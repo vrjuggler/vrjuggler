@@ -31,13 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <Input/vjGlove/fsPinchGlove.h>
 #include <Input/vjGlove/vjPinchGlove.h>
 
 #include <gloveApp.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 void gloveApp::renderLightsAndMaterials()
 {
@@ -77,7 +78,6 @@ void gloveApp::initGlState()
 
 void gloveApp::myDraw()
 {
-   //static vjGlContextData< vjMatrix > matrix;
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -210,11 +210,24 @@ bool gloveApp::RightFist()
       return false;
 }
 
-//: Function called after tracker update but before start of drawing
+// Function called after tracker update but before start of drawing.  Do
+// calculations and state modifications here.
 //  In the glove application, this function does the logic for picking the
 //  objects.
-void gloveApp::preFrame()
+void gloveApp::postFrame()
 {
+   vjGlApp::postFrame();
+   
+   //: we need to keep track of the wand, and the user.
+    UserInfo    userInfo;
+    TrackedInfo wandInfo;
+    TrackedInfo headInfo;
+
+    vjVec3 glovePos;
+    vjMatrix finger_matrix;
+    vjMatrix invNav;
+    invNav.invert(mNavigation);
+    
    /////////////////////////////////////////////////////////
    //: Debug stuff
    std::cout<<mPinchLeftThumb->getData()
@@ -262,13 +275,38 @@ void gloveApp::preFrame()
    
    /////////////////////////////////////////////////////////
    //: Handle navigation
-   mNavigation.accelerate( LeftPointing() == true );
-   mNavigation.rotate( LeftPointing() == false && LeftOpen() == false );
-   mNavigation.setMatrix( mGlove->getPos(vjGloveData::INDEX) );
-   mNavigation.update();
+   //mNavigation.accelerate( LeftPointing() == true );
+   //mNavigation.rotate( LeftPointing() == false && LeftOpen() == false );
+   //mNavigation.setMatrix( mGlove->getPos(vjGloveData::INDEX) );
+   //mNavigation.update( time );
 
-   vjVec3 glovePos;
+   
+   //: Get the position of the index finger:
+    finger_matrix = mGlove->getPos(vjGloveData::INDEX);
+    finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
+    glovePos.xformVec( invNav, glovePos );
+    
+    ////////////////////////
+    // NAVIGATION         //
+    ////////////////////////////////////////////////////////
+    static float userVelocity = 0;
 
+    if (LeftPointing() == true)
+    {
+      userVelocity += 0.0001f;
+    } 
+    else if (LeftFist() == true)
+    {
+      userVelocity = 0.0f;
+    }
+    userInfo.setVelocity( userVelocity );
+    userInfo.setAngularVelocity( 0.01f );
+    vjMatrix tttt = mGlove->getPos(vjGloveData::INDEX);
+    wandInfo.updateWithMatrix( tttt );
+    userInfo.update( wandInfo, vjVec3(0.0f, 0.0f, 0.0f) );
+    userInfo.getSceneTransform( mNavigation );
+    ////////////////////////////////////////////////////////
+    
     
    ////////////////////////////////////////////////////////
    //: pick up the object if you're grabbing.

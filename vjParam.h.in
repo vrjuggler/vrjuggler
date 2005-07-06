@@ -39,13 +39,13 @@
  * version number" that is intended for internal feature checks by VR Juggler
  * itself.
  */
-#undef __VJ_version
+#define __VJ_version @VER_NUMBER@
 
 /*
  * This is the "human-readable" VR Juggler version _string_.  It is of the
  * form <major>.<minor>.<days since last major release>.
  */
-#undef VJ_VERSION
+#define VJ_VERSION @VER_STRING@
 
 
 #endif	/* _VJ_PARAM_H_ */

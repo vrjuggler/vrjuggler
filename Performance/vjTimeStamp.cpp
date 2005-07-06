@@ -69,7 +69,7 @@ void vjTimeStampSGI::initialize() {
     poffmask = getpagesize() - 1;
     phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cyclevalue);
     if (phys_addr == ENODEV) {
-	vjDEBUG (vjDBG_ERROR,0) << "ERROR: vjTimeStamp: Cycle Counter not "
+	vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " vjTimeStamp: Cycle Counter not "
 	    "supported by this machine.\n" << vjDEBUG_FLUSH;
 	iotimer_addr = &enodev_dummy_address;
     }

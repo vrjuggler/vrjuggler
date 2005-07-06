@@ -41,6 +41,8 @@
 	nav
 	..
 	ogl
+	    analog
+	    ..
 	    combo
 	    ..
 	    cones
@@ -50,6 +52,10 @@
 	    digitalGlove
 	    ..
 	    simpleGlove
+	    ..
+	    texture
+		ImageFileLoaderCode
+		..
 	    ..
 	    torus
 	    ..
@@ -64,6 +70,12 @@
 	    pfNav
 	    ..
 	    pfTools
+	    ..
+	..
+	tutorials
+	    simpleInput
+	    ..
+	    simplePfApp
 	    ..
 	..
 	tools

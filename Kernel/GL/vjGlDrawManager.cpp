@@ -214,7 +214,7 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 
    // -- Create any needed Pipes & Start them
    unsigned int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
-   vjASSERT(pipe_num >= 0);                            // ASSERT: pipeNum := [0...n]
+
    if(pipes.size() < (pipe_num+1))           // ASSERT: Max index of pipes is < our pipe
    {                                         // +1 because if pipeNum = 0, I still need size() == 1
       while(pipes.size() < (pipe_num+1))     // While we need more pipes
@@ -448,7 +448,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
    const float head_radius(0.60f);      // 7.2 inches
    const float eye_vertical(0.22f);
    const float eye_horizontal(0.7f);
-   const float interoccular(0.27f);
+   const float interocular(0.27f);
    const float eye_radius(0.08f);
 
    glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
@@ -498,11 +498,11 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
             glColor3f(0.2f, 0.2f, 0.2f);
             glTranslatef(0.0f, eye_vertical, -eye_horizontal);
             glPushMatrix();                     // Right eye
-               glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
+               glTranslatef((interocular/2.0f), 0.0f, 0.0f);
                drawSphere(eye_radius, 5, 5);
             glPopMatrix();
             glPushMatrix();                     // Left eye
-               glTranslatef(-(interoccular/2.0f), 0.0f, 0.0f);
+               glTranslatef(-(interocular/2.0f), 0.0f, 0.0f);
                drawSphere(eye_radius, 5, 5);
             glPopMatrix();
          glPopMatrix();

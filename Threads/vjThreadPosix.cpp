@@ -47,7 +47,7 @@
 #include <Threads/vjThreadFunctor.h>
 
 
-vjThreadKeyPosix           vjThreadPosix::mThreadIdKey(NULL);
+vjThreadPosix::staticWrapper vjThreadPosix::statics;
 
 typedef struct sched_param sched_param_t;
 
@@ -247,7 +247,7 @@ void vjThreadPosix::startThread(void* null_param)
    // TELL EVERYONE THAT WE LIVE!!!!
    vjThreadManager::instance()->lock();      // Lock manager
    {
-      mThreadIdKey.setspecific((void*)this);     // Store the pointer to me
+      threadIdKey().setspecific((void*)this);     // Store the pointer to me
       registerThread(true);
    }
    vjThreadManager::instance()->unlock();
@@ -305,8 +305,10 @@ vjThreadPosix::setPrio (int prio) {
 vjBaseThread*
 vjThreadPosix::self (void)
 {
+   vjASSERT((statics.mStaticsInitialized==1221) && "Trying to call vjThreadPosix::self before statics are initialized. Don't do that");
+
    vjBaseThread* my_thread;
-   mThreadIdKey.getspecific((void**)&my_thread);
+   threadIdKey().getspecific((void**)&my_thread);
 
    return my_thread;
 }
@@ -333,7 +335,7 @@ void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
        mThreadTable.addThread(this, hash());      // Store way to look me up
-       mThreadIdKey.setspecific((void*)this);     // Store the pointer to me
+       threadIdKey().setspecific((void*)this);     // Store the pointer to me
        registerThread(true);
     } else {
         registerThread(false);   // Failed to create

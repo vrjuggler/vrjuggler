@@ -76,34 +76,37 @@ public:
     //! PRE: None.
     //! POST: m_motion_star is initialized, and mThread is set to NULL.
     //
-    //! ARGS: address        - The IP address or hostname of the MotionStar PC
-    //+                        to which we are connecting.  This defaults to
-    //+                        NULL.
-    //! ARGS: port           - The server port to which we are connecting.  The
-    //+                        default is 6000.
-    //! ARGS: proto          - The transmission protocol to use in
-    //+                        communicating with the server.  The default is
-    //+                        BIRDNET::TCP which matches the default port
-    //+                        number 6000.
-    //! ARGS: master         - A flag stating whether or not this server
-    //+                        chassis is a master or a slave.  The default is
-    //+                        slave (false).
-    //! ARGS: hemisphere     - The hemisphere in use on the transmitter.  The
-    //+                        default is FLOCK::FRONT_HEMISPHERE.
-    //! ARGS: bird_format    - The bird format.  The default is
-    //+                        FLOCK::POSITION_ANGLES.
-    //! ARGS: run_mode       - The run mode for the device.  The default is
-    //+                        BIRDNET::CONTINUOUS.
-    //! ARGS: birds_required - The number of birds required.  The default is
-    //+                        10.
+    //! ARGS: address          - The IP address or hostname of the MotionStar
+    //+                          PC to which we are connecting.  This defaults
+    //+                          to NULL.
+    //! ARGS: port             - The server port to which we are connecting.
+    //+                          The default is 6000.
+    //! ARGS: proto            - The transmission protocol to use in
+    //+                          communicating with the server.  The default
+    //+                          is BIRDNET::TCP which matches the default
+    //+                          port number 6000.
+    //! ARGS: master           - A flag stating whether or not this server
+    //+                          chassis is a master or a slave.  The default
+    //+                          is slave (false).
+    //! ARGS: hemisphere       - The hemisphere in use on the transmitter.
+    //+                          The default is FLOCK::FRONT_HEMISPHERE.
+    //! ARGS: bird_format      - The bird format.  The default is
+    //+                          FLOCK::POSITION_ANGLES.
+    //! ARGS: run_mode         - The run mode for the device.  The default is
+    //+                          BIRDNET::CONTINUOUS.
+    //! ARGS: report_rate      -
+    //! ARGS: measurement_rate -
+    //! ARGS: birds_required   - The number of birds required.  The default is
+    //+                          10.
     // ------------------------------------------------------------------------
     vjMotionStar(const char* address = NULL, const unsigned short port = 6000,
-		 const enum BIRDNET::protocol proto = BIRDNET::TCP,
+                 const enum BIRDNET::protocol proto = BIRDNET::TCP,
                  const bool master = false,
-		 const FLOCK::hemisphere hemisphere = FLOCK::FRONT_HEMISPHERE,
-		 const FLOCK::data_format bird_format = FLOCK::POSITION_ANGLES,
-		 const BIRDNET::run_mode run_mode = BIRDNET::CONTINUOUS,
-		 const unsigned char report_rate = 1,
+                 const FLOCK::hemisphere hemisphere = FLOCK::FRONT_HEMISPHERE,
+                 const FLOCK::data_format bird_format = FLOCK::POSITION_ANGLES,
+                 const BIRDNET::run_mode run_mode = BIRDNET::CONTINUOUS,
+                 const unsigned char report_rate = 1,
+                 const double measurement_rate = 68.3,
                  const unsigned int birds_required = 10);
 
     // ------------------------------------------------------------------------
@@ -430,20 +433,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the current data measurement rate.
-    //
-    //! PRE: m_motion_star has been initialized.
-    //! POST: The current data measurement rate is returned to the caller.
-    //
-    //! RETURNS: A double-precision floating-point value for data measurement
-    //+          rate.
-    // ------------------------------------------------------------------------
-    inline double
-    getDataRate (void) const {
-        return m_motion_star.getDataRate();
-    }
-
-    // ------------------------------------------------------------------------
     //: Set the run mode for the device.
     //
     //! PRE: m_motion_star has been initialized.
@@ -471,7 +460,7 @@ public:
     //: Set the report rate for the birds.
     //
     //! PRE: m_motion_star has been initialized.
-    //! POST: If the device is not active, bird the report rate is set to the
+    //! POST: If the device is not active, the bird report rate is set to the
     //+       given byte value.
     //
     //! ARGS: rate - The new value for the bird report rate.
@@ -489,6 +478,31 @@ public:
     inline unsigned char
     getReportRate (void) const {
         return m_motion_star.getReportRate();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Set the data measurement rate for the chassis.
+    //
+    //! PRE: m_motion_star has been initialized.
+    //! POST: If the device is not active, the chassis data measurement rate
+    //+       is set to the given double value.
+    //
+    //! ARGS: rate - The new value for the measurement rate.
+    // ------------------------------------------------------------------------
+    void setMeasurementRate(const double rate);
+
+    // ------------------------------------------------------------------------
+    //: Get the current data measurement rate for the chassis.
+    //
+    //! PRE: m_motion_star has been initialized.
+    //! POST: The current data measurement rate is returned to the caller.
+    //
+    //! RETURNS: A double-precision floating-point value for data measurement
+    //+          rate.
+    // ------------------------------------------------------------------------
+    inline double
+    getMeasurementRate (void) const {
+        return m_motion_star.getMeasurementRate();
     }
 
     // ------------------------------------------------------------------------

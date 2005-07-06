@@ -89,6 +89,13 @@
 #include <algorithm>
 #include <math.h>
 
+//: Linear Interpolation
+inline void VJ_LERP( float& result, const float& lerp, const float& a, 
+                  const float& b )
+{
+    float size = b - a;
+    result = a + (size * lerp);
+}
 /* #include <Kernel/vjDebug.h> */
 #endif   /* __cplusplus */
 
@@ -120,6 +127,10 @@
 #   define asinf(x) ((float) asin(x))
 #endif
 
+#ifndef HAVE_COSF
+#   define cosf(x) ((float) cos(x))
+#endif
+
 #ifndef HAVE_ACOSF
 #   define acosf(x) ((float) acos(x))
 #endif
@@ -132,9 +143,13 @@
 #   define sqrtf(x) ((float) sqrt(x))
 #endif
 
+#ifndef HAVE_FABSF
+#   define fabsf(x) ((float) fabs(x))
+#endif
+
 #define VJ_EPS 1e-8
-#define VJ_DEG2RAD(x) ((x)*M_PI/180.0)
-#define VJ_RAD2DEG(x) ((x)*180.0/M_PI)
+#define VJ_DEG2RAD(x) (x * 0.01745329252f) /* M_PI / 180.0 */
+#define VJ_RAD2DEG(x) (x * 57.2957795131f) /* 180.0 / M_PI */
 #define VJ_ZERO_CLAMP(x) ((fabs(x) < VJ_EPS)? 0.0f : x)
 #define VJ_IS_ZERO(x) (fabs(x) < VJ_EPS)
 #define VJ_CLAMP(x,y) ((x>y)? y : x)

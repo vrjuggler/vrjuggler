@@ -58,17 +58,17 @@ public:
     //: Constructor with arguments.  This will start a new thread that will
     //+ execute the specified function with the given argument.
     // -----------------------------------------------------------------------
-    vjThreadWin32 (vj_thread_func_t func, void* arg = 0, long flags = 0,
-                 u_int priority = 0, void* stack_addr = NULL,
-                 size_t stack_size = 0);
+    vjThreadWin32(vj_thread_func_t func, void* arg = 0, long flags = 0,
+                  u_int priority = 0, void* stack_addr = NULL,
+                  size_t stack_size = 0);
 
     // -----------------------------------------------------------------------
     //: Constructor with arguments (functor version).  This will start a new
     //+ thread that will execute the specified function.
     // -----------------------------------------------------------------------
-    vjThreadWin32 ( vjBaseThreadFunctor* functorPtr, long flags = 0,
-                 u_int priority = 0, void* stack_addr = NULL,
-                 size_t stack_size = 0);
+    vjThreadWin32(vjBaseThreadFunctor* functorPtr, long flags = 0,
+                  u_int priority = 0, void* stack_addr = NULL,
+                  size_t stack_size = 0);
 
     // -----------------------------------------------------------------------
     //: Destructor.
@@ -77,7 +77,7 @@ public:
         ;
     }
 
-    
+
     // -----------------------------------------------------------------------
     //: Create a new thread that will execute functorPtr.
     //
@@ -140,7 +140,7 @@ public:
         if( 0xFFFFFFFF == ResumeThread(mThreadHandle))
            return -1;
         else
-           return 0;        
+           return 0;
     }
 
     // -----------------------------------------------------------------------
@@ -158,7 +158,7 @@ public:
         if( 0xFFFFFFFF == SuspendThread(mThreadHandle))
            return -1;
         else
-           return 0;        
+           return 0;
     }
 
     // -----------------------------------------------------------------------
@@ -212,7 +212,7 @@ public:
        Sleep(0);     // Sleep for 0 ms, this gives up our time-slice
     }
 
-    
+
     // -----------------------------------------------------------------------
     //: Send the specified signal to this thread (not necessarily SIGKILL).
     //
@@ -252,26 +252,29 @@ public:
         CloseHandle(mThreadHandle);
     }
 
-   
+
    // -----------------------------------------------------------------------
    //: Output the state of the object.
    // -----------------------------------------------------------------------
    virtual std::ostream& outStream(std::ostream& out)
    {
-      out << "p:" << mThreadTID << " ";
+      out.setf(std::ios::right);
+      out << std::setw(7) << std::setfill('0') << mThreadTID << "/";
+      out.unsetf(std::ios::right);
       vjBaseThread::outStream(out);
+      out << std::setfill(' ');
       return out;
    }
 
 
 // Private member variables.
 private:
-    HANDLE		mThreadHandle;    //: HANDLE* data structure for this thread
+    HANDLE     mThreadHandle;    //: HANDLE* data structure for this thread
     DWORD      mThreadTID;       //: The win32 thread ID
 
 
 public:
-	 // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //: Get the address of thread we are in
     //! PRE: None.
     //! POST: The address of a pointer to a thread data structure that
@@ -279,16 +282,19 @@ public:
     //
     //! RETURNS: pointer - A pointer to this vjThreadWin32 object's address.
     // -----------------------------------------------------------------------
-    static vjBaseThread* self ()
-	 {
-        DWORD thread_id = GetCurrentThreadId();                         // Get our pid or handle
-		  vjBaseThread* cur_thread = mThreadTable.getThread(thread_id);   // Get the entry in the thread table
-		  return cur_thread;                      // return us
+    static vjBaseThread* self () {
+        DWORD thread_id = GetCurrentThreadId();   // Get our pid or handle
+
+        // Get the entry in the thread table.
+        vjBaseThread* cur_thread = mThreadTable.getThread(thread_id);
+
+        // Return us.
+        return cur_thread;
     }
 
 private:
-	static vjThreadTable<DWORD>	mThreadTable;
+    static vjThreadTable<DWORD> mThreadTable;
 };
 
 
-#endif	/* _THREAD_WIN32_H */
+#endif   /* _THREAD_WIN32_H */

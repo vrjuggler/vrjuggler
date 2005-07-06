@@ -32,6 +32,7 @@
 
 
 #include <vjConfig.h>
+#include <vjParam.h>
 #include <string.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
@@ -41,7 +42,7 @@
 #include <Environment/vjEnvironmentManager.h>
 
 // Get the system factory we need
-#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) ||    \
+#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
     defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD)
 #include <Kernel/vjSGISystemFactory.h>
 #elif defined(VJ_OS_Win32)
@@ -68,8 +69,8 @@ int vjKernel::start()
    vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
    new_thread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  "
-                           << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
+                                         << std::endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -275,7 +276,7 @@ void vjKernel::initConfig()
 
 #ifdef VJ_OS_IRIX
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
-#elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) ||     \
+#elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) || defined(VJ_OS_AIX) || \
       defined(VJ_OS_FreeBSD)
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
 #elif defined(VJ_OS_Win32)
@@ -310,7 +311,7 @@ int vjKernel::configProcessPending(bool lockIt)
    vjConfigManager* cfg_mgr = vjConfigManager::instance();
    if(cfg_mgr->pendingNeedsChecked())
    {
-      vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
 
       chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
       chunks_processed += getInputManager()->configProcessPending(lockIt);
@@ -324,8 +325,8 @@ int vjKernel::configProcessPending(bool lockIt)
       if(NULL != mApp)
          chunks_processed += mApp->configProcessPending(lockIt);
 
-      vjDEBUG_ENDlg(vjDBG_ALL,vjDBG_CONFIG_LVL,false,false) << std::endl
-                                                            << vjDEBUG_FLUSH;
+      vjDEBUG_CONT_END(vjDBG_ALL,vjDBG_CONFIG_LVL) << std::endl
+                                                   << vjDEBUG_FLUSH;
    }
    return chunks_processed;
 }
@@ -387,7 +388,7 @@ bool vjKernel::addUser(vjConfigChunk* chunk)
    }
    else
    {
-      vjDEBUG(vjDBG_CONFIG,vjDBG_CONFIG_LVL)
+      vjDEBUG(vjDBG_CONFIG,vjDBG_STATE_LVL)
                              << "vjKernel: Added new vjUser: "
                              << new_user->getName().c_str() << std::endl
                              << vjDEBUG_FLUSH;
@@ -406,7 +407,7 @@ bool vjKernel::removeUser(vjConfigChunk* chunk)
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfigFile(std::string filename)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: "
+   vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "Loading config file: "
                            << filename << std::endl << vjDEBUG_FLUSH;
 
    vjConfigChunkDB* chunk_db = new vjConfigChunkDB;
@@ -418,8 +419,8 @@ void vjKernel::loadConfigFile(std::string filename)
    bool chunk_db_load_success = chunk_db->load(filename);
    if (!chunk_db_load_success)
    {
-     vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:")
-        << "vjConfigManager::loadConfigFile: DB Load failed to load file: "
+     vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+        << "vjKernel::loadConfigFile: DB Load failed to load file: "
         << filename.c_str() << std::endl << vjDEBUG_FLUSH;
      exit(1);
    }
@@ -486,5 +487,35 @@ vjUser* vjKernel::getUser(std::string userName)
          return mUsers[i];
 
    return NULL;
+}
+
+vjKernel::vjKernel()
+{
+   mApp = NULL;
+   mNewApp = NULL;
+   mNewAppSet = false;
+   mControlThread = NULL;
+   mSysFactory = NULL;
+   mInputManager = NULL;
+   mDrawManager = NULL;
+   mDisplayManager = NULL;
+   mSoundManager = NULL;
+
+   environmentManager = NULL;
+   perfBuffer = NULL;
+
+   //mInitialChunkDB = NULL;
+   //mChunkDB = NULL;
+
+   sharedMemPool = NULL;
+
+   // Print out the Juggler version number when the kernel is created.
+   vjDEBUG(vjDBG_BASE, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
+                          << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler: ")
+                          << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
+                          << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_BASE, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
+                          << std::endl << vjDEBUG_FLUSH;
 }
 

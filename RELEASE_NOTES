@@ -10,6 +10,48 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.0.0
+Released: April 13, 2001
+
+    Required application and configuration changes for upgrading from older
+    beta versions:
+        * Interocular distance is now a configurable option.  If not given,
+          the default separation will be 0.0 which results in no stereo
+          viewing.  A recommended value for most cases is 0.229.  This is
+          set in the JugglerUser chunk.
+        * Link Juggler_utils when compiling applications.
+        * The method vjQuat::unit() is now called vjQuat::normalizeFast().
+        * The method vjQuat::makeQuat() is now called vjQuat::makeRot().
+        * Update the descfiles property in ~/.vjconfig/vjcontrol.cfg (if one
+          exists) to point to "$VJ_SHARE_DIR/Data/chunksDesc".  This is
+          necessary because the extra VR Juggler files are now installed in
+          $VJ_BASE_DIR/share by default instead of $VJ_BASE_DIR.  Note that
+          $VJ_SHARE_DIR is a value used internally by VjControl and does
+          not have to be set as an environment variable.
+        * On IRIX with the MIPSpro Compilers, -LANG:std must be added to the
+          compiler and linker options for compiling applications.
+        * On IRIX, the version 7.3.1.1m or newer of the MIPSpro Compilers is
+          required.  Check your version with 'CC -version' on the command
+          line.
+        * The Ascension MotionStar driver has been improved, and configuration
+          files for that device must be updated.  Refer to the examples in
+          $VJ_BASE_DIR/share/Data/configFiles/example.mstar.1pack.config and
+          $VJ_BASE_DIR/share/Data/configFiles/example.mstar.2pack.config for
+          one- and two-pack configurations respectively.
+        * All windows are positioned relative to the lower left corner of
+          the display area.  This allows all graphics APIs on all platforms
+          to use the same display configuration.
+
+    New features:
+        * The field of view (FOV) and aspect ratio can now be configured in
+          simulator windows.
+        * Drivers for trackd and the Intersense IS-900 have been added.
+        * Many memory problems and instability issues have been fixed.
+        * Win32 support has been improved.  All windows are positioned
+          correctly, and borderless surface displays can be opened.
+
+===============================================================================
+
  Version: 0.1.97
 Released: July 18, 2000
 

@@ -53,6 +53,9 @@ void vjDisplay::config(vjConfigChunk* chunk)
     mView    = (vjDisplay::DisplayView)(int)chunk->getProperty("view");
     mActive  = chunk->getProperty("active");
 
+    mLatencyMeasure = new vjPerfDataBuffer ("Head Latency " + name, 500, 4);
+    vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mLatencyMeasure);
+
     // -- Check for error in configuration -- //
     // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
@@ -86,7 +89,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     if(NULL == mUser)
     {
-       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: "
+       vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " User not found named: "
                               << user_name.c_str() << std::endl
                               << vjDEBUG_FLUSH;
       vjASSERT(false);

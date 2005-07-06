@@ -8,7 +8,8 @@
 *    Copyright:    InterSense 1999 - All rights Reserved.
 * 
 *    Comments:     Win32 and UNIX rs232 driver
-*
+*		   Added termios support
+* 		   Stripped Unix Platform Dependant Code
 *    
 ************************************************************************/
 /* Header files */  
@@ -18,7 +19,7 @@
 
 #include "isense.h"
 
-#if !defined UNIX 
+#if !defined UNIX    /* Win32 Specific Start! */
 
 #include <windows.h>
 #include <process.h>
@@ -59,7 +60,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
                             FILE_FLAG_OVERLAPPED,
                             0);
 
-    if(port->portHandle == INVALID_HANDLE_VALUE)
+    if(port->portHandle == INVALID_HANDLE_VALUE)  
     {
         return FALSE;
     }
@@ -379,9 +380,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
     return TRUE;
 }
 
-#endif
-
-#ifdef UNIX
+#else /* Win32 Specific Complete */
 
 /***********************************************************************
 *
@@ -398,14 +397,6 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 #include <sys/termios.h>
 #include <fcntl.h>
 
-#ifdef IRIX
-#include <sys/z8530.h> /* SGI only */
-#endif
-
-#ifdef SOLARIS
-#include <termio.h> 
-#endif
-
 #include "serial.h"
 #include "isdriver.h"
 #include "timer.h"
@@ -413,8 +404,9 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 /****************************************************************************/
 int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate)
 {
-    struct termio terminfo;
-
+    struct termios terminfo;
+    int magicBaudRate = 0;
+    
     /* close port if one is open */
     rs232DeinitCommunications(port);
 
@@ -423,7 +415,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
     port->dwReturned = 0;
     port->portNumber = 0;
 
-    port->desc = open(comPort, O_RDWR);
+    port->desc = open(comPort, O_RDWR | O_NDELAY);
 
     if ( port->desc > 0)
     {
@@ -435,135 +427,106 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
         return FALSE;
     }
 
-    if( ioctl(port->desc, TCGETA, &terminfo ) == -1 )
+    tcgetattr(port->desc, &terminfo);
+    terminfo.c_iflag = terminfo.c_oflag = terminfo.c_lflag = 0;
+    terminfo.c_cc[4] = 0;
+    terminfo.c_cc[5] = 5;
+
+    switch (baudRate)
+    {
+	    case 150: magicBaudRate = B150; break;
+	    case 200: magicBaudRate = B200; break;
+	    case 300: magicBaudRate = B300; break;
+	    case 600: magicBaudRate = B600; break;
+	    case 1200: magicBaudRate = B1200; break;
+	    case 1800: magicBaudRate = B1800; break;
+    	case 2400: magicBaudRate = B2400; break;
+	    case 4800: magicBaudRate = B4800; break;
+	    case 9600: magicBaudRate = B9600; break;
+	    case 19200: magicBaudRate = B19200; break;
+	
+        #ifndef _POSIX_SOURCE
+            case 57600: magicBaudRate = B57600; break;
+            case 76800: magicBaudRate = B76800; break;
+            case 115200: magicBaudRate = B115200; break;
+        #endif
+
+        case 38400:
+        default:
+          magicBaudRate = B38400;
+          break;
+    }
+ 
+    terminfo.c_cflag = CS8|CREAD|CLOCAL;   /*  Might be needed for IRIX   |CNEW_RTSCTS; */
+
+    cfsetospeed(&terminfo, magicBaudRate);
+    cfsetispeed(&terminfo, magicBaudRate);
+
+    if( tcsetattr(port->desc, TCSANOW, &terminfo) != 0 )
     {
         perror( "Configuring Port for InterSense Tracker" );
         return FALSE;
     }
 
-#if defined IRIX
-      
-    terminfo.c_iflag = 0;
-    terminfo.c_oflag = 0;
-    terminfo.c_lflag = 0;
-    terminfo.c_cc[4] = 0;
-    terminfo.c_cc[5] = 5;
-
-#if defined LEGACY_SGI
-    terminfo.c_cflag = 
-        (baudRate == 9600 ? B9600 : baudRate == 19200 ?  B19200 : B38400)|CS8|CREAD|CLOCAL|CNEW_RTSCTS;
-#else  
-    terminfo.c_cflag = CS8|CREAD|CLOCAL|CNEW_RTSCTS;
-    terminfo.c_ospeed = (baudRate == 9600 ? B9600 :
-                        (baudRate == 19200 ?  B19200 :
-                        (baudRate == 38400 ?  B38400 : B115200)));                        
-    terminfo.c_ispeed = terminfo.c_ospeed;
-#endif
-
-
-#else /* other flavors of UNIX, including Linux */
-
-    terminfo.c_iflag = 0;
-    terminfo.c_oflag = 0;
-    terminfo.c_lflag = 0;
-
-    terminfo.c_cflag  = (baudRate == 9600L  ? B9600  :
-                        (baudRate == 19200L ? B19200 :
-                        (baudRate == 38400L ? B38400 : B115200)))|CS8|CREAD|CLOCAL;                       
-
-    terminfo.c_cc[4] = 0;
-    terminfo.c_cc[5] = 5;
-
-#endif
-
-    if( ioctl(port->desc, TCSETA, &terminfo ) == -1 )
-    {
-        perror( "Configuring Port for InterSense Tracker" );
-        return FALSE;
-    }
-
-#ifdef IRIX
-    /* This removes the 50 Hz limit on the serial port
-       access on some SGI computers. */
-
-    if( ioctl(port->desc, SIOC_ITIMER, 0 ) == -1 )
-    {
-        perror( "Setting up real-time serial port access" );
-        return FALSE;
-    }
-#endif
-
-#if defined SOLARIS
     if (fcntl(port->desc, F_SETFL, O_NDELAY) < 0)
     {
         perror( "Tracker-Port Setup");
         return FALSE;
     }
-#else
-    if (fcntl(port->desc, F_SETFL, FNDELAY) < 0)
-    {
-        perror( "Tracker-Port Setup");
-        return FALSE;
-    }
-#endif     
-    
+
     if( tcflush(port->desc, TCIOFLUSH ) == -1 )
     {
         perror( "Flushing Port for InterSense Tracker" );
         return FALSE;
-    }
+    }                
 
-    return TRUE;
+    return TRUE; 
 }
 
 
 /****************************************************************************/
 int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
 {
-    struct termio terminfo;
+    struct termios terminfo;
+    int magicBaudRate = 0;
+    
+    tcgetattr(port->desc, &terminfo);
+    terminfo.c_iflag = terminfo.c_oflag = terminfo.c_lflag = 0;
+    
+    terminfo.c_cc[4] = 0;
+    terminfo.c_cc[5] = 5;
 
-    if( ioctl(port->desc, TCGETA, &terminfo ) == -1 )
+    switch (baudRate)
     {
-        perror( "Configuring Port for InterSense Tracker" );
-        return FALSE;
+	    case 150: magicBaudRate = B150; break;
+	    case 200: magicBaudRate = B200; break;
+	    case 300: magicBaudRate = B300; break;
+	    case 600: magicBaudRate = B600; break;
+	    case 1200: magicBaudRate = B1200; break;
+	    case 1800: magicBaudRate = B1800; break;
+    	case 2400: magicBaudRate = B2400; break;
+	    case 4800: magicBaudRate = B4800; break;
+	    case 9600: magicBaudRate = B9600; break;
+	    case 19200: magicBaudRate = B19200; break;
+	
+        #ifndef _POSIX_SOURCE
+            case 57600: magicBaudRate = B57600; break;
+            case 76800: magicBaudRate = B76800; break;
+            case 115200: magicBaudRate = B115200; break;
+        #endif
+
+        case 38400:
+        default:
+          magicBaudRate = B38400;
+          break;
     }
+ 
+    terminfo.c_cflag = CS8|CREAD|CLOCAL;     /* Might be needed for IRIX  |CNEW_RTSCTS; */
 
-#if defined IRIX
-      
-    terminfo.c_iflag = 0;
-    terminfo.c_oflag = 0;
-    terminfo.c_lflag = 0;
-    terminfo.c_cc[4] = 0;
-    terminfo.c_cc[5] = 5;
+    cfsetospeed(&terminfo, magicBaudRate);
+    cfsetispeed(&terminfo, magicBaudRate);
 
-#if defined LEGACY_SGI
-    terminfo.c_cflag = 
-        (baudRate == 9600 ? B9600 : baudRate == 19200 ?  B19200 : B38400)|CS8|CREAD|CLOCAL|CNEW_RTSCTS; 
-#else
-    terminfo.c_cflag = CS8|CREAD|CLOCAL|CNEW_RTSCTS;
-    terminfo.c_ospeed = (baudRate == 9600 ? B9600 :
-                        (baudRate == 19200 ?  B19200 :
-                        (baudRate == 38400 ?  B38400 : B115200)));                        
-    terminfo.c_ispeed = terminfo.c_ospeed;
-#endif
-
-
-#else /* other flavors of UNIX, including Linux */
-
-    terminfo.c_iflag = 0;
-    terminfo.c_oflag = 0;
-    terminfo.c_lflag = 0;
-
-    terminfo.c_cflag  = (baudRate == 9600L  ? B9600  :
-                        (baudRate == 19200L ? B19200 :
-                        (baudRate == 38400L ? B38400 : B115200)))|CS8|CREAD|CLOCAL;                       
-
-    terminfo.c_cc[4] = 0;
-    terminfo.c_cc[5] = 5;
-
-#endif
-
-    if( ioctl(port->desc, TCSETA, &terminfo ) == -1 )
+    if( tcsetattr(port->desc, TCSANOW, &terminfo) != 0 )
     {
         perror( "Configuring Port for InterSense Tracker" );
         return FALSE;
@@ -660,10 +623,7 @@ int rs232InChar(COMM_PORT *port, char *c, int flush)
     return EOF;
 }
 
-
-#endif
-
-
+#endif /* UNIX Specific Complete */
 
 /*************************** waitForChar ***********************************/
 BOOL waitForChar( COMM_PORT *port, char *ch )
@@ -687,17 +647,35 @@ BOOL waitForShort( COMM_PORT *port, short *num )
     union {
        char bytes[2];
        short word;
-    } bytesToWord;
+    } bytesToWord, endian;
 
-#if defined REVERSE_BYTE_ORDER
-    if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
-    if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
-#else
-    if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
-    if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
-#endif
+    endian.word = 256;
+
+    /* Big endian. */
+    if ( endian.bytes[0] ) {
+        if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
+        if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
+    }
+    /* Little endian. */
+    else {
+        if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
+        if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
+    }
 
     *num = bytesToWord.word;
 
     return TRUE;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

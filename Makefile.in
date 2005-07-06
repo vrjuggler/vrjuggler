@@ -43,6 +43,8 @@
 # installworld    - Install everything (same as 'install-all').  This requires 
 #                   that 'buildworld' be successfully completed beforehand.
 # release         - Build and install a release version.
+# release-all-abi - Build and install a release version using all supported
+#                   ABIs.
 #
 # all             - Build everything.
 # all-abi         - Build everything using all supported ABIs.
@@ -235,6 +237,16 @@ ifeq (${PLATFORM}, Linux)
     _PF_EXTRA_LDOPTS = -O
 endif
 
+# Version information.
+BRANCH		= RELENG_1_0
+VER_ARGS	= -f ${VJROOT_ABS}/VERSION -s @THREAD_SYS@ -b ${BRANCH}	\
+                  -i ${VJROOT_ABS}/vjParam.h.in -o vjParam.h		\
+                  -d "`date '+%b %e, %Y %H:%M:%S'`"
+
+ifdef VERSION
+    VER_ARGS	+= -v ${VERSION}
+endif
+
 # =============================================================================
 # Lists used for various types of recursion.
 # =============================================================================
@@ -276,6 +288,7 @@ world:
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make world started $(BUILD_START)"
 	@echo "==============================================================="
+	@${MAKE} beforebuild
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
@@ -298,6 +311,7 @@ world-all-abi:
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make world started on `LTIME=C date`"
 	@echo "==============================================================="
+	@${MAKE} beforebuild
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
@@ -334,6 +348,7 @@ release:
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make release started on `LTIME=C date`"
 	@echo "==============================================================="
+	@${MAKE} beforebuild
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
@@ -345,9 +360,56 @@ endif
 	@${MAKE} _install_libs
 	@${MAKE} _install_post_libs
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/ChangeLog ${VJROOT_ABS}/COPYING	 		\
-          ${VJROOT_ABS}/README ${VJROOT_ABS}/RELEASE_NOTES 		\
-          ${prefix}
+          ${VJROOT_ABS}/ChangeLog ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/COPYING ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/KNOWN_BUGS ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/README ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/RELEASE_NOTES ${prefix}
+	@echo "Build time: `LTIME=C date`" > ${prefix}/BUILD_TIME
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make release completed on `LTIME=C date`"
+	@echo "==============================================================="
+
+release-all-abi:
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make release started on `LTIME=C date`"
+	@echo "==============================================================="
+	@${MAKE} beforebuild
+ifndef NO_CLEAN
+	@${MAKE} clobber
+endif
+	@abi_list='${ABI_LIST}' ;					\
+          for abi in $$abi_list ; do					\
+              echo "------------------------------------------------" ;	\
+              echo "Building libraries using $$abi" ;			\
+              echo "------------------------------------------------" ;	\
+              ${MAKE} vjABI=$$abi _libs ;				\
+          done
+	@${MAKE} gui
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning VR Juggler release installation process"
+	@echo "---------------------------------------------------------------"
+	@${MAKE} beforeinstall
+	@abi_list='${ABI_LIST}' ;					\
+          for abi in $$abi_list ; do					\
+              echo "------------------------------------------------" ;	\
+              echo "Installing $$abi version of libraries" ;		\
+              echo "------------------------------------------------" ;	\
+              ${MAKE} vjABI=$$abi _install_libs ;			\
+          done
+	@${MAKE} _install_post_libs
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/ChangeLog ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/COPYING ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/README ${prefix}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/RELEASE_NOTES ${prefix}
 	@echo "Build time: `LTIME=C date`" > ${prefix}/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make release completed on `LTIME=C date`"
@@ -390,6 +452,7 @@ all-abi:
 
 # Things to do before the object files and library are built.
 beforebuild:
+	@${SHELL} ${scriptdir}/make-ver.sh ${VER_ARGS}
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -754,6 +817,7 @@ endif	# ifndef NO_JAVA_GUI
 # should be set to ${instlinks}.
 # =============================================================================
 links:
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
@@ -767,8 +831,11 @@ links:
             done
 	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
           ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
-	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
-	cd ${instlinks} && rm -f ./samples &&				\
+	cd ${instlinks} && rm -rf ./${VJ_SHARE_DIR} &&			\
+          ${SHELL} ${scriptdir}/mkinstalldirs ./${VJ_SHARE_DIR}
+	cd ${instlinks}/${VJ_SHARE_DIR} && rm -f ./Data &&		\
+          ln -s ${VJROOT_ABS}/Data ./Data
+	cd ${instlinks}/${VJ_SHARE_DIR} && rm -f ./samples &&		\
           ln -s ${VJROOT_ABS}/samples ./samples
 	cd ${instlinks}/include && rm -f ./vjConfig.h &&		\
           ${LN_S} ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
@@ -783,15 +850,21 @@ ifndef NO_JAVA_GUI
 	cd ${instlinks}/bin && rm -f ./VjControl.jar &&			\
           ${LN_S} ${topdir}/GUI/VjControl.jar ./
 	cd ${instlinks}/bin && rm -f ./vjcontrol &&			\
-          ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
-	cd ${instlinks}/bin && rm -f ./vjcontrol1.1 &&			\
-          ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol1.1 ./vjcontrol1.1
+          sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
+              ${VJROOT_ABS}/GUI/vjcontrol > vjcontrol &&		\
+          chmod ${EXEC_PERMS} vjcontrol
 endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
 	@cd ${instlinks} && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
+else
+	@echo "---------------------------------------------------------------"
+	@echo 'You must now install VR Juggler and set %VJ_BASE_DIR% to:'
+	@echo "  ${prefix}"
+	@echo "---------------------------------------------------------------"
+endif
 
 # Remove the links in ${instlinks}.
 clean-links:
@@ -825,12 +898,13 @@ hier:
 	@echo "------------------------------------------------"
 	${SHELL} ${scriptdir}/mkinstalldirs ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${datadir}
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
@@ -1155,45 +1229,49 @@ install-headers:
 	@${MAKE} RECTARGET="install" recursive
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/vjConfig.h ${includedir}/vjConfig.h
-	@-rm -f ./vjConfig.tmp
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${topdir}/*.h ${includedir}
+          ${topdir}/vjDefines.h ${includedir}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${topdir}/vjParam.h ${includedir}
 
 # Install the sample applications.
 install-samples:
 	@echo "------------------------------------------------"
 	@echo "Installing sample applications"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/samples
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/samples
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
           --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/samples"	\
           --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."		\
-          --prefix="${prefix}/samples"
+          --prefix="${datadir}/samples"
 
 # Install the test programs.
 install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/test
-	${PERL} ${scriptdir}/makefiles-gen.pl --prefix="${prefix}/test"	\
-          --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/test"	\
-          --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/test
+	${PERL} ${scriptdir}/makefiles-gen.pl --mode="${FILE_PERMS}"	\
+          --prefix="${datadir}/test" --vars="${topdir}/VARS.pl"		\
+          --startdir="${top_srcdir}/test" ${_GROUP_OPT_PL} --srcdir="."
 
 # Install the user tools code.
 install-tools:
 	@echo "------------------------------------------------"
 	@echo "Installing user tools"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/tools	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/tools
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/tools
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
-          --prefix="${prefix}/tools" --vars="${topdir}/VARS.pl"		\
+          --prefix="${datadir}/tools" --vars="${topdir}/VARS.pl"	\
           --startdir="${top_srcdir}/tools" --mode="${FILE_PERMS}"	\
           ${_GROUP_OPT_PL} --srcdir="."
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
@@ -1204,9 +1282,11 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
+	${SHELL} ${scriptdir}/mkinstalldirs ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-dir.pl -i ${top_srcdir}/Data	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/Data
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/Data	\
+          -v "${topdir}/VARS.pl"
 
 # Install the Java-based config editor if possible.
 install-gui:
@@ -1220,11 +1300,15 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
+	@sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
+          ${VJROOT_ABS}/GUI/vjcontrol > vjcontrol
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
+          vjcontrol ${bindir}/vjcontrol && rm -f vjcontrol
 else
+	@sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
+          ${VJROOT_ABS}/GUI/vjcontrol.bat > vjcontrol.bat
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX} 			\
-          ${VJROOT_ABS}/GUI/vjcontrol.bat ${bindir}/vjcontrol.bat
+          vjcontrol.bat ${bindir}/vjcontrol.bat && rm -f vjcontrol.bat
 endif	# if OS_TYPE == UNIX
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/GUI/VjControl.jar ${bindir}

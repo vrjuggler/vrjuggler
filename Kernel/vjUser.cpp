@@ -66,10 +66,15 @@ bool vjUser::config(vjConfigChunk* chunk)
    // Initialize interocular distance
    mInterocularDist = chunk->getProperty("interocular_distance");
 
-   vjDEBUG(vjDBG_KERNEL,3) << "id: " << mUserId << "   Name:" << mName.c_str()
+   if(mInterocularDist == 0.0f)
+   {
+      vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << clrOutNORM(clrRED, "WARNING:") << "User: " << mName << " has interocular distance is set to 0.0f.  This is probably not what you wanted.\n" << vjDEBUG_FLUSH;
+   }
+
+   vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "id: " << mUserId << "   Name:" << mName.c_str()
                            << "   headPos:" << head_alias.c_str()
                            << "   interocular_distance:" << mInterocularDist
                            << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_KERNEL,3) << "\n" << vjDEBUG_FLUSH;
+
    return true;
 }

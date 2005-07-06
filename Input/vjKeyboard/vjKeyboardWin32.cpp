@@ -542,16 +542,20 @@ LONG APIENTRY MenuWndProc (HWND hWnd, UINT message, UINT wParam, LONG lParam)
 
 void vjKeyboardWin32::createWindowWin32 ()
 {
+   int root_height;
+
    InitCommonControls();
 
    //m_hInst = g_hInst;
    m_hInst = GetModuleHandle(NULL);    // Just try to get the application's handle
    MenuInit(m_hInst);
 
+   root_height = GetSystemMetrics(SM_CYSCREEN);
+
    /* Create the app. window */
    m_hWnd = CreateWindow(("Juggler Keyboard"), (instName), WS_OVERLAPPEDWINDOW,
-                         m_x, m_y, m_width, m_height, (HWND) NULL, NULL,
-                         m_hInst, (LPSTR) NULL);
+                         m_x, root_height - m_y - m_height, m_width, m_height,
+                         (HWND) NULL, NULL, m_hInst, (LPSTR) NULL);
    ShowWindow(m_hWnd,SW_SHOW);
    UpdateWindow(m_hWnd);
 

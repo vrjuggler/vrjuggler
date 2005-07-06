@@ -117,7 +117,7 @@ bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
             while (in.get(buffer[i]) && (buffer[i] != '"'))
                 ;
             buffer[i] = '\0';
-            vjDEBUG (vjDBG_ERROR,0) << "ERROR: Truncated string in config file: '"
+            vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Truncated string in config file: '"
                                     << buffer << "'\n" << vjDEBUG_FLUSH;
         }
         retval = true;

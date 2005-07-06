@@ -208,12 +208,14 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
                          const FLOCK::data_format bird_format,
                          const BIRDNET::run_mode run_mode,
                          const unsigned char report_rate,
+                         const double measurement_rate,
                          const unsigned int birds_requested)
-    : m_active(false), m_port(port), m_proto(proto), m_master(master),
+    : m_active(false), m_socket(-1), m_port(port), m_proto(proto),
+      m_master(master), m_seq_num(0), m_run_mode(run_mode),
       m_hemisphere(hemisphere), m_bird_format(bird_format),
-      m_run_mode(run_mode), m_report_rate(report_rate),
-      m_birds_requested(birds_requested), m_socket(-1), m_seq_num(0),
-      m_birds_active(0), m_unit_conv(1.0)
+      m_measurement_rate(measurement_rate), m_report_rate(report_rate),
+      m_birds_requested(birds_requested),
+      m_cur_mrate(0.0), m_birds_active(0), m_unit_conv(1.0)
 {
     union {
         char	c[sizeof(short)];
@@ -246,11 +248,17 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
 // Destructor.
 // ----------------------------------------------------------------------------
 aMotionStar::~aMotionStar () {
+    unsigned int i;
+
     if ( isActive() ) {
         stop();
     }
 
-    for ( unsigned int i = 0; i < m_birds.size(); i++ ) {
+    for ( i = 0; i < m_erc_vec.size(); i++ ) {
+        delete m_erc_vec[i];
+    }
+
+    for ( i = 0; i < m_birds.size(); i++ ) {
         delete m_birds[i];
     }
 }
@@ -355,8 +363,45 @@ aMotionStar::start () {
                         fprintf(stderr, "[aMotionStar] WARNING: Failed to "
                                 "read system status\n");
                     }
+                    // We only try to set the system status if we got a valid
+                    // copy of the current system status.
                     else {
                         fprintf(stderr, "[aMotionStar] Got system status\n");
+
+                        // As long as a positive, non-zero measurement rate is
+                        // given, send it to the MotionStar chassis as a system
+                        // configuration parameter.
+                        if ( m_measurement_rate > 0.0 ) {
+                            std::string str_rate;
+                            int status;
+
+                            // Bounds checking on the measumrent rate.
+                            if ( m_measurement_rate > 144.0 ) {
+                                m_measurement_rate = 144.0;
+                            }
+                            else if ( m_measurement_rate < 20.0 ) {
+                                m_measurement_rate = 20.0;
+                            }
+
+                            convertMeasurementRate(m_measurement_rate,
+                                                   str_rate);
+                            status = setSystemStatus(sys_status,
+                                                     sys_status->transmitterNumber,
+                                                     str_rate.c_str());
+
+                            if ( status != 0 ) {
+                                fprintf(stderr, "[aMotionStar] WARNING: Failed "
+                                        "to set system status\n");
+                            }
+                            else {
+                                // I use std::cerr here so that I don't have
+                                // to deal with fprintf(3)'s float vs. double
+                                // formatting.
+                                std::cerr << "[aMotionStar] Set measurement "
+                                          << "rate to " << m_measurement_rate
+                                          << std::endl;
+                            }
+                        }
                     }
 
                     // Configure each of the birds.
@@ -495,8 +540,11 @@ aMotionStar::sample () {
 
                 if ( rec_data_words != m_birds[bird]->data_words ) {
                     fprintf(stderr,
-                            "[aMotionStar] WARNING: Expecting %u data words "
-                            "from bird %u, got %u\n",
+                            "[aMotionStar] WARNING: Expecting %u data words from bird %u, got %u\n"
+                            "                       You may have requested more birds than you\n"
+                            "                       have connected, or the birds may not be\n"
+                            "                       connected sequentially\n"
+                            "                       Verify that your configuratoin is correct\n",
                             m_birds[bird]->data_words, bird, rec_data_words);
                 }
 
@@ -589,7 +637,7 @@ aMotionStar::stopData () {
 
             // If getRsp() did not return 0, print a warning message stating
             // that the data flow could not be stopped.
-            if ( status != 0 ) { 
+            if ( status != 0 ) {
                 fprintf(stderr,
                         "[aMotionStar] WARNING: Could not stop continuous data\n");
             }
@@ -942,7 +990,7 @@ aMotionStar::getMatrixAngles (const unsigned int bird, float angles[3]) const {
 void
 aMotionStar::getQuaternion (const unsigned int bird, float quat[4]) const {
     FLOCK::data_format format;
-    
+
     format = m_birds[bird]->format;
 
     // Read the quaternion parameters from the data block.  Refer to page 92
@@ -1048,7 +1096,7 @@ aMotionStar::getSystemStatus () {
         flock_number        = status_info->flockNumber;
         m_chassis_id        = status_info->chassisNumber;
         m_chassis_dev_count = status_info->chassisDevices;
-        m_data_rate         = convertDataRate(status_info->measurementRate);
+        m_cur_mrate         = convertMeasurementRate(status_info->measurementRate);
 
         // If this is the master chassis, get the extra system information
         // about all of the devices connected to the chassis.  This will tell
@@ -1056,6 +1104,7 @@ aMotionStar::getSystemStatus () {
         // vector.
 //        if ( m_master ) {
             unsigned char* fbb_devices;
+            FBB::Device* cur_dev;
 
             // Get the start address for the "array" of devices.  Element 0
             // of this "array" is the first byte after the end of the system
@@ -1063,21 +1112,32 @@ aMotionStar::getSystemStatus () {
             fbb_devices = &sys_status->buffer[sizeof(BIRDNET::SYSTEM_STATUS)];
 
             for ( unsigned char i = 0; i < flock_number; i++ ) {
-                // Create a new FBB Device object and put it in the m_birds
-                // vector.  Its initial values are set using the status byte
-                // for the device.
-                m_birds.push_back(new FBB::Device());
-                m_birds[i]->accessible = fbb_devices[i] & FBB::ACCESS;
-                m_birds[i]->running    = fbb_devices[i] & FBB::RUNNING;
-                m_birds[i]->has_sensor = fbb_devices[i] & FBB::SENSOR;
-                m_birds[i]->is_erc     = fbb_devices[i] & FBB::ERC;
+                // Create a new FBB Device object.
+                cur_dev = new FBB::Device();
 
-                if ( m_birds[i]->is_erc ) {
-                    m_birds[i]->ert3_present = fbb_devices[i] & FBB::ERT3;
-                    m_birds[i]->ert2_present = fbb_devices[i] & FBB::ERT2;
-                    m_birds[i]->ert1_present = fbb_devices[i] & FBB::ERT1;
-                    m_birds[i]->ert0_present = fbb_devices[i] & FBB::ERT0;
+                // The ERC device is not put into the m_birds vector.  We do
+                // not want to try reading data from it.
+                if ( fbb_devices[i] & FBB::ERC ) {
+                    m_erc_vec.push_back(cur_dev);
+
+                    cur_dev->ert3_present = fbb_devices[i] & FBB::ERT3;
+                    cur_dev->ert2_present = fbb_devices[i] & FBB::ERT2;
+                    cur_dev->ert1_present = fbb_devices[i] & FBB::ERT1;
+                    cur_dev->ert0_present = fbb_devices[i] & FBB::ERT0;
                 }
+                // Put all non-ERC devices in the m_birds vector.
+                else {
+                    m_birds.push_back(cur_dev);
+                }
+
+                cur_dev->accessible = fbb_devices[i] & FBB::ACCESS;
+                cur_dev->running    = fbb_devices[i] & FBB::RUNNING;
+                cur_dev->has_sensor = fbb_devices[i] & FBB::SENSOR;
+                cur_dev->is_erc     = fbb_devices[i] & FBB::ERC;
+
+                // This is how we handle remembering which device this is
+                // after this point.
+                cur_dev->addr = i + 1;
             }
 
             // If the number of birds connected to the server is less than
@@ -1098,22 +1158,26 @@ aMotionStar::getSystemStatus () {
 // Set the system status.
 // ----------------------------------------------------------------------------
 int
-aMotionStar::setSystemStatus (const unsigned char xmtr_num,
+aMotionStar::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
+                              const unsigned char xmtr_num,
                               const char data_rate[6])
 {
-    BIRDNET::SYSTEM_STATUS sys_status;
-
-    sys_status.transmitterNumber = xmtr_num;
+    if ( sys_status->transmitterNumber != xmtr_num ) {
+        sys_status->transmitterNumber = xmtr_num;
+        fprintf(stderr, "[aMotionStar] Settting active transmitter to %u\n",
+                xmtr_num);
+    }
 
     // Copy the contents of data_rate into the measuermentRate block.
     // XXX: This may be a little bit of overkill.  strncpy(3) is probably
     // sufficient.
     for ( int i = 0; i < 6; i++ ) {
-        sys_status.measurementRate[i] = data_rate[i];
+        sys_status->measurementRate[i] = data_rate[i];
     }
 
     // Set the system status by setting the status for device 0.
-    return setDeviceStatus(0, (char*) &sys_status, sizeof(sys_status));
+    return setDeviceStatus(0, (char*) sys_status,
+                           sizeof(BIRDNET::SYSTEM_STATUS));
 }
 
 // ----------------------------------------------------------------------------
@@ -1154,14 +1218,7 @@ aMotionStar::configureBirds () {
 
             // If we are still reading configuration information for
             // requested birds, handle the setup steps.
-            // XXX: This should use the < operator for the comparison becuase
-            // bird is 0-based and is not is not incremented until the end of
-            // the loop.  I don't know why this has to be <= since bird, but
-            // it may just be a requirement of how the birds are configured.
-            // I need to read the documentation in more detail to figure this
-            // out.  In any case, an additional hack is added at the end of
-            // the loop when m_birds_active is incrmented.
-            if ( bird <= m_birds_requested ) {
+            if ( bird < m_birds_requested ) {
                 unsigned char format;
 
                 // XXX: Eventually, we would like to have all birds get their
@@ -1273,9 +1330,9 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
     BIRDNET::DATA_PACKET* status;
     BIRDNET::SINGLE_BIRD_STATUS* bird_status;
 
-    // We request the status of (bird + 1) because the MotionStar devices are
-    // indexed from 1, but the driver indexes them from 0.
-    status = getDeviceStatus(bird + 1);
+    // The value in bird is the index into the m_birds vector.  Using that
+    // element from the vector, we get the actual FBB address.
+    status = getDeviceStatus(m_birds[bird]->addr);
 
     // If nothing was read, nothing can be returned.
     if ( status == NULL ) {
@@ -1372,9 +1429,9 @@ int
 aMotionStar::setBirdStatus (const unsigned char bird,
                             BIRDNET::SINGLE_BIRD_STATUS* status)
 {
-    // We set the status for (bird + 1) because the MotionStar devices are
-    // indexed from 1, but the driver indexes them from 0.
-    return setDeviceStatus(bird + 1, (char*) status,
+    // The value in bird is the index into the m_birds vector.  Using that
+    // entry, we get the actual FBB address.
+    return setDeviceStatus(m_birds[bird]->addr, (char*) status,
                            sizeof(BIRDNET::SINGLE_BIRD_STATUS));
 }
 
@@ -1462,7 +1519,7 @@ aMotionStar::setDeviceStatus (const unsigned char device, const char* buffer,
     memcpy((void*) &msg.buffer[0], (void*) buffer, buffer_size);
 
     // Send the constructed packet to the server.
-    status = sendMsg(&msg, total_size); 
+    status = sendMsg(&msg, total_size);
 
     if ( status != 0 ) {
         fprintf(stderr,
@@ -1580,7 +1637,7 @@ aMotionStar::toFloat (const unsigned char high_byte,
 // floating-point number representing the data rate.
 // ----------------------------------------------------------------------------
 double
-aMotionStar::convertDataRate (const unsigned char rate[6]) {
+aMotionStar::convertMeasurementRate (const unsigned char rate[6]) {
     double data_rate;
     char data_rate_a[7];
 
@@ -1600,6 +1657,19 @@ aMotionStar::convertDataRate (const unsigned char rate[6]) {
     data_rate = atof(data_rate_a) / 1000.0;
 
     return data_rate;
+}
+
+// ----------------------------------------------------------------------------
+// Convert the given double-precision floating-point number to a 6-byte array
+// of characters representing the data rate.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::convertMeasurementRate (const double rate, std::string& str_rate)
+{
+    char rate_a[7];
+
+    snprintf(rate_a, 7, "%06.0f", rate * 1000.0);
+    str_rate = rate_a;
 }
 
 // ----------------------------------------------------------------------------
@@ -1677,7 +1747,7 @@ aMotionStar::getRsp (void* packet, const size_t packet_size) {
     int status;
 
     // Get the packet from the server.
-    bytes = recv(m_socket, packet, packet_size, 0);
+    bytes = recvn(packet, packet_size);
 
     // Nothing was read.
     if ( bytes == 0 ) {
@@ -1697,6 +1767,44 @@ aMotionStar::getRsp (void* packet, const size_t packet_size) {
     }
 
     return status;
+}
+
+// ----------------------------------------------------------------------------
+// Read exactly packet_size bytes from the server.
+// ----------------------------------------------------------------------------
+ssize_t
+aMotionStar::recvn (void* packet, const size_t packet_size, const int flags) {
+    size_t count;
+    ssize_t bytes;
+
+    count = packet_size;
+
+    while ( count > 0 ) {
+        bytes = ::recv(m_socket, packet, packet_size, flags);
+
+        // Read error.
+        if ( bytes < 0 ) {
+            // Restart the read process if we were interrupted by the OS.
+            if ( errno == EINTR ) {
+                continue;
+            }
+            // Otherwise, we have an error situation, so return the value
+            // returned by recv(2).
+            else  {
+                break;
+            }
+        }
+        // May have read EOF, so return bytes read so far.
+        else if ( bytes == 0 ) {
+            bytes = packet_size - count;
+        }
+        else {
+            packet = (void*) ((char*) packet + bytes);
+            count -= bytes;
+        }
+    }
+
+    return bytes;
 }
 
 // ----------------------------------------------------------------------------
@@ -1753,7 +1861,7 @@ aMotionStar::printSystemStatus (const BIRDNET::SYSTEM_STATUS* status) {
               << (unsigned int) xmtr_num << "\n";
     std::cout << std::setw(pad_width_dot) << std::setfill('.')
               << "* Measurement rate " << " "
-              << convertDataRate(status->measurementRate) << "\n";
+              << convertMeasurementRate(status->measurementRate) << "\n";
     sprintf(rev_str, "%d.%d", status->softwareRevision[0],
             status->softwareRevision[1]);
     rev_num = atof(rev_str);

@@ -62,8 +62,9 @@ unix2dos ( ) {
     dnl # /tmp instead of //D/tmp if D: is the home drive.  The expression
     dnl # simply prepends "$HOMEDRIVE" (after evaluation) to the path.
     _drive_exp=['s/^\/\/\([[:alpha:]]\)/\1:/']
+    _drive_exp2=['s/^\/cygdrive\/\([[:alpha:]]\)/\1:/']
     _add_home_exp=["s/^\//$HOMEDRIVE\//"]
-    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_add_home_exp}"`
+    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_drive_exp2}" -e "${_add_home_exp}"`
 
     echo "${_retval}"
 }
@@ -155,6 +156,12 @@ AC_ARG_WITH(pfroot,
                           directory                       [default=/usr]],
             PFROOT="$withval", PFROOT='/usr')
 
+dnl # Define the version of Perfromer to use.
+dnl # The default is 2.4.
+AC_ARG_WITH(pfver,
+            [  --with-pfver=<VER>      Performer version to use        [default=2.4]],
+            PF_VER="$withval", PF_VER='2.4')
+
 dnl # Define the root directory for the OpenGL installation.
 dnl # The default is /usr.
 AC_ARG_WITH(oglroot,
@@ -218,11 +225,6 @@ AC_ARG_WITH(dir-perms,
             [  --with-dir-perms=<DIRECTORY PERMISSIONS>
                           Installed directory permisions  [default=0755]],
             DIR_PERMS="$withval", DIR_PERMS='0755')
-
-AC_ARG_WITH(version,
-            [  --with-version=<major>.<minor>.<micro>
-                          VR Juggler version number       [default=none]],
-            _vj_version="$withval", _vj_version='none')
 
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
@@ -375,16 +377,18 @@ case $target_os in
         dnl # $ABI.
         if test "$ABI" = "64" ; then
             DSOREGFILE='/usr/lib64/so_locations'
-            OPT_FLAGS='-O1 -OPT:Olimit=0'
+            OPT_FLAGS='-O2 -OPT:Olimit=0'
         elif test "$ABI" = "N32" ; then
             DSOREGFILE='/usr/lib32/so_locations'
-            OPT_FLAGS='-O1 -OPT:Olimit=0'
+            OPT_FLAGS='-O2 -OPT:Olimit=0'
         fi
 
         AR='${CXX}'
         ARFLAGS='-LANG:std -J6 -ar -WR,-v -o'
         CFLAGS="$CFLAGS -ansi"
+        CFLAGS_DYNLIB="$CFLAGS_DYNLIB -KPIC"
         CXXFLAGS="$CXXFLAGS -ansi -LANG:std"
+        CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -KPIC"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
@@ -558,6 +562,12 @@ case $target_os in
             VJ_ABI_CFG('WIN32')
         fi
 
+        dnl # There is no performance testing/monitoring code for Win32 (yet).
+        if test "x${_enable_perf}" != "xNONE" ; then
+            AC_MSG_WARN(*** Disabling performance testing on $host ***)
+            _enable_perf='NONE'
+        fi
+
         dnl # We have to use Win32 threads on Win32.
         if test "x${_thread_pkg}" != "xWIN32" ; then
             AC_MSG_WARN(*** WIN32 threads must be used on $host ***)
@@ -604,7 +614,7 @@ case $target_os in
         dnl # somewhat annoying names.
         case ${_sys_name} in
             dnl # Windows NT 4.0.
-            *NT-4.0)
+            *NT-[[45]].0)
                 PLATFORM='WinNT'
                 ;;
             dnl # Windows 95 and 98.
@@ -707,6 +717,18 @@ CXXFLAGS="$CXXFLAGS ${_EXTRA_FLAGS}"
 
 AC_PROG_CC
 AC_PROG_CXX
+
+dnl # If we are using GCC as the C compiler, the option for making
+dnl # position-independent code is -fPIC.
+if test "x$GCC" = "xyes" ; then
+    CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fPIC"
+fi
+
+dnl # If we are using GCC as the C++ compiler, the option for making
+dnl # position-independent code is -fPIC.
+if test "x$GXX" = "xyes" ; then
+    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fPIC"
+fi
 
 dnl # If we are using GCC as the compiler, we need to be using at least egcs
 dnl # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
@@ -859,7 +881,9 @@ AC_PROG_MAKE_SET
 
 dnl # While ranlib(1) is not part of the base IRIX installation, the VRAC SGIs
 dnl # have a ranlib(1) installed that does very bad things to ar archives.
-if test "$PLATFORM" = "IRIX" ; then
+dnl # We also do not want to use the Cygwin ranlib(1) with the Visual C++
+dnl # LINK.EXE command.
+if test "$PLATFORM" = "IRIX" -o "$OS_TYPE" = "Win32" ; then
     RANLIB=':'
 else
     AC_PROG_RANLIB
@@ -1186,23 +1210,34 @@ PERFORMER_API=''		dnl # 'Y' then we are using Performer
 dnl # Test for the Performer library if the Performer API was enabled.
 if test "x${_enable_pf_api}" = "xyes" ; then
     _vjsave_CFLAGS="$CFLAGS"
+    _vjsave_CPPFLAGS="$CPPFLAGS"
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
+    _vjsave_LIBS="$LIBS"
 
     dnl # Ensure that /usr/include and /usr/lib are not included multiple
     dnl # times if $PFROOT is "/usr".
     if test "x${PFROOT}" != "x/usr" ; then
-        INCLUDES="$INCLUDES -I\${PFROOT}/include"
-        LDFLAGS="-L\${PFROOT}/lib\${LIBBITSUF} $LDFLAGS"
+        CPPFLAGS="$CPPFLAGS -I${PFROOT}/include"
+        INCLUDES="$INCLUDES -I${PFROOT}/include"
+        LDFLAGS="-L${PFROOT}/lib${LIBBITSUF} $LDFLAGS"
     fi
 
     CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
 
+    dnl # We are using Performer 2.[23] as defined by the --with-pfver
+    dnl # command-line argument.
+    if test "x$PF_VER" = "x2.2" -o "x$PF_VER" = "x2.3" ; then
+        pf_ext='_ogl'
+    dnl # We are using Performer 2.4 or newer.
+    else
+        pf_ext=''
+    fi
+
     dnl # On Linux, we have to link all the Performer libraries AND libdl to
     dnl # get the check for pfInit() in libpf to compile.
     if test "$PLATFORM" = "Linux" ; then
-        _vjsave_LIBS="$LIBS"
-        LIBS="$LIBS -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -ldl"
+        LIBS="$LIBS -lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext -ldl"
     fi
 
     dnl # If the Performer library was found, add the API object files to the
@@ -1211,37 +1246,33 @@ if test "x${_enable_pf_api}" = "xyes" ; then
     AC_CHECK_LIB(pf, pfInit,
         AC_CHECK_HEADER(Performer/pf.h,
             [ PERFORMER_API="Y";
-              _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl';
+              LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext";
               AC_DEFINE(VJ_API_PERFORMER,) ],
             AC_MSG_WARN(*** Performer API will not be used (pf.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
 
-    dnl # Restore $LIBS to its original value if we are using Linux (it was
-    dnl # modified before the previous check block).  Also append -ldl to
-    dnl # $LIBS if the Performer library was found.
-    if test "$PLATFORM" = "Linux" ; then
-        LIBS="${_vjsave_LIBS}"
-
-        if test "x$PERFORMER_API" != "x" ; then
-            _PFOGLLIB="${_PFOGLLIB} -ldl"
-        fi
-    fi
-    
-    dnl # Under Irix users will need -limage to load .flt files 
-    dnl # referencing .sgi images
-    if test "$PLATFORM" = "IRIX" ; then
-            _PFOGLLIB="${_PFOGLLIB} -limage"
-    fi
-
-    dnl # Restore $CFLAGS now that we are done testing.
-    CFLAGS="${_vjsave_CFLAGS}"
-
+    if test "x$PERFORMER_API" != "x" ; then
+        case $PLATFORM in
+            dnl # Under IRIX users will need -limage to load .flt files 
+            dnl # referencing .sgi images.
+            IRIX)
+                LIBPERFORMER="$LIBPERFORMER -limage"
+                ;;
+            dnl Append -ldl to $LIBPERFORMER on Linux.
+            Linux)
+                LIBPERFORMER="$LIBPERFORMER -ldl"
+                ;;
+        esac
     dnl # No Performer API files were added, so restore $INCLUDES and $LDFLAGS
     dnl # so that no OpenGL stuff in included in them.
-    if test "x$PERFORMER_API" = "x" ; then
+    else
         INCLUDES="${_vjsave_INCLUDES}"
         LDFLAGS="${_vjsave_LDFLAGS}"
     fi
+
+    CFLAGS="${_vjsave_CFLAGS}"
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
+    LIBS="${_vjsave_LIBS}"
 fi
 
 dnl # -----------
@@ -1364,7 +1395,7 @@ AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
                  sys/time.h termios.h unistd.h sys/z8530.h		\
-                 sys/capability.h sys/stdsyms.h)
+                 sys/capability.h sys/stdsyms.h inttypes.h)
 
 dnl # All of the above header file checks may not be necessary ...
 
@@ -1416,14 +1447,16 @@ LIBS="${_vjsave_LIBS}"
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.
 if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    AC_CHECK_FUNCS(sinf sqrtf asinf acosf atan2f)
+    AC_CHECK_FUNCS(sinf cosf sqrtf asinf acosf atan2f fabsf)
 dnl # Otherwise, they are in libmath if they are anywhere.
 else
     AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
+    AC_CHECK_LIB(m, cosf, AC_DEFINE(HAVE_COSF))
     AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
     AC_CHECK_LIB(m, asinf, AC_DEFINE(HAVE_ASINF))
     AC_CHECK_LIB(m, acosf, AC_DEFINE(HAVE_ACOSF))
     AC_CHECK_LIB(m, atan2f, AC_DEFINE(HAVE_ATAN2F))
+    AC_CHECK_LIB(m, fabsf, AC_DEFINE(HAVE_FABSF))
 fi
 
 dnl # All of the above function checks may not be necessary ...
@@ -1489,32 +1522,6 @@ fi
 
 PATH="${_vjsave_PATH}"
 
-dnl # Construct the VR Juggler version using the getversion Perl script (if
-dnl # Perl is available).  This is never cached because the version number
-dnl # can change on a daily basis.  Thus, every time configure is run, there
-dnl # exists the potential for a new version number to be generated.
-dnl # XXX: Get this to work without Perl!
-if test "x${_vj_version}" != "xno" ; then
-    if test "x$PERL" != "xno" ; then
-        _recversion="$PERL $srcdir/release/scripts/record-version.pl"
-        _param_h_args="-i $srcdir/vjParam.h.in -o vjParam.h"
-
-        dnl # If no version number is given, try to extract the current
-        dnl # value from $srcdir/VERSION.
-        if test "x${_vj_version}" = "xnone" ; then
-            ${_recversion} -f "$srcdir/VERSION" ${_param_h_args}
-        dnl # Otherwise, use the given version number.
-        else
-            ${_recversion} -v "${_vj_version}" ${_param_h_args}
-        fi
-    else
-        AC_MSG_WARN(Cannot construct VR Juggler version without Perl)
-        cp "$srcdir/vjParam.h.in" vjParam.h
-    fi
-else
-    cp "$srcdir/vjParam.h.in" vjParam.h
-fi
-
 dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
@@ -1523,6 +1530,7 @@ EXTRA_LINK_FLAGS=''		dnl # For use in linking Juggler applications
 if test "$PLATFORM" = "IRIX" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 1183,3322 -w2"
+    EXTRA_LINK_FLAGS="-all"
 elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
     CFLAGS="$CFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
     CXXFLAGS="$CXXFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
@@ -1581,6 +1589,8 @@ dnl # listed are for use only in the Makefile.in's found in that tree unless
 dnl # otherwise noted.  They are used in the following way:
 dnl #
 dnl #     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
+dnl #     * APP_EXTRA_FLAGS_PF: Extra flags for the compiler and linker when
+dnl #       building Performer applications.
 dnl #     * APP_VJ_INC_AW: The include path for the AudioWorks header files.
 dnl #     * APP_VJ_INC_SL: The include path for hte SL header files.
 dnl #     * APP_VJ_LIBS_BASIC: The basic VR Juggler library.
@@ -1639,21 +1649,34 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         APP_VJ_LIBS_BEGIN="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler'
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST=''
-        APP_VJ_LIBS_BASIC_INST='-lJuggler'
+        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
+        APP_VJ_LIBS_BASIC_INST='-lJuggler -lJuggler_utils'
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END='-lm'
+    dnl # If we are compiling with GNU C++, we can pass -Bstatic and -Bdynamic
+    dnl # to the GNU linker to link only the VR Juggler libs statically.
+    elif test "x$GXX" = "xyes" ; then
+        APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END=''
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
+
+        APP_VJ_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
+        APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
+
+        APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
+        APP_EXTRA_LIBS_END="-lm"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
         APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler'
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
         APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
@@ -1662,16 +1685,25 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_END="-lm"
     fi
 
+    dnl # FreeBSD needs to use libcompat for linking.
+    if test "x$PLATFORM" = "xFreeBSD" ; then
+        APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
+    fi
+
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_EXTRA_LIBS_PF="$LIBPERFORMER"
+
+    if test "x$PLATFORM" = "xLinux" ; then
+        APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
+    fi
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
     APP_VJ_LIBS_END=''
-    APP_VJ_LIBS_BASIC='Juggler.lib'
+    APP_VJ_LIBS_BASIC='Juggler.lib Juggler_utils.lib'
     APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
     APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
     APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
@@ -1681,7 +1713,7 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_EXTRA_LIBS_PF="$LIBPERFORMER"
 fi
 
 dnl # Translate paths from UNIX-style to Win32.
@@ -1706,16 +1738,36 @@ else
     SAFE_VJROOT_ABS="$VJROOT_ABS"
 fi
 
+dnl # Set up some sed expressions that will help separate the share directory
+dnl # from the full installation prefix.
+_prefix_var_exp='s|^${prefix}/||'
+
+if test "x$prefix" = "xNONE" ; then
+    _prefix_exp="s|^$ac_default_prefix/||"
+else
+    _prefix_exp="s|^$prefix/||"
+fi
+
+dnl # Make a best-effort attempt to extract the actual share directory from
+dnl # the full installation prefix.  This is not foolproof, but it will work
+dnl # in almost all cases.  A person would have to be doing something
+dnl # malicious or foolish to make it break.
+VJ_SHARE_DIR=`echo "$datadir" | sed -e "${_prefix_var_exp}"`
+VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(SAFE_VJROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
+AC_SUBST(VJ_SHARE_DIR)
 
 AC_SUBST(AR)
 AC_SUBST(ARFLAGS)
 AC_SUBST(AR_NAME_FLAG)
 AC_SUBST(CFLAGS)
+AC_SUBST(CFLAGS_DYNLIB)
 AC_SUBST(CXXFLAGS)
+AC_SUBST(CXXFLAGS_DYNLIB)
 AC_SUBST(DEP_GEN_FLAG)
 AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
@@ -1776,6 +1828,7 @@ AC_SUBST(SL_INC)
 AC_SUBST(SL_LIB)
 
 AC_SUBST(APP_EXTRA_FLAGS)
+AC_SUBST(APP_EXTRA_FLAGS_PF)
 AC_SUBST(APP_EXTRA_INC_AW)
 AC_SUBST(APP_EXTRA_INC_SL)
 AC_SUBST(APP_VJ_LIBS_BEGIN)
@@ -1921,12 +1974,14 @@ AC_OUTPUT(Makefile
           Utils/Makefile
           samples/Makefile
           samples/ogl/Makefile
+          samples/ogl/analog/Makefile
           samples/ogl/combo/Makefile
           samples/ogl/cones/Makefile
           samples/ogl/cubes/Makefile
           samples/ogl/glove/Makefile
           samples/ogl/digitalGlove/Makefile
           samples/ogl/simpleGlove/Makefile
+          samples/ogl/texture/Makefile
           samples/ogl/torus/Makefile
           samples/ogl/wand/Makefile
           samples/pf/Makefile
@@ -1934,16 +1989,11 @@ AC_OUTPUT(Makefile
           samples/pf/pfNav/Makefile
           samples/tutorials/Makefile
           samples/tutorials/simpleInput/Makefile
-				  samples/tutorials/simplePf/Makefile
+          samples/tutorials/simplePf/Makefile
           test/Makefile 
           test/TestSuite/Makefile
-          test/CfgTest/Makefile 
-          test/GLWindow/Makefile
           test/Math/Makefile 
           test/Matrix/Makefile 
-          test/Performance/Makefile
-          test/Performance/analyzer/Makefile
-          test/Performance/perfdatabuffer-test/Makefile 
           test/Quat/Makefile
           test/Sync/Makefile 
           test/input/Makefile
@@ -1958,6 +2008,19 @@ AC_OUTPUT(Makefile
           release/mtree/VJ.test.dist
           release/mtree/VJ.tools.dist
           VARS.pl)
+
+dnl # Create a script for handy reconfiguration of a build tree.  It removes
+dnl # configure's cache and status files and then runs configure with the
+dnl # same arguments.
+: ${RECONFIG=./reconfig}
+
+echo "creating $RECONFIG"
+rm -f $RECONFIG
+cat > $RECONFIG <<RECONFIG_SCRIPT
+rm -f config.status config.cache config.log
+$0 $ac_configure_args
+RECONFIG_SCRIPT
+chmod 755 $RECONFIG
 
 cat <<BUILD_INFO
 

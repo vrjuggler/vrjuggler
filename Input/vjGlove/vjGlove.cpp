@@ -232,7 +232,7 @@ vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNu
    }
    else
    {
-      vjDEBUG( vjDBG_INPUT_MGR,0) << "ERROR: vjGlove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " vjGlove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vjDEBUG_FLUSH;
       vjASSERT( mGlovePos[devNum] != NULL );      // should be false in here
       return vjMatrix();
    }
