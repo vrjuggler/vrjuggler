@@ -81,7 +81,9 @@ typedef char* (*getNameFunc)(void);
  */
 typedef char* (*getVersionFunc)(void);
 
-vprSingletonImp(SoundFactory);
+// This singleton must be removed after the snx::sonix singleton in case the
+// code for a plug-in needs to be referenced by snx::sonix::~sonix().
+vprSingletonImpLifetime(SoundFactory, 2);
 
 SoundFactory::SoundFactory()
 {

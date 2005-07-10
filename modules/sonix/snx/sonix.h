@@ -311,6 +311,8 @@ private:
    /** @link dependency */
    /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
 
+   friend struct vpr::detail::Deleter<sonix>;
+
    vprSingletonHeader(sonix);
 };
 

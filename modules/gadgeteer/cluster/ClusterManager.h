@@ -64,6 +64,8 @@ class ClusterPlugin;
  */
 class GADGET_CLASS_API ClusterManager : public jccl::ConfigElementHandler
 {
+   friend struct vpr::detail::Deleter<ClusterManager>;
+
    vprSingletonHeader( ClusterManager );
 protected:
    /** Constructor is hidden, so no direct instantiation is allowed. */
