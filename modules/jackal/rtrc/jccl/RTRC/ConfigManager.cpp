@@ -53,7 +53,7 @@ namespace fs = boost::filesystem;
 namespace jccl
 {
 
-vprSingletonImp(ConfigManager);
+vprSingletonImpLifetime(ConfigManager, 10);
 
 
 ConfigManager::ConfigManager()

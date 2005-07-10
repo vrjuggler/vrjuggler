@@ -478,7 +478,6 @@ private:
    RemoteReconfig* mReconfigIf;
 
 protected:
-
    ConfigManager();
    virtual ~ConfigManager();
 
@@ -488,6 +487,8 @@ protected:
    // needed for windows:
    ConfigManager(const ConfigManager&) {;}
    void operator= (const ConfigManager&) {;}
+
+   friend struct vpr::detail::Deleter<ConfigManager>;
 
    vprSingletonHeader(ConfigManager);
 

@@ -178,7 +178,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.92.3], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
+VPR_PATH([1.1.2], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
 
 TWEEK_PATH_JAVA([0.19.2], ,
                 [AC_MSG_WARN([*** Tweek Java required for editor JavaBeans ***])
