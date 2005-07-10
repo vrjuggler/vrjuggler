@@ -43,56 +43,80 @@
 #define _VPR_SINGLETON_H_
 
 #include <vpr/vprConfig.h>
+
+#include <stdlib.h>
+
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
+
+#include <vpr/Util/detail/LifetimeTracker.h>
 
 // Double checked locking version
 
 #define vprSingletonHeader( TYPE )                   \
 public:                                              \
-   static TYPE* instance( void )
+   static TYPE* instance();                          \
+private:                                             \
+   static volatile TYPE* sInstance
 
 #define vprSingletonHeaderWithInitFunc( TYPE, INIT_FUNC_NAME ) \
 public:                                                        \
-   static TYPE* instance( void )
+   static TYPE* instance();                                    \
+private:                                                       \
+   static volatile TYPE* sInstance
+
+#define vprSingletonImp(TYPE) vprSingletonImpLifetime(TYPE, 1u)
 
 // NOTE: currently, func is thread safe after first call to instance().
 // if first call to instance happens multiple times simultaneously
 // then don't be surprised when something dies because of a mutex..
 // this bug can be caused by spawning two threads immediately after
 // entering main()
-#define vprSingletonImp( TYPE )                           \
-   TYPE* TYPE::instance( void )                           \
-   {                                                      \
-      static vpr::Mutex singleton_lock1;                  \
-      static TYPE* the_instance1 = NULL;                  \
-                                                          \
-      if (the_instance1 == NULL)                          \
-      {                                                   \
-         vpr::Guard<vpr::Mutex> guard( singleton_lock1 ); \
-         if (the_instance1 == NULL)                       \
-         { the_instance1 = new TYPE; }                    \
-      }                                                   \
-      return the_instance1;                               \
-   }
+#define vprSingletonImpLifetime(TYPE, LONGEVITY)                        \
+   TYPE* TYPE::instance()                                               \
+   {                                                                    \
+      static vpr::Mutex singleton_lock1;                                \
+                                                                        \
+      if ( sInstance == NULL )                                          \
+      {                                                                 \
+         vpr::Guard<vpr::Mutex> guard(singleton_lock1);                 \
+         if ( sInstance == NULL )                                       \
+         {                                                              \
+            sInstance = new TYPE;                                       \
+            vpr::SetLongevity((TYPE*) sInstance,                        \
+                              (unsigned int) LONGEVITY,                 \
+                              vpr::detail::Deleter<TYPE>::Delete);      \
+         }                                                              \
+      }                                                                 \
+      return (TYPE*) sInstance;                                         \
+   }                                                                    \
+                                                                        \
+   volatile TYPE* TYPE::sInstance = NULL;
 
-#define vprSingletonImpWithInitFunc( TYPE, INIT_FUNC_NAME )   \
-   TYPE* TYPE::instance( void )                               \
-   {                                                          \
-      static vpr::Mutex singleton_lock2;                      \
-      static TYPE* the_instance2 = NULL;                      \
-                                                              \
-      if (the_instance2 == NULL)                              \
-      {                                                       \
-         vpr::Guard<vpr::Mutex> guard( singleton_lock2 );     \
-         if (the_instance2 == NULL)                           \
-         {                                                    \
-            the_instance2 = new TYPE;                         \
-            the_instance2->INIT_FUNC_NAME();                  \
-         }                                                    \
-      }                                                       \
-      return the_instance2;                                   \
-   }
+#define vprSingletonImpWithInitFunc(TYPE, INIT_FUNC_NAME)       \
+   vprSingletonImpLifetimeWithInitFunc(TYPE, INIT_FUNC_NAME, 1u)
+
+#define vprSingletonImpLifetimeWithInitFunc(TYPE, INIT_FUNC_NAME, LONGEVITY) \
+   TYPE* TYPE::instance()                                               \
+   {                                                                    \
+      static vpr::Mutex singleton_lock2;                                \
+                                                                        \
+      if ( sInstance == NULL )                                          \
+      {                                                                 \
+         vpr::Guard<vpr::Mutex> guard(singleton_lock2);                 \
+         if ( sInstance == NULL )                                       \
+         {                                                              \
+            sInstance = new TYPE;                                       \
+            ((TYPE*) sInstance)->INIT_FUNC_NAME();                      \
+            vpr::SetLongevity((TYPE*) sInstance,                        \
+                              (unsigned int) LONGEVITY,                 \
+                              vpr::detail::Deleter<TYPE>::Delete);      \
+         }                                                              \
+      }                                                                 \
+      return (TYPE*) sInstance;                                         \
+   }                                                                    \
+                                                                        \
+   volatile TYPE* TYPE::sInstance = NULL;
 
 namespace vpr
 {
@@ -159,7 +183,7 @@ namespace vpr
       {
       }
    };
-}; // end of namespace vpr
+} // end of namespace vpr
 
 
 //

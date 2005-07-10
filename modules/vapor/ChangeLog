@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-07-10 patrickh Extended the vprSingleton* macros so that singleton objects
+                    are deleted on application exit and so that singletons have
+                    longevity.
+                    NEW VERSION: 1.1.2
 2005-06-09 patrickh Updated to support Windows 64-bit edition.
                     NEW VERSION: 1.1.1
 2005-06-06 patrickh VR Juggler 2.0 branch created.

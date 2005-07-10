@@ -1087,6 +1087,7 @@ AC_CONFIG_FILES([
    vpr/Thread/Makefile
    vpr/Perf/Makefile
    vpr/Util/Makefile
+   vpr/Util/detail/Makefile
    vpr/Util/md5/Makefile
    vpr/Util/uuid/Makefile
    test/Makefile

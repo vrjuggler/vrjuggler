@@ -129,11 +129,16 @@ protected:
    ThreadManager()
    {;}
 
+   ~ThreadManager()
+   {;}
+
    // These two have to be here because Visual C++ will try to make them
    // exported public symbols.  This causes problems because copying vpr::Mutex
    // objects is not allowed.
    ThreadManager(const ThreadManager&) {;}
    void operator=(const ThreadManager&) {;}
+
+   friend struct vpr::detail::Deleter<ThreadManager>;
 
    vprSingletonHeader(ThreadManager);
 };

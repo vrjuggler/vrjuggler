@@ -81,7 +81,7 @@ vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 */
 
 
-vprSingletonImpWithInitFunc(Debug, init);
+vprSingletonImpLifetimeWithInitFunc(Debug, init, 50);
 
 Debug::Debug()
    : mFile(NULL)

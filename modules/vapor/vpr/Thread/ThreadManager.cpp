@@ -50,7 +50,7 @@
 namespace vpr
 {
 
-vprSingletonImp(ThreadManager);
+vprSingletonImpLifetime(ThreadManager, 100);
 
 /**
  * Called when a thread has been added to the system.
