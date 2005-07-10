@@ -202,6 +202,8 @@ protected:
 
    void operator= (const DisplayManager&) {;}
 
+   friend struct vpr::detail::Deleter<DisplayManager>;
+
    vprSingletonHeader( DisplayManager );
 };
 

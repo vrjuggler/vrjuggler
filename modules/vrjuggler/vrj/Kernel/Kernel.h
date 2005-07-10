@@ -315,6 +315,8 @@ protected:
 
    virtual ~Kernel();
 
+   friend struct vpr::detail::Deleter<Kernel>;
+
    vprSingletonHeader( Kernel );
 };
 

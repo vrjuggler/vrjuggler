@@ -61,6 +61,8 @@ protected:
 
    virtual ~GlProcAppWrapper();
 
+   friend struct vpr::detail::Deleter<GlProcAppWrapper>;
+
    vprSingletonHeader(GlProcAppWrapper);
 
 public:

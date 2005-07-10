@@ -151,7 +151,7 @@ DPP_PROG_INSTALL
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.92.3], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
+VPR_PATH([1.1.2], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 JCCL_PATH_CXX([0.92.1], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
