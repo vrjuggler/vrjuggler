@@ -138,8 +138,6 @@ protected:
    ThreadManager(const ThreadManager&) {;}
    void operator=(const ThreadManager&) {;}
 
-   friend struct vpr::detail::Deleter<ThreadManager>;
-
    vprSingletonHeader(ThreadManager);
 };
 

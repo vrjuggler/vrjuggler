@@ -57,12 +57,14 @@
 public:                                              \
    static TYPE* instance();                          \
 private:                                             \
+   friend struct vpr::detail::Deleter<TYPE>;         \
    static volatile TYPE* sInstance
 
 #define vprSingletonHeaderWithInitFunc( TYPE, INIT_FUNC_NAME ) \
 public:                                                        \
    static TYPE* instance();                                    \
 private:                                                       \
+   friend struct vpr::detail::Deleter<TYPE>;                   \
    static volatile TYPE* sInstance
 
 #define vprSingletonImp(TYPE) vprSingletonImpLifetime(TYPE, 1u)
