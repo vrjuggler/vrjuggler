@@ -10,6 +10,11 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.0.0
+Released: July 5, 2005
+    New in this release:
+       * Support for Windows XP x64 Edition.
+
  Version: 1.0 Beta 3
 Released: June 7, 2005
 
