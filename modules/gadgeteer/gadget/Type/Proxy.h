@@ -142,33 +142,6 @@ namespace gadget
          mStupefied = newState;
       }
 
-      /**
-       * Is the proxy currently stupefied?
-       * If the device we are proxying does not exist, then this will return
-       * true.
-       *
-       * @deprecated The name of this method is spelled incorrectly, and it
-       *             will be removed in Gadgeteer 1.2.  Use isStupefied()
-       *             instead.
-       */
-      virtual bool isStupified() const
-      {
-         return isStupefied();
-      }
-
-      /**
-       * Sets the stupefication state of this proxy.
-       *
-       * @param newState The new state of stupefication.
-       *
-       * @deprecated The name of this method is spelled incorrectly, and it
-       *             will be removed in Gadgeteer 1.2.  Use stupefy() instead.
-       */
-      void stupify(const bool newState = true)
-      {
-         stupefy(newState);
-      }
-
       /** Returns the time of last update. */
       virtual vpr::Interval getTimeStamp() const = 0;
 
