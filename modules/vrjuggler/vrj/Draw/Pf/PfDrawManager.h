@@ -374,8 +374,6 @@ protected:
 
    virtual ~PfDrawManager();
 
-   friend struct vpr::detail::Deleter<PfDrawManager>;
-
    vprSingletonHeader(PfDrawManager);
 };
 

@@ -241,7 +241,6 @@ protected:
 
    void operator=(const GlDrawManager&) {;}
 
-   friend struct vpr::detail::Deleter<GlDrawManager>;
    vprSingletonHeader(GlDrawManager);
 };
 
