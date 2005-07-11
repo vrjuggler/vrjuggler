@@ -110,8 +110,6 @@ private:
    /** Default dependency checker. */
    DepChecker mDefaultChecker;
 
-   friend struct vpr::detail::Deleter<DependencyManager>;
-
    vprSingletonHeader(DependencyManager);
 
 }; // class DependencyManager

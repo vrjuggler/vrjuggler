@@ -488,8 +488,6 @@ protected:
    ConfigManager(const ConfigManager&) {;}
    void operator= (const ConfigManager&) {;}
 
-   friend struct vpr::detail::Deleter<ConfigManager>;
-
    vprSingletonHeader(ConfigManager);
 
 }; // class ConfigManager
