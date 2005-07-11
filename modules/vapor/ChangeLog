@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-07-11 patrickh Removed methods from vpr::LibraryLoader that were marked as
+                    deprecated in version 0.92.3.  Removed vpr::RefCountMemory,
+                    which was marked as deprecaetd in version 0.92.0.
+                    NEW VERSION: 1.1.4
 2005-07-11 patrickh Eliminated the need for users of vprSingletonHeader* to
                     declare vpr::detail::Deleter<T> as a friend.
                     NEW VERSION: 1.1.3

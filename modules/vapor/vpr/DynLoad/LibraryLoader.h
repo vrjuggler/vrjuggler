@@ -219,51 +219,6 @@ public:
     */
    static std::string makeFullDSOName(const std::string& dsoBaseName);
 
-   /**
-    * @deprecated This function is deprecated and will be removed in VPR 1.2.
-    *             Use findDSOAndCallEntryPoint() instead.
-    *
-    * @see findDSOAndCallEntryPoint
-    */
-   static vpr::ReturnStatus findDSOAndLookup(const std::string& dsoBaseName,
-                                             const std::vector<std::string>& searchPath,
-                                             const std::string& funcName,
-                                             boost::function1<bool, void*> callback,
-                                             vpr::LibraryPtr& dso)
-   {
-      return findDSOAndCallEntryPoint(dsoBaseName, searchPath, funcName,
-                                      callback, dso);
-   }
-
-   /**
-    * @deprecated This function is deprecated and will be removed in VPR 1.2.
-    *             Use findDSOAndCallEntryPoint() instead.
-    *
-    * @see findDSOAndCallEntryPoint
-    */
-   static vpr::ReturnStatus findDSOAndLookup(const std::string& dsoBaseName,
-                                             const std::vector<boost::filesystem::path>& searchPath,
-                                             const std::string& funcName,
-                                             boost::function1<bool, void*> callback,
-                                             vpr::LibraryPtr& dso)
-   {
-      return findDSOAndCallEntryPoint(dsoBaseName, searchPath, funcName,
-                                      callback, dso);
-   }
-
-   /**
-    * @deprecated This function is deprecated and will be removed in VPR 1.2.
-    *             Use callEntryPoint() instead.
-    *
-    * @see callEntryPoint
-    */
-   static vpr::ReturnStatus findEntryPoint(vpr::LibraryPtr dso,
-                                           const std::string& funcName,
-                                           boost::function1<bool, void*> callback)
-   {
-      return callEntryPoint(dso, funcName, callback);
-   }
-
 private:
    static void makeBoostFsVector(const std::vector<std::string>& strVec,
                                  std::vector<boost::filesystem::path>& boostFsVec);
