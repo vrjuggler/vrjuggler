@@ -9,7 +9,15 @@ For all versions:
 ===============================================================================
 
  Version: 1.0.0
-Released: <month> <day>, 2005
+Released: July 5, 2005
+    New in this release:
+       * Support for Windows XP x64 Edition.
+       * Memory leak fixes in thread initialization when using SPROC and
+         NSPR.
+
+    Recommended chnages when upgrading from all previous versions:
+       * Change uses of VPR_OS_Win32 to VPR_OS_Windows to aid in porting
+         code to the Win64 platform.
 
  Version: 1.0 Beta 3
 Released: June 7, 2005
