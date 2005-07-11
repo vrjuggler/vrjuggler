@@ -71,8 +71,6 @@ class DeviceFactory;
  */
 class GADGET_CLASS_API InputManager : public jccl::ConfigElementHandler
 {
-   friend struct vpr::detail::Deleter<InputManager>;
-
    vprSingletonHeader( InputManager );    // Make it a singleton
 
 protected:

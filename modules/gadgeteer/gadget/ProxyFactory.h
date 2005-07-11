@@ -198,8 +198,6 @@ private:
    /** List of all the proxy constructors. */
    std::vector< boost::shared_ptr<ProxyConstructorBase> > mConstructors;
 
-   friend struct vpr::detail::Deleter<ProxyFactory>;
-
    vprSingletonHeaderWithInitFunc(ProxyFactory,loadKnownProxies);
 };
 
