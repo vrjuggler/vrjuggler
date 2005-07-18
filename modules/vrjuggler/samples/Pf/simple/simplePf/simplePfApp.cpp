@@ -35,6 +35,24 @@
 
 using namespace vrj;
 
+simplePfApp::~simplePfApp()
+{
+   // Tear down the scene graph.
+   if ( NULL != mSceneScale && NULL != mLightGroup && NULL != mSun &&
+        NULL != mRootNode )
+   {
+      mSceneScale->removeChild(mLightGroup);
+      mSceneScale->removeChild(mModelRoot);
+      mRootNode->removeChild(mSceneScale);
+      mLightGroup->removeChild(mSun);
+
+      delete mSun;
+      delete mLightGroup;
+      delete mSceneScale;
+      delete mRootNode;
+   }
+}
+
 // ------- SCENE GRAPH ----
 // a standard organized interface for derived applications:
 //

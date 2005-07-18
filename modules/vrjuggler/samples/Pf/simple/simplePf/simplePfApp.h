@@ -65,10 +65,7 @@ public:
    {
    }
 
-   virtual ~simplePfApp()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual ~simplePfApp();
 
    /**
     * Called between pfInit and pfConfig.  This function allows the user
