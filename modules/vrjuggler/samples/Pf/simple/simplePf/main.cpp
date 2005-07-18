@@ -55,16 +55,16 @@ int main(int argc, char* argv[])
    simplePfApp* application = new simplePfApp();
 
    // --- CHECK FOR CORRECT ARGUMENTS ---- //
-   usage(argv);
-
    if ( argc < 2 )
    {
+      usage(argv);
       std::cout << "\n\n[ERROR!!!] you must supply a model database followed "
                 << "by VR Juggler config files." << std::endl;
       return 1;
    }
    else if ( argc < 3 )
    {
+      usage(argv);
       std::cout << "\n\n[ERROR!!!] you must supply VR Juggler config files "
                 << "after the model file." << std::endl;
       return 2;
@@ -89,6 +89,8 @@ int main(int argc, char* argv[])
    kernel->waitForKernelStop();
 
    delete application;
+
+   pfExit();
 
    return 0;
 }
