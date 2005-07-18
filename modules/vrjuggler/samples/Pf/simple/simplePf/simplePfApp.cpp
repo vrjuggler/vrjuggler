@@ -44,23 +44,25 @@ using namespace vrj;
 void simplePfApp::initScene()
 {
    // Load the scene
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "simplePfApp::initScene\n"
+                                             << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
    mRootNode      = new pfGroup;            // Root of our graph
    mSceneScale    = new pfDCS;
 
-   float scene_scale = 1.0f/gadget::PositionUnitConversion::ConvertToFeet;    // Scene uses feet as units
+   // Scene uses feet as units
+   float scene_scale = 1.0f / gadget::PositionUnitConversion::ConvertToFeet;
    mSceneScale->setScale(scene_scale);
 
    // Create the SUN light source
    mLightGroup = new pfGroup;
    mSun = new pfLightSource;
-   mLightGroup->addChild( mSun );
-   mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
-   mSun->setColor( PFLT_DIFFUSE,1.0f,1.0f,1.0f );
-   mSun->setColor( PFLT_AMBIENT,0.3f,0.3f,0.3f );
-   mSun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
+   mLightGroup->addChild(mSun);
+   mSun->setPos(0.3f, 0.0f, 0.3f, 0.0f);
+   mSun->setColor(PFLT_DIFFUSE, 1.0f,1.0f,1.0f);
+   mSun->setColor(PFLT_AMBIENT, 0.3f,0.3f,0.3f);
+   mSun->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
    mSun->on();
 
    // --- LOAD THE MODEL --- //
@@ -68,6 +70,6 @@ void simplePfApp::initScene()
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
    mRootNode->addChild(mSceneScale);
-   mSceneScale->addChild( mModelRoot );
+   mSceneScale->addChild(mModelRoot);
    mSceneScale->addChild(mLightGroup);
 }

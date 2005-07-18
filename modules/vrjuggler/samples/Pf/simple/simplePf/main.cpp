@@ -41,33 +41,38 @@ using namespace vrj;
 
 void usage(char** argv)
 {
-   std::cout<<"Usage:\n";
-   std::cout<<"      "<<argv[0]<<" <model_name> vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n";
+   std::cout << "Usage:\n"
+             << "      " << argv[0]
+             << " <model_name> vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]"
+             << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
-   Kernel* kernel = Kernel::instance(); // Declare a new Kernel
-   simplePfApp* application = new simplePfApp();  // Delcare an instance of my application
+   Kernel* kernel = Kernel::instance();    // Declare a new Kernel
+
+   // Delcare an instance of my application
+   simplePfApp* application = new simplePfApp();
 
    // --- CHECK FOR CORRECT ARGUMENTS ---- //
    usage(argv);
 
-   if (argc < 2)
+   if ( argc < 2 )
    {
-      usage( argv );
-      std::cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<std::flush;
+      std::cout << "\n\n[ERROR!!!] you must supply a model database followed "
+                << "by VR Juggler config files." << std::endl;
       return 1;
    }
-   else if (argc < 3)
+   else if ( argc < 3 )
    {
-      std::cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<std::flush;
+      std::cout << "\n\n[ERROR!!!] you must supply VR Juggler config files "
+                << "after the model file." << std::endl;
       return 2;
    }
 
    // --- GET MODEL NAME --- //
    std::string model_filename = argv[1];
-   std::cout << "Will load: " << model_filename.c_str() << "\n" << std::flush;
+   std::cout << "Will load: " << model_filename << "\n" << std::flush;
 
    // Load config files
    for ( int i = 2; i < argc; ++i )
@@ -75,11 +80,11 @@ int main(int argc, char* argv[])
       kernel->loadConfigFile(argv[i]);
    }
 
-   kernel->start();                            // Start the Kernel running
+   kernel->start();                        // Start the Kernel running
 
    // Configure the application
-   application->setModel( model_filename );
-   kernel->setApplication( application );    // Set up the kernel
+   application->setModel(model_filename);
+   kernel->setApplication(application);    // Set up the kernel
 
    kernel->waitForKernelStop();
 

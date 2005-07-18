@@ -56,13 +56,19 @@ using namespace vrj;
 class simplePfApp : public PfApp
 {
 public:
-   simplePfApp() :
-      mModelFileName(""), mLightGroup( NULL ), mSun(NULL), mRootNode( NULL ), mModelRoot( NULL )
+   simplePfApp()
+      : mModelFileName("")
+      , mLightGroup(NULL)
+      , mSun(NULL)
+      , mRootNode(NULL)
+      , mModelRoot(NULL)
    {
    }
 
-   virtual ~simplePfApp (void)
-   {;}
+   virtual ~simplePfApp()
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
     * Called between pfInit and pfConfig.  This function allows the user
