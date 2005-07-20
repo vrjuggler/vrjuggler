@@ -56,13 +56,16 @@ using namespace vrj;
 class simplePfApp : public PfApp
 {
 public:
-   simplePfApp() :
-      mModelFileName(""), mLightGroup( NULL ), mSun(NULL), mRootNode( NULL ), mModelRoot( NULL )
+   simplePfApp()
+      : mModelFileName("")
+      , mLightGroup(NULL)
+      , mSun(NULL)
+      , mRootNode(NULL)
+      , mModelRoot(NULL)
    {
    }
 
-   virtual ~simplePfApp (void)
-   {;}
+   virtual ~simplePfApp();
 
    /**
     * Called between pfInit and pfConfig.  This function allows the user
@@ -104,7 +107,6 @@ public:
    pfGroup*       mLightGroup;
    pfLightSource* mSun;                 /**< Sun to light the environment */
    pfGroup*       mRootNode;            /**< The root of the scene graph */
-   pfDCS*         mSceneScale;          /**< Scale for the root node */
    pfNode*        mModelRoot;           /**< Root of the model */
 };
 
