@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-20-2005 patrickh    Do not call pfExit() in vrj::PfDrawManager::closeAPI().
+                        Leave that up to application programmers to put at the
+                        end of their main() function instead.
+
 [2.0.0 released - 7.5.2005]====================================================
 Jul-07-2005 patrickh    NEW VERSION: 2.0.0
 Jun-27-2005 aronb       Ensure that we close each OpenGL window and its

@@ -1162,10 +1162,11 @@ void PfDrawManager::initAppGraph()
 
 void PfDrawManager::closeAPI()
 {
-   pfExit();
+   // NOTE: We do not call pfExit() here because it would cause the whole
+   // process to exit.  If users want to call pfExit(), they must do so on
+   // their own at whatever time is appropriate for their application.
    pfuExitUtil();
 }
-
 
 void PfDrawManager::updatePfProjections()
 {

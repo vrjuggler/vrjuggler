@@ -10,8 +10,22 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.0.1
+Released: ???
+
+    In general, there are no required application or configuration changes
+    to update from VR Juggler 2.0.0 to 2.0.1.  Nevertheless, all users
+    updating to 2.0.1 should read the following carefully:
+
+       * The VR Juggler Performer Draw Manager no longer calls pfExit()
+         when it is shut down.  Instead, users who want to ensure that
+         Performer cleans up its resources should put a call to pfExit()
+         at the very end of their application main() function.  The call
+         to pfExit() must be the last call in main().
+
  Version: 2.0.0
 Released: July 5, 2005
+
     Please refer to the following to get started with VR Juggler 2.0.0:
 
        http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
