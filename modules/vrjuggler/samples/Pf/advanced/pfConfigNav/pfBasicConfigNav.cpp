@@ -53,5 +53,10 @@ int main(int argc, char* argv[])
 
    delete application;
 
+   // Tell Performer to clean up its resources.  A side effect of this call
+   // is that the standard library exit() function will be called, so nothing
+   // after this call to pfExit() will be executed.
+   pfExit();
+
    return 0;
 }
