@@ -336,59 +336,59 @@ public class ConfigToolbar
       int result = fileChooser.showOpenDialog(getParentFrame());
       if (result == JFileChooser.APPROVE_OPTION)
       {
-         try
+         // Make sure the selected file actually exists
+         File file = fileChooser.getSelectedFile();
+         if ( ! file.exists() )
          {
-            // Make sure the selected file actually exists
-            File file = fileChooser.getSelectedFile();
-            if (! file.exists())
+            JOptionPane.showMessageDialog(getParentFrame(),
+                                          "You must open an existing file.",
+                                          "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return false;
+         }
+
+         ConfigBroker broker = new ConfigBrokerProxy();
+
+         // We want to automatically follow include directives. Keep track of
+         // all the URLs on a stack and read them one at a time in the order
+         // that we come across them.
+         Stack urls = new Stack();
+         urls.push(file);
+         while ( ! urls.isEmpty() )
+         {
+            // Expand env vars in the URL
+            File res_file = (File)urls.pop();
+            String res_name = expandEnvVars(res_file.getAbsolutePath());
+            System.out.println("Opening included resource: "+res_name);
+
+            try
             {
-               JOptionPane.showMessageDialog(getParentFrame(),
-                                             "You must open an existing file.",
-                                             "Error",
-                                             JOptionPane.ERROR_MESSAGE);
-               return false;
-            }
-
-            ConfigBroker broker = new ConfigBrokerProxy();
-
-            // We want to automatically follow include directives. Keep track of
-            // all the URLs on a stack and read them one at a time in the order
-            // that we come across them
-            Stack urls = new Stack();
-            urls.push(file);
-            while (! urls.isEmpty())
-            {
-               // Expand env vars in the URL
-               File res_file = (File)urls.pop();
-               String res_name = expandEnvVars(res_file.getAbsolutePath());
-               System.out.println("Opening included resource: "+res_name);
-
                FileDataSource data_source =
                   FileDataSource.open(res_name, getBroker().getRepository());
                broker.add(res_name, data_source);
                ctx.add(res_name);
 
-               // Look through the elements in the newly loaded file and see if
-               // any of them are include directives
+               // Look through the elements in the newly loaded file and
+               // see if any of them are include directives.
                java.util.List includes = data_source.getIncludes();
-               for (Iterator itr = includes.iterator(); itr.hasNext(); )
+               for ( Iterator itr = includes.iterator(); itr.hasNext(); )
                {
                   // Make sure the file reference it created relative to the
-                  // current file
-                  urls.push(new File(res_file.getParentFile().getAbsolutePath(),
-                                     (String)itr.next()));
+                  // current file.
+                  urls.push(
+                     new File(res_file.getParentFile().getAbsolutePath(),
+                              (String) itr.next())
+                  );
                }
             }
+            catch (IOException ioe)
+            {
+               showLoadErrorMessage(res_name, ioe);
+            }
+         }
 
-            setConfigContext(ctx);
-            return true;
-         }
-         catch (IOException ioe)
-         {
-            JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
-                                          "Error", JOptionPane.ERROR_MESSAGE);
-            ioe.printStackTrace();
-         }
+         setConfigContext(ctx);
+         return true;
       }
 
       return false;
