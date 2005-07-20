@@ -38,17 +38,14 @@ using namespace vrj;
 simplePfApp::~simplePfApp()
 {
    // Tear down the scene graph.
-   if ( NULL != mSceneScale && NULL != mLightGroup && NULL != mSun &&
-        NULL != mRootNode )
+   if ( NULL != mLightGroup && NULL != mSun && NULL != mRootNode )
    {
-      mSceneScale->removeChild(mLightGroup);
-      mSceneScale->removeChild(mModelRoot);
-      mRootNode->removeChild(mSceneScale);
+      mRootNode->removeChild(mLightGroup);
+      mRootNode->removeChild(mModelRoot);
       mLightGroup->removeChild(mSun);
 
       delete mSun;
       delete mLightGroup;
-      delete mSceneScale;
       delete mRootNode;
    }
 }
@@ -56,8 +53,8 @@ simplePfApp::~simplePfApp()
 // ------- SCENE GRAPH ----
 // a standard organized interface for derived applications:
 //
-//                         /-- mLightGroup -- mSun
-// mRootNode -- mSceneScale -- mModelRoot
+//            /-- mLightGroup -- mSun
+// mRootNode -- mModelRoot
 //
 void simplePfApp::initScene()
 {
@@ -66,12 +63,7 @@ void simplePfApp::initScene()
                                              << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
-   mRootNode      = new pfGroup;            // Root of our graph
-   mSceneScale    = new pfDCS;
-
-   // Scene uses feet as units
-   float scene_scale = 1.0f / gadget::PositionUnitConversion::ConvertToFeet;
-   mSceneScale->setScale(scene_scale);
+   mRootNode = new pfGroup;            // Root of our graph
 
    // Create the SUN light source
    mLightGroup = new pfGroup;
@@ -87,7 +79,6 @@ void simplePfApp::initScene()
    mModelRoot = pfdLoadFile(mModelFileName.c_str());
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
-   mRootNode->addChild(mSceneScale);
-   mSceneScale->addChild(mModelRoot);
-   mSceneScale->addChild(mLightGroup);
+   mRootNode->addChild(mModelRoot);
+   mRootNode->addChild(mLightGroup);
 }

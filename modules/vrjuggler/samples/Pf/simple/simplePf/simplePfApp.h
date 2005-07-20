@@ -107,7 +107,6 @@ public:
    pfGroup*       mLightGroup;
    pfLightSource* mSun;                 /**< Sun to light the environment */
    pfGroup*       mRootNode;            /**< The root of the scene graph */
-   pfDCS*         mSceneScale;          /**< Scale for the root node */
    pfNode*        mModelRoot;           /**< Root of the model */
 };
 
