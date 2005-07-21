@@ -64,6 +64,7 @@ typedef Bool               (*ISD_CONFIG_FILE_FN)    ( ISD_TRACKER_HANDLE, char *
 typedef Bool               (*ISD_AUX_OUTPUT_FN)     ( ISD_TRACKER_HANDLE, WORD, BYTE *, WORD );
 typedef Bool               (*ISD_UDP_BROADCAST_FN)  ( ISD_TRACKER_HANDLE, DWORD, ISD_TRACKER_DATA_TYPE *, ISD_CAMERA_DATA_TYPE * );
 typedef Bool               (*ISD_SYS_INFO_FN)       ( ISD_TRACKER_HANDLE, ISD_HARDWARE_INFO_TYPE * );
+typedef Bool               (*ISD_GET_HARDW_INFO_FN) ( ISD_TRACKER_HANDLE, ISD_STATION_HARDWARE_INFO_TYPE *, WORD );
 
 
 //==========================================================================================
@@ -89,6 +90,7 @@ ISD_CONFIG_FILE_FN    _ISD_ConfigureFromFile        = NULL;
 ISD_AUX_OUTPUT_FN     _ISD_AuxOutput                = NULL;
 ISD_UDP_BROADCAST_FN  _ISD_UdpBroadcastData         = NULL;
 ISD_SYS_INFO_FN       _ISD_GetSystemHardwareInfo    = NULL;
+ISD_GET_HARDW_INFO_FN _ISD_GetStationHardwareInfo   = NULL;
 
 
 //==========================================================================================
@@ -116,6 +118,7 @@ static DLL *ISD_LoadLib( const char *driver_name )
         _ISD_AuxOutput              = ( ISD_AUX_OUTPUT_FN )     dll_entrypoint( hLib, "ISD_AuxOutput" );
         _ISD_UdpBroadcastData       = ( ISD_UDP_BROADCAST_FN )  dll_entrypoint( hLib, "ISD_UdpBroadcastData" );
         _ISD_GetSystemHardwareInfo  = ( ISD_SYS_INFO_FN )       dll_entrypoint( hLib, "ISD_GetSystemHardwareInfo" );
+        _ISD_GetStationHardwareInfo = ( ISD_GET_HARDW_INFO_FN ) dll_entrypoint( hLib, "ISD_GetStationHardwareInfo" );
     }
     
     if( hLib == NULL )
@@ -149,6 +152,7 @@ static void ISD_FreeLib( void )
     _ISD_AuxOutput              = NULL;
     _ISD_UdpBroadcastData       = NULL;
     _ISD_GetSystemHardwareInfo  = NULL;
+    _ISD_GetStationHardwareInfo = NULL;
     
     if( hLib )
     {
@@ -447,6 +451,17 @@ ISD_GetSystemHardwareInfo(
 {
     if( !_ISD_GetSystemHardwareInfo ) return FALSE;
     return (*_ISD_GetSystemHardwareInfo)( handle, hwInfo );
+}
+
+
+//==========================================================================================
+DLLEXPORT Bool DLLENTRY 
+ISD_GetStationHardwareInfo( ISD_TRACKER_HANDLE handle, 
+                            ISD_STATION_HARDWARE_INFO_TYPE *info, 
+                            WORD stationNum ) 
+{
+    if( !_ISD_GetStationHardwareInfo ) return FALSE;
+    return (*_ISD_GetStationHardwareInfo)( handle, info, stationNum );
 }
 
 
