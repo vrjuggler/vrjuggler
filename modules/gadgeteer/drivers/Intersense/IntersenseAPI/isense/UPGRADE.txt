@@ -19,7 +19,7 @@ Files not imported:
 Imported by:
 
 	cvs import juggler/modules/gadgeteer/drivers/Intersense/IntersenseAPI/isense \
-		INTERSENSE ISENSE_SDK_v3_58
+		INTERSENSE ISENSE_SDK_v3_83
 
 Files off the vendor branch:
 	isense.c
