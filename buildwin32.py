@@ -1341,7 +1341,7 @@ def installMsvcRT(prefix):
       # Get *every* MSVC runtime DLL.  This list could be shortened at some
       # point if anyone cares to try.
       sys_dir = os.path.join(srcroot, 'System32')
-      dlls = glob.glob(sys_dir, 'msvc*.dll'))
+      dlls = glob.glob(sys_dir, 'msvc*.dll')
 
       for d in dlls:
          shutil.copy2(d, destdir)
