@@ -36,7 +36,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				RegisterOutput="FALSE"
-				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-gd-$(BOOST_VERSION).lib cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
+				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-gd-$(BOOST_VERSION).lib cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d.dll"
 				Version="1.0.0"
 				LinkIncremental="2"

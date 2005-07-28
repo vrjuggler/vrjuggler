@@ -1344,10 +1344,13 @@ def installMsvcRT(prefix):
 
       # Get *every* MSVC runtime DLL.  This list could be shortened at some
       # point if anyone cares to try.
-      dlls = glob.glob(os.path.join(srcroot, 'System32', 'msvc*.dll'))
+      sys_dir = os.path.join(srcroot, 'System32')
+      dlls = glob.glob(os.path.join(sys_dir, 'msvc*.dll'))
 
       for d in dlls:
          shutil.copy2(d, destdir)
+
+      shutil.copy2(os.path.join(sys_dir, 'dbghelp.dll'), destdir)
    except KeyError, ex:
       printStatus("WARNING: Could not install MSVC runtime DLLs")
       print ex
