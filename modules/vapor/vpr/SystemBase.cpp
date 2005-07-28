@@ -78,7 +78,7 @@ using boost::format;
 
 namespace
 {
-#if defined(VPR_OS_Windows)
+#if defined(VPR_OS_Windows) && defined(_DEBUG)
 // NOTE: There is no IA64 version of this function since the IA64 version
 // of Windows has been discontinued.
 #if defined(_M_IX86) || defined(_M_X64)
@@ -108,8 +108,8 @@ DWORD_PTR getProgramCounter()
 #  undef AXREG
 #  undef PTR_SIZE
 }
-#endif   /* defined(_M_IX86) || defined(_M_X64) */
 #pragma auto_inline(on)
+#endif   /* defined(_M_IX86) || defined(_M_X64) */
 
 // This is based on WheatyExceptionReport::GetLogicalAddress().  The
 // original can be found in the March 2002 issue of MSDN Magazine:
@@ -257,7 +257,7 @@ std::string SystemBase::getCallStack()
    free(strings);
 
    ret_stack = trace_stream.str();
-#elif defined(VPR_OS_Windows)
+#elif defined(VPR_OS_Windows) && defined(_DEBUG)
    // This will be used over and over again below.  In particular, we need
    // to be sure that SymInitialize() and SymCleanup() are called with the
    // same process handle value.
