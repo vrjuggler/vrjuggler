@@ -260,7 +260,8 @@ std::string SystemBase::getCallStack()
    free(strings);
 
    ret_stack = trace_stream.str();
-#elif defined(VPR_OS_Windows) && defined(_DEBUG)
+#elif defined(VPR_OS_Windows)
+#if defined(_DEBUG)
    // This will be used over and over again below.  In particular, we need
    // to be sure that SymInitialize() and SymCleanup() are called with the
    // same process handle value.
@@ -401,7 +402,12 @@ std::string SystemBase::getCallStack()
 
       SymCleanup(proc);
    }
-#endif
+#else   /* ! defined(_DEBUG) */
+   ret_stack = "Stack trace:\n"
+               "   <Call stack printing not supported>\n"
+               "   Use a debug build to get a stack trace\n";
+#endif  /* defined(_DEBUG) */
+#endif  /* defined(HAVE_BACKTRACE) */
 
    return ret_stack;
 }
