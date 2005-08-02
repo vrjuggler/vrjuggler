@@ -74,7 +74,10 @@
 #endif
 
 
+// Right now, Boost.Format is only used by Windows-specific code in this file.
+#if defined(VPR_OS_Windows)
 using boost::format;
+#endif
 
 namespace
 {
