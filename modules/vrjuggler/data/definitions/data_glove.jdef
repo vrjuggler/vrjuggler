@@ -5,7 +5,7 @@
       <abstract>false</abstract>
       <help>Configuration for a 5DT Data Glove device. This device makes use of seven analog data sources (0-6): thumb, index, middle, ring, pinky, (hand) pitch, (hand) roll. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more on 5DT DataGlove&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>glove_device</parent>
-      <parent>digital_device</parent>
+      <parent>analog_device</parent>
       <category>/Devices/Glove</category>
       <property valuetype="string" variable="false" name="port">
          <help>The serial port this device is connected to. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
