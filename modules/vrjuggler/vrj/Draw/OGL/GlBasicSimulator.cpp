@@ -47,6 +47,7 @@
 #include <vrj/Draw/OGL/GlDrawManager.h>
 
 #include <vrj/Display/DisplayManager.h>
+#include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
