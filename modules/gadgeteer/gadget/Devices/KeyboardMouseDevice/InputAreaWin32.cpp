@@ -547,13 +547,34 @@ gadget::Keys InputAreaWin32::VKKeyToKey(int vkKey)
       default: return gadget::KEY_UNKNOWN;
    }
 }
+
 void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
-                                   const gadget::EventType& type,
-                                   const MSG& msg)
+                                 const gadget::EventType& type,
+                                 const MSG& msg)
 {
-   // XXX: Missing modifier key information here...
-   // XXX: Missing ASCII character value here...
-   gadget::EventPtr key_event(new gadget::KeyEvent(type, key, 0, msg.time));
+   // Build up the modifier mask based on what modifier keys are currently
+   // pressed.
+   int mask(0);
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_SHIFT] )
+   {
+      mask |= gadget::SHIFT_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_CTRL] )
+   {
+      mask |= gadget::CTRL_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_ALT] )
+   {
+      mask |= gadget::ALT_MASK;
+   }
+
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+      << "[gadget::InputAreaWin32::addKeyEvent()] Key character '"
+      << (char) msg.wParam << "' with modifier mask " << mask << std::endl
+      << vprDEBUG_FLUSH;
+
+   gadget::EventPtr key_event(new gadget::KeyEvent(type, key, mask, msg.time,
+                                                   msg.wParam));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 
