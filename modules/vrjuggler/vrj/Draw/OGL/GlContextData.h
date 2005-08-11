@@ -132,7 +132,7 @@ public:
 
    /**
     * This function gives exclusive access to ALL copies of the
-    * context-specific data.
+    * context-specific data for contexts controlled by the current thread.
     *
     * @note THIS CAN NOT BE USED IN A DRAW PROCESS OR VERY BAD THINGS WILL
     *       HAPPEN.  Only for EXPERT use.
