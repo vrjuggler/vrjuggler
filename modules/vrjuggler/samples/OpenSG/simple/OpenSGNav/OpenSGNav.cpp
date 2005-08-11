@@ -188,7 +188,7 @@ void OpenSGNav::initScene()
    else
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[OpenSGNavGrab::initScene()] Loading '" << mFileToLoad << "' ..."
+         << "[OpenSGNav::initScene()] Loading '" << mFileToLoad << "' ..."
          << std::endl << vprDEBUG_FLUSH;
       mModelRoot =
          OSG::SceneFileHandler::the().read((OSG::Char8*) (mFileToLoad.c_str()));
