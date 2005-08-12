@@ -289,9 +289,9 @@ bool Intersense::sample()
                                      gmtl::Math::deg2Rad( mTracker.xRot( stationIndex ) ) );
          gmtl::setRot( cur_pos_samples[i].mPosData, euler );
          gmtl::setTrans( cur_pos_samples[i].mPosData,
-                            gmtl::Vec3f(mTracker.xPos( stationIndex )*3.2808,
-                                        mTracker.yPos( stationIndex )*3.2808,
-                                        mTracker.zPos( stationIndex )*3.2808) );
+                         gmtl::Vec3f(mTracker.xPos(stationIndex),
+                                     mTracker.yPos(stationIndex),
+                                     mTracker.zPos(stationIndex)) );
       }
       else
       {
