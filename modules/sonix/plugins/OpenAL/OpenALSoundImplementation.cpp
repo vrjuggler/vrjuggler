@@ -621,7 +621,6 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
          // Copy the memory in data into mBindLookup[alias].data.
          mBindLookup[alias].data.resize(size);
-         // XXX: The memory allocated for data by alutLoadWAVFile() is leaked.
          memcpy(&mBindLookup[alias].data[0], data, size);
 
          // create a new buffer to put our loaded data into...
@@ -656,6 +655,8 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // put the data into an OpenAL buffer
          alBufferData(bufferID, format, &(mBindLookup[alias].data[0]),
                       mBindLookup[alias].data.size(), freq);
+         alutUnloadWAV(format, data, size, freq);
+
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
