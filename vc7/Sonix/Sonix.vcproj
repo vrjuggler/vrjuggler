@@ -119,9 +119,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\modules\sonix\snx\FileIO.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\sonix\snx\SoundFactory.cpp">
 			</File>
 			<File
@@ -151,9 +148,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\Endian.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\sonix\snx\FileIO.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\ISoundImplementation.h">
