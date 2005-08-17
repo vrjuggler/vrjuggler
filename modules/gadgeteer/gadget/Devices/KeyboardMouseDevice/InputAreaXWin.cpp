@@ -312,7 +312,6 @@ void InputAreaXWin::handleEvent(::XEvent& event)
             addMouseButtonEvent(gadget::MBUTTON4,
                                 gadget::MouseButtonPressEvent,
                                 event.xbutton);
-            std::cout << "Button 4 down" << std::endl;
             break;
          case Button5:
             mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 1;
@@ -320,7 +319,6 @@ void InputAreaXWin::handleEvent(::XEvent& event)
             addMouseButtonEvent(gadget::MBUTTON5,
                                 gadget::MouseButtonPressEvent,
                                 event.xbutton);
-            std::cout << "Button 5 down" << std::endl;
             break;
          }
 
