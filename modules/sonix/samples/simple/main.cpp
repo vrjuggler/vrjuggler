@@ -47,7 +47,7 @@
 #include <boost/filesystem/exception.hpp>
 
 #include <snx/sonix.h> 
-#include <snx/FileIO.h>
+
 
 int main( int argc, char* argv[] )
 {
