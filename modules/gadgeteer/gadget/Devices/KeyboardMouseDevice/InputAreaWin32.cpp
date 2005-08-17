@@ -552,6 +552,19 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
                                  const gadget::EventType& type,
                                  const MSG& msg)
 {
+   // Windows reports multiple key-down events when a modifier key is held
+   // down, but the X Window System does not. For consistency, we ignore
+   // repeated key-down events for modifier keys on Windows.
+   // XXX: Putting this here is a bit of a hack, but the conditional logic
+   // is much cleaner in this form.
+   if ( type == gadget::KeyPressEvent &&
+        (key == gadget::KEY_SHIFT || key == gadget::KEY_ALT ||
+         key == gadget::KEY_CTRL) &&
+        mKeyboardMouseDevice->mRealkeys[key] != 0 )
+   {
+      return;
+   }
+
    // Build up the modifier mask based on what modifier keys are currently
    // pressed.
    int mask(0);
