@@ -41,24 +41,13 @@
 
 #include <snx/PluginConfig.h>
 
-#include <vector>
 #include <string>
 #include <iostream>
-#include <stdio.h> /* for FILE */
 #include <boost/concept_check.hpp>
-
-#include <gmtl/Math.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/MatrixOps.h>
-#include <gmtl/VecOps.h>
-#include <gmtl/Generate.h>
-#include <gmtl/Xforms.h>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
-#include <snx/FileIO.h>
 #include <snx/SoundImplementation.h>
 #include <snx/SoundInfo.h>
 #include <snx/SoundFactory.h>

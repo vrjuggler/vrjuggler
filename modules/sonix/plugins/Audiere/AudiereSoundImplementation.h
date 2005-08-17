@@ -49,12 +49,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/MatrixOps.h>
-#include <gmtl/VecOps.h>
-#include <gmtl/Xforms.h>
 
 #include <audiere.h>
 
