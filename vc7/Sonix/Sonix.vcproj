@@ -37,7 +37,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix_d.dll"
-				Version="1.1.1"
+				Version="1.1.2"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
@@ -89,7 +89,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix.dll"
-				Version="1.1.1"
+				Version="1.1.2"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
@@ -118,9 +118,6 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
-			<File
-				RelativePath="..\..\modules\sonix\snx\FileIO.cpp">
-			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\SoundFactory.cpp">
 			</File>
@@ -151,9 +148,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\Endian.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\sonix\snx\FileIO.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\ISoundImplementation.h">
