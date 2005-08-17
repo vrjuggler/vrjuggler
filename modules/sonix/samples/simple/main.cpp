@@ -42,6 +42,10 @@
 #include <iostream>
 
 #include <unistd.h>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/exception.hpp>
+
 #include <snx/sonix.h> 
 #include <snx/FileIO.h>
 
@@ -63,12 +67,23 @@ int main( int argc, char* argv[] )
       return 0;
    }
 
-   if (!snx::FileIO::fileExists( filename.c_str() ))
+   try
    {
-      std::cout << "File not found: " << filename << "\n" << std::flush;
-      return 0;
+      boost::filesystem::path file_path(filename, boost::filesystem::native);
+      if ( ! boost::filesystem::exists(file_path) )
+      {
+         std::cout << "File not found: " << filename << "\n" << std::flush;
+         return 0;
+      }
    }
-   
+   catch (boost::filesystem::filesystem_error& ex)
+   {
+      std::cerr << "File system exception caught while trying to load\n"
+                << filename << std::endl;
+      std::cerr << ex.what() << std::endl;
+      return -1;
+   }
+
    snx::SoundInfo si;
    si.filename = filename;
    si.datasource = snx::SoundInfo::FILESYSTEM;
