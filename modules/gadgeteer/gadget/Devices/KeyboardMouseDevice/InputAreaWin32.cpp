@@ -570,11 +570,13 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
       << "[gadget::InputAreaWin32::addKeyEvent()] Key character '"
-      << (char) msg.wParam << "' with modifier mask " << mask << std::endl
-      << vprDEBUG_FLUSH;
+      << (char) tolower(msg.wParam) << "' with modifier mask " << mask
+      << std::endl << vprDEBUG_FLUSH;
 
+   // The X Window System returns ASCII key characters as lowercase letters,
+   // so we force Windows to do the same for consistency.
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, mask, msg.time,
-                                                   msg.wParam));
+                                                   tolower(msg.wParam)));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 
