@@ -50,6 +50,12 @@
 #  define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
 #endif
 
+#ifndef WM_MOUSEWHEEL
+// Message ID for IntelliMouse wheel
+#define WM_MOUSEWHEEL WM_MOUSELAST + 1
+#endif
+
+
 namespace gadget
 {
 
@@ -344,6 +350,67 @@ void InputAreaWin32::updKeys(const MSG& message)
                              gadget::MouseButtonReleaseEvent, message);
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "RightButtonUp\n" << vprDEBUG_FLUSH;
+         break;
+
+      // Mouse wheel events are interpreted as the pressing and releasing of
+      // either Button 4 or Button 5. This is the behavior with the X Window
+      // System.
+      case WM_MOUSEWHEEL:
+         // A positive value in the Z delta indicates that the wheel
+         // was rotated forward. We interpret this as Button 4 to be
+         // consistent with the X Window System.
+         if ( ((short) HIWORD(message.wParam)) > 0 )
+         {
+            // First, we treat this event as a mouse button press.
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 1;
+            mKeyboardMouseDevice->mKeys[gadget::MBUTTON4] += 1;
+
+            addMouseButtonEvent(gadget::MBUTTON4,
+                                gadget::MouseButtonPressEvent, message);
+
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+               << "Button 4 down (Scroll wheel forward)\n"
+               << vprDEBUG_FLUSH;
+
+            // Then we treat it as a mouse button release. Again, this is
+            // to be consistent with the behavior seen with X11.
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 0;
+            mKeyboardMouseDevice->mKeys[gadget::MBUTTON4] += 1;
+
+            addMouseButtonEvent(gadget::MBUTTON4,
+                                gadget::MouseButtonReleaseEvent, message);
+
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+               << "Button 4 up\n" << vprDEBUG_FLUSH;
+         }
+         // A negative value in the Z delta indicates that the wheel
+         // was rotated backward. We interpret this as Button 5 to be
+         // consistent with the X Window System.
+         else
+         {
+            // First, we treat this event as a mouse button press.
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 1;
+            mKeyboardMouseDevice->mKeys[gadget::MBUTTON5] += 1;
+
+            addMouseButtonEvent(gadget::MBUTTON5,
+                                gadget::MouseButtonPressEvent, message);
+
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+               << "Button 5 down (Scroll wheel backward)\n"
+               << vprDEBUG_FLUSH;
+
+            // Then we treat it as a mouse button release. Again, this is
+            // to be consistent with the behavior seen with X11.
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 0;
+            mKeyboardMouseDevice->mKeys[gadget::MBUTTON5] += 1;
+
+            addMouseButtonEvent(gadget::MBUTTON5,
+                                gadget::MouseButtonReleaseEvent, message);
+
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+               << "Button 5 up\n" << vprDEBUG_FLUSH;
+         }
+
          break;
 
          // mouse movement
