@@ -547,13 +547,49 @@ gadget::Keys InputAreaWin32::VKKeyToKey(int vkKey)
       default: return gadget::KEY_UNKNOWN;
    }
 }
+
 void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
-                                   const gadget::EventType& type,
-                                   const MSG& msg)
+                                 const gadget::EventType& type,
+                                 const MSG& msg)
 {
-   // XXX: Missing modifier key information here...
-   // XXX: Missing ASCII character value here...
-   gadget::EventPtr key_event(new gadget::KeyEvent(type, key, 0, msg.time));
+   // Windows reports multiple key-down events when a modifier key is held
+   // down, but the X Window System does not. For consistency, we ignore
+   // repeated key-down events for modifier keys on Windows.
+   // XXX: Putting this here is a bit of a hack, but the conditional logic
+   // is much cleaner in this form.
+   if ( type == gadget::KeyPressEvent &&
+        (key == gadget::KEY_SHIFT || key == gadget::KEY_ALT ||
+         key == gadget::KEY_CTRL) &&
+        mKeyboardMouseDevice->mRealkeys[key] != 0 )
+   {
+      return;
+   }
+
+   // Build up the modifier mask based on what modifier keys are currently
+   // pressed.
+   int mask(0);
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_SHIFT] )
+   {
+      mask |= gadget::SHIFT_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_CTRL] )
+   {
+      mask |= gadget::CTRL_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_ALT] )
+   {
+      mask |= gadget::ALT_MASK;
+   }
+
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+      << "[gadget::InputAreaWin32::addKeyEvent()] Key character '"
+      << (char) tolower(msg.wParam) << "' with modifier mask " << mask
+      << std::endl << vprDEBUG_FLUSH;
+
+   // The X Window System returns ASCII key characters as lowercase letters,
+   // so we force Windows to do the same for consistency.
+   gadget::EventPtr key_event(new gadget::KeyEvent(type, key, mask, msg.time,
+                                                   tolower(msg.wParam)));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 
