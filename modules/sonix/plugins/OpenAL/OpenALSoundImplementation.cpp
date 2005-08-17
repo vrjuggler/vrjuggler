@@ -44,7 +44,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <stdio.h>// for FILE
 
 #if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
 #  include <al.h>
@@ -605,34 +604,25 @@ void OpenALSoundImplementation::bind( const std::string& alias )
                                           std::string("... \n"),
                                        std::string("\n"));
 
-         // This file loading bit is complicated because only the Linux version
-         // of OpenAL defines AL_FORMAT_WAVE_EXT.  Other platforms set the
-         // format specifier in alut helper functions.
          ALenum format;
-#if defined(VPR_OS_Windows) || defined(VPR_OS_Darwin)
          ALvoid* data;
          ALsizei size, freq;
 
-         // Macintosh does not have the loop parameter in its
-         // alutLoadWAVFile().
-#if defined(VPR_OS_Windows)
+         // The Mac OS X version of alutLoadWAVFile() does not have the loop
+         // parameter.
+#if defined(VPR_OS_Darwin)
+         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
+                         &size, &freq);
+#else
          ALboolean loop;
          alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
                          &size, &freq, &loop);
-#elif defined(VPR_OS_Darwin)
-         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
-                         &size, &freq);
 #endif
 
          // Copy the memory in data into mBindLookup[alias].data.
          mBindLookup[alias].data.resize(size);
          // XXX: The memory allocated for data by alutLoadWAVFile() is leaked.
          memcpy(&mBindLookup[alias].data[0], data, size);
-#else
-         format = AL_FORMAT_WAVE_EXT;
-         snx::FileIO::fileLoad(soundInfo.filename.c_str(),
-                               mBindLookup[alias].data);
-#endif
 
          // create a new buffer to put our loaded data into...
          alGenBuffers( 1, &bufferID );
@@ -665,7 +655,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
          // put the data into an OpenAL buffer
          alBufferData(bufferID, format, &(mBindLookup[alias].data[0]),
-                      mBindLookup[alias].data.size(), 0);
+                      mBindLookup[alias].data.size(), freq);
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
