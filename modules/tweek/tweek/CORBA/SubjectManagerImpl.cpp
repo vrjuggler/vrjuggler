@@ -41,6 +41,7 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/UnknownHostException.h>
 
 #include <tweek/Util/Debug.h>
 #include <tweek/CORBA/CorbaManager.h>
@@ -277,12 +278,13 @@ void SubjectManagerImpl::initInfoMap()
    vpr::InetAddr::getLocalHost(local_addr);
 
    std::string hostname;
-
-   if ( local_addr.getHostname(hostname).success() )
+   
+   try
    {
+      local_addr.getHostname(hostname);
       mInfoMap["Hostname"] = hostname;
    }
-   else
+   catch (vpr::UnknownHostException& ex)
    {
       mInfoMap["Hostname"] = std::string("Unknown");
    }
