@@ -76,7 +76,7 @@ const DigitalData Digital::getDigitalData(int devNum)
    }
 }
 
-vpr::ReturnStatus Digital::writeObject(vpr::ObjectWriter* writer)
+void Digital::writeObject(vpr::ObjectWriter* writer)
 {
    writer->beginTag(Digital::getInputTypeName());
    //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
@@ -112,11 +112,9 @@ vpr::ReturnStatus Digital::writeObject(vpr::ObjectWriter* writer)
       mDigitalSamples.unlock();
    }
    writer->endTag();
-
-   return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus Digital::readObject(vpr::ObjectReader* reader)
+void Digital::readObject(vpr::ObjectReader* reader)
 {
       //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
@@ -174,8 +172,6 @@ vpr::ReturnStatus Digital::readObject(vpr::ObjectReader* reader)
    mDigitalSamples.swapBuffers();
 
    reader->endTag();
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 } // End of gadget namespace

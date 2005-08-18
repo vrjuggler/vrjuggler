@@ -70,7 +70,7 @@ const StringData String::getStringData(int devNum)
    }
 }
 
-vpr::ReturnStatus String::writeObject(vpr::ObjectWriter* writer)
+void String::writeObject(vpr::ObjectWriter* writer)
 {
    writer->beginTag(String::getInputTypeName());
    SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
@@ -105,11 +105,9 @@ vpr::ReturnStatus String::writeObject(vpr::ObjectWriter* writer)
       mStringSamples.unlock();
    }
    writer->endTag();
-
-   return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus String::readObject(vpr::ObjectReader* reader)
+void String::readObject(vpr::ObjectReader* reader)
 {
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
@@ -165,8 +163,6 @@ vpr::ReturnStatus String::readObject(vpr::ObjectReader* reader)
    mStringSamples.swapBuffers();
 
    reader->endTag();
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 } // End of gadget namespace

@@ -342,8 +342,13 @@ vpr::ReturnStatus MotionStarStandalone::start()
    }
 
    // If the socket could not be opened, we are in trouble.
-   if ( ! m_socket->open().success() )
+   try
    {
+      m_socket->open();
+   }
+   catch (vpr::IOException& ex)
+   {
+      // TODO: setCause(ex)
       std::stringstream msg_stream;
       msg_stream << "Could not open "
                  << ((m_proto == BIRDNET::UDP) ? "datagram" : "stream")
@@ -355,7 +360,7 @@ vpr::ReturnStatus MotionStarStandalone::start()
       throw mstar::NetworkException(msg_stream.str());
    }
    // Otherwise, keep on truckin'.
-   else
+   
    {
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "[MotionStarStandalone] "
@@ -365,13 +370,18 @@ vpr::ReturnStatus MotionStarStandalone::start()
       // Connect to the server.  If this is a datagram socket, it will
       // set the default recipient of all future packets, so this is a
       // valid, safe operation regardless of the protocol being used.
-      if ( ! m_socket->connect().success() )
+      try
       {
+         m_socket->connect();
+      }
+      catch (vpr::IOException& ex)
+      {
+         // TODO: setCause(ex)
          // XXX: Use VPR's error message stuff for this one...
          perror("[MotionStarStandalone] Cannot connect to server");
          throw mstar::ConnectException(std::string("Cannot connect to server"));
       }
-      else
+      
       {
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "[MotionStarStandalone] Connected to server" << std::endl
@@ -2040,13 +2050,15 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
    throw(mstar::NetworkWriteException, mstar::NoDataWrittenException)
 {
    vpr::Uint32 bytes;
-   vpr::ReturnStatus status;
+   vpr::ReturnStatus status(vpr::ReturnStatus::Succeed);
 
    // Send the packet to the server.
-   status = m_socket->send(packet, packetSize, bytes);
-
+   try
+   {
+      m_socket->send(packet, packetSize, bytes);
+   }
    // An error occurred while trying to send the packet.
-   if ( status.failure() )
+   catch (vpr::IOException& ex)
    {
       std::string msg("Could not send message to ");
       msg += m_address.getAddressString();
@@ -2055,8 +2067,9 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
          << "[MotionStarStandalone] " << msg << std::endl << vprDEBUG_FLUSH;
       throw mstar::NetworkWriteException(msg);
    }
+   
    // Nothing was sent.
-   else if ( bytes == 0 )
+   if ( bytes == 0 )
    {
       std::string msg("Sent 0 bytes to ");
       msg += m_address.getAddressString();
@@ -2091,13 +2104,15 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
    throw(mstar::NetworkReadException, mstar::NoDataReadException)
 {
    vpr::Uint32 bytes;
-   vpr::ReturnStatus status;
+   vpr::ReturnStatus status(vpr::ReturnStatus::Succeed);
 
    // Get the packet from the server.
-   status = m_socket->recvn(packet, packetSize, bytes);
-
+   try
+   {
+      m_socket->recvn(packet, packetSize, bytes);
+   }
    // An error occurred while trying to receive the packet.
-   if ( status.failure() )
+   catch (vpr::IOException& ex)
    {
       std::string msg("Could not read message from ");
       msg += m_address.getAddressString();
@@ -2105,8 +2120,9 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
          << "[MotionStarStandalone] " << msg  << std::endl << vprDEBUG_FLUSH;
       throw mstar::NetworkReadException(msg);
    }
+
    // Nothing was read.
-   else if ( bytes == 0 )
+   if ( bytes == 0 )
    {
       std::string msg("Read 0 bytes from ");
       msg += m_address.getAddressString();

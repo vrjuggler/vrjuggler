@@ -58,29 +58,25 @@ namespace cluster
       {
          vpr::Uint32 bytes_read;   
          
-         vpr::ReturnStatus status =
-            stream->readn( mData, Header::RIM_PACKET_HEAD_SIZE, bytes_read );
-         
-         if ( status != vpr::ReturnStatus::Succeed ||
-              bytes_read != RIM_PACKET_HEAD_SIZE )
+         try
          {
-            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-               << clrOutBOLD( clrRED, "ERROR:" )
-               << "Header::Header Something is seriously wrong here!" 
-               << std::endl << vprDEBUG_FLUSH;
-            
+            stream->readn( mData, Header::RIM_PACKET_HEAD_SIZE, bytes_read );
+         }
+         catch (vpr::IOException& ex)
+         {
+            stream->close();
+            delete stream;
+            stream = NULL;
+            throw cluster::ClusterException( "Header::Header() - Could not read the header!" );
+         }
+
+         if (bytes_read != RIM_PACKET_HEAD_SIZE )
+         {
             stream->close();
             delete stream;
             stream = NULL;
             
-            if ( status != vpr::ReturnStatus::Succeed )
-            {
-               throw cluster::ClusterException( "Header::Header() - Could not read the header!" );
-            }
-            else
-            {
-               throw cluster::ClusterException( "Header::Header() - Bytes Read was lower than RIM_PACKET_HEAD_SIZE" );
-            }            
+            throw cluster::ClusterException( "Header::Header() - Bytes Read was lower than RIM_PACKET_HEAD_SIZE" );
          }
          
          if ( bytes_read != RIM_PACKET_HEAD_SIZE )
@@ -171,16 +167,22 @@ namespace cluster
       }
    }
    
-   vpr::ReturnStatus Header::send( vpr::SocketStream* socket )
+   void Header::send( vpr::SocketStream* socket ) throw (cluster::ClusterException)
    {
       vprASSERT( NULL != socket && "Socket is NULL" );
 
       // -Send the data in this packet
       vpr::Uint32 bytes_written;
       
-      vpr::ReturnStatus status = socket->send( mData, RIM_PACKET_HEAD_SIZE, bytes_written );
-      return status;
-
+      try
+      {
+         socket->send( mData, RIM_PACKET_HEAD_SIZE, bytes_written );
+      }
+      catch (vpr::IOException& ex)
+      {
+         // TODO: setCause(ex)
+         throw cluster::ClusterException( "Header::send() - failed to send header." );
+      }
    }
    
    void Header::dump()

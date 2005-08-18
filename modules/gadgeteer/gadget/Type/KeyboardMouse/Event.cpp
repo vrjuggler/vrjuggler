@@ -40,18 +40,16 @@
 namespace gadget
 {
 
-vpr::ReturnStatus Event::writeObject(vpr::ObjectWriter* writer)
+void Event::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint8(mType);
    writer->writeUint64(mTime);
-   return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus Event::readObject(vpr::ObjectReader* reader)
+void Event::readObject(vpr::ObjectReader* reader)
 {
    mType = (EventType)reader->readUint8();
    mTime = reader->readUint64();
-   return vpr::ReturnStatus::Succeed;
 }
 
 } // End of gadget namespace

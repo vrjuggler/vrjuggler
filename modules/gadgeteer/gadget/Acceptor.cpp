@@ -40,7 +40,6 @@
 #include <cluster/ClusterDelta.h>
 
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #include <boost/concept_check.hpp>
 
@@ -129,8 +128,10 @@ namespace gadget
       vpr::SocketStream sock( mListenAddr, vpr::InetAddr::AnyAddr );
       
       // Open in server mode.
-      if ( sock.openServer().success() )
+      try
       {
+         sock.openServer();
+
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
          << clrOutBOLD( clrMAGENTA, "[Acceptor]" )
          << " Listening on Port: " << mListenAddr.getPort()
@@ -138,7 +139,7 @@ namespace gadget
          
          sock.setReuseAddr( true );
       }
-      else
+      catch (vpr::IOException& ex)
       {
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
             << clrSetBOLD( clrRED ) << "[Acceptor]"
@@ -157,16 +158,16 @@ namespace gadget
 
       while ( mRunning )
       {
-         // Wait for a connection request.
-         vpr::ReturnStatus status = sock.accept( *client_sock, vpr::Interval::NoTimeout );
-
-         vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL)
-            << clrOutBOLD(clrMAGENTA, "[Acceptor]")
-            << " Receiving a connection on Port: "
-            << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
-
-         if ( status.success() )
+         try
          {
+            // Wait for a connection request.
+            sock.accept( *client_sock, vpr::Interval::NoTimeout );
+
+            vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL)
+               << clrOutBOLD(clrMAGENTA, "[Acceptor]")
+               << " Receiving a connection on Port: "
+               << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
+
             // Optimize new socket for low latency communication
             client_sock->setNoDelay( true );
 
@@ -315,7 +316,7 @@ namespace gadget
                client_sock = new vpr::SocketStream;
             }
          }
-         else if ( status == vpr::ReturnStatus::Timeout )
+         catch (vpr::IOException& ex)
          {
             // Should never happen since timeout is infinite
             client_sock->close();

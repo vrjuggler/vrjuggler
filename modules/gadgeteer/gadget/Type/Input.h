@@ -176,19 +176,17 @@ public:
    /**
     * Serialize this device's data.
     */
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   virtual void writeObject(vpr::ObjectWriter* writer)
    {
       boost::ignore_unused_variable_warning(writer);
-      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /**
     * De-serialize this devices data.
     */
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   virtual void readObject(vpr::ObjectReader* reader)
    {
       boost::ignore_unused_variable_warning(reader);
-      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /** Is this input device active? */

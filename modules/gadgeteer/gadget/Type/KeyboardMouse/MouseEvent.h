@@ -148,12 +148,12 @@ public:
    /**
     * Serializes this event using the given ObjectWriter.
     */
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+   virtual void writeObject(vpr::ObjectWriter* writer);
 
    /**
     * De-serializes this event using the given ObjectReader.
     */
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   virtual void readObject(vpr::ObjectReader* reader);
 
 private:
    gadget::Keys mButton;        /**< The button associated with this event. */

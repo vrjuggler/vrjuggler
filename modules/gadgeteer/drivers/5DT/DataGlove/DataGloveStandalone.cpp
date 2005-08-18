@@ -181,25 +181,30 @@ int DataGloveStandalone::mConnectToHardware(const std::string& tty_port, int bau
    // Create new serial port
    mPort = new vpr::SerialPort(tty_port);
    mPort->setOpenReadWrite();
-
-   if (!mPort->open().success()) 
+   
+   try
    {
-      std::cout<<"[dataGlove] Port ("<<tty_port<<") open failed\n"<<std::flush;
+      mPort->open();
+   }
+   catch (vpr::IOException& ex)
+   {
+      std::cout << "[dataGlove] Port (" << tty_port
+         << ") open failed\n" << std::flush;
       mPort->close();
       return 0;
-	}
-   else
-   {
-      std::cout<<"[dataGlove] Port ("<<tty_port<<") open success\n"<<std::flush;
-      mPort->clearAll();      
-      baud = 9600;
-      mPort->setRead(true);
-      mPort->setMinInputSize(1);
-      mPort->setOutputBaudRate(baud); // Put me before input to be safe
-      mPort->setInputBaudRate(baud);
-      mPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-      std::cout<<"[dataGlove] Port ("<<tty_port<<") successfully changed the port settings\n"<<std::flush;
    }
+
+   std::cout << "[dataGlove] Port (" << tty_port
+      << ") open success\n" << std::flush;
+   mPort->clearAll();      
+   baud = 9600;
+   mPort->setRead(true);
+   mPort->setMinInputSize(1);
+   mPort->setOutputBaudRate(baud); // Put me before input to be safe
+   mPort->setInputBaudRate(baud);
+   mPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+   std::cout << "[dataGlove] Port (" << tty_port
+      << ") successfully changed the port settings\n" << std::flush;
 
    return 1;
 }

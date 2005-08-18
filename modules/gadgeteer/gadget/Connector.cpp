@@ -68,8 +68,12 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
       << " Attempting to connect to: " << node->getName()
       << std::endl << vprDEBUG_FLUSH;
       
-   // Set the address that we want to connect to
-   if ( !inet_addr.setAddress( node->getHostname(), node->getPort() ).success() )
+   try
+   {
+      // Set the address that we want to connect to
+      inet_addr.setAddress( node->getHostname(), node->getPort() );
+   }
+   catch (vpr::IOException& ex)
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
          << clrOutBOLD( clrBLUE, "[Connector]" )
@@ -81,10 +85,12 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
    // Create a new socket stream to this address
    sock_stream = new vpr::SocketStream( vpr::InetAddr::AnyAddr, inet_addr );
 
-   // If we can successfully open the socket and connect to the server
-   if ( sock_stream->open().success() &&
-        sock_stream->connect().success() )
+   try
    {
+      // If we can successfully open the socket and connect to the server
+      sock_stream->open();
+      sock_stream->connect();
+
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL )
          << clrOutBOLD( clrBLUE, "[Connector]" )
          << " Successfully connected to: "
@@ -145,7 +151,7 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          return vpr::ReturnStatus::Fail;
       }
    }
-   else
+   catch (vpr::IOException& ex)
    {
       delete sock_stream;
       

@@ -76,15 +76,18 @@ namespace cluster
       mBufferObjectWriter->setCurPos(0);
 
       // This updates the mApplicationData which both mBufferedObjectReader and mDevicePacket point to
-      vpr::ReturnStatus status = mApplicationData->writeObject(mBufferObjectWriter);
+      mApplicationData->writeObject(mBufferObjectWriter);
+      //vpr::ReturnStatus status = mApplicationData->writeObject(mBufferObjectWriter);
 
       // If we do not successfully serialize the object, don't send it.
       // This allows the developer to create a object that only gets
       // sent when a change occurs.
+      /*
       if (!status.success())
       {
          return;
       }
+      */
 
       // We must update the size of the actual data that we are going to send
       mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 

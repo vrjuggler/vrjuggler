@@ -343,8 +343,13 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
       throw cluster::ClusterException("Node::send() - Packet Header is NULL!");
    }
 
-   if (!mHeader->send(mSockStream).success())
+   try
    {
+      mHeader->send(mSockStream);
+   }
+   catch (vpr::IOException& ex)
+   {
+      // TODO: setCause(ex)
       throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
    }
 
@@ -360,15 +365,17 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
    {
       std::vector<vpr::Uint8>* packet_data = out_packet->getData();
 
-      vpr::ReturnStatus status = mSockStream->send(*packet_data, 
+      try
+      {
+         mSockStream->send(*packet_data, 
             mHeader->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE,
             bytes_written);
-      if (!status.success())
+      }
+      catch (vpr::IOException& ex)
       {
+         // TODO: setCause(ex)
          throw cluster::ClusterException("Packet::recv() - Sending data packet failed!!");
       }
-      
-      return(status);
    }
    else
    {
@@ -376,10 +383,14 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
 
       // Since we are sending a DataPacket we are not actually sending all data here. We are only sending 2 GUIDs here
       int size = 32;
-
-      vpr::ReturnStatus status = mSockStream->send(*packet_data, size ,bytes_written);
-      if (!status.success())
+      
+      try
       {
+         mSockStream->send(*packet_data, size, bytes_written);
+      }
+      catch (vpr::IOException& ex)
+      {
+         // TODO: setCause(ex)
          throw cluster::ClusterException("Packet::recv() - Sending packet failed!!");
       }
 
@@ -405,14 +416,17 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
       delete testing;
       */
       
-      status = mSockStream->send(*(temp_data_packet->getDeviceData()),temp_data_packet->getDeviceData()->size(),bytes_written);
-      if (!status.success())
+      try
       {
+         mSockStream->send(*(temp_data_packet->getDeviceData()),temp_data_packet->getDeviceData()->size(),bytes_written);
+      }
+      catch (vpr::IOException& ex)
+      {
+         // TODO: setCause(ex)
          throw cluster::ClusterException("Packet::recv() - Sending Packet Data failed!!");
       }
-      
-      return(status);
-   }     
+   }
+   return vpr::ReturnStatus::Succeed;
 }
 
 cluster::Packet* Node::recvPacket()
@@ -472,22 +486,23 @@ cluster::Packet* Node::recvPacket()
    {
       vpr::Uint32 bytes_read;	  
    
-      // Get packet data.
-      vpr::ReturnStatus status =
+      try
+      {
+         // Get packet data.
          mSockStream->recvn( incoming_data,
                              packet_head->getPacketLength() -
                              cluster::Header::RIM_PACKET_HEAD_SIZE,
                              bytes_read );
-
-      if ( !status.success() )
+      }
+      catch (vpr::IOException& ex)
       {
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
             << clrOutBOLD( clrRED, "ERROR:" )
             << " Reading packet data failed. Expecting: "
             << packet_head->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE
-            << " But got: " << bytes_read << " ReturnStatus Code: "
-            << (int)status.code() << std::endl << vprDEBUG_FLUSH;
-
+            << " But got: " << bytes_read << std::endl << vprDEBUG_FLUSH;
+         
+         // TODO: setCause(ex)
          throw cluster::ClusterException( "Node::recvPacket() - Reading packet data failed!" );
       }
    }

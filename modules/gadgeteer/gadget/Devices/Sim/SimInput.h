@@ -105,16 +105,14 @@ public:
        return std::string("SimInput");
    }
 
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   virtual void writeObject(vpr::ObjectWriter* writer)
    {
       boost::ignore_unused_variable_warning(writer);
-      return vpr::ReturnStatus::Succeed;
    }
 
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   virtual void readObject(vpr::ObjectReader* reader)
    {
       boost::ignore_unused_variable_warning(reader);
-      return vpr::ReturnStatus::Succeed;
    }
 
 protected:

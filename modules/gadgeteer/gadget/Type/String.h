@@ -140,9 +140,9 @@ namespace gadget
          return std::string("String");
       }
 
-      virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+      virtual void writeObject(vpr::ObjectWriter* writer);
 
-      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+      virtual void readObject(vpr::ObjectReader* reader);
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.

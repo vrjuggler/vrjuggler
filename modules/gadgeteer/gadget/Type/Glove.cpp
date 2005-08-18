@@ -79,7 +79,7 @@ bool Glove::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-vpr::ReturnStatus Glove::writeObject(vpr::ObjectWriter* writer)
+void Glove::writeObject(vpr::ObjectWriter* writer)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
 
@@ -130,11 +130,9 @@ vpr::ReturnStatus Glove::writeObject(vpr::ObjectWriter* writer)
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Glove::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n" << vprDEBUG_FLUSH;
    }
    writer->endTag();
-
-   return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus Glove::readObject(vpr::ObjectReader* reader)
+void Glove::readObject(vpr::ObjectReader* reader)
 {
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
@@ -197,8 +195,6 @@ vpr::ReturnStatus Glove::readObject(vpr::ObjectReader* reader)
    mGloveSamples.unlock();
    swapGloveBuffers();
    reader->endTag();
-
-   return(vpr::ReturnStatus::Succeed);
 }
 
 /**

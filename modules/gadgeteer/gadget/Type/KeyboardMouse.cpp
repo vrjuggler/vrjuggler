@@ -69,7 +69,7 @@ std::string KeyboardMouse::getInputTypeName()
 /**
  * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
  */
-vpr::ReturnStatus KeyboardMouse::writeObject(vpr::ObjectWriter* writer)
+void KeyboardMouse::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
 
@@ -93,14 +93,12 @@ vpr::ReturnStatus KeyboardMouse::writeObject(vpr::ObjectWriter* writer)
    {
       mCurEventQueue[i]->writeObject(writer);
    }
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 /**
  * Read mCurKeys and mCurEventQueueLock from a stream using the given ObjectReader.
  */
-vpr::ReturnStatus KeyboardMouse::readObject(vpr::ObjectReader* reader)
+void KeyboardMouse::readObject(vpr::ObjectReader* reader)
 {
    // ASSERT if the given datastream does not start with the correct datatype
    // flag.
@@ -151,8 +149,6 @@ vpr::ReturnStatus KeyboardMouse::readObject(vpr::ObjectReader* reader)
 
    // We must set sync time correctly here since updateEventQueue() changes it.
    mSyncTime.set(temp_sync, vpr::Interval::Base);
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 bool KeyboardMouse::modifierOnly(gadget::Keys modKey)

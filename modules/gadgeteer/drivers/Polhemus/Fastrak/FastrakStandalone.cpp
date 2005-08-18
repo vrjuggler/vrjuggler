@@ -47,9 +47,15 @@ vpr::ReturnStatus FastrakStandalone::open()
    mSerialPort->setBlocking(false);
    mSerialPort->setOpenReadWrite();
 
-   status = mSerialPort->open();
+   try
+   {
+      mSerialPort->open();
+   }
+   catch (vpr::IOException& ex)
+   {
+      return vpr::ReturnStatus::Fail;
+   }
 
-   if ( status.success() )
    {
       vpr::Uint32 baud;
 
@@ -111,15 +117,21 @@ int FastrakStandalone::Read(int len)
    for ( ;; )
    {
       //Passing in timeout val here to wait for input
-      status = mSerialPort->read(cp, rem, bytes_read, timeoutVal);
-      if(status.timeout())
+      try
+      {
+         mSerialPort->read(cp, rem, bytes_read, timeoutVal);
+      }
+      catch (vpr::TimeoutException& ex)
+      {
          continue;
-      else if ( !status.success() )
+      }
+      catch (vpr::IOException& ex)
       {
          tempBuf[len - rem] = '\0';
          memcpy(mTrackerBuf, tempBuf, 256);
          return len - rem;
       }
+
       if ( (rem -= bytes_read) == 0 )
       {
          tempBuf[len] = '\0';
@@ -178,7 +190,11 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    vpr::Uint32 bytes_read, bytes_written;
 
    //Set to non-continuous mode
-   if (!(retval = mSerialPort->write("c", 1, bytes_written)).success())
+   try
+   {
+      mSerialPort->write("c", 1, bytes_written);
+   }
+   catch (vpr::IOException& ex)
    {
       fprintf(stderr,
               "[FastrakStandalone] Failure setting non-continuous mode for tracker");
@@ -190,7 +206,11 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    vpr::System::msleep(100);//Sleep for 0.1 seconds
 
    //Set to non-continuous and request status
-   if (!(retval = mSerialPort->write("S", 1, bytes_written)).success())
+   try
+   {
+      mSerialPort->write("S", 1, bytes_written);
+   }
+   catch (vpr::IOException& ex)
    {
       fprintf(stderr,
               "[FastrakStandalone] Failure writing status command to tracker");
@@ -204,19 +224,25 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    while (numElapsedWaits<100&&state<4)
    {
       vpr::Interval timeoutVal(100, vpr::Interval::Msec);
-      retval = mSerialPort->read(buffer, 1, bytes_read, timeoutVal);
-      if (retval != vpr::ReturnStatus::Succeed)
+      try
       {
-         if (retval == vpr::ReturnStatus::Timeout  ||
-            retval == vpr::ReturnStatus::WouldBlock)
-         {
-            ++numElapsedWaits;
-            continue;
-         }
-
+         mSerialPort->read(buffer, 1, bytes_read, timeoutVal);
+      }
+      catch (vpr::TimeoutException)
+      {
+         ++numElapsedWaits;
+         continue;
+      }
+      catch (vpr::WouldBlockException)
+      {
+         ++numElapsedWaits;
+         continue;
+      }
+      catch (vpr::IOException& ex)
+      {
          fprintf(stderr,
                  "[FastrakStandalone] Failure reading status byte from tracker");
-         return retval;
+         return vpr::ReturnStatus::Fail;
       }
 
       /* Read next byte and try matching status reply's prefix: */
@@ -304,20 +330,27 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
           state < 2)
    {
       vpr::Interval timeoutVal(100, vpr::Interval::Msec);
-      retval = mSerialPort->read(cPtr, 1, bytes_read, timeoutVal);
-      if (retval != vpr::ReturnStatus::Succeed)
+      try
       {
-         if (retval == vpr::ReturnStatus::Timeout  ||
-            retval == vpr::ReturnStatus::WouldBlock)
-         {
-            vpr::System::msleep(100);//Sleep for 0.1 seconds
-            ++numElapsedWaits;
-            continue;
-         }
-
+         mSerialPort->read(cPtr, 1, bytes_read, timeoutVal);
+      }
+      catch (vpr::TimeoutException& ex)
+      {
+         vpr::System::msleep(100);//Sleep for 0.1 seconds
+         ++numElapsedWaits;
+         continue;
+      }
+      catch (vpr::WouldBlockException& ex)
+      {
+         vpr::System::msleep(100);//Sleep for 0.1 seconds
+         ++numElapsedWaits;
+         continue;
+      }
+      catch (vpr::IOException& ex)
+      {
          fprintf(stderr,
                  "[FastrakStandalone] Failure reading second round status byte from tracker\n");
-         return retval;
+         return vpr::ReturnStatus::Fail;
       }
 
       char input = *cPtr;

@@ -142,10 +142,10 @@ namespace gadget
       }
 
       /** Serializes this object. */
-      virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+      virtual void writeObject(vpr::ObjectWriter* writer);
 
       /** De-serializes this object. */
-      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+      virtual void readObject(vpr::ObjectReader* reader);
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.

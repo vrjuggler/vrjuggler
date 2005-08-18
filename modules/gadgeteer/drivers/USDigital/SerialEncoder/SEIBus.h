@@ -80,7 +80,11 @@ public:
       port->setOpenReadWrite();
       port->setBlocking(true);      
 
-      if ( port->open()==vpr::ReturnStatus::Fail )
+      try
+      {
+         port->open();
+      }
+      catch (vpr::IOException& ex)
       {
          return -1;
       }

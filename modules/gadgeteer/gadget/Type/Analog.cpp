@@ -55,11 +55,10 @@ Analog::~Analog()
    /* Do nothing. */ ;
 }
 
-vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
+void Analog::writeObject(vpr::ObjectWriter* writer)
 {
    //std::cout << "[Remote Input Manager] In Analog write" << std::endl;
 
-   ////////////////////////////////////////////////////
    SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
    writer->beginTag(Analog::getInputTypeName());
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
@@ -104,12 +103,9 @@ vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
          << vprDEBUG_FLUSH;
    }
    writer->endTag();
-
-   return vpr::ReturnStatus::Succeed;
-   ////////////////////////////////////////////////////
 }
 
-vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
+void Analog::readObject(vpr::ObjectReader* reader)
 {
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
@@ -166,8 +162,6 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
    swapAnalogBuffers();
 
    reader->endTag();
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 bool Analog::config(jccl::ConfigElementPtr element)

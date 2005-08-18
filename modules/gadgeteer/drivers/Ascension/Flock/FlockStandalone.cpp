@@ -192,7 +192,16 @@ vpr::ReturnStatus FlockStandalone::open()
       mSerialPort->setOpenReadWrite();
 
       //   - Set the port attributes to use
-      if ( mSerialPort->open().success() )
+      try
+      {
+         mSerialPort->open();
+      }
+      catch (vpr::IOException& ex)
+      {
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+            << "Port open failed\n" << vprDEBUG_FLUSH;
+         return vpr::ReturnStatus::Fail;
+      }
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
             << "Port opened successfully\n" << vprDEBUG_FLUSH ;
@@ -242,8 +251,11 @@ vpr::ReturnStatus FlockStandalone::open()
          vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL)
             << " done.\n" << vprDEBUG_FLUSH;
 
-         ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-         if(!ret_stat.success())
+         try
+         {
+            mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+         }
+         catch (vpr::IOException& ex)
          {
             open_successfull = false;
          }
@@ -292,12 +304,6 @@ vpr::ReturnStatus FlockStandalone::open()
                << attempt_num << ".  Trying again...\n" << vprDEBUG_FLUSH;
             attempt_num++;
          }
-      }
-      else
-      {
-         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-            << "Port open failed\n" << vprDEBUG_FLUSH;
-         return vpr::ReturnStatus::Fail;
       }
    }
    while((!open_successfull) && (attempt_num <max_open_attempts));
@@ -454,13 +460,21 @@ void FlockStandalone::sample()
 
             while(bytes_remaining)        // While more left to read
             {
-               read_ret = mSerialPort->read(temp_data_record, bytes_remaining,
-                                            bytes_read, mReadTimeout);
-               // Append the temp data onto the end of the data record
-               data_record.insert(data_record.end(), temp_data_record.begin(),
-                                  temp_data_record.end());
-               bytes_remaining -= bytes_read;
-               if(read_ret.inProgress() || read_ret.failure())    // If timeout or failed
+               try
+               {
+                  mSerialPort->read(temp_data_record, bytes_remaining,
+                                    bytes_read, mReadTimeout);
+                  // Append the temp data onto the end of the data record
+                  data_record.insert(data_record.end(), temp_data_record.begin(),
+                                     temp_data_record.end());
+                  bytes_remaining -= bytes_read;
+               }
+               catch (vpr::WouldBlockException& ex)
+               {
+                  // Do nothing.
+               }
+               // If timeout or fail
+               catch (vpr::IOException& ex)
                {
                   num_stream_read_failures++;
                   throw Flock::CommandFailureException("Did not read full data record in point mode.");
@@ -512,14 +526,23 @@ void FlockStandalone::sample()
 
             while(bytes_remaining)        // While more left to read
             {
-               read_ret = mSerialPort->read(temp_data_record, bytes_remaining,
-                                            bytes_read, mReadTimeout);
-               // Append the temp data onto the end of the data record
-               data_record.insert(data_record.end(), temp_data_record.begin(),
-                                  temp_data_record.end());
-               bytes_remaining -= bytes_read;
-               if(read_ret.inProgress() || read_ret.failure())    // If timeout or failed
+               try
                {
+                  mSerialPort->read(temp_data_record, bytes_remaining,
+                                    bytes_read, mReadTimeout);
+                  // Append the temp data onto the end of the data record
+                  data_record.insert(data_record.end(), temp_data_record.begin(),
+                                     temp_data_record.end());
+                  bytes_remaining -= bytes_read;
+               }
+               catch (vpr::WouldBlockException& ex)
+               {
+                  // Do nothing.
+               }
+               // If timeout or failed
+               catch (vpr::IOException& ex)
+               {
+                  // TODO: setCause(ex)
                   num_stream_read_failures++;
                   throw Flock::CommandFailureException("Could not find entire streaming data record");
                }
@@ -1310,19 +1333,26 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
    }
 
    unsigned int bytes_written;
-
-   vpr::ReturnStatus ret_val = mSerialPort->write(&cmd, 1, bytes_written);
-   if(ret_val.failure())
+   
+   try
    {
+      mSerialPort->write(&cmd, 1, bytes_written);
+   }
+   catch (vpr::IOException& ex)
+   {
+      // TODO: setCause(ex)
       throw Flock::CommandFailureException("Failed to write full command");
    }
 
    if(!data.empty())
    {
-      vpr::ReturnStatus ret_val = mSerialPort->write(&(data[0]), data.size(),
-                                                     bytes_written);
-      if(ret_val.failure())
+      try
       {
+         mSerialPort->write(&(data[0]), data.size(), bytes_written);
+      }
+      catch (vpr::IOException& ex)
+      {
+         // TODO: setCause(ex)
          throw Flock::CommandFailureException("Failed to write full command args");
       }
    }
@@ -1405,8 +1435,11 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
 
    //vpr::System::msleep(200);                                   // Wait for any random input
    vpr::System::msleep(50);
-   ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
-   if(!ret_stat.success())
+   try
+   {
+      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
+   }
+   catch (vpr::IOException& ex)
    {
       throw Flock::CommandFailureException("Failed to flush queue before command");
    }

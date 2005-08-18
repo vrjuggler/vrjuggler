@@ -128,22 +128,20 @@ public:
    /** Type of the placeholder object that can be used to represent us */
    typedef InputPlaceHolder< InputMixer<ComposedParent, NewParent> > MixedPlaceholderType;
 
-   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   void writeObject(vpr::ObjectWriter* writer)
    {
       writer->beginTag(InputMixer<ComposedParent,NewParent>::getInputTypeName());
       ComposedParent::writeObject(writer);
       NewParent::writeObject(writer);
       writer->endTag();
-      return(vpr::ReturnStatus::Succeed);
    }
 
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   void readObject(vpr::ObjectReader* reader)
    {
       reader->beginTag(InputMixer<ComposedParent,NewParent>::getInputTypeName());
       ComposedParent::readObject(reader);
       NewParent::readObject(reader);
       reader->endTag();
-      return(vpr::ReturnStatus::Succeed);
    }
 
    std::string getInputTypeName()

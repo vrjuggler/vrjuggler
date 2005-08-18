@@ -64,34 +64,35 @@ namespace gadget
       // Open the file handle read & write.
       mPort->setOpenReadWrite();
 
-      if ( !mPort->open().success() )
+      try
+      {
+         mPort->open();
+      }
+      catch (vpr::IOException& ex)
       {
          return(vpr::ReturnStatus::Fail);
       }
-      else
-      {
-         // Reset all port settings to false.
-         mPort->clearAll();
+      
+      // Reset all port settings to false.
+      mPort->clearAll();
 
-         // Set the current character size.
-         mPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+      // Set the current character size.
+      mPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 
-         // The device is local.
-         mPort->setLocalAttach(true);
+      // The device is local.
+      mPort->setLocalAttach(true);
 
-         // Enable reading from the port.(Note: This does not effect
-         // SerialPort::setOpenReadWrite() from above.
-         mPort->setRead(true);
+      // Enable reading from the port.(Note: This does not effect
+      // SerialPort::setOpenReadWrite() from above.
+      mPort->setRead(true);
 
-         // Enable ignoring BREAK bytes.
-         mPort->setBreakByteIgnore(true);
+      // Enable ignoring BREAK bytes.
+      mPort->setBreakByteIgnore(true);
 
-         // Set the output/input baud rates. Put output first to be safe.
-         mPort->setOutputBaudRate(baud);
-         mPort->setInputBaudRate(baud);
-         return(vpr::ReturnStatus::Succeed);
-      }
-
+      // Set the output/input baud rates. Put output first to be safe.
+      mPort->setOutputBaudRate(baud);
+      mPort->setInputBaudRate(baud);
+      return(vpr::ReturnStatus::Succeed);
    }
    
    vpr::ReturnStatus PinchGloveStandalone::setTimestampsOn(const bool val)
@@ -295,9 +296,15 @@ namespace gadget
       // way we are clearing the PinchGloves input buffer.
 
       mPort->write(&first, 1, written);
-      if (mPort->read(&buf[0], 10, written, read_timeout).success())
+      try
       {
+         mPort->read(&buf[0], 10, written, read_timeout);
+         // If read without an error.
          mPort->write(&first, 1, written);
+      }
+      catch (vpr::IOException& ex)
+      {
+         // Do nothing.
       }
       vpr::System::msleep(100);
       // Wait between sending bytes.
@@ -314,16 +321,26 @@ namespace gadget
 
       vpr::Interval read_timeout(5000,vpr::Interval::Msec);
 
-      if (!mPort->read(&temp_byte, 1, read, read_timeout).success())
-      { 
+      try
+      {
+         mPort->read(&temp_byte, 1, read, read_timeout);
+      }
+      catch (vpr::IOException& ex)
+      {
+         // TODO: setCause(ex)
          throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 
       }
       vprASSERT(1 == read);
 
       while(data_type != temp_byte)
       {
-         if(!mPort->read(&temp_byte, 1, read, read_timeout).success())
+         try
          {
+            mPort->read(&temp_byte, 1, read, read_timeout);
+         }
+         catch (vpr::IOException& ex)
+         {
+            // TODO: setCause(ex)
             throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 
          }
          vprASSERT(1 == read);
@@ -332,8 +349,13 @@ namespace gadget
       // Getting all chars until END_BYTE
       result.clear();
       
-      if(!mPort->read(&temp_byte, 1, read, read_timeout).success())
+      try
       {
+         mPort->read(&temp_byte, 1, read, read_timeout);
+      }
+      catch (vpr::IOException& ex)
+      {
+         // TODO: setCause(ex)
          throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 
       }
       vprASSERT(1 == read);
@@ -344,8 +366,13 @@ namespace gadget
          // Add the byte to the result.
          result.push_back(temp_byte);
          
-         if(!mPort->read(&temp_byte, 1, read, read_timeout).success())
+         try
          {
+            mPort->read(&temp_byte, 1, read, read_timeout);
+         }
+         catch (vpr::IOException& ex)
+         {
+            // TODO: setCause(ex)
             throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 
          }
          vprASSERT(1 == read);

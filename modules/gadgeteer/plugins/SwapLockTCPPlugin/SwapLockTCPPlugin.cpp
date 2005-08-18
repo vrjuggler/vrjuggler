@@ -231,7 +231,11 @@ namespace cluster
       vpr::InetAddr inet_addr;
       
          // Set the address that we want to connect to
-      if ( !inet_addr.setAddress(mBarrierMasterHostname, mTCPport).success() )
+      try
+      {
+         inet_addr.setAddress(mBarrierMasterHostname, mTCPport);
+      }
+      catch (vpr::IOException& ex)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"[SwapLockTCPPlugin]: Failed to set address\n") 
             << vprDEBUG_FLUSH;
@@ -246,7 +250,18 @@ namespace cluster
       mSyncServerSocket->open();
       mSyncServerSocket->setBlocking(true);
       
-      if (mSyncServerSocket->connect().success())
+      try
+      {
+         mSyncServerSocket->connect();
+      }
+      catch (vpr::IOException& ex)
+      {
+         // Free unused memory since we could not connect
+         delete mSyncServerSocket;
+         mSyncServerSocket = NULL;
+         return vpr::ReturnStatus::Fail;
+      }
+
       {   
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SwapLockTCPPlugin]: Successfully connected to sync server: " 
             << mBarrierMasterHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
@@ -287,10 +302,6 @@ namespace cluster
             return(vpr::ReturnStatus::Succeed);
          }
       }
-      // Free unused memory since we could not connect
-      delete mSyncServerSocket;
-      mSyncServerSocket = NULL;
-      return(vpr::ReturnStatus::Fail);
    }
 
    void SwapLockTCPPlugin::masterSend()
@@ -331,7 +342,11 @@ namespace cluster
       for (std::vector<vpr::SocketStream*>::iterator i = mSyncClients.begin();
            i < mSyncClients.end();i++)
       {
-         if((*i)->recv(&temp , 1, bytes_read,read_timeout) == vpr::ReturnStatus::Timeout)
+         try
+         {
+            (*i)->recv(&temp , 1, bytes_read,read_timeout);
+         }
+         catch (vpr::TimeoutException& ex)
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin::masterReceive()]")
@@ -381,7 +396,11 @@ namespace cluster
       
       vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
-      if (!mSyncServerSocket->recv(&temp , 1, bytes_read,read_timeout).success())
+      try
+      {   
+         mSyncServerSocket->recv(&temp , 1, bytes_read,read_timeout);
+      }
+      catch (vpr::IOException& ex)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin::slaveReceive()]")
@@ -439,11 +458,12 @@ namespace cluster
 
       vpr::SocketStream sock(mListenAddr, vpr::InetAddr::AnyAddr);
         // Open in server mode.
-      if ( sock.openServer().success() )
+      try
       {
+         sock.openServer();
          sock.setReuseAddr(true);
       }
-      else
+      catch (vpr::IOException& ex)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrSetBOLD(clrRED) << "[SwapLockTCPPlugin]"
@@ -459,13 +479,15 @@ namespace cluster
       vpr::SocketStream* client_sock = new vpr::SocketStream;
 
       while ( 1 )
-      {    // Wait for an incoming connection.   
-         vpr::ReturnStatus status = sock.accept(*client_sock, vpr::Interval::NoTimeout);
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin]")
-            << " Received a connection attempt on Port: " << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
-         if ( status.success() )
-         {               
+      {  
+         try
+         {
+            // Wait for an incoming connection.   
+            sock.accept(*client_sock, vpr::Interval::NoTimeout);
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+               << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin]")
+               << " Received a connection attempt on Port: " << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
+         
             client_sock->setNoDelay(true);  
                // Lock Cluster Nodes while working on them
               // Try to receive a Packet
@@ -553,9 +575,9 @@ namespace cluster
             /////////////////////////////////////////////
             
          }
-         else if ( status == vpr::ReturnStatus::Timeout )
+         catch (vpr::TimeoutException& ex)
          {
-               // Should never happen since timeout is infinite
+            // Should never happen since timeout is infinite
             client_sock->close();
             delete client_sock;
             client_sock = new vpr::SocketStream;

@@ -81,13 +81,13 @@ public:
     * Writes both mCurKeys and mCurEventQueueLock to a stream using the given
     * object writer.
     */
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+   virtual void writeObject(vpr::ObjectWriter* writer);
 
    /**
     * Reads mCurKeys and mCurEventQueueLock from a stream using the given
     * object reader.
     */
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   virtual void readObject(vpr::ObjectReader* reader);
 
    virtual bool config(jccl::ConfigElementPtr element)
    {

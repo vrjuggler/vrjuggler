@@ -39,7 +39,6 @@
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #include <cluster/ClusterException.h>
 
@@ -95,7 +94,7 @@ public:
 
    void parseHeader();
 
-   vpr::ReturnStatus send( vpr::SocketStream* socket );
+   void send( vpr::SocketStream* socket ) throw (cluster::ClusterException);
 
    void dump();
 

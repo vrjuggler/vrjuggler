@@ -63,7 +63,7 @@ MouseEvent::MouseEvent()
 }
 
 // Serializes this event using the given ObjectWriter.
-vpr::ReturnStatus MouseEvent::writeObject(vpr::ObjectWriter* writer)
+void MouseEvent::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(mType);
 
@@ -74,12 +74,10 @@ vpr::ReturnStatus MouseEvent::writeObject(vpr::ObjectWriter* writer)
    writer->writeUint32(mGlobalX);
    writer->writeUint32(mGlobalY);
    writer->writeUint32(mState);
-   
-   return vpr::ReturnStatus::Succeed;
 }
 
 // De-serializes this event using the given ObjectReader.
-vpr::ReturnStatus MouseEvent::readObject(vpr::ObjectReader* reader)
+void MouseEvent::readObject(vpr::ObjectReader* reader)
 {
    // We have already read the type in EventWindoe to decide
    // if we should construct a KeyEvent or a MouseEvent
@@ -92,7 +90,6 @@ vpr::ReturnStatus MouseEvent::readObject(vpr::ObjectReader* reader)
    mGlobalX = reader->readUint32();
    mGlobalY = reader->readUint32();
    mState = reader->readUint32();
-   return vpr::ReturnStatus::Succeed;
 }
 
 } // End of gadget namespace

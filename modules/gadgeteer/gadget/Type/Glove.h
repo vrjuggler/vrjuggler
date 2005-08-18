@@ -131,8 +131,8 @@ public:
       return std::string("Glove");
    }
 
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void readObject(vpr::ObjectReader* reader);
 
    /** Utility function to generate GloveData from DigitalData. */
    std::vector<GloveData> getGloveDataFromDigitalData(const std::vector<DigitalData>& digitalData);
