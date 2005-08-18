@@ -322,9 +322,12 @@ void FileHandleImplUNIX::setSynchronousWrite(bool sync) throw (IOException)
          << (sync ? "synchronous" : "asynchronous") << " writes on "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
 
-      throw IOException("[vpr::FileHandleImplUNIX::setSynchronousWrite()] Failed to enable "
-         + (sync ? "synchronous" : "asynchronous") << " writes on "
-         + mName << ": " << std::string(strerror(errno)), VPR_LOCATION);
+      std::stringstream msg_stream;
+      msg_stream << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] "
+                 << "Failed to enable "
+                 << (sync ? "synchronous" : "asynchronous") << " writes on "
+                 << mName << ": " << strerror(errno);
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
 #else
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
@@ -332,9 +335,11 @@ void FileHandleImplUNIX::setSynchronousWrite(bool sync) throw (IOException)
       << (sync ? "synchronous" : "asynchronous")
       << " writes on this platform!\n" << vprDEBUG_FLUSH;
 
-   throw IOException("[vpr::FileHandleImplUNIX::setSynchronousWrite()] Cannot enable "
-      + std::string(sync ? "synchronous" : "asynchronous")
-      + " writes on this platform!", VPR_LOCATION);
+   std::stringstream msg_stream;
+   msg_stream << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] "
+              << "Cannot enable " << (sync ? "synchronous" : "asynchronous")
+              << " writes on this platform!";
+   throw IOException(msg_stream.str(), VPR_LOCATION);
 #endif
 }
 
