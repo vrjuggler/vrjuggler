@@ -30,12 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/////////////////////////////////////////////////////////////////////////
-//
-// ibox tracking class
-//
-////////////////////////////////////////////////////////////////////////
-
 #ifndef _GADGET_IBOX_H_
 #define _GADGET_IBOX_H_
 
@@ -47,7 +41,6 @@
 #include <gadget/Type/InputMixer.h>
 #include <drivers/Immersion/IBox/IBoxStandalone.h>
 
-
 namespace gadget
 {
 
@@ -55,42 +48,13 @@ namespace gadget
  * The Immersion Box input class.
  *
  * The Immersion Box is a 4 Digital, 4 Analog input device, the Ibox class
- * therefore must inherit from both Digital and Analog.  The class uses
- * the HCI library for a simple interface to the IBox.
+ * therefore must inherit from both Digital and Analog.
  */
-//class IBox : public Input, public Digital, public Analog
 class IBox : public InputMixer<InputMixer<Input,Digital>,Analog>
 {
-protected:
-   struct IboxData
-   {
-      /** Constructor
-      * Init both vectors to the default size of 4
-      */
-      IboxData()
-         : button(4), analog(4)
-      {;}
-
-      /** Helper to set all the times */
-      void setTime()
-      {
-         button[0].setTime();
-         button[1].setTime( button[0].getTime() );
-         button[2].setTime( button[0].getTime() );
-         button[3].setTime( button[0].getTime() );
-         analog[0].setTime( button[0].getTime() );
-         analog[1].setTime( button[0].getTime() );
-         analog[2].setTime( button[0].getTime() );
-         analog[3].setTime( button[0].getTime() );
-      }
-
-      std::vector<DigitalData> button;    // size of 4
-      std::vector<AnalogData>  analog;    // size of 4
-   };
-
 public:
    /** Construction/Destruction */
-   IBox() : mDoneFlag(false) //: Input(), Digital(), Analog()  <<<<< HERE
+   IBox() : mDoneFlag(false), mButton(4), mAnalog(4)
    {
       // re-set Analog min/max values to ibox defaults.
       this->setMin( 0.0f );
@@ -128,16 +92,14 @@ protected:
       delete this;
    }
 
-
 private:
-   // juggler ibox data in the range of [0..255]
-   //IBOX_DATA   theData[3];
-
-   // ibox native data in the range of [0..255]
-   IboxStandalone mPhysicalIbox;
-   std::string    mPortName;
-   long           mBaudRate;
-   bool           mDoneFlag;
+   IBoxStandalone* mIBox;
+   std::string     mPortName;
+   long            mBaudRate;
+   bool            mDoneFlag;
+   bool            mDataUpdated;
+   std::vector<DigitalData> mButton;    // size of 4
+   std::vector<AnalogData>  mAnalog;    // size of 4
 };
 
 } // End of gadget namespace

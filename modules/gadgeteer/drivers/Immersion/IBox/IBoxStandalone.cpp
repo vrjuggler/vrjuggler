@@ -30,923 +30,809 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#define MIN_TIMEOUT 0.1
-
-#include <gadget/Devices/DriverConfig.h>
 #include <stdio.h>
 #include <boost/concept_check.hpp>
 #include <vpr/System.h>
 #include <drivers/Immersion/IBox/IBoxStandalone.h>
 
-
-// ----------------------------------------------------------------------------
-// Constructor:  This sets all the default values for the ibox.
-// ----------------------------------------------------------------------------
-IboxStandalone::IboxStandalone()
-{
-	port = NULL;
-	overlap = 0;
-
-	fastTimeOut.set(100, vpr::Interval::Msec);
-	slowTimeOut.set(3000, vpr::Interval::Msec);
-
-
-	/* Set all descr. strings to null strings */
-	mSerial_number[0] = 0;
-	mProduct_name[0] = 0;
-	//mProduct_id[0] = 0;
-	mModel_name[0] = 0;
-	mComment[0] = 0;
-	mParam_format[0] = 0;
-	mVersion[0] = 0;
-	mPackets_expected=0;
-	
-	mPacket.clear();
-}
-// ----------------------------------------------------------------------------
-// Destructor. Deletes the port
-// ----------------------------------------------------------------------------
-IboxStandalone::~IboxStandalone()
-{
-	if ( port != NULL )
-	{
-		port->close();
-		delete port;
-		port = NULL;
-	}
+#define printInfo(command, data, desc)                          \
+{                                                               \
+   if ( sendStringCommand(command))                             \
+   {                                                            \
+      std::string data = readString();                          \
+      vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)            \
+         << "  [IBox] " << desc << ": "                         \
+         << data << std::endl << vprDEBUG_FLUSH;                \
+   }                                                            \
+   else                                                         \
+   {                                                            \
+      vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)            \
+         << "  [IBox] Could not get "                           \
+         << desc << "!" << std::endl << vprDEBUG_FLUSH;         \
+   }                                                            \
 }
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-
-vpr::ReturnStatus IboxStandalone::connect(const std::string& port_name,
-                                          long int baud)
+IBoxStandalone::IBoxStandalone()
 {
-	mPortName=port_name;
-	mBaudRate = baud;
-
-	port = new vpr::SerialPort(mPortName);
-    port->setOpenReadWrite();
-    if ( !port->open().success() )
-	{
-		std::cerr << "[IBox] Port: " << mPortName << " could not be opened!" << std::endl;
-		return(vpr::ReturnStatus::Fail);
-	}
-	else
-	{
-		std::cerr << "[IBox] Success, Port: " << mPortName << " opened." << std::endl;
-	}
-    port->clearAll();
-    port->setLocalAttach(true);
-    port->setMinInputSize(0);
-    port->setTimeout(0);
-    port->setOutputBaudRate(mBaudRate); // Put me before input to be safe
-    port->setInputBaudRate(mBaudRate);
-    port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-    port->setRead(true);
-	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;
-	if ( autosynch()!=vpr::ReturnStatus::Succeed )
-	{
-		return(vpr::ReturnStatus::Fail);
-	}
-	std::cerr << "[IBox] Done with Autosync." << std::endl;
-	begin();
-	getInfo();
-	return(vpr::ReturnStatus::Succeed);
-}
-vpr::ReturnStatus IboxStandalone::connect()
-{
-	if(mPortName.empty()) mPortName = std::string("/dev/ttyd4");
-	if(mBaudRate==0) mBaudRate = 9600;
-
-	port = new vpr::SerialPort(mPortName);
-    port->setOpenReadWrite();
-    if ( !port->open().success() )
-	{
-		std::cerr << "[IBox] Port: " << mPortName << " could not be opened!" << std::endl;
-		return(vpr::ReturnStatus::Fail);
-	}
-	else
-	{
-		std::cerr << "[IBox] Success, Port: " << mPortName << " opened." << std::endl;
-	}
-    port->clearAll();
-    port->setLocalAttach(true);
-    port->setMinInputSize(0);
-    port->setTimeout(0);
-    port->setOutputBaudRate(mBaudRate); // Put me before input to be safe
-    port->setInputBaudRate(mBaudRate);
-    port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-    port->setRead(true);
-	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;
-	if ( autosynch()!=vpr::ReturnStatus::Succeed )
-	{
-		return(vpr::ReturnStatus::Fail);
-	}
-	std::cerr << "[IBox] Done with Autosync." << std::endl;
-	begin();
-	getInfo();
-	return(vpr::ReturnStatus::Succeed);
+   mSerialPort = NULL;
+   mPacket.clear();
 }
 
-unsigned char IboxStandalone::getCmdByte(int t, int anlg, int encd)
+IBoxStandalone::~IBoxStandalone()
 {
-	unsigned char tByte;
-	unsigned char anlgByte;
-	unsigned char encdByte;
-	if ( t )
-	{
-		tByte = TIMER_BIT;
-	}
-	else
-	{
-		tByte = 0;
-	}
-
-	if ( anlg > 4 )
-	{
-		anlgByte=ANALOG_BITS;
-	}
-	else if ( anlg > 2 )
-	{
-		anlgByte=ANALOG_HI_BIT;
-	}
-	else if ( anlg > 0 )
-	{
-		anlgByte=ANALOG_LO_BIT;
-	}
-	else
-	{
-		anlgByte=0;
-	}
-
-	if ( encd > 4 )
-	{
-		encdByte=ENCODER_BITS;
-	}
-	else if ( encd > 2 )
-	{
-		encdByte=ENCODER_HI_BIT;
-	}
-	else if ( encd > 0 )
-	{
-		encdByte=ENCODER_LO_BIT;
-	}
-	else
-	{
-		encdByte=0;
-	}
-	return(tByte | anlgByte | encdByte);
+   if ( mSerialPort != NULL )
+   {
+      try
+      {
+         if (mSerialPort->isOpen())
+         {
+            disconnect();
+         }
+      }
+      catch (...)
+      {;}
+      delete mSerialPort;
+      mSerialPort = NULL;
+   }
 }
 
-vpr::ReturnStatus IboxStandalone::getInfo()
+void IBoxStandalone::connect(const std::string& port_name, long int baud)
+   throw (vpr::IOException, IBoxException)
 {
-	vpr::ReturnStatus status = vpr::ReturnStatus::Succeed;
-	//Get Product Name from device, all Immersion products return there name
-	//so that drivers could be used for more than one Immersion device dynamically
-    if ( string_cmd(GET_PROD_NAME) != vpr::ReturnStatus::Succeed )
-	{
-		std::cerr << "	[IBox] Could not get Product Name!" << std::endl;
-		status=vpr::ReturnStatus::Fail;
-	}
-	else
-	{
-		std::cerr << "	[IBox] Product Name: " << mProduct_name << std::endl;
-	}
-	//Get Product ID
-	if ( string_cmd(GET_PROD_ID) != vpr::ReturnStatus::Succeed )
-	{
-		std::cerr << "	[IBox] Could not get Product ID!" << std::endl;
-		status=vpr::ReturnStatus::Fail;
-	}
-	else
-	{
-		std::cerr << "	[IBox] Product ID: " << mProduct_id << std::endl;
-	}
-	//Get Model Name
-	if ( string_cmd(GET_MODEL_NAME) != vpr::ReturnStatus::Succeed )
-	{
-		std::cerr << "	[IBox] Could not get Model Name!" << std::endl;
-		status=vpr::ReturnStatus::Fail;
-	}
-	else
-	{
-		std::cerr << "	[IBox] Model Name: " << mModel_name << std::endl;
-	}
-	//Get Serial Number
-	if ( string_cmd(GET_SERNUM) != vpr::ReturnStatus::Succeed )
-	{
-		std::cerr << "	[IBox] Could not get Serial Number!" << std::endl;
-		status=vpr::ReturnStatus::Fail;
-	}
-	else
-	{
-		std::cerr << "	[IBox] Serial Number: " << mSerial_number << std::endl;
-	}
-	//Get Device Comments
-	if ( string_cmd(GET_COMMENT) != vpr::ReturnStatus::Succeed )
-	{
-		std::cerr << "	[IBox] Could not get Comment!" << std::endl;
-		status=vpr::ReturnStatus::Fail;
-	}
-	else
-	{
-		std::cerr << "	[IBox] Comment: " << mComment << std::endl;
-	}
+   mPortName = port_name;
+   mBaudRate = baud;
 
-	//Get Parameter Format
-	if ( string_cmd(GET_PRM_FORMAT) != vpr::ReturnStatus::Succeed )
-	{
-		std::cerr << "	[IBox] Could not get Parameter Format!" << std::endl;
-		status=vpr::ReturnStatus::Fail;
-	}
-	else
-	{
-		std::cerr << "	[IBox] Parameter Format: " << mParam_format << std::endl;
-	}
+   mSerialPort = new vpr::SerialPort(mPortName);
+   mSerialPort->setOpenReadWrite();
 
-	//Get Version
-	if ( string_cmd(GET_VERSION) != vpr::ReturnStatus::Succeed )
-	{
-		std::cerr << "	[IBox] Could not get Version!" << std::endl;
-		status=vpr::ReturnStatus::Fail;
-	}
-	else
-	{
-		std::cerr << "	[IBox] Version: " << mVersion << std::endl;
-	}
-	return(status);
+   try
+   {
+      mSerialPort->open();
+      vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
+         << "[IBox] Success, Port: " << mPortName
+         << " (" << mBaudRate << ") opened." << std::endl
+         << vprDEBUG_FLUSH;
+   }
+   catch (vpr::IOException& ex)
+   {
+      vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
+         << "[IBox] Port: " << mPortName << " could not be opened!"
+         << std::endl << vprDEBUG_FLUSH;
+      throw IBoxException("[IBox] Port: " + mPortName
+         + " could not be opened!", VPR_LOCATION);
+   }
+
+   mSerialPort->clearAll();
+   mSerialPort->setLocalAttach(true);
+   mSerialPort->setMinInputSize(0);
+   mSerialPort->setTimeout(0);
+   mSerialPort->setOutputBaudRate(mBaudRate); // Put me before input to be safe
+   mSerialPort->setInputBaudRate(mBaudRate);
+   mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+   mSerialPort->setRead(true);
+
+   vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
+      << "[IBox] Changed all of the serial port settings."
+      << std::endl << vprDEBUG_FLUSH;
+   if (!autoSync())
+   {
+      throw IBoxException(
+         "Could not sync with IBox device, try power cycling",
+         VPR_LOCATION);
+   }
+   
+   vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
+      << "[IBox] Done with autosync." << std::endl << vprDEBUG_FLUSH;
+   beginCommunication();
+   getInfo();
 }
 
-void   IboxStandalone::invalidate_fields()
+vpr::Uint8 IBoxStandalone::getCommandByte(const int timerFlag,
+                                          const int numAnalogs,
+                                          const int numEncoders) const
 {
-	mTimer_updated = 0;
-	mAnalog_updated[0] = 0;
-	mAnalog_updated[1] = 0;
-	mAnalog_updated[2] = 0;
-	mAnalog_updated[3] = 0;
-	mAnalog_updated[4] = 0;
-	mAnalog_updated[5] = 0;
-	mAnalog_updated[6] = 0;
-	mAnalog_updated[7] = 0;
-	mEncoder_updated[0] = 0;
-	mEncoder_updated[1] = 0;
-	mEncoder_updated[2] = 0;
-	mEncoder_updated[3] = 0;
-	mEncoder_updated[4] = 0;
-	mEncoder_updated[5] = 0;
-	mMarker_updated = 0;
+   vpr::Uint8 timer_byte;
+   vpr::Uint8 analog_byte;
+   vpr::Uint8 encoder_byte;
+
+   if ( timerFlag )
+   {
+      timer_byte = TIMER_BIT;
+   }
+   else
+   {
+      timer_byte = 0;
+   }
+
+   if ( numAnalogs > 4 )
+   {
+      analog_byte = ANALOG_BITS;
+   }
+   else if ( numAnalogs > 2 )
+   {
+      analog_byte = ANALOG_HI_BIT;
+   }
+   else if ( numAnalogs > 0 )
+   {
+      analog_byte = ANALOG_LO_BIT;
+   }
+   else
+   {
+      analog_byte = 0;
+   }
+
+   if ( numEncoders > 4 )
+   {
+      encoder_byte = ENCODER_BITS;
+   }
+   else if ( numEncoders > 2 )
+   {
+      encoder_byte = ENCODER_HI_BIT;
+   }
+   else if ( numEncoders > 0 )
+   {
+      encoder_byte = ENCODER_LO_BIT;
+   }
+   else
+   {
+      encoder_byte = 0;
+   }
+   return (timer_byte | analog_byte | encoder_byte);
 }
 
-vpr::ReturnStatus IboxStandalone::autosynch()
+void IBoxStandalone::getInfo() throw (vpr::IOException)
 {
-	vpr::Uint32 written;
-	unsigned char temp[4];
-	int trys = 0;
+   printInfo(GET_PROD_NAME, mProductId, "Product Name");
+   printInfo(GET_PROD_ID, mProductId, "Product ID");
+   printInfo(GET_MODEL_NAME, mModelName, "Model Name");
+   printInfo(GET_SERNUM, mSerialNumber, "Serial Number");
+   printInfo(GET_COMMENT, mComment, "Comment");
+   printInfo(GET_PRM_FORMAT, mParamFormat, "Parameter Format");
+   printInfo(GET_VERSION, mVersion, "Version:");
+}
 
-	end();
-    port->write(SIGNON_STR, sizeof(SIGNON_STR) - 1, written);
-	vpr::System::msleep(150); /* XXX: Artificial pause */
+void IBoxStandalone::clearUpdateFieldss()
+{
+   mTimerUpdated = 0;
+   mAnalogUpdated[0] = 0;
+   mAnalogUpdated[1] = 0;
+   mAnalogUpdated[2] = 0;
+   mAnalogUpdated[3] = 0;
+   mAnalogUpdated[4] = 0;
+   mAnalogUpdated[5] = 0;
+   mAnalogUpdated[6] = 0;
+   mAnalogUpdated[7] = 0;
+   mEncoderUpdated[0] = 0;
+   mEncoderUpdated[1] = 0;
+   mEncoderUpdated[2] = 0;
+   mEncoderUpdated[3] = 0;
+   mEncoderUpdated[4] = 0;
+   mEncoderUpdated[5] = 0;
+   mMarkerUpdated = 0;
+}
 
-	port->read(&temp, 1, written, slowTimeOut);
-	//Try for a specified numer of times
-	while ( trys < 10 )
-	{
-        if ( temp[0] == 'I' )
-		{
-			port->read(&temp, 3, written, fastTimeOut);
+bool IBoxStandalone::autoSync()
+{
+   vpr::Uint32 written;
+   char temp[4];
+   vpr::Interval timeout(100, vpr::Interval::Msec);
+   int trys = 0;
+   
+   // Try to reset the device.
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   sendEndCommand();
+   vpr::System::msleep(100);
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+
+   // Try to sync for a specified number of times
+   while ( trys < 10 )
+   {
+      try
+      {
+         mSerialPort->write(SIGNON_STR, sizeof(SIGNON_STR) - 1, written);
+         mSerialPort->read(&temp, 1, written, timeout);
+
+         if ( temp[0] == 'I' )
+         {
+            mSerialPort->read(&temp, 3, written, timeout);
+            
             if ( temp[0] == 'M' && temp[1] == 'M' && temp[2] == 'C' )
-			{
-				return(vpr::ReturnStatus::Succeed);
-			}
-		}
-		port->write(SIGNON_STR, sizeof(SIGNON_STR) - 1, written);
-		vpr::System::msleep(150); /* XXX: Artificial pause */
-		port->read(&temp, 1, written, slowTimeOut);
-		trys++;
-	}
-    return(vpr::ReturnStatus::Fail);
+            {
+               return true;
+            }
+         }
+      }
+      catch (vpr::TimeoutException& ex)
+      {
+         // Do nothing on timeouts.
+      }
+
+      trys++;
+   }
+   return false;
 }
 
-int IboxStandalone::begin()
+bool IBoxStandalone::beginCommunication()
 {
-	vpr::Uint32 written;
-	port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-	port->write(BEGIN_STR,sizeof(BEGIN_STR) - 1, written);
-    if ( read_string(mProduct_id) == vpr::ReturnStatus::Succeed )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+   vpr::Uint32 written;
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   mSerialPort->write(BEGIN_STR, sizeof(BEGIN_STR) - 1, written);
+   
+   try
+   {
+      mProductId = readString();
+      return true;
+   }
+   catch (...)
+   {}
+   return false;
 }
 
-
-int IboxStandalone::end()
+void IBoxStandalone::sendEndCommand() throw (vpr::IOException)
 {
-	vpr::Uint32 written;
-	port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-	if ( port->write(END_STR, sizeof(END_STR) - 1, written).success() )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+   vpr::Uint32 written;
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+
+   mSerialPort->write(END_STR, sizeof(END_STR) - 1, written);
 }
 
-void IboxStandalone::disconnect()
+void IBoxStandalone::disconnect() throw (vpr::IOException)
 {
-	port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-	end();
-	port->close();
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   sendEndCommand();
+   mSerialPort->close();
 }
 
-vpr::ReturnStatus IboxStandalone::string_cmd(byte cmnd)
+bool IBoxStandalone::sendStringCommand(const vpr::Uint8 command) const
 {
-	
-	vpr::Uint32 written;
-	vpr::ReturnStatus result;
+   vpr::Uint32 written;
+   vpr::Uint8 response;
+   vpr::Interval timeout(100, vpr::Interval::Msec);
 
-	char temp=cmnd;
-    char* buffer = &temp;
-    char ch[2];
-
-	port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-	port->write(buffer, 1, written);
-	port->read(ch, 1, written,fastTimeOut);
-	if ( ch[0]!=*buffer )		//If the returned command does not match the sent command
-	{
-		vpr::System::msleep(150);		//We try one more time
-		port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-        port->write(buffer, 1, written);
-        if ( (port->read(ch, 1, written,slowTimeOut) != vpr::ReturnStatus::Succeed) || (ch[0]!=*buffer) )
-		{
-			return(vpr::ReturnStatus::Fail);
-		}
-	}
-    switch ( cmnd )
-	{
-		case GET_PROD_NAME:
-			result = read_string(mProduct_name);
-			break;
-		case GET_PROD_ID:
-			result = read_string(mProduct_id);
-			break;
-		case GET_MODEL_NAME:
-			result = read_string(mModel_name);
-			break;
-		case GET_SERNUM:
-			result = read_string(mSerial_number);
-			break;
-		case GET_COMMENT:
-			result = read_string(mComment);
-			break;
-		case GET_PRM_FORMAT:
-			result = read_string(mParam_format);
-			break;
-		case GET_VERSION:
-			result = read_string(mVersion);
-			break;
-		default:
-			result = vpr::ReturnStatus::Succeed;
-			break;
-	}
-	return result;
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   mSerialPort->write(&command, 1, written);
+   mSerialPort->read(&response, 1, written, timeout);
+   
+   // If the returned command does not match the sent command
+   if ( response != command )
+   {
+      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      mSerialPort->write(&command, 1, written);
+      try
+      {
+         mSerialPort->read(&response, 1, written, timeout);
+      }
+      catch (vpr::IOException& ex)
+      {
+         return false;
+      }
+      
+      if (response != command)
+      {
+         return false;
+      }
+   }
+   return true;
 }
 
-vpr::ReturnStatus IboxStandalone::read_string(char *str)
+std::string IBoxStandalone::readString() throw (vpr::IOException)
 {
-	vpr::Uint32 written;
-	vpr::ReturnStatus status;
-	char ch;
+   char buffer[MAX_STRING_SIZE];
+   char* buffer_ptr = buffer;
+   vpr::Uint32 written;
+   char ch;
+   vpr::Interval timeout(100, vpr::Interval::Msec);
 
-	status = port->read(&ch,1,written, fastTimeOut);
-	if(status != vpr::ReturnStatus::Succeed)
-	{
-		return(vpr::ReturnStatus::Fail);
-	}
-	else
-	{
-		while ( status == vpr::ReturnStatus::Succeed )
-		{
-			*str++ = (byte) ch;
-			status = port->read(&ch,1,written, fastTimeOut);
-		}
-	}
-	return(vpr::ReturnStatus::Succeed);
+   mSerialPort->read(&ch,1,written, timeout);
+
+   while ( 0 != ch )
+   {
+      *(buffer_ptr++) = (char) ch;
+      mSerialPort->read(&ch,1,written, timeout);
+   }
+   return (std::string(buffer));
 }
 
-vpr::ReturnStatus IboxStandalone::wait_update(int timer_flag, int num_analogs ,int num_encoders)
+void IBoxStandalone::waitForUpdate(int timerFlag, int numAnalogs, int numEncoders)
+   throw (vpr::IOException)
 {
-	std_cmd(timer_flag, num_analogs, num_encoders);
-	return wait_packet();
+   sendCommand(timerFlag, numAnalogs, numEncoders);
+   waitForPacket();
 }
 
-vpr::ReturnStatus    IboxStandalone::wait_packet()
+void IBoxStandalone::waitForPacket()
 {
-	while ( check_packet() == vpr::ReturnStatus::InProgress );
-	return(vpr::ReturnStatus::Succeed);			//Might as well be void return
+   bool running(true);
+   while (running)
+   {
+      try
+      {
+         checkForPacket();
+      }
+      catch (vpr::TimeoutException& ex)
+      {
+         continue;
+      }
+      catch (IBoxException& ex)
+      {
+         continue;
+      }
+
+      // If there were no errors, then we know we have the packet.
+      running = false;
+   }   
 }
 
-void IboxStandalone::std_cmd(int timer_flag, int analog_reports, int encoder_reports)
+void IBoxStandalone::sendCommand(const int timerFlag, const int numAnalogs,
+                                 const int numEncoders) const
+   throw (vpr::IOException)
 {
-	vpr::Uint32 written;
-	unsigned char cmnd = getCmdByte(timer_flag, analog_reports, encoder_reports);
-	port->write(&cmnd, 1, written);
+   vpr::Uint32 written;
+   vpr::Uint8 command = getCommandByte(timerFlag, numAnalogs, numEncoders);
+   mSerialPort->write(&command, 1, written);
 }
 
-void IboxStandalone::simple_cfg_cmd(byte cmnd)
+void IBoxStandalone::sendSimpleConfigCommand(const vpr::Uint8 command) const
 {
-	vpr::Uint32 written;
-	char temp = cmnd;
-	char* buffer = &temp;
-	port->write(buffer, sizeof(buffer), written);
+   vpr::Uint32 written;
+   mSerialPort->write(&command, 1, written);
 }
 
-vpr::ReturnStatus IboxStandalone::passwd_cmd(byte cmnd)
+void IBoxStandalone::sendPasswordCommand(const vpr::Uint8 command,
+   const std::vector<vpr::Uint8> args) throw (vpr::IOException, IBoxException)
 {
-	char temp = cmnd;
-	char* buffer = &temp;
-	vpr::Uint16 size;
-	vpr::Uint32 written;
-	char ch[2];
-	char reader[2];
-	port->write(buffer, 1, written);
-    port->read(ch, 1, written, fastTimeOut);
-	while ( ch[0]!=cmnd )
-	{
-		if ( port->getMinInputSize(size).failure() )
-		{
-			return(vpr::ReturnStatus::Fail);
-		}
+   vpr::Uint8 response;
+   vpr::Uint32 bytes_written;
+   vpr::Uint32 bytes_read;
+   vpr::Interval timeout(100, vpr::Interval::Msec);
 
-		if ( ch!=0 )
-		{
-			port->read(ch, 1, written, fastTimeOut);
-		}
-        port->read(ch, 1, written, slowTimeOut);
-	}
-	if ( ch[0]==cmnd )
-	{
-		port->write(mSerial_number, strlen(mSerial_number), written);
-		port->write(NULL, 1, written);
-        port->read(reader, 1, written, fastTimeOut);
-		if ( (unsigned char) reader[0] == PASSWD_OK )
-		{
-			port->write(mCfg_args, 1, written);
-			return(vpr::ReturnStatus::Succeed);
-		}
-		else return (vpr::ReturnStatus::Fail);
-	}
-	else return(vpr::ReturnStatus::Timeout);
+   // Write command
+   mSerialPort->write(&command, 1, bytes_written);
+   mSerialPort->read(&response, 1, bytes_read, timeout);
+
+   while ( response != command )
+   {
+      mSerialPort->read(&response, 1, bytes_read, timeout);
+   }
+
+   mSerialPort->write(mSerialNumber.c_str(), strlen(mSerialNumber.c_str()), bytes_written);
+   // Send NULL to terminate.
+   mSerialPort->write(NULL, 1, bytes_written);
+   mSerialPort->read(&response, 1, bytes_read, timeout);
+   if ( response != PASSWD_OK )
+   {
+      throw IBoxException("Password not accepted.", VPR_LOCATION);
+   }
+   mSerialPort->write(args, args.size(), bytes_written);
 }
 
-
-void IboxStandalone::insert_marker(byte marker)
+void IBoxStandalone::insertMarker(const vpr::Uint8 marker) const
 {
-	simple_cfg_cmd(INSERT_MARKER);
-	char temp = marker;
-	char* buffer = &temp;
-	vpr::Uint32 written;
-	port->write( buffer, 1, written);
+   sendSimpleConfigCommand(INSERT_MARKER);
+   vpr::Uint32 bytes_written;
+   mSerialPort->write( &marker, 1, bytes_written);
 }
 
-vpr::ReturnStatus IboxStandalone::get_home_ref()
+void IBoxStandalone::getHomeRef()
+   throw (vpr::IOException, IBoxException)
 {
-	simple_cfg_cmd(GET_HOME_REF);
-	return wait_packet();
+   sendSimpleConfigCommand(GET_HOME_REF);
+   checkForPacket();
 }
 
-vpr::ReturnStatus IboxStandalone::set_home_ref(int *homeref)
+void IBoxStandalone::setHomeRef(int *homeref)
+   throw (vpr::IOException, IBoxException)
 {
-	mNum_cfg_args = 2*NUM_ENCODERS;
-	mCfg_args[0] = homeref[0] >> 8;
-	mCfg_args[1] = homeref[0] & 0x00FF;
-	mCfg_args[2] = homeref[1] >> 8;
-	mCfg_args[3] = homeref[1] & 0x00FF;
-	mCfg_args[4] = homeref[2] >> 8;
-	mCfg_args[5] = homeref[2] & 0x00FF;
-	mCfg_args[6] = homeref[3] >> 8;
-	mCfg_args[7] = homeref[3] & 0x00FF;
-	mCfg_args[8] = homeref[4] >> 8;
-	mCfg_args[9] = homeref[4] & 0x00FF;
-	mCfg_args[10] = homeref[5] >> 8;
-	mCfg_args[11] = homeref[5] & 0x00FF;
-	return passwd_cmd(SET_HOME_REF);
+   std::vector<vpr::Uint8> args;
+   args.resize(2 * NUM_ENCODERS);
+   args[0] = homeref[0] >> 8;
+   args[1] = homeref[0] & 0x00FF;
+   args[2] = homeref[1] >> 8;
+   args[3] = homeref[1] & 0x00FF;
+   args[4] = homeref[2] >> 8;
+   args[5] = homeref[2] & 0x00FF;
+   args[6] = homeref[3] >> 8;
+   args[7] = homeref[3] & 0x00FF;
+   args[8] = homeref[4] >> 8;
+   args[9] = homeref[4] & 0x00FF;
+   args[10] = homeref[5] >> 8;
+   args[11] = homeref[5] & 0x00FF;
+   sendPasswordCommand(SET_HOME_REF, args);
 }
 
-vpr::ReturnStatus    IboxStandalone::go_home_pos()
+void IBoxStandalone::goHomePosition() throw (vpr::IOException, IBoxException)
 {
-	simple_cfg_cmd(HOME_POS);
-	return wait_packet();
+   sendSimpleConfigCommand(HOME_POS);
+   checkForPacket();
 }
 
-vpr::ReturnStatus    IboxStandalone::set_home_pos(int *homepos)
+void IBoxStandalone::setHomePosition(int *homepos)
+   throw (vpr::IOException, IBoxException)
 {
-	mNum_cfg_args = 2*NUM_ENCODERS;
-	mCfg_args[0] = homepos[0] >> 8;
-	mCfg_args[1] = homepos[0] & 0x00FF;
-	mCfg_args[2] = homepos[1] >> 8;
-	mCfg_args[3] = homepos[1] & 0x00FF;
-	mCfg_args[4] = homepos[2] >> 8;
-	mCfg_args[5] = homepos[2] & 0x00FF;
-	mCfg_args[6] = homepos[3] >> 8;
-	mCfg_args[7] = homepos[3] & 0x00FF;
-	mCfg_args[8] = homepos[4] >> 8;
-	mCfg_args[9] = homepos[4] & 0x00FF;
-	mCfg_args[10] = homepos[5] >> 8;
-	mCfg_args[11] = homepos[5] & 0x00FF;
-	return passwd_cmd(SET_HOME);
+   std::vector<vpr::Uint8> args;
+   args.resize(2 * NUM_ENCODERS);
+   args[0] = homepos[0] >> 8;
+   args[1] = homepos[0] & 0x00FF;
+   args[2] = homepos[1] >> 8;
+   args[3] = homepos[1] & 0x00FF;
+   args[4] = homepos[2] >> 8;
+   args[5] = homepos[2] & 0x00FF;
+   args[6] = homepos[3] >> 8;
+   args[7] = homepos[3] & 0x00FF;
+   args[8] = homepos[4] >> 8;
+   args[9] = homepos[4] & 0x00FF;
+   args[10] = homepos[5] >> 8;
+   args[11] = homepos[5] & 0x00FF;
+   sendPasswordCommand(SET_HOME, args);
 }
 
-vpr::ReturnStatus    IboxStandalone::get_maxes()
+void IBoxStandalone::getMaxValues() throw (vpr::IOException, IBoxException)
 {
-	simple_cfg_cmd(GET_MAXES);
-	return wait_packet();
+   sendSimpleConfigCommand(GET_MAXES);
+   checkForPacket();
 }
 
-vpr::ReturnStatus    IboxStandalone::factory_settings()
+void IBoxStandalone::setFactoryDefaults() throw (vpr::IOException, IBoxException)
 {
-    mNum_cfg_args = 0;
-    return(passwd_cmd(RESTORE_FACTORY));
+   std::vector<vpr::Uint8> args;
+   args.resize(0);
+   sendPasswordCommand(RESTORE_FACTORY, args);
 }
 
-void IboxStandalone::report_motion(int timer_flag, int analog_reports, int encoder_reports, int delay, byte active_btns, int *analog_deltas, int *encoder_deltas)
+void IBoxStandalone::startMotionMode(int timer_flag, int analog_reports,
+   int encoder_reports, int delay, vpr::Uint8 active_btns,
+   std::vector<vpr::Uint8>& analog_deltas,
+   std::vector<vpr::Uint8>& encoder_deltas) throw (vpr::IOException)
 {
    boost::ignore_unused_variable_warning(active_btns);
-	int i;
-	vpr::Uint32 written;
-	char temp;
-	char* buffer;
-	char  cmnd = getCmdByte(timer_flag, analog_reports, encoder_reports);
+   vpr::Uint32 written;
+   vpr::Uint8 temp;
+   vpr::Uint8 command = getCommandByte(timer_flag, analog_reports, encoder_reports);
 
-	//Command Byte 4F or CF
-	temp = REPORT_MOTION;
-	buffer = &temp;
-	port->write(buffer, 1, written);
+   // Command Byte 4F or CF
+   temp = REPORT_MOTION;
+   mSerialPort->write(&temp, 1, written);
 
-	//Minimum delay between packets, 16 bit integer, ticks are ~1 ms
-	temp = (vpr::Uint16)delay;
-	buffer = &temp;
-	port->write(buffer, 1, written);
+   // Minimum delay between packets, 16 bit integer, ticks are ~1 ms
+   temp = (vpr::Uint16)delay;
+   mSerialPort->write(&temp, 1, written);
 
-	//Send the command that we are to act like we are responding to	(Byte 3)
-	buffer = &cmnd;
-	port->write(buffer, 1, written);
+   // Send the command that we are to act like we are responding to	(Byte 3)
+   mSerialPort->write(&command, 1, written);
 
-	//Does each button click generate a packet
-	temp = 0xFF;
-	buffer = &temp;
-	port->write(buffer, 1, written);
+   // Does each button click generate a packet
+   temp = 0xFF;
+   mSerialPort->write(&temp, 1, written);
 
-	//Send the minimum analog change to generate a packet
-	port->write(analog_deltas, sizeof(analog_deltas), written);
+   // Send the minimum analog changes to generate a packet.
+   analog_deltas.resize(NUM_ENCODERS);
+   mSerialPort->write(analog_deltas, analog_deltas.size(), written);
 
-	//Send the minimum encoder change to generate a packet
-	for ( i=0;i<NUM_ENCODERS;i++ )
-	{
-		temp = encoder_deltas[i];
-		buffer = &temp;
-		port->write(buffer, sizeof(buffer), written);
-	}
+   // Send the minimum encoder change to generate a packet.
+   encoder_deltas.resize(NUM_ENCODERS);
+   mSerialPort->write(encoder_deltas, encoder_deltas.size(), written);
 }
 
-void   IboxStandalone::end_motion()
+void IBoxStandalone::stopMotionMode()
 {
-	vpr::Uint32 written;
-	port->write(0, 1, written);
-	port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   vpr::Uint32 written;
+   mSerialPort->write(0, 1, written);
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 }
 
-vpr::ReturnStatus    IboxStandalone::check_packet()
+void IBoxStandalone::checkForPacket() throw (vpr::IOException, IBoxException)
 {
-	vpr::Uint16 size;
-	if ( build_packet()==vpr::ReturnStatus::Succeed )
-	{
-		return(parse_packet());
-	}
-	else
-	{
-		if ( port->getMinInputSize(size).failure() )
-		{
-			return(vpr::ReturnStatus::Timeout);
-		}
-		else
-		{
-			return(vpr::ReturnStatus::InProgress);
-		}
-	}
+   getDataPacket();
+   parsePacket();
 }
 
-vpr::ReturnStatus    IboxStandalone::check_motion()
+void IBoxStandalone::checkForMotion() throw (vpr::IOException, IBoxException)
 {
-	if ( build_packet()==vpr::ReturnStatus::Succeed )
-	{
-		return(parse_packet());
-	}
-	else
-	{
-		return(vpr::ReturnStatus::InProgress);
-	}
+   getDataPacket();
+   parsePacket();
 }
 
-vpr::ReturnStatus  IboxStandalone::build_packet()
+void IBoxStandalone::getDataPacket() throw (vpr::IOException, IBoxException)
 {
-	unsigned char ch;
-	int cmdInt;
-	vpr::Uint32 written;
+   vpr::Uint8 packet_type;
+   vpr::Uint32 written;
+   vpr::Interval timeout(100, vpr::Interval::Msec);
 
-    if ( mPacket.parsed )
-	{
-		if ( port->read(&ch, 1, written,fastTimeOut).failure() )
-		{
-			std::cerr << "[IBox] Failure to get first byte" << std::endl;
-			return(vpr::ReturnStatus::Fail);
-		}
-		else
-		{
-			mPacket.cmd_byte = (byte) ch;				//Set the returned command byte, it will tell us what is in it
-			cmdInt = ch;
-            if ( cmdInt < 0x80 )		   //This is because the 7th bit is always set high when echoed back
-			{
-				std::cerr << "[IBox] Not a valid command!" << std::endl;
-				mPacket.error = 1;
-				return(vpr::ReturnStatus::Fail);
-			}
-			else
-			{
-				mPacket.parsed = 0;
-				mPacket.error = 0;
-				mPacket.data_ptr = mPacket.data;
-				mPacket.num_bytes_needed = packet_size(cmdInt);
-                mPackets_expected--;
-                if ( mPacket.num_bytes_needed > 0 )
-				{
-					while ( port->read(&ch, 1, written,fastTimeOut).success() && --mPacket.num_bytes_needed != 0 )
-					{
-                        *(mPacket.data_ptr)++ = (byte) ch;
-					}
-				}
-                return(vpr::ReturnStatus::Succeed);
-			}
-		}
-	}
-	return(vpr::ReturnStatus::InProgress);
+   try
+   {
+      mSerialPort->read(&packet_type, 1, written, timeout);
+   }
+   catch (vpr::IOException& ex)
+   {
+      vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
+         << "[IBox] Failure to get first byte" << std::endl << vprDEBUG_FLUSH;
+      throw;
+   }
+
+   // Store the command byte as the packet type.
+   mPacket.cmd_byte = packet_type;
+   // This is because the 7th bit is always set high when echoed back
+   if ( packet_type < 0x80 )
+   {
+      vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
+         << "[IBox] Not a valid command!" << std::endl << vprDEBUG_FLUSH;
+      mPacket.error = 1;
+      throw IBoxException("Not a valid command!", VPR_LOCATION);
+   }
+   else
+   {
+      mPacket.error = 0;
+      mPacket.data_ptr = mPacket.data;
+      mPacket.num_bytes_needed = getPacketSize(packet_type);
+
+      mSerialPort->read(mPacket.data_ptr, mPacket.num_bytes_needed, written, timeout);
+   }
 }
 
-vpr::ReturnStatus    IboxStandalone::parse_packet()
+void IBoxStandalone::parsePacket() throw (IBoxException)
 {
-	byte cmnd = mPacket.cmd_byte;
-	unsigned char bits, temp;
-	byte *dp;
-	int *p, *q;
+   vpr::Uint8 command = mPacket.cmd_byte;
+   unsigned char bits;
+   vpr::Uint8* dp;
 
-	if ( mPacket.num_bytes_needed < 0 )
-	{
-		return(vpr::ReturnStatus::Fail);
-	}
-	if ( mPacket.error )
-	{
-		return(vpr::ReturnStatus::Fail);
-	}
+   if ( mPacket.num_bytes_needed == 0 )
+   {
+      throw IBoxException("Empty packet can not be parsed.", VPR_LOCATION);
+   }
+   if ( mPacket.error )
+   {
+      throw IBoxException("Packet error.", VPR_LOCATION);
+   }
 
-	invalidate_fields();
-	dp = mPacket.data;
-	if ( cmnd < CONFIG_MIN )
-	{
-		bits = *dp++;			//Bits = the second byte of the data
-		mButtons = bits;		//mbuttons simply = this first byte
-		p = mButton;
-		*p++ = bits & 0x01;
-		*p++ = bits & 0x02;
-		*p++ = bits & 0x04;
-		*p++ = bits & 0x08;
-		*p++ = bits & 0x10;
-		*p++ = bits & 0x20;
-		*p++ = bits & 0x40;
-		if ( cmnd & TIMER_BIT )
-		{
-			temp = *dp++ << 7;
-			temp += *dp++;
-			mTimer = temp;
-			mTimer_updated = 1;
-		}
-		bits = (cmnd & ANALOG_BITS) >> 2;
-		if ( bits-- )
-		{
-			p = mAnalog;
-			q = mAnalog_updated;
-			*p++ = *dp++ << 1;
-			*p++ = *dp++ << 1;
-			*q++ = 1, *q++ = 1;
-			if ( bits-- )
-			{
-				*p++ = *dp++ << 1;
-				*p++ = *dp++ << 1;
-				*q++ = 1, *q++ = 1;
-				if ( bits-- )
-				{
-					*p++ = *dp++ << 1;
-					*p++ = *dp++ << 1;
-					*p++ = *dp++ << 1;
-					*p++ = *dp++ << 1;
-					*q++ = 1, *q++ = 1;
-					*q++ = 1, *q++ = 1;
-				}
-			}
-			p = mAnalog;
-			*p++ |= (*dp & 0x40 ? 1 : 0);
-			*p++ |= (*dp & 0x20 ? 1 : 0);
-			*p++ |= (*dp & 0x10 ? 1 : 0);
-			*p++ |= (*dp & 0x08 ? 1 : 0);
-			*p++ |= (*dp & 0x04 ? 1 : 0);
-			*p++ |= (*dp & 0x02 ? 1 : 0);
-			*p++ |= (*dp++ & 0x01 ? 1 : 0);
-		}
-		bits = cmnd & ENCODER_BITS;
-		if ( bits-- )
-		{
-			p = mEncoder;
-			q = mEncoder_updated;
-			*p = *dp++ << 7;
-			*p++ += *dp++;
-			*p = *dp++ << 7;
-			*p++ += *dp++;
-			*q++ = 1, *q++ = 1;
-			if ( bits-- )
-			{
-				*p = *dp++ << 7;
-				*p++ += *dp++;
-				*q++ = 1;
-				if ( bits-- )
-				{
-					*p = *dp++ << 7;
-					*p++ += *dp++;
-					*p = *dp++ << 7;
-					*p++ += *dp++;
-					*p = *dp++ << 7;
-					*p++ += *dp++;
-					*q++ = 1, *q++ = 1, *q++ = 1;
-				}
-			}
-		}
-	}
-	else
-	{
-		return(parse_cfg_packet());
-	}
-	mPacket.parsed = 1;
-	//}
-	return(vpr::ReturnStatus::Succeed);
+   clearUpdateFieldss();
+   dp = mPacket.data;
+   if ( command < CONFIG_MIN )
+   {
+      bits = *dp++; // Bits = the second byte of the data
+      mButtonBits = bits; // mbuttons simply = this first byte
+      mButtonValues[0] = (bits & 0x01);
+      mButtonValues[1] = (bits & 0x02) >> 1;
+      mButtonValues[2] = (bits & 0x04) >> 2;
+      mButtonValues[3] = (bits & 0x08) >> 3;
+      mButtonValues[4] = (bits & 0x10) >> 4;
+      mButtonValues[5] = (bits & 0x20) >> 5;
+      mButtonValues[6] = (bits & 0x40) >> 6;
+      if ( command & TIMER_BIT )
+      {
+         mTimer = *dp++ << 7;
+         mTimer += *dp++;
+         mTimerUpdated = 1;
+      }
+      bits = (command & ANALOG_BITS) >> 2;
+      if ( bits-- )
+      {
+         mAnalog[0] = *dp++ << 1;
+         mAnalog[1] = *dp++ << 1;
+         mAnalogUpdated[0] = 1;
+         mAnalogUpdated[1] = 1;
+         if ( bits-- )
+         {
+            mAnalog[2] = *dp++ << 1;
+            mAnalog[3] = *dp++ << 1;
+            mAnalogUpdated[2] = 1;
+            mAnalogUpdated[3] = 1;
+            if ( bits-- )
+            {
+               mAnalog[4] = *dp++ << 1;
+               mAnalog[5] = *dp++ << 1;
+               mAnalog[6] = *dp++ << 1;
+               mAnalog[7] = *dp++ << 1;
+               mAnalogUpdated[4] = 1;
+               mAnalogUpdated[5] = 1;
+               mAnalogUpdated[6] = 1;
+               mAnalogUpdated[7] = 1;
+            }
+         }
+         mAnalog[0] |= (*dp & 0x40 ? 1 : 0);
+         mAnalog[1] |= (*dp & 0x20 ? 1 : 0);
+         mAnalog[2] |= (*dp & 0x10 ? 1 : 0);
+         mAnalog[3] |= (*dp & 0x08 ? 1 : 0);
+         mAnalog[4] |= (*dp & 0x04 ? 1 : 0);
+         mAnalog[5] |= (*dp & 0x02 ? 1 : 0);
+         mAnalog[6] |= (*dp++ & 0x01 ? 1 : 0);
+      }
+      bits = command & ENCODER_BITS;
+      if ( bits-- )
+      {
+         mEncoder[0] = *dp++ << 7;
+         mEncoder[0] += *dp++;
+         mEncoder[1] = *dp++ << 7;
+         mEncoder[1] += *dp++;
+         mEncoderUpdated[0] = 1;
+         mEncoderUpdated[1] = 1;
+         if ( bits-- )
+         {
+            mEncoder[2] = *dp++ << 7;
+            mEncoder[2] += *dp++;
+            mEncoderUpdated[2] = 1;
+            if ( bits-- )
+            {
+               mEncoder[3] = *dp++ << 7;
+               mEncoder[3] += *dp++;
+               mEncoder[4] = *dp++ << 7;
+               mEncoder[4] += *dp++;
+               mEncoder[5] = *dp++ << 7;
+               mEncoder[5] += *dp++;
+               mEncoderUpdated[3] = 1;
+               mEncoderUpdated[4] = 1;
+               mEncoderUpdated[5] = 1;
+            }
+         }
+      }
+   }
+   else
+   {
+      parseConfigPacket();
+   }
 }
 
-vpr::ReturnStatus    IboxStandalone::parse_cfg_packet()
+void IBoxStandalone::parseConfigPacket() throw (IBoxException)
 {
-	byte *dp = mPacket.data;
-	int *p;
-	std::cout << "Parsing config!!!!" <<std::endl;
-	switch ( mPacket.cmd_byte )
-	{
-		case GET_HOME_REF:
-			p = mHome_ref;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			break;
-		case GET_MAXES:
-			p = mButton_supported;
-			*p++ = *dp & 0x01; *p++ = *dp & 0x02;
-			*p++ = *dp & 0x04; *p++ = *dp & 0x08;
-			*p++ = *dp & 0x10; *p++ = *dp & 0x20;
-			*p++ = *dp++ & 0x40;
+   vpr::Uint8 *dp = mPacket.data;
 
-			mMax_timer = *dp++ << 8;
-			mMax_timer |= *dp++;
+   switch ( mPacket.cmd_byte )
+   {
+   case GET_HOME_REF:
+      mHomeRef[0] = *dp++ << 8;
+      mHomeRef[0] += *dp++;
+      mHomeRef[1] = *dp++ << 8;
+      mHomeRef[1] += *dp++;
+      mHomeRef[2] = *dp++ << 8;
+      mHomeRef[2] += *dp++;
+      mHomeRef[3] = *dp++ << 8;
+      mHomeRef[3] += *dp++;
+      mHomeRef[4] = *dp++ << 8;
+      mHomeRef[4] += *dp++;
+      mHomeRef[5] = *dp++ << 8;
+      mHomeRef[5] += *dp++;
+      break;
+   case GET_MAXES:
+      mButtonSupported[0] = *dp & 0x01;
+      mButtonSupported[1] = (*dp & 0x02) >> 1;
+      mButtonSupported[2] = (*dp & 0x04) >> 2;
+      mButtonSupported[3] = (*dp & 0x08) >> 3;
+      mButtonSupported[4] = (*dp & 0x10) >> 4;
+      mButtonSupported[5] = (*dp & 0x20) >> 5;
+      mButtonSupported[6] = (*dp++ & 0x40) >> 6;
 
-			p = mMax_analog;
-			*p++ = *dp++; *p++ = *dp++; *p++ = *dp++;
-			*p++ = *dp++; *p++ = *dp++; *p++ = *dp++;
-			*p++ = *dp++; *p++ = *dp++;
-			p = mMax_analog;
-			*p++ |= (0x40 & *dp ? 0x01 : 0);
-			*p++ |= (0x20 & *dp ? 0x01 : 0);
-			*p++ |= (0x10 & *dp ? 0x01 : 0);
-			*p++ |= (0x08 & *dp ? 0x01 : 0);
-			*p++ |= (0x04 & *dp ? 0x01 : 0);
-			*p++ |= (0x02 & *dp ? 0x01 : 0);
-			*p++ |= (0x01 & *dp++ ? 0x01 : 0);
+      mMaxTimer = *dp++ << 8;
+      mMaxTimer |= *dp++;
 
-			p = mMax_encoder;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			*p = *dp++ << 8; *p++ += *dp++;
-			break;
-		case INSERT_MARKER:
-			mMarker = *dp;
-			mMarker_updated = 1;
-			break;
-		case HOME_POS:	/* No action needed */
-		case REPORT_MOTION:
-			break;
-		default:
-			return(vpr::ReturnStatus::Fail);
-			break;
-	}
-	return(vpr::ReturnStatus::Succeed);
+      mMaxAnalog[0] = *dp++;
+      mMaxAnalog[1] = *dp++;
+      mMaxAnalog[2] = *dp++;
+      mMaxAnalog[3] = *dp++;
+      mMaxAnalog[4] = *dp++;
+      mMaxAnalog[5] = *dp++;
+      mMaxAnalog[6] = *dp++;
+      mMaxAnalog[7] = *dp++;
+
+      mMaxAnalog[0] |= (0x40 & *dp ? 0x01 : 0);
+      mMaxAnalog[1] |= (0x20 & *dp ? 0x01 : 0);
+      mMaxAnalog[2] |= (0x10 & *dp ? 0x01 : 0);
+      mMaxAnalog[3] |= (0x08 & *dp ? 0x01 : 0);
+      mMaxAnalog[4] |= (0x04 & *dp ? 0x01 : 0);
+      mMaxAnalog[5] |= (0x02 & *dp ? 0x01 : 0);
+      mMaxAnalog[6] |= (0x01 & *dp++ ? 0x01 : 0);
+
+      mMaxEncoder[0] = *dp++ << 8;
+      mMaxEncoder[0] += *dp++;
+      mMaxEncoder[1] = *dp++ << 8;
+      mMaxEncoder[1] += *dp++;
+      mMaxEncoder[2] = *dp++ << 8;
+      mMaxEncoder[2] += *dp++;
+      mMaxEncoder[3] = *dp++ << 8;
+      mMaxEncoder[3] += *dp++;
+      mMaxEncoder[4] = *dp++ << 8;
+      mMaxEncoder[4] += *dp++;
+      mMaxEncoder[5] = *dp++ << 8;
+      mMaxEncoder[5] += *dp++;
+      break;
+   case INSERT_MARKER:
+      mMarker = *dp;
+      mMarkerUpdated = 1;
+      break;
+   case HOME_POS:	/* No action needed */
+   case REPORT_MOTION:
+      break;
+   default:
+      throw IBoxException("Unsupported configuration packet", VPR_LOCATION);
+      break;
+   }
 }
 
-int    IboxStandalone::packet_size(int cmd)
+vpr::Uint32 IBoxStandalone::getPacketSize(const vpr::Uint8 packetType)
 {
-	int size = 1;	/* Regular cmds always include buttons byte */
-	int bits;
+   // Regular cmds always include buttons byte
+   vpr::Uint32 size = 1;
+   int bits;
 
-	if ( cmd < CONFIG_MIN )
-	{
-		if ( cmd & TIMER_BIT )
-		{
-			size += 2;
-		}
+   if ( packetType < CONFIG_MIN )
+   {
+      if ( packetType & TIMER_BIT )
+      {
+         size += 2;
+      }
 
-		bits = cmd & ANALOG_BITS;			//Extract ANALOG bits and TEST
-		if ( bits == ANALOG_LO_BIT )
-		{
-			size += 2 + 1;
-		}
-		else if ( bits == ANALOG_HI_BIT )
-		{
-			size += 4 + 1;
-		}
-		else if ( bits == ANALOG_BITS )
-		{
-			size += 8 + 1;
-		}
+      // Extract ANALOG bits and TEST
+      bits = packetType & ANALOG_BITS;
+      if ( bits == ANALOG_LO_BIT )
+      {
+         size += 2 + 1;
+      }
+      else if ( bits == ANALOG_HI_BIT )
+      {
+         size += 4 + 1;
+      }
+      else if ( bits == ANALOG_BITS )
+      {
+         size += 8 + 1;
+      }
 
-		bits = cmd & ENCODER_BITS;			//Extract Encoder bits and TEST
-		if ( bits == ENCODER_LO_BIT )
-		{
-			size += 2*2;
-		}
-		else if ( bits == ENCODER_HI_BIT )
-		{
-			size += 2*3;
-		}
-		else if ( bits == ENCODER_BITS )
-		{
-			size += 2*6;
-		}
-	}
-	else switch ( cmd )
-		{
-			case GET_HOME_REF:
-				size = 12;
-				break;
-			case SET_BAUD:
-			case INSERT_MARKER:
-				size = 1;
-				break;
-			case GET_MAXES:
-				size = 24;
-				break;
-			case HOME_POS:
-			case END_SESSION:
-			case REPORT_MOTION:
-				size = 0;
-				break;
-			case GET_PARAMS:
-			case GET_PROD_NAME:
-			case GET_PROD_ID:
-			case GET_MODEL_NAME:
-			case GET_SERNUM:
-			case GET_COMMENT:
-			case GET_PRM_FORMAT:
-			case GET_VERSION:
-				//case SET_PARAMS:
-			case SET_HOME:
-			case SET_HOME_REF:
-			case RESTORE_FACTORY:
-				size = -1;
-				break;
-		}
-
-	return size;
+      // Extract Encoder bits and TEST
+      bits = packetType & ENCODER_BITS;
+      if ( bits == ENCODER_LO_BIT )
+      {
+         size += 2*2;
+      }
+      else if ( bits == ENCODER_HI_BIT )
+      {
+         size += 2*3;
+      }
+      else if ( bits == ENCODER_BITS )
+      {
+         size += 2*6;
+      }
+   }
+   else
+   {
+      switch ( packetType )
+      {
+      case GET_HOME_REF:
+         size = 12;
+         break;
+      case SET_BAUD:
+      case INSERT_MARKER:
+         size = 1;
+         break;
+      case GET_MAXES:
+         size = 24;
+         break;
+      case HOME_POS:
+      case END_SESSION:
+      case REPORT_MOTION:
+         size = 0;
+         break;
+      case GET_PARAMS:
+      case GET_PROD_NAME:
+      case GET_PROD_ID:
+      case GET_MODEL_NAME:
+      case GET_SERNUM:
+      case GET_COMMENT:
+      case GET_PRM_FORMAT:
+      case GET_VERSION:
+      //case SET_PARAMS:
+      case SET_HOME:
+      case SET_HOME_REF:
+      case RESTORE_FACTORY:
+         size = 0;
+         break;
+      }
+   }
+   return size;
 }
 
-int IboxStandalone::buttonFunc(int pos)
+int IBoxStandalone::getButtonData(int pos) const
 {
-	return mButton[pos];
+   return mButtonValues[pos];
 }
 
-int IboxStandalone::analogFunc(int pos)
+int IBoxStandalone::getAnalogData(int pos) const
 {
-	return mAnalog[pos];
+   return mAnalog[pos];
 }

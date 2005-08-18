@@ -70,9 +70,9 @@ void IBox::controlLoop(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
 
-   while(!mDoneFlag)
+   while (!mDoneFlag)
    {
-     sample();
+      mDataUpdated = sample();
    }
 }
 
@@ -131,46 +131,51 @@ IBox::~IBox()
 *********************************************** ahimberg */
 bool IBox::startSampling()
 {
-   vpr::ReturnStatus result;
-
-   if (mThread == NULL)
+   if (mThread != NULL)
    {
-      result = mPhysicalIbox.connect(mPortName, mBaudRate);
-      if (result == vpr::ReturnStatus::Succeed)
-      {
-         mActive = true;
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-            << "     Connected to IBox.\n" << std::flush << vprDEBUG_FLUSH;
-      } else
-      {
-         mActive = false;
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << "   FAILED TO CONNECT to the Ibox named " << mInstName
-            << std::endl << "     Ibox settings were: " << std::endl
-            << "      port : " << mPortName << std::endl
-            << "   mBaudRate: " << mBaudRate << std::endl << std::endl
-            << vprDEBUG_FLUSH;
-         return 0;
-      }
-      mPhysicalIbox.std_cmd(0,4,0);
-      
-      // Set exit flag and spawn sample thread
-      mDoneFlag = false;
-      vpr::ThreadMemberFunctor<IBox>* memberFunctor = 
-         new vpr::ThreadMemberFunctor<IBox>(this, &IBox::controlLoop, NULL);
-      mThread = new vpr::Thread(memberFunctor);
+      return false;
+   }
 
-      if ( ! mThread->valid() )
-      {
-         return 0; //fail
-      }
-      else
-      {
-         return 1;
-      }
+   try
+   {
+      mIBox = new IBoxStandalone();
+      mIBox->connect(mPortName, mBaudRate);
+      mActive = true;
+   }
+   catch (vpr::Exception& ex)
+   {
+      mActive = false;
+      delete mIBox;
+      mIBox = NULL;
+
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "Failed to connect to the IBox: " << mInstName << std::endl
+         << "   port: " << mPortName << std::endl
+         << "   baud: " << mBaudRate << std::endl
+         << ex.getExtendedDescription() << std::endl
+         << vprDEBUG_FLUSH;
+
+      return false;
+   }
+   
+   // Set exit flag and spawn sample thread
+   mDoneFlag = false;
+   vpr::ThreadMemberFunctor<IBox>* memberFunctor = 
+      new vpr::ThreadMemberFunctor<IBox>(this, &IBox::controlLoop, NULL);
+   mThread = new vpr::Thread(memberFunctor);
+
+   if ( ! mThread->valid() )
+   {
+      mIBox->disconnect();
+      delete mIBox;
+      mIBox = NULL;
+
+      return false;
    }
    else
-      return 0; // already sampling
+   {
+      return true;
+   }
 }
 
 /**********************************************************
@@ -183,58 +188,55 @@ bool IBox::startSampling()
   Each call to this function is not guaranteed to result in new data.
 
 *********************************************** ahimberg */
-bool IBox::sample()
+bool IBox::sample() //throw (vpr::IOException)
 {
-   //struct timeval tv;
-   // double start_time, stop_time;
-   vpr::ReturnStatus result;
-   //int tmp;
-   //static int c = 0;
-   IboxData cur_reading;
-
-   result = mPhysicalIbox.check_packet();
-   if (result == vpr::ReturnStatus::InProgress)
+   try
    {
-   }
-   else if (result == vpr::ReturnStatus::Succeed)
-   {
-      mPhysicalIbox.std_cmd(0,4,0);
-      //    if (c == 0) {
-      //      vpr::System::gettimeofday(&tv,0);
-      //      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-      //    }
-      //    c++;
-      //    if (c == 60) {
-      //      vpr::System::gettimeofday(&tv,0);
-      //      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-      //      std::cout << 1/((stop_time-start_time) / 60)
-      //                << "  " << std::endl;
-      //      c = 0;
-      //    }
+      mIBox->sendCommand(0,4,0);
+      mIBox->checkForPacket();
 
-      cur_reading.button[0] = mPhysicalIbox.buttonFunc(0);
-      cur_reading.button[1] = mPhysicalIbox.buttonFunc(1);
-      cur_reading.button[2] = mPhysicalIbox.buttonFunc(2);
-      cur_reading.button[3] = mPhysicalIbox.buttonFunc(3);
+      mButton[0] = mIBox->getButtonData(0);
+      mButton[1] = mIBox->getButtonData(1);
+      mButton[2] = mIBox->getButtonData(2);
+      mButton[3] = mIBox->getButtonData(3);
 
       // we really need to do normalization here instead of in getData.
       // need this so we return consistent AnalogData. -cj
       float f;
-      this->normalizeMinToMax( mPhysicalIbox.analogFunc(0), f );
-      cur_reading.analog[0] = f;
-      this->normalizeMinToMax( mPhysicalIbox.analogFunc(1), f );
-      cur_reading.analog[1] = f;
-      this->normalizeMinToMax( mPhysicalIbox.analogFunc(2), f );
-      cur_reading.analog[2] = f;
-      this->normalizeMinToMax( mPhysicalIbox.analogFunc(3), f );
-      cur_reading.analog[3] = f;
+      this->normalizeMinToMax( mIBox->getAnalogData(0), f );
+      mAnalog[0] = f;
+      this->normalizeMinToMax( mIBox->getAnalogData(1), f );
+      mAnalog[1] = f;
+      this->normalizeMinToMax( mIBox->getAnalogData(2), f );
+      mAnalog[2] = f;
+      this->normalizeMinToMax( mIBox->getAnalogData(3), f );
+      mAnalog[3] = f;
 
-      cur_reading.setTime();
+      mButton[0].setTime();
+      mButton[1].setTime( mButton[0].getTime() );
+      mButton[2].setTime( mButton[0].getTime() );
+      mButton[3].setTime( mButton[0].getTime() );
+      mAnalog[0].setTime( mButton[0].getTime() );
+      mAnalog[1].setTime( mButton[0].getTime() );
+      mAnalog[2].setTime( mButton[0].getTime() );
+      mAnalog[3].setTime( mButton[0].getTime() );
 
-      addAnalogSample(cur_reading.analog);
-      addDigitalSample(cur_reading.button);
+      addAnalogSample(mAnalog);
+      addDigitalSample(mButton);
    }
-   return 1;
+   catch (vpr::TimeoutException& ex)
+   {
+      return false;
+   }
+   catch (IBoxException& ex)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.getExtendedDescription()
+         << vprDEBUG_FLUSH;
+
+      return false;
+   }
+   return true;
 }
 
 /**********************************************************
@@ -254,13 +256,18 @@ bool IBox::stopSampling()
       delete(mThread);
       mThread = NULL;
 
-      vpr::System::usleep(100);        // 100 uSec pause
+      vpr::System::usleep(100);
 
-      mPhysicalIbox.disconnect();
-      std::cout << "stopping the ibox.." << std::endl;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "Stopping the IBox."
+         << vprDEBUG_FLUSH;
+
+      mIBox->disconnect();
+      delete mIBox;
+      mIBox = NULL;
    }
 
-  return 1;
+  return true;
 }
 
 /**********************************************************
