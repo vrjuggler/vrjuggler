@@ -134,98 +134,98 @@ public:
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter \p from.
     */
-   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 len,
-                              vpr::InetAddr& from, vpr::Uint32& bytesRead,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recvfrom(void* msg, const vpr::Uint32 len,
+                 vpr::InetAddr& from, vpr::Uint32& bytesRead,
+                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSocketDgramImpl->recvfrom(msg, len, from, bytesRead, timeout);
+      mSocketDgramImpl->recvfrom(msg, len, from, bytesRead, timeout);
    }
 
    /**
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter \p from.
     */
-   vpr::ReturnStatus recvfrom(std::string& msg, const vpr::Uint32 len,
-                              vpr::InetAddr& from, vpr::Uint32& bytesRead,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recvfrom(std::string& msg, const vpr::Uint32 len,
+                 vpr::InetAddr& from, vpr::Uint32& bytesRead,
+                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
       msg.resize(len);
       memset(&msg[0], '\0', msg.size());
 
-      return recvfrom((void*) &msg[0], msg.size(), from, bytesRead, timeout);
+      recvfrom((void*) &msg[0], msg.size(), from, bytesRead, timeout);
    }
 
    /**
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter \p from.
     */
-   vpr::ReturnStatus recvfrom(std::vector<vpr::Uint8>& msg,
-                              const vpr::Uint32 len, vpr::InetAddr& from,
-                              vpr::Uint32& bytesRead,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recvfrom(std::vector<vpr::Uint8>& msg,
+                 const vpr::Uint32 len, vpr::InetAddr& from,
+                 vpr::Uint32& bytesRead,
+                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      vpr::ReturnStatus retval;
-
       msg.resize(len);
 
       memset(&msg[0], '\0', msg.size());
-      retval = recvfrom((void*) &msg[0], msg.size(), from, bytesRead, timeout);
+      recvfrom((void*) &msg[0], msg.size(), from, bytesRead, timeout);
 
       // Size it down if needed, if (bytesRead==len), then resize does
       // nothing.
-      if ( retval.success() )
-      {
-         msg.resize(bytesRead);
-      }
-
-      return retval;
+      msg.resize(bytesRead);
    }
 
    /**
     * Sends a message to the designated recipient.
     */
-   vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 len,
-                            const vpr::InetAddr& to, vpr::Uint32& bytesSent,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void sendto(const void* msg, const vpr::Uint32 len,
+               const vpr::InetAddr& to, vpr::Uint32& bytesSent,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSocketDgramImpl->sendto(msg, len, to, bytesSent, timeout);
+      mSocketDgramImpl->sendto(msg, len, to, bytesSent, timeout);
    }
 
    /**
     * Sends a message to the designated recipient.
     */
-   vpr::ReturnStatus sendto(const std::string& msg, const vpr::Uint32 len,
-                            const vpr::InetAddr& to, vpr::Uint32& bytesSent,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void sendto(const std::string& msg, const vpr::Uint32 len,
+               const vpr::InetAddr& to, vpr::Uint32& bytesSent,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
-      return sendto(msg.c_str(), len, to, bytesSent, timeout);
+      sendto(msg.c_str(), len, to, bytesSent, timeout);
    }
 
    /**
     * Sends a message to the designated recipient.
     */
-   vpr::ReturnStatus sendto(const std::vector<vpr::Uint8>& msg,
-                            const vpr::Uint32 len, const vpr::InetAddr& to,
-                            vpr::Uint32& bytesSent,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void sendto(const std::vector<vpr::Uint8>& msg,
+               const vpr::Uint32 len, const vpr::InetAddr& to,
+               vpr::Uint32& bytesSent,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
-      return sendto((const void*) &msg[0], len, to, bytesSent, timeout);
+      sendto((const void*) &msg[0], len, to, bytesSent, timeout);
    }
 
 protected:
-   virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                       struct vpr::SocketOptions::Data& data)
-      const
+   virtual void getOption(const vpr::SocketOptions::Types option,
+                          struct vpr::SocketOptions::Data& data)
+      const throw (SocketException)
    {
       return mSocketDgramImpl->getOption(option, data);
    }
 
-   virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
-                                       const struct vpr::SocketOptions::Data& data)
+   virtual void setOption(const vpr::SocketOptions::Types option,
+                          const struct vpr::SocketOptions::Data& data)
+      throw (SocketException)
    {
-      return mSocketDgramImpl->setOption(option, data);
+      mSocketDgramImpl->setOption(option, data);
    }
 
 // Put in back door for simulator

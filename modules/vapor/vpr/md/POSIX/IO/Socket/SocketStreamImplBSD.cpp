@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <sstream>
 #include <string.h>
 #include <strings.h>
 #include <sys/types.h>
@@ -80,10 +81,9 @@ SocketStreamImplBSD::SocketStreamImplBSD(const SocketStreamImplBSD& sock)
 }
 
 // Listen on the socket for incoming connection requests.
-vpr::ReturnStatus SocketStreamImplBSD::listen(const int backlog)
+void SocketStreamImplBSD::listen(const int backlog)
+   throw (SocketException)
 {
-   vpr::ReturnStatus retval;
-
    // Put the socket into listning mode.  If that fails, print an error and
    // return error status.
    if ( ::listen(mHandle->mFdesc, backlog) == -1 )
@@ -91,17 +91,17 @@ vpr::ReturnStatus SocketStreamImplBSD::listen(const int backlog)
       fprintf(stderr,
               "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
               strerror(errno));
-      retval.setCode(ReturnStatus::Fail);
-   }
 
-   return retval;
+      throw SocketException("[vpr::SocketStreamImplBSD] Cannot listen on socket: "
+         + std::string(strerror(errno)), VPR_LOCATION);
+   }
 }
 
 // Accept an incoming connection request.
-vpr::ReturnStatus SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Interval timeout)
+void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Interval timeout)
+   throw (IOException)
 {
    int accept_sock;
-   vpr::ReturnStatus retval;
    InetAddr addr;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int addrlen;
@@ -109,49 +109,52 @@ vpr::ReturnStatus SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Int
    socklen_t addrlen;
 #endif
 
-   retval = mHandle->isReadable(timeout);
-
-   if ( retval.success() )
+   if (!mHandle->isReadable(timeout))
    {
-      mBlockingFixed = true;
-
-      // Accept an incoming connection request.
-      addrlen = addr.size();
-      accept_sock = ::accept(mHandle->mFdesc,
-                             (struct sockaddr*) &addr.mAddr, &addrlen);
-
-      // If accept(2) failed, print an error message and return error stauts.
-      if ( accept_sock == -1 )
-      {
-         if ( errno == EWOULDBLOCK && ! isBlocking() )
-         {
-            retval.setCode(ReturnStatus::WouldBlock);
-         }
-         else
-         {
-            fprintf(stderr,
-                    "[vpr::SocketStreamImplBSD] Error while accepting "
-                    "incoming connection: %s\n", strerror(errno));
-            retval.setCode(ReturnStatus::Fail);
-         }
-      }
-      // Otherwise, put the new socket in the passed socket object.
-      else
-      {
-         sock.setRemoteAddr(addr);
-         sock.mHandle         = new FileHandleImplUNIX(addr.getAddressString());
-         sock.mHandle->mFdesc = accept_sock;
-         sock.mHandle->mOpen  = true;
-
-         sock.setBlocking(this->isBlocking());
-
-         sock.mBound         = true;
-         sock.mConnected     = true;
-         sock.mBlockingFixed = true;
-      }
+      throw TimeoutException("Timeout occured when accepting connection.",
+         VPR_LOCATION);
    }
 
-   return retval;
+   mBlockingFixed = true;
+
+   // Accept an incoming connection request.
+   addrlen = addr.size();
+   accept_sock = ::accept(mHandle->mFdesc,
+                          (struct sockaddr*) &addr.mAddr, &addrlen);
+
+   // If accept(2) failed, print an error message and return error stauts.
+   if ( accept_sock == -1 )
+   {
+      if ( errno == EWOULDBLOCK && ! isBlocking() )
+      {
+         throw WouldBlockException("Would block while accepting.", VPR_LOCATION);
+      }
+      else
+      {
+         fprintf(stderr,
+                 "[vpr::SocketStreamImplBSD] Error while accepting "
+                 "incoming connection: %s\n", strerror(errno));
+
+         std::stringstream ss;
+         ss << "[vpr::SocketStreamImplBSD] Error while accepting "
+            << "incoming connection: " << strerror(errno);
+         throw SocketException(ss.str(), VPR_LOCATION);
+      }
+   }
+   // Otherwise, put the new socket in the passed socket object.
+   else
+   {
+      sock.setRemoteAddr(addr);
+      sock.mHandle         = new FileHandleImplUNIX(addr.getAddressString());
+      sock.mHandle->mFdesc = accept_sock;
+      sock.mHandle->mOpen  = true;
+
+      sock.setBlocking(this->isBlocking());
+
+      sock.mBound         = true;
+      sock.mConnectCalled = true;
+      sock.mBlockingFixed = true;
+   }
 }
 
 } // End of vpr namespace

@@ -50,8 +50,8 @@
 
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/UnknownHostException.h>
 #include <vpr/Util/Assert.h>
-#include <vpr/Util/ReturnStatus.h>
 
 namespace vpr
 {
@@ -94,7 +94,7 @@ public:
    /**
     * Returns the local host's address.
     */
-   static vpr::ReturnStatus getLocalHost(vpr::InterAddr& host_addr)
+   static void getLocalHost(vpr::InterAddr& host_addr)
    {
       vprASSERT(false && "Implement me");
    }
@@ -198,11 +198,10 @@ public:
    /**
     * Returns the fully qualified hostname for this address.
     */
-   vpr::ReturnStatus getHostname(std::string& s) const
+   void getHostname(std::string& s) const
    {
       boost::ignore_unused_variable_warning(s);
       vprASSERT(false && "Implement me");
-      return vpr::ReturnStatus::Fail;
    }
 
    /**
@@ -224,16 +223,12 @@ public:
     *             a colon.  The address can be a hostname or a dotted-decimal
     *             IP address.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the address was valid
-    *         and the set operation succeeded.
-    * @return vpr::ReturnStatus::Fail is returned if the address could not be
-    *         looked up.
+    * @throws UnknownHostException - if no IP address for the host could be found.
     */
-   vpr::ReturnStatus setAddress(const std::string& addr)
+   void setAddress(const std::string& addr) throw (UnknownHostException)
    {
       boost::ignore_unused_variable_warning(addr);
       vprASSERT(false && "Implement me");
-      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /**
@@ -244,17 +239,14 @@ public:
     * @param addr An address string in IP format or hostname format.
     * @param port The new port number for this socket.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the address was valid
-    *         and the set operation succeeded.
-    * @return vpr::ReturnStatus::Fail is returned if the address could not be
-    *         looked up.
+    * @throws UnknownHostException - if no IP address for the host could be found.
     */
-   vpr::ReturnStatus setAddress(const std::string& addr, const Uint16 port)
+   void setAddress(const std::string& addr, const Uint16 port)
+      throw (UnknownHostException)
    {
       boost::ignore_unused_variable_warning(addr);
       boost::ignore_unused_variable_warning(port);
       vprASSERT(false && "Implement me");
-      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /**
@@ -264,13 +256,12 @@ public:
     * @param address A 32-bit integer IP address.
     * @param port    The port to associate with the IP address.
     */
-   vpr::ReturnStatus setAddress(const vpr::Uint32 address,
-                                const vpr::Uint16 port)
+   void setAddress(const vpr::Uint32 address,
+                   const vpr::Uint16 port)
    {
       boost::ignore_unused_variable_warning(address);
       boost::ignore_unused_variable_warning(port);
       vprASSERT(false && "Implement me");
-      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    /**

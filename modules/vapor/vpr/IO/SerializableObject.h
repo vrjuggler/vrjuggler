@@ -43,8 +43,6 @@
 #define _VPR_SERIALIZABLE_OBJ_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace vpr
 {
@@ -72,7 +70,7 @@ public:
     * @param writer The object writer to which the data for this object
     *               will be written to allow serialization of this object.
     */
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer) = 0;
+   virtual void writeObject(vpr::ObjectWriter* writer) = 0;
 
 protected:
    WriteableObject()
@@ -107,7 +105,7 @@ public:
     * @param reader The object reader from which the data for this object
     *               can be read to allow de-serialization of this object.
     */
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader) = 0;
+   virtual void readObject(vpr::ObjectReader* reader) = 0;
 
 protected:
    ReadableObject()
@@ -154,11 +152,11 @@ protected:
  * an existing type (for example, \c MyType):
  *
  * \code
- * vpr::ReturnStatus
+ * void
  * vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
  * { ... }
  *
- * vpr::ReturnStatus
+ * void
  * vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* writer)
  * { ... }
  * \endcode
@@ -175,8 +173,8 @@ template<class BASE>
 class SerializableObjectMixin : public SerializableObject, public BASE
 {
 public:
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void readObject(vpr::ObjectReader* reader);
 };
 
 } // namespace vpr

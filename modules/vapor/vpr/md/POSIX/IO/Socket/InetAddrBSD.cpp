@@ -78,10 +78,9 @@ InetAddrBSD::InetAddrBSD()
    setFamily(SocketTypes::INET);
 }
 
-vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
+void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr) throw (UnknownHostException)
 {
    char local_host_name[MAXHOSTNAMELEN + 1];
-   vpr::ReturnStatus status;
 
    bzero(local_host_name, sizeof(local_host_name));
 
@@ -91,10 +90,8 @@ vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
    }
    else
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw UnknownHostException("No IP address for could be found for localhost.", VPR_LOCATION);
    }
-
-   return status;
 }
 
 /**
@@ -102,12 +99,11 @@ vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
  * form <address>:<port> where <address> can be a hostname or a
  * dotted-decimal IP address.
  */
-vpr::ReturnStatus InetAddrBSD::setAddress(const std::string& address)
+void InetAddrBSD::setAddress(const std::string& address) throw (UnknownHostException)
 {
    std::string::size_type pos;
    std::string host_addr, host_port;
    vpr::Uint16 port;
-   vpr::ReturnStatus retval;
 
    // Extract the address and the port number from the given string.
    pos       = address.find(":");
@@ -115,32 +111,25 @@ vpr::ReturnStatus InetAddrBSD::setAddress(const std::string& address)
    host_port = address.substr(pos + 1);
    port      = (Uint16) atoi(host_port.c_str());
 
-   retval = lookupAddress(host_addr);
+   lookupAddress(host_addr);
    setPort(port);
    setFamily(vpr::SocketTypes::INET);
-
-   return retval;
 }
 
-vpr::ReturnStatus InetAddrBSD::setAddress(const std::string& address,
-                                          const Uint16 port)
+void InetAddrBSD::setAddress(const std::string& address,
+                             const Uint16 port) throw (UnknownHostException)
 {
-   vpr::ReturnStatus retval;
-
-   retval = lookupAddress(address);
+   lookupAddress(address);
    setPort(port);
    setFamily(SocketTypes::INET);
-
-   return retval;
 }
 
-vpr::ReturnStatus InetAddrBSD::setAddress(const vpr::Uint32 address,
-                                          const vpr::Uint16 port)
+void InetAddrBSD::setAddress(const vpr::Uint32 address,
+                             const vpr::Uint16 port)
 {
    setAddressValue(address);
    setPort(port);
    setFamily(SocketTypes::INET);
-   return ReturnStatus();
 }
 
 unsigned char InetAddrBSD::getLength() const
@@ -282,9 +271,8 @@ std::string InetAddrBSD::getAddressString() const
    return ip_str;
 }
 
-vpr::ReturnStatus InetAddrBSD::getHostname(std::string& hostname) const
+void InetAddrBSD::getHostname(std::string& hostname) const throw (UnknownHostException)
 {
-   vpr::ReturnStatus status;
    struct hostent* entry;
 
    entry = gethostbyaddr((const char*) &mAddr.sin_addr,
@@ -292,21 +280,21 @@ vpr::ReturnStatus InetAddrBSD::getHostname(std::string& hostname) const
 
    if ( NULL == entry )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
       const char* error_str = hstrerror(h_errno);
       vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
          << "[InetAddrBSD::getHostname()] ERROR: " << error_str
          << std::endl << vprDEBUG_FLUSH;
+
+      throw UnknownHostException("[InetAddrBSD::getHostname] Hostname lookup failed: "
+         + std::string(hstrerror(h_errno)), VPR_LOCATION);
    }
    else
    {
       hostname = entry->h_name;
    }
-
-   return status;
 }
 
-std::vector<std::string> InetAddrBSD::getHostnames() const
+std::vector<std::string> InetAddrBSD::getHostnames() const throw (UnknownHostException)
 {
    std::vector<std::string> names;
    struct hostent* entry;
@@ -314,7 +302,12 @@ std::vector<std::string> InetAddrBSD::getHostnames() const
    entry = gethostbyaddr((const char*) &mAddr.sin_addr,
                          sizeof(mAddr.sin_addr), mAddr.sin_family);
 
-   if ( NULL != entry )
+   if ( NULL == entry )
+   {
+      throw UnknownHostException("[InetAddrBSD::getHostnames] Hostname lookup failed: "
+         + std::string(hstrerror(h_errno)), VPR_LOCATION);
+   }
+   else
    {
       names.push_back(std::string(entry->h_name));
 
@@ -375,9 +368,8 @@ void InetAddrBSD::copy(const InetAddrBSD& addr)
 /**
  * Look up the given address and store the address in mAddr.
  */
-vpr::ReturnStatus InetAddrBSD::lookupAddress(const std::string& address)
+void InetAddrBSD::lookupAddress(const std::string& address) throw (UnknownHostException)
 {
-   vpr::ReturnStatus retval;
    struct hostent* host_entry;
 
    // First, try looking the host up by name.
@@ -403,7 +395,9 @@ vpr::ReturnStatus InetAddrBSD::lookupAddress(const std::string& address)
          fprintf(stderr,
                  "[vpr::InetAddrBSD] Could not find address for '%s': %s\n",
                  address.c_str(), strerror(errno));
-         retval.setCode(ReturnStatus::Fail);
+
+         throw UnknownHostException("[vpr::InetAddrBSD] Could not find address for '"
+            + address + "': " + strerror(errno), VPR_LOCATION);
       }
       // Otherwise, we found the integer address successfully.
       else
@@ -411,8 +405,6 @@ vpr::ReturnStatus InetAddrBSD::lookupAddress(const std::string& address)
          setAddressValue(addr);
       }
    }
-
-   return retval;
 }
 
 } // End of vpr namespace

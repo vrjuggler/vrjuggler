@@ -51,6 +51,7 @@
 
 #include <vpr/IO/Socket/InetAddrBase.h>
 #include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/UnknownHostException.h>
 
 
 // XXX: Extend to work with IPv6.
@@ -100,11 +101,9 @@ public:
     * Returns the local host's address via the given object reference.
     *
     * @param hostAddr Storage for the returned address object.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the local host has an
-    *         an address.  Otherwise, vpr::ReturnStatus::Fail is returned.
+    * @throws UnknownHostException - if no IP address for the host could be found.
     */
-   static vpr::ReturnStatus getLocalHost(vpr::InetAddrBSD& hostAddr);
+   static void getLocalHost(vpr::InetAddrBSD& hostAddr) throw (UnknownHostException);
 
    /**
     * Sets the address for this object using the given address.  It must be
@@ -114,8 +113,10 @@ public:
     * @param address A string giving the address and port number separated by
     *                a colon.  The address can be a hostname or a
     *                dotted-decimal IP address.
+    *                
+    * @throws UnknownHostException - if no IP address for the host could be found.
     */
-   vpr::ReturnStatus setAddress(const std::string& address);
+   void setAddress(const std::string& address) throw (UnknownHostException);
 
    /**
     * Sets the address for this object using the given address and port
@@ -125,8 +126,10 @@ public:
     * @param address A string giving the address (either hostname or IP
     *                address).
     * @param port    The port to associate with this IP address.
+    *
+    * @throws UnknownHostException - if no IP address for the host could be found.
     */
-   vpr::ReturnStatus setAddress(const std::string& address, const Uint16 port);
+   void setAddress(const std::string& address, const Uint16 port) throw (UnknownHostException);
 
    /**
     * Sets the address for this object using the given address and port
@@ -135,8 +138,8 @@ public:
     * @param address A 32-bit integer IP address.
     * @param port    The port to associate with this IP address.
     */
-   vpr::ReturnStatus setAddress(const vpr::Uint32 address,
-                                const vpr::Uint16 port);
+   void setAddress(const vpr::Uint32 address,
+                   const vpr::Uint16 port);
 
    /**
     * Gets the length of the address structure (if supported by the host OS).
@@ -239,13 +242,13 @@ public:
    /**
     * Returns the fully qualified hostname for this address.
     */
-   vpr::ReturnStatus getHostname(std::string& hostname) const;
+   void getHostname(std::string& hostname) const throw (UnknownHostException);
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
     */
-   std::vector<std::string> getHostnames() const;
+   std::vector<std::string> getHostnames() const throw (UnknownHostException);
 
    /**
     * Overloaded assignment operator to ensure that assignments work
@@ -385,10 +388,9 @@ protected:
     * @post The given address string is converted into a 32-bit INET
     *       address.  The mAddr member variable is populated accordingly.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the address lookup was
-    *         successful.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws UnknownHostException - if address lookup failed
     */
-   vpr::ReturnStatus lookupAddress(const std::string& addr);
+   void lookupAddress(const std::string& addr) throw (UnknownHostException);
 
    struct sockaddr_in mAddr;    /**< The Ineternet address structure */
 };

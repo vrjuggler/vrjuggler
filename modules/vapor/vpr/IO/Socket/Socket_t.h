@@ -48,12 +48,12 @@
 #include <string>
 
 #include <vpr/IO/BlockIO.h> // base class.
+#include <vpr/IO/IOException.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
 
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Assert.h>
 
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
@@ -112,13 +112,12 @@ public:
     *       returned to the caller.  If the socket is opened, \c mOpen is set
     *       to true.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this socket is
-    *         opened successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the socket could not be opened.
+    * @see FileHandleImplUNIX::open()
     */
-   vpr::ReturnStatus open()
+   void open() throw (IOException)
    {
-      return mSocketImpl->open();
+      mSocketImpl->open();
    }
 
    /**
@@ -129,13 +128,12 @@ public:
     *       is returned to the caller.  If the socket is closed, \c mOpen
     *       is set to false.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this socket is
-    *         closed successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the socke could not be closed.
+    * @see FileHandleImplUNIX::close()
     */
-   vpr::ReturnStatus close()
+   void close() throw (IOException)
    {
-      return mSocketImpl->close();
+      mSocketImpl->close();
    }
 
    /**
@@ -207,13 +205,16 @@ public:
     *                 configure to use blocking I/O.  A value of false
     *                 indicates that it should use non-blocking I/O.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the socket's
-    *         blocking mode is set to blocking.  vpr::ReturnStatus::Fail is
-    *         returned otherwise.
+    * @throws vpr::SocketException if trying to call after a clocking
+    *         call has already been made.
+    * @throws vpr::IOException if the blocking state could not be set.
+    * 
+    * @see FileHandleImplUNIX::setBlocking()
+    * @see isOpen, open
     */
-   vpr::ReturnStatus setBlocking(bool blocking)
+   void setBlocking(bool blocking) throw (IOException)
    {
-      return mSocketImpl->setBlocking(blocking);
+      mSocketImpl->setBlocking(blocking);
    }
 
    /**
@@ -236,13 +237,11 @@ public:
     * @pre The socket is open.
     * @post The socket is bound to the address defined in the constructor.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this socket was
-    *         bound to its designated local address successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::SocketException if socket could not be bound.
     */
-   vpr::ReturnStatus bind()
+   void bind() throw (SocketException)
    {
-      return mSocketImpl->bind();
+      mSocketImpl->bind();
    }
 
    // ========================================================================
@@ -261,19 +260,20 @@ public:
     *       communication has been established.  For a datagram socket, the
     *       default destination for all packets is now \c mLocalAddr.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the connection
-    *         succeeded.
-    * @return vpr::ReturnStatus::InProgress is returned if this is a
-    *         non-blocking socket and the connection is still in progress.
-    *         The connection will be completed "in the background".
-    * @return vpr::ReturnStatus::Timeout is returned if the connection could
-    *         not be made within the given timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the connection could not
-    *         be made.
+    * @throws ConnectionResetException if connection is reset.
+    * @throws NoRouteToHostException if a route to host does not exist.
+    * @throws UnknownHostException if host does not exist.
+    * @throws IOException if network is down.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::SocketException if could not connect.
     */
-   vpr::ReturnStatus connect(const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (SocketException)
    {
-      return mSocketImpl->connect(timeout);
+      mSocketImpl->connect(timeout);
    }
 
    /**
@@ -294,19 +294,19 @@ public:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to receive.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   vpr::ReturnStatus recv(void* buffer, const vpr::Uint32 length,
-                          vpr::Uint32& bytesRead,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recv(void* buffer, const vpr::Uint32 length,
+             vpr::Uint32& bytesRead,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return read(buffer, length, bytesRead, timeout);
+      read(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -328,19 +328,19 @@ public:
     *                  available for reading.  This argument is optional
     *                  and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to receive.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   vpr::ReturnStatus recv(std::string& buffer, const vpr::Uint32 length,
-                          vpr::Uint32& bytesRead,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recv(std::string& buffer, const vpr::Uint32 length,
+             vpr::Uint32& bytesRead,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return read(buffer, length, bytesRead, timeout);
+      read(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -362,19 +362,19 @@ public:
     *                  available for reading.  This argument is optional
     *                  and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to receive.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   vpr::ReturnStatus recv(std::vector<vpr::Uint8>& buffer,
-                          const vpr::Uint32 length, vpr::Uint32& bytesRead,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recv(std::vector<vpr::Uint8>& buffer,
+             const vpr::Uint32 length, vpr::Uint32& bytesRead,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return read(buffer, length, bytesRead, timeout);
+      read(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -395,17 +395,17 @@ public:
     *                  available for reading.  This argument is optional
     *                  and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to receive.
+    * @throws vpr::SocketException if socket is not connected.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   vpr::ReturnStatus recvn(void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytesRead,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recvn(void* buffer, const vpr::Uint32 length,
+              vpr::Uint32& bytesRead,
+              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return readn(buffer, length, bytesRead, timeout);
+      readn(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -427,18 +427,17 @@ public:
     *                  available for reading.  This argument is optional
     *                  and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read
-    *         operation completed successfully.
-    *         vpr::ReturnStatus::Fail is returned if the read
-    *         operation failed.  vpr::ReturnStatus::WouldBlock if the
-    *         device is in non-blocking mode, and there is no data to
-    *         receive.
+    * @throws vpr::SocketException if socket is not connected.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   vpr::ReturnStatus recvn(std::string& buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytesRead,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recvn(std::string& buffer, const vpr::Uint32 length,
+              vpr::Uint32& bytesRead,
+              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return readn(buffer, length, bytesRead, timeout);
+      readn(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -460,19 +459,17 @@ public:
     *                  available for reading.  This argument is optional
     *                  and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to receive.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
+    * @throws vpr::SocketException if socket is not connected.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   vpr::ReturnStatus recvn(std::vector<vpr::Uint8>& buffer,
-                           const vpr::Uint32 length, vpr::Uint32& bytesRead,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void recvn(std::vector<vpr::Uint8>& buffer,
+              const vpr::Uint32 length, vpr::Uint32& bytesRead,
+              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return readn(buffer, length, bytesRead, timeout);
+      readn(buffer, length, bytesRead, timeout);
    }
 
    /** Returns the number of avaiable bytes for reading. */
@@ -496,21 +493,23 @@ public:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the write operation could not be
-    *         completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
+    * @throws ConnectionResetException if connection is reset.
+    * @throws NoRouteToHostException if a route to host does not exist.
+    * @throws UnknownHostException if host does not exist.
+    * @throws IOException if network is down.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::SocketException if the write operation failed.
+    * @throws vpr::IOException if the file handle write operation failed.
     */
-   vpr::ReturnStatus send(const void* buffer, const vpr::Uint32 length,
-                          vpr::Uint32& bytesWritten,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void send(const void* buffer, const vpr::Uint32 length,
+             vpr::Uint32& bytesWritten,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return write(buffer, length, bytesWritten, timeout);
+      write(buffer, length, bytesWritten, timeout);
    }
 
    /**
@@ -529,21 +528,24 @@ public:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the send operation could not be completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
+    * @throws ConnectionResetException if connection is reset.
+    * @throws NoRouteToHostException if a route to host does not exist.
+    * @throws UnknownHostException if host does not exist.
+    * @throws IOException if network is down.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::SocketException if the write operation failed.
+    * @throws vpr::IOException if the file handle write operation failed.
     */
-   vpr::ReturnStatus send(const std::string& buffer, const vpr::Uint32 length,
-                          vpr::Uint32& bytesWritten,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void send(const std::string& buffer, const vpr::Uint32 length,
+             vpr::Uint32& bytesWritten,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
-      return write(buffer, length, bytesWritten, timeout);
+      write(buffer, length, bytesWritten, timeout);
    }
 
    /**
@@ -562,22 +564,25 @@ public:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
-    * @return vpr::ReturnStatus::WoudlBlock is returned if the handle is in
-    *         non-blocking mode, and the send operation could not be completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
+    * @throws ConnectionResetException if connection is reset.
+    * @throws NoRouteToHostException if a route to host does not exist.
+    * @throws UnknownHostException if host does not exist.
+    * @throws IOException if network is down.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::SocketException if the write operation failed.
+    * @throws vpr::IOException if the file handle write operation failed.
     */
-   vpr::ReturnStatus send(const std::vector<vpr::Uint8>& buffer,
-                          const vpr::Uint32 length,
-                          vpr::Uint32& bytesWritten,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void send(const std::vector<vpr::Uint8>& buffer,
+             const vpr::Uint32 length,
+             vpr::Uint32& bytesWritten,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
-      return write(buffer, length, bytesWritten,timeout);
+      write(buffer, length, bytesWritten,timeout);
    }
 
    /**
@@ -599,9 +604,9 @@ public:
       return mSocketImpl->getLocalAddr();
    }
 
-   vpr::ReturnStatus setLocalAddr(const InetAddr& addr)
+   void setLocalAddr(const InetAddr& addr)
    {
-      return mSocketImpl->setLocalAddr(addr);
+      mSocketImpl->setLocalAddr(addr);
    }
 
    const InetAddr& getRemoteAddr() const
@@ -609,9 +614,9 @@ public:
       return mSocketImpl->getRemoteAddr();
    }
 
-   vpr::ReturnStatus setRemoteAddr(const InetAddr& addr)
+   void setRemoteAddr(const InetAddr& addr)
    {
-      return mSocketImpl->setRemoteAddr(addr);
+      mSocketImpl->setRemoteAddr(addr);
    }
 
 protected:
@@ -700,19 +705,19 @@ protected:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   virtual vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                                    vpr::Uint32& bytesRead,
-                                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void read_i(void* buffer, const vpr::Uint32 length,
+                       vpr::Uint32& bytesRead,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSocketImpl->read_i(buffer, length, bytesRead, timeout);
+      mSocketImpl->read_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -734,19 +739,17 @@ protected:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throws vpr::SocketException if socket is not connected.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   virtual vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                                     vpr::Uint32& bytesRead,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void readn_i(void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytesRead,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSocketImpl->readn_i(buffer, length, bytesRead, timeout);
+      mSocketImpl->readn_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -765,34 +768,38 @@ protected:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the write could not be completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
+    * @throws ConnectionResetException if connection is reset.
+    * @throws NoRouteToHostException if a route to host does not exist.
+    * @throws UnknownHostException if host does not exist.
+    * @throws IOException if network is down.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::SocketException if the write operation failed.
+    * @throws vpr::IOException if the file handle write operation failed.
     */
-   virtual vpr::ReturnStatus write_i(const void* buffer,
-                                     const vpr::Uint32 length,
-                                     vpr::Uint32& bytesWritten,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void write_i(const void* buffer,
+                        const vpr::Uint32 length,
+                        vpr::Uint32& bytesWritten,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSocketImpl->write_i(buffer, length, bytesWritten, timeout);
+      mSocketImpl->write_i(buffer, length, bytesWritten, timeout);
    }
 
-   virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                       struct vpr::SocketOptions::Data& data)
-      const
+   virtual void getOption(const vpr::SocketOptions::Types option,
+                          struct vpr::SocketOptions::Data& data)
+      const throw (SocketException)
    {
-      return mSocketImpl->getOption(option, data);
+      mSocketImpl->getOption(option, data);
    }
 
-   virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
-                                       const struct vpr::SocketOptions::Data& data)
+   virtual void setOption(const vpr::SocketOptions::Types option,
+                          const struct vpr::SocketOptions::Data& data)
+      throw (SocketException)
    {
-      return mSocketImpl->setOption(option, data);
+      mSocketImpl->setOption(option, data);
    }
 
 // Put in back door for simulator

@@ -56,10 +56,15 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		SocketAcceptor.cpp	\
-		SocketConnector.cpp	\
-		SocketDatagramOpt.cpp	\
-		SocketStreamOpt.cpp
+SRCS=		ConnectionRefusedException.cpp	\
+		ConnectionResetException.cpp	\
+		NoRouteToHostException.cpp	\
+		SocketAcceptor.cpp		\
+		SocketConnector.cpp		\
+		SocketDatagramOpt.cpp		\
+		SocketException.cpp		\
+		SocketStreamOpt.cpp		\
+		UnknownHostException.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

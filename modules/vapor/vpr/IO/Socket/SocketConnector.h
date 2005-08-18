@@ -45,7 +45,6 @@
 #include <vpr/vprConfig.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -81,32 +80,32 @@ public:
    * @param localAddr  Our local address.  This defaults to
    *                   vpr::InetAddr::AnyAddr.
    */
-  vpr::ReturnStatus connect(vpr::SocketStream& newStream,
-                            const vpr::InetAddr& remoteAddr,
-                            vpr::Interval timeout = vpr::Interval::NoTimeout,
-                            const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
+  void connect(vpr::SocketStream& newStream,
+               const vpr::InetAddr& remoteAddr,
+               vpr::Interval timeout = vpr::Interval::NoTimeout,
+               const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr) throw (IOException);
 
   /**
    * Tries to complete a non-blocking connection.
    */
-  vpr::ReturnStatus complete(vpr::SocketStream &newStream,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+  void complete(vpr::SocketStream &newStream,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout) throw (IOException);
 
 protected:
    /**
     * Makes sure that we have opened the socket.  If not, then open it with
     * the given parameters.
     */
-   bool checkOpen(SocketStream& newStream);
+   void checkOpen(SocketStream& newStream) throw (IOException);
 
    /**
     * Performs pre-connection rituals.  If we are not bound, then bind to the
     * given local address.  If \p timeout is vpr::Interval::NoWait, then try
     * to set non-blocking status.
     */
-   bool connectStart(vpr::SocketStream& newStream,
+   void connectStart(vpr::SocketStream& newStream,
                      vpr::Interval timeout = vpr::Interval::NoTimeout,
-                     const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
+                     const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr) throw (IOException);
 };
 
 }  // namespace vpr

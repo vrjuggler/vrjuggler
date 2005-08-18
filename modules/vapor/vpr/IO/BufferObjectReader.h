@@ -105,30 +105,24 @@ public:
    /** @name Tag and attribute handling */
    //@{
    /** Starts a new section/element of name \p tagName. */
-   virtual vpr::ReturnStatus beginTag(const std::string& tagName)
+   virtual void beginTag(const std::string& tagName)
    {
       boost::ignore_unused_variable_warning(tagName);
-      return vpr::ReturnStatus::Succeed;
    }
 
    /** Ends the most recently named tag. */
-   virtual vpr::ReturnStatus endTag()
-   {
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual void endTag()
+   {;}
 
    /** Starts an attribute of the name \p attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName)
+   virtual void beginAttribute(const std::string& attributeName)
    {
       boost::ignore_unused_variable_warning(attributeName);
-      return vpr::ReturnStatus::Succeed;
    }
 
    /** Ends the most recently named attribute */
-   virtual vpr::ReturnStatus endAttribute()
-   {
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual void endAttribute()
+   {;}
    //@}
 
 

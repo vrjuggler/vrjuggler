@@ -43,7 +43,6 @@
 #define _VPR_BASEIOSTATS_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 
 namespace vpr
@@ -74,18 +73,15 @@ public:
    enum { IS_NULL = 0 };
 
 public:
-   virtual void read_s(vpr::ReturnStatus& status,
-                       void* buffer, const vpr::Uint32 length,
+   virtual void read_s(void* buffer, const vpr::Uint32 length,
                        vpr::Uint32& bytes_read,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   virtual void readn_s(vpr::ReturnStatus& status,
-                        void* buffer, const vpr::Uint32 length,
+   virtual void readn_s(void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytes_read,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   virtual void write_s(vpr::ReturnStatus& status,
-                        const void* buffer, const vpr::Uint32 length,
+   virtual void write_s(const void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytes_written,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 

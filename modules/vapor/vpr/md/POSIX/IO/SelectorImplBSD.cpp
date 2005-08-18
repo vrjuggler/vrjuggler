@@ -53,6 +53,7 @@
 #include <sys/time.h>
 #include <errno.h>
 
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/md/POSIX/IO/SelectorImplBSD.h>
 #include <vpr/Util/Assert.h>
 
@@ -166,11 +167,11 @@ vpr::Uint16 SelectorImplBSD::getOut (vpr::IOSys::Handle handle)
 /**
  * Select.
  */
-vpr::ReturnStatus SelectorImplBSD::select (vpr::Uint16& numWithEvents,
-                                           const vpr::Interval timeout)
+void SelectorImplBSD::select (vpr::Uint16& numWithEvents,
+                              const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus ret_val;
-   int result, last_fd;
+   int num_events, last_fd;
    fd_set read_set, write_set, exception_set;
    std::vector<BSDPollDesc>::iterator i;
    struct timeval timeout_obj;
@@ -233,22 +234,29 @@ vpr::ReturnStatus SelectorImplBSD::select (vpr::Uint16& numWithEvents,
 
    // If timeout is 0, this will be the same as polling the descriptors.  To
    // get no timeout, NULL must be passed to select(2).
-   result = ::select(last_fd + 1, &read_set, &write_set, &exception_set,
+   num_events = ::select(last_fd + 1, &read_set, &write_set, &exception_set,
                      (timeout != vpr::Interval::NoTimeout) ? &timeout_obj : NULL);
 
    // D'oh!
-   if ( -1 == result )
+   if ( -1 == num_events )
    {
       fprintf(stderr, "SelectorImplBSD::select: Error selecting: %s\n",
               strerror(errno));
       numWithEvents = 0;
-      ret_val.setCode(ReturnStatus::Fail);
+
+      throw IOException("SelectorImplBSD::select: Error selecting: "
+         + std::string(strerror(errno)), VPR_LOCATION);
    }
    // Timeout.
-   else if ( 0 == result )
+   // XXX: As documented in FileHandleImplUNIX::isReadable(), if timeout
+   //      is equal to vpr::Interval::NoWait the file handle may be ready
+   //      for reading even though select returned 0. This is vauge in the
+   //      documentation because it says that calling select with a timeout
+   //      of NULL will return immediately.
+   else if ( 0 == num_events )
    {
       numWithEvents = 0;
-      ret_val.setCode(ReturnStatus::Timeout);
+      throw TimeoutException("Timeout occured while selecting.", VPR_LOCATION);
    }
    // We got one!
    else
@@ -271,10 +279,8 @@ vpr::ReturnStatus SelectorImplBSD::select (vpr::Uint16& numWithEvents,
          }
       }
 
-      numWithEvents = result;
+      numWithEvents = num_events;
    }
-
-   return ret_val;
 }
 
 /**

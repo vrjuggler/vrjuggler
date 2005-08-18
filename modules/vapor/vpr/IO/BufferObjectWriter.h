@@ -95,99 +95,93 @@ public:
    /** @name Tag and attribute handling */
    //@{
    /** Starts a new section/element of name \p tagName. */
-   virtual vpr::ReturnStatus beginTag(const std::string& tagName)
+   virtual void beginTag(const std::string& tagName)
    {
       boost::ignore_unused_variable_warning(tagName);
-      return vpr::ReturnStatus::Succeed;
    }
    
    /** Ends the most recently named tag. */
-   virtual vpr::ReturnStatus endTag()
-   {
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual void endTag()
+   {;}
 
    /** Starts an attribute of the name \p attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName)
+   virtual void beginAttribute(const std::string& attributeName)
    {
       boost::ignore_unused_variable_warning(attributeName);
-      return vpr::ReturnStatus::Succeed;
    }
 
    /** Ends the most recently named attribute. */
-   virtual vpr::ReturnStatus endAttribute()
-   {
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual void endAttribute()
+   {;}
    //@}
 
    /**
     * Writes out the single byte.
     * @post data = old(data)+val, \c mCurHeadPos advaced 1
     */
-   virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val);
-   virtual vpr::ReturnStatus writeUint16(vpr::Uint16 val);
-   virtual vpr::ReturnStatus writeUint32(vpr::Uint32 val);
-   virtual vpr::ReturnStatus writeUint64(vpr::Uint64 val);
-   virtual vpr::ReturnStatus writeFloat(float val);
-   virtual vpr::ReturnStatus writeDouble(double val);
-   virtual vpr::ReturnStatus writeString(std::string val);
-   virtual vpr::ReturnStatus writeBool(bool val);
+   virtual void writeUint8(vpr::Uint8 val);
+   virtual void writeUint16(vpr::Uint16 val);
+   virtual void writeUint32(vpr::Uint32 val);
+   virtual void writeUint64(vpr::Uint64 val);
+   virtual void writeFloat(float val);
+   virtual void writeDouble(double val);
+   virtual void writeString(std::string val);
+   virtual void writeBool(bool val);
 
    /* Writes raw data of length \p len. */
-   inline vpr::ReturnStatus writeRaw(vpr::Uint8* data,
-                                     const unsigned int len = 1);
+   inline void writeRaw(vpr::Uint8* data,
+                        const unsigned int len = 1);
 
 public:
    std::vector<vpr::Uint8>*   mData;
    unsigned int               mCurHeadPos;
 };
 
-inline vpr::ReturnStatus BufferObjectWriter::writeUint8(vpr::Uint8 val)
+inline void BufferObjectWriter::writeUint8(vpr::Uint8 val)
 {
-   return writeRaw(&val, 1);
+   writeRaw(&val, 1);
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeUint16(vpr::Uint16 val)
+inline void BufferObjectWriter::writeUint16(vpr::Uint16 val)
 {
    vpr::Uint16 nw_val = vpr::System::Htons(val);
 
-   return writeRaw((vpr::Uint8*)&nw_val, 2);
+   writeRaw((vpr::Uint8*)&nw_val, 2);
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeUint32(vpr::Uint32 val)
+inline void BufferObjectWriter::writeUint32(vpr::Uint32 val)
 {
    vpr::Uint32 nw_val = vpr::System::Htonl(val);
 
-   return writeRaw((vpr::Uint8*)&nw_val, 4);
+   writeRaw((vpr::Uint8*)&nw_val, 4);
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeUint64(vpr::Uint64 val)
+inline void BufferObjectWriter::writeUint64(vpr::Uint64 val)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
 
-   return writeRaw((vpr::Uint8*)&nw_val, 8);
+   writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeFloat(float val)
+inline void BufferObjectWriter::writeFloat(float val)
 {
    // We are writing the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
    vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*)&val));
 
-   return writeRaw((vpr::Uint8*)&nw_val, 4);
+   writeRaw((vpr::Uint8*)&nw_val, 4);
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeDouble(double val)
+inline void BufferObjectWriter::writeDouble(double val)
 {
    // We are writing the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
    vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*)&val));
 
-   return writeRaw((vpr::Uint8*)&nw_val, 8);
+   writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
+inline void BufferObjectWriter::writeString(std::string val)
 {
    writeUint16(val.size());
    for(unsigned i=0; i<val.length();++i)
@@ -195,27 +189,25 @@ inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
       writeRaw((vpr::Uint8*)&(val[i]),1);
    }
 
-   return vpr::ReturnStatus::Succeed;
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeBool(bool val)
+inline void BufferObjectWriter::writeBool(bool val)
 {
    // Darwin uses four bytes (!) for bools.
 #ifdef VPR_OS_Darwin
    vpr::Uint8 temp = (vpr::Uint8) val;
-   return writeRaw((vpr::Uint8*)&temp, 1);
+   writeRaw((vpr::Uint8*)&temp, 1);
 #else
-   return writeRaw((vpr::Uint8*)&val, 1);
+   writeRaw((vpr::Uint8*)&val, 1);
 #endif
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeRaw(vpr::Uint8* data,
+inline void BufferObjectWriter::writeRaw(vpr::Uint8* data,
                                                       const unsigned int len)
 {
    for(unsigned i=0;i<len;++i)
       mData->push_back(data[i]);
    mCurHeadPos += len;
-   return vpr::ReturnStatus::Succeed;
 }
 
 } // namespace vpr

@@ -71,6 +71,7 @@ SUBDIR+=		uuid
 endif
 
 SRCS=		Debug.cpp		\
+		Exception.cpp		\
 		FileUtils.cpp		\
 		GUID.cpp		\
 		Interval.cpp		\

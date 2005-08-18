@@ -43,7 +43,6 @@
 #define BANDWIDTHSTATADAPTER_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/Util/ReturnStatus.h>
 
 namespace vpr
 {
@@ -64,28 +63,28 @@ template < class BASE_ONE, class BASE_TWO >
 class IOStatsStrategyAdapter : public BASE_ONE, public BASE_TWO
 {
 public:
-   virtual void read_s(vpr::ReturnStatus& status, void* buffer,
-                       const vpr::Uint32 length, vpr::Uint32& bytesRead,
+   virtual void read_s(void* buffer, const vpr::Uint32 length,
+                       vpr::Uint32& bytesRead,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      BASE_ONE::read_s(status, buffer, length, bytesRead, timeout);
-      BASE_TWO::read_s(status, buffer, length, bytesRead, timeout);
+      BASE_ONE::read_s(buffer, length, bytesRead, timeout);
+      BASE_TWO::read_s(buffer, length, bytesRead, timeout);
    }
 
-   virtual void readn_s(vpr::ReturnStatus& status, void* buffer,
-                        const vpr::Uint32 length, vpr::Uint32& bytesRead,
+   virtual void readn_s(void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytesRead,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      BASE_ONE::readn_s(status, buffer, length, bytesRead, timeout);
-      BASE_TWO::readn_s(status, buffer, length, bytesRead, timeout);
+      BASE_ONE::readn_s(buffer, length, bytesRead, timeout);
+      BASE_TWO::readn_s(buffer, length, bytesRead, timeout);
    }
 
-   virtual void write_s(vpr::ReturnStatus& status, const void* buffer,
-                        const vpr::Uint32 length, vpr::Uint32& bytesWritten,
+   virtual void write_s(const void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytesWritten,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      BASE_ONE::write_s(status, buffer, length, bytesWritten, timeout);
-      BASE_TWO::write_s(status, buffer, length, bytesWritten, timeout);
+      BASE_ONE::write_s(buffer, length, bytesWritten, timeout);
+      BASE_TWO::write_s(buffer, length, bytesWritten, timeout);
    }
 };
 

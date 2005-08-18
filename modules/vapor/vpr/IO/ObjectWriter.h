@@ -46,8 +46,6 @@
 
 #include <vpr/vprTypes.h>
 #include <vpr/Util/AttributeMapBase.h>
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace vpr
 {
@@ -106,26 +104,26 @@ public:
     */
    //@{
    /** Starts a new section/element of name tagName. */
-   virtual vpr::ReturnStatus beginTag(const std::string& tagName) = 0;
+   virtual void beginTag(const std::string& tagName) = 0;
 
    /** Ends the most recently named tag. */
-   virtual vpr::ReturnStatus endTag() = 0;
+   virtual void endTag() = 0;
 
    /** Starts an attribute of the name attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName) = 0;
+   virtual void beginAttribute(const std::string& attributeName) = 0;
 
    /** Ends the most recently named attribute. */
-   virtual vpr::ReturnStatus endAttribute() = 0;
+   virtual void endAttribute() = 0;
    //@}
 
-   virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val) = 0;
-   virtual vpr::ReturnStatus writeUint16(vpr::Uint16 val) = 0;
-   virtual vpr::ReturnStatus writeUint32(vpr::Uint32 val) = 0;
-   virtual vpr::ReturnStatus writeUint64(vpr::Uint64 val) = 0;
-   virtual vpr::ReturnStatus writeFloat(float val) = 0;
-   virtual vpr::ReturnStatus writeDouble(double val) = 0;
-   virtual vpr::ReturnStatus writeString(std::string val) = 0;
-   virtual vpr::ReturnStatus writeBool(bool val) = 0;
+   virtual void writeUint8(vpr::Uint8 val) = 0;
+   virtual void writeUint16(vpr::Uint16 val) = 0;
+   virtual void writeUint32(vpr::Uint32 val) = 0;
+   virtual void writeUint64(vpr::Uint64 val) = 0;
+   virtual void writeFloat(float val) = 0;
+   virtual void writeDouble(double val) = 0;
+   virtual void writeString(std::string val) = 0;
+   virtual void writeBool(bool val) = 0;
 
 protected:
    bool mIsBinary;   /**< Is this a binary serializer? */

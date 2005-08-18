@@ -73,16 +73,16 @@ public:
    /** @name Tag and attribute handling. */
    //@{
    /** Starts a new section/element of name \p tagName. */
-   virtual vpr::ReturnStatus beginTag(const std::string& tagName);
+   virtual void beginTag(const std::string& tagName);
 
    /** Ends the most recently named tag. */
-   virtual vpr::ReturnStatus endTag();
+   virtual void endTag();
 
    /** Starts an attribute of the name \p attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName);
+   virtual void beginAttribute(const std::string& attributeName);
 
    /** Ends the most recently named attribute. */
-   virtual vpr::ReturnStatus endAttribute();
+   virtual void endAttribute();
    //@}
 
    virtual void resetReading();

@@ -47,10 +47,12 @@
 #include <string>
 #include <vector>
 
+#include <vpr/IO/EOFException.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/IO/IOSys.h>
-#include <vpr/Util/ReturnStatus.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Interval.h>
-
 
 namespace vpr
 {
@@ -114,11 +116,11 @@ public:
     *       returned to the caller.  If the file is opened, mOpen is set to
     *       true.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the file handle was
-    *         opened successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
+    * @throws vpr::WouldBlockException if the file handle is in non-blocking
+    *         mode and could not be opened yet.
+    * @throws vpr::IOException if the file handle could not be opened.
     */
-   vpr::ReturnStatus open();
+   void open() throw (IOException);
 
    /**
     * Closes the file handle.
@@ -128,12 +130,9 @@ public:
     *       returned to the caller.  If the file is closed, mOpen is set to
     *       false.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the file handle was
-    *         closed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the file handle could not
-    *         be closed for some reason.
+    * @throws vpr::IOException if the file handle could not be closed.
     */
-   vpr::ReturnStatus close();
+   void close() throw (IOException);
 
    /**
     * Gets the open state of this file handle.
@@ -160,10 +159,9 @@ public:
     *                 blocking I/O.  A value of false indicates that it will
     *                 use non-blocking I/O.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
-    *         changed successfully; vpr::ReturnStatus::Fail otherwise.
+    * @throws vpr::IOException if the blocking mode could not be set.
     */
-   vpr::ReturnStatus setBlocking(bool blocking);
+   void setBlocking(bool blocking) throw (IOException);
 
    /**
     * Returns the contained handle.
@@ -227,11 +225,10 @@ public:
     *             append mode for writing.  A value of false indicates that
     *             it will not.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.  vpr::ReturnStatus::Fail is returned if
-    *         the write mode could not be changed for some reason.
+    * @throws vpr::IOException if the write mode could not be changed
+    *         for some reason.
     */
-   vpr::ReturnStatus setAppend(bool flag);
+   void setAppend(bool flag) throw (IOException);
 
    /**
     * Reconfigures the file handle so that writes are synchronous or
@@ -244,11 +241,10 @@ public:
     *             used.  A value of false indicates that asynchronous writes
     *             will be used.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.  vpr::ReturnStatus::Fail is returned if
-    *         the write mode could not be changed for some reason.
+    * @throws vpr::IOException if the write mode could not be changed
+    *         for some reason.
     */
-   vpr::ReturnStatus setSynchronousWrite(bool flag);
+   void setSynchronousWrite(bool flag) throw (IOException);
 
    /**
     * Tests if the I/O device is read-only.
@@ -291,8 +287,9 @@ public:
     *
     * @pre The file descriptor is valid.
     * @post The buffer size is returned via the by-reference parameter.
+    * @throws vpr::IOException if read buffer size could not be found.
     */
-   vpr::ReturnStatus getReadBufferSize(vpr::Int32& buffer) const;
+   void getReadBufferSize(vpr::Int32& buffer) const throw (IOException);
 
    /**
     * Implementation of the read template method.  This reads at most the
@@ -312,17 +309,15 @@ public:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the file is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesRead,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void read_i(void* buffer, const vpr::Uint32 length, vpr::Uint32& bytesRead,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Implementation of the readn template method.  This reads exactly the
@@ -342,16 +337,14 @@ public:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the file is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesRead,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void readn_i(void* buffer, const vpr::Uint32 length,
+                vpr::Uint32& bytesRead,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Implementation of the write template method.  This writes the buffer to
@@ -369,19 +362,16 @@ public:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBLock is returned if the handle is in
-    *         non-blocking mode, and the write operation could not be
-    *         completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the write operation failed.
     */
-   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesWritten,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void write_i(const void* buffer, const vpr::Uint32 length,
+                vpr::Uint32& bytesWritten,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Returns the number of bytes available for reading in the receive
@@ -427,14 +417,18 @@ protected:
    /**
     * Tests if the file handle is ready for reading within the timeout
     * period.
+    *
+    * @throws IOException if error occured while querying read state.
     */
-   vpr::ReturnStatus isReadable(const vpr::Interval timeout) const;
+   bool isReadable(const vpr::Interval timeout) const throw (IOException);
 
    /**
     * Tests if the file handle is ready for writing within the timeout
     * period.
+    * 
+    * @throws IOException if error occured while querying write state.
     */
-   vpr::ReturnStatus isWriteable(const vpr::Interval timeout) const;
+   bool isWriteable(const vpr::Interval timeout) const throw (IOException);
 
    std::string mName;           /**< The name of this file */
    bool        mOpen;           /**< Open state of this file */

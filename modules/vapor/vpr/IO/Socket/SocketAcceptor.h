@@ -45,7 +45,6 @@
 #include <vpr/vprConfig.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/InetAddr.h>
-#include <vpr/Util/ReturnStatus.h>
 
 namespace vpr
 {
@@ -115,7 +114,7 @@ public:
     * @param backlog   The maximum allowed size for the queue of pending
     *                  connections.
     */
-   vpr::ReturnStatus open(const vpr::InetAddr& addr, bool reuseAddr = true,
+   void open(const vpr::InetAddr& addr, bool reuseAddr = true,
                           const int backlog = 5);
 
    /**
@@ -133,26 +132,25 @@ public:
     *                request.  This argument is optional and default to
     *                vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned when a connection is
-    *         completed successfully.  In this case, the \p sock argument
-    *         returned is the newly created connected socket.
-    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
-    *         non-blocking acceptor and there are no pending connections.
-    * @return vpr::ReturnStatus::Fail is returned if the socket failed to
-    *         accept.
+    * @throws vpr::WouldBlockException if this is a non-blocking socket,
+    *         and there are no waiting connection requests.
+    * @throws vpr::TimeoutException if no connection requests arrived within
+    *         the given timeout period.
+    * @throws vpr::SocketException if the connection was not accepted because
+    *         of an error.
     */
-   vpr::ReturnStatus accept(vpr::SocketStream& sock,
-                            vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void accept(vpr::SocketStream& sock,
+               vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(mSocket.isOpen());
 
-      return mSocket.accept(sock, timeout);
+      mSocket.accept(sock, timeout);
    }
 
    /**
     * Closes the accepting socket.
     */
-   vpr::ReturnStatus close()
+   void close() throw (IOException)
    {
       return mSocket.close();
    }

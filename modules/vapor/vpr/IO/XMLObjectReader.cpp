@@ -64,7 +64,7 @@ namespace
 
 /** Helper to read the data from the current string. */
 template<class T>
-vpr::ReturnStatus readValueStringRep(T& val, std::stringstream* inStream)
+void readValueStringRep(T& val, std::stringstream* inStream)
 {
    vprASSERT(inStream != NULL);
 
@@ -78,8 +78,6 @@ vpr::ReturnStatus readValueStringRep(T& val, std::stringstream* inStream)
    //stream_content = (*in_stream).str();
 
    (*inStream) >> val;
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 }
@@ -184,7 +182,7 @@ void XMLObjectReader::debugDumpStack(int debug_level)
 
 // Starting a new tag.
 // Get the local cdata into the current data source.
-vpr::ReturnStatus XMLObjectReader::beginTag(const std::string& tagName)
+void XMLObjectReader::beginTag(const std::string& tagName)
 {
    vprDEBUG_OutputGuard(vprDBG_ALL, XML_OR_LEVEL, std::string("beginTag:[") + tagName + std::string("]\n"), "endTag");
 
@@ -250,21 +248,19 @@ vpr::ReturnStatus XMLObjectReader::beginTag(const std::string& tagName)
 
    std::string cur_node_name = mCurNodeStack.back().node->getName();
    vprASSERT(tagName == cur_node_name && "Reading back in incorrect order");
-   return vpr::ReturnStatus::Succeed;
 }
 
 // Ends the most recently named tag.
 // Just pop of the current node state information.
-vpr::ReturnStatus XMLObjectReader::endTag()
+void XMLObjectReader::endTag()
 {
    vprASSERT(!mCurNodeStack.empty());
    mCurNodeStack.pop_back();
-   return vpr::ReturnStatus::Succeed;
 }
 
 // Starts an attribute of the name attributeName.
 // Get the attribute content and set the attribute source with that content.
-vpr::ReturnStatus XMLObjectReader::beginAttribute(const std::string& attributeName)
+void XMLObjectReader::beginAttribute(const std::string& attributeName)
 {
    //std::cout << "beginAttribute: " << attributeName << std::endl;
    std::string attrib_content = mCurNodeStack.back().node->getAttribute(attributeName).getString();
@@ -274,17 +270,15 @@ vpr::ReturnStatus XMLObjectReader::beginAttribute(const std::string& attributeNa
    mAttribSource.seekg(0,std::ios::beg);        // Seek to beginning
    //std::cout << "  mAttribSource.str():[" << mAttribSource.str() << "]" << std::endl;
    mCurSource = AttribSource;             // Get content from attribute now
-   return vpr::ReturnStatus::Succeed;
 }
 
 // Ends the most recently named attribute.
-vpr::ReturnStatus XMLObjectReader::endAttribute()
+void XMLObjectReader::endAttribute()
 {
    mAttribSource.clear();
    mAttribSource.seekg(0,std::ios::beg);
    mAttribSource.str("");     // Clear the attrib content (not required, but helps point out bugs)
    mCurSource = CdataSource;     // Set back to getting data from cdata
-   return vpr::ReturnStatus::Succeed;
 }
 
 void XMLObjectReader::resetReading()

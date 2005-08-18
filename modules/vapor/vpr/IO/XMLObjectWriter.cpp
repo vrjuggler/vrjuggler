@@ -64,7 +64,7 @@ std::vector<vpr::Uint8> XMLObjectWriter::getData()
 // When mCurNode is Null, then we need to allocated a new node in its place.
 // And also check the Root node to set it to (this is the first call to
 // beginTag).
-vpr::ReturnStatus XMLObjectWriter::beginTag(const std::string& tagName)
+void XMLObjectWriter::beginTag(const std::string& tagName)
 {
    cppdom::NodePtr new_node;
 
@@ -91,12 +91,11 @@ vpr::ReturnStatus XMLObjectWriter::beginTag(const std::string& tagName)
       mCurNode->addChild(new_node);
       mCurNode = new_node.get();
    }
-   return vpr::ReturnStatus::Succeed;
 }
 
 // Ends the most recently named tag.
 // Close off the current node and set current to its parent.
-vpr::ReturnStatus XMLObjectWriter::endTag()
+void XMLObjectWriter::endTag()
 {
    vprASSERT(mCurNode != NULL);
    //vprASSERT(mCurNode->getParent() != NULL);
@@ -117,12 +116,10 @@ vpr::ReturnStatus XMLObjectWriter::endTag()
    {
       mCurCData = mCurNode->getCdata();
    }
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 // Starts an attribute of the name attributeName.
-vpr::ReturnStatus XMLObjectWriter::beginAttribute(const std::string& attributeName)
+void XMLObjectWriter::beginAttribute(const std::string& attributeName)
 {
    // Make sure that we have not called beginAttribute without an endAttribute
    vprASSERT(mCurAttribName.empty() && "Didn't close previous attribute");
@@ -130,11 +127,10 @@ vpr::ReturnStatus XMLObjectWriter::beginAttribute(const std::string& attributeNa
 
    mCurAttribName = attributeName;
    mCurTarget = AttribTarget;
-   return vpr::ReturnStatus::Succeed;
 }
 
 // Ends the most recently named attribute.
-vpr::ReturnStatus XMLObjectWriter::endAttribute()
+void XMLObjectWriter::endAttribute()
 {
    vprASSERT(AttribTarget == mCurTarget);
 
@@ -145,42 +141,40 @@ vpr::ReturnStatus XMLObjectWriter::endAttribute()
    mCurAttribData.clear();
 
    mCurTarget = CdataTarget;
-
-   return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeUint8(vpr::Uint8 val)
+void XMLObjectWriter::writeUint8(vpr::Uint8 val)
 {
    // Cast to uint16 so it doesn't get written as a char
-   return writeValueStringRep(vpr::Uint16(val));
+   writeValueStringRep(vpr::Uint16(val));
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeUint16(vpr::Uint16 val)
+void XMLObjectWriter::writeUint16(vpr::Uint16 val)
 {
-   return writeValueStringRep(val);
+   writeValueStringRep(val);
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeUint32(vpr::Uint32 val)
+void XMLObjectWriter::writeUint32(vpr::Uint32 val)
 {
-   return writeValueStringRep(val);
+   writeValueStringRep(val);
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeUint64(vpr::Uint64 val)
+void XMLObjectWriter::writeUint64(vpr::Uint64 val)
 {
-   return writeValueStringRep(val);
+   writeValueStringRep(val);
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeFloat(float val)
+void XMLObjectWriter::writeFloat(float val)
 {
-   return writeValueStringRep(val);
+   writeValueStringRep(val);
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeDouble(double val)
+void XMLObjectWriter::writeDouble(double val)
 {
-   return writeValueStringRep(val);
+   writeValueStringRep(val);
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeString(std::string val)
+void XMLObjectWriter::writeString(std::string val)
 {
    if(AttribTarget == mCurTarget)
    {
@@ -193,13 +187,11 @@ vpr::ReturnStatus XMLObjectWriter::writeString(std::string val)
          mCurCData += ' ';
       mCurCData += '"' + val + '"';    // Add string in quotes
    }
-
-   return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus XMLObjectWriter::writeBool(bool val)
+void XMLObjectWriter::writeBool(bool val)
 {
-   return writeValueStringRep(val);
+   writeValueStringRep(val);
 }
 
 } // End of vpr namespace

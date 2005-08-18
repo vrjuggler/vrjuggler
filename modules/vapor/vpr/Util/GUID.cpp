@@ -230,7 +230,7 @@ void GUID::generate(const GUID& nsGuid, const std::string& name)
 #endif
 }
 
-vpr::ReturnStatus GUID::writeObject(vpr::ObjectWriter* writer)
+void GUID::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint32(mGuid.standard.m0);
    writer->writeUint16(mGuid.standard.m1);
@@ -243,10 +243,9 @@ vpr::ReturnStatus GUID::writeObject(vpr::ObjectWriter* writer)
    writer->writeUint8(mGuid.standard.m5[3]);
    writer->writeUint8(mGuid.standard.m5[4]);
    writer->writeUint8(mGuid.standard.m5[5]);
-   return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus GUID::readObject(vpr::ObjectReader* reader)
+void GUID::readObject(vpr::ObjectReader* reader)
 {
    mGuid.standard.m0 = reader->readUint32();
    mGuid.standard.m1 = reader->readUint16();
@@ -259,7 +258,6 @@ vpr::ReturnStatus GUID::readObject(vpr::ObjectReader* reader)
    mGuid.standard.m5[3] = reader->readUint8();
    mGuid.standard.m5[4] = reader->readUint8();
    mGuid.standard.m5[5] = reader->readUint8();
-   return vpr::ReturnStatus::Succeed;
 }
 
 void GUID::fromString(const std::string& guid_string)

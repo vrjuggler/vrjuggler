@@ -71,52 +71,43 @@ public:
    /**
     * @pre The read operation must have already occured.
     */
-   virtual void read_s(ReturnStatus& status, void* buffer,
-                       const vpr::Uint32 length, vpr::Uint32& bytesRead,
+   virtual void read_s(void* buffer, const vpr::Uint32 length,
+                       vpr::Uint32& bytesRead,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       boost::ignore_unused_variable_warning(buffer);
       boost::ignore_unused_variable_warning(length);
       boost::ignore_unused_variable_warning(timeout);
 
-      if(status.success())
-      {
-         mReadStats.addSample(bytesRead);
-      }
+      mReadStats.addSample(bytesRead);
    }
 
    /**
     * @pre The read operation must have already occured.
     */
-   virtual void readn_s(ReturnStatus& status, void* buffer,
-                        const vpr::Uint32 length, vpr::Uint32& bytesRead,
+   virtual void readn_s(void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytesRead,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       boost::ignore_unused_variable_warning(buffer);
       boost::ignore_unused_variable_warning(length);
       boost::ignore_unused_variable_warning(timeout);
 
-      if(status.success())
-      {
-         mReadStats.addSample(bytesRead);
-      }
+      mReadStats.addSample(bytesRead);
    }
 
    /**
     * @pre The write operation must have already occured.
     */
-   virtual void write_s(ReturnStatus& status, const void* buffer,
-                        const vpr::Uint32 length, vpr::Uint32& bytesWritten,
+   virtual void write_s(const void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytesWritten,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       boost::ignore_unused_variable_warning(buffer);
       boost::ignore_unused_variable_warning(length);
       boost::ignore_unused_variable_warning(timeout);
 
-      if(status.success())
-      {
-         mWriteStats.addSample(bytesWritten);
-      }
+      mWriteStats.addSample(bytesWritten);
    }
 
 public:

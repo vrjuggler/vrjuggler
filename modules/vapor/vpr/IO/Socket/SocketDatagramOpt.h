@@ -48,7 +48,6 @@
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
 #include <vpr/IO/Socket/InetAddr.h>
-#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -76,107 +75,86 @@ public:
    /**
     * Gets the multicast interface for this datagram socket.
     */
-   vpr::ReturnStatus getMcastInterface(vpr::InetAddr& mcastIf)
+   void getMcastInterface(vpr::InetAddr& mcastIf) throw (IOException)
    {
       vpr::SocketOptions::Data option;
-      vpr::ReturnStatus retval;
 
-      retval = getOption(SocketOptions::McastInterface, option);
-
-      if ( retval.success() )
-      {
-         mcastIf = option.mcast_if;
-      }
-
-      return retval;
+      getOption(SocketOptions::McastInterface, option);
+      mcastIf = option.mcast_if;
    }
 
    /**
     * Sets the multicast interface for this datagram socket.
     */
-   vpr::ReturnStatus setMcastInterface(const vpr::InetAddr& mcastIf)
+   void setMcastInterface(const vpr::InetAddr& mcastIf) throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.mcast_if = mcastIf;
-      return setOption(SocketOptions::McastInterface, option);
+      setOption(SocketOptions::McastInterface, option);
    }
 
    /**
     * Gets the multicast time-to-live parameter for packets sent on this
     * socket.
     */
-   vpr::ReturnStatus getMcastTimeToLive(vpr::Uint8& ttl)
+   void getMcastTimeToLive(vpr::Uint8& ttl) throw (IOException)
    {
       vpr::SocketOptions::Data option;
-      vpr::ReturnStatus retval;
 
-      retval = getOption(SocketOptions::McastTimeToLive, option);
-
-      if ( retval.success() )
-      {
-         ttl = option.mcast_ttl;
-      }
-
-      return retval;
+      getOption(SocketOptions::McastTimeToLive, option);
+      ttl = option.mcast_ttl;
    }
 
    /**
     * Sets the multicast time-to-live parameter for packets sent on this
     * socket.
     */
-   vpr::ReturnStatus setMcastTimeToLive(const vpr::Uint8 ttl)
+   void setMcastTimeToLive(const vpr::Uint8 ttl) throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.mcast_ttl = ttl;
-      return setOption(SocketOptions::McastTimeToLive, option);
+      setOption(SocketOptions::McastTimeToLive, option);
    }
 
    /**
     *
     */
-   vpr::ReturnStatus getMcastLoopback(vpr::Uint8& loop)
+   void getMcastLoopback(vpr::Uint8& loop) throw (IOException)
    {
       vpr::SocketOptions::Data option;
-      vpr::ReturnStatus retval;
 
-      retval = getOption(SocketOptions::McastLoopback, option);
-
-      if ( retval.success() )
-      {
-         loop = option.mcast_loopback;
-      }
-
-      return retval;
+      getOption(SocketOptions::McastLoopback, option);
+      loop = option.mcast_loopback;
    }
 
    /**
     *
     */
-   vpr::ReturnStatus setMcastLoopback(const vpr::Uint8 loop)
+   void setMcastLoopback(const vpr::Uint8 loop) throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.mcast_loopback = loop;
-      return setOption(SocketOptions::McastLoopback, option);
+      setOption(SocketOptions::McastLoopback, option);
    }
 
    /**
     *
     */
-   vpr::ReturnStatus addMcastMember(const vpr::McastReq& request)
+   void addMcastMember(const vpr::McastReq& request) throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.mcast_add_member = request;
-      return setOption(SocketOptions::AddMember, option);
+      setOption(SocketOptions::AddMember, option);
    }
 
    /**
     *
     */
-   vpr::ReturnStatus dropMcastMember(const vpr::McastReq& request)
+   void dropMcastMember(const vpr::McastReq& request) throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.mcast_drop_member = request;
-      return setOption(SocketOptions::DropMember, option);
+      setOption(SocketOptions::DropMember, option);
    }
 };
 

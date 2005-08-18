@@ -111,13 +111,15 @@ public:
     * @post An attempt is made to open the serial port.  The resulting status
     *       is returned to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the serial port opened
-    *         successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::WouldBlockException if the serial port is in non-blocking
+    *         mode and could not be opened yet.
+    * @throws vpr::IOException if the serial port could not be opened.
+    * 
+    * @see vpr::FileHandleImplUNIX::open() 
     */
-   vpr::ReturnStatus open()
+   void open() throw (IOException)
    {
-      return mSioImpl.open();
+      mSioImpl.open();
    }
 
    /**
@@ -127,13 +129,12 @@ public:
     * @post An attempt is made to close the serial port.  The resulting
     *       status is returned to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the serial port is
-    *         closed successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the file handle could not be closed.
+    * @see vpr::FileHandleImplUNIX::close() 
     */
-   vpr::ReturnStatus close()
+   void close() throw (IOException)
    {
-      return mSioImpl.close();
+      mSioImpl.close();
    }
 
    /**
@@ -147,13 +148,12 @@ public:
     * @param blocking A value of true makes the serial port blocking.  A value
     *                 of false makes it non-blocking.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the device's blocking
-    *         mode is set to blocking.
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the blocking mode could not be set.
+    * @see vpr::FileHandleImplUNIX::setBlocking() 
     */
-   vpr::ReturnStatus setBlocking(bool blocking)
+   void setBlocking(bool blocking) throw (IOException)
    {
-      return mSioImpl.setBlocking(blocking);
+      mSioImpl.setBlocking(blocking);
    }
 
    /**
@@ -162,13 +162,11 @@ public:
     * @pre The port is open.
     * @post All of the serial port flags are set to 0 except VMIN=1
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the port's
-    *         flags were cleard successfully
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if all attributes could not be cleared.
     */
-   vpr::ReturnStatus clearAll()
+   void clearAll() throw (IOException)
    {
-      return mSioImpl.clearAll();
+      mSioImpl.clearAll();
    }
 
    /**
@@ -286,15 +284,13 @@ public:
     * @param size A reference to a vpr::Uint16 where the buffer size is
     *             stored for return to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the buffer size was
-    *         retrieved successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
+    * @throws vpr::IOException if the buffer size could not be retrieved.
     *
     * @see getTimeout
     */
-   vpr::ReturnStatus getMinInputSize(vpr::Uint16& size) const
+   void getMinInputSize(vpr::Uint16& size) const throw (IOException)
    {
-      return mSioImpl.getMinInputSize(size);
+      mSioImpl.getMinInputSize(size);
    }
 
    /**
@@ -308,13 +304,13 @@ public:
     *       updated and success is returned.  Otherwise, a failure status is
     *       returned.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the buffer size was set
-    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the buffer size could not be set successfully.
+    *
     * @see setTimeout
     */
-   vpr::ReturnStatus setMinInputSize(const vpr::Uint8 size)
+   void setMinInputSize(const vpr::Uint8 size) throw (IOException)
    {
-      return mSioImpl.setMinInputSize(size);
+      mSioImpl.setMinInputSize(size);
    }
 
    /**
@@ -328,13 +324,11 @@ public:
     * @param timeout A reference to a vpr::Uint8 to be used as storage for
     *                the timeout value.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the timeout length was
-    *         retrieved successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the timeout could not be retrieved.
     */
-   vpr::ReturnStatus getTimeout(vpr::Uint8& timeout) const
+   void getTimeout(vpr::Uint8& timeout) const throw (IOException)
    {
-      return mSioImpl.getTimeout(timeout);
+      mSioImpl.getTimeout(timeout);
    }
 
    /**
@@ -348,13 +342,11 @@ public:
     * @param timeout_val The new timeout value measured in tenths of a
     *                    second.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the timeout length was
-    *         updated successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the timeout could not be set successfully.
     */
-   vpr::ReturnStatus setTimeout(const vpr::Uint8 timeout_val)
+   void setTimeout(const vpr::Uint8 timeout_val) throw (IOException)
    {
-      return mSioImpl.setTimeout(timeout_val);
+      mSioImpl.setTimeout(timeout_val);
    }
 
    /**
@@ -367,15 +359,14 @@ public:
     * @param size A reference to a vpr::SerialTypes::CharacterSizeOption
     *             object to be used as storage for the character size value.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the character size was
-    *         retrieved successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the character size could be retrieved.
     *
     * @see vpr::SerialTypes::CharacterSizeOption
     */
-   vpr::ReturnStatus getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
+   void getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
+      throw (IOException)
    {
-      return mSioImpl.getCharacterSize(size);
+      mSioImpl.getCharacterSize(size);
    }
 
    /**
@@ -388,15 +379,14 @@ public:
     *
     * @param bpb The new character size.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the character size was
-    *         updated successfully. vpr::ReturnStatus::Fail is is returned
-    *         otherwise.
+    * @throws vpr::IOexception if character size could not be set.
     *
     * @see vpr::SerialTypes::CharacterSizeOption
     */
-   vpr::ReturnStatus setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
+   void setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
+      throw (IOException)
    {
-      return mSioImpl.setCharacterSize(bpb);
+      mSioImpl.setCharacterSize(bpb);
    }
 
    /**
@@ -406,8 +396,9 @@ public:
     * @post The read state (either enabled or disabled) is returne to the
     *       caller.
     *
-    * @return \c true is returned if bytes can be read from the device.
-    * @return \c false is returned otherwise.
+    * @return true is returned if bytes can be read from the device.  false is
+    *         returned otherwise.
+    * @throws vpr::IOException if read state could not be retrieved.
     */
    bool getReadState() const
    {
@@ -423,12 +414,11 @@ public:
     * @param flag A value of true makes the port readable.  A value of false
     *             makes it unreadable.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if reading was enabled.
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if read state could not be set.
     */
-   vpr::ReturnStatus setRead(bool flag)
+   void setRead(bool flag) throw (IOException)
    {
-      return mSioImpl.setRead(flag);
+      mSioImpl.setRead(flag);
    }
 
    /**
@@ -440,6 +430,8 @@ public:
     *
     * @return true is returned if local attachment is set.
     *         false is returned otherwise.
+    *
+    * @throws vpr::IOException if local attach state could not be retrieved.
     */
    bool getLocalAttachState() const
    {
@@ -454,10 +446,9 @@ public:
     *
     * @param flag A value of true enables local attachment.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if local attach state could not be set.
     */
-   vpr::ReturnStatus setLocalAttach(bool flag)
+   void setLocalAttach(bool flag) throw (IOException)
    {
       return mSioImpl.setLocalAttach(flag);
    }
@@ -472,13 +463,11 @@ public:
     * @param num_bits A reference to a vpr::Uint8 that will be
     *                 used to store the number of stop bits.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the number of
-    *         stop bits was retrieved successfully.
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if stop bits could not be retrieved.
     */
-   vpr::ReturnStatus getStopBits(vpr::Uint8& num_bits) const
+   void getStopBits(vpr::Uint8& num_bits) const throw (IOException)
    {
-      return mSioImpl.getStopBits(num_bits);
+      mSioImpl.getStopBits(num_bits);
    }
 
    /**
@@ -490,13 +479,11 @@ public:
     *
     * @param num_bits The number of stop bits to use.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the number of stop bits
-    *         was updated successfully.
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if stop bits could not be set.
     */
-   vpr::ReturnStatus setStopBits(const vpr::Uint8 num_bits)
+   void setStopBits(const vpr::Uint8 num_bits) throw (IOException)
    {
-      return mSioImpl.setStopBits(num_bits);
+      mSioImpl.setStopBits(num_bits);
    }
 
    /**
@@ -512,11 +499,12 @@ public:
     *
     * @return true is returned if canonical input mode is enabled.
     *         Otherwise, false is returned.
+    * @throws vpr::IOException if canonical state could not be retrieved.
     *
     * @see getMinInputSize
     * @see getTimeout
     */
-   bool getCanonicalState() const
+   bool getCanonicalState() const throw (IOException)
    {
       return mSioImpl.getCanonicalState();
    }
@@ -528,14 +516,13 @@ public:
     * @pre The serial port is open.
     * @post Canonical input is enabled or disabled.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if canonical input was
-    *         enabled.  Otherwise, vpr::ReturnStatus::Fail is returned.
+    * @throws vpr::IOException if canonical state could not be set.
     *
     * @see getCanonicalState
     */
-   vpr::ReturnStatus setCanonicalInput(bool flag)
+   void setCanonicalInput(bool flag) throw (IOException)
    {
-      return mSioImpl.setCanonicalInput(flag);
+      mSioImpl.setCanonicalInput(flag);
    }
 
    /**
@@ -545,10 +532,10 @@ public:
     * @pre The serial port is open.
     * @post The erroneous byte ignore state is returned to the caller.
     *
-    * @return true is returned if bad bytes are ignored.
-    *         false is returned if bad bytes are not ignored.
+    * @throws vpr::IOException if bad byte ignore state could not
+    *         be retrieved.
     */
-   bool getBadByteIgnoreState() const
+   bool getBadByteIgnoreState() const throw (IOException)
    {
       return mSioImpl.getBadByteIgnoreState();
    }
@@ -563,13 +550,11 @@ public:
     * @param flag A value of true enables ignoring of bad bytes.  A value of
     *             false disables it.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if bad byte ignoring is
-    *         enabled.
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if bad bytes ignore could not be set.
     */
-   vpr::ReturnStatus setBadByteIgnore(bool flag)
+   void setBadByteIgnore(bool flag) throw (IOException)
    {
-      return mSioImpl.setBadByteIgnore(flag);
+      mSioImpl.setBadByteIgnore(flag);
    }
 
    /**
@@ -580,8 +565,10 @@ public:
     *
     * @return true is returned if BREAK bytes are ignored.
     *         false is returned if BREAK bytes are not ignored.
+    * @throws vpr::IOException if break byte ignore state could not
+    *         be retrieved.
     */
-   bool getBreakByteIgnoreState() const
+   bool getBreakByteIgnoreState() const throw (IOException)
    {
       return mSioImpl.getBreakByteIgnoreState();
    }
@@ -595,12 +582,11 @@ public:
     * @param flag A value of true enables ignoring of BREAK bytes.  A value of
     *             false disables it.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if BREAK byte ignoring is
-    *         enabled.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if break byte ignore state could not be set.
     */
-   vpr::ReturnStatus setBreakByteIgnore(bool flag)
+   void setBreakByteIgnore(bool flag) throw (IOException)
    {
-      return mSioImpl.setBreakByteIgnore(flag);
+      mSioImpl.setBreakByteIgnore(flag);
    }
 
    /**
@@ -611,8 +597,10 @@ public:
     *
     * @return true is returned if input parity checking is enabled.  false is
     *         returned if input parity checking is disabled.
+    * @throws vpr::IOException if input parity check state
+    *         could not be retrieved.
     */
-   bool getInputParityCheckState() const
+   bool getInputParityCheckState() const throw (IOException)
    {
       return mSioImpl.getInputParityCheckState();
    }
@@ -626,12 +614,11 @@ public:
     * @param flag A value of true enables input parity checking.  A value of
     *             false disables it.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if input parity check state could not be set.
     */
-   vpr::ReturnStatus setInputParityCheck(bool flag)
+   void setInputParityCheck(bool flag) throw (IOException)
    {
-      return mSioImpl.setInputParityCheck(flag);
+      mSioImpl.setInputParityCheck(flag);
    }
 
    /**
@@ -643,8 +630,9 @@ public:
     *
     * @return true is returned if input bytes are stripped to seven bits.
     *         false is returned if input bytes are not stripped.
+    * @throws vpr::IOException if bit strip state could not be retrieved.
     */
-   bool getBitStripState() const
+   bool getBitStripState() const throw (IOException)
    {
       return mSioImpl.getBitStripState();
    }
@@ -658,12 +646,11 @@ public:
     * @param flag A value of true enables input byte stripping.  A value of
     *             false disables it.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if bit strip state could not be set.
     */
-   vpr::ReturnStatus setBitStripping(bool flag)
+   void setBitStripping(bool flag) throw (IOException)
    {
-      return mSioImpl.setBitStripping(flag);
+      mSioImpl.setBitStripping(flag);
    }
 
    /**
@@ -680,8 +667,10 @@ public:
     *
     * @return true is returned if start-stop input control is enabled.  false
     *         is returned if start-stop input control is not enabled.
+    * @throws vpr::IOException if start stop input state could not
+    *         be retrieved.
     */
-   bool getStartStopInputState() const
+   bool getStartStopInputState() const throw (IOException)
    {
       return mSioImpl.getStartStopInputState();
    }
@@ -696,12 +685,11 @@ public:
     * @param flag A value of true enables start-stop input control.  A value
     *             of false disables it.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if start stop input state could not be set.
     */
-   vpr::ReturnStatus setStartStopInput(bool flag)
+   void setStartStopInput(bool flag) throw (IOException)
    {
-      return mSioImpl.setStartStopInput(flag);
+      mSioImpl.setStartStopInput(flag);
    }
 
    /**
@@ -716,8 +704,10 @@ public:
     *
     * @return true is returned if start-stop output control is enabled.  false
     *         is returned if start-stop output control is not enabled.
+    * @throws vpr::IOException if start stop output state could not
+    *         be retrieved.
     */
-   bool getStartStopOutputState() const
+   bool getStartStopOutputState() const throw (IOException)
    {
       return mSioImpl.getStartStopOutputState();
    }
@@ -732,14 +722,13 @@ public:
     * @param flag A value of true enables start-stop output control.  A value
     *             of false disables it.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if start stop output state could not be set.
     *
     * @see getStartStopOutputState
     */
-   vpr::ReturnStatus setStartStopOutput(bool flag)
+   void setStartStopOutput(bool flag) throw (IOException)
    {
-      return mSioImpl.setStartStopOutput(flag);
+      mSioImpl.setStartStopOutput(flag);
    }
 
    /**
@@ -753,8 +742,10 @@ public:
     * @return true is returned if parity generation and checking are enabled
     *         for outgoing and incoming bytes respectively.  false is returned
     *         if parity generation and checking are disabled.
+    * @throws vpr::IOException if parity generation state could not
+    *         be retrieved.
     */
-   bool getParityGenerationState() const
+   bool getParityGenerationState() const throw (IOException)
    {
       return mSioImpl.getParityGenerationState();
    }
@@ -769,12 +760,11 @@ public:
     * @param flag A value of true anables parity generation.  A value of true
     *             disables it.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if partiy generation state could not be set.
     */
-   vpr::ReturnStatus setParityGeneration(bool flag)
+   void setParityGeneration(bool flag) throw (IOException)
    {
-      return mSioImpl.setParityGeneration(flag);
+      mSioImpl.setParityGeneration(flag);
    }
 
    /**
@@ -784,8 +774,10 @@ public:
     *
     * @return true is returned if parity error marking is enabled.  false is
     *         returned if parity error masking is disabled.
+    * @throws vpr::IOException if parity error marking state
+    *         could not be retrieved.
     */
-   bool getParityErrorMarkingState() const
+   bool getParityErrorMarkingState() const throw (IOException)
    {
       return mSioImpl.getParityErrorMarkingState();
    }
@@ -804,14 +796,13 @@ public:
     * @param flag A value of true enables parity error marking.  A value of
     *             false disables it.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if parity error marking state could not be set.
     *
     * @see setInputParityCheck
     */
-   vpr::ReturnStatus setParityErrorMarking(bool flag)
+   void setParityErrorMarking(bool flag) throw (IOException)
    {
-      return mSioImpl.setParityErrorMarking(flag);
+      mSioImpl.setParityErrorMarking(flag);
    }
 
    /**
@@ -836,12 +827,11 @@ public:
     *
     * @param type The type of parity to use.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if parity could not be set.
     */
-   vpr::ReturnStatus setParity(const vpr::SerialTypes::ParityType& type)
+   void setParity(const vpr::SerialTypes::ParityType& type) throw (IOException)
    {
-      return mSioImpl.setParity(type);
+      mSioImpl.setParity(type);
    }
 
    /**
@@ -854,12 +844,11 @@ public:
     * @param rate A reference to a vpr::Uint32 to be used as storage for the
     *             current input baud setting.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if input baud rate could not be retrieved.
     */
-   vpr::ReturnStatus getInputBaudRate(vpr::Uint32& rate) const
+   void getInputBaudRate(vpr::Uint32& rate) const throw (IOException)
    {
-      return mSioImpl.getInputBaudRate(rate);
+      mSioImpl.getInputBaudRate(rate);
    }
 
    /**
@@ -870,12 +859,11 @@ public:
     *
     * @param baud The new input baud setting.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if input baud rate could not be set.
     */
-   vpr::ReturnStatus setInputBaudRate(const vpr::Uint32 baud)
+   void setInputBaudRate(const vpr::Uint32 baud) throw (IOException)
    {
-      return mSioImpl.setInputBaudRate(baud);
+      mSioImpl.setInputBaudRate(baud);
    }
 
    /**
@@ -888,12 +876,11 @@ public:
     * @param rate A reference to a vpr::Uint32 to be used as storage for the
     *             current output baud setting.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    * operation.
+    * @throws vpr::IOException if ouput baud rate could not be retrieved.
     */
-   vpr::ReturnStatus getOutputBaudRate(vpr::Uint32& rate) const
+   void getOutputBaudRate(vpr::Uint32& rate) const throw (IOException)
    {
-      return mSioImpl.getOutputBaudRate(rate);
+      mSioImpl.getOutputBaudRate(rate);
    }
 
    /**
@@ -904,23 +891,21 @@ public:
     *
     * @param baud The new output baud setting.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if ouput baud rate could not be set.
     */
-   vpr::ReturnStatus setOutputBaudRate(const vpr::Uint32 baud)
+   void setOutputBaudRate(const vpr::Uint32 baud) throw (IOException)
    {
-      return mSioImpl.setOutputBaudRate(baud);
+      mSioImpl.setOutputBaudRate(baud);
    }
 
    /**
     * Waits for all output to be transmitted.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if failed to drain output.
     */
-   vpr::ReturnStatus drainOutput()
+   void drainOutput() throw (IOException)
    {
-      return mSioImpl.drainOutput();
+      mSioImpl.drainOutput();
    }
 
    /**
@@ -935,12 +920,11 @@ public:
     *
     * @param opt The flow control change.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException of control flow could not be changed.
     */
-   vpr::ReturnStatus controlFlow(SerialTypes::FlowActionOption opt)
+   void controlFlow(SerialTypes::FlowActionOption opt) throw (IOException)
    {
-      return mSioImpl.controlFlow(opt);
+      mSioImpl.controlFlow(opt);
    }
 
    /**
@@ -950,10 +934,12 @@ public:
     *
     * @return true is returned if hardware flow control is enabled.
     *         false is returned otherwise.
+    * @throws vpr::IOException if hardware flow control state
+    *         could not be retrieved.
     *
     * @see controlFlow
     */
-   bool getHardwareFlowControlState() const
+   bool getHardwareFlowControlState() const throw (IOException)
    {
       return mSioImpl.getHardwareFlowControlState();
    }
@@ -964,14 +950,13 @@ public:
     * flow control, not all platforms implement hardware flow control.  Hence,
     * this may have no effect depending on the operating system.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if hardware flow control state could not be set.
     *
     * @see controlFlow
     */
-   vpr::ReturnStatus setHardwareFlowControl(bool flag)
+   void setHardwareFlowControl(bool flag) throw (IOException)
    {
-      return mSioImpl.setHardwareFlowControl(flag);
+      mSioImpl.setHardwareFlowControl(flag);
    }
 
    /**
@@ -986,12 +971,11 @@ public:
     *
     * @param queue The queue (or queues) to be flushed.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throws vpr::IOException if queue could not be flushed.
     */
-   vpr::ReturnStatus flushQueue(SerialTypes::FlushQueueOption queue)
+   void flushQueue(SerialTypes::FlushQueueOption queue) throw (IOException)
    {
-      return mSioImpl.flushQueue(queue);
+      mSioImpl.flushQueue(queue);
    }
 
    /**
@@ -1006,21 +990,22 @@ public:
     *
     * @param duration The length of time to send a zero bit stream to the
     *                 serial port.
-    *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    *                 
+    * @throws vpr::IOException if break could not be sent.
     */
-   vpr::ReturnStatus sendBreak(const int duration)
+   void sendBreak(const int duration) throw (IOException)
    {
-      return mSioImpl.sendBreak(duration);
+      mSioImpl.sendBreak(duration);
    }
 
    /**
-   * Return the status of the carrier detect signal.
-   * @return - May be platform dependent, but will at least be as follows.
-   *           0 - not high, 1 - high, -1 - Not supported
-   */
-   int getCarrierDetect() const
+    * Return the status of the carrier detect signal.
+    * @return - May be platform dependent, but will at least be as follows.
+    *           0 - not high, 1 - high, -1 - Not supported
+    *
+    * @throws vpr::IOException if carrier detect state could not be retrieved.
+    */
+   int getCarrierDetect() const throw (IOException)
    {
       return mSioImpl.getCarrierDetect();
    }
@@ -1029,8 +1014,10 @@ public:
     * Returns the status of the data set ready line.
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported
+    *         
+    * @throws vpr::IOException if data set ready state could not be retrieved.
     */
-   int getDataSetReady() const
+   int getDataSetReady() const throw (IOException)
    {
       return mSioImpl.getDataSetReady();
    }
@@ -1039,8 +1026,10 @@ public:
     * Returns the status of the clear to send.
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported
+    *
+    * @throws vpr::IOException if clear to send state could not be retrieved.
     */
-   int getClearToSend() const
+   int getClearToSend() const throw (IOException)
    {
       return mSioImpl.getRequestToSend();
    }
@@ -1049,22 +1038,32 @@ public:
     * Returns the status of the ring indicator line.
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported
+    *
+    * @throws vpr::IOException if ring indicator state could not be retrieved.
     */
-   int getRingIndicator() const
+   int getRingIndicator() const throw (IOException)
    {
       return mSioImpl.getRingIndicator();
    }
 
-   /** Sets the data terminal ready line. */
-   vpr::ReturnStatus setDataTerminalReady(bool val)
+   /** Sets the data terminal ready line.
+    *
+    * @throws vpr::IOException if data terminal ready state could
+    *         not be set.
+    */
+   void setDataTerminalReady(bool val) throw (IOException)
    {
-      return mSioImpl.setDataTerminalReady(val);
+      mSioImpl.setDataTerminalReady(val);
    }
 
-   /** Sets the ready to send line. */
-   vpr::ReturnStatus setRequestToSend(bool val)
+   /** Sets the ready to send line.
+    *
+    * @throws vpr::IOException ifrequest to send state could
+    *         not be set.
+    */
+   void setRequestToSend(bool val) throw (IOException)
    {
-      return mSioImpl.setRequestToSend(val);
+      mSioImpl.setRequestToSend(val);
    }
 
 protected:
@@ -1086,20 +1085,18 @@ protected:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         failed.
-    * @return vpr::ReturnStatus::WouldBlock if the port is in non-blocking
-    *         mode, and there is no data to be read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
+    * @throws vpr::WouldBlockException if the port is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   virtual vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                                    vpr::Uint32& bytesRead,
-                                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void read_i(void* buffer, const vpr::Uint32 length,
+                       vpr::Uint32& bytesRead,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSioImpl.read_i(buffer, length, bytesRead, timeout);
+      mSioImpl.read_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -1120,19 +1117,16 @@ protected:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the port is in non-blocking
-    *         mode, and there is no data to be read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throws vpr::EOFException if end of port or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   virtual vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                                     vpr::Uint32& bytesRead,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void readn_i(void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytesRead,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSioImpl.readn_i(buffer, length, bytesRead, timeout);
+      mSioImpl.readn_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -1151,22 +1145,19 @@ protected:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the write operation could not
-    *         complete.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the write operation failed.
     */
-   virtual vpr::ReturnStatus write_i(const void* buffer,
-                                     const vpr::Uint32 length,
-                                     vpr::Uint32& bytesWritten,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual void write_i(const void* buffer,
+                        const vpr::Uint32 length,
+                        vpr::Uint32& bytesWritten,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSioImpl.write_i(buffer, length, bytesWritten, timeout);
+      mSioImpl.write_i(buffer, length, bytesWritten, timeout);
    }
 
    /// Platform-specific serial port implementation object

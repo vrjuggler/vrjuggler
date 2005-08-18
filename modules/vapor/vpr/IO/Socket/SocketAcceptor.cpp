@@ -46,35 +46,25 @@
 namespace vpr
 {
 
-vpr::ReturnStatus SocketAcceptor::open(const vpr::InetAddr& addr,
+void SocketAcceptor::open(const vpr::InetAddr& addr,
                                        bool reuseAddr, int backlog)
 {
-   vpr::ReturnStatus ret_val;
-
    vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
 
    mSocket.setLocalAddr(addr);
-
-   ret_val = mSocket.open();
-   if ( ret_val.failure() )
-      return ret_val;
-
+   mSocket.open();
    mSocket.setReuseAddr(reuseAddr);
 
-   ret_val = mSocket.bind();
-   if ( ret_val.failure() )
+   try
+   {
+      mSocket.bind();
+      mSocket.listen(backlog);
+   }
+   catch (IOException& ex)
    {
       mSocket.close();
-      return ret_val;
+      throw;
    }
-
-   ret_val = mSocket.listen(backlog);
-   if ( ret_val.failure() )
-   {
-      mSocket.close();
-      return ret_val;
-   }
-   return ret_val;
 }
 
 }

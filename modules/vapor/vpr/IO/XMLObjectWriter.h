@@ -88,30 +88,30 @@ public:
    /** @name Tag and attribute handling */
    //@{
    /** Starts a new section/element of name \p tagName. */
-   virtual vpr::ReturnStatus beginTag(const std::string& tagName);
+   virtual void beginTag(const std::string& tagName);
 
    /** Ends the most recently named tag. */
-   virtual vpr::ReturnStatus endTag();
+   virtual void endTag();
 
    /** Starts an attribute of the name \p attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName);
+   virtual void beginAttribute(const std::string& attributeName);
 
    /** Ends the most recently named attribute. */
-   virtual vpr::ReturnStatus endAttribute();
+   virtual void endAttribute();
    //@}
 
    /**
     * Writes out the single byte.
     * @post data = old(data)+val, \c mCurHeadPos advaced 1.
     */
-   virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val);
-   virtual vpr::ReturnStatus writeUint16(vpr::Uint16 val);
-   virtual vpr::ReturnStatus writeUint32(vpr::Uint32 val);
-   virtual vpr::ReturnStatus writeUint64(vpr::Uint64 val);
-   virtual vpr::ReturnStatus writeFloat(float val);
-   virtual vpr::ReturnStatus writeDouble(double val);
-   virtual vpr::ReturnStatus writeString(std::string val);
-   virtual vpr::ReturnStatus writeBool(bool val);
+   virtual void writeUint8(vpr::Uint8 val);
+   virtual void writeUint16(vpr::Uint16 val);
+   virtual void writeUint32(vpr::Uint32 val);
+   virtual void writeUint64(vpr::Uint64 val);
+   virtual void writeFloat(float val);
+   virtual void writeDouble(double val);
+   virtual void writeString(std::string val);
+   virtual void writeBool(bool val);
 
 protected:
    enum CurTarget
@@ -122,7 +122,7 @@ protected:
 
     /** Helper to write the data to the current string. */
     template<class T>
-    vpr::ReturnStatus writeValueStringRep(const T& val)
+    void writeValueStringRep(const T& val)
     {
        std::ostringstream oss;
        oss << val;
@@ -148,8 +148,6 @@ protected:
           //          << "str rep:" << oss.str() << std::endl
           //          << "new cdata data:" << mCurCData << std::endl;
        }
-
-       return vpr::ReturnStatus::Succeed;
     }
 
 protected:

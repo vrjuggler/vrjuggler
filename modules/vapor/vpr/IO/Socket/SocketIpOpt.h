@@ -58,57 +58,45 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getTypeOfService(vpr::SocketOptions::TypeOfService& tos)
+   void getTypeOfService(vpr::SocketOptions::TypeOfService& tos)
+      throw (IOException)
    {
       vpr::SocketOptions::Data option;
-      vpr::ReturnStatus retval;
 
-      retval = getOption(vpr::SocketOptions::IpTypeOfService, option);
-
-      if ( retval.success() )
-      {
-         tos = option.type_of_service;
-      }
-
-      return retval;
+      getOption(vpr::SocketOptions::IpTypeOfService, option);
+      tos = option.type_of_service;
    }
 
    /**
     *
     */
-   vpr::ReturnStatus setTypeOfService(const vpr::SocketOptions::TypeOfService& tos)
+   void setTypeOfService(const vpr::SocketOptions::TypeOfService& tos)
+      throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.type_of_service = tos;
-      return setOption(vpr::SocketOptions::IpTypeOfService, option);
+      setOption(vpr::SocketOptions::IpTypeOfService, option);
    }
 
    /**
     *
     */
-   vpr::ReturnStatus getTimeToLive(vpr::Int32& ttl)
+   void getTimeToLive(vpr::Int32& ttl) throw (IOException)
    {
       vpr::SocketOptions::Data option;
-      vpr::ReturnStatus retval;
 
-      retval = getOption(vpr::SocketOptions::IpTimeToLive, option);
-
-      if ( retval.success() )
-      {
-         ttl = option.ip_ttl;
-      }
-
-      return retval;
+      getOption(vpr::SocketOptions::IpTimeToLive, option);
+      ttl = option.ip_ttl;
    }
 
    /**
     *
     */
-   vpr::ReturnStatus setTimeToLive(const vpr::Int32 ttl)
+   void setTimeToLive(const vpr::Int32 ttl) throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.ip_ttl = ttl;
-      return setOption(vpr::SocketOptions::IpTimeToLive, option);
+      setOption(vpr::SocketOptions::IpTimeToLive, option);
    }
 };
 

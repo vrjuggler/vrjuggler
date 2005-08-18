@@ -48,9 +48,8 @@
 #include <vector>
 
 #include <vpr/IO/BlockIO.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace vpr
 {
@@ -120,14 +119,13 @@ public:
     *       returned to the caller.  If opened successfully, this file is
     *       ready for use.
     *
-    * @return vpr::ReturnStatus::Succeed is returned when the file was
-    *         opened successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the file could not be
-    *         opened for some reason.
+    * @throws vpr::WouldBlockException if the file handle is in non-blocking
+    *         mode and could not be opened yet.
+    * @throws vpr::IOException if the file handle could not be opened.
     */
-   virtual vpr::ReturnStatus open()
+   virtual void open() throw (IOException)
    {
-      return mHandleImpl.open();
+      mHandleImpl.open();
    }
 
    /**
@@ -138,12 +136,9 @@ public:
     * @post An attempt is made to close the file.  The resulting status is
     *       returned to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the file was closed
-    *         successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the file could not be
-    *         closed.
+    * @throws vpr::IOException if the file handle could not be closed.
     */
-   virtual vpr::ReturnStatus close()
+   virtual void close() throw (IOException)
    {
       return mHandleImpl.close();
    }
@@ -155,13 +150,11 @@ public:
     * @pre The file handle is open.
     * @post Processes may block when accessing the file.
     *
-    * @return vpr::ReturnStatus::Succeed will be returned if the blocking mode
-    *         was changed successfully.  vpr::ReturnStatus::Fail will be
-    *         returned if the blocking mode could not be changed.
+    * @throws vpr::IOException if the blocking mode could not be set.
     */
-   virtual vpr::ReturnStatus setBlocking(bool blocking)
+   virtual void setBlocking(bool blocking) throw (IOException)
    {
-      return mHandleImpl.setBlocking(blocking);
+      mHandleImpl.setBlocking(blocking);
    }
 
    /**
@@ -243,13 +236,12 @@ public:
     * @param flag A value of true indicates that the file should be in append
     *             mode.  A value of false indicates that it should not.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
+    * @throws vpr::IOException if the write mode could not be changed
+    *         for some reason.
     */
-   vpr::ReturnStatus setAppend(bool flag)
+   void setAppend(bool flag) throw (IOException)
    {
-      return mHandleImpl.setAppend(flag);
+      mHandleImpl.setAppend(flag);
    }
 
    /**
@@ -263,11 +255,10 @@ public:
     *             synchronous writes.  A value of false indicates that it
     *             should use asynchronous writes.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.  vpr::ReturnStatus::Fail is returned if
-    *         the write mode could not be changed for some reason.
+    * @throws vpr::IOException if the write mode could not be changed
+    *         for some reason.
     */
-   vpr::ReturnStatus setSynchronousWrite(bool flag)
+   void setSynchronousWrite(bool flag) throw (IOException)
    {
       return mHandleImpl.setSynchronousWrite(flag);
    }
@@ -338,18 +329,18 @@ protected:
     *                  caller.  This argument is optional and defaults to
     *                  vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation
-    *         failed.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and there is no data to read.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesRead,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void read_i(void* buffer, const vpr::Uint32 length,
+               vpr::Uint32& bytesRead,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mHandleImpl.read_i(buffer, length, bytesRead, timeout);
+      mHandleImpl.read_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -372,15 +363,16 @@ protected:
     *                  caller.  This argument is optional and defaults to
     *                  vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesRead,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void readn_i(void* buffer, const vpr::Uint32 length,
+                vpr::Uint32& bytesRead,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mHandleImpl.readn_i(buffer, length, bytesRead, timeout);
+      mHandleImpl.readn_i(buffer, length, bytesRead, timeout);
    }
 
    /**
@@ -400,19 +392,18 @@ protected:
     *                     caller.  This argument is optional and defaults to
     *                     vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the write operation could not be
-    *         completed.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the write operation failed.
     */
-   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesWritten,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void write_i(const void* buffer, const vpr::Uint32 length,
+                vpr::Uint32& bytesWritten,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mHandleImpl.write_i(buffer, length, bytesWritten, timeout);
+      mHandleImpl.write_i(buffer, length, bytesWritten, timeout);
    }
 
    /// Platform-specific file hanlde implementation instance.

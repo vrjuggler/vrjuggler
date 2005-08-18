@@ -44,14 +44,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+#include <sstream>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <errno.h>
 
+#include <vpr/IO/Socket/ConnectionResetException.h>
+#include <vpr/IO/Socket/UnknownHostException.h>
+#include <vpr/IO/Socket/NoRouteToHostException.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
-
 
 namespace vpr
 {
@@ -82,11 +85,12 @@ SocketDatagramImplBSD::SocketDatagramImplBSD(const SocketDatagramImplBSD& sock)
    mHandle->mBlocking = sock.mHandle->mBlocking;
 }
 
-vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
-                                                  const vpr::Uint32 length,
-                                                  vpr::InetAddr& from,
-                                                  vpr::Uint32& bytesRead,
-                                                  const vpr::Interval timeout)
+void SocketDatagramImplBSD::recvfrom(void* msg,
+                                     const vpr::Uint32 length,
+                                     vpr::InetAddr& from,
+                                     vpr::Uint32& bytesRead,
+                                     const vpr::Interval timeout)
+   throw (IOException)
 {
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int fromlen;
@@ -94,99 +98,122 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
    socklen_t fromlen;
 #endif
 
-   vpr::ReturnStatus retval;
-
-   retval = mHandle->isReadable(timeout);
-
-   if ( retval.success() )
+   // If not readable within timeout interval throw exception.
+   if (!mHandle->isReadable(timeout))
    {
-      ssize_t bytes;
+      bytesRead = 0;
+      throw TimeoutException("Timeout occured while trying to read from: "
+         + mHandle->getName(), VPR_LOCATION);
+   }
 
-      mBlockingFixed = true;
+   ssize_t bytes;
 
-      fromlen = from.size();
-      bytes   = ::recvfrom(mHandle->mFdesc, msg, length, 0,
-                           (struct sockaddr*) &from.mAddr, &fromlen);
+   mBlockingFixed = true;
 
-      if ( bytes == -1 )
+   fromlen = from.size();
+   bytes   = ::recvfrom(mHandle->mFdesc, msg, length, 0,
+                        (struct sockaddr*) &from.mAddr, &fromlen);
+
+   if ( bytes == -1 )
+   {
+      bytesRead = 0;
+
+      if ( errno == EAGAIN && ! isBlocking() )
       {
-         bytesRead = 0;
-
-         if ( errno == EAGAIN && ! isBlocking() )
-         {
-            retval.setCode(vpr::ReturnStatus::WouldBlock);
-         }
-         else
-         {
-            fprintf(stderr,
-                    "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
-                    mRemoteAddr.getAddressString().c_str(),
-                    mRemoteAddr.getPort(), strerror(errno));
-            retval.setCode(vpr::ReturnStatus::Fail);
-         }
-      }
-      else if ( bytes == 0 )
-      {
-         retval.setCode(vpr::ReturnStatus::NotConnected);
+         throw WouldBlockException("Would block while reading.", VPR_LOCATION);
       }
       else
       {
-         bytesRead = bytes;
+         fprintf(stderr,
+                 "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
+                 mRemoteAddr.getAddressString().c_str(),
+                 mRemoteAddr.getPort(), strerror(errno));
+
+         std::stringstream ss;
+         ss << "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket ("
+            << mRemoteAddr.getAddressString() << ":" << mRemoteAddr.getPort()
+            << "): " << std::string(strerror(errno));
+
+         throw SocketException(ss.str(), VPR_LOCATION);
       }
    }
-
-   return retval;
+   else if ( bytes == 0 )
+   {
+      throw SocketException("Socket not connected.");
+   }
+   else
+   {
+      bytesRead = bytes;
+   }
 }
 
-vpr::ReturnStatus SocketDatagramImplBSD::sendto(const void* msg,
-                                                const vpr::Uint32 length,
-                                                const vpr::InetAddr& to,
-                                                vpr::Uint32& bytesSent,
-                                                const vpr::Interval timeout)
+void SocketDatagramImplBSD::sendto(const void* msg,
+                                   const vpr::Uint32 length,
+                                   const vpr::InetAddr& to,
+                                   vpr::Uint32& bytesSent,
+                                   const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus retval;
-
-   retval = mHandle->isWriteable(timeout);
-
-   if ( retval.success() )
+   // If not writable within timeout interval throw exception.
+   if (!mHandle->isWriteable(timeout))
    {
-      ssize_t bytes;
+      bytesSent = 0;
+      throw TimeoutException("Timeout occured while trying to write to: "
+         + mHandle->getName(), VPR_LOCATION);
+   }
 
-      mBlockingFixed = true;
+   ssize_t bytes;
 
-      bytes = ::sendto(mHandle->mFdesc, msg, length, 0,
-                       (struct sockaddr*) &to.mAddr, to.size());
+   mBlockingFixed = true;
 
-      if ( bytes == -1 )
+   bytes = ::sendto(mHandle->mFdesc, msg, length, 0,
+                    (struct sockaddr*) &to.mAddr, to.size());
+
+   if ( bytes == -1 )
+   {
+      bytesSent = 0;
+
+      if ( errno == EAGAIN && ! isBlocking() )
       {
-         bytesSent = 0;
-
-         if ( errno == EAGAIN && ! isBlocking() )
-         {
-            retval.setCode(vpr::ReturnStatus::WouldBlock);
-         }
-         else
-         {
-            fprintf(stderr,
-                    "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
-                    to.getAddressString().c_str(), to.getPort(),
-                    mRemoteAddr.getAddressString().c_str(),
-                    mRemoteAddr.getPort(), strerror(errno));
-            retval.setCode(vpr::ReturnStatus::Fail);
-         }
-      }
-      else if ( errno == EHOSTUNREACH || errno == EHOSTDOWN ||
-                errno == ENETDOWN )
-      {
-         retval.setCode(vpr::ReturnStatus::NotConnected);
+         throw WouldBlockException("Would block while reading.", VPR_LOCATION);
       }
       else
       {
-         bytesSent = bytes;
+         fprintf(stderr,
+                 "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
+                 to.getAddressString().c_str(), to.getPort(),
+                 mRemoteAddr.getAddressString().c_str(),
+                 mRemoteAddr.getPort(), strerror(errno));
+         
+         std::stringstream ss;
+         ss << "[vpr::SocketDatagramImplBSD] ERROR: Could not send to "
+            << to.getAddressString() << ":" << to.getPort() << " on socket ("
+            << mRemoteAddr.getAddressString() << ":" << mRemoteAddr.getPort()
+            << "): " << std::string(strerror(errno));
+         
+         throw SocketException(ss.str(), VPR_LOCATION);
       }
    }
-
-   return retval;
+   if ( ECONNRESET == errno)
+   {
+      throw ConnectionResetException("Connection reset.", VPR_LOCATION);
+   }
+   else if (EHOSTUNREACH == errno)
+   {
+      throw NoRouteToHostException("No route to host.", VPR_LOCATION);
+   }
+   else if (EHOSTDOWN == errno)
+   {
+      throw UnknownHostException("Unknown host.", VPR_LOCATION);
+   }
+   else if (ENETDOWN == errno)
+   {
+      throw IOException("Network is down.", VPR_LOCATION);
+   }
+   else
+   {
+      bytesSent = bytes;
+   }
 }
 
 } // End of vpr namespace

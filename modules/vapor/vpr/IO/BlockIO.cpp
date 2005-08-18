@@ -53,14 +53,13 @@ bool BlockIO::isReadBlocked(const vpr::Interval& timeout)
    vpr::Selector selector;
    vpr::IOSys::Handle handle;
    vpr::Uint16 num_events;
-   vpr::ReturnStatus status;
 
    handle = getHandle();
    selector.addHandle(handle);
    selector.setIn(handle, vpr::Selector::Read);
 
    // Test the handle to get its read state.
-   status = selector.select(num_events, timeout);
+   selector.select(num_events, timeout);
 
    if ( num_events == 1 )
    {
@@ -80,14 +79,13 @@ bool BlockIO::isWriteBlocked(const vpr::Interval& timeout)
    vpr::Selector selector;
    vpr::IOSys::Handle handle;
    vpr::Uint16 num_events;
-   vpr::ReturnStatus status;
 
    handle = getHandle();
    selector.addHandle(handle);
    selector.setIn(handle, vpr::Selector::Write);
 
    // Test the handle to get its write state.
-   status = selector.select(num_events, timeout);
+   selector.select(num_events, timeout);
 
    if ( num_events == 1 )
    {
@@ -132,60 +130,50 @@ BlockIO::~BlockIO()
    /* Do nothing. */ ;
 }
 
-vpr::ReturnStatus BlockIO::read_s(void* buffer, const vpr::Uint32 length,
-                                  vpr::Uint32& bytesRead,
-                                  const vpr::Interval timeout)
+void BlockIO::read_s(void* buffer, const vpr::Uint32 length,
+                     vpr::Uint32& bytesRead,
+                     const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    if(mStatsStrategy != NULL)
    {
-      mStatsStrategy->read_s(status, buffer, length, bytesRead, timeout);
+      mStatsStrategy->read_s(buffer, length, bytesRead, timeout);
    }
    else
    {
-      status = read_i(buffer, length, bytesRead, timeout);
+      read_i(buffer, length, bytesRead, timeout);
    }
-
-   return status;
 }
 
-vpr::ReturnStatus BlockIO::readn_s(void* buffer, const vpr::Uint32 length,
-                                   vpr::Uint32& bytesRead,
-                                   const vpr::Interval timeout)
+void BlockIO::readn_s(void* buffer, const vpr::Uint32 length,
+                      vpr::Uint32& bytesRead,
+                      const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    if(mStatsStrategy != NULL)
    {
-      mStatsStrategy->readn_s(status, buffer, length, bytesRead, timeout);
+      mStatsStrategy->readn_s(buffer, length, bytesRead, timeout);
    }
    else
    {
-      status = readn_i(buffer, length, bytesRead, timeout);
+      readn_i(buffer, length, bytesRead, timeout);
    }
-
-   return status;
 }
 
-vpr::ReturnStatus BlockIO::write_s(const void* buffer,
-                                   const vpr::Uint32 length,
-                                   vpr::Uint32& bytesWritten,
-                                   const vpr::Interval timeout)
+void BlockIO::write_s(const void* buffer,
+                      const vpr::Uint32 length,
+                      vpr::Uint32& bytesWritten,
+                      const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    if(mStatsStrategy != NULL)
    {
-      mStatsStrategy->write_s(status, buffer, length, bytesWritten,
-                              timeout);
+      mStatsStrategy->write_s(buffer, length, bytesWritten, timeout);
    }
    else
    {
-       status = write_i(buffer, length, bytesWritten, timeout);
+       write_i(buffer, length, bytesWritten, timeout);
    }
-
-   return status;
 }
 
 }

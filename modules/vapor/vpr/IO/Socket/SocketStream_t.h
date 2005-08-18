@@ -45,7 +45,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/IO/Socket/SocketStreamOpt.h>
 #include <vpr/IO/Socket/Socket_t.h> /* base bridge class.. */
 
@@ -138,13 +137,12 @@ public:
     *
     * @param backlog The maximum length of th queue of pending connections.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this socket is now in
+    * @throws vpr::SocketException if the socket could not be put into
     *         a listening state.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus listen(const int backlog = 5)
+   void listen(const int backlog = 5) throw (SocketException)
    {
-      return mSocketStreamImpl->listen(backlog);
+      mSocketStreamImpl->listen(backlog);
    }
 
    /**
@@ -160,23 +158,20 @@ public:
     * @param timeout The length of time to wait for the accept call to
     *                return.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the new connection was
-    *         accepted succesfully.
-    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
-    *         non-blocking socket, and there are no waiting connection
-    *         requests.
-    * @return vpr::ReturnStatus::Timeout is returned when no connections
-    *         requests arrived within the given timeout period.
-    * @return vpr::ReturnStatus::Fail is returned if the connection was not
-    *         accepted.  An error message is printed explaining what went
-    *         wrong.
+    * @throws vpr::WouldBlockException if this is a non-blocking socket,
+    *         and there are no waiting connection requests.
+    * @throws vpr::TimeoutException if no connection requests arrived within
+    *         the given timeout period.
+    * @throws vpr::SocketException if the connection was not accepted because
+    *         of an error.
     *
     * @see open, bind, listen
     */
-   vpr::ReturnStatus accept(SocketStream_t& sock,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void accept(SocketStream_t& sock,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException)
    {
-      return mSocketStreamImpl->accept(*(sock.mSocketStreamImpl), timeout);
+      mSocketStreamImpl->accept(*(sock.mSocketStreamImpl), timeout);
    }
 
    /**
@@ -193,38 +188,25 @@ public:
     *                  This argument is optional and defaults to true.
     * @param backlog   The maximum length of the pending connection queue.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the server socket is
-    *         in the listening state and ready to accept incoming connection
-    *         requests.
-    * @return vpr::ReturnStatus::Fail is returned if the server socket could
-    *         not be set up.
+    * @throws vpr::WouldBlockException if this is a non-blocking socket,
+    *         and there are no waiting connection requests.
+    * @throws vpr::TimeoutException if no connection requests arrived within
+    *         the given timeout period.
+    * @throws vpr::SocketException if the connection was not accepted because
+    *         of an error.
     */
-   vpr::ReturnStatus openServer(const bool reuseAddr = true,
-                                const int backlog = 5)
+   void openServer(const bool reuseAddr = true,
+                   const int backlog = 5) throw (IOException)
    {
-      vpr::ReturnStatus status;
 
       // First, open the socket.
-      status = this->open();
+      this->open();
+      this->setReuseAddr(reuseAddr);
+      this->bind();
 
-      if ( status.success() )
-      {
-         status = this->setReuseAddr(reuseAddr);
-
-         if ( status.success() )
-         {
-            status = this->bind();
-
-            // If that succeeded, bind to the internal address.
-            if ( status.success() )
-            {
-               // Finally, if that succeeded, go into listening mode.
-               status = this->listen(backlog);
-            }
-         }
-      }
-
-      return status;
+      // If that succeeded, bind to the internal address.
+      // Finally, if that succeeded, go into listening mode.
+      this->listen(backlog);
    }
 
 protected:
@@ -244,17 +226,18 @@ protected:
       this->mSocketImpl = mSocketStreamImpl;
    }
 
-   virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                                       struct vpr::SocketOptions::Data& data)
-      const
+   virtual void getOption(const vpr::SocketOptions::Types option,
+                          struct vpr::SocketOptions::Data& data)
+      const throw (SocketException)
    {
-      return mSocketStreamImpl->getOption(option, data);
+      mSocketStreamImpl->getOption(option, data);
    }
 
-   virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
-                                       const struct vpr::SocketOptions::Data& data)
+   virtual void setOption(const vpr::SocketOptions::Types option,
+                          const struct vpr::SocketOptions::Data& data)
+      throw (SocketException)
    {
-      return mSocketStreamImpl->setOption(option, data);
+      mSocketStreamImpl->setOption(option, data);
    }
 
 // Put in back door for simulator

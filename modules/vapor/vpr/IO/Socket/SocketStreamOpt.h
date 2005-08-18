@@ -47,7 +47,6 @@
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
-#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -75,29 +74,22 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getMaxSegmentSize(size_t& size)
+   void getMaxSegmentSize(size_t& size)
    {
       vpr::SocketOptions::Data option;
-      vpr::ReturnStatus retval;
 
-      retval = getOption(vpr::SocketOptions::MaxSegment, option);
-
-      if ( retval.success() )
-      {
-         size = option.max_segment;
-      }
-
-      return retval;
+      getOption(vpr::SocketOptions::MaxSegment, option);
+      size = option.max_segment;
    }
 
    /**
     *
     */
-   vpr::ReturnStatus setMaxSegmentSize(const vpr::Int32 size)
+   void setMaxSegmentSize(const vpr::Int32 size)
    {
       vpr::SocketOptions::Data option;
       option.max_segment = size;
-      return setOption(vpr::SocketOptions::MaxSegment, option);
+      setOption(vpr::SocketOptions::MaxSegment, option);
    }
 
    /**
@@ -111,19 +103,12 @@ public:
     *                segements.  Otherwise, the Nagel alorithm is delaying
     *                the transmission.
     */
-   vpr::ReturnStatus getNoDelay(bool& enabled)
+   void getNoDelay(bool& enabled)
    {
       vpr::SocketOptions::Data option;
-      vpr::ReturnStatus retval;
 
-      retval = getOption(vpr::SocketOptions::NoDelay, option);
-
-      if ( retval.success() )
-      {
-         enabled = option.no_delay;
-      }
-
-      return retval;
+      getOption(vpr::SocketOptions::NoDelay, option);
+      enabled = option.no_delay;
    }
 
    /**
@@ -133,11 +118,11 @@ public:
     * @param enableVal The Boolean enable/disable state for no-delay on this
     *                  socket.
     */
-   vpr::ReturnStatus setNoDelay(const bool enableVal)
+   void setNoDelay(const bool enableVal)
    {
       vpr::SocketOptions::Data option;
       option.no_delay = enableVal;
-      return setOption(vpr::SocketOptions::NoDelay, option);
+      setOption(vpr::SocketOptions::NoDelay, option);
    }
 };
 

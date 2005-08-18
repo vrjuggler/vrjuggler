@@ -46,6 +46,7 @@
 
 #include <string>
 
+#include <vpr/IO/Socket/SocketException.h>
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 
 
@@ -96,17 +97,26 @@ public:
 
    /**
     * Receives a message from the specified address.
+    * 
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
-                              vpr::InetAddr& from, vpr::Uint32& bytesRead,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void recvfrom(void* msg, const vpr::Uint32 length,
+                 vpr::InetAddr& from, vpr::Uint32& bytesRead,
+                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Sends a message to the specified address.
     */
-   vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                            const vpr::InetAddr& to, vpr::Uint32& bytesSent,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void sendto(const void* msg, const vpr::Uint32 length,
+               const vpr::InetAddr& to, vpr::Uint32& bytesSent,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 };
 
 } // End of namespace

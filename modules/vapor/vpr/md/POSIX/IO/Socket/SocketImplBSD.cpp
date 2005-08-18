@@ -53,6 +53,10 @@
 #include <errno.h>
 
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
+#include <vpr/IO/Socket/ConnectionResetException.h>
+#include <vpr/IO/Socket/ConnectionRefusedException.h>
+#include <vpr/IO/Socket/UnknownHostException.h>
+#include <vpr/IO/Socket/NoRouteToHostException.h>
 #include <vpr/Util/Debug.h>
 
 
@@ -70,10 +74,9 @@ const std::string& SocketImplBSD::getName() const
 
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
-vpr::ReturnStatus SocketImplBSD::open()
+void SocketImplBSD::open() throw (IOException)
 {
    int domain, type, sock;
-   vpr::ReturnStatus retval;
 
    switch ( mLocalAddr.getFamily() )
    {
@@ -143,7 +146,9 @@ vpr::ReturnStatus SocketImplBSD::open()
       fprintf(stderr,
               "[vpr::SocketImplBSD] Could not create socket (%s): %s\n",
               getName().c_str(), strerror(errno));
-      retval.setCode(vpr::ReturnStatus::Fail);
+
+      throw SocketException("[vpr::SocketImplBSD] Could not create socket ("
+         + getName() + "): " + std::string(strerror(errno)), VPR_LOCATION);
    }
    // Otherwise, return success.
    else
@@ -158,28 +163,24 @@ vpr::ReturnStatus SocketImplBSD::open()
 
       // Since socket(2) cannot open a socket in non-blocking mode, we call
       // vpr::FileHandleUNIX::setBlocking() directly.
-      retval = mHandle->setBlocking(mOpenBlocking);
+      mHandle->setBlocking(mOpenBlocking);
    }
-
-   return retval;
 }
 
-vpr::ReturnStatus SocketImplBSD::close()
+void SocketImplBSD::close() throw (IOException)
 {
-   return mHandle->close();
+   mHandle->close();
 }
 
 // Reconfigures the socket so that it is in blocking mode.
-vpr::ReturnStatus SocketImplBSD::setBlocking(bool blocking)
+void SocketImplBSD::setBlocking(bool blocking) throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    vprASSERT(! mBlockingFixed &&
              "Cannot change blocking state after a blocking call!");
 
    if ( ! mBlockingFixed )
    {
-      status = mHandle->setBlocking(blocking);
+      mHandle->setBlocking(blocking);
 
       if ( ! isOpen() )
       {
@@ -188,16 +189,14 @@ vpr::ReturnStatus SocketImplBSD::setBlocking(bool blocking)
    }
    else
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw SocketException("Cannot change blocking state after a blocking call.",
+         VPR_LOCATION);
    }
-
-   return status;
 }
 
 // Bind this socket to the address in the host address member variable.
-vpr::ReturnStatus SocketImplBSD::bind()
+void SocketImplBSD::bind() throw (SocketException)
 {
-   vpr::ReturnStatus retval;
    int status;
 
    // Bind the socket to the address in mLocalAddr.
@@ -210,23 +209,21 @@ vpr::ReturnStatus SocketImplBSD::bind()
       fprintf(stderr,
               "[vpr::SocketImplBSD] Cannot bind socket to address: %s\n",
               strerror(errno));
-      retval.setCode(vpr::ReturnStatus::Fail);
+      throw SocketException("[vpr::SocketImplBSD] Cannot bind socket to address: "
+         + std::string(strerror(errno)), VPR_LOCATION);
    }
    else
    {
       mBound = true;
    }
-
-   return retval;
 }
 
 // Connect the socket on the client side to the server side.  For a datagram
 // socket, this makes the address given to the constructor the default
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
-vpr::ReturnStatus SocketImplBSD::connect(vpr::Interval timeout)
+void SocketImplBSD::connect(vpr::Interval timeout) throw (SocketException)
 {
-   vpr::ReturnStatus retval;
    int status;
 
    // Attempt to connect to the address in mAddr.
@@ -238,47 +235,70 @@ vpr::ReturnStatus SocketImplBSD::connect(vpr::Interval timeout)
    // error status.
    if ( status == -1 )
    {
-      // If this is a non-blocking connection, return
-      // vpr::ReturnStatus::InProgress to indicate that the connection will
-      // complete later.  I'm not sure if it's safe to set mConnected and
+      std::string errstr(strerror(errno));
+
+      // If this is a non-blocking connection, return normally with the
+      // post condition that users must call isConnected() after calling connect
+      // when using non-blocking sockets.
+      // NOTE: I'm not sure if it's safe to set mConnectCalled and
       // mBlockingFixed at this point, but they have to be set sometime.
       if ( errno == EINPROGRESS && ! isBlocking() )
       {
-         if ( vpr::Interval::NoWait == timeout )
+         if ( vpr::Interval::NoWait != timeout )
          {
-            retval.setCode(vpr::ReturnStatus::InProgress);
+            // Force socket to wait for timeout interval to expire
+            // before returning. This provides a way for the caller
+            // to specify that they want the connection process to
+            // block even with a non-blocking socket.
+            mHandle->isWriteable(timeout);
          }
-         // If we have a timeout value, wait for at most the duration of
-         // that interval.  If we time out, tell the caller that the
-         // connection is still in progress.
-         else if ( ! mHandle->isWriteable(timeout).success() )
-         {
-            retval.setCode(vpr::ReturnStatus::InProgress);
-         }
-
-         mBound          = true;
-         mConnected      = true;
+         mBound         = true;
+         mConnectCalled = true;
          mBlockingFixed = true;
+      }
+      else if (ECONNREFUSED == errno)
+      {
+         throw ConnectionRefusedException("Connection refused: "
+            + errstr, VPR_LOCATION);
+      }
+      else if (ECONNRESET == errno)
+      {
+         throw ConnectionResetException("Connection reset: " + errstr,
+            VPR_LOCATION);
+      }
+      else if (EHOSTUNREACH == errno)
+      {
+         throw NoRouteToHostException("No route to host: " + errstr,
+            VPR_LOCATION);
+      }
+      else if (EHOSTDOWN == errno)
+      {
+         throw SocketException("Host down: " + errstr, VPR_LOCATION);
+      }
+      else if (ENETDOWN == errno)
+      {
+         throw SocketException("Network is down: " + errstr, VPR_LOCATION);
       }
       else
       {
-//         fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
-//                 mRemoteAddr.getAddressString().c_str(), strerror(errno));
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "[vpr::SocketImplBSD] Error connecting to "
-            << mRemoteAddr.getAddressString() << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-         retval.setCode(vpr::ReturnStatus::Fail);
+            << mRemoteAddr.getAddressString() << ": " << errstr << std::endl << vprDEBUG_FLUSH;
+
+         throw SocketException("[vpr::SocketImplBSD] Error connecting to "
+            + mRemoteAddr.getAddressString() + ": " + errstr,
+            VPR_LOCATION);
       }
    }
    // Otherwise, return success.
    else
    {
-      mBound          = true;
-      mConnected      = true;
-      mBlockingFixed = true;
+      mBound            = true;
+      mConnectCalled    = true;
+      mBlockingFixed    = true;
    }
 
    // Fill in the local address if has not already been assigned.
-   if ( mConnected && vpr::InetAddr::AnyAddr == mLocalAddr )
+   if ( mConnectCalled && vpr::InetAddr::AnyAddr == mLocalAddr )
    {
       int status;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
@@ -308,129 +328,136 @@ vpr::ReturnStatus SocketImplBSD::connect(vpr::Interval timeout)
                                                   << vprDEBUG_FLUSH;
       }
    }
-
-   return retval;
 }
 
-bool SocketImplBSD::isConnected() const
+bool SocketImplBSD::isConnected() const throw ()
 {
    bool connected(false);
 
-   if ( isOpen() && mConnected )
+   if ( isOpen() && mConnectCalled )
    {
-      vpr::ReturnStatus status;
       vpr::Int32 bytes;
-
-      status = mHandle->getReadBufferSize(bytes);
-
-      if ( status.success() )
+      
+      try
       {
-         if ( bytes == 0 )
-         {
-            // If there are no bytes to read but the OS tells us that the
-            // socket is readable, then something is wrong.
-            if ( ! mHandle->isReadable(vpr::Interval::NoWait).success() )
-            {
-               connected = true;
-            }
-         }
-         else
+         mHandle->getReadBufferSize(bytes);
+         
+         // If there are bytes to read then we know that we are connected.
+         if ( bytes != 0 )
          {
             connected = true;
          }
+         else
+         {
+            // If there are no bytes to read but we get a
+            // TimeOut when asked for data then we are connected.
+            connected = mHandle->isReadable(vpr::Interval::NoWait);
+         }
+      } // Catch all unhandled exceptions.
+      catch(...)
+      {
+         connected = false;
       }
    }
 
    return connected;
 }
 
-vpr::ReturnStatus SocketImplBSD::setLocalAddr(const InetAddr& addr)
+void SocketImplBSD::setLocalAddr(const InetAddr& addr) throw (SocketException)
 {
-   vpr::ReturnStatus status;
-
-   if ( mBound || mConnected )
+   if ( mBound || mConnectCalled )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "SocketImplBSD::setLocalAddr: Can't set address of a "
          << "bound or connected socket.\n" << vprDEBUG_FLUSH;
-      status.setCode(vpr::ReturnStatus::Fail);
+
+      throw SocketException(std::string("SocketImplBSD::setLocalAddr: Can't set address of a ")
+         + std::string("bound or connected socket."), VPR_LOCATION);
    }
    else
    {
       mLocalAddr = addr;
    }
-
-   return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::setRemoteAddr(const InetAddr& addr)
+void SocketImplBSD::setRemoteAddr(const InetAddr& addr) throw (SocketException)
 {
-   vpr::ReturnStatus status;
-
-   if ( mConnected )
+   if ( mConnectCalled )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw SocketException("Can not set remote address on a connected socket.",
+         VPR_LOCATION);
    }
    else
    {
       mRemoteAddr = addr;
    }
-
-   return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::read_i(void* buffer,
-                                        const vpr::Uint32 length,
-                                        vpr::Uint32& bytesRead,
-                                        const vpr::Interval timeout)
+void SocketImplBSD::read_i(void* buffer,
+                           const vpr::Uint32 length,
+                           vpr::Uint32& bytesRead,
+                           const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
    mBlockingFixed = true;
-   status = mHandle->read_i(buffer, length, bytesRead, timeout);
-
+   mHandle->read_i(buffer, length, bytesRead, timeout);
+   
+   //XXX: Should never happen.
    if ( bytesRead == 0 )
    {
-      status.setCode(vpr::ReturnStatus::NotConnected);
+      throw SocketException("Socket not connected.", VPR_LOCATION);
    }
-
-   return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::readn_i(void* buffer,
-                                         const vpr::Uint32 length,
-                                         vpr::Uint32& bytesRead,
-                                         const vpr::Interval timeout)
+void SocketImplBSD::readn_i(void* buffer,
+                            const vpr::Uint32 length,
+                            vpr::Uint32& bytesRead,
+                            const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
    mBlockingFixed = true;
-   status = mHandle->readn_i(buffer, length, bytesRead, timeout);
-
+   mHandle->readn_i(buffer, length, bytesRead, timeout);
+   
+   // XXX: Should never happen.
    if ( bytesRead == 0 )
    {
-      status.setCode(vpr::ReturnStatus::NotConnected);
+      throw SocketException("Socket not connected.", VPR_LOCATION);
    }
-
-   return status;
 }
 
-vpr::ReturnStatus SocketImplBSD::write_i(const void* buffer,
-                                         const vpr::Uint32 length,
-                                         vpr::Uint32& bytesWritten,
-                                         const vpr::Interval timeout)
+void SocketImplBSD::write_i(const void* buffer,
+                            const vpr::Uint32 length,
+                            vpr::Uint32& bytesWritten,
+                            const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
    mBlockingFixed = true;
-   status = mHandle->write_i(buffer, length, bytesWritten, timeout);
 
-   if ( status.failure() )
+   try
    {
-      if ( ECONNRESET == errno || EHOSTUNREACH || EHOSTDOWN || ENETDOWN )
+      mHandle->write_i(buffer, length, bytesWritten, timeout);
+   }
+   catch (IOException& ex)
+   {
+      //XXX: We could add a setCause() method to link exceptions.
+      std::string errstr(strerror(errno));
+      if (ECONNRESET == errno)
       {
-         status.setCode(vpr::ReturnStatus::NotConnected);
+         throw ConnectionResetException("Connection reset: " + errstr, VPR_LOCATION);
+      }
+      else if (EHOSTUNREACH == errno)
+      {
+         throw NoRouteToHostException("No route to host: " + errstr, VPR_LOCATION);
+      }
+      else if (EHOSTDOWN == errno)
+      {
+         throw SocketException("Host is down: " + errstr, VPR_LOCATION);
+      }
+      else if (ENETDOWN == errno)
+      {
+         throw SocketException("Network is down: " + errstr, VPR_LOCATION);
       }
    }
-
-   return status;
 }
 
 /**
@@ -447,11 +474,11 @@ union sockopt_data
    Uint8          mcast_loop;
 };
 
-vpr::ReturnStatus SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
-                                           struct vpr::SocketOptions::Data& data) const
+void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
+                              struct vpr::SocketOptions::Data& data) const
+   throw (SocketException)
 {
    int opt_name, opt_level, status;
-   vpr::ReturnStatus retval;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int opt_size;
 #else
@@ -614,17 +641,18 @@ vpr::ReturnStatus SocketImplBSD::getOption(const vpr::SocketOptions::Types optio
    }
    else
    {
-      retval.setCode(vpr::ReturnStatus::Fail);
       fprintf(stderr,
               "[vpr::SocketImplBSD] ERROR: Could not get socket option for socket %s: %s\n",
               mHandle->getName().c_str(), strerror(errno));
-   }
 
-   return retval;
+      throw SocketException("[vpr::SocketImplBSD] ERROR: Could not get socket option for socket "
+         + mHandle->getName() + ": " + std::string(strerror(errno)), VPR_LOCATION);
+   }
 }
 
-vpr::ReturnStatus SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
-                                           const struct vpr::SocketOptions::Data& data)
+void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
+                              const struct vpr::SocketOptions::Data& data)
+   throw (SocketException)
 {
    int opt_name, opt_level;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
@@ -633,7 +661,6 @@ vpr::ReturnStatus SocketImplBSD::setOption(const vpr::SocketOptions::Types optio
    socklen_t opt_size;
 #endif
    union sockopt_data opt_data;
-   vpr::ReturnStatus retval;
 
    opt_name = opt_level = -1;
    opt_size = 0;
@@ -699,6 +726,8 @@ vpr::ReturnStatus SocketImplBSD::setOption(const vpr::SocketOptions::Types optio
 #ifdef IPTOS_LOWCOST
                opt_data.size = IPTOS_LOWCOST;
 #else
+               // XXX: Should this be an invalid argument exception
+               //      or should we ignore it.
                fprintf(stderr,
                        "[vpr::SocketImplBSD] WARNING: This platform does not "
                        "support LowCost type of service!\n");
@@ -758,10 +787,9 @@ vpr::ReturnStatus SocketImplBSD::setOption(const vpr::SocketOptions::Types optio
 
    if ( ::setsockopt(mHandle->mFdesc, opt_level, opt_name, &opt_data, opt_size) != 0 )
    {
-      retval.setCode(vpr::ReturnStatus::Fail);
+      throw SocketException("[vpr::SocketImplBSD] ERROR: Could not set socket option for socket "
+         + mHandle->getName() + ": " + std::string(strerror(errno)), VPR_LOCATION);
    }
-
-   return retval;
 }
 
 SocketImplBSD::~SocketImplBSD()
@@ -780,7 +808,7 @@ SocketImplBSD::~SocketImplBSD()
 SocketImplBSD::SocketImplBSD(const vpr::SocketTypes::Type sockType)
    : mOpenBlocking(true)
    , mBound(false)
-   , mConnected(false)
+   , mConnectCalled(false)
    , mBlockingFixed(false)
    , mHandle(NULL)
    , mType(sockType)
@@ -793,7 +821,7 @@ SocketImplBSD::SocketImplBSD(const vpr::InetAddr& localAddr,
                              const vpr::SocketTypes::Type sockType)
    : mOpenBlocking(true)
    , mBound(false)
-   , mConnected(false)
+   , mConnectCalled(false)
    , mBlockingFixed(false)
    , mHandle(NULL)
    , mLocalAddr(localAddr)

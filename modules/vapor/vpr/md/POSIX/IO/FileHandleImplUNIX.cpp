@@ -43,6 +43,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sstream>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -64,7 +65,6 @@
 
 #include <vpr/Util/Debug.h>
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
-
 
 namespace vpr
 {
@@ -109,10 +109,8 @@ FileHandleImplUNIX::~FileHandleImplUNIX()
 }
 
 // Open the file handle.
-vpr::ReturnStatus FileHandleImplUNIX::open()
+void FileHandleImplUNIX::open() throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    int open_flags(mOpenMode);
 
    if ( ! mOpenBlocking )
@@ -129,17 +127,19 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
       // If we are opening in non-blocking mode, we do not want to bomb out.
       if ( errno == EWOULDBLOCK && ! mOpenBlocking )
       {
-         status.setCode(vpr::ReturnStatus::WouldBlock);
          mOpen = true;
+         throw WouldBlockException("Would block.", VPR_LOCATION);
       }
       // Otherwise, report the error.
       else
       {
+         mOpen = false;
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << "[vpr::FileHandleImplUNIX::open()] Could not open " << mName
             << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-         status.setCode(ReturnStatus::Fail);
-         mOpen = false;
+
+         throw IOException("[vpr::FileHandleImplUNIX::open()] Could not open "
+            + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
       }
    }
    // Otherwise, set mOpen to true.
@@ -148,15 +148,11 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
       mOpen     = true;
       mBlocking = mOpenBlocking;
    }
-
-   return status;
 }
 
 // Close the file handle.
-vpr::ReturnStatus FileHandleImplUNIX::close()
+void FileHandleImplUNIX::close() throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "[vpr::FileHandleImplUNIX::close()] Closing file descriptor "
       << mFdesc << std::endl << vprDEBUG_FLUSH;
@@ -166,22 +162,20 @@ vpr::ReturnStatus FileHandleImplUNIX::close()
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "[vpr::FileHandleImplUNIX::close()] Could not close " << mName
          << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-      status.setCode(ReturnStatus::Fail);
+
+      throw IOException("[vpr::FileHandleImplUNIX::close()] Could not close "
+         + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
    }
    else
    {
       mFdesc = -1;
       mOpen  = false;
    }
-
-   return status;
 }
 
 // Reconfigure the file handle so that it is in blocking mode.
-vpr::ReturnStatus FileHandleImplUNIX::setBlocking(bool blocking)
+void FileHandleImplUNIX::setBlocking(bool blocking) throw (IOException)
 {
-   vpr::ReturnStatus retval;
-
    if ( ! mOpen )
    {
       mOpenBlocking = blocking;
@@ -225,15 +219,16 @@ vpr::ReturnStatus FileHandleImplUNIX::setBlocking(bool blocking)
             << "[vpr::FileHandleImplUNIX::setBlocking()] Failed to set "
             << (blocking ? "blocking" : "non-blocking") << " state on "
             << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-         retval.setCode(ReturnStatus::Fail);
+
+         throw IOException("[vpr::FileHandleImplUNIX::setBlocking()] Failed to set "
+            + std::string(blocking ? "blocking" : "non-blocking") + " state on "
+            + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
       }
       else
       {
          mBlocking = blocking;
       }
    }
-
-   return retval;
 }
 
 vpr::IOSys::Handle FileHandleImplUNIX::getHandle() const
@@ -263,10 +258,9 @@ void FileHandleImplUNIX::setOpenReadWrite()
 }
 
 // Reconfigure the file handle to be in append mode.
-vpr::ReturnStatus FileHandleImplUNIX::setAppend(bool append)
+void FileHandleImplUNIX::setAppend(bool append) throw (IOException)
 {
    int cur_flags, new_flags, retval;
-   vpr::ReturnStatus status;
 
    // Get the current flags.
    cur_flags = getFlags();
@@ -291,16 +285,16 @@ vpr::ReturnStatus FileHandleImplUNIX::setAppend(bool append)
          << "[vpr::FileHandleImplUNIX::setAppend()] Failed to "
          << (append ? "enable" : "disable") << " append mode on "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-      status.setCode(ReturnStatus::Fail);
-   }
 
-   return status;
+      throw IOException("[vpr::FileHandleImplUNIX::setAppend()] Failed to "
+         + std::string(append ? "enable" : "disable") + " append mode on "
+         + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
+   }
 }
 
 // Reconfigure the file handle so that writes are synchronous.
-vpr::ReturnStatus FileHandleImplUNIX::setSynchronousWrite(bool sync)
+void FileHandleImplUNIX::setSynchronousWrite(bool sync) throw (IOException)
 {
-   vpr::ReturnStatus status;
 #if ! defined(_POSIX_SOURCE) && defined(O_SYNC) && defined(O_ASYNC)
    int cur_flags, new_flags, retval;
 
@@ -327,17 +321,21 @@ vpr::ReturnStatus FileHandleImplUNIX::setSynchronousWrite(bool sync)
          << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] Failed to enable "
          << (sync ? "synchronous" : "asynchronous") << " writes on "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-      status.setCode(vpr::ReturnStatus::Fail);
+
+      throw IOException("[vpr::FileHandleImplUNIX::setSynchronousWrite()] Failed to enable "
+         + (sync ? "synchronous" : "asynchronous") << " writes on "
+         + mName << ": " << std::string(strerror(errno)), VPR_LOCATION);
    }
 #else
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
       << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] Cannot enable "
       << (sync ? "synchronous" : "asynchronous")
       << " writes on this platform!\n" << vprDEBUG_FLUSH;
-   status.setCode(vpr::ReturnStatus::Fail);
-#endif
 
-   return status;
+   throw IOException("[vpr::FileHandleImplUNIX::setSynchronousWrite()] Cannot enable "
+      + std::string(sync ? "synchronous" : "asynchronous")
+      + " writes on this platform!", VPR_LOCATION);
+#endif
 }
 
 bool FileHandleImplUNIX::isReadOnly() const
@@ -355,16 +353,14 @@ bool FileHandleImplUNIX::isReadWrite() const
    return (mOpenMode == O_RDWR);
 }
 
-vpr::ReturnStatus FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) const
+void FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) const
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    if ( ioctl(mFdesc, FIONREAD, &buffer) == -1 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw IOException("vpr::FileHandleImplUNIX::getReadBufferSize() Cannot get buffer size.",
+         VPR_LOCATION);
    }
-
-   return status;
 }
 
 // ============================================================================
@@ -373,82 +369,84 @@ vpr::ReturnStatus FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) cons
 
 // Read the specified number of bytes from the file handle into the given
 // bufer.
-vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
-                                             const vpr::Uint32 length,
-                                             vpr::Uint32& bytesRead,
-                                             const vpr::Interval timeout)
+void FileHandleImplUNIX::read_i(void* buffer,
+                                const vpr::Uint32 length,
+                                vpr::Uint32& bytesRead,
+                                const vpr::Interval timeout) throw (IOException)
 {
-   vpr::ReturnStatus status;
-
-   status = isReadable(timeout);
-
-   if ( status.success() )
+   // If not readable within timeout interval throw exception.
+   if (!isReadable(timeout))
    {
-      ssize_t bytes;
+      bytesRead = 0;
+      throw TimeoutException("Timeout occured while trying to read from: " + mName,
+         VPR_LOCATION);
+   }
 
-      bytes = ::read(mFdesc, buffer, length);
+   ssize_t bytes;
 
-      // Something went wrong while attempting to read from the file.
-      if ( bytes < 0 )
+   bytes = ::read(mFdesc, buffer, length);
+
+   // Something went wrong while attempting to read from the file.
+   if ( bytes < 0 )
+   {
+      bytesRead = 0;
+
+      if ( errno == EAGAIN && ! mBlocking )
       {
-         bytesRead = 0;
-
-         if ( errno == EAGAIN && ! mBlocking )
-         {
-            status.setCode(vpr::ReturnStatus::WouldBlock);
-         }
-         // If the error is EAGAIN and we are in non-blocking mode, we do not
-         // bother to print the message.
-         if ( ! (errno == EAGAIN && ! mBlocking) )
-         {
-            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << "[vpr::FileHandleImplUNIX::read_i()] Error reading from "
-               << mName << ": " << strerror(errno) << std::endl
-               << vprDEBUG_FLUSH;
-            status.setCode(ReturnStatus::Fail);
-         }
+         throw WouldBlockException("Would block while reading.", VPR_LOCATION);
       }
-      // If 0 bytes were read or an error was returned, we print an error
-      // message.
-      else if ( bytes == 0 && errno != 0 )
+      // If the error is EAGAIN and we are in non-blocking mode, we do not
+      // bother to print the message.
+      if ( ! (errno == EAGAIN && ! mBlocking) )
       {
-         // XXX: Failure status may not be exactly what we want to return.
-         status.setCode(ReturnStatus::Fail);
-         bytesRead = 0;
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleImplUNIX::read_i()] Error reading from "
+            << mName << ": " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
+
+         throw IOException("[vpr::FileHandleImplUNIX::read_i()] Error reading from "
+            + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
+      }
+   }
+   // If 0 bytes were read or an error was returned, we print an error
+   // message.
+   else if ( bytes == 0 && errno != 0 )
+   {
+      bytesRead = 0;
 //     errno != ENOENT
-         vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-            << "[vpr::FileHandleImplUNIX::read_i()] Nothing read from "
-            << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-      }
-      else
-      {
-         bytesRead = bytes;
-      }
+      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << "[vpr::FileHandleImplUNIX::read_i()] Nothing read from "
+         << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+
+      // XXX: Failure status may not be exactly what we want to return.
+      throw IOException("[vpr::FileHandleImplUNIX::read_i()] Nothing read from "
+         + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
    }
    else
    {
-      bytesRead = 0;
+      bytesRead = bytes;
    }
-
-   return status;
 }
 
 // Read exactly the specified number of bytes from the file handle into the
-// given buffer.  This is baesd on the readn() function given on pages 51-2 of
+// given buffer.  This is based on the readn() function given on pages 51-2 of
 // _Effective TCP/IP Programming_ by Jon D. Snader.
-vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
-                                              const vpr::Uint32 buffer_size,
-                                              vpr::Uint32& bytesRead,
-                                              const vpr::Interval timeout)
+void FileHandleImplUNIX::readn_i(void* buffer,
+                                 const vpr::Uint32 buffer_size,
+                                 vpr::Uint32& bytesRead,
+                                 const vpr::Interval timeout)
+   throw (IOException)
 {
    size_t bytes_left;
    ssize_t bytes;
-   vpr::ReturnStatus status;
 
    if ( vpr::Interval::NoTimeout != timeout )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n"
                                               << vprDEBUG_FLUSH;
+      //TODO: InvalidArgumentException instead, but this will require
+      //      adding it as an acceptable exception to throw.
+      throw IOException("Timeout not supported by readn.", VPR_LOCATION);
    }
 
    bytesRead = 0;
@@ -471,16 +469,21 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
       if ( bytes < 0 )
       {
          // Restart the read process if we were interrupted by the OS.
-         if ( errno == EINTR )
+         if ( EINTR == errno )
+         {
+            continue;
+         }
+         // Restart the read process if socket is non-blocking and no
+         // data was immediately available.
+         else if ( EAGAIN == errno )
          {
             continue;
          }
          // Otherwise, we have an error situation, so return failure status.
          else
          {
-            status.setCode(ReturnStatus::Fail);
             bytesRead = 0;
-            return status;
+            throw IOException("Error reading from: " + mName, VPR_LOCATION);
          }
       }
       // We have read EOF, so there is nothing more to read.  At this point,
@@ -494,7 +497,11 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
             << mFdesc << " and " << bytesRead << " bytes read in total."
             << std::endl << vprDEBUG_FLUSH;
 
-         return status;
+         std::stringstream ss;
+         ss << "[vpr::FileHandleImplUNIX::readn_i()] Read EOF with "
+            << bytes_left << " bytes left to read from file handle "
+            << mFdesc << " and " << bytesRead + " bytes read in total.";
+         throw EOFException(ss.str(), VPR_LOCATION);
       }
       else
       {
@@ -503,50 +510,50 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
          bytesRead  += bytes;
       }
    }
-
-   return status;
 }
 
 // Write the buffer to the file handle.
-vpr::ReturnStatus FileHandleImplUNIX::write_i(const void* buffer,
-                                              const vpr::Uint32 length,
-                                              vpr::Uint32& bytesWritten,
-                                              const vpr::Interval timeout)
+void FileHandleImplUNIX::write_i(const void* buffer,
+                                 const vpr::Uint32 length,
+                                 vpr::Uint32& bytesWritten,
+                                 const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus status;
-
-   status = isWriteable(timeout);
-
-   if ( status.success() )
+   // If not writable within timeout interval throw exception.
+   if (!isWriteable(timeout))
    {
-      ssize_t bytes;
+      bytesWritten = 0;
+      throw TimeoutException("Timeout occured while trying to write to: " + mName,
+         VPR_LOCATION);
+   }
 
-      bytes = ::write(mFdesc, buffer, length);
+   ssize_t bytes;
 
-      if ( bytes <= 0 )
+   bytes = ::write(mFdesc, buffer, length);
+
+   if ( bytes <= 0 )
+   {
+      bytesWritten = 0;
+
+      if ( errno == EAGAIN && ! mBlocking )
       {
-         bytesWritten = 0;
-
-         if ( errno == EAGAIN && ! mBlocking )
-         {
-            status.setCode(vpr::ReturnStatus::WouldBlock);
-         }
-         else
-         {
-            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << "[vpr::FileHandleImplUNIX::write_i()] Error writing to "
-               << mName << ": " << strerror(errno) << std::endl
-               << vprDEBUG_FLUSH;
-            status.setCode(ReturnStatus::Fail);
-         }
+         throw WouldBlockException("Would block writing.", VPR_LOCATION);
       }
       else
       {
-         bytesWritten = bytes;
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleImplUNIX::write_i()] Error writing to "
+            << mName << ": " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
+
+         throw IOException("[vpr::FileHandleImplUNIX::write_i()] Error writing to "
+            + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
       }
    }
-
-   return status;
+   else
+   {
+      bytesWritten = bytes;
+   }
 }
 
 vpr::Uint32 FileHandleImplUNIX::availableBytes() const
@@ -573,16 +580,16 @@ int FileHandleImplUNIX::setFlags(const int flags)
    return fcntl(mFdesc, F_SETFL, flags);
 }
 
-vpr::ReturnStatus FileHandleImplUNIX::isReadable(const vpr::Interval timeout) const
+bool FileHandleImplUNIX::isReadable(const vpr::Interval timeout) const
+   throw (IOException)
 {
-   vpr::ReturnStatus ready;
    fd_set read_set;
    int num_events;
    struct timeval timeout_obj;
 
    if ( mFdesc == -1 )
    {
-      ready.setCode(vpr::ReturnStatus::Fail);
+      throw IOException("Invalid file handle.", VPR_LOCATION);
    }
    else
    {
@@ -614,30 +621,39 @@ vpr::ReturnStatus FileHandleImplUNIX::isReadable(const vpr::Interval timeout) co
 
       if ( num_events == 0 )
       {
+         // Added in revision 1.33 
+         // If timeout is vpr::Interval::NoWait(NULL) the file handle may be ready for
+         // reading even though select returned 0. This is vauge in the documentation
+         // because it says that calling select with a timeout of NULL will return
+         // immediately.
          if ( ! FD_ISSET(mFdesc, &read_set) )
          {
-            ready.setCode(vpr::ReturnStatus::Timeout);
+            return false;
          }
       }
       else if ( num_events < 0 )
       {
-         ready.setCode(vpr::ReturnStatus::Fail);
+         // TODO: Test additional select errors.
+         // EBADF  An invalid file descriptor was given in one of the sets.
+         // EINTR  A non blocked signal was caught.
+         // EINVAL n is negative or the value contained within timeout is invalid.
+         // ENOMEM select was unable to allocate memory for internal tables.
+         throw IOException("Error while testing if file handle is readable.", VPR_LOCATION);
       }
    }
-
-   return ready;
+   return true;
 }
 
-vpr::ReturnStatus FileHandleImplUNIX::isWriteable(const vpr::Interval timeout) const
+bool FileHandleImplUNIX::isWriteable(const vpr::Interval timeout) const
+   throw (IOException)
 {
-   vpr::ReturnStatus ready;
    fd_set write_set;
    int num_events;
    struct timeval timeout_obj;
 
    if ( mFdesc == -1 )
    {
-      ready.setCode(vpr::ReturnStatus::Fail);
+      throw IOException("Invalid file handle.", VPR_LOCATION);
    }
    else
    {
@@ -662,25 +678,38 @@ vpr::ReturnStatus FileHandleImplUNIX::isWriteable(const vpr::Interval timeout) c
 
       FD_ZERO(&write_set);
       FD_SET(mFdesc, &write_set);
-
+      
+      // Watch to see if a write will block. Timeout is an upper bound on the amount of time
+      // elapsed before select returns. It may be zero, causing select to return
+      // immediately. (This is useful for polling.) If timeout is NULL (no timeout),
+      // select can block indefinitely.
       num_events = select(mFdesc + 1, NULL, &write_set, NULL,
                           (timeout != vpr::Interval::NoTimeout) ? &timeout_obj :
                                                                   NULL);
 
       if ( num_events == 0 )
       {
+         // Added in revision 1.33 
+         // If timeout is vpr::Interval::NoWait(NULL) the file handle may be ready for
+         // writing even though select returned 0. This is vauge in the documentation
+         // because it says that calling select with a timeout of NULL will return
+         // immediately.
          if ( ! FD_ISSET(mFdesc, &write_set) )
          {
-            ready.setCode(vpr::ReturnStatus::Timeout);
+            return false;
          }
       }
       else if ( num_events < 0 )
       {
-         ready.setCode(vpr::ReturnStatus::Fail);
+         // TODO: Test additional select errors.
+         // EBADF  An invalid file descriptor was given in one of the sets.
+         // EINTR  A non blocked signal was caught.
+         // EINVAL n is negative or the value contained within timeout is invalid.
+         // ENOMEM select was unable to allocate memory for internal tables.
+         throw IOException("Error while testing if file handle is writeable.", VPR_LOCATION);
       }
    }
-
-   return ready;
+   return true;
 }
 
 } // End of vpr namespace

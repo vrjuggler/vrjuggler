@@ -47,8 +47,8 @@
 #include <vector>
 
 #include <vpr/IO/SelectorBase.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/IO/IOSys.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 
 
@@ -155,16 +155,15 @@ public:
     *                      vpr::Interval::NoWait effects a poll on the
     *                      registered handles and returns immediately.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if at least one event was
-    *         detected within the timeout interval.
-    * @return vpr::ReturnStatus::Timeout is returned if no events were detected
-    *         before the timeout expired or if vpr::Interval::NoWait was
-    *         passed.  In this case, \p numWithEvents should be checked for a
+    * @throws vpr::TimeoutException if no events were detected before the
+    *         timeout expired or if vpr::Interval::NoWait was passed. In
+    *         this case, \p numWithEvents should be checked for a
     *         value greater than 0.
-    * @return vpr::ReturnStatus::Fail is returned if the select failed.
+    * @throws vpr::IOException if the select failed.
     */
-   vpr::ReturnStatus select(vpr::Uint16& numWithEvents,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void select(vpr::Uint16& numWithEvents,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * For iteration over the registered handles.

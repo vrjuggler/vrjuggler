@@ -49,9 +49,10 @@
 
 #include <vpr/IO/IOSys.h>
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketOptions.h>
-#include <vpr/Util/ReturnStatus.h>
+#include <vpr/IO/Socket/SocketException.h>
 
 
 namespace vpr
@@ -87,11 +88,11 @@ public:
     * @post A new socket is created with its file handle stored in the
     *       mFdesc member variable.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the socket was opened
-    *         successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::SocketException if the socket could not be opened.
+    * @throws vpr::IOException if the blocking state could not be set.
+    * @see FileHandleImplUNIX::setBlocking()
     */
-   vpr::ReturnStatus open();
+   void open() throw (IOException);
 
    /**
     * Close the socket.
@@ -100,11 +101,10 @@ public:
     * @post An attempt is made to close the socket.  The resulting status is
     *       returned to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the socket was closed
-    *         successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::IOException if the socke could not be closed.
+    * @see FileHandleImplUNIX::close()
     */
-   vpr::ReturnStatus close();
+   void close() throw (IOException);
 
    /**
     * Gets the open state of this socket.
@@ -137,12 +137,9 @@ public:
     * @pre The socket is open, and \c mLocalAddr has been initialized properly.
     * @post The socket is bound to the address in \c mLocalAddr.
     *
-    * @return vpr::ReturnStatus::Sucess is returned if the socket was bound to
-    *         the address successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the socket could not be
-    *         bound to the address in \c mLocalAddr.
+    * @throws vpr::SocketException if socket could not be bound.
     */
-   vpr::ReturnStatus bind();
+   void bind() throw (SocketException);
 
    /** Returns the contained handle. */
    vpr::IOSys::Handle getHandle() const
@@ -171,13 +168,14 @@ public:
     *                 configured to use blocking I/O.  A value of \c false
     *                 indicates that it will use non-blocking I/O.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
-    *         changed successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
-    *
+    * @throws vpr::SocketException if trying to call after a clocking
+    *         call has already been made.
+    * @throws vpr::IOException if the blocking state could not be set.
+    * 
+    * @see FileHandleImplUNIX::setBlocking()
     * @see isOpen, open
     */
-   vpr::ReturnStatus setBlocking(bool blocking);
+   void setBlocking(bool blocking) throw (IOException);
 
    /**
     * Gets the current blocking state for the socket.
@@ -206,17 +204,18 @@ public:
     *       communication has been established.  For a datagram socket, the
     *       default destination for all packets is now \c mLocalAddr.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the connection
-    *         succeeded.
-    * @return vpr::ReturnStatus::InProgress is returned if this is a
-    *         non-blocking socket and the connection is still in progress.  The
-    *         connection will be completed "in the background".
-    * @return vpr::ReturnStatus::Timeout is returned if the connection could
-    *         not be made within the given timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the connection could not
-    *         be made.
+    * @throws ConnectionResetException if connection is reset.
+    * @throws NoRouteToHostException if a route to host does not exist.
+    * @throws UnknownHostException if host does not exist.
+    * @throws IOException if network is down.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::SocketException if could not connect.
     */
-   vpr::ReturnStatus connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void connect(vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (SocketException);
 
    /**
     * Gets the status of a possibly connected socket.
@@ -226,7 +225,7 @@ public:
     * @return \c true is returned if this socket is still connected.
     * @return \c false is returned if this socket is not currently connected.
     */
-   bool isConnected() const;
+   bool isConnected() const throw ();
 
    /**
     * Gets the type of this socket (for example, vpr::SocketTypes::STREAM).
@@ -257,14 +256,12 @@ public:
     * @post On successful completion, \c mLocalAddr is updated to use the given
     *       vpr::InetAddr object.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the local address was
-    *         changed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the local address could
-    *         not be changed.  This occurs when this socket is already bound.
+    * @throws vpr::SocketException if the local address could not be changed.
+    *         This occurs when this socket is already bound.
     *
     * @see isBound, bind
     */
-   vpr::ReturnStatus setLocalAddr(const vpr::InetAddr& addr);
+   void setLocalAddr(const vpr::InetAddr& addr) throw (SocketException);
 
    /**
     * Returns the remote address for this socket.  This is typically the
@@ -283,15 +280,12 @@ public:
     * @post On successful completion, \c mRemoteAddr is updated to use the
     *       given vpr::InetAddr object.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the remote address was
-    *         changed successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the remote address could
-    *         not be changed.  This occurs when this socket is already
-    *         connected.
+    * @throws vpr::SocketException if the remote address could not be changed
+    *         because the socket is already connected.
     *
     * @see isConnected, connect
     */
-   vpr::ReturnStatus setRemoteAddr(const vpr::InetAddr& addr);
+   void setRemoteAddr(const vpr::InetAddr& addr) throw (SocketException);
 
    /**
     * Implementation of the read() template method.  This reads at most the
@@ -311,17 +305,17 @@ public:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
     */
-   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesRead,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void read_i(void* buffer, const vpr::Uint32 length,
+               vpr::Uint32& bytesRead,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -341,17 +335,15 @@ public:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throws vpr::SocketException if socket is not connected.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
     */
-   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesRead,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void readn_i(void* buffer, const vpr::Uint32 length,
+                vpr::Uint32& bytesRead,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Implementation of the write() template method.  This writes the buffer
@@ -369,19 +361,21 @@ public:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the write operation could not be
-    *         completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
+    * @throws ConnectionResetException if connection is reset.
+    * @throws NoRouteToHostException if a route to host does not exist.
+    * @throws UnknownHostException if host does not exist.
+    * @throws IOException if network is down.
+    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
+    *         and the write operation could not be completed.
+    * @throws vpr::TimeoutException if the write could not begin within the
+    *         timeout interval.
+    * @throws vpr::SocketException if the write operation failed.
+    * @throws vpr::IOException if the file handle write operation failed.
     */
-   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesWritten,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void write_i(const void* buffer, const vpr::Uint32 length,
+                vpr::Uint32& bytesWritten,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    vpr::Uint32 availableBytes() const
    {
@@ -395,12 +389,12 @@ public:
     * @param data   A data buffer that will be used to store the value of the
     *               given option.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the value for the given
-    *         option was retrieved successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throws vpr::SocketException if the value for the given option
+    *         could not be retrieved.
     */
-   vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                               struct vpr::SocketOptions::Data& data) const;
+   void getOption(const vpr::SocketOptions::Types option,
+                  struct vpr::SocketOptions::Data& data) const
+      throw (SocketException);
 
    /**
     * Sets a value for the given option on the socket using the given data
@@ -409,9 +403,13 @@ public:
     * @param option The option whose value will be set.
     * @param data   A data buffer containing the value to be used in setting
     *               the socket option.
+    *
+    * @throws vpr::SocketException if the value for the given option
+    *         could not be set.
     */
-   vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
-                               const struct vpr::SocketOptions::Data& data);
+   void setOption(const vpr::SocketOptions::Types option,
+                  const struct vpr::SocketOptions::Data& data)
+      throw (SocketException);
 
    /**
     * Destructor.  This releases the memory allocated for mHandle (if it is
@@ -451,7 +449,7 @@ protected:
 protected:
    bool mOpenBlocking; /**< Used for working around socket(2) semantics */
    bool mBound;
-   bool mConnected;
+   bool mConnectCalled;
    bool mBlockingFixed;
 
    vpr::FileHandleImplUNIX* mHandle; /**< The OS handle for this socket */
