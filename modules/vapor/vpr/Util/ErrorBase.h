@@ -64,6 +64,12 @@ public:
       /* Fill in common error types */
    };
 
+   /** @since 1.1.6 */
+   static std::string getCurrentErrorMsg()
+   {
+      return std::string("");
+   }
+
    static void outputCurrentError(std::ostream& out, const std::string& prefix)
    {
       boost::ignore_unused_variable_warning(out);

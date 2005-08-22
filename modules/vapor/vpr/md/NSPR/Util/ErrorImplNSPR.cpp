@@ -39,52 +39,45 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_ERROR_IMPL_NSPR_H_
-#define _VPR_ERROR_IMPL_NSPR_H_
-
 #include <vpr/vprConfig.h>
-#include <iostream>
+
+#include <sstream>
 #include <prerror.h>
-#include <vpr/Util/ErrorBase.h>
+
+#include <vpr/md/NSPR/Util/ErrorImplNSPR.h>
 
 
 namespace vpr
 {
 
-/** \class ErrorImplNSPR ErrorImplNSPR.h vpr/Util/Error.h
- *
- * NSPR Implementation of a cross-platform error reporting class.
- */
-class VPR_CLASS_API ErrorImplNSPR : public ErrorBase
+std::string ErrorImplNSPR::getCurrentErrorMsg()
 {
-public:
-   /** @since 1.1.6 */
-   static std::string getCurrentErrorMsg();
+   PRErrorCode  err = PR_GetError();
+   const char* err_name = PR_ErrorToName(err);
+   const char* err_str = PR_ErrorToString(err,0);
 
-   static void outputCurrentError(std::ostream& out, const std::string& prefix)
+   /*
+   int os_err = PR_GetOSError();
+   char* os_str = strerror(PR_GetOSError());
+   */
+
+   std::stringstream msg_stream;
+   msg_stream << "NSPR error code " << err;
+
+   if ( err_name != NULL || err_str != NULL )
    {
-      out << "Error (NSPR): " << prefix << " (" << getCurrentErrorMsg() << ")"
-          << std::endl;
+      if ( err_name != NULL )
+      {
+         msg_stream << ": " << err_name;
+      } 
+
+      if ( err_str != NULL )
+      {
+         msg_stream << ", " << err_str;
+      }
    }
 
-   static ErrorType getCurrentError()
-   {
-      return NoError;
-   }
+   return msg_stream.str();
+}
 
-protected:
-   static PRErrorCode convertErrorVprToNspr(ErrorType mask)
-   {
-      return PR_MAX_ERROR;
-   }
-
-   static ErrorType convertErrorNsprToVpr(PRErrorCode mask)
-   {
-      return NoError;
-   }
-};
-
-} // End of vpr namespace
-
-
-#endif  /* _VPR_ERROR_IMP_NSPR_H_ */
+}

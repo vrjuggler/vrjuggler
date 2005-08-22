@@ -50,6 +50,20 @@ extern int errno;
 namespace vpr
 {
 
+std::string ErrorImplPosix::getCurrentErrorMsg()
+{
+   const char* err_str(strerror(errno));
+
+   if ( NULL != err_str )
+   {
+      return std::string(err_str);
+   }
+   else
+   {
+      return std::string("");
+   }
+}
+
 void ErrorImplPosix::outputCurrentError (std::ostream& out,
                                          const std::string& prefix)
 {

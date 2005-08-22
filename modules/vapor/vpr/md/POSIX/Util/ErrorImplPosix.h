@@ -58,7 +58,9 @@ namespace vpr
 class VPR_CLASS_API ErrorImplPosix : public ErrorBase
 {
 public:
-   
+   /** @since 1.1.6 */
+   static std::string getCurrentErrorMsg();
+
    static void outputCurrentError(std::ostream& out, const std::string& prefix);
 
    static ErrorType getCurrentError()
