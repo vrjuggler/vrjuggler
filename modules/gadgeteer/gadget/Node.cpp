@@ -347,7 +347,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
    {
       mHeader->send(mSockStream);
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       // TODO: setCause(ex)
       throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
@@ -371,7 +371,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
             mHeader->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE,
             bytes_written);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          throw cluster::ClusterException("Packet::recv() - Sending data packet failed!!");
@@ -388,7 +388,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
       {
          mSockStream->send(*packet_data, size, bytes_written);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          throw cluster::ClusterException("Packet::recv() - Sending packet failed!!");
@@ -420,7 +420,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
       {
          mSockStream->send(*(temp_data_packet->getDeviceData()),temp_data_packet->getDeviceData()->size(),bytes_written);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          throw cluster::ClusterException("Packet::recv() - Sending Packet Data failed!!");
@@ -494,7 +494,7 @@ cluster::Packet* Node::recvPacket()
                              cluster::Header::RIM_PACKET_HEAD_SIZE,
                              bytes_read );
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
             << clrOutBOLD( clrRED, "ERROR:" )

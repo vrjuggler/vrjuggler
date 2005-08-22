@@ -62,7 +62,7 @@ namespace cluster
          {
             stream->readn( mData, Header::RIM_PACKET_HEAD_SIZE, bytes_read );
          }
-         catch (vpr::IOException& ex)
+         catch (vpr::IOException&)
          {
             stream->close();
             delete stream;
@@ -178,7 +178,7 @@ namespace cluster
       {
          socket->send( mData, RIM_PACKET_HEAD_SIZE, bytes_written );
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          throw cluster::ClusterException( "Header::send() - failed to send header." );

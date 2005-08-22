@@ -73,7 +73,7 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
       // Set the address that we want to connect to
       inet_addr.setAddress( node->getHostname(), node->getPort() );
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
          << clrOutBOLD( clrBLUE, "[Connector]" )
@@ -151,7 +151,7 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          return vpr::ReturnStatus::Fail;
       }
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       delete sock_stream;
       

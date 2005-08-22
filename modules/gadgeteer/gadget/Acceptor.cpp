@@ -139,7 +139,7 @@ namespace gadget
          
          sock.setReuseAddr( true );
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
             << clrSetBOLD( clrRED ) << "[Acceptor]"
@@ -316,7 +316,7 @@ namespace gadget
                client_sock = new vpr::SocketStream;
             }
          }
-         catch (vpr::IOException& ex)
+         catch (vpr::IOException&)
          {
             // Should never happen since timeout is infinite
             client_sock->close();
