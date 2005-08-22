@@ -32,7 +32,13 @@
 
 #include <cluster/PluginConfig.h>
 
-#include <plugins/SwapLockTCPPlugin/SwapLockTCPPlugin.h> // my header...
+#include <boost/concept_check.hpp>
+
+#include <vpr/Thread/Thread.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Port/SerialPort.h>
+#include <vpr/Util/ReturnStatus.h>
 
 #include <gadget/Util/Debug.h>
 #include <gadget/gadgetParam.h>
@@ -46,13 +52,7 @@
 #include <cluster/Packets/SyncRequest.h>
 #include <cluster/Packets/SyncAck.h>
 
-#include <vpr/Thread/Thread.h>
-
-#include <vpr/Util/ReturnStatus.h>
-#include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/IO/Port/SerialPort.h>
-
-#include <boost/concept_check.hpp>
+#include <plugins/SwapLockTCPPlugin/SwapLockTCPPlugin.h> // my header...
 
 
 extern "C"
@@ -235,7 +235,7 @@ namespace cluster
       {
          inet_addr.setAddress(mBarrierMasterHostname, mTCPport);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"[SwapLockTCPPlugin]: Failed to set address\n") 
             << vprDEBUG_FLUSH;
@@ -254,7 +254,7 @@ namespace cluster
       {
          mSyncServerSocket->connect();
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // Free unused memory since we could not connect
          delete mSyncServerSocket;
@@ -346,7 +346,7 @@ namespace cluster
          {
             (*i)->recv(&temp , 1, bytes_read,read_timeout);
          }
-         catch (vpr::TimeoutException& ex)
+         catch (vpr::TimeoutException&)
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin::masterReceive()]")
@@ -400,7 +400,7 @@ namespace cluster
       {   
          mSyncServerSocket->recv(&temp , 1, bytes_read,read_timeout);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin::slaveReceive()]")
@@ -463,7 +463,7 @@ namespace cluster
          sock.openServer();
          sock.setReuseAddr(true);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrSetBOLD(clrRED) << "[SwapLockTCPPlugin]"
@@ -575,7 +575,7 @@ namespace cluster
             /////////////////////////////////////////////
             
          }
-         catch (vpr::TimeoutException& ex)
+         catch (vpr::TimeoutException&)
          {
             // Should never happen since timeout is infinite
             client_sock->close();
