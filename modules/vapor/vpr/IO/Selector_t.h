@@ -180,7 +180,7 @@ public:
                const vpr::Interval& timeout = vpr::Interval::NoTimeout)
       throw (IOException)
    {
-      return mSelectorImp.select(numWithEvents, timeout);
+      mSelectorImp.select(numWithEvents, timeout);
    }
 
    /**
