@@ -834,6 +834,12 @@ def installTweek(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installTweekJava(prefix):
+   # Create an empty bin\beans directory in prefix. The Tweek Java GUI still
+   # searches this directory for backwards compatibility with much older
+   # versions of the code. This is not required, but it does eliminate a
+   # Tweek Java GUI startup warning.
+   mkinstalldirs(os.path.join(prefix, 'bin', 'beans'))
+
    srcdir = os.path.join(gJugglerDir, 'vc7', 'Tweek_Java')
 
    if os.path.exists(os.path.join(srcdir, 'Tweek.jar')):
