@@ -433,9 +433,11 @@ public:
     *
     * @pre The serial port is open.
     * @post The local attach state is returned to the caller.
-    * @return true  - The device is attached locally.
-    *         false - The device is not attached locally, and opening the
-    *                 device will usually block until there is a response.
+    *
+    * @return \c true is returned if the device is attached locally.
+    * @return \c false is returned if the device is not attached locally, and
+    *         opening the device will usually block until there is a response.
+    *
     * @throws vpr::IOException if local attach state could not be retrieved.
     */
    bool getLocalAttachState() const throw (IOException);
@@ -549,6 +551,7 @@ public:
     *
     * @return \c true is returned if bad bytes are ignored.
     * @return \c false is retunred otherwise.
+    *
     * @throws vpr::IOException if break byte ignore state could not
     *         be retrieved.
     */
@@ -575,6 +578,7 @@ public:
     *
     * @return \c true is returned if input parity checking is enabled
     * @return \c false is returned otherwise.
+    *
     * @throws vpr::IOException if input parity check state
     *         could not be retrieved.
     */
@@ -633,7 +637,7 @@ public:
     *
     * @return \c true is returned if start-stop input control is enabled.
     * @return \c false is returned otherwise.
-    * @throws vpr::IOException if start stop input state could not
+    * @throws vpr::IOException if start-stop input state could not
     *         be retrieved.
     */
    bool getStartStopInputState() const throw (IOException);
@@ -648,7 +652,7 @@ public:
     * @param flag A value of true enables start-stop input control.  A value
     *             of false disables it.
     *
-    * @throws vpr::IOException if start stop input state could not be set.
+    * @throws vpr::IOException if start-stop input state could not be set.
     *
     * @see getStartStopInputState
     */
@@ -666,7 +670,7 @@ public:
     *
     * @return \c true is returned if start-stop output control is enabled;
     * @return \c false is returned otherwise.
-    * @throws vpr::IOException if start stop output state could not
+    * @throws vpr::IOException if start-stop output state could not
     *         be retrieved.
     */
    bool getStartStopOutputState() const throw (IOException);
@@ -681,7 +685,7 @@ public:
     * @param flag A value of true enables start-stop output control.  A value
     *             of false disables it.
     *
-    * @throws vpr::IOException if start stop output state could not be set.
+    * @throws vpr::IOException if start-stop output state could not be set.
     *
     * @see getStartStopOutputState
     */
@@ -733,7 +737,7 @@ public:
    /**
     * Enables or disables marking of bytes with parity errors or framing errors
     * (except BREAKs).  This is only active if input parity and framing error
-    * reporting is enabled (see enableInputParityCheck() for more
+    * reporting is enabled (see setInputParityCheck() for more
     * information).  The mark is the three-byte sequence \377 \0 X where X
     * is the byte received in error.  If bit stripping is enabled, a valid
     * \377 byte is passed as the two-byte sequence \377 \377.
@@ -746,7 +750,7 @@ public:
     *
     * @throws vpr::IOException if parity error marking state could not be set.
     *
-    * @see enableInputParityCheck
+    * @see setInputParityCheck
     */
    void setParityErrorMarking(bool flag) throw (IOException);
 
@@ -847,7 +851,7 @@ public:
     *
     * @param opt The flow control change.
     *
-    * @throws vpr::IOException of control flow could not be changed.
+    * @throw vpr::IOException If control flow could not be changed.
     */
    void controlFlow(vpr::SerialTypes::FlowActionOption opt)
       throw (IOException);
@@ -955,17 +959,23 @@ public:
     */
    int getRingIndicator() const throw (IOException);
 
-   /** Sets the data terminal ready line.
+   /**
+    * Sets or clears the data terminal ready line.
     *
-    * @throws vpr::IOException if data terminal ready state could
-    *         not be set.
+    * @param val A boolean parameter indicating whether to set (true) or
+    *            clear (false) the data terminal ready line.
+    *
+    * @throw vpr::IOException If data terminal ready state could not be set.
     */
    void setDataTerminalReady(bool val) throw (IOException);
 
-   /** Sets the request to send line.
+   /**
+    * Sets or clears the request-to-send line.
     *
-    * @throws vpr::IOException ifrequest to send state could
-    *         not be set.
+    * @param val A boolean parameter indicating whether to set (true) or
+    *            clear (false) the request-to-send line.
+    *
+    * @throw vpr::IOException If request to send state could not be set.
     */
    void setRequestToSend(bool val) throw (IOException);
 
