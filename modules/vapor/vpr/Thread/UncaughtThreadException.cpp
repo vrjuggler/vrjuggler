@@ -74,8 +74,8 @@ void UncaughtThreadException::setException(const vpr::Exception& ex)
 void UncaughtThreadException::setException(const std::exception& ex)
 {
    mDescription = ex.what();
-   mLocation = "Location not availible with std::exception.";
-   mStackTrace = "Stacktrace not availible with std::exception.";
+   mLocation = "";
+   mStackTrace = "";
 }
 
 }
