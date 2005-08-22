@@ -35,6 +35,8 @@
 #include <boost/concept_check.hpp>
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Assert.h>
 
 #include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
@@ -51,7 +53,7 @@ vpr::ReturnStatus FastrakStandalone::open()
    {
       mSerialPort->open();
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       return vpr::ReturnStatus::Fail;
    }
@@ -121,11 +123,11 @@ int FastrakStandalone::Read(int len)
       {
          mSerialPort->read(cp, rem, bytes_read, timeoutVal);
       }
-      catch (vpr::TimeoutException& ex)
+      catch (vpr::TimeoutException&)
       {
          continue;
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          tempBuf[len - rem] = '\0';
          memcpy(mTrackerBuf, tempBuf, 256);
@@ -194,7 +196,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    {
       mSerialPort->write("c", 1, bytes_written);
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       fprintf(stderr,
               "[FastrakStandalone] Failure setting non-continuous mode for tracker");
@@ -210,7 +212,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    {
       mSerialPort->write("S", 1, bytes_written);
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       fprintf(stderr,
               "[FastrakStandalone] Failure writing status command to tracker");
@@ -238,7 +240,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
          ++numElapsedWaits;
          continue;
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          fprintf(stderr,
                  "[FastrakStandalone] Failure reading status byte from tracker");
@@ -334,19 +336,19 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       {
          mSerialPort->read(cPtr, 1, bytes_read, timeoutVal);
       }
-      catch (vpr::TimeoutException& ex)
+      catch (vpr::TimeoutException&)
       {
          vpr::System::msleep(100);//Sleep for 0.1 seconds
          ++numElapsedWaits;
          continue;
       }
-      catch (vpr::WouldBlockException& ex)
+      catch (vpr::WouldBlockException&)
       {
          vpr::System::msleep(100);//Sleep for 0.1 seconds
          ++numElapsedWaits;
          continue;
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          fprintf(stderr,
                  "[FastrakStandalone] Failure reading second round status byte from tracker\n");

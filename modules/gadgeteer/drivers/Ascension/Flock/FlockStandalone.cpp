@@ -46,10 +46,12 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+#include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Assert.h> /* for vprASSERT */
 #include <gadget/Util/Debug.h>
 
 #include <drivers/Ascension/Flock/FlockStandalone.h>
+
 
 namespace Flock
 {
@@ -196,7 +198,7 @@ vpr::ReturnStatus FlockStandalone::open()
       {
          mSerialPort->open();
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
             << "Port open failed\n" << vprDEBUG_FLUSH;
@@ -255,7 +257,7 @@ vpr::ReturnStatus FlockStandalone::open()
          {
             mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
          }
-         catch (vpr::IOException& ex)
+         catch (vpr::IOException&)
          {
             open_successfull = false;
          }
@@ -469,12 +471,12 @@ void FlockStandalone::sample()
                                      temp_data_record.end());
                   bytes_remaining -= bytes_read;
                }
-               catch (vpr::WouldBlockException& ex)
+               catch (vpr::WouldBlockException&)
                {
                   // Do nothing.
                }
                // If timeout or fail
-               catch (vpr::IOException& ex)
+               catch (vpr::IOException&)
                {
                   num_stream_read_failures++;
                   throw Flock::CommandFailureException("Did not read full data record in point mode.");
@@ -535,12 +537,12 @@ void FlockStandalone::sample()
                                      temp_data_record.end());
                   bytes_remaining -= bytes_read;
                }
-               catch (vpr::WouldBlockException& ex)
+               catch (vpr::WouldBlockException&)
                {
                   // Do nothing.
                }
                // If timeout or failed
-               catch (vpr::IOException& ex)
+               catch (vpr::IOException&)
                {
                   // TODO: setCause(ex)
                   num_stream_read_failures++;
@@ -1338,7 +1340,7 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
    {
       mSerialPort->write(&cmd, 1, bytes_written);
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       // TODO: setCause(ex)
       throw Flock::CommandFailureException("Failed to write full command");
@@ -1350,7 +1352,7 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
       {
          mSerialPort->write(&(data[0]), data.size(), bytes_written);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          throw Flock::CommandFailureException("Failed to write full command args");
@@ -1439,7 +1441,7 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
    {
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       throw Flock::CommandFailureException("Failed to flush queue before command");
    }

@@ -33,6 +33,8 @@
 #include <stdio.h>
 #include <boost/concept_check.hpp>
 #include <vpr/System.h>
+#include <vpr/IO/TimeoutException.h>
+
 #include <drivers/Immersion/IBox/IBoxStandalone.h>
 
 #define printInfo(command, data, desc)                          \
@@ -93,7 +95,7 @@ void IBoxStandalone::connect(const std::string& port_name, long int baud)
          << " (" << mBaudRate << ") opened." << std::endl
          << vprDEBUG_FLUSH;
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
          << "[IBox] Port: " << mPortName << " could not be opened!"
@@ -242,7 +244,7 @@ bool IBoxStandalone::autoSync()
             }
          }
       }
-      catch (vpr::TimeoutException& ex)
+      catch (vpr::TimeoutException&)
       {
          // Do nothing on timeouts.
       }
@@ -302,7 +304,7 @@ bool IBoxStandalone::sendStringCommand(const vpr::Uint8 command) const
       {
          mSerialPort->read(&response, 1, written, timeout);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          return false;
       }
@@ -349,11 +351,11 @@ void IBoxStandalone::waitForPacket()
       {
          checkForPacket();
       }
-      catch (vpr::TimeoutException& ex)
+      catch (vpr::TimeoutException&)
       {
          continue;
       }
-      catch (IBoxException& ex)
+      catch (IBoxException&)
       {
          continue;
       }
@@ -542,7 +544,7 @@ void IBoxStandalone::getDataPacket() throw (vpr::IOException, IBoxException)
    {
       mSerialPort->read(&packet_type, 1, written, timeout);
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       vprDEBUG(vprDBG_VPR, vprDBG_CONFIG_STATUS_LVL)
          << "[IBox] Failure to get first byte" << std::endl << vprDEBUG_FLUSH;

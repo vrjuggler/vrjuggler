@@ -33,6 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
+#include <vpr/IO/TimeoutException.h>
 
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
@@ -224,7 +225,7 @@ bool IBox::sample() //throw (vpr::IOException)
       addAnalogSample(mAnalog);
       addDigitalSample(mButton);
    }
-   catch (vpr::TimeoutException& ex)
+   catch (vpr::TimeoutException&)
    {
       return false;
    }
