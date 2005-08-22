@@ -39,13 +39,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/vprConfig.h>
+
+#include <sstream>
+
 #include <vpr/Thread/UncaughtThreadException.h>
 
 namespace vpr
 {
 
 UncaughtThreadException::UncaughtThreadException(const std::string& msg,
-                                 const std::string& location) throw()
+                                                 const std::string& location)
+   throw()
    : Exception(msg, location)
 {
    /* Do nothing. */ ;
@@ -58,7 +63,10 @@ UncaughtThreadException::~UncaughtThreadException() throw()
 
 void UncaughtThreadException::setException(const vpr::Exception& ex)
 {
-   mDescription = ex.getExceptionName() + ": " + ex.getDescription();
+   std::stringstream desc_stream;
+   desc_stream << ex.getExceptionName() << ": " + ex.getDescription();
+
+   mDescription = desc_stream.str();
    mLocation = ex.getLocation();
    mStackTrace = ex.getStackTrace();
 }
