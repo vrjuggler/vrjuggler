@@ -82,8 +82,8 @@ ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
-   , mCaughtException(false)
    , mException("No exception caught")
+   , mCaughtException(false)
    , mThreadStartCompleted(false)
    , mStartFunctor(NULL)
 {
@@ -102,8 +102,8 @@ ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
-   , mCaughtException(false)
    , mException("No exception caught")
+   , mCaughtException(false)
    , mThreadStartCompleted(false)
    , mStartFunctor(NULL)
 {
@@ -126,8 +126,8 @@ ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
-   , mCaughtException(false)
    , mException("No exception caught")
+   , mCaughtException(false)
    , mThreadStartCompleted(false)
    , mStartFunctor(NULL)
 {
