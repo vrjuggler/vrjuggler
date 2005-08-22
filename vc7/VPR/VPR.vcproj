@@ -37,7 +37,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-gd-$(BOOST_VERSION).lib cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d.dll"
-				Version="1.1.2"
+				Version="1.1.6"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
@@ -90,7 +90,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-$(BOOST_VERSION).lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr.dll"
-				Version="1.1.2"
+				Version="1.1.6"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
@@ -133,13 +133,31 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\BlockIO.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionRefusedException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionResetException.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Debug.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\EOFException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Util\ErrorImplNSPR.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\Exception.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\FileUtils.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\GUID.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\IOException.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.cpp">
@@ -167,6 +185,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Port\Port.cpp">
@@ -205,6 +226,9 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagramOpt.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketException.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketImplNSPR.cpp">
 			</File>
 			<File
@@ -241,7 +265,19 @@
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadPool.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\TimeoutException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Thread\UncaughtThreadException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\UnknownHostException.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Version.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\WouldBlockException.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectReader.cpp">
@@ -293,6 +329,12 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\CondVarNSPR.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionRefusedException.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionResetException.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\DateTime.h">
 			</File>
 			<File
@@ -302,6 +344,9 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\DurationStatCollector.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\EOFException.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Error.h">
 			</File>
 			<File
@@ -309,6 +354,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Util\ErrorImplNSPR.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\Exception.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Factory.h">
@@ -330,6 +378,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\GuardedQueue.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\IOException.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Stats\IOStatsStrategyAdapter.h">
@@ -384,6 +435,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\NullMutex.h">
@@ -488,6 +542,9 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagram_t.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketException.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketImplNSPR.h">
 			</File>
 			<File
@@ -557,10 +614,22 @@
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadPool.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\TimeoutException.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Timer.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Thread\UncaughtThreadException.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\UnknownHostException.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Version.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\WouldBlockException.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectReader.h">
