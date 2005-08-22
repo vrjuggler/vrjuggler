@@ -5,7 +5,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <MySuites.h>
 
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -16,11 +15,12 @@
 namespace vprTest
 {
 
-class ThreadTest : public CppUnit::ThreadTestCase
+class ThreadTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(ThreadTest);
 CPPUNIT_TEST(testNoSpawnCtor);
 CPPUNIT_TEST(testAutoSpawnCtor);
+CPPUNIT_TEST(testUncaughtException);
 CPPUNIT_TEST(testRunnableFunctor);
 //CPPUNIT_TEST( testCreateJoin);
 //CPPUNIT_TEST( testSuspendResume);
@@ -30,12 +30,12 @@ CPPUNIT_TEST( testThreadSpecificData);
 CPPUNIT_TEST_SUITE_END();
 
 public:
-   ThreadTest() : CppUnit::ThreadTestCase ()
+   ThreadTest() : CppUnit::TestCase ()
    {
       mNumRecursions = 0;
    }
 
-   ThreadTest(std::string name) : CppUnit::ThreadTestCase (name)
+   ThreadTest(std::string name) : CppUnit::TestCase (name)
    {
       mNumRecursions = 0;
    }
@@ -54,6 +54,7 @@ public:
 
    void testNoSpawnCtor();
    void testAutoSpawnCtor();
+   void testUncaughtException();
 
    void testRunnableFunctor();
 

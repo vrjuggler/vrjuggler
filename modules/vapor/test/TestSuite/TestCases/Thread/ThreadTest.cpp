@@ -9,6 +9,8 @@
 #include <vpr/Thread/TSObject.h>
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/ThreadManager.h>
+#include <vpr/Util/Exception.h>
+#include <vpr/Thread/UncaughtThreadException.h>
 
 #include <cppunit/extensions/MetricRegistry.h>
 
@@ -41,8 +43,37 @@ public:
       }
    }
 
+   void methodOne() throw (vpr::Exception)
+   {
+      methodTwo();
+   }
+   void methodTwo() throw (vpr::Exception)
+   {
+      methodThree();
+   }
+   void methodThree() throw (vpr::Exception)
+   {
+      mLocation = VPR_LOCATION;
+      throw vpr::Exception("Test Exception", mLocation);
+   }
+
+   void throwSomething(void* arg) throw (vpr::Exception)
+   {
+      boost::ignore_unused_variable_warning(arg);
+      vprASSERT(vpr::Thread::self() != NULL && "We should know ourselves by now");
+
+      //methodOne();
+      methodThree();
+   }
+
+   std::string getLocation()
+   {
+      return mLocation;
+   }
+
    static const vpr::Uint32 mMaxInc;
    vpr::Uint32 mValue;
+   std::string mLocation;
 };
 
 const vpr::Uint32 Tester::mMaxInc = 500;
@@ -115,6 +146,31 @@ void ThreadTest::testAutoSpawnCtor()
       CPPUNIT_ASSERT_EQUAL(test_obj.mValue, (start_val + Tester::mMaxInc));
    }
 }
+
+void ThreadTest::testUncaughtException()
+{
+   Tester test_obj;
+
+   vpr::ThreadMemberFunctor<Tester> functor(&test_obj, &Tester::throwSomething, NULL);
+   CPPUNIT_ASSERT(functor.isValid() && "Functor should be valid");
+
+   vpr::Thread my_thread(&functor);
+   CPPUNIT_ASSERT(my_thread.valid() && "Thread should be running now");
+
+   CPPUNIT_ASSERT_THROW(my_thread.join(), vpr::UncaughtThreadException);
+   //CPPUNIT_ASSERT_NO_THROW(my_thread.join());
+
+   vpr::Thread my_thread2(&functor);
+   try
+   {
+      my_thread2.join();
+   }
+   catch (vpr::Exception& ex)
+   {
+      CPPUNIT_ASSERT(ex.getDescription() == "vpr::Exception: Test Exception");
+   }
+}
+
 
 void ThreadTest::testRunnableFunctor()
 {
@@ -441,8 +497,6 @@ void ThreadTest::recurseConsumeResources(void* arg)
 // ------------------------------------ //
 void ThreadTest::testThreadSpecificData()
 {
-   threadAssertReset();
-
    // Spawn off a bunch of threads (m)
    // Have each one increment counter n times
    // join all threads
@@ -478,8 +532,6 @@ void ThreadTest::testThreadSpecificData()
       delete functors[t];
       delete thread_names[t];
    }
-
-   checkThreadAssertions();
 }
 
 /**
@@ -496,7 +548,7 @@ void ThreadTest::tsIncCounter(void* arg)
 
       (*mTSCounter) = 0;
       vpr::System::usleep(rand()%1000);
-      assertTestThread((*mTSCounter) == 0);
+      CPPUNIT_ASSERT((*mTSCounter) == 0);
 
       try
       {
@@ -506,7 +558,7 @@ void ThreadTest::tsIncCounter(void* arg)
             vpr::System::usleep(30);    // Sleep for 10 micro seconds
          }
          //std::cout << test_name << " ts:" << *mTSCounter << " inc:" << IncCount << std::endl;
-         assertTestThread((*mTSCounter) == IncCount);
+         CPPUNIT_ASSERT((*mTSCounter) == IncCount);
       }
       catch (...)
       {
@@ -529,7 +581,7 @@ void ThreadTest::tsIncCounter(void* arg)
             (*mTSCounter) = (*mTSCounter) + 1;
          }
 
-         assertTestThread((*mTSCounter) == IncCount);
+         CPPUNIT_ASSERT((*mTSCounter) == IncCount);
 
          CPPUNIT_METRIC_STOP_TIMING();
          CPPUNIT_ASSERT_METRIC_TIMING_LE(test_name, IncCount, 0.075f, 0.1f);  // warn at 7.5%, error at 10%
