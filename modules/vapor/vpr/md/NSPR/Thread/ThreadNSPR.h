@@ -60,6 +60,7 @@
 #include <vpr/Thread/BaseThread.h>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/ThreadManager.h>
+#include <vpr/Thread/UncaughtThreadException.h>
 
 #include <vpr/md/NSPR/Thread/ThreadKeyNSPR.h>
 #include <vpr/md/NSPR/Sync/CondVarNSPR.h>
@@ -150,7 +151,7 @@ public:
     * @return 0 is returned upon successful completion.  -1 is returned if
     *         an error occurred.
     */
-   virtual int join(void** status = NULL);
+   virtual int join(void** status = NULL)  throw (UncaughtThreadException);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -308,7 +309,9 @@ private:
    VPRThreadScope     mScope;
    VPRThreadState     mState;
    PRUint32           mStackSize;
-
+   vpr::UncaughtThreadException mException;
+   bool                         mCaughtException;
+   
    bool              mThreadStartCompleted;  /**< Flag for signaling when thread start is completed */
    vpr::CondVarNSPR  mThreadStartCondVar;    /**< CondVar for thread starting */
 

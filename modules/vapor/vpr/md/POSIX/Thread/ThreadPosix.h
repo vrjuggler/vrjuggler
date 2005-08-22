@@ -58,6 +58,7 @@
 
 // To get the POSIX key stuff for storing self.
 #include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
+#include <vpr/Thread/UncaughtThreadException.h>
 #include <vpr/md/POSIX/Sync/CondVarPosix.h>
 
 namespace vpr
@@ -187,9 +188,16 @@ public:  // ----- Various other thread functions ------
     * @return 0 is returned if this thread is "joined" successfully.<br>
     *         -1 is returned on an error condition.
     */
-   virtual int join(void** status = 0)
+   virtual int join(void** status = 0) throw (UncaughtThreadException)
    {
-      return pthread_join(mThread, status);
+      int return_status = pthread_join(mThread, status);
+
+      if (mCaughtException)
+      {
+         throw mException;
+      }
+
+      return return_status;
    }
 
    /**
@@ -359,6 +367,8 @@ private:
    VPRThreadScope    mScope;         /**< Scope (process or system) of this thread */
    VPRThreadState    mState;
    size_t            mStackSize;
+   vpr::UncaughtThreadException mException;
+   bool                         mCaughtException;
 
    /** Flag for signaling when thread start is completed. */
    bool mThreadStartCompleted;

@@ -67,6 +67,8 @@ ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
+   , mCaughtException(false)
+   , mException("No exception caught")
 {
 }
 
@@ -83,6 +85,8 @@ ThreadNSPR::ThreadNSPR(thread_func_t func, void* arg,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
+   , mCaughtException(false)
+   , mException("No exception caught")
 {
    mDeleteFunctor = true;
    setFunctor(new ThreadNonMemberFunctor(func, arg));
@@ -102,6 +106,8 @@ ThreadNSPR::ThreadNSPR(BaseThreadFunctor* functorPtr,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
+   , mCaughtException(false)
+   , mException("No exception caught")
 {
    setFunctor(functorPtr);
    start();
@@ -215,9 +221,13 @@ vpr::ReturnStatus ThreadNSPR::start()
    return status;
 }
 
-int ThreadNSPR::join(void** status)
+int ThreadNSPR::join(void** status)  throw (UncaughtThreadException)
 {
    boost::ignore_unused_variable_warning(status);
+   if (mCaughtException)
+   {
+      throw mException;
+   }
    return PR_JoinThread(mThread);
 }
 
@@ -279,8 +289,31 @@ void ThreadNSPR::startThread(void* nullParam)
    }
    mThreadStartCondVar.release();
 
-   // --- CALL USER FUNCTOR --- //
-   (*mUserThreadFunctor)();
+   try
+   {
+      // --- CALL USER FUNCTOR --- //
+      (*mUserThreadFunctor)();
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING:")
+         << " Caught exception: " << ex.getExtendedDescription()
+         << vprDEBUG_FLUSH;
+
+      mCaughtException = true;
+      mException.setException(ex);
+   }
+   catch (std::exception& ex)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING:")
+         << " Caught exception: " << ex.what()
+         << vprDEBUG_FLUSH;
+
+      mCaughtException = true;
+      mException.setException(ex);
+   }
 }
 
 

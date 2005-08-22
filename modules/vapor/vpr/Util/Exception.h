@@ -78,6 +78,9 @@ public:
    std::string getDescription() const;
    void setDescription(std::string desc);
 
+   std::string getLocation() const;
+   std::string getStackTrace() const;
+
    /** Slightly longer description */
    virtual std::string getExtendedDescription() const;
 

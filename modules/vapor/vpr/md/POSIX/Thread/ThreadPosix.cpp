@@ -82,6 +82,8 @@ ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
+   , mCaughtException(false)
+   , mException("No exception caught")
    , mThreadStartCompleted(false)
    , mStartFunctor(NULL)
 {
@@ -100,6 +102,8 @@ ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
+   , mCaughtException(false)
+   , mException("No exception caught")
    , mThreadStartCompleted(false)
    , mStartFunctor(NULL)
 {
@@ -122,6 +126,8 @@ ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
+   , mCaughtException(false)
+   , mException("No exception caught")
    , mThreadStartCompleted(false)
    , mStartFunctor(NULL)
 {
@@ -306,9 +312,32 @@ void ThreadPosix::startThread(void* nullParam)
       mThreadStartCondVar.signal();
    }
    mThreadStartCondVar.release();
+   
+   try
+   {
+      // --- CALL USER FUNCTOR --- //
+      (*mUserThreadFunctor)();
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING:")
+         << " Caught exception: " << ex.getExtendedDescription()
+         << vprDEBUG_FLUSH;
 
-   // --- CALL USER FUNCTOR --- //
-   (*mUserThreadFunctor)();
+      mCaughtException = true;
+      mException.setException(ex);
+   }
+   catch (std::exception& ex)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING:")
+         << " Caught exception: " << ex.what()
+         << vprDEBUG_FLUSH;
+
+      mCaughtException = true;
+      mException.setException(ex);
+   }
 }
 
 // Get this thread's priority.

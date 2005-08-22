@@ -63,6 +63,8 @@ ThreadSGI::ThreadSGI(BaseThread::VPRThreadPriority priority,
    , mDeleteFunctor(false)
    , mStartFunctor(NULL)
    , mRunning(false)
+   , mCaughtException(false)
+   , mException("No exception caught")
 {
 }
 
@@ -78,6 +80,8 @@ ThreadSGI::ThreadSGI(thread_func_t func, void* arg,
    , mDeleteFunctor(false)
    , mStartFunctor(NULL)
    , mRunning(false)
+   , mCaughtException(false)
+   , mException("No exception caught")
 {
    // Create the thread functor to start.
    mDeleteFunctor = true;
@@ -97,6 +101,8 @@ ThreadSGI::ThreadSGI(BaseThreadFunctor* functorPtr,
    , mDeleteFunctor(false)
    , mStartFunctor(NULL)
    , mRunning(false)
+   , mCaughtException(false)
+   , mException("No exception caught")
 {
    setFunctor(functorPtr);
    start();
@@ -208,8 +214,31 @@ void ThreadSGI::startThread(void* null_param)
    prctl(PR_SETEXITSIG, 0);
    prctl(PR_TERMCHILD);
 
-   // --- CALL USER FUNCTOR --- //
-   (*mUserThreadFunctor)();
+   try
+   {
+      // --- CALL USER FUNCTOR --- //
+      (*mUserThreadFunctor)();
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING:")
+         << " Caught exception: " << ex.getExtendedDescription()
+         << vprDEBUG_FLUSH;
+
+      mCaughtException = true;
+      mException.setException(ex);
+   }
+   catch (std::exception& ex)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING:")
+         << " Caught exception: " << ex.what()
+         << vprDEBUG_FLUSH;
+
+      mCaughtException = true;
+      mException.setException(ex);
+   }
 }
 
 
@@ -217,32 +246,42 @@ void ThreadSGI::startThread(void* null_param)
  * Makes the calling thread wait for the termination of the specified
  * thread.
  */
-int ThreadSGI::join(void** arg)
+int ThreadSGI::join(void** arg)  throw (UncaughtThreadException)
 {
-    int status, retval;
-    pid_t pid;
+   int status, retval;
+   pid_t pid;
 
-    do {
-        pid = ::waitpid(mThreadPID, &status, 0);
-    } while ( WIFSTOPPED(status) != 0 );
+   do
+   {
+      pid = ::waitpid(mThreadPID, &status, 0);
+   } while ( WIFSTOPPED(status) != 0 );
 
-    if ( pid > -1 ) {
-        vprASSERT(pid == mThreadPID);
+   if ( pid > -1 )
+   {
+      vprASSERT(pid == mThreadPID);
 
-        if ( WIFEXITED(status) != 0 && arg != NULL ) {
-            **((int**) arg) = WEXITSTATUS(status);
-        }
-        else if ( WIFSIGNALED(status) != 0 && arg != NULL ) {
-            **((int**) arg) = WTERMSIG(status);
-        }
+      if ( WIFEXITED(status) != 0 && arg != NULL )
+      {
+         **((int**) arg) = WEXITSTATUS(status);
+      }
+      else if ( WIFSIGNALED(status) != 0 && arg != NULL )
+      {
+         **((int**) arg) = WTERMSIG(status);
+      }
 
-        retval = 0;
-    }
-    else {
-        retval = -1;
-    }
+      retval = 0;
+   }
+   else
+   {
+      retval = -1;
+   }
 
-    return retval;
+   if (mCaughtException)
+   {
+      throw mException;
+   }
+
+   return retval;
 }
 
 std::ostream& ThreadSGI::outStream(std::ostream& out)

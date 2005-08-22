@@ -58,7 +58,7 @@
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/BaseThread.h>
-
+#include <vpr/Thread/UncaughtThreadException.h>
 
 namespace vpr
 {
@@ -163,6 +163,8 @@ private:
 
    bool               mRunning;
    VPRThreadPriority  mPriority;
+   vpr::UncaughtThreadException mException;
+   bool                         mCaughtException;
 
 public:
 
@@ -173,7 +175,7 @@ public:
     * @return 0 is returned on successful completion.  -1 is returned on
     *         failure.
     */
-   virtual int join(void** = 0);
+   virtual int join(void** = 0)  throw (UncaughtThreadException);
 
    /**
     * Resumes the execution of a thread that was previously suspended using

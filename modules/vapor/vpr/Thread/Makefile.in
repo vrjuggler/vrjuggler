@@ -56,13 +56,14 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		BaseThread.cpp		\
-		Signal.cpp		\
-		ThreadFunctor.cpp	\
-		ThreadManager.cpp	\
-		ThreadPool.cpp		\
-		TSObject.cpp		\
-		TSObjectProxy.cpp
+SRCS=		BaseThread.cpp			\
+		Signal.cpp			\
+		ThreadFunctor.cpp		\
+		ThreadManager.cpp		\
+		ThreadPool.cpp			\
+		TSObject.cpp			\
+		TSObjectProxy.cpp		\
+		UncaughtThreadException.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

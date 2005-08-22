@@ -39,49 +39,35 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <vpr/System.h>
-#include <vpr/Util/Exception.h>
+#include <vpr/Thread/UncaughtThreadException.h>
 
 namespace vpr
 {
 
-Exception::Exception(std::string desc, std::string location) throw()
-   : std::runtime_error(desc), mDescription(desc), mLocation(location)
+UncaughtThreadException::UncaughtThreadException(const std::string& msg,
+                                 const std::string& location) throw()
+   : Exception(msg, location)
 {
-   mStackTrace = vpr::System::getCallStack();
+   /* Do nothing. */ ;
 }
 
-Exception::~Exception() throw()
-{;}
-
-const char* Exception::what() const throw()
+UncaughtThreadException::~UncaughtThreadException() throw()
 {
-   m_full_desc = getFullDescription();
-   return m_full_desc.c_str();
+   /* Do nothing. */ ;
 }
 
-std::string Exception::getExceptionName() const
-{  return std::string("vpr::Exception"); }
-
-std::string Exception::getDescription() const
-{ return mDescription; }
-
-void Exception::setDescription(std::string desc)
-{ mDescription = desc; }
-
-std::string Exception::getLocation() const
-{ return mLocation; }
-
-std::string Exception::getStackTrace() const
-{ return mStackTrace; }
-
-std::string Exception::getExtendedDescription() const
+void UncaughtThreadException::setException(const vpr::Exception& ex)
 {
-   return this->getExceptionName() + std::string(": ") + getDescription();
+   mDescription = ex.getExceptionName() + ": " + ex.getDescription();
+   mLocation = ex.getLocation();
+   mStackTrace = ex.getStackTrace();
 }
 
-std::string Exception::getFullDescription() const
-{ return getExtendedDescription() + std::string("  ") + mLocation + std::string("\n") + mStackTrace; }
+void UncaughtThreadException::setException(const std::exception& ex)
+{
+   mDescription = ex.what();
+   mLocation = "Location not availible with std::exception.";
+   mStackTrace = "Stacktrace not availible with std::exception.";
+}
 
 }
