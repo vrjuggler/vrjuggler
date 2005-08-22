@@ -158,7 +158,6 @@ void ThreadTest::testUncaughtException()
    CPPUNIT_ASSERT(my_thread.valid() && "Thread should be running now");
 
    CPPUNIT_ASSERT_THROW(my_thread.join(), vpr::UncaughtThreadException);
-   //CPPUNIT_ASSERT_NO_THROW(my_thread.join());
 
    vpr::Thread my_thread2(&functor);
    try
