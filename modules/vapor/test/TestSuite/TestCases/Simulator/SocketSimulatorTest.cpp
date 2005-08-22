@@ -486,12 +486,12 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
    acceptor_addr.setPort(mAcceptorPort);
 
    status = acceptor.open(acceptor_addr);
-   assertTestThread(status.success() && "Failed to open acceptor");
+   CPPUNIT_ASSERT(status.success() && "Failed to open acceptor");
 
    // The acceptor must be non-blocking so that the connected socket it
    // returns will also be non-blocking.  *sigh*
    status = acceptor.getSocket().setBlocking(false);
-   assertTestThread(status.success() &&
+   CPPUNIT_ASSERT(status.success() &&
                     "Failed to enable non-blocking for accepted socket");
 
    mCondVar.acquire();
@@ -507,10 +507,10 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
    }
    while ( status == vpr::ReturnStatus::WouldBlock );
 
-   assertTestThread(status.success() && "Accept failed");
+   CPPUNIT_ASSERT(status.success() && "Accept failed");
 
-   assertTestThread(client_sock.isOpen() && "Accepted socket should be open");
-   assertTestThread(! client_sock.isBlocking() &&
+   CPPUNIT_ASSERT(client_sock.isOpen() && "Accepted socket should be open");
+   CPPUNIT_ASSERT(! client_sock.isBlocking() &&
                     "Connected client socket should be non-blocking");
 
    // Wait until the connector knows that it's connected before we proceed.
@@ -525,7 +525,7 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
 
    client_sock.setNoDelay(true);
    status = client_sock.send(mMessage, mMessageLen, bytes_written);
-   assertTestThread(! status.failure() &&
+   CPPUNIT_ASSERT(! status.failure() &&
                     "Failed to send message to client");
 
    mCondVar.acquire();
@@ -536,11 +536,11 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
    mCondVar.release();
 
    status = client_sock.close();
-   assertTestThread(status.success() &&
+   CPPUNIT_ASSERT(status.success() &&
                     "Could not close acceptor side of connection");
 
    status = acceptor.close();
-   assertTestThread(status.success() && "Could not close acceptor");
+   CPPUNIT_ASSERT(status.success() && "Could not close acceptor");
 }
 
 void SocketSimulatorTest::multiThreadTest_connector (void* arg)
@@ -566,10 +566,10 @@ void SocketSimulatorTest::multiThreadTest_connector (void* arg)
    mCondVar.release();
 
    status = con_sock.open();
-   assertTestThread(status.success() && "Failed to open connector socket");
+   CPPUNIT_ASSERT(status.success() && "Failed to open connector socket");
 
    status = con_sock.setBlocking(false);
-   assertTestThread(status.success() &&
+   CPPUNIT_ASSERT(status.success() &&
                     "Failed to enable non-blocking for connector");
 
    status = connector.connect(con_sock, remote_addr,
@@ -597,9 +597,9 @@ void SocketSimulatorTest::multiThreadTest_connector (void* arg)
       connector.complete(con_sock);
    }
 
-   assertTestThread(status.success() && "Connector can't connect");
+   CPPUNIT_ASSERT(status.success() && "Connector can't connect");
 
-   assertTestThread(! con_sock.isBlocking() &&
+   CPPUNIT_ASSERT(! con_sock.isBlocking() &&
                     "Connector should be non-blocking");
 
    // Tell the acceptor that we are ready and it can do whatever it wants.
@@ -634,7 +634,7 @@ void SocketSimulatorTest::multiThreadTest_connector (void* arg)
    }
    while ( status == vpr::ReturnStatus::WouldBlock );
 
-   assertTestThread(bytes_read == mMessageLen &&
+   CPPUNIT_ASSERT(bytes_read == mMessageLen &&
                     "Connector received message of wrong size");
 
    con_sock.close();

@@ -6,7 +6,6 @@
 #include <MySuites.h>
 
 #include <cppunit/TestCase.h>
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -17,7 +16,7 @@
 namespace vprTest
 {
 
-class SocketCopyConstructorTest : public CppUnit::ThreadTestCase
+class SocketCopyConstructorTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SocketCopyConstructorTest);
 //CPPUNIT_TEST( simpleTest );
@@ -26,11 +25,11 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    SocketCopyConstructorTest()
-   : CppUnit::ThreadTestCase ()
+   : CppUnit::TestCase ()
    {;}
 
    SocketCopyConstructorTest(std::string name)
-   : CppUnit::ThreadTestCase (name)
+   : CppUnit::TestCase (name)
    {;}
 
    virtual ~SocketCopyConstructorTest()

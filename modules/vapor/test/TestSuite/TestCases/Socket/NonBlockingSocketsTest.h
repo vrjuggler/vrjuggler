@@ -6,7 +6,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <MySuites.h>
-#include <cppunit/extensions/ThreadTestCase.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
@@ -15,7 +14,7 @@
 namespace vprTest
 {
 
-class NonBlockingSocketTest : public CppUnit::ThreadTestCase
+class NonBlockingSocketTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(NonBlockingSocketTest);
 CPPUNIT_TEST( testSetOpenNonBlockingThenOpenThenClose );
@@ -28,12 +27,12 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    NonBlockingSocketTest()
-      : CppUnit::ThreadTestCase (), mAcceptorPort(0)
+      : CppUnit::TestCase (), mAcceptorPort(0)
    {
    }
 
    NonBlockingSocketTest(std::string name)
-      : CppUnit::ThreadTestCase (name), mAcceptorPort(0)
+      : CppUnit::TestCase (name), mAcceptorPort(0)
    {
    }
 

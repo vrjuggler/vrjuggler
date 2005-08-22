@@ -8,7 +8,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <MySuites.h>
 
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 #include <vpr/vpr.h>
@@ -17,7 +16,7 @@
 namespace vprTest
 {
 
-class SerialPortTest : public CppUnit::ThreadTestCase
+class SerialPortTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SerialPortTest);
 
@@ -56,13 +55,13 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    SerialPortTest(std::string name)
-      : CppUnit::ThreadTestCase(name), mDataBuffer("This is a test...")
+      : CppUnit::TestCase(name), mDataBuffer("This is a test...")
    {
       /* Do nothing. */ ;
    }
 
    SerialPortTest()
-      : CppUnit::ThreadTestCase(), mDataBuffer("This is a test...")
+      : CppUnit::TestCase(), mDataBuffer("This is a test...")
    {
       /* Do nothing. */ ;
    }

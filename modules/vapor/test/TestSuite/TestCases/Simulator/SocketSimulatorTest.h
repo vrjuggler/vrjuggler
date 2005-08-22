@@ -5,7 +5,6 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/ThreadTestCase.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Sync/CondVar.h>
@@ -14,7 +13,7 @@
 namespace vprTest
 {
 
-class SocketSimulatorTest : public CppUnit::ThreadTestCase
+class SocketSimulatorTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SocketSimulatorTest);
 CPPUNIT_TEST( graphConstructionTest );
@@ -26,13 +25,13 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    SocketSimulatorTest (std::string name)
-      : CppUnit::ThreadTestCase(name)
+      : CppUnit::TestCase(name)
    {
       /* Do nothing. */ ;
    }
 
    SocketSimulatorTest ()
-      : CppUnit::ThreadTestCase()
+      : CppUnit::TestCase()
    {
       /* Do nothing. */ ;
    }

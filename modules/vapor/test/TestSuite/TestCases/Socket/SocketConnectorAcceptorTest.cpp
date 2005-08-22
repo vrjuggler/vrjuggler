@@ -66,7 +66,6 @@ void SocketConnectorAcceptorTest::testAcceptorConstruction ()
 
 void SocketConnectorAcceptorTest::testSpawnedAcceptor ()
 {
-   threadAssertReset();
 #ifdef VPR_OS_Windows
    long rand_num(rand());
 #else
@@ -100,8 +99,6 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor ()
    // Wait for threads
    acceptor_thread.join();
    connector_thread.join();
-
-   checkThreadAssertions();
 }
 
 void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
@@ -116,8 +113,8 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
    vpr::Uint32 bytes_written;
 
    // Open the acceptor
-   ret_val = acceptor.open(local_acceptor_addr);
-   assertTestThread((ret_val.success()) && "Acceptor did not open correctly");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Acceptor did not open correctly",
+      acceptor.open(local_acceptor_addr));
 
    for(int i=0;i<mNumItersA;i++)
    {
@@ -131,15 +128,16 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
 
       // ACCEPT connection
       sock = new vpr::SocketStream;
-      ret_val = acceptor.accept(*sock, vpr::Interval::NoTimeout );
-      assertTestThread((ret_val.success()) && "Accepting socket failed");
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Accepting socket failed",
+         acceptor.accept(*sock, vpr::Interval::NoTimeout ));
 
-      assertTestThread((sock->isOpen()) && "Accepted socket should be open");
-      assertTestThread((sock->isConnected()) && "Accepted socket should be connected");
+      CPPUNIT_ASSERT((sock->isOpen()) && "Accepted socket should be open");
+      CPPUNIT_ASSERT((sock->isConnected()) && "Accepted socket should be connected");
 
-      ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message
-      assertTestThread((ret_val.success()) && "Problem writing in acceptor");
-      assertTestThread((bytes_written == mMessageLen) && "Didn't send entire messag");
+      // Send a message
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem writing in acceptor",
+         sock->write(mMessageValue, mMessageLen, bytes_written));
+      CPPUNIT_ASSERT((bytes_written == mMessageLen) && "Didn't send entire messag");
 
       // WAIT for close
       mCondVar.acquire();
@@ -147,11 +145,10 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
          mCondVar.wait();
       mCondVar.release();
 
-      bool is_connected = sock->isConnected();
-      assertTestThread((is_connected == false) && "Socket should not still be connected");
+      CPPUNIT_ASSERT(sock->isConnected() && "Socket should not still be connected");
 
-      ret_val = sock->close();                                // Close the socket
-      assertTestThread((ret_val.success()) && "Problem closing accepted socket");
+      // Close the socket
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem closing accepted socket", sock->close());
    }
 }
 
@@ -177,17 +174,17 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_connector (void* arg)
 
       vpr::SocketStream    con_sock;
       std::string      data;
-      ret_val = connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout );
-      assertTestThread((ret_val.success()) && "Connector can't connect");
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect",
+         connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout ));
 
-      ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
-      assertTestThread((ret_val.success()) && "Read failed");
-      assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
+      // Recieve data
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Read failed", con_sock.read(data, mMessageLen, bytes_read));
+      CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
 
-      bool is_connected = con_sock.isConnected();
-      assertTestThread(is_connected && "Socket should still be connected");
+      CPPUNIT_ASSERT(con_sock.isConnected() && "Socket should still be connected");
 
-      con_sock.close();                                   // Close socket
+      // Close socket
+      CPPUNIT_ASSERT_NO_THROW(con_sock.close());
 
       // Tell everyone that we closed
       mCondVar.acquire();

@@ -37,15 +37,15 @@ void SocketCopyConstructorTest::simpleTest ()
    CPPUNIT_ASSERT(sock->getLocalAddr() == newSock1->getLocalAddr());
 
    delete sock;
-   CPPUNIT_ASSERT(newSock1->open().success() && "Can not open copied socket1");
-   CPPUNIT_ASSERT(newSock2->open().success() && "Can not open copied socket2");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Can not open copied socket1", newSock1->open());
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Can not open copied socket2", newSock2->open());
 
    CPPUNIT_ASSERT(newSock2->getType() == newSock1->getType());
    CPPUNIT_ASSERT(newSock2->getRemoteAddr() == newSock1->getRemoteAddr());
    CPPUNIT_ASSERT(newSock2->getLocalAddr() == newSock1->getLocalAddr());
 
-   CPPUNIT_ASSERT(newSock1->close().success() && "Can not close copied socket1");
-   CPPUNIT_ASSERT(newSock2->close().success() && "Can not close copied socket2");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Can not close copied socket1", newSock1->close());
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Can not close copied socket2", newSock2->close());
 
    delete newSock1;
    delete newSock2;
@@ -53,8 +53,6 @@ void SocketCopyConstructorTest::simpleTest ()
 
 void SocketCopyConstructorTest::testCopyConnectedSocket ()
 {
-   threadAssertReset();
-
    mState = NOT_READY;                        // Initialize
 
    // Spawn acceptor thread
@@ -69,8 +67,6 @@ void SocketCopyConstructorTest::testCopyConnectedSocket ()
 
    connector_thread.join();
    acceptor_thread.join();
-
-   checkThreadAssertions();
 }
 
 void SocketCopyConstructorTest::testCopyConstructor_connector (void* arg)
@@ -79,15 +75,12 @@ void SocketCopyConstructorTest::testCopyConstructor_connector (void* arg)
 
    const vpr::Uint16 port(13579);
    vpr::InetAddr remote_addr;
-   bool result = 0;
-   bool result1 = 0;
    char buffer[40];
    remote_addr.setPort(port);
    vpr::SocketStream connector_socket(vpr::InetAddr::AnyAddr, remote_addr);
    vpr::SocketStream* copy_connector(NULL);
 
-   result = connector_socket.open().success();
-   assertTestThread((result != false) && "Can not open connector socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Can not open connector socket", connector_socket.open());
 
    // WAIT for READY
    mCondVar.acquire();
@@ -97,22 +90,17 @@ void SocketCopyConstructorTest::testCopyConstructor_connector (void* arg)
    }
    mCondVar.release();
 
-   result1 = connector_socket.connect().success();
-   assertTestThread((result1 != false) && "connect fails");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("connect fails", connector_socket.connect());
 
    copy_connector = new vpr::SocketStream (connector_socket);
 
-   if (result1 != false)
-   {
-     vpr::Uint32 bytes_read;
-     vpr::ReturnStatus status = copy_connector->read (buffer, 40, bytes_read);
-     if (status.success())
-        copy_connector->close();
-   }
+   vpr::Uint32 bytes_read;
+   CPPUNIT_ASSERT_NO_THROW(copy_connector->read (buffer, 40, bytes_read));
+   copy_connector->close();
 
-   assertTestThread(copy_connector->getType() == connector_socket.getType());
-   assertTestThread(copy_connector->getRemoteAddr() == connector_socket.getRemoteAddr());
-   assertTestThread(copy_connector->getLocalAddr() == connector_socket.getLocalAddr());
+   CPPUNIT_ASSERT(copy_connector->getType() == connector_socket.getType());
+   CPPUNIT_ASSERT(copy_connector->getRemoteAddr() == connector_socket.getRemoteAddr());
+   CPPUNIT_ASSERT(copy_connector->getLocalAddr() == connector_socket.getLocalAddr());
 
    connector_socket.close();
    copy_connector->close();
@@ -133,7 +121,6 @@ void SocketCopyConstructorTest::testCopyConstructor_acceptor(void* arg)
    boost::ignore_unused_variable_warning(arg);
 
    const vpr::Uint16 port(13579);
-   bool result = 0;
    char buffer[]="Hello!";
    vpr::InetAddr local_addr;
    local_addr.setPort(port);
@@ -142,47 +129,35 @@ void SocketCopyConstructorTest::testCopyConstructor_acceptor(void* arg)
    vpr::SocketStream child_socket;
    vpr::SocketStream* copy_acceptor(NULL);
    vpr::SocketStream* copy_child(NULL);
-   vpr::ReturnStatus child_create_status;
 
-   result = acceptor_socket.open().success();
-   assertTestThread((result != false) && "Can not open acceptor socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Can not open acceptor socket", acceptor_socket.open());;
 
-   result = acceptor_socket.bind().success();
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Can not bind acceptor socket", acceptor_socket.bind());
 
-   if (result == false)
-      assertTestThread((false) && "Can not bind acceptor socket");
-   else
-   {
-      result = acceptor_socket.listen().success();
-      assertTestThread((result != false) && "acceptor listening fails");
-      // READY - Tell everyone that we are ready to accept
-         mCondVar.acquire();
-         {
-            mState = READY;
-            mCondVar.signal();       // Tell any waiting threads
-         }
-         mCondVar.release();
-      child_create_status = acceptor_socket.accept(child_socket);
-      assertTestThread(child_create_status.success() && "accept() fails");
-   }
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("acceptor listening fails", acceptor_socket.listen());
+   // READY - Tell everyone that we are ready to accept
+      mCondVar.acquire();
+      {
+         mState = READY;
+         mCondVar.signal();       // Tell any waiting threads
+      }
+      mCondVar.release();
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("accept() fails", acceptor_socket.accept(child_socket));
 
    copy_acceptor = new vpr::SocketStream (acceptor_socket);
-   if (child_create_status.success())
-   {
-      copy_child = new vpr::SocketStream (child_socket);
-   }
+   copy_child = new vpr::SocketStream (child_socket);
 
-   assertTestThread(copy_acceptor->getType() == acceptor_socket.getType());
-   assertTestThread(copy_acceptor->getRemoteAddr() == acceptor_socket.getRemoteAddr());
-   assertTestThread(copy_acceptor->getLocalAddr() == acceptor_socket.getLocalAddr());
+   CPPUNIT_ASSERT(copy_acceptor->getType() == acceptor_socket.getType());
+   CPPUNIT_ASSERT(copy_acceptor->getRemoteAddr() == acceptor_socket.getRemoteAddr());
+   CPPUNIT_ASSERT(copy_acceptor->getLocalAddr() == acceptor_socket.getLocalAddr());
 
    if (copy_child != NULL)
    {
       vpr::Uint32 bytes_written;
       copy_child->write(buffer, sizeof(buffer), bytes_written);
-      assertTestThread(copy_child->getType() == child_socket.getType());
-      assertTestThread(copy_child->getRemoteAddr() == child_socket.getRemoteAddr());
-      assertTestThread(copy_child->getLocalAddr() == child_socket.getLocalAddr());
+      CPPUNIT_ASSERT(copy_child->getType() == child_socket.getType());
+      CPPUNIT_ASSERT(copy_child->getRemoteAddr() == child_socket.getRemoteAddr());
+      CPPUNIT_ASSERT(copy_child->getLocalAddr() == child_socket.getLocalAddr());
    }
 
    // WAIT for close
@@ -191,9 +166,8 @@ void SocketCopyConstructorTest::testCopyConstructor_acceptor(void* arg)
          mCondVar.wait();
    mCondVar.release();
 
-   result = acceptor_socket.close().success();
-   assertTestThread((result != false) && "acceptor close fails");
-   if (child_create_status.success()) child_socket.close();
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("acceptor close fails", acceptor_socket.close());
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("child close fails", child_socket.close());
 
    copy_acceptor->close();
    if (copy_child != NULL) copy_child->close();

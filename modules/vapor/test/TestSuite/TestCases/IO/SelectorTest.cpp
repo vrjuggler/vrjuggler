@@ -16,6 +16,7 @@
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/IO/Socket/SocketConnector.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>
 #include <vpr/Util/ReturnStatus.h>
@@ -39,7 +40,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SelectorTest );
 
 void SelectorTest::testAcceptorPoolSelection ()
 {
-    threadAssertReset();
 #ifdef VPR_OS_Windows
 	long rand_num(rand());
 #else
@@ -67,8 +67,6 @@ void SelectorTest::testAcceptorPoolSelection ()
     // Wait for threads
     acceptor_thread.join();
     connector_thread.join();
-
-    checkThreadAssertions();
 }
 
 void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
@@ -98,9 +96,9 @@ void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
    }
 
    // First test selector TIMEOUT
-   ret_val = selector.select(num_events, vpr::Interval(5,vpr::Interval::Usec));
-   assertTestThread(ret_val.timeout() && "Selection did not timeout like it should");
-   assertTestThread((0 == num_events) && "Num events should have been 0");
+   CPPUNIT_ASSERT_THROW(selector.select(num_events, vpr::Interval(5,vpr::Interval::Usec)), vpr::TimeoutException);
+   //CPPUNIT_ASSERT(ret_val.timeout() && "Selection did not timeout like it should");
+   CPPUNIT_ASSERT((0 == num_events) && "Num events should have been 0");
 
    // READY - Tell everyone that we are ready to accept
    mCondVar.acquire();
@@ -115,11 +113,9 @@ void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
     for(i=0;i<mNumIters;i++)
     {
        num_events = 0;
-       ReturnStatus ret = selector.select(num_events, vpr::Interval::NoTimeout );
-
-       assertTestThread((ret.success()) &&
-                        "Selection did not return successfully");
-       assertTestThread((num_events == 1) && "There was not only 1 event");
+       
+       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Selection did not return successfully", selector.select(num_events, vpr::Interval::NoTimeout ));
+       CPPUNIT_ASSERT((num_events == 1) && "There was not only 1 event");
 
        // get an acceptor that has a connection request pending
        // (ready_acceptor)
@@ -130,27 +126,26 @@ void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
          // if selector's out flag is VPR_READ|VPR_EXCEPT
          if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::Read | vpr::Selector::Except))
          {
-            assertTestThread((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()) &&
+            CPPUNIT_ASSERT((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()) &&
                              "Handle not found int acceptor table");
             ready_acceptor = acceptorTable[selector.getHandle(j)];
             num_found += 1;
          }
        }
 
-       assertTestThread((num_found == 1) && "Wrong number of acceptors found");
-       assertTestThread(ready_acceptor != NULL && "no ready acceptor");
+       CPPUNIT_ASSERT((num_found == 1) && "Wrong number of acceptors found");
+       CPPUNIT_ASSERT(ready_acceptor != NULL && "no ready acceptor");
 
        // ACCEPT connection (generate a sock)
        SocketStream sock;
-       ret_val = ready_acceptor->accept(sock);
-       assertTestThread((ret_val.success()) && "Accepted socket is null");
-       assertTestThread((sock.isOpen()) && "Accepted socket should be open");
+       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Accepted socket is null", ready_acceptor->accept(sock));
+       CPPUNIT_ASSERT((sock.isOpen()) && "Accepted socket should be open");
 
        // use the sock to write (send)... then close it...
-       ret_val = sock.write(mMessageValue, mMessageLen, bytes_written);      // Send a message
-       assertTestThread((ret_val.success()) && "Problem writing in acceptor");
-       ret_val = sock.close();         // Close the socket
-       assertTestThread((ret_val.success()) && "Problem closing accepted socket");
+       // Send a message
+       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem writing in acceptor", sock.write(mMessageValue, mMessageLen, bytes_written));
+       // Close the socket
+       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem closing accepted socket", sock.close());
     }
 
     // Delete acceptors (which in turn closes's and deletes their sockets)
@@ -190,12 +185,11 @@ void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
       remote_addr.setAddress("localhost", port_num);
       vpr::SocketStream con_sock;
       std::string       data;
-      ret_val = connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec) );
-      assertTestThread((ret_val.success()) && "Connector can't connect");
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect", connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec) ));
 
-      ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
-      assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
-      assertTestThread((ret_val.success()) && "Failure reading data");
+      // Recieve data
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failure reading data", con_sock.read(data, mMessageLen, bytes_read));
+      CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
 
       con_sock.close();                                   // Close socket
    }
@@ -203,7 +197,6 @@ void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
 
 void SelectorTest::testSendThenPoll ()
 {
-    threadAssertReset();
 #ifdef VPR_OS_Windows
 	long rand_num(rand());
 #else
@@ -230,8 +223,6 @@ void SelectorTest::testSendThenPoll ()
     // Wait for threads
     acceptor_thread.join();
     connector_thread.join();
-
-    checkThreadAssertions();
 }
 
 void SelectorTest::testSendThenPoll_acceptor (void* arg)
@@ -268,8 +259,8 @@ void SelectorTest::testSendThenPoll_acceptor (void* arg)
    for(i=0;i<mNumRendevousPorts;i++)
    {
       SocketStream sock;
-      ret_val = acceptors[i]->accept(sock);           // Accept the connection
-      assertTestThread((ret_val.success()) && "Error accepting a connection");
+      // Accept the connection
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Error accepting a connection", acceptors[i]->accept(sock));
       socks.push_back(sock);                          // Pushes a copy of the socket onto the socket list
       vpr::IOSys::Handle handle = sock.getHandle();         // Get the Handle to register
       handleTable[handle] = i;                              // Save handle index
@@ -277,7 +268,7 @@ void SelectorTest::testSendThenPoll_acceptor (void* arg)
       selector.setIn(handle, (vpr::Selector::Read));        // Set it for waiting for VPR_READ
    }
 
-   assertTestThread((mNumRendevousPorts == selector.getNumHandles()) && "We didn't add all ports correctly to selector");
+   CPPUNIT_ASSERT((mNumRendevousPorts == selector.getNumHandles()) && "We didn't add all ports correctly to selector");
 
    // Use selector to find the sock(s) to read on
    // Then read message after checking to verify subgroup
@@ -298,13 +289,11 @@ void SelectorTest::testSendThenPoll_acceptor (void* arg)
 
        // Get the events
        vpr::Uint16 num_events;
-       ReturnStatus ret = selector.select(num_events, vpr::Interval::NoTimeout);
+       
+       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Selection did not return successfully", selector.select(num_events, vpr::Interval::NoTimeout));
 
        //vpr::System::msleep(50);
-
-       assertTestThread((ret.success()) &&
-                        "Selection did not return successfully");
-       assertTestThread((num_events == mSelectedPorts.size()) &&
+       CPPUNIT_ASSERT((num_events == mSelectedPorts.size()) &&
                         "There was an incorrect number of events");
        if(num_events != mSelectedPorts.size())
        {
@@ -321,27 +310,27 @@ void SelectorTest::testSendThenPoll_acceptor (void* arg)
           // If have data to read
           if(selector.getOut(selector.getHandle(s_idx)) & (vpr::Selector::Read))
           {
-            assertTestThread((handleTable.find(selector.getHandle(s_idx)) != handleTable.end()) &&
+            CPPUNIT_ASSERT((handleTable.find(selector.getHandle(s_idx)) != handleTable.end()) &&
                              "Handle not found int acceptor table");
             vpr::Uint16 sock_index = handleTable[selector.getHandle(s_idx)];
 
             //std::cout << sock_index << ", ";
 
-            assertTestThread(sock_index == s_idx && "Indices out of sync");
-            assertTestThread((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()) &&
+            CPPUNIT_ASSERT(sock_index == s_idx && "Indices out of sync");
+            CPPUNIT_ASSERT((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()) &&
                              "Found a port that wasn't supposed to have data");
             num_found += 1;
 
             std::string data;
             vpr::Uint32 bytes_read;
-            ret_val = socks[s_idx].read(data, mMessageLen, bytes_read);
-            assertTestThread(ret_val.success() && "Problems reading data");
-            assertTestThread((bytes_read == mMessageLen) && "Data recieved is of wrong length");
+            
+            CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problems reading data", socks[s_idx].read(data, mMessageLen, bytes_read)); 
+            CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Data recieved is of wrong length");
          }
        }
        //std::cout << std::endl;
 
-       assertTestThread((num_found == mSelectedPorts.size()) &&
+       CPPUNIT_ASSERT((num_found == mSelectedPorts.size()) &&
                         "Wrong number of readers found");
 
        // Tell senders that we are DONE_READING
@@ -442,10 +431,9 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
    {
       remote_addr.setAddress("localhost", (mRendevousPort+i));             // Set remote port
       vpr::SocketStream cur_sock;                                          // The current socket to connect
-      ret_val = connector.connect(cur_sock, remote_addr, vpr::Interval::NoTimeout );           // Connect to the port
-      assertTestThread((ret_val.success()) && "Connector can't connect");
-      ret_val = cur_sock.setNoDelay(true);
-      assertTestThread(ret_val.success() && "Failed to set nodelay on socket");
+      // Connect to the port
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect", connector.connect(cur_sock, remote_addr, vpr::Interval::NoTimeout ));
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to set nodelay on socket", cur_sock.setNoDelay(true));
       sockets.push_back(cur_sock);                                         // Copy the connected socket handle into list
    }
 
@@ -480,10 +468,10 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
       for(j=0;j<mSelectedPorts.size();j++)
       {
          //std::cout << mSelectedPorts[j] << ", ";
-         assertTestThread((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
-         ret_val = sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen, bytes_written);    // Write the data
-         assertTestThread((mMessageLen == bytes_written) && "Wrong num bytes written");
-         assertTestThread((ret_val.success()) && "Error writing data on socket");
+         CPPUNIT_ASSERT((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
+         // Write the data
+         CPPUNIT_ASSERT_NO_THROW_MESSAGE("Error writing data on socket", sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen, bytes_written));
+         CPPUNIT_ASSERT((mMessageLen == bytes_written) && "Wrong num bytes written");
       }
 
       //std::cout << std::endl;

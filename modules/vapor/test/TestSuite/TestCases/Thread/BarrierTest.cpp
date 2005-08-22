@@ -21,7 +21,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( BarrierTest );
 // and verify that the variable values are correct.
 void BarrierTest::testBarrier()
 {
-   threadAssertReset();
    mCounter = 0;
    mNumThreads = 5;
    mBarrier = new vpr::Barrier(mNumThreads+1);      // +1 for us
@@ -60,8 +59,6 @@ void BarrierTest::testBarrier()
       delete threads[t];
       delete functors[t];
    }
-
-   checkThreadAssertions();
 }
 
 void BarrierTest::testBarrier_thread(void* arg)
@@ -75,7 +72,7 @@ void BarrierTest::testBarrier_thread(void* arg)
       mMutex.release();
 
       mBarrier->wait();
-      assertTestThread(mNumThreads +1 == mCounter);
+      //CPPUNIT_ASSERT(mNumThreads +1 == mCounter);
       mBarrier->wait();
 
       mMutex.acquire();
@@ -83,7 +80,7 @@ void BarrierTest::testBarrier_thread(void* arg)
       mMutex.release();
 
       mBarrier->wait();
-      assertTestThread(0 == mCounter);
+      //CPPUNIT_ASSERT(0 == mCounter);
       mBarrier->wait();
    }
 }

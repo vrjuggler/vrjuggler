@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include <vpr/Util/ReturnStatus.h>
-
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <MySuites.h>
@@ -24,7 +22,7 @@ public:
       Class1() : charVal(0), shortVal(0), longVal(0), longlongVal(0), floatVal(0), doubleVal(0)
       {;}
 
-      virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+      virtual void writeObject(vpr::ObjectWriter* writer)
       {
          writer->writeUint8(charVal);
          writer->writeUint16(shortVal);
@@ -36,10 +34,9 @@ public:
          writer->writeUint64(slonglongVal);
          writer->writeFloat(floatVal);
          writer->writeDouble(doubleVal);
-         return vpr::ReturnStatus::Succeed;
       }
 
-      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+      virtual void readObject(vpr::ObjectReader* reader)
       {
          charVal = reader->readUint8();
          shortVal = reader->readUint16();
@@ -51,7 +48,6 @@ public:
          slonglongVal = reader->readUint64();
          floatVal = reader->readFloat();
          doubleVal = reader->readDouble();
-         return vpr::ReturnStatus::Succeed;
       }
 
       bool operator==(Class1& r) const
@@ -89,20 +85,18 @@ public:
       Class2() : mFlag(true)
       {;}
 
-      virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+      virtual void writeObject(vpr::ObjectWriter* writer)
       {
          mObj1.writeObject(writer);
          mObj2.writeObject(writer);
          writer->writeBool(mFlag);
-         return vpr::ReturnStatus::Succeed;
       }
 
-      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+      virtual void readObject(vpr::ObjectReader* reader)
       {
          mObj1.readObject(reader);
          mObj2.readObject(reader);
          mFlag = reader->readBool();
-         return vpr::ReturnStatus::Succeed;
       }
 
       bool operator==(Class2& r)

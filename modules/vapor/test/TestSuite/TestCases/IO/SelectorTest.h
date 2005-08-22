@@ -9,7 +9,6 @@
 #include <MySuites.h>
 
 #include <cppunit/TestCase.h>
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -22,7 +21,7 @@ using namespace vpr;
 namespace vprTest
 {
 
-class SelectorTest : public CppUnit::ThreadTestCase
+class SelectorTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SelectorTest);
 #ifndef VPR_SIMULATOR
@@ -33,11 +32,11 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    SelectorTest()
-   : CppUnit::ThreadTestCase ()
+   : CppUnit::TestCase ()
    {;}
 
    SelectorTest(std::string name)
-   : CppUnit::ThreadTestCase (name)
+   : CppUnit::TestCase (name)
    {;}
 
    virtual ~SelectorTest()
@@ -45,12 +44,10 @@ public:
 
    virtual void setUp()
    {
-      //threadAssertReset();
    }
 
    virtual void tearDown()
    {
-      //checkThreadAssertions();
    }
 
    // Test an acceptor pool

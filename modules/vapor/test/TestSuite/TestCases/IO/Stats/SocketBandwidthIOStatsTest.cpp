@@ -27,7 +27,6 @@ namespace vprTest
 
 void SocketBandwidthIOStatsTest::testBandwidth()
 {
-   threadAssertReset();
 #ifdef VPR_OS_Windows
    long rand_num(rand());
 #else
@@ -62,8 +61,6 @@ void SocketBandwidthIOStatsTest::testBandwidth()
    // Wait for threads
    acceptor_thread.join();
    connector_thread.join();
-
-   checkThreadAssertions();
 }
 
 void SocketBandwidthIOStatsTest::testBandwidth_acceptor(void* arg)
@@ -77,7 +74,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor(void* arg)
 
    // Open the acceptor
    ret_val = acceptor.open(local_acceptor_addr);
-   assertTestThread((ret_val.success()) && "Acceptor did not open correctly");
+   CPPUNIT_ASSERT((ret_val.success()) && "Acceptor did not open correctly");
 
    for(int i=0;i<mNumItersA;i++)
    {
@@ -92,15 +89,15 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor(void* arg)
       // ACCEPT connection
       sock = new vpr::SocketStream;
       ret_val = acceptor.accept(*sock, vpr::Interval::NoTimeout );
-      assertTestThread((ret_val.success()) && "Accepting socket failed");
+      CPPUNIT_ASSERT((ret_val.success()) && "Accepting socket failed");
 
-      assertTestThread((sock->isOpen()) && "Accepted socket should be open");
-      assertTestThread((sock->isConnected()) && "Accepted socket should be connected");
+      CPPUNIT_ASSERT((sock->isOpen()) && "Accepted socket should be open");
+      CPPUNIT_ASSERT((sock->isConnected()) && "Accepted socket should be connected");
       for(int j=0;j<mNumItersB;j++)
       {
          ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message
-         assertTestThread((ret_val.success()) && "Problem writing in acceptor");
-         assertTestThread((bytes_written == mMessageLen) && "Didn't send entire messag");
+         CPPUNIT_ASSERT((ret_val.success()) && "Problem writing in acceptor");
+         CPPUNIT_ASSERT((bytes_written == mMessageLen) && "Didn't send entire messag");
       }
 
       // WAIT for close
@@ -136,7 +133,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor(void* arg)
       }
 
       ret_val = sock->close();                                // Close the socket
-      assertTestThread((ret_val.success()) && "Problem closing accepted socket");
+      CPPUNIT_ASSERT((ret_val.success()) && "Problem closing accepted socket");
    }
 }
 
@@ -161,13 +158,13 @@ void SocketBandwidthIOStatsTest::testBandwidth_connector(void* arg)
       vpr::SocketStream    con_sock;
       std::string          data;
       ret_val = connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout );
-      assertTestThread((ret_val.success()) && "Connector can't connect");
+      CPPUNIT_ASSERT((ret_val.success()) && "Connector can't connect");
 
       for(int j=0;j<mNumItersB;j++)
       {
          ret_val = con_sock.readn(data, mMessageLen, bytes_read);   // Recieve data
-         assertTestThread((ret_val.success()) && "Read failed");
-         assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
+         CPPUNIT_ASSERT((ret_val.success()) && "Read failed");
+         CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
       }
 
       vpr::BaseIOStatsStrategy* stats = con_sock.getIOStatStrategy();

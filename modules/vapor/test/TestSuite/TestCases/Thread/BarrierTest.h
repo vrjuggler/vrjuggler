@@ -5,7 +5,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <MySuites.h>
 
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -14,17 +13,17 @@
 namespace vprTest
 {
 
-class BarrierTest : public CppUnit::ThreadTestCase
+class BarrierTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(BarrierTest);
 CPPUNIT_TEST( testBarrier);
 CPPUNIT_TEST_SUITE_END();
 
 public:
-   BarrierTest() : CppUnit::ThreadTestCase ()
+   BarrierTest() : CppUnit::TestCase ()
    {;}
 
-   BarrierTest(std::string name) : CppUnit::ThreadTestCase (name)
+   BarrierTest(std::string name) : CppUnit::TestCase (name)
    {;}
 
    virtual ~BarrierTest()
@@ -35,7 +34,6 @@ public:
 
    virtual void tearDown()
    {;}
-
 
    void testBarrier();
    void testBarrier_thread(void* arg);

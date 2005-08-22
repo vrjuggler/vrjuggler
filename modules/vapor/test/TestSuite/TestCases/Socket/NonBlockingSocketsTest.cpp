@@ -16,7 +16,6 @@
 
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Debug.h>
 
 #include <vpr/System.h>
@@ -36,56 +35,46 @@ CPPUNIT_TEST_SUITE_REGISTRATION( NonBlockingSocketTest );
 void NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose()
 {
    int port = 6275;
-   bool result = false;
    vpr::InetAddr local_addr;
    local_addr.setPort( port );
    vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
 
    acceptor_socket.setBlocking(false);
 
-   result = acceptor_socket.open().success();
-   CPPUNIT_ASSERT( result );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.open());
 
-   result = acceptor_socket.close().success();
-   CPPUNIT_ASSERT( result );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.close());
 }
 
 void NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose()
 {
    int port = 6275;
-   bool result = false;
    vpr::InetAddr local_addr;
    local_addr.setPort( port );
    vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
 
    acceptor_socket.setBlocking(false); // for opening
-   result = acceptor_socket.open().success();
-   CPPUNIT_ASSERT( result );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.open());
 
    CPPUNIT_ASSERT(! acceptor_socket.isBlocking());
 
    acceptor_socket.setBlocking(true); // for reads and writes
    CPPUNIT_ASSERT(acceptor_socket.isBlocking());
 
-   result = acceptor_socket.close().success();
-   CPPUNIT_ASSERT( result );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.close());
 }
 
 void NonBlockingSocketTest::testConnect2NonBlockingSockets()
 {
    int port = 6275;
-   //bool result = false;
    vpr::InetAddr local_addr;
-   vpr::ReturnStatus status;
    local_addr.setPort( port );
    vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
    vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
 
    // a/c: Open
-   status = acceptor_socket.open();
-   CPPUNIT_ASSERT( status.failure() != true );
-   status = connector_socket.open();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW( acceptor_socket.open());
+   CPPUNIT_ASSERT_NO_THROW( connector_socket.open() );
 
    // a/c: enableNonBlock
    acceptor_socket.setBlocking(false);
@@ -94,44 +83,49 @@ void NonBlockingSocketTest::testConnect2NonBlockingSockets()
    CPPUNIT_ASSERT(! connector_socket.isBlocking());
 
    // a:   bind
-   status = acceptor_socket.bind();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.bind());
 
    // a:   listen
-   status = acceptor_socket.listen();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.listen());
 
    // c:   connect
-   status = connector_socket.connect();
-   CPPUNIT_ASSERT( status.failure() != true );
-   if ( status.success() != true )
+   try
    {
-      CPPUNIT_ASSERT( status.inProgress() == true );
+      connector_socket.connect();
+   }
+   catch (vpr::WouldBlockException& ex)
+   {
+      // Do nothing.
+   }
+   catch (vpr::IOException& ex)
+   {
+      CPPUNIT_ASSERT_NO_THROW(throw);
    }
 
    // a:   accept
    vpr::SocketStream spawned_socket;
-   status = acceptor_socket.accept( spawned_socket );
-   CPPUNIT_ASSERT( status.failure() != true );
-   //CPPUNIT_ASSERT( spawned_socket.isOpen() );
-   if ( status.success() != true )
+   try
    {
-      CPPUNIT_ASSERT( status.inProgress() == true );
+      acceptor_socket.accept( spawned_socket );
+   }
+   catch (vpr::WouldBlockException& ex)
+   {
+      // Do nothing.
+   }
+   catch (vpr::IOException& ex)
+   {
+      // TODO: Should be able to just try.
+      CPPUNIT_ASSERT(false && "Accept failed.");
    }
 
    // a/c/s: Close
-   status = acceptor_socket.close();
-   CPPUNIT_ASSERT( status.failure() != true );
-   status = connector_socket.close();
-   CPPUNIT_ASSERT( status.failure() != true );
-   status = spawned_socket.close();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.close());
+   CPPUNIT_ASSERT_NO_THROW(connector_socket.close());
+   CPPUNIT_ASSERT_NO_THROW(spawned_socket.close());
 }
 
 void NonBlockingSocketTest::testNonBlockingTransfer ()
 {
-   threadAssertReset();
-
    mState        = NOT_READY;                        // Initialize
    mAcceptorPort = 34567;
    mMessage      = "The sixth sheik's sixth sheep's sick";
@@ -150,29 +144,24 @@ void NonBlockingSocketTest::testNonBlockingTransfer ()
    // Wait for threads
    acceptor_thread.join();
    connector_thread.join();
-
-   checkThreadAssertions();
 }
 
 void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
 {
    boost::ignore_unused_variable_warning(arg);
 
-   vpr::ReturnStatus status;
    vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
    vpr::InetAddr acceptor_addr;
    acceptor_addr.setPort(mAcceptorPort);
 
-   status = acceptor.open(acceptor_addr);
-   assertTestThread(status.success() && "Failed to open acceptor");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to open acceptor", acceptor.open(acceptor_addr));
 
    // The acceptor must be non-blocking so that the connected socket it
    // returns will also be non-blocking.  *sigh*
-   status = acceptor.getSocket().setBlocking(false);
-   assertTestThread(status.success() &&
-                    "Failed to enable non-blocking for accepted socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to enable non-blocking for accepted socket",
+      acceptor.getSocket().setBlocking(false));
 
    mCondVar.acquire();
    {
@@ -180,22 +169,32 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
       mCondVar.signal();
    }
    mCondVar.release();
-
-   do
+   
+   bool running(true);
+   while (running)
    {
-      status = acceptor.accept(client_sock);
+      try
+      {
+         acceptor.accept(client_sock);
+         running = false;
+      }
+      catch (vpr::WouldBlockException& ex)
+      {
+         // Do nothing.
+      }
+      catch (vpr::Exception& ex)
+      {
+         CPPUNIT_ASSERT_NO_THROW(throw);
+      }
    }
-   while ( status == vpr::ReturnStatus::WouldBlock );
 
-   assertTestThread(status.success() && "Accept failed");
-
-   assertTestThread(client_sock.isOpen() && "Accepted socket should be open");
-   assertTestThread(! client_sock.isBlocking() &&
+   CPPUNIT_ASSERT(client_sock.isOpen() && "Accepted socket should be open");
+   CPPUNIT_ASSERT(! client_sock.isBlocking() &&
                     "Connected client socket should be non-blocking");
 
    client_sock.setNoDelay(true);
-   status = client_sock.send(mMessage, mMessageLen, bytes_written);
-   assertTestThread(! status.failure() && "Failed to send message to client");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to send message to client",
+      client_sock.send(mMessage, mMessageLen, bytes_written));
 
    mCondVar.acquire();
    {
@@ -213,19 +212,15 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
    }
    mCondVar.release();
 
-   status = client_sock.close();
-   assertTestThread(status.success() &&
-                    "Could not close acceptor side of client socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor side of client socket", client_sock.close());
 
-   status = acceptor.close();
-   assertTestThread(status.success() && "Could not close acceptor");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor", acceptor.close());
 }
 
 void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
 {
    boost::ignore_unused_variable_warning(arg);
 
-   vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;
    vpr::SocketStream con_sock;
@@ -243,19 +238,14 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
    }
    mCondVar.release();
 
-   status = con_sock.open();
-   assertTestThread(status.success() && "Failed to open connector socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to open connector socket", con_sock.open());
 
-   status = con_sock.setBlocking(false);
-   assertTestThread(status.success() &&
-                    "Failed to enable non-blocking for connector");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to enable non-blocking for connector", con_sock.setBlocking(false));
 
-   status = connector.connect(con_sock, remote_addr,
-                              vpr::Interval(5, vpr::Interval::Sec));
-   assertTestThread(! status.failure() && "Connector can't connect");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect",
+      connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec)));
 
-   assertTestThread(! con_sock.isBlocking() &&
-                    "Connector should be non-blocking");
+   CPPUNIT_ASSERT(! con_sock.isBlocking() && "Connector should be non-blocking");
 
    mCondVar.acquire();
    {
@@ -266,9 +256,11 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
    }
    mCondVar.release();
 
-   status = con_sock.recv(data, mMessageLen, bytes_read);
-
-   if ( status == vpr::ReturnStatus::WouldBlock )
+   try
+   {
+      con_sock.recv(data, mMessageLen, bytes_read);
+   }
+   catch (vpr::WouldBlockException& ex)
    {
       // Make sure we got all the data, then close.
       while ( con_sock.isReadBlocked() )
@@ -278,15 +270,12 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
                                  << vprDEBUG_FLUSH;
       }
    }
-   else if ( status.success() )
+   catch(...)
    {
-      assertTestThread(bytes_read == mMessageLen &&
-                       "Connector received message of wrong size");
+      CPPUNIT_ASSERT(false && "Connector could not receive message");
    }
-   else
-   {
-      assertTestThread(false && "Connector could not receive message");
-   }
+   CPPUNIT_ASSERT(bytes_read == mMessageLen &&
+                    "Connector received message of wrong size");
 
    mCondVar.acquire();
    {
@@ -301,9 +290,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
 void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
 {
    int port = 6275;
-   //bool result = false;
    vpr::InetAddr local_addr;
-   vpr::ReturnStatus status;
    local_addr.setPort( port );
    vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
    vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
@@ -313,10 +300,8 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    connector_socket.setBlocking(false);
 
    // a/c: Open
-   status = acceptor_socket.open();
-   CPPUNIT_ASSERT( status.failure() != true );
-   status = connector_socket.open();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.open());
+   CPPUNIT_ASSERT_NO_THROW(connector_socket.open());
 
    CPPUNIT_ASSERT(! acceptor_socket.isBlocking());
    CPPUNIT_ASSERT(! connector_socket.isBlocking());
@@ -336,24 +321,29 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    CPPUNIT_ASSERT(! connector_socket.isBlocking());
 
    // a:   bind
-   status = acceptor_socket.bind();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.bind());
 
    // a:   listen
-   status = acceptor_socket.listen();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.listen());
 
    // c:   connect
-   status = connector_socket.connect();
-   CPPUNIT_ASSERT( status.failure() != true );
-   if ( status.success() != true )
+   try
    {
-      CPPUNIT_ASSERT( status.inProgress() == true );
+      connector_socket.connect();
+   }
+   catch (vpr::WouldBlockException& ex)
+   {
+      // Do nothing.
+   }
+   catch (vpr::IOException& ex)
+   {
+      // TODO: Should be able to just try.
+      CPPUNIT_ASSERT(false && "Connect failed.");
    }
 
    // block until connection request goes through
    vpr::Uint16 num_events;
-   status = selector.select( num_events, vpr::Interval(50000,vpr::Interval::Msec) );
+   selector.select( num_events, vpr::Interval(50000,vpr::Interval::Msec) );
    for (int j = 0; j < selector.getNumHandles(); ++j)
    {
       if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::Read | vpr::Selector::Except))
@@ -367,27 +357,26 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
 
    // a:   accept
    vpr::SocketStream spawned_socket;
-   status = acceptor_socket.accept( spawned_socket );
-   CPPUNIT_ASSERT( status.success() == true && "accepted socket is NULL" );
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("accepted socket is NULL",  acceptor_socket.accept( spawned_socket ));
    CPPUNIT_ASSERT( spawned_socket.isOpen() && "accepted socket should be open" );
 
    // s:    write...
    std::string message = "Hi Maynard, My leg hurts";
    vpr::Uint32 bytes_written;
-   status = spawned_socket.write( message, message.size(), bytes_written );
-   CPPUNIT_ASSERT( status.success() && "Problem writing in acceptor" );
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE( "Problem writing in acceptor",
+      spawned_socket.write( message, message.size(), bytes_written ));
 
    // s:    write the max size...
    size_t size;
-   status = spawned_socket.getSendBufferSize( size );
-   CPPUNIT_ASSERT( status.success() && "couldn't get the max size for sending data with socket" );
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE( "couldn't get the max size for sending data with socket",
+      spawned_socket.getSendBufferSize( size ));
    message.resize( size );
-   status = spawned_socket.write( message, message.size(), bytes_written );
-   CPPUNIT_ASSERT( status.success() && "maxsize test failed" );
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE( "maxsize test failed",
+      spawned_socket.write( message, message.size(), bytes_written ));
 
    // block until data is sent
 /*
-   status = selector.select( num_events, 50000 );
+   selector.select( num_events, 50000 );
    for (int j = 0; j < selector.getNumHandles(); ++j)
    {
       if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::Read | vpr::Selector::Except))
@@ -399,23 +388,18 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    CPPUNIT_ASSERT( num_events > 0 && "no events" );
 
    // c:     read
-   status = connector_socket.read( message, message.size(), bytes_written );
+   connector_socket.read( message, message.size(), bytes_written );
    CPPUNIT_ASSERT( status.success() && "read test failed" );
 */
 
    // a/c/s: Close
-   status = acceptor_socket.close();
-   CPPUNIT_ASSERT( status.failure() != true );
-   status = connector_socket.close();
-   CPPUNIT_ASSERT( status.failure() != true );
-   status = spawned_socket.close();
-   CPPUNIT_ASSERT( status.failure() != true );
+   CPPUNIT_ASSERT_NO_THROW(acceptor_socket.close());
+   CPPUNIT_ASSERT_NO_THROW(connector_socket.close());
+   CPPUNIT_ASSERT_NO_THROW(spawned_socket.close());
 }
 
 void NonBlockingSocketTest::testSendUDP ()
 {
-   threadAssertReset();
-
    mState        = NOT_READY;                        // Initialize
    mReceiverPort = 34567;
    mSenderPort   = mReceiverPort + 1;
@@ -424,7 +408,7 @@ void NonBlockingSocketTest::testSendUDP ()
 
    // Spawn acceptor thread
    vpr::ThreadMemberFunctor<NonBlockingSocketTest>* receiver_functor =
-         new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_receiver);
+      new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_receiver);
    vpr::Thread receiver_thread(receiver_functor);
 
    // Spawn connector thread
@@ -435,30 +419,24 @@ void NonBlockingSocketTest::testSendUDP ()
    // Wait for threads
    receiver_thread.join();
    sender_thread.join();
-
-   checkThreadAssertions();
 }
 
 void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
 {
    boost::ignore_unused_variable_warning(arg);
 
-   vpr::ReturnStatus status;
    vpr::InetAddr my_addr, from_addr;
    my_addr.setPort(mReceiverPort);
    std::string data;
    vpr::Uint32 bytes_read;
    vpr::SocketDatagram recv_sock(my_addr, vpr::InetAddr::AnyAddr);
 
-   status = recv_sock.open();
-   assertTestThread(status.success() && "Failed to open receiver socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to open receiver socket", recv_sock.open());
 
-   status = recv_sock.setBlocking(false);
-   assertTestThread(status.success() &&
-                    "Failed to enable non-blocking for receiver");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to enable non-blocking for receiver",
+      recv_sock.setBlocking(false));
 
-   status = recv_sock.bind();
-   assertTestThread(status.success() && "Failed to bind receiver socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to bind receiver socket", recv_sock.bind());
 
    mCondVar.acquire();
    {
@@ -467,14 +445,26 @@ void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
    }
    mCondVar.release();
 
-   do
+   // TODO: Fix with readn?
+   bool running(true);
+   while (running)
    {
-      status = recv_sock.recvfrom(data, mMessageLen, from_addr, bytes_read);
-      vpr::System::usleep(10);
-   } while ( status == vpr::ReturnStatus::WouldBlock );
-
-   assertTestThread(status.success() && "Failed to receive message");
-
+      try
+      {
+         recv_sock.recvfrom(data, mMessageLen, from_addr, bytes_read);
+         running = false;
+      }
+      catch (vpr::WouldBlockException& ex)
+      {
+         vpr::System::usleep(10);
+         // Do nothing.
+      }
+      catch (vpr::Exception& ex)
+      {
+         CPPUNIT_ASSERT_NO_THROW(throw);
+      }
+   }
+   
    mCondVar.acquire();
    {
       mState = DATA_RECEIVED;
@@ -482,18 +472,16 @@ void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
    }
    mCondVar.release();
 
-   assertTestThread(bytes_read == mMessageLen && "Did not receive entire message");
-   assertTestThread(data == mMessage);
+   CPPUNIT_ASSERT(bytes_read == mMessageLen && "Did not receive entire message");
+   CPPUNIT_ASSERT(data == mMessage);
 
-   status = recv_sock.close();
-   assertTestThread(status.success() && "Could not close receiver socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close receiver socket", recv_sock.close());
 }
 
 void NonBlockingSocketTest::testSendUDP_sender (void* arg)
 {
    boost::ignore_unused_variable_warning(arg);
 
-   vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    vpr::SocketDatagram send_sock;
    vpr::Uint32 bytes;
@@ -509,18 +497,15 @@ void NonBlockingSocketTest::testSendUDP_sender (void* arg)
    }
    mCondVar.release();
 
-   status = send_sock.open();
-   assertTestThread(status.success() && "Failed to open sender socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to open sender socket", send_sock.open());
 
-   status = send_sock.setBlocking(false);
-   assertTestThread(status.success() &&
-                    "Failed to enable non-blocking for sender");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to enable non-blocking for sender", send_sock.setBlocking(false));
 
-   status = send_sock.sendto(mMessage, mMessageLen, remote_addr, bytes);
-   assertTestThread(status.success() && "Failed to send to receiver");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to send to receiver",
+      send_sock.sendto(mMessage, mMessageLen, remote_addr, bytes));
 
-   status = send_sock.close();
-   assertTestThread(status.success() && "Could not close sender socket");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close sender socket",
+      send_sock.close());
 }
 
 } // End of vprTest namespace

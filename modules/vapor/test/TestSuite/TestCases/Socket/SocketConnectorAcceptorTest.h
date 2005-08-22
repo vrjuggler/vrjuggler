@@ -8,7 +8,6 @@
 #include <MySuites.h>
 
 #include <cppunit/TestCase.h>
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -22,7 +21,7 @@
 namespace vprTest
 {
 
-class SocketConnectorAcceptorTest : public CppUnit::ThreadTestCase
+class SocketConnectorAcceptorTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SocketConnectorAcceptorTest);
 #ifndef VPR_SIMULATOR
@@ -33,11 +32,11 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    SocketConnectorAcceptorTest()
-   : CppUnit::ThreadTestCase ()
+   : CppUnit::TestCase ()
    {;}
 
    SocketConnectorAcceptorTest(std::string name)
-   : CppUnit::ThreadTestCase (name)
+   : CppUnit::TestCase (name)
    {;}
 
    virtual ~SocketConnectorAcceptorTest()

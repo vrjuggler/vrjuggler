@@ -4,7 +4,6 @@
 #include <string>
 
 #include <cppunit/TestCase.h>
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 
 #include <cppunit/TestFixture.h>
@@ -32,7 +31,7 @@ typedef struct _thread_args thread_args_t;
 namespace vprTest
 {
 
-class SocketTest : public CppUnit::ThreadTestCase
+class SocketTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SocketTest);
 // None of these tests can be used with the simulator because they all
@@ -56,14 +55,14 @@ CPPUNIT_TEST_SUITE_END();
 
 public:
    SocketTest( )
-      : CppUnit::ThreadTestCase (),
+      : CppUnit::TestCase (),
         testSendRecv_buffer( "we're sending DATA!!!" )
    {
       init();
    }
 
    SocketTest(std::string name)
-      : CppUnit::ThreadTestCase (name),
+      : CppUnit::TestCase (name),
         testSendRecv_buffer( "we're sending DATA!!!" )
    {
       init();

@@ -8,7 +8,6 @@
 #include <MySuites.h>
 
 #include <cppunit/TestCase.h>
-#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -19,15 +18,15 @@
 namespace vprTest
 {
 
-class SocketBandwidthIOStatsTest : public CppUnit::ThreadTestCase
+class SocketBandwidthIOStatsTest : public CppUnit::TestCase
 {
 public:
    SocketBandwidthIOStatsTest()
-   : CppUnit::ThreadTestCase ()
+   : CppUnit::TestCase ()
    {;}
 
    SocketBandwidthIOStatsTest(std::string name)
-   : CppUnit::ThreadTestCase (name)
+   : CppUnit::TestCase (name)
    {;}
 
    virtual ~SocketBandwidthIOStatsTest()
