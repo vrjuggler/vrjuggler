@@ -84,7 +84,7 @@ public:
       {
          port->open();
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          return -1;
       }

@@ -346,7 +346,7 @@ vpr::ReturnStatus MotionStarStandalone::start()
    {
       m_socket->open();
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       // TODO: setCause(ex)
       std::stringstream msg_stream;
@@ -374,7 +374,7 @@ vpr::ReturnStatus MotionStarStandalone::start()
       {
          m_socket->connect();
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          // XXX: Use VPR's error message stuff for this one...
@@ -2058,7 +2058,7 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
       m_socket->send(packet, packetSize, bytes);
    }
    // An error occurred while trying to send the packet.
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       std::string msg("Could not send message to ");
       msg += m_address.getAddressString();
@@ -2112,7 +2112,7 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
       m_socket->recvn(packet, packetSize, bytes);
    }
    // An error occurred while trying to receive the packet.
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       std::string msg("Could not read message from ");
       msg += m_address.getAddressString();

@@ -68,7 +68,7 @@ namespace gadget
       {
          mPort->open();
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          return(vpr::ReturnStatus::Fail);
       }
@@ -302,7 +302,7 @@ namespace gadget
          // If read without an error.
          mPort->write(&first, 1, written);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // Do nothing.
       }
@@ -325,7 +325,7 @@ namespace gadget
       {
          mPort->read(&temp_byte, 1, read, read_timeout);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 
@@ -338,7 +338,7 @@ namespace gadget
          {
             mPort->read(&temp_byte, 1, read, read_timeout);
          }
-         catch (vpr::IOException& ex)
+         catch (vpr::IOException&)
          {
             // TODO: setCause(ex)
             throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 
@@ -353,7 +353,7 @@ namespace gadget
       {
          mPort->read(&temp_byte, 1, read, read_timeout);
       }
-      catch (vpr::IOException& ex)
+      catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
          throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 
@@ -370,7 +370,7 @@ namespace gadget
          {
             mPort->read(&temp_byte, 1, read, read_timeout);
          }
-         catch (vpr::IOException& ex)
+         catch (vpr::IOException&)
          {
             // TODO: setCause(ex)
             throw PinchGlove::TimeoutException("[PinchGlove] Timeout occured while trying to read."); 

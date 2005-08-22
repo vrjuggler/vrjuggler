@@ -186,7 +186,7 @@ int DataGloveStandalone::mConnectToHardware(const std::string& tty_port, int bau
    {
       mPort->open();
    }
-   catch (vpr::IOException& ex)
+   catch (vpr::IOException&)
    {
       std::cout << "[dataGlove] Port (" << tty_port
          << ") open failed\n" << std::flush;
