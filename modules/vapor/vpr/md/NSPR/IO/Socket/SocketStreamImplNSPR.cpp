@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <sstream>
 #include <string.h>
 
 #ifdef HAVE_STRINGS_H
@@ -51,8 +52,10 @@
 #include <prio.h>
 #include <prinrval.h>
 
-#include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
+#include <vpr/IO/WouldBlockException.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 
 
 namespace vpr
@@ -82,48 +85,51 @@ SocketStreamImplNSPR::SocketStreamImplNSPR(const vpr::InetAddr& localAddr,
 }
 
 // Listen on the socket for incoming connection requests.
-vpr::ReturnStatus SocketStreamImplNSPR::listen(const int backlog)
+void SocketStreamImplNSPR::listen(const int backlog) throw (SocketException)
 {
-   vpr::ReturnStatus retval;
-   PRStatus status;
-
    if ( !mBound )        // To listen, we must be bound
    {
+      std::stringstream msg_stream;
+      msg_stream << "[vpr::SocketStreamImplNSPR::listen()] "
+              << "Trying to listen on an unbound socket.";
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[vpr::SocketStreamImplNSPR::listen()] "
-         << "Trying to listen on an unbound socket.\n" << vprDEBUG_FLUSH;
-      retval.setCode(vpr::ReturnStatus::Fail);
+         << msg_stream.str() << std::endl << vprDEBUG_FLUSH;
+      throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
       // Put the socket into listning mode.  If that fails, print an error
       // and return error status.
-      status = PR_Listen(mHandle, backlog);
+      PRStatus status = PR_Listen(mHandle, backlog);
 
       if ( PR_FAILURE == status )
       {
-         vpr::Error::outputCurrentError(std::cerr,
-                                        "[vpr::SocketStreamImplNSPR::listen()] Cannot listen on socket: ");
-         retval.setCode(vpr::ReturnStatus::Fail);
+         std::stringstream msg_stream;
+         msg_stream << "[vpr::SocketStreamImplNSPR::listen()] "
+                    << "Cannot listen on socket";
+         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
+
+         msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
       }
    }
-
-   return retval;
 }
 
 // Accept an incoming connection request.
-vpr::ReturnStatus SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
-                                               vpr::Interval timeout)
+void SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
+                                  vpr::Interval timeout)
+   throw (SocketException)
 {
-   vpr::ReturnStatus retval;
    vpr::InetAddr addr;
 
    if ( ! mBound )        // To listen, we must be bound
    {
+      std::stringstream msg_stream;
+      msg_stream << "[vpr::SocketStreamImplNSPR::listen()] "
+                 << "Trying to accept on an unbound socket.";
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[vpr::SocketStreamImplNSPR::accept()] "
-         << "Trying to accept on an unbound socket.\n" << vprDEBUG_FLUSH;
-      retval.setCode(vpr::ReturnStatus::Fail);
+         << msg_stream.str() << std::endl << vprDEBUG_FLUSH;
+      throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
@@ -143,17 +149,23 @@ vpr::ReturnStatus SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
 
          if ( err_code == PR_WOULD_BLOCK_ERROR )
          {
-            retval.setCode(vpr::ReturnStatus::WouldBlock);
+            throw WouldBlockException("Would block while accepting.",
+                                      VPR_LOCATION);
          }
          else if ( err_code == PR_IO_TIMEOUT_ERROR )
          {
-            retval.setCode(vpr::ReturnStatus::Timeout);
+            throw TimeoutException("Timeout occured when accepting connection.",
+                                   VPR_LOCATION);
          }
          else
          {
-            vpr::Error::outputCurrentError(std::cerr,
-                                           "[vpr::SocketStreamImplNSPR::accept()] Cannot accept on socket: ");
-            retval.setCode(vpr::ReturnStatus::Fail);
+            std::stringstream msg_stream;
+            msg_stream << "[vpr::SocketStreamImplNSPR::listen()] "
+                       << "Cannot accept on socket";
+            vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
+
+            msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+            throw SocketException(msg_stream.str(), VPR_LOCATION);
          }
       }
       // Otherwise, put the new socket in the passed socket object.
@@ -163,13 +175,11 @@ vpr::ReturnStatus SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
          sock.setRemoteAddr(addr);
          sock.mOpen = true;
          sock.mBound = true;
-         sock.mConnected = true;
+         sock.mConnectCalled = true;
          sock.mBlocking = mBlocking;
          sock.mBlockingFixed = true;
       }
    }
-
-   return retval;
 }
 
 } // End of vpr namespace

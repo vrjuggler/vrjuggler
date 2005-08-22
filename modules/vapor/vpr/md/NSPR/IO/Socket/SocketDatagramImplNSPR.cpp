@@ -41,9 +41,13 @@
 
 #include <vpr/vprConfig.h>
 
+#include <sstream>
 #include <prio.h>
 #include <prinrval.h>
 
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/WouldBlockException.h>
+#include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/Util/Error.h>
 #include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
 
@@ -55,13 +59,12 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
-                                                   const vpr::Uint32 length,
-                                                   vpr::InetAddr& from,
-                                                   vpr::Uint32& bytesRead,
-                                                   const vpr::Interval timeout)
+void SocketDatagramImplNSPR::recvfrom(void* msg, const vpr::Uint32 length,
+                                      vpr::InetAddr& from,
+                                      vpr::Uint32& bytesRead,
+                                      const vpr::Interval timeout)
+   throw (IOException)
 {
-   ReturnStatus retval;
    PRInt32 bytes;
 
    bytes = PR_RecvFrom(mHandle, msg, length, 0, from.getPRNetAddr(),
@@ -77,37 +80,69 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
 
       bytesRead = 0;
 
+      const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
+      std::stringstream msg_stream;
+
       if ( err_code == PR_WOULD_BLOCK_ERROR )
       {
-         retval.setCode(vpr::ReturnStatus::WouldBlock);
+         msg_stream << "Would block while writing";
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw WouldBlockException(msg_stream.str(), VPR_LOCATION);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
-         retval.setCode(ReturnStatus::Timeout);
+         msg_stream << "recvfrom operation timed out";
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw TimeoutException(msg_stream.str(), VPR_LOCATION);
       }
       else
       {
-         vpr::Error::outputCurrentError(std::cerr,
-                                        "SocketDatagramImplNSPR::recvfrom: Could not read from socket");
-         retval.setCode(ReturnStatus::Fail);
+         msg_stream << "[vpr::SocketDatagramImplNSPR::recvfrom()] Could not "
+                    << "read from socket";
+         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
       }
    }
    else if ( bytes == 0 )      // Not connected
    {
-      retval.setCode(ReturnStatus::NotConnected);
       bytesRead = bytes;
-   }
 
-   return retval;
+      std::stringstream msg_stream;
+      msg_stream << "Connection closed";
+      const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
+
+      if ( ! nspr_err_msg.empty() )
+      {
+         msg_stream << ": " << nspr_err_msg;
+      }
+
+      // XXX: Do we need a NotConnectedException?
+      throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
+   }
 }
 
-vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
-                                                 const vpr::Uint32 length,
-                                                 const vpr::InetAddr& to,
-                                                 vpr::Uint32& bytesSent,
-                                                 const vpr::Interval timeout)
+void SocketDatagramImplNSPR::sendto(const void* msg, const vpr::Uint32 length,
+                                    const vpr::InetAddr& to,
+                                    vpr::Uint32& bytesSent,
+                                    const vpr::Interval timeout)
+   throw (IOException)
 {
-   ReturnStatus retval;
    PRInt32 bytes;
 
    bytes = PR_SendTo(mHandle, msg, length, 0, to.getPRNetAddr(),
@@ -119,31 +154,61 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
 
       bytesSent = 0;
 
+      const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
+      std::stringstream msg_stream;
+
       if ( err_code == PR_WOULD_BLOCK_ERROR )
       {
-         retval.setCode(vpr::ReturnStatus::WouldBlock);
+         msg_stream << "Would block while writing";
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw WouldBlockException(msg_stream.str(), VPR_LOCATION);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
-         retval.setCode(ReturnStatus::Timeout);
+         msg_stream << "Write operation timed out";
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw TimeoutException(msg_stream.str(), VPR_LOCATION);
       }
       else if ( err_code == PR_NOT_CONNECTED_ERROR )
       {
-         retval.setCode(vpr::ReturnStatus::NotConnected);
+         msg_stream << "Connection reset";
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         // XXX: Do we need a NotConnectedException?
+         throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
       }
       else
       {
-         vpr::Error::outputCurrentError(std::cerr,
-                                        "SocketDatagramImplNSPR::sendto: Could not send message");
-         retval.setCode(ReturnStatus::Fail);
+         msg_stream << "[vpr::SocketDatagramImplNSPR::sendto()] Could not "
+                    << "send message";
+         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
       }
    }
    else
    {
       bytesSent = bytes;
    }
-
-   return retval;
 }
 
 } // End of vpr namespace

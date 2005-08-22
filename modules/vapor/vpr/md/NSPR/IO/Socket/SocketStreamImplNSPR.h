@@ -108,15 +108,12 @@ public:
     *
     * @param backlog The maximum length of the queue of pending connections.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
-    *         listening state.
-    * @return vpr::ReturnStatus::Fail is returned if this socket could not be
-    *         put into a listening state.  An error message is printed
-    *         explaining what went wrong.
+    * @throw vpr::SocketException If the socket could not be put into a
+    *                             listening state.
     *
     * @see open, bind
     */
-   vpr::ReturnStatus listen(const int backlog = 5);
+   void listen(const int backlog = 5) throw (SocketException);
 
    /**
     * Accepts an incoming connection request and returns the connected socket
@@ -130,21 +127,20 @@ public:
     *                used to return the newly connected socket.
     * @param timeout The length of time to wait for the accept call to return.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the new connection was
-    *         accepted succesfully.
-    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
-    *         non-blocking socket, and there are no waiting connection
-    *         requests.
-    * @return vpr::ReturnStatus::Timeout is returned when no connections
-    *         requests arrived within the given timeout period.
-    * @return vpr::ReturnStatus::Fail is returned if the connection was not
-    *         accepted.  An error message is printed explaining what went
-    *         wrong.
+    * @throw vpr::WouldBlockException
+    *           If this is a non-blocking socket, and there are no waiting
+    *           connection requests.
+    * @throw vpr::TimeoutException
+    *           If no connection requests arrived within the given timeout
+    *           period.
+    * @throw vpr::SocketException
+    *           If the connection was not accepted because of an error.
     *
     * @see open, bind, listen
     */
-   vpr::ReturnStatus accept(SocketStreamImplNSPR& sock,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void accept(SocketStreamImplNSPR& sock,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (SocketException);
 };
 
 } // End of vpr namespace

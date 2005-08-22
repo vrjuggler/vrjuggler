@@ -42,12 +42,43 @@
 #include <vpr/vprConfig.h>
 
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <string.h>
 
-#include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 
+
+namespace
+{
+
+/** Helper function for error reporting within this file. */
+std::string getErrorMessage(const DWORD errorCode)
+{
+   char* msg_buffer(NULL);
+   FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+                 NULL, errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                 (LPTSTR) &msg_buffer, 0, NULL);
+
+   // Copy the contents of msg_buffer into err_msg and then release the memory
+   // allocated for msg_buffer. What a hassle.
+   std::string err_msg(msg_buffer);
+   LocalFree(msg_buffer);
+
+   return err_msg;
+}
+
+std::string getErrorMessageWithCode(const DWORD errorCode)
+{
+   std::stringstream msg_stream;
+   msg_stream << getErrorMessage(errorCode) << " (error code = " << errorCode
+              << ")";
+   return msg_stream.str();
+}
+
+}
 
 namespace vpr
 {
@@ -75,9 +106,8 @@ SerialPortImplWin32::~SerialPortImplWin32()
 }
 
 // Open the serial port and initialize its flags.
-vpr::ReturnStatus SerialPortImplWin32::open()
+void SerialPortImplWin32::open() throw (IOException)
 {
-   vpr::ReturnStatus status;
    COMMTIMEOUTS gct;
    mHandle = CreateFile( mName.c_str(),
                          mOpenFlag,
@@ -89,22 +119,38 @@ vpr::ReturnStatus SerialPortImplWin32::open()
                        );
 
    if ( mHandle == INVALID_HANDLE_VALUE )
-   {  // Handle the error.
-      std::cout << "CreateFile failed with error: " << GetLastError()
-                << std::endl;
-      status.setCode(vpr::ReturnStatus::Fail);
-      return status;
+   {
+      // Report the error.
+      std::stringstream msg_stream;
+      msg_stream << "CreateFile() failed for " << mName
+                 << ": " << getErrorMessageWithCode(GetLastError());
+
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR") << ": " << msg_stream.str()
+         << std::endl << std::endl << vprDEBUG_FLUSH;
+
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
+
    gct.ReadIntervalTimeout =0;
    gct.ReadTotalTimeoutConstant=0;
    gct.ReadTotalTimeoutMultiplier=0;
    gct.WriteTotalTimeoutConstant=5000;
    gct.WriteTotalTimeoutMultiplier=0;
-   if ( !SetCommTimeouts(mHandle,&gct) )
+
+   if ( ! SetCommTimeouts(mHandle, &gct) )
    {
-      std::cout << "Timeout initialization failed." << std::endl;
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Timeout initialization for " << mName << " failed: "
+                 << getErrorMessageWithCode(GetLastError());
+
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
+
    DCB dcb;
    GetCommState(mHandle, &dcb);
    SetCommState(mHandle, &dcb);
@@ -112,32 +158,35 @@ vpr::ReturnStatus SerialPortImplWin32::open()
    setHardwareFlowControl(false);
 
    mOpen = true;
-   return status;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::close()
+void SerialPortImplWin32::close() throw (IOException)
 {
-   vpr::ReturnStatus retval;
-
-   if ( !CloseHandle(mHandle) )
+   if ( ! CloseHandle(mHandle) )
    {
-      retval.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "[vpr::SerialPortImplWin32::close()] Could not close "
+                 << mName << ": " << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << msg_stream.str() << std::endl << vprDEBUG_FLUSH;
+
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
 
-   mHandle=NULL;
-
-   return retval;
+   mHandle = NULL;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setBlocking(bool blocking)
+void SerialPortImplWin32::setBlocking(bool blocking) throw (IOException)
 {
-   vpr::ReturnStatus status;
-
    if ( ! mOpen )
    {
-       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-          << "ERROR: Enabling blocking mode after port open is unsuported in Win32."
-          << std::endl << vprDEBUG_FLUSH;
+      std::stringstream msg_stream;
+      msg_stream << "Enabling blocking mode after port open is unsupported "
+                 << "on Windows.";
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
@@ -148,15 +197,16 @@ vpr::ReturnStatus SerialPortImplWin32::setBlocking(bool blocking)
       else
       {
          // XXX: Still not sure why this is not supported.
+         std::stringstream msg_stream;
+         msg_stream << "Non-blocking serial ports are not currently "
+                    << "supported on Windows.";
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "ERROR: Non-Blocking not currently supported in win32."
+            << clrOutBOLD(clrRED, "ERROR") << ": " << msg_stream.str()
             << std::endl << vprDEBUG_FLUSH;
-         status.setCode(vpr::ReturnStatus::Fail);
+         throw IOException(msg_stream.str(), VPR_LOCATION);
 //         mBlocking |= FILE_FLAG_OVERLAPPED;
       }
    }
-
-   return status;
 }
 
 vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction()
@@ -168,71 +218,78 @@ vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction()
    return update;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::clearAll()
+void SerialPortImplWin32::clearAll() throw (IOException)
 {
-   // Not implemented yet...
-   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+   /* XXX: Not implemented yet... */ ;
 }
 
 void SerialPortImplWin32::setUpdateAction(SerialTypes::UpdateActionOption action)
 {
    /* Do Nothing */
-   std::cout << "Update action always NOW in Win32" << std::endl;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "NOTE: Serial port update action is always NOW on Windows."
+      << std::endl << vprDEBUG_FLUSH;
 }
 
 // Query the serial port for the maximum buffer size.
-vpr::ReturnStatus SerialPortImplWin32::getMinInputSize(vpr::Uint16 &size) const
+void SerialPortImplWin32::getMinInputSize(vpr::Uint16& size) const
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
    COMMPROP lpCommProp;
    if ( !GetCommProperties(mHandle, &lpCommProp) ||
         (int)lpCommProp.dwCurrentTxQueue == 0 )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
-      std::cout << "Maximum buffer size is unavailable.\n";
+      throw IOException("Maximum buffer size is unavailable.", VPR_LOCATION);
    }
    else
    {
       size = lpCommProp.dwCurrentTxQueue;
    }
-
-   return s;
 }
 
 // Attempt to change the buffer size to the given argument.
-vpr::ReturnStatus SerialPortImplWin32::setMinInputSize(const vpr::Uint8 size)
+void SerialPortImplWin32::setMinInputSize(const vpr::Uint8 size)
+   throw (IOException)
 {
-   ReturnStatus s;
-   if ( !SetupComm(mHandle, (int)size, (int)size) )
+   if ( ! SetupComm(mHandle, (int)size, (int)size) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
-      std::cout << "Could not set the minimum buffer size - "<<GetLastError()<<"\n";
+      std::stringstream msg_stream;
+      msg_stream << "Could not set the minimum buffer size: "
+                 << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return s;
 }
 
 // Get the value of the timeout (in tenths of a second) to wait for data to
 // arrive.  This is only applicable in non-canonical mode.
-vpr::ReturnStatus SerialPortImplWin32::getTimeout(vpr::Uint8& timeout) const
+void SerialPortImplWin32::getTimeout(vpr::Uint8& timeout) const
+   throw (IOException)
 {
    COMMTIMEOUTS t;
-   vpr::ReturnStatus retval;
-   if ( !GetCommTimeouts(mHandle, &t) )
+   if ( ! GetCommTimeouts(mHandle, &t) )
    {
-      retval.setCode(vpr::ReturnStatus::Fail);
-      std::cout << "The timeout value is unavailable.\n";
+      std::stringstream msg_stream;
+      msg_stream << "The timeout value is unavailable: "
+                 << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
+
    timeout = (int)t.ReadTotalTimeoutConstant/100;
-   return retval;
 }
 
 // Set the value of the timeout to wait for data to arrive.  The value given
 // must be in tenths of a second.  This is only applicable in non-canonical
 // mode.
-vpr::ReturnStatus SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
+void SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
+   throw (IOException)
 {
    COMMTIMEOUTS t;
-   vpr::ReturnStatus retval;
    GetCommTimeouts(mHandle, &t);
 
    mCurrentTimeout=timeout;
@@ -240,15 +297,19 @@ vpr::ReturnStatus SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
    t.ReadTotalTimeoutConstant = (int)timeout*100;
    if ( !SetCommTimeouts(mHandle, &t) )
    {
-      retval.setCode(vpr::ReturnStatus::Fail);
-      std::cout << "Could not set timeout value.\n";
+      std::stringstream msg_stream;
+      msg_stream << "Could not set timeout value: "
+                 << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-
-   return retval;
 }
 
 // Get the character size (the bits per byte).
-vpr::ReturnStatus SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
+void SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size)
+   const throw (IOException)
 {
    vpr::ReturnStatus retval;
    DCB dcb;
@@ -272,16 +333,21 @@ vpr::ReturnStatus SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::Charac
    }
    else
    {
-      retval.setCode(vpr::ReturnStatus::Fail);
-      std::cout << "Error attaining bits/byte.\n";
+      std::stringstream msg_stream;
+      msg_stream << "Failed to acquire bits/byte: "
+                 << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return retval;
 }
 
 // Set the current character size (the bits per byte) to the size in the given
 // value.  This is used for both reding and writing, and the size does not
 // include the parity bit (if any).
-vpr::ReturnStatus SerialPortImplWin32::setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
+void SerialPortImplWin32::setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
+   throw (IOException)
 {
    vpr::ReturnStatus retval;
    DCB dcb;
@@ -301,20 +367,23 @@ vpr::ReturnStatus SerialPortImplWin32::setCharacterSize(const vpr::SerialTypes::
          dcb.ByteSize = 8;
          break;
    }
-   if ( !SetCommState(mHandle,&dcb) )
+
+   if ( ! SetCommState(mHandle,&dcb) )
    {
-      std::cout << GetLastError()<< std::endl<<std::endl;
-      retval.setCode(vpr::ReturnStatus::Fail);
-      std::cout << "Error setting bits/byte.\n";
+      std::stringstream msg_stream;
+      msg_stream << "Failed to set bits/byte: "
+                 << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return retval;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::getStopBits(vpr::Uint8& numBits) const
+void SerialPortImplWin32::getStopBits(vpr::Uint8& numBits) const
+   throw (IOException)
 {
    DCB dcb;
-
-   vpr::ReturnStatus retval;
 
    if ( GetCommState(mHandle, &dcb) )
    {
@@ -330,18 +399,21 @@ vpr::ReturnStatus SerialPortImplWin32::getStopBits(vpr::Uint8& numBits) const
    }
    else
    {
-      std::cout << "Number of stop bits is unavailable.\n";
-      retval.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Number of stop bits is unavailable: "
+                 << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return retval;
 }
 
 // Set the number of stop bits to use.  The value must be either 1 or 2.
-vpr::ReturnStatus SerialPortImplWin32::setStopBits(const vpr::Uint8 numBits)
+void SerialPortImplWin32::setStopBits(const vpr::Uint8 numBits)
+   throw (IOException)
 {
    DCB dcb;
-
-   vpr::ReturnStatus retval;
 
    GetCommState(mHandle, &dcb);
    switch ( (int)numBits )
@@ -353,12 +425,17 @@ vpr::ReturnStatus SerialPortImplWin32::setStopBits(const vpr::Uint8 numBits)
          dcb.StopBits = TWOSTOPBITS;
          break;
    }
-   if ( !SetCommState(mHandle, &dcb) )
+
+   if ( ! SetCommState(mHandle, &dcb) )
    {
-      std::cout << "Error in setting stop bits.\n";
-      retval.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Failed to set stop bits: "
+                 << getErrorMessageWithCode(GetLastError());
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": " << msg_stream.str()
+         << std::endl << vprDEBUG_FLUSH;
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return retval;
 }
 
 // Get the state of parity checking for input.
@@ -368,7 +445,11 @@ bool SerialPortImplWin32::getInputParityCheckState() const
    bool b;
    if ( !GetCommState(mHandle, &dcb) )
    {
-      std::cout << "Error attaining parity checking state.\n";
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING")
+         << ": Error attaining parity checking state: "
+         << getErrorMessageWithCode(GetLastError()) << std::endl
+         << vprDEBUG_FLUSH;
    }
    if ( dcb.fParity == true )
    {
@@ -382,51 +463,52 @@ bool SerialPortImplWin32::getInputParityCheckState() const
 }
 
 // Enable input parity checking.
-vpr::ReturnStatus SerialPortImplWin32::setInputParityCheck(bool flag)
+void SerialPortImplWin32::setInputParityCheck(bool flag) throw (IOException)
 {
-   vpr::ReturnStatus s;
    DCB dcb;
 
    if ( !GetCommState(mHandle, &dcb) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Failed to query serial port state: "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
 
    dcb.fParity = flag;
    if ( !SetCommState(mHandle, &dcb) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Failed to change serial port parity setting: "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-
-   return s;
 }
 
 // Get the current CLOCAL state, if the device is locally attached.
 bool SerialPortImplWin32::getLocalAttachState() const
 {
-   // Not implemented yet...
+   // XXX: Not implemented yet...
    return false;
 }
 
 // Enable CLOCAL, that is the device is locally attached
-vpr::ReturnStatus SerialPortImplWin32::setLocalAttach(bool flag)
+void SerialPortImplWin32::setLocalAttach(bool flag) throw (IOException)
 {
-   // Not implemented yet...
-   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+   /* XXX: Not implemented yet... */ ;
 }
 
 // Get the current state of ignoring BREAK bytes.
 bool SerialPortImplWin32::getBreakByteIgnoreState() const
 {
-   // Not implemented yet...
+   // XXX: Not implemented yet...
    return false;
 }
 
 // Enable ignoring of received BREAK bytes.
-vpr::ReturnStatus SerialPortImplWin32::setBreakByteIgnore(bool flag)
+void SerialPortImplWin32::setBreakByteIgnore(bool flag) throw(IOException)
 {
-   // Not implemented yet...
-   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+   /* XXX: Not implemented yet... */ ;
 }
 
 // Get the current parity checking type (either odd or even).
@@ -444,15 +526,19 @@ vpr::SerialTypes::ParityType SerialPortImplWin32::getParity() const
    }
    else
    {
-      std::cout << "error in attaining parity type\n";
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING")
+         << ": Failed to query serial port parity setting: "
+         << getErrorMessageWithCode(GetLastError()) << std::endl
+         << vprDEBUG_FLUSH;
       return vpr::SerialTypes::PORT_PARITY_ODD;
    }
 }
 
 // Enable odd or even parity.
-vpr::ReturnStatus SerialPortImplWin32::setParity(const vpr::SerialTypes::ParityType& type)
+void SerialPortImplWin32::setParity(const vpr::SerialTypes::ParityType& type)
+   throw (IOException)
 {
-   ReturnStatus s;
    DCB dcb;
    GetCommState(mHandle, &dcb);
 
@@ -466,15 +552,14 @@ vpr::ReturnStatus SerialPortImplWin32::setParity(const vpr::SerialTypes::ParityT
    }
 
    SetCommState(mHandle, &dcb);
-   return s;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::write_i(const void* buffer,
-                                               const vpr::Uint32 length,
-                                               vpr::Uint32& bytesWritten,
-                                               const vpr::Interval timeout)
+void SerialPortImplWin32::write_i(const void* buffer,
+                                  const vpr::Uint32 length,
+                                  vpr::Uint32& bytesWritten,
+                                  const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
    unsigned long bytes;
 
    if ( vpr::Interval::NoTimeout != timeout )
@@ -484,25 +569,26 @@ vpr::ReturnStatus SerialPortImplWin32::write_i(const void* buffer,
          << vprDEBUG_FLUSH;
    }
 
-   if ( !WriteFile(mHandle, buffer, length, &bytes, NULL) )
+   if ( ! WriteFile(mHandle, buffer, length, &bytes, NULL) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
       bytesWritten = 0;
+
+      std::stringstream msg_stream;
+      msg_stream << "Failed to write to serial port " << mName << ": "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
       bytesWritten = bytes;
    }
-
-   return s;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer,
-                                              const vpr::Uint32 length,
-                                              vpr::Uint32& bytesRead,
-                                              const vpr::Interval timeout)
+void SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
+                                 vpr::Uint32& bytesRead,
+                                 const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
    unsigned long bytes;
 
    // Shouldn't be setting this every read, but don't have any other way of
@@ -515,17 +601,15 @@ vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer,
       SetCommTimeouts(mHandle, &t);
    }
 
-   if ( !ReadFile( mHandle, buffer, length, &bytes,NULL) )
+   if ( ! ReadFile(mHandle, buffer, length, &bytes, NULL) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Failed to read from serial port " << mName << ": "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
 
    bytesRead = bytes;
-
-   if(bytes==0)
-   {
-      s.setCode(vpr::ReturnStatus::Timeout);
-   }
 
    //Now set the timeout back
    if ( vpr::Interval::NoTimeout != timeout )
@@ -536,13 +620,20 @@ vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer,
       SetCommTimeouts(mHandle, &t);
    }
 
-   return s;
+   // XXX: Does reading 0 bytes really indicate a timeout?
+   if ( bytes == 0 )
+   {
+      std::stringstream msg_stream;
+      msg_stream << "Timeout while attempting to read from serial port "
+                 << mName;
+      throw TimeoutException(msg_stream.str(), VPR_LOCATION);
+   }
 }
 
-vpr::ReturnStatus SerialPortImplWin32::readn_i(void* buffer,
-                                               const vpr::Uint32 length,
-                                               vpr::Uint32& bytesRead,
-                                               const vpr::Interval timeout)
+void SerialPortImplWin32::readn_i(void* buffer, const vpr::Uint32 length,
+                                  vpr::Uint32& bytesRead,
+                                  const vpr::Interval timeout)
+   throw (IOException)
 {
    //Call read_i for now
    return read_i(buffer,length,bytesRead,timeout);
@@ -558,48 +649,51 @@ bool SerialPortImplWin32::getBadByteIgnoreState() const
 }
 
 // Enable ignoring of received bytes with framing errors or parity errors.
-vpr::ReturnStatus SerialPortImplWin32::setBadByteIgnore(bool flag)
+void SerialPortImplWin32::setBadByteIgnore(bool flag) throw (IOException)
 {
    vpr::ReturnStatus s;
    DCB dcb;
    GetCommState(mHandle, &dcb);
    dcb.fErrorChar = flag;
 
-   if ( !SetCommState(mHandle, &dcb) )
+   if ( ! SetCommState(mHandle, &dcb) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Failed to set bad byte ignore state: "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return s;
 }
 
 // Get the current state of parity generation for outgoing bytes and parity
 // checking for incoming bytes.
-bool SerialPortImplWin32::getParityGenerationState() const
+bool SerialPortImplWin32::getParityGenerationState() const throw (IOException)
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
    if ( dcb.fParity = false )
    {
-      std::cout << "parity checking is not true\n";
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) 
+         << "parity checking is not true\n" << vprDEBUG_FLUSH;
       return false;
    }
    else if ( dcb.Parity != NOPARITY )
    {
-      std::cout << "parity generaton not invoked\n";
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) 
+         << "parity generation not invoked\n" << vprDEBUG_FLUSH;
       return false;
    }
    else
    {
       return true;
    }
-
 }
 
 // Enable parity generation for outgoing bytes and parity checking for
 // incoming bytes.
-vpr::ReturnStatus SerialPortImplWin32::setParityGeneration(bool enableParity)
+void SerialPortImplWin32::setParityGeneration(bool enableParity)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
    DCB dcb;
    GetCommState(mHandle, &dcb);
    dcb.fParity = enableParity;
@@ -621,11 +715,13 @@ vpr::ReturnStatus SerialPortImplWin32::setParityGeneration(bool enableParity)
       dcb.Parity = NOPARITY;
    }
 
-   if ( !SetCommState(mHandle, &dcb) )
+   if ( ! SetCommState(mHandle, &dcb) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Failed to set parity generation state: "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return s;
 }
 
 // Enable marking of bytes with parity errors or framing errors (except
@@ -635,81 +731,89 @@ vpr::ReturnStatus SerialPortImplWin32::setParityGeneration(bool enableParity)
 // If bit stripping is enabled, a valid \377 byte is passed as the two-byte
 // sequence \377 \377.
 bool SerialPortImplWin32::getParityErrorMarkingState() const
+   throw (IOException)
 {
    return mParityMark;
 }
 
 // Enable parity error and framing error marking.
-vpr::ReturnStatus SerialPortImplWin32::setParityErrorMarking(bool flag)
+void SerialPortImplWin32::setParityErrorMarking(bool flag) throw (IOException)
 {
-   vpr::ReturnStatus s;
    DCB dcb;
    GetCommState(mHandle, &dcb);
    dcb.fErrorChar = flag;
-   if ( !SetCommState(mHandle, &dcb) )
-   {
-      s.setCode(vpr::ReturnStatus::Fail);
-   }
 
-   return s;
+   if ( ! SetCommState(mHandle, &dcb) )
+   {
+      std::stringstream msg_stream;
+      msg_stream << "Failed to set parity error marking: "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
+   }
+   else
+   {
+      mParityMark = flag;
+   }
 }
 
 // Get the current input baud rate.
-vpr::ReturnStatus SerialPortImplWin32::getInputBaudRate(vpr::Uint32& rate) const
+void SerialPortImplWin32::getInputBaudRate(vpr::Uint32& rate) const
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
    DCB dcb;
    GetCommState(mHandle, &dcb);
    rate = dcb.BaudRate;
-   return s;
 }
 
 // Set the current input baud rate.
-vpr::ReturnStatus SerialPortImplWin32::setInputBaudRate(const vpr::Uint32& baud)
+void SerialPortImplWin32::setInputBaudRate(const vpr::Uint32& baud)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
+   DCB dcb;
+   GetCommState(mHandle, &dcb);
+   dcb.BaudRate = baud;
+
+   if ( ! SetCommState(mHandle, &dcb) )
+   {
+      std::stringstream msg_stream;
+      msg_stream << "Failed to set input baud to " << baud << ": "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
+   }
+}
+
+// Get the current output baud rate.
+void SerialPortImplWin32::getOutputBaudRate(vpr::Uint32& rate) const
+   throw (IOException)
+{
+   DCB dcb;
+   GetCommState(mHandle, &dcb);
+   rate = dcb.BaudRate;
+}
+
+// Set the current output baud rate.
+void SerialPortImplWin32::setOutputBaudRate(const vpr::Uint32& baud)
+   throw (IOException)
+{
    DCB dcb;
    GetCommState(mHandle, &dcb);
    dcb.BaudRate = baud;
    if ( !SetCommState(mHandle, &dcb) )
    {
-      s.setCode(vpr::ReturnStatus::Fail);
+      std::stringstream msg_stream;
+      msg_stream << "Failed to set output baud to " << baud << ": "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   return s;
-
-}
-
-// Get the current output baud rate.
-vpr::ReturnStatus SerialPortImplWin32::getOutputBaudRate(vpr::Uint32& rate) const
-{
-   vpr::ReturnStatus s;
-   DCB dcb;
-   GetCommState(mHandle, &dcb);
-   rate = dcb.BaudRate;
-   return s;
-}
-
-// Set the current output baud rate.
-vpr::ReturnStatus SerialPortImplWin32::setOutputBaudRate(const vpr::Uint32& baud)
-{
-   vpr::ReturnStatus s;
-   DCB dcb;
-   GetCommState(mHandle, &dcb);
-   dcb.BaudRate =baud;
-   if ( !SetCommState(mHandle, &dcb) )
-   {
-      s.setCode(vpr::ReturnStatus::Fail);
-   }
-   return s;
 }
 
 // Transmit a continuous stream of zero bits for the given duration.  If the
 // argument is 0, the transmission will last between 0.25 and 0.5 seconds.
 // Otherwise, the duration specfies the number of seconds to send the zero bit
 // stream.
-vpr::ReturnStatus SerialPortImplWin32::sendBreak(const vpr::Int32 duration)
+void SerialPortImplWin32::sendBreak(const vpr::Int32 duration)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
    DWORD flags;
 
    //Send a break for .5 seconds
@@ -718,25 +822,21 @@ vpr::ReturnStatus SerialPortImplWin32::sendBreak(const vpr::Int32 duration)
    ClearCommBreak(mHandle);
    Sleep(35);
    ClearCommError(mHandle,&flags,NULL);	//Clear the break error
-
-   return s;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::drainOutput()
+void SerialPortImplWin32::drainOutput() throw (IOException)
 {
-   vpr::ReturnStatus s;
-   // do nothing
-   return s;
+   /* Do nothing. */ ;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::controlFlow(SerialTypes::FlowActionOption opt)
+void SerialPortImplWin32::controlFlow(SerialTypes::FlowActionOption opt)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
-   // do nothing
-   return s;
+   /* Do nothing. */ ;
 }
 
 bool SerialPortImplWin32::getHardwareFlowControlState() const
+   throw (IOException)
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
@@ -751,10 +851,9 @@ bool SerialPortImplWin32::getHardwareFlowControlState() const
    }
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setHardwareFlowControl(bool enable)
+void SerialPortImplWin32::setHardwareFlowControl(bool enable)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
-
    DCB dcb;
    GetCommState(mHandle, &dcb);
 
@@ -768,81 +867,84 @@ vpr::ReturnStatus SerialPortImplWin32::setHardwareFlowControl(bool enable)
       dcb.fRtsControl=RTS_CONTROL_DISABLE;
       dcb.fDtrControl=DTR_CONTROL_DISABLE;
    }
-   SetCommState(mHandle,&dcb);
 
-   return s;
+   SetCommState(mHandle,&dcb);
 }
 
-vpr::ReturnStatus SerialPortImplWin32::flushQueue(vpr::SerialTypes::FlushQueueOption queue)
+void SerialPortImplWin32::flushQueue(vpr::SerialTypes::FlushQueueOption queue)
+   throw (IOException)
 {
-   vpr::ReturnStatus s;
-
-   if(queue==vpr::SerialTypes::INPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES)
+   if ( queue == vpr::SerialTypes::INPUT_QUEUE ||
+        queue == vpr::SerialTypes::IO_QUEUES )
    {
       PurgeComm(mHandle, PURGE_RXCLEAR);
    }
 
-   if(queue==vpr::SerialTypes::OUTPUT_QUEUE || queue==vpr::SerialTypes::IO_QUEUES)
+   if ( queue == vpr::SerialTypes::OUTPUT_QUEUE ||
+        queue == vpr::SerialTypes::IO_QUEUES )
    {
       PurgeComm(mHandle, PURGE_TXCLEAR);
    }
-
-   return s;
 }
 
-
-bool SerialPortImplWin32::getCanonicalState() const
+bool SerialPortImplWin32::getCanonicalState() const throw (IOException)
 {
-   std::cout << "Canonical State not yet implemented, EOF is enabled."
-             << std::endl;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Canonical State not yet implemented--EOF is enabled." << std::endl
+      << vprDEBUG_FLUSH;
    return false;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setCanonicalInput(bool flag)
+void SerialPortImplWin32::setCanonicalInput(bool flag) throw (IOException)
 {
-   std::cout << "Canoncial State not yet implemented, EOF is enabled."
-             << std::endl;
-   return vpr::ReturnStatus::Fail;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Canoncial State not yet implemented, EOF is enabled." << std::endl
+      << vprDEBUG_FLUSH;
 }
 
-bool SerialPortImplWin32::getBitStripState() const
+bool SerialPortImplWin32::getBitStripState() const throw (IOException)
 {
-   std::cout << "Bit Stripping is not yet implemented on Win32." << std::endl;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Bit Stripping is not yet implemented on Windows." << std::endl
+      << vprDEBUG_FLUSH;
    return false;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setBitStripping(bool flag)
+void SerialPortImplWin32::setBitStripping(bool flag) throw (IOException)
 {
-   std::cout << "Bit Stripping is not yet implemented on Win32." << std::endl;
-   return vpr::ReturnStatus::Fail;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Bit Stripping is not yet implemented on Windows." << std::endl
+      << vprDEBUG_FLUSH;
 }
 
-bool SerialPortImplWin32::getStartStopInputState() const
+bool SerialPortImplWin32::getStartStopInputState() const throw (IOException)
 {
-   std::cout << "Start/Stop Input is not yet implemented on Win32."
-             << std::endl;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Start/Stop Input is not yet implemented on Windows." << std::endl
+      << vprDEBUG_FLUSH;
    return false;
 }
 
 bool SerialPortImplWin32::getStartStopOutputState() const
 {
-   std::cout << "Start/Stop Output is not yet implemented on Win32."
-             << std::endl;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Start/Stop Output is not yet implemented on Windows." << std::endl
+      << vprDEBUG_FLUSH;
    return false;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setStartStopInput(bool flag)
+void SerialPortImplWin32::setStartStopInput(bool flag) throw (IOException)
 {
-   std::cout << "Start/Stop Input is not yet implemented on Win32."
-             << std::endl;
-   return vpr::ReturnStatus::Fail;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Start/Stop Input is not yet implemented on Win32." << std::endl
+      << vprDEBUG_FLUSH;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setStartStopOutput(bool flag)
+void SerialPortImplWin32::setStartStopOutput(bool flag)
 {
-   std::cout << "Start/Stop output is not yet implemented on Win32."
-             << std::endl;
-   return vpr::ReturnStatus::Fail;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Start/Stop output is not yet implemented on Win32." << std::endl
+      << vprDEBUG_FLUSH;
 }
 
 } // End of vpr namespace

@@ -41,10 +41,12 @@
 
 #include <vpr/vprConfig.h>
 
+#include <sstream>
+
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
-#include <vpr/Util/Assert.h>
-#include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
 
 
 namespace vpr
@@ -141,31 +143,36 @@ vpr::Uint16 SelectorImplNSPR::getOut(IOSys::Handle handle)
 /**
  *  Select
  */
-ReturnStatus SelectorImplNSPR::select(vpr::Uint16& numWithEvents,  const vpr::Interval timeout)
+void SelectorImplNSPR::select(vpr::Uint16& numWithEvents,
+                              const vpr::Interval timeout)
+   throw (IOException)
 {
-   vpr::ReturnStatus ret_val;
-
    PRInt32 result;
 
    // Call poll - If timeout == 0, then make sure we pass 0
-   result = PR_Poll(&(mPollDescs[0]), mPollDescs.size(), NSPR_getInterval(timeout) );
+   result = PR_Poll(&(mPollDescs[0]), mPollDescs.size(),
+                    NSPR_getInterval(timeout));
 
-   if( -1 == result)
+   if ( -1 == result )
    {
       //NSPR_PrintError("SelectorImplNSPR::select: Error selecting. ");
-      vpr::Error::outputCurrentError(std::cerr, "SelectorImplNSPR::select: Error selecting.");
+      std::stringstream msg_stream;
+      msg_stream << "[vpr::SelectorImplNSPR::select()] Error selecting.";
+      vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
+
       numWithEvents = 0;
-      ret_val.setCode(ReturnStatus::Fail);
+
+      msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   else if(0 == result)    // Timeout
+   else if ( 0 == result )    // Timeout
    {
       numWithEvents = 0;
-      ret_val.setCode(ReturnStatus::Timeout);
+      throw TimeoutException("Timeout occured while selecting.", VPR_LOCATION);
    }
    //else                    // Got some
 
    numWithEvents = result;
-   return ret_val;
 }
 
 /**

@@ -52,7 +52,6 @@
 #include <vpr/IO/SelectorBase.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/Util/Debug.h>
-#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -113,9 +112,18 @@ public:
     *                      that have events.
     * @param timeout       The number of milliseconds to select for
     *                      (passing vpr::Interval::NoWait means don't wait).
+    *
+    *
+    * @throws vpr::TimeoutException If no events were detected before the
+    *                               timeout expired or if
+    *                               vpr::Interval::NoWait was passed. In
+    *                               this case, \p numWithEvents should be
+    *                               checked for a value greater than 0.
+    * @throws vpr::IOException      If the select failed.
     */
-   vpr::ReturnStatus select(vpr::Uint16& numWithEvents,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void select(vpr::Uint16& numWithEvents,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Gets the number of handles.

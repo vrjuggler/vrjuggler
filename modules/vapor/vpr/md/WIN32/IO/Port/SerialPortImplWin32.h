@@ -44,14 +44,11 @@
 
 #include <vpr/vprConfig.h>
 
-#include <iostream>
-#include <stdio.h>
 #include <string>
-#include <vector>
 
 #include <vpr/IO/IOSys.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/IO/Port/SerialTypes.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Debug.h>
 
@@ -148,11 +145,11 @@ public:
     *       returned to the caller.  If the port is opened, mOpen is set to
     *       true.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the serial port was
-    *         opened successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throw vpr::WouldBlockException If the serial port is in non-blocking
+    *                                 mode and could not be opened yet.
+    * @throw vpr::IOException         If the serial port could not be opened.
     */
-   vpr::ReturnStatus open();
+   void open() throw (IOException);
 
    /**
     * Closes this serial port.
@@ -162,11 +159,9 @@ public:
     *       returned to the caller.  If the port is closed, mOpen is set to
     *       false.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the serial port was
-    *         closed successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throw vpr::IOException If the file handle could not be closed.
     */
-   vpr::ReturnStatus close();
+   void close() throw (IOException);
 
    /**
     * Reconfigures this serial port so that it is in blocking or non-blocking
@@ -175,10 +170,9 @@ public:
     *
     * @post Processes will block (or not) when accessing this port.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
-    *         changed successfully; vpr::ReturnStatus::Fail otherwise.
+    * @throw vpr::IOException If the blocking mode could not be set.
     */
-   vpr::ReturnStatus setBlocking(bool flag);
+   void setBlocking(bool flag) throw(IOException);
 
    /**
     * Get the current blocking state for the serial port.
@@ -286,11 +280,9 @@ public:
     *       port's flags are initaialized to 0.  The resulting status is
     *       returned to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the serial port was
-    *         opened successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
+    * @throw vpr::IOException If all attributes could not be cleared.
     */
-   vpr::ReturnStatus clearAll();
+   void clearAll() throw (IOException);
 
    /**
     * Queries the serial port for the maximum buffer size.
@@ -302,10 +294,9 @@ public:
     * @param size A reference to a vpr::Uint8 where the buffer size is
     *             stored for return to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the buffer size was
-    *         retrieved successfully; vpr::ReturnStatus::Fail otherwise.
+    * @throw vpr::IOException If the buffer size could not be retrieved.
     */
-   vpr::ReturnStatus getMinInputSize(vpr::Uint16& size) const;
+   void getMinInputSize(vpr::Uint16& size) const throw (IOException);
 
    /**
     * Attempts to change the buffer size to the given argument.
@@ -317,10 +308,10 @@ public:
     *
     * @param size The new size for the buffer.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the buffer size was set
-    *         successfully; vpr::ReturnStatus::Fail otherwise.
+    * @throw vpr::IOException If the buffer size could not be set
+    *                         successfully.
     */
-   vpr::ReturnStatus setMinInputSize(const vpr::Uint8 size);
+   void setMinInputSize(const vpr::Uint8 size) throw (IOException);
 
    /**
     * Gets the value of the timeout (in tenths of a second) to wait for data
@@ -333,10 +324,9 @@ public:
     * @param timeout A reference to a vpr::Uint8 to be used as storage for
     *                the timeout value.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the timeout was
-    *         requested successfully; vpr::ReturnStatus::Fail otherwise.
+    * @throw vpr::IOException If the timeout could not be retrieved.
     */
-   vpr::ReturnStatus getTimeout(vpr::Uint8& timeout) const;
+   void getTimeout(vpr::Uint8& timeout) const throw (IOException);
 
    /**
     * Sets the value of the timeout to wait for data to arrive.  The value
@@ -348,10 +338,9 @@ public:
     *
     * @param timeout The new timeout value measured in tenths of a second.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the timeout was set
-    *         successfully; vpr::ReturnStatus::Fail otherwise.
+    * @throw vpr::IOException If the timeout could not be set successfully.
     */
-   vpr::ReturnStatus setTimeout(const vpr::Uint8 timeout);
+   void setTimeout(const vpr::Uint8 timeout) throw (IOException);
 
    /**
     * Gets the character size (the bits per byte).
@@ -364,10 +353,10 @@ public:
     *             object to be used as storage for the character size
     *             value.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If the character size could be retrieved.
     */
-   vpr::ReturnStatus getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const;
+   void getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
+      throw (IOException);
 
    /**
     * Sets the current character size (the bits per byte) to the size in the
@@ -379,10 +368,10 @@ public:
     *
     * @param bpb  The new character size.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOexception If character size could not be set.
     */
-   vpr::ReturnStatus setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb);
+   void setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
+      throw (IOException);
 
    /**
     * Gets the current read state for the port.
@@ -404,12 +393,11 @@ public:
     * @pre The serial port is open.
     * @post An attempt is made to make the device readable.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if reading is enabled
-    *         successfully.
+    * @throw vpr::IOException If read state could not be set.
     */
-   vpr::ReturnStatus setRead(bool flag)
+   void setRead(bool flag) throw (IOException)
    {
-      return vpr::ReturnStatus();
+      /* Do nothing. */ ;
    }
 
    /**
@@ -422,8 +410,10 @@ public:
     * @return \c true is returned if the device is attached locally.
     * @return \c false is returned if the device is not attached locally, and
     *         opening the device will usually block until there is a response.
+    *
+    * @throw vpr::IOException If local attach state could not be retrieved.
     */
-   bool getLocalAttachState() const;
+   bool getLocalAttachState() const throw (IOException);
 
    /**
     * Mark the device as locally attached or not.
@@ -431,10 +421,9 @@ public:
     * @pre This serial port is open.
     * @post The device has its local attachment state enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If local attach state could not be set.
     */
-   vpr::ReturnStatus setLocalAttach(bool flag);
+   void setLocalAttach(bool flag) throw (IOException);
 
    /**
     * Get the current state of ignoring BREAK bytes.
@@ -444,8 +433,11 @@ public:
     *
     * @return \c true is returned if bad bytes are ignored.
     * @return \c false is returned if bad bytes are not ignored.
+    *
+    * @throw vpr::IOException If break byte ignore state could not
+    *                         be retrieved.
     */
-   bool getBreakByteIgnoreState() const;
+   bool getBreakByteIgnoreState() const throw (IOException);
 
    /**
     * Enable ignoring of received BREAK bytes or not.
@@ -453,10 +445,9 @@ public:
     * @pre This serial port is open.
     * @post BREAK byte ignoring is enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If break byte ignore state could not be set.
     */
-   vpr::ReturnStatus setBreakByteIgnore(bool flag);
+   void setBreakByteIgnore(bool flag) throw (IOException);
 
    /**
     * Gets the number of stop bits in use.  This will be either 1 or 2.
@@ -468,10 +459,9 @@ public:
     * @param numBits A reference to a vpr::Uint8 that will be used to
     *                store the number of stop bits.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If stop bits could not be retrieved.
     */
-   vpr::ReturnStatus getStopBits(vpr::Uint8& numBits) const;
+   void getStopBits(vpr::Uint8& numBits) const throw (IOException);
 
    /**
     * Sets the number of stop bits to use.  The value must be either 1 or 2.
@@ -482,10 +472,9 @@ public:
     *
     * @param numBits The number of stop bits to use.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException if stop bits could not be set.
     */
-   vpr::ReturnStatus setStopBits(const vpr::Uint8 numBits);
+   void setStopBits(const vpr::Uint8 numBits) throw (IOException);
 
    /**
     * Queries the canonical input state of the serial port.  If canonical mode
@@ -500,8 +489,10 @@ public:
     * @post The current state of canonical input is returnd to the caller.
     *
     * @return \c true if canonical input is enabled; \c false otherwise.
+    *
+    * @throw vpr::IOException If canonical state could not be retrieved.
     */
-   bool getCanonicalState() const;
+   bool getCanonicalState() const throw (IOException);
 
    /**
     * Enables or disables canonical input.  See getCanonicalState() for more
@@ -510,12 +501,11 @@ public:
     * @pre The serial port is open.
     * @post Canonical input is enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If canonical state could not be set.
     *
     * @see getCanonicalState
     */
-   vpr::ReturnStatus setCanonicalInput(bool flag);
+   void setCanonicalInput(bool flag) throw (IOException);
 
    /**
     * Gets the current state of ignoring bytes with framing errors (other
@@ -525,8 +515,10 @@ public:
     * @post The erroneous byte ignore state is returned to the caller.
     *
     * @return \c true if bad bytes are ignored; \c false otherwise.
+    *
+    * @throw vpr::IOException If bad byte ignore state could not be retrieved.
     */
-   bool getBadByteIgnoreState() const;
+   bool getBadByteIgnoreState() const throw (IOException);
 
    /**
     * Enables or disables ignoring of received bytes with framing errors or
@@ -535,10 +527,9 @@ public:
     * @pre The serial port is open.
     * @post Erroneous byte ignoring is enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If bad bytes ignore could not be set.
     */
-   vpr::ReturnStatus setBadByteIgnore(bool flag);
+   void setBadByteIgnore(bool flag) throw (IOException);
 
    /**
     * Gets the state of parity checking for input.
@@ -547,8 +538,11 @@ public:
     * @post The state of input parity checking is returned to the caller.
     *
     * @return \c true if input parity checking is enabled; \c false otherwise.
+    *
+    * @throw vpr::IOException If input parity check state could not be
+    *                         retrieved.
     */
-   bool getInputParityCheckState() const;
+   bool getInputParityCheckState() const throw (IOException);
 
    /**
     * Enables or disables input parity checking.
@@ -556,10 +550,9 @@ public:
     * @pre The serial port is open.
     * @post Input parity checking is enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If input parity check state could not be set.
     */
-   vpr::ReturnStatus setInputParityCheck(bool flag);
+   void setInputParityCheck(bool flag) throw (IOException);
 
    /**
     * Gets the current state of bit stripping.  When enabled, input bytes are
@@ -570,8 +563,10 @@ public:
     *
     * @return \c true if input bytes are stripped to seven bits.
     * @return \c false is returned if input bytes are not stripped.
+    *
+    * @throw vpr::IOException If bit strip state could not be retrieved.
     */
-   bool getBitStripState() const;
+   bool getBitStripState() const throw (IOException);
 
    /**
     * Enables or disables stripping of input bytes to seven bits.
@@ -579,10 +574,9 @@ public:
     * @pre The serial port is open.
     * @post Input bit stripping is enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If bit strip state could not be set.
     */
-   vpr::ReturnStatus setBitStripping(bool flag);
+   void setBitStripping(bool flag) throw (IOException);
 
    /**
     * Gets the state of start-stop input control.  When enabled, if the
@@ -598,8 +592,10 @@ public:
     *
     * @return \c true is returned if start-stop input control is enabled.
     * @return \c false is returned otherwise.
+    *
+    * @throw vpr::IOException If start-stop input state could not be retrieved.
     */
-   bool getStartStopInputState() const;
+   bool getStartStopInputState() const throw (IOException);
 
    /**
     * Enables or disables start-stop input control.  See
@@ -608,12 +604,11 @@ public:
     * @pre The serial port is open.
     * @post Start-stop input control is enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If start-stop input state could not be set.
     *
     * @see getStartStopInputState
     */
-   vpr::ReturnStatus setStartStopInput(bool flag);
+   void setStartStopInput(bool flag) throw (IOException);
 
    /**
     * Gets the state of start-stop output control.  When enabled, when the
@@ -627,8 +622,11 @@ public:
     *
     * @return \c true is returned if start-stop output control is enabled
     * @return \c false is returned otherwise.
+    *
+    * @throw vpr::IOException If start-stop output state could not be
+    *                         retrieved.
     */
-   bool getStartStopOutputState() const;
+   bool getStartStopOutputState() const throw (IOException);
 
    /**
     * Enables or disables start-stop output control.  See
@@ -637,12 +635,11 @@ public:
     * @pre The serial port is open.
     * @post Start-stop output control is ensabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException if start-stop output state could not be set.
     *
     * @see getStartStopOutputState
     */
-   vpr::ReturnStatus setStartStopOutput(bool flag);
+   void setStartStopOutput(bool flag) throw (IOException);
 
    /**
     * Gets the current state of parity generation for outgoing bytes and
@@ -656,8 +653,11 @@ public:
     *         outgoing and incoming bytes respectively.
     * @return \c false is returned if parity generation and checking are
     *         disabled.
+    *
+    * @throw vpr::IOException If parity generation state could not be
+    *                         retrieved.
     */
-   bool getParityGenerationState() const;
+   bool getParityGenerationState() const throw (IOException);
 
    /**
     * Enables or disables parity generation for outgoing bytes and parity
@@ -666,10 +666,9 @@ public:
     * @pre This serial port is open.
     * @post Parity generation and checking are enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If partiy generation state could not be set.
     */
-   vpr::ReturnStatus setParityGeneration(bool flag);
+   void setParityGeneration(bool flag) throw (IOException);
 
    /**
     * Returns the current state of parity error marking for this serial port.
@@ -678,8 +677,11 @@ public:
     *
     * @return \c true is returned if parity error marking is enabled.
     * @return \c false is returned if parity error masking is disabled.
+    *
+    * @throw vpr::IOException If parity error marking state could not be
+    *                         retrieved.
     */
-   bool getParityErrorMarkingState() const;
+   bool getParityErrorMarkingState() const throw (IOException);
 
    /**
     * Enables marking of bytes with parity errors or framing errors (except
@@ -692,12 +694,11 @@ public:
     * @pre This serial port is open.
     * @post Bytes with an error are marked and passed on to the reader.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If parity error marking state could not be set.
     *
     * @see setInputParityCheck
     */
-   vpr::ReturnStatus setParityErrorMarking(bool flag);
+   void setParityErrorMarking(bool flag) throw (IOException);
 
    /**
     * Gets the current parity checking type (either odd or even).
@@ -711,15 +712,14 @@ public:
    SerialTypes::ParityType getParity() const;
 
    /**
-    * Enables odd or event parity.
+    * Enables odd or even parity.
     *
     * @pre This serial port is open.
     * @post Odd or even parity is enabled.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If parity could not be set.
     */
-   vpr::ReturnStatus setParity(const SerialTypes::ParityType& type);
+   void setParity(const SerialTypes::ParityType& type) throw (IOException);
 
    /**
     * Gets the current input baud rate.
@@ -731,10 +731,9 @@ public:
     * @param rate A reference to a vpr::Uint32 to be used as storage for
     *             the current input baud rate.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If input baud rate could not be retrieved.
     */
-   vpr::ReturnStatus getInputBaudRate(vpr::Uint32& rate) const;
+   void getInputBaudRate(vpr::Uint32& rate) const throw (IOException);
 
    /**
     * Sets the current input baud rate.
@@ -744,10 +743,9 @@ public:
     *
     * @param rate The new input baud rate.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If input baud rate could not be set.
     */
-   vpr::ReturnStatus setInputBaudRate(const vpr::Uint32& rate);
+   void setInputBaudRate(const vpr::Uint32& rate) throw (IOException);
 
    /**
     * Gets the current output baud rate.
@@ -759,10 +757,9 @@ public:
     * @param rate A reference to a vpr::Uint32 to be used as storage for
     *             the current output baud rate.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If ouput baud rate could not be retrieved.
     */
-   vpr::ReturnStatus getOutputBaudRate(vpr::Uint32& rate) const;
+   void getOutputBaudRate(vpr::Uint32& rate) const throw (IOException);
 
    /**
     * Sets the current output baud rate.
@@ -772,10 +769,9 @@ public:
     *
     * @param rate The new output baud rate.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException if ouput baud rate could not be set.
     */
-   vpr::ReturnStatus setOutputBaudRate(const vpr::Uint32& rate);
+   void setOutputBaudRate(const vpr::Uint32& rate) throw (IOException);
 
    /**
     * Waits for all output to be transmitted.
@@ -783,10 +779,9 @@ public:
     * @pre This serial port is open.
     * @post All output is transmitted.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If failed to drain output.
     */
-   vpr::ReturnStatus drainOutput();
+   void drainOutput() throw (IOException);
 
    /**
     * Alters the input or output flow control.  Based on the
@@ -800,10 +795,10 @@ public:
     *
     * @param opt The flow control change.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If control flow could not be changed.
     */
-   vpr::ReturnStatus controlFlow(vpr::SerialTypes::FlowActionOption opt);
+   void controlFlow(vpr::SerialTypes::FlowActionOption opt)
+      throw (IOException);
 
    /**
     * Returns the current enable state of hardware flow control.
@@ -813,9 +808,12 @@ public:
     * @return \c true is returned if hardware flow control is enabled.
     * @return \c false is returned otherwise.
     *
+    * @throw vpr::IOException If hardware flow control state could not be
+    *                         retrieved.
+    *
     * @see controlFlow
     */
-   bool getHardwareFlowControlState() const;
+   bool getHardwareFlowControlState() const throw (IOException);
 
    /**
     * Attempts to enable "hardware" flow control.  While some documents
@@ -823,12 +821,11 @@ public:
     * flow control, not all platforms implement hardware flow control.  Hence,
     * this may have no effect depending on the operating system.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If hardware flow control state could not be set.
     *
     * @see controlFlow
     */
-   vpr::ReturnStatus setHardwareFlowControl(bool flag);
+   void setHardwareFlowControl(bool flag) throw (IOException);
 
    /**
     * Discards either the input buffer (unread data received from the
@@ -842,10 +839,10 @@ public:
     *
     * @param queue The queue (or queues) to be flushed.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If hardware flow control state could not be set.
     */
-   vpr::ReturnStatus flushQueue(vpr::SerialTypes::FlushQueueOption queue);
+   void flushQueue(vpr::SerialTypes::FlushQueueOption queue)
+      throw (IOException);
 
    /**
     * Transmits a continuous stream of zero bits for the given duration.  If
@@ -860,18 +857,19 @@ public:
     * @param duration The length of time to send a zero bit stream to the
     *                 serial device.
     *
-    * @return A vpr::ReturnStatus object describing the results of the
-    *         operation.
+    * @throw vpr::IOException If break could not be sent.
     */
-   vpr::ReturnStatus sendBreak(const vpr::Int32 duration);
+   void sendBreak(const vpr::Int32 duration) throw (IOException);
 
    /**
     * Returns the status of the carrier detect signal.
     *
     * @return May be platform dependent, but will at least be as follows:
     *         0 - not high, 1 - high, -1 - Not supported.
+    *
+    * @throw vpr::IOException If carrier detect state could not be retrieved.
     */
-   int getCarrierDetect() const
+   int getCarrierDetect() const throw (IOException)
    {
       return -1;
    }
@@ -881,8 +879,10 @@ public:
     *
     * @return May be platform dependent, but will at least be as follows:
     *         0 - not high, 1 - high, -1 - Not supported.
+    *
+    * @throw vpr::IOException If data set ready state could not be retrieved.
     */
-   int getDataSetReady() const
+   int getDataSetReady() const throw (IOException)
    {
       return -1;
    }
@@ -892,8 +892,10 @@ public:
     *
     * @return May be platform dependent, but will at least be as follows:
     *         0 - not high, 1 - high, -1 - Not supported.
+    *
+    * @throw vpr::IOException If clear to send state could not be retrieved.
     */
-   int getClearToSend() const
+   int getClearToSend() const throw (IOException)
    {
       return -1;
    }
@@ -903,22 +905,39 @@ public:
     *
     * @return May be platform dependent, but will at least be as follows:
     *         0 - not high, 1 - high, -1 - Not supported.
+    *
+    * @throw vpr::IOException If ring indicator state could not be retrieved.
     */
-   int getRingIndicator() const
+   int getRingIndicator() const throw (IOException)
    {
       return -1;
    }
 
-   /** Sets the data terminal ready line. */
-   vpr::ReturnStatus setDataTerminalReady(bool val)
+   /**
+    * Sets or clears the data terminal ready line.
+    *
+    * @param val A boolean parameter indicating whether to set (true) or
+    *            clear (false) the data terminal ready line.
+    *
+    * @throw vpr::IOException If the data terminal ready state could not be
+    *                         set.
+    */
+   void setDataTerminalReady(bool val) throw (IOException)
    {
-      return vpr::ReturnStatus::Fail;
+      /* Do nothing. */ ;
    }
 
-   /** Sets the ready to send line. */
-   vpr::ReturnStatus setRequestToSend(bool val)
+   /**
+    * Sets or clears the ready-to-send line.
+    *
+    * @param val A boolean parameter indicating whether to set (true) or
+    *            clear (false) the ready-to-send line.
+    *
+    * @throw vpr::IOException If request to send state could not be set.
+    */
+   void setRequestToSend(bool val) throw (IOException)
    {
-      return vpr::ReturnStatus::Fail;
+      /* Do nothing. */ ;
    }
 
    /**
@@ -939,17 +958,15 @@ public:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the port is in non-blocking mode,
-    *         and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not begin
-    *         within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throw vpr::WouldBlockException If the port is in non-blocking mode,
+    *                                 and there is no data to read.
+    * @throw vpr::TimeoutException    If the read could not begin within the
+    *                                 timeout interval.
+    * @throw vpr::IOException         If the read operation failed.
     */
-   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesRead,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void read_i(void* buffer, const vpr::Uint32 length, vpr::Uint32& bytesRead,
+               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -969,17 +986,13 @@ public:
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the port is in non-blocking mode,
-    *         and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not begin
-    *         within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @throw vpr::EOFException If end of port or end of stream has been
+    *                          reached unexpectedly during input.
+    * @throw vpr::IOException  If an error ocured while reading.
     */
-   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesRead,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void readn_i(void* buffer, const vpr::Uint32 length, vpr::Uint32& bytesRead,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
    /**
     * Implementation of the write() template method.  This writes the given
@@ -997,18 +1010,17 @@ public:
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the write operation could not be
-    *         completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation failed.
+    * @throw vpr::WouldBlockException If the handle is in non-blocking mode,
+    *                                 and the write operation could not be
+    *                                 completed.
+    * @throw vpr::TimeoutException    If the write could not begin within the
+    *                                 timeout interval.
+    * @throw vpr::IOException         If the write operation failed.
     */
-   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesWritten,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void write_i(const void* buffer, const vpr::Uint32 length,
+                vpr::Uint32& bytesWritten,
+                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+      throw (IOException);
 
 protected:
    HANDLE mHandle;     /**< handle to communication file */

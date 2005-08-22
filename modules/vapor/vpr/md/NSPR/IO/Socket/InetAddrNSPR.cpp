@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <sstream>
 #include <prsystem.h>
 
 #include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
@@ -53,30 +54,32 @@ namespace vpr
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
-vpr::ReturnStatus InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& hostAddr)
+void InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& hostAddr)
+   throw (UnknownHostException)
 {
-   vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
    char local_host_name[257];
    memset(local_host_name, 0, 257);
 
    if ( PR_GetSystemInfo(PR_SI_HOSTNAME, local_host_name, 256) == PR_SUCCESS )
    {
       hostAddr.setAddress(std::string(local_host_name), 0);
-      status.setCode(vpr::ReturnStatus::Succeed);
    }
-
-   return status;
+   else
+   {
+      throw UnknownHostException("No IP address for could be found for localhost.",
+                                 VPR_LOCATION);
+   }
 }
 
 // Set the address for this object using the given address.  It must be of the
 // form <address>:<port> where <address> can be a hostname or a dotted-decimal
 // IP address.
-vpr::ReturnStatus InetAddrNSPR::setAddress(const std::string& address)
+void InetAddrNSPR::setAddress(const std::string& address)
+   throw (UnknownHostException)
 {
    std::string::size_type pos;
    std::string host_addr, host_port;
    vpr::Uint16 port;
-   vpr::ReturnStatus retval;
 
    // Extract the address and the port number from the given string.
    pos       = address.find(":");
@@ -84,10 +87,9 @@ vpr::ReturnStatus InetAddrNSPR::setAddress(const std::string& address)
    host_port = address.substr(pos + 1);
    port      = (vpr::Uint16) atoi(host_port.c_str());
 
-   retval = lookupAddress(host_addr);
+   lookupAddress(host_addr);
    setPort(port);
    setFamily(vpr::SocketTypes::INET);
-   return retval;
 }
 
 // Get the protocol family of this address structure.
@@ -144,9 +146,9 @@ std::string InetAddrNSPR::getAddressString() const
    return temp;
 }
 
-vpr::ReturnStatus InetAddrNSPR::getHostname(std::string& hostname) const
+void InetAddrNSPR::getHostname(std::string& hostname) const
+   throw (UnknownHostException)
 {
-   vpr::ReturnStatus status;
    char buffer[PR_NETDB_BUF_SIZE];
    memset(buffer, 0, PR_NETDB_BUF_SIZE);
    PRStatus ret_status;
@@ -156,18 +158,20 @@ vpr::ReturnStatus InetAddrNSPR::getHostname(std::string& hostname) const
 
    if ( ret_status == PR_FAILURE )
    {
-      vpr::Error::outputCurrentError(std::cerr, "[InetAddrNSPR::getHostname] Failed to get host by address");
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::string err_msg(
+         "[InetAddrNSPR::getHostname] Failed to get host by address"
+      );
+      vpr::Error::outputCurrentError(std::cerr, err_msg);
+      throw UnknownHostException(err_msg, VPR_LOCATION);
    }
    else
    {
       hostname = hostent.h_name;
    }
-
-   return status;
 }
 
 std::vector<std::string> InetAddrNSPR::getHostnames() const
+   throw (UnknownHostException)
 {
    std::vector<std::string> names;
    char buffer[PR_NETDB_BUF_SIZE];
@@ -185,14 +189,21 @@ std::vector<std::string> InetAddrNSPR::getHostnames() const
          names.push_back(std::string(*ptr));
       }
    }
+   else
+   {
+      std::stringstream msg_stream;
+      msg_stream << "[InetAddrBSD::getHostnames] Hostname lookup failed: "
+                 << vpr::Error::getCurrentErrorMsg();
+      throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
+   }
 
    return names;
 }
 
 // Look up the address in mName and store the address in mAddr.
-vpr::ReturnStatus InetAddrNSPR::lookupAddress(const std::string& address)
+void InetAddrNSPR::lookupAddress(const std::string& address)
+   throw (UnknownHostException)
 {
-   vpr::ReturnStatus retval;
    PRStatus ret_status;
    PRHostEnt host_entry;
    char buffer[PR_NETDB_BUF_SIZE];
@@ -203,26 +214,26 @@ vpr::ReturnStatus InetAddrNSPR::lookupAddress(const std::string& address)
    if ( ret_status == PR_FAILURE )
    {
       setAddressValue(0);           // Error on lookup, so zero the address
-      std::string error_msg("[InetAddrNSPR::lookupAddress] Fail to look up host: ");
-      error_msg += address;
+      std::stringstream msg_stream;
+      msg_stream << "[InetAddrNSPR::lookupAddress] Failed to look up host '"
+                 << address << "'";
 
-      vpr::Error::outputCurrentError(std::cerr, error_msg);
-      retval.setCode(ReturnStatus::Fail);
+      vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
+
+      msg_stream << " (" << vpr::Error::getCurrentErrorMsg() << ")";
+      throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
       if ( PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr) == -1 )
       {
-         retval.setCode(ReturnStatus::Fail);
-      }
-
-      if ( retval.failure() )
-      {
-         vpr::Error::outputCurrentError(std::cerr, "[InetAddrNSPR::lookupAddress] Could not enumerate host entry");
+         std::string err_msg(
+            "[InetAddrNSPR::lookupAddress] Could not enumerate host entry"
+         );
+         vpr::Error::outputCurrentError(std::cerr, err_msg);
+         throw UnknownHostException(err_msg, VPR_LOCATION);
       }
    }
-
-   return retval;
 }
 
 } // End of vpr namespace
