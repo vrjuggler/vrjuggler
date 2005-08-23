@@ -1,5 +1,6 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2005-08-23 patrickh     Added awareness of GCJ in the JDK detection macros.
 2005-07-01 patrickh     Fixed libjvm.so detection on Linux/amd64.
 
 [2.0.1 released - 6.18.2005]===================================================
