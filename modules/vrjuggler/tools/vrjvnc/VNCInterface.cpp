@@ -65,6 +65,7 @@
 // -- Standard Includes
 #include <stdio.h>
 #include <stdlib.h>
+#include <sstream>
 #include <string.h>
 #include <cmath>
 #include <list>
@@ -372,22 +373,31 @@ void VNCInterface::readData(std::string& data, vpr::Uint32 len)
                         "readData(std::string, vpr::Uint32) entered\n",
                         "readData(std::string, vpr::Uint32) done.\n");
 
-   vpr::Uint32 bytes_read;
-   vpr::ReturnStatus read_status;
-
    vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "Reading " << len << " bytes from socket\n" << vprDEBUG_FLUSH;
 
-   read_status = mSock.recvn(data, len, bytes_read);
-
-   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
-      << "Got " << bytes_read << " bytes from socket\n" << vprDEBUG_FLUSH;
-
-   if ( ! read_status.success() || len != bytes_read )
+   try
    {
-      char msg[256];
-      sprintf(msg, "Failed to read %u bytes", len);
-      throw NetReadException(msg);
+      vpr::Uint32 bytes_read;
+      mSock.recvn(data, len, bytes_read);
+
+      vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
+         << "Got " << bytes_read << " bytes from socket\n" << vprDEBUG_FLUSH;
+
+      if ( len != bytes_read )
+      {
+         std::stringstream msg_stream;
+         msg_stream << "Failed to read " << len << " bytes";
+         throw NetReadException(msg_stream.str());
+      }
+   }
+   catch (vpr::IOException& ex)
+   {
+      std::cerr << ex.what() << std::endl;
+      std::stringstream msg_stream;
+      msg_stream << "Failed to read " << len << " bytes";
+      // XXX: setCause(ex) ?
+      throw NetReadException(msg_stream.str());
    }
 }
 
@@ -418,16 +428,27 @@ void VNCInterface::readData(void* data, vpr::Uint32 len)
 
 void VNCInterface::writeData(const void* data, vpr::Uint32 len)
 {
-   vpr::Uint32 bytes_written;
    vpr::ReturnStatus write_status;
 
-   write_status = mSock.write(data, len, bytes_written);
-
-   if ( ! write_status.success() || len != bytes_written )
+   try
    {
-      char msg[256];
-      sprintf(msg, "Failed to write %u bytes", len);
-      throw NetWriteException(msg);
+      vpr::Uint32 bytes_written;
+      mSock.write(data, len, bytes_written);
+
+      if ( len != bytes_written )
+      {
+         std::stringstream msg_stream;
+         msg_stream << "Failed to write " << len << " bytes";
+         throw NetWriteException(msg_stream.str());
+      }
+   }
+   catch (vpr::IOException& ex)
+   {
+      std::cerr << ex.what() << std::endl;
+      std::stringstream msg_stream;
+      msg_stream << "Failed to write " << len << " bytes";
+      // XXX: setCause(ex) ?
+      throw NetWriteException(msg_stream.str());
    }
 }
 
@@ -603,22 +624,27 @@ void VNCInterface::connectToVNCServer(const std::string& password)
    server_addr.setAddress(mHost, mPort);
    mSock.setRemoteAddr(server_addr);
 
-   if ( mSock.open().success() )
+   try
    {
-      if ( mSock.connect().success() )
+      mSock.open();
+      mSock.connect();
+
+      // Read and write version information
+      handleVNCVersion();
+
+      // Authenticate client
+      if ( handleVNCAuthentication(password) == false )
       {
-         // Read and write version information
-         handleVNCVersion();
-
-         // Authenticate client
-         if ( handleVNCAuthentication(password) == false )
-         {
-            throw VNCProtoException("Authentication failed.");
-         }
-
-         // Initialize the connection
-         handleVNCInitialization();
+         throw VNCProtoException("Authentication failed.");
       }
+
+      // Initialize the connection
+      handleVNCInitialization();
+   }
+   catch (std::exception& ex)
+   {
+      std::cerr << ex.what() << std::endl;
+      throw VNCProtoException("Failed to connect.");
    }
 }
 
