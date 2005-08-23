@@ -20,6 +20,11 @@
 /*
  * vncauth.c - Functions for VNC password management and authentication.
  */
+#if defined(WIN32) || defined(WIN64)
+#  include <io.h>
+#  include <time.h>
+#  include <WinCompat.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
