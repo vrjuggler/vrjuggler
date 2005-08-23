@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2005/07/01 14:31:04
-dnl Version:       1.55
+dnl Date modified: 2005/08/23 19:45:45
+dnl Version:       1.56
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.55 2005/07/01 14:31:04 patrickh Exp
+dnl java.m4,v 1.56 2005/08/23 19:45:45 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -145,6 +145,28 @@ AC_DEFUN([DPP_PATH_JAVA],
    AC_PATH_PROG([JAVAC], [javac], [no], [${dpp_temp_javac_search_path}])
 
    dnl -----------------------------------------------------------------------
+   dnl Determine if the Java installation we found is really GCJ masquerading
+   dnl as the JDK.
+   dnl -----------------------------------------------------------------------
+   if test "x$JAVAC" != "xno" ; then
+      dpp_temp_java=`echo $JAVAC | sed -e 's|javac$||'`java
+
+      AC_MSG_CHECKING([if $dpp_temp_java is from GCJ])
+      dpp_gcj_test=`$dpp_temp_java -version 2>&1 | grep -i gcj`
+
+      dnl If the java command is part of GCJ, then we cannot use it.
+      if test "x$dpp_gcj_test" != "x" ; then
+         AC_MSG_RESULT([yes])
+         AC_MSG_WARN([*** The use of GCJ is not currently supported as a replacement for the JDK ***])
+
+         JDK_HOME='none'
+         JAVAC='no'
+      else
+         AC_MSG_RESULT([no])
+      fi
+   fi
+
+   dnl -----------------------------------------------------------------------
    dnl If $JAVAC has a value other than "no", extract the value of $JDK_HOME
    dnl from it.  Also use the path to $JAVAC as the basis for the path to
    dnl jar, javah, and rmic.
@@ -207,11 +229,17 @@ AC_DEFUN([DPP_JDK_VERSION],
    if test -x "$1/bin/java" ; then
       dpp_jdk_ver_line=`$1/bin/java -version 2>&1 | grep 'java version'`
 
-      changequote(<<, >>)
-      dpp_jdk_ver=`echo $dpp_jdk_ver_line | sed -e 's/^.*"[^0-9]*\([0-9][.0-9]*\).*"$/\1/'`
-      changequote([, ])
+      if test "x$dpp_jdk_ver_line" != "x" ; then
+         changequote(<<, >>)
+         dpp_jdk_ver=`echo $dpp_jdk_ver_line | sed -e 's/^.*"[^0-9]*\([0-9][.0-9]*\).*"$/\1/'`
+         changequote([, ])
 
-      DPP_VERSION_CHECK_MSG_NO_CACHE([JDK], [$dpp_jdk_ver], [$2], [$3], [$4])
+         DPP_VERSION_CHECK_MSG_NO_CACHE([JDK], [$dpp_jdk_ver], [$2], [$3],
+                                        [$4])
+      else
+         AC_MSG_WARN([*** Could not determine JDK version from $1/bin/java ***])
+         ifelse([$4], , :, [$4])
+      fi
    fi
 ])
 
