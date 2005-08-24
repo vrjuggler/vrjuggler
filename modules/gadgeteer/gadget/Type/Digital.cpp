@@ -76,7 +76,7 @@ const DigitalData Digital::getDigitalData(int devNum)
    }
 }
 
-void Digital::writeObject(vpr::ObjectWriter* writer)
+void Digital::writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
 {
    writer->beginTag(Digital::getInputTypeName());
    //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
@@ -114,7 +114,7 @@ void Digital::writeObject(vpr::ObjectWriter* writer)
    writer->endTag();
 }
 
-void Digital::readObject(vpr::ObjectReader* reader)
+void Digital::readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
 {
       //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
    vprASSERT(reader->attribExists("rim.timestamp.delta"));

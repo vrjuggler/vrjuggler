@@ -79,7 +79,7 @@ bool Glove::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-void Glove::writeObject(vpr::ObjectWriter* writer)
+void Glove::writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
 
@@ -132,7 +132,7 @@ void Glove::writeObject(vpr::ObjectWriter* writer)
    writer->endTag();
 }
 
-void Glove::readObject(vpr::ObjectReader* reader)
+void Glove::readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
 {
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");

@@ -40,13 +40,13 @@
 namespace gadget
 {
 
-void Event::writeObject(vpr::ObjectWriter* writer)
+void Event::writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
 {
    writer->writeUint8(mType);
    writer->writeUint64(mTime);
 }
 
-void Event::readObject(vpr::ObjectReader* reader)
+void Event::readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
 {
    mType = (EventType)reader->readUint8();
    mTime = reader->readUint64();

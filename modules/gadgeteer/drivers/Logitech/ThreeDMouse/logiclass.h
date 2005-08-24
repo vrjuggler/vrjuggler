@@ -99,7 +99,7 @@ public:
       mThreadID = NULL;
    }
 
-   ~ThreeDMouse()
+   virtual ~ThreeDMouse() throw ()
    {
       stopSampling();
    }

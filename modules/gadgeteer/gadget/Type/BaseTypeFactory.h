@@ -163,6 +163,11 @@ public:
       BaseTypeFactory::instance()->registerNetDevice(this);
    }
 
+   virtual ~BaseTypeConstructor() throw ()
+   {
+      /* Do nothing. */ ;
+   }
+
    Input* createNetDevice(std::string baseType)
    {
       boost::ignore_unused_variable_warning(baseType);
@@ -180,7 +185,9 @@ public:
    }
 
    virtual std::string getInputTypeName()
-    { return DEV::getInputTypeName(); }
+   {
+      return DEV::getInputTypeName();
+   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

@@ -70,6 +70,7 @@ std::string KeyboardMouse::getInputTypeName()
  * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
  */
 void KeyboardMouse::writeObject(vpr::ObjectWriter* writer)
+   throw (vpr::IOException)
 {
    writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
 
@@ -99,6 +100,7 @@ void KeyboardMouse::writeObject(vpr::ObjectWriter* writer)
  * Read mCurKeys and mCurEventQueueLock from a stream using the given ObjectReader.
  */
 void KeyboardMouse::readObject(vpr::ObjectReader* reader)
+   throw (vpr::IOException)
 {
    // ASSERT if the given datastream does not start with the correct datatype
    // flag.

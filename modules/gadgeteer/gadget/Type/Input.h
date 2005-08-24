@@ -91,7 +91,7 @@ public:
     * Free the memory for the Instance Name and Serial Port strings if
     * allocated.
     */
-   virtual ~Input()
+   virtual ~Input() throw ()
    {
       ;
    }
@@ -176,7 +176,7 @@ public:
    /**
     * Serialize this device's data.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer)
+   virtual void writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
    {
       boost::ignore_unused_variable_warning(writer);
    }
@@ -184,7 +184,7 @@ public:
    /**
     * De-serialize this devices data.
     */
-   virtual void readObject(vpr::ObjectReader* reader)
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
    {
       boost::ignore_unused_variable_warning(reader);
    }

@@ -78,7 +78,7 @@ class IntersenseAPI
 {
 public:
    IntersenseAPI();
-   virtual ~IntersenseAPI();
+   virtual ~IntersenseAPI() throw ();
 
    /** Configures the device with a config element. */
    virtual bool config(jccl::ConfigElementPtr e);

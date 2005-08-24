@@ -65,7 +65,7 @@ bool MSFTSpeechRecogString::config(jccl::ConfigElementPtr c)
    return true;
 }
 
-MSFTSpeechRecogString::~MSFTSpeechRecogString()
+MSFTSpeechRecogString::~MSFTSpeechRecogString() throw ()
 {
    this->stopSampling();
 }

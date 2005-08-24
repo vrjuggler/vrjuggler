@@ -63,7 +63,7 @@ public:
     * @pre None.
     * @post Shared memory is released.
     */
-   virtual ~DTK();
+   virtual ~DTK() throw ();
 
    /** Configures the device with a config chunk. */
    virtual bool config(jccl::ConfigChunkPtr c);

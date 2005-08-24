@@ -58,7 +58,7 @@ KeyEvent::KeyEvent()
 }
 
 // Serializes this event using the given ObjectWriter.
-void KeyEvent::writeObject(vpr::ObjectWriter* writer)
+void KeyEvent::writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
 {
    writer->writeUint16(mType);
 
@@ -70,7 +70,7 @@ void KeyEvent::writeObject(vpr::ObjectWriter* writer)
 }
 
 // De-serializes this event using the given ObjectReader.
-void KeyEvent::readObject(vpr::ObjectReader* reader)
+void KeyEvent::readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
 {
    // We have already read the type in KeyboardMouse to decide
    // if we should construct a KeyEvent or a MouseEvent

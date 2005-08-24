@@ -62,7 +62,10 @@ public:
 public:
    Glove();
 
-   virtual ~Glove() {}
+   virtual ~Glove() throw ()
+   {
+      /* Do nothing. */ ;
+   }
 
    virtual bool config(jccl::ConfigElementPtr element);
 
@@ -131,8 +134,9 @@ public:
       return std::string("Glove");
    }
 
-   virtual void writeObject(vpr::ObjectWriter* writer);
-   virtual void readObject(vpr::ObjectReader* reader);
+   virtual void writeObject(vpr::ObjectWriter* writer)
+      throw (vpr::IOException);
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException);
 
    /** Utility function to generate GloveData from DigitalData. */
    std::vector<GloveData> getGloveDataFromDigitalData(const std::vector<DigitalData>& digitalData);

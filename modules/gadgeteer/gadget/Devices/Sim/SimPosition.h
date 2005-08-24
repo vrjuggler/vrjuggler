@@ -87,14 +87,17 @@ public:
       , mDRot(-1221.75f)
    {;}
 
-   virtual ~SimPosition() {;}
+   virtual ~SimPosition() throw ()
+   {
+      /* Do nothing. */ ;
+   }
 
    virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
-   bool startSampling() { return 1; }
-   bool stopSampling() { return 1; }
-   bool sample() { return 1; }
+   bool startSampling() { return true; }
+   bool stopSampling() { return true; }
+   bool sample() { return true; }
 
    /** Updates the data. */
    virtual void updateData();

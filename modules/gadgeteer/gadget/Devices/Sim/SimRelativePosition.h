@@ -58,7 +58,10 @@ class SimRelativePosition : public InputMixer<Input,Position>
 {
 public:
    SimRelativePosition() {;}
-   virtual ~SimRelativePosition() {;}
+   virtual ~SimRelativePosition() throw ()
+   {
+      /* Do nothing. */ ;
+   }
 
    virtual bool config(jccl::ConfigElementPtr element);
 

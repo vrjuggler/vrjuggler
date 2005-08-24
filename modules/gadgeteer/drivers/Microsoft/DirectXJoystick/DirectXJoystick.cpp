@@ -70,7 +70,7 @@ DirectXJoystick::DirectXJoystick()
 {
 }
 
-DirectXJoystick::~DirectXJoystick()
+DirectXJoystick::~DirectXJoystick() throw ()
 {
    stopSampling();
 }

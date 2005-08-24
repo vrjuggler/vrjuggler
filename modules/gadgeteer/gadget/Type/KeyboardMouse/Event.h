@@ -87,15 +87,16 @@ public:
       return mTime;
    }
 
-   virtual ~Event()
+   virtual ~Event() throw ()
    {
    }
 
    /** Serializes this object. */
-   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void writeObject(vpr::ObjectWriter* writer)
+      throw (vpr::IOException);
 
    /** De-serializes this object. */
-   virtual void readObject(vpr::ObjectReader* reader);
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException);
 
 protected:
    /**

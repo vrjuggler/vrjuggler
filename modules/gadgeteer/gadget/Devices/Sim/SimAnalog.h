@@ -61,7 +61,7 @@ class SimAnalog : public InputMixer<InputMixer<SimInput,Input>,Analog>
 public:
    SimAnalog();
 
-   virtual ~SimAnalog();
+   virtual ~SimAnalog() throw ();
 
    /**
     * Reads the minimum and maximum value configuration information for this

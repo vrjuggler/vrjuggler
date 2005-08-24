@@ -84,7 +84,7 @@ Fastrak::Fastrak() : mSampleThread(NULL)
    ;
 }
 
-Fastrak::~Fastrak()
+Fastrak::~Fastrak() throw ()
 {
    this->stopSampling();
    mFastrakDev.trackerFinish();

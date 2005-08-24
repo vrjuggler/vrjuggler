@@ -81,7 +81,7 @@ public:
    Position();
 
    /** Destructor */
-   virtual ~Position();
+   virtual ~Position() throw ();
 
    virtual bool config(jccl::ConfigElementPtr e);
 
@@ -144,10 +144,11 @@ public:
    }
 
    /** Serializes this object. */
-   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void writeObject(vpr::ObjectWriter* writer)
+      throw (vpr::IOException);
 
    /** De-serializes this object. */
-   virtual void readObject(vpr::ObjectReader* reader);
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException);
 
    /**
     * Returns the current stable sample buffers for this device.

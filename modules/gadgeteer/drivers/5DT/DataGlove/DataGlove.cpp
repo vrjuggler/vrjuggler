@@ -81,7 +81,7 @@ std::string DataGlove::getElementType()
    return "data_glove";
 }
 
-DataGlove::~DataGlove ()
+DataGlove::~DataGlove() throw ()
 {
    stopSampling();      // Stop the glove
    delete mGlove;       // Delete the glove

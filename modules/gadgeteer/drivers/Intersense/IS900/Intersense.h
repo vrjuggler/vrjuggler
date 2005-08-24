@@ -151,7 +151,7 @@ protected:
 
 public:
    Intersense();
-   virtual ~Intersense();
+   virtual ~Intersense() throw ();
 
    /** Configures the device with a config element. */
    virtual bool config(jccl::ConfigElementPtr e);

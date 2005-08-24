@@ -85,7 +85,7 @@ public:
       }
    }
 
-   virtual ~ApplicationData()
+   virtual ~ApplicationData() throw ()
    {
       ;
    }

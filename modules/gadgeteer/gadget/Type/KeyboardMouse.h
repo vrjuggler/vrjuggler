@@ -70,7 +70,7 @@ public:
 
    KeyboardMouse();
 
-   virtual ~KeyboardMouse()
+   virtual ~KeyboardMouse() throw ()
    {
       /* Do nothing. */ ;
    }
@@ -81,13 +81,14 @@ public:
     * Writes both mCurKeys and mCurEventQueueLock to a stream using the given
     * object writer.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void writeObject(vpr::ObjectWriter* writer)
+      throw (vpr::IOException);
 
    /**
     * Reads mCurKeys and mCurEventQueueLock from a stream using the given
     * object reader.
     */
-   virtual void readObject(vpr::ObjectReader* reader);
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException);
 
    virtual bool config(jccl::ConfigElementPtr element)
    {

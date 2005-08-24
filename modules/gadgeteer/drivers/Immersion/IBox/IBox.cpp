@@ -116,7 +116,7 @@ bool IBox::config(jccl::ConfigElementPtr e)
   do the rest.
 
 *********************************************** ahimberg */
-IBox::~IBox()
+IBox::~IBox() throw ()
 {
   stopSampling();
 }

@@ -70,7 +70,7 @@ const CommandData Command::getCommandData(int devNum)
    }
 }
 
-void Command::writeObject(vpr::ObjectWriter* writer)
+void Command::writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
 {
    writer->beginTag(Command::getInputTypeName());
    SampleBuffer_t::buffer_t& stable_buffer = mCommandSamples.stableBuffer();
@@ -110,7 +110,7 @@ void Command::writeObject(vpr::ObjectWriter* writer)
    writer->endTag();
 }
 
-void Command::readObject(vpr::ObjectReader* reader)
+void Command::readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
 {
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");

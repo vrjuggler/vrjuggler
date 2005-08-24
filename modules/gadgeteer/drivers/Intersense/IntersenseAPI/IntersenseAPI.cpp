@@ -124,7 +124,7 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-IntersenseAPI::~IntersenseAPI()
+IntersenseAPI::~IntersenseAPI() throw ()
 {
    this->stopSampling();
 }

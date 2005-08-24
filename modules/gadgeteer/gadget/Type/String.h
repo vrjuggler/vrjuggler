@@ -82,7 +82,7 @@ namespace gadget
          ;
       }
 
-      virtual ~String()
+      virtual ~String() throw ()
       {
          ;
       }
@@ -140,9 +140,11 @@ namespace gadget
          return std::string("String");
       }
 
-      virtual void writeObject(vpr::ObjectWriter* writer);
+      virtual void writeObject(vpr::ObjectWriter* writer)
+         throw (vpr::IOException);
 
-      virtual void readObject(vpr::ObjectReader* reader);
+      virtual void readObject(vpr::ObjectReader* reader)
+         throw (vpr::IOException);
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.

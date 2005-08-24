@@ -128,7 +128,7 @@ public:
    /** Type of the placeholder object that can be used to represent us */
    typedef InputPlaceHolder< InputMixer<ComposedParent, NewParent> > MixedPlaceholderType;
 
-   void writeObject(vpr::ObjectWriter* writer)
+   void writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
    {
       writer->beginTag(InputMixer<ComposedParent,NewParent>::getInputTypeName());
       ComposedParent::writeObject(writer);
@@ -136,7 +136,7 @@ public:
       writer->endTag();
    }
 
-   void readObject(vpr::ObjectReader* reader)
+   void readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
    {
       reader->beginTag(InputMixer<ComposedParent,NewParent>::getInputTypeName());
       ComposedParent::readObject(reader);

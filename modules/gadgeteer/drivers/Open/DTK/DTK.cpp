@@ -165,7 +165,7 @@ bool DTK::config(jccl::ConfigChunkPtr c)
    return true;
 }
 
-DTK::~DTK()
+DTK::~DTK() throw ()
 {
    this->stopSampling();
    int i = 0;

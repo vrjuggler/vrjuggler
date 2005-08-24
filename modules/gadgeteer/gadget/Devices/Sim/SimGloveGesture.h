@@ -57,6 +57,11 @@ public:
    /** Constructs a SimGloveGesture. */
    SimGloveGesture() {;}
 
+   ~SimGloveGesture() throw ()
+   {
+      /* Do nothing. */ ;
+   }
+
    virtual bool config(jccl::ConfigElementPtr element);
 
    /**

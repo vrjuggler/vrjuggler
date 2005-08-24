@@ -64,7 +64,7 @@ public:
    SimDigitalGlove();
 
    /** Destructor. */
-   virtual ~SimDigitalGlove();
+   virtual ~SimDigitalGlove() throw ();
 
    /** Configures this device. */
    virtual bool config(jccl::ConfigElementPtr element);

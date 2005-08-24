@@ -66,7 +66,7 @@ class Fastrak : public InputMixer<InputMixer<Input,Digital>, Position>
 {
 public:
    Fastrak();           // must call gadget::Analog()? see gadget/Type/Analog.h
-   virtual ~Fastrak();
+   virtual ~Fastrak() throw ();
 
    // return what element type is associated with this class.
    static std::string getElementType();

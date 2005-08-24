@@ -59,7 +59,7 @@ class GADGET_CLASS_API InputAreaWin32 : public gadget::InputArea
 {
 public:
    InputAreaWin32();
-   ~InputAreaWin32();
+   ~InputAreaWin32() throw ();
 
    /**
     * Handles any events in the system.

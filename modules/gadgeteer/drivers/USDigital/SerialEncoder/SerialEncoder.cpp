@@ -65,7 +65,7 @@ SerialEncoder::SerialEncoder()
    /* Do nothing. */
 }
 
-SerialEncoder::~SerialEncoder()   
+SerialEncoder::~SerialEncoder() throw ()
 {
    this->stopSampling();
    delete mSerialEncoder;

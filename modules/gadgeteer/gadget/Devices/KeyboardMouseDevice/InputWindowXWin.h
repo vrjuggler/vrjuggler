@@ -99,7 +99,7 @@ public:
       vprASSERT(NULL == mThread);      // Should have been initialized in base constructor
    }
 
-   ~InputWindowXWin()
+   ~InputWindowXWin() throw ()
    {
       //stopSampling();
    }

@@ -50,12 +50,12 @@ Analog::Analog()
    /* Do nothing. */ ;
 }
 
-Analog::~Analog()
+Analog::~Analog() throw ()
 {
    /* Do nothing. */ ;
 }
 
-void Analog::writeObject(vpr::ObjectWriter* writer)
+void Analog::writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
 {
    //std::cout << "[Remote Input Manager] In Analog write" << std::endl;
 
@@ -105,7 +105,7 @@ void Analog::writeObject(vpr::ObjectWriter* writer)
    writer->endTag();
 }
 
-void Analog::readObject(vpr::ObjectReader* reader)
+void Analog::readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
 {
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");

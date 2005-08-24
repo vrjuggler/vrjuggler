@@ -86,6 +86,11 @@ public:
     */
    KeyEvent();
 
+   virtual ~KeyEvent() throw ()
+   {
+      /* Do nothing. */ ;
+   }
+
    /**
     * Get the key that was pressed while generating this event.
     */
@@ -118,12 +123,13 @@ public:
    /**
     * Serializes this event using the given ObjectWriter.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void writeObject(vpr::ObjectWriter* writer)
+      throw (vpr::IOException);
 
    /**
     * De-serializes this event using the given ObjectReader.
     */
-   virtual void readObject(vpr::ObjectReader* reader);
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException);
 
 protected:
    gadget::Keys mKey;          /**< The actual key pressed. */

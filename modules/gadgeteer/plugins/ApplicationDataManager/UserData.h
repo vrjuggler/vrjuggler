@@ -79,7 +79,7 @@
  *
  * \code
  * template<>
- * vpr::ReturnStatus
+ * void
  * vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
  * {
  *    writer->writeUint16(something);
@@ -87,7 +87,7 @@
  * }
  *
  * template<>
- * vpr::ReturnStatus
+ * void
  * vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* reader)
  * {
  *    something = reader->readUint16();
@@ -132,14 +132,19 @@ public:
       : ApplicationData(id, host_name)
    {;}
 
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   ~AppDataMixin() throw ()
    {
-      return BASE::writeObject(writer);
+      /* Do nothing. */ ;
    }
 
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   virtual void writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
    {
-      return BASE::readObject(reader);
+      BASE::writeObject(writer);
+   }
+
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
+   {
+      BASE::readObject(reader);
    }
 
 #ifndef _MSC_VER

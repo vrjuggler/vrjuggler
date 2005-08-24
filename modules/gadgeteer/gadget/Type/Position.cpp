@@ -56,7 +56,7 @@ namespace gadget
 Position::Position()
 {;}
 
-Position::~Position()
+Position::~Position() throw ()
 {;}
 
 
@@ -114,7 +114,7 @@ bool Position::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-void Position::writeObject(vpr::ObjectWriter* writer)
+void Position::writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
 
@@ -163,7 +163,7 @@ void Position::writeObject(vpr::ObjectWriter* writer)
 }
 
 
-void Position::readObject(vpr::ObjectReader* reader)
+void Position::readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
 {
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");

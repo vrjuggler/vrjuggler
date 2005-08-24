@@ -162,7 +162,7 @@ bool Intersense::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-Intersense::~Intersense()
+Intersense::~Intersense() throw ()
 {
     this->stopSampling();
     if (stations != NULL)

@@ -70,7 +70,7 @@ public:
     * @pre None.
     * @post Shared memory is released.
     */
-   ~TrackdAPISensor();
+   ~TrackdAPISensor() throw ();
 
    /**
     * Configures the trackd sensor with the given config element.

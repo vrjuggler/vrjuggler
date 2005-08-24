@@ -60,7 +60,7 @@ public:
       this->setMin( 0.0f );
       this->setMax( 255.0f );
    }
-   ~IBox();
+   virtual ~IBox() throw ();
 
    virtual bool config(jccl::ConfigElementPtr e);
 

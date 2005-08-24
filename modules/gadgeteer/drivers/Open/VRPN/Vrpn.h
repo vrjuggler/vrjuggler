@@ -93,7 +93,7 @@ public:
     * @pre None.
     * @post Shared memory is released.
     */
-   ~Vrpn();
+   virtual ~Vrpn() throw ();
 
    /**
     * Configures the VRPN with the given config element.

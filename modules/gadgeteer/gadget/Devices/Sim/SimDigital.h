@@ -60,7 +60,7 @@ class SimDigital : public InputMixer<InputMixer<SimInput,Input>,Digital>
 {
 public:
    SimDigital();
-   virtual ~SimDigital();
+   virtual ~SimDigital() throw ();
 
    virtual bool config(jccl::ConfigElementPtr element);
 

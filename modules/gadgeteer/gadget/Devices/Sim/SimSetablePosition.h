@@ -67,7 +67,7 @@ public:
    SimSetablePosition()
    {;}
 
-   virtual ~SimSetablePosition()
+   virtual ~SimSetablePosition() throw ()
    {;}
 
    virtual bool config(jccl::ConfigElementPtr element);

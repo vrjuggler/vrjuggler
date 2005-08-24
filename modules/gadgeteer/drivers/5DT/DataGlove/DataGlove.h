@@ -68,7 +68,7 @@ public:
    {;}
 
    /** Destroy the glove */
-   virtual ~DataGlove();
+   virtual ~DataGlove() throw ();
    virtual bool config(jccl::ConfigElementPtr e);
    static std::string getElementType();
    virtual bool startSampling();

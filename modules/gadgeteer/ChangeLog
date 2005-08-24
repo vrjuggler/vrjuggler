@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-24-2005 patrickh    Updated to VPR 1.1.7.
+                        NEW VERSION: 1.1.4
 Jul-11-2005 patrickh    Removed the methods gadget::Proxy::isStupified() and
                         gadget::Proxy::stupify(), both of which are mis-spelled
                         and have been deprecated since 0.92.1.

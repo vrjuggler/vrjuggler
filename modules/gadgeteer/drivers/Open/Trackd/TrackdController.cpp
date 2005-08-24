@@ -70,7 +70,7 @@ TrackdController::TrackdController(): mTrackdController(NULL)
  * @pre None.
  * @post Shared memory is released.
  */
-TrackdController::~TrackdController()
+TrackdController::~TrackdController() throw ()
 {
    delete mTrackdController;
 }
