@@ -53,7 +53,7 @@
 class NavData : public vpr::SerializableObject
 {
 public:
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
    {
       float pos_data[16];
       for ( unsigned n=0;n<16;n++ )
@@ -62,18 +62,17 @@ public:
       }
 
       mCurPos.set(pos_data);
-      return vpr::ReturnStatus::Succeed;
    }
 
-   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   virtual void writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
    {
       const float* pos_data = mCurPos.getData();
       for ( int n=0;n<16;n++ )
       {
          writer->writeFloat(pos_data[n]);
       }
-      return vpr::ReturnStatus::Succeed;
    }
+
 public:
    gmtl::Matrix44f mCurPos;      /**< Current position */
 };

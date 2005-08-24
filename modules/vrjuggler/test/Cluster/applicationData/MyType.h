@@ -45,19 +45,23 @@ struct MyType
 
 namespace vpr
 {
+
 template<>
-inline vpr::ReturnStatus vpr::SerializableObjectMixin<vrjTest::MyType>::writeObject(vpr::ObjectWriter* writer)
+inline void
+vpr::SerializableObjectMixin<vrjTest::MyType>::writeObject(vpr::ObjectWriter* writer)
+   throw (vpr::IOException)
 { 
    writer->writeUint16(something);  
    writer->writeBool(drawBool);
-   return vpr::ReturnStatus::Succeed;
 }
 
 template<>
-inline vpr::ReturnStatus vpr::SerializableObjectMixin<vrjTest::MyType>::readObject(vpr::ObjectReader* reader)
+inline void
+vpr::SerializableObjectMixin<vrjTest::MyType>::readObject(vpr::ObjectReader* reader)
+   throw (vpr::IOException)
 {
    something = reader->readUint16();
    drawBool = reader->readBool();
-   return vpr::ReturnStatus::Succeed;
 }
+
 }
