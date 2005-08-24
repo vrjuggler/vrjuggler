@@ -73,7 +73,10 @@ public:
 public:
    GUID(const GenerateTag& tag);
 
-   virtual ~GUID() {;}
+   virtual ~GUID() throw ()
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
     * Converts this GUID to its corresponding string representation.
@@ -182,8 +185,8 @@ public:
 
    /** @name Reader/Writer methods */
    //@{
-   virtual void writeObject(vpr::ObjectWriter* writer);
-   virtual void readObject(vpr::ObjectReader* reader);
+   virtual void writeObject(vpr::ObjectWriter* writer) throw (IOException);
+   virtual void readObject(vpr::ObjectReader* reader) throw (IOException);
    //@}
 
    /**

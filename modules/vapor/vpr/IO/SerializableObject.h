@@ -44,6 +44,9 @@
 
 #include <vpr/vprConfig.h>
 
+#include <vpr/IO/IOException.h>
+
+
 namespace vpr
 {
 
@@ -59,7 +62,7 @@ class ObjectReader;
 class WriteableObject
 {
 public:
-   virtual ~WriteableObject()
+   virtual ~WriteableObject() throw()
    {;}
 
    /**
@@ -69,8 +72,11 @@ public:
     *
     * @param writer The object writer to which the data for this object
     *               will be written to allow serialization of this object.
+    *
+    * @throw IOException If an error occurs during object serialization.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer) = 0;
+   virtual void writeObject(vpr::ObjectWriter* writer)
+      throw (IOException) = 0;
 
 protected:
    WriteableObject()
@@ -94,7 +100,7 @@ private:
 class ReadableObject
 {
 public:
-   virtual ~ReadableObject()
+   virtual ~ReadableObject() throw()
    {;}
 
    /**
@@ -104,8 +110,11 @@ public:
     *
     * @param reader The object reader from which the data for this object
     *               can be read to allow de-serialization of this object.
+    *
+    * @throw IOException If an error occurs during object de-serialization.
     */
-   virtual void readObject(vpr::ObjectReader* reader) = 0;
+   virtual void readObject(vpr::ObjectReader* reader)
+      throw (IOException) = 0;
 
 protected:
    ReadableObject()
@@ -154,10 +163,12 @@ protected:
  * \code
  * void
  * vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
+ *    throw (IOException)
  * { ... }
  *
  * void
  * vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* writer)
+ *    throw (IOException)
  * { ... }
  * \endcode
  *
@@ -173,8 +184,8 @@ template<class BASE>
 class SerializableObjectMixin : public SerializableObject, public BASE
 {
 public:
-   virtual void writeObject(vpr::ObjectWriter* writer);
-   virtual void readObject(vpr::ObjectReader* reader);
+   virtual void writeObject(vpr::ObjectWriter* writer) throw (IOException);
+   virtual void readObject(vpr::ObjectReader* reader) throw (IOException);
 };
 
 } // namespace vpr

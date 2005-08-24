@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-08-24 patrickh Added throw() clause to vpr::ReadableObject::readObject(),
+                    to vpr::WriteableObject::writeObject(), and to the
+                    destructor for each of those classes.
+                    NEW VERSION: 1.1.7
 2005-08-22 patrickh Added exception handling to Windows/NSPR I/O code.
                     NEW VERSION: 1.1.6
 2005-08-18 aronb    Added exception handling to POSIX/BSD I/O code.

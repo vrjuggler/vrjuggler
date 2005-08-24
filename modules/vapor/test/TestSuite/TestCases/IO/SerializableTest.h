@@ -23,6 +23,7 @@ public:
       {;}
 
       virtual void writeObject(vpr::ObjectWriter* writer)
+         throw (vpr::IOException)
       {
          writer->writeUint8(charVal);
          writer->writeUint16(shortVal);
@@ -37,6 +38,7 @@ public:
       }
 
       virtual void readObject(vpr::ObjectReader* reader)
+         throw (vpr::IOException)
       {
          charVal = reader->readUint8();
          shortVal = reader->readUint16();
@@ -86,6 +88,7 @@ public:
       {;}
 
       virtual void writeObject(vpr::ObjectWriter* writer)
+         throw (vpr::IOException)
       {
          mObj1.writeObject(writer);
          mObj2.writeObject(writer);
@@ -93,6 +96,7 @@ public:
       }
 
       virtual void readObject(vpr::ObjectReader* reader)
+         throw (vpr::IOException)
       {
          mObj1.readObject(reader);
          mObj2.readObject(reader);
@@ -138,7 +142,6 @@ public:
    void testReadWriteNested();
 };
 
-};
+}
 
 #endif
-
