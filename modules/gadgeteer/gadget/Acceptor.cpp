@@ -130,14 +130,13 @@ namespace gadget
       // Open in server mode.
       try
       {
-         sock.openServer();
+         // Open server enabling reuse of bound address.
+         sock.openServer(true);
 
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
          << clrOutBOLD( clrMAGENTA, "[Acceptor]" )
          << " Listening on Port: " << mListenAddr.getPort()
          << std::endl << vprDEBUG_FLUSH;
-         
-         sock.setReuseAddr( true );
       }
       catch (vpr::IOException&)
       {
