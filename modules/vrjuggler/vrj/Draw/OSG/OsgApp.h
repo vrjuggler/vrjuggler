@@ -37,6 +37,7 @@
 
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OGL/GlWindow.h>
 
 #include <vrj/Display/CameraProjection.h>
 
