@@ -60,7 +60,7 @@ ObjectWriter::ObjectWriter(const ObjectWriter& o)
    ;
 }
 
-ObjectWriter::~ObjectWriter()
+ObjectWriter::~ObjectWriter() throw ()
 {
    ;
 }

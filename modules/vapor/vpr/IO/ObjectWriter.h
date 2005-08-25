@@ -45,7 +45,9 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/vprTypes.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/Util/AttributeMapBase.h>
+
 
 namespace vpr
 {
@@ -64,7 +66,7 @@ protected:
    ObjectWriter(const ObjectWriter& o);
 
 public:
-   virtual ~ObjectWriter();
+   virtual ~ObjectWriter() throw ();
 
    /**
     * Returns true if the writer is using a binary based format.
@@ -98,27 +100,87 @@ public:
 \endverbatim
     */
    //@{
-   /** Starts a new section/element of name tagName. */
-   virtual void beginTag(const std::string& tagName) = 0;
+   /**
+    * Starts a new section/element of name \p tagName.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void beginTag(const std::string& tagName) throw (IOException) = 0;
 
-   /** Ends the most recently named tag. */
-   virtual void endTag() = 0;
+   /**
+    * Ends the most recently named tag.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void endTag() throw (IOException) = 0;
 
-   /** Starts an attribute of the name attributeName. */
-   virtual void beginAttribute(const std::string& attributeName) = 0;
+   /**
+    * Starts an attribute of the name \p attributeName.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void beginAttribute(const std::string& attributeName)
+      throw (IOException) = 0;
 
-   /** Ends the most recently named attribute. */
-   virtual void endAttribute() = 0;
+   /**
+    * Ends the most recently named attribute.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void endAttribute() throw (IOException) = 0;
    //@}
 
-   virtual void writeUint8(vpr::Uint8 val) = 0;
-   virtual void writeUint16(vpr::Uint16 val) = 0;
-   virtual void writeUint32(vpr::Uint32 val) = 0;
-   virtual void writeUint64(vpr::Uint64 val) = 0;
-   virtual void writeFloat(float val) = 0;
-   virtual void writeDouble(double val) = 0;
-   virtual void writeString(std::string val) = 0;
-   virtual void writeBool(bool val) = 0;
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeUint8(vpr::Uint8 val) throw (IOException) = 0;
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeUint16(vpr::Uint16 val) throw (IOException) = 0;
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeUint32(vpr::Uint32 val) throw (IOException) = 0;
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeUint64(vpr::Uint64 val) throw (IOException) = 0;
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeFloat(float val) throw (IOException) = 0;
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeDouble(double val) throw (IOException) = 0;
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeString(std::string val) throw (IOException) = 0;
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeBool(bool val) throw (IOException) = 0;
 
 protected:
    bool mIsBinary;   /**< Is this a binary serializer? */

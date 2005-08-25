@@ -50,9 +50,13 @@
 namespace vpr
 {
 
-std::vector<vpr::Uint8> XMLObjectWriter::getData()
+std::vector<vpr::Uint8> XMLObjectWriter::getData() throw (IOException)
 {
-   vprASSERT(mRootNode.get() != NULL);
+   if ( mRootNode.get() == NULL )
+   {
+      throw IOException("NULL root node", VPR_LOCATION);
+   }
+
    std::stringstream oss;
    mRootNode->save(oss, 0);
    std::string str_rep = oss.str();
@@ -65,6 +69,7 @@ std::vector<vpr::Uint8> XMLObjectWriter::getData()
 // And also check the Root node to set it to (this is the first call to
 // beginTag).
 void XMLObjectWriter::beginTag(const std::string& tagName)
+   throw (IOException)
 {
    cppdom::NodePtr new_node;
 
@@ -72,7 +77,12 @@ void XMLObjectWriter::beginTag(const std::string& tagName)
    {
       cppdom::ContextPtr cxt(new cppdom::Context);
       new_node = cppdom::NodePtr(new cppdom::Node(tagName, cxt));
-      vprASSERT(mRootNode.get() == NULL && "Tried to root the writer twice");
+
+      if ( mRootNode.get() != NULL )
+      {
+         throw IOException("Tried to root the writer twice", VPR_LOCATION);
+      }
+
       mRootNode = new_node;
       mCurNode = new_node.get();
    }
@@ -87,7 +97,8 @@ void XMLObjectWriter::beginTag(const std::string& tagName)
       }
 
       // Add new child node
-      new_node = cppdom::NodePtr(new cppdom::Node(tagName, mRootNode->getContext()));
+      new_node = cppdom::NodePtr(new cppdom::Node(tagName,
+                                                  mRootNode->getContext()));
       mCurNode->addChild(new_node);
       mCurNode = new_node.get();
    }
@@ -95,9 +106,12 @@ void XMLObjectWriter::beginTag(const std::string& tagName)
 
 // Ends the most recently named tag.
 // Close off the current node and set current to its parent.
-void XMLObjectWriter::endTag()
+void XMLObjectWriter::endTag() throw (IOException)
 {
-   vprASSERT(mCurNode != NULL);
+   if ( NULL == mCurNode )
+   {
+      throw IOException("Current node is NULL", VPR_LOCATION);
+   }
    //vprASSERT(mCurNode->getParent() != NULL);
 
    // Write out the cdata
@@ -120,19 +134,33 @@ void XMLObjectWriter::endTag()
 
 // Starts an attribute of the name attributeName.
 void XMLObjectWriter::beginAttribute(const std::string& attributeName)
+   throw (IOException)
 {
    // Make sure that we have not called beginAttribute without an endAttribute
-   vprASSERT(mCurAttribName.empty() && "Didn't close previous attribute");
-   vprASSERT(mCurAttribData.empty() && "There should not be any attribute data now.  It should have been flushed");   
+   if ( ! mCurAttribName.empty() )
+   {
+      throw IOException("Did not close previous attribute", VPR_LOCATION);
+   }
+
+   if ( ! mCurAttribData.empty() )
+   {
+      throw IOException(
+         "There should not be any attribute data now.  It should have been flushed",
+         VPR_LOCATION
+      );
+   }
 
    mCurAttribName = attributeName;
    mCurTarget = AttribTarget;
 }
 
 // Ends the most recently named attribute.
-void XMLObjectWriter::endAttribute()
+void XMLObjectWriter::endAttribute() throw (IOException)
 {
-   vprASSERT(AttribTarget == mCurTarget);
+   if ( AttribTarget != mCurTarget )
+   {
+      throw IOException("AttribTarget != mCurTarget", VPR_LOCATION);
+   }
 
    mCurNode->setAttribute(mCurAttribName, mCurAttribData);
    //std::cout << "Setting attrib:[" << mCurAttribName << "] value:[" << mCurAttribData << "]\n";
@@ -143,53 +171,60 @@ void XMLObjectWriter::endAttribute()
    mCurTarget = CdataTarget;
 }
 
-void XMLObjectWriter::writeUint8(vpr::Uint8 val)
+void XMLObjectWriter::writeUint8(vpr::Uint8 val) throw (IOException)
 {
    // Cast to uint16 so it doesn't get written as a char
    writeValueStringRep(vpr::Uint16(val));
 }
 
-void XMLObjectWriter::writeUint16(vpr::Uint16 val)
+void XMLObjectWriter::writeUint16(vpr::Uint16 val) throw (IOException)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeUint32(vpr::Uint32 val)
+void XMLObjectWriter::writeUint32(vpr::Uint32 val) throw (IOException)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeUint64(vpr::Uint64 val)
+void XMLObjectWriter::writeUint64(vpr::Uint64 val) throw (IOException)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeFloat(float val)
+void XMLObjectWriter::writeFloat(float val) throw (IOException)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeDouble(double val)
+void XMLObjectWriter::writeDouble(double val) throw (IOException)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeString(std::string val)
+void XMLObjectWriter::writeString(std::string val) throw (IOException)
 {
-   if(AttribTarget == mCurTarget)
+   if ( AttribTarget == mCurTarget )
    {
-      vprASSERT(mCurAttribData.empty() && "Can't add string to non-empty attribute");
+      if ( ! mCurAttribData.empty() )
+      {
+         throw IOException("Can't add string to non-empty attribute",
+                           VPR_LOCATION);
+      }
+
       mCurAttribData = val;
    }
    else
    {
-      if(!mCurCData.empty())  // Add spacing
+      if ( ! mCurCData.empty() )  // Add spacing
+      {
          mCurCData += ' ';
+      }
       mCurCData += '"' + val + '"';    // Add string in quotes
    }
 }
 
-void XMLObjectWriter::writeBool(bool val)
+void XMLObjectWriter::writeBool(bool val) throw (IOException)
 {
    writeValueStringRep(val);
 }

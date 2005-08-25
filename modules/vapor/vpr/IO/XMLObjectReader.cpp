@@ -39,22 +39,24 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vpr/IO/XMLObjectReader.h>
+#include <vpr/vprConfig.h>
 
+#include <string>
+#include <sstream>
+#include <iterator>
 #include <vector>
 
 #include <boost/concept_check.hpp>
 #include <boost/static_assert.hpp>
-#include <vpr/IO/ObjectReader.h>
-
-#include <vpr/Util/Assert.h>
-#include <vpr/Util/Debug.h>
 
 #include <cppdom/cppdom.h>
 #include <cppdom/version.h>
-#include <string>
-#include <sstream>
-#include <iterator>
+
+#include <vpr/IO/EOFException.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
+
+#include <vpr/IO/XMLObjectReader.h>
 
 #define XML_OR_LEVEL vprDBG_HEX_LVL
 
@@ -65,14 +67,30 @@ namespace
 /** Helper to read the data from the current string. */
 template<class T>
 void readValueStringRep(T& val, std::stringstream* inStream)
+   throw (vpr::IOException)
 {
-   vprASSERT(inStream != NULL);
+   if ( NULL == inStream )
+   {
+      throw vpr::IOException("NULL stream", VPR_LOCATION);
+   }
 
    // Just to be safe do this again for the heck of it. :)
    //in_stream->exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
-   vprASSERT(!inStream->bad() && "Bad stream, BAAADDD stream.");
-   vprASSERT(!inStream->fail() && "Stream failed.");
-   vprASSERT(!inStream->eof() && "Stream EOF'd.");
+   if ( inStream->bad() )
+   {
+      throw vpr::IOException("Bad stream", VPR_LOCATION);
+   }
+
+   if ( inStream->fail() )
+   {
+      throw vpr::IOException("Stream failed", VPR_LOCATION);
+   }
+
+   if ( inStream->eof() )
+   {
+      throw vpr::EOFException("Stream at end of file", VPR_LOCATION);
+   }
+
    vprASSERT(inStream->good());
 
    //stream_content = (*in_stream).str();
@@ -98,8 +116,6 @@ XMLObjectReader::XMLObjectReader(cppdom::NodePtr rootNode)
    mRootNode = rootNode;
    //mAttribSource.exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
 }
-
-
 
 XMLObjectReader::NodeState::NodeState(cppdom::Node* cur_node)
    : node(cur_node)
@@ -183,6 +199,7 @@ void XMLObjectReader::debugDumpStack(int debug_level)
 // Starting a new tag.
 // Get the local cdata into the current data source.
 void XMLObjectReader::beginTag(const std::string& tagName)
+   throw (IOException)
 {
    vprDEBUG_OutputGuard(vprDBG_ALL, XML_OR_LEVEL, std::string("beginTag:[") + tagName + std::string("]\n"), "endTag");
 
@@ -204,7 +221,11 @@ void XMLObjectReader::beginTag(const std::string& tagName)
          << "  num children:" << mCurNodeStack.back().node->getChildren().size()
          << std::endl << vprDEBUG_FLUSH;
 
-      vprASSERT(mCurNodeStack.back().nextChild_i != mCurNodeStack.back().endChild_i && "Past last child. No remaining child tags.");
+      if ( mCurNodeStack.back().nextChild_i == mCurNodeStack.back().endChild_i )
+      {
+         throw IOException("Past last child. No remaining child tags.",
+                           VPR_LOCATION);
+      }
 
       // Make sure that we get to child of type node.
       // While next child is not of type node skip over cdata...
@@ -218,7 +239,12 @@ void XMLObjectReader::beginTag(const std::string& tagName)
             << "Skip node: " << (*(mCurNodeStack.back().nextChild_i))->getName()
             << " -- non nt_node type.\n" << vprDEBUG_FLUSH;
          mCurNodeStack.back().nextChild_i++;
-         vprASSERT(mCurNodeStack.back().nextChild_i != mCurNodeStack.back().endChild_i && "Skipped past last child. No remaining child tags.");
+
+         if ( mCurNodeStack.back().nextChild_i == mCurNodeStack.back().endChild_i )
+         {
+            throw IOException("Skipped past last child. No remaining child tags.",
+                              VPR_LOCATION);
+         }
       }
 
       cppdom::NodePtr tag_node = *(mCurNodeStack.back().nextChild_i);   // Get the node with the given tag
@@ -253,17 +279,24 @@ void XMLObjectReader::beginTag(const std::string& tagName)
 // Ends the most recently named tag.
 // Just pop of the current node state information.
 void XMLObjectReader::endTag()
+   throw (IOException)
 {
-   vprASSERT(!mCurNodeStack.empty());
+   if ( mCurNodeStack.empty() )
+   {
+      throw IOException("Node stack is empty", VPR_LOCATION);
+   }
+
    mCurNodeStack.pop_back();
 }
 
 // Starts an attribute of the name attributeName.
 // Get the attribute content and set the attribute source with that content.
 void XMLObjectReader::beginAttribute(const std::string& attributeName)
+   throw (IOException)
 {
    //std::cout << "beginAttribute: " << attributeName << std::endl;
-   std::string attrib_content = mCurNodeStack.back().node->getAttribute(attributeName).getString();
+   std::string attrib_content =
+      mCurNodeStack.back().node->getAttribute(attributeName).getString();
    //std::cout << "  attrib content: [" << attrib_content << "]\n";
    mAttribSource.clear();                       // Clear error states
    mAttribSource.str(attrib_content);
@@ -274,6 +307,7 @@ void XMLObjectReader::beginAttribute(const std::string& attributeName)
 
 // Ends the most recently named attribute.
 void XMLObjectReader::endAttribute()
+   throw (IOException)
 {
    mAttribSource.clear();
    mAttribSource.seekg(0,std::ios::beg);
@@ -303,7 +337,7 @@ void XMLObjectReader::popState()
 
 
 
-vpr::Uint8 XMLObjectReader::readUint8()
+vpr::Uint8 XMLObjectReader::readUint8() throw (IOException)
 {
    // Read a uint16 so that it does not treat it as a single char
    vpr::Uint16 temp_data;
@@ -311,43 +345,42 @@ vpr::Uint8 XMLObjectReader::readUint8()
    return vpr::Uint8(temp_data);
 }
 
-vpr::Uint16 XMLObjectReader::readUint16()
+vpr::Uint16 XMLObjectReader::readUint16() throw (IOException)
 {
    vpr::Uint16 val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-vpr::Uint32 XMLObjectReader::readUint32()
+vpr::Uint32 XMLObjectReader::readUint32() throw (IOException)
 {
    vpr::Uint32 val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-vpr::Uint64 XMLObjectReader::readUint64()
+vpr::Uint64 XMLObjectReader::readUint64() throw (IOException)
 {
    vpr::Uint64 val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-float XMLObjectReader::readFloat()
+float XMLObjectReader::readFloat() throw (IOException)
 {
    float val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-double XMLObjectReader::readDouble()
+double XMLObjectReader::readDouble() throw (IOException)
 {
    double val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-
-std::string XMLObjectReader::readString()
+std::string XMLObjectReader::readString() throw (IOException)
 {
    std::string ret_val("");   
 
@@ -361,10 +394,14 @@ std::string XMLObjectReader::readString()
       char temp_char('0');
 
       // Get the first "
-      while('"' != temp_char)
+      while ( '"' != temp_char )
       {
          mCurNodeStack.back().cdataSource.get(temp_char);
-         vprASSERT(('>' != temp_char) && ('<' != temp_char) && "String delimiter not found");
+
+         if ( '>' == temp_char || '<' == temp_char )
+         {
+            throw IOException("String delimiter not found", VPR_LOCATION);
+         }
       }
 
       // Get the contents of the string
@@ -384,7 +421,7 @@ std::string XMLObjectReader::readString()
    return ret_val;
 }
 
-bool XMLObjectReader::readBool()
+bool XMLObjectReader::readBool() throw (IOException)
 {
    bool val;
    readValueStringRep(val, getCurSource());

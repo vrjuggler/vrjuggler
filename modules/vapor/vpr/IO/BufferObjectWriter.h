@@ -67,6 +67,8 @@ public:
    BufferObjectWriter(std::vector<vpr::Uint8>* data,
                       const unsigned int curPos = 0);
 
+   virtual ~BufferObjectWriter() throw ();
+
    void setCurPos(unsigned int val)
    {
       mCurHeadPos = val;
@@ -84,55 +86,118 @@ public:
 
    /** @name Tag and attribute handling */
    //@{
-   /** Starts a new section/element of name \p tagName. */
-   virtual void beginTag(const std::string& tagName)
+   /**
+    * Starts a new section/element of name \p tagName.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void beginTag(const std::string& tagName) throw (IOException)
    {
       boost::ignore_unused_variable_warning(tagName);
    }
    
-   /** Ends the most recently named tag. */
-   virtual void endTag()
+   /**
+    * Ends the most recently named tag.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void endTag() throw (IOException)
    {;}
 
-   /** Starts an attribute of the name \p attributeName. */
+   /**
+    * Starts an attribute of the name \p attributeName.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
    virtual void beginAttribute(const std::string& attributeName)
+      throw (IOException)
    {
       boost::ignore_unused_variable_warning(attributeName);
    }
 
-   /** Ends the most recently named attribute. */
-   virtual void endAttribute()
+   /**
+    * Ends the most recently named attribute.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void endAttribute() throw (IOException)
    {;}
    //@}
 
    /**
     * Writes out the single byte.
-    * @post data = old(data)+val, \c mCurHeadPos advaced 1
+    * @post data = old(data)+val, \c mCurHeadPos advanced 1.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
     */
-   virtual void writeUint8(vpr::Uint8 val);
-   virtual void writeUint16(vpr::Uint16 val);
-   virtual void writeUint32(vpr::Uint32 val);
-   virtual void writeUint64(vpr::Uint64 val);
-   virtual void writeFloat(float val);
-   virtual void writeDouble(double val);
-   virtual void writeString(std::string val);
-   virtual void writeBool(bool val);
+   virtual void writeUint8(vpr::Uint8 val) throw (IOException);
 
-   /* Writes raw data of length \p len. */
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeUint16(vpr::Uint16 val) throw (IOException);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeUint32(vpr::Uint32 val) throw (IOException);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeUint64(vpr::Uint64 val) throw (IOException);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeFloat(float val) throw (IOException);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeDouble(double val) throw (IOException);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeString(std::string val) throw (IOException);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeBool(bool val) throw (IOException);
+
+   /**
+    * Writes raw data of length \p len.
+    */
    inline void writeRaw(vpr::Uint8* data,
-                        const unsigned int len = 1);
+                        const unsigned int len = 1)
+      throw (IOException);
 
 public:
    std::vector<vpr::Uint8>*   mData;
    unsigned int               mCurHeadPos;
 };
 
-inline void BufferObjectWriter::writeUint8(vpr::Uint8 val)
+inline void BufferObjectWriter::writeUint8(vpr::Uint8 val) throw (IOException)
 {
    writeRaw(&val, 1);
 }
 
 inline void BufferObjectWriter::writeUint16(vpr::Uint16 val)
+   throw (IOException)
 {
    vpr::Uint16 nw_val = vpr::System::Htons(val);
 
@@ -140,6 +205,7 @@ inline void BufferObjectWriter::writeUint16(vpr::Uint16 val)
 }
 
 inline void BufferObjectWriter::writeUint32(vpr::Uint32 val)
+   throw (IOException)
 {
    vpr::Uint32 nw_val = vpr::System::Htonl(val);
 
@@ -147,13 +213,14 @@ inline void BufferObjectWriter::writeUint32(vpr::Uint32 val)
 }
 
 inline void BufferObjectWriter::writeUint64(vpr::Uint64 val)
+   throw (IOException)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
 
    writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 
-inline void BufferObjectWriter::writeFloat(float val)
+inline void BufferObjectWriter::writeFloat(float val) throw (IOException)
 {
    // We are writing the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
@@ -162,7 +229,7 @@ inline void BufferObjectWriter::writeFloat(float val)
    writeRaw((vpr::Uint8*)&nw_val, 4);
 }
 
-inline void BufferObjectWriter::writeDouble(double val)
+inline void BufferObjectWriter::writeDouble(double val) throw (IOException)
 {
    // We are writing the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
@@ -172,6 +239,7 @@ inline void BufferObjectWriter::writeDouble(double val)
 }
 
 inline void BufferObjectWriter::writeString(std::string val)
+   throw (IOException)
 {
    writeUint16(val.size());
    for(unsigned i=0; i<val.length();++i)
@@ -181,7 +249,7 @@ inline void BufferObjectWriter::writeString(std::string val)
 
 }
 
-inline void BufferObjectWriter::writeBool(bool val)
+inline void BufferObjectWriter::writeBool(bool val) throw (IOException)
 {
    // Darwin uses four bytes (!) for bools.
 #ifdef VPR_OS_Darwin
@@ -193,7 +261,8 @@ inline void BufferObjectWriter::writeBool(bool val)
 }
 
 inline void BufferObjectWriter::writeRaw(vpr::Uint8* data,
-                                                      const unsigned int len)
+                                         const unsigned int len)
+   throw (IOException)
 {
    for(unsigned i=0;i<len;++i)
       mData->push_back(data[i]);

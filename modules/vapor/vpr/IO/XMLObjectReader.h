@@ -70,19 +70,25 @@ public:
 
    XMLObjectReader(cppdom::NodePtr rootNode);
 
+   virtual ~XMLObjectReader() throw ()
+   {
+      /* Do nothing. */ ;
+   }
+
    /** @name Tag and attribute handling. */
    //@{
    /** Starts a new section/element of name \p tagName. */
-   virtual void beginTag(const std::string& tagName);
+   virtual void beginTag(const std::string& tagName) throw (IOException);
 
    /** Ends the most recently named tag. */
-   virtual void endTag();
+   virtual void endTag() throw (IOException);
 
    /** Starts an attribute of the name \p attributeName. */
-   virtual void beginAttribute(const std::string& attributeName);
+   virtual void beginAttribute(const std::string& attributeName)
+      throw (IOException);
 
    /** Ends the most recently named attribute. */
-   virtual void endAttribute();
+   virtual void endAttribute() throw (IOException);
    //@}
 
    virtual void resetReading();
@@ -90,53 +96,141 @@ public:
    virtual void pushState();
    virtual void popState();
 
-   virtual vpr::Uint8 readUint8();
-   virtual vpr::Uint16 readUint16();
-   virtual vpr::Uint32 readUint32();
-   virtual vpr::Uint64 readUint64();
-   virtual float readFloat();
-   virtual double readDouble();
-   virtual std::string readString();
-   virtual bool readBool();
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual vpr::Uint8 readUint8() throw (IOException);
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual vpr::Uint16 readUint16() throw (IOException);
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual vpr::Uint32 readUint32() throw (IOException);
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual vpr::Uint64 readUint64() throw (IOException);
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual float readFloat() throw (IOException);
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual double readDouble() throw (IOException);
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual std::string readString() throw (IOException);
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual bool readBool() throw (IOException);
 
    /** @name Helper methods */
    //@{
-   virtual void readUint8(vpr::Uint8& val)
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readUint8(vpr::Uint8& val) throw (IOException)
    {
       val = this->readUint8();
    }
 
-   virtual void readUint16(vpr::Uint16& val)
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readUint16(vpr::Uint16& val) throw (IOException)
    {
       val = this->readUint16();
    }
 
-   virtual void readUint32(vpr::Uint32& val)
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readUint32(vpr::Uint32& val) throw (IOException)
    {
       val = this->readUint32();
    }
 
-   virtual void readUint64(vpr::Uint64& val)
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readUint64(vpr::Uint64& val) throw (IOException)
    {
       val = this->readUint64();
    }
 
-   virtual void readFloat(float& val)
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readFloat(float& val) throw (IOException)
    {
       val = this->readFloat();
    }
 
-   virtual void readDouble(double& val)
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readDouble(double& val) throw (IOException)
    {
       val = this->readDouble();
    }
 
-   virtual void readString(std::string& str)
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readString(std::string& str) throw (IOException)
    {
       str = this->readString();
    }
 
-   virtual void readBool(bool& val)
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readBool(bool& val) throw (IOException)
    {
       val = this->readBool();
    }

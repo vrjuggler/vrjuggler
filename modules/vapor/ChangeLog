@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-08-25 patrickh Added execption throwing to vpr::ObjectReader,
+                    vpr::ObjectWriter, and types derived therefrom.
+                    NEW VERSION: 1.1.8
 2005-08-24 patrickh Added throw() clause to vpr::ReadableObject::readObject(),
                     to vpr::WriteableObject::writeObject(), and to the
                     destructor for each of those classes.
