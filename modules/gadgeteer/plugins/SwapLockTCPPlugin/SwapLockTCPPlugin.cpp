@@ -302,6 +302,8 @@ namespace cluster
             return(vpr::ReturnStatus::Succeed);
          }
       }
+
+      return vpr::ReturnStatus::Fail;
    }
 
    void SwapLockTCPPlugin::masterSend()
