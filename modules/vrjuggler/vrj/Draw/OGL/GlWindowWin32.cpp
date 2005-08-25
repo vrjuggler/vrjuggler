@@ -109,6 +109,10 @@ bool GlWindowWin32::open()
 
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
+   // Ensure that the input window base class has the right dimension
+   // information.
+   InputAreaWin32::resize(mWindowWidth, mWindowHeight);
+
    // Create the main application window
    mWinHandle = CreateWindow(GL_WINDOW_WIN32_CLASSNAME, mWindowName.c_str(),
                              style, mOriginX,
