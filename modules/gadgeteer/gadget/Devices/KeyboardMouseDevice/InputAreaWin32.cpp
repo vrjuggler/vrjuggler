@@ -61,6 +61,8 @@ namespace gadget
 
 InputAreaWin32::InputAreaWin32()
    : mWinHandle(NULL)
+   , mWidth(0)
+   , mHeight(0)
    , mPrevX(0)
    , mPrevY(0)
 {;}
