@@ -54,21 +54,15 @@ namespace vpr
  *
  * Interface used to read object data from a stream.
  */
-class ObjectReader : public AttributeMapBase
+class VPR_CLASS_API ObjectReader : public AttributeMapBase
 {
 protected:
-   ObjectReader()
-      : mIsBinary(false)
-   {;}
+   ObjectReader();
 
-   ObjectReader(const ObjectReader& o)
-      : AttributeMapBase(o)
-      , mIsBinary(false)
-   {;}
+   ObjectReader(const ObjectReader& o);
 
 public:
-   virtual ~ObjectReader()
-   {;}
+   virtual ~ObjectReader();
 
    /**
     * Returns true if this writer is using a binary-based format.

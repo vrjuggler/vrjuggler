@@ -133,6 +133,12 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\BlockIO.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\BufferObjectReader.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\BufferObjectWriter.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionRefusedException.cpp">
 			</File>
 			<File
@@ -188,6 +194,12 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\ObjectReader.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\ObjectWriter.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Port\Port.cpp">

@@ -64,8 +64,12 @@ SUBDIR=		Port		\
 		Stats
 
 SRCS=		BlockIO.cpp		\
+		BufferObjectReader.cpp	\
+		BufferObjectWriter.cpp	\
 		EOFException.cpp	\
 		IOException.cpp		\
+		ObjectReader.cpp	\
+		ObjectWriter.cpp	\
 		TimeoutException.cpp	\
 		WouldBlockException.cpp	\
 		XMLObjectReader.cpp	\

@@ -59,23 +59,13 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class BufferObjectWriter : public ObjectWriter
+class VPR_CLASS_API BufferObjectWriter : public ObjectWriter
 {
 public:
-   BufferObjectWriter()
-      : mData(new std::vector<vpr::Uint8>)
-      , mCurHeadPos(0)
-   {
-      mIsBinary = true;
-   }
+   BufferObjectWriter();
 
    BufferObjectWriter(std::vector<vpr::Uint8>* data,
-                      const unsigned int curPos = 0)
-      : mData(data)
-      , mCurHeadPos(curPos)
-   {
-      mIsBinary = true;
-   }
+                      const unsigned int curPos = 0);
 
    void setCurPos(unsigned int val)
    {
