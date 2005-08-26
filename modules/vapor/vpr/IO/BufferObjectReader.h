@@ -62,16 +62,11 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class BufferObjectReader : public ObjectReader
+class VPR_CLASS_API BufferObjectReader : public ObjectReader
 {
 public:
    BufferObjectReader(std::vector<vpr::Uint8>* data,
-                      const unsigned int curPos = 0)
-      : mData(data)
-      , mCurHeadPos(curPos)
-   {
-      mIsBinary = true;
-   }
+                      const unsigned int curPos = 0);
 
    void setCurPos(const unsigned int val)
    {
@@ -100,7 +95,6 @@ public:
       mHeadPosStateStack.pop_back();
       setCurPos(new_head_pos);
    }
-
 
    /** @name Tag and attribute handling */
    //@{
