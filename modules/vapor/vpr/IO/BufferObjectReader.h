@@ -198,14 +198,14 @@ public:
    std::vector<unsigned int>  mHeadPosStateStack;  /**< Store pushed and popped state information */
 };
 
-vpr::Uint8 BufferObjectReader::readUint8()
+inline vpr::Uint8 BufferObjectReader::readUint8()
 {
    vpr::Uint8 temp_data;
    memcpy(&temp_data, readRaw(1), 1);
    return temp_data;
 }
 
-vpr::Uint16 BufferObjectReader::readUint16()
+inline vpr::Uint16 BufferObjectReader::readUint16()
 {
    vpr::Uint16 nw_val;
    memcpy(&nw_val, readRaw(2), 2);
@@ -213,7 +213,7 @@ vpr::Uint16 BufferObjectReader::readUint16()
    return vpr::System::Ntohs(nw_val);
 }
 
-vpr::Uint32 BufferObjectReader::readUint32()
+inline vpr::Uint32 BufferObjectReader::readUint32()
 {
    vpr::Uint32 nw_val;
    memcpy(&nw_val, readRaw(4), 4);
@@ -221,7 +221,7 @@ vpr::Uint32 BufferObjectReader::readUint32()
    return vpr::System::Ntohl(nw_val);
 }
 
-vpr::Uint64 BufferObjectReader::readUint64()
+inline vpr::Uint64 BufferObjectReader::readUint64()
 {
    vpr::Uint64 nw_val;
    memcpy(&nw_val, readRaw(8), 8);
@@ -230,7 +230,7 @@ vpr::Uint64 BufferObjectReader::readUint64()
    return h_val;
 }
 
-float BufferObjectReader::readFloat()
+inline float BufferObjectReader::readFloat()
 {
    // We are reading the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
@@ -242,7 +242,7 @@ float BufferObjectReader::readFloat()
    return *((float*)&h_val);
 }
 
-double BufferObjectReader::readDouble()
+inline double BufferObjectReader::readDouble()
 {
    // We are reading the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
@@ -255,7 +255,7 @@ double BufferObjectReader::readDouble()
    return d_val;
 }
 
-std::string BufferObjectReader::readString()
+inline std::string BufferObjectReader::readString()
 {
    vpr::Uint16 str_len = readUint16();
    std::string ret_val;
@@ -268,12 +268,12 @@ std::string BufferObjectReader::readString()
    return ret_val;
 }
 
-bool BufferObjectReader::readBool()
+inline bool BufferObjectReader::readBool()
 {
    return (bool)*(readRaw(1));
 }
 
-vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
+inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
 {
    mCurHeadPos += len;
    vprASSERT((mCurHeadPos-len) < mData->size());
