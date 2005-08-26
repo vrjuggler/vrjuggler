@@ -43,9 +43,10 @@
 #  define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
 #endif
 
+#include <iostream>
+
 namespace vrj
 {
-
 PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& displayName)
 {
    mName = displayName;
@@ -65,7 +66,7 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& disp
 void PfInputHandler::openConnection()
 {
    static Atom wm_protocols, wm_delete_window;
-   
+
    if (!mPipe)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -76,8 +77,8 @@ void PfInputHandler::openConnection()
    }
 
    const char* str = pfGetPipeWSConnectionName(mPipe);
-
    mXDisplay = pfOpenWSConnection(str, false);
+
    if (NULL == mXDisplay)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -87,15 +88,23 @@ void PfInputHandler::openConnection()
       return;
    }
 
+   XSetErrorHandler( errorHandler );
+   //XWindowAttributes* attrib = 0;
+   //XGetWindowAttributes( mXDisplay, mXWindow, attrib );
+
+   //std::cout << attrib->x << std::endl
+   //            << attrib->y << std::endl
+   //            << attrib->width << std::endl
+   //            << attrib->height << std::endl;
+
    // XSync in order to ensure that window is initialized
    // for this connection.
    XSync(mXDisplay, false);
 
-   static long event_mask = (FocusChangeMask | ExposureMask |
-                             VisibilityChangeMask | /*StructureNotifyMask |*/
-                             KeyPressMask | KeyReleaseMask | 
-                             ButtonPressMask | ButtonReleaseMask |
-                             PointerMotionMask);
+   // Get the same events as the GLXWindow gets....
+   unsigned long event_mask = ExposureMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask |
+                   ButtonPressMask | ButtonReleaseMask | ButtonMotionMask |
+                   PointerMotionMask | StructureNotifyMask;
 
    wm_protocols = XInternAtom(mXDisplay, "WM_PROTOCOLS", 1);
    wm_delete_window = XInternAtom(mXDisplay, "WM_DELETE_WINDOW", 1);
@@ -152,11 +161,8 @@ void PfInputHandler::handleEvents()
    // in a server roundtrip (in Linux) and probably causes a performance
    // hit.  So only being defined for LINUX
    */
-#ifdef __linux__
+
    while (XPending(mXDisplay)) 
-#else
-   while (XEventsQueued(mXDisplay, QueuedAlready)) 
-#endif
    {
       XNextEvent(mXDisplay, &event);
       
@@ -183,6 +189,18 @@ void PfInputHandler::handleEvents()
          break;
       }
    }
+}
+
+int PfInputHandler::errorHandler( ::Display* display, XErrorEvent* e )
+{
+   char* errorOutput = new char[ 512 ];
+   XGetErrorText( e->display, (int)e->error_code, errorOutput, 512 );
+   vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR:")
+         << "PfInputHandler::errorHandler Caught X Error '\n" << errorOutput
+         << "'\n" << vprDEBUG_FLUSH;
+   delete [] errorOutput;
+   return 0;
 }
 #endif /* VPR_OS_Windows */
 } // End of vrj namespace

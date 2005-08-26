@@ -121,6 +121,12 @@ public:
     */
    void handleEvents();
 
+   /**
+    * Handles error output from X services
+    * Traps X errors instead of killing the application
+    */
+   static int errorHandler( ::Display* display, XErrorEvent* e );
+
 private:
    void openConnection();
 #endif
