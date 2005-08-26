@@ -293,7 +293,7 @@ void PfDrawManager::initAPI()
    //pfFrame();
 
    // Dump the state
-//   debugDump(vprDBG_CONFIG_LVL);
+   // debugDump(vprDBG_CONFIG_LVL);
 
    vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL)
       << "[vrj::PfDrawManager::initAPI()] Exiting." << std::endl
@@ -620,18 +620,24 @@ void PfDrawManager::addDisplay(Display* disp)
    // Call pfFrame to cause the pipeWindow configured to be opened and setup.
    pfFrame();
    
-   ////pfuInitInput( pWin, PFUINPUT_NOFORK_X );
-   //pfuInitInput( pf_disp.pWin, PFUINPUT_X );
-   ////pfPWinType( pWin, PFPWIN_TYPE_X_NOFORK );
-   //pfPWinType( pf_disp.pWin, PFPWIN_TYPE_X );
-   
-   //pfuInputHandler(&handlePerformerEvents, PFUINPUT_CATCH_ALL);
+   // This is neccessary because it may take a couple
+   // frames for the window to fully open. This information was
+   // found in "man pfPipeWindow".
+
+   // Performer says that if you trigger a window from the applciation proccess
+   // you must wait for the window to open during the draw process.
+   while( !pfIsPWinOpen( pf_disp.pWin ) )
+   {
+      pfFrame();
+      vpr::System::usleep( 500 ); 
+   }
 
    PfInputHandler* new_input_handler = new PfInputHandler(pf_disp.pWin, disp->getName());
-
+   
    // Configure the Performer window to accept events.
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
    new_input_handler->config(display_elt, disp);
+
    
    mPfInputHandlers.push_back(new_input_handler);
 
