@@ -123,12 +123,6 @@ public class TweekCore
          System.err.println(ex.getMessage());
       }
 
-      // Add in the old default Bean directory for backwards compatibility.
-      // This will be removed before Tweek 1.0 is relesaed.
-      String compat_path = System.getProperty("TWEEK_BASE_DIR") +
-                           File.separator + "bin" + File.separator + "beans";
-      mBeanDirs.add(compat_path);
-
       // As a side effect, the following may add more paths to mBeanDirs.
       String[] new_args = parseTweekArgs(args);
 
