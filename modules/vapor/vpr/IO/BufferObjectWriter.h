@@ -104,7 +104,9 @@ public:
     *                    data source.
     */
    virtual void endTag() throw (IOException)
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
     * Starts an attribute of the name \p attributeName.
@@ -125,7 +127,9 @@ public:
     *                    data source.
     */
    virtual void endAttribute() throw (IOException)
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
    //@}
 
    /**
@@ -201,7 +205,7 @@ inline void BufferObjectWriter::writeUint16(vpr::Uint16 val)
 {
    vpr::Uint16 nw_val = vpr::System::Htons(val);
 
-   writeRaw((vpr::Uint8*)&nw_val, 2);
+   writeRaw((vpr::Uint8*) &nw_val, 2);
 }
 
 inline void BufferObjectWriter::writeUint32(vpr::Uint32 val)
@@ -209,7 +213,7 @@ inline void BufferObjectWriter::writeUint32(vpr::Uint32 val)
 {
    vpr::Uint32 nw_val = vpr::System::Htonl(val);
 
-   writeRaw((vpr::Uint8*)&nw_val, 4);
+   writeRaw((vpr::Uint8*) &nw_val, 4);
 }
 
 inline void BufferObjectWriter::writeUint64(vpr::Uint64 val)
@@ -217,36 +221,36 @@ inline void BufferObjectWriter::writeUint64(vpr::Uint64 val)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
 
-   writeRaw((vpr::Uint8*)&nw_val, 8);
+   writeRaw((vpr::Uint8*) &nw_val, 8);
 }
 
 inline void BufferObjectWriter::writeFloat(float val) throw (IOException)
 {
    // We are writing the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
-   vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*)&val));
+   vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*) &val));
 
-   writeRaw((vpr::Uint8*)&nw_val, 4);
+   writeRaw((vpr::Uint8*) &nw_val, 4);
 }
 
 inline void BufferObjectWriter::writeDouble(double val) throw (IOException)
 {
    // We are writing the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
-   vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*)&val));
+   vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*) &val));
 
-   writeRaw((vpr::Uint8*)&nw_val, 8);
+   writeRaw((vpr::Uint8*) &nw_val, 8);
 }
 
 inline void BufferObjectWriter::writeString(std::string val)
    throw (IOException)
 {
    writeUint16(val.size());
-   for(unsigned i=0; i<val.length();++i)
-   {
-      writeRaw((vpr::Uint8*)&(val[i]),1);
-   }
 
+   for ( unsigned int i = 0; i < val.length(); ++i )
+   {
+      writeRaw((vpr::Uint8*) &val[i], 1);
+   }
 }
 
 inline void BufferObjectWriter::writeBool(bool val) throw (IOException)
@@ -254,9 +258,9 @@ inline void BufferObjectWriter::writeBool(bool val) throw (IOException)
    // Darwin uses four bytes (!) for bools.
 #ifdef VPR_OS_Darwin
    vpr::Uint8 temp = (vpr::Uint8) val;
-   writeRaw((vpr::Uint8*)&temp, 1);
+   writeRaw((vpr::Uint8*) &temp, 1);
 #else
-   writeRaw((vpr::Uint8*)&val, 1);
+   writeRaw((vpr::Uint8*) &val, 1);
 #endif
 }
 
@@ -264,8 +268,11 @@ inline void BufferObjectWriter::writeRaw(vpr::Uint8* data,
                                          const unsigned int len)
    throw (IOException)
 {
-   for(unsigned i=0;i<len;++i)
+   for ( unsigned int i = 0; i < len; ++i )
+   {
       mData->push_back(data[i]);
+   }
+
    mCurHeadPos += len;
 }
 
