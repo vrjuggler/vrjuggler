@@ -306,14 +306,14 @@ public:
    std::vector<unsigned int>  mHeadPosStateStack;  /**< Store pushed and popped state information */
 };
 
-vpr::Uint8 BufferObjectReader::readUint8() throw (IOException)
+inline vpr::Uint8 BufferObjectReader::readUint8() throw (IOException)
 {
    vpr::Uint8 temp_data;
    memcpy(&temp_data, readRaw(1), 1);
    return temp_data;
 }
 
-vpr::Uint16 BufferObjectReader::readUint16() throw (IOException)
+inline vpr::Uint16 BufferObjectReader::readUint16() throw (IOException)
 {
    vpr::Uint16 nw_val;
    memcpy(&nw_val, readRaw(2), 2);
@@ -321,7 +321,7 @@ vpr::Uint16 BufferObjectReader::readUint16() throw (IOException)
    return vpr::System::Ntohs(nw_val);
 }
 
-vpr::Uint32 BufferObjectReader::readUint32() throw (IOException)
+inline vpr::Uint32 BufferObjectReader::readUint32() throw (IOException)
 {
    vpr::Uint32 nw_val;
    memcpy(&nw_val, readRaw(4), 4);
@@ -329,7 +329,7 @@ vpr::Uint32 BufferObjectReader::readUint32() throw (IOException)
    return vpr::System::Ntohl(nw_val);
 }
 
-vpr::Uint64 BufferObjectReader::readUint64() throw (IOException)
+inline vpr::Uint64 BufferObjectReader::readUint64() throw (IOException)
 {
    vpr::Uint64 nw_val;
    memcpy(&nw_val, readRaw(8), 8);
@@ -338,7 +338,7 @@ vpr::Uint64 BufferObjectReader::readUint64() throw (IOException)
    return h_val;
 }
 
-float BufferObjectReader::readFloat() throw (IOException)
+inline float BufferObjectReader::readFloat() throw (IOException)
 {
    // We are reading the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
@@ -350,7 +350,7 @@ float BufferObjectReader::readFloat() throw (IOException)
    return *((float*)&h_val);
 }
 
-double BufferObjectReader::readDouble() throw (IOException)
+inline double BufferObjectReader::readDouble() throw (IOException)
 {
    // We are reading the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
@@ -363,7 +363,7 @@ double BufferObjectReader::readDouble() throw (IOException)
    return d_val;
 }
 
-std::string BufferObjectReader::readString() throw (IOException)
+inline std::string BufferObjectReader::readString() throw (IOException)
 {
    vpr::Uint16 str_len = readUint16();
    std::string ret_val;
@@ -376,12 +376,12 @@ std::string BufferObjectReader::readString() throw (IOException)
    return ret_val;
 }
 
-bool BufferObjectReader::readBool() throw (IOException)
+inline bool BufferObjectReader::readBool() throw (IOException)
 {
    return (bool)*(readRaw(1));
 }
 
-vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
+inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
    throw (IOException)
 {
    mCurHeadPos += len;
