@@ -34,6 +34,31 @@
 # This file is used only for generating and installing documentation.  The
 # variable $(webroot) should be assigned an appropriate value in order for
 # an installation to work correctly.
+#
+# The following environment variables must be set to be able to build all the
+# documentation:
+#
+#    DOCBOOK_ROOT   - The directory containing the DocBook XSL stylesheets and
+#    	              the tools needed to render DocBook documents (Batik,
+#    	              FOP, Saxon, and Xalan-J). This may be set as a "build
+#    	              variable" using a command line argumen to make(1).
+#    JAVA_HOME      - The root directory of the Java runtime installation.
+#    TWEEK_BASE_DIR - The root directory of a Tweek Java API installation
+#    		      (using <buildir>/instlinks works fine).
+#    JCCL_BASE_DIR  - The root directory of a JCCL Java API installation
+#    		      (using <buildir>/instlinks works fine).
+#
+# Furthermore, the 'doxygen' command must be in the user's path, and it is
+# generally best if the Graphviz tools are also in the user's path.
+#
+# NOTE: At present, building the Java API references for JCCL and VRJConfig is
+# rather a pain. The javadoc command needs to be able to download information
+# from www.vrjuggler.org for the Tweek and JCCL Java APIs to generate fully
+# hyperlinked content, but the automated documentation rendering process
+# complicates this. In some cases, it may be necessary to render the Tweek Java
+# API documentation & upload it and then render the JCCL Java API documentation
+# & upload it. At that point, it is then possible to render all the Java API
+# documentation using the automated process. Ugh.
 # -----------------------------------------------------------------------------
 # This makefile requires the use of GNU make.
 # =============================================================================
