@@ -34,12 +34,15 @@
 #define _VRJ_PF_INPUT_HANDLER_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Util/Debug.h>
+
+#include <string>
 
 #ifndef VPR_OS_Windows
 #  include <X11/Xlib.h>
 #  include <X11/Xutil.h>
 #endif
+
+#include <Performer/pf.h>
 
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
@@ -51,9 +54,7 @@
 #endif
 
 #include <vrj/Display/Display.h>
-#include <Performer/pf.h>
-
-#include <string>
+#include <vrj/Util/Debug.h>
 
 
 #ifdef VPR_OS_Windows
@@ -121,6 +122,12 @@ public:
     */
    void handleEvents();
 
+   /**
+    * Handles error output from X services
+    * Traps X errors instead of killing the application
+    */
+   static int errorHandler( ::Display* display, XErrorEvent* e );
+
 private:
    void openConnection();
 #endif
@@ -132,4 +139,5 @@ private:
 };
 
 }
+
 #endif
