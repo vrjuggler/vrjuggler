@@ -21,7 +21,7 @@
 
 #include <boost/concept_check.hpp>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 
 #include <windows.h>
 #include <process.h>
@@ -523,7 +523,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 
 #endif
 
-#if !defined VPR_OS_Win32
+#if !defined VPR_OS_Windows
 
 /***********************************************************************
 *

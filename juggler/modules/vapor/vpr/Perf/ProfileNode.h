@@ -84,7 +84,7 @@ namespace vpr
        * @param name      Static string pointer and name for this node.
        * @param queueSize Queue size.
        */
-      ProfileNode(const char * name, const unsigned int queueSize = 0);
+      ProfileNode(const char* name, const unsigned int queueSize = 0);
 
       /**
        * Destructor.
@@ -155,7 +155,7 @@ namespace vpr
        * @param depth Depth in the traversal.  Used for indentation and the
        *              like.
        */
-      void printTree(const unsigned depth = 0);
+      void printTree(const unsigned int depth = 0);
 
       /** Gets an XML representation of the profile hierarchy. */
       std::string getXMLRep();
@@ -195,7 +195,8 @@ namespace vpr
          return mTotalTime;
       }
 
-      typedef std::pair< std::deque<vpr::Interval>::const_iterator, std::deque<vpr::Interval>::const_iterator> NodeHistoryRange;
+      typedef std::pair<std::deque<vpr::Interval>::const_iterator,
+                        std::deque<vpr::Interval>::const_iterator> NodeHistoryRange;
 
       const NodeHistoryRange getNodeHistoryRange()
       {
@@ -217,11 +218,11 @@ namespace vpr
 
    protected:
       /** Helper for building up XML representation recursively. */
-      void getXMLRep(std::stringstream& s, unsigned depth=0);
+      void getXMLRep(std::stringstream& s, unsigned int depth = 0);
 
    protected:
       const char*    mName;         /**< Pointer to the name for this node.  Must be a static string. */
-      unsigned       mTotalCalls;   /**< Total number of times called since last reset. */
+      unsigned int   mTotalCalls;   /**< Total number of times called since last reset. */
       vpr::Interval  mTotalTime;    /**< Total summed time over mTotalCalls. */
       vpr::Interval  mLastSample;   /**< The last sample taken. */
 

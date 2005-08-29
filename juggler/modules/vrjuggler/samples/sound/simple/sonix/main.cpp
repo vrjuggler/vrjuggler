@@ -71,5 +71,7 @@ int main(int argc, char* argv[])
    kernel->setApplication(application);
    kernel->waitForKernelStop();
 
+   delete application;
+
    return 0;
 }

@@ -30,8 +30,8 @@
 #ifndef STOP_WATCH_INCLUDED
 #define STOP_WATCH_INCLUDED
 
-#ifndef WIN32
-   #include <sys/time.h>
+#if ! defined(WIN32) && ! defined(WIN64)
+#  include <sys/time.h>
 #endif
 #include <assert.h>
 
@@ -123,7 +123,7 @@ inline StopWatch::StopWatch() : mTimeDelta( 0.0 ),
  *  @post returns a 64bit float expressed as seconds since midnight (00:00)
  *        Coordinated Universal Time (UTC), January 1, 1970.
  */
-#ifndef WIN32
+#if ! defined(WIN32) && ! defined(WIN64)
    inline double StopWatch::getTime()
    {
      struct timeval tv;

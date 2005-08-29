@@ -63,57 +63,58 @@ vpr::Mutex counterMutex;
 
 const int NUMTHREADS = 16;
 
-	///---//  Beginning of main
-int main(void )
+///---//  Beginning of main
+int main()
 {
-    vpr::ThreadPool* thePool = new vpr::ThreadPool(NUMTHREADS);
-    vpr::Mutex DebugLock;
-    
-    DebugLock.acquire();
-	std::cout << "Hello there\n\n" << std::flush;
-	std::cout << "Start:\n\n";
-    
-	counter = 0;
-	std::cout << "Counter: " << counter << std::endl;
-    DebugLock.release();
-    
-        
-    for (float i=0;i<70;i++) {
-	thePool->startFunc((vpr::thread_func_t)doIt);      
-    }
-    thePool->wait();
+   vpr::ThreadPool* thePool = new vpr::ThreadPool(NUMTHREADS);
+   vpr::Mutex DebugLock;
 
-    std::cerr << "\n\nPast the barrier:" << counter << "\n\n" << std::flush;
+   DebugLock.acquire();
+      std::cout << "Hello there\n\n" << std::flush;
+      std::cout << "Start:\n\n";
 
-    counter = 0;
+      counter = 0;
+      std::cout << "Counter: " << counter << std::endl;
+   DebugLock.release();
 
-    for (float z=0;z<30;z++) {
-	thePool->startFunc((vpr::thread_func_t)doIt);
-    }
-    thePool->wait();
-  
-    DebugLock.acquire();
-	std::cout << "\n\nCounter: " << counter << std::endl << std::flush;
-	
-	std::cout << "End:\n\n";
-	std::cout << "\n" << std::flush;
-	std::cerr << "\n\nDone:" << std::endl;
-    DebugLock.release();
+   for ( int i = 0; i < 70; ++i )
+   {
+      thePool->startFunc((vpr::thread_func_t) doIt);
+   }
+   thePool->wait();
 
+   std::cerr << "\n\nPast the barrier:" << counter << "\n\n" << std::flush;
+
+   counter = 0;
+
+   for ( int z = 0; z < 30; ++z )
+   {
+      thePool->startFunc((vpr::thread_func_t) doIt);
+   }
+   thePool->wait();
+
+   DebugLock.acquire();
+      std::cout << "\n\nCounter: " << counter << std::endl << std::flush;
+
+      std::cout << "End:\n\n";
+      std::cout << "\n" << std::flush;
+      std::cerr << "\n\nDone:" << std::endl;
+   DebugLock.release();
+
+   return 0;
 }
 
 void doIt(void* param)
 {
-    counterMutex.acquire();
-	counter = counter+1;
-	std::cout << vpr::Thread::self() << " Counter:" << counter << std::endl;
-    counterMutex.release();
-    
-    float pdq = 3.14;
-    long iters = (1000000*drand48());
-    for(float q=0;q<iters;q += .34)
-    {
-	pdq = sin(sin(q)*q*cos(q*pdq));
-    }
-    	
+   counterMutex.acquire();
+      counter = counter+1;
+      std::cout << vpr::Thread::self() << " Counter:" << counter << std::endl;
+   counterMutex.release();
+
+   float pdq = 3.14;
+   long iters = 1000000 * drand48();
+   for ( float q = 0; q < iters; q += 0.34 )
+   {
+      pdq = sin(sin(q) * q * cos(q * pdq));
+   }
 }

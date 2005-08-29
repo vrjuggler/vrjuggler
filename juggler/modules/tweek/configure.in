@@ -41,7 +41,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([Tweek], [0.92], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Tweek], [1.0], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([tweek/tweekDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
@@ -169,6 +169,8 @@ AH_TEMPLATE([__mips__], [Define to 1 if building on MIPS architecture.])
 AH_TEMPLATE([__powerpc__], [Define to 1 if building on PowerPC architecture.])
 AH_TEMPLATE([__sparc__], [Define to 1 if building on the SPARC architecture.])
 AH_TEMPLATE([__x86__], [Define to 1 if building on Intel x86 architecture.])
+AH_TEMPLATE([__ia64__],
+            [Define to 1 if building on Intel Itanium architecture.])
 
 # Depending on the target operating system, set various command options and
 # such.
@@ -228,6 +230,10 @@ case $target_os in
          *86)
             AC_DEFINE(__x86__)
             EXTRA_DEFS="$EXTRA_DEFS -D__x86__"
+            ;;
+         ia64)
+            AC_DEFINE(__ia64__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__ia64__"
             ;;
          alpha)
             AC_DEFINE(__alpha__)
@@ -300,6 +306,10 @@ case $target_os in
          *86)
             AC_DEFINE(__x86__)
             EXTRA_DEFS="$EXTRA_DEFS -D__x86__"
+            ;;
+         ia64)
+            AC_DEFINE(__ia64__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__ia64__"
             ;;
          alpha)
             AC_DEFINE(__alpha__)

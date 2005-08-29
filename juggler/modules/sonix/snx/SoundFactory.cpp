@@ -99,9 +99,10 @@ SoundFactory::SoundFactory()
          << "Sonix plug-in loading may fail.\n" << vprDEBUG_FLUSH;
    }
 
-#if defined(_ABIN32)
+#if defined(VPR_OS_IRIX) && defined(_ABIN32)
    std::string snx_lib_dir("${SNX_BASE_DIR}/lib32/snx/plugins");
-#elif defined(_ABI64)
+#elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
+      defined(VPR_OS_Linux) && defined(__x86_64__)
    std::string snx_lib_dir("${SNX_BASE_DIR}/lib64/snx/plugins");
 #else
    std::string snx_lib_dir("${SNX_BASE_DIR}/lib/snx/plugins");
@@ -113,7 +114,7 @@ SoundFactory::SoundFactory()
    snx_lib_dir += std::string("/opt");
 #endif
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
    const std::string driver_ext("dll");
 #elif defined(VPR_OS_Darwin)
    const std::string driver_ext("dylib");

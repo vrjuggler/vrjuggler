@@ -12,7 +12,7 @@ namespace vprTest
 {
 CPPUNIT_TEST_SUITE_REGISTRATION( LibraryFinderTest );
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
 static const std::string C_MOD("cmod.dll");
 static const std::string CXX_MOD("cxxmod.dll");
 static const std::string DSO_SUFFIX(".dll");

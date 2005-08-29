@@ -8,11 +8,24 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.0.1
+Released: August 29, 2005
+    This is a minor bug-fix release made as part of the release of
+    VR Juggler 2.0.1.
+
  Version: 1.0.0
-Released: <month> <day>, 2005
+Released: July 5, 2005
+    New in this release:
+       * Support for Windows XP x64 Edition.
+       * Memory leak fixes in thread initialization when using SPROC and
+         NSPR.
+
+    Recommended chnages when upgrading from all previous versions:
+       * Change uses of VPR_OS_Win32 to VPR_OS_Windows to aid in porting
+         code to the Win64 platform.
 
  Version: 1.0 Beta 3
-Released: May <day>, 2005
+Released: June 7, 2005
     Required changes when upgrading from all previous versions:
        * vpr::ThreadPool::barrier() is now vpr::ThreadPool::wait().
 

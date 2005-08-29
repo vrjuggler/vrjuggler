@@ -151,7 +151,16 @@ private:
    /**
     * The functor to call from startThread.
     */
-   BaseThreadFunctor* mUserThreadFunctor;
+   vpr::BaseThreadFunctor* mUserThreadFunctor;
+
+   /**
+    * Flag indicating if we allocated mUserThreadFunctor and therefore must
+    * delete it ourselves.
+    */
+   bool mDeleteFunctor;
+
+   vpr::ThreadMemberFunctor<vpr::ThreadSGI>* mStartFunctor;
+
    bool               mRunning;
    VPRThreadPriority  mPriority;
 

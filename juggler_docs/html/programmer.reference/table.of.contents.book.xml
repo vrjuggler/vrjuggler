@@ -1,7 +1,0 @@
-<rootfolder
-    title="Programmer Reference" 
-    link="${PROGRAMMERREF}/index.html"
-    info="Quick reference for developers using the Juggler virtual platform.">
-
-    <!-- install-web include ${PROGRAMMERREF}/classes/index_book.xml -->
-</rootfolder>

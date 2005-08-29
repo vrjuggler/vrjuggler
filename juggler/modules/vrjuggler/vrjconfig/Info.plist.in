@@ -51,6 +51,8 @@
 			<string>$JAVAROOT</string>
 			<key>VJ_BASE_DIR</key>
 			<string>$JAVAROOT</string>
+			<key>JCCL_DEFINITION_PATH</key>
+			<string>@prefix@/share/vrjuggler/data/definitions</string>
 			<key>apple.laf.useScreenMenuBar</key>
 			<string>true</string>
 			<key>java.security.policy</key>

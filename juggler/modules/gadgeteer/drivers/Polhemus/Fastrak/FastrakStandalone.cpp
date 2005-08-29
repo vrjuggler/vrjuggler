@@ -140,7 +140,7 @@ void FastrakStandalone::readloop(void *unused)
 
 /*
    // XXX: Maybe this could be replaced with VPR's signal abstraction?
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
    sigignore(SIGINT);
 #endif
 */

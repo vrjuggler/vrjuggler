@@ -61,17 +61,12 @@ namespace vpr
 class ObjectWriter : public AttributeMapBase
 {
 protected:
-   ObjectWriter()
-      : mIsBinary(false)
-   {;}
+   ObjectWriter();
 
-   ObjectWriter(const ObjectWriter& o)
-      : AttributeMapBase(o), mIsBinary(false)
-   {;}
+   ObjectWriter(const ObjectWriter& o);
 
 public:
-   virtual ~ObjectWriter()
-   {;}
+   virtual ~ObjectWriter();
 
    /**
     * Returns true if the writer is using a binary based format.

@@ -153,9 +153,9 @@ void ParseUtil::SearchPathData::setSearchPath(const std::string& path)
    // Ensure that we have a path that is not empty before we try any parsing.
    if ( path.length() > 0 )
    {
-// Define the separator character for the elements of the path.  On Win32, we
-// use ";", and on everything else, we use ":".
-#ifdef VPR_OS_Win32
+// Define the separator character for the elements of the path.  On Windows,
+// we use ";", and on everything else, we use ":".
+#ifdef VPR_OS_Windows
       char elem_sep(';');
       std::string ostype;
 

@@ -156,7 +156,7 @@ bool IntersenseAPI::startSampling()
       // Load the config state from the physical tracker
       mTracker.loadConfigState(station_index);
       mTracker.setState(station_index, mStations[i].enabled);
-      mTracker.setAngleFormat(station_index, ISD_QUATERNION);
+      mTracker.setAngleFormat(station_index, ISD_EULER);
       mTracker.setInputs(station_index,
                          mStations[i].useDigital || mStations[i].useAnalog);
       // Save the config state to the physical tracker.

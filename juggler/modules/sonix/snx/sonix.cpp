@@ -80,7 +80,8 @@ sonix::~sonix()
  * @input alias of the sound to trigger, and number of times to play, -1 to
  *        repeat infinately, 1 (single shot) is default.
  * @preconditions alias does not have to be associated with a loaded sound.
- * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
+ * @postconditions if it is, then the loaded sound is triggered.  if it isn't
+ *                 then nothing happens.
  * @semantics Triggers a sound
  */
 void sonix::trigger( const std::string& alias, const int& repeat )
@@ -173,23 +174,27 @@ void sonix::getListenerPosition(gmtl::Matrix44f& mat)
    this->impl().getListenerPosition( mat );
 }
 
-
 /**
  * change the underlying sound API to something else.
  * @input usually a name of a valid registered sound API implementation
  * @preconditions sound implementation should be registered
- * @postconditions underlying API is changed to the requested API name.   if apiName's implementation is not registered, then underlying API is changed to the stub version.
+ * @postconditions underlying API is changed to the requested API name.   if
+ *                 apiName's implementation is not registered, then underlying
+ *                 API is changed to the stub version.
  * @semantics function is safe: always returns a valid implementation.
  * @time O(1)
- * @output a valid sound API.  if apiName is invalid, then a stub implementation is returned.
+ * @output a valid sound API.  if apiName is invalid, then a stub
+ *         implementation is returned.
  */
 void sonix::changeAPI(const std::string& apiName)
 {
    snx::ISoundImplementation& oldImpl = this->impl();
-   vprASSERT( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
+   vprASSERT(&oldImpl != NULL &&
+             "this->impl() should ensure that oldImpl is non-NULL");
 
    // change the current api to the newly requested one.
-   snx::SoundFactory::instance()->createImplementation( apiName, mImplementation );
+   snx::SoundFactory::instance()->createImplementation(apiName,
+                                                       mImplementation);
 
    vprDEBUG(snxDBG, vprDBG_CRITICAL_LVL) << "Changing sound API from '"
                                          << oldImpl.name() << "' to '"
@@ -197,10 +202,14 @@ void sonix::changeAPI(const std::string& apiName)
                                          << vprDEBUG_FLUSH;
 
    // copy sound state from old to current (doesn't do binding yet)
-   snx::SoundImplementation* si = dynamic_cast<snx::SoundImplementation*>( mImplementation );
-   vprASSERT( NULL != si && "implementation is not of type SoundImplementation, cast fails" );
-   snx::SoundImplementation& old_si = dynamic_cast<snx::SoundImplementation&>( oldImpl );
-   vprASSERT( NULL != &old_si && "implementation is not of type SoundImplementation, cast fails" );
+   snx::SoundImplementation* si =
+      dynamic_cast<snx::SoundImplementation*>(mImplementation);
+   vprASSERT(NULL != si &&
+             "implementation is not of type SoundImplementation, cast fails");
+   snx::SoundImplementation& old_si =
+      dynamic_cast<snx::SoundImplementation&>(oldImpl);
+   vprASSERT(NULL != &old_si &&
+             "implementation is not of type SoundImplementation, cast fails");
    si->copy( old_si );
 
    // unload all sound data
@@ -213,7 +222,8 @@ void sonix::changeAPI(const std::string& apiName)
    delete &oldImpl;
 
    // startup the new API
-   if(!mImplementation->startAPI()) // if it fails to start then we revert back to stub
+   // if it fails to start then we revert back to stub
+   if ( ! mImplementation->startAPI() )
    {
       vprDEBUG(snxDBG, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "ERROR:") << " Failed to start new API--"
@@ -236,7 +246,8 @@ void sonix::configure(const snx::SoundAPIInfo& sai)
  * reconfigure: change properties of the sound to the descriptino provided.
  * @preconditions provide an alias and a SoundInfo which describes the sound
  * @postconditions alias will point to loaded sound data
- * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+ * @semantics associate an alias to sound data.  later this alias can be used
+ *            to operate on this sound data.
  */
 void sonix::configure(const std::string& alias,
                       const snx::SoundInfo& description)
@@ -250,7 +261,8 @@ void sonix::remove(const std::string alias)
 }
 
 /**
- * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+ * @semantics call once per sound frame (doesn't have to be same as your
+ *            graphics frame)
  * @input time elapsed since last frame
  */
 void sonix::step(const float& timeElapsed)
@@ -262,7 +274,8 @@ snx::ISoundImplementation& sonix::impl()
 {
    if (mImplementation == NULL)
    {
-      snx::SoundFactory::instance()->createImplementation( "stub", mImplementation );
+      snx::SoundFactory::instance()->createImplementation("stub",
+                                                          mImplementation);
       mImplementation->startAPI();
       mImplementation->bindAll();
    }

@@ -22,7 +22,7 @@
       is included in <xref linkend="appendix.gfdl" />.</para>
     </legalnotice>
 
-    <releaseinfo>Version 2.0 Beta 3</releaseinfo>
+    <releaseinfo>Version 2.0</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -5719,6 +5719,148 @@ pfDraw();</programlisting>
             member function after clearing the channel and drawing the next
             frame (<function>pfFrame()</function>).</para>
           </section>
+        </section>
+
+        <section>
+          <title><function>pfExit()</function>: To Call or Not to Call</title>
+
+          <para>The Performer function <function>pfExit()</function> poses a
+          problem for VR Juggler applications, and some background information
+          will help ensure that readers understand the consequences of using
+          <function>pfExit()</function> (or not). The main issue with
+          <function>pfExit()</function> as it relates to VR Juggler is that
+          calling <function>pfExit()</function> has the side effect of calling
+          the system function <function>exit()</function>, which means that it
+          should be (or has to be) the very last function call of a program.
+          Prior to VR Juggler 2.0.1, the VR Juggler Performer Draw Manager was
+          written to call <function>pfExit()</function> from within the method
+          <methodname>vrj::PfDrawManager::closeAPI()</methodname>. Before VR
+          Juggler 2.0 Beta 3, however, this method of the
+          <classname>vrj::PfDrawManager</classname> interface had never been
+          called—the result of the kernel shutdown process being incomplete.
+          With the more complete kernel shutdown process in VR Juggler 2.0
+          Beta 3 and 2.0.0, authors of Performer-based VR Juggler applications
+          saw their applications exiting prematurely after invoking the kernel
+          shutdown. More specifically, any code that was intended to be
+          executed after
+          <methodname>vrj::PfDrawManager::closeAPI()</methodname> would not be
+          executed. Such code includes
+          <methodname>vrj::App::exit()</methodname> or an override thereof; an
+          application object destructor; and anything else to be done after
+          <methodname>vrj::Kernel::waitForKernelStop()</methodname>
+          returned.</para>
+
+          <para>To remedy this problem,
+          <methodname>vrj::PfDrawManager::closeAPI()</methodname> in VR
+          Juggler 2.0.1 and newer <emphasis>does not</emphasis> call
+          <function>pfExit()</function>. Rather, it is the responsibility of
+          the application programmer to call <function>pfExit()</function> if
+          s/he so desires. Failing to call <function>pfExit()</function> could
+          result in resource leaks from Performer, but calling
+          <function>pfExit()</function> has been known to cause application
+          crashes (irrespective of whether VR Juggler is used). In general,
+          users should call <function>pfExit()</function> at the end of their
+          <function>main()</function> function, but if doing so causes the
+          application to crash on exit, then not calling
+          <function>pfExit()</function> is probably the better option.</para>
+
+          <sidebar>
+            <para>Resources that could be leaked by Performer if
+            <function>pfExit()</function> is not called would generally fall
+            under the heading of <quote>temporary files.</quote> Resource
+            leaks are not memory leaks since the operating system will
+            automatically deallocate any memory held by Performer at the time
+            of application exit. Since Performer may allocate temporary files
+            for its process locking and shared memory arena, it would usually
+            be best to ensure that Performer cleans up after itself.</para>
+          </sidebar>
+
+          <para>The important thing to remember is that the application object
+          destructor needs to be called <emphasis>before</emphasis>
+          <function>pfExit()</function> is called. Refer to <xref
+          linkend="example.using.pfExit.heap" /> for an example of how
+          <function>pfExit()</function> would be used with a VR Juggler
+          application object allocated on the heap. For a stack-allocated
+          application object, see <xref
+          linkend="example.using.pfExit.stack" />.</para>
+
+          <example id="example.using.pfExit.heap">
+            <title>Using <function>pfExit()</function> with a Heap-Allocated
+            Application Object</title>
+
+            <programlisting linenumbering="numbered">int main(int argc, char* argv[])
+{
+   vrj::Kernel* kernel = vrj::Kernel::instance();
+
+   // Allocate the application object on the heap.  Its
+   // destructor will be called manually before calling
+   // pfExit().
+   simplePfApp* application = new simplePfApp();
+
+   // Load config files.
+   for ( int i = 2; i &lt; argc; ++i )
+   {
+      kernel-&gt;loadConfigFile(argv[i]);
+   }
+
+   kernel-&gt;start();
+
+   // Configure the application.
+   application-&gt;setModel(argv[1]);
+   kernel-&gt;setApplication(application);
+
+   // Wait for the kernel to shut down.
+   kernel-&gt;waitForKernelStop();
+
+   // Final application clean-up.
+   delete application;
+
+   // Clean up Performer.
+   // Calls system exit() function and therefore never returns.
+   pfExit();
+
+   return 0;
+}</programlisting>
+          </example>
+
+          <example id="example.using.pfExit.stack">
+            <title>Using <function>pfExit()</function> with a Stack-Allocated
+            Application Object</title>
+
+            <programlisting linenumbering="numbered">int main(int argc, char* argv[])
+{
+   // Nested scope for stack-allocated data.
+   {
+      vrj::Kernel* kernel = vrj::Kernel::instance();
+
+      // Load config files.
+      for ( int i = 2; i &lt; argc; ++i )
+      {
+         kernel-&gt;loadConfigFile(argv[i]);
+      }
+
+      kernel-&gt;start();
+
+      // Allocate the application object on the stack.  Its
+      // destructor will be called automatically at the end
+      // of this nested scope.
+      simplePfApp application;
+
+      // Configure the application and give it to the kernel.
+      application.setModel(argv[1]);
+      kernel-&gt;setApplication(&amp;application);
+
+      // Wait for the kernel to shut down.
+      kernel-&gt;waitForKernelStop();
+   }
+
+   // Clean up Performer.
+   // Calls system exit() function and therefore never returns.
+   pfExit();
+
+   return 0;
+}</programlisting>
+          </example>
         </section>
       </section>
 

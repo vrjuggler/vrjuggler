@@ -140,7 +140,6 @@ inline StopWatch::StopWatch(const int& averageFpsRefreshRate)
 //  returns - a number of any scalar type (see top for time format)
 // TODO: does compiler optimize the
 //       case where T = double???, if not, then un-template this.
-#ifndef WIN32
 inline void StopWatch::getTime(double& num)
 {
    vpr::TimeVal tv;
@@ -153,24 +152,6 @@ inline void StopWatch::getTime(double& num)
    // cast the high-precision number down to what user wants.
    num = goodPrecision;
 }
-#else
-#include <sys/types.h>
-#include <sys/timeb.h>
-//#include <windows.h>
-//double goodPrecision = GetTickCount() / 1000.0;
-inline void StopWatch::getTime(double& num)
-{
-   struct _timeb tv;
-   _ftime(&tv);
-
-   // compose sec with millisec for sec.millisec
-   double goodPrecision = static_cast<double>(tv.time) +
-			     (static_cast<double>(tv.millitm) / 1000.0);
-
-   // cast the high-precision number down to what user wants.
-   num = goodPrecision;
-}
-#endif
 
 //: Starts the stopwatch
 //  result - sets the value startTime

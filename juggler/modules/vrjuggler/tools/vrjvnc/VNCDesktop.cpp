@@ -28,11 +28,21 @@
  *
  ************ <VRJ VNC auto-copyright.pl END do not edit this line> **********/
 
+#if defined(WIN32) || defined(WIN64)
+#  include <windows.h>
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <X11/Xmd.h>
+
+#if defined(WIN32) || defined(WIN64)
+#  include <WinCompat.h>
+#else
+#  include <X11/Xmd.h>
+#endif
+
 #include <rfbproto.h>
 #include <gmtl/Point.h>
 #include <gmtl/Vec.h>

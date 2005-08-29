@@ -60,7 +60,7 @@ namespace vpr
 {
 
 // XXX: Use a functor for the real handler function?
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 typedef RETSIGTYPE (__cdecl *SignalHandler_t)(int);
 #else
 #if defined(VPR_OS_IRIX) && defined(__GNUC__) && \

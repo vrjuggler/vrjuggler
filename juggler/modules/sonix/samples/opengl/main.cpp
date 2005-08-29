@@ -45,8 +45,8 @@
 //                          there as needed
 //
 
-#ifdef WIN32
-   #include <windows.h>  // make the app win32 friendly. :)
+#if defined(WIN32) || defined(WIN64)
+#  include <windows.h>  // make the app win32 friendly. :)
 #endif
 #include <GL/gl.h>
 #include <GL/glu.h>

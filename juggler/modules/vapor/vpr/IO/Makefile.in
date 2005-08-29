@@ -64,6 +64,10 @@ SUBDIR=		Port		\
 		Stats
 
 SRCS=		BlockIO.cpp		\
+		BufferObjectReader.cpp	\
+		BufferObjectWriter.cpp	\
+		ObjectReader.cpp	\
+		ObjectWriter.cpp	\
 		XMLObjectReader.cpp	\
 		XMLObjectWriter.cpp
 

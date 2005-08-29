@@ -36,6 +36,8 @@
 
 #include <jccl/Config/ConfigElement.h>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/Util/Assert.h>
 #include <gadget/InputManager.h>
 #include <vrj/Util/Debug.h>
@@ -107,6 +109,10 @@ bool GlWindowWin32::open()
 
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
+   // Ensure that the input window base class has the right dimension
+   // information.
+   InputAreaWin32::resize(mWindowWidth, mWindowHeight);
+
    // Create the main application window
    mWinHandle = CreateWindow(GL_WINDOW_WIN32_CLASSNAME, mWindowName.c_str(),
                              style, mOriginX,
@@ -122,7 +128,7 @@ bool GlWindowWin32::open()
    }
 
    // Attach a pointer to the device for use from the WNDPROC
-   SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM) this);
+   SetWindowLongPtr(mWinHandle, GWLP_USERDATA, (LPARAM) this);
 
    // We have a valid window, so... Create the context
    mDeviceContext = GetDC(mWinHandle);            // Store the device context
@@ -239,8 +245,9 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
    if (mXDisplayName == neg_one_STRING)    // Use display env
    {
        const std::string DISPLAY_str("DISPLAY");
-       const char* d = getenv(DISPLAY_str.c_str());
-       if (NULL != d)
+       std::string d;
+       vpr::System::getenv(DISPLAY_str, d);
+       if ( ! d.empty() )
        {
           mXDisplayName = std::string( d );
        }

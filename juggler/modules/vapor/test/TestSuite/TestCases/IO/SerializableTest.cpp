@@ -20,7 +20,7 @@ void SerializableTest::testReaderWriter()
    const vpr::Uint8 data_uint8(0xAB);
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221);
 #else
    const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221ll);
@@ -115,7 +115,7 @@ void SerializableTest::testDataOffsets()
    const vpr::Uint8 data_uint8(0xAB);
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221);
 #else
    const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221ll);
@@ -196,7 +196,7 @@ void SerializableTest::testReadWriteSimple()
    obj1.charVal = 0xAB;
    obj1.shortVal = 0xCAFE;
    obj1.longVal = 0xDEADBEEF;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    obj1.longlongVal = 0xFACEBEEFCAFEDEAD;
 #else
    obj1.longlongVal = 0xFACEBEEFCAFEDEADll;
@@ -233,7 +233,7 @@ void SerializableTest::testReadWriteNested()
    obj1.mObj1.charVal = 0xAB;
    obj1.mObj1.shortVal = 0xCAFE;
    obj1.mObj1.longVal = 0xDEADBEEF;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    obj1.mObj1.longlongVal = 0xFACEBEEFCAFEDEAD;
 #else
    obj1.mObj1.longlongVal = 0xFACEBEEFCAFEDEADll;
@@ -244,7 +244,7 @@ void SerializableTest::testReadWriteNested()
    obj1.mObj2.charVal = 0xEF;
    obj1.mObj2.shortVal = 0xDEAD;
    obj1.mObj2.longVal = 0xBEEFFACE;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    obj1.mObj2.longlongVal = 0xFACEBEEFCAFEDEAD;
 #else
    obj1.mObj2.longlongVal = 0xFACEBEEFCAFEDEADll;

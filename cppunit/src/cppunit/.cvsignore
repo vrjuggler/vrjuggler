@@ -1,9 +1,0 @@
-Makefile.in Makefile
-.deps
-.libs
-*.lo *.la
-*.Tags.WW
-Debug DebugCrossplatform Release ReleaseDll DebugDLL
-*.ncb *.opt
-SunWS_cache
-ir.out

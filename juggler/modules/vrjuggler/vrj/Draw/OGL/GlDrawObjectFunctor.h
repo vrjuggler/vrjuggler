@@ -61,7 +61,6 @@ public:
     */
    virtual void draw(vrj::User* user) = 0;
 
-protected:
    virtual ~GlDrawObjectFunctor()
    {
       /* Do nothing. */ ;
@@ -77,7 +76,6 @@ class GlDrawGloveObjectFunctor : public GlDrawObjectFunctor
 public:
    virtual void setGlove() = 0;
 
-protected:
    virtual ~GlDrawGloveObjectFunctor()
    {
       /* Do nothing. */ ;

@@ -29,13 +29,13 @@ bool FileHandler::canHandle( const char* const filename ) const
 		std::string currentExt = _extensions[x];
 
 		int amountToCompare = kev::Min(fileExt.size(), currentExt.size());
-		#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 		if (strnicmp( fileExt.data(), currentExt.data(), amountToCompare ) == 0)
 			canload = true;
-		#else
+#else
 		if (strncasecmp( fileExt.data(), currentExt.data(), amountToCompare ) == 0)
 			canload = true;
-		#endif
+#endif
 		
 		// cleanup
 		delete []file;

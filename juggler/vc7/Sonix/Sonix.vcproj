@@ -11,16 +11,16 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="DebugDLL"
-			IntermediateDirectory="DebugDLL"
+			Name="DebugDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_ROOT)\include&quot;;..\..\modules\vapor;..\VPR"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -37,9 +37,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix_d.dll"
-				Version="0.92.0"
+				Version="1.0.1"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\VPR\DebugDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/sonix_d.pdb"
 				SubSystem="1"
@@ -61,9 +61,9 @@
 				Name="VCWebDeploymentTool"/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="ReleaseDLL"
-			IntermediateDirectory="ReleaseDLL"
+			Name="ReleaseDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -72,7 +72,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_ROOT)\include&quot;;..\..\modules\vapor;..\VPR"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;_OPT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;_OPT;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -89,9 +89,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix.dll"
-				Version="0.92.0"
+				Version="1.0.1"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\VPR\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -118,9 +118,6 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
-			<File
-				RelativePath="..\..\modules\sonix\snx\FileIO.cpp">
-			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\SoundFactory.cpp">
 			</File>
@@ -151,9 +148,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\Endian.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\sonix\snx\FileIO.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\ISoundImplementation.h">

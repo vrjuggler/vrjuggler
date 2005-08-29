@@ -67,5 +67,7 @@ int main(int argc, char** argv)
    // Block until the kernel exits
    kernel->waitForKernelStop();
 
+   delete application;
+
    return 0;
 }

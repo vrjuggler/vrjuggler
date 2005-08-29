@@ -59,23 +59,13 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class BufferObjectWriter : public ObjectWriter
+class VPR_CLASS_API BufferObjectWriter : public ObjectWriter
 {
 public:
-   BufferObjectWriter()
-      : mData(new std::vector<vpr::Uint8>)
-      , mCurHeadPos(0)
-   {
-      mIsBinary = true;
-   }
+   BufferObjectWriter();
 
    BufferObjectWriter(std::vector<vpr::Uint8>* data,
-                      const unsigned int curPos = 0)
-      : mData(data)
-      , mCurHeadPos(curPos)
-   {
-      mIsBinary = true;
-   }
+                      const unsigned int curPos = 0);
 
    void setCurPos(unsigned int val)
    {
@@ -152,47 +142,48 @@ inline vpr::ReturnStatus BufferObjectWriter::writeUint16(vpr::Uint16 val)
 {
    vpr::Uint16 nw_val = vpr::System::Htons(val);
 
-   return writeRaw((vpr::Uint8*)&nw_val, 2);
+   return writeRaw((vpr::Uint8*) &nw_val, 2);
 }
 
 inline vpr::ReturnStatus BufferObjectWriter::writeUint32(vpr::Uint32 val)
 {
    vpr::Uint32 nw_val = vpr::System::Htonl(val);
 
-   return writeRaw((vpr::Uint8*)&nw_val, 4);
+   return writeRaw((vpr::Uint8*) &nw_val, 4);
 }
 
 inline vpr::ReturnStatus BufferObjectWriter::writeUint64(vpr::Uint64 val)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
 
-   return writeRaw((vpr::Uint8*)&nw_val, 8);
+   return writeRaw((vpr::Uint8*) &nw_val, 8);
 }
 
 inline vpr::ReturnStatus BufferObjectWriter::writeFloat(float val)
 {
    // We are writing the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
-   vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*)&val));
+   vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*) &val));
 
-   return writeRaw((vpr::Uint8*)&nw_val, 4);
+   return writeRaw((vpr::Uint8*) &nw_val, 4);
 }
 
 inline vpr::ReturnStatus BufferObjectWriter::writeDouble(double val)
 {
    // We are writing the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
-   vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*)&val));
+   vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*) &val));
 
-   return writeRaw((vpr::Uint8*)&nw_val, 8);
+   return writeRaw((vpr::Uint8*) &nw_val, 8);
 }
 
 inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
 {
    writeUint16(val.size());
-   for(unsigned i=0; i<val.length();++i)
+
+   for ( unsigned int i = 0; i < val.length(); ++i )
    {
-      writeRaw((vpr::Uint8*)&(val[i]),1);
+      writeRaw((vpr::Uint8*) &val[i], 1);
    }
 
    return vpr::ReturnStatus::Succeed;
@@ -203,17 +194,20 @@ inline vpr::ReturnStatus BufferObjectWriter::writeBool(bool val)
    // Darwin uses four bytes (!) for bools.
 #ifdef VPR_OS_Darwin
    vpr::Uint8 temp = (vpr::Uint8) val;
-   return writeRaw((vpr::Uint8*)&temp, 1);
+   return writeRaw((vpr::Uint8*) &temp, 1);
 #else
-   return writeRaw((vpr::Uint8*)&val, 1);
+   return writeRaw((vpr::Uint8*) &val, 1);
 #endif
 }
 
 inline vpr::ReturnStatus BufferObjectWriter::writeRaw(vpr::Uint8* data,
                                                       const unsigned int len)
 {
-   for(unsigned i=0;i<len;++i)
+   for ( unsigned int i = 0; i < len; ++i )
+   {
       mData->push_back(data[i]);
+   }
+
    mCurHeadPos += len;
    return vpr::ReturnStatus::Succeed;
 }

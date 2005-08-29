@@ -2,9 +2,6 @@
 <control_panel title="Choose a category">
    <category label="Display" title="Choose a display"
              icon="org/vrjuggler/vrjconfig/images/display64.png">
-      <wizard label="Test wizard"
-              wizard_location="${VJ_BASE_DIR}/share/vrjuggler/beans/wizards/ClusterWizard.jar"
-              icon="org/vrjuggler/vrjconfig/images/simulator64.png" />
       <type label="Display Window" title="Choose a display window"
             token="display_window"
             icon="org/vrjuggler/vrjconfig/images/display64.png"/>

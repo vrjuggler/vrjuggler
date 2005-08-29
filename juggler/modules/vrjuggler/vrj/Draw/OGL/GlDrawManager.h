@@ -54,15 +54,14 @@
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <vrj/Draw/DrawManager.h>
-//#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Draw/OGL/GlWindow.h>
-#include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlUserData.h>
 
 namespace vrj
 {
    class GlApp;
    class SimViewport;
+   class GlPipe;
+   class GlWindow;
 
 /** \class GlDrawManager GlDrawManager.h vrj/Draw/OGL/GlDrawManager.h
  *
@@ -233,11 +232,7 @@ protected:
 protected:
    GlDrawManager();
 
-   virtual ~GlDrawManager()
-   {
-      // XXX: Need to shut down the control thread and free the memory pointed
-      // to by mMemberFunctor and mControlThread.
-   }
+   virtual ~GlDrawManager();
 
    GlDrawManager(const GlDrawManager& o)
       : DrawManager(o)

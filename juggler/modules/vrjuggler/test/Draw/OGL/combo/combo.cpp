@@ -71,8 +71,10 @@ int main(int argc, char* argv[])
    }
 
    // Load any config files specified on the command line
-   for(int i=1;i<argc;i++)
+   for ( int i = 1; i < argc; ++i )
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    kernel->start();
       //- Kernel load global config  -- Environment variable
@@ -81,8 +83,11 @@ int main(int argc, char* argv[])
 
    kernel->setApplication(torus_app);         // Set application
 
-   while(1)
+   // Run each application object three times.
+   for ( int i = 0; i < 3; ++i )
    {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "main loop pass #" << i << std::endl << vprDEBUG_FLUSH;
       vpr::System::sleep(5);
       kernel->setApplication(wand_app);
       vpr::System::sleep(5);
@@ -92,4 +97,13 @@ int main(int argc, char* argv[])
 
       vpr::Thread::yield();
    }
+
+   kernel->stop();
+   kernel->waitForKernelStop();
+
+   delete wand_app;
+   delete cubes_app;
+   delete torus_app;
+
+   return 0;
 }

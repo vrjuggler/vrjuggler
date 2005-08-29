@@ -79,7 +79,7 @@ vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);      // Lock acce
    // of the given event mask.
    while(have_events_to_check)
    {
-      
+
       handleEvent(event);
       have_events_to_check = XCheckWindowEvent(mXDisplay, mXWindow, event_mask,
                                                &event);
@@ -90,7 +90,7 @@ void InputAreaXWin::handleEvent(::XEvent& event)
 {
    KeySym key;
    gadget::Keys vj_key;          // The key in vj space
-   
+
       switch (event.type)
       {
       // A KeyPress event occurred.  Flag the key that was pressed (as a
@@ -186,7 +186,7 @@ void InputAreaXWin::handleEvent(::XEvent& event)
          key = XLookupKeysym((XKeyEvent*)&event,0);
          vj_key = xKeyToKey(key);
          mKeyboardMouseDevice->mRealkeys[vj_key] = 0;
-         
+
          addKeyEvent(vj_key, gadget::KeyReleaseEvent, &event.xkey);
 
          // -- Update lock state -- //
@@ -306,6 +306,20 @@ void InputAreaXWin::handleEvent(::XEvent& event)
                                 gadget::MouseButtonPressEvent,
                                 event.xbutton);
             break;
+         case Button4:
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 1;
+            mKeyboardMouseDevice->mKeys[gadget::MBUTTON4] += 1;
+            addMouseButtonEvent(gadget::MBUTTON4,
+                                gadget::MouseButtonPressEvent,
+                                event.xbutton);
+            break;
+         case Button5:
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 1;
+            mKeyboardMouseDevice->mKeys[gadget::MBUTTON5] += 1;
+            addMouseButtonEvent(gadget::MBUTTON5,
+                                gadget::MouseButtonPressEvent,
+                                event.xbutton);
+            break;
          }
 
          break;
@@ -332,10 +346,22 @@ void InputAreaXWin::handleEvent(::XEvent& event)
                                 gadget::MouseButtonReleaseEvent,
                                 event.xbutton);
             break;
+         case Button4:
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 0;
+            addMouseButtonEvent(gadget::MBUTTON4,
+                                gadget::MouseButtonReleaseEvent,
+                                event.xbutton);
+            break;
+         case Button5:
+            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 0;
+            addMouseButtonEvent(gadget::MBUTTON5,
+                                gadget::MouseButtonReleaseEvent,
+                                event.xbutton);
+            break;
          }
 
          break;
-   
+
       // The windows size has changed
       case ConfigureNotify:
             updateOriginAndSize(event.xconfigure.width, event.xconfigure.height);
@@ -364,7 +390,7 @@ void InputAreaXWin::lockMouse(XEvent* ev)
       display = mXDisplay;
       window = mXWindow;
    }
-   
+
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::InputAreaXWin: LOCKING MOUSE..." << vprDEBUG_FLUSH;
 

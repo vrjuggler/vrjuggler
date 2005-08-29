@@ -59,7 +59,7 @@
 #   define VJ_OPT
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 /* Exclude rarely-used stuff from Windows headers */
 #define WIN32_LEAN_AND_MEAN
 
@@ -69,7 +69,7 @@
 #include <windows.h>
 
 /* extern HINSTANCE g_hInst = NULL; */
-#endif   /* WIN32 */
+#endif   /* WIN32 || WIN64 */
 
 /*
  * ----------------------------------------------------------------------------
@@ -77,7 +77,7 @@
  * VJ_EXTERN for the prototype and VJ_IMPLEMENT for the implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -118,7 +118,7 @@
 #   define VJ_CALLBACK_DECL
 #   define VJ_STATIC_CALLBACK(__x) static __x
 
-#endif	/* WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 #ifdef _VRJ_BUILD_
 #   define VJ_API(__type)	VJ_EXPORT(__type)
