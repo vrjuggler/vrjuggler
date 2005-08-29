@@ -32,9 +32,13 @@
 
 #define PF_C_API 1
 
+#include <vrj/vrjConfig.h>
+
+#include <iostream>
+#include <Performer/pf/pfPipeWindow.h>
+
 #include <vrj/Util/Debug.h>
 #include <vrj/Draw/Pf/PfInputHandler.h>
-#include <Performer/pf/pfPipeWindow.h>
 
 #ifndef GET_X_LPARAM
 #  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
@@ -46,13 +50,14 @@
 namespace vrj
 {
 
-PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& displayName)
+PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow,
+                               const std::string& displayName)
 {
    mName = displayName;
    mPipeWindow = pipeWindow;
    mPipe = pfGetPWinPipe(mPipeWindow);
    mBlocking = false;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    mWinHandle = pipeWindow->getWSWindow();
 #else
    // Get the XWindow from that we are going to recieve events from.
@@ -61,12 +66,12 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& disp
 #endif
 }
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 void PfInputHandler::openConnection()
 {
    static Atom wm_protocols, wm_delete_window;
-   
-   if (!mPipe)
+
+   if ( ! mPipe )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR:")
@@ -76,8 +81,8 @@ void PfInputHandler::openConnection()
    }
 
    const char* str = pfGetPipeWSConnectionName(mPipe);
-
    mXDisplay = pfOpenWSConnection(str, false);
+
    if (NULL == mXDisplay)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -87,15 +92,24 @@ void PfInputHandler::openConnection()
       return;
    }
 
+   XSetErrorHandler( errorHandler );
+   //XWindowAttributes* attrib = 0;
+   //XGetWindowAttributes( mXDisplay, mXWindow, attrib );
+
+   //std::cout << attrib->x << std::endl
+   //            << attrib->y << std::endl
+   //            << attrib->width << std::endl
+   //            << attrib->height << std::endl;
+
    // XSync in order to ensure that window is initialized
    // for this connection.
    XSync(mXDisplay, false);
 
-   static long event_mask = (FocusChangeMask | ExposureMask |
-                             VisibilityChangeMask | /*StructureNotifyMask |*/
-                             KeyPressMask | KeyReleaseMask | 
-                             ButtonPressMask | ButtonReleaseMask |
-                             PointerMotionMask);
+   // Get the same events as the GLXWindow gets....
+   unsigned long event_mask = ExposureMask | StructureNotifyMask |
+                              KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                              ButtonReleaseMask | ButtonMotionMask |
+                              PointerMotionMask | StructureNotifyMask;
 
    wm_protocols = XInternAtom(mXDisplay, "WM_PROTOCOLS", 1);
    wm_delete_window = XInternAtom(mXDisplay, "WM_DELETE_WINDOW", 1);
@@ -113,8 +127,9 @@ void PfInputHandler::checkEvents()
 }
 
 
-#ifdef VPR_OS_Win32
-LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+#ifdef VPR_OS_Windows
+LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam,
+                               LPARAM lParam)
 {
    switch ( message )
    {
@@ -138,7 +153,7 @@ LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 }
 #endif
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 void PfInputHandler::handleEvents()
 {
    XEvent		event;
@@ -152,11 +167,8 @@ void PfInputHandler::handleEvents()
    // in a server roundtrip (in Linux) and probably causes a performance
    // hit.  So only being defined for LINUX
    */
-#ifdef __linux__
+
    while (XPending(mXDisplay)) 
-#else
-   while (XEventsQueued(mXDisplay, QueuedAlready)) 
-#endif
    {
       XNextEvent(mXDisplay, &event);
       
@@ -184,5 +196,18 @@ void PfInputHandler::handleEvents()
       }
    }
 }
-#endif /* VPR_OS_Win32 */
+
+int PfInputHandler::errorHandler(::Display*, XErrorEvent* e)
+{
+   char* errorOutput = new char[512];
+   XGetErrorText(e->display, (int) e->error_code, errorOutput, 512);
+   vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR:")
+         << "PfInputHandler::errorHandler Caught X Error '\n" << errorOutput
+         << "'\n" << vprDEBUG_FLUSH;
+   delete [] errorOutput;
+   return 0;
+}
+#endif /* VPR_OS_Windows */
+
 } // End of vrj namespace

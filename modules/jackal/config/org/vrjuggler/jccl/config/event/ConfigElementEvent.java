@@ -113,7 +113,7 @@ public class ConfigElementEvent
    }
 
    /**
-    * Returns the "index0" of the range of proeprty values that were
+    * Returns the "index0" of the range of property values that were
     * reordered as a result of changing the index of a property value.  If
     * this event is not related to changing the index of a property value,
     * then -1 is returned.  The returned value is not necessarily the start
@@ -130,7 +130,7 @@ public class ConfigElementEvent
    }
 
    /**
-    * Returns the "index1" of the range of proeprty values that were
+    * Returns the "index1" of the range of property values that were
     * reordered as a result of changing the index of a property value.  If
     * this event is not related to changing the index of a property value,
     * then -1 is returned.  The returned value is not necessarily the start

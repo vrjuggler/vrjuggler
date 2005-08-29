@@ -17,6 +17,16 @@
 typedef BOOL                Bool;
 typedef HWND                Hwnd;
 
+// 64 bit Unix
+#elif defined __LP64__
+
+typedef unsigned char       BYTE;
+typedef unsigned int        DWORD;  
+typedef int                 LONG;
+typedef int                 Bool;
+typedef unsigned short      WORD;
+typedef int                 Hwnd;
+
 #else
 
 typedef unsigned char       BYTE;

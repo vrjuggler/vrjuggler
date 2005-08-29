@@ -41,7 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #  include <winsock2.h> /* For struct tiemval */
 #endif
 

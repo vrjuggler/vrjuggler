@@ -53,8 +53,7 @@ EXTRA_CXXFLAGS+= -DVJ_ROOT_DIR="\"$(instprefix)\""
 # Prefix for recursive stuff.
 DIRPRFX=	snx/
 
-SRCS=		FileIO.cpp			\
-		SoundFactory.cpp		\
+SRCS=		SoundFactory.cpp		\
 		SoundHandle.cpp			\
 		SoundImplementation.cpp 	\
 		StubSoundImplementation.cpp 	\

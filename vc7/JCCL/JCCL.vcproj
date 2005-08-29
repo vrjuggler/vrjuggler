@@ -11,16 +11,16 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="DebugDLL"
-			IntermediateDirectory="DebugDLL"
+			Name="DebugDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -37,9 +37,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr_d.lib cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl_d.dll"
-				Version="0.92.0"
+				Version="1.0.1"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\DebugDLL"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/jccl_d.pdb"
 				SubSystem="1"
@@ -61,9 +61,9 @@
 				Name="VCWebDeploymentTool"/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="ReleaseDLL"
-			IntermediateDirectory="ReleaseDLL"
+			Name="ReleaseDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -72,7 +72,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;_OPT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;_OPT;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -89,9 +89,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl.dll"
-				Version="0.92.0"
+				Version="1.0.1"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\ReleaseDLL"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"

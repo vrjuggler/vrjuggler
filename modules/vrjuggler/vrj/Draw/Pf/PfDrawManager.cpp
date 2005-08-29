@@ -293,7 +293,7 @@ void PfDrawManager::initAPI()
    //pfFrame();
 
    // Dump the state
-//   debugDump(vprDBG_CONFIG_LVL);
+   // debugDump(vprDBG_CONFIG_LVL);
 
    vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL)
       << "[vrj::PfDrawManager::initAPI()] Exiting." << std::endl
@@ -620,18 +620,24 @@ void PfDrawManager::addDisplay(Display* disp)
    // Call pfFrame to cause the pipeWindow configured to be opened and setup.
    pfFrame();
    
-   ////pfuInitInput( pWin, PFUINPUT_NOFORK_X );
-   //pfuInitInput( pf_disp.pWin, PFUINPUT_X );
-   ////pfPWinType( pWin, PFPWIN_TYPE_X_NOFORK );
-   //pfPWinType( pf_disp.pWin, PFPWIN_TYPE_X );
-   
-   //pfuInputHandler(&handlePerformerEvents, PFUINPUT_CATCH_ALL);
+   // This is neccessary because it may take a couple
+   // frames for the window to fully open. This information was
+   // found in "man pfPipeWindow".
+
+   // Performer says that if you trigger a window from the applciation proccess
+   // you must wait for the window to open during the draw process.
+   while( !pfIsPWinOpen( pf_disp.pWin ) )
+   {
+      pfFrame();
+      vpr::System::usleep( 500 ); 
+   }
 
    PfInputHandler* new_input_handler = new PfInputHandler(pf_disp.pWin, disp->getName());
-
+   
    // Configure the Performer window to accept events.
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
    new_input_handler->config(display_elt, disp);
+
    
    mPfInputHandlers.push_back(new_input_handler);
 
@@ -648,7 +654,7 @@ void PfDrawManager::addDisplay(Display* disp)
 }
 
 /*
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 void PfDrawManager::createEmptyCursor(::Display* display, ::Window root)
 {
    Pixmap cursormask;
@@ -683,7 +689,7 @@ void PfDrawManager::createEmptyCursor(::Display* display, ::Window root)
 void PfDrawManager::removeDisplay(Display* disp)
 {
    // Find the pfDisplay
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    // Visual C++ does not have std::compose1(), so we have to do this the
    // tedious, non-template-coolness way.
    std::vector<pfDisplay>::iterator disp_i;
@@ -875,7 +881,7 @@ std::vector<int> PfDrawManager::getMonoFBConfig(vrj::Display* disp)
    std::vector<int> app_fb = mApp->getFrameBufferAttrs();
    mono_fb.insert(mono_fb.end(), app_fb.begin(), app_fb.end());
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    mono_fb.push_back(0);
 #else
    mono_fb.push_back(None);
@@ -897,7 +903,7 @@ std::vector<int> PfDrawManager::getStereoFBConfig(vrj::Display* disp)
    std::vector<int> app_fb = mApp->getFrameBufferAttrs();
    stereo_fb.insert(stereo_fb.end(), app_fb.begin(), app_fb.end());
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    stereo_fb.push_back(0);
 #else
    stereo_fb.push_back(None);
@@ -1162,10 +1168,11 @@ void PfDrawManager::initAppGraph()
 
 void PfDrawManager::closeAPI()
 {
-   pfExit();
+   // NOTE: We do not call pfExit() here because it would cause the whole
+   // process to exit.  If users want to call pfExit(), they must do so on
+   // their own at whatever time is appropriate for their application.
    pfuExitUtil();
 }
-
 
 void PfDrawManager::updatePfProjections()
 {

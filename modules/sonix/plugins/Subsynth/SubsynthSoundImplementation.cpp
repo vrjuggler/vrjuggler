@@ -44,7 +44,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <stdio.h>// for FILE
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/exception.hpp>
 
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
@@ -54,7 +56,6 @@
 #include <gmtl/Xforms.h>
 #include <vpr/Util/Assert.h>
 
-#include <snx/FileIO.h>
 #include <snx/SoundImplementation.h>
 #include <snx/SoundInfo.h>
 #include <snx/SoundFactory.h>
@@ -507,10 +508,36 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
       default:
       case snx::SoundInfo::FILESYSTEM:
       {
-         // open the file as readonly binary
-         if (!snx::FileIO::fileExists( soundInfo.filename.c_str() )) 
+
+         // Test for the existence of soundInfo.filename before proceeding
+         // any further.
+         try
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) <<clrOutNORM(clrYELLOW, "ERROR:")<<"Subsynth| alias '" << alias << "', file '"<<soundInfo.filename<<"' doesn't exist\n" << vprDEBUG_FLUSH;
+            boost::filesystem::path file_path(soundInfo.filename,
+                                              boost::filesystem::native);
+
+            if ( ! boost::filesystem::exists(file_path) )
+            {
+               vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+                  << clrOutNORM(clrRED, "ERROR") << ": Subsynth| alias '"
+                  << alias << "',\n" << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
+                  << "file '" << soundInfo.filename << "'\n"
+                  << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
+                  << "does not exist\n" << vprDEBUG_FLUSH;
+               break;
+            }
+         }
+         catch (boost::filesystem::filesystem_error& ex)
+         {
+            vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+               << clrOutNORM(clrYELLOW, "WARNING")
+               << ": OpenAL| File system exception while testing for the "
+               << "existence of file '" << soundInfo.filename << "'"
+               << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
+               << ex.what() << std::endl << vprDEBUG_FLUSH;
             break;
          }
 

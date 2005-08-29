@@ -62,6 +62,10 @@
  * ------------------------------------------------------------------------
  */
 
+#if defined(WIN32) || defined(WIN64)
+#  include <windows.h>
+#endif
+
 // -- Standard Includes
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,7 +74,11 @@
 #include <list>
 
 // -- X11 Includes
-#include <X11/Xmd.h>
+#if defined(WIN32) || defined(WIN64)
+#  include <WinCompat.h>
+#else
+#  include <X11/Xmd.h>
+#endif
 
 // -- VNC Includes
 extern "C" {
@@ -90,14 +98,18 @@ extern "C" {
 // @@@ Need to make this portable!
 int endianTest = 1;
 
+#if ! defined(Swap16IfLE)
 #define Swap16IfLE(s) \
     (*(char *)&endianTest ? ((((s) & 0xff) << 8) | (((s) >> 8) & 0xff)) : (s))
+#endif
 
+#if ! defined(Swap32IfLE)
 #define Swap32IfLE(l) \
     (*(char *)&endianTest ? ((((l) & 0xff000000) >> 24) | \
 			     (((l) & 0x00ff0000) >> 8)  | \
 			     (((l) & 0x0000ff00) << 8)  | \
 			     (((l) & 0x000000ff) << 24))  : (l))
+#endif
 
 //#define DEBUG
 
@@ -331,8 +343,13 @@ Rectangle VNCInterface::merge(const Rectangle &r1, const Rectangle &r2)
    Rectangle r;
 
    // Find the resulting rectangle that encloses both rectangles
+#if defined(WIN32) || defined(WIN64)
+   r.x = min(r1.x, r2.x);
+   r.y = min(r1.y, r2.y);
+#else
    r.x = std::min(r1.x, r2.x);
    r.y = std::min(r1.y, r2.y);
+#endif
    int x1 = r1.x + r1.width;  int x2 = r2.x + r2.width;
    int y1 = r1.y + r1.height; int y2 = r2.y + r2.height;
    r.width = (x1 > x2) ? r1.width : r2.width;

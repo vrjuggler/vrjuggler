@@ -55,7 +55,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifdef _LIB // static library
+#if defined _LIB || defined XILINK // static library
     #define	DLLEXPORT 
     #define	DLLENTRY __cdecl
     typedef void (* DLL_EP)(void);
@@ -134,10 +134,13 @@ typedef enum
 ISD_INTERFACE_TYPE;
 
 
-// for now limited to 8 
-#define ISD_MAX_STATIONS        8
-
+#if defined ISENSE_LIMITED
+#define ISD_MAX_TRACKERS        2 
+#define ISD_MAX_STATIONS        4
+#else
 #define ISD_MAX_TRACKERS        32 
+#define ISD_MAX_STATIONS        8
+#endif
 
 // orientation format 
 #define ISD_EULER               1
@@ -466,6 +469,73 @@ typedef struct
 ISD_HARDWARE_INFO_TYPE;
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+// Station hardware information.
+// This structure provides detailed information on station hardware and
+// it's capabilities.
+
+typedef struct
+{
+    Bool    Valid;             // set to TRUE if ISD_GetStationHardwareInfo succeeded
+
+    DWORD   ID;                // unique number identifying a station. It is the same as that 
+                               // passed to the ISD_SetStationConfig and ISD_GetStationConfig   
+                               // functions and can be 1 to ISD_MAX_STATIONS 
+
+    char    DescVersion[20];   // Station Descriptor version 
+
+    float   FirmwareRev;       // Station firmware revision.
+    DWORD   SerialNum;         // Serial number 
+    char    CalDate[20];       // Cal date (mm/dd/yyyy)
+    DWORD   Port;              // Hardware port number 
+    
+    struct
+    {
+        Bool    Position;      // TRUE if station can track position
+        Bool    Orientation;   // TRUE if station can track orientation
+        DWORD   Encoders;      // number lens encoders, is 0 then none are available
+        DWORD   NumChannels;   // number of analog channels supported by this station, wand has 2 (joystick)
+        DWORD   NumButtons;    // number of digital button inputs supported by this station
+        DWORD   AuxInputs;     // number of auxiliary input channels (OEM products)
+        DWORD   AuxOutputs;    // number of auxiliary output channels (OEM products)
+        Bool    Compass;       // TRUE is station has compass
+
+        Bool    bReserved1;     
+        Bool    bReserved2;
+        Bool    bReserved3;     
+        Bool    bReserved4;
+
+        DWORD   dwReserved1;        
+        DWORD   dwReserved2;       
+        DWORD   dwReserved3;     
+        DWORD   dwReserved4;
+    }
+    Capability;
+
+    Bool    bReserved1;
+    Bool    bReserved2;
+    Bool    bReserved3;     
+    Bool    bReserved4;
+
+    DWORD   Type;           // station type        
+    DWORD   dwReserved2;       
+    DWORD   dwReserved3;     
+    DWORD   dwReserved4;
+
+    float   fReserved1;  
+    float   fReserved2;
+    float   fReserved3;
+    float   fReserved4;
+
+    char    cReserved1[128];    
+    char    cReserved2[128];    
+    char    cReserved3[128];    
+    char    cReserved4[128];    
+}
+ISD_STATION_HARDWARE_INFO_TYPE;
+
+
 // Returns -1 on failure. To detect tracker automatically specify 0 for commPort.
 // hParent parameter to ISD_OpenTracker is optional and should only be used if 
 // information screen or tracker configuration tools are to be used when available 
@@ -721,10 +791,23 @@ DLLEXPORT Bool DLLENTRY ISD_UdpBroadcastData(
 // ----------------------------------------------------------------------------
 DLLEXPORT float DLLENTRY ISD_GetTime( void );
 
+
+// System hardware information.
+// ----------------------------------------------------------------------------
 DLLEXPORT Bool DLLENTRY ISD_GetSystemHardwareInfo( 
                                                   ISD_TRACKER_HANDLE handle, 
                                                   ISD_HARDWARE_INFO_TYPE *hwInfo
                                                   );
+
+
+// Station hardware information.
+// ----------------------------------------------------------------------------
+DLLEXPORT Bool DLLENTRY ISD_GetStationHardwareInfo( 
+                                                   ISD_TRACKER_HANDLE handle, 
+                                                   ISD_STATION_HARDWARE_INFO_TYPE *info, 
+                                                   WORD stationID 
+                                                   );
+
 
 #ifdef __cplusplus
 }

@@ -35,39 +35,50 @@
 
 using namespace vrj;
 
+simplePfApp::~simplePfApp()
+{
+   // Tear down the scene graph.
+   if ( NULL != mLightGroup && NULL != mSun && NULL != mRootNode )
+   {
+      mRootNode->removeChild(mLightGroup);
+      mRootNode->removeChild(mModelRoot);
+      mLightGroup->removeChild(mSun);
+
+      delete mSun;
+      delete mLightGroup;
+      delete mRootNode;
+   }
+}
+
 // ------- SCENE GRAPH ----
 // a standard organized interface for derived applications:
 //
-//                         /-- mLightGroup -- mSun
-// mRootNode -- mSceneScale -- mModelRoot
+//            /-- mLightGroup -- mSun
+// mRootNode -- mModelRoot
 //
 void simplePfApp::initScene()
 {
    // Load the scene
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "simplePfApp::initScene\n"
+                                             << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
-   mRootNode      = new pfGroup;            // Root of our graph
-   mSceneScale    = new pfDCS;
-
-   float scene_scale = 1.0f/gadget::PositionUnitConversion::ConvertToFeet;    // Scene uses feet as units
-   mSceneScale->setScale(scene_scale);
+   mRootNode = new pfGroup;            // Root of our graph
 
    // Create the SUN light source
    mLightGroup = new pfGroup;
    mSun = new pfLightSource;
-   mLightGroup->addChild( mSun );
-   mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
-   mSun->setColor( PFLT_DIFFUSE,1.0f,1.0f,1.0f );
-   mSun->setColor( PFLT_AMBIENT,0.3f,0.3f,0.3f );
-   mSun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
+   mLightGroup->addChild(mSun);
+   mSun->setPos(0.3f, 0.0f, 0.3f, 0.0f);
+   mSun->setColor(PFLT_DIFFUSE, 1.0f,1.0f,1.0f);
+   mSun->setColor(PFLT_AMBIENT, 0.3f,0.3f,0.3f);
+   mSun->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
    mSun->on();
 
    // --- LOAD THE MODEL --- //
    mModelRoot = pfdLoadFile(mModelFileName.c_str());
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
-   mRootNode->addChild(mSceneScale);
-   mSceneScale->addChild( mModelRoot );
-   mSceneScale->addChild(mLightGroup);
+   mRootNode->addChild(mModelRoot);
+   mRootNode->addChild(mLightGroup);
 }

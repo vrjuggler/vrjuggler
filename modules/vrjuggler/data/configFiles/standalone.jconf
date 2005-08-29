@@ -114,8 +114,8 @@
          <initial_rotation>0.0</initial_rotation>
          <translation_delta>0.01</translation_delta>
          <rotation_delta>0.1</rotation_delta>
-         <translation_coordinate_system>0</translation_coordinate_system>
-         <rotation_coordinate_system>0</rotation_coordinate_system>
+         <translation_coordinate_system>Global</translation_coordinate_system>
+         <rotation_coordinate_system>Global</rotation_coordinate_system>
          <position_filters>
             <position_transform_filter name="Position Filters" version="1">
                <pre_translate>0.0</pre_translate>

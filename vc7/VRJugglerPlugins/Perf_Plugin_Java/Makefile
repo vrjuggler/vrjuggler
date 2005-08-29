@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 ANT=		..\..\..\external\ant\bin\ant
-IDL=		..\..\..\external\JacORB\idl.bat
+IDL=		..\..\..\external\JacORB\idl
 IDL_OPTS=	
 IDL_INCLUDES=	-I..\..\..\modules\tweek				\
 		-I..\..\..\modules\vrjuggler\plugins\corba_perf_mon

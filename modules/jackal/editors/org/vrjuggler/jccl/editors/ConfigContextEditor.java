@@ -459,8 +459,6 @@ public class ConfigContextEditor
       float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(),
                                    color.getBlue(), null);
 
-      System.out.println("HSB before: " + hsb[0] + " " + hsb[1] + " " + hsb[2]);
-
       // Make sure that the color is bright enough to allow good contrast
       // between the background color and the text (foreground) color.
       // XXX: There is probably a better way to handle this... -PH 12/24/2004

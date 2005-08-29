@@ -61,8 +61,10 @@ int main(int argc, char* argv[])
    }
    
    // Load any config files specified on the command line
-   for(int i=1;i<argc;i++)
+   for ( int i = 1; i < argc; ++i )
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    kernel->start();
 
@@ -73,6 +75,8 @@ int main(int argc, char* argv[])
       //- Load user local config
 
    kernel->waitForKernelStop();
+
+   delete application;
 
    return 0;
 }

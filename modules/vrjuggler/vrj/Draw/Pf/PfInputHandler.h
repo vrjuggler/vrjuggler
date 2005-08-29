@@ -34,29 +34,30 @@
 #define _VRJ_PF_INPUT_HANDLER_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Util/Debug.h>
 
-#ifndef VPR_OS_Win32
+#include <string>
+
+#ifndef VPR_OS_Windows
 #  include <X11/Xlib.h>
 #  include <X11/Xutil.h>
 #endif
 
+#include <Performer/pf.h>
+
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #  include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 #else
 #  include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 #endif
 
 #include <vrj/Display/Display.h>
-#include <Performer/pf.h>
-
-#include <string>
+#include <vrj/Util/Debug.h>
 
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 typedef struct _pfuWin32Event
 {
   HWND hwnd;
@@ -70,7 +71,7 @@ typedef struct _pfuWin32Event
 namespace vrj
 {
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
 #endif
 
@@ -79,7 +80,7 @@ LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
  * Performer input handler.
  */
 class PfInputHandler
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    : public gadget::InputAreaWin32
 #else
    : public gadget::InputAreaXWin
@@ -112,7 +113,7 @@ public:
    }
 
    void checkEvents();
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
    /**
     * Grab events from Performer window and sends them to
     * InputAreaXWin::handleEvent() or InputAreaWin32::handleEvent()
@@ -120,6 +121,12 @@ public:
     * @pre openConnection has been called.
     */
    void handleEvents();
+
+   /**
+    * Handles error output from X services
+    * Traps X errors instead of killing the application
+    */
+   static int errorHandler( ::Display* display, XErrorEvent* e );
 
 private:
    void openConnection();
@@ -132,4 +139,5 @@ private:
 };
 
 }
+
 #endif

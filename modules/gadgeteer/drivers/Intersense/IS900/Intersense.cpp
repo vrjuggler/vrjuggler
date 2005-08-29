@@ -35,6 +35,9 @@
 #include <sstream>
 #include <fstream>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
@@ -178,7 +181,7 @@ void Intersense::controlLoop(void* nullParam)
 
         mTracker.getConfigState(j);
         mTracker.rState(j) = stations[i].enabled;
-        mTracker.rAngleFormat(j) = ISD_QUATERNION;
+        mTracker.rAngleFormat(j) = ISD_EULER;
         mTracker.rButtons(j) = stations[i].useDigital;
         mTracker.rAnalogData(j) = stations[i].useAnalog;
         mTracker.setConfigState(j);
@@ -188,6 +191,9 @@ void Intersense::controlLoop(void* nullParam)
     while (!mExitFlag)
     {
         this->sample();
+        //TODO: Find a way to eliminate this sleep. This was added because
+        //      the CPU was getting pegged too fast with samples.
+        vpr::System::msleep(50);
     }
 }
 
@@ -283,9 +289,9 @@ bool Intersense::sample()
                                      gmtl::Math::deg2Rad( mTracker.xRot( stationIndex ) ) );
          gmtl::setRot( cur_pos_samples[i].mPosData, euler );
          gmtl::setTrans( cur_pos_samples[i].mPosData,
-                            gmtl::Vec3f(mTracker.xPos( stationIndex )*3.2808,
-                                        mTracker.yPos( stationIndex )*3.2808,
-                                        mTracker.zPos( stationIndex )*3.2808) );
+                         gmtl::Vec3f(mTracker.xPos(stationIndex),
+                                     mTracker.yPos(stationIndex),
+                                     mTracker.zPos(stationIndex)) );
       }
       else
       {

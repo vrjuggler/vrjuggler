@@ -1,3 +1,57 @@
+Changes from Ant 1.6.4 to Ant 1.6.5
+===================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* <move> was unable to replace existing files or write into
+  existing directories.  Bugzilla report 34962.
+
+* <macrodef> with redefined default values was incorrect. (Fix for
+   31215 had a bug). Bugzilla report 35109.
+
+* <javadoc> will convert backslashes to forwardslashes when generating file
+  list by useexternalfile. Bugzilla report 27814.
+
+Changes from Ant 1.6.3 to Ant 1.6.4
+===================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* Sun javah failed with java.lang.NoClassDefFoundError.
+  Bugzilla report 34681.
+
+* DirectoryScanner.slowScan() was broken. Bugzilla report 34722.
+
+* DirectoryScanner.scan() could throw a NullPointerException on
+  case-insensitive filesystems (read Windows or MacOS X).
+
+* Get w/authentication failed with ArrayOutOfBoundsExceptions.
+  Bugzilla report 34734.
+
+* Granularity attribute for <sync> task was undocumented.
+  Bugzilla report 34871.
+
+* <unzip> and <untar> could leave file handles open on invalid
+  archives.  Bugzilla report 34893.
+
+* propertyset threw NPE with nested, mapped propertysets.
+
+* <ftp> up to date calculations were wrong.
+  Bugzilla report 34941.
+
+Other changes:
+--------------
+
+* AntXMLContext.setCurrentTargets() is now public. Bugzilla report 34680.
+
 Changes from Ant 1.6.2 to Ant 1.6.3
 ===================================
 
@@ -639,11 +693,6 @@ Other changes:
    won't attempt to check it out again.
  - Added three new ClearCase commands: ccmkattr, ccmkdir, ccmkelem
   Bugzilla Report 26253.
-
-* New condition <typefound> that can be used to probe for the declaration 
-  and implementation of a task, type, preset, macro, scriptdef, whatever. 
-  As it tests for the implementation, it can be used to check for optional
-  tasks being available. 
 
 * added nested text support to <macrodef>
   

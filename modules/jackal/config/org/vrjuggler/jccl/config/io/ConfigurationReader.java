@@ -89,6 +89,11 @@ public class ConfigurationReader
          parser.setRepository(mDefinitionRepos);
          return (parser.parse(doc));
       }
+      catch (org.jdom.input.JDOMParseException e)
+      {
+         System.err.println(e.getMessage());
+         throw new IOException(e.getMessage());
+      }
       catch (JDOMException e)
       {
          e.printStackTrace();

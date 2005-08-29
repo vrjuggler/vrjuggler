@@ -85,7 +85,7 @@ public:
     */
    Input();
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
    /** Input Destructor.
     *
     * Free the memory for the Instance Name and Serial Port strings if
@@ -197,10 +197,10 @@ public:
       return mActive;
    }
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    /**
     * Overlaod delete so that we can delete our memory correctly.  This is
-    * necessary for DLLs on Win32 to release memory from the correct memory
+    * necessary for DLLs on Windows to release memory from the correct memory
     * space.  All subclasses must overload delete similarly.
     */
    void operator delete(void* p)

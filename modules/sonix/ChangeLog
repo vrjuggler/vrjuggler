@@ -1,5 +1,18 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.0.1 released - 8.29.2005]===================================================
+Aug-29-2005 patrickh    NEW VERSION: 1.0.1
+Aug-17-2005 patrickh    Removed the unused namespace snx::FileIO and all its
+                        members.
+
+[1.0.0 released - 7.5.2005]====================================================
+Jul-07-2005 patrickh    NEW VERSION: 1.0.0
+Jun-15-2005 patrickh    Updated to support Windows 64-bit edition.
+                        NEW VERSION: 0.93.1
+
+[1.0 Beta 3 released - 6.7.2005]===============================================
+Jun-07-2005 patrickh    NEW VERSION: 0.93.0
+
 [1.0 Beta 2 released - 1.18.2005]==============================================
 Jan-18-2005 patrickh    NEW VERSION: 0.92.0
 

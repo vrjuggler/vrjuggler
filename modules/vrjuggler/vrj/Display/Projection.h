@@ -179,8 +179,18 @@ protected:
    //@}
 
 public:
-   /** Set the system wide near and far values. */
+   /** Sets the system-wide near and far values. */
    static void setNearFar(float near_val, float far_val);
+
+   /**
+    * Retrieves the system-wide near and far values.
+    *
+    * @param nearVal Storage for the returned near value.
+    * @param farVal  Storage for the returned far value.
+    *
+    * @since 2.0.1
+    */
+   static void getNearFar(float& nearVal, float& farVal);
 };
 
 }

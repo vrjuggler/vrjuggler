@@ -49,6 +49,15 @@ GlDrawConeWandFunctor::GlDrawConeWandFunctor()
 {
 }
 
+GlDrawConeWandFunctor::~GlDrawConeWandFunctor()
+{
+   if ( NULL != mQuadObj )
+   {
+      gluDeleteQuadric(mQuadObj);
+      mQuadObj = NULL;
+   }
+}
+
 void GlDrawConeWandFunctor::draw(vrj::User* user)
 {
    boost::ignore_unused_variable_warning(user);
@@ -138,9 +147,9 @@ void GlDrawRightAngleWandFunctor::draw(vrj::User* user)
       0.0f, -0.001568f, -0.002352f
    };
 
+#if 0
    unsigned num_tris(20);
 
-#if 0
    // USED to generate normals
    static bool first_time(true);
 

@@ -221,7 +221,15 @@ public:
     */
    DateTime operator+ (const DateTime& o) const
    {
-      return DateTime(mSeconds + o.mSeconds, mMicroSeconds + o.mMicroSeconds);
+      const vpr::Uint32 us = mMicroSeconds + o.mMicroSeconds;
+      if ( us > 1000000 )
+      {
+         return DateTime(mSeconds + o.mSeconds + 1, us - 1000000);
+      }
+      else 
+      {
+         return DateTime(mSeconds + o.mSeconds, us);
+      }
    }
 
    /**
@@ -230,7 +238,16 @@ public:
     */
    DateTime operator- (const DateTime& o) const
    {
-      return DateTime(mSeconds - o.mSeconds, mMicroSeconds - o.mMicroSeconds);
+      if ( mMicroSeconds > o.mMicroSeconds )
+      {
+         return DateTime(mSeconds - o.mSeconds,
+                         mMicroSeconds - o.mMicroSeconds);
+      }
+      else
+      {
+         return DateTime(mSeconds - o.mSeconds - 1,
+                         1000000 + mMicroSeconds - o.mMicroSeconds);
+      }
    }
 
 private:

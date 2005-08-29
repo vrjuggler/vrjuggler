@@ -10,8 +10,18 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.0.1
+Released: August 29, 2005
+    This is a minor bug-fix release made as part of the release of
+    VR Juggler 2.0.1.
+
+ Version: 1.0.0
+Released: July 5, 2005
+    New in this release:
+       * Support for Windows XP x64 Edition.
+
  Version: 1.0 Beta 3
-Released: April XX, 2005
+Released: June 7, 2005
 
     The methods jccl::ConfigDefinition::assertValid(),
     jccl::ConfigElement::assertValid(), and

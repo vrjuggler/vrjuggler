@@ -767,7 +767,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * named property or -1 if the named property has no such value.  The
     * value lookup is performed using reference equality rather than object
     * equality.  Hence, <code>value</code> must be the actual object reference
-    * that is among the values for the named proeprty.
+    * that is among the values for the named property.
     *
     * @param name       the name of the property to retrieve
     * @param value      the value whose index will be returned

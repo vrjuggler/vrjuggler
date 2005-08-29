@@ -20,7 +20,7 @@
 
 #include <vpr/vpr.h>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #include <windows.h>
 #include <winbase.h>
 #endif

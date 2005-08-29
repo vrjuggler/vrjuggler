@@ -97,19 +97,27 @@
 #define PACKAGE_NAME "VR Juggler Portable Runtime"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "VR Juggler Portable Runtime 0.92"
+#define PACKAGE_STRING "VR Juggler Portable Runtime 1.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "vr-juggler-portable-runtime"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.92"
+#define PACKAGE_VERSION "1.0"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
 
-/* Define if building on a Win32 platform. */
-#define VPR_OS_Win32 
+/* Define if building on a Windows platform. */
+#define VPR_OS_Windows
+
+/* Define if building on the Win32 platform. */
+#ifdef WIN32
+#  define VPR_OS_Win32 
+/* Define if building on the Win64 platform. */
+#elif defined(WIN64)
+#  define VPR_OS_Win64
+#endif
 
 /* Define if using the Netscape Portable Runtime. */
 #define VPR_USE_NSPR 

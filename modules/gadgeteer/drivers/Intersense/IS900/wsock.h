@@ -14,7 +14,7 @@
 #ifndef _ISD_wsockh
 #define _ISD_wsockh
 
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32 || defined WIN64
 #include <winsock.h>
 
 #else /* UNIX */

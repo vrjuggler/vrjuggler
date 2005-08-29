@@ -80,7 +80,7 @@
 #   define VPR_OPT
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 /* Exclude rarely-used stuff from Windows headers */
 #define WIN32_LEAN_AND_MEAN
 
@@ -90,7 +90,7 @@
 #include <windows.h>
 
 /* extern HINSTANCE g_hInst = NULL; */
-#endif   /* WIN32 */
+#endif   /* WIN32 || WIN64 */
 
 
 /* Common C++ includes. */
@@ -156,7 +156,7 @@ namespace std
  * VPR_EXTERN for the prototype and VPR_IMPLEMENT for the implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -215,7 +215,7 @@ namespace std
 #   define VPR_CALLBACK_DECL
 #   define VPR_STATIC_CALLBACK(__x) static __x
 
-#endif  /* VPR_OS_Win32 */
+#endif  /* VPR_OS_Windows */
 
 #ifdef _VPR_BUILD_
 #   define VPR_API(__type)      VPR_EXPORT(__type)

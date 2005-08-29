@@ -59,6 +59,8 @@ class GlDrawConeWandFunctor : public GlDrawObjectFunctor
 public:
    GlDrawConeWandFunctor();
 
+   virtual ~GlDrawConeWandFunctor();
+
    /** Called to initialize any context specific information. */
    virtual void contextInit()
    {;}
@@ -81,6 +83,11 @@ protected:
 class GlDrawRightAngleWandFunctor : public GlDrawObjectFunctor
 {
 public:
+   virtual ~GlDrawRightAngleWandFunctor()
+   {
+      /* Do nothing. */ ;
+   }
+
    /** Called to initialize any context specific information. */
    virtual void contextInit()
    {;}

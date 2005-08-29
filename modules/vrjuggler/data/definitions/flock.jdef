@@ -83,19 +83,19 @@
    </definition_version>
    <definition_version version="2" label="Flock of Birds">
       <abstract>false</abstract>
-      <help>Configuration for Ascension Flock of Birds.</help>
+      <help>Configuration for Ascension Flock of Birds. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apa.html#section.configure.flock"&gt;more on Flock of Birds&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
-         <help>The name of the serial port to which the Flock is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc.</help>
+         <help>The name of the serial port to which the Flock is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apa.html#section.configure.flock"&gt;more ...&lt;/a&gt;)</help>
          <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
-         <help>Serial port speed.</help>
+         <help>Serial port speed. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apa.html#section.configure.flock"&gt;more ...&lt;/a&gt;)</help>
          <value label="Baud" defaultvalue="38400"/>
       </property>
       <property valuetype="integer" variable="false" name="hemisphere">
-         <help>The transmitter hemisphere in which the sensors will be tracked.</help>
+         <help>The transmitter hemisphere in which the sensors will be tracked. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apa.html#section.configure.flock"&gt;more ...&lt;/a&gt;)</help>
          <value label="Hemisphere" defaultvalue="3"/>
          <enumeration editable="false">
             <enum label="Front" value="0"/>
@@ -107,11 +107,11 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="master_address">
-         <help></help>
+         <help>The Fast Bird Bus address of the master bird. If the Flock of Birds firmware revision is 3.67 or newer, then the hardware auto-detects the master bird address. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apa.html#section.configure.flock"&gt;more ...&lt;/a&gt;)</help>
          <value label="Master Address" defaultvalue="1"/>
       </property>
       <property valuetype="integer" variable="false" name="addressing_mode">
-         <help></help>
+         <help>The addressing mode in use by the Flock of Birds® hardware. If the Flock of Birds firmware revision is 3.67 or newer, then the hardware auto-detects the addressing mode. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apa.html#section.configure.flock"&gt;more ...&lt;/a&gt;)</help>
          <value label="Addressing Mode" defaultvalue="0"/>
          <enumeration editable="false">
             <enum label="Normal" value="0"/>
@@ -120,7 +120,7 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="filter">
-         <help>Filter</help>
+         <help>The software filter to use. This is ignored. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apa.html#section.configure.flock"&gt;more ...&lt;/a&gt;)</help>
          <value label="Filter" defaultvalue="0"/>
          <enumeration editable="false">
             <enum label="AC_NARROW" value="0"/>

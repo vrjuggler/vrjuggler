@@ -49,7 +49,7 @@
  * implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -90,7 +90,7 @@
 #   define GADGET_CLUSTER_PLUGIN_CALLBACK_DECL
 #   define GADGET_CLUSTER_PLUGIN_STATIC_CALLBACK(__x) static __x
 
-#endif	/* WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 #ifdef _GADGET_CLUSTER_PLUGIN_BUILD_
 #   define GADGET_CLUSTER_PLUGIN_API(__type)	GADGET_CLUSTER_PLUGIN_EXPORT(__type)

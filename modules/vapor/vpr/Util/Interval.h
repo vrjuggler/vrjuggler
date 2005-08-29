@@ -229,7 +229,7 @@ public:
     */
    float secf() const
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       return (float((vpr::Int64) mMicroSeconds)/1000000.0f);
 #else
       return (float(mMicroSeconds)/1000000.0f);
@@ -251,7 +251,7 @@ public:
     */
    double secd() const
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       return (double((vpr::Int64) mMicroSeconds)/1000000.0f);
 #else
       return (double(mMicroSeconds)/1000000.0f);
@@ -291,7 +291,7 @@ public:
     */
    float msecf() const
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       return (float((vpr::Int64) mMicroSeconds)/1000.0f);
 #else
       return (float(mMicroSeconds)/1000.0f);
@@ -313,7 +313,7 @@ public:
     */
    double msecd() const
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       return (double((vpr::Int64) mMicroSeconds)/1000.0f);
 #else
       return (double(mMicroSeconds)/1000.0f);
@@ -353,7 +353,7 @@ public:
     */
    float usecf() const
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       return ((vpr::Int64) mMicroSeconds);
 #else
       return (mMicroSeconds);
@@ -375,7 +375,7 @@ public:
     */
    double usecd() const
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       return ((vpr::Int64) mMicroSeconds);
 #else
       return (mMicroSeconds);

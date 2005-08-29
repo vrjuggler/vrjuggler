@@ -82,7 +82,6 @@ public:
     */
    FileHandle_t(const std::string& fileName)
       : BlockIO(file_name)
-      , mOpenMode(READ_WRITE)
       , mHandleImpl(fileName)
    {
       /* Do nothing. */ ;

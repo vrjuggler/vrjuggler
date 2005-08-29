@@ -55,7 +55,7 @@ namespace jccl
 
    void ElementFactory::loadDefs(const std::string& defaultPath)
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       static const std::string path_sep(";");
 #else
       static const std::string path_sep(":");

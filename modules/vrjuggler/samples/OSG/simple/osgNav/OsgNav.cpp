@@ -81,11 +81,13 @@ void OsgNav::preFrame()
 
    // Cluster debug code.
    // std::cout << "CLUSTER Delta: " << diff_time.getBaseVal() << std::endl;
-   // std::cout << "CLUSTER Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
+   // std::cout << "CLUSTER Current: " << cur_time.getBaseVal() << "Last: "
+   //           << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
 
    mLastPreFrameTime = cur_time;
 
-   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "------- preFrame ------\n"
+   //                                          << vprDEBUG_FLUSH;
 
    // Get wand data
    gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
@@ -114,10 +116,13 @@ void OsgNav::preFrame()
    // pointing.
    if ( mButton2->getData() == gadget::Digital::ON )
    {
-      gmtl::EulerAngleXYZf euler( 0.0f, gmtl::makeYRot(mWand->getData()), 0.0f );// Only allow Yaw (rot y)
-      gmtl::Matrix44f rot_mat = gmtl::makeRot<gmtl::Matrix44f>( euler );
+      // Only allow Yaw (rot y)
+      gmtl::EulerAngleXYZf euler(0.0f, gmtl::makeYRot(mWand->getData()), 0.0f);
+      gmtl::Matrix44f rot_mat = gmtl::makeRot<gmtl::Matrix44f>(euler);
       mNavigator.setRotationalVelocity(rot_mat);
-   } // Make sure to reset the rotational velocity when we stop pressing the button.
+   }
+   // Make sure to reset the rotational velocity when we stop pressing the
+   // button.
    else if(mButton2->getData() == gadget::Digital::TOGGLE_OFF)
    {
       mNavigator.setRotationalVelocity(gmtl::Matrix44f());
@@ -174,8 +179,8 @@ void OsgNav::myInit()
 
    mNavigator.init();
 
-   mRootNode->addChild( mNoNav );
-   mRootNode->addChild( mNavTrans );
+   mRootNode->addChild(mNoNav.get());
+   mRootNode->addChild(mNavTrans.get());
 
    //Load the model
    std::cout << "Attempting to load file: " << mFileToLoad << "... ";
@@ -185,28 +190,31 @@ void OsgNav::myInit()
    // Transform node for the model
    mModelTrans  = new osg::MatrixTransform();
    //This can be used if the model orientation needs to change
-   mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( -90.0f ), 1.0f, 0.0f, 0.0f) );
+   mModelTrans->preMult(osg::Matrix::rotate(gmtl::Math::deg2Rad(-90.0f),
+                                            1.0f, 0.0f, 0.0f));
 
-   if(NULL == mModel)
+   if ( ! mModel.valid() )
    {
       std::cout << "ERROR: Could not load file: " << mFileToLoad << std::endl;
    }
    else
    {
       // Add model to the transform
-      mModelTrans->addChild(mModel);
+      mModelTrans->addChild(mModel.get());
    }
    
    // Add the transform to the tree
-   mNavTrans->addChild( mModelTrans );
+   mNavTrans->addChild(mModelTrans.get());
 
    // run optimization over the scene graph
    osgUtil::Optimizer optimizer;
-   optimizer.optimize(mRootNode);
+   optimizer.optimize(mRootNode.get());
 
    // traverse the scene graph setting up all osg::GeoSet's so they will use
    // OpenGL display lists.
-   //osgUtil::DisplayListVisitor dlv(osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS);
+   //osgUtil::DisplayListVisitor dlv(
+   //   osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS
+   //);
    //mRootNode->accept(dlv);
 }
 
@@ -228,32 +236,33 @@ void OsgNav::initTweek(int& argc, char* argv[])
                RemoteNavSubjectImpl* remote_nav_interface =
                   new RemoteNavSubjectImpl(&mNavigator);
 
-               mCorbaManager.getSubjectManager()->addInfoItem("OsgNav","RemoteNav");
+               mCorbaManager.getSubjectManager()->addInfoItem("OsgNav",
+                                                              "RemoteNav");
                try
                {
-                  mCorbaManager.getSubjectManager()->registerSubject(remote_nav_interface,
-                                                                     "RemoteNavSubject");
+                  mCorbaManager.getSubjectManager()->registerSubject(
+                     remote_nav_interface, "RemoteNavSubject"
+                  );
                }
                catch (...)
                {
-                  std::cout
-                     << "Failed to register subject\n" << std::flush;
+                  std::cout << "Failed to register subject" << std::endl;
                }
             }
          }
          catch (CORBA::Exception& ex)
          {
             std::cout
-               << "Caught an unknown CORBA exception when trying to register!\n"
-               << std::flush;
+               << "Caught an unknown CORBA exception when trying to register!"
+               << std::endl;
          }
       }
 
    }
    catch (...)
    {
-      std::cout
-         << "Caught an unknown exception while initializing Tweek!\n" << std::flush;
+      std::cout << "Caught an unknown exception while initializing Tweek!"
+                << std::endl;
    }
 
    std::cout << "\n\nDONE WITH TWEEK INITIALIZATION!!\n\n" << std::flush;

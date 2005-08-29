@@ -135,11 +135,13 @@ ThreadPosix::~ThreadPosix()
    if ( mDeleteThreadFunctor )
    {
       delete mUserThreadFunctor;
+      mUserThreadFunctor = NULL;
    }
 
    if ( NULL != mStartFunctor )
    {
       delete mStartFunctor;
+      mStartFunctor = NULL;
    }
 
    // TELL EVERYONE THAT WE'RE DEAD!!!!
