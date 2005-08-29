@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0.1 released - 8.29.2005]===================================================
+Aug-29-2005 patrickh    NEW VERSION: 2.0.1
 Jul-25-2005 patrickh    Added vrj::Projection::getNearFar().
 Jul-20-2005 patrickh    Do not call pfExit() in vrj::PfDrawManager::closeAPI().
                         Leave that up to application programmers to put at the

@@ -11,7 +11,7 @@ For all versions:
 ===============================================================================
 
  Version: 2.0.1
-Released: ???
+Released: August 29, 2005
 
     In general, there are no required application or configuration changes
     to update from VR Juggler 2.0.0 to 2.0.1.  Nevertheless, all users
@@ -22,6 +22,16 @@ Released: ???
          Performer cleans up its resources should put a call to pfExit()
          at the very end of their application main() function.  The call
          to pfExit() must be the last call in main().
+
+       * Use of Performer on IRIX has been fixed, and keyboard/mouse input
+         input Performer graphics windows now works on IRIX (in addition to
+         Linux and Windows).
+
+       * A critical bug in the InterSense API and IS-900 device drivers has
+         been fixed.
+
+       * gadget::KeyEvent objects on Windows now provide the same information
+         as is available when using the X Window System.
 
  Version: 2.0.0
 Released: July 5, 2005
