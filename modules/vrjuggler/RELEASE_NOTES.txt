@@ -30,8 +30,19 @@ Released: August 29, 2005
        * A critical bug in the InterSense API and IS-900 device drivers has
          been fixed.
 
+       * The InterSense API driver has been updated to the latest release of
+         the InterSense Interface SDK and now has better support for
+         UNIX-based operating systems running on 64-bit architectures.
+
        * gadget::KeyEvent objects on Windows now provide the same information
          as is available when using the X Window System.
+
+       * Mouse scroll wheel events are now supported and are treated as
+         button press/release events for mouse buttons 4 and 5.
+
+       * Sample rate problems with the Sonix OpenAL plug-in have been fixed.
+
+       * VRJ VNC now supports Windows.
 
  Version: 2.0.0
 Released: July 5, 2005
