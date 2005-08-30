@@ -52,7 +52,7 @@ namespace vpr
  *
  * Wrapper around UNIX file descriptors.  This is typedef'd to vpr::IOSys.
  */
-class IOSysUnix
+class VPR_CLASS_API IOSysUnix
 {
 public:
    typedef int Handle;

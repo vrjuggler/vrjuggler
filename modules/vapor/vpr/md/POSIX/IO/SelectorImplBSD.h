@@ -65,7 +65,7 @@ namespace vpr
  * as the template parameter to vpr::Selector_t<T> to create the typedef
  * vpr::Selector.
  */
-class SelectorImplBSD : public SelectorBase
+class VPR_CLASS_API SelectorImplBSD : public SelectorBase
 {
 public:
    // XXX: What should we do when we are adding a handler while

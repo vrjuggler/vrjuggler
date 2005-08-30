@@ -58,7 +58,7 @@ namespace vpr
  * used in conjunction with vpr::SocketConfiguration to create the typedef
  * vpr::SocketStream.
  */
-class SocketStreamImplBSD : public SocketImplBSD
+class VPR_CLASS_API SocketStreamImplBSD : public SocketImplBSD
 {
 public:
    // ========================================================================

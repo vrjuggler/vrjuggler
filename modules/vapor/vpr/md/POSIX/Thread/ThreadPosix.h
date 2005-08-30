@@ -79,7 +79,7 @@ typedef vpr::Uint32 thread_id_t;
  *
  * This is typedef'd to vpr::Thread.
  */
-class ThreadPosix : public BaseThread
+class VPR_CLASS_API ThreadPosix : public BaseThread
 {
 public:  // ---- Thread CREATION and SPAWNING -----
    /** Non-spawning constructor.  This will not start a thread. */

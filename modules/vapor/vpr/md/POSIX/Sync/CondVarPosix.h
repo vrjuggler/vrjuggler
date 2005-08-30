@@ -65,7 +65,7 @@ namespace vpr
  * condition variables for the implementation.  This is typedef'd to
  * vpr::CondVar.
  */
-class CondVarPosix
+class VPR_CLASS_API CondVarPosix
 {
 public:
    /**

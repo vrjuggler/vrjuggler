@@ -59,7 +59,7 @@ namespace vpr
  * This is used in conjunction with vpr::SocketConfiguration to create the
  * BSD implementation of the typedef vpr::SocketDatagram.
  */
-class SocketDatagramImplBSD : public vpr::SocketImplBSD
+class VPR_CLASS_API SocketDatagramImplBSD : public vpr::SocketImplBSD
 {
 public:
    typedef SocketImplBSD Parent;

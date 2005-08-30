@@ -66,7 +66,7 @@ namespace vpr
  * For more information about serial ports on Linux, refer to
  * http://www.ibiblio.org/mdw/HOWTO/Serial-HOWTO-3.html
  */
-class SerialPortImplTermios
+class VPR_CLASS_API SerialPortImplTermios
 {
 public:
    /**

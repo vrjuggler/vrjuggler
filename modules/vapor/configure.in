@@ -836,6 +836,9 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vpr_cxxflags="$vc_cxxflags"
 fi
 
+# Add visibility flag if supported.
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS"
+
 # If we are using pthreads, add the library containing the pthread calls to
 # $LIBS.
 if test "x$USE_PTHREADS" = "xyes" ; then

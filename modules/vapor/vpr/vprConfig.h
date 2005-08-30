@@ -149,6 +149,11 @@ namespace std
 #   define VPR_HAVE_HASH_SET  1
 #endif
 
+#if !defined(WIN32) && !defined(WIN64)          \
+      && defined(__GNUC__) && __GNUC__ >= 4     \
+      && !defined(VPR_HAVE_GCC_VISIBILITY)
+#  define VPR_HAVE_GCC_VISIBILITY
+#endif
 
 /*
  * ----------------------------------------------------------------------------
@@ -196,6 +201,25 @@ namespace std
 #   define VPR_CALLBACK
 #   define VPR_CALLBACK_DECL
 #   define VPR_STATIC_CALLBACK(__x) static __x
+
+#elif defined(VPR_HAVE_GCC_VISIBILITY)
+
+#   define VPR_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
+#   define VPR_EXPORT_CLASS        __attribute__ ((visibility("default")))
+#   define VPR_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#   define VPR_IMPORT(__type)      __type
+#   define VPR_IMPORT_DATA(__type) __type
+#   define VPR_IMPORT_CLASS        
+
+#   define VPR_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
+#   define VPR_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
+#   define VPR_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
+#   define VPR_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
+
+#   define VPR_CALLBACK
+#   define VPR_CALLBACK_DECL
+#   define VPR_STATIC_CALLBACK(__x) static __x
+
 
 #else   /* UNIX (where this stuff is simple!) */
 

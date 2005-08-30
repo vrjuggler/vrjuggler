@@ -67,7 +67,7 @@ namespace vpr
  * Mutex wrapper for POSIX-compliant systems using pthreads mutex variables
  * for the implementation.  This is typedef'd to vpr::Mutex.
  */
-class MutexPosix
+class VPR_CLASS_API MutexPosix
 {
 public:
    /**

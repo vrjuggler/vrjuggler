@@ -78,7 +78,7 @@ namespace vpr
  * Low-level operating system feature abstractions using POSIX functionality.
  * This is typedef'd to vpr::System.
  */
-class SystemPosix : public SystemBase
+class VPR_CLASS_API SystemPosix : public SystemBase
 {
 public:
    /**
