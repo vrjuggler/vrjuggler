@@ -217,6 +217,12 @@ AC_DEFUN([VJ_COMPILER_SETUP],
     CFLAGS="$CFLAGS $CC_PIPE_FLAGS"
     CXXFLAGS="$CXXFLAGS $CXX_PIPE_FLAGS"
 
+    # Add visibility flag if supported.
+    #DPP_COMPILER_FLAG($CXX, [-fvisibility=hidden], dpp_cv_prog_cc_visibility)
+    #if test "x$dpp_cv_prog_cc_visibility" = "xyes" ; then
+    #    CXX_VISIBILITY_FLAGS='-fvisibility=hidden'
+    #fi
+
     # The following sets up the warning levels for the compilers we support.
     # The levels we want for C++ are as follows (in increasing order of
     # noisiness):
