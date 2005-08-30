@@ -469,7 +469,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-CXXFLAGS="$CXXFLAGS $GADGET_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $GADGET_CXXFLAGS"
 DEPEND_FLAGS="$GADGET_INCLUDES"
 
 # Note that we do not have to add to $gadget_cxxflags because user code

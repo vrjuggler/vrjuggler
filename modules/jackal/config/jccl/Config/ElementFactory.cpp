@@ -214,7 +214,7 @@ namespace jccl
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << "Failed to load definition file: '" << file_name.c_str()
-            << ": " << e.what() << "'.\n" << vprDEBUG_FLUSH;
+            << "': " << e.what() << std::endl << vprDEBUG_FLUSH;
          return false;
       }
 

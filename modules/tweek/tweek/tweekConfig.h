@@ -75,6 +75,12 @@
 /* extern HINSTANCE g_hInst = NULL; */
 #endif   /* WIN32 || WIN64 */
 
+#if !defined(WIN32) && !defined(WIN64)          \
+      && defined(__GNUC__) && __GNUC__ >= 4     \
+      && !defined(TWEEK_HAVE_GCC_VISIBILITY)
+#  define TWEEK_HAVE_GCC_VISIBILITY
+#endif
+
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -99,6 +105,24 @@
 #   define TWEEK_IMPLEMENT(__type)      _declspec(dllexport) __type
 #   define TWEEK_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
 #   define TWEEK_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
+
+#   define TWEEK_CALLBACK
+#   define TWEEK_CALLBACK_DECL
+#   define TWEEK_STATIC_CALLBACK(__x) static __x
+
+#elif defined(TWEEK_HAVE_GCC_VISIBILITY)
+
+#   define TWEEK_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
+#   define TWEEK_EXPORT_CLASS        __attribute__ ((visibility("default")))
+#   define TWEEK_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#   define TWEEK_IMPORT(__type)      __type
+#   define TWEEK_IMPORT_DATA(__type) __type
+#   define TWEEK_IMPORT_CLASS        
+
+#   define TWEEK_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
+#   define TWEEK_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
+#   define TWEEK_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
+#   define TWEEK_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
 
 #   define TWEEK_CALLBACK
 #   define TWEEK_CALLBACK_DECL

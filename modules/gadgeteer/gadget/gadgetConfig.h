@@ -70,6 +70,12 @@
 
 #endif   /* WIN32 || WIN64 */
 
+#if !defined(WIN32) && !defined(WIN64)          \
+      && defined(__GNUC__) && __GNUC__ >= 4     \
+      && !defined(GADGET_HAVE_GCC_VISIBILITY)
+#  define GADGET_HAVE_GCC_VISIBILITY
+#endif
+
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -95,6 +101,24 @@
 #   define GADGET_IMPLEMENT(__type)      _declspec(dllexport) __type
 #   define GADGET_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
 #   define GADGET_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
+
+#   define GADGET_CALLBACK
+#   define GADGET_CALLBACK_DECL
+#   define GADGET_STATIC_CALLBACK(__x) static __x
+
+#elif defined(GADGET_HAVE_GCC_VISIBILITY)
+
+#   define GADGET_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
+#   define GADGET_EXPORT_CLASS        __attribute__ ((visibility("default")))
+#   define GADGET_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#   define GADGET_IMPORT(__type)      __type
+#   define GADGET_IMPORT_DATA(__type) __type
+#   define GADGET_IMPORT_CLASS        
+
+#   define GADGET_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
+#   define GADGET_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
+#   define GADGET_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
+#   define GADGET_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
 
 #   define GADGET_CALLBACK
 #   define GADGET_CALLBACK_DECL

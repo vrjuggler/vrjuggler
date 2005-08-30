@@ -71,6 +71,13 @@
 /* extern HINSTANCE g_hInst = NULL; */
 #endif   /* WIN32 || WIN64 */
 
+
+#if !defined(WIN32) && !defined(WIN64)          \
+      && defined(__GNUC__) && __GNUC__ >= 4     \
+      && !defined(VJ_HAVE_GCC_VISIBILITY)
+#  define VJ_HAVE_GCC_VISIBILITY
+#endif
+
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -95,6 +102,24 @@
 #   define VJ_IMPLEMENT(__type)      _declspec(dllexport) __type
 #   define VJ_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
 #   define VJ_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
+
+#   define VJ_CALLBACK
+#   define VJ_CALLBACK_DECL
+#   define VJ_STATIC_CALLBACK(__x) static __x
+
+#elif defined(VJ_HAVE_GCC_VISIBILITY)
+
+#   define VJ_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
+#   define VJ_EXPORT_CLASS        __attribute__ ((visibility("default")))
+#   define VJ_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#   define VJ_IMPORT(__type)      __type
+#   define VJ_IMPORT_DATA(__type) __type
+#   define VJ_IMPORT_CLASS        
+
+#   define VJ_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
+#   define VJ_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
+#   define VJ_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
+#   define VJ_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
 
 #   define VJ_CALLBACK
 #   define VJ_CALLBACK_DECL

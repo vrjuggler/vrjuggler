@@ -72,6 +72,24 @@
 #   define JCCL_PLUGIN_CALLBACK_DECL
 #   define JCCL_PLUGIN_STATIC_CALLBACK(__x) static __x
 
+#elif defined(JCCL_HAVE_GCC_VISIBILITY)
+
+#   define JCCL_PLUGIN_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
+#   define JCCL_PLUGIN_EXPORT_CLASS        __attribute__ ((visibility("default")))
+#   define JCCL_PLUGIN_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#   define JCCL_PLUGIN_IMPORT(__type)      __type
+#   define JCCL_PLUGIN_IMPORT_DATA(__type) __type
+#   define JCCL_PLUGIN_IMPORT_CLASS        
+
+#   define JCCL_PLUGIN_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
+#   define JCCL_PLUGIN_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
+#   define JCCL_PLUGIN_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
+#   define JCCL_PLUGIN_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
+
+#   define JCCL_PLUGIN_CALLBACK
+#   define JCCL_PLUGIN_CALLBACK_DECL
+#   define JCCL_PLUGIN_STATIC_CALLBACK(__x) static __x
+
 #else   /* UNIX (where this stuff is simple!) */
 
 #   define JCCL_PLUGIN_EXPORT(__type)      __type

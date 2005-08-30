@@ -65,6 +65,12 @@
 #   include <windows.h>
 #endif /* WIN32 || WIN64 */
 
+#if !defined(WIN32) && !defined(WIN64)          \
+      && defined(__GNUC__) && __GNUC__ >= 4     \
+      && !defined(JCCL_HAVE_GCC_VISIBILITY)
+#  define JCCL_HAVE_GCC_VISIBILITY
+#endif
+
 /**
  ** ----------------------------------------------------------------------------
  ** DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -92,6 +98,23 @@
 #define JCCL_CALLBACK
 #define JCCL_CALLBACK_DECL
 #define JCCL_STATIC_CALLBACK(__x) static __x
+
+#elif defined(JCCL_HAVE_GCC_VISIBILITY)
+#   define JCCL_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
+#   define JCCL_EXPORT_CLASS        __attribute__ ((visibility("default")))
+#   define JCCL_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#   define JCCL_IMPORT(__type)      __type
+#   define JCCL_IMPORT_DATA(__type) __type
+#   define JCCL_IMPORT_CLASS        
+
+#   define JCCL_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
+#   define JCCL_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
+#   define JCCL_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
+#   define JCCL_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
+
+#   define JCCL_CALLBACK
+#   define JCCL_CALLBACK_DECL
+#   define JCCL_STATIC_CALLBACK(__x) static __x
 
 #else   /* UNIX */
 

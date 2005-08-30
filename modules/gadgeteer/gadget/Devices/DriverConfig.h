@@ -72,6 +72,24 @@
 #   define GADGET_DRIVER_CALLBACK_DECL
 #   define GADGET_DRIVER_STATIC_CALLBACK(__x) static __x
 
+#elif defined(GADGET_HAVE_GCC_VISIBILITY)
+
+#   define GADGET_DRIVER_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
+#   define GADGET_DRIVER_EXPORT_CLASS        __attribute__ ((visibility("default")))
+#   define GADGET_DRIVER_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#   define GADGET_DRIVER_IMPORT(__type)      __type
+#   define GADGET_DRIVER_IMPORT_DATA(__type) __type
+#   define GADGET_DRIVER_IMPORT_CLASS        
+
+#   define GADGET_DRIVER_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
+#   define GADGET_DRIVER_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
+#   define GADGET_DRIVER_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
+#   define GADGET_DRIVER_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
+
+#   define GADGET_DRIVER_CALLBACK
+#   define GADGET_DRIVER_CALLBACK_DECL
+#   define GADGET_DRIVER_STATIC_CALLBACK(__x) static __x
+
 #else   /* UNIX (where this stuff is simple!) */
 
 #   define GADGET_DRIVER_EXPORT(__type)      __type
