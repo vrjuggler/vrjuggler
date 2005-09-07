@@ -84,12 +84,6 @@
             advanced
                 OpenSGNavGrab
                 ..
-                OpenSGViewer
-                    Common
-                    ..
-                    OpenSG
-                    ..
-                ..
             ..
             simple
                 OpenSGNav

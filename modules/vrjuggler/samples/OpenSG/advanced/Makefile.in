@@ -36,8 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-APPS=	OpenSGNavGrab	\
-	OpenSGViewer
+APPS=	OpenSGNavGrab
 
 # -----------------------------------------------------------------------------
 # Build targets.
