@@ -3,8 +3,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glove", "OGL\advanced\glove
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "navgrab", "OGL\advanced\navgrab\navgrab.vcproj", "{CCC5AD55-60CF-47DD-861A-663F52C2CBD0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "proceduralApp", "OGL\ext\proceduralApp\proceduralApp.vcproj", "{FD2862DB-E025-4BD1-A2AB-73AC6B418ADD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConfigApp", "OGL\simple\ConfigApp\ConfigApp.vcproj", "{F7A281D0-0C41-42FD-8A26-ACD91C6EC4A3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "contextApp", "OGL\simple\contextApp\contextApp.vcproj", "{821044C4-8E85-41A0-A87F-3EAE45607CF4}"
@@ -47,10 +45,6 @@ Global
 		{CCC5AD55-60CF-47DD-861A-663F52C2CBD0}.Debug.Build.0 = Debug|Win32
 		{CCC5AD55-60CF-47DD-861A-663F52C2CBD0}.Release.ActiveCfg = Release|Win32
 		{CCC5AD55-60CF-47DD-861A-663F52C2CBD0}.Release.Build.0 = Release|Win32
-		{FD2862DB-E025-4BD1-A2AB-73AC6B418ADD}.Debug.ActiveCfg = Debug|Win32
-		{FD2862DB-E025-4BD1-A2AB-73AC6B418ADD}.Debug.Build.0 = Debug|Win32
-		{FD2862DB-E025-4BD1-A2AB-73AC6B418ADD}.Release.ActiveCfg = Release|Win32
-		{FD2862DB-E025-4BD1-A2AB-73AC6B418ADD}.Release.Build.0 = Release|Win32
 		{F7A281D0-0C41-42FD-8A26-ACD91C6EC4A3}.Debug.ActiveCfg = Debug|Win32
 		{F7A281D0-0C41-42FD-8A26-ACD91C6EC4A3}.Debug.Build.0 = Debug|Win32
 		{F7A281D0-0C41-42FD-8A26-ACD91C6EC4A3}.Release.ActiveCfg = Release|Win32

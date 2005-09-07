@@ -47,10 +47,6 @@
                     ..
                 ..
             ..
-            ext
-                proceduralApp
-                ..
-            ..
             simple
                 ConfigApp
                 ..
