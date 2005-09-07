@@ -44,6 +44,8 @@
         ..
         Draw
             OGL
+                WallTest
+                ..
                 analog
                 ..
                 combo
@@ -64,16 +66,8 @@
                 ..
                 torus
                 ..
-                WallTest
-                ..
                 wand
                 ..
-            ..
-            OSG
-            ..
-            OpenSG
-            ..
-            Pf
             ..
         ..
         PerfMon

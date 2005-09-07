@@ -65,23 +65,29 @@
            ..
         ..
         OSG
-            simple
-                osgNav
-                    remotenav
-                        Subject
-                            idl
-                            ..
-                        ..
-                    ..
-                ..
-            ..
             advanced
                OSGNavGrab
                ..
             ..
+            simple
+                osgNav
+                    remotenav
+                        Server
+                        ..
+                        Subject
+                            idl
+                            ..
+                        ..
+                        Viewer
+                        ..
+                    ..
+                ..
+            ..
         ..
         OpenSG
             advanced
+                OpenSGNavGrab
+                ..
                 OpenSGViewer
                     Common
                     ..
