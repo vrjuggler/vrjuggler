@@ -732,8 +732,8 @@ else
 
    changequote(<<, >>)
    # XXX: These sed(1) expressions could be improved.
-   CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/-l[^ ]*//g'`
-   CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/-L[^ ]*//g'`
+   CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/( |^)-l[^ ]*//g'`
+   CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/( |^)-L[^ ]*//g'`
    changequote([, ])
 
    cppdom_version=`$CPPDOM_CONFIG --version`
