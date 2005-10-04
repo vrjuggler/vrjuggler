@@ -245,9 +245,9 @@ inline void BufferObjectWriter::writeDouble(double val) throw (IOException)
 inline void BufferObjectWriter::writeString(std::string val)
    throw (IOException)
 {
-   writeUint16(val.size());
+   writeUint32(val.size());
 
-   for ( unsigned int i = 0; i < val.length(); ++i )
+   for ( vpr::Uint32 i = 0; i < val.length(); ++i )
    {
       writeRaw((vpr::Uint8*) &val[i], 1);
    }

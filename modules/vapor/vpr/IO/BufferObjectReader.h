@@ -365,10 +365,10 @@ inline double BufferObjectReader::readDouble() throw (IOException)
 
 inline std::string BufferObjectReader::readString() throw (IOException)
 {
-   vpr::Uint16 str_len = readUint16();
+   vpr::Uint32 str_len = readUint32();
    std::string ret_val;
    char tempChar;
-   for(unsigned i=0; i<str_len;++i)
+   for(vpr::Uint32 i=0; i<str_len;++i)
    {
       tempChar = (char)(*readRaw(1));
       ret_val += tempChar;
