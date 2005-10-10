@@ -207,7 +207,7 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
          mReconfigIf->disable();
       }
 
-      delete mReconfigIf;
+      mReconfigIf = NULL;
    }
 
    vprDEBUG(jcclDBG_RECONFIG, vprDBG_VERB_LVL)
@@ -227,7 +227,6 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
                << clrOutBOLD(clrYELLOW, "WARNING:")
                << " Failed to enable remote run-time reconfiguration.\n"
                << vprDEBUG_FLUSH;
-            delete mReconfigIf;
             mReconfigIf = NULL;
          }
       }
@@ -238,7 +237,6 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
             << clrOutBOLD(clrYELLOW, "WARNING:")
             << " Failed to initialize remote run-time reconfiguration.\n"
             << vprDEBUG_FLUSH;
-         delete mReconfigIf;
          mReconfigIf = NULL;
       }
    }
@@ -246,13 +244,10 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
 
 ConfigManager::~ConfigManager()
 {
-   if ( NULL != mReconfigIf && mReconfigIf->isEnabled() )
-   {
-      mReconfigIf->disable();
-
-      delete mReconfigIf;
-      mReconfigIf = NULL;
-   }
+   // We do not deal with shutting down or unloading the remote run-time
+   // reconfiguration plug-in directly here. If the plug-in was loaded, then
+   // the reference counted memory in mRemoteRtrcPlugin will handle cleaning
+   // that up automatically.
 }
 
 //-------------------- Pending List Stuff -------------------------------
