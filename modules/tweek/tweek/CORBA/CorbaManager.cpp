@@ -153,25 +153,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught CORBA::SystemException during initialization\n"
          << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-         << "Minor code: " << sysEx.minor() << ", completed: "
-         << vprDEBUG_FLUSH;
-
-      switch ( sysEx.completed() )
-      {
-         case CORBA::COMPLETED_YES:
-            vprDEBUG_CONT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-               << "YES" << std::endl << vprDEBUG_FLUSH;
-            break;
-         case CORBA::COMPLETED_NO:
-            vprDEBUG_CONT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-               << "NO" << std::endl << vprDEBUG_FLUSH;
-            break;
-         case CORBA::COMPLETED_MAYBE:
-            vprDEBUG_CONT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-               << "MAYBE" << std::endl << vprDEBUG_FLUSH;
-            break;
-      }
+      printSystemException(sysEx, vprDBG_CRITICAL_LVL);
    }
    catch (CORBA::Exception&)
    {
@@ -224,7 +206,24 @@ void CorbaManager::shutdown(bool waitForCompletion)
       // We want to etherialize objects (destroy registered servants).  This
       // will destroy all descendant POAs, so we do not have to worry about
       // them at all.
-      mRootPOA->destroy(true, waitForCompletion);
+      try
+      {
+         mRootPOA->destroy(true, waitForCompletion);
+         mRootPOA = PortableServer::POA::_nil();
+      }
+      catch (CORBA::SystemException& ex)
+      {
+         vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+            << "Caught CORBA::SystemException during root POA destruction\n"
+            << vprDEBUG_FLUSH;
+         printSystemException(ex, vprDBG_CRITICAL_LVL);
+      }
+      catch (...)
+      {
+         vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+            << "Caught unknown exception during root POA destruction."
+            << std::endl << vprDEBUG_FLUSH;
+      }
    }
 
    if ( ! CORBA::is_nil(mORB) )
@@ -232,6 +231,15 @@ void CorbaManager::shutdown(bool waitForCompletion)
       try
       {
          mORB->shutdown(waitForCompletion);
+         mORB->destroy();
+         mORB = CORBA::ORB::_nil();
+      }
+      catch (CORBA::SystemException& ex)
+      {
+         vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+            << "Caught CORBA::SystemException during ORB shutdown\n"
+            << vprDEBUG_FLUSH;
+         printSystemException(ex, vprDBG_CRITICAL_LVL);
       }
       catch (...)
       {
@@ -508,6 +516,29 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    retain_policy->destroy();
 
    return status;
+}
+
+void CorbaManager::printSystemException(const CORBA::SystemException& ex,
+                                        const int debugLevel)
+{
+   vprDEBUG(tweekDBG_CORBA, debugLevel) << "Minor code: " << ex.minor()
+                                        << ", completed: " << vprDEBUG_FLUSH;
+
+   switch ( ex.completed() )
+   {
+      case CORBA::COMPLETED_YES:
+         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "YES" << std::endl
+                                                   << vprDEBUG_FLUSH;
+         break;
+      case CORBA::COMPLETED_NO:
+         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "NO" << std::endl
+                                                   << vprDEBUG_FLUSH;
+         break;
+      case CORBA::COMPLETED_MAYBE:
+         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "MAYBE" << std::endl
+                                                   << vprDEBUG_FLUSH;
+         break;
+   }
 }
 
 void CorbaManager::run()
