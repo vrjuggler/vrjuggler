@@ -50,14 +50,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating C++ stubs from CORBA IDL..."
-				CommandLine="mkdir tweek\idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
-"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -111,14 +104,7 @@ $(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ..
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating C++ stubs from CORBA IDL..."
-				CommandLine="mkdir tweek\idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
-$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
-"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
