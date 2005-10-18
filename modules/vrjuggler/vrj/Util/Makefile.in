@@ -47,7 +47,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VJ_LIBRARY)
 
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
