@@ -52,9 +52,37 @@
 namespace vpr
 {
 
-extern VPR_API(std::string) getVersionString(void);
-extern VPR_API(vpr::Uint32) getVersionNumber(void);
-extern VPR_API(std::string) getSubsystem(void);
+/**
+ * Retruns the "human-readable" VPR version \em string. The full form includes
+ * the version number (<major>.<minor>.<patch>-<build>), the canonical name
+ * of the release, the threading subsystem, and the build date. The major
+ * version number is updated when major architectural changes are made; the
+ * minor when there are minor API changes; and the patch when there are bug
+ * fixes. The build number is usually representative of the nightly build
+ * process relative to a given version x.y.z.
+ *
+ * @see vpr::VPR_VERSION
+ */
+extern VPR_API(std::string) getVersionString();
+
+/**
+ * Returns the 9-digit VPR version integer. This form provides three digits
+ * for each of the major, minor, and patch numbers with no leading zeros.
+ *
+ * @note The number returned is the value at run time. For a compile-time
+ *       version identifier, use \c __VPR_version. The value is the same as
+ *       what is returned by this function.
+ */
+extern VPR_API(vpr::Uint32) getVersionNumber();
+
+/**
+ * Returns the name of the threading subsystem used to compile VPR. It will be
+ * one of \c "POSIX", \c "SPROC", or \c "NSPR". This identifier is part of the
+ * full version string returned by vpr::getVersionString().
+ *
+ * @see vpr::getVersionString()
+ */
+extern VPR_API(std::string) getSubsystem();
 
 }
 

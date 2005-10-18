@@ -51,7 +51,27 @@
 namespace snx
 {
 
+/**
+ * Retruns the "human-readable" Sonix version \em string. The full form
+ * includes the version number (<major>.<minor>.<patch>-<build>), the canonical
+ * name of the release, the threading subsystem, and the build date. The major
+ * version number is updated when major architectural changes are made; the
+ * minor when there are minor API changes; and the patch when there are bug
+ * fixes. The build number is usually representative of the nightly build
+ * process relative to a given version x.y.z.
+ *
+ * @see snx::SNX_VERSION
+ */
 extern SNX_API(std::string) getVersionString();
+
+/**
+ * Returns the 9-digit Sonix version integer. This form provides three digits
+ * for each of the major, minor, and patch numbers with no leading zeros.
+ *
+ * @note The number returned is the value at run time. For a compile-time
+ *       version identifier, use \c __SNX_version. The value is the same as
+ *       what is returned by this function.
+ */
 extern SNX_API(vpr::Uint32) getVersionNumber();
 
 }
