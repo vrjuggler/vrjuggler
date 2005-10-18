@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-18-2005 patrickh    Added the functions vrj::getVersionString() and
+                        vrj::getVersionNumber().
+                        NEW VERSION: 2.1.5
 Jul-25-2005 patrickh    Added vrj::Projection::getNearFar().
                         NEW VERSION: 2.1.4
 Jul-18-2005 patrickh    Do not call pfExit() in vrj::PfDrawManager::closeAPI().

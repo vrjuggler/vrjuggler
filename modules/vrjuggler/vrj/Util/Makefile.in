@@ -47,6 +47,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VJ_LIBRARY)
 
+SRCS=		Version.cpp
+
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
