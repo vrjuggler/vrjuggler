@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-18-2005 patrickh    Added the functions vrj::getVersionString() and
+                        vrj::getVersionNumber().
+
 [2.0.1 released - 8.29.2005]===================================================
 Aug-29-2005 patrickh    NEW VERSION: 2.0.1
 Jul-25-2005 patrickh    Added vrj::Projection::getNearFar().
