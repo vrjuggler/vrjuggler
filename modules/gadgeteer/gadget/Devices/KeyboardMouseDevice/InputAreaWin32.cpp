@@ -634,21 +634,7 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
       return;
    }
 
-   // Build up the modifier mask based on what modifier keys are currently
-   // pressed.
-   int mask(0);
-   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_SHIFT] )
-   {
-      mask |= gadget::SHIFT_MASK;
-   }
-   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_CTRL] )
-   {
-      mask |= gadget::CTRL_MASK;
-   }
-   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_ALT] )
-   {
-      mask |= gadget::ALT_MASK;
-   }
+   int mask = getModifierMask();
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
       << "[gadget::InputAreaWin32::addKeyEvent()] Key character '"
@@ -672,24 +658,77 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
                                          const gadget::EventType& type,
                                          const MSG& msg)
 {
-   // XXX: Missing keyboard modifier information here...
+   int state = getModifierMask() | getButtonMask();
+
    gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
                                                        GET_X_LPARAM(msg.lParam),
                                                        GET_Y_LPARAM(msg.lParam),
-                                                       msg.pt.x, msg.pt.y, 0,
-                                                       msg.time));
+                                                       msg.pt.x, msg.pt.y,
+                                                       state, msg.time));
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
 void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
 {
+   int state = getModifierMask() | getButtonMask();
+
    gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
                                                        gadget::NO_MBUTTON,
                                                        GET_X_LPARAM(msg.lParam),
                                                        GET_Y_LPARAM(msg.lParam),
-                                                       msg.pt.x, msg.pt.y, 0,
-                                                       msg.time));
+                                                       msg.pt.x, msg.pt.y,
+                                                       state, msg.time));
    mKeyboardMouseDevice->addEvent(mouse_event);
+}
+
+int InputAreaWin32::getModifierMask()
+{
+   // Build up the modifier mask based on what modifier keys are currently
+   // pressed.
+   int mask(0);
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_SHIFT] )
+   {
+      mask |= gadget::SHIFT_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_CTRL] )
+   {
+      mask |= gadget::CTRL_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::KEY_ALT] )
+   {
+      mask |= gadget::ALT_MASK;
+   }
+   return mask;
+}
+
+int InputAreaWin32::getButtonMask()
+{
+   // Build up the mouse button mask based on what mouse buttons are currently
+   // pressed.
+   int mask(0);
+
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON1] )
+   {
+      mask |= gadget::BUTTON1_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON2] )
+   {
+      mask |= gadget::BUTTON2_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON3] )
+   {
+      mask |= gadget::BUTTON3_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] )
+   {
+      mask |= gadget::BUTTON4_MASK;
+   }
+   if ( mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] )
+   {
+      mask |= gadget::BUTTON5_MASK;
+   }
+
+   return mask;
 }
 
 void InputAreaWin32::doInternalError( const std::string& msg )
