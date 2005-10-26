@@ -72,13 +72,15 @@ protected:
    void lockMouse();
    void unlockMouse();
    void resize(long width, long height);
+   gadget::Keys VKKeyToKey(int vkKey);
    virtual void addKeyEvent(const gadget::Keys& key,
                             const gadget::EventType& type, const MSG& message);
    virtual void addMouseButtonEvent(const gadget::Keys& button,
                                     const gadget::EventType& type,
                                     const MSG& message);
    virtual void addMouseMoveEvent(const MSG& message);
-   gadget::Keys VKKeyToKey(int vkKey);
+   int getModifierMask();
+   int getButtonMask();
    static void doInternalError( const std::string& msg );
 
 protected:
