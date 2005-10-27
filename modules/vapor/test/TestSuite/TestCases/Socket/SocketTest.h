@@ -45,11 +45,11 @@ CPPUNIT_TEST(differentAddressOpenBindCloseTest);
 //CPPUNIT_TEST(reuseAddrSimpleTest);
 //CPPUNIT_TEST(reuseAddrTest);
 //CPPUNIT_TEST(testOpenCloseOpen);
-//CPPUNIT_TEST(testSendRecv);
+CPPUNIT_TEST(testSendRecv);
 //CPPUNIT_TEST(testBlocking);
 //CPPUNIT_TEST(testTcpConnection);
 //CPPUNIT_TEST(testReadn);
-CPPUNIT_TEST(testIsConnected);   
+CPPUNIT_TEST(testIsConnected);
 #endif
 CPPUNIT_TEST_SUITE_END();
 
@@ -176,7 +176,7 @@ public:
    void testIsConnected_acceptor(void* arg);
    void testIsConnected_connector(void* arg);
    // =========================================================================
-   
+
 
 protected:
    void init ()

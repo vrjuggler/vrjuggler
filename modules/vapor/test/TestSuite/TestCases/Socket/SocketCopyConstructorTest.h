@@ -20,7 +20,7 @@ class SocketCopyConstructorTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SocketCopyConstructorTest);
 //CPPUNIT_TEST( simpleTest );
-CPPUNIT_TEST( testCopyConnectedSocket );
+//CPPUNIT_TEST( testCopyConnectedSocket );
 CPPUNIT_TEST_SUITE_END();
 
 public:
