@@ -829,12 +829,15 @@ void SocketTest::testReadnClient (void* arg)
    client_sock.close();
 }
 
+// Start up a client that will try to read 20 bytes at ones
+// - Have server send 20 bytes in multiple chunks.
 void SocketTest::testReadn ()
 {
    vpr::Uint16 server_port = 55446;
    vpr::InetAddr local_addr;
    local_addr.setPort(server_port);
    vpr::SocketStream server_sock(local_addr, vpr::InetAddr::AnyAddr);
+   const unsigned int bytes_to_send = 20;
    const unsigned int pkt_size = 5;
    vpr::Uint32 bytes;
    char buffer[pkt_size];
@@ -857,6 +860,19 @@ void SocketTest::testReadn ()
    vpr::SocketStream client_sock;
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Server could not accept connection", server_sock.accept(client_sock));
 
+   unsigned bytes_sent = 0;
+
+   while(bytes_sent != bytes_to_send)
+   {
+      unsigned to_send = pkt_size;
+      if( (bytes_to_send-bytes_sent) < to_send)
+      { to_send = bytes_to_send-bytes_sent; }
+
+      client_sock.write(buffer, pkt_size, bytes);
+      bytes_sent += bytes;
+   }
+
+   /*
    for ( unsigned int i = 0; i < 20; i += pkt_size )
    {
       memset((void*) buffer, 0, sizeof(buffer));
@@ -869,8 +885,12 @@ void SocketTest::testReadn ()
       client_sock.write(buffer, pkt_size, bytes);
       CPPUNIT_ASSERT(bytes != 0 && "Server could not write to client");
    }
+   */
+
+
 
    client_sock.close();
+   client_thread->join();
    delete client_thread;
    server_sock.close();
 }

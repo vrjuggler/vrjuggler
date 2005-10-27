@@ -48,7 +48,7 @@ CPPUNIT_TEST(reuseAddrSimpleTest);
 CPPUNIT_TEST(testSendRecv);
 //CPPUNIT_TEST(testBlocking);
 //CPPUNIT_TEST(testTcpConnection);
-//CPPUNIT_TEST(testReadn);
+CPPUNIT_TEST(testReadn);
 CPPUNIT_TEST(testIsConnected);
 #endif
 CPPUNIT_TEST_SUITE_END();
