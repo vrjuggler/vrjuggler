@@ -100,8 +100,9 @@ public:
     * @pre The socket is open.
     * @post An attempt is made to close the socket.  The resulting status is
     *       returned to the caller.
+    *       The local tracking of connected state and bound status are reset.
     *
-    * @throws vpr::IOException if the socke could not be closed.
+    * @throws vpr::IOException if the socket could not be closed.
     * @see FileHandleImplUNIX::close()
     */
    void close() throw (IOException);
@@ -171,7 +172,7 @@ public:
     * @throws vpr::SocketException if trying to call after a clocking
     *         call has already been made.
     * @throws vpr::IOException if the blocking state could not be set.
-    * 
+    *
     * @see FileHandleImplUNIX::setBlocking()
     * @see isOpen, open
     */
@@ -447,10 +448,10 @@ protected:
                  const vpr::SocketTypes::Type sockType);
 
 protected:
-   bool mOpenBlocking; /**< Used for working around socket(2) semantics */
-   bool mBound;
-   bool mConnectCalled;
-   bool mBlockingFixed;
+   bool mOpenBlocking;     /**< Used for working around socket(2) semantics */
+   bool mBound;            /**< True if we have been successfully bound to a port. */
+   bool mConnectCalled;    /**< A connection call has been issued and is processing. */
+   bool mBlockingFixed;    /**< Blocking state is fixed and can't be changed. */
 
    vpr::FileHandleImplUNIX* mHandle; /**< The OS handle for this socket */
 

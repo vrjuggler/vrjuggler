@@ -170,6 +170,13 @@ void SocketImplBSD::open() throw (IOException)
 void SocketImplBSD::close() throw (IOException)
 {
    mHandle->close();
+
+   // Reset the local state tracking to initial state
+   // since we are not connected or bound any more.
+   // This allows the socket to be reused.
+   mBound = false;
+   mConnectCalled = false;
+   mBlockingFixed = false;
 }
 
 // Reconfigures the socket so that it is in blocking mode.
@@ -337,11 +344,11 @@ bool SocketImplBSD::isConnected() const throw ()
    if ( isOpen() && mConnectCalled )
    {
       vpr::Int32 bytes;
-      
+
       try
       {
          mHandle->getReadBufferSize(bytes);
-         
+
          // If there are bytes to read then we know that we are connected.
          if ( bytes != 0 )
          {
@@ -401,7 +408,7 @@ void SocketImplBSD::read_i(void* buffer,
 {
    mBlockingFixed = true;
    mHandle->read_i(buffer, length, bytesRead, timeout);
-   
+
    //XXX: Should never happen.
    if ( bytesRead == 0 )
    {
@@ -417,7 +424,7 @@ void SocketImplBSD::readn_i(void* buffer,
 {
    mBlockingFixed = true;
    mHandle->readn_i(buffer, length, bytesRead, timeout);
-   
+
    // XXX: Should never happen.
    if ( bytesRead == 0 )
    {
