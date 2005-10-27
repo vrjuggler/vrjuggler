@@ -400,19 +400,22 @@ void SocketTest::reuseAddrSimpleTest()
    sock1 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
    sock2 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
    sock3 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
-   
+
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Cannot open sock1", sock1->open());
    sock1->setReuseAddr(true);
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Cannot bind sock1", sock1->bind());
-   
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Cannot open sock2", sock2->open());
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Cannot bind second socket re-using addr", sock2->bind());
-   
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Cannot open sock3", sock3->open());
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Cannot bind third socket re-using addr", sock3->bind());
 
-   sock1->close();
+   // Try failed bind
+   sock2->open();
+   CPPUNIT_ASSERT_THROW_MESSAGE("Bind on same address should fail.", sock2->bind(), vpr::SocketException);
    sock2->close();
+
+   // Close and then try reuse
+   sock1->close();
+
+   sock3->open();
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Bind on same (closed) address should not fail.", sock3->bind());
+
    sock3->close();
    delete sock1;
    delete sock2;

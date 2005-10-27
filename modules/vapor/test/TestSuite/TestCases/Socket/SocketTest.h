@@ -42,7 +42,7 @@ CPPUNIT_TEST(sameAddressOpenBindCloseTest);
 CPPUNIT_TEST(sameAddressOpenBindDestructTest);
 CPPUNIT_TEST(differentAddressOpenBindCloseTest);
 //CPPUNIT_TEST(bindAgainFailTest);
-//CPPUNIT_TEST(reuseAddrSimpleTest);
+CPPUNIT_TEST(reuseAddrSimpleTest);
 //CPPUNIT_TEST(reuseAddrTest);
 //CPPUNIT_TEST(testOpenCloseOpen);
 CPPUNIT_TEST(testSendRecv);
