@@ -895,6 +895,25 @@ void SocketTest::testReadn ()
    server_sock.close();
 }
 
+// Try to start a non-blocking connection and then test the isConnected state.
+void SocketTest::testNonBlockingIsConnected()
+{
+   vpr::Uint16 port = 32721;
+
+   vpr::InetAddr remote_addr;
+   remote_addr.setAddress("localhost", port);
+   vpr::SocketStream test_sock(vpr::InetAddr::AnyAddr, remote_addr);
+   test_sock.setBlocking(false);
+
+   test_sock.open();
+   test_sock.connect();
+
+   CPPUNIT_ASSERT(test_sock.isBound() && "Socket should be bound now.");
+   CPPUNIT_ASSERT(!test_sock.isConnected() && "Should not have been able to connect yet.");
+
+   test_sock.close();
+}
+
 void SocketTest::testIsConnected ()
 {
    mState        = NOT_READY;                        // Initialize
@@ -937,7 +956,7 @@ void SocketTest::testIsConnected_acceptor (void* arg)
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Accept failed", acceptor.accept(client_sock));
    CPPUNIT_ASSERT(client_sock.isOpen() && "Accepted socket should be open");
-   CPPUNIT_ASSERT(client_sock.isConnected() && "Connector not connected");
+   CPPUNIT_ASSERT(client_sock.isConnected() && "Connector should now be connected");
 
    // --- STATE: Acceptor Tested --- //
    mCondVar.acquire();
@@ -946,6 +965,9 @@ void SocketTest::testIsConnected_acceptor (void* arg)
       mCondVar.signal();
    }
    mCondVar.release();
+
+   // Should be connected now.
+   CPPUNIT_ASSERT(client_sock.isConnected() && "Should be connected now");
 
    // --- WAIT FOR: Connector closed -- //
    mCondVar.acquire();
@@ -986,11 +1008,10 @@ void SocketTest::testIsConnected_connector (void* arg)
 
    vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
-   vpr::SocketConnector connector;
-   vpr::SocketStream con_sock;
    std::string data;
 
    remote_addr.setAddress("localhost", mAcceptorPort);
+   vpr::SocketStream con_sock(vpr::InetAddr::AnyAddr, remote_addr);
 
    mCondVar.acquire();
    {
@@ -1003,8 +1024,9 @@ void SocketTest::testIsConnected_connector (void* arg)
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to open connector socket", con_sock.open());
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect",
-      connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec)));
+   con_sock.connect();
+   //CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect",
+   //   connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec)));
 
    // --- WAIT FOR: Acceptor Tested --- //
    mCondVar.acquire();
@@ -1015,6 +1037,9 @@ void SocketTest::testIsConnected_connector (void* arg)
       }
    }
    mCondVar.release();
+
+   // Should be connected now.
+   CPPUNIT_ASSERT(con_sock.isConnected() && "Should be connected now");
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close connector side of client socket", con_sock.close());
 

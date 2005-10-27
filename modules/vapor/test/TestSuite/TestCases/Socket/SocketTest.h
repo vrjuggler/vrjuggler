@@ -49,6 +49,7 @@ CPPUNIT_TEST(testSendRecv);
 //CPPUNIT_TEST(testBlocking);
 //CPPUNIT_TEST(testTcpConnection);
 CPPUNIT_TEST(testReadn);
+CPPUNIT_TEST(testNonBlockingIsConnected);
 CPPUNIT_TEST(testIsConnected);
 #endif
 CPPUNIT_TEST_SUITE_END();
@@ -164,6 +165,9 @@ public:
    void testReadnClient(void* arg);
    void testReadn();
    // =========================================================================
+
+   // Test that a new un-connected non-blocking socket is marked as not connected.
+   void testNonBlockingIsConnected();
 
    // =========================================================================
    // Test for isConnected().  In this test, two threads are spawned, one for
