@@ -896,22 +896,42 @@ void SocketTest::testReadn ()
 }
 
 // Try to start a non-blocking connection and then test the isConnected state.
-void SocketTest::testNonBlockingIsConnected()
+void SocketTest::testNonBlockingConnectFailure()
 {
    vpr::Uint16 port = 32721;
 
    vpr::InetAddr remote_addr;
-   remote_addr.setAddress("localhost", port);
+   remote_addr.setAddress("www.google.com", port);
+
+   // Test failing to connect to a remote address
    vpr::SocketStream test_sock(vpr::InetAddr::AnyAddr, remote_addr);
    test_sock.setBlocking(false);
-
    test_sock.open();
-   test_sock.connect();
-
+   test_sock.connect(vpr::Interval::NoWait);
    CPPUNIT_ASSERT(test_sock.isBound() && "Socket should be bound now.");
    CPPUNIT_ASSERT(!test_sock.isConnected() && "Should not have been able to connect yet.");
-
    test_sock.close();
+
+   // Test timing out on remote connection
+   vpr::SocketStream test_sock2(vpr::InetAddr::AnyAddr, remote_addr);
+   test_sock2.setBlocking(false);
+   test_sock2.open();
+   CPPUNIT_ASSERT_THROW_MESSAGE("Connect should time out.",
+                                test_sock2.connect(vpr::Interval(5, vpr::Interval::Msec)),
+                                vpr::TimeoutException);
+   CPPUNIT_ASSERT(!test_sock2.isOpen());
+
+   // Local connection - should fail with no timeout
+   remote_addr.setAddress("localhost",port);
+   vpr::SocketStream test_sock3(vpr::InetAddr::AnyAddr, remote_addr);
+   test_sock3.setBlocking(false);
+   test_sock3.open();
+
+   CPPUNIT_ASSERT_THROW_MESSAGE("Should be refused",
+                                test_sock3.connect(vpr::Interval::NoTimeout),
+                                vpr::SocketException);
+   CPPUNIT_ASSERT(!test_sock3.isOpen() && "Should have been closed up");
+
 }
 
 void SocketTest::testIsConnected ()
@@ -978,22 +998,36 @@ void SocketTest::testIsConnected_acceptor (void* arg)
    }
    mCondVar.release();
 
-   // We now have a one sided socket -- Read and write should return NotConnected
+   // We now have a one sided socket -- Read and write should throw exception
    char temp_buffer[100];
-   vpr::Uint32 bytes_handled;
+   vpr::Uint32 bytes_handled(80);
 
-   CPPUNIT_ASSERT_NO_THROW(client_sock.recv((void*)temp_buffer, 50, bytes_handled));
+   // Still considered connected from our side until we try to read or write
+   // This is because it closed down cleanly
+   CPPUNIT_ASSERT(client_sock.isConnected() && "Should still be connected (sort of)");
 
+   CPPUNIT_ASSERT_THROW_MESSAGE("Socket is disconnected",
+                                client_sock.recv((void*)temp_buffer, 50, bytes_handled),
+                                vpr::SocketException);
    CPPUNIT_ASSERT(bytes_handled == 0);
 
-   // This should give an error too, but it doesn't seem to
-   CPPUNIT_ASSERT_NO_THROW(client_sock.send((void*)temp_buffer, 50, bytes_handled));
+   //CPPUNIT_ASSERT(!client_sock.isConnected() && "Should not be connected after read");
+
+   // Check for exception on trying to write to disconnected socket
+   /*
+   CPPUNIT_ASSERT_THROW_MESSAGE("Socket is disconnected",
+                                client_sock.send((void*)temp_buffer, 50, bytes_handled),
+                                vpr::IOException);
+                                */
+   client_sock.send((void*)temp_buffer, 50, bytes_handled);
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor side of client socket", client_sock.close());
 
-   CPPUNIT_ASSERT_NO_THROW(client_sock.send((void*)temp_buffer, 50, bytes_handled));
+   CPPUNIT_ASSERT_THROW_MESSAGE("Socket is closed",
+                                client_sock.send((void*)temp_buffer, 50, bytes_handled),
+                                vpr::IOException);
 
-   CPPUNIT_ASSERT( !client_sock.isConnected() && "Connector not disconnected");
+   CPPUNIT_ASSERT( !client_sock.isConnected() && "Should be fully disconnected after read and write");
 
    /*
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor side of client socket", client_sock.close());

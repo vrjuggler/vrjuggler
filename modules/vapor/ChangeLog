@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-10-28 allenb   Fixed up bugs in BSD Socket related to async connection,
+                    isConnected, and exceptions thrown.
+                    NEW VERSION: 1.1.9
 2005-08-25 patrickh Added execption throwing to vpr::ObjectReader,
                     vpr::ObjectWriter, and types derived therefrom.
                     NEW VERSION: 1.1.8
