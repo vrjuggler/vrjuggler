@@ -200,23 +200,25 @@ public:
     * the effect of establishing a connection with the destination.
     *
     * @pre The socket is open.
-    * @post The socket is connected to the address in \c mLocalAddr.  For a
-    *       stream socket, this means that a connection for future
-    *       communication has been established.  For a datagram socket, the
-    *       default destination for all packets is now \c mLocalAddr.
+    * @post blocking: The socket is connected to the address in \c mLocalAddr.
+    *         For a stream socket, this means that a connection for future
+    *         communication has been established.  For a datagram socket, the
+    *         default destination for all packets is now \c mLocalAddr.
+    *       non-blocking: A connection has been started and may have completed
+    *         or caused an error.
+    * @note timeout value does not affect blocking socket connects.
+    * @todo Make timeout value apply to blocking sockets (by making non-blocking
+    *       for duration of connection).
     *
-    * @throws ConnectionResetException if connection is reset.
-    * @throws NoRouteToHostException if a route to host does not exist.
-    * @throws UnknownHostException if host does not exist.
-    * @throws IOException if network is down.
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
+    * @throws vpr::ConnectionResetException if connection is reset.
+    * @throws vpr::NoRouteToHostException if a route to host does not exist.
+    * @throws vpr::UnknownHostException if host does not exist.
+    * @throws vpr::TimeoutException if the connection could not be completed
+    *         in the given amount of time. This closes the socket before throw.
     * @throws vpr::SocketException if could not connect.
     */
    void connect(vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (SocketException);
+      throw (vpr::Exception);
 
    /**
     * Gets the status of a possibly connected socket.

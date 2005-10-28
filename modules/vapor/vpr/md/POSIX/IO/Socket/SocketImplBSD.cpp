@@ -57,8 +57,66 @@
 #include <vpr/IO/Socket/ConnectionRefusedException.h>
 #include <vpr/IO/Socket/UnknownHostException.h>
 #include <vpr/IO/Socket/NoRouteToHostException.h>
+#include <vpr/md/POSIX/IO/SelectorImplBSD.h>
 #include <vpr/Util/Debug.h>
 
+namespace
+{
+
+// Given an error number (or errno) build up an exception with the
+// correct type and error string and throw it.
+//
+// This helper comes in handy since we have to throw exceptions from so many places in
+// the socket implementation.
+void buildAndThrowException(std::string prefix, std::string location, int error_number=-2)
+{
+   if (-2 == error_number)
+   {
+      error_number = errno;
+   }
+
+   /** Build error string. */
+   const char* err_str(strerror(error_number));
+   std::string err_string;
+
+   if ( NULL != err_str )
+   {
+      err_string = std::string(err_str);
+   }
+   else
+   {
+      err_string = std::string("");
+   }
+
+   // Build and throw exception
+   if(ECONNREFUSED == error_number)
+   {
+      throw vpr::ConnectionRefusedException(prefix + "Connection refused: " + err_string, location);
+   }
+   else if(ECONNRESET == error_number)
+   {
+      throw vpr::ConnectionResetException(prefix + "Connection reset: " + err_string, location);
+   }
+   else if (EHOSTUNREACH == error_number)
+   {
+      throw vpr::NoRouteToHostException(prefix + "No route to host: " + err_string, location);
+   }
+   else if (EHOSTDOWN == error_number)
+   {
+      throw vpr::SocketException(prefix + "Host down: " + err_string, location);
+   }
+   else if (ENETDOWN == error_number)
+   {
+      throw vpr::SocketException(prefix + "Network is down: " + err_string, location);
+   }
+   else
+   {
+      throw vpr::SocketException(prefix + "Error: " + err_string, location);
+   }
+
+}
+
+}
 
 namespace vpr
 {
@@ -143,12 +201,7 @@ void SocketImplBSD::open() throw (IOException)
    // If socket(2) failed, print an error message and return error status.
    if ( sock == -1 )
    {
-      fprintf(stderr,
-              "[vpr::SocketImplBSD] Could not create socket (%s): %s\n",
-              getName().c_str(), strerror(errno));
-
-      throw SocketException("[vpr::SocketImplBSD] Could not create socket ("
-         + getName() + "): " + std::string(strerror(errno)), VPR_LOCATION);
+      buildAndThrowException("[vpr::CocketImplBSD::open] (" + getName() + ") ", VPR_LOCATION);
    }
    // Otherwise, return success.
    else
@@ -213,11 +266,7 @@ void SocketImplBSD::bind() throw (SocketException)
    // If that fails, print an error and return error status.
    if ( status == -1 )
    {
-      fprintf(stderr,
-              "[vpr::SocketImplBSD] Cannot bind socket to address: %s\n",
-              strerror(errno));
-      throw SocketException("[vpr::SocketImplBSD] Cannot bind socket to address: "
-         + std::string(strerror(errno)), VPR_LOCATION);
+      buildAndThrowException("[vpr::SocketImplBSD::bind] ", VPR_LOCATION);
    }
    else
    {
@@ -229,7 +278,7 @@ void SocketImplBSD::bind() throw (SocketException)
 // socket, this makes the address given to the constructor the default
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
-void SocketImplBSD::connect(vpr::Interval timeout) throw (SocketException)
+void SocketImplBSD::connect(vpr::Interval timeout) throw (vpr::Exception)
 {
    int status;
 
@@ -242,8 +291,6 @@ void SocketImplBSD::connect(vpr::Interval timeout) throw (SocketException)
    // error status.
    if ( status == -1 )
    {
-      std::string errstr(strerror(errno));
-
       // If this is a non-blocking connection, return normally with the
       // post condition that users must call isConnected() after calling connect
       // when using non-blocking sockets.
@@ -257,43 +304,50 @@ void SocketImplBSD::connect(vpr::Interval timeout) throw (SocketException)
             // before returning. This provides a way for the caller
             // to specify that they want the connection process to
             // block even with a non-blocking socket.
-            mHandle->isWriteable(timeout);
+
+            try
+            {
+               // Wait for read/write on the socket
+               SelectorImplBSD selector;
+               selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write);
+               vpr::Uint16 num_events(0);
+               selector.select(num_events, timeout);
+
+               // Check for error state on socket
+               vpr::SocketOptions::Data opt_data;
+               getOption(SocketOptions::Error, opt_data);
+               int sock_error = opt_data.error;
+
+               if(sock_error)
+               {
+                  close();
+                  buildAndThrowException("[vpr::SocketImplBSD] Async-connection error: ", VPR_LOCATION, sock_error);
+               }
+               else  // Completed in time
+               {
+                  mBound = true;
+                  mConnectCalled = true;
+                  mBlockingFixed = true;
+               }
+
+            }
+            catch(TimeoutException& te)      // Select timed out, so the connect timed out
+            {
+               close();
+               throw TimeoutException("Timeout while connecting.", VPR_LOCATION);
+            }
+
          }
-         mBound         = true;
-         mConnectCalled = true;
-         mBlockingFixed = true;
-      }
-      else if (ECONNREFUSED == errno)
-      {
-         throw ConnectionRefusedException("Connection refused: "
-            + errstr, VPR_LOCATION);
-      }
-      else if (ECONNRESET == errno)
-      {
-         throw ConnectionResetException("Connection reset: " + errstr,
-            VPR_LOCATION);
-      }
-      else if (EHOSTUNREACH == errno)
-      {
-         throw NoRouteToHostException("No route to host: " + errstr,
-            VPR_LOCATION);
-      }
-      else if (EHOSTDOWN == errno)
-      {
-         throw SocketException("Host down: " + errstr, VPR_LOCATION);
-      }
-      else if (ENETDOWN == errno)
-      {
-         throw SocketException("Network is down: " + errstr, VPR_LOCATION);
+         else   // non-blocking connect started
+         {
+            mBound         = true;
+            mConnectCalled = true;
+            mBlockingFixed = true;
+         }
       }
       else
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "[vpr::SocketImplBSD] Error connecting to "
-            << mRemoteAddr.getAddressString() << ": " << errstr << std::endl << vprDEBUG_FLUSH;
-
-         throw SocketException("[vpr::SocketImplBSD] Error connecting to "
-            + mRemoteAddr.getAddressString() + ": " + errstr,
-            VPR_LOCATION);
+         buildAndThrowException("[vpr::SocketImplBSD::Connect] ", VPR_LOCATION);
       }
    }
    // Otherwise, return success.
@@ -337,34 +391,44 @@ void SocketImplBSD::connect(vpr::Interval timeout) throw (SocketException)
    }
 }
 
+
+// Idea:
+// - If have read or write and there are no socket errors, then we are connected
 bool SocketImplBSD::isConnected() const throw ()
 {
    bool connected(false);
 
    if ( isOpen() && mConnectCalled )
    {
-      vpr::Int32 bytes;
+      //vpr::Int32 bytes;
+
+      bool readable = mHandle->isReadable(vpr::Interval::NoWait);
+      bool writable = mHandle->isWriteable(vpr::Interval::NoWait);
 
       try
       {
-         mHandle->getReadBufferSize(bytes);
-
-         // If there are bytes to read then we know that we are connected.
-         if ( bytes != 0 )
-         {
-            connected = true;
-         }
-         else
-         {
-            // If there are no bytes to read but we get a
-            // TimeOut when asked for data then we are connected.
-            connected = mHandle->isReadable(vpr::Interval::NoWait);
-         }
-      } // Catch all unhandled exceptions.
-      catch(...)
-      {
-         connected = false;
+         SelectorImplBSD selector;
+         selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write);
+         vpr::Uint16 num_events(0);
+         selector.select(num_events, vpr::Interval::NoWait);
       }
+      catch(TimeoutException& te)
+      {
+         return false;
+      }
+
+      vpr::SocketOptions::Data opt_data;
+      getOption(SocketOptions::Error, opt_data);
+      int sock_error = opt_data.error;
+
+      if(sock_error)
+      {
+         //close();
+         buildAndThrowException("[vpr::SocketImplBSD::isConnected] Error: ", VPR_LOCATION, sock_error);
+      }
+
+      // No error, so we are connected
+      connected = true;
    }
 
    return connected;
@@ -409,10 +473,12 @@ void SocketImplBSD::read_i(void* buffer,
    mBlockingFixed = true;
    mHandle->read_i(buffer, length, bytesRead, timeout);
 
-   //XXX: Should never happen.
-   if ( bytesRead == 0 )
+   // If read returns 0, then other side shut down cleanly
+   // note: bytesRead is also 0 when non-blocking and can't get data
+   //       but in that case we throw WouldBlockException
+   if ( 0 == bytesRead )
    {
-      throw SocketException("Socket not connected.", VPR_LOCATION);
+      throw SocketException("Socket disconnected cleanly.", VPR_LOCATION);
    }
 }
 
@@ -440,31 +506,15 @@ void SocketImplBSD::write_i(const void* buffer,
 {
    mBlockingFixed = true;
 
-   try
-   {
+   //try
+   //{
       mHandle->write_i(buffer, length, bytesWritten, timeout);
-   }
-   catch (IOException& ex)
-   {
-      //XXX: We could add a setCause() method to link exceptions.
-      std::string errstr(strerror(errno));
-      if (ECONNRESET == errno)
-      {
-         throw ConnectionResetException("Connection reset: " + errstr, VPR_LOCATION);
-      }
-      else if (EHOSTUNREACH == errno)
-      {
-         throw NoRouteToHostException("No route to host: " + errstr, VPR_LOCATION);
-      }
-      else if (EHOSTDOWN == errno)
-      {
-         throw SocketException("Host is down: " + errstr, VPR_LOCATION);
-      }
-      else if (ENETDOWN == errno)
-      {
-         throw SocketException("Network is down: " + errstr, VPR_LOCATION);
-      }
-   }
+   //}
+   //catch (IOException& ex)
+   //{
+   //   // Build up the socket based error
+   //   buildAndThrowException("[vpr::SocketImplBSD::write_i] ", VPR_LOCATION);
+   //}
 }
 
 /**
@@ -479,6 +529,7 @@ union sockopt_data
    struct in_addr mcast_if;
    Uint8          mcast_ttl;
    Uint8          mcast_loop;
+   Int32          error;
 };
 
 void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
@@ -572,6 +623,12 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
          opt_name  = TCP_MAXSEG;
          opt_size  = sizeof(opt_data.size);
          break;
+
+      // BSD specific
+      case vpr::SocketOptions::Error:
+         opt_level = SOL_SOCKET;
+         opt_name  = SO_ERROR;
+         opt_size  = sizeof(opt_data.error);
    }
 
    status = getsockopt(mHandle->mFdesc, opt_level, opt_name,
@@ -643,6 +700,9 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
          case vpr::SocketOptions::AddMember:
          case vpr::SocketOptions::DropMember:
             /** Do nothing */
+            break;
+         case vpr::SocketOptions::Error:
+            data.error = opt_data.error;
             break;
       }
    }
@@ -789,6 +849,10 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
          opt_name      = TCP_MAXSEG;
          opt_data.size = data.max_segment;
          opt_size      = sizeof(size_t);
+         break;
+
+      // Unsetable
+      case vpr::SocketOptions::Error:
          break;
    }
 
