@@ -391,7 +391,7 @@ void FileHandleImplUNIX::read_i(void* buffer,
 
    bytes = ::read(mFdesc, buffer, length);
 
-   // Something went wrong while attempting to read from the file.
+   // Error: Something went wrong while attempting to read from the file.
    if ( bytes < 0 )
    {
       bytesRead = 0;
@@ -400,25 +400,17 @@ void FileHandleImplUNIX::read_i(void* buffer,
       {
          throw WouldBlockException("Would block while reading.", VPR_LOCATION);
       }
-      // If the error is EAGAIN and we are in non-blocking mode, we do not
-      // bother to print the message.
-      if ( ! (errno == EAGAIN && ! mBlocking) )
+      else  // "real" error, so throw IO Exception
       {
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleImplUNIX::read_i()] Error reading from "
-            << mName << ": " << strerror(errno) << std::endl
-            << vprDEBUG_FLUSH;
-
          throw IOException("[vpr::FileHandleImplUNIX::read_i()] Error reading from "
             + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
       }
    }
-   // If 0 bytes were read or an error was returned, we print an error
-   // message.
-   else if ( bytes == 0 && errno != 0 )
+   // If 0 bytes were read and an error was returned, we throw
+   // note: If bytes == 0 and no error (and socket) then that means the other side shut down cleanly
+   else if ( (0 == bytes) && (0 != errno) )
    {
       bytesRead = 0;
-//     errno != ENOENT
       vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
          << "[vpr::FileHandleImplUNIX::read_i()] Nothing read from "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
@@ -626,7 +618,7 @@ bool FileHandleImplUNIX::isReadable(const vpr::Interval timeout) const
 
       if ( num_events == 0 )
       {
-         // Added in revision 1.33 
+         // Added in revision 1.33
          // If timeout is vpr::Interval::NoWait(NULL) the file handle may be ready for
          // reading even though select returned 0. This is vauge in the documentation
          // because it says that calling select with a timeout of NULL will return
@@ -683,7 +675,7 @@ bool FileHandleImplUNIX::isWriteable(const vpr::Interval timeout) const
 
       FD_ZERO(&write_set);
       FD_SET(mFdesc, &write_set);
-      
+
       // Watch to see if a write will block. Timeout is an upper bound on the amount of time
       // elapsed before select returns. It may be zero, causing select to return
       // immediately. (This is useful for polling.) If timeout is NULL (no timeout),
@@ -694,7 +686,7 @@ bool FileHandleImplUNIX::isWriteable(const vpr::Interval timeout) const
 
       if ( num_events == 0 )
       {
-         // Added in revision 1.33 
+         // Added in revision 1.33
          // If timeout is vpr::Interval::NoWait(NULL) the file handle may be ready for
          // writing even though select returned 0. This is vauge in the documentation
          // because it says that calling select with a timeout of NULL will return
