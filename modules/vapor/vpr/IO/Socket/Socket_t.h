@@ -208,7 +208,7 @@ public:
     * @throws vpr::SocketException if trying to call after a clocking
     *         call has already been made.
     * @throws vpr::IOException if the blocking state could not be set.
-    * 
+    *
     * @see FileHandleImplUNIX::setBlocking()
     * @see isOpen, open
     */
@@ -271,7 +271,7 @@ public:
     * @throws vpr::SocketException if could not connect.
     */
    void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (SocketException)
+      throw (vpr::Exception)
    {
       mSocketImpl->connect(timeout);
    }
