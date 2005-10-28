@@ -75,7 +75,9 @@ namespace SocketOptions
       McastTimeToLive,  /**< Multicast time to live (TTL) option */
       McastLoopback,    /**< Multicast loopback option */
       NoDelay,          /**< TCP "no delay" option (Nagle Algorithm) */
-      MaxSegment        /**< TCP maximum segment size option */
+      MaxSegment,       /**< TCP maximum segment size option */
+            /** Implementation specific */
+      Error             /**< Current socket error */
    };
 
    /** Socket type of service options. */
@@ -119,6 +121,7 @@ namespace SocketOptions
       Uint8         mcast_loopback;
       McastReq      mcast_add_member;
       McastReq      mcast_drop_member;
+      Int32         error;
    };
 }
 
