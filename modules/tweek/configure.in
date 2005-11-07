@@ -245,28 +245,11 @@ case $target_os in
             ;;
       esac
 
-      case $target_os in
-         # FreeBSD 3.x.
-         freebsd3*)
-            AC_DEFINE(__OSVERSION__, 3)
-            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=3"
-         ;;
-         # FreeBSD 4.x.
-         freebsd4*)
-            AC_DEFINE(__OSVERSION__, 4)
-            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=4"
-         ;;
-         # FreeBSD 5.x.
-         freebsd5*)
-            AC_DEFINE(__OSVERSION__, 5)
-            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=5"
-         ;;
-         # FreeBSD 6.x.
-         freebsd6*)
-            AC_DEFINE(__OSVERSION__, 6)
-            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=6"
-         ;;
-      esac
+      changequote(<<, >>)
+      tweek_freebsd_ver=`echo $target_os | sed -e 's/freebsd\([1-9][0-9]*\)\..*/\1/'`
+      changequote([, ])
+      AC_DEFINE_UNQUOTED(__OSVERSION__, $tweek_freebsd_ver)
+      EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=$tweek_freebsd_ver"
 
       ;;
    # HP PA-RISC machine running HP-UX.20.
