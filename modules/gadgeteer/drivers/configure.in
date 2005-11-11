@@ -582,6 +582,8 @@ AC_CONFIG_FILES([
    3Dconnexion/SpaceBall/Makefile
    5DT/Makefile
    5DT/DataGlove/Makefile
+   ART/Makefile
+   ART/DTrack/Makefile
    Ascension/Makefile
    Ascension/Flock/Makefile
    Ascension/MotionStar/Makefile
