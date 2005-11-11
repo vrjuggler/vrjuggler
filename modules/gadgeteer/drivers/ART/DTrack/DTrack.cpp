@@ -94,7 +94,7 @@ DTrack::~DTrack()
 std::string DTrack::getElementType()
 {
 
-	return "DTrack";
+	return "dtrack";
 }
 
 
