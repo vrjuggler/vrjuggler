@@ -57,9 +57,9 @@ int main (int argc, char* argv[])
 
    port->setOpenReadWrite();
    port->setBlocking(true);
-
-   if ( port->open().success() )
+   try
    {
+      port->open();
       char read_buffer[10], write_buffer[10];
       vpr::Uint32 bytes;
       int val;
@@ -85,6 +85,10 @@ int main (int argc, char* argv[])
          port->write(write_buffer, strlen(write_buffer) + 1, bytes);
          std::cerr << "Wrote '" << write_buffer << "' (" << bytes << " bytes)\n";
       }
+   }
+   catch(...)
+   {
+      std::cout << "Serial Port Failed" << std::endl;
    }
 
    return 0;

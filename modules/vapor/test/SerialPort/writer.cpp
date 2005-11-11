@@ -50,6 +50,7 @@
 int main (int argc, char* argv[])
 {
    vpr::SerialPort* write_port;
+   int memleak = 38400;
 
    write_port = new vpr::SerialPort(argv[1]);
 
@@ -58,26 +59,44 @@ int main (int argc, char* argv[])
 
    for ( int i = 1; i <= 4; i++ )
    {
-      if ( write_port->open().success() )
+      memleak = 38400;
+      try
       {
+         write_port->open();
          char buffer[] = "This is a test...";
          vpr::Uint32 bytes;
          vpr::Uint16 size;
 
          std::cout << "Port opened\n";
 
-         if ( write_port->getMinInputSize(size).success() )
-         {
-            std::cout << "Min buffer size: " << size << std::endl;
-         }
+         write_port->getMinInputSize(size);
+         std::cout << "Min buffer size: " << size << std::endl;
+         
 
          write_port->setCanonicalInput(false);
          write_port->setUpdateAction(vpr::SerialTypes::NOW);
          write_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+         std::cout << "Pre Write memleak :" << memleak << std::endl;
          write_port->write(buffer, sizeof(char) * (strlen(buffer) + 1), bytes);
+         std::cout << std::flush;
+         std::cout << "Post Write memleak :" << memleak << std::endl;
          write_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
          std::cout << "Wrote " << bytes << " bytes to " << argv[1] << std::endl;
+
+         if(38400 != memleak)
+         {
+            std::cout << "THERE IS A MEMORY LEAK" << std::endl;
+         }
+         if(38400 == memleak)
+         {
+            std::cout << "Strange" << std::endl;
+         }
       }
+      catch(...)
+      {
+         std::cout << "Serial Port Failed" << std::endl;
+      }
+      
 
       write_port->close();
    }

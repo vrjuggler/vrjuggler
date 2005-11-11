@@ -53,22 +53,26 @@ int main (int argc, char* argv[])
 
    read_port->setOpenReadOnly();
    read_port->setBlocking(true);
-
-   if ( read_port->open().success() )
+   try
    {
+      read_port->open();
       char buffer[80];
       vpr::Uint32 bytes;
 
       std::cout << "Port opened\n";
       memset((void*) &buffer, '\0', sizeof(buffer));
 
-//      read_port->setUpdateAction(vpr::SerialIO::NOW);
+      //read_port->setUpdateAction(vpr::SerialIO::NOW);
       read_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
       read_port->setRead(true);
       read_port->setCanonicalInput(false);
-//      read_port->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
+      //read_port->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
       read_port->read(buffer, sizeof(buffer), bytes);
       std::cout << "Read '" << buffer << "'" << std::endl;
+   }
+   catch(...)
+   {
+      std::cout << "Serial Port Failed" << std::endl;
    }
 
    return 0;
