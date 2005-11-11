@@ -84,18 +84,22 @@ DTrackStandalone::DTrackStandalone(
 	// creat UDP socket:
 
 	if(remote_ip != NULL && remote_port != 0){
-		stat = d_remote.setAddress(remote_ip, remote_port);
-		
-		if(!stat.success()){
+		try
+		{
+			d_remote.setAddress(remote_ip, remote_port);
+			d_use_remote = true;
+		}
+		catch (vpr::UnknownHostException& ex)
+		{
 			vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-				<< "[DTrackStandalone] invalid remote address " << remote_ip << ":" << remote_port
+				<< "[DTrackStandalone] invalid remote address "
+				<< remote_ip << ":" << remote_port
 				<< std::endl << vprDEBUG_FLUSH;
-					
+			vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+				<< ex.what() << std::endl;
 			d_udpsock = NULL;
 			return;
 		}
-		
-		d_use_remote = true;
 	}else{
 		d_use_remote = false;
 	}
@@ -105,47 +109,43 @@ DTrackStandalone::DTrackStandalone(
 
 	d_udpsock = new vpr::SocketDatagram(addr, vpr::InetAddr::AnyAddr);
 
-	stat = d_udpsock->open();
+	try
+	{
+		d_udpsock->open();
+		d_udpsock->bind();
+		d_udptimeout.set(udptimeout_us, vpr::Interval::Usec);
 
-	if(!stat.success()){  // socket cannot be opened
+		// create UDP buffer:
+
+		d_udpbufsize = udpbufsize;
+
+		d_udpbuf = (char *)malloc(udpbufsize);
+
+		if(!d_udpbuf){
+			d_udpsock->close();
+			delete d_udpsock;
+			d_udpsock = NULL;
+			return;
+		}
+
+		// reset actual DTrack data:
+
+		act_framenr = 0;
+		act_timestamp = -1;
+
+		act_nbodycal = -1;
+		act_nbody = act_nflystick = act_nmeatool = act_nmarker = act_nglove = 0;
+	}
+	catch (vpr::Exception& ex)
+	{
 		vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-			<< "[DTrackStandalone] cannot open UDP socket, port " << udpport << std::endl << vprDEBUG_FLUSH;
-				
+			<< "[DTrackStandalone] cannot open UDP socket, port "
+			<< udpport << std::endl << vprDEBUG_FLUSH;
+		vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+			<< ex.what() << std::endl;
 		delete d_udpsock;
 		d_udpsock = NULL;
-		return;
 	}
-	
-	stat = d_udpsock->bind();
-
-	if(!stat.success()){  // socket cannot be bound
-		delete d_udpsock;
-		d_udpsock = NULL;
-		return;
-	}
-	
-	d_udptimeout.set(udptimeout_us, vpr::Interval::Usec);
-
-	// creat UDP buffer:
-
-	d_udpbufsize = udpbufsize;
-	
-	d_udpbuf = (char *)malloc(udpbufsize);
-	
-	if(!d_udpbuf){
-		d_udpsock->close();
-		delete d_udpsock;
-		d_udpsock = NULL;
-		return;
-	}
-
-	// reset actual DTrack data:
-
-	act_framenr = 0;
-	act_timestamp = -1;
-
-	act_nbodycal = -1;
-	act_nbody = act_nflystick = act_nmeatool = act_nmarker = act_nglove = 0;
 }
 
 
@@ -251,14 +251,18 @@ bool DTrackStandalone::receive(void)
 	// Receive UDP packet:
 
 	do{
-		stat = d_udpsock->recvfrom((void *)d_udpbuf, d_udpbufsize-1, addr, len, d_udptimeout);
-
-		if(!stat.success()){
-			if(stat.timeout()){
-				set_timeout();
-				return false;
-			}
-
+		try
+		{
+			d_udpsock->recvfrom((void *)d_udpbuf, d_udpbufsize - 1,
+					    addr, len, d_udptimeout);
+		}
+		catch (vpr::TimeoutException& ex)
+		{
+			set_timeout();
+			return false;
+		}
+		catch (vpr::IOException& ex)
+		{
 			set_udperror();
 			return false;
 		}
@@ -666,9 +670,13 @@ bool DTrackStandalone::send(unsigned short cmd, int val)
 
 	// send UDP packet:
 
-	stat = d_udpsock->sendto((const void *)cmdstr, strlen(cmdstr) + 1, d_remote, bytes, d_udptimeout);
-
-	if(!stat.success()){
+	try
+	{
+		d_udpsock->sendto((const void *)cmdstr, strlen(cmdstr) + 1,
+				  d_remote, bytes, d_udptimeout);
+	}
+	catch (vpr::IOException& ex)
+	{
 		set_udperror();
 		return false;
 	}

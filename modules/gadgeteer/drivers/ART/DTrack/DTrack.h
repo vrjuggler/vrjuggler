@@ -46,7 +46,7 @@ class DTrack : public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>,
 {
 public:
 	DTrack();
-	~DTrack();
+	~DTrack() throw ();
 
 	/** Returns a string that matches this device's configuration element type. */
 	static std::string getElementType();
