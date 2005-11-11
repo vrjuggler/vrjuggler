@@ -497,7 +497,7 @@ void FileHandleImplUNIX::readn_i(void* buffer,
          std::stringstream ss;
          ss << "[vpr::FileHandleImplUNIX::readn_i()] Read EOF with "
             << bytes_left << " bytes left to read from file handle "
-            << mFdesc << " and " << bytesRead + " bytes read in total.";
+            << mFdesc << " and " << bytesRead << " bytes read in total.";
          throw EOFException(ss.str(), VPR_LOCATION);
       }
       else
