@@ -33,6 +33,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <iomanip>
+#include <sstream>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -54,6 +55,7 @@
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/DeviceInterface.h>
 #include <gadget/Util/Debug.h>
+#include <gadget/Util/PluginVersionException.h>
 #include <gadget/gadgetParam.h>
 
 #include <gadget/InputManager.h>
@@ -125,24 +127,20 @@ struct VersionCheckCallable
 
       // Call the entry point function, which, in this case, returns the
       // version of Gadgeteer against which the driver was compiled.
-      vpr::Uint32 driver_gadget_ver = (*version_func)();
+      const vpr::Uint32 driver_gadget_ver = (*version_func)();
 
-      bool match = (driver_gadget_ver == mGadgetVersion);
-
-      if ( ! match )
+      if ( driver_gadget_ver != mGadgetVersion )
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING")
-            << ": Gadgeteer version mismatch!\n" << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << "Driver was compiled against Gadgeteer version "
-            << driver_gadget_ver << ",\n" << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << "but this is Gadgeteer version " << mGadgetVersion
-            << std::endl << vprDEBUG_FLUSH;
+         std::ostringstream msg_stream;
+         msg_stream << "Gadgeteer version mismatch!\n"
+                    << "Driver was compiled against Gadgeteer version "
+                    << driver_gadget_ver << ",\n"
+                    << "but this is Gadgeteer version " << mGadgetVersion
+                    << std::endl;
+         throw gadget::PluginVersionException(msg_stream.str(), VPR_LOCATION);
       }
 
-      return match;
+      return true;
    }
 
    static const vpr::Uint32 mGadgetVersion;
@@ -798,13 +796,19 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
 
             if ( dso.get() != NULL )
             {
-               vpr::ReturnStatus version_status;
-               VersionCheckCallable version_functor;
-               version_status =
+               try
+               {
+                  VersionCheckCallable version_functor;
                   vpr::LibraryLoader::callEntryPoint(dso, get_version_func,
                                                      version_functor);
 
-               if ( ! version_status.success() )
+                  DriverInitCallable init_functor(this);
+                  vpr::LibraryLoader::callEntryPoint(dso, driver_init_func,
+                                                     init_functor);
+
+                  mLoadedDrivers.push_back(dso);
+               }
+               catch (gadget::PluginVersionException& ex)
                {
                   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                      << clrOutBOLD(clrRED, "ERROR")
@@ -813,19 +817,20 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                   vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                      << "This driver will not be usable.\n"
                      << vprDEBUG_FLUSH;
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << ex.getExtendedDescription() << std::endl
+                     << vprDEBUG_FLUSH;
                }
-               else
+               catch (vpr::Exception& ex)
                {
-                  vpr::ReturnStatus load_status;
-                  DriverInitCallable init_functor(this);
-                  load_status =
-                     vpr::LibraryLoader::callEntryPoint(dso, driver_init_func,
-                                                        init_functor);
-
-                  if ( load_status.success() )
-                  {
-                     mLoadedDrivers.push_back(dso);
-                  }
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << clrOutBOLD(clrRED, "ERROR")
+                     << ": Failed to load driver DSO '"
+                     << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
+                  vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << "This driver will not be usable.\n" << vprDEBUG_FLUSH;
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << ex.what() << std::endl << vprDEBUG_FLUSH;
                }
             }
             else
@@ -870,20 +875,32 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
 
                vpr::LibraryFinder finder(driver_dir, driver_ext);
                vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-               DriverInitCallable functor(this);
+               VersionCheckCallable version_functor;
+               DriverInitCallable init_functor(this);
 
                for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
                      lib != libs.end();
                      ++lib )
                {
-                  vpr::ReturnStatus load_status;
-                  load_status =
-                     vpr::LibraryLoader::callEntryPoint(*lib, driver_init_func,
-                                                        functor);
-
-                  if ( load_status.success() )
+                  try
                   {
+                     vpr::LibraryLoader::callEntryPoint(*lib, get_version_func,
+                                                        version_functor);
+                     vpr::LibraryLoader::callEntryPoint(*lib, driver_init_func,
+                                                        init_functor);
                      mLoadedDrivers.push_back(*lib);
+                  }
+                  catch (vpr::Exception& ex)
+                  {
+                     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << clrOutBOLD(clrRED, "ERROR")
+                        << ": Failed to load driver DSO '"
+                        << (*lib)->getName() << "'\n" << vprDEBUG_FLUSH;
+                     vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << "This driver will not be usable.\n"
+                        << vprDEBUG_FLUSH;
+                     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << ex.what() << std::endl << vprDEBUG_FLUSH;
                   }
                }
             }

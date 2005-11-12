@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-13-2005 patrickh    Updated to VPR 1.1.10.
+                        NEW VERSION: 1.1.6
 Oct-26-2005 patrickh    gadget::MouseEvent objects on Windows now have correct
                         key press state information.
                         Submitted by: Juan Hernando

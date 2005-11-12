@@ -33,6 +33,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <iomanip>
+#include <sstream>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
 
@@ -41,20 +42,21 @@
 #include <vpr/DynLoad/LibraryLoader.h>
 #include <vpr/Util/FileUtils.h>
 
+#include <jccl/Config/ConfigDefinitionPtr.h>
+#include <jccl/Config/ConfigDefinition.h>
+#include <jccl/RTRC/ConfigManager.h>
+#include <jccl/RTRC/DependencyManager.h>
+
 #include <gadget/Util/Debug.h>
+#include <gadget/Util/PluginVersionException.h>
 #include <gadget/gadgetParam.h>
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/Node.h>
 
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPlugin.h>
-#include <cluster/ClusterManager.h>
 #include <cluster/Packets/EndBlock.h>
-
-#include <jccl/Config/ConfigDefinitionPtr.h>
-#include <jccl/Config/ConfigDefinition.h>
-#include <jccl/RTRC/ConfigManager.h>
-#include <jccl/RTRC/DependencyManager.h>
+#include <cluster/ClusterManager.h>
 
 
 namespace fs = boost::filesystem;
@@ -89,24 +91,21 @@ namespace cluster
 
          // Call the entry point function, which, in this case, returns the
          // version of Gadgeteer against which the plug-in was compiled.
-         vpr::Uint32 plugin_gadget_ver = (*version_func)();
+         const vpr::Uint32 plugin_gadget_ver = (*version_func)();
 
-         bool match = (plugin_gadget_ver == mGadgetVersion);
-
-         if ( ! match )
+         if ( plugin_gadget_ver != mGadgetVersion )
          {
-            vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-               << clrOutBOLD(clrYELLOW, "WARNING")
-               << ": Gadgeteer version mismatch!\n" << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-               << "Cluster plug-in was compiled against Gadgeteer version "
-               << plugin_gadget_ver << ",\n" << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-               << "but this is Gadgeteer version " << mGadgetVersion
-               << std::endl << vprDEBUG_FLUSH;
+            std::ostringstream msg_stream;
+            msg_stream << "Gadgeteer version mismatch!\n"
+                       << "Cluster plug-in was compiled against Gadgeteer "
+                       << "version " << plugin_gadget_ver << ",\n"
+                       << "but this is Gadgeteer version " << mGadgetVersion
+                       << std::endl;
+            throw gadget::PluginVersionException(msg_stream.str(),
+                                                 VPR_LOCATION);
          }
 
-         return match;
+         return true;
       }
 
       static const vpr::Uint32 mGadgetVersion;
@@ -689,36 +688,45 @@ namespace cluster
 
                   if ( dso.get() != NULL )
                   {
-                     vpr::ReturnStatus version_status;
-                     VersionCheckCallable version_functor;
-                     version_status =
+                     try
+                     {
+                        VersionCheckCallable version_functor;
                         vpr::LibraryLoader::callEntryPoint(dso,
                                                            get_version_func,
                                                            version_functor);
 
-                     if ( ! version_status.success() )
+                        PluginInitCallable init_functor(this);
+                        vpr::LibraryLoader::callEntryPoint(dso,
+                                                           plugin_init_func,
+                                                           init_functor);
+
+                        mLoadedPlugins.push_back(dso);
+                     }
+                     catch (gadget::PluginVersionException& ex)
                      {
-                        vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                        vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                            << clrOutBOLD(clrRED, "ERROR")
-                           << ": Version mismatch while loading cluster plug-in DSO '"
-                           << plugin_dso_name << "'\n" << vprDEBUG_FLUSH;
-                        vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                           << ": Version mismatch while loading cluster "
+                           << "plug-in DSO '" << plugin_dso_name << "'\n"
+                           << vprDEBUG_FLUSH;
+                        vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                            << "This plug-in will not be usable.\n"
                            << vprDEBUG_FLUSH;
+                        vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                           << ex.getExtendedDescription() << std::endl
+                           << vprDEBUG_FLUSH;
                      }
-                     else
+                     catch (vpr::Exception& ex)
                      {
-                        vpr::ReturnStatus load_status;
-                        PluginInitCallable init_functor(this);
-                        load_status =
-                           vpr::LibraryLoader::callEntryPoint(dso,
-                                                              plugin_init_func,
-                                                              init_functor);
-
-                        if ( load_status.success() )
-                        {
-                           mLoadedPlugins.push_back(dso);
-                        }
+                        vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                           << clrOutBOLD(clrRED, "ERROR")
+                           << ": Failed to load cluster plug-in DSO '"
+                           << plugin_dso_name << "'\n" << vprDEBUG_FLUSH;
+                        vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                           << "This plug-in will not be usable.\n"
+                           << vprDEBUG_FLUSH;
+                        vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                           << ex.what() << std::endl << vprDEBUG_FLUSH;
                      }
                   }
                   else
