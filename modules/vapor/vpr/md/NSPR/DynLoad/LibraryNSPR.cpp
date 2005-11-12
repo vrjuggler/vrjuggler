@@ -82,7 +82,7 @@ void LibraryNSPR::load()
       }
       catch (vpr::IOException& ex)
       {
-         std::ostringsteream msg_stream;
+         std::ostringstream msg_stream;
          msg_stream << "Library unload failed during loading:\n"
                     << ex.getExtendedDescription();
          throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
@@ -116,8 +116,6 @@ void LibraryNSPR::unload()
    {
       mLibrary = NULL;
    }
-
-   return status;
 }
 
 } // End of vpr namespace

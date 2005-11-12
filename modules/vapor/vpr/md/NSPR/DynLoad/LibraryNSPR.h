@@ -48,8 +48,6 @@
 #include <string>
 #include <prlink.h>
 
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace vpr
 {
@@ -144,7 +142,7 @@ public:
     *
     * @throw vpr::IOException is thrown if loading the library fails.
     */
-   vpr::ReturnStatus load();
+   void load();
 
    /**
     * This function undoes the effect of the load() method.  After calling this
@@ -156,7 +154,7 @@ public:
     *
     * @throw vpr::IOException is thrown if unloading the library fails.
     */
-   vpr::ReturnStatus unload();
+   void unload();
 
    /**
     * Returns whether this library has been loaded from local storage.
