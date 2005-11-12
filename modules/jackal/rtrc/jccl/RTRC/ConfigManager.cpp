@@ -210,6 +210,17 @@ void ConfigManager::loadRemoteReconfig()
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
          << "(This is not a fatal error.)" << std::endl << vprDEBUG_FLUSH;
+
+      // The plug-in is not usable, so we can unload it.
+      if ( mRemoteRtrcPlugin.get() != NULL )
+      {
+         if ( mRemoteRtrcPlugin->isLoaded() )
+         {
+            mRemoteRtrcPlugin->unload();
+         }
+
+         mRemoteRtrcPlugin.reset();
+      }
    }
 }
 
