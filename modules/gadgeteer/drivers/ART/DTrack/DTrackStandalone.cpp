@@ -33,6 +33,7 @@
 #include <vpr/vpr.h>
 #include <vpr/vprTypes.h>
 #include <vpr/System.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Debug.h>
