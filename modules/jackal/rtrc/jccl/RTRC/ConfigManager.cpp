@@ -32,6 +32,7 @@
 
 #include <jccl/jcclConfig.h>
 
+#include <iomanip>
 #include <boost/filesystem/path.hpp>
 
 #include <vpr/vpr.h>
@@ -65,55 +66,10 @@ ConfigManager::ConfigManager()
    loadRemoteReconfig();
 }
 
-/**
- * This struct implements a callable object (a functor, basically).  An
- * instance can be passed in where a boost::function1<bool, void*> is expected.
- * In jccl::ConfigManager::loadRemoteReconfig(), instances are used to handle
- * dynamic loading of plug-ins via vpr::LibraryLoader.
- */
-struct Callable
-{
-   Callable(jccl::ConfigManager* cfgMgr) : mgr(cfgMgr)
-   {
-   }
-
-   /**
-    * This will be invoked as a callback by methods of vpr::LibraryLoader.
-    *
-    * @param func A function pointer for the entry point in a dynamically
-    *             loaded plug-in.  This must be cast to the correct signature
-    *             before being invoked.
-    */
-   bool operator()(void* func)
-   {
-      jccl::RemoteReconfig* (*init_func)(jccl::ConfigManager*);
-
-      // Cast the entry point function to the correct signature so that we can
-      // call it.  All dynamically plug-ins must have an entry point function
-      // that takes no argument and returns a pointer to an implementation of
-      // the jccl::RemoteReconfig interface.
-      init_func = (jccl::RemoteReconfig* (*)(jccl::ConfigManager*)) func;
-
-      // Call the entry point function.
-      jccl::RemoteReconfig* plugin = (*init_func)(mgr);
-
-      if ( NULL != plugin )
-      {
-         mgr->setRemoteReconfigPlugin(plugin);
-         return true;
-      }
-      else
-      {
-         return false;
-      }
-   }
-
-   jccl::ConfigManager* mgr;
-};
-
 void ConfigManager::loadRemoteReconfig()
 {
-   vprASSERT(NULL == mReconfigIf && "RTRC interface object already instantiated.");
+   vprASSERT(NULL == mReconfigIf &&
+             "RTRC interface object already instantiated.");
 
    const std::string jccl_base_dir("JCCL_BASE_DIR");
    const std::string vj_base_dir("VJ_BASE_DIR");
@@ -174,22 +130,97 @@ void ConfigManager::loadRemoteReconfig()
    // of implementing remote run-time reconfiguration, we could have options
    // for which plug-in to load.
    const std::string reconfig_dso("corba_rtrc");
-   const std::string init_func("initPlugin");
-   Callable functor(this);
-   vpr::ReturnStatus status;
-   status = vpr::LibraryLoader::findDSOAndCallEntryPoint(reconfig_dso,
-                                                         search_path,
-                                                         init_func, functor,
-                                                         mRemoteRtrcPlugin);
+   mRemoteRtrcPlugin = vpr::LibraryLoader::findDSO(reconfig_dso, search_path);
 
-   if ( ! status.success() )
+   bool load_done(true);
+
+   if ( mRemoteRtrcPlugin.get() != NULL )
+   {
+      vprASSERT(! mRemoteRtrcPlugin->isLoaded() &&
+                "Plug-in should not already be loaded");
+      vprDEBUG(jcclDBG_RECONFIG, vprDBG_CONFIG_STATUS_LVL)
+         << "Loading library: " << std::setiosflags(std::ios::right)
+         << std::setfill(' ') << std::setw(50) << mRemoteRtrcPlugin->getName()
+         << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
+
+      vpr::ReturnStatus status = mRemoteRtrcPlugin->load();
+      if ( ! status.success() )
+      {
+         load_done = false;
+         vprDEBUG_CONT(jcclDBG_RECONFIG, vprDBG_CONFIG_STATUS_LVL)
+            << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n"
+            << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         const std::string init_func_name("initPlugin");
+         void* entry_point = mRemoteRtrcPlugin->findSymbol(init_func_name);
+
+         if ( NULL != entry_point )
+         {
+            vprDEBUG_CONT(jcclDBG_RECONFIG, vprDBG_CONFIG_STATUS_LVL)
+               << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n"
+               << vprDEBUG_FLUSH;
+
+            jccl::RemoteReconfig* (*init_func)(jccl::ConfigManager*);
+
+            // Cast the entry point function to the correct signature so that we
+            // can call it.  All dynamically plug-ins must have an entry point
+            // function that takes no argument and returns a pointer to an
+            // implementation of the jccl::RemoteReconfig interface.
+            init_func =
+               (jccl::RemoteReconfig* (*)(jccl::ConfigManager*)) entry_point;
+
+            // Call the entry point function.
+            jccl::RemoteReconfig* plugin = (*init_func)(this);
+
+            if ( NULL != plugin )
+            {
+               setRemoteReconfigPlugin(plugin);
+            }
+            else
+            {
+               load_done = false;
+               vprDEBUG_CONT(jcclDBG_RECONFIG, vprDBG_CONFIG_STATUS_LVL)
+                  << "[ " << clrSetNORM(clrRED) << "entry point call FAILED"
+                  << clrRESET << " ]\n" << vprDEBUG_FLUSH;
+            }
+         }
+         else
+         {
+            load_done = false;
+            vprDEBUG_CONT(jcclDBG_RECONFIG, vprDBG_CONFIG_STATUS_LVL)
+               << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET
+               << " ]\n" << vprDEBUG_FLUSH;
+         }
+      }
+   }
+   else
+   {
+      load_done = false;
+   }
+
+   if ( ! load_done )
    {
       vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
-         << "Failed to load the remote run-time reconfiguration plug-in."
+         << "Failed to load the remote run-time reconfiguration"
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
-         << "Remote run-time reconfiguration is disabled."
+         << "plug-in. Remote run-time reconfiguration is disabled."
          << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
+         << "(This is not a fatal error.)" << std::endl << vprDEBUG_FLUSH;
+
+      // The plug-in is not usable, so we can unload it.
+      if ( mRemoteRtrcPlugin.get() != NULL )
+      {
+         if ( mRemoteRtrcPlugin->isLoaded() )
+         {
+            mRemoteRtrcPlugin->unload();
+         }
+
+         mRemoteRtrcPlugin.reset();
+      }
    }
 }
 
@@ -207,7 +238,7 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
          mReconfigIf->disable();
       }
 
-      delete mReconfigIf;
+      mReconfigIf = NULL;
    }
 
    vprDEBUG(jcclDBG_RECONFIG, vprDBG_VERB_LVL)
@@ -227,7 +258,6 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
                << clrOutBOLD(clrYELLOW, "WARNING:")
                << " Failed to enable remote run-time reconfiguration.\n"
                << vprDEBUG_FLUSH;
-            delete mReconfigIf;
             mReconfigIf = NULL;
          }
       }
@@ -238,7 +268,6 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
             << clrOutBOLD(clrYELLOW, "WARNING:")
             << " Failed to initialize remote run-time reconfiguration.\n"
             << vprDEBUG_FLUSH;
-         delete mReconfigIf;
          mReconfigIf = NULL;
       }
    }
@@ -246,13 +275,10 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
 
 ConfigManager::~ConfigManager()
 {
-   if ( NULL != mReconfigIf && mReconfigIf->isEnabled() )
-   {
-      mReconfigIf->disable();
-
-      delete mReconfigIf;
-      mReconfigIf = NULL;
-   }
+   // We do not deal with shutting down or unloading the remote run-time
+   // reconfiguration plug-in directly here. If the plug-in was loaded, then
+   // the reference counted memory in mRemoteRtrcPlugin will handle cleaning
+   // that up automatically.
 }
 
 //-------------------- Pending List Stuff -------------------------------
