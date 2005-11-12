@@ -38,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="jccl_d.lib vpr_d.lib cppdom_d.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget_d.dll"
-				Version="1.1.1"
+				Version="1.1.6"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
@@ -91,7 +91,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget.dll"
-				Version="1.1.1"
+				Version="1.1.6"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
@@ -260,6 +260,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\PacketFactory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Util\PluginVersionException.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Position.cpp">
@@ -555,6 +558,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\PacketHandler.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Util\PluginVersionException.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Position.h">
