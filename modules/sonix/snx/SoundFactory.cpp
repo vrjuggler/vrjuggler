@@ -209,11 +209,11 @@ void SoundFactory::loadPlugins( vpr::LibraryFinder::LibraryList libs )
 {
    for (unsigned int x = 0; x < libs.size(); ++x)
    {
-      // open the library
-      vpr::ReturnStatus didLoad = libs[x]->load();
-
-      if (didLoad == vpr::ReturnStatus::Succeed)
+      try
       {
+         // Open the library.
+         libs[x]->load();
+
         //If the plug-in implements the nessiasry interface
         if ( this->isPlugin(libs[x]) )
         {
@@ -255,11 +255,13 @@ void SoundFactory::loadPlugins( vpr::LibraryFinder::LibraryList libs )
             }
         }
       }
-      else
+      catch (vpr::Exception& ex)
       {
-        //Lib failed to load
-        vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
-            << "ERROR: Plugin '" << libs[x]->getName() << "' Failed to load\n" << vprDEBUG_FLUSH;
+         // Library failed to load.
+         vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrRED, "ERROR") << ": Plugin '"
+            << libs[x]->getName() << "' Failed to load\n" << ex.what()
+            << std::endl << vprDEBUG_FLUSH;
       }
    }
 }

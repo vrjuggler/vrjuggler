@@ -143,16 +143,10 @@ void ConfigManager::loadRemoteReconfig()
          << std::setfill(' ') << std::setw(50) << mRemoteRtrcPlugin->getName()
          << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
 
-      vpr::ReturnStatus status = mRemoteRtrcPlugin->load();
-      if ( ! status.success() )
+      try
       {
-         load_done = false;
-         vprDEBUG_CONT(jcclDBG_RECONFIG, vprDBG_CONFIG_STATUS_LVL)
-            << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n"
-            << vprDEBUG_FLUSH;
-      }
-      else
-      {
+         mRemoteRtrcPlugin->load();
+
          const std::string init_func_name("initPlugin");
          void* entry_point = mRemoteRtrcPlugin->findSymbol(init_func_name);
 
@@ -193,6 +187,13 @@ void ConfigManager::loadRemoteReconfig()
                << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET
                << " ]\n" << vprDEBUG_FLUSH;
          }
+      }
+      catch (vpr::Exception& ex)
+      {
+         load_done = false;
+         vprDEBUG_CONT(jcclDBG_RECONFIG, vprDBG_CONFIG_STATUS_LVL)
+            << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n"
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
       }
    }
    else
