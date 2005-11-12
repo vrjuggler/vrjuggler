@@ -61,9 +61,11 @@ class CorbaRemoteReconfig
 {
 
 public:
-   CorbaRemoteReconfig(jccl::ConfigManager* configMgr);
+   CorbaRemoteReconfig();
 
    virtual ~CorbaRemoteReconfig();
+
+   void setConfigManager(jccl::ConfigManager* configMgr);
 
    bool configCanHandle(jccl::ConfigElementPtr e);
 

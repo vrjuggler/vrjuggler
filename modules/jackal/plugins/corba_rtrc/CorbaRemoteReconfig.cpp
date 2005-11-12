@@ -42,13 +42,17 @@
 #include <corba_rtrc/RemoteReconfigSubjectImpl.h>
 #include <corba_rtrc/CorbaRemoteReconfig.h>
 
+static jccl::CorbaRemoteReconfig mReconfigObj;
+
 
 extern "C"
 {
 
-JCCL_PLUGIN_EXPORT(jccl::RemoteReconfig*) initPlugin(jccl::ConfigManager* configMgr)
+JCCL_PLUGIN_EXPORT(jccl::RemoteReconfig*)
+initPlugin(jccl::ConfigManager* configMgr)
 {
-   return new jccl::CorbaRemoteReconfig(configMgr);
+   mReconfigObj.setConfigManager(configMgr);
+   return &mReconfigObj;
 }
 
 }
@@ -56,21 +60,41 @@ JCCL_PLUGIN_EXPORT(jccl::RemoteReconfig*) initPlugin(jccl::ConfigManager* config
 namespace jccl
 {
 
-CorbaRemoteReconfig::CorbaRemoteReconfig(jccl::ConfigManager* configMgr)
-   : mConfigManager(configMgr)
+CorbaRemoteReconfig::CorbaRemoteReconfig()
+   : mConfigManager(NULL)
    , mCorbaManager(NULL)
    , mInterface(NULL)
    , mEnabled(false)
    , mInterfaceName("CorbaRemoteReconfig")
 {
-   mConfigManager->addConfigElementHandler(this);
+   /* Do nothing. */ ;
 }
 
 CorbaRemoteReconfig::~CorbaRemoteReconfig()
 {
-   mConfigManager->removeConfigElementHandler(this);
-   mConfigManager = NULL;
+   if ( NULL != mConfigManager )
+   {
+      mConfigManager->removeConfigElementHandler(this);
+      mConfigManager = NULL;
+   }
+
    stopCorba();
+}
+
+void CorbaRemoteReconfig::setConfigManager(jccl::ConfigManager* configMgr)
+{
+   if ( NULL != mConfigManager )
+   {
+      mConfigManager->removeConfigElementHandler(this);
+      mConfigManager = NULL;
+   }
+
+   mConfigManager = configMgr;
+
+   if ( NULL != mConfigManager )
+   {
+      mConfigManager->addConfigElementHandler(this);
+   }
 }
 
 bool CorbaRemoteReconfig::configCanHandle(jccl::ConfigElementPtr element)
