@@ -87,7 +87,6 @@ void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
                             begin_str,
                             "[tweek::SubjectManagerImpl::registerSubject()] Exiting.\n");
 
-   mSubjectIdsMutex.acquire();
    {
       vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
          << "Activating servant with the POA.\n" << vprDEBUG_FLUSH;
@@ -95,6 +94,7 @@ void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
          << "Servant: " << std::hex << subjectServant << std::dec
          << std::endl << vprDEBUG_FLUSH;
 
+      vpr::Guard<vpr::Mutex> subj_ids_guard(mSubjectIdsMutex);
       // We have to register servant with POA first.
       mSubjectIds[name_str] =
          mCorbaMgr.getChildPOA()->activate_object(subjectServant);
@@ -102,7 +102,6 @@ void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
       vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
          << "Servant activated.\n" << vprDEBUG_FLUSH;
    }
-   mSubjectIdsMutex.release();
 
    storeSubject(subjectServant->_this(), name_str);
 }
@@ -116,12 +115,11 @@ vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
 
    if ( mSubjects.count(name_str) > 0 )
    {
-      mSubjectIdsMutex.acquire();
+      // Deactivate the object in the POA.
       {
-         // Deactivate the object in the POA.
+         vpr::Guard<vpr::Mutex> subj_ids_guard(mSubjectIdsMutex);
          mCorbaMgr.getChildPOA()->deactivate_object(mSubjectIds[name_str]);
       }
-      mSubjectIdsMutex.release();
 
       Subject_ptr subj = mSubjects[name_str];
       CORBA::release(subj);
