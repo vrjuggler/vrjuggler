@@ -39,21 +39,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <vpr/System.h>
+#include <vpr/vprConfig.h>
 #include <vpr/IO/Socket/ConnectionRefusedException.h>
+
 
 namespace vpr
 {
 
 ConnectionRefusedException::ConnectionRefusedException(const std::string& msg,
-                                 const std::string& location) throw()
+                                                       const std::string& location)
+   throw ()
    : SocketException(msg, location)
 {
    /* Do nothing. */ ;
 }
 
-ConnectionRefusedException::~ConnectionRefusedException() throw()
+ConnectionRefusedException::~ConnectionRefusedException() throw ()
 {
    /* Do nothing. */ ;
 }

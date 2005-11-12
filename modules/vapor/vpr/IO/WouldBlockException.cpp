@@ -39,21 +39,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <vpr/System.h>
+#include <vpr/vprConfig.h>
 #include <vpr/IO/WouldBlockException.h>
+
 
 namespace vpr
 {
 
 WouldBlockException::WouldBlockException(const std::string& msg,
-                                 const std::string& location) throw()
+                                         const std::string& location) throw ()
    : IOException(msg, location)
 {
    /* Do nothing. */ ;
 }
 
-WouldBlockException::~WouldBlockException() throw()
+WouldBlockException::~WouldBlockException() throw ()
 {
    /* Do nothing. */ ;
 }

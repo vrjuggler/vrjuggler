@@ -39,21 +39,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <vpr/System.h>
+#include <vpr/vprConfig.h>
 #include <vpr/IO/EOFException.h>
+
 
 namespace vpr
 {
 
 EOFException::EOFException(const std::string& msg,
-                                 const std::string& location) throw()
+                           const std::string& location) throw ()
    : IOException(msg, location)
 {
    /* Do nothing. */ ;
 }
 
-EOFException::~EOFException() throw()
+EOFException::~EOFException() throw ()
 {
    /* Do nothing. */ ;
 }

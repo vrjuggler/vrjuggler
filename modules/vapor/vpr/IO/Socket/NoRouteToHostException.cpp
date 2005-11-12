@@ -39,21 +39,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <vpr/System.h>
+#include <vpr/vprConfig.h>
 #include <vpr/IO/Socket/NoRouteToHostException.h>
+
 
 namespace vpr
 {
 
 NoRouteToHostException::NoRouteToHostException(const std::string& msg,
-                                 const std::string& location) throw()
+                                               const std::string& location)
+   throw ()
    : SocketException(msg, location)
 {
    /* Do nothing. */ ;
 }
 
-NoRouteToHostException::~NoRouteToHostException() throw()
+NoRouteToHostException::~NoRouteToHostException() throw ()
 {
    /* Do nothing. */ ;
 }

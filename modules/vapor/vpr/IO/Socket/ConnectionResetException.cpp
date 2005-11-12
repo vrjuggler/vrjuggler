@@ -39,21 +39,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <vpr/System.h>
+#include <vpr/vprConfig.h>
 #include <vpr/IO/Socket/ConnectionResetException.h>
+
 
 namespace vpr
 {
 
 ConnectionResetException::ConnectionResetException(const std::string& msg,
-                                 const std::string& location) throw()
+                                                   const std::string& location)
+   throw ()
    : SocketException(msg, location)
 {
    /* Do nothing. */ ;
 }
 
-ConnectionResetException::~ConnectionResetException() throw()
+ConnectionResetException::~ConnectionResetException() throw ()
 {
    /* Do nothing. */ ;
 }
