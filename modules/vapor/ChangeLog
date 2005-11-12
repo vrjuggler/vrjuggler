@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-11-13 patrickh vpr::Library and vpr::LibraryLoader functions now throw
+                    exceptions instead of returning vpr::ReturnStatus.
+                    NEW VERSION: 1.1.10
 2005-10-28 allenb   Fixed up bugs in BSD Socket related to async connection,
                     isConnected, and exceptions thrown.
                     NEW VERSION: 1.1.9

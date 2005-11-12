@@ -42,8 +42,10 @@
 #include <vpr/vprConfig.h>
 
 #include <stdlib.h>
+#include <sstream>
 #include <boost/concept_check.hpp>
 
+#include <vpr/IO/IOException.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/md/POSIX/DynLoad/LibraryUNIX.h>
@@ -52,11 +54,27 @@
 namespace vpr
 {
 
-vpr::ReturnStatus LibraryUNIX::load()
+LibraryUNIX::~LibraryUNIX() throw ()
 {
-   vpr::ReturnStatus status;
+   if ( NULL != mLibrary )
+   {
+      try
+      {
+         unload();
+      }
+      catch (vpr::IOException& ex)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Failed to unload library during destruction" << std::endl
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
+   }
+}
 
-   if ( std::string("") != mName )
+void LibraryUNIX::load()
+{
+   if ( ! mName.empty() )
    {
       mLibrary = dlopen(mName.c_str(), RTLD_NOW | RTLD_GLOBAL);
    }
@@ -67,34 +85,29 @@ vpr::ReturnStatus LibraryUNIX::load()
 
    if ( NULL == mLibrary )
    {
-      vprDEBUG_CONT(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << clrOutNORM(clrYELLOW, "WARNING:") << " Could not load '" << mName
-         << "'\n" << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << dlerror() << std::endl << vprDEBUG_FLUSH;
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to load '" << mName << "': " << dlerror();
+      throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
    }
-
-   return status;
 }
 
-vpr::ReturnStatus LibraryUNIX::unload()
+void LibraryUNIX::unload()
 {
-   vprASSERT(mLibrary != NULL && "No library to unload");
-   vpr::ReturnStatus status;
+   if ( NULL == mLibrary )
+   {
+      throw vpr::IOException("No library to unload", VPR_LOCATION);
+   }
 
    if ( dlclose(mLibrary) != 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to unload '" << mName << "': " << dlerror();
+      throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
       mLibrary = NULL;
    }
-
-   return status;
 }
 
 void* LibraryUNIX::findSymbolAndLibrary(const char* symbolName,

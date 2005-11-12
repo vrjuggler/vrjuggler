@@ -114,13 +114,7 @@ public:
    /**
     * Unloads the library if one has been loaded.
     */
-   ~LibraryNSPR()
-   {
-      if ( NULL != mLibrary )
-      {
-         unload();
-      }
-   }
+   ~LibraryNSPR() throw ();
 
    /**
     * Overlaoded assignment operator.
@@ -147,6 +141,8 @@ public:
     * runtime.
     *
     * @post The library is loaded if the runtime loader can find it.
+    *
+    * @throw vpr::IOException is thrown if loading the library fails.
     */
    vpr::ReturnStatus load();
 
@@ -157,6 +153,8 @@ public:
     *
     * @pre A library has previously been loaded with load().
     * @post The library is unloaded.
+    *
+    * @throw vpr::IOException is thrown if unloading the library fails.
     */
    vpr::ReturnStatus unload();
 

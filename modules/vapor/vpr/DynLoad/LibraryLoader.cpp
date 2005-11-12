@@ -42,13 +42,17 @@
 #include <vpr/vprConfig.h>
 
 #include <iomanip>
+#include <sstream>
 #include <algorithm>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
 
+#include <vpr/IO/IOException.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/DynLoad/Library.h>
+#include <vpr/DynLoad/LibraryException.h>
+#include <vpr/DynLoad/SymbolLookupException.h>
 
 #include <vpr/DynLoad/LibraryLoader.h>
 
@@ -110,7 +114,7 @@ vpr::LibraryPtr LibraryLoader::findDSO(const std::string& dsoBaseName,
             break;
          }
       }
-      catch(fs::filesystem_error& fsEx)
+      catch (fs::filesystem_error& fsEx)
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "ERROR:")
@@ -122,151 +126,113 @@ vpr::LibraryPtr LibraryLoader::findDSO(const std::string& dsoBaseName,
    return dso;
 }
 
-vpr::ReturnStatus LibraryLoader::findDSOAndCallEntryPoint(const std::string& dsoBaseName,
-                                                          const std::vector<std::string>& searchPath,
-                                                          const std::string& funcName,
-                                                          boost::function1<bool, void*> callback,
-                                                          vpr::LibraryPtr& dso)
+void LibraryLoader::findDSOAndCallEntryPoint(const std::string& dsoBaseName,
+                                             const std::vector<std::string>& searchPath,
+                                             const std::string& funcName,
+                                             boost::function1<bool, void*> callback,
+                                             vpr::LibraryPtr& dso)
 {
    std::vector<fs::path> fs_path;
    makeBoostFsVector(searchPath, fs_path);
-   return findDSOAndCallEntryPoint(dsoBaseName, fs_path, funcName, callback,
-                                   dso);
+   findDSOAndCallEntryPoint(dsoBaseName, fs_path, funcName, callback, dso);
 }
 
-vpr::ReturnStatus LibraryLoader::findDSOAndCallEntryPoint(const std::string& dsoBaseName,
-                                                          const std::vector<fs::path>& searchPath,
-                                                          const std::string& funcName,
-                                                          boost::function1<bool, void*> callback,
-                                                          vpr::LibraryPtr& dso)
+void LibraryLoader::findDSOAndCallEntryPoint(const std::string& dsoBaseName,
+                                             const std::vector<fs::path>& searchPath,
+                                             const std::string& funcName,
+                                             boost::function1<bool, void*> callback,
+                                             vpr::LibraryPtr& dso)
 {
-   vpr::ReturnStatus status;
-   bool load_attempted(false);
-
    dso = findDSO(dsoBaseName, searchPath);
 
+   // If findDSO() succeeded, then we can go ahead and try to call the named
+   // entry point function.
    if ( dso.get() != NULL )
    {
-      try
-      {
-         status = callEntryPoint(dso, funcName, callback);
-         load_attempted = true;
-      }
-      catch(fs::filesystem_error& fsEx)
-      {
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED, "ERROR:")
-            << " File system exception caught: " << fsEx.what()
-            << std::endl << vprDEBUG_FLUSH;
-      }
+      callEntryPoint(dso, funcName, callback);
    }
-
-   // If no load was attempted, that means that the DSO does not exist in
+   // If findDSO() failed, that means that the DSO does not exist in
    // searchPath.  We'll give it one last shot here using whatever features
    // the run-time loader has for searching on its own.
-   if ( ! load_attempted )
+   else
    {
       const std::string dso_name = makeFullDSOName(dsoBaseName);
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "[vpr::LibraryLoader::findDSOAndLookup()] Falling back on run-time loader search for '"
-         << dso_name << "'\n" << vprDEBUG_FLUSH;
+         << "[vpr::LibraryLoader::findDSOAndLookup()] Falling back on "
+         << "run-time loader search for '" << dso_name << "'\n"
+         << vprDEBUG_FLUSH;
+
       vpr::LibraryPtr temp_dso = vpr::LibraryPtr(new vpr::Library(dso_name));
-      status = callEntryPoint(temp_dso, funcName, callback);
+      callEntryPoint(temp_dso, funcName, callback);
 
-      // If callEntryPoint succeeded, then store the vpr::LibraryPtr object
-      // in the return storage.  Otherwise, we let it go out of scope and get
-      // deleted.
-      if ( ! status.failure() )
-      {
-         dso = temp_dso;
-      }
+      // If callEntryPoint() did not throw an exception, then store the
+      // vpr::LibraryPtr object in the return storage.  Otherwise, we let
+      // temp_dso go out of scope and get deleted.
+      dso = temp_dso;
    }
-
-   return status;
 }
 
-vpr::ReturnStatus LibraryLoader::callEntryPoint(vpr::LibraryPtr dso,
-                                                const std::string& funcName,
-                                                boost::function1<bool, void*> callback)
+void LibraryLoader::callEntryPoint(vpr::LibraryPtr dso,
+                                   const std::string& funcName,
+                                   boost::function1<bool, void*> callback)
 {
-   vprASSERT(dso.get() != NULL && "Invalid vpr::LibraryPtr object");
-
-   vpr::ReturnStatus status;
-   const int lib_name_width(50);
-   bool had_to_load(false);
+   if ( dso.get() == NULL )
+   {
+      throw vpr::LibraryException("Invalid vpr::LibraryPtr object",
+                                  VPR_LOCATION);
+   }
 
    // Load the DSO if it has not already been loaded.
    if ( ! dso->isLoaded() )
    {
-      had_to_load = true;
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
          << "Loading library: " << std::setiosflags(std::ios::right)
-         << std::setfill(' ') << std::setw(lib_name_width) << dso->getName()
+         << std::setfill(' ') << std::setw(50) << dso->getName()
          << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
 
-      dso->load();
+      try
+      {
+         dso->load();
+         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+            << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n"
+            << vprDEBUG_FLUSH;
+      }
+      catch (vpr::IOException& ex)
+      {
+         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+            << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n"
+            << vprDEBUG_FLUSH;
+         throw ex;
+      }
    }
 
-   if ( dso->isLoaded() )
+   vprASSERT(dso->isLoaded() && "Library should be loaded at this point");
+
+   // Look up the named function in the DSO and store it in the pointer called
+   // "entry_point".
+   void* entry_point = dso->findSymbol(funcName);
+
+   if ( NULL != entry_point )
    {
-      // Look up the named function in the DSO and store it in the pointer
-      // called "entry_point".
-      void* entry_point = dso->findSymbol(funcName);
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "Got pointer to DSO entry point function.\n" << vprDEBUG_FLUSH;
 
-      if ( NULL != entry_point )
+      // Use the caller-provided callback function for actual invocation
+      // of entry_point.  It is up to this function to cast creator to the
+      // desired type and do the cool stuff with it.
+      if ( ! callback(entry_point) )
       {
-         // Only print this closing thing if we had to load the DSO ourselves.
-         if ( had_to_load )
-         {
-            vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-               << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n"
-               << vprDEBUG_FLUSH;
-         }
-
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "Got pointer to DSO entry point function.\n" << vprDEBUG_FLUSH;
-
-         // Use the caller-provided callback function for actual invocation
-         // of entry_point.  It is up to this function to cast creator to the
-         // desired type and do the cool stuff with it.
-         if ( ! callback(entry_point) )
-         {
-            status.setCode(vpr::ReturnStatus::Fail);
-         }
-      }
-      else
-      {
-         // Only print this closing thing if we had to load the DSO ourselves.
-         if ( had_to_load )
-         {
-            vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-               << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET
-               << " ]\n" << vprDEBUG_FLUSH;
-         }
-
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << clrOutNORM(clrYELLOW, "WARNING")
-            << ": Failed to look up entry point function '" << funcName
-            << "' in DSO '" << dso->getName() << "'\n"
-            << vprDEBUG_FLUSH;
-         status.setCode(vpr::ReturnStatus::Fail);
+         throw vpr::LibraryException("User callback failed", VPR_LOCATION);
       }
    }
    else
    {
-      status.setCode(vpr::ReturnStatus::Fail);
-
-      // Only print this closing thing if we had to load the DSO ourselves.
-      if ( had_to_load )
-      {
-         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL)
-            << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n"
-            << vprDEBUG_FLUSH;
-      }
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to look up entry point function '" << funcName
+                 << "' in DSO '" << dso->getName() << "'";
+      throw vpr::SymbolLookupException(msg_stream.str(), VPR_LOCATION);
    }
-
-   return status;
 }
 
 std::string LibraryLoader::makeFullDSOName(const std::string& dsoBaseName)

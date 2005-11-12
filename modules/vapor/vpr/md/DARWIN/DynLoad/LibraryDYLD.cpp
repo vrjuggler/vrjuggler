@@ -67,6 +67,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sstream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdarg.h>
@@ -74,6 +75,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <mach-o/dyld.h>
 #include <boost/concept_check.hpp>
 
+#include <vpr/IO/IOException.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/md/DARWIN/DynLoad/LibraryDYLD.h>
@@ -156,11 +158,27 @@ static const char* error(int setget, const char *str, ...)
 namespace vpr
 {
 
-vpr::ReturnStatus LibraryDYLD::load()
+LibraryDYLD::~LibraryDYLD()
 {
-   vpr::ReturnStatus status;
+   if ( NULL != mLibrary )
+   {
+      try
+      {
+         unload();
+      }
+      catch (vpr::IOException& ex)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Failed to unload library during destruction" << std::endl
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
+   }
+}
 
-   if ( std::string("") != mName )
+void LibraryDYLD::load()
+{
+   if ( ! mName.empty() )
    {
       mLibrary = internalDlopen(mName.c_str(), RTLD_NOW | RTLD_GLOBAL);
    }
@@ -171,34 +189,30 @@ vpr::ReturnStatus LibraryDYLD::load()
 
    if ( NULL == mLibrary )
    {
-      vprDEBUG_CONT(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << clrOutNORM(clrYELLOW, "WARNING:") << " Could not load '" << mName
-         << "'\n" << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << internalDlerror() << std::endl << vprDEBUG_FLUSH;
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to load '" << mName << "': " << ();
+      throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
    }
-
-   return status;
 }
 
-vpr::ReturnStatus LibraryDYLD::unload()
+void LibraryDYLD::unload()
 {
-   vprASSERT(mLibrary != NULL && "No library to unload");
-   vpr::ReturnStatus status;
+   if ( NULL == mLibrary )
+   {
+      throw vpr::IOException("No library to unload", VPR_LOCATION);
+   }
 
    if ( internalDlclose(mLibrary) != 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to unload '" << mName << "': "
+                 << internalDlerror();
+      throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
       mLibrary = NULL;
    }
-
-   return status;
 }
 
 void* LibraryDYLD::findSymbolAndLibrary(const char* symbolName,

@@ -48,7 +48,6 @@
 #include <string>
 
 #include <vpr/Util/Assert.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #if defined (__GNUC__) && __GNUC__ > 3
 #define dl_restrict __restrict
@@ -149,8 +148,12 @@ public:
     * The returned reference becomes the library's identity.  The function
     * suppresses duplicate loading if the library is already known by the
     * runtime.
+    *
+    * @post The library is loaded if the runtime loader can find it.
+    *
+    * @throw vpr::IOException is thrown if loading the library fails.
     */
-   vpr::ReturnStatus load();
+   void load();
 
    /**
     * This function undoes the effect of the load() method.  After calling this
@@ -159,8 +162,10 @@ public:
     *
     * @pre A library has previously been loaded with load().
     * @post The library is unloaded.
+    *
+    * @throw vpr::IOException is thrown if unloading the library fails.
     */
-   vpr::ReturnStatus unload();
+   void unload();
 
    /**
     * Returns whether this library has been loaded from local storage.
@@ -191,6 +196,8 @@ public:
     * @param symbolName The text representation of the symbol to resolve.
     *
     * @return An untyped pointer, possibly NULL.
+    *
+    * @throw vpr::IOException is thrown if an I/O error occurs.
     */
    void* findSymbol(const char* symbolName)
    {
@@ -199,7 +206,6 @@ public:
       if ( NULL == mLibrary )
       {
          load();
-         vprASSERT(NULL != mLibrary && "Could not load any library");
       }
 
       return internalDlsym(mLibrary, symbolName);
@@ -215,6 +221,8 @@ public:
    /**
     * Finds a symbol in one of the currently loaded libraries, and returns
     * both the symbol and the library in which it was found.
+    *
+    * @throw vpr::IOException is thrown if an I/O error occurs.
     */
    static void* findSymbolAndLibrary(const char* symbolName, LibraryDYLD& lib);
 

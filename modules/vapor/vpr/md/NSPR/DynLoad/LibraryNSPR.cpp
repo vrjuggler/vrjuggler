@@ -42,8 +42,11 @@
 #include <vpr/vprConfig.h>
 
 #include <stdlib.h>
+#include <sstream>
 
+#include <vpr/IO/IOException.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/DynLoad/LibraryNSPR.h>
 
@@ -51,38 +54,63 @@
 namespace vpr
 {
 
-vpr::ReturnStatus LibraryNSPR::load()
+LibraryNSPR::~LibraryNSPR() throw ()
 {
-   vpr::ReturnStatus status;
-
+   if ( NULL != mLibrary )
+   {
+      try
+      {
+         unload();
+      }
+      catch (vpr::IOException& ex)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Failed to unload library during destruction" << std::endl
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
+   }
+}
+void LibraryNSPR::load()
+{
    // Make sure a library object has not already been loaded.
    if ( NULL != mLibrary )
    {
-      vpr::ReturnStatus unload_status;
-      unload_status = unload();
-      vprASSERT(unload_status.success() && "Library unload failed");
+      try
+      {
+         unload();
+      }
+      catch (vpr::IOException& ex)
+      {
+         std::ostringsteream msg_stream;
+         msg_stream << "Library unload failed during loading:\n"
+                    << ex.getExtendedDescription();
+         throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
+      }
    }
 
    mLibrary = PR_LoadLibrary(mName.c_str());
 
    if ( NULL == mLibrary )
    {
-      vpr::NSPR_PrintError("\nWARNING: Could not load library -- ");
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::ostringstream msg_stream;
+      vpr::NSPR_PrintError("Failed to load library -- ", msg_stream);
+      throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
    }
-
-   return status;
 }
 
-vpr::ReturnStatus LibraryNSPR::unload()
+void LibraryNSPR::unload()
 {
-   vprASSERT(mLibrary != NULL && "Library not loaded");
-   vpr::ReturnStatus status;
+   if ( NULL == mLibrary )
+   {
+      throw vpr::IOException("No library to unload", VPR_LOCATION);
+   }
 
    if ( PR_UnloadLibrary(mLibrary) == PR_FAILURE )
    {
-      vpr::NSPR_PrintError("WARNING: Could not unload library -- ");
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::ostringstream msg_stream;
+      vpr::NSPR_PrintError("Failed to unload library -- ", msg_stream);
+      throw vpr::IOException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {

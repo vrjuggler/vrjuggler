@@ -48,9 +48,6 @@
 #include <dlfcn.h>
 #include <string>
 
-#include <vpr/Util/Assert.h>
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace vpr
 {
@@ -114,13 +111,7 @@ public:
    /**
     * Unloads the library if one has been loaded.
     */
-   ~LibraryUNIX()
-   {
-      if ( NULL != mLibrary )
-      {
-         unload();
-      }
-   }
+   ~LibraryUNIX() throw ();
 
    /**
     * Overlaoded assignment operator.
@@ -145,8 +136,12 @@ public:
     * The returned reference becomes the library's identity.  The function
     * suppresses duplicate loading if the library is already known by the
     * runtime.
+    *
+    * @post The library is loaded if the runtime loader can find it.
+    *
+    * @throw vpr::IOException is thrown if loading the library fails.
     */
-   vpr::ReturnStatus load();
+   void load();
 
    /**
     * This function undoes the effect of the load() method.  After calling this
@@ -155,8 +150,10 @@ public:
     *
     * @pre A library has previously been loaded with load().
     * @post The library is unloaded.
+    *
+    * @throw vpr::IOException is thrown if unloading the library fails.
     */
-   vpr::ReturnStatus unload();
+   void unload();
 
    /**
     * Returns whether this library has been loaded from local storage.
@@ -192,6 +189,8 @@ public:
     * @param symbolName The text representation of the symbol to resolve.
     *
     * @return An untyped pointer, possibly NULL.
+    *
+    * @throw vpr::IOException is thrown if an I/O error occurs.
     */
    void* findSymbol(const char* symbolName)
    {
@@ -200,7 +199,6 @@ public:
       if ( NULL == mLibrary )
       {
          load();
-         vprASSERT(NULL != mLibrary && "Could not load any library");
       }
 
       return dlsym(mLibrary, symbolName);
@@ -223,6 +221,8 @@ public:
     * @param symbolName The text representation of the symbol to resolve.
     *
     * @return An untyped pointer, possibly NULL.
+    *
+    * @throw vpr::IOException is thrown if an I/O error occurs.
     */
    void* findSymbol(const std::string& symbolName)
    {
@@ -244,6 +244,8 @@ public:
     * @param lib        The shared library containing the requested symbol.
     *
     * @return An untyped pointer, possibly NULL.
+    *
+    * @throw vpr::IOException is thrown if an I/O error occurs.
     */
    static void* findSymbolAndLibrary(const char* symbolName, LibraryUNIX& lib);
 
@@ -255,6 +257,8 @@ public:
     * @param lib        The shared library containing the requested symbol.
     *
     * @return An untyped pointer, possibly NULL.
+    *
+    * @throw vpr::IOException is thrown if an I/O error occurs.
     */
    static void* findSymbolAndLibrary(const std::string& symbolName,
                                      LibraryUNIX& lib)

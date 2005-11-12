@@ -125,11 +125,15 @@ public:
     *
     * @see makeFullDSOName, callEntryPoint
     *
-    * @note This method was renamed from findDSOAndLookup() in VPR 0.92.3.
-    *
     * @since 0.92.3
+    *
+    * @throw vpr::SymbolLookupException is thrown if \p funcName cannot be
+    *        found in the discovered DSO.
+    * @throw vpr::LibraryException is thrown if anything else goes wrong.
+    *
+    * @note The user callback may throw exceptions of its own.
     */
-   static vpr::ReturnStatus findDSOAndCallEntryPoint(
+   static void findDSOAndCallEntryPoint(
       const std::string& dsoBaseName,
       const std::vector<std::string>& searchPath, const std::string& funcName,
       boost::function1<bool, void*> callback, vpr::LibraryPtr& dso
@@ -158,11 +162,15 @@ public:
     *
     * @see makeFullDSOName, callEntryPoint
     *
-    * @note This method was renamed from findDSOAndLookup() in VPR 0.92.3.
-    *
     * @since 0.92.3
+    *
+    * @throw vpr::SymbolLookupException is thrown if \p funcName cannot be
+    *        found in the discovered DSO.
+    * @throw vpr::LibraryException is thrown if anything else goes wrong.
+    *
+    * @note The user callback may throw exceptions of its own.
     */
-   static vpr::ReturnStatus findDSOAndCallEntryPoint(
+   static void findDSOAndCallEntryPoint(
       const std::string& dsoBaseName,
       const std::vector<boost::filesystem::path>& searchPath,
       const std::string& funcName, boost::function1<bool, void*> callback,
@@ -199,10 +207,16 @@ public:
     * @note This method was renamed from findEntryPoint() in VPR 0.92.3.
     *
     * @since 0.92.3
+    *
+    * @throw vpr::SymbolLookupException is thrown if \p funcName cannot be
+    *        found in \p dso.
+    * @throw vpr::LibraryException is thrown if \p dso is an invalid pointer
+    *        or if \p callback returns false.
+    *
+    * @note The user callback may throw exceptions of its own.
     */
-   static vpr::ReturnStatus callEntryPoint(vpr::LibraryPtr dso,
-                                           const std::string& funcName,
-                                           boost::function1<bool, void*> callback);
+   static void callEntryPoint(vpr::LibraryPtr dso, const std::string& funcName,
+                              boost::function1<bool, void*> callback);
 
    /**
     * Constructs the platform-specific DSO name using the given "base" name.

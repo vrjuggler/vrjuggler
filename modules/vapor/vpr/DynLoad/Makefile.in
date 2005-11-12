@@ -56,9 +56,11 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		LibraryFinder.cpp	\
-		LibraryLoader.cpp	\
-		LoaderError.cpp
+SRCS=		LibraryException.cpp		\
+		LibraryFinder.cpp		\
+		LibraryLoader.cpp		\
+		LoaderError.cpp			\
+		SymbolLookupException.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
