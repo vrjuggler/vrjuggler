@@ -38,18 +38,28 @@
 #define _TWEEK_PARAM_H_
 
 
-/*
- * Define to the 9-digit Tweek version integer.  This is the "internal version
- * number" that is intended for internal feature checks by Tweek itself.
+/**
+ * The 9-digit Tweek version integer. This form provides three digits for each
+ * of the major, minor, and patch numbers with no leading zeros. The number
+ * is a compile-time constant and is suitable (and intended) for use with
+ * preprocessor integer comparisons.
  */
 #define __TWEEK_version @VER_NUMBER@
 
-/*
- * This is the "human-readable" Tweek version _string_.  It is of the form
- * <major>.<minor>.<days since last major release>.
- */
 namespace tweek
 {
+   /**
+    * This is the "human-readable" Tweek version \em string. The full form
+    * includes the version number (<major>.<minor>.<patch>-<build>), the
+    * canonical name of the release, the threading subsystem, and the build
+    * date. The major version number is updated when major architectural
+    * changes are made; the minor when there are minor API changes; and the
+    * patch when there are bug fixes. The build number is usually
+    * representative of the nightly build process relative to a given version
+    * x.y.z.
+    *
+    * @see tweek::getVersionString()
+    */
    extern TWEEK_DATA_API(const char*) TWEEK_VERSION;
 }
 
