@@ -48,7 +48,12 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Exception type thrown if a connection fails because there is no route to
+ * the remote host.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API NoRouteToHostException : public SocketException
 {
 public:

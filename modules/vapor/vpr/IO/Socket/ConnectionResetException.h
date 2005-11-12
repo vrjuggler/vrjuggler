@@ -48,7 +48,12 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Exception type thrown if network communication fails because the connection
+ * is reset.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API ConnectionResetException : public SocketException
 {
 public:

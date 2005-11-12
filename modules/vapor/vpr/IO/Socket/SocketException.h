@@ -48,7 +48,11 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Base class for exceptions associated with network (socket) communication.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API SocketException : public IOException
 {
 public:

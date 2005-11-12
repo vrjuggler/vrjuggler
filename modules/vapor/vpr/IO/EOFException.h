@@ -48,7 +48,11 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Exception type thrown if end of file (EOF) is reached unexpectedly.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API EOFException : public IOException
 {
 public:

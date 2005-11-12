@@ -48,7 +48,12 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Exception type thrown if a connection fails because the connection is
+ * refused.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API ConnectionRefusedException : public SocketException
 {
 public:

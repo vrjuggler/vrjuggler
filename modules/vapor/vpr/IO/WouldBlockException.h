@@ -48,7 +48,12 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Exception type thrown if an I/O operation would block when using a
+ * non-blocking I/O channel.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API WouldBlockException : public IOException
 {
 public:

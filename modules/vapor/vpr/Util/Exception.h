@@ -63,7 +63,10 @@
 namespace vpr
 {
 
-/** Base exception for all VPR exceptions.
+/**
+ * Base exception for all VPR exceptions.
+ *
+ * @since 1.1.5
  */
 class VPR_CLASS_API Exception : public std::runtime_error
 {

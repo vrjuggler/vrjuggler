@@ -48,7 +48,12 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Exception type thrown if a host lookup fails because the hostname is
+ * unknown.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API UnknownHostException : public SocketException
 {
 public:

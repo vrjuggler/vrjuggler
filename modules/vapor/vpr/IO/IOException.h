@@ -48,7 +48,11 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Base class for exceptions dealing with I/O.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API IOException : public Exception
 {
 public:

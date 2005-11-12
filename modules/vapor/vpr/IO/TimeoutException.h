@@ -48,7 +48,11 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/**
+ * Exception type thrown if an I/O operation times out.
+ *
+ * @since 1.1.5
+ */
 class VPR_CLASS_API TimeoutException : public IOException
 {
 public:
