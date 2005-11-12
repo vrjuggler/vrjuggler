@@ -44,22 +44,28 @@
 
 #include <vpr/vprConfig.h>
 
-/*
- * Define to the 9-digit VPR version integer.  This is the "internal version
- * number" that is intended for internal feature checks by VPR itself.
+/**
+ * The 9-digit VPR version integer. This form provides three digits for each of
+ * the major, minor, and patch numbers with no leading zeros. The number is a
+ * compile-time constant and is suitable (and intended) for use with
+ * preprocessor integer comparisons.
  */
 #define __VPR_version @VER_NUMBER@
 
-/*
- * This is the "human-readable" VPR version _string_.  It is of the form
- * <major>.<minor>.<patch>-<build>.  The major version number is updated when
- * major architectural changes are made; the minor when there are minor API
- * changes; and the patch when there are bug fixes.  The build number is
- * representative of the nightly build process relative to a given version
- * x.y.z.
- */
 namespace vpr
 {
+   /**
+    * This is the "human-readable" VPR version \em string. The full form
+    * includes the version number (<major>.<minor>.<patch>-<build>), the
+    * canonical name of the release, the threading subsystem, and the build
+    * date. The major version number is updated when major architectural
+    * changes are made; the minor when there are minor API changes; and the
+    * patch when there are bug fixes. The build number is usually
+    * representative of the nightly build process relative to a given version
+    * x.y.z.
+    *
+    * @see vpr::getVersionString()
+    */
    extern VPR_DATA_API(const char*) VPR_VERSION;
 }
 
