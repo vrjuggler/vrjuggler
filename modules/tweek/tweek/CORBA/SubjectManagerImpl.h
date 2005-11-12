@@ -107,6 +107,16 @@ public:
       throw(CORBA::SystemException);
 
    /**
+    * Returns whether this Subject Manager contains the named subject.
+    *
+    * @param name The name of the subject to search for in this Subject
+    *             Manager's collection of subjects.
+    *
+    * @since 1.1.2
+    */
+   bool hasSubject(const char* name) throw (CORBA::SystemException);
+
+   /**
     * Returns the named Tweek Subject reference to the caller if the Subject
     * is registered.  If not, a reference equal to CORBA::nil() is returned.
     */
