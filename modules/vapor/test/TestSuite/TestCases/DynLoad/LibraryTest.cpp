@@ -4,6 +4,7 @@
 #include <vpr/vpr.h>
 #include <vpr/DynLoad/Library.h>
 #include <vpr/System.h>
+#include <vpr/Util/Exception.h>
 #include <TestCases/DynLoad/modules/TestInterface.h>
 
 #include <TestCases/DynLoad/LibraryTest.h>
@@ -51,10 +52,15 @@ void LibraryTest::loadTest()
    CPPUNIT_ASSERT(mod_file.good() && "Module does not exist");
    mod_file.close();
 
-   vpr::ReturnStatus status;
-   vpr::Library c_lib(mCModuleName);
-   status = c_lib.load();
-   CPPUNIT_ASSERT(status.success() && "Load failed");
+   try
+   {
+      vpr::Library c_lib(mCModuleName);
+      c_lib.load();
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false && "Load failed");
+   }
 }
 
 void LibraryTest::unloadTest()
@@ -65,76 +71,116 @@ void LibraryTest::unloadTest()
    CPPUNIT_ASSERT(mod_file.good() && "Module does not exist");
    mod_file.close();
 
-   vpr::ReturnStatus status;
-   vpr::Library c_lib(mCModuleName);
-   status = c_lib.load();
-   CPPUNIT_ASSERT(status.success() && "Load failed");
+   try
+   {
+      vpr::Library c_lib(mCModuleName);
+      c_lib.load();
 
-   status = c_lib.unload();
-   CPPUNIT_ASSERT(status.success() && "Unload failed");
+      try
+      {
+         c_lib.unload();
+      }
+      catch (vpr::Exception&)
+      {
+         CPPUNIT_ASSERT(false && "Unload failed");
+      }
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false && "Load failed");
+   }
 }
 
 void LibraryTest::libraryPathTest()
 {
    vpr::ReturnStatus status;
-   vpr::Library lib(C_MOD);
-
    status = vpr::System::setenv(std::string("LD_LIBRARY_PATH"),
                                 std::string(MODULE_DIR));
    CPPUNIT_ASSERT(status.success() && "Failed to extend library path");
 
-   status = lib.load();
-   CPPUNIT_ASSERT(status.success() && "Library load failed");
+   try
+   {
+      vpr::Library lib(C_MOD);
+      lib.load();
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false && "Library load failed");
+   }
 }
 
 void LibraryTest::loadCSymbolTest()
 {
-   vpr::Library c_lib(mCModuleName);
-   int (*test_func)();
+   try
+   {
+      int (*test_func)();
 
-   vpr::ReturnStatus status;
-   status = c_lib.load();
-   CPPUNIT_ASSERT(status.success() && "C module load failed");
+      vpr::Library c_lib(mCModuleName);
+      c_lib.load();
 
-   // This is the weirdest cast I have ever written.
-   test_func = (int(*)()) c_lib.findSymbol("function");
-   CPPUNIT_ASSERT(NULL != test_func && "Symbol lookup failed");
+      // This is the weirdest cast I have ever written.
+      test_func = (int(*)()) c_lib.findSymbol("function");
+      CPPUNIT_ASSERT(NULL != test_func && "Symbol lookup failed");
 
-   int result = (*test_func)();
-   CPPUNIT_ASSERT(1 == result && "Wrong result from loaded function");
+      int result = (*test_func)();
+      CPPUNIT_ASSERT(1 == result && "Wrong result from loaded function");
 
-   test_func = (int(*)()) c_lib.findSymbol("bogusFunc");
-   CPPUNIT_ASSERT(NULL == test_func && "Found non-existent symbol");
+      test_func = (int(*)()) c_lib.findSymbol("bogusFunc");
+      CPPUNIT_ASSERT(NULL == test_func && "Found non-existent symbol");
 
-   status = c_lib.unload();
-   CPPUNIT_ASSERT(status.success() && "C module unload failed");
+      try
+      {
+         c_lib.unload();
+      }
+      catch (vpr::Exception&)
+      {
+         CPPUNIT_ASSERT(false && "C module unload failed");
+      }
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false && "C module load failed");
+   }
 }
 
 void LibraryTest::loadCxxSymbolTest()
 {
-   vpr::Library cxx_lib(mCxxModuleName);
-   void* (*creator)();
-   TestInterface* test_obj(NULL);
+   try
+   {
+      void* (*creator)();
 
-   vpr::ReturnStatus status;
-   status = cxx_lib.load();
-   CPPUNIT_ASSERT(status.success() && "C++ module load failed");
+      vpr::Library cxx_lib(mCxxModuleName);
+      cxx_lib.load();
 
-   // No, *this* is the weirdest cast I have ever written.
-   creator = (void*(*)()) cxx_lib.findSymbol("entryFunc");
-   CPPUNIT_ASSERT(NULL != creator && "Entry point lookup failed");
+      // No, *this* is the weirdest cast I have ever written.
+      creator = (void*(*)()) cxx_lib.findSymbol("entryFunc");
+      CPPUNIT_ASSERT(NULL != creator && "Entry point lookup failed");
 
-   void* object = (*creator)();
-   CPPUNIT_ASSERT(NULL != object && "Object creation failed");
+      void* object = (*creator)();
+      CPPUNIT_ASSERT(NULL != object && "Object creation failed");
 
-   // Is there a way to test that this cast was successful?
-   test_obj = static_cast<TestInterface*>(object);
-//   CPPUNIT_ASSERT(NULL != test_obj && "Dynamic casting of created object failed");
+      // Is there a way to test that this cast was successful?
+      TestInterface* test_obj(NULL);
+      test_obj = static_cast<TestInterface*>(object);
+//      CPPUNIT_ASSERT(NULL != test_obj &&
+//                     "Dynamic casting of created object failed");
 
-   CPPUNIT_ASSERT(test_obj->function() == true && "Unexpected results from TestInterface object");
+      CPPUNIT_ASSERT(test_obj->function() == true &&
+                     "Unexpected results from TestInterface object");
 
-   status = cxx_lib.unload();
-   CPPUNIT_ASSERT(status.success() && "C++ module unload failed");
+      try
+      {
+         cxx_lib.unload();
+      }
+      catch (vpr::Exception&)
+      {
+         CPPUNIT_ASSERT(false && "C++ module unload failed");
+      }
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false && "C++ module load failed");
+   }
 }
 
 }

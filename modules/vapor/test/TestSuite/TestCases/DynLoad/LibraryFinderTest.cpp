@@ -1,9 +1,10 @@
 #include <string>
+#include <boost/filesystem/exception.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/DynLoad/LibraryFinder.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/System.h>
-#include <boost/filesystem/exception.hpp>
 
 #include <TestCases/DynLoad/LibraryFinderTest.h>
 
@@ -97,11 +98,17 @@ void LibraryFinderTest::scanAndLoadTest()
 
    vpr::LibraryFinder::LibraryList libs;
    libs = finder.getLibraries();
-   CPPUNIT_ASSERT(libs.size() == MOD_COUNT && "Wrong number of libraries found");
+   CPPUNIT_ASSERT(libs.size() == MOD_COUNT &&
+                  "Wrong number of libraries found");
 
-   vpr::ReturnStatus status;
-   status = libs[0]->load();
-   CPPUNIT_ASSERT(status.success() && "Load failed");
+   try
+   {
+      libs[0]->load();
+   }
+   catch (vpr::IOException&)
+   {
+      CPPUNIT_ASSERT(false && "Load failed");
+   }
 }
 
 }

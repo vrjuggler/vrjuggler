@@ -5,6 +5,8 @@
 #include <vpr/vpr.h>
 #include <vpr/DynLoad/Library.h>
 #include <vpr/DynLoad/LibraryLoader.h>
+#include <vpr/DynLoad/LibraryException.h>
+#include <vpr/DynLoad/SymbolLookupException.h>
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <TestCases/DynLoad/modules/TestInterface.h>
@@ -74,23 +76,31 @@ public:
 
 void LibraryLoaderTest::callEntryPointTestRaw()
 {
-   vpr::ReturnStatus status;
-
    vpr::LibraryPtr dso(new vpr::Library(mModules[0].first));
-   status = vpr::LibraryLoader::callEntryPoint(dso, mModules[0].second,
-                                               (bool(*)(void*)) rawCallback);
-   CPPUNIT_ASSERT(status.success());
+   try
+   {
+      vpr::LibraryLoader::callEntryPoint(dso, mModules[0].second,
+                                         (bool(*)(void*)) rawCallback);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
 }
 
 void LibraryLoaderTest::callEntryPointTestFunctor()
 {
-   vpr::ReturnStatus status;
-
    LoaderFunctor functor;
    vpr::LibraryPtr dso(new vpr::Library(mModules[1].first));
-   status = vpr::LibraryLoader::callEntryPoint(dso, mModules[1].second,
-                                               functor);
-   CPPUNIT_ASSERT(status.success());
+
+   try
+   {
+      vpr::LibraryLoader::callEntryPoint(dso, mModules[1].second, functor);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
 }
 
 void LibraryLoaderTest::findDSOTest()
@@ -110,73 +120,127 @@ void LibraryLoaderTest::findDSOTest()
 
 void LibraryLoaderTest::findDSOAndCallEntryPointTest()
 {
-   vpr::ReturnStatus status;
-   vpr::LibraryPtr dso1, dso2;
-   std::vector<std::string> path1(1);
+   try
+   {
+      std::vector<std::string> path1(1, std::string(MODULE_DIR));
 
-   path1[0] = std::string(MODULE_DIR);
-   status = vpr::LibraryLoader::findDSOAndCallEntryPoint("loadermod1", path1,
-                                                         mModules[0].second,
-                                                         (bool(*)(void*)) rawCallback,
-                                                         dso1);
-   CPPUNIT_ASSERT(status.success());
-   CPPUNIT_ASSERT(dso1.get() != NULL);
+      vpr::LibraryPtr dso;
+      vpr::LibraryLoader::findDSOAndCallEntryPoint("loadermod1", path1,
+                                                   mModules[0].second,
+                                                   (bool(*)(void*)) rawCallback,
+                                                   dso);
+      CPPUNIT_ASSERT(dso.get() != NULL);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
 
-   std::vector<fs::path> path2(1);
-   path2[0] = fs::path(std::string(MODULE_DIR), fs::native);
-   status = vpr::LibraryLoader::findDSOAndCallEntryPoint("loadermod1", path2,
-                                                         mModules[0].second,
-                                                         (bool(*)(void*)) rawCallback,
-                                                         dso2);
-   CPPUNIT_ASSERT(status.success());
-   CPPUNIT_ASSERT(dso2.get() != NULL);
+   try
+   {
+      std::vector<fs::path> path2(1, fs::path(std::string(MODULE_DIR)));
+
+      vpr::LibraryPtr dso;
+      vpr::LibraryLoader::findDSOAndCallEntryPoint("loadermod1", path2,
+                                                   mModules[0].second,
+                                                   (bool(*)(void*)) rawCallback,
+                                                   dso);
+      CPPUNIT_ASSERT(dso.get() != NULL);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
 }
 
 void LibraryLoaderTest::multiLoadTest()
 {
-   vpr::ReturnStatus status;
+   try
+   {
+      vpr::LibraryPtr dso(new vpr::Library(mModules[0].first));
+      vpr::LibraryLoader::callEntryPoint(dso, mModules[0].second,
+                                         (bool(*)(void*)) rawCallback);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
 
-   vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-   status = vpr::LibraryLoader::callEntryPoint(dso1, mModules[0].second,
-                                               (bool(*)(void*)) rawCallback);
-   CPPUNIT_ASSERT(status.success());
-
-   LoaderFunctor functor;
-   vpr::LibraryPtr dso2(new vpr::Library(mModules[1].first));
-   status = vpr::LibraryLoader::callEntryPoint(dso2, mModules[1].second,
-                                               functor);
-   CPPUNIT_ASSERT(status.success());
+   try
+   {
+      LoaderFunctor functor;
+      vpr::LibraryPtr dso(new vpr::Library(mModules[1].first));
+      vpr::LibraryLoader::callEntryPoint(dso, mModules[1].second, functor);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
 }
 
 void LibraryLoaderTest::loadFailureTest()
 {
-   vpr::ReturnStatus status;
-
    vpr::Debug::instance()->disableOutput();
+   try
+   {
       vpr::LibraryPtr dso(new vpr::Library("loadFailureTest"));
-      status = vpr::LibraryLoader::callEntryPoint(dso, "notThere",
-                                                  (bool(*)(void*)) rawCallback);
-      CPPUNIT_ASSERT(status.failure());
+      vpr::LibraryLoader::callEntryPoint(dso, "notThere",
+                                         (bool(*)(void*)) rawCallback);
+      // Execution should not reach this point.
+      CPPUNIT_ASSERT(false);
+   }
+   // This is the exception type that we are expecting.
+   catch (vpr::IOException&)
+   {
+      CPPUNIT_ASSERT(true);
+   }
+   catch (vpr::SymbolLookupException&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
+   catch (vpr::LibraryException&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
    vpr::Debug::instance()->enableOutput();
 }
 
 void LibraryLoaderTest::lookupFailureTest()
 {
-   vpr::ReturnStatus status;
-
    vpr::Debug::instance()->disableOutput();
-      vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-      status = vpr::LibraryLoader::callEntryPoint(dso1, "lookupFailureTest",
-                                                  (bool(*)(void*)) rawCallback);
-      CPPUNIT_ASSERT(status.failure());
+   try
+   {
+      vpr::LibraryPtr dso(new vpr::Library(mModules[0].first));
+      vpr::LibraryLoader::callEntryPoint(dso, "lookupFailureTest",
+                                         (bool(*)(void*)) rawCallback);
+
+      // Execution should not reach this point.
+      CPPUNIT_ASSERT(false);
+   }
+   // This is the exception type that we are expecting.
+   catch (vpr::SymbolLookupException&)
+   {
+      CPPUNIT_ASSERT(true);
+   }
+   catch (vpr::LibraryException&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
    vpr::Debug::instance()->enableOutput();
 }
 
 void LibraryLoaderTest::findFailureTest()
 {
    std::vector<std::string> path(0);
-   vpr::ReturnStatus status;
-   vpr::LibraryPtr dso1, dso2;
+   vpr::LibraryPtr dso1;
 
    CPPUNIT_ASSERT(dso1.get() == NULL);
    vpr::Debug::instance()->disableOutput();
@@ -184,14 +248,37 @@ void LibraryLoaderTest::findFailureTest()
    vpr::Debug::instance()->enableOutput();
    CPPUNIT_ASSERT(dso1.get() == NULL);
 
+   vpr::LibraryPtr dso2;
    CPPUNIT_ASSERT(dso2.get() == NULL);
    vpr::Debug::instance()->disableOutput();
-      status = vpr::LibraryLoader::findDSOAndCallEntryPoint("findFailureTest",
-                                                            path, "notThere",
-                                                            (bool(*)(void*)) rawCallback,
-                                                            dso2);
+   try
+   {
+      vpr::LibraryLoader::findDSOAndCallEntryPoint("findFailureTest",
+                                                   path, "notThere",
+                                                   (bool(*)(void*)) rawCallback,
+                                                   dso2);
+
+      // Execution should not reach this point.
+      CPPUNIT_ASSERT(false);
+   }
+   // This is the exception type that we are expecting.
+   catch (vpr::IOException&)
+   {
+      CPPUNIT_ASSERT(true);
+   }
+   catch (vpr::SymbolLookupException&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
+   catch (vpr::LibraryException&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false);
+   }
    vpr::Debug::instance()->enableOutput();
-   CPPUNIT_ASSERT(status.failure());
    CPPUNIT_ASSERT(dso2.get() == NULL);
 }
 
