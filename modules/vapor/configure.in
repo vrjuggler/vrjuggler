@@ -54,7 +54,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([vpr/vprConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([1.99.15])
+DPP_PREREQ([2.0.2])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -649,9 +649,7 @@ if test "x$given_boost_fs_libname" = "x" ; then
    fi
 
    # Include the detected Boost version number in the library name.
-   version="-${dpp_boost_major}_${dpp_boost_minor}"
-
-   boost_fs_name="boost_filesystem$toolset$threading$version"
+   boost_fs_name="boost_filesystem$toolset$threading-$BOOST_LIB_VERSION"
 else
    boost_fs_name="$given_boost_fs_libname"
 fi
