@@ -1,5 +1,7 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2005-11-16 patrickh     Provide $BOOST_LIB_VERSION from DPP_HAVE_BOOST as
+                        extracted directly from boost/version.hpp.
 2005-08-23 patrickh     Added awareness of GCJ in the JDK detection macros.
 2005-07-01 patrickh     Fixed libjvm.so detection on Linux/amd64.
 

@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          boost.m4,v
-dnl Date modified: 2005/03/20 17:18:17
-dnl Version:       1.26
+dnl Date modified: 2005/11/16 14:42:21
+dnl Version:       1.27
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -37,13 +37,15 @@ dnl     --with-boost   - Give the root directory of the Boost implementation
 dnl                      installation.
 dnl
 dnl Variables defined:
-dnl     BOOST          - do we have boost on the system?
-dnl     BOOST_ROOT     - The Boost installation directory.
-dnl     BOOST_INCLUDES - Extra include path for the Boost header directory.
-dnl     BOOST_LDFLAGS  - Extra library path for the Boost libraries.
+dnl     BOOST             - do we have boost on the system?
+dnl     BOOST_ROOT        - The Boost installation directory.
+dnl     BOOST_INCLUDES    - Extra include path for the Boost header directory.
+dnl     BOOST_LDFLAGS     - Extra library path for the Boost libraries.
+dnl     BOOST_VERSION     - The integer Boost version (see boost/version.hpp).
+dnl     BOOST_LIB_VERSION - The version substring in Boost library names.
 dnl ===========================================================================
 
-dnl boost.m4,v 1.26 2005/03/20 17:18:17 patrickh Exp
+dnl boost.m4,v 1.27 2005/11/16 14:42:21 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Boost installed.  This adds the
@@ -120,16 +122,17 @@ AC_DEFUN([DPP_HAVE_BOOST],
 
       DPP_LANG_RESTORE
 
-      boost_version="$dpp_boost_incdir/boost/version.hpp"
+      boost_version_hpp="$dpp_boost_incdir/boost/version.hpp"
 
-      if test "x$dpp_have_boost" = "xyes" -a -r "$boost_version" ; then
+      if test "x$dpp_have_boost" = "xyes" -a -r "$boost_version_hpp" ; then
          dnl This expression passed to grep(1) is not great.  It could stand to
          dnl test for one or more whitespace characters instead of just one for
          dnl book-ending BOOST_VERSION.
          dnl NOTE: Using sed(1) here is done to avoid problems with version.hpp
          dnl being a Windows text file instead of a UNIX text file.
          changequote(<<, >>)
-         BOOST_VERSION=`grep 'define BOOST_VERSION ' "$boost_version" | sed -e 's/^[^0-9]*\([0-9][0-9]*\)[^0-9]*$/\1/'`
+         BOOST_VERSION=`grep 'define BOOST_VERSION ' "$boost_version_hpp" | sed -e 's/^[^0-9]*\([0-9][0-9]*\)[^0-9]*$/\1/'`
+         BOOST_LIB_VERSION=`grep 'define BOOST_LIB_VERSION ' "$boost_version_hpp" | sed -e 's/^.*"\([0-9][^"]*\)".*$/\1/'`
          changequote([, ])
          dpp_boost_patch=`expr $BOOST_VERSION % 100`
          dpp_boost_minor=`expr $BOOST_VERSION / 100 % 1000`
@@ -140,7 +143,7 @@ AC_DEFUN([DPP_HAVE_BOOST],
                                         [dpp_have_boost=no])
       else
          dpp_have_boost='no'
-         AC_MSG_WARN([$boost_version is not readable.
+         AC_MSG_WARN([$boost_version_hpp is not readable.
 Using the option --with-boost-includes may help fix this.])
          ifelse([$5], , :, [$5])
       fi
@@ -179,4 +182,6 @@ Using the option --with-boost-includes may help fix this.])
    AC_SUBST(BOOST_INCLUDES)
    AC_SUBST(BOOST_LDFLAGS)
    AC_SUBST(BOOST_LDFLAGS_LINK_EXE)
+   AC_SUBST(BOOST_VERSION)
+   AC_SUBST(BOOST_LIB_VERSION)
 ])
