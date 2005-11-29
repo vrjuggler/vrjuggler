@@ -176,7 +176,10 @@ bool InputWindowXWin::stopSampling()
    {
       mExitFlag = true;
 
-      XResizeWindow(mXDisplay, mXWindow, 1,1); //Dummy event
+      // Dummy event to get the event handling thread to respond. Since we
+      // want the window to close anyway, this is a logical choice for the
+      // dummy event.
+      XUnmapWindow(mXDisplay, mXWindow);
       XFlush(mXDisplay);
 
       mThread->join();
