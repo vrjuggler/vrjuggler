@@ -71,6 +71,7 @@ LibraryNSPR::~LibraryNSPR() throw ()
       }
    }
 }
+
 void LibraryNSPR::load()
 {
    // Make sure a library object has not already been loaded.
