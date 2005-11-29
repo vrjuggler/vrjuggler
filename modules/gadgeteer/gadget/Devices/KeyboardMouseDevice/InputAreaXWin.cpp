@@ -33,9 +33,12 @@
 #include <gadget/gadgetConfig.h>
 
 #include <iomanip>
+#include <X11/Xutil.h>
+#include <X11/keysym.h>
 
 #include <gadget/Util/Debug.h>
-#include <gadget/Type/KeyboardMouse/EventPtr.h>
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+#include <gadget/Type/KeyboardMouse/MouseEvent.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 
 

@@ -34,17 +34,17 @@
 #define GADGET_INPUT_AREA_XWIN_H
 
 #include <gadget/gadgetConfig.h>
+
+#include <X11/Xlib.h>
+/*
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
+*/
 
-#include <vpr/Sync/Mutex.h>
-
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
 #include <gadget/Type/KeyboardMouse/Keys.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
+
 
 namespace gadget
 {
@@ -62,14 +62,20 @@ class GADGET_CLASS_API InputAreaXWin : public InputArea
 {
 public:
    InputAreaXWin() 
-      : mXDisplay(NULL),
-        mWidth(0), mHeight(0),
-        mEmptyCursorSet(false), 
-        mPrevX(0), mPrevY(0)
+      : mXDisplay(NULL)
+      , mWidth(0)
+      , mHeight(0)
+      , mEmptyCursorSet(false)
+      , mPrevX(0)
+      , mPrevY(0)
+   {
+      /* Do nothing. */ ;
+   }
 
-   {;}
    virtual ~InputAreaXWin()
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
 
 protected:
    void lockMouse(XEvent* ev = NULL);
