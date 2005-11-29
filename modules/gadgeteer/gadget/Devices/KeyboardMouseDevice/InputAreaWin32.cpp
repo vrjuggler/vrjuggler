@@ -36,9 +36,10 @@
 #include <sstream>
 
 #include <vpr/vpr.h>
-#include <vpr/System.h>
 #include <vpr/Sync/Guard.h>
 
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+#include <gadget/Type/KeyboardMouse/MouseEvent.h>
 #include <gadget/Util/Debug.h>
 
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h> // my header

@@ -38,10 +38,8 @@
 #include <vpr/Sync/Mutex.h>
 
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
 #include <gadget/Type/KeyboardMouse/Keys.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
+
 
 namespace gadget
 {
@@ -84,11 +82,13 @@ protected:
    static void doInternalError( const std::string& msg );
 
 protected:
-   HWND           mWinHandle;           /**< Window handle */
-   unsigned int   mWidth, mHeight;
-   bool           mBlocking;       /**< Are we using a display we manage ourselves (true) or a remote one (false). */
-   vpr::Mutex     mKeysLock;            /**< Must hold this lock when accessing mKeys. */
-   int            mPrevX, mPrevY;       /**< Previous mouse location. */
+   HWND         mWinHandle;     /**< Window handle */
+   unsigned int mWidth;         /**< Input area width */
+   unsigned int mHeight;        /**< Input area height */
+   bool         mBlocking;      /**< Are we using a display we manage ourselves (true) or a remote one (false). */
+   vpr::Mutex   mKeysLock;      /**< Must hold this lock when accessing mKeys */
+   int          mPrevX;         /**< Previous mouse location X-coordinate */
+   int          mPrevY;         /**< Previous mouse location Y-coordinate */
 };
 
 } // end namespace gadget
