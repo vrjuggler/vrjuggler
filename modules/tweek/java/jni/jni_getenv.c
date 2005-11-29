@@ -35,6 +35,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <stdlib.h>
+#include <string.h>
 #include <jni.h>
 
 
@@ -53,13 +54,43 @@ Java_org_vrjuggler_tweek_EnvironmentServiceImpl_tweekJniGetenv(JNIEnv* env,
    if ( NULL != jname )
    {
       const char* name = (*env)->GetStringUTFChars(env, jname, NULL);
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+      char* value;
+      size_t value_size = 256 * sizeof(char);
+      size_t req_size;
+      errno_t status;
+
+      value = (char*) malloc(value_size);
+      memset(value, '\0', value_size);
+      status = getenv_s(&req_size, value, value_size, name);
+
+      // If the memory allocated for value was insufficient, we need
+      // to call getenv_s() again with a new buffer that has the
+      // necessary size.
+      if ( req_size > value_size )
+      {
+         value_size = req_size;
+         value = (char*) realloc(value, value_size);
+         status = getenv_s(&req_size, value, value_size, name);
+      }
+
+      if ( 0 == status )
+      {
+         result = (*env)->NewStringUTF(env, value);
+      }
+
+      free(value);
+#else
       const char* value = getenv(name);
-      (*env)->ReleaseStringUTFChars(env, jname, name);
 
       if ( NULL != value )
       {
          result = (*env)->NewStringUTF(env, value);
       }
+#endif
+
+      (*env)->ReleaseStringUTFChars(env, jname, name);
    }
 
    return result;
