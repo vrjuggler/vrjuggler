@@ -167,8 +167,32 @@ bool InputWindowWin32::stopSampling()
    if ( mThread != NULL )
    {
       mExitFlag = true;
-      ::PostMessage( mWinHandle, WM_USER, 0, 0 );// send a dummy message to the window to close
-      mThread->join();
+      // Send a dummy message to the window to close.
+      bool result = ::PostMessage(mWinHandle, WM_USER, 0, 0);
+
+      if ( ! result )
+      {
+         char* msg_buffer(NULL);
+
+         DWORD error_code = GetLastError();
+         FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+                       NULL, error_code,
+                       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                       (LPTSTR) &msg_buffer, 0, NULL);
+
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: [gadget::InputWindowWin32::stopSampling()] "
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "PostMessage() failed with error code " << error_code
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << msg_buffer << std::endl << vprDEBUG_FLUSH;
+
+         LocalFree(msg_buffer);
+      }
+
+//      mThread->join();
       delete mThread;
       mThread = NULL;
    }
