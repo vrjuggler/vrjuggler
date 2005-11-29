@@ -560,7 +560,7 @@ int basePuckSerial::portWrite(HandleType handle, unsigned char* buffer,
     for (i = 0; i < bufferSize; i++)
 	if (!TransmitCommChar(handle, buffer[i]))
 	{
-	    puckSleep(0.01);
+	    puckSleep(0.01f);
 	    if (!TransmitCommChar(handle, buffer[i]))
 		break;
 	}
@@ -1390,7 +1390,7 @@ bool spaceTraveler::processAnalogData(int buffer[], analogData &ana)
     // step function
     int absolute = abs(value);
     int sign = value < 0 ? -1 : 1;
-    float step1 = 0.25; float step2 = 0.15; float step3 = 0.05;
+    float step1 = 0.25f; float step2 = 0.15f; float step3 = 0.05f;
     int cutoff1 = static_cast<int>(_zeroRadius * step1);
     int cutoff2 = static_cast<int>(_zeroRadius * step2);
     int cutoff3 = static_cast<int>(_zeroRadius * step3);
