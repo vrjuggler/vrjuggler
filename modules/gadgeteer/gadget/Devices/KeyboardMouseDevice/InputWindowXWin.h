@@ -35,20 +35,13 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <X11/keysym.h>
-#include <boost/concept_check.hpp>
-
-#include <vpr/Sync/Mutex.h>
-
-#include <gadget/Type/Input.h>
-#include <gadget/Type/KeyboardMouse.h>
-#include <gadget/Type/InputMixer.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
-#include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
+
+#include <gadget/Type/Input.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
+
 
 namespace gadget
 {
@@ -91,9 +84,11 @@ class InputWindowXWin : public InputAreaXWin, public Input
 public:
 
    InputWindowXWin()
-      : mVisual(NULL),
-        mScreen(-1), mX(-1), mY(-1),
-        mExitFlag(false)
+      : mVisual(NULL)
+      , mScreen(-1)
+      , mX(-1)
+      , mY(-1)
+      , mExitFlag(false)
    {
       mBlocking = true;
       vprASSERT(NULL == mThread);      // Should have been initialized in base constructor
@@ -152,18 +147,12 @@ protected:
    }
 
    /** Do any extra event processing needed. */
-   virtual void processEvent(XEvent event)
+   virtual void processEvent(XEvent)
    {
-      boost::ignore_unused_variable_warning(event);
+      /* Do nothing. */ ;
    }
 
 private:
-   /** @name Event handling utility methods. */
-   //@{
-
-
-   //@}
-
    /** @name X-Window System utility functions */
    //@{
 
@@ -188,34 +177,22 @@ protected:
    ::XSetWindowAttributes mSWA;
 
    // --- Used with local window --- //
-   int          mScreen, mX, mY;    /**< screen id, x-origin, y-origin. */
-   //unsigned int mWidth, mHeight;    /**< Width and height of the managed window. */
-   //Cursor       mEmptyCursor;       /**< "Blank" cursor for X. */
-   //bool         mEmptyCursorSet;    /**< If true, then empty cursor has been created. */
+   int mScreen;         /**< Screen ID */
+   int mX;              /**< Origin X-coordinate */
+   int mY;              /**< Origin Y-coordinate */
 
    /** @name KeyboardMouse state holders
     * @note This driver does not use the normal triple buffering mechanism.
     * Instead, it just uses a modified double buffering system.
     */
    //@{
-   /** Key press count used during data updating.
-    *  (0,*): The num key presses during an UpdateData (ie. How many keypress events).
-    */
    bool       mExitFlag;         /**< Should we exit? */
-
-   //lockState  mLockState;        /**< The current state of locking. */
-   //int        mLockStoredKey;    /**< The key that was pressed down. */
-   //int        mLockToggleKey;    /**< The key that toggles the locking. */
    //@}
 
    std::string mXDisplayString;  /**< The display string to use from systemDisplay config info. */
-
-   //float mMouseSensitivity;
-   //int   mSleepTimeMS;           /**< Amount of time to sleep in milliseconds between updates. */
-   //int   mPrevX, mPrevY;         /**< Previous mouse location. */
 };
 
-
 } // end namespace
+
 
 #endif

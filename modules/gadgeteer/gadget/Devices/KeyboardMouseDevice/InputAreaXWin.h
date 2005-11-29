@@ -34,17 +34,12 @@
 #define GADGET_INPUT_AREA_XWIN_H
 
 #include <gadget/gadgetConfig.h>
+
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/keysym.h>
 
-#include <vpr/Sync/Mutex.h>
-
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
 #include <gadget/Type/KeyboardMouse/Keys.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
+
 
 namespace gadget
 {
@@ -62,14 +57,20 @@ class GADGET_CLASS_API InputAreaXWin : public InputArea
 {
 public:
    InputAreaXWin() 
-      : mXDisplay(NULL),
-        mWidth(0), mHeight(0),
-        mEmptyCursorSet(false), 
-        mPrevX(0), mPrevY(0)
+      : mXDisplay(NULL)
+      , mWidth(0)
+      , mHeight(0)
+      , mEmptyCursorSet(false)
+      , mPrevX(0)
+      , mPrevY(0)
+   {
+      /* Do nothing. */ ;
+   }
 
-   {;}
    virtual ~InputAreaXWin()
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
 
 protected:
    void lockMouse(XEvent* ev = NULL);
@@ -140,19 +141,21 @@ private:
    
 protected:
    /** Do any extra event processing needed. */
-   virtual void processEvent(::XEvent event)
+   virtual void processEvent(::XEvent)
    {
-      boost::ignore_unused_variable_warning(event);
+      /* Do nothing. */ ;
    }
 
    ::Display*           mXDisplay;
    ::Window             mXWindow;
    
-   unsigned int mWidth,mHeight;
+   unsigned int mWidth;          /**< Input area width */
+   unsigned int mHeight;         /**< Input area height */
    bool         mBlocking;       /**< Are we using a display we manage ourselves (true) or a remote one (false). */
    Cursor       mEmptyCursor;    /**< "Blank" cursor for X. */
    bool         mEmptyCursorSet; /**< If true, then empty cursor has been created. */
-   int          mPrevX, mPrevY;  /**< Previous mouse location. */
+   int          mPrevX;          /**< Previous mouse location X-coordinate */
+   int          mPrevY;          /**< Previous mouse location Y-coordinate */
 };
 
 } // end namespace gadget
