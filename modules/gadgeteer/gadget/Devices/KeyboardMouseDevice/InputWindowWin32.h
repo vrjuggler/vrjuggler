@@ -39,17 +39,9 @@
 #include <windows.h>
 #include <commctrl.h>
 
-#include <vpr/Thread/Thread.h>
-#include <vpr/System.h>
-#include <jccl/Config/ConfigElement.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gadget/Type/Input.h>
-#include <gadget/Type/KeyboardMouse.h>
-#include <gadget/Type/InputMixer.h>
-
-#include <gadget/Type/KeyboardMouse/Keys.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
-
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 
 
@@ -125,16 +117,16 @@ protected:
       delete this;
    }
 
-   virtual void processEvent(UINT message, UINT wParam, LONG lParam)
+   virtual void processEvent(UINT, UINT, LONG)
    {
+      /* Do nothing. */ ;
    }
 
    /** 
     * Window function for the main application window. Processes all 
     * the menu selections and oter messages.
     */
-   friend LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam,
-                                    LONG lParam);
+   friend LONG APIENTRY MenuWndProc(HWND, UINT, UINT, LONG);
 
    HINSTANCE   m_hInst;
    void createWindowWin32();
@@ -150,10 +142,9 @@ protected:
    /** Name of the remote display window (index in registry). */
    std::string mRemoteDisplayName;
 
-   /** Info structure for remote window. */
-   //InputAreaWin32::InputAreaRegistry::InputAreaInfo mRemoteInputAreaInfo;
-
-   int mScreen, mX, mY;     /**< screen id, x-origin, y-origin. */
+   int   mScreen;           /**< Screen ID */
+   int   mX;                /**< Origin X-coordinate */
+   int   mY;                /**< Origin X-coordinate */
    bool  mExitFlag;         /**< Should we exit? */
    bool  mControlLoopDone;
 };

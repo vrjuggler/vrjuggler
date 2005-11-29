@@ -35,12 +35,13 @@
 #include <iomanip>
 #include <sys/types.h>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputWindowWin32.h>
+
 
 namespace gadget
 {
