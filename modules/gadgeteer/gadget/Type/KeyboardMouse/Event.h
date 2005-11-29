@@ -36,6 +36,8 @@
 #include <gadget/gadgetConfig.h>
 #include <vpr/IO/SerializableObject.h>
 
+#include <gadget/Type/KeyboardMouse/EventPtr.h>
+
 namespace gadget
 {
 
