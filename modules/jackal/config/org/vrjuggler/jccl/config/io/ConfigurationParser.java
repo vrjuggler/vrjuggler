@@ -222,15 +222,32 @@ public class ConfigurationParser
       ConfigElementParser parser = new ConfigElementParser(mDefinitionRepos/*,
                                                            searchPath*/);
       List config_elts = new ArrayList();
+      List created_elts = new ArrayList();
 
-      // Parse each child of the elements node for a configuration element
-      for (Iterator itr = root.getChildren().iterator(); itr.hasNext(); )
+      // Parse each child of the element's node for a configuration element.
+      parseElementList(parser, root.getChildren(), config_elts, created_elts);
+
+      // Parse XML elements created as a result of parsing the initial input.
+      List new_elts = created_elts;
+      while ( ! new_elts.isEmpty() )
       {
-         Element elt = (Element)itr.next();
-         config_elts.add(parser.parse(elt));
+         created_elts = new ArrayList();
+         parseElementList(parser, new_elts, config_elts, created_elts);
+         new_elts = created_elts;
       }
 
       return config_elts;
+   }
+
+   private void parseElementList(ConfigElementParser parser, List xmlElements,
+                                 List configElements, List createdXmlElements)
+      throws ParseException
+   {
+      for ( Iterator e = xmlElements.iterator(); e.hasNext(); )
+      {
+         configElements.add(parser.parse((Element) e.next(),
+                                         createdXmlElements));
+      }
    }
 
    private static final String CONFIGURATION             = "configuration";
