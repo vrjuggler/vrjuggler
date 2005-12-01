@@ -447,12 +447,30 @@ public class ConfigToolbar
                      java.util.List includes = data_source.getIncludes();
                      for (Iterator itr = includes.iterator(); itr.hasNext(); )
                      {
-                        // Make sure the file reference it created relative to
-                        // the current file.
-                        urls.push(
-                           new File(res_file.getParentFile().getAbsolutePath(),
-                           (String)itr.next())
-                        );
+                        String inc_file_name = (String) itr.next();
+                        File inc_file = new File(inc_file_name);
+
+                        // If the included file name is absolute, we can just
+                        // add it to urls with no further effort.
+                        if ( inc_file.isAbsolute() )
+                        {
+                           urls.push(inc_file);
+                        }
+                        // If the included file name is relative, then we
+                        // need to be sure that the file reference is relative
+                        // to res_file.
+                        else
+                        {
+                           File parent = res_file.getParentFile();
+
+                           if ( parent == null )
+                           {
+                              File abs_file = res_file.getAbsoluteFile();
+                              parent = abs_file.getParentFile();
+                           }
+
+                           urls.push(new File(parent, inc_file_name));
+                        }
                      }
                   }
                   catch (IOException ioe)
