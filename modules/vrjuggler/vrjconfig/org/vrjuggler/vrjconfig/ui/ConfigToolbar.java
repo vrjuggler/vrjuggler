@@ -447,12 +447,17 @@ public class ConfigToolbar
                      java.util.List includes = data_source.getIncludes();
                      for (Iterator itr = includes.iterator(); itr.hasNext(); )
                      {
+                        File parent = res_file.getParentFile();
+
+                        if ( parent == null )
+                        {
+                           File abs_file = res_file.getAbsoluteFile();
+                           parent = abs_file.getParentFile();
+                        }
+
                         // Make sure the file reference it created relative to
                         // the current file.
-                        urls.push(
-                           new File(res_file.getParentFile().getAbsolutePath(),
-                           (String)itr.next())
-                        );
+                        urls.push(new File(parent, (String) itr.next()));
                      }
                   }
                   catch (IOException ioe)
