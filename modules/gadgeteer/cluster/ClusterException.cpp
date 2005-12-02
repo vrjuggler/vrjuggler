@@ -30,35 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CLUSTER_CLUSTER_EXCEPTION_H_
-#define _CLUSTER_CLUSTER_EXCEPTION_H_
-
-#include <gadget/gadgetConfig.h>
-#include <vpr/Util/Exception.h>
+#include <cluster/ClusterException.h>
 
 namespace cluster
 {
 
-/** \class ClusterException ClusterException.h cluster/ClusterException.h 
- *
- * Basic exception that may be thrown by the ClusterNetwork or any of the
- * Plugins.
- */
-class GADGET_CLASS_API ClusterException : public vpr::Exception
-{
-public:
-   ClusterException(const std::string& msg,
-                    const std::string& location = "")
-      throw ();
+ClusterException::ClusterException(const std::string& msg,
+                                  const std::string& location)
+   throw ()
+   : vpr::Exception(msg, location)
+{;}
 
-   virtual ~ClusterException() throw();
-
-   virtual std::string getExceptionName() const
-   {
-      return "cluster::ClusterException";
-   }
-};
+ClusterException::~ClusterException() throw()
+{;}
 
 } // end namespace gadget
-
-#endif

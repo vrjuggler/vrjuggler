@@ -510,8 +510,8 @@ namespace cluster
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                   << clrOutBOLD(clrRED,"ERROR:")
-                  << "SwapLockTCPPlugin::acceptLoop() Caught an exception: " 
-                  << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
+                  << "SwapLockTCPPlugin::acceptLoop() Caught an exception: " << std::endl
+                  << cluster_exception.what() << std::endl << vprDEBUG_FLUSH;
 
                delete client_sock;
                client_sock = new vpr::SocketStream;

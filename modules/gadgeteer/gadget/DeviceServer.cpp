@@ -113,8 +113,8 @@ namespace gadget
                << "DeviceServer::send() Caught an exception!"
                << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-               << clrSetBOLD( clrRED ) << cluster_exception.getMessage()
-               << clrRESET << std::endl << vprDEBUG_FLUSH;
+               << clrOutBOLD(clrRED, "ERROR:") << cluster_exception.what()
+               << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
                << "DeviceServer::send() We have lost our connection to: "
                << (*i)->getName() << ":" << (*i)->getPort()

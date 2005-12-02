@@ -54,7 +54,8 @@ DIRPRFX=	cluster/
 # Subdirectories to compile.
 SUBDIR=		Packets
 
-SRCS=		ClusterManager.cpp 	\
+SRCS=		ClusterException.cpp	\
+		ClusterManager.cpp 	\
 		ClusterNode.cpp		\
 		ClusterDepChecker.cpp	\
 		ClusterPlugin.cpp	\

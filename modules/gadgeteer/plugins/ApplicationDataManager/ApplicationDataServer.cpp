@@ -117,8 +117,9 @@ namespace cluster
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ApplicationDataServer::send() Caught an exception!"
                << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
-               << cluster_exception.getMessage() << clrRESET
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+               << clrOutBOLD(clrRED, "ERROR: ")
+               << cluster_exception.what()
                << std::endl << vprDEBUG_FLUSH;
 
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<
