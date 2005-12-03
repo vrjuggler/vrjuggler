@@ -119,7 +119,8 @@ void GlDrawManager::setApp(App* _app)
          << "Type of object " << std::hex << _app << std::dec << " is "
          << typeid(_app).name() << std::endl << vprDEBUG_FLUSH;
 
-      throw vrj::DrawMgrException("Object not of type vrj::GlApp");
+      throw vrj::DrawMgrException("Object not of type vrj::GlApp",
+                                  VPR_LOCATION);
    }
 }
 

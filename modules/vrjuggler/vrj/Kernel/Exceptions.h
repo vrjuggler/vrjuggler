@@ -33,8 +33,7 @@
 #ifndef _VRJ_KERNEL_EXCEPTIONS_H_
 #define _VRJ_KERNEL_EXCEPTIONS_H_
 
-#include <exception>
-#include <string>
+#include <vpr/Util/Exception.h>
 
 
 namespace vrj
@@ -44,26 +43,19 @@ namespace vrj
  *
  * General exception type for managers held by vrj::Kernel.
  */
-class ManagerException : public std::exception
+class ManagerException : public vpr::Exception
 {
 public:
-   ManagerException(const std::string& msg) : mMessage(msg)
+   ManagerException(const std::string& msg, const std::string& location = "")
+      : vpr::Exception(msg, location)
    {
       ;
    }
 
-   virtual ~ManagerException() throw()
+   virtual ~ManagerException() throw ()
    {
       ;
    }
-
-   virtual const char* what() const throw()
-   {
-      return mMessage.c_str();
-   }
-
-protected:
-   std::string mMessage;
 };
 
 /** \class DrawMgrException Exceptions.h vrj/Kernel/Exceptions.h
@@ -73,12 +65,13 @@ protected:
 class DrawMgrException : public ManagerException
 {
 public:
-   DrawMgrException(const std::string& msg) : ManagerException(msg)
+   DrawMgrException(const std::string& msg, const std::string& location = "")
+      : ManagerException(msg, location)
    {
       ;
    }
 
-   virtual ~DrawMgrException() throw()
+   virtual ~DrawMgrException() throw ()
    {
       ;
    }
