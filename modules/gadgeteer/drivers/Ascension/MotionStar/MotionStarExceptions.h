@@ -33,8 +33,7 @@
 #ifndef _GADGET_ASCENSION_MOTION_STAR_EXCEPTIONS_H_
 #define _GADGET_ASCENSION_MOTION_STAR_EXCEPTIONS_H_
 
-#include <exception>
-#include <string>
+#include <vpr/Util/Exception.h>
 
 
 namespace mstar
@@ -43,26 +42,20 @@ namespace mstar
 /**
  * Basic exception that may be thrown by the standalone MotionStar driver.
  */
-class MotionStarException : public std::exception
+class MotionStarException : public vpr::Exception
 {
 public:
-   MotionStarException(const std::string& msg) : mMessage(msg)
+   MotionStarException(const std::string& msg,
+                       const std::string& location = "")
+      : vpr::Exception(msg, location)
    {
-      ;
+      /* Do nothing. */ ;
    }
 
-   virtual ~MotionStarException() throw()
+   virtual ~MotionStarException() throw ()
    {
-      ;
+      /* Do nothing. */ ;
    }
-
-   const std::string& getMessage() const
-   {
-      return mMessage;
-   }
-
-private:
-   std::string mMessage;
 };
 
 /**
@@ -71,8 +64,16 @@ private:
 class NetworkException : public MotionStarException
 {
 public:
-   NetworkException(const std::string& msg = "") : MotionStarException(msg)
+   NetworkException(const std::string& msg = "",
+                    const std::string& location = "")
+      : MotionStarException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~NetworkException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -82,8 +83,16 @@ public:
 class NetworkReadException : public NetworkException
 {
 public:
-   NetworkReadException(const std::string& msg = "") : NetworkException(msg)
+   NetworkReadException(const std::string& msg = "",
+                        const std::string& location = "")
+      : NetworkException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~NetworkReadException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -93,8 +102,16 @@ public:
 class NoDataReadException : public NetworkReadException
 {
 public:
-   NoDataReadException(const std::string& msg = "") : NetworkReadException(msg)
+   NoDataReadException(const std::string& msg = "",
+                       const std::string& location = "")
+      : NetworkReadException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~NoDataReadException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -104,8 +121,16 @@ public:
 class NetworkWriteException : public NetworkException
 {
 public:
-   NetworkWriteException(const std::string& msg = "") : NetworkException(msg)
+   NetworkWriteException(const std::string& msg = "",
+                         const std::string& location = "")
+      : NetworkException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~NetworkWriteException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -115,9 +140,16 @@ public:
 class NoDataWrittenException : public NetworkWriteException
 {
 public:
-   NoDataWrittenException(const std::string& msg = "")
-      : NetworkWriteException(msg)
+   NoDataWrittenException(const std::string& msg = "",
+                          const std::string& location = "")
+      : NetworkWriteException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~NoDataWrittenException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -127,8 +159,16 @@ public:
 class ConnectException : public NetworkException
 {
 public:
-   ConnectException(const std::string& msg = "") : NetworkException(msg)
+   ConnectException(const std::string& msg = "",
+                    const std::string& location = "")
+      : NetworkException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~ConnectException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -144,9 +184,17 @@ public:
     *        msg       An optional message to associate with this exception.
     */
    NoDeviceStatusException(const unsigned int deviceNum,
-                           const std::string& msg = "")
-      : MotionStarException(msg), mDevNum(deviceNum)
+                           const std::string& msg = "",
+                           const std::string& location = "")
+      : MotionStarException(msg, location)
+      , mDevNum(deviceNum)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~NoDeviceStatusException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 
    unsigned int mDevNum;
@@ -159,8 +207,16 @@ public:
 class CommandException : public MotionStarException
 {
 public:
-   CommandException(const std::string& msg = "") : MotionStarException(msg)
+   CommandException(const std::string& msg = "",
+                    const std::string& location = "")
+      : MotionStarException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~CommandException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -171,8 +227,15 @@ public:
 class DataException : public MotionStarException
 {
 public:
-   DataException(const std::string& msg = "") : MotionStarException(msg)
+   DataException(const std::string& msg = "", const std::string& location = "")
+      : MotionStarException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~DataException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 
@@ -186,8 +249,16 @@ public:
 class ScaleFactorUnknownException : public DataException
 {
 public:
-   ScaleFactorUnknownException(const std::string& msg = "") : DataException(msg)
+   ScaleFactorUnknownException(const std::string& msg = "",
+                               const std::string& location = "")
+      : DataException(msg, location)
    {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~ScaleFactorUnknownException() throw ()
+   {
+      /* Do nothing. */ ;
    }
 };
 

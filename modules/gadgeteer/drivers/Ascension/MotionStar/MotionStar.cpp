@@ -295,7 +295,7 @@ bool MotionStar::startSampling()
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "gadget::MotionStar failed to connect to server: "
-               << ex.getMessage() << std::endl << vprDEBUG_FLUSH;
+               << ex.what() << std::endl << vprDEBUG_FLUSH;
          }
          // Some network error occurred when trying to start the device.
          catch(mstar::NetworkException&)
@@ -309,7 +309,7 @@ bool MotionStar::startSampling()
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "Abnormal return from MotionStarStandalone::start(): "
-               << ex.getMessage() << std::endl << vprDEBUG_FLUSH;
+               << ex.what() << std::endl << vprDEBUG_FLUSH;
          }
       }
       // The thread has been started, so we are already sampling.

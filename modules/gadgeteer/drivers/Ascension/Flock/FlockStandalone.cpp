@@ -279,7 +279,7 @@ vpr::ReturnStatus FlockStandalone::open()
             {
                vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                   << "Flockstandalone::open: command exception: "
-                  << cfe.getMessage() << std::endl << vprDEBUG_FLUSH;
+                  << cfe.what() << std::endl << vprDEBUG_FLUSH;
                open_successfull = false;
             }
          }
@@ -479,7 +479,10 @@ void FlockStandalone::sample()
                catch (vpr::IOException&)
                {
                   num_stream_read_failures++;
-                  throw Flock::CommandFailureException("Did not read full data record in point mode.");
+                  throw Flock::CommandFailureException(
+                     "Did not read full data record in point mode.",
+                     VPR_LOCATION
+                  );
                }
             }
             vprASSERT(data_record.size() == data_record_size);            // Assert: We actually read the number of bytes we set out too
@@ -517,7 +520,10 @@ void FlockStandalone::sample()
                mSerialPort->read(&buffer, 1, bytes_read, mReadTimeout);
                if(1 != bytes_read)
                {
-                  throw Flock::CommandFailureException("No response looking for first byte of streaming data");
+                  throw Flock::CommandFailureException(
+                     "No response looking for first byte of streaming data",
+                     VPR_LOCATION
+                  );
                }
             }
             while(!(phase_mask & buffer));
@@ -546,7 +552,10 @@ void FlockStandalone::sample()
                {
                   // TODO: setCause(ex)
                   num_stream_read_failures++;
-                  throw Flock::CommandFailureException("Could not find entire streaming data record");
+                  throw Flock::CommandFailureException(
+                     "Could not find entire streaming data record",
+                     VPR_LOCATION
+                  );
                }
             }
             data_record.insert(data_record.begin(), buffer);              // Add on the initial phase bit
@@ -577,7 +586,7 @@ void FlockStandalone::sample()
       {
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "FlockStandalone::sample: Warning: exception:"
-            << cfe.getMessage() << std::endl << vprDEBUG_FLUSH;
+            << cfe.what() << std::endl << vprDEBUG_FLUSH;
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "FlockStandalone::sample: Flushing queues to correct.\n"
             << vprDEBUG_FLUSH;
@@ -678,7 +687,9 @@ void FlockStandalone::setPort(const std::string& serialPort)
 {
    if ( FlockStandalone::CLOSED != mStatus )
    {
-      throw Flock::CommandFailureException("Cannot set port after flock has been opened.");
+      throw Flock::CommandFailureException(
+         "Cannot set port after flock has been opened.", VPR_LOCATION
+      );
    }
 
    if ( ! serialPort.empty() )
@@ -699,7 +710,9 @@ void FlockStandalone::setBaudRate(const int& baud)
 {
    if ( FlockStandalone::CLOSED != mStatus )
    {
-      throw Flock::CommandFailureException("Cannot set baud after flock has been opened.");
+      throw Flock::CommandFailureException(
+         "Cannot set baud after flock has been opened.", VPR_LOCATION
+      );
    }
 
    mBaud = baud;
@@ -711,7 +724,9 @@ void FlockStandalone::setHemisphere(const BIRD_HEMI& h)
    if ( (FlockStandalone::CLOSED != mStatus) &&
         (FlockStandalone::OPEN != mStatus) )
    {
-      throw Flock::CommandFailureException("Setting hemisphere not allowed after flock configured");
+      throw Flock::CommandFailureException(
+         "Setting hemisphere not allowed after flock configured", VPR_LOCATION
+      );
    }
 
    mHemisphere = h;
@@ -723,7 +738,9 @@ void FlockStandalone::setFilterType(const BIRD_FILT& f)
    if ( (FlockStandalone::CLOSED != mStatus) &&
         (FlockStandalone::OPEN != mStatus) )
    {
-      throw Flock::CommandFailureException("Setting filter type not allowed after flock configured");
+      throw Flock::CommandFailureException(
+         "Setting filter type not allowed after flock configured", VPR_LOCATION
+      );
    }
 
    mFilter = f;
@@ -774,8 +791,11 @@ void FlockStandalone::setOutputFormat(Flock::Output::Format format)
       //vpr::ReturnStatus ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
       sendOutputFormatCmd(mOutputFormat, true);
       //if(!ret_stat.success())
-      //{   throw Flock::CommandFailureException("Failed to flush queue before command"); }
-      //
+      //{
+      //   throw Flock::CommandFailureException(
+      //      "Failed to flush queue before command", VPR_LOCATION
+      //   );
+      //}
    }
    if(was_streaming)
    {
@@ -788,7 +808,10 @@ void FlockStandalone::setNumSensors( const unsigned int& n )
 {
    if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
-      throw Flock::CommandFailureException("Setting number birds not allowed after flock configured");
+      throw Flock::CommandFailureException(
+         "Setting number birds not allowed after flock configured",
+         VPR_LOCATION
+      );
    }
 
    mNumSensors = n;
@@ -799,7 +822,9 @@ void FlockStandalone::setSync(const vpr::Uint8& sync)
 {
    if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
-      throw Flock::CommandFailureException("Sync command not allowed after flock configured");
+      throw Flock::CommandFailureException(
+         "Sync command not allowed after flock configured", VPR_LOCATION
+      );
    }
 
    mSyncStyle = sync;
@@ -1331,7 +1356,7 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
 {
    if ( NULL == mSerialPort )
    {
-      throw Flock::ConnectionException("NULL port");
+      throw Flock::ConnectionException("NULL port", VPR_LOCATION);
    }
 
    unsigned int bytes_written;
@@ -1343,7 +1368,8 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
    catch (vpr::IOException&)
    {
       // TODO: setCause(ex)
-      throw Flock::CommandFailureException("Failed to write full command");
+      throw Flock::CommandFailureException("Failed to write full command",
+                                           VPR_LOCATION);
    }
 
    if(!data.empty())
@@ -1355,7 +1381,9 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
       catch (vpr::IOException&)
       {
          // TODO: setCause(ex)
-         throw Flock::CommandFailureException("Failed to write full command args");
+         throw Flock::CommandFailureException(
+            "Failed to write full command args", VPR_LOCATION
+         );
       }
    }
 }
@@ -1432,7 +1460,7 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
 
    if ( NULL == mSerialPort )
    {
-      throw Flock::ConnectionException("NULL port");
+      throw Flock::ConnectionException("NULL port", VPR_LOCATION);
    }
 
    //vpr::System::msleep(200);                                   // Wait for any random input
@@ -1443,7 +1471,9 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
    }
    catch (vpr::IOException&)
    {
-      throw Flock::CommandFailureException("Failed to flush queue before command");
+      throw Flock::CommandFailureException(
+         "Failed to flush queue before command", VPR_LOCATION
+      );
    }
    //vpr::System::msleep(300);                                   // Let the buffers clear
    //vpr::System::msleep(50);         // Let the buffers clear.  Don't know if this is needed
@@ -1455,7 +1485,8 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
 
    if(bytes_written != sizeof(exam_cmd))
    {
-      throw Flock::CommandFailureException("Full command not written");
+      throw Flock::CommandFailureException("Full command not written",
+                                           VPR_LOCATION);
    }
 
    //vpr::System::msleep(500);
@@ -1468,7 +1499,8 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
    // Check response size
    if(bytes_read != respSize)
    {
-      throw Flock::CommandFailureException("Incomplete command response");
+      throw Flock::CommandFailureException("Incomplete command response",
+                                           VPR_LOCATION);
    }
 }
 
@@ -1488,7 +1520,7 @@ void FlockStandalone::setAttribute(vpr::Uint8 attrib,
 
    if ( NULL == mSerialPort )
    {
-      throw Flock::ConnectionException("NULL port");
+      throw Flock::ConnectionException("NULL port", VPR_LOCATION);
    }
 
    //vpr::System::msleep(200);                                   // Wait for any random input
@@ -1499,7 +1531,8 @@ void FlockStandalone::setAttribute(vpr::Uint8 attrib,
    mSerialPort->write(change_cmd, 2, bytes_written);
    if(bytes_written != sizeof(change_cmd))
    {
-      throw Flock::CommandFailureException("Full command not written");
+      throw Flock::CommandFailureException("Full command not written",
+                                           VPR_LOCATION);
    }
 
    // Send args
@@ -1508,7 +1541,9 @@ void FlockStandalone::setAttribute(vpr::Uint8 attrib,
       mSerialPort->write(attribData, attribData.size(), bytes_written);
       if(bytes_written != attribData.size())
       {
-         throw Flock::CommandFailureException("Change command args not fully written");
+         throw Flock::CommandFailureException(
+            "Change command args not fully written", VPR_LOCATION
+         );
       }
    }
    mSerialPort->drainOutput();
@@ -1601,7 +1636,8 @@ void FlockStandalone::checkError()
 
    if(have_error_to_throw)
    {
-      throw Flock::BirdErrorException(prev_err.first, prev_err.second);
+      throw Flock::BirdErrorException(prev_err.first, prev_err.second,
+                                      VPR_LOCATION);
    }
 }
 
@@ -1706,7 +1742,7 @@ void FlockStandalone::readInitialFlockConfiguration()
    catch(Flock::FlockException& e)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Flock error: " << e.getMessage() << std::endl << vprDEBUG_FLUSH;
+         << "Flock error: " << e.what() << std::endl << vprDEBUG_FLUSH;
    }
 }
 

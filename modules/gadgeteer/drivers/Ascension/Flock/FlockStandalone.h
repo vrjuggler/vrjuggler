@@ -33,11 +33,16 @@
 #ifndef _GADGET_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
 #define _GADGET_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
 
-#include <vpr/IO/Port/SerialPort.h>
-#include <vpr/vprTypes.h>
 #include <string>
 #include <sstream>
+
 #include <gmtl/Matrix.h>
+
+#include <vpr/vpr.h>
+#include <vpr/vprTypes.h>
+#include <vpr/IO/Port/SerialPort.h>
+#include <vpr/Util/Exception.h>
+
 
 enum BIRD_HEMI
 {
@@ -154,95 +159,110 @@ namespace Flock
 
    // ------ Flock exceptions ------ //
    /** Base exception for Flock errors. */
-   class FlockException : public std::exception
+   class FlockException : public vpr::Exception
    {
    public:
-      FlockException(const std::string& msg) : mMsg(msg)
-      {;}
-
-      virtual ~FlockException() throw()
-      {;}
-
-      const std::string& getMessage() const
+      FlockException(const std::string& msg, const std::string& location = "")
+         : vpr::Exception(msg, location)
       {
-         return mMsg;
+         /* Do nothing. */ ;
       }
 
-      virtual const char* what() const throw()
+      virtual ~FlockException() throw ()
       {
-         return mMsg.c_str();
+         /* Do nothing. */ ;
       }
-
-   protected:
-      std::string mMsg;
    };
 
    /** Thrown when there are errors with the connection. */
    class ConnectionException : public FlockException
    {
    public:
-      ConnectionException(const std::string& msg="Connection exception")
-         : FlockException(msg)
-      {;}
+      ConnectionException(const std::string& msg = "Connection exception",
+                          const std::string& location = "")
+         : FlockException(msg, location)
+      {
+         /* Do nothing. */ ;
+      }
 
-      virtual ~ConnectionException() throw()
-      {;}
+      virtual ~ConnectionException() throw ()
+      {
+         /* Do nothing. */ ;
+      }
    };
 
    /** Thrown when there are timeouts reading or writing. */
    class TimeoutException : public FlockException
    {
    public:
-      TimeoutException(const std::string& msg="Time out exception")
-         : FlockException(msg)
-      {;}
+      TimeoutException(const std::string& msg = "Time out exception",
+                       const std::string& location = "")
+         : FlockException(msg, location)
+      {
+         /* Do nothing. */ ;
+      }
 
-      virtual ~TimeoutException() throw()
-      {;}
+      virtual ~TimeoutException() throw ()
+      {
+         /* Do nothing. */ ;
+      }
    };
 
    /** Thrown when there is invalid data read from the Flock. */
    class InvalidDataException : public FlockException
    {
    public:
-      InvalidDataException(const std::string& msg="Time out exception")
-         : FlockException(msg)
-      {;}
+      InvalidDataException(const std::string& msg = "Time out exception",
+                           const std::string& location = "")
+         : FlockException(msg, location)
+      {
+         /* Do nothing. */ ;
+      }
 
-      virtual ~InvalidDataException() throw()
-      {;}
+      virtual ~InvalidDataException() throw ()
+      {
+         /* Do nothing. */ ;
+      }
    };
 
    /** Thrown when there is invalid data read from the Flock. */
    class CommandFailureException : public FlockException
    {
    public:
-      CommandFailureException(const std::string& msg="Time out exception")
-         : FlockException(msg)
-      {;}
+      CommandFailureException(const std::string& msg = "Time out exception",
+                              const std::string& location = "")
+         : FlockException(msg, location)
+      {
+         /* Do nothing. */ ;
+      }
 
-      virtual ~CommandFailureException() throw()
-      {;}
+      virtual ~CommandFailureException() throw ()
+      {
+         /* Do nothing. */ ;
+      }
    };
 
    /** Thrown when the Flock is in an error state. */
    class BirdErrorException : public FlockException
    {
    public:
-      BirdErrorException(vpr::Uint8 err, vpr::Uint8 expandedErr)
-         : FlockException("Bird error")
+      BirdErrorException(vpr::Uint8 err, vpr::Uint8 expandedErr,
+                         const std::string& location = "")
+         : FlockException("Bird error", location)
       {
          std::string err_desc = Flock::getErrorDescription(err,expandedErr);
          std::ostringstream msg;
          msg << "Bird error: [" << err << "," << expandedErr << "]: "
              << err_desc;
-         mMsg = msg.str();
+         mDescription = msg.str();
          mErr = err;
          mExpandedErr = expandedErr;
       }
 
-      virtual ~BirdErrorException() throw()
-      {;}
+      virtual ~BirdErrorException() throw ()
+      {
+         /* Do nothing. */ ;
+      }
 
       vpr::Uint8 mErr;
       vpr::Uint8 mExpandedErr;
