@@ -63,11 +63,11 @@ void ClusterNode::controlLoop(void* nullParam)
          {
             update();
          }
-         catch(cluster::ClusterException cluster_exception)
+         catch(cluster::ClusterException& cluster_exception)
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
-               << cluster_exception.getMessage() << clrRESET
-               << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+               << clrOutBOLD(clrRED, "ERROR") << ": "
+               << cluster_exception.what() << std::endl << vprDEBUG_FLUSH;
             
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<
                "ClusterNode::update() We have lost our connection to: " << getName() << ":" << getPort()

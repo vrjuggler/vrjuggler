@@ -443,11 +443,11 @@ namespace cluster
                // Signal Update thread to read Network Packets
                (*i)->signalUpdate();
             }
-            catch(cluster::ClusterException cluster_exception)
+            catch(cluster::ClusterException& cluster_exception)
             {
                vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-                  << clrSetBOLD( clrRED ) << cluster_exception.getMessage()
-                  << clrRESET << std::endl << vprDEBUG_FLUSH;
+                  << clrOutBOLD(clrRED, "ERROR") << ": "
+                  << cluster_exception.what() << std::endl << vprDEBUG_FLUSH;
 
                (*i)->shutdown();
             }
