@@ -43,6 +43,7 @@
 
 #include <string.h>
 #include <iomanip>
+#include <typeinfo>
 #include <sys/types.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -322,8 +323,11 @@ void ThreadPosix::startThread(void* nullParam)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << clrOutNORM(clrYELLOW, "WARNING:")
-         << " Caught exception: " << ex.getExtendedDescription()
-         << vprDEBUG_FLUSH;
+         << " Caught an unhandled exception of type " << typeid(ex).name()
+         << " in thread:" << std::endl
+         << ex.getExtendedDescription() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Thread exiting due to uncaught exception\n" << vprDEBUG_FLUSH;
 
       mCaughtException = true;
       mException.setException(ex);
@@ -332,8 +336,11 @@ void ThreadPosix::startThread(void* nullParam)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << clrOutNORM(clrYELLOW, "WARNING:")
-         << " Caught exception: " << ex.what()
-         << vprDEBUG_FLUSH;
+         << " Caught an unhandled exception of type " << typeid(ex).name()
+         << " in thread:" << std::endl
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Thread exiting due to uncaught exception\n" << vprDEBUG_FLUSH;
 
       mCaughtException = true;
       mException.setException(ex);
