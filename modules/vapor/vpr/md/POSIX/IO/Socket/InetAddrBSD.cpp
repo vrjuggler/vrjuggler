@@ -42,11 +42,14 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <string.h>
 #include <sstream>
 #include <unistd.h>
+#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/param.h>
+#include <net/if.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -386,42 +389,23 @@ void InetAddrBSD::copy(const InetAddrBSD& addr)
 void InetAddrBSD::lookupAddress(const std::string& address)
    throw (UnknownHostException)
 {
-   struct hostent* host_entry;
+   struct addrinfo* addrs;
+   struct addrinfo hints;
+   hints.ai_flags = AF_INET;
+   int result = getaddrinfo(address.c_str(), NULL, &hints, &addrs);
 
-   // First, try looking the host up by name.
-   host_entry = gethostbyname(address.c_str());
-
-   // If that succeeded, put the result in mRemoteAddr.
-   if ( host_entry != NULL )
+   if ( result == 0 )
    {
-      copyAddressValue(host_entry->h_addr);
+      memcpy((void*) &mAddr, addrs->ai_addr, addrs->ai_addrlen);
+      freeaddrinfo(addrs);
    }
-   // If gethostbyname(3) failed, the address string may be an IP address.
    else
    {
-      in_addr_t addr;
-
-      // Try looking it up with inet_addr(3).
-      addr = inet_addr(address.c_str());
-
-      // If the address string could not be found using inet_addr(3), then
-      // return error status.
-      if ( addr == INADDR_NONE )
-      {
-         fprintf(stderr,
-                 "[vpr::InetAddrBSD] Could not find address for '%s': %s\n",
-                 address.c_str(), strerror(errno));
-
-         std::ostringstream msg_stream;
-         msg_stream << "[vpr::InetAddrBSD::lookupAddress()] Could not find "
-                    << "address for '" << address << "': " << strerror(errno);
-         throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
-      }
-      // Otherwise, we found the integer address successfully.
-      else
-      {
-         setAddressValue(addr);
-      }
+      std::ostringstream msg_stream;
+      msg_stream << "\nCould not find address for '" << address << "': "
+                 << gai_strerror(result);
+      std::cout << msg_stream.str() << std::endl;
+      throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
 }
 
