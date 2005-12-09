@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <sstream>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -291,11 +292,10 @@ void InetAddrBSD::getHostname(std::string& hostname) const
          << "[InetAddrBSD::getHostname()] ERROR: " << error_str
          << std::endl << vprDEBUG_FLUSH;
 
-      throw UnknownHostException(
-         "[InetAddrBSD::getHostname] Hostname lookup failed: " +
-            std::string(hstrerror(h_errno)),
-         VPR_LOCATION
-      );
+      std::ostringstream msg_stream;
+      msg_stream << "[InetAddrBSD::getHostname()] Hostname lookup failed: "
+                 << error_str;
+      throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
@@ -314,10 +314,10 @@ std::vector<std::string> InetAddrBSD::getHostnames() const
 
    if ( NULL == entry )
    {
-      throw UnknownHostException(
-         "[InetAddrBSD::getHostnames] Hostname lookup failed: " +
-            std::string(hstrerror(h_errno)),
-         VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "[InetAddrBSD::getHostnames()] Hostname lookup failed: "
+                 << hstrerror(h_errno);
+      throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
@@ -409,11 +409,10 @@ void InetAddrBSD::lookupAddress(const std::string& address)
                  "[vpr::InetAddrBSD] Could not find address for '%s': %s\n",
                  address.c_str(), strerror(errno));
 
-         throw UnknownHostException(
-            "[vpr::InetAddrBSD] Could not find address for '" + address +
-               "': " + strerror(errno),
-            VPR_LOCATION
-         );
+         std::ostringstream msg_stream;
+         msg_stream << "[vpr::InetAddrBSD::lookupAddress()] Could not find "
+                    << "address for '" << address << "': " << strerror(errno);
+         throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
       }
       // Otherwise, we found the integer address successfully.
       else
