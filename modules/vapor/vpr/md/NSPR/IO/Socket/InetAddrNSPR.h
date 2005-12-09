@@ -46,11 +46,13 @@
 
 #include <string>
 #include <vector>
-#include <vpr/IO/Socket/SocketTypes.h>
-#include <vpr/IO/Socket/InetAddrBase.h>
-
 #include <prio.h>
 #include <prnetdb.h>
+
+#include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/InetAddrBase.h>
+#include <vpr/Util/IllegalArgumentException.h>
+
 
 namespace vpr
 {
@@ -174,8 +176,12 @@ public:
     *       value and stored.
     *
     * @param family The protocol family value.
+    *
+    * @throw IllegalArgumentException is thrown if \p family is not a valid
+    *        protocol family or if the identified family is not supported.
     */
-   void setFamily(const vpr::SocketTypes::Domain family);
+   void setFamily(const vpr::SocketTypes::Domain family)
+      throw (IllegalArgumentException);
 
    /**
     * Get this address' port in host byte order.

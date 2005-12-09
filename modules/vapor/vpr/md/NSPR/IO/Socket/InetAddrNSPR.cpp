@@ -115,6 +115,7 @@ vpr::SocketTypes::Domain InetAddrNSPR::getFamily() const
 
 // Set the protocol family of this address structure.
 void InetAddrNSPR::setFamily(const vpr::SocketTypes::Domain family)
+   throw (IllegalArgumentException)
 {
    switch ( family )
    {
@@ -128,9 +129,11 @@ void InetAddrNSPR::setFamily(const vpr::SocketTypes::Domain family)
          PR_NetAddrFamily(&mAddr) = PR_AF_INET6;
          break;
       default:
-         fprintf(stderr,
-                 "[vpr::InetAddrNSPR] ERROR: Unknown socket family value %d\n",
-                 family);
+         {
+            std::ostringstream msg_stream;
+            msg_stream << "Unknown socket family value " << family;
+            throw IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+         }
          break;
    }
 }

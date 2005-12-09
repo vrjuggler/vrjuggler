@@ -52,6 +52,7 @@
 #include <vpr/IO/Socket/InetAddrBase.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/IO/Socket/UnknownHostException.h>
+#include <vpr/Util/IllegalArgumentException.h>
 
 
 // XXX: Extend to work with IPv6.
@@ -192,8 +193,12 @@ public:
     *       value and stored.
     *
     * @param family The protocol family value.
+    *
+    * @throw IllegalArgumentException is thrown if \p family is not a valid
+    *        protocol family or if the identified family is not supported.
     */
-   void setFamily(const vpr::SocketTypes::Domain family);
+   void setFamily(const vpr::SocketTypes::Domain family)
+      throw (IllegalArgumentException);
 
    /**
     * Gets this address' port in host byte order.

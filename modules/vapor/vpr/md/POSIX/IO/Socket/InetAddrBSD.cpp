@@ -201,6 +201,7 @@ vpr::SocketTypes::Domain InetAddrBSD::getFamily() const
  * Sets the protocol family of this address structure.
  */
 void InetAddrBSD::setFamily(const vpr::SocketTypes::Domain family)
+   throw (IllegalArgumentException)
 {
    switch ( family )
    {
@@ -218,8 +219,8 @@ void InetAddrBSD::setFamily(const vpr::SocketTypes::Domain family)
 #ifdef PF_INET6
          mAddr.sin_family = PF_INET6;
 #else
-         fprintf(stderr,
-                 "[vpr::InetAddrBSD] WARNING: IPv6 not supported on this host!\n");
+         throw IllegalArgumentException("IPv6 not supported on this host!",
+                                        VPR_LOCATION);
 #endif
          break;
 #if defined(PF_LINK) || defined(PF_RAW)
@@ -232,9 +233,11 @@ void InetAddrBSD::setFamily(const vpr::SocketTypes::Domain family)
          break;
 #endif
       default:
-         fprintf(stderr,
-                 "[vpr::InetAddrBSD] ERROR: Unknown socket family value %d\n",
-                 family);
+         {
+            std::ostringstream msg_stream;
+            msg_stream << "Unknown socket family value " << family;
+            throw IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+         }
          break;
    }
 }
