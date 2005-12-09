@@ -70,12 +70,13 @@ EXTRA_DEFS+=		@UUID_DEFS@
 SUBDIR+=		uuid
 endif
 
-SRCS=		Debug.cpp		\
-		Exception.cpp		\
-		FileUtils.cpp		\
-		GUID.cpp		\
-		Interval.cpp		\
-		StreamLock.cpp		\
+SRCS=		Debug.cpp			\
+		Exception.cpp			\
+		FileUtils.cpp			\
+		GUID.cpp			\
+		IllegalArgumentException.cpp	\
+		Interval.cpp			\
+		StreamLock.cpp			\
 		Version.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
