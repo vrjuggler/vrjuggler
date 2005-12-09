@@ -101,9 +101,12 @@ public:
     * Returns the local host's address via the given object reference.
     *
     * @param hostAddr Storage for the returned address object.
-    * @throws UnknownHostException - if no IP address for the host could be found.
+    *
+    * @throw UnknownHostException if no IP address for the host could be
+    *        found.
     */
-   static void getLocalHost(vpr::InetAddrBSD& hostAddr) throw (UnknownHostException);
+   static void getLocalHost(vpr::InetAddrBSD& hostAddr)
+      throw (UnknownHostException);
 
    /**
     * Sets the address for this object using the given address.  It must be
@@ -114,7 +117,7 @@ public:
     *                a colon.  The address can be a hostname or a
     *                dotted-decimal IP address.
     *                
-    * @throws UnknownHostException - if no IP address for the host could be found.
+    * @throw UnknownHostException if no IP address for the host could be found.
     */
    void setAddress(const std::string& address) throw (UnknownHostException);
 
@@ -127,9 +130,11 @@ public:
     *                address).
     * @param port    The port to associate with this IP address.
     *
-    * @throws UnknownHostException - if no IP address for the host could be found.
+    * @throw UnknownHostException if no IP address for the host could be
+    *        found.
     */
-   void setAddress(const std::string& address, const Uint16 port) throw (UnknownHostException);
+   void setAddress(const std::string& address, const Uint16 port)
+      throw (UnknownHostException);
 
    /**
     * Sets the address for this object using the given address and port
@@ -388,7 +393,7 @@ protected:
     * @post The given address string is converted into a 32-bit INET
     *       address.  The mAddr member variable is populated accordingly.
     *
-    * @throws UnknownHostException - if address lookup failed
+    * @throw UnknownHostException if address lookup failed.
     */
    void lookupAddress(const std::string& addr) throw (UnknownHostException);
 

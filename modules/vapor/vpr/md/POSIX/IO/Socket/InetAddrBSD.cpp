@@ -78,7 +78,8 @@ InetAddrBSD::InetAddrBSD()
    setFamily(SocketTypes::INET);
 }
 
-void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr) throw (UnknownHostException)
+void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
+   throw (UnknownHostException)
 {
    char local_host_name[MAXHOSTNAMELEN + 1];
 
@@ -90,7 +91,9 @@ void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr) throw (UnknownHostExc
    }
    else
    {
-      throw UnknownHostException("No IP address for could be found for localhost.", VPR_LOCATION);
+      throw UnknownHostException(
+         "No IP address for could be found for localhost.", VPR_LOCATION
+      );
    }
 }
 
@@ -99,7 +102,8 @@ void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr) throw (UnknownHostExc
  * form <address>:<port> where <address> can be a hostname or a
  * dotted-decimal IP address.
  */
-void InetAddrBSD::setAddress(const std::string& address) throw (UnknownHostException)
+void InetAddrBSD::setAddress(const std::string& address)
+   throw (UnknownHostException)
 {
    std::string::size_type pos;
    std::string host_addr, host_port;
@@ -117,7 +121,8 @@ void InetAddrBSD::setAddress(const std::string& address) throw (UnknownHostExcep
 }
 
 void InetAddrBSD::setAddress(const std::string& address,
-                             const Uint16 port) throw (UnknownHostException)
+                             const Uint16 port)
+   throw (UnknownHostException)
 {
    lookupAddress(address);
    setPort(port);
@@ -271,7 +276,8 @@ std::string InetAddrBSD::getAddressString() const
    return ip_str;
 }
 
-void InetAddrBSD::getHostname(std::string& hostname) const throw (UnknownHostException)
+void InetAddrBSD::getHostname(std::string& hostname) const
+   throw (UnknownHostException)
 {
    struct hostent* entry;
 
@@ -285,8 +291,11 @@ void InetAddrBSD::getHostname(std::string& hostname) const throw (UnknownHostExc
          << "[InetAddrBSD::getHostname()] ERROR: " << error_str
          << std::endl << vprDEBUG_FLUSH;
 
-      throw UnknownHostException("[InetAddrBSD::getHostname] Hostname lookup failed: "
-         + std::string(hstrerror(h_errno)), VPR_LOCATION);
+      throw UnknownHostException(
+         "[InetAddrBSD::getHostname] Hostname lookup failed: " +
+            std::string(hstrerror(h_errno)),
+         VPR_LOCATION
+      );
    }
    else
    {
@@ -294,7 +303,8 @@ void InetAddrBSD::getHostname(std::string& hostname) const throw (UnknownHostExc
    }
 }
 
-std::vector<std::string> InetAddrBSD::getHostnames() const throw (UnknownHostException)
+std::vector<std::string> InetAddrBSD::getHostnames() const
+   throw (UnknownHostException)
 {
    std::vector<std::string> names;
    struct hostent* entry;
@@ -304,8 +314,10 @@ std::vector<std::string> InetAddrBSD::getHostnames() const throw (UnknownHostExc
 
    if ( NULL == entry )
    {
-      throw UnknownHostException("[InetAddrBSD::getHostnames] Hostname lookup failed: "
-         + std::string(hstrerror(h_errno)), VPR_LOCATION);
+      throw UnknownHostException(
+         "[InetAddrBSD::getHostnames] Hostname lookup failed: " +
+            std::string(hstrerror(h_errno)),
+         VPR_LOCATION);
    }
    else
    {
@@ -368,7 +380,8 @@ void InetAddrBSD::copy(const InetAddrBSD& addr)
 /**
  * Look up the given address and store the address in mAddr.
  */
-void InetAddrBSD::lookupAddress(const std::string& address) throw (UnknownHostException)
+void InetAddrBSD::lookupAddress(const std::string& address)
+   throw (UnknownHostException)
 {
    struct hostent* host_entry;
 
@@ -396,8 +409,11 @@ void InetAddrBSD::lookupAddress(const std::string& address) throw (UnknownHostEx
                  "[vpr::InetAddrBSD] Could not find address for '%s': %s\n",
                  address.c_str(), strerror(errno));
 
-         throw UnknownHostException("[vpr::InetAddrBSD] Could not find address for '"
-            + address + "': " + strerror(errno), VPR_LOCATION);
+         throw UnknownHostException(
+            "[vpr::InetAddrBSD] Could not find address for '" + address +
+               "': " + strerror(errno),
+            VPR_LOCATION
+         );
       }
       // Otherwise, we found the integer address successfully.
       else
