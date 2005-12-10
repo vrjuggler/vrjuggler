@@ -390,8 +390,11 @@ void InetAddrBSD::lookupAddress(const std::string& address)
    throw (UnknownHostException)
 {
    struct addrinfo* addrs;
+
    struct addrinfo hints;
+   memset((void*) &hints, 0, sizeof(hints));
    hints.ai_flags = AF_INET;
+
    int result = getaddrinfo(address.c_str(), NULL, &hints, &addrs);
 
    if ( result == 0 )
