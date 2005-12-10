@@ -286,26 +286,29 @@ std::string InetAddrBSD::getAddressString() const
 void InetAddrBSD::getHostname(std::string& hostname) const
    throw (UnknownHostException)
 {
-   struct hostent* entry;
+   socklen_t salen;
+#if defined(_HAVE_SIN_LEN)
+   salen = mAddr.sin_len;
+#else
+   salen = sizeof(mAddr);
+#endif
 
-   entry = gethostbyaddr((const char*) &mAddr.sin_addr,
-                         sizeof(mAddr.sin_addr), mAddr.sin_family);
+   char addr[NI_MAXHOST];
+   memset((void*) &addr, 0, sizeof(addr));
 
-   if ( NULL == entry )
+   int result = getnameinfo((sockaddr*) &mAddr, salen, addr, sizeof(addr),
+                            NULL, 0, NI_NAMEREQD);
+
+   if ( result == 0 )
    {
-      const char* error_str = hstrerror(h_errno);
-      vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
-         << "[InetAddrBSD::getHostname()] ERROR: " << error_str
-         << std::endl << vprDEBUG_FLUSH;
-
-      std::ostringstream msg_stream;
-      msg_stream << "[InetAddrBSD::getHostname()] Hostname lookup failed: "
-                 << error_str;
-      throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
+      hostname = addr;
    }
    else
    {
-      hostname = entry->h_name;
+      std::ostringstream msg_stream;
+      msg_stream << "Could not find hostname for "
+                 << inet_ntoa(mAddr.sin_addr) << ": " << strerror(errno);
+      throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
 }
 
@@ -405,7 +408,7 @@ void InetAddrBSD::lookupAddress(const std::string& address)
    else
    {
       std::ostringstream msg_stream;
-      msg_stream << "\nCould not find address for '" << address << "': "
+      msg_stream << "Could not find address for '" << address << "': "
                  << gai_strerror(result);
       throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
