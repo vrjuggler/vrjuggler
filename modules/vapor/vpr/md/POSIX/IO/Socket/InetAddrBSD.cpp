@@ -407,7 +407,6 @@ void InetAddrBSD::lookupAddress(const std::string& address)
       std::ostringstream msg_stream;
       msg_stream << "\nCould not find address for '" << address << "': "
                  << gai_strerror(result);
-      std::cout << msg_stream.str() << std::endl;
       throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
 }
