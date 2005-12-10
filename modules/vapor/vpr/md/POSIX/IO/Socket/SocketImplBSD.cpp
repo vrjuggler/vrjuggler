@@ -51,6 +51,7 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <errno.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 #include <vpr/IO/Socket/ConnectionResetException.h>
@@ -404,6 +405,8 @@ bool SocketImplBSD::isConnected() const throw ()
 
       bool readable = mHandle->isReadable(vpr::Interval::NoWait);
       bool writable = mHandle->isWriteable(vpr::Interval::NoWait);
+      boost::ignore_unused_variable_warning(readable);
+      boost::ignore_unused_variable_warning(writable);
 
       try
       {
