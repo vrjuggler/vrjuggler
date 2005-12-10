@@ -465,10 +465,10 @@ if test "x$ac_cv_has_timezone" = "xyes" ; then
               [Define if the timezone type is available.])
 fi
 
-# The following checks for availability of the in_addr_t type.  Since it is
-# supposed to be defined in netinet/in.h, the usual AC_CHECK_TYPE method will
-# not work.
 if test "x$SUBSYSTEM" != "xNSPR" ; then
+    # The following checks for availability of the in_addr_t type.  Since it is
+    # supposed to be defined in netinet/in.h, the usual AC_CHECK_TYPE method
+    # will not work.
     AC_CACHE_CHECK([for in_addr_t], [ac_cv_has_in_addr_t],
         [AC_TRY_COMPILE([#include <sys/types.h>
                          #include <netinet/in.h> ],
@@ -480,6 +480,25 @@ if test "x$SUBSYSTEM" != "xNSPR" ; then
         AC_DEFINE(in_addr_t, int,
                   [Define to int if the in_addr_t type is not available.])
     fi
+
+    # Determine whether the sockaddr_in struct declares the sin_len member.
+    # Some platforms (most notably, Linux) do not include this.
+    # NOTE: If sockaddr_in does not declare sin_len, then sockaddr does not
+    # declare sa_len.
+    AC_CACHE_CHECK([whether struct sockaddr_in has sin_len],
+        [ac_cv_have_sin_len],
+        [AC_TRY_COMPILE([
+#include <sys/types.h>
+#include <netinet/in.h>],
+                        [struct sockaddr_in addr; addr.sin_len = 0;],
+                        [ac_cv_have_sin_len='yes'],
+                        [ac_cv_have_sin_len='no'])])
+
+    AH_TEMPLATE([HAVE_SIN_LEN], [Define if struct sockaddr_in has sin_len])
+
+   if test "x$ac_cv_have_sin_len" = "xyes" ; then
+        AC_DEFINE(HAVE_SIN_LEN)
+   fi
 fi
 
 # If we are not using NSPR, we make typedefs in vprTypes.h based on the results
