@@ -148,6 +148,9 @@
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterDepChecker.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\cluster\ClusterException.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterManager.cpp">
 			</File>
 			<File
