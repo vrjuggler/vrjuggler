@@ -534,7 +534,8 @@ DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
 # Checks for library functions.
 # -----------------------------------------------------------------------------
 AC_CHECK_FUNCS([gettimeofday sigaction sigemptyset sigfillset sigaddset \
-                sigdelset sigismember snprintf strerror strerror_r])
+                sigdelset sigismember snprintf strerror strerror_r \
+                getifaddrs])
 
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC([socket], [SOCKET_LIB=''],
@@ -1098,6 +1099,7 @@ AC_CONFIG_FILES([
    vpr/md/WIN32/Makefile
    vpr/md/WIN32/IO/Makefile
    vpr/md/WIN32/IO/Port/Makefile
+   vpr/md/common/Makefile
    vpr/DynLoad/Makefile
    vpr/IO/Makefile
    vpr/IO/Port/Makefile

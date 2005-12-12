@@ -77,4 +77,58 @@ void InetAddrTest::testLocalAddressLookup ()
    CPPUNIT_ASSERT(empty_addr != local_addr && "Default addresses not equal");
 }
 
+void InetAddrTest::testGetAllLocalAddrs()
+{
+   // Set up a localhost address with port 0. This will be used below for
+   // determining whether the loopback address is included with the addresses
+   // returned by vpr::InetAddr::getAllLocalAdddrs().
+   vpr::InetAddr localhost;
+   localhost.setAddress("127.0.0.1");
+   localhost.setPort(0);
+
+   vpr::InetAddr default_addr;
+   vpr::InetAddr::getLocalHost(default_addr);
+
+   // Get all local addresses without loopback.
+   try
+   {
+      std::vector<vpr::InetAddr> addrs;
+      std::vector<vpr::InetAddr>::iterator a;
+
+      vpr::InetAddr::getAllLocalAddrs(addrs);
+
+      a = std::find(addrs.begin(), addrs.end(), localhost);
+      CPPUNIT_ASSERT(a == addrs.end() && "Loopback should not be present");
+
+      if ( ! addrs.empty() )
+      {
+         a = std::find(addrs.begin(), addrs.end(), default_addr);
+         CPPUNIT_ASSERT(a != addrs.end() && "Default address not in addrs");
+      }
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false && "Caught vpr::Exception");
+   }
+
+   // Get all local addresses with loopback.
+   try
+   {
+      std::vector<vpr::InetAddr> addrs;
+      std::vector<vpr::InetAddr>::iterator a;
+
+      vpr::InetAddr::getAllLocalAddrs(addrs, true);
+
+      a = std::find(addrs.begin(), addrs.end(), localhost);
+      CPPUNIT_ASSERT(a != addrs.end() && "Loopback should be present");
+
+      a = std::find(addrs.begin(), addrs.end(), default_addr);
+      CPPUNIT_ASSERT(a != addrs.end() && "Default address not in addrs");
+   }
+   catch (vpr::Exception&)
+   {
+      CPPUNIT_ASSERT(false && "Caught vpr::Exception");
+   }
+}
+
 } // End of vprTest namespace

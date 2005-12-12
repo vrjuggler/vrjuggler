@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-12-11 patrickh Added vpr::InetAddr::getAllLocalAddrs().
+                    NEW VERSION: 1.1.12
 2005-12-09 patrickh Added vpr::IllegalArgumentException.
                     NEW VERSION: 1.1.11
 2005-11-12 patrickh vpr::Library and vpr::LibraryLoader functions now throw

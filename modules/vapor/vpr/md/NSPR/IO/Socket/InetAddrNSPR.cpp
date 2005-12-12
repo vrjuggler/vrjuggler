@@ -52,6 +52,9 @@
 namespace vpr
 {
 
+void getIfAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
+                const bool withLoopback);
+
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
 void InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& hostAddr)
@@ -69,6 +72,12 @@ void InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& hostAddr)
       throw UnknownHostException("No IP address for could be found for localhost.",
                                  VPR_LOCATION);
    }
+}
+
+void InetAddrNSPR::getAllLocalAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
+                                    const bool withLoopback)
+{
+   vpr::getIfAddrs(hostAddrs, withLoopback);
 }
 
 // Set the address for this object using the given address.  It must be of the

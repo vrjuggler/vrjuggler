@@ -99,7 +99,7 @@ public:
    }
 
    /**
-    * Returns the local host's address via the given object reference.
+    * Returns the local host's default address via the given object reference.
     *
     * @param hostAddr Storage for the returned address object.
     *
@@ -108,6 +108,31 @@ public:
     */
    static void getLocalHost(vpr::InetAddrBSD& hostAddr)
       throw (UnknownHostException);
+
+   /**
+    * Retrieves all the IPv4 addresses associated with the local machine,
+    * including the loopback address (127.0.0.1) if so indicated.
+    *
+    * @post \p hostAddrs contains vpr::InetAddr objetcs holding all the local
+    *       IPv4 addresses for the local machine.
+    *
+    * @param hostAddrs    Storage for the discovered local IPv4 addresses.
+    *                     The vector is cleared before the addresses are
+    *                     added, so any objects currently in the vector are
+    *                     lost.
+    * @param withLoopback A flag indicating whether to include the loopback
+    *                     address (127.0.0.1) in \p hostAddrs. This parameter
+    *                     is optional and defaults to false.
+    *
+    * @note This method currently supports only IPv4.
+    *
+    * @throw vpr::Exception is thrown if a fatal error occurs that prevents
+    *        discovery of the local machine's addresses.
+    *
+    * @since 1.1.12
+    */
+   static void getAllLocalAddrs(std::vector<vpr::InetAddrBSD>& hostAddrs,
+                                const bool withLoopback = false);
 
    /**
     * Sets the address for this object using the given address.  It must be

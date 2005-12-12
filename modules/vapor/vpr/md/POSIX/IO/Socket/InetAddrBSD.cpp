@@ -72,6 +72,9 @@
 namespace vpr
 {
 
+void getIfAddrs(std::vector<vpr::InetAddrBSD>& hostAddrs,
+                const bool withLoopback);
+
 const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to ANY addr
 
 InetAddrBSD::InetAddrBSD()
@@ -99,6 +102,12 @@ void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
          "No IP address for could be found for localhost.", VPR_LOCATION
       );
    }
+}
+
+void InetAddrBSD::getAllLocalAddrs(std::vector<vpr::InetAddrBSD>& hostAddrs,
+                                   const bool withLoopback)
+{
+   vpr::getIfAddrs(hostAddrs, withLoopback);
 }
 
 /**
