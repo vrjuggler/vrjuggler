@@ -37,7 +37,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-gd-$(BOOST_VERSION).lib cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d.dll"
-				Version="1.1.11"
+				Version="1.1.12"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
@@ -90,7 +90,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libboost_filesystem-$(BOOST_TOOL)-mt-$(BOOST_VERSION).lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr.dll"
-				Version="1.1.11"
+				Version="1.1.12"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
@@ -170,6 +170,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\IllegalArgumentException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\md\common\InetAddrHelpers.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\InetAddrNSPR.cpp">
