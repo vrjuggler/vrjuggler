@@ -148,6 +148,12 @@ void SubjectManagerImpl::storeSubject(Subject_ptr subject,
    mSubjects[name] = Subject::_duplicate(subject);
 }
 
+bool SubjectManagerImpl::hasSubject(const char* name)
+   throw (CORBA::SystemException)
+{
+   return mSubjects.count(std::string(name)) > 0;
+}
+
 Subject_ptr SubjectManagerImpl::getSubject(const char* name)
    throw(CORBA::SystemException)
 {
