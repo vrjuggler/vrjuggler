@@ -242,7 +242,7 @@ SubjectManager::SubjectManagerInfoList* SubjectManagerImpl::getInfo()
    vpr::Guard<vpr::Mutex> lock(mInfoMapMutex);
 
    // Create the sequence and size it.
-   tweek::SubjectManager::SubjectManagerInfoList* info_items =
+   tweek::SubjectManager::SubjectManagerInfoList_var info_items =
       new tweek::SubjectManager::SubjectManagerInfoList();
    info_items->length(mInfoMap.size());
 
@@ -260,13 +260,13 @@ SubjectManager::SubjectManagerInfoList* SubjectManagerImpl::getInfo()
          << "Adding item[" << j << "]: " << item.key << " => " << item.value
          << std::endl << vprDEBUG_FLUSH;
 
-      (*info_items)[j] = item;
+      info_items[j] = item;
    }
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
       << "Returning all info items to caller\n" << vprDEBUG_FLUSH;
 
-   return info_items;
+   return info_items._retn();
 }
 
 char* SubjectManagerImpl::getName()

@@ -53,7 +53,7 @@ namespace tweek
 BeanNameList* BeanDeliverySubjectImpl::getAllBeanNames()
    throw(CORBA::SystemException)
 {
-   BeanNameList* bean_names = new BeanNameList();
+   BeanNameList_var bean_names = new BeanNameList();
 
    // Lock down the Bean collection before using it.
    {
@@ -66,11 +66,11 @@ BeanNameList* BeanDeliverySubjectImpl::getAllBeanNames()
 
       for ( i = mBeanCollection.begin(), j = 0; i != mBeanCollection.end(); ++i, ++j )
       {
-         (*bean_names)[j] = CORBA::string_dup((*i).first.c_str());
+         bean_names[j] = CORBA::string_dup((*i).first.c_str());
       }
    }
 
-   return bean_names;
+   return bean_names._retn();
 }
 
 BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
