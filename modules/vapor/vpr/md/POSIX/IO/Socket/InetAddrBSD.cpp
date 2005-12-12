@@ -288,22 +288,33 @@ std::string InetAddrBSD::getAddressString() const
 vpr::ReturnStatus InetAddrBSD::getHostname(std::string& hostname) const
 {
    vpr::ReturnStatus status;
-   struct hostent* entry;
 
-   entry = gethostbyaddr((const char*) &mAddr.sin_addr,
-                         sizeof(mAddr.sin_addr), mAddr.sin_family);
+   socklen_t salen;
+#if defined(HAVE_SIN_LEN)
+   salen = mAddr.sin_len;
+#else
+   salen = sizeof(mAddr);
+#endif
 
-   if ( NULL == entry )
+   char addr[NI_MAXHOST];
+   memset((void*) &addr, 0, sizeof(addr));
+
+   int result = getnameinfo((sockaddr*) &mAddr, salen, addr, sizeof(addr),
+                            NULL, 0, NI_NAMEREQD);
+
+   if ( result == 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
-      const char* error_str = hstrerror(h_errno);
-      vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
-         << "[InetAddrBSD::getHostname()] ERROR: " << error_str
-         << std::endl << vprDEBUG_FLUSH;
+      hostname = addr;
    }
    else
    {
-      hostname = entry->h_name;
+      status.setCode(vpr::ReturnStatus::Fail);
+      const int err_code(errno);
+      vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": [vpr::InetAddrBSD::getHostname()] Could not find hostname for "
+         << inet_ntoa(mAddr.sin_addr) << ": " << strerror(err_code)
+         << std::endl << vprDEBUG_FLUSH;
    }
 
    return status;
