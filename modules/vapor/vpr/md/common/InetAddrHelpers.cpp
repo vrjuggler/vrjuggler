@@ -191,7 +191,7 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
 
    // Initial guess on the size of the buffer that will be returned by
    // ioctl(2) or WSAIoctl().
-   size_t len = sizeof(ifreq_t) * 32;
+   unsigned int num_reqs(32);
 
    size_t lastlen(0);
    unsigned long bytes_returned(0);
@@ -205,7 +205,7 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
    for ( ; ; )
    {
       // Allocate storage for the data returned by ioctl(2) or WSAIoctl().
-      if_list = new ifreq_t[len];
+      if_list = new ifreq_t[num_reqs];
 
       if ( NULL == if_list )
       {
@@ -217,6 +217,7 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
          throw vpr::Exception("Out of memory", VPR_LOCATION);
       }
 
+      const size_t len = sizeof(ifreq_t) * num_reqs;
 #if defined(VPR_OS_Windows)
       int result = WSAIoctl(sock, SIO_GET_INTERFACE_LIST, 0, 0, &if_list,
                             len, &bytes_returned, 0, 0);
@@ -285,8 +286,9 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
          }
       }
 
-      // Increment the size of the returned buffer.
-      len += 10 * sizeof(ifreq_t);
+      // Increment the size of the returned buffer by increasing the number of
+      // allocated request structures.
+      num_reqs += 10;
       delete[] if_list;
    }
 
