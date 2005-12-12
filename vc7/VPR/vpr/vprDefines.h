@@ -125,7 +125,4 @@
 /* Define to unsigned int if the sigset_t type is not available. */
 #define sigset_t unsigned int
 
-/* define to 'int' if your system does not have socklen_t */
-#define socklen_t int
-
 #endif /* _VPR_DEFINES_H_ */
