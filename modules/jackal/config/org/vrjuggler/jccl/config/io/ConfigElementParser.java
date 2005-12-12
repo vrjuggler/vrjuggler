@@ -68,8 +68,10 @@ public class ConfigElementParser
     * added to the repository.
     *
     * @param root          the XML DOM element to parse
+    * @param createdElts   storage for any XML DOM elements created as a
+    *                      result of upgrading the given XML DOM element
     */
-   public ConfigElement parse(Element root)
+   public ConfigElement parse(Element root, java.util.List createdElts)
       throws ParseException
    {
       // Get the name of the definition this element depends on
@@ -138,7 +140,7 @@ public class ConfigElementParser
             if(null != xslt_element)
             {
                // Transform the element to the next version.
-               root = transformElement(root, xslt_element);
+               root = transformElement(root, xslt_element, createdElts);
             }
             else
             {
@@ -186,7 +188,8 @@ public class ConfigElementParser
 
 
    private static Element transformElement(Element elementNode,
-                                           Element xsltElement)
+                                           Element xsltElement,
+                                           List createdElts)
       throws ParseException
    {
       JDOMSource xslt_source = new JDOMSource(xsltElement);
@@ -202,9 +205,21 @@ public class ConfigElementParser
          Element result_elm = null;
          java.util.List temp_list = result.getResult();
 
-         if(temp_list.size() > 0)
+         if ( temp_list.size() > 0 )
          {
-            result_elm = (Element)temp_list.get(0);
+            // The first item in the list must be the transformed version of
+            // elementNode.
+            result_elm = (Element) temp_list.remove(0);
+
+            // Hang onto any elements created as a result of the transformtaion
+            // for later use. Note that result_elm was retrieved using
+            // java.util.List.remove() so that it is no longer part of
+            // temp_list.
+            if ( ! temp_list.isEmpty() )
+            {
+               createdElts.addAll(temp_list);
+            }
+
             return result_elm;
          }
       }
@@ -330,7 +345,9 @@ public class ConfigElementParser
 
       // The property type must be a configuration element, so recurse on it
       Element config_element_node = (Element)elt.getChildren().get(0);
-      return parse(config_element_node);
+      // XXX: This discards XML elements created as a result of parsing
+      // config_element_node!
+      return parse(config_element_node, new ArrayList());
    }
 
    /**
