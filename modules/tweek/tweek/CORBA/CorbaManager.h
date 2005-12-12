@@ -178,12 +178,12 @@ public:
       return mSubjectManager;
    }
 
-   const PortableServer::POA_var& getRootPOA() const
+   PortableServer::POA_var getRootPOA() const
    {
       return mRootPOA;
    }
 
-   const PortableServer::POA_var& getChildPOA() const
+   PortableServer::POA_var getChildPOA() const
    {
       return mChildPOA;
    }
