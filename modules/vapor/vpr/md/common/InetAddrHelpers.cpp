@@ -219,8 +219,8 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
 
       const size_t len = sizeof(ifreq_t) * num_reqs;
 #if defined(VPR_OS_Windows)
-      int result = WSAIoctl(sock, SIO_GET_INTERFACE_LIST, 0, 0, if_list,
-                            len, &bytes_returned, 0, 0);
+      int result = WSAIoctl(sock, SIO_GET_INTERFACE_LIST, NULL, 0, if_list,
+                            len, &bytes_returned, NULL, NULL);
 #else
       ifc.ifc_len = len;
       ifc.ifc_req = if_list;
