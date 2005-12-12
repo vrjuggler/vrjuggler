@@ -165,9 +165,32 @@ namespace vrj
       const std::string perf_mon_dso("corba_perf_mon");
       const std::string init_func("initPlugin");
       Callable functor(this);
-      vpr::LibraryLoader::findDSOAndCallEntryPoint(perf_mon_dso, search_path,
-                                                   init_func, functor,
-                                                   mPluginDSO);
+      vpr::ReturnStatus status;
+      status =
+         vpr::LibraryLoader::findDSOAndCallEntryPoint(perf_mon_dso,
+                                                      search_path, init_func,
+                                                      functor, mPluginDSO);
+
+      if ( ! status.success() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Failed to load the remote performance monitoring plug-in."
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Remote performance monitoring is disabled." << std::endl
+            << vprDEBUG_FLUSH;
+
+         // The plug-in is not usable, so we can unload it.
+         if ( mPluginDSO.get() != NULL )
+         {
+            if ( mPluginDSO->isLoaded() )
+            {
+               mPluginDSO->unload();
+            }
+
+            mPluginDSO.reset();
+         }
+      }
    }
 
    void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
