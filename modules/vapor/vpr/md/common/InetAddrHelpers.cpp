@@ -98,7 +98,11 @@ namespace vpr
  */
 void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
 {
+#if defined(VPR_OS_Windows)
+   const unsigned long loop = ntohl(INADDR_LOOPBACK);
+#else
    const in_addr_t loop = ntohl(INADDR_LOOPBACK);
+#endif
 
    // Make sure hostAddrs is empty so that we can use push_back() below.
    hostAddrs.clear();
@@ -161,7 +165,7 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
 #if defined(VPR_OS_Windows)
    typedef INTERFACE_INFO ifreq_t;
 
-   SOCKET sock = WSASocket(AF_INET, SOCK_DGRAM, 0);
+   SOCKET sock = WSASocket(AF_INET, SOCK_DGRAM, 0, 0, 0, 0);
 
    // Socket creation failed, so we cannot proceed.
    if ( sock == SOCKET_ERROR )
@@ -321,8 +325,18 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
       }
 
       char netaddr[18];
+#if defined(VPR_OS_Windows)
+      // inet_ntoa() returns a pointer to static memory, which means that
+      // it is not reentrant. There is a race condition here between the
+      // time of the return from inet_ntoa() and the time that strcpy()
+      // actually copies the memory. Unfortunately, WinSock2 does not
+      // provide inet_ntop().
+      strcpy(netaddr, inet_ntoa(addr->sin_addr));
+      char* temp_addr = netaddr;
+#else
       const char* temp_addr = inet_ntop(addr->sin_family, &addr->sin_addr,
                                         netaddr, sizeof(netaddr));
+#endif
 
       if ( NULL != temp_addr )
       {
