@@ -191,14 +191,21 @@ bool LinuxJoydev::startSampling()
    // - By default this will clear them out
    mCurAxes.resize(mNumAxes);
    mCurAxesRanges.resize(mNumAxes, axis_range_t(getMin(), getMax()));
-   mCurButtons.resize(mNumButtons + mAxisButtonIndices.size());
+   // We use double the number of axis button indices because each axis has
+   // to map to two buttons (high and low).
+   mCurButtons.resize(mNumButtons + mAxisButtonIndices.size() * 2);
 
    // Setup axis as button stuff
    mAxisToButtonIndexLookup.clear();
    mAxisToButtonIndexLookup.resize(mNumAxes, -1);            // Default to -1, meaning no axis button
    for ( unsigned int i = 0; i < mAxisButtonIndices.size(); ++i )       // For each configured axis index
    {
-      unsigned int virtual_btn_index = (mNumButtons + i); // Index of the virtual button from the axis
+      // Define the index of the virtual button from the axis. Each axis
+      // provides two virtual buttons: one for its low value and one for its
+      // high value. These virtual buttons are paired up in the digital
+      // sample buffers as [low0, high0, low1, high1, ..., lowN, highN] for
+      // axes 0 through N.
+      const unsigned int virtual_btn_index = mNumButtons + i * 2;
       vprASSERT(virtual_btn_index < mCurButtons.size() &&
                 "Virtual button index out of range");
       unsigned int axis_index = mAxisButtonIndices[i];                      // Index of the axis we are mapping
@@ -251,16 +258,45 @@ void LinuxJoydev::updateData()
          mCurAxes[axis_number] = norm_value;
          mCurAxes[axis_number].setTime();
 
-         // Check for axis buttons
-         // - If we have a mapping
-         // - If axis is gt 0.5, then btn is down
-         if(mAxisToButtonIndexLookup[axis_number] != -1)    // If we map to a virtual button
+         // Check for axis buttons. If we have a mapping for axis_number,
+         // then we map the value of the analog axis to two buttons (high and
+         // low). If the analog value is greater than 0.5, then we map the
+         // high button to 1 and the low button to 0. If the analog value is
+         // less than 0.5, then we map the high button to 0 and the low button
+         // to 0. Otherwise, both buttons are 0.
+         if ( mAxisToButtonIndexLookup[axis_number] != -1 )    // If we map to a virtual button
          {
-            unsigned vir_btn_index = mAxisToButtonIndexLookup[axis_number];
-            vprASSERT(vir_btn_index < mCurButtons.size() &&
-                      "Virtual button index out of range");
-            mCurButtons[vir_btn_index] = ( (norm_value > 0.5f) ? 1 : 0);
-            mCurButtons[vir_btn_index].setTime();
+            const unsigned int low_btn_index =
+               mAxisToButtonIndexLookup[axis_number];
+            const unsigned int high_btn_index = low_btn_index + 1;
+            vprASSERT(high_btn_index < mCurButtons.size() &&
+                      "Virtual high button index out of range");
+            vprASSERT(low_btn_index < mCurButtons.size() &&
+                      "Virtual low button index out of range");
+
+            // Record the high button as pressed and the low button as not
+            // pressed.
+            if ( norm_value > 0.5f )
+            {
+               mCurButtons[low_btn_index]  = 0;
+               mCurButtons[high_btn_index] = 1;
+            }
+            // Record the high button as not pressed and the low button as
+            // pressed.
+            else if ( norm_value < 0.5f )
+            {
+               mCurButtons[low_btn_index]  = 1;
+               mCurButtons[high_btn_index] = 0;
+            }
+            // Record both buttons as not pressed.
+            else
+            {
+               mCurButtons[low_btn_index]  = 0;
+               mCurButtons[high_btn_index] = 0;
+            }
+
+            mCurButtons[low_btn_index].setTime();
+            mCurButtons[high_btn_index].setTime();
          }
       }
    }
