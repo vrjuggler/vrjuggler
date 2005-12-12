@@ -168,8 +168,10 @@ public:
    vpr::ReturnStatus destroySubjectManager();
 
    /**
-    * Returns this CORBA managaer's SubjectManagerImpl instance to the caller.
-    * Users will need this so that they may register subjects.
+    * Returns this CORBA Manager's SubjectManagerImpl instance to the caller.
+    * Users will need this so that they may register subjects. It is the
+    * caller's responsibility to call tweek::SubjectManagerImpl::_add_ref()
+    * and tweek::SubjectManagerImpl::_remove_ref() as necessary.
     */
    tweek::SubjectManagerImpl* getSubjectManager() const
    {
@@ -186,6 +188,12 @@ public:
       return mChildPOA;
    }
 
+   /**
+    * Returns this CORBA Manager's BeanDeliverySubjectImpl instance to the
+    * caller. It is the caller's responsibility to call the methods
+    * tweek::BeanDeliverySubjectImpl::_add_ref() and
+    * tweek::BeanDeliverySubjectImpl::_remove_ref() as necessary.
+    */
    BeanDeliverySubjectImpl* getBeanDeliverySubject() const
    {
       return mBeanDeliverySubject;
@@ -214,11 +222,11 @@ private:
    CosNaming::NamingContext_var mRootContext;
    CosNaming::NamingContext_var mLocalContext;
 
-   tweek::SubjectManagerImpl*   mSubjectManager;
-   PortableServer::ObjectId_var mSubjectManagerId;
-   CosNaming::Name              mSubjectManagerName;
-
-   BeanDeliverySubjectImpl* mBeanDeliverySubject;
+   /** @name CORBA Servants */
+   //@{
+   tweek::SubjectManagerImpl* mSubjectManager;
+   BeanDeliverySubjectImpl*   mBeanDeliverySubject;
+   //@}
 
    /** The name of the default Bean Delivery Subject. */
    static const std::string DELIVERY_SUBJECT_NAME;

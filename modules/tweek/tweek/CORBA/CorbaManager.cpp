@@ -194,8 +194,17 @@ void CorbaManager::shutdown(bool waitForCompletion)
    {
       if ( NULL != mBeanDeliverySubject )
       {
-         mSubjectManager->unregisterSubject(DELIVERY_SUBJECT_NAME.c_str());
-         delete mBeanDeliverySubject;
+         try
+         {
+            mSubjectManager->unregisterSubject(DELIVERY_SUBJECT_NAME.c_str());
+         }
+         catch (CORBA::OBJECT_NOT_EXIST&)
+         {
+            /* Do nothing. */ ;
+         }
+
+         mBeanDeliverySubject->_remove_ref();
+         mBeanDeliverySubject = NULL;
       }
 
       destroySubjectManager();
@@ -266,7 +275,8 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
    // to use it.
    try
    {
-      mSubjectManagerId = mChildPOA->activate_object(mSubjectManager);
+      mChildPOA->activate_object(mSubjectManager);
+      mSubjectManager->_add_ref();
    }
    // This will be raised if the IdUniqunessPolicy within our child POA is set
    // to UNIQUE_ID.
@@ -313,9 +323,10 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
 
          vprASSERT(! CORBA::is_nil(mgr_ptr) && "CORBA object not activated in POA");
 
-         mSubjectManagerName.length(1);
-         mSubjectManagerName[0].id   = CORBA::string_dup(id_str.c_str());
-         mSubjectManagerName[0].kind = CORBA::string_dup(kind);
+         CosNaming::Name subj_mgr_name;
+         subj_mgr_name.length(1);
+         subj_mgr_name[0].id   = CORBA::string_dup(id_str.c_str());
+         subj_mgr_name[0].kind = CORBA::string_dup(kind);
 
          // Bind the Subject Manager reference and activate the object within
          // the POA.  If a Subject Manager is already bound, the exceptoin
@@ -323,7 +334,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          // since we only want one Subject Manager per address space.
          try
          {
-            mLocalContext->bind(mSubjectManagerName, mgr_ptr);
+            mLocalContext->bind(subj_mgr_name, mgr_ptr);
 
             // Now that everything is set up with the Subject Manager, we can
             // register the one Subject that is always around: the default Bean
@@ -334,10 +345,12 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
                mBeanDeliverySubject = new BeanDeliverySubjectImpl();
                mSubjectManager->registerSubject(mBeanDeliverySubject,
                                                 DELIVERY_SUBJECT_NAME.c_str());
+               mBeanDeliverySubject->_add_ref();
             }
             catch (...)
             {
                delete mBeanDeliverySubject;
+               mBeanDeliverySubject = NULL;
                vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
                   << clrOutNORM(clrYELLOW, "WARNING")
                   << ": Failed to register Bean Delivery Subject\n"
@@ -378,64 +391,8 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
    // Only try to do destruction if there is a servant to destroy.
    if ( mSubjectManager != NULL )
    {
-      // This attempts to go through the process of destroying the registered
-      // Subject Manager servant.  The memory for the servant is only deleted
-      // if the servant can be deactivated in the POA.
-      try
-      {
-         // First, we deactivate the servant in the POA.
-         mChildPOA->deactivate_object(mSubjectManagerId);
-
-         // Then we attempt to unbind the reference from the Naming Service.
-         // Should this fail, the object reference will be invalid because of
-         // the above step, so deleting the servant's memory should be okay.
-         try
-         {
-            mLocalContext->unbind(mSubjectManagerName);
-         }
-         catch (CORBA::ORB::InvalidName& ex)
-         {
-            boost::ignore_unused_variable_warning(ex);
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-               << "WARNING: Invalid name used when trying to unbind "
-               << "Subject Manager!\n" << vprDEBUG_FLUSH;
-         }
-         catch (CosNaming::NamingContext::CannotProceed& ex)
-         {
-            boost::ignore_unused_variable_warning(ex);
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-               << "WARNING: Could not unbind Subject Manager!\n"
-               << vprDEBUG_FLUSH;
-         }
-
-         // Finally, we delete the servant's memory.
-         delete mSubjectManager;
-         mSubjectManager = NULL;
-      }
-      catch (PortableServer::POA::ObjectNotActive& policy_ex)
-      {
-         boost::ignore_unused_variable_warning(policy_ex);
-
-         // If the servant is not active in the POA, something may have gone
-         // wrong in createSubjectManager().  In that case, the memory should
-         // still be deleted since there is no active object to worry about
-         // anyway.
-         delete mSubjectManager;
-         mSubjectManager = NULL;
-
-         vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
-            << "WARNING: Coult not deactive Subject Manager: not active in POA\n"
-            << vprDEBUG_FLUSH;
-      }
-      catch (PortableServer::POA::WrongPolicy& policy_ex)
-      {
-         boost::ignore_unused_variable_warning(policy_ex);
-
-         status.setCode(vpr::ReturnStatus::Fail);
-         vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
-            << "WARNING: Coult not deactive Subject Manager: wrong POA policy\n"
-            << vprDEBUG_FLUSH;
-      }
+      mSubjectManager->_remove_ref();
+      mSubjectManager = NULL;
    }
    else
    {
