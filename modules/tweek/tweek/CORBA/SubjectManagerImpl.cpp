@@ -278,15 +278,9 @@ char* SubjectManagerImpl::getName()
 
 void SubjectManagerImpl::initInfoMap()
 {
-   vpr::InetAddr local_addr;
-   vpr::InetAddr::getLocalHost(local_addr);
-
-   std::string hostname;
-   
    try
    {
-      local_addr.getHostname(hostname);
-      mInfoMap["Hostname"] = hostname;
+      mInfoMap["Hostname"] = vpr::InetAddr::getLocalHost().getHostname();
    }
    catch (vpr::UnknownHostException& ex)
    {
