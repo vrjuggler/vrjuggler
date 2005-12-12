@@ -145,7 +145,7 @@ vpr::ReturnStatus InetAddrBSD::setAddress(const vpr::Uint32 address,
 
 unsigned char InetAddrBSD::getLength() const
 {
-#ifdef _HAVE_SIN_LEN
+#ifdef HAVE_SIN_LEN
    return mAddr.sin_len;
 #else
    return 0;
@@ -154,7 +154,7 @@ unsigned char InetAddrBSD::getLength() const
 
 void InetAddrBSD::setLength(const unsigned char length)
 {
-#ifdef _HAVE_SIN_LEN
+#ifdef HAVE_SIN_LEN
    mAddr.sin_len = length;
 #else
    boost::ignore_unused_variable_warning(length);
