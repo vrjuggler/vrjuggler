@@ -99,39 +99,34 @@ public:
    }
 
    /**
-    * Returns the local host's default address via the given object reference.
-    *
-    * @param hostAddr Storage for the returned address object.
+    * Returns the local host's default address.
     *
     * @throw UnknownHostException If no IP address for the host could be found.
+    *
+    * @return A vpr::InetAddr object holding the local host's default address.
     */
-   static void getLocalHost(vpr::InetAddrNSPR& hostAddr)
-      throw (UnknownHostException);
+   static vpr::InetAddrNSPR getLocalHost() throw (UnknownHostException);
 
    /**
     * Retrieves all the IPv4 addresses associated with the local machine,
     * including the loopback address (127.0.0.1) if so indicated.
     *
-    * @post \p hostAddrs contains vpr::InetAddr objetcs holding all the local
-    *       IPv4 addresses for the local machine.
-    *
-    * @param hostAddrs    Storage for the discovered local IPv4 addresses.
-    *                     The vector is cleared before the addresses are
-    *                     added, so any objects currently in the vector are
-    *                     lost.
     * @param withLoopback A flag indicating whether to include the loopback
-    *                     address (127.0.0.1) in \p hostAddrs. This parameter
-    *                     is optional and defaults to false.
+    *                     address (127.0.0.1) in the returned collection. This
+    *                     parameter is optional and defaults to false.
     *
     * @note This method currently supports only IPv4.
     *
     * @throw vpr::Exception is thrown if a fatal error occurs that prevents
     *        discovery of the local machine's addresses.
     *
+    * @return A vector containing vpr::InetAddr objects holding all the local
+    *         IPv4 addresses for the local machine.
+    *
     * @since 1.1.12
     */
-   static void getAllLocalAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
-                                const bool withLoopback = false);
+   static std::vector<vpr::InetAddrNSPR>
+      getAllLocalAddrs(const bool withLoopback = false);
 
    /**
     * Sets the address for this object using the given address.  It must be
@@ -270,7 +265,7 @@ public:
    /**
     * Returns the fully qualified hostname for this address.
     */
-   void getHostname(std::string& hostname) const throw (UnknownHostException);
+   std::string getHostname() const throw (UnknownHostException);
 
    /**
     * Returns the fully qualified primary hostname for this address and all

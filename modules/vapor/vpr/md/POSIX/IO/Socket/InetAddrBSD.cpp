@@ -72,8 +72,7 @@
 namespace vpr
 {
 
-void getIfAddrs(std::vector<vpr::InetAddrBSD>& hostAddrs,
-                const bool withLoopback);
+std::vector<vpr::InetAddrBSD> getIfAddrs(const bool withLoopback);
 
 const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to ANY addr
 
@@ -85,16 +84,16 @@ InetAddrBSD::InetAddrBSD()
    setFamily(SocketTypes::INET);
 }
 
-void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
-   throw (UnknownHostException)
+vpr::InetAddrBSD InetAddrBSD::getLocalHost() throw (UnknownHostException)
 {
-   char local_host_name[MAXHOSTNAMELEN + 1];
+   vpr::InetAddrBSD localhost;
 
+   char local_host_name[MAXHOSTNAMELEN + 1];
    bzero(local_host_name, sizeof(local_host_name));
 
    if ( gethostname(local_host_name, MAXHOSTNAMELEN) == 0 )
    {
-      hostAddr.setAddress(std::string(local_host_name), 0);
+      localhost.setAddress(std::string(local_host_name), 0);
    }
    else
    {
@@ -102,12 +101,14 @@ void InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
          "No IP address for could be found for localhost.", VPR_LOCATION
       );
    }
+
+   return localhost;
 }
 
-void InetAddrBSD::getAllLocalAddrs(std::vector<vpr::InetAddrBSD>& hostAddrs,
-                                   const bool withLoopback)
+std::vector<vpr::InetAddrBSD>
+InetAddrBSD::getAllLocalAddrs(const bool withLoopback)
 {
-   vpr::getIfAddrs(hostAddrs, withLoopback);
+   return vpr::getIfAddrs(withLoopback);
 }
 
 /**
@@ -293,7 +294,7 @@ std::string InetAddrBSD::getAddressString() const
    return ip_str;
 }
 
-void InetAddrBSD::getHostname(std::string& hostname) const
+std::string InetAddrBSD::getHostname() const
    throw (UnknownHostException)
 {
    socklen_t salen;
@@ -309,6 +310,8 @@ void InetAddrBSD::getHostname(std::string& hostname) const
    int result = getnameinfo((sockaddr*) &mAddr, salen, addr, sizeof(addr),
                             NULL, 0, NI_NAMEREQD);
 
+   std::string hostname;
+
    if ( result == 0 )
    {
       hostname = addr;
@@ -323,6 +326,8 @@ void InetAddrBSD::getHostname(std::string& hostname) const
                  << inet_ntoa(mAddr.sin_addr) << ": " << strerror(err_code);
       throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
+
+   return hostname;
 }
 
 std::vector<std::string> InetAddrBSD::getHostnames() const

@@ -94,7 +94,7 @@ public:
    /**
     * Returns the local host's address.
     */
-   static void getLocalHost(vpr::InterAddr& host_addr)
+   static vpr::InetAddr getLocalHost()
    {
       vprASSERT(false && "Implement me");
    }
@@ -198,10 +198,10 @@ public:
    /**
     * Returns the fully qualified hostname for this address.
     */
-   void getHostname(std::string& s) const
+   std::string getHostname() const
    {
-      boost::ignore_unused_variable_warning(s);
       vprASSERT(false && "Implement me");
+      return std::string();
    }
 
    /**

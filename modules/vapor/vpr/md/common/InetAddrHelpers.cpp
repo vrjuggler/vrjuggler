@@ -82,21 +82,18 @@ namespace vpr
  * and vpr::InetAddrNSPR. Instead of duplicating complicated code, those
  * classes call into this function.
  *
- * @post \p hostAddrs contains vpr::InetAddr objetcs holding all the local
- *       IPv4 addresses for the local machine.
- *
- * @param hostAddrs    Storage for the discovered local IPv4 addresses. The
- *                     vector is cleared before the addresses are added, so
- *                     any objects currently in the vector are lost.
  * @param withLoopback A flag indicating whether to include the loopback
- *                     address (127.0.0.1) in \p hostAddrs.
+ *                     address (127.0.0.1) in the returned collection.
  *
  * @note This method currently supports only IPv4.
  *
  * @throw vpr::Exception is thrown if a fatal error occurs that prevents
  *        discovery of the local machine's addresses.
+ *
+ * @return A vector containing vpr::InetAddr objects holding all the local
+ *         IPv4 addresses for the local machine.
  */
-void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
+std::vector<vpr::InetAddr> getIfAddrs(const bool withLoopback)
 {
 #if defined(VPR_OS_Windows)
    const unsigned long loop = ntohl(INADDR_LOOPBACK);
@@ -104,8 +101,7 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
    const in_addr_t loop = ntohl(INADDR_LOOPBACK);
 #endif
 
-   // Make sure hostAddrs is empty so that we can use push_back() below.
-   hostAddrs.clear();
+   std::vector<vpr::InetAddr> host_addrs;
 
 #if defined(HAVE_GETIFADDRS)
    ifaddrs* addrs(NULL);
@@ -146,7 +142,7 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
          {
             vpr::InetAddr vpr_addr;
             vpr_addr.setAddress(netaddr, 0);
-            hostAddrs.push_back(vpr_addr);
+            host_addrs.push_back(vpr_addr);
          }
       }
    }
@@ -344,13 +340,15 @@ void getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs, const bool withLoopback)
       {
          vpr::InetAddr vpr_addr;
          vpr_addr.setAddress(netaddr, 0);
-         hostAddrs.push_back(vpr_addr);
+         host_addrs.push_back(vpr_addr);
       }
    }
 
    // All done.
    delete[] if_list;
 #endif  /* defined(HAVE_GETIFADDRS) */
+
+   return host_addrs;
 }
 
 }

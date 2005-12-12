@@ -61,8 +61,8 @@ void InetAddrTest::testAddressLookup ()
    CPPUNIT_ASSERT(addr3.getAddressString() == addr4.getAddressString());
    CPPUNIT_ASSERT(addr3 == addr4);
    std::string addr3_hn, addr4_hn;
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("", addr3.getHostname(addr3_hn));
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("", addr4.getHostname(addr4_hn));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("", addr3_hn = addr3.getHostname());
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("", addr4_hn = addr4.getHostname());
    CPPUNIT_ASSERT(addr3_hn == addr4_hn);
    CPPUNIT_ASSERT(addr3 == addr5);
 #endif
@@ -73,7 +73,8 @@ void InetAddrTest::testLocalAddressLookup ()
    vpr::InetAddr empty_addr, local_addr;
 
    CPPUNIT_ASSERT(empty_addr == local_addr && "Default addresses not equal");
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Local host lookup failed", vpr::InetAddr::getLocalHost(local_addr));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Local host lookup failed",
+                                   local_addr = vpr::InetAddr::getLocalHost());
    CPPUNIT_ASSERT(empty_addr != local_addr && "Default addresses not equal");
 }
 
@@ -86,16 +87,14 @@ void InetAddrTest::testGetAllLocalAddrs()
    localhost.setAddress("127.0.0.1");
    localhost.setPort(0);
 
-   vpr::InetAddr default_addr;
-   vpr::InetAddr::getLocalHost(default_addr);
+   vpr::InetAddr default_addr = vpr::InetAddr::getLocalHost();
 
    // Get all local addresses without loopback.
    try
    {
-      std::vector<vpr::InetAddr> addrs;
       std::vector<vpr::InetAddr>::iterator a;
 
-      vpr::InetAddr::getAllLocalAddrs(addrs);
+      std::vector<vpr::InetAddr> addrs = vpr::InetAddr::getAllLocalAddrs();
 
       a = std::find(addrs.begin(), addrs.end(), localhost);
       CPPUNIT_ASSERT(a == addrs.end() && "Loopback should not be present");
@@ -114,10 +113,9 @@ void InetAddrTest::testGetAllLocalAddrs()
    // Get all local addresses with loopback.
    try
    {
-      std::vector<vpr::InetAddr> addrs;
       std::vector<vpr::InetAddr>::iterator a;
 
-      vpr::InetAddr::getAllLocalAddrs(addrs, true);
+      std::vector<vpr::InetAddr> addrs = vpr::InetAddr::getAllLocalAddrs(true);
 
       a = std::find(addrs.begin(), addrs.end(), localhost);
       CPPUNIT_ASSERT(a != addrs.end() && "Loopback should be present");

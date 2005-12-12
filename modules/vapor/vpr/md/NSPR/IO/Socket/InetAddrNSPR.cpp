@@ -52,32 +52,34 @@
 namespace vpr
 {
 
-void getIfAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
-                const bool withLoopback);
+std::vector<vpr::InetAddrNSPR> getIfAddrs(const bool withLoopback);
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
-void InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& hostAddr)
-   throw (UnknownHostException)
+vpr::InetAddrNSPR InetAddrNSPR::getLocalHost() throw (UnknownHostException)
 {
    char local_host_name[257];
    memset(local_host_name, 0, 257);
 
+   vpr::InetAddrNSPR localhost;
+
    if ( PR_GetSystemInfo(PR_SI_HOSTNAME, local_host_name, 256) == PR_SUCCESS )
    {
-      hostAddr.setAddress(std::string(local_host_name), 0);
+      localhost.setAddress(std::string(local_host_name), 0);
    }
    else
    {
       throw UnknownHostException("No IP address for could be found for localhost.",
                                  VPR_LOCATION);
    }
+
+   return localhost;
 }
 
-void InetAddrNSPR::getAllLocalAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
-                                    const bool withLoopback)
+std::vector<vpr::InetAddrNSPR>
+InetAddrNSPR::getAllLocalAddrs(const bool withLoopback)
 {
-   vpr::getIfAddrs(hostAddrs, withLoopback);
+   return vpr::getIfAddrs(withLoopback);
 }
 
 // Set the address for this object using the given address.  It must be of the
@@ -158,13 +160,13 @@ std::string InetAddrNSPR::getAddressString() const
    return temp;
 }
 
-void InetAddrNSPR::getHostname(std::string& hostname) const
-   throw (UnknownHostException)
+std::string InetAddrNSPR::getHostname() const throw (UnknownHostException)
 {
    char buffer[PR_NETDB_BUF_SIZE];
    memset(buffer, 0, PR_NETDB_BUF_SIZE);
    PRStatus ret_status;
    PRHostEnt hostent;
+   std::string hostname;
 
    ret_status = PR_GetHostByAddr(&mAddr, buffer, sizeof(buffer), &hostent);
 
@@ -180,6 +182,8 @@ void InetAddrNSPR::getHostname(std::string& hostname) const
    {
       hostname = hostent.h_name;
    }
+
+   return hostname;
 }
 
 std::vector<std::string> InetAddrNSPR::getHostnames() const
