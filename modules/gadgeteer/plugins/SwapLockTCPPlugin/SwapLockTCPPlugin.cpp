@@ -271,11 +271,8 @@ namespace cluster
          // return result
          
          // Get the localhost name.
-         vpr::InetAddr local;
-         vpr::InetAddr::getLocalHost(local);
-
-         std::string local_host_name;
-         local.getHostname(local_host_name);
+         std::string local_host_name =
+            vpr::InetAddr::getLocalHost().getHostname();
 
          SyncRequest sync_request(local_host_name, mTCPport);
          
@@ -544,15 +541,11 @@ namespace cluster
             setActive(true);
 
             // Get the localhost name.
-            vpr::InetAddr local;
-            vpr::InetAddr::getLocalHost(local);
-
-            std::string host;
-            local.getHostname(host);
+            const std::string host =
+               vpr::InetAddr::getLocalHost().getHostname();
             vpr::Uint16 temp_port = mTCPport;
 
             SyncAck temp_ack(host, temp_port, true);
-
 
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin]")

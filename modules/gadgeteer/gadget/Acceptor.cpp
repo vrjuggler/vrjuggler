@@ -171,8 +171,9 @@ namespace gadget
             client_sock->setNoDelay( true );
 
             // Get the hostname and port of the requesting host.
-            std::string remote_host_name;
-            client_sock->getRemoteAddr().getHostname( remote_host_name );
+            const std::string remote_host_name(
+               client_sock->getRemoteAddr().getHostname()
+            );
             vpr::Uint16 port = client_sock->getRemoteAddr().getPort();
 
             vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
@@ -196,10 +197,8 @@ namespace gadget
             else
             {
                // Get address information about local host.
-               vpr::InetAddr local;
-               std::string local_hostname;
-               vpr::InetAddr::getLocalHost( local );
-               local.getHostname( local_hostname );
+               const vpr::InetAddr local = vpr::InetAddr::getLocalHost();
+               const std::string local_hostname = local.getHostname();
                cluster::ConnectionAck* temp = NULL;
 
                if( remote_node->getStatus() == Node::CONNECTED || 

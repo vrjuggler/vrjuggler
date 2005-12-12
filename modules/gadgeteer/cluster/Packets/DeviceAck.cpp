@@ -51,10 +51,7 @@ namespace cluster
       mAck = ack;
       
       // Get the localhost name.
-      vpr::InetAddr local;
-      vpr::InetAddr::getLocalHost(local);
-
-      local.getHostname(mHostname);
+      mHostname = vpr::InetAddr::getLocalHost().getHostname();
 
       // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,

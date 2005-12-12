@@ -73,10 +73,7 @@ namespace gadget
       test.setAddress(test_host_name, 0);
 
       // Get local address.
-      vpr::InetAddr local;
-      vpr::InetAddr::getLocalHost(local);
-      
-      return (hostCompare(local, test));
+      return hostCompare(vpr::InetAddr::getLocalHost(), test);
    }
 
    bool AbstractNetworkManager::hostCompare(const vpr::InetAddr& first, const vpr::InetAddr& second)
