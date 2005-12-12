@@ -158,16 +158,41 @@ namespace vrj
                        (std::string("lib") + bit_suffix) /
                        std::string("vrjuggler") / std::string("plugins");
 
-      // In the long run, we may not want to hard-code the base name of the
-      // plug-in we load.  If we ever reach a point where we have multiple ways
-      // of implementing remote performance monitoring, we could have options
-      // for which plug-in to load.
-      const std::string perf_mon_dso("corba_perf_mon");
-      const std::string init_func("initPlugin");
-      Callable functor(this);
-      vpr::LibraryLoader::findDSOAndCallEntryPoint(perf_mon_dso, search_path,
-                                                   init_func, functor,
-                                                   mPluginDSO);
+      try
+      {
+         // In the long run, we may not want to hard-code the base name of the
+         // plug-in we load.  If we ever reach a point where we have multiple
+         // ways of implementing remote performance monitoring, we could have
+         // options for which plug-in to load.
+         const std::string perf_mon_dso("corba_perf_mon");
+         const std::string init_func("initPlugin");
+         Callable functor(this);
+         vpr::LibraryLoader::findDSOAndCallEntryPoint(perf_mon_dso,
+                                                      search_path, init_func,
+                                                      functor, mPluginDSO);
+      }
+      catch (vpr::Exception&)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Failed to load the remote performance monitoring plug-in."
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Remote performance monitoring is disabled." << std::endl
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "(This is not a fatal error.)" << std::endl << vprDEBUG_FLUSH;
+
+         // The plug-in is not usable, so we can unload it.
+         if ( mPluginDSO.get() != NULL )
+         {
+            if ( mPluginDSO->isLoaded() )
+            {
+               mPluginDSO->unload();
+            }
+
+            mPluginDSO.reset();
+         }
+      }
    }
 
    void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
