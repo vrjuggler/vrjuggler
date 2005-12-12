@@ -42,10 +42,13 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/param.h>
+#include <net/if.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -378,38 +381,27 @@ void InetAddrBSD::copy(const InetAddrBSD& addr)
 vpr::ReturnStatus InetAddrBSD::lookupAddress(const std::string& address)
 {
    vpr::ReturnStatus retval;
-   struct hostent* host_entry;
+   struct addrinfo* addrs;
 
-   // First, try looking the host up by name.
-   host_entry = gethostbyname(address.c_str());
+   struct addrinfo hints;
+   memset((void*) &hints, 0, sizeof(hints));
+   hints.ai_flags = AF_INET;
 
-   // If that succeeded, put the result in mRemoteAddr.
-   if ( host_entry != NULL )
+   int result = getaddrinfo(address.c_str(), NULL, &hints, &addrs);
+
+   if ( result == 0 )
    {
-      copyAddressValue(host_entry->h_addr);
+      memcpy((void*) &mAddr, addrs->ai_addr, addrs->ai_addrlen);
+      freeaddrinfo(addrs);
    }
-   // If gethostbyname(3) failed, the address string may be an IP address.
    else
    {
-      in_addr_t addr;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING")
+         << ": Could not find address for '" << address << "': "
+         << gai_strerror(result) << std::endl << vprDEBUG_FLUSH;
 
-      // Try looking it up with inet_addr(3).
-      addr = inet_addr(address.c_str());
-
-      // If the address string could not be found using inet_addr(3), then
-      // return error status.
-      if ( addr == INADDR_NONE )
-      {
-         fprintf(stderr,
-                 "[vpr::InetAddrBSD] Could not find address for '%s': %s\n",
-                 address.c_str(), strerror(errno));
-         retval.setCode(ReturnStatus::Fail);
-      }
-      // Otherwise, we found the integer address successfully.
-      else
-      {
-         setAddressValue(addr);
-      }
+      retval.setCode(vpr::ReturnStatus::Fail);
    }
 
    return retval;
