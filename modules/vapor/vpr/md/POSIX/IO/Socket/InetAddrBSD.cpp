@@ -247,7 +247,8 @@ void InetAddrBSD::setFamily(const vpr::SocketTypes::Domain family)
       default:
          {
             std::ostringstream msg_stream;
-            msg_stream << "Unknown socket family value " << family;
+            msg_stream << "Unknown socket family value "
+                       << (unsigned long) family;
             throw IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
          }
          break;
