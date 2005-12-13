@@ -177,8 +177,8 @@ void InputAreaXWin::handleEvent(::XEvent& event)
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)    //vprDBG_HVERB_LVL
             << "KeyPress: " << std::hex << key
             << " state: " << ((XKeyEvent*)&event)->state
-            << " ==> " << (unsigned int) xKeyToKey(key) << std::endl
-            << vprDEBUG_FLUSH;
+            << " ==> " << (unsigned int) xKeyToKey(key) << std::dec
+            << std::endl << vprDEBUG_FLUSH;
 
          break;
 
@@ -206,8 +206,8 @@ void InputAreaXWin::handleEvent(::XEvent& event)
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "KeyRelease:" << std::hex << key
             << " state:" << ((XKeyEvent*)&event)->state
-            << " ==> " << (unsigned int) xKeyToKey(key) << std::endl
-            << vprDEBUG_FLUSH;
+            << " ==> " << (unsigned int) xKeyToKey(key) << std::dec
+            << std::endl << vprDEBUG_FLUSH;
          break;
 
       // A MotionNotify event (mouse pointer movement) occurred.
