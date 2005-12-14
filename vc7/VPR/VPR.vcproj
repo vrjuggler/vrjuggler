@@ -425,9 +425,6 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\InetAddr.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\InetAddrBase.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\InetAddrNSPR.h">
 			</File>
 			<File
