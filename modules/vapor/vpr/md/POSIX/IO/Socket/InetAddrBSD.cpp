@@ -63,6 +63,7 @@
 
 #include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
 
 #ifndef INADDR_NONE
 #  define INADDR_NONE 0xffffffff   /* -1 return */
