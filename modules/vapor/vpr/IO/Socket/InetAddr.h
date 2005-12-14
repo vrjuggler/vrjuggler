@@ -72,7 +72,7 @@ namespace vpr
  */
 struct InetAddrHash
 {
-   size_t operator() (vpr::InetAddr addr) const
+   size_t operator() (const vpr::InetAddr& addr) const
    {
       return ((addr.getAddressValue() << 16) | addr.getPort());
    }
