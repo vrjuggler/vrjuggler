@@ -745,7 +745,8 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
 
          start_dir = os.path.join(startDir, f)
          dest_dir  = os.path.join(destDir, f)
-         installDir(start_dir, dest_dir, allowedExts, disallowedExts)
+         installDir(start_dir, dest_dir, allowedExts, disallowedExts,
+                    disallowedFiles)
       else:
          (root, f_ext) = os.path.splitext(f)
          if allowedExts is None:
