@@ -753,7 +753,6 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
             if f_ext not in disallowedExts:
                shutil.copy2(f, destDir)
          elif f_ext in allowedExts:
-            (head, tail) = os.path.split(f)
             if f not in disallowedFiles:
                shutil.copy2(f, destDir)
 
