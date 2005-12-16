@@ -97,7 +97,7 @@ public:
    }
 
    /**
-    * Returns the local host's address via the given object reference.
+    * Returns the local host's default address via the given object reference.
     *
     * @param hostAddr Storage for the returned address object.
     *
@@ -105,6 +105,33 @@ public:
     *         an address.  Otherwise, vpr::ReturnStatus::Fail is returned.
     */
    static vpr::ReturnStatus getLocalHost(vpr::InetAddrNSPR& hostAddr);
+
+   /**
+    * Retrieves all the IPv4 addresses associated with the local machine,
+    * including the loopback address (127.0.0.1) if so indicated.
+    *
+    * @post \p hostAddrs contains vpr::InetAddr objetcs holding all the local
+    *       IPv4 addresses for the local machine.
+    *
+    * @param hostAddrs    Storage for the discovered local IPv4 addresses.
+    *                     The vector is cleared before the addresses are
+    *                     added, so any objects currently in the vector are
+    *                     lost.
+    * @param withLoopback A flag indicating whether to include the loopback
+    *                     address (127.0.0.1) in \p hostAddrs. This parameter
+    *                     is optional and defaults to false.
+    *
+    * @note This method currently supports only IPv4.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the querying of all
+    *         local addresses completes without error. Otherwise,
+    *         vpr::ReturnStatus::Fail is returned.
+    *
+    * @since 1.0.2
+    */
+   static vpr::ReturnStatus
+      getAllLocalAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
+                       const bool withLoopback = false);
 
    /**
     * Sets the address for this object using the given address.  It must be

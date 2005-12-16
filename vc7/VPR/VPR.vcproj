@@ -152,6 +152,9 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\md\common\InetAddrHelpers.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\InetAddrNSPR.cpp">
 			</File>
 			<File

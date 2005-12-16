@@ -71,6 +71,9 @@
 namespace vpr
 {
 
+vpr::ReturnStatus getIfAddrs(std::vector<vpr::InetAddrBSD>& hostAddrs,
+                             const bool withLoopback);
+
 const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to ANY addr
 
 InetAddrBSD::InetAddrBSD()
@@ -98,6 +101,13 @@ vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
    }
 
    return status;
+}
+
+vpr::ReturnStatus
+InetAddrBSD::getAllLocalAddrs(std::vector<vpr::InetAddrBSD>& hostAddrs,
+                              const bool withLoopback)
+{
+   return vpr::getIfAddrs(hostAddrs, withLoopback);
 }
 
 /**
