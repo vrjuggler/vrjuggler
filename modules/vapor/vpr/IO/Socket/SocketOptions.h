@@ -46,6 +46,7 @@
 
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/McastReq.h>
+#include <vpr/IO/Socket/SocketException.h>
 
 
 namespace vpr

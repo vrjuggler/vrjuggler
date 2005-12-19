@@ -51,6 +51,7 @@
 
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/UnknownHostException.h>
 #include <vpr/Util/IllegalArgumentException.h>
 
 
