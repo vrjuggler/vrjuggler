@@ -57,8 +57,8 @@ int main (int argc, char* argv[])
          catch (CORBA::Exception& ex)
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "Caught an unknown CORBA exception when trying to register!\n"
-               << vprDEBUG_FLUSH;
+               << "Caught CORBA exception '" << ex._name()
+               << "' when trying to register!\n" << vprDEBUG_FLUSH;
          }
 
          if ( ! status.success() )
