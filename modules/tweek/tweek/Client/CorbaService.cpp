@@ -141,8 +141,8 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
          << "Caught CORBA::SystemException during initialization\n"
          << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-         << "Minor code: " << sysEx.minor() << ", completed: "
-         << vprDEBUG_FLUSH;
+         << "Name: " << sysEx._name() << ", minor code: " << sysEx.minor()
+         << ", completed: " << vprDEBUG_FLUSH;
 
       switch ( sysEx.completed() )
       {

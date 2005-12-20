@@ -478,7 +478,8 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
 void CorbaManager::printSystemException(const CORBA::SystemException& ex,
                                         const int debugLevel)
 {
-   vprDEBUG(tweekDBG_CORBA, debugLevel) << "Minor code: " << ex.minor()
+   vprDEBUG(tweekDBG_CORBA, debugLevel) << "Name: " << ex._name()
+                                        << ", minor code: " << ex.minor()
                                         << ", completed: " << vprDEBUG_FLUSH;
 
    switch ( ex.completed() )
