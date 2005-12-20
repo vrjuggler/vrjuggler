@@ -478,9 +478,19 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
 void CorbaManager::printSystemException(const CORBA::SystemException& ex,
                                         const int debugLevel)
 {
+#ifdef TWEEK_USE_OMNIORB
+   vprDEBUG_NEXT(tweekDBG_CORBA, debugLevel)
+      << "Name: " << ex._name() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(tweekDBG_CORBA, debugLevel)
+      << "Minor code: " << ex.NP_minorString() << " (" << ex.minor()
+      << ")" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(tweekDBG_CORBA, debugLevel)
+      << "Completed: " << vprDEBUG_FLUSH;
+#else
    vprDEBUG(tweekDBG_CORBA, debugLevel) << "Name: " << ex._name()
                                         << ", minor code: " << ex.minor()
                                         << ", completed: " << vprDEBUG_FLUSH;
+#endif
 
    switch ( ex.completed() )
    {

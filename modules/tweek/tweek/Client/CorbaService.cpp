@@ -140,9 +140,19 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught CORBA::SystemException during initialization\n"
          << vprDEBUG_FLUSH;
+#ifdef TWEEK_USE_OMNIORB
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Name: " << sysEx._name() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Minor code: " << sysEx.NP_minorString() << " (" << sysEx.minor()
+         << ")" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Completed: " << vprDEBUG_FLUSH;
+#else
       vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Name: " << sysEx._name() << ", minor code: " << sysEx.minor()
          << ", completed: " << vprDEBUG_FLUSH;
+#endif
 
       switch ( sysEx.completed() )
       {
