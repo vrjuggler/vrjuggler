@@ -42,6 +42,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <tweek/Util/Debug.h>
+#include <tweek/CORBA/CorbaHelpers.h>
 #include <tweek/CORBA/SubjectImpl.h>
 
 
@@ -99,7 +100,19 @@ void SubjectImpl::notify() throw(CORBA::SystemException)
 
    for ( i = m_observers.begin(); i != m_observers.end(); i++ )
    {
-      (*i)->update();
+      try
+      {
+         (*i)->update();
+      }
+      catch (CORBA::SystemException& ex)
+      {
+         vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": [tweek::SubjectImpl::notify()] "
+            << "Caught CORBA system exception while notifying observer:\n"
+            << vprDEBUG_FLUSH;
+         printSystemException(ex, vprDBG_WARNING_LVL);
+      }
    }
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Done notifying observers\n"
