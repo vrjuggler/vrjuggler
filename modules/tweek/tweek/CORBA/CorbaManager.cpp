@@ -475,29 +475,6 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    return status;
 }
 
-void CorbaManager::printSystemException(const CORBA::SystemException& ex,
-                                        const int debugLevel)
-{
-   vprDEBUG(tweekDBG_CORBA, debugLevel) << "Minor code: " << ex.minor()
-                                        << ", completed: " << vprDEBUG_FLUSH;
-
-   switch ( ex.completed() )
-   {
-      case CORBA::COMPLETED_YES:
-         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "YES" << std::endl
-                                                   << vprDEBUG_FLUSH;
-         break;
-      case CORBA::COMPLETED_NO:
-         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "NO" << std::endl
-                                                   << vprDEBUG_FLUSH;
-         break;
-      case CORBA::COMPLETED_MAYBE:
-         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "MAYBE" << std::endl
-                                                   << vprDEBUG_FLUSH;
-         break;
-   }
-}
-
 void CorbaManager::run()
 {
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server is running!\n"

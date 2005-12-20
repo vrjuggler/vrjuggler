@@ -141,4 +141,38 @@ CosNaming::NamingContext_var bindLocalNamingContext(CosNaming::NamingContext_ptr
    return local_context;
 }
 
+void printSystemException(const CORBA::SystemException& ex,
+                          const int debugLevel)
+{
+#ifdef TWEEK_USE_OMNIORB
+   vprDEBUG_NEXT(tweekDBG_CORBA, debugLevel)
+      << "Name: " << ex._name() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(tweekDBG_CORBA, debugLevel)
+      << "Minor code: " << ex.NP_minorString() << " (" << ex.minor()
+      << ")" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(tweekDBG_CORBA, debugLevel)
+      << "Completed: " << vprDEBUG_FLUSH;
+#else
+   vprDEBUG(tweekDBG_CORBA, debugLevel) << "Name: " << ex._name()
+                                        << ", minor code: " << ex.minor()
+                                        << ", completed: " << vprDEBUG_FLUSH;
+#endif
+
+   switch ( ex.completed() )
+   {
+      case CORBA::COMPLETED_YES:
+         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "YES" << std::endl
+                                                   << vprDEBUG_FLUSH;
+         break;
+      case CORBA::COMPLETED_NO:
+         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "NO" << std::endl
+                                                   << vprDEBUG_FLUSH;
+         break;
+      case CORBA::COMPLETED_MAYBE:
+         vprDEBUG_CONT(tweekDBG_CORBA, debugLevel) << "MAYBE" << std::endl
+                                                   << vprDEBUG_FLUSH;
+         break;
+   }
+}
+
 } // End of tweek namespace

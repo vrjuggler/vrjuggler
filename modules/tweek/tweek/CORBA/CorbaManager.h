@@ -208,9 +208,6 @@ public:
 private:
    vpr::ReturnStatus createChildPOA(const std::string& local_id);
 
-   void printSystemException(const CORBA::SystemException& ex,
-                             const int debugLevel);
-
    std::string mAppName;
 
    vpr::ThreadRunFunctor<tweek::CorbaManager>* mOrbFunctor;
