@@ -89,6 +89,17 @@ CosNaming::NamingContext_var getRootNamingContextByURI(CORBA::ORB_ptr orb,
 CosNaming::NamingContext_var bindLocalNamingContext(CosNaming::NamingContext_ptr parentContext,
                                                     const std::string& localId);
 
+/**
+ * Prints the given CORBA system exception to standard out (stdout) using
+ * vpr::Debug.
+ *
+ * @param ex         The exception to be printed to stdout.
+ * @param debugLevel The vpr::Debug output level at which the exception state
+ *                   will be printed.
+ */
+void printSystemException(const CORBA::SystemException& ex,
+                          const int debugLevel);
+
 } // End of tweek namespace
 
 
