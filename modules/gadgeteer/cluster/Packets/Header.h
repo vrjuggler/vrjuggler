@@ -71,7 +71,10 @@ public:
     * Directly read the needed header data from socket(blocking), and parse the
     * header.
     */
-   Header( vpr::SocketStream* stream ) throw( cluster::ClusterException );
+   Header() : mPacketReader(NULL), mPacketWriter(NULL)
+   {;}
+
+   void readData( vpr::SocketStream* stream ) throw( cluster::ClusterException );
 
    Header( vpr::Uint16 RIM_code, vpr::Uint16 packet_type,
            vpr::Uint32 packet_length, vpr::Uint32 frame );

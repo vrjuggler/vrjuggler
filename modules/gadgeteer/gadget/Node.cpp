@@ -440,7 +440,20 @@ cluster::Packet* Node::recvPacket()
    
    vpr::Guard<vpr::Mutex> guard(mSockReadLock);
    
-   cluster::Header* packet_head = new cluster::Header(mSockStream);
+   cluster::Header* packet_head = new cluster::Header();
+   
+   try
+   {
+      packet_head->readData(mSockStream);
+   }
+   catch (vpr::IOException& ex)
+   {
+      vprDEBUG( gadgetDBG_RIM, vprDBG_HVERB_LVL )
+         << clrOutNORM(clrRED, "ERROR: ")
+         << "Node::recvPacket() Could not read the header from the socket." << std::endl
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+      throw ex;
+   }
    
    vprDEBUG( gadgetDBG_RIM, vprDBG_HVERB_LVL )
       << "Node::recvPacket() PacketFactory is trying to make a packet type: " 
