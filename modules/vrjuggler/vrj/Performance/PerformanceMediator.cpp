@@ -57,7 +57,17 @@ namespace vrj
    PerformanceMediator::PerformanceMediator()
    : mPerfIf(NULL)
    {
-      loadPerfPlugin();
+      try
+      {
+         loadPerfPlugin();
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutNORM(clrYELLOW, "WARNING:")
+            << " Caught exception: " << ex.getExtendedDescription()
+            << std::endl << vprDEBUG_FLUSH;
+      }
    }
 
    PerformanceMediator::~PerformanceMediator()
