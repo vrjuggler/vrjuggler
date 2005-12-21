@@ -46,6 +46,8 @@
 
 namespace vpr
 {
+/** Number of bytes used to store the size of the string. */
+const unsigned int BufferObjectReader::STRING_LENGTH_SIZE = 4;
 
 BufferObjectReader::BufferObjectReader(std::vector<vpr::Uint8>* data,
                                        const unsigned int curPos)

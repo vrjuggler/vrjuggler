@@ -66,6 +66,9 @@ namespace vpr
 class VPR_CLASS_API BufferObjectReader : public ObjectReader
 {
 public:
+   /** Number of bytes used to store the size of the string. */
+   static const unsigned int STRING_LENGTH_SIZE;
+
    BufferObjectReader(std::vector<vpr::Uint8>* data,
                       const unsigned int curPos = 0);
 
@@ -74,6 +77,11 @@ public:
    void setCurPos(const unsigned int val)
    {
       mCurHeadPos = val;
+   }
+
+   std::vector<vpr::Uint8*>::size_type getSize()
+   {
+      return mData->size();
    }
 
    unsigned int getCurPos()
@@ -365,6 +373,7 @@ inline double BufferObjectReader::readDouble() throw (IOException)
 
 inline std::string BufferObjectReader::readString() throw (IOException)
 {
+   // Note: If you change this, you need to change STRING_LENGTH_SIZE
    vpr::Uint32 str_len = readUint32();
    std::string ret_val;
    char tempChar;
@@ -384,12 +393,12 @@ inline bool BufferObjectReader::readBool() throw (IOException)
 inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
    throw (IOException)
 {
-   mCurHeadPos += len;
-
-   if ( mCurHeadPos - len >= mData->size() )
+   if ( mCurHeadPos >= mData->size() )
    {
       throw EOFException("Attempted to read beyond data block", VPR_LOCATION);
    }
+
+   mCurHeadPos += len;
 
    return &((*mData)[mCurHeadPos-len]);
 }
