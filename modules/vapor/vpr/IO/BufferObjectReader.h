@@ -283,8 +283,8 @@ inline bool BufferObjectReader::readBool()
 
 inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
 {
+   vprASSERT(mCurHeadPos < mData->size());
    mCurHeadPos += len;
-   vprASSERT((mCurHeadPos-len) < mData->size());
 
    return &((*mData)[mCurHeadPos-len]);
 }
