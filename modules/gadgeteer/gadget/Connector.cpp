@@ -96,7 +96,23 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          << " Successfully connected to: "
          << node->getHostname() <<":"<< node->getPort()
          << std::endl << vprDEBUG_FLUSH;
+   }
+   catch (vpr::IOException&)
+   {
+      delete sock_stream;
+      
+      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_VERB_LVL )
+         << clrOutBOLD( clrBLUE, "[Connector]" )
+         << clrOutBOLD( clrRED, " ERROR:" )
+         << " Could not connect to Node: "
+         << node->getHostname() << " : " << node->getPort()
+         << std::endl << vprDEBUG_FLUSH;
          
+      return vpr::ReturnStatus::Fail;
+   }
+
+   try
+   {
       sock_stream->setNoDelay( true );
       vpr::SocketStream* old_stream = node->getSockStream();
       node->setSockStream( sock_stream );
@@ -151,15 +167,16 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          return vpr::ReturnStatus::Fail;
       }
    }
-   catch (vpr::IOException&)
+   catch (vpr::IOException& ex)
    {
       delete sock_stream;
       
-      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_VERB_LVL )
+      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
          << clrOutBOLD( clrBLUE, "[Connector]" )
          << clrOutBOLD( clrRED, " ERROR:" )
-         << " Could not connect to Node: "
+         << " reading ACK/NACK from: "
          << node->getHostname() << " : " << node->getPort()
+         << std::endl << ex.what()
          << std::endl << vprDEBUG_FLUSH;
          
       return vpr::ReturnStatus::Fail;
