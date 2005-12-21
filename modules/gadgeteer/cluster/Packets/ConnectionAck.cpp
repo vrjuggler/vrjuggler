@@ -49,7 +49,7 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_CONNECTION_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 /* Uint16 for length*/
+                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
                                       + mHostname.size()
                                       + 2 /*mPort*/
                                       + 1 /*mAck*/,
@@ -79,11 +79,30 @@ namespace cluster
    
    void ConnectionAck::parse(vpr::BufferObjectReader* reader)
    {
+      vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL) 
+         << clrOutBOLD(clrYELLOW, "ConnectionAck data size:    ")
+         << reader->getSize()
+         << std::endl << vprDEBUG_FLUSH;
+
+      vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL) 
+         << clrOutBOLD(clrYELLOW, "ConnectionAck::parse() mCurPos:    ")
+         << reader->getCurPos()
+         << std::endl << vprDEBUG_FLUSH;
       // De-Serialize the hostname of the acknowledging node
       mHostname = reader->readString();
-         
+ 
+      vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL) 
+         << clrOutBOLD(clrYELLOW, "ConnectionAck::parse() mCurPos:    ")
+         << reader->getCurPos()
+         << std::endl << vprDEBUG_FLUSH;
+        
       // De-Serialize the listening port of the acknowledging node
       mPort = reader->readUint16();
+
+      vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL) 
+         << clrOutBOLD(clrYELLOW, "ConnectionAck::parse() mCurPos:    ")
+         << reader->getCurPos()
+         << std::endl << vprDEBUG_FLUSH;
 
       // De-Serialize the Ack boolean
       mAck = reader->readBool();
