@@ -446,8 +446,9 @@ namespace cluster
             catch(cluster::ClusterException& cluster_exception)
             {
                vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-                  << clrOutBOLD(clrRED, "ERROR") << ": "
-                  << cluster_exception.what() << std::endl << vprDEBUG_FLUSH;
+                  << clrOutBOLD(clrRED, "ERROR: ")
+                  << cluster_exception.what()
+                  << std::endl << vprDEBUG_FLUSH;
 
                (*i)->shutdown();
             }
