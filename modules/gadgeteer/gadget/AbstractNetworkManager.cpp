@@ -92,8 +92,34 @@ namespace gadget
             << std::setw(16) << remote_address.getAddressString() << " | "
             << std::endl << vprDEBUG_FLUSH;
 
-      // Get all local interfaces.
-      std::vector<vpr::InetAddr> local_interfaces = vpr::InetAddr::getAllLocalAddrs();
+      // Try to get all local interfaces.
+      //   - Fall back on local host
+      std::vector<vpr::InetAddr> local_interfaces;
+      try
+      {
+         local_interfaces = vpr::InetAddr::getAllLocalAddrs();
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_NET_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING: ")
+            << "Failed to get list of local interfaces: "
+            << ex.getExtendedDescription()
+            << std::endl << vprDEBUG_FLUSH;
+         try
+         {
+            vpr::InetAddr local_host = vpr::InetAddr::getLocalHost();
+            local_interfaces.push_back(local_host);
+         }
+         catch (vpr::Exception& ex)
+         {
+            vprDEBUG(gadgetDBG_NET_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING: ")
+               << "Failed to get local host: "
+               << ex.getExtendedDescription()
+               << std::endl << vprDEBUG_FLUSH;
+         }
+      }
 
       // Print debug information about all local interfaces.
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
