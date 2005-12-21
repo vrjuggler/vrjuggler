@@ -80,6 +80,12 @@ public:
       mCurHeadPos = val;
    }
 
+   /** @since 1.0.2 */
+   std::vector<vpr::Uint8*>::size_type getSize()
+   {
+      return mData->size();
+   }
+
    unsigned int getCurPos()
    {
       return mCurHeadPos;
