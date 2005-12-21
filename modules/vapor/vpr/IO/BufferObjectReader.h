@@ -65,6 +65,13 @@ namespace vpr
 class VPR_CLASS_API BufferObjectReader : public ObjectReader
 {
 public:
+   /**
+    * Number of bytes used to store the size of the string.
+    *
+    * @since 1.0.2
+    */
+   static const unsigned int STRING_LENGTH_SIZE;
+
    BufferObjectReader(std::vector<vpr::Uint8>* data,
                       const unsigned int curPos = 0);
 
@@ -257,6 +264,7 @@ inline double BufferObjectReader::readDouble()
 
 inline std::string BufferObjectReader::readString()
 {
+   // Note: If you change this, you need to change STRING_LENGTH_SIZE
    vpr::Uint32 str_len = readUint32();
    std::string ret_val;
    char tempChar;

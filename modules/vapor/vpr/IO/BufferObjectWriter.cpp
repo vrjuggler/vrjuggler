@@ -46,6 +46,8 @@
 
 namespace vpr
 {
+/** Number of bytes used to store the size of the string. */
+const unsigned int BufferObjectWriter::STRING_LENGTH_SIZE = 4;
 
 BufferObjectWriter::BufferObjectWriter()
    : mData(new std::vector<vpr::Uint8>)

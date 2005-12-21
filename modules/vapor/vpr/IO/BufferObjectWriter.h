@@ -62,6 +62,13 @@ namespace vpr
 class VPR_CLASS_API BufferObjectWriter : public ObjectWriter
 {
 public:
+   /**
+    * Number of bytes used to store the size of the string.
+    *
+    * @since 1.0.2
+    */
+   static const unsigned int STRING_LENGTH_SIZE;
+
    BufferObjectWriter();
 
    BufferObjectWriter(std::vector<vpr::Uint8>* data,
@@ -179,6 +186,7 @@ inline vpr::ReturnStatus BufferObjectWriter::writeDouble(double val)
 
 inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
 {
+   // Note: If you change this, you need to change STRING_LENGTH_SIZE
    writeUint32(val.size());
 
    for ( vpr::Uint32 i = 0; i < val.length(); ++i )
