@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-12-21 aronb    Added vpr::BufferObjectReader::STRING_SIZE_LENGTH and
+                    vpr::BufferObjectWriter::STRING_SIZE_LENGTH.
+                    NEW VERSION: 1.1.15
 2005-12-14 patrickh Removed vpr::InetAddrBase.
                     NEW VERSION: 1.1.14
 2005-12-12 patrickh Changed the signatures of vpr::InetAddr::getLocalHost(),

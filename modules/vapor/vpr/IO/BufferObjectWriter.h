@@ -62,7 +62,11 @@ namespace vpr
 class VPR_CLASS_API BufferObjectWriter : public ObjectWriter
 {
 public:
-   /** Number of bytes used to store the size of the string. */
+   /**
+    * Number of bytes used to store the size of the string.
+    *
+    * @since 1.1.15
+    */
    static const unsigned int STRING_LENGTH_SIZE;
 
    BufferObjectWriter();

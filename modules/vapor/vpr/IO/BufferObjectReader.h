@@ -66,7 +66,11 @@ namespace vpr
 class VPR_CLASS_API BufferObjectReader : public ObjectReader
 {
 public:
-   /** Number of bytes used to store the size of the string. */
+   /**
+    * Number of bytes used to store the size of the string.
+    *
+    * @since 1.1.15
+    */
    static const unsigned int STRING_LENGTH_SIZE;
 
    BufferObjectReader(std::vector<vpr::Uint8>* data,
@@ -79,6 +83,9 @@ public:
       mCurHeadPos = val;
    }
 
+   /**
+    * @since 1.1.15
+    */
    std::vector<vpr::Uint8*>::size_type getSize()
    {
       return mData->size();
