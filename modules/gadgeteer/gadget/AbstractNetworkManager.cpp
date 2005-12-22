@@ -33,6 +33,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <cluster/ClusterManager.h>
 #include <cluster/Packets/Header.h>
@@ -66,46 +67,69 @@ namespace gadget
    /**
     * Determine if the given hostname matches the local machine's hostname.
     */
-   bool AbstractNetworkManager::isLocalHost(const std::string& test_host_name)
+   bool AbstractNetworkManager::isLocalHost(const std::string& testHostName)
    {
       // Resolve the address of the hostname given to test.
-      vpr::InetAddr test;
-      test.setAddress(test_host_name, 0);
-
-      // Get local address.
-      vpr::InetAddr local;
-      vpr::InetAddr::getLocalHost(local);
-      
-      return (hostCompare(local, test));
-   }
-
-   bool AbstractNetworkManager::hostCompare(const vpr::InetAddr& first, const vpr::InetAddr& second)
-   {
-      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-         << "+================= Local addresses ==================+"
-         << std::endl << vprDEBUG_FLUSH;
-      std::vector<std::string> first_names = first.getHostnames();
-      for (std::vector<std::string>::iterator itr = first_names.begin() ; itr != first_names.end() ; ++itr)
-      {
-         vpr::InetAddr temp;
-         temp.setAddress( (*itr), 0 );
-         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-            << "| Name: " << std::setw(25) << (*itr) << " | "
-            << std::setw(16) << temp.getAddressString() << " | "
-            << std::endl << vprDEBUG_FLUSH;
-      }
+      vpr::InetAddr remote_address;
+      remote_address.setAddress(testHostName, 0);
 
       vprDEBUG(gadgetDBG_NET_MGR,vprDBG_HVERB_LVL)
          << "+======= Resolved addresses for given hostname ======+"
          << std::endl << vprDEBUG_FLUSH;
-      std::vector<std::string> second_names = second.getHostnames();
-      for (std::vector<std::string>::iterator itr = second_names.begin() ; itr != second_names.end() ; ++itr)
+
+      std::string remote_hostname;
+      if ( remote_address.getHostname(remote_hostname).failure() )
       {
-         vpr::InetAddr temp;
-         temp.setAddress( (*itr), 0 );
+         remote_hostname = "Error resolving remote hostname";
+      }
+
+      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
+            << "| Name: " << std::setw(25) << remote_hostname << " | "
+            << std::setw(16) << remote_address.getAddressString() << " | "
+            << std::endl << vprDEBUG_FLUSH;
+
+      // Get all local interfaces.
+      std::vector<vpr::InetAddr> local_interfaces;
+      vpr::ReturnStatus status;
+      status = vpr::InetAddr::getAllLocalAddrs(local_interfaces);
+
+      if ( status.failure() )
+      {
+         vprDEBUG(gadgetDBG_NET_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING: ")
+            << "Failed to get list of local interfaces!\n"
+            << vprDEBUG_FLUSH;
+
+         local_interfaces.clear();
+         vpr::InetAddr local_addr;
+         status = vpr::InetAddr::getLocalHost(local_addr);
+
+         if ( status.success() )
+         {
+            local_interfaces.push_back(local_addr);
+         }
+         else
+         {
+            vprDEBUG(gadgetDBG_NET_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING: ")
+               << "Failed to get local host!\n" << vprDEBUG_FLUSH;
+         }
+      }
+
+      // Print debug information about all local interfaces.
+      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
+         << "+================= Local interfaces =================+"
+         << std::endl << vprDEBUG_FLUSH;
+      for (std::vector<vpr::InetAddr>::iterator itr = local_interfaces.begin() ; itr != local_interfaces.end() ; ++itr)
+      {
+         std::string temp_hostname;
+         if ( (*itr).getHostname(temp_hostname).failure() )
+         {
+            temp_hostname = "Error getting hostname";
+         }
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-            << "| Name: " << std::setw(25) << (*itr) << " | "
-            << std::setw(16) << temp.getAddressString() << " | "
+            << "| Name: " << std::setw(25) << temp_hostname << " | "
+            << std::setw(16) << (*itr).getAddressString() << " | "
             << std::endl << vprDEBUG_FLUSH;
       }
 
@@ -113,20 +137,24 @@ namespace gadget
          << "+====================================================+"
          << std::endl << vprDEBUG_FLUSH;
 
-      bool result = false;
-      if (first.getAddressString() == second.getAddressString())
+      bool result(false);
+      for (std::vector<vpr::InetAddr>::iterator itr = local_interfaces.begin() ; itr != local_interfaces.end() ; ++itr)
       {
-         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-            << "| We have a match.                                   |"
-            << std::endl << vprDEBUG_FLUSH;
-         result = true;
-      }
-      else
-      {
-         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-            << "| NO match.                                          |"
-            << std::endl << vprDEBUG_FLUSH;
-         result = false;
+         if ((*itr).getAddressValue() == remote_address.getAddressValue())
+         {
+            vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
+               << "| We have a match.                  "
+               << std::setw(16) << (*itr).getAddressString() << " |"
+               << std::endl << vprDEBUG_FLUSH;
+            result = true;
+         }
+         else
+         {
+            vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
+               << "| NO match.                         "
+               << std::setw(16) << (*itr).getAddressString() << " |"
+               << std::endl << vprDEBUG_FLUSH;
+         }
       }
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
          << "+====================================================+"
@@ -186,7 +214,7 @@ namespace gadget
    }
 
    vpr::ReturnStatus AbstractNetworkManager::addNode(const std::string& name, const std::string& host_name,
-                                                    const vpr::Uint16& port, vpr::SocketStream* socket_stream)
+                                                    const vpr::Uint16& port, vpr::SocketStream* socketStream)
    {
       // -Create a new Node using the given information
       // -Add the new node to the AbstractNetworkManager
@@ -196,7 +224,7 @@ namespace gadget
          << " Adding node: " << name
          << std::endl << vprDEBUG_FLUSH;
 
-      Node* temp_node = new Node(name, host_name, port, socket_stream, this);
+      Node* temp_node = new Node(name, host_name, port, socketStream, this);
       mNodes.push_back( temp_node );
       
       return vpr::ReturnStatus::Succeed;
@@ -212,6 +240,23 @@ namespace gadget
          << std::endl << vprDEBUG_FLUSH;
 
       mNodes.push_back( node );
+   }
+
+   void AbstractNetworkManager::removeNode(const std::string& nodeHostname)
+   {
+      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
+         << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+         << " Removing node: " << nodeHostname
+         << std::endl << vprDEBUG_FLUSH;
+
+      for (std::vector<gadget::Node*>::iterator itr = mNodes.begin() ; itr != mNodes.end() ; itr++)
+      {
+         if ((*itr)->getHostname() == nodeHostname)
+         {
+            mNodes.erase(itr);
+            return;
+         }
+      }
    }
    
    Node* AbstractNetworkManager::getNodeByHostname(const std::string& host_name)

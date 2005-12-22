@@ -28,14 +28,13 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
-    *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _GADGET_ABSTRACT_NETWORK_MANAGER_H
 #define _GADGET_ABSTRACT_NETWORK_MANAGER_H
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Acceptor.h>
 #include <gadget/Connector.h>
 
 #include <vpr/IO/Socket/InetAddr.h>
@@ -105,7 +104,7 @@ public:
     * first by callinf lockNodes()
     */
    vpr::ReturnStatus addNode(const std::string& name, const std::string& host_name, 
-                             const vpr::Uint16& port, vpr::SocketStream* socket_stream = NULL);
+                             const vpr::Uint16& port, vpr::SocketStream* socketStream = NULL);
 
    /**
     * Adds the given Node to the std::map of Nodes
@@ -118,7 +117,7 @@ public:
    /**
     * Removes the Node with the given hostname
     */
-   void removeNode(const std::string& node_hostname);
+   void removeNode(const std::string& nodeHostname);
 
 public:  
    /**
@@ -219,12 +218,7 @@ public:
    /**
     * Determine if the given hostname matches the local machine's hostname.
     */
-   static bool isLocalHost(const std::string& test_host_name);
-
-   /**
-    * Compare the two InetAddr wo see if they are for the same host.
-    */
-   static bool hostCompare(const vpr::InetAddr& first, const vpr::InetAddr& second);
+   static bool isLocalHost(const std::string& testHostName);
 
    PacketHandler* getHandlerByGUID(const vpr::GUID& handler_guid);
    void addHandler(PacketHandler* new_handler);
