@@ -51,9 +51,9 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DEVICE_REQ,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                       + 16 /*Plugin GUID*/
-                                       + 2 /*Size mDeviceName*/
-                                       + mDeviceName.size(),
+                                      + 16 /*Plugin GUID*/
+                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                                      + mDeviceName.size(),
                                       0/*Field not curently used*/);
       // Serialize the given data.
       serialize();

@@ -48,7 +48,7 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_CONNECTION_REQ,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 
+                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
                                       + mHostname.size()
                                       + 2 /*mPort*/
                                       ,0/*Field not curently used*/);

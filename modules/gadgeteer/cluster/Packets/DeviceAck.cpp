@@ -62,9 +62,12 @@ namespace cluster
                                       Header::RIM_PACKET_HEAD_SIZE 
                                       + 16 /*mPluginId*/
                                       + 16 /*mId*/
-                                      + 2 /*value of size*/+ mDeviceName.size() /*length of mDeviceName*/
-                                      + 2 /*value of size*/+ mDeviceBaseType.size() /*length of mDeviceBaseType*/
-                                      + 2 /*value of size*/+ mHostname.size() /*length of mDeviceBaseType*/
+                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                                      + mDeviceName.size() /*length of mDeviceName*/
+                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                                      + mDeviceBaseType.size() /*length of mDeviceBaseType*/
+                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                                      + mHostname.size() /*length of mDeviceBaseType*/
                                       + 1 /*mAck*/,
                                       0/*Field not curently used*/);                      
       // Serialize the given data.
