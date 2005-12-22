@@ -93,7 +93,7 @@ public:
     * Process an incoming packet.
     */
    void handlePacket(cluster::Packet* packet, Node* node);
-  
+
    void updateNewConnections();
 
    /**
@@ -103,7 +103,7 @@ public:
     * The caller of this method mustlock the Nodes list
     * first by callinf lockNodes()
     */
-   vpr::ReturnStatus addNode(const std::string& name, const std::string& host_name, 
+   vpr::ReturnStatus addNode(const std::string& name, const std::string& host_name,
                              const vpr::Uint16& port, vpr::SocketStream* socketStream = NULL);
 
    /**
@@ -119,19 +119,19 @@ public:
     */
    void removeNode(const std::string& nodeHostname);
 
-public:  
+public:
    /**
     * Returns the Node with the given hostname
     * If no Node with this hostname exists, NULL is returned.
-    */   
+    */
    gadget::Node* getNodeByHostname(const std::string& host_name);
-   
+
    /**
     * Returns the Node with the given name
     * If no Node with this name exists, NULL is returned.
-    */   
+    */
    gadget::Node* getNodeByName(const std::string& node_name);
-   
+
    /**
     * Get the number of nodes in network.
     */
@@ -153,7 +153,7 @@ public:
    {
       return mNodes.begin();
    }
-   
+
    /**
     * Get an iterator to the end of the Nodes std::vector.
     * The caller of this method must have locked the Nodes list.
@@ -167,14 +167,14 @@ public:
     * Return the number of Nodes in the Pending Nodes list.
     */
    vpr::Uint16 getNumPendingNodes();
-   
-private:      
+
+private:
    /**
     * Attempt to connect to all Nodes in the PendingNodes list.
     */
    bool attemptPendingNodes();
 
-public: 
+public:
    /**
     * Kill the listen thread and the update thread
     */
@@ -194,7 +194,7 @@ public:
    /**
     * Configure the given jccl::ConfigElement because it was just added to
     * the active configuration.
-    * 
+    *
     * @return true  If we successfully configured the given cluster_node
     *               element.
     * @return false If we failed to configure the given cluster_node element.
@@ -206,15 +206,15 @@ public:
     * here.
     */
    static std::string getClusterNodeElementType();
-   
+
    /**
     * Remove the given jccl::ConfigElement from the active configuration .
-    * 
+    *
     * @return true  If we successfully removed the given cluster_node element.
     * @return false If we failed to removed the given cluster_node element.
     */
    bool configRemove(jccl::ConfigElementPtr element);
-   
+
    /**
     * Determine if the given hostname matches the local machine's hostname.
     */
@@ -222,13 +222,13 @@ public:
 
    PacketHandler* getHandlerByGUID(const vpr::GUID& handler_guid);
    void addHandler(PacketHandler* new_handler);
-   
+
    virtual vpr::ReturnStatus attemptConnect(Node* node) = 0;
    virtual void startListening(int listen_port, bool accept_anonymous) = 0;
 
-private:   
+private:
    std::vector<gadget::Node*>    mNodes;         /**< List of nodes in network. */
-   
+
    std::map<vpr::GUID, PacketHandler*>  mHandlerMap;
 };
 
