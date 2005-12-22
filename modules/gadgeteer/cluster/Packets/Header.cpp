@@ -1,5 +1,5 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
+*
  * VR Juggler is (C) Copyright 1998-2005 by Iowa State University
  *
  * Original Authors:
@@ -47,26 +47,35 @@ namespace cluster
       mFrame = frame;
    }
    
-   Header::Header( vpr::SocketStream* stream ) throw ( cluster::ClusterException ) : mPacketReader(NULL), mPacketWriter(NULL)
+   void Header::readData( vpr::SocketStream* stream ) throw ( cluster::ClusterException )
    {
       vprASSERT( NULL != stream && "Can not create a Header using a NULL SocketStream" );
 
       // - Is stream is a valid SocketStream?
       //   - Read in the packet from the socket
       //   - Set the BufferObjectReader and BufferObjectWriter to use mData  <====We only need BufferObjectReader
-      if ( NULL != stream )
+      if (NULL == stream)
+      {
+         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+            << clrOutBOLD( clrRED, "ERROR:" )
+            << " SocketSteam is NULL"
+            << std::endl << vprDEBUG_FLUSH;
+
+         throw cluster::ClusterException("Header::Header() - SocketStream is NULL");
+      }
+      else
       {
          vpr::Uint32 bytes_read;   
          
          vpr::ReturnStatus status =
             stream->readn( mData, Header::RIM_PACKET_HEAD_SIZE, bytes_read );
-         
+
          if ( status != vpr::ReturnStatus::Succeed ||
               bytes_read != RIM_PACKET_HEAD_SIZE )
          {
             vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
                << clrOutBOLD( clrRED, "ERROR:" )
-               << "Header::Header Something is seriously wrong here!" 
+               << "Header::readData() - Could not read the header!"
                << std::endl << vprDEBUG_FLUSH;
             
             stream->close();
@@ -97,15 +106,7 @@ namespace cluster
          mPacketReader = new vpr::BufferObjectReader( &mData );
          parseHeader();
       }
-      else
-      {
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << clrOutBOLD( clrRED, "ERROR:" )
-            << " SocketSteam is NULL"
-            << std::endl << vprDEBUG_FLUSH;
 
-         throw std::exception();
-      }
    }
 
    void Header::serializeHeader()
