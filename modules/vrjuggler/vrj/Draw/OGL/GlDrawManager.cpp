@@ -335,8 +335,8 @@ void GlDrawManager::addDisplay(Display* disp)
 
    // -- Add window to the correct pipe
    GlPipe* pipe;                           // The pipe to assign it to
-   pipe = pipes[pipe_num];                    // ASSERT: pipeNum is in the valid range
-   pipe->addWindow(new_win);              // Window has been added
+   pipe = pipes[pipe_num];                 // ASSERT: pipeNum is in the valid range
+   pipe->addWindow(new_win);               // Window has been added
 
    vprASSERT(isValidWindow(new_win));      // Make sure it was added to draw manager
 }

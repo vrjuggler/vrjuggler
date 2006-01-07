@@ -14,6 +14,12 @@
          <help>The X11 display strings for the pipes. The string "-1" is treated as being equal to the &lt;tt&gt;$DISPLAY&lt;/tt&gt; environment variable. NOTE: This is a zero-based list. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="X11 Display" defaultvalue=":0.0"/>
       </property>
+        <property valuetype="boolean" variable="false" name="use_swap_group">
+         <help>if true, attempt to use a hardware swap group to keep all window buffer swaps in sync.  Also if using cluster this will try to create a swap group across the cluster.</help>
+         <value label="Use Swap Group" defaultvalue="false"/>
+      </property>   
+    
       <upgrade_transform/>
    </definition_version>
+  
 </definition>

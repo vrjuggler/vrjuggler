@@ -50,8 +50,6 @@
 
 #include <vpr/Util/Debug.h>
 
-#include <boost/concept_check.hpp>
-
 
 namespace vrj
 {
@@ -266,15 +264,6 @@ public:
    }
 
    friend std::ostream& operator<<(std::ostream& out, GlWindow& win);
-
-public:
-   virtual bool createHardwareSwapGroup(const std::vector<GlWindow*>& wins)
-   {
-      boost::ignore_unused_variable_warning(wins);
-      vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL)
-         << "WARNING: hardware swap not supported.\n" << vprDEBUG_FLUSH;
-      return false;
-   }
 
 protected:
    /**

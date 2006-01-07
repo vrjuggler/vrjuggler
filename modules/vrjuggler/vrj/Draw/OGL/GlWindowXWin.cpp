@@ -304,6 +304,40 @@ bool GlWindowXWin::open()
       ret_val = false;
    }
 
+   // Register extensions in this window
+   makeCurrent();
+   mExtensions.registerExtensions();
+
+     // Check on using swap group
+   jccl::ConfigElementPtr disp_sys_elt = DisplayManager::instance()->getDisplaySystemElement();
+   bool use_swap_group = disp_sys_elt->getProperty<bool>("use_swap_group");
+
+   if(use_swap_group)
+   {
+      vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL, "Attempting to setup GLX swap group.", "");
+       
+      // Try NV swap group extension
+      if(mExtensions.hasSwapGroupNV())
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL) << "SwapGroupNV: " << mExtensions.hasSwapGroupNV() << std::endl << vprDEBUG_FLUSH;
+         GLuint max_groups, max_barriers;
+         mExtensions.glXQueryMaxSwapGroupsNV(mXDisplay, screen, &max_groups, &max_barriers);
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL) << "Max groups: " << max_groups << " Max Barriers:" << max_barriers << std::endl << vprDEBUG_FLUSH;
+
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL) << "Setting up NV swap group and barrier group. Group: 1, Barrier: 1\n" << vprDEBUG_FLUSH;
+         // For now, just assume both groups are group 1
+         // Note: In the future this code may need to be refactored to be controlled
+         //   from the GlPipe class since it is really the thing that would correspond
+         //   to the group and could group the correct windows to a group id.
+         mExtensions.glXJoinSwapGroupNV(mXDisplay, mXWindow, 1);
+         mExtensions.glXBindSwapBarrierNV(mXDisplay, 1, 1);
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Could not detect any GLX extensions that support swap groups. Proceeding with no swap locking.\n" << vprDEBUG_FLUSH;
+      }
+   }
+
    return ret_val;
 }
 
@@ -415,44 +449,6 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "[vrj::GlWindowXWin::config] Display name is '" << mXDisplayName
       << "'" << std::endl << vprDEBUG_FLUSH;
-}
-
-bool GlWindowXWin::createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wins)
-{
-   // Convert to glx windows
-   std::vector<GlWindowXWin*> glx_wins;
-   unsigned int i;
-
-   if ( wins.size() <= 0 )
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << "WARNING: createHardwareSwapGroup called with no windows\n"
-         << vprDEBUG_FLUSH;
-   }
-
-   for ( i = 0; i < wins.size(); ++i )
-   {
-      GlWindowXWin* glx_win = dynamic_cast<GlWindowXWin*>(wins[i]);
-      vprASSERT(glx_win != NULL);    // Make sure we have the right type
-      glx_wins.push_back(glx_win);
-   }
-
-   // Create hardware group
-#ifdef VPR_OS_IRIX
-   for ( i = 0; i < glx_wins.size(); ++i )      // For each window
-   {
-      // If not me then add with me to the swap group.
-      if ( glx_wins[i] != this )
-      {
-         glXJoinSwapGroupSGIX(mXDisplay, mXWindow, glx_wins[i]->mXWindow);
-      }
-   }
-#else
-   vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-      << "WARNING: createHardwareSwapGroup not supported.\n" << vprDEBUG_FLUSH;
-#endif
-
-   return true;
 }
 
 void GlWindowXWin::checkEvents()

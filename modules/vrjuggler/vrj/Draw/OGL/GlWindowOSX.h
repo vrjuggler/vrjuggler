@@ -113,9 +113,7 @@ public:
    bool startSampling();
    //@}
 
-   void configWindow(Display* _display);
-
-   virtual bool createHardwareSwapGroup(const std::vector<GlWindow*>& wins);
+   void configWindow(Display* _display);   
 
 protected:
     OSStatus BuildGLFromWindow(WindowPtr pWindow, AGLContext* paglContext,

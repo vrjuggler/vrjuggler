@@ -269,11 +269,6 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
 
 }
 
-bool GlWindowOSX::createHardwareSwapGroup(const std::vector<GlWindow*>& wins)
-{
-   boost::ignore_unused_variable_warning(wins);
-   return true; // This is not supported, just stubbed out.
-}
 
 // ============================================================================
 // The following methods come from Carbon SetupGL 1.5 distributed by Apple
