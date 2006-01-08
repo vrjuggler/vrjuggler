@@ -1,6 +1,6 @@
 dnl ************ <auto-copyright.pl BEGIN do not edit this line> ************
 dnl
-dnl VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+dnl VR Juggler is (C) Copyright 1998-2006 by Iowa State University
 dnl
 dnl Original Authors:
 dnl   Allen Bierbaum, Christopher Just,
