@@ -58,28 +58,7 @@ void SwapSyncApp::contextInit()
 
 void SwapSyncApp::preFrame()
 {
-   mFrameNum += 1;
-   
-   // Sleep for one of a predetermined times.
-   // - Use this instead of random because we want to generate worst case
-   //   on some of these sleeps (ie. one node 0, one node 2 seconds)
-   unsigned sleep_choice = rand() % 3;
-   vpr::Uint32 sleep_ms;
-   
-   if(0 == sleep_choice) { sleep_ms = 0; }
-   else if(1 == sleep_choice) { sleep_ms = 1000; }   
-   else if(2 == sleep_choice) { sleep_ms = 4000; }      
-   
-   /*
-   float rand_num = drand48();
-   float base_ms = 1500.0f;         // Sleep this much each time
-   float var_ms = 2000.0f;          // Variability each frame
-   
-   vpr::Uint32 sleep_ms = vpr::Uint32(float(base_ms + (var_ms * rand_num)));
-   */
-   
-   vpr::System::msleep(sleep_ms);   
-   vprDEBUG(vprDBG_ALL, 0) << "Sleep: " << sleep_ms << "ms\n" << vprDEBUG_FLUSH;
+   mFrameNum += 1;   
 }
 
 void SwapSyncApp::bufferPreDraw()
@@ -101,7 +80,28 @@ void SwapSyncApp::bufferPreDraw()
 }
 
 void SwapSyncApp::draw()
-{;}
+{
+   // Sleep for one of a predetermined times.
+   // - Use this instead of random because we want to generate worst case
+   //   on some of these sleeps (ie. one node 0, one node 2 seconds)
+   unsigned sleep_choice = rand() % 3;
+   vpr::Uint32 sleep_ms;
+   
+   if(0 == sleep_choice) { sleep_ms = 0; }
+   else if(1 == sleep_choice) { sleep_ms = 1000; }   
+   else if(2 == sleep_choice) { sleep_ms = 4000; }      
+   
+   /*
+   float rand_num = drand48();
+   float base_ms = 1500.0f;         // Sleep this much each time
+   float var_ms = 2000.0f;          // Variability each frame
+   
+   vpr::Uint32 sleep_ms = vpr::Uint32(float(base_ms + (var_ms * rand_num)));
+   */
+   
+   vpr::System::msleep(sleep_ms);   
+   vprDEBUG(vprDBG_ALL, 0) << mFrameNum << ": Sleep: " << sleep_ms << "ms\n" << vprDEBUG_FLUSH;;
+}
 
 void SwapSyncApp::initGLState()
 {
