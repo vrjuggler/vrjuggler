@@ -691,6 +691,7 @@ AC_CONFIG_FILES([
    test/Draw/OGL/digitalGlove/Makefile
    test/Draw/OGL/logger/Makefile
    test/Draw/OGL/simpleGlove/Makefile
+   test/Draw/OGL/swapSync/Makefile   
    test/Draw/OGL/texture/Makefile
    test/Draw/OGL/torus/Makefile
    test/Draw/OGL/WallTest/Makefile

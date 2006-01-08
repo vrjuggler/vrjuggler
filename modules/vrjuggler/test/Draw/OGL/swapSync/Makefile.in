@@ -31,38 +31,26 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/test/Draw/OGL
-#
-# Generated for use on @PLATFORM@
+# Makefile.in for juggler/test/Draw/OGL/swapSync
+# This requires GNU make.
 # -----------------------------------------------------------------------------
 
-APPS	= analog	\
-          combo		\
-          cubes		\
-          digitalGlove	\
-	  logger	\
-          simpleGlove	\
-          swapSync      \
-          texture	\
-          torus		\
-	  WallTest	\
-          wand
+all: swapSync@EXEEXT@
+
+APP_NAME=	swapSync@EXEEXT@
+
+# Basic options.
+srcdir=		@srcdir@
+SRCS=		main.cpp swapSyncApp.cpp
+
+EXTRA_INCLUDES=
+EXTRA_PATH_FOR_SOURCES=
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
 # -----------------------------------------------------------------------------
-# Build targets.
+# Application build targets.
 # -----------------------------------------------------------------------------
-default: all
-
-all: $(APPS)
-
-$(APPS)::
-	cd $@ && $(MAKE)
-
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-clean clobber:
-	@for app in $(APPS) ; do		\
-            cd $$app && $(MAKE) $@ ;		\
-            cd .. ;				\
-        done
+swapSync@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

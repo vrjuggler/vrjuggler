@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-08-2006 allenb      Added swapSync test application.
 Jan-07-2006 allenb      Added GlExtensionLoader classes.
                         Added support for NV swap_group.
 			NEW VERSION: 2.1.6
