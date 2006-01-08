@@ -50,7 +50,7 @@ AC_INIT([VR Juggler Portable Runtime], [1.1],
         [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([vpr/vprDefines.h])
 AC_PREREQ([2.53])
-AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
+AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([vpr/vprConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
