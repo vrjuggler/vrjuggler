@@ -11,7 +11,7 @@
   <property category="sys" name="CheckStable" value="1"/>
   <property category="sys" name="Company" value="VRAC"/>
   <property category="sys" name="CompanyLabel" value="Company:"/>
-  <property category="sys" name="Copyright" value="Copyright (c) 1998-2005"/>
+  <property category="sys" name="Copyright" value="Copyright (c) 1998-2006"/>
   <property category="sys" name="CopyrightLabel" value="Copyright:"/>
   <property category="sys" name="DefaultPath" value="."/>
   <property category="sys" name="Description" value=""/>
