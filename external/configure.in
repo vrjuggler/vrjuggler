@@ -1,6 +1,6 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+# VR Juggler is (C) Copyright 1998-2006 by Iowa State University
 #
 # Original Authors:
 #   Allen Bierbaum, Christopher Just,
@@ -40,7 +40,7 @@
 AC_INIT([VR Juggler external dependencies], [0.0],
         [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
-AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
+AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_REVISION([$Revision$])
 AC_CONFIG_SRCDIR([ant/lib/ant.jar])
 AC_CONFIG_AUX_DIR(../share/config)
