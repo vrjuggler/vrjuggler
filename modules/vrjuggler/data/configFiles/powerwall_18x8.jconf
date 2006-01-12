@@ -461,7 +461,7 @@
          <device>IBox1</device>
          <unit>1</unit>
       </digital_proxy>
-      <display_system name="Pipe Setup" version="1">
+      <display_system name="Pipe Setup" version="2">
          <number_of_pipes>1</number_of_pipes>
          <x11_pipes>-1</x11_pipes>
          <x11_pipes>:0.1</x11_pipes>
@@ -471,6 +471,7 @@
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
+         <use_swap_group>false</use_swap_group>
       </display_system>
       <user name="User1" version="1">
          <head_position>VJHead</head_position>

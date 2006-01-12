@@ -21,9 +21,10 @@
       </start_barrier_plugin>
       <cluster_node name="Node(ptah-1)" version="1">
          <display_system>
-            <display_system name="display_system 0" version="1">
+            <display_system name="display_system 0" version="2">
                <number_of_pipes>1</number_of_pipes>
                <x11_pipes>-1</x11_pipes>
+               <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
          <display_windows>
@@ -89,9 +90,10 @@
       </cluster_node>
       <cluster_node name="Node(ptah-2)" version="1">
          <display_system>
-            <display_system name="display_system 0" version="1">
+            <display_system name="display_system 0" version="2">
                <number_of_pipes>1</number_of_pipes>
                <x11_pipes>-1</x11_pipes>
+               <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
          <display_windows>
@@ -157,9 +159,10 @@
       </cluster_node>
       <cluster_node name="Node(ptah-3)" version="1">
          <display_system>
-            <display_system name="display_system 0" version="1">
+            <display_system name="display_system 0" version="2">
                <number_of_pipes>1</number_of_pipes>
                <x11_pipes>-1</x11_pipes>
+               <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
          <display_windows>
@@ -225,9 +228,10 @@
       </cluster_node>
       <cluster_node name="Node(ptah-4)" version="1">
          <display_system>
-            <display_system name="display_system 0" version="1">
+            <display_system name="display_system 0" version="2">
                <number_of_pipes>1</number_of_pipes>
                <x11_pipes>-1</x11_pipes>
+               <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
          <display_windows>
