@@ -99,6 +99,10 @@ int main (int argc, char* argv[])
                   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                      << "Failed to register subject\n" << vprDEBUG_FLUSH;
                }
+
+               // We are done with our pointers to the servants.
+               slider_subj->_remove_ref();
+               whiteboard_subj->_remove_ref();
             }
          }
          catch (CORBA::Exception& ex)

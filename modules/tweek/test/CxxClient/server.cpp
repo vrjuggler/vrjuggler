@@ -87,6 +87,9 @@ int main (int argc, char* argv[])
                   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                      << "Failed to register subject\n" << vprDEBUG_FLUSH;
                }
+
+               // We are done with our pointer to the servant.
+               slider_subj->_remove_ref();
             }
          }
          catch (CORBA::Exception& ex)
