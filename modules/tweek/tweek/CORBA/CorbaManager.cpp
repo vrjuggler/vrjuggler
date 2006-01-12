@@ -265,7 +265,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
    vprASSERT(! CORBA::is_nil(mLocalContext) && "No naming service available");
    vpr::ReturnStatus status;
 
-   tweek::SubjectManager_ptr mgr_ptr;
+   tweek::SubjectManager_var mgr_ptr;
 
    vprASSERT(mSubjectManager == NULL && "Subject Manager already exists for this CORBA Manager!");
    mSubjectManager = new SubjectManagerImpl(*this);
