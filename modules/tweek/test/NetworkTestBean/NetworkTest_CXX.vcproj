@@ -40,7 +40,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tweek_d.lib vpr_d.lib libnspr4.lib omnithread31_rtd.lib omniORB406_rtd.lib omniDynamic406_rtd.lib $(NOINHERIT)"
+				AdditionalDependencies="tweek_d.lib vpr_d.lib libnspr4.lib omnithread32_rtd.lib omniORB407_rtd.lib omniDynamic407_rtd.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/server.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -96,7 +96,7 @@ $(VJ_DEPS_DIR)\bin\omniidl  -bcxx -Wbh=.h,s=.cpp -C. -I$(VJ_BASE_DIR)\include Wh
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tweek.lib vpr.lib libnspr4.lib omnithread31_rt.lib omniORB406_rt.lib omniDynamic406_rt.lib"
+				AdditionalDependencies="tweek.lib vpr.lib libnspr4.lib omnithread32_rt.lib omniORB407_rt.lib omniDynamic407_rt.lib"
 				OutputFile="$(OutDir)/server.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
