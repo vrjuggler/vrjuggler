@@ -329,6 +329,17 @@ def postProcessOptions(options):
             os.environ['OMNITHREAD_VERSION'] = match.group(1)
             break
 
+   if os.environ['TRACKD_API_ROOT'] != '' and os.path.exists(os.environ['TRACKD_API_ROOT']):
+      trackdapi_dir = os.environ['TRACKD_API_ROOT']
+      trackdapi_incdir = os.path.join(trackdapi_dir, 'include')
+
+      # Figure out which Trackd API header to include.
+      headers = ['trackdAPI.h', 'trackdAPI_CC.h']
+      for h in headers:
+         if os.path.exists(os.path.join(trackdapi_incdir, h)):
+            os.environ['GADGET_TRACKD_API_H'] = '<%s>' % h
+            break
+
 def writeCacheFile(optionDict):
    cache_file = open(getCacheFileName(), 'w')
    for k, v in optionDict.iteritems():
