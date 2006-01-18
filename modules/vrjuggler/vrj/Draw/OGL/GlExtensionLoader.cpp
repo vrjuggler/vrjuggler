@@ -65,7 +65,7 @@ GlExtensionLoader::VoidExtFunc GlExtensionLoader::getFunctionByName(const char* 
    }
 #elif defined(WIN32)
 
-   found_func = (void(__cdecl*)(void)) wglGetProcAddress(s);
+   found_func = (void(__cdecl*)(void)) wglGetProcAddress(name);
 
 #elif defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX) || \
    defined(VPR_OS_Linux) || defined(VPR_OS_FreeBSD) || defined(VPR_OS_Solaris)
