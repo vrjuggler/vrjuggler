@@ -82,7 +82,7 @@ namespace gadget
       {
          remote_hostname = remote_address.getHostname();
       }
-      catch(std::exception& ex)
+      catch(std::exception&)
       {
          remote_hostname = "Error resolving remote hostname";
       }
@@ -132,7 +132,7 @@ namespace gadget
          {
             temp_hostname = (*itr).getHostname();
          }
-         catch(std::exception& ex)
+         catch(std::exception&)
          {
             temp_hostname = "Error getting hostname";
          }

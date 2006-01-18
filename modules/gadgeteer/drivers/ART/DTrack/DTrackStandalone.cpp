@@ -257,12 +257,12 @@ bool DTrackStandalone::receive(void)
 			d_udpsock->recvfrom((void *)d_udpbuf, d_udpbufsize - 1,
 					    addr, len, d_udptimeout);
 		}
-		catch (vpr::TimeoutException& ex)
+		catch (vpr::TimeoutException&)
 		{
 			set_timeout();
 			return false;
 		}
-		catch (vpr::IOException& ex)
+		catch (vpr::IOException&)
 		{
 			set_udperror();
 			return false;
@@ -676,7 +676,7 @@ bool DTrackStandalone::send(unsigned short cmd, int val)
 		d_udpsock->sendto((const void *)cmdstr, strlen(cmdstr) + 1,
 				  d_remote, bytes, d_udptimeout);
 	}
-	catch (vpr::IOException& ex)
+	catch (vpr::IOException&)
 	{
 		set_udperror();
 		return false;
