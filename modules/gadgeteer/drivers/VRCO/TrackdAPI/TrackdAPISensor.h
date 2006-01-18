@@ -40,7 +40,7 @@
 #include <gadget/Type/InputMixer.h>
 
 #define TRACKD_DLL_EXPORTS 0
-#include <trackdAPI.h>
+#include GADGET_TRACKD_API_H
 #include <gmtl/Matrix.h>
 
 
