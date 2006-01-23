@@ -179,6 +179,8 @@ namespace vrj
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Remote performance monitoring is disabled." << std::endl
             << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "(This is not a fatal error.)" << std::endl << vprDEBUG_FLUSH;
 
          // The plug-in is not usable, so we can unload it.
          if ( mPluginDSO.get() != NULL )
