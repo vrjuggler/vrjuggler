@@ -88,6 +88,7 @@ public:
       , mScreen(-1)
       , mX(-1)
       , mY(-1)
+      , mMemberFunctor(NULL)
       , mExitFlag(false)
    {
       mBlocking = true;
@@ -180,6 +181,8 @@ protected:
    int mScreen;         /**< Screen ID */
    int mX;              /**< Origin X-coordinate */
    int mY;              /**< Origin Y-coordinate */
+
+   vpr::ThreadMemberFunctor<InputWindowXWin>* mMemberFunctor;
 
    /** @name KeyboardMouse state holders
     * @note This driver does not use the normal triple buffering mechanism.

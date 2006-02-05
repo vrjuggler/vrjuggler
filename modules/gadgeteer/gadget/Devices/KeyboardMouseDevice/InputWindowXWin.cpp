@@ -153,10 +153,10 @@ bool InputWindowXWin::startSampling()
    mExitFlag = false;
    
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<InputWindowXWin>* memberFunctor =
+   mMemberFunctor =
       new vpr::ThreadMemberFunctor<InputWindowXWin>(this, &InputWindowXWin::controlLoop, NULL);
 
-   mThread = new vpr::Thread(memberFunctor);
+   mThread = new vpr::Thread(mMemberFunctor);
 
    // return success value...
    if ( ! mThread->valid() )
@@ -186,6 +186,9 @@ bool InputWindowXWin::stopSampling()
 
       delete mThread;
       mThread = NULL;
+
+      delete mMemberFunctor;
+      mMemberFunctor = NULL;
    }
 
    return true;
