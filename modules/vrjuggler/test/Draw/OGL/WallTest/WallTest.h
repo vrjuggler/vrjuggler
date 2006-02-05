@@ -48,6 +48,9 @@
 
 using namespace vrj;
 
+/** Test program for wall settings.
+ *
+ */
 class WallTest : public GlApp
 {
 public:
