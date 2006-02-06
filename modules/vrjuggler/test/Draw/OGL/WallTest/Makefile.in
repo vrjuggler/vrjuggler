@@ -41,7 +41,10 @@ APP_NAME=	WallTest@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		WallTest.cpp main.cpp WallTestHelpers.cpp
+SRCS=		WallTest.cpp main.cpp Text.cpp WallTestHelpers.cpp
+
+EXTRA_INCLUDES=		-I$(srcdir)/../perfAddon 
+EXTRA_PATH_FOR_SOURCES=	$(srcdir)/../perfAddon
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk

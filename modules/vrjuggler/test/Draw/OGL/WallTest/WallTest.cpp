@@ -57,6 +57,7 @@
 #include "CubeLineMode.h"
 #include "TestPatternMode.h"
 #include "StereoEyeTestMode.h"
+#include "DisplayInfoMode.h"
 
 using namespace gmtl;
 using namespace vrj;
@@ -76,6 +77,7 @@ void WallTest::init()
    mTestModes.push_back(TestModePtr(new TestPatternMode));
    mTestModes.push_back(TestModePtr(new CubeLineMode));
    mTestModes.push_back(TestModePtr(new StereoEyeTestMode));
+   mTestModes.push_back(TestModePtr(new DisplayInfoMode));
 }
 
 
