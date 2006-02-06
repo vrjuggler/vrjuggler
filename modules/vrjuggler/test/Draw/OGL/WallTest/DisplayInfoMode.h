@@ -59,7 +59,7 @@ public:
       std::string text = display_text.str();
 
       glColor3f(1.0,1.0,0.0);
-      mText->drawTextBlock(text);  
+      mText->drawTextBlock(text, 0.4, 0.4);  
    }
 
 protected:
