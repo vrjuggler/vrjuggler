@@ -43,8 +43,14 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Display/SurfaceViewport.h>
+
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
+
+#include <vector>
+
+#include <TestMode.h>
 
 using namespace vrj;
 
@@ -85,16 +91,13 @@ public:
    virtual void postFrame(){;}
 
    virtual void contextInit(){;}
-   virtual void draw();
-   virtual void drawC6();
+   virtual void draw();   
  
-   void drawGrid();
+   void drawGrid(float wallWidth, float wallHeight);
    void drawCubeLine();
-   void drawCube();
    void drawCubeOrTriangle();
  
-   void drawWall(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl::Point3f ur);
-   gmtl::Matrix44f calculateSurfaceRotation(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl::Point3f ur);
+   void drawWall(vrj::SurfaceViewport* surf);   
 	
 public:
    bool mUseLights;
@@ -108,6 +111,8 @@ public:
    gadget::DigitalInterface   mButton1; /**< Digital interface for button 1 */
    gadget::DigitalInterface   mButton2;
    gadget::DigitalInterface   mButton3;
+
+   std::vector<TestModePtr>   mTestModes;    /** List of test modes. */
 };
 
 

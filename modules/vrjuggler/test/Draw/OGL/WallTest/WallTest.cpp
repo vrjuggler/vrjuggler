@@ -52,6 +52,7 @@
 #include <vrj/Display/Display.h>
 
 #include "WallTest.h"
+#include "WallTestHelpers.h"
 
 using namespace gmtl;
 using namespace vrj;
@@ -65,7 +66,8 @@ void WallTest::bufferPreDraw()
 void WallTest::draw()
 {   
 
-   if(mUseLights){
+   if(mUseLights)
+   {
       glEnable(GL_NORMALIZE);
       glEnable(GL_LIGHT0);
       glLightfv(GL_LIGHT0,GL_POSITION,mLightPosition.getData());
@@ -73,7 +75,8 @@ void WallTest::draw()
       glEnable(GL_COLOR_MATERIAL);
       glEnable(GL_LIGHTING);
    }
-   else{
+   else
+   {
       glDisable(GL_LIGHTING);
    }
 
@@ -84,10 +87,7 @@ void WallTest::draw()
  
    DisplayManager* displayManager=vrj::GlDrawManager::instance()->getDisplayManager();
    std::vector<Display*> disps=displayManager->getAllDisplays();
-   gmtl::Point3f ur,lr,ul,ll;
-
-   int numSurfacesDrawn=0;
-   float scale=gadget::PositionUnitConversion::ConvertToFeet;
+    
   
    for(unsigned int i=0;i<disps.size();i++)
    {
@@ -101,122 +101,41 @@ void WallTest::draw()
             SurfaceViewport* surface = dynamic_cast<SurfaceViewport*>(viewport);
             vprASSERT(surface!=NULL);
 
-            surface->getCorners(ll,lr,ur,ul);
-
-            ll=ll*scale;
-            lr=lr*scale;
-            ul=ul*scale;
-            ur=ur*scale;
-
-            drawWall(ll,lr,ul,ur);
-
-	    numSurfacesDrawn++;
-	 }
+            drawWall(surface);            
+         }
       }
-   }
-
-   if(numSurfacesDrawn==0)
-   {
-      drawC6();
-   }
+   }  
 }
 
-void WallTest::drawC6()
+
+void WallTest::drawWall(SurfaceViewport* surf)
 {
-   gmtl::Point3f ll,lr,ul,ur;
+   gmtl::Matrix44f rotate;
+   gmtl::Vec3f center;
+   float wall_width, wall_height;
 
-   // Floor
-   ll=gmtl::Point3f(-5,0,-5);
-   lr=gmtl::Point3f(5,0,-5);
-   ur=gmtl::Point3f(5,0,5);
-   ul=gmtl::Point3f(-5,0,5);
-   drawWall(ll,lr,ul,ur);
-
-   // Ceiling
-   ll=gmtl::Point3f(-5,10,5);
-   lr=gmtl::Point3f(5,10,5);
-   ur=gmtl::Point3f(5,10,-5);
-   ul=gmtl::Point3f(-5,10,-5);
-   drawWall(ll,lr,ul,ur);
-
-   // Front
-   ll=gmtl::Point3f(-5,0,5);
-   lr=gmtl::Point3f(5,0,5);
-   ur=gmtl::Point3f(5,10,5);
-   ul=gmtl::Point3f(-5,10,5);
-   drawWall(ll,lr,ul,ur);
-
-   // Back
-   ll=gmtl::Point3f(5,0,-5);
-   lr=gmtl::Point3f(-5,0,-5);
-   ur=gmtl::Point3f(-5,10,-5);
-   ul=gmtl::Point3f(5,10,-5);
-   drawWall(ll,lr,ul,ur);
-
-   // Left
-   ll=gmtl::Point3f(-5,0,-5);
-   lr=gmtl::Point3f(-5,0,5);
-   ur=gmtl::Point3f(-5,10,5);
-   ul=gmtl::Point3f(-5,10,-5);
-   drawWall(ll,lr,ul,ur);
-
-   // Right
-   ll=gmtl::Point3f(5,0,5);
-   lr=gmtl::Point3f(5,0,-5);
-   ur=gmtl::Point3f(5,10,-5);
-   ul=gmtl::Point3f(5,10,5);
-   drawWall(ll,lr,ul,ur);
-}
-
-void WallTest::drawWall(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl::Point3f ur)
-{
-   gmtl::Matrix44f rotate=calculateSurfaceRotation(ll,lr,ul,ur);
-   // FIXME:  The following is a workaround for GMTL CVS Head's meta 
-   //         programming.  It should be removed as soon as the GMTL API
-   //         addresses this.
-   gmtl::Vec3f origin = ll + lr + ul + ur;
-   origin /= 4.0;
-   //gmtl::Vec3f origin=(ll+lr+ul+ur)/4.0;
-   gmtl::Vec3f lr_ll = lr - ll;
-   gmtl::Vec3f ur_lr = ur - lr;
-   gmtl::Vec3f scale(gmtl::length(lr_ll), gmtl::length(ur_lr), 0.0f);
-   scale[2]=scale[0]; // To keep the cubes and tetrahedrons happy
-   scale*=0.1f;
+   calcSurfaceParameters(surf, rotate, center, wall_width, wall_height);
    
    glPushMatrix();
-   glTranslatef(origin[0],origin[1],origin[2]);
-   glMultMatrixf(rotate.getData());
-   glPushMatrix();
-   glScalef(scale[0],scale[1],scale[2]);
-   drawGrid();
-   if(mUseCubesOrTriangles)
    {
-      drawCubeOrTriangle();
-   }
-   glPopMatrix();
-   glRotatef(90,0,1,0);
-   if(mUseCubes)
-   {
-      drawCubeLine();
+      // Translate to center of wall and rotate to looking down wall
+      glTranslatef(center[0],center[1],center[2]);
+      glMultMatrixf(rotate.getData());
+         
+      drawGrid(wall_width, wall_height);
+      if(mUseCubesOrTriangles)
+      {
+         drawCubeOrTriangle();
+      }      
+      
+      if(mUseCubes)
+      {
+         drawCubeLine();
+      }
    }
    glPopMatrix();
 }
 
-gmtl::Matrix44f WallTest::calculateSurfaceRotation(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl::Point3f ur)
-{
-   // Find the base vectors for the surface axiis (in terms of the base coord system)
-   // With z out, x to the right, and y up
-   gmtl::Vec3f x_base, y_base, z_base;
-   x_base = (lr-ll);
-   y_base = (ur-lr);
-   gmtl::cross( z_base, x_base, y_base);
-
-   // They must be normalized
-   gmtl::normalize(x_base); gmtl::normalize(y_base); gmtl::normalize(z_base);
-
-   // Calculate the surfaceRotMat using law of cosines
-   return gmtl::makeDirCos<gmtl::Matrix44f>(x_base,y_base,z_base);
-}
 
 void WallTest::preFrame()
 {
@@ -247,118 +166,83 @@ void WallTest::preFrame()
    }
 }
 
-void WallTest::drawGrid()
+void WallTest::drawGrid(float wallWidth, float wallHeight)
 {
-   glPushAttrib(GL_LIGHTING);
-   glDisable(GL_LIGHTING);
-
-   glLineWidth(2);
+   // Scale to size of wall and then to 10 units wide and tall
+   glPushMatrix();
+   {
+      glScalef(wallWidth, wallHeight, 1.0f);
+      glScalef(0.1, 0.1, 0.1);
    
-   glBegin(GL_LINES);
-
-   float x;
-   for(x=-5;x<=5;x+=0.5)
-   {
-      if(x==-2.5)      glColor3f(0,1,1);
-      else if(x==-2)   glColor3f(1,1,0);
-      else if(x==-1.5) glColor3f(1,0,1);
-      else if(x==-1)   glColor3f(1,0,0);
-      else if(x==-0.5) glColor3f(0,1,0);
-      else if(x==0)    glColor3f(0,0,1);
-      else if(x==0.5)  glColor3f(0,1,0);
-      else if(x==1)    glColor3f(1,0,0);
-      else if(x==1.5)  glColor3f(1,0,1);
-      else if(x==2)    glColor3f(1,1,0);
-      else if(x==2.5)  glColor3f(0,1,1);
-      else             glColor3f(1,1,1);
-
-      glVertex2f(x,-5);
-      glVertex2f(x,5);
-
-      glVertex2f(-5,x);
-      glVertex2f(5,x);
+      glPushAttrib(GL_LIGHTING);
+      glDisable(GL_LIGHTING);
+   
+      glLineWidth(2);
+      
+      glBegin(GL_LINES);
+   
+      float x;
+      for(x=-5;x<=5;x+=0.5)
+      {
+         if(x==-2.5)      glColor3f(0,1,1);
+         else if(x==-2)   glColor3f(1,1,0);
+         else if(x==-1.5) glColor3f(1,0,1);
+         else if(x==-1)   glColor3f(1,0,0);
+         else if(x==-0.5) glColor3f(0,1,0);
+         else if(x==0)    glColor3f(0,0,1);
+         else if(x==0.5)  glColor3f(0,1,0);
+         else if(x==1)    glColor3f(1,0,0);
+         else if(x==1.5)  glColor3f(1,0,1);
+         else if(x==2)    glColor3f(1,1,0);
+         else if(x==2.5)  glColor3f(0,1,1);
+         else             glColor3f(1,1,1);
+   
+         glVertex2f(x,-5);
+         glVertex2f(x,5);
+   
+         glVertex2f(-5,x);
+         glVertex2f(5,x);
+      }
+   
+      glEnd();
+   
+      glColor3f(1,1,0);
+      glBegin(GL_LINE_LOOP);
+      for ( x = 0; x < Math::TWO_PI; x += Math::PI / 20.0 )
+      {
+         glVertex2f(sin(x)*5,cos(x)*5);
+      }
+      glEnd();
+   
+      glColor3f(0,1,1);
+      glLineWidth(5);
+      glBegin(GL_LINES);
+         glVertex2f(-1,0);
+         glVertex2f(1,0);
+         glVertex2f(0,-1);
+         glVertex2f(0,1);
+      glEnd();
+      glLineWidth(1);
+   
+      glPopAttrib();
    }
-
-   glEnd();
-
-   glColor3f(1,1,0);
-   glBegin(GL_LINE_LOOP);
-   for ( x = 0; x < Math::TWO_PI; x += Math::PI / 20.0 )
-   {
-      glVertex2f(sin(x)*5,cos(x)*5);
-   }
-   glEnd();
-
-   glColor3f(0,1,1);
-   glLineWidth(5);
-   glBegin(GL_LINES);
-      glVertex2f(-1,0);
-      glVertex2f(1,0);
-      glVertex2f(0,-1);
-      glVertex2f(0,1);
-   glEnd();
-   glLineWidth(1);
-
-   glPopAttrib();
+   glPopMatrix();
 }
 
 void WallTest::drawCubeLine()
 {
    glColor3f(0,0,1);
-	
-   float x;
-   for(x=-5;x<=25;x+=2.5)
+	   
+   for(float z=5;z>=-25;z-=2.5)
    {
       glPushMatrix();
-      glTranslatef(x,0,0);
-      glScalef(0.25,0.25,0.25);
-      drawCube();
+         glTranslatef(0,0,z);
+         glScalef(0.25,0.25,0.25);
+         drawCube();
       glPopMatrix();
    }
 }
 
-void WallTest::drawCube()
-{
-   glBegin(GL_QUADS);
-   
-   glNormal3f(0,-1,0);
-   glVertex3f(-1,-1,-1);
-   glVertex3f(1,-1,-1);
-   glVertex3f(1,-1,1);
-   glVertex3f(-1,-1,1);
-
-   glNormal3f(0,1,0);
-   glVertex3f(-1,1,-1);
-   glVertex3f(-1,1,1);
-   glVertex3f(1,1,1);
-   glVertex3f(1,1,-1);
-
-   glNormal3f(-1,0,0);
-   glVertex3f(-1,-1,-1);
-   glVertex3f(-1,-1,1);
-   glVertex3f(-1,1,1);
-   glVertex3f(-1,1,-1);
-   
-   glNormal3f(1,0,0);
-   glVertex3f(1,-1,-1);
-   glVertex3f(1,1,-1);
-   glVertex3f(1,1,1);
-   glVertex3f(1,-1,1);
-
-   glNormal3f(0,0,-1);
-   glVertex3f(-1,-1,-1);
-   glVertex3f(1,-1,-1);
-   glVertex3f(1,1,-1);
-   glVertex3f(-1,1,-1);
-   
-   glNormal3f(0,0,1);
-   glVertex3f(-1,-1,1);
-   glVertex3f(1,-1,1);
-   glVertex3f(1,1,1);
-   glVertex3f(-1,1,1);
-   
-   glEnd();
-}
 
 void WallTest::drawCubeOrTriangle()
 {
@@ -377,28 +261,7 @@ void WallTest::drawCubeOrTriangle()
    {
       glTranslatef(-1.5,0,0);
       glColor3f(0,1,0);
-	   
-      glBegin(GL_TRIANGLES);
-      glNormal3f(0,-1,0);
-      glVertex3f(-1,-1,-1);
-      glVertex3f(0,-1,1);
-      glVertex3f(1,-1,-1);
-
-      glNormal3f(0,1,0);
-      glVertex3f(-1,-1,-1);
-      glVertex3f(0,1,0);
-      glVertex3f(0,-1,1);
-
-      glNormal3f(0,1,0);
-      glVertex3f(0,-1,1);
-      glVertex3f(0,1,0);
-      glVertex3f(1,-1,-1);
-
-      glNormal3f(0,1,0);
-      glVertex3f(1,-1,-1);
-      glVertex3f(0,1,0);
-      glVertex3f(-1,-1,-1);
-      glEnd();
+	   drawPyramid();
    }
 
    glPopMatrix();

@@ -41,7 +41,7 @@ APP_NAME=	WallTest@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		WallTest.cpp main.cpp
+SRCS=		WallTest.cpp main.cpp WallTestHelpers.cpp
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
