@@ -62,24 +62,15 @@ class WallTest : public GlApp
 public:
    WallTest()
    {
-      mUseLights=false;
-      mUseCubesOrTriangles=true;
-      mUseCubes=true;
+      mUseLights=false;      
+      mCurMode = 0;
+      mLightPosition=gmtl::Point4f(0,5,0,1);
    }
 
    virtual ~WallTest(){;}
 
 public:
-   virtual void init()
-   {
-      // Initialize devices
-      mWand.init("VJWand");
-      mHead.init("VJHead");
-      mButton0.init("VJButton0");
-      mButton1.init("VJButton1");
-      mButton2.init("VJButton2");
-      mButton3.init("VJButton3");
-   }
+   virtual void init();
 
    virtual void apiInit(){;}
 
@@ -87,22 +78,12 @@ public:
    virtual void bufferPreDraw();
 
    virtual void preFrame();
-   virtual void intraFrame(){;}
-   virtual void postFrame(){;}
-
-   virtual void contextInit(){;}
+   virtual void contextInit();
    virtual void draw();   
- 
-   void drawGrid(float wallWidth, float wallHeight);
-   void drawCubeLine();
-   void drawCubeOrTriangle();
- 
-   void drawWall(vrj::SurfaceViewport* surf);   
+    
 	
 public:
-   bool mUseLights;
-   bool mUseCubesOrTriangles;
-   bool mUseCubes;
+   bool mUseLights;      
    gmtl::Point4f mLightPosition;
    
    gadget::PositionInterface  mWand;    /**< Positional interface for Wand position */
@@ -113,6 +94,7 @@ public:
    gadget::DigitalInterface   mButton3;
 
    std::vector<TestModePtr>   mTestModes;    /** List of test modes. */
+   unsigned                   mCurMode;      /** Current test mode to use. */
 };
 
 
