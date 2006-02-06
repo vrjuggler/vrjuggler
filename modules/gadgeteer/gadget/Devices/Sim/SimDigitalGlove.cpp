@@ -86,22 +86,30 @@ bool SimDigitalGlove::config(jccl::ConfigElementPtr element)
  */
 void SimDigitalGlove::updateData()
 {
-   std::vector<DigitalData> digitalSample(10);
+   std::vector<DigitalData> digital_sample(10);
 	
     // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {
       if (checkKeyPair( mSimKeys[i] ))             // If keys pressed
-         digitalSample[i] = 1;
+         digital_sample[i] = 1;
       else
-         digitalSample[i] = 0;
+         digital_sample[i] = 0;
    }
 
-   addDigitalSample(digitalSample);
+   addDigitalSample(digital_sample);
    swapDigitalBuffers();
 
-   std::vector<GloveData> gloveSample=getGloveDataFromDigitalData(digitalSample);
-   addGloveSample(gloveSample);
+   std::vector<GloveData> glove_sample = getGloveDataFromDigitalData(digital_sample);
+   vpr::Interval time_stamp = mKeyboardMouse->getTimeStamp();
+
+   for (std::vector<GloveData>::iterator itr = glove_sample.begin() ;
+        itr != glove_sample.end() ; itr++)
+   {
+      (*itr).setTime(time_stamp);
+   }
+
+   addGloveSample(glove_sample);
    swapGloveBuffers();
    
    return;

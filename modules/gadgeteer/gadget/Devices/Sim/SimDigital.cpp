@@ -88,7 +88,8 @@ void SimDigital::updateData()
    // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {
-      digital_data_sample[i].setTime();
+      // Set the time for the digital data to the KeyboardMouse timestamp
+      digital_data_sample[i].setTime(mKeyboardMouse->getTimeStamp());
       if(checkKeyPair(mSimKeys[i]))             // If keys pressed
       {
          digital_data_sample[i] = 1;
