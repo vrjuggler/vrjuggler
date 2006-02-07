@@ -68,26 +68,39 @@ public:
    
    virtual void draw(WallTest *wallTest)
    {
-      DisplayManager* displayManager=vrj::GlDrawManager::instance()->getDisplayManager();
-     std::vector<Display*> disps=displayManager->getAllDisplays();    
-   
-     for(unsigned int i=0;i<disps.size();i++)
-     {
-        for (unsigned int v=0;v<disps[i]->getNumViewports();v++)
-        {
-           Viewport* viewport=disps[i]->getViewport(v);
-   
-           if (viewport->isSurface())
-           {
-              // Get a pointer to the surface
-              SurfaceViewport* surface = dynamic_cast<SurfaceViewport*>(viewport);
-              vprASSERT(surface!=NULL);
-   
-              drawWallPattern(surface);            
-           }
-        }
-     }  
+      vrj::GlUserData* user_data       = vrj::GlDrawManager::instance()->currentUserData();      
+      vrj::Viewport*   cur_vp          = user_data->getViewport();
+      vrj::Projection* proj            = user_data->getProjection();
+      
+      if(cur_vp->isSimulator())
+      {
+	 DisplayManager* displayManager=vrj::GlDrawManager::instance()->getDisplayManager();
+	 std::vector<Display*> disps=displayManager->getAllDisplays();    
 
+	 for(unsigned int i=0;i<disps.size();i++)
+	 {
+            for (unsigned int v=0;v<disps[i]->getNumViewports();v++)
+            {
+               Viewport* viewport=disps[i]->getViewport(v);
+
+               if (viewport->isSurface())
+               {
+        	  // Get a pointer to the surface
+        	  SurfaceViewport* surface = dynamic_cast<SurfaceViewport*>(viewport);
+        	  vprASSERT(surface!=NULL);
+
+        	  drawWallPattern(surface);            
+               }
+            }
+	 }
+      }
+      else
+      {      
+         SurfaceViewport* surface = dynamic_cast<SurfaceViewport*>(cur_vp);
+         vprASSERT(surface!=NULL);
+
+         drawWallPattern(surface);
+      }              
    }
 
    void drawWallPattern(SurfaceViewport* surf)
