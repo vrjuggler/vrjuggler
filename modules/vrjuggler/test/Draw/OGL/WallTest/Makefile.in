@@ -41,7 +41,15 @@ APP_NAME=	WallTest@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		WallTest.cpp main.cpp Text.cpp WallTestHelpers.cpp
+SRCS=		CubeLineMode.cpp	\
+		DisplayInfoMode.cpp	\
+		StereoEyeTestMode.cpp	\
+		TestPatternMode.cpp	\
+		Text.cpp		\
+		WallTest.cpp		\
+		WallTestHelpers.cpp	\
+		WireSphereMode.cpp	\
+		main.cpp
 
 EXTRA_INCLUDES=		-I$(srcdir)/../perfAddon 
 EXTRA_PATH_FOR_SOURCES=	$(srcdir)/../perfAddon
