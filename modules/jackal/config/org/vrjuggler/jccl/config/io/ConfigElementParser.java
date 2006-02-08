@@ -180,10 +180,18 @@ public class ConfigElementParser
       }
 
       // Get all the properties for this element
-      Map props = parseProperties(root, def);
+      try
+      {
+         Map props = parseProperties(root, def);
 
-      // Create the configuration element
-      return new ConfigElement(def, name, props);
+         // Create the configuration element
+         return new ConfigElement(def, name, props);
+      }
+      catch (ParseException pe)
+      {
+         throw new ParseException("Failed to parse config element \"" +
+                                  name + "\"\n" + pe.getMessage());
+      }
    }
 
 
@@ -336,18 +344,29 @@ public class ConfigElementParser
          return propDef.getEnums().get(valueStr);
       }
 
-      // If the property type is not a configuration element, convert it to
-      // that value type.
-      if (propDef.getType() != ConfigElement.class)
+      try
       {
-         return convertValue(valueStr, propDef.getType());
-      }
+         // If the property type is not a configuration element, convert it to
+         // that value type.
+         if (propDef.getType() != ConfigElement.class)
+         {
+            return convertValue(valueStr, propDef.getType());
+         }
 
-      // The property type must be a configuration element, so recurse on it
-      Element config_element_node = (Element)elt.getChildren().get(0);
-      // XXX: This discards XML elements created as a result of parsing
-      // config_element_node!
-      return parse(config_element_node, new ArrayList());
+         // The property type must be a configuration element, so recurse on it
+         Element config_element_node = (Element)elt.getChildren().get(0);
+         // XXX: This discards XML elements created as a result of parsing
+         // config_element_node!
+         return parse(config_element_node, new ArrayList());
+      }
+      // If a helper method throws a ParseException, catch it, add some detail
+      // to the message, and then throw a new exception of the same type.
+      catch (ParseException pe)
+      {
+         String msg = pe.getMessage();
+         msg += "\nCaught while parsing property " + propDef.getName();
+         throw new ParseException(msg);
+      }
    }
 
    /**
@@ -387,12 +406,12 @@ public class ConfigElementParser
          }
          else
          {
-            throw new ParseException("Unknown valuetype: "+type);
+            throw new ParseException("Unknown valuetype \"" + type + "\"");
          }
       }
       catch (NumberFormatException nfe)
       {
-         throw new ParseException("Invalid value: "+valueStr);
+         throw new ParseException("Invalid value \"" + valueStr + "\"");
       }
    }
 
