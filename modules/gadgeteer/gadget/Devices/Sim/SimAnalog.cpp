@@ -122,7 +122,7 @@ void SimAnalog::updateData()
 
       // Set the normalized data
       norm_data[i] = normalized_value;
-      norm_data[i].setTime();
+      norm_data[i].setTime(mKeyboardMouse->getTimeStamp());
    }
 
    // Locks and then swaps the indices.
