@@ -30,30 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
- 
+
 #ifndef _TEST_MODE_H_
 #define _TEST_MODE_H_
 
-#include <boost/shared_ptr.hpp> 
+#include <boost/shared_ptr.hpp>
 #include <string>
-
-#ifdef VPR_OS_Darwin
-#include <OpenGL/gl.h>
-#else
-#include <GL/gl.h>
-#endif
-
-#include <gmtl/Math.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Generate.h>
-#include <gmtl/Vec.h>
-
-#include <gadget/Type/Position/PositionUnitConversion.h>
-
-#include <vrj/Draw/OGL/GlDrawManager.h>
-#include <vrj/Display/DisplayManager.h>
-#include <vrj/Display/SurfaceViewport.h>
-#include <vrj/Display/Display.h>
 
 class TestMode;
 typedef boost::shared_ptr<TestMode> TestModePtr;
