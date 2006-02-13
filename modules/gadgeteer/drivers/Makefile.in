@@ -137,7 +137,6 @@ endif
 SUBDIR=	3Dconnexion/SpaceBall		\
 	5DT/DataGlove			\
 	ART/DTrack	 		\
-	Ascension/Flock 		\
 	Ascension/MotionStar		\
 	Fakespace/PinchGlove		\
 	Immersion/IBox			\
