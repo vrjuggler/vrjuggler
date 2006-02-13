@@ -62,6 +62,10 @@
 #include <vrpn_Tracker.h>
 #include <vrpn_Button.h>
 
+#if ! defined(VRPN_CALLBACK)
+#  define VRPN_CALLBACK
+#endif
+
 
 namespace gadget
 {
@@ -175,8 +179,8 @@ private:
    std::vector<gmtl::Quatf> mQuats;
    std::vector<gmtl::Vec3f> mPositions;
 
-   friend void staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
-   friend void staticHandleButton(void *userdata, vrpn_BUTTONCB t);
+   friend void VRPN_CALLBACK staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
+   friend void VRPN_CALLBACK staticHandleButton(void *userdata, vrpn_BUTTONCB t);
 };
 
 } // End of gadget namespace

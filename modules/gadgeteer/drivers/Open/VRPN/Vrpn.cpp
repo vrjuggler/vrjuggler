@@ -98,7 +98,7 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-void staticHandleTracker(void *userdata, vrpn_TRACKERCB t)
+void VRPN_CALLBACK staticHandleTracker(void *userdata, vrpn_TRACKERCB t)
 {
 
 #if (VRPN_DEBUG&1)
@@ -109,7 +109,7 @@ void staticHandleTracker(void *userdata, vrpn_TRACKERCB t)
    this_ptr->handleTracker(t);
 }
 
-void staticHandleButton(void *userdata, vrpn_BUTTONCB b)
+void VRPN_CALLBACK staticHandleButton(void *userdata, vrpn_BUTTONCB b)
 {
 #if (VRPN_DEBUG&1)
    std::cout << "HandleButton" << std::endl;
