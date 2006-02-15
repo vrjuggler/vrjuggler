@@ -34,6 +34,7 @@
 #include <vector>
 
 #include <vpr/System.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/Port/SerialPort.h>
 #include <vpr/Util/Debug.h>
 
