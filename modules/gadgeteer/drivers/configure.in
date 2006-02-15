@@ -603,6 +603,7 @@ AC_CONFIG_FILES([
    Ascension/Makefile
    Ascension/Flock/Makefile
    Ascension/MotionStar/Makefile
+   Ascension/Wanda/Makefile
    Fakespace/Makefile
    Fakespace/PinchGlove/Makefile
    Immersion/Makefile
