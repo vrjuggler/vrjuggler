@@ -115,6 +115,13 @@ bool Wanda::config(jccl::ConfigElementPtr elt)
    else
    {
       mWanda.setPortName(elt->getProperty<std::string>("port"));
+      const unsigned int timeout =
+         elt->getProperty<unsigned int>("read_timeout");
+
+      if ( timeout > 0 )
+      {
+         mWanda.setTimeout(vpr::Interval(timeout, vpr::Interval::Msec));
+      }
    }
 
    return status;

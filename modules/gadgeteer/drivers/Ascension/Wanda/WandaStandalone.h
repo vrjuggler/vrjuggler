@@ -69,6 +69,11 @@ public:
 
    void setPortName(const std::string& portName);
 
+   void setTimeout(const vpr::Interval& timeout)
+   {
+      mTimeout = timeout;
+   }
+
    /**
     * Opens the serial port to which the Wanda is connected and starts the
     * communication protocol with the device.
@@ -154,6 +159,26 @@ public:
    static const float ANALOG_MAX;
 
 private:
+   /**
+    * Attempts to read \p length bytes from \c mPort before the given
+    * timeout expires. The number of bytes read is returned to the caller. If
+    * the read cannot complete before the timeout expires, then a
+    * vpr::TimeoutException is thrown.
+    *
+    * @param length  The number of bytes to try to read from \c mPort.
+    * @param timeout The amount of time to spend trying to read \p length
+    *                bytes. This parameter is optional, and it defaults to
+    *                vpr::Interval::NoTimeout if not given.
+    *
+    * @return The number of bytes read is returned.
+    *
+    * @throw vpr::TimeoutException is thrown if the read operation could not
+    *        complete before the given timeout expired.
+    */
+   vpr::Uint32
+      readBytes(const vpr::Uint32 length,
+                const vpr::Interval& timeout = vpr::Interval::NoTimeout);
+
    /** @name Serial Port Members */
    //@{
    std::string      mPortName;  /**< The port name (COM1, /dev/ttyS1, etc.) */
@@ -162,10 +187,12 @@ private:
 
    bool mRunning;
 
-   vpr::Interval mTimeout;
+   vpr::Interval mTimeout;      /**< Timeout used for non-blocking reads */
 
    /**
     * The current data buffer as read (possibly in pieces) from the hardware.
+    *
+    * @see sample()
     */
    std::deque<vpr::Uint8> mDataBuffer;
 
