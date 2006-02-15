@@ -57,8 +57,12 @@ namespace tweek
 CorbaService::CorbaService(const std::string& nsHost, vpr::Uint16 nsPort,
                            const std::string& iiopVersion,
                            const std::string& subContextId)
-   : mOrbFunctor(NULL), mOrbThread(NULL), mNsHost(nsHost), mNsPort(nsPort),
-     mNameServiceURI("corbaloc:iiop:"), mSubContextId(subContextId)
+   : mOrbFunctor(NULL)
+   , mOrbThread(NULL)
+   , mNsHost(nsHost)
+   , mNsPort(nsPort)
+   , mNameServiceURI("corbaloc:iiop:")
+   , mSubContextId(subContextId)
 {
    // Why isn't this conversion easier to do with std::string?
    char nsPort_str[6];

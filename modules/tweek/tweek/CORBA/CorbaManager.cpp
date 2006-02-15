@@ -56,8 +56,11 @@ namespace tweek
 const std::string CorbaManager::DELIVERY_SUBJECT_NAME("TweekBeanPusher");
 
 CorbaManager::CorbaManager()
-   : mAppName("unknown"), mOrbFunctor(NULL), mOrbThread(NULL),
-     mSubjectManager(NULL), mBeanDeliverySubject(NULL)
+   : mAppName("unknown")
+   , mOrbFunctor(NULL)
+   , mOrbThread(NULL)
+   , mSubjectManager(NULL)
+   , mBeanDeliverySubject(NULL)
 {
    std::string tweek_ver = getVersionString();
 
@@ -66,8 +69,9 @@ CorbaManager::CorbaManager()
       << std::string(tweek_ver.length() + 14, '=') << std::endl
       << vprDEBUG_FLUSH;
    vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-      << clrOutNORM(clrGREEN, "Tweek Server: ") << clrOutNORM(clrGREEN, tweek_ver)
-      << clrRESET << std::endl << vprDEBUG_FLUSH;
+      << clrOutNORM(clrGREEN, "Tweek Server: ")
+      << clrOutNORM(clrGREEN, tweek_ver) << clrRESET << std::endl
+      << vprDEBUG_FLUSH;
    vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
       << std::string(tweek_ver.length() + 14, '=') << std::endl
       << vprDEBUG_FLUSH;
