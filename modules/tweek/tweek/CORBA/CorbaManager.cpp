@@ -276,7 +276,6 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
    try
    {
       mChildPOA->activate_object(mSubjectManager);
-      mSubjectManager->_add_ref();
    }
    // This will be raised if the IdUniqunessPolicy within our child POA is set
    // to UNIQUE_ID.
@@ -345,7 +344,6 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
                mBeanDeliverySubject = new BeanDeliverySubjectImpl();
                mSubjectManager->registerSubject(mBeanDeliverySubject,
                                                 DELIVERY_SUBJECT_NAME.c_str());
-               mBeanDeliverySubject->_add_ref();
             }
             catch (...)
             {
