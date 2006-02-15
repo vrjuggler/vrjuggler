@@ -1164,6 +1164,9 @@ int main(int argc, char* argv[])
                      &lt;&lt; "Failed to register subject\n"
                      &lt;&lt; vprDEBUG_FLUSH;
                }
+
+               // We are done with our pointer to the servant.
+               slider_subj-&gt;_remove_ref();
             }
          }
          catch (CORBA::Exception&amp; ex)
@@ -1366,6 +1369,9 @@ int main(int argc, char* argv[])
                      &lt;&lt; "Failed to register subject\n"
                      &lt;&lt; vprDEBUG_FLUSH;
                }
+
+               // We are done with our pointer to the servant.
+               custom_subj-&gt;_remove_ref();
             }
          }
          catch (CORBA::Exception&amp; ex)
@@ -2348,6 +2354,9 @@ int main(int argc, char* argv[])
                      &lt;&lt; "Failed to register subject\n"
                      &lt;&lt; vprDEBUG_FLUSH;
                }
+
+               // We are done with our pointer to the servant.
+               slider_subj-&gt;_remove_ref();
             }
          }
          catch (CORBA::Exception&amp; ex)
