@@ -84,6 +84,8 @@ XSLTPROC?=	/usr/bin/xsltproc
 FO_VERSION?=	FOP
 XSLT_TOOL?=	Xalan
 
+recursive_copy=	tar --exclude .svn -chvf - $(1) | tar -C $(2) -xpf -
+
 # Use one of the following depending on what will be processing the generated
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
 # defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
@@ -166,10 +168,10 @@ ifdef INSTALL_FILES
 	cp $(INSTALL_FILES) $(prefix)/
 endif
 ifdef INSTALL_DIRS
-	cp -r $(INSTALL_DIRS) $(prefix)
+	$(call recursive_copy, $(INSTALL_DIRS), $(prefix))
 endif
 ifdef NEED_DB_IMAGES
-	cp -RH images $(prefix)/
+	$(call recursive_copy, images, $(prefix))
 endif
 endif
 
@@ -180,15 +182,15 @@ else
 	if [ ! -d "$(prefix)" ]; then mkdir -p $(prefix); fi
 	for file in $(XML_FILES) ; do \
             dir=`echo $$file | sed -e 's/\.xml//'` ; \
-            cp -r $$dir $(prefix)/ ; \
+            $(call recursive_copy, $$dir, $(prefix)) ; \
             if [ ! -z "$(INSTALL_FILES)" ]; then \
                 cp $(INSTALL_FILES) $(prefix)/$$dir ; \
             fi ; \
             if [ ! -z "$(NEED_DB_IMAGES)" ]; then \
-                cp -RH images $(prefix)/$$dir ; \
+                $(call recursive_copy, images, $(prefix)/$$dir) ; \
             fi ; \
             if [ ! -z "$(INSTALL_DIRS)" ]; then \
-                cp -r $(INSTALL_DIRS) $(prefix)/$$dir ; \
+                $(call recursive_copy, $(INSTALL_DIRS), $(prefix)/$$dir) ; \
             fi ; \
           done
 endif
@@ -232,7 +234,7 @@ endif
                 cp $(INSTALL_FILES) $$dir ; \
             fi ; \
             if [ ! -z "$(INSTALL_DIRS)" ]; then \
-                cp -r $(INSTALL_DIRS) $$dir ; \
+                $(call recursive_copy, $(INSTALL_DIRS), $$dir) ; \
             fi ; \
             cur_dir=`pwd` ; \
             cd $$dir ; \
