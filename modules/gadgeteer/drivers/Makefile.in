@@ -138,6 +138,7 @@ SUBDIR=	3Dconnexion/SpaceBall		\
 	5DT/DataGlove			\
 	ART/DTrack	 		\
 	Ascension/MotionStar		\
+	Ascension/Wanda			\
 	Fakespace/PinchGlove		\
 	Immersion/IBox			\
 	Intersense/IS900		\
