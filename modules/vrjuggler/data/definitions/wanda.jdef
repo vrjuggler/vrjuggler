@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="wanda" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Wanda">
+      <abstract>false</abstract>
+      <help>Configuration for the Ascension Wanda.</help>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>The name of the serial port to which the Wanda is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc.</help>
+         <value label="Port" defaultvalue="/dev/ttyS0"/>
+      </property>
+      <property valuetype="float" variable="false" name="min">
+         <help>The lower bound for the range of valid values for the analog data.</help>
+         <value label="Analog Minimum" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>The upper bound for the range of valid values for the analog data.</help>
+         <value label="Analog Maximum" defaultvalue="255.0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="read_timeout">
+         <help>The amount of time (in milliseconds) to wait on a serial port read operation before timing out.</help>
+         <value label="Serial Read Timeout (ms)" defaultvalue="20"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

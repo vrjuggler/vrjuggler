@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/home/patrick/src/Juggler/main/juggler/build.linux.posix.gcc40/modules/vrjuggler/test/Draw/OGL/wand/example.wanda.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <input_manager name="IM Wanda" version="2">
+         <driver>Wanda_drv</driver>
+      </input_manager>
+      <wanda name="Wanda" version="1">
+         <port>/dev/ttyS1</port>
+         <min>-34.0</min>
+         <max>34.0</max>
+         <read_timeout>20</read_timeout>
+         <device_host />
+      </wanda>
+      <digital_proxy name="Digital Proxy 0" version="1">
+         <device>Wanda</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Digital Proxy 1" version="1">
+         <device>Wanda</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="Digital Proxy 2" version="1">
+         <device>Wanda</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <analog_proxy name="Analog Proxy 0" version="1">
+         <device>Wanda</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <analog_proxy name="Analog Proxy 1" version="1">
+         <device>Wanda</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <alias name="VJButton0" version="1">
+         <proxy>Digital Proxy 2</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>Digital Proxy 1</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>Digital Proxy 0</proxy>
+      </alias>
+      <alias name="VJAnalog0" version="1">
+         <proxy>Analog Proxy 0</proxy>
+      </alias>
+      <alias name="VJAnalog1" version="1">
+         <proxy>Analog Proxy 1</proxy>
+      </alias>
+   </elements>
+</configuration>
+
