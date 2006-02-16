@@ -527,6 +527,40 @@ vpr::ReturnStatus SerialPortImplWin32::write_i(const void* buffer,
    return s;
 }
 
+vpr::ReturnStatus SerialPortImplWin32::setDataTerminalReady(bool val)
+{
+   vpr::ReturnStatus status;
+   const DWORD func = (val ? SETDTR : CLRDTR);
+
+   if ( ! EscapeCommFunction(mHandle, func) )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Failed to " << (val ? "set" : "clear") << " DTR on serial port "
+         << mName << ": " << getErrorMessageWithCode(GetLastError())
+         << std::endl << vprDEBUG_FLUSH;
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus SerialPortImplWin32::setRequestToSend(bool val)
+{
+   vpr::ReturnStatus status;
+   const DWORD func = (val ? SETRTS : CLRRTS);
+
+   if ( ! EscapeCommFunction(mHandle, func) )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Failed to " << (val ? "set" : "clear") << " RTS on serial port "
+         << mName << ": " << getErrorMessageWithCode(GetLastError())
+         << std::endl << vprDEBUG_FLUSH;
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
 vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer,
                                               const vpr::Uint32 length,
                                               vpr::Uint32& bytesRead,

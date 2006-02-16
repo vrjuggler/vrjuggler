@@ -910,16 +910,10 @@ public:
    }
 
    /** Sets the data terminal ready line. */
-   vpr::ReturnStatus setDataTerminalReady(bool val)
-   {
-      return vpr::ReturnStatus::Fail;
-   }
+   vpr::ReturnStatus setDataTerminalReady(bool val);
 
    /** Sets the ready to send line. */
-   vpr::ReturnStatus setRequestToSend(bool val)
-   {
-      return vpr::ReturnStatus::Fail;
-   }
+   vpr::ReturnStatus setRequestToSend(bool val);
 
    /**
     * Implementation of the read() template method.  This reads at most the
