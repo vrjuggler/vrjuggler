@@ -42,12 +42,42 @@
 #include <vpr/vprConfig.h>
 
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include <string.h>
 
 #include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 #include <vpr/Util/Debug.h>
 
+
+namespace
+{
+
+/** Helper function for error reporting within this file. */
+std::string getErrorMessage(const DWORD errorCode)
+{
+   char* msg_buffer(NULL);
+   FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+                 NULL, errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                 (LPTSTR) &msg_buffer, 0, NULL);
+
+   // Copy the contents of msg_buffer into err_msg and then release the memory
+   // allocated for msg_buffer. What a hassle.
+   std::string err_msg(msg_buffer);
+   LocalFree(msg_buffer);
+
+   return err_msg;
+}
+
+std::string getErrorMessageWithCode(const DWORD errorCode)
+{
+   std::stringstream msg_stream;
+   msg_stream << getErrorMessage(errorCode) << " (error code = " << errorCode
+              << ")";
+   return msg_stream.str();
+}
+
+}
 
 namespace vpr
 {
