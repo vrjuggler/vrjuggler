@@ -30,8 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#if defined(WIN32) || defined(WIN64)
+#  include <windows.h>
+#endif
+
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+#include <gmtl/Math.h>
 
 #include <WallTestHelpers.h>
 #include <WireSphereMode.h>
@@ -48,7 +54,7 @@ void fghCircleTable(double** sint, double** cost, const int n)
 
    /* Determine the angle between samples */
 
-   const double angle = 2 * M_PI / (double) ((n == 0) ? 1 : n);
+   const double angle = 2 * gmtl::Math::PI / (double) ((n == 0) ? 1 : n);
 
    /* Allocate memory for n samples, plus duplicate of first entry at the end */
 

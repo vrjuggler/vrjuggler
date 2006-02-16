@@ -30,6 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#if defined(WIN32) || defined(WIN64)
+#  include <windows.h>
+#endif
+
 #ifdef VPR_OS_Darwin
 #include <OpenGL/gl.h>
 #else

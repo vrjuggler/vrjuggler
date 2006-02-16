@@ -30,9 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
  
- #include "WallTestHelpers.h"
+#if defined(WIN32) || defined(WIN64)
+#  include <windows.h>
+#endif
 
 #include <gadget/Type/Position/PositionUnitConversion.h>
+#include "WallTestHelpers.h"
+
 
 void drawCube()
 {
