@@ -53,6 +53,8 @@
 # endif
 #endif
 
+#include <boost/bind.hpp>
+
 
 // Using Statements
 using std::cout;
