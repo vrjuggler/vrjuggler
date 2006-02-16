@@ -36,10 +36,6 @@
 
 #include <plugins/RIMPlugin/RIMPlugin.h>
 
-// Accept Thread
-#include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
-
 // Sharing Devices
 #include <gadget/Type/BaseTypeFactory.h>
 #include <gadget/Type/DeviceFactory.h>

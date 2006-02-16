@@ -35,10 +35,6 @@
 
 #include <gadget/RemoteInputManager.h>
 
-// Accept Thread
-#include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
-
 // Sharing Devices
 #include <gadget/Type/BaseTypeFactory.h>
 #include <gadget/VirtualDevice.h>
