@@ -31,6 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/Devices/DriverConfig.h>
+
+#include <boost/bind.hpp>
+
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 #include <vpr/IO/TimeoutException.h>
@@ -62,15 +65,13 @@ namespace gadget
 {
 
 /**********************************************************
-  void controlLoop(void*)
+  void controlLoop()
 
   The spawned thread just loops from here
 
 *********************************************** ahimberg */
-void IBox::controlLoop(void* nullParam)
+void IBox::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    while (!mDoneFlag)
    {
       mDataUpdated = sample();
@@ -161,9 +162,7 @@ bool IBox::startSampling()
    
    // Set exit flag and spawn sample thread
    mDoneFlag = false;
-   vpr::ThreadMemberFunctor<IBox>* memberFunctor = 
-      new vpr::ThreadMemberFunctor<IBox>(this, &IBox::controlLoop, NULL);
-   mThread = new vpr::Thread(memberFunctor);
+   mThread = new vpr::Thread(boost::bind(&IBox::controlLoop, this));
 
    if ( ! mThread->valid() )
    {

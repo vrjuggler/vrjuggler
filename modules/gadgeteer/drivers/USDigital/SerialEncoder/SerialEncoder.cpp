@@ -32,7 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 #include <gmtl/Generate.h>
 #include <gadget/gadgetParam.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
@@ -56,8 +56,7 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 }
 
 SerialEncoder::SerialEncoder()   
-   : mThreadFunctor(NULL)
-   , mSampleThread(NULL)
+   : mSampleThread(NULL)
    , mExitFlag(false)
    , mBaudRate(0)
 {
@@ -89,10 +88,9 @@ bool SerialEncoder::config(jccl::ConfigElementPtr e)
 bool SerialEncoder::startSampling()
 {
    mExitFlag = false;
-   mThreadFunctor =
-      new vpr::ThreadMemberFunctor<SerialEncoder>(this,
-                                                  &SerialEncoder::threadedSampleFunction);
-   mSampleThread = new vpr::Thread(mThreadFunctor);
+   mSampleThread =
+      new vpr::Thread(boost::bind(&SerialEncoder::threadedSampleFunction,
+                                  this));
 
    if ( !mSampleThread->valid() )
    {
@@ -125,17 +123,13 @@ bool SerialEncoder::stopSampling()
       mSampleThread->join();
       delete mSampleThread;
       mSampleThread=NULL;
-      delete mThreadFunctor;
-      mThreadFunctor = NULL;
    }
 
    return true;
 }
 
-void SerialEncoder::threadedSampleFunction(void* nullArg)
+void SerialEncoder::threadedSampleFunction()
 {
-   boost::ignore_unused_variable_warning(nullArg);
-
    while ( !mExitFlag )
    {
       sample();

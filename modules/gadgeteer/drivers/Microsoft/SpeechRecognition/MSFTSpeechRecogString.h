@@ -70,7 +70,7 @@ public:
    bool startSampling();
 
    /** Main thread of control for this active object. */
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
    /** Stops sampling. */
    bool stopSampling();

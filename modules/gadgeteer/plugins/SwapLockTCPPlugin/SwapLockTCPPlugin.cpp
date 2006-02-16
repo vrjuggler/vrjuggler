@@ -32,6 +32,7 @@
 
 #include <cluster/PluginConfig.h>
 
+#include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
 
 #include <vpr/Thread/Thread.h>
@@ -423,11 +424,9 @@ namespace cluster
                << "Starting the listening thread...\n" << vprDEBUG_FLUSH;
 
                // Start a thread to monitor port
-            vpr::ThreadMemberFunctor<SwapLockTCPPlugin>* memberFunctor =
-            new vpr::ThreadMemberFunctor<SwapLockTCPPlugin>
-            (this, &SwapLockTCPPlugin::acceptLoop, NULL);
-            
-            mAcceptThread = new vpr::Thread(memberFunctor);
+            mAcceptThread =
+               new vpr::Thread(boost::bind(&SwapLockTCPPlugin::acceptLoop,
+                                           this));
             vprASSERT(mAcceptThread->valid());
             return true;
          }
@@ -449,10 +448,8 @@ namespace cluster
       }
    }
    
-   void SwapLockTCPPlugin::acceptLoop(void* nullParam)
+   void SwapLockTCPPlugin::acceptLoop()
    {
-      boost::ignore_unused_variable_warning(nullParam);
-
       //////////////////////////// Create an acceptor socket that listens on port. //////////////////////////////
 
       vpr::SocketStream sock(mListenAddr, vpr::InetAddr::AnyAddr);

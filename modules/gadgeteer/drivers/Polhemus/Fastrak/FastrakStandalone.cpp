@@ -32,7 +32,8 @@
 
 #include <string>
 #include <string.h>
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/IO/TimeoutException.h>
@@ -146,9 +147,8 @@ int FastrakStandalone::Read(int len)
 }
 
 
-void FastrakStandalone::readloop(void *unused)
+void FastrakStandalone::readloop()
 {
-   boost::ignore_unused_variable_warning(unused);
    vpr::Uint32 bytes_written;
    vpr::Uint32 sleep_time(10000000/mConf.baud);
 
@@ -592,20 +592,14 @@ void FastrakStandalone::checkchild()
          mReadThread->kill(9);
       }
    }
-   vpr::ThreadMemberFunctor<FastrakStandalone>* read_func =
-      new vpr::ThreadMemberFunctor<FastrakStandalone>(this,
-                                                       &FastrakStandalone::readloop,
-                                                       NULL);
-   mReadThread = new vpr::Thread(read_func);
+   mReadThread = new vpr::Thread(boost::bind(&FastrakStandalone::readloop,
+                                             this));
 */
    mExitFlag = false;
    if ( NULL == mReadThread )
    {
-      vpr::ThreadMemberFunctor<FastrakStandalone>* read_func =
-         new vpr::ThreadMemberFunctor<FastrakStandalone>(this,
-                                                          &FastrakStandalone::readloop,
-                                                          NULL);
-      mReadThread = new vpr::Thread(read_func);
+      mReadThread = new vpr::Thread(boost::bind(&FastrakStandalone::readloop,
+                                                this));
    }
 }
 

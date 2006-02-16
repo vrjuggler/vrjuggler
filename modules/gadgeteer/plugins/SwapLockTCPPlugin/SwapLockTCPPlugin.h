@@ -180,7 +180,7 @@ private:
     *
     * Note: This will only be used by the barrier master.
     */
-   void acceptLoop(void* nullParam);
+   void acceptLoop();
    
    /**
     * Sends the "complete" signal to all sync slaves.

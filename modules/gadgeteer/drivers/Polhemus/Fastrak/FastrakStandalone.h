@@ -114,7 +114,7 @@ private:
    vpr::ReturnStatus readStatus();
 
    int Read(int len);
-   void readloop(void* unused);
+   void readloop();
    void checkchild();
    void getTrackerInfo(struct perstation* psp, unsigned char c);
    void getTrackerBuf();

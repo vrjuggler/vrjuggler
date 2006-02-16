@@ -34,7 +34,7 @@
 
 #include <iomanip>
 #include <algorithm>
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <gadget/Util/Debug.h>
 #include <gadget/gadgetParam.h>
@@ -140,12 +140,8 @@ bool PinchGlove::startSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) 
       << "[PinchGlove] Spawning control thread." << std::endl  << vprDEBUG_FLUSH;
 
-      // Create a functor that points at the sample method.
-      vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
-         new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
-
       // Create a new thread to handle the control.
-      mThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(boost::bind(&PinchGlove::controlLoop, this));
 
       if (!mThread->valid())
       {
@@ -171,10 +167,8 @@ bool PinchGlove::startSampling()
    }
 }
 
-void PinchGlove::controlLoop(void* nullParam)
+void PinchGlove::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-   
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "[PinchGlove] Entered control thread"
       << std::endl << vprDEBUG_FLUSH;

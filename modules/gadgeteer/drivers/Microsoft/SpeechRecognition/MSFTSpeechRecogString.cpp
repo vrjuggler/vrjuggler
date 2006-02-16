@@ -33,6 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <vector>
+#include <boost/bind.hpp>
 
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
@@ -71,10 +72,8 @@ MSFTSpeechRecogString::~MSFTSpeechRecogString() throw ()
 }
 
 // Main thread of control for this active object
-void MSFTSpeechRecogString::controlLoop(void* nullParam)
+void MSFTSpeechRecogString::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    //Wait for initialization to finish
    // XXX: This should use a condition variable.  -PH 7/10/2004
    while( mIsInitializing )
@@ -118,11 +117,9 @@ bool MSFTSpeechRecogString::startSampling()
    else
    {
       // Create a new thread to handle the sampling control
-      vpr::ThreadMemberFunctor<MSFTSpeechRecogString>* memberFunctor =
-         new vpr::ThreadMemberFunctor<MSFTSpeechRecogString>(this,
-                                                             &MSFTSpeechRecogString::controlLoop,
-                                                             NULL);
-      mThread = new vpr::Thread(memberFunctor);
+      mThread =
+         new vpr::Thread(boost::bind(&MSFTSpeechRecogString::controlLoop,
+                                     this));
 
       if ( ! mThread->valid() )
       {

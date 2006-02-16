@@ -186,7 +186,7 @@ public:
    /**
     * Control loop for updating this thread.
     */
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
    /**
     * Signal a semaphore to let the update thread fall into

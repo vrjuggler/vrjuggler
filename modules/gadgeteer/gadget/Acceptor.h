@@ -75,7 +75,8 @@ private:
    /**
     * Control Loop used to continuously accept incoming connections.
     */
-   void acceptLoop( void* nullParam );
+   void acceptLoop();
+
 private:
    AbstractNetworkManager*      mNetworkManager;     /**< Network we are accepting connections on. */
    vpr::Thread*                 mAcceptThread;       /**< Thread that listens for incoming connections. */

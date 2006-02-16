@@ -33,6 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <vector>
+#include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
 
 #include <jccl/Config/ConfigElement.h>
@@ -70,10 +71,8 @@ namespace gadget
  *
  * @param arg A pointer to a MotionStar object cast to a void*.
  */
-void MotionStar::controlLoop(void* nullParam)
+void MotionStar::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "gadget::MotionStar: Spawned SampleBirds starting\n"
       << vprDEBUG_FLUSH;
@@ -271,10 +270,8 @@ bool MotionStar::startSampling()
             // Set exit flag to not exit and start sample thread
             mExitFlag = false;
 
-            vpr::ThreadMemberFunctor<MotionStar>* run_thread =
-               new vpr::ThreadMemberFunctor<MotionStar>(this, &MotionStar::controlLoop, NULL);
-
-            mMyThread = new vpr::Thread(run_thread);
+            mMyThread = new vpr::Thread(boost::bind(&MotionStar::controlLoop,
+                                                    this));
 
             if ( ! mMyThread->valid() )
             {

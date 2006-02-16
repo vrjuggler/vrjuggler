@@ -27,6 +27,9 @@
  */
 
 #include <gadget/Devices/DriverConfig.h>
+
+#include <boost/bind.hpp>
+
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/gadgetParam.h>
 
@@ -170,7 +173,7 @@ bool DTrack::startSampling()
 
 	thrRunning = true;
 
-	thrThread = new vpr::Thread(thrFunction, (void*) this);
+	thrThread = new vpr::Thread(boost::bind(&DTrack::thrFunction, this));
 
 	if(!thrThread->valid()){
 		thrRunning = false;
@@ -225,14 +228,12 @@ bool DTrack::stopSampling()
 //
 // classPointer (i): pointer to calling class
 
-void DTrack::thrFunction(void* classPointer)
+void DTrack::thrFunction()
 {
-	DTrack* this_ptr = static_cast<DTrack*>(classPointer);
-
 	// sampling loop:
 
-	while(this_ptr->thrRunning){
-		this_ptr->sample();
+	while(thrRunning){
+		sample();
 	}
 }
 

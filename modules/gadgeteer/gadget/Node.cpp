@@ -32,7 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 //#include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
@@ -204,15 +204,13 @@ void Node::update()
    delete temp_packet;
 }
 
-void Node::controlLoop(void* nullParam)
+void Node::controlLoop()
 {
    // - Block on an update call
    // - Update Local Data
    // - Send
    // - Signal Sync
 
-   boost::ignore_unused_variable_warning(nullParam);
-   
    while( mRunning )
    {
       // Wait for trigger
@@ -281,10 +279,7 @@ void Node::start()
 
    mRunning = true;
 
-   vpr::ThreadMemberFunctor<Node>* memberFunctor =
-      new vpr::ThreadMemberFunctor<Node>(this, &Node::controlLoop, NULL);
-
-   mControlThread = new vpr::Thread(memberFunctor);
+   mControlThread = new vpr::Thread(boost::bind(&Node::controlLoop, this));
 
    if (mControlThread->valid())
    {

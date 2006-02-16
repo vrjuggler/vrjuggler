@@ -128,7 +128,7 @@ protected:
       delete this;
    }
 
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
 private:
    vpr::Thread*      mThread;      /**< The thread doing the Flock sampling */

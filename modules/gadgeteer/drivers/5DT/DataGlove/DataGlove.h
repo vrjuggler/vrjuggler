@@ -96,7 +96,7 @@ protected:
    }
 
    /** The main control loop for the object. */
-   void controlLoop( void* nullParam );
+   void controlLoop();
    void copyDataFromGlove();
 
 protected:

@@ -32,6 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <wchar.h>
+#include <boost/bind.hpp>
 #include <drivers/Microsoft/SpeechRecognition/MSFTSpeechServerManager.h>
 
 #include <gadget/Util/Debug.h>
@@ -386,7 +387,7 @@ void MSFTSpeechServerManager::SpeakString(std::string TheString)
    delete toSpeak;
 }
 
-void MSFTSpeechServerManager::updateLoop(void* nullParam)
+void MSFTSpeechServerManager::updateLoop()
 {
    //Initialize the Speech Manager
    if(!Initialize())
@@ -428,11 +429,8 @@ bool MSFTSpeechServerManager::startUpdating()
    }
 
    // Create a new thread to handle the sampling control
-   vpr::ThreadMemberFunctor<MSFTSpeechServerManager>* memberFunctor =
-      new vpr::ThreadMemberFunctor<MSFTSpeechServerManager>(this,
-                                                            &MSFTSpeechServerManager::updateLoop,
-                                                            NULL);
-   mUpdateThread = new vpr::Thread(memberFunctor);
+   mUpdateThread =
+      new vpr::Thread(boost::bind(&MSFTSpeechServerManager::updateLoop, this));
 
    if ( ! mUpdateThread->valid() )
    {

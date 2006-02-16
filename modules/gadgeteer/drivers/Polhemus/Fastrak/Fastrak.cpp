@@ -39,7 +39,8 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <vector>
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
+
 #include <gmtl/EulerAngle.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Generate.h>
@@ -450,9 +451,8 @@ bool Fastrak::startSampling()
       }
 
       mExitFlag = false;
-      vpr::ThreadMemberFunctor<Fastrak>* member_thread =
-         new vpr::ThreadMemberFunctor<Fastrak>(this, &Fastrak::controlLoop, NULL);
-      mSampleThread = new vpr::Thread(member_thread);
+      mSampleThread = new vpr::Thread(boost::bind(&Fastrak::controlLoop,
+                                                  this));
 
       if ( mSampleThread->valid() )
       {
@@ -570,10 +570,8 @@ gmtl::Matrix44f Fastrak::getPosData( int station )
    return position_matrix;
 }
 
-void Fastrak::controlLoop( void* nullParam )
+void Fastrak::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    // Exit when flag is set...
    while ( !mExitFlag )
    {

@@ -105,7 +105,7 @@ public:
    }
 
    virtual bool config(jccl::ConfigElementPtr e);
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
    /** Input pure virtual functions **/
    bool startSampling();

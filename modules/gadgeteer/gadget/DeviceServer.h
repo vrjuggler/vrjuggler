@@ -101,7 +101,7 @@ namespace gadget
       }
 
       void start();
-      void controlLoop(void* nullParam);
+      void controlLoop();
 
       void go();
 

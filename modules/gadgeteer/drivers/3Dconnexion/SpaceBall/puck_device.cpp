@@ -81,12 +81,11 @@ PuckDevice::~PuckDevice() throw ()
     if (_puck) delete _puck; 
 }
 
-void PuckDevice::controlLoop(void* pointer)
+void PuckDevice::controlLoop()
 {
-    PuckDevice *this_ptr = static_cast<PuckDevice*>( pointer );
     while (1)
     {
-	this_ptr->sample();
+	sample();
 //	vpr::System::sleep(1);
     }
 }
@@ -116,7 +115,7 @@ bool PuckDevice::startSampling()
      */
     initBuffers();    
     // Create a new thread to handle the control
-    mThread = new vpr::Thread(controlLoop, (void *) this);   
+    mThread = new vpr::Thread(boost::bind(&PuckDevice::controlLoop, this));
     if (mThread->valid())
     {
 	return true;

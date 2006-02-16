@@ -113,7 +113,7 @@ public:
    }
 
    /** Main thread of control for this active object. */
-   void updateLoop(void* nullParam);
+   void updateLoop();
 
    /** Checks if the device is active. */
    bool isActive()

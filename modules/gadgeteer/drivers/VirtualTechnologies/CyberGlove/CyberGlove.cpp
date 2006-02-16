@@ -35,6 +35,7 @@
 
 // need stdio for sprintf
 #include <stdio.h>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -132,10 +133,7 @@ CyberGlove::startSampling()
       //Reset Exit flag in case of a shutdown and restart of the driver
       mExitFlag = false;
       // Create a new thread to handle the control
-      vpr::ThreadMemberFunctor<CyberGlove>* memberFunctor =
-         new vpr::ThreadMemberFunctor<CyberGlove>(this, &CyberGlove::controlLoop, NULL);
-
-      mThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(boost::bind(&CyberGlove::controlLoop, this));
 
       if ( ! mThread->valid() )
       {
@@ -155,10 +153,8 @@ CyberGlove::startSampling()
 
 // -Opens the glove port
 // -Starts sampling the glove
-void CyberGlove::controlLoop(void* nullParam)
+void CyberGlove::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    // Open the port and run with it
    if(mGlove->open() == 0)
    {

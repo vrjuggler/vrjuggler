@@ -126,7 +126,7 @@ protected:
    /**
     * The main control loop for this device.
     */
-   void controlLoop( void* nullParam );
+   void controlLoop();
 
 protected:
    PinchGloveStandalone* mGlove;        /**< The PinchGloveStandalone device. */

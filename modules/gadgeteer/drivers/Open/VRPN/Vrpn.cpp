@@ -57,7 +57,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -195,9 +195,8 @@ bool Vrpn::startSampling()
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) 
          << "[VRPN] Spawning control thread." << std::endl  << vprDEBUG_FLUSH;
       
-      vpr::ThreadMemberFunctor<Vrpn>* read_func =
-         new vpr::ThreadMemberFunctor<Vrpn>(this, &Vrpn::readLoop, NULL);
-      mReadThread = new vpr::Thread(read_func);
+      mReadThread = new vpr::Thread(boost::bind(&Vrpn::readLoop, this));
+
       if ( !mReadThread->valid() )
       {
          return 0;
@@ -213,10 +212,8 @@ bool Vrpn::startSampling()
    }
 }
 
-void Vrpn::readLoop(void *nullParam)
+void Vrpn::readLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    vrpn_Tracker_Remote *tracker;
    vrpn_Button_Remote *button;
 

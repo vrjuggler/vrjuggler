@@ -34,6 +34,7 @@
 
 #include <strstream>
 #include <fstream>
+#include <boost/bind.hpp>
 
 #include <dtk.h>
 #include <dlfcn.h>
@@ -202,7 +203,7 @@ DTK::~DTK() throw ()
 }
 
 // Main thread of control for this active object
-void DTK::controlLoop(void* nullParam)
+void DTK::controlLoop()
 {
    if ( theData != NULL )
    {
@@ -276,9 +277,7 @@ bool DTK::startSampling()
       mExitFlag = false;
 
       // Create a new thread to handle the control
-      vpr::ThreadMemberFunctor<DTK>* memberFunctor =
-         new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
-      mThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(boost::bind(&DTK::controlLoop, this));
 
       if ( mThread->valid() )
       {

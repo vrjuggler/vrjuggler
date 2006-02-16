@@ -34,6 +34,7 @@
 
 #include <iomanip>
 #include <sys/types.h>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -89,7 +90,7 @@ bool InputWindowWin32::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-void InputWindowWin32::controlLoop(void* devPtr)
+void InputWindowWin32::controlLoop()
 {
    mControlLoopDone = false;
 
@@ -146,12 +147,7 @@ bool InputWindowWin32::startSampling()
 
    // Create a new thread to handle the control
    mExitFlag = false;
-   vpr::ThreadMemberFunctor<InputWindowWin32>* memberFunctor =
-      new vpr::ThreadMemberFunctor<InputWindowWin32>(this,
-                                                     &InputWindowWin32::controlLoop,
-                                                     (void*) this);
-
-   mThread = new vpr::Thread(memberFunctor);
+   mThread = new vpr::Thread(boost::bind(&InputWindowWin32::controlLoop, this));
 
    // Ensure that we have a valid thread.
    if ( ! mThread->valid() )

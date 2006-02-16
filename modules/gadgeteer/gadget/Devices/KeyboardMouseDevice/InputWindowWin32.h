@@ -71,7 +71,7 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
    /** Main thread of control for this active object. */
-   void controlLoop( void* nullParam );
+   void controlLoop();
 
    /* Pure Virtuals required by gadget::Input. */
 

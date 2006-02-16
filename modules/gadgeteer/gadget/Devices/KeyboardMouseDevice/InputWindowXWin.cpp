@@ -33,7 +33,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <iomanip>
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -153,10 +153,7 @@ bool InputWindowXWin::startSampling()
    mExitFlag = false;
    
    // Create a new thread to handle the control
-   mMemberFunctor =
-      new vpr::ThreadMemberFunctor<InputWindowXWin>(this, &InputWindowXWin::controlLoop, NULL);
-
-   mThread = new vpr::Thread(mMemberFunctor);
+   mThread = new vpr::Thread(boost::bind(&InputWindowXWin::controlLoop, this));
 
    // return success value...
    if ( ! mThread->valid() )
@@ -186,19 +183,14 @@ bool InputWindowXWin::stopSampling()
 
       delete mThread;
       mThread = NULL;
-
-      delete mMemberFunctor;
-      mMemberFunctor = NULL;
    }
 
    return true;
 }
 
 // Main thread of control for this active object
-void InputWindowXWin::controlLoop(void* nullParam)
+void InputWindowXWin::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::InputWindowXWin::controlLoop: Thread started.\n"
       << vprDEBUG_FLUSH;

@@ -119,7 +119,7 @@ protected:
    }
 
 private:
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
    int mButtonState;                   /**< only one button on station 0 */
    float mTrackersPosition[4][3];      /**< 4 stations, 3 coordinates */

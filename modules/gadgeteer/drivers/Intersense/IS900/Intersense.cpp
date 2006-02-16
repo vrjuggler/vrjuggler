@@ -34,6 +34,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -51,7 +52,6 @@
 #include <gadget/gadgetParam.h>
 
 #include <drivers/Intersense/IS900/Intersense.h>
-#include <boost/concept_check.hpp>
 
 
 extern "C"
@@ -170,9 +170,8 @@ Intersense::~Intersense() throw ()
 }
 
 // Main thread of control for this active object
-void Intersense::controlLoop(void* nullParam)
+void Intersense::controlLoop()
 {
-    boost::ignore_unused_variable_warning(nullParam);
     // Configure the stations used by the configuration
     int j = 0;
     for( int i = 0; i < mTracker.NumStations(); i++ )
@@ -231,9 +230,7 @@ bool Intersense::startSampling()
 // Create a new thread to handle the control and set flag to loop
 
       mExitFlag = false;
-      vpr::ThreadMemberFunctor<Intersense>* memberFunctor =
-            new vpr::ThreadMemberFunctor<Intersense>(this, &Intersense::controlLoop, NULL);
-      mThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(boost::bind(&Intersense::controlLoop, this));
 
         if ( ! mThread->valid() )
         {

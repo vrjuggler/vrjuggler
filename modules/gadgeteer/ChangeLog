@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-15-2006 patrickh    Updated to VPR 1.1.16.
+                        NEW VERSION: 1.1.7
 Nov-12-2005 patrickh    Updated to VPR 1.1.10.
                         NEW VERSION: 1.1.6
 Oct-26-2005 patrickh    gadget::MouseEvent objects on Windows now have correct

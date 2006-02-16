@@ -887,7 +887,7 @@ class PuckDevice : public gadget::InputMixer<gadget::InputMixer
 
     //----------------------------------------
     ///
-    static void controlLoop(void* pointer);
+    void controlLoop();
     /// Initialize the analog and digital buffers
     void initBuffers();
     /// Digital data to be sent to gadget classes

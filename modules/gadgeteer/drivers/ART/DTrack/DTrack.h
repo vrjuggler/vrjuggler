@@ -90,7 +90,7 @@ protected:
 
 private:
 	vpr::Thread*  thrThread;
-	static void thrFunction(void* classPointer);
+	void thrFunction();
 	bool thrRunning;
 
 	DTrackStandalone* standalone;

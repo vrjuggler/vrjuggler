@@ -129,12 +129,10 @@ protected:
 
 private:
    /** The function called by the spawned thread. */
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
    /** @name Sample Loop Members */
    //@{
-   vpr::ThreadMemberFunctor<Wanda>* mFunctor;
-
    /** The thread doing the Wanda sampling. */
    vpr::Thread* mThread;
 

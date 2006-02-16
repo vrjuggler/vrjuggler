@@ -33,7 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <string>
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 #include <vpr/System.h>
 
 #include <jccl/Config/ConfigElement.h>
@@ -123,9 +123,7 @@ bool DataGlove::startSampling()
       mExitFlag = false;
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] Spawning control thread\n" << vprDEBUG_FLUSH;
-      vpr::ThreadMemberFunctor<DataGlove>* memberFunctor =
-         new vpr::ThreadMemberFunctor<DataGlove>(this, &DataGlove::controlLoop, NULL);
-      mThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(boost::bind(&DataGlove::controlLoop, this));
 
       if ( ! mThread->valid() )
       {
@@ -146,10 +144,8 @@ bool DataGlove::startSampling()
    }
 }
 
-void DataGlove::controlLoop(void* nullParam)
+void DataGlove::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
          << "[dataglove] Entered control thread\n"
          << vprDEBUG_FLUSH;

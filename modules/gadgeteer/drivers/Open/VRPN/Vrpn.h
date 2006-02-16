@@ -163,7 +163,7 @@ private:
    void handleTracker(vrpn_TRACKERCB t);
    void handleButton(vrpn_BUTTONCB b);
 
-   void readLoop(void *nullParam);
+   void readLoop();
 
    bool mExitFlag;
 

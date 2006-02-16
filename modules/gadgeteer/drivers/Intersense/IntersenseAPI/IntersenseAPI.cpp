@@ -32,7 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <vpr/vprConfig.h>
 #include <vpr/System.h>
@@ -130,10 +130,8 @@ IntersenseAPI::~IntersenseAPI() throw ()
 }
 
 // Main thread of control for this active object
-void IntersenseAPI::controlLoop(void* nullParam)
+void IntersenseAPI::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    // Loop through and keep sampling until stopSampleing is called.
    while(!mDone)
    {
@@ -197,11 +195,7 @@ bool IntersenseAPI::startSampling()
    mDone = false;
 
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<IntersenseAPI>* memberFunctor =
-      new vpr::ThreadMemberFunctor<IntersenseAPI>(this,
-                                                  &IntersenseAPI::controlLoop,
-                                                  NULL);
-   mThread = new vpr::Thread(memberFunctor);
+   mThread = new vpr::Thread(boost::bind(&IntersenseAPI::controlLoop, this));
 
    if ( ! mThread->valid() )
    {

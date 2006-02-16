@@ -54,6 +54,7 @@
 #include <termios.h>  // for tcsetattr(3T)
 #include <unistd.h>   // for close()
 #include <sys/time.h>
+#include <boost/bind.hpp>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -61,7 +62,6 @@
 #include <gmtl/Generate.h>
 
 #include <vpr/System.h>
-#include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/gadgetParam.h>
@@ -98,10 +98,7 @@ bool ThreeDMouse::startSampling()
       void sampleMouse(void*);
 
       mExitFlag = false;
-      vpr::ThreadMemberFunctor<ThreeDMouse>* run_thread =
-         new vpr::ThreadMemberFunctor<ThreeDMouse>(this, &ThreeDMouse::controlLoop,
-                                                   NULL);
-      mThread = new vpr::Thread(run_thread);
+      mThread = new vpr::Thread(boost::bind(&ThreeDMouse::controlLoop, this));
 
       if ( ! mThread->valid() )
       {
@@ -120,9 +117,8 @@ bool ThreeDMouse::startSampling()
 
 }
 
-void ThreeDMouse::controlLoop(void* nullParam)
+void ThreeDMouse::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
    struct timeval tv;
    double start_time, stop_time;
 

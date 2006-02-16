@@ -33,8 +33,8 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <vector>
+#include <boost/bind.hpp>
 
-#include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
@@ -143,10 +143,8 @@ Flock::~Flock() throw ()
    this->stopSampling();
 }
 
-void Flock::controlLoop(void* nullParam)
+void Flock::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    // vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
    //    << "gadget::Flock: Spawned SampleBirds starting"
    //    << std::endl << vprDEBUG_FLUSH;
@@ -189,9 +187,7 @@ bool Flock::startSampling()
 
       // Create a new thread to handle the control
       mExitFlag = false;
-      vpr::ThreadMemberFunctor<Flock>* memberFunctor =
-          new vpr::ThreadMemberFunctor<Flock>(this, &Flock::controlLoop, NULL);
-      mThread = new vpr::Thread(memberFunctor);
+      mThread = new vpr::Thread(boost::bind(&Flock::controlLoop, this));
 
       if ( ! mThread->valid() )
       {

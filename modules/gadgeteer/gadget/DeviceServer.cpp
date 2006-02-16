@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 #include <gadget/Util/Debug.h>
 #include <gadget/Node.h>
 #include <gadget/DeviceServer.h>
@@ -212,14 +212,12 @@ namespace gadget
       }
    }
 
-   void DeviceServer::controlLoop(void* nullParam)
+   void DeviceServer::controlLoop()
    {
       // -Block on an update call
       // -Update Local Data
       // -Send
       // -Signal Sync
-
-      boost::ignore_unused_variable_warning(nullParam);
 
       while(true)
       {
@@ -253,12 +251,8 @@ namespace gadget
       // --- Setup Multi-Process stuff --- //
       // Create a new thread to handle the control
 
-      vpr::ThreadMemberFunctor<DeviceServer>* memberFunctor =
-         new vpr::ThreadMemberFunctor<DeviceServer>(this,
-                                                    &DeviceServer::controlLoop,
-                                                    NULL);
-
-      mControlThread = new vpr::Thread(memberFunctor);
+      mControlThread = new vpr::Thread(boost::bind(&DeviceServer::controlLoop,
+                                                   this));
 
       if (mControlThread->valid())
       {

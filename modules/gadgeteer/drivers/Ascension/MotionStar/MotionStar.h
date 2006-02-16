@@ -457,7 +457,7 @@ public:
    /**
     * Control loop for sampling. Waits on flag.
     */
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

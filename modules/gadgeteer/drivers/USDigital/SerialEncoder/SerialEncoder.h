@@ -71,7 +71,7 @@ public:
       swapPositionBuffers();
    }
 
-   void threadedSampleFunction(void* classPointer);
+   void threadedSampleFunction();
 
    void operator delete(void* p)
    {
@@ -85,7 +85,6 @@ protected:
    }
 
 private:
-   vpr::ThreadMemberFunctor<SerialEncoder>* mThreadFunctor;
    vpr::Thread* mSampleThread;
    bool  mExitFlag;
    std::string mPortStr;

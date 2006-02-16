@@ -31,6 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
+#include <boost/bind.hpp>
+
 #include <gadget/Acceptor.h>
 #include <gadget/Node.h>
 #include <gadget/Util/Debug.h>
@@ -41,7 +44,6 @@
 
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <boost/concept_check.hpp>
 
 namespace gadget
 {
@@ -71,10 +73,8 @@ namespace gadget
                << "Starting the listening thread...\n" << vprDEBUG_FLUSH;
 
                // Start a thread to monitor port
-            vpr::ThreadMemberFunctor<Acceptor>* memberFunctor =
-               new vpr::ThreadMemberFunctor<Acceptor>( this, &Acceptor::acceptLoop, NULL );
-
-            mAcceptThread = new vpr::Thread( memberFunctor );
+            mAcceptThread = new vpr::Thread(boost::bind(&Acceptor::acceptLoop,
+                                                        this));
             vprASSERT( mAcceptThread->valid() );
             return true;
          }
@@ -97,7 +97,7 @@ namespace gadget
       }
    }
 
-   void Acceptor::acceptLoop( void* nullParam )
+   void Acceptor::acceptLoop()
    {
       
       // - Create a socket to listen for incoming connections
@@ -122,8 +122,6 @@ namespace gadget
       //     - Get Cluster Delta
       //   - Else close and delete socket
       
-      boost::ignore_unused_variable_warning( nullParam );
-
       // Create a socket to listen for incoming connections
       vpr::SocketStream sock( mListenAddr, vpr::InetAddr::AnyAddr );
       

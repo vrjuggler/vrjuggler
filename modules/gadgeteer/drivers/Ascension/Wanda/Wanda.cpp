@@ -32,6 +32,8 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <boost/bind.hpp>
+
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
@@ -65,8 +67,7 @@ namespace gadget
 {
 
 Wanda::Wanda(const char* portName)
-   : mFunctor(NULL)
-   , mThread(NULL)
+   : mThread(NULL)
    , mWanda(portName)
 {
    /* Do nothing. */ ;
@@ -146,12 +147,8 @@ bool Wanda::startSampling()
          mWanda.start();
 
          mExitFlag = false;
-         mFunctor = new vpr::ThreadMemberFunctor<Wanda>(this,
-                                                        &Wanda::controlLoop,
-                                                        NULL);
-         mThread  = new vpr::Thread(mFunctor);
-
-         status = mThread->valid();
+         mThread   = new vpr::Thread(boost::bind(&Wanda::controlLoop, this));
+         status    = mThread->valid();
       }
       catch (vpr::Exception& ex)
       {
@@ -231,12 +228,6 @@ bool Wanda::stopSampling()
          mThread = NULL;
       }
 
-      if ( NULL != mFunctor )
-      {
-         delete mFunctor;
-         mFunctor = NULL;
-      }
-
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "Stopping the Wanda device... " << vprDEBUG_FLUSH;
 
@@ -277,7 +268,7 @@ void Wanda::updateData()
    }
 }
 
-void Wanda::controlLoop(void*)
+void Wanda::controlLoop()
 {
    while ( ! mExitFlag )
    {
