@@ -37,6 +37,8 @@
 #include <tweek/tweekConfig.h>
 
 #include <cstdio>
+#include <boost/bind.hpp>
+
 #include <vpr/vpr.h>
 //#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
@@ -57,7 +59,6 @@ const std::string CorbaManager::DELIVERY_SUBJECT_NAME("TweekBeanPusher");
 
 CorbaManager::CorbaManager()
    : mAppName("unknown")
-   , mOrbFunctor(NULL)
    , mOrbThread(NULL)
    , mSubjectManager(NULL)
    , mBeanDeliverySubject(NULL)
@@ -148,8 +149,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Starting ORB thread\n"
                                                  << vprDEBUG_FLUSH;
-      mOrbFunctor = new vpr::ThreadRunFunctor<tweek::CorbaManager>(this);
-      mOrbThread  = new vpr::Thread(mOrbFunctor);
+      mOrbThread = new vpr::Thread(boost::bind(&CorbaManager::run, this));
    }
    catch (CORBA::SystemException& sysEx)
    {

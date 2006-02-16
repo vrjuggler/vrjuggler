@@ -40,6 +40,7 @@
 #include <cstdlib>
 #include <string>
 #include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/Util/Assert.h>
@@ -57,8 +58,7 @@ namespace tweek
 CorbaService::CorbaService(const std::string& nsHost, vpr::Uint16 nsPort,
                            const std::string& iiopVersion,
                            const std::string& subContextId)
-   : mOrbFunctor(NULL)
-   , mOrbThread(NULL)
+   : mOrbThread(NULL)
    , mNsHost(nsHost)
    , mNsPort(nsPort)
    , mNameServiceURI("corbaloc:iiop:")
@@ -135,8 +135,7 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Starting ORB thread\n"
                                                  << vprDEBUG_FLUSH;
 
-      mOrbFunctor = new vpr::ThreadRunFunctor<CorbaService>(this);
-      mOrbThread  = new vpr::Thread(mOrbFunctor);
+      mOrbThread = new vpr::Thread(boost::bind(&CorbaService::run, this));
    }
    catch (CORBA::SystemException& sysEx)
    {

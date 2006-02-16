@@ -88,8 +88,6 @@ public:
       {
          delete mOrbThread;
          mOrbThread = NULL;
-         delete mOrbFunctor;
-         mOrbFunctor = NULL;
       }
    }
 
@@ -210,7 +208,6 @@ private:
 
    std::string mAppName;
 
-   vpr::ThreadRunFunctor<tweek::CorbaManager>* mOrbFunctor;
    vpr::Thread* mOrbThread;
 
    CORBA::ORB_var mORB;

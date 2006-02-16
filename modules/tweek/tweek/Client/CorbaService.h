@@ -94,8 +94,6 @@ public:
       {
          delete mOrbThread;
          mOrbThread = NULL;
-         delete mOrbFunctor;
-         mOrbFunctor = NULL;
       }
    }
 
@@ -215,7 +213,6 @@ private:
    void addSubjectManagers(const CosNaming::BindingList& bindingList,
                            std::list<tweek::SubjectManager_var>& mgrList);
 
-   vpr::ThreadRunFunctor<tweek::CorbaService>* mOrbFunctor;
    vpr::Thread* mOrbThread;
 
    std::string mNsHost;
