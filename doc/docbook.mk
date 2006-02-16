@@ -84,7 +84,7 @@ XSLTPROC?=	/usr/bin/xsltproc
 FO_VERSION?=	FOP
 XSLT_TOOL?=	Xalan
 
-recursive_copy=	tar --exclude .svn -chvf - $(1) | tar -C $(2) -xpf -
+recursive_copy=	tar --exclude .svn --exclude CVS -chvf - $(1) | tar -C $(2) -xpf -
 
 # Use one of the following depending on what will be processing the generated
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
