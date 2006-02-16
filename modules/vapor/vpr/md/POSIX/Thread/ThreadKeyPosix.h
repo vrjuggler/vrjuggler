@@ -49,17 +49,17 @@
 #define _VPR_THREAD_KEY_POSIX_H_
 
 #include <vpr/vprConfig.h>
+
+#include <boost/function.hpp>
 #include <pthread.h>
 #include <sys/types.h>
-
-#include <vpr/Thread/ThreadFunctor.h>
 
 
 namespace vpr
 {
 
 // Key destructor function type.
-typedef thread_func_t KeyDestructor;
+typedef void (*KeyDestructor)(void*);
 
 
 /** \class ThreadKeyPosix ThreadKeyPosix.h vpr/Thread/Thread.h
@@ -71,33 +71,6 @@ class ThreadKeyPosix
 {
 public:
    /**
-    * Default constructor.  After calling this, one of the keycreate()
-    * overloads must be called to finish the key allocation process.
-    *
-    * @see keycreate
-    */
-   ThreadKeyPosix()
-      : mDestructor(NULL)
-   {
-      keycreate(NULL);
-   }
-
-   /**
-    * Creates a key that knows how to delete itself using a function pointer.
-    *
-    * @post A key is created and is associated with the specified destructor
-    *       function and argument.
-    *
-    * @param destructor The destructor function for the key.
-    * @param arg        Argument to be passed to destructor.
-    */
-   ThreadKeyPosix(thread_func_t destructor, void* arg)
-      : mDestructor(NULL)
-   {
-      keycreate(destructor, arg);
-   }
-
-   /**
     * Creates a key that knows how to delete itself using a function pointer.
     *
     * @post A key is created and is associated with the specified destructor
@@ -105,8 +78,7 @@ public:
     *
     * @param destructor The destructor function for the key.
     */
-   ThreadKeyPosix(BaseThreadFunctor* destructor)
-      : mDestructor(NULL)
+   ThreadKeyPosix(KeyDestructor destructor = NULL)
    {
       keycreate(destructor);
    }
@@ -117,11 +89,6 @@ public:
    ~ThreadKeyPosix()
    {
       keyfree();
-
-      if ( NULL != mDestructor )
-      {
-         delete mDestructor;
-      }
    }
 
    /**
@@ -131,41 +98,17 @@ public:
     * single argument.
     *
     * @post A key is created and is associated with the specified destructor
-    *       function and argument.
+    *       function.
     *
-    * @param destructor The destructor function for the key.
-    * @param arg        Argument to be passed to destructor.
-    *
-    * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
-    *
-    * @note Use this routine to construct the key destructor function if
-    *       it requires arguments.  Otherwise, use the single-argument version
-    *       of keycreate().
-    */
-   int keycreate(thread_func_t destructor, void* arg)
-   {
-      mDestructor = new ThreadNonMemberFunctor(destructor, arg);
-      return keycreate(mDestructor);
-   }
-
-   /**
-    * Allocates a key that is used to identify data that is specific to
-    * each thread in the process, is global to all threads in the process
-    * and is destroyed by the specified destructor function.
-    *
-    * @post A key is created and is associated with the specified
-    *       destructor function.
-    *
-    * @param destructor Procedure to be called to destroy a data value
-    *                   associated with the key when the thread terminates.
+    * @param destructor A pointer to the destructor function for the key.
+    *                   This parameter is optional and defaults to NULL.
     *
     * @return 0 is returned upon successful completion.
     * @return -1 is returned if an error occurs.
     */
-   int keycreate(BaseThreadFunctor* destructor)
+   int keycreate(KeyDestructor destructor = NULL)
    {
-      return pthread_key_create(&mKeyID, (KeyDestructor) destructor);
+      return pthread_key_create(&mKeyID, destructor);
    }
 
    /**
@@ -228,8 +171,6 @@ public:
 
 private:
    pthread_key_t mKeyID;        /**< Thread key ID */
-
-   vpr::ThreadNonMemberFunctor* mDestructor;
 };
 
 } // End of vpr namespace
