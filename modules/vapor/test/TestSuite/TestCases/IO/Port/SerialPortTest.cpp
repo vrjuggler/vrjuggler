@@ -1,12 +1,12 @@
 #include <iostream>
+#include <boost/bind.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/IO/Port/SerialPort.h>
 
 #include <TestCases/IO/Port/SerialPortTest.h>
-
-#include <boost/concept_check.hpp>
 
 
 namespace vprTest

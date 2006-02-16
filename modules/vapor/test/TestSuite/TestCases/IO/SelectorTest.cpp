@@ -11,6 +11,8 @@
 #  include <ext/algorithm>
 #endif
 
+#include <boost/bind.hpp>
+
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/InetAddr.h>
@@ -60,7 +62,7 @@ void SelectorTest::testAcceptorPoolSelection ()
 
     // Spawn connector thread
     vpr::Thread connector_thread(
-      boost::bnid(&SelectorTest::testAcceptorPoolSelection_connector, this)
+      boost::bind(&SelectorTest::testAcceptorPoolSelection_connector, this)
     );
 
     // Wait for threads

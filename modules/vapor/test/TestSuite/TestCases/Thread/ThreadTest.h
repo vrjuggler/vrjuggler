@@ -60,12 +60,12 @@ public:
    // =========================================================================
    void testCreateJoin();
 
-   void incCounter(void* arg);
+   void incCounter();
 
    // =========================================================================
    // thread SuspendResume test
    // =========================================================================
-   void counter1Func(void* arg);
+   void counter1Func();
 
    long sampleCompare(int num);
 
@@ -76,7 +76,7 @@ public:
    // thread Priority test
    // =========================================================================
 
-   void counter2Func(void* arg);
+   void counter2Func();
 
    void testPriority();
 
@@ -86,13 +86,12 @@ public:
    void interactiveTestCPUGrind();
 
    // This function just grinds the CPU and waits for the flag to flip
-   void grindCPUWorker(void* arg);
+   void grindCPUWorker();
 
    // -------------------------------------------------------------------- //
    void testThreadStackSize();
 
    // Recurse and consume some resources
-   // Arg is a pointer to a long
    void recurseConsumeResources(int arg);
 
    // ------------------------------------ //

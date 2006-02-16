@@ -36,7 +36,7 @@ public:
    {;}
 
    void testBarrier();
-   void testBarrier_thread(void* arg);
+   void testBarrier_thread();
 
 public:
    unsigned       mCounter;      /**< Helper counter variable. */

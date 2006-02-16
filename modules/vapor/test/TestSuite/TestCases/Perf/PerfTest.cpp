@@ -1,3 +1,5 @@
+#include <boost/bind.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/Util/GUID.h>
 //#include <vpr/Util/GUIDFactory.h>
@@ -8,8 +10,6 @@
 #include <TestCases/Perf/PerfTest.h>
 #include <vpr/Perf/ProfileManager.h>      // Get all the profile stuff
 #include <vpr/System.h>
-
-#include <boost/concept_check.hpp>
 
 
 namespace vprTest

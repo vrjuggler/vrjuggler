@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <math.h>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 
@@ -18,10 +19,6 @@
 
 #include <TestCases/Thread/ThreadTest.h>
 
-#include <math.h>
-
-#include <boost/concept_check.hpp>
-
 
 namespace vprTest
 {
@@ -34,9 +31,8 @@ public:
    {
    }
 
-   void doSomething(void* arg)
+   void doSomething()
    {
-      boost::ignore_unused_variable_warning(arg);
       vprASSERT(vpr::Thread::self() != NULL && "We should know ourselves by now");
 
       for ( vpr::Uint32 i = 0; i < mMaxInc; ++i )
@@ -59,9 +55,8 @@ public:
       throw vpr::Exception("Test Exception", mLocation);
    }
 
-   void throwSomething(void* arg) throw (vpr::Exception)
+   void throwSomething() throw (vpr::Exception)
    {
-      boost::ignore_unused_variable_warning(arg);
       vprASSERT(vpr::Thread::self() != NULL && "We should know ourselves by now");
 
       //methodOne();
@@ -141,7 +136,7 @@ void ThreadTest::testUncaughtException()
 
    CPPUNIT_ASSERT_THROW(my_thread.join(), vpr::UncaughtThreadException);
 
-   vpr::Thread my_thread2(&functor);
+   vpr::Thread my_thread2(functor);
    try
    {
       my_thread2.join();
@@ -187,9 +182,8 @@ void ThreadTest::testCreateJoin()
    std::cout << " done\n" << std::flush;
 }
 
-void ThreadTest::incCounter(void* arg)
+void ThreadTest::incCounter()
 {
-   boost::ignore_unused_variable_warning(arg);
    for(vpr::Uint32 i=0;i<ThreadTest_INC_COUNT;i++)
    {
       mItemProtectionMutex.acquire();
@@ -204,9 +198,8 @@ void ThreadTest::incCounter(void* arg)
    }
 }
 
-void ThreadTest::counter1Func(void* arg)
+void ThreadTest::counter1Func()
 {
-   boost::ignore_unused_variable_warning(arg);
    for(int i=0;i<10000;i++)
    {
       vpr::System::msleep(10);    // Sleep for 20 micro seconds
@@ -281,9 +274,8 @@ void ThreadTest::testSuspendResume()
    std::cout << " done\n" << std::flush;
 }
 
-void ThreadTest::counter2Func(void* arg)
+void ThreadTest::counter2Func()
 {
-   boost::ignore_unused_variable_warning(arg);
    for(int i=0;i<10000;i++)
    {
       vpr::System::msleep(10);    // Sleep for 20 micro seconds
@@ -368,7 +360,7 @@ void ThreadTest::interactiveTestCPUGrind()
    for(int t=0;t<num_threads;t++)
    {
       threads.push_back(
-         new vpr::Thread(boost::bind(&ThreadTest::grindCPUWorder, this));
+         new vpr::Thread(boost::bind(&ThreadTest::grindCPUWorker, this))
       );
    }
 
@@ -391,9 +383,8 @@ void ThreadTest::interactiveTestCPUGrind()
 }
 
 // This function just grinds the CPU and waits for the flag to flip
-void ThreadTest::grindCPUWorker(void* arg)
+void ThreadTest::grindCPUWorker()
 {
-   boost::ignore_unused_variable_warning(arg);
    double bogus_sum(0.0);
    double da_arg(0.1);
    const double inc(0.005);
@@ -465,7 +456,7 @@ void ThreadTest::testThreadSpecificData()
 
       // Spawns thread here.
       threads[t] = new vpr::Thread(boost::bind(&ThreadTest::tsIncCounter, this,
-                                               t.str()));
+                                               s.str()));
    }
 
    for(int t=0;t<num_threads;t++)

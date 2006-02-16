@@ -1,13 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
 
 #include <TestCases/Thread/BarrierTest.h>
-
-#include <boost/concept_check.hpp>
 
 #define BARRIER_ITERS 30
 
@@ -58,10 +57,8 @@ void BarrierTest::testBarrier()
    }
 }
 
-void BarrierTest::testBarrier_thread(void* arg)
+void BarrierTest::testBarrier_thread()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    for(unsigned i=0;i<BARRIER_ITERS;++i)
    {
       mMutex.acquire();
