@@ -53,13 +53,12 @@
 #include <vpr/vprConfig.h>
 #include <sys/types.h>
 
-#include <vpr/Thread/ThreadFunctor.h>
 
 namespace vpr
 {
 
 // Key destructor function type.
-typedef thread_func_t   KeyDestructor;
+typedef void (*KeyDestructor)(void*);
 
 /** \class ThreadKeySGI ThreadKeySGI.h vpr/Threaed/Thread.h
  *
@@ -70,34 +69,14 @@ class ThreadKeySGI
 {
 public:
    /**
-    * Default constructor.  After calling this, one of the keycreate()
-    * overloads must be called to finish the key allocation process.
-    *
-    * @see keycreate
-    */
-   ThreadKeySGI()
-   {
-      keycreate(NULL);
-   }
-
-   /**
     * Creates a key that knows how to delete itself using a function pointer.
     *
     * @post A key is created and is associated with the specified destructor
     *       function and argument.
     *
     * @param destructor The destructor function for the key.
-    * @param arg        Argument to be passed to destructor.
     */
-   ThreadKeySGI(thread_func_t destructor, void* arg)
-   {
-      keycreate(destructor, arg);
-   }
-
-   /**
-    * Constructor.
-    */
-   ThreadKeySGI(BaseThreadFunctor* destructor)
+   ThreadKeySGI(KeyDestructor destructor = NULL)
    {
       keycreate(destructor);
    }
@@ -113,45 +92,18 @@ public:
    /**
     * Allocates a keyp that is used to identify data that is specific to
     * each thread in the process, is global to all threads in the process
-    * and is destroyed using the spcefied destructor function that takes a
-    * single argument.
+    * and is destroyed using the spcefied destructor function.
     *
     * @post A key is created and is associated with the specified
     *        destructor function and argument.
     *
     * @param destructor  The destructor function for the key.  This uses
     *                    the functor data structure.
-    * @param arg         Argument to be passed to destructor.
     *
     * @return 0 is returned on successful complection
     * @return -1 is returned to indicate an error.
-    *
-    * @note Use this routine to construct the key destructor function if
-    *       it requires arguments.  Otherwise, use the two-argument
-    *       version of keycreate().
     */
-   int keycreate(thread_func_t destructor, void* arg)
-   {
-      std::cerr << "vpr::ThreadKeySGI::keycreate() not implemented yet!\n";
-
-      return -1;
-   }
-
-   /**
-    * Allocates a keyp that is used to identify data that is specific to
-    * each thread in the process, is global to all threads in the process
-    * and is destroyed by the specified destructor function.
-    *
-    * @post A key is created and is associated with the specified
-    *        destructor function.
-    *
-    * @param destructor Procedure to be called to destroy a data value
-    *                   associated with the key when the thread terminates.
-    *
-    * @return  0 is returned upon successful completion.
-    * @return -1 is returned to indicate an error.
-    */
-   int keycreate(BaseThreadFunctor* destructor)
+   int keycreate(KeyDestructor destructor = NULL)
    {
       std::cerr << "vpr::ThreadKeySGI::keycreate() not implemented yet!\n";
 
