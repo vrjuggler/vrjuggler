@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-15-2006 patrickh    Updated to VPR 1.1.16.
+			NEW VERSION: 2.1.7
 Jan-08-2006 allenb      Added swapSync test application.
 Jan-07-2006 allenb      Added GlExtensionLoader classes.
                         Added support for NV swap_group.

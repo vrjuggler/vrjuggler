@@ -108,7 +108,7 @@ public:
    void initConfig();
 
    /** The Kernel loop. */
-   void controlLoop(void* nullParam);
+   void controlLoop();
 
    /**
     * Sets the application object for the Kernel to deal with.
@@ -281,7 +281,6 @@ protected:
 
    bool               mIsRunning;        /**< Flag for wether the kernel is currently running */
    bool               mExitFlag;         /**< Set true when the kernel should exit */
-   vpr::ThreadMemberFunctor<vrj::Kernel>* mControlFunctor;
    vpr::Thread*       mControlThread;    /**< The thread in control of me */
    vpr::CondVar       mExitWaitCondVar;  /**< Cond var for waiting for exit */
 

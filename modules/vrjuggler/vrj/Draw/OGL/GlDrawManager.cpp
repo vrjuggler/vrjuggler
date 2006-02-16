@@ -33,6 +33,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <stdlib.h>
+#include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
 
 #include <cluster/ClusterManager.h>
@@ -71,7 +72,6 @@ GlDrawManager::GlDrawManager()
    , drawTriggerSema(0)
    , drawDoneSema(0)
    , mRunning(false)
-   , mMemberFunctor(NULL)
    , mControlThread(NULL)
 {
 }
@@ -88,12 +88,6 @@ GlDrawManager::~GlDrawManager()
    {
       delete mControlThread;
       mControlThread = NULL;
-   }
-
-   if ( NULL != mMemberFunctor )
-   {
-      delete mMemberFunctor;
-      mMemberFunctor = NULL;
    }
 }
 
@@ -137,10 +131,7 @@ void GlDrawManager::start()
    // Create a new thread to handle the control
    mRunning = true;
 
-   mMemberFunctor =
-      new vpr::ThreadMemberFunctor<GlDrawManager>(this, &GlDrawManager::main,
-                                                  NULL);
-   mControlThread = new vpr::Thread(mMemberFunctor);
+   mControlThread = new vpr::Thread(boost::bind(&GlDrawManager::main, this));
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "vrj::GlDrawManager started (thread: " << mControlThread << ")\n"
@@ -167,9 +158,8 @@ void GlDrawManager::sync()
 
 
 /** This is the control loop for the manager. */
-void GlDrawManager::main(void* nullParam)
+void GlDrawManager::main()
 {
-   boost::ignore_unused_variable_warning(nullParam);
    bool stop_requested(false);
 
    while ( ! stop_requested )

@@ -99,7 +99,7 @@ public:
    virtual void sync();
 
    /** Control loop for the manager. */
-   void main(void* nullParam);
+   void main();
 
    /** Initializes the drawing API (if not already running). */
    virtual void initAPI();
@@ -225,7 +225,6 @@ protected:
     */
    bool              mRunning;         /**< Used to stop the drawing thread. */
 
-   vpr::ThreadMemberFunctor<GlDrawManager>* mMemberFunctor;
    vpr::Thread* mControlThread;
    //@}
 

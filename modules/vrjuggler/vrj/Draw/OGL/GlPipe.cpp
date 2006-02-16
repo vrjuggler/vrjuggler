@@ -40,6 +40,8 @@
 #   include <GL/gl.h>
 #endif
 
+#include <boost/bind.hpp>
+
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlApp.h>
@@ -50,7 +52,7 @@
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Draw/OGL/GlSimInterface.h>
-#include <boost/concept_check.hpp>
+
 
 namespace vrj
 {
@@ -61,12 +63,6 @@ GlPipe::~GlPipe()
    {
       delete mActiveThread;
       mActiveThread = NULL;
-   }
-
-   if ( NULL != mControlFunctor )
-   {
-      delete mControlFunctor;
-      mControlFunctor = NULL;
    }
 }
 
@@ -79,10 +75,7 @@ int GlPipe::start()
     vprASSERT(mThreadRunning == false);        // We should not be running yet
 
     // Create a new thread to call the control loop
-    mControlFunctor =
-      new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
-
-    mActiveThread = new vpr::Thread(mControlFunctor);
+    mActiveThread = new vpr::Thread(boost::bind(&GlPipe::controlLoop, this));
 
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
        << "[vrj::GlPipe::start()] Started control loop. " << mActiveThread
@@ -171,9 +164,8 @@ void GlPipe::removeWindow(GlWindow* win)
 // - Swap all windows <br>
 // - Signal swap completed <br>
 //
-void GlPipe::controlLoop(void* nullParam)
+void GlPipe::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
    mThreadRunning = true;     // We are running so set flag
    // Loop until flag set
    while (!mControlExit)

@@ -32,6 +32,8 @@
 
 #include <vrj/vrjConfig.h>
 #include <string.h>
+#include <boost/bind.hpp>
+
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
@@ -62,8 +64,6 @@
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Util/Version.h>
 
-#include <boost/concept_check.hpp>
-
 
 namespace vrj
 {
@@ -87,12 +87,8 @@ int Kernel::start()
    initSignalButtons();    // Initialize the signal buttons that may be pressed
 
    // Create a new thread to handle the control
-   mControlFunctor = new vpr::ThreadMemberFunctor<Kernel>(this,
-                                                          &Kernel::controlLoop,
-                                                          NULL);
-
    // mControlThread is set in controlLoop().
-   new vpr::Thread(mControlFunctor);
+   new vpr::Thread(boost::bind(&Kernel::controlLoop, this));
 
    vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL)
       << "vrj::Kernel::start(): Just started control loop." << std::endl
@@ -138,9 +134,8 @@ void Kernel::waitForKernelStop()
 
 
 // The Kernel loop.
-void Kernel::controlLoop(void* nullParam)
+void Kernel::controlLoop()
 {
-   boost::ignore_unused_variable_warning(nullParam);
    vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
       << "vrj::Kernel::controlLoop: Started.\n" << vprDEBUG_FLUSH;
    vprASSERT (NULL != vpr::Thread::self());
@@ -650,7 +645,6 @@ Kernel::Kernel()
    , mNewAppSet(false)
    , mIsRunning(false)
    , mExitFlag(false)
-   , mControlFunctor(NULL)
    , mControlThread(NULL)
    , mInputManager(NULL)
    , mDrawManager(NULL)
@@ -758,12 +752,6 @@ Kernel::~Kernel()
    {
       delete mControlThread;
       mControlThread = NULL;
-   }
-
-   if ( NULL != mControlFunctor )
-   {
-      delete mControlFunctor;
-      mControlFunctor = NULL;
    }
 
    for ( std::vector<vrj::User*>::iterator i = mUsers.begin(); i != mUsers.end(); ++i )
