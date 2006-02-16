@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-02-15 patrickh Replaced vpr::ThreadMemberFunctor<T> and
+                    vpr::ThreadNonMemberFunctor by Boost.Function.
+                    NEW VERSION: 1.1.16
 2005-12-21 aronb    Added vpr::BufferObjectReader::STRING_SIZE_LENGTH and
                     vpr::BufferObjectWriter::STRING_SIZE_LENGTH.
                     NEW VERSION: 1.1.15

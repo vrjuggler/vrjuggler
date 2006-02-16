@@ -13,7 +13,6 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/IO/Socket/SocketConnector.h>
 #include <vpr/IO/Socket/SocketStream.h>
@@ -453,14 +452,14 @@ void SocketSimulatorTest::multiThreadTest ()
    status = vpr::sim::Controller::instance()->constructNetwork("test_network.vsn");
    CPPUNIT_ASSERT(status.success() && "Could not construct network");
 
-   vpr::ThreadMemberFunctor<SocketSimulatorTest>* acceptor_func =
-      new vpr::ThreadMemberFunctor<SocketSimulatorTest>(this, &SocketSimulatorTest::multiThreadTest_acceptor);
-   vpr::Thread acceptor(acceptor_func);
+   vpr::Thread acceptor(
+      boost::bind(&SocketSimulatorTest::multiThreadTest_acceptor, this)
+   );
    acceptor.start();
 
-   vpr::ThreadMemberFunctor<SocketSimulatorTest>* connector_func =
-      new vpr::ThreadMemberFunctor<SocketSimulatorTest>(this, &SocketSimulatorTest::multiThreadTest_connector);
-   vpr::Thread connector(connector_func);
+   vpr::Thread connector(
+      boost::bind(&SocketSimulatorTest::multiThreadTest_connector, this)
+   );
    connector.start();
 
    // Run, Lola, run.
@@ -474,10 +473,8 @@ void SocketSimulatorTest::multiThreadTest ()
    checkThreadAssertions();
 }
 
-void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
+void SocketSimulatorTest::multiThreadTest_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::ReturnStatus status;
    vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
@@ -543,10 +540,8 @@ void SocketSimulatorTest::multiThreadTest_acceptor (void* arg)
    CPPUNIT_ASSERT(status.success() && "Could not close acceptor");
 }
 
-void SocketSimulatorTest::multiThreadTest_connector (void* arg)
+void SocketSimulatorTest::multiThreadTest_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;

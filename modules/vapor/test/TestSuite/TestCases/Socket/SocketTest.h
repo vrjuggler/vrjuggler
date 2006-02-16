@@ -77,8 +77,8 @@ public:
    // open-close * n test
    // start two threads, cli/serv... both opening and closing many many times.
    // =========================================================================
-   void testOpenCloseOpen_connector( void* data );
-   void testOpenCloseOpen_acceptor( void* data );
+   void testOpenCloseOpen_connector();
+   void testOpenCloseOpen_acceptor();
    void testOpenCloseOpen();
    // =========================================================================
 
@@ -88,8 +88,8 @@ public:
    // same as open/close * n test, but do send/recv of data.  do many times.
    // =========================================================================
    const std::string testSendRecv_buffer;
-   void testSendRecv_connector( void* data );
-   void testSendRecv_acceptor( void* data );
+   void testSendRecv_connector();
+   void testSendRecv_acceptor();
    void testSendRecv();
    // =========================================================================
 
@@ -134,35 +134,35 @@ public:
    // reuse address client/server test
    // try to reuse the address with serv/cli threads...
    // =========================================================================
-   void reuseAddrTest_connector( void* data );
-   void reuseAddrTest_acceptor( void* data );
+   void reuseAddrTest_connector();
+   void reuseAddrTest_acceptor();
    void reuseAddrTest();
 
    // =========================================================================
    // Blocking/Nonblocking test
    // does this work?  what's it do?
    // =========================================================================
-   void testBlocking_connector(void* arg);
-   void testBlocking_acceptor(void* arg);
+   void testBlocking_connector();
+   void testBlocking_acceptor();
    void testBlocking();
 
 
    void testTcpConnection();
 
    //Function for master server thread
-   void serverFunc(void* arg);
+   void serverFunc();
 
    //function for creating client threads
-   void clientFunc(void* arg);
+   void clientFunc();
 
    //function for creating slave server thread, the server sends message to client, gets the client's
    //echo, and then compares the two strings.
-   void sServerFunc(void* arg);
+   void sServerFunc(_thread_args* tArg);
 
    // =========================================================================
    // readn() test
    // =========================================================================
-   void testReadnClient(void* arg);
+   void testReadnClient(vpr::Uint16 port);
    void testReadn();
    // =========================================================================
 
@@ -177,8 +177,8 @@ public:
    // connection at key times.
    // =========================================================================
    void testIsConnected(void);
-   void testIsConnected_acceptor(void* arg);
-   void testIsConnected_connector(void* arg);
+   void testIsConnected_acceptor();
+   void testIsConnected_connector();
    // =========================================================================
 
 

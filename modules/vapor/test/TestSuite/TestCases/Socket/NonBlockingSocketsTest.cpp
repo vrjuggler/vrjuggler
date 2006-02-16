@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <boost/bind.hpp>
 
 #include <cppunit/TestCaller.h>
 
@@ -21,7 +22,6 @@
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 
 #include <TestCases/Socket/NonBlockingSocketsTest.h>
 
@@ -132,24 +132,24 @@ void NonBlockingSocketTest::testNonBlockingTransfer ()
    mMessageLen   = mMessage.length();
 
    // Spawn acceptor thread
-   vpr::ThreadMemberFunctor<NonBlockingSocketTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testNonBlockingTransfer_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&NonBlockingSocketTest::testNonBlockingTransfer_acceptor,
+                  this)
+   );
 
    // Spawn connector thread
-   vpr::ThreadMemberFunctor<NonBlockingSocketTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testNonBlockingTransfer_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&NonBlockingSocketTest::testNonBlockingTransfer_connector,
+                  this)
+   );
 
    // Wait for threads
    acceptor_thread.join();
    connector_thread.join();
 }
 
-void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
+void NonBlockingSocketTest::testNonBlockingTransfer_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
@@ -217,10 +217,8 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor", acceptor.close());
 }
 
-void NonBlockingSocketTest::testNonBlockingTransfer_connector (void* arg)
+void NonBlockingSocketTest::testNonBlockingTransfer_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;
    vpr::SocketStream con_sock;
@@ -407,24 +405,22 @@ void NonBlockingSocketTest::testSendUDP ()
    mMessageLen   = mMessage.length();
 
    // Spawn acceptor thread
-   vpr::ThreadMemberFunctor<NonBlockingSocketTest>* receiver_functor =
-      new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_receiver);
-   vpr::Thread receiver_thread(receiver_functor);
+   vpr::Thread receiver_thread(
+      boost::bind(&NonBlockingSocketTest::testSendUDP_receiver, this)
+   );
 
    // Spawn connector thread
-   vpr::ThreadMemberFunctor<NonBlockingSocketTest>* sender_functor =
-      new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_sender);
-   vpr::Thread sender_thread(sender_functor);
+   vpr::Thread sender_thread(
+      boost::bind(&NonBlockingSocketTest::testSendUDP_sender, this)
+   );
 
    // Wait for threads
    receiver_thread.join();
    sender_thread.join();
 }
 
-void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
+void NonBlockingSocketTest::testSendUDP_receiver()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::InetAddr my_addr, from_addr;
    my_addr.setPort(mReceiverPort);
    std::string data;
@@ -478,10 +474,8 @@ void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close receiver socket", recv_sock.close());
 }
 
-void NonBlockingSocketTest::testSendUDP_sender (void* arg)
+void NonBlockingSocketTest::testSendUDP_sender()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::InetAddr remote_addr;
    vpr::SocketDatagram send_sock;
    vpr::Uint32 bytes;

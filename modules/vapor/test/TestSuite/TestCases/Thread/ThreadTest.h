@@ -21,7 +21,6 @@ CPPUNIT_TEST_SUITE(ThreadTest);
 CPPUNIT_TEST(testNoSpawnCtor);
 CPPUNIT_TEST(testAutoSpawnCtor);
 CPPUNIT_TEST(testUncaughtException);
-CPPUNIT_TEST(testRunnableFunctor);
 //CPPUNIT_TEST( testCreateJoin);
 //CPPUNIT_TEST( testSuspendResume);
 //CPPUNIT_TEST( testPriority);
@@ -55,8 +54,6 @@ public:
    void testNoSpawnCtor();
    void testAutoSpawnCtor();
    void testUncaughtException();
-
-   void testRunnableFunctor();
 
    // =========================================================================
    // thread CreateJoin test
@@ -96,7 +93,7 @@ public:
 
    // Recurse and consume some resources
    // Arg is a pointer to a long
-   void recurseConsumeResources(void* arg);
+   void recurseConsumeResources(int arg);
 
    // ------------------------------------ //
    // ---- Thread specific data stuff ---- //
@@ -106,7 +103,7 @@ public:
    /**
    * @param arg - ptr to std::string id of thread
    */
-   void tsIncCounter(void* arg);
+   void tsIncCounter(std::string threadName);
 
  
    /*

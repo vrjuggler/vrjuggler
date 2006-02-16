@@ -40,11 +40,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
+#include <iomanip>
 #include <stdio.h>
-#include <ulocks.h>
 #include <math.h>
 #include <time.h>
 #include <sys/time.h>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
@@ -60,7 +61,7 @@ public:
    int start();     // Start the thingie
    void trigger();   // Trigger increment
    void sync();      // Wait for completion
-   void main(void* nullParam);   // Main loop
+   void main();   // Main loop
    
    void incValue()
       { value++;}
@@ -119,10 +120,8 @@ int main(void)
 int SyncIncrementer::start()
 {
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<SyncIncrementer>* memberFunctor = 
-   new vpr::ThreadMemberFunctor<SyncIncrementer>(this, &SyncIncrementer::main, NULL);
-
-   vpr::Thread* control_thread = new vpr::Thread(memberFunctor);
+   vpr::Thread* control_thread =
+      new vpr::Thread(boost::bind(&SyncIncrementer::main, this));
 
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SyncIncrementer::start: Just started main loop.  "
                            << control_thread << std::endl << vprDEBUG_FLUSH;
@@ -171,7 +170,8 @@ void SyncIncrementer::sync()
 
 
 //: This is the main loop that incs
-void SyncIncrementer::main(void* nullParam) {
+void SyncIncrementer::main()
+{
    while (1)
    {
       syncCond.acquire();

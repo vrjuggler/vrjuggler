@@ -61,8 +61,8 @@ public:
    // Then the main thread starts using a connector to connect to the connector
    // After connection the acceptor sends a message, the connector recieves it and closes the socket
    void testSpawnedAcceptor();
-   void testSpawnedAcceptor_acceptor(void* arg);
-   void testSpawnedAcceptor_connector(void* arg);
+   void testSpawnedAcceptor_acceptor();
+   void testSpawnedAcceptor_connector();
   
 protected:
     vpr::Uint16     mRendevousPort;     // The port the acceptor will be waiting on

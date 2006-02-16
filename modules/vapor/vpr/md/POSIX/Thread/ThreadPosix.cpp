@@ -54,9 +54,9 @@
 #endif
 
 #include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <vpr/Thread/ThreadManager.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Assert.h>
 // It is safe to include Debug.h in this file because Debug.h does not
@@ -76,9 +76,7 @@ ThreadPosix::staticWrapper ThreadPosix::statics;
 // Non-spawning constructor.  This will not start a new thread.
 ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL)
-   , mDeleteThreadFunctor(false)
-   , mRunning(false)
+   : mRunning(false)
    , mPriority(priority)
    , mScope(scope)
    , mState(state)
@@ -86,19 +84,17 @@ ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
    , mException("No exception caught")
    , mCaughtException(false)
    , mThreadStartCompleted(false)
-   , mStartFunctor(NULL)
 {
    /* Do nothing. */ ;
 }
 
 // Spawning constructor with arguments.  This will start a new thread that will
 // execute the specified function.
-ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
-                         VPRThreadPriority priority, VPRThreadScope scope,
-                         VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL)
-   , mDeleteThreadFunctor(false)
-   , mRunning(false)
+ThreadPosix::ThreadPosix(const vpr::thread_func_t& func,
+                         VPRThreadPriority priority,
+                         VPRThreadScope scope, VPRThreadState state,
+                         size_t stackSize)
+   : mRunning(false)
    , mPriority(priority)
    , mScope(scope)
    , mState(state)
@@ -106,51 +102,14 @@ ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
    , mException("No exception caught")
    , mCaughtException(false)
    , mThreadStartCompleted(false)
-   , mStartFunctor(NULL)
 {
-   // Create the thread functor to start.  This will be deleted in the
-   // destructor.
-   setFunctor(new ThreadNonMemberFunctor(func, arg));
-   mDeleteThreadFunctor = true;
-   start();
-}
-
-// Spawning constructor.  This will start a new thread that will execute the
-// specified function.
-ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
-                         VPRThreadPriority priority, VPRThreadScope scope,
-                         VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL)
-   , mDeleteThreadFunctor(false)
-   , mRunning(false)
-   , mPriority(priority)
-   , mScope(scope)
-   , mState(state)
-   , mStackSize(stackSize)
-   , mException("No exception caught")
-   , mCaughtException(false)
-   , mThreadStartCompleted(false)
-   , mStartFunctor(NULL)
-{
-   setFunctor(functorPtr);
+   setFunctor(func);
    start();
 }
 
 // Destructor.
 ThreadPosix::~ThreadPosix()
 {
-   if ( mDeleteThreadFunctor )
-   {
-      delete mUserThreadFunctor;
-      mUserThreadFunctor = NULL;
-   }
-
-   if ( NULL != mStartFunctor )
-   {
-      delete mStartFunctor;
-      mStartFunctor = NULL;
-   }
-
    // TELL EVERYONE THAT WE'RE DEAD!!!!
    ThreadManager::instance()->lock();      // Lock manager
    {
@@ -159,12 +118,12 @@ ThreadPosix::~ThreadPosix()
    ThreadManager::instance()->unlock();
 }
 
-void ThreadPosix::setFunctor(BaseThreadFunctor* functorPtr)
+void ThreadPosix::setFunctor(const vpr::thread_func_t& functor)
 {
    vprASSERT(! mRunning && "Thread already running.");
-   vprASSERT(functorPtr->isValid() && "Invalid functor.");
+   vprASSERT(! functor.empty() && "Invalid functor.");
 
-   mUserThreadFunctor = functorPtr;
+   mUserThreadFunctor = functor;
 }
 
 vpr::ReturnStatus ThreadPosix::start()
@@ -176,21 +135,18 @@ vpr::ReturnStatus ThreadPosix::start()
       vprASSERT(false && "Thread already started");
       status.setCode(vpr::ReturnStatus::Fail);
    }
-   else if ( NULL == mUserThreadFunctor )
+   else if ( mUserThreadFunctor.empty() )
    {
       vprASSERT(false && "No functor set");
       status.setCode(vpr::ReturnStatus::Fail);
    }
    else
    {
-      mStartFunctor =
-         new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
-                                              NULL);
-
       // Spawn the thread.  If the thread is spawned successfully, the method
       // startThread() will register the actual thread info.
       mThreadStartCompleted = false;  // Make sure this is set correctly
-      status = spawn(mStartFunctor);
+      mStartFunctor = boost::bind(&ThreadPosix::startThread, this);
+      status = spawn();
 
       // Thread spawned successfully.
       if ( status.success() )
@@ -223,7 +179,7 @@ vpr::ReturnStatus ThreadPosix::start()
 }
 
 // Creates a new thread that will execute functorPtr.
-vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
+vpr::ReturnStatus ThreadPosix::spawn()
 {
    vpr::ReturnStatus status;
    int ret_val;
@@ -279,7 +235,7 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
 
    // Finally create the thread.
    ret_val = pthread_create(&(mThread), &thread_attrs,
-                            vprThreadFunctorFunction, (void *) functorPtr);
+                            vprThreadFunctorFunction, (void *) &mStartFunctor);
 
    // Inform the caller if the thread was not created successfully.
    if ( ret_val != 0 )
@@ -293,10 +249,8 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
 }
 
 // Called by the spawn routine to start the user thread function.
-void ThreadPosix::startThread(void* nullParam)
+void ThreadPosix::startThread()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    // WE are a new thread... yeah!!!!
    // TELL EVERYONE THAT WE LIVE!!!!
    ThreadManager::instance()->lock();      // Lock manager
@@ -317,7 +271,7 @@ void ThreadPosix::startThread(void* nullParam)
    try
    {
       // --- CALL USER FUNCTOR --- //
-      (*mUserThreadFunctor)();
+      mUserThreadFunctor();
    }
    catch (vpr::Exception& ex)
    {

@@ -59,6 +59,8 @@
 #  include <sys/resource.h>
 #endif
 
+#include <boost/bind.hpp>
+
 #include <vpr/Thread/ThreadPool.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Guard.h>
@@ -115,7 +117,7 @@ ThreadPool::~ThreadPool()
 // that represents this process.   The contents of that struct, in
 // particular threadWait, MUST be initialized by the parent.
 // ----------------------------------------------------------------------------
-void ThreadPool::threadLoop (void* theThreadAsVoid)
+void ThreadPool::threadLoop(OneThread* myThread)
 {
 //   DebugLock.acquire();
    vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << Thread::self()
@@ -128,8 +130,6 @@ void ThreadPool::threadLoop (void* theThreadAsVoid)
 
    listLock.acquire();
    listLock.release();     // Do this to make sure addThread is done
-
-   OneThread* myThread = (OneThread*)theThreadAsVoid;
 
 #ifdef VPR_USE_IRIX_SPROC
 
@@ -152,7 +152,7 @@ void ThreadPool::threadLoop (void* theThreadAsVoid)
       workingCountLock.release();
 
       // --- DO THE WORK --- //
-      myThread->functor->operator()();
+      myThread->functor();
 
       // --- PROCESS EXIT OVERHEAD --- //
       workingCountLock.acquire();     // Get access to the working count
@@ -233,11 +233,8 @@ OneThread* ThreadPool::addThread ()
    //OneThread* newThread = new (this->getMyMemPool()->allocate(sizeof(OneThread))) OneThread;    // Used placement new
    OneThread* newThread = new OneThread;
    newThread->next = NULL;
-
-//    ThreadMemberFunctor<ThreadPool>* memberFunctor = new ThreadMemberFunctor<ThreadPool>(this, ThreadPool::threadLoop, (void*)newThread);
-   ThreadMemberFunctor<ThreadPool>* memberFunctor = new ThreadMemberFunctor<ThreadPool>(this, &ThreadPool::threadLoop, (void*)newThread);
-
-   newThread->thread = new Thread(memberFunctor);
+   newThread->thread = new Thread(boost::bind(&ThreadPool::threadLoop, this,
+                                              newThread));
 
 //    DebugLock.acquire();
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << newThread->thread

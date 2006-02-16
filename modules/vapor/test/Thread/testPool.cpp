@@ -56,7 +56,7 @@
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
 
-void doIt(void*);
+void doIt();
 
 long counter;
 vpr::Mutex counterMutex;
@@ -79,7 +79,7 @@ int main()
 
    for ( int i = 0; i < 70; ++i )
    {
-      thePool->startFunc((vpr::thread_func_t) doIt);
+      thePool->startFunc(doIt);
    }
    thePool->wait();
 
@@ -89,7 +89,7 @@ int main()
 
    for ( int z = 0; z < 30; ++z )
    {
-      thePool->startFunc((vpr::thread_func_t) doIt);
+      thePool->startFunc(doIt);
    }
    thePool->wait();
 
@@ -104,7 +104,7 @@ int main()
    return 0;
 }
 
-void doIt(void* param)
+void doIt()
 {
    counterMutex.acquire();
       counter = counter+1;

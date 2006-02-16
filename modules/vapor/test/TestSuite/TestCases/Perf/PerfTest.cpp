@@ -67,14 +67,13 @@ void PerfTest::testReset()
 void PerfTest::testMultithreading()
 {
    const int num_threads(3);
-   std::vector<vpr::ThreadMemberFunctor<PerfTest>*> functors(num_threads);
    std::vector<vpr::Thread*> threads(num_threads);
 
    for(int t=0;t<num_threads;t++)
    {
       vpr::ProfileManager::startProfile("StartThread");
-      functors[t] = new vpr::ThreadMemberFunctor<PerfTest>(this,&PerfTest::createSamples);
-      threads[t] = new vpr::Thread(functors[t]);   // Spawns thread here.
+      // Spawns thread here.
+      threads[t] = new vpr::Thread(boost::bind(&PerfTest::createSamples, this));
       vpr::ProfileManager::stopProfile();
    }
 
@@ -82,7 +81,6 @@ void PerfTest::testMultithreading()
    {
       threads[t]->join();
       delete threads[t];
-      delete functors[t];
    }
 
    std::cout << "---- Multi-threaded tree ----" << std::endl;
@@ -91,10 +89,8 @@ void PerfTest::testMultithreading()
 }
 
 // used for spawned thread.  Just create some samples and exit
-void PerfTest::createSamples(void* arg)
+void PerfTest::createSamples()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::ProfileManager::startProfile("One");
       vpr::ProfileManager::startProfile("One-1");
       vpr::ProfileManager::stopProfile();

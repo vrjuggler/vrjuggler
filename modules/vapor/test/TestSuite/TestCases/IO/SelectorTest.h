@@ -56,8 +56,8 @@ public:
    // which acceptor is actually being connected to so that only a single
    // accept is needed (that never should really block)
    void testAcceptorPoolSelection();
-   void testAcceptorPoolSelection_acceptor( void* arg );
-   void testAcceptorPoolSelection_connector( void* arg );
+   void testAcceptorPoolSelection_acceptor();
+   void testAcceptorPoolSelection_connector();
 
    // Test sending data to a group of recievers that are pooled
    // This test is based upon the idea of having a pool of
@@ -67,8 +67,8 @@ public:
    // The acceptor side then selects on the sockets and hopefully it gets that same group back as the ones with pending data
    //
    void testSendThenPoll();
-   void testSendThenPoll_acceptor(void* arg);
-   void testSendThenPoll_connector(void* arg);
+   void testSendThenPoll_acceptor();
+   void testSendThenPoll_connector();
 
 
 protected:

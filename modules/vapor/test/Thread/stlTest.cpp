@@ -47,12 +47,14 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include <boost/bind.hpp>
+
 #include <vpr/Thread/ThreadPool.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/System.h>
 
-void doIt(void*);
+void doIt(const int);
 
 template<class T>
 void dumpVector(std::vector<T>& theVector);
@@ -95,7 +97,7 @@ int main()
 ///*
    for ( int i = 0; i < 15; ++i )
    {
-      thePool->startFunc((vpr::thread_func_t) doIt, (void*) &params[i]);
+      thePool->startFunc(boost::bind(doIt, params[i]));
    }
    thePool->wait();
 //*/
@@ -118,13 +120,11 @@ int main()
    return 0;
 }
 
-void doIt(void* param)
+void doIt(const int x)
 {
-   int* x = (int*) param;
-
    for ( int i = 0; i < 100; ++i )
    {
-      intVector.push_back(i + ((*x) * 100));
+      intVector.push_back(i + (x * 100));
    }
 }
 

@@ -28,7 +28,7 @@ public:
    void testReset();
    void testMultithreading();
 
-   void createSamples(void* arg);
+   void createSamples();
 
 public:
    vpr::Mutex  mOutputLock;

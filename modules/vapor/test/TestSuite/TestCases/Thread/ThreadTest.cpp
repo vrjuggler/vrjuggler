@@ -1,10 +1,12 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
+#include <boost/bind.hpp>
+#include <boost/ref.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/TSTable.h>
 #include <vpr/Thread/TSObject.h>
 #include <vpr/Thread/TSObjectProxy.h>
@@ -78,27 +80,6 @@ public:
 
 const vpr::Uint32 Tester::mMaxInc = 500;
 
-class RunnableTest
-{
-public:
-   RunnableTest() : mValue(0)
-   {
-   }
-
-   void run()
-   {
-      for ( vpr::Uint32 i = 0; i < mMaxInc; ++i )
-      {
-         mValue++;
-      }
-   }
-
-   static const vpr::Uint32 mMaxInc;
-   vpr::Uint32 mValue;
-};
-
-const vpr::Uint32 RunnableTest::mMaxInc = 1000;
-
 static const vpr::Uint32 ThreadTest_INC_COUNT = 5000;
 
 void ThreadTest::testNoSpawnCtor()
@@ -112,11 +93,11 @@ void ThreadTest::testNoSpawnCtor()
       vpr::Thread my_thread;
       CPPUNIT_ASSERT(! my_thread.valid() && "Thread should not be running yet");
 
-      vpr::ThreadMemberFunctor<Tester> functor(&test_obj, &Tester::doSomething,
-                                               NULL);
-      CPPUNIT_ASSERT(functor.isValid() && "Functor should be valid");
+      vpr::thread_func_t functor = boost::bind(&Tester::doSomething,
+                                               boost::ref(test_obj));
+      CPPUNIT_ASSERT(! functor.empty() && "Functor should be valid");
 
-      my_thread.setFunctor(&functor);
+      my_thread.setFunctor(functor);
       CPPUNIT_ASSERT(! my_thread.valid() && "Thread should not be running yet");
 
       my_thread.start();
@@ -135,11 +116,11 @@ void ThreadTest::testAutoSpawnCtor()
       const vpr::Uint32 start_val(500);
       test_obj.mValue = start_val;
 
-      vpr::ThreadMemberFunctor<Tester> functor(&test_obj, &Tester::doSomething,
-                                               NULL);
-      CPPUNIT_ASSERT(functor.isValid() && "Functor should be valid");
+      vpr::thread_func_t functor = boost::bind(&Tester::doSomething,
+                                               boost::ref(test_obj));
+      CPPUNIT_ASSERT(! functor.empty() && "Functor should be valid");
 
-      vpr::Thread my_thread(&functor);
+      vpr::Thread my_thread(functor);
       CPPUNIT_ASSERT(my_thread.valid() && "Thread should be running now");
 
       my_thread.join();
@@ -151,10 +132,11 @@ void ThreadTest::testUncaughtException()
 {
    Tester test_obj;
 
-   vpr::ThreadMemberFunctor<Tester> functor(&test_obj, &Tester::throwSomething, NULL);
-   CPPUNIT_ASSERT(functor.isValid() && "Functor should be valid");
+   vpr::thread_func_t functor = boost::bind(&Tester::throwSomething,
+                                            boost::ref(test_obj));
+   CPPUNIT_ASSERT(! functor.empty() && "Functor should be valid");
 
-   vpr::Thread my_thread(&functor);
+   vpr::Thread my_thread(functor);
    CPPUNIT_ASSERT(my_thread.valid() && "Thread should be running now");
 
    CPPUNIT_ASSERT_THROW(my_thread.join(), vpr::UncaughtThreadException);
@@ -171,20 +153,6 @@ void ThreadTest::testUncaughtException()
 }
 
 
-void ThreadTest::testRunnableFunctor()
-{
-   const vpr::Uint32 start_val = 500;
-   RunnableTest obj;
-   obj.mValue = start_val;
-
-   vpr::ThreadRunFunctor<RunnableTest> runnable(&obj);
-   vpr::Thread thread(&runnable);
-   CPPUNIT_ASSERT(thread.valid() && "Thread did not start");
-
-   thread.join();
-   CPPUNIT_ASSERT(obj.mValue == (start_val + obj.mMaxInc));
-}
-
 void ThreadTest::testCreateJoin()
 {
    // Spawn off a bunch of threads (m)
@@ -197,15 +165,12 @@ void ThreadTest::testCreateJoin()
    //std::cout<<" Thread CreateJoin: \n"<<std::flush;
 
    const int num_threads(10);
-   std::vector<vpr::ThreadMemberFunctor<ThreadTest>*> functors(num_threads);
    std::vector<vpr::Thread*> threads(num_threads);
 
    for(int t=0;t<num_threads;t++)
    {
-      functors[t] = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::incCounter);
-
       // Spawns thread here.
-      threads[t] = new vpr::Thread(functors[t]);
+      threads[t] = new vpr::Thread(boost::bind(&ThreadTest::incCounter, this));
    }
 
    for(int t=0;t<num_threads;t++)
@@ -213,7 +178,6 @@ void ThreadTest::testCreateJoin()
       if(threads[t]->join() == false)
          CPPUNIT_ASSERT(false && "Thread was not able to be joined");
       delete threads[t];
-      delete functors[t];
    }
 
    CPPUNIT_ASSERT_EQUAL((unsigned long) num_threads * ThreadTest_INC_COUNT,
@@ -296,10 +260,8 @@ void ThreadTest::testSuspendResume()
 
    mCounter=0;
 
-   // spawn an counter thread
-   vpr::ThreadMemberFunctor<ThreadTest>* counter_functor =
-      new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter1Func );
-   vpr::Thread counter_thread(counter_functor);
+   // spawn a counter thread
+   vpr::Thread counter_thread(boost::bind(&ThreadTest::counter1Func, this));
 
    vpr::System::msleep(100 );
 
@@ -348,14 +310,10 @@ void ThreadTest::testPriority()
    long diff2=0;
 
    // spawn two counter threads
-   vpr::ThreadMemberFunctor<ThreadTest>* counter1_functor =
-      new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter1Func );
-   vpr::Thread counter1_thread(counter1_functor);
+   vpr::Thread counter1_thread(boost::bind(&ThreadTest::counter1Func, this));
    vpr::System::msleep(500 );
 
-   vpr::ThreadMemberFunctor<ThreadTest>* counter2_functor =
-      new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter2Func );
-   vpr::Thread counter2_thread(counter2_functor);
+   vpr::Thread counter2_thread(boost::bind(&ThreadTest::counter2Func, this));
 //   counter2_thread.suspend();
    vpr::System::msleep(500 );
 //   counter2_thread.resume();
@@ -395,8 +353,7 @@ void ThreadTest::interactiveTestCPUGrind()
    // Spawn off user specified number of threads
    // Have each grind the CPU until the user enters a value
    int num_threads(0);
-   std::vector<vpr::ThreadMemberFunctor<ThreadTest>*> functors(num_threads);
-   std::vector<vpr::Thread*>                          threads(num_threads);
+   std::vector<vpr::Thread*> threads(num_threads);
 
    mStopGrindingCPU = false;
 
@@ -410,9 +367,9 @@ void ThreadTest::interactiveTestCPUGrind()
    // -- SPAWN THE THREADS -- //
    for(int t=0;t<num_threads;t++)
    {
-      functors.push_back( new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::grindCPUWorker));
-      vpr::Thread* cur_thread = new vpr::Thread(functors[t]);
-      threads.push_back(cur_thread);
+      threads.push_back(
+         new vpr::Thread(boost::bind(&ThreadTest::grindCPUWorder, this));
+      );
    }
 
    // -- ASK FOR USER STOP -- //
@@ -428,7 +385,6 @@ void ThreadTest::interactiveTestCPUGrind()
       if(threads[t]->join() == false)
          CPPUNIT_ASSERT(false && "Thread was not able to be joined");
       delete threads[t];
-      delete functors[t];
    }
 
    CPPUNIT_ASSERT((answer == 'y') || (answer == 'Y'));
@@ -457,13 +413,11 @@ void ThreadTest::testThreadStackSize()
    const long stack_size = 64000;
 
    int arg;
-
-   vpr::ThreadMemberFunctor<ThreadTest>* functor;
-   vpr::Thread* the_thread;
-
-   functor = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::recurseConsumeResources, &arg);
-
-   the_thread = new vpr::Thread(functor, vpr::BaseThread::VPR_PRIORITY_NORMAL, vpr::BaseThread::VPR_LOCAL_THREAD, vpr::BaseThread::VPR_JOINABLE_THREAD, stack_size);
+   vpr::Thread* the_thread =
+      new vpr::Thread(boost::bind(&ThreadTest::recurseConsumeResources, this, arg),
+                      vpr::BaseThread::VPR_PRIORITY_NORMAL,
+                      vpr::BaseThread::VPR_LOCAL_THREAD,
+                      vpr::BaseThread::VPR_JOINABLE_THREAD, stack_size);
    CPPUNIT_ASSERT(the_thread != NULL);
 
    CPPUNIT_ASSERT(the_thread->join() && "Failed to join with testThreadStackSize thread");
@@ -473,7 +427,7 @@ void ThreadTest::testThreadStackSize()
 
 // Recurse and consume some resources
 // Arg is a pointer to a long
-void ThreadTest::recurseConsumeResources(void* arg)
+void ThreadTest::recurseConsumeResources(int arg)
 {
    // Allocate some stack variables
    long var1(5), var2(3), var3(7);
@@ -502,20 +456,16 @@ void ThreadTest::testThreadSpecificData()
    // Make sure counter is of valid value
 
    const int num_threads(10);
-   std::vector<vpr::ThreadMemberFunctor<ThreadTest>*> functors(num_threads);
    std::vector<vpr::Thread*> threads(num_threads);
-   std::vector<std::string*> thread_names(num_threads);
 
    for(int t=0;t<num_threads;t++)
    {
-      char buffer[256];
-      sprintf(buffer, "%d", t);
-      thread_names[t] = new std::string(buffer);
-
-      functors[t] = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::tsIncCounter, thread_names[t]);
+      std::ostringstream s;
+      s << t;
 
       // Spawns thread here.
-      threads[t] = new vpr::Thread(functors[t]);
+      threads[t] = new vpr::Thread(boost::bind(&ThreadTest::tsIncCounter, this,
+                                               t.str()));
    }
 
    for(int t=0;t<num_threads;t++)
@@ -528,19 +478,16 @@ void ThreadTest::testThreadSpecificData()
       */
       threads[t]->join();
       delete threads[t];
-      delete functors[t];
-      delete thread_names[t];
    }
 }
 
 /**
 * @param arg - ptr to std::string id of thread
 */
-void ThreadTest::tsIncCounter(void* arg)
+void ThreadTest::tsIncCounter(std::string threadName)
 {
-   std::string* thread_name = static_cast<std::string*>(arg);
    std::string test_name("TSDataOverhead");
-   test_name += (*thread_name);
+   test_name += threadName;
 
    {
       const unsigned long IncCount(rand()%100);

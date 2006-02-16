@@ -44,6 +44,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
+#include <boost/bind.hpp>
+#include <boost/ref.hpp>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObjectProxy.h>
@@ -56,13 +58,14 @@ int threads_created = 0;
 int threads_exited = 0;
 vpr::Mutex create_mutex;
 
-void doFunc(void*);
+void doFunc(vpr::TSObjectProxy<int>&);
 
 int main()
 {
    vpr::TSObjectProxy<int> tsCounter;     // Allocate a thread specific counter
 
-   vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*)(&tsCounter));
+   vpr::Thread* new_thread =
+      new vpr::Thread(boost::bind(doFunc, boost::ref(tsCounter)));
 
    create_mutex.acquire();
       threads_created++;
@@ -76,11 +79,8 @@ int main()
    return 0;
 }
 
-void doFunc(void* TSCounterPtr)
+void doFunc(vpr::TSObjectProxy<int>& tsCounter)
 {
-   vpr::TSObjectProxy<int>& ts_counter =
-      *(static_cast<vpr::TSObjectProxy<int>*>(TSCounterPtr));
-
    create_mutex.acquire();
       num_threads_to_create -= 1;
    create_mutex.release();
@@ -97,27 +97,28 @@ void doFunc(void* TSCounterPtr)
          }
          else if ( num_threads_to_create > 0 )
          {
-            vpr::Thread* new_thread = new vpr::Thread(doFunc, TSCounterPtr);
+            vpr::Thread* new_thread =
+               new vpr::Thread(boost::bind(doFunc, boost::ref(tsCounter)));
             threads_created++;
          }
       create_mutex.release();
    }
 
-   (*ts_counter) = 0;
+   (*tsCounter) = 0;
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "Starting with: " << *ts_counter << std::endl << vprDEBUG_FLUSH;
+      << "Starting with: " << *tsCounter << std::endl << vprDEBUG_FLUSH;
 
-   while ( *ts_counter < 1000 )
+   while ( *tsCounter < 1000 )
    {
       for ( int i = 0; i < 1000; ++i )
       {
          float x = sin((float) i);
       }
-      (*ts_counter)++;
+      (*tsCounter)++;
    }
 
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "Finished counting: Final val:" << *ts_counter << std::endl
+      << "Finished counting: Final val:" << *tsCounter << std::endl
       << vprDEBUG_FLUSH;
 
    create_mutex.acquire();

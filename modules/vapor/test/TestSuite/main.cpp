@@ -36,7 +36,7 @@
 //#define vprtest_RANDOM_SEED 1
 
 #ifdef VPR_SIMULATOR
-static void run (void* arg)
+static void run ()
 {
    while ( true )
    {

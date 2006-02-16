@@ -44,6 +44,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
+#include <boost/bind.hpp>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
@@ -65,7 +66,7 @@ const long num_reps = 100000;          // Number of times to call
 
 vpr::TSObjectProxy<int>    tsDataItem;     // Allocate a thread specific int
 
-void doFunc(void*);
+void doFunc(const int);
 
 int main(int argc, char* argv[])
 {
@@ -80,13 +81,14 @@ int main(int argc, char* argv[])
 
    // Run in primordial thread first.
    int temp_val = 0;
-   doFunc((void*) temp_val);
+   doFunc(temp_val);
    thread_count++;
 
    // Then run in num_threads -1 spawned threads.
    for ( int thread_num = 1 ;thread_num < num_threads; ++thread_num )
    {
-      vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*)(thread_num));
+      vpr::Thread* new_thread = new vpr::Thread(boost::bind(doFunc,
+                                                            thread_num));
 
       // Increment the thread count
       thread_count_mutex.acquire();
@@ -116,23 +118,21 @@ int main(int argc, char* argv[])
    return 0;
 }
 
-void doFunc(void* void_thread_num)
+void doFunc(const int threadNum)
 {
-   int thread_num = (int)void_thread_num;
-
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "Thread: " << thread_num << ": Entering.\n" << vprDEBUG_FLUSH;
+      << "Thread: " << threadNum << ": Entering.\n" << vprDEBUG_FLUSH;
 
-   timers[thread_num].startTiming();
+   timers[threadNum].startTiming();
    for ( long rep = 0; rep < num_reps; ++rep )
    {
      *tsDataItem = rep;
    }
-   timers[thread_num].stopTiming();
+   timers[threadNum].stopTiming();
 
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "Thread: " << thread_num << ": Exiting: Avg Time of: "
-      << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f)
+      << "Thread: " << threadNum << ": Exiting: Avg Time of: "
+      << ((timers[threadNum].getTiming()/(double)num_reps)*1000.0f)
       << "ms" << std::endl << vprDEBUG_FLUSH;
    thread_count_mutex.acquire();
       thread_count--;               // Removing us from the number there

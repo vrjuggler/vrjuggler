@@ -106,8 +106,8 @@ public:
    void testChangeSoftwareFlowControl();
 
    void testSendRecv();
-   void testSendRecv_sender(void* arg);
-   void testSendRecv_receiver(void* arg);   
+   void testSendRecv_sender();
+   void testSendRecv_receiver();   
 
 private:
    static std::string mSendPortName;

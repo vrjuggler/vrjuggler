@@ -58,7 +58,6 @@
 #include <boost/concept_check.hpp>
 
 #include <vpr/Thread/BaseThread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Thread/UncaughtThreadException.h>
 
@@ -94,17 +93,7 @@ public:
     * Spawning constructor.  This will start a new thread that will execute
     * the specified function.
     */
-   ThreadNSPR(thread_func_t func, void* arg = NULL,
-              VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-              VPRThreadScope scope = VPR_GLOBAL_THREAD,
-              VPRThreadState state = VPR_JOINABLE_THREAD,
-              PRUint32 stack_size = 0);
-
-   /**
-    * Spawning constructor (functor version).  This will start a new thread
-    * that will execute the specified functor.
-    */
-   ThreadNSPR(BaseThreadFunctor* functor_ptr,
+   ThreadNSPR(const vpr::thread_func_t& func,
               VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
               VPRThreadScope scope = VPR_GLOBAL_THREAD,
               VPRThreadState state = VPR_JOINABLE_THREAD,
@@ -123,7 +112,7 @@ public:
     *
     * @pre The thread is not already running.  The functor is valid.
     */
-   virtual void setFunctor(BaseThreadFunctor* functorPtr);
+   virtual void setFunctor(const vpr::thread_func_t& functor);
 
    /**
     * Creates a new thread that will execute this thread's functor.
@@ -294,16 +283,10 @@ private:
    PRThread* mThread;    /**<  PRThread data structure for this thread */
 
    /** The functor to call when the thread starts. */
-   vpr::BaseThreadFunctor* mUserThreadFunctor;
-
-   /**
-    * Flag indicating if we allocated mUserThreadFunctor and therefore must
-    * delete it ourselves.
-    */
-   bool mDeleteFunctor;
+   vpr::thread_func_t mUserThreadFunctor;
 
    /** Memory handed off to PR_CreateThread() as the thread function. */
-   vpr::ThreadMemberFunctor<vpr::ThreadNSPR>* mStartFunctor;
+   vpr::thread_func_t mStartFunctor;
 
    VPRThreadPriority  mPriority;
    VPRThreadScope     mScope;

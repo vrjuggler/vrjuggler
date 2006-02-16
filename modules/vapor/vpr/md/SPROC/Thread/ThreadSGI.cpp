@@ -59,10 +59,7 @@ namespace vpr
 ThreadSGI::ThreadSGI(BaseThread::VPRThreadPriority priority,
                      BaseThread::VPRThreadScope scope,
                      BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL)
-   , mDeleteFunctor(false)
-   , mStartFunctor(NULL)
-   , mRunning(false)
+   : mRunning(false)
    , mCaughtException(false)
    , mException("No exception caught")
 {
@@ -72,39 +69,16 @@ ThreadSGI::ThreadSGI(BaseThread::VPRThreadPriority priority,
  * Spawning constructor.  This will actually start a new thread that will
  * execute the specified function.
  */
-ThreadSGI::ThreadSGI(thread_func_t func, void* arg,
+ThreadSGI::ThreadSGI(const vpr::thread_func_t& func,
                      BaseThread::VPRThreadPriority priority,
                      BaseThread::VPRThreadScope scope,
                      BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL)
-   , mDeleteFunctor(false)
-   , mStartFunctor(NULL)
-   , mRunning(false)
+   : mRunning(false)
    , mCaughtException(false)
    , mException("No exception caught")
 {
    // Create the thread functor to start.
-   mDeleteFunctor = true;
-   setFunctor(new ThreadNonMemberFunctor(func, arg));
-   start();
-}
-
-/**
- * Spawning constructor with arguments (functor version).  This will start a
- * new thread that will execute the specified function.
- */
-ThreadSGI::ThreadSGI(BaseThreadFunctor* functorPtr,
-                     BaseThread::VPRThreadPriority priority,
-                     BaseThread::VPRThreadScope scope,
-                     BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL)
-   , mDeleteFunctor(false)
-   , mStartFunctor(NULL)
-   , mRunning(false)
-   , mCaughtException(false)
-   , mException("No exception caught")
-{
-   setFunctor(functorPtr);
+   setFunctor(func);
    start();
 }
 
@@ -115,26 +89,14 @@ ThreadSGI::~ThreadSGI()
       unregisterThread();
    }
    ThreadManager::instance()->unlock();
-
-   if ( NULL != mStartFunctor )
-   {
-      delete mStartFunctor;
-      mStartFunctor = NULL;
-   }
-
-   if ( mDeleteFunctor )
-   {
-      delete mUserThreadFunctor;
-      mUserThreadFunctor = NULL;
-   }
 }
 
-void ThreadSGI::setFunctor(BaseThreadFunctor* functorPtr)
+void ThreadSGI::setFunctor(const vpr::thread_func_t& functor)
 {
    vprASSERT(! mRunning && "Thread already running");
-   vprASSERT(functorPtr->isValid());
+   vprASSERT(! functorPtr.empty());
 
-   mUserThreadFunctor = functorPtr;
+   mUserThreadFunctor = functor;
 }
 
 vpr::ReturnStatus ThreadSGI::start()
@@ -146,19 +108,16 @@ vpr::ReturnStatus ThreadSGI::start()
       vprASSERT(false && "Thread already running");
       status.setCode(vpr::ReturnStatus::Fail);
    }
-   else if ( NULL == mUserThreadFunctor )
+   else if ( mUserThreadFunctor.empty() )
    {
       vprASSERT(false && "No functor set");
       status.setCode(vpr::ReturnStatus::Fail);
    }
    else
    {
-      mStartFunctor =
-         new ThreadMemberFunctor<ThreadSGI>(this, &ThreadSGI::startThread,
-                                            NULL);
-
       // Spawn the thread.
-      status = spawn(mStartFunctor);
+      mStartFunctor = boost::bind(&ThreadSGI::startThread, this);
+      status = spawn();
 
       if ( status.success() )
       {
@@ -183,11 +142,11 @@ vpr::ReturnStatus ThreadSGI::start()
    return status;
 }
 
-vpr::ReturnStatus ThreadSGI::spawn(BaseThreadFunctor* functorPtr)
+vpr::ReturnStatus ThreadSGI::spawn()
 {
    vpr::ReturnStatus status;
-   mThreadPID = sproc(thread_func_t(&vprThreadFunctorFunction),
-                      PR_SADDR | PR_SFDS, functorPtr);
+   mThreadPID = sproc(vprThreadFunctorFunction, PR_SADDR | PR_SFDS,
+                      &mStartFunctor);
 
    if ( mThreadPID == -1 )
    {
@@ -200,7 +159,7 @@ vpr::ReturnStatus ThreadSGI::spawn(BaseThreadFunctor* functorPtr)
 /**
  * Called by the spawn routine to start the user thread function.
  */
-void ThreadSGI::startThread(void* null_param)
+void ThreadSGI::startThread()
 {
    // WE are a new thread... yeah!!!!
    // TELL EVERYONE THAT WE LIVE!!!!
@@ -217,7 +176,7 @@ void ThreadSGI::startThread(void* null_param)
    try
    {
       // --- CALL USER FUNCTOR --- //
-      (*mUserThreadFunctor)();
+      mUserThreadFunctor();
    }
    catch (vpr::Exception& ex)
    {
@@ -240,7 +199,6 @@ void ThreadSGI::startThread(void* null_param)
       mException.setException(ex);
    }
 }
-
 
 /**
  * Makes the calling thread wait for the termination of the specified

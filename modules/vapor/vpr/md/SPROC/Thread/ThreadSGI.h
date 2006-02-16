@@ -56,7 +56,6 @@
 #include <unistd.h>
 
 #include <vpr/vprTypes.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/BaseThread.h>
 #include <vpr/Thread/UncaughtThreadException.h>
 
@@ -84,18 +83,7 @@ public:
     * This will actually start a new thread that will execute the specified
     * function.
     */
-   ThreadSGI(thread_func_t func, void* arg = 0,
-             BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-             BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
-             BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
-             size_t stackSize = 0);
-
-   /**
-    * Spawning constructor with arguments (functor version).
-    * This will start a new thread that will execute the specified
-    * function.
-    */
-   ThreadSGI(BaseThreadFunctor* functorPtr,
+   ThreadSGI(const vpr::thread_func_t& func,
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
              BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
@@ -109,7 +97,7 @@ public:
     *
     * @pre The thread is not already running.  The functor is valid.
     */
-   virtual void setFunctor(BaseThreadFunctor* functorPtr);
+   virtual void setFunctor(const vpr::thread_func_t& functor);
 
    /**
     * Starts this thread's execution.
@@ -137,7 +125,7 @@ private:
     * @return A non-zero value is returned upon successful thread creation.
     *         -1 is returned if an error occurred.
     */
-   vpr::ReturnStatus spawn(BaseThreadFunctor* functorPtr);
+   vpr::ReturnStatus spawn();
 
    /**
     * Called by the spawn routine to start the user thread function.
@@ -145,21 +133,15 @@ private:
     * @pre Called ONLY by a new thread
     * @post The new thread will have started the user thread function.
     */
-   void startThread(void* null_param);
+   void startThread();
 
 private:
    /**
-    * The functor to call from startThread.
+    * The functor to call from startThread().
     */
-   vpr::BaseThreadFunctor* mUserThreadFunctor;
+   vpr::thread_func_t mUserThreadFunctor;
 
-   /**
-    * Flag indicating if we allocated mUserThreadFunctor and therefore must
-    * delete it ourselves.
-    */
-   bool mDeleteFunctor;
-
-   vpr::ThreadMemberFunctor<vpr::ThreadSGI>* mStartFunctor;
+   vpr::thread_func_t mStartFunctor;
 
    bool               mRunning;
    VPRThreadPriority  mPriority;

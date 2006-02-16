@@ -61,9 +61,6 @@ PRUint32 ThreadNSPR::mTicksPerSec = PR_TicksPerSecond();
 ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
    : mThread(NULL)
-   , mUserThreadFunctor(NULL)
-   , mDeleteFunctor(false)
-   , mStartFunctor(NULL)
    , mPriority(priority)
    , mScope(scope)
    , mState(state)
@@ -75,13 +72,10 @@ ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
 
 // Spawning constructor with arguments.  This will start a new thread that
 // will execute the specified function.
-ThreadNSPR::ThreadNSPR(thread_func_t func, void* arg,
+ThreadNSPR::ThreadNSPR(const vpr::thread_func_t& func,
                        VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
    : mThread(NULL)
-   , mUserThreadFunctor(NULL)
-   , mDeleteFunctor(false)
-   , mStartFunctor(NULL)
    , mPriority(priority)
    , mScope(scope)
    , mState(state)
@@ -89,28 +83,7 @@ ThreadNSPR::ThreadNSPR(thread_func_t func, void* arg,
    , mCaughtException(false)
    , mException("No exception caught")
 {
-   mDeleteFunctor = true;
-   setFunctor(new ThreadNonMemberFunctor(func, arg));
-   start();
-}
-
-// Spawning constructor (functor version).  This will start a new thread that
-// will execute the specified function.
-ThreadNSPR::ThreadNSPR(BaseThreadFunctor* functorPtr,
-                       VPRThreadPriority priority, VPRThreadScope scope,
-                       VPRThreadState state, PRUint32 stackSize)
-   : mThread(NULL)
-   , mUserThreadFunctor(NULL)
-   , mDeleteFunctor(false)
-   , mStartFunctor(NULL)
-   , mPriority(priority)
-   , mScope(scope)
-   , mState(state)
-   , mStackSize(stackSize)
-   , mCaughtException(false)
-   , mException("No exception caught")
-{
-   setFunctor(functorPtr);
+   setFunctor(func);
    start();
 }
 
@@ -122,24 +95,12 @@ ThreadNSPR::~ThreadNSPR()
       unregisterThread();
    }
    ThreadManager::instance()->unlock();
-
-   if ( NULL != mStartFunctor )
-   {
-      delete mStartFunctor;
-      mStartFunctor = NULL;
-   }
-
-   if ( mDeleteFunctor )
-   {
-      delete mUserThreadFunctor;
-      mUserThreadFunctor = NULL;
-   }
 }
 
-void ThreadNSPR::setFunctor(BaseThreadFunctor* functorPtr)
+void ThreadNSPR::setFunctor(const vpr::thread_func_t& functor)
 {
    vprASSERT(mThread == NULL && "Thread already running");
-   vprASSERT(functorPtr->isValid());
+   vprASSERT(! functor.empty());
 
    mUserThreadFunctor = functorPtr;
 }
@@ -154,7 +115,7 @@ vpr::ReturnStatus ThreadNSPR::start()
       vprASSERT(false && "Thread already running");
       status.setCode(vpr::ReturnStatus::Fail);
    }
-   else if ( NULL == mUserThreadFunctor )
+   else if ( mUserThreadFunctor.empty() )
    {
       vprASSERT(false && "No functor set");
       status.setCode(vpr::ReturnStatus::Fail);
@@ -169,20 +130,18 @@ vpr::ReturnStatus ThreadNSPR::start()
       nspr_scope = vprThreadScopeToNSPR(mScope);
       nspr_state = vprThreadStateToNSPR(mState);
 
-      vprASSERT(mUserThreadFunctor->isValid());
+      vprASSERT(! mUserThreadFunctor.empty());
 
       // Store the member functor and create the functor for spawning to our
       // start routine.
-      mStartFunctor = 
-         new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
-                                             NULL);
+      mStartFunctor = boost::bind(&ThreadNSPR::startThread, this);
 
       // Finally create the thread.
       // - On success --> The start method registers the actual thread info
       mThreadStartCompleted = false;      // Initialize registration flag (uses cond var for this)
       PRThread* ret_thread =
          PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
-                         (void*) mStartFunctor, nspr_prio, nspr_scope,
+                         (void*) &mStartFunctor, nspr_prio, nspr_scope,
                          nspr_state, (PRUint32) mStackSize);
 
       // Inform the caller if the thread was not created successfully.
@@ -293,7 +252,7 @@ void ThreadNSPR::startThread(void* nullParam)
    try
    {
       // --- CALL USER FUNCTOR --- //
-      (*mUserThreadFunctor)();
+      mUserThreadFunctor();
    }
    catch (vpr::Exception& ex)
    {

@@ -44,8 +44,8 @@ public:
    // Then the main thread starts using a connector to connect to the connector
    // After connection the acceptor sends a message, the connector recieves it and closes the socket
    void testBandwidth();
-   void testBandwidth_acceptor(void* arg);
-   void testBandwidth_connector(void* arg);
+   void testBandwidth_acceptor();
+   void testBandwidth_connector();
 
    static CppUnit::Test* suite()
    {

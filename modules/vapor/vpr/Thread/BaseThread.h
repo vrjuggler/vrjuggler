@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <boost/concept_check.hpp>
+#include <boost/function.hpp>
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
 
@@ -56,10 +57,7 @@ namespace vpr
  * function pointer type for all functions initially passed as code to
  * execute within a separate thread of control.
  */
-typedef void (*thread_func_t)(void *);
-
-
-class BaseThreadFunctor;
+typedef boost::function<void()> thread_func_t;
 
 /** \class BaseThread BaseThread.h vpr/Thread/BaseThread.h
  *
@@ -104,7 +102,7 @@ public:
    }
 
    /** Sets the thread's functor--the code that will get executed. */
-   virtual void setFunctor(BaseThreadFunctor* functorPtr) = 0;
+   virtual void setFunctor(const vpr::thread_func_t& functor) = 0;
 
    /** Starts the thread's execution. */
    virtual vpr::ReturnStatus start() = 0;
@@ -153,39 +151,6 @@ protected:
    void registerThread(bool successfulCreation);
 
    void unregisterThread();
-
-   /**
-    * Creates a new thread that will execute functorPtr.
-    *
-    * @post A thread (with any specified attributes) is created that begins
-    *       executing \p functorPtr.
-    *
-    * @param functorPtr Function to be executed by the thread.
-    * @param priority   Priority of created thread (optional).
-    * @param scope      The scope of the new thread.  This argument is
-    *                   optional, and it defaults to
-    *                   vpr::Thread::VPR_GLOBAL_THREAD.
-    * @param state      The state of the new thread (joinable or unjoinable).
-    *                   This argument is optional, and it defaults to
-    *                   vpr::Thread::VPR_JOINABLE_THREAD.
-    * @param stack_size The stack size for the new thread.  This argument is
-    *                   optional, and it defaults to 0 (use the default stack
-    *                   size offered by the OS).
-    *
-    * @return A non-zero value is returned to indicate that the thread was
-    *         created successfully.  -1 is returned otherwise.
-    */
-/*
-   virtual vpr::ReturnStatus spawn(BaseThreadFunctor* functorPtr,
-                                   VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-                                   VPRThreadScope scope = VPR_GLOBAL_THREAD,
-                                   VPRThreadState state = VPR_JOINABLE_THREAD,
-                                   size_t stack_size = 0)
-   {
-      std::cerr << "Base spawn.  Should NOT be called." << std::endl;
-      return vpr::ReturnStatus::Fail;
-   }
-*/
 
 public:
    /**
@@ -352,6 +317,14 @@ private:
 
 /// Ouput operator.
 VPR_API(std::ostream&) operator<<(std::ostream& out, Thread* threadPtr);
+
+// This is the actual function that is called.
+// It must be extern "C".
+#if defined(VPR_USE_PTHREADS)
+extern "C" void* vprThreadFunctorFunction(void* args);
+#else
+extern "C" void vprThreadFunctorFunction(void* args);
+#endif
 
 } // End of vpr namespace
 

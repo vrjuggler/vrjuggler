@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/Socket.h>
@@ -14,7 +15,6 @@
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
 
@@ -79,14 +79,16 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor ()
    mState = NOT_READY;                        // Initialize
 
    // Spawn acceptor thread
-   vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>(this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor,
+                  this)
+   );
 
    // Spawn connector thread
-   vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>(this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&SocketConnectorAcceptorTest::testSpawnedAcceptor_connector,
+                  this)
+   );
 
    CPPUNIT_ASSERT( acceptor_thread.valid() && "Invalid acceptor thread");
    CPPUNIT_ASSERT( connector_thread.valid() && "Invalid connector thread");
@@ -101,10 +103,8 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor ()
    connector_thread.join();
 }
 
-void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
+void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::InetAddr local_acceptor_addr;
    local_acceptor_addr.setAddress("localhost", mRendevousPort);
    vpr::SocketAcceptor acceptor;
@@ -152,10 +152,8 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
    }
 }
 
-void SocketConnectorAcceptorTest::testSpawnedAcceptor_connector (void* arg)
+void SocketConnectorAcceptorTest::testSpawnedAcceptor_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::ReturnStatus ret_val;
    vpr::Uint32 bytes_read;
    vpr::InetAddr remote_addr;

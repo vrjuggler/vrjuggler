@@ -101,4 +101,30 @@ void BaseThread::unregisterThread()
    vpr::ThreadManager::instance()->removeThread(thread_ptr);
 }
 
+//--------------------------------------------
+// This is the actual function that is called.
+//--------------------------------------------
+#if defined(VPR_USE_PTHREADS)
+void* vprThreadFunctorFunction(void* arg)
+{
+   // Wait until this thread has been registered with the thread
+   // manager before continuing execution.
+   ThreadManager::instance()->lock();
+   ThreadManager::instance()->unlock();
+
+   vpr::thread_func_t& func = *((vpr::thread_func_t*) arg);
+   vprASSERT(! func.empty());
+   func();
+
+   return (void*) NULL;
+}
+#else
+void vprThreadFunctorFunction(void* arg)
+{
+   vpr::thread_func_t& func = *((vpr::thread_func_t*) arg);
+   vprASSERT(! func.empty());
+   func();
+}
+#endif
+
 }

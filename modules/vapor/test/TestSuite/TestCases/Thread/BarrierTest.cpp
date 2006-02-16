@@ -4,7 +4,6 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 
 #include <TestCases/Thread/BarrierTest.h>
 
@@ -25,13 +24,12 @@ void BarrierTest::testBarrier()
    mNumThreads = 5;
    mBarrier = new vpr::Barrier(mNumThreads+1);      // +1 for us
 
-   std::vector<vpr::ThreadMemberFunctor<BarrierTest>*> functors(mNumThreads);
    std::vector<vpr::Thread*> threads(mNumThreads);
 
    for(unsigned t=0;t<mNumThreads;t++)
    {
-      functors[t] = new vpr::ThreadMemberFunctor<BarrierTest>(this,&BarrierTest::testBarrier_thread);
-      threads[t] = new vpr::Thread(functors[t]);
+      threads[t] = new vpr::Thread(boost::bind(&BarrierTest::testBarrier_thread,
+                                               this));
    }
 
    for(unsigned i=0;i<BARRIER_ITERS;++i)
@@ -57,7 +55,6 @@ void BarrierTest::testBarrier()
    {
       threads[t]->join();
       delete threads[t];
-      delete functors[t];
    }
 }
 

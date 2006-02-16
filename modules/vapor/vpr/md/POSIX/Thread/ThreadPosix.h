@@ -92,17 +92,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
     * Spawning constructor with argument.  This will start a new thread that
     * will execute the specified function.
     */
-   ThreadPosix(thread_func_t func, void* arg = NULL,
-               VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-               VPRThreadScope scope = VPR_GLOBAL_THREAD,
-               VPRThreadState state = VPR_JOINABLE_THREAD,
-               size_t stack_size = 0);
-
-   /**
-    * Spawning constructor (functor version).  This will start a new thread
-    * that will execute the function encapsulated by the functor.
-    */
-   ThreadPosix(BaseThreadFunctor* functorPtr,
+   ThreadPosix(const vpr::thread_func_t& func,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
@@ -121,7 +111,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
     *
     * @pre The thread is not already running.  The functor is valid.
     */
-   virtual void setFunctor(BaseThreadFunctor* functorPtr);
+   virtual void setFunctor(const vpr::thread_func_t& functor);
 
    /**
     * Starts this thread's execution.
@@ -144,15 +134,10 @@ protected:
     *       execution immediately, or it may block for a short time before
     *       beginning execution.
     *
-    * @param functorPtr Function to be executed by the thread.
-    *
     * @return A vpr::ReturnStatus obj is returned to indicate the result of
     *         the thread creation.
-    *
-    * @note The pthreads implementation on HP-UX 10.20 does not allow the
-    *       stack address to be changed.
     */
-   vpr::ReturnStatus spawn(BaseThreadFunctor* functorPtr);
+   vpr::ReturnStatus spawn();
 
    /**
     * Called by the spawn routine to start the user thread function.
@@ -161,17 +146,12 @@ protected:
     * @post The new thread will have started the user thread function.
     *       Any necessary thread registration is performed.  The user thread
     *       functor is called.
-    *
-    * @param nullParam Unused.
     */
-   void startThread(void* nullParam);
+   void startThread();
 
 private:
-   BaseThreadFunctor* mUserThreadFunctor;     /**< The functor to call when
+   vpr::thread_func_t mUserThreadFunctor;     /**< The functor to call when
                                                    the thread starts */
-   bool               mDeleteThreadFunctor;   /**< Flag stating whether to
-                                                   free the memory for the
-                                                   thread functor */
 
 public:  // ----- Various other thread functions ------
 
@@ -380,7 +360,7 @@ private:
     * Functor used for calling back vpr::ThreadPosix::startThread().  This
     * technique helps to ensure proper thread registration.
     */
-   vpr::ThreadMemberFunctor<ThreadPosix>* mStartFunctor;
+   vpr::thread_func_t mStartFunctor;
 
    /** Converts a VPR thread priority to its Pthread equivalent. */
    int vprThreadPriorityToPOSIX(const VPRThreadPriority priority);

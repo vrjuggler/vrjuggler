@@ -62,26 +62,20 @@ public:
       : thread(NULL)
       , next(NULL)
       , functor(NULL)
-      , deleteFunctor(false)
       , threadWait(0)
    {
-      ;
+      /* Do nothing. */ ;
    }
 
    ~OneThread()
    {
-      if ( deleteFunctor )
-      {
-         delete functor;
-         functor = NULL;
-      }
+      /* Do nothing. */ ;
    }
 
 public:
    Thread* thread;               //! Handle of the thread process
    OneThread* next;              //! -> next vprOneThread ready to run
-   BaseThreadFunctor* functor;   //! -> function thread is to call
-   bool deleteFunctor;           //! Flag indicating whether we delete functor
+   vpr::thread_func_t functor;   //! -> function thread is to call
    Semaphore threadWait;         //! thread waits for work here
 };
 
@@ -113,37 +107,23 @@ public:
     * Gives a function to the processes.  Start a function going
     * asynchronously.  Called by master process.
     */
-   void startFunc(thread_func_t func, void* arg = NULL)
-   {
-      this->startFunc(new ThreadNonMemberFunctor(func, arg), true);
-   }
-
-   void startFunc(BaseThreadFunctor* theFunctor, void* argument)
-   {
-      theFunctor->setArg(argument);
-      this->startFunc(theFunctor);
-   }
-
-   void startFunc(BaseThreadFunctor* theFunctor,
-                  const bool deleteFunctor = false)
+   void startFunc(const thread_func_t& func)
    {
       OneThread* theThread = getThread();
 
-      theThread->deleteFunctor = deleteFunctor;
-      theThread->functor = theFunctor;     /* set address of func to exec */
+      theThread->functor = func;           /* set func to exec */
       theThread->threadWait.release();     /* wake up sleeping process */
-      //delete theFunctor;
    }
 
    OneThread* addThread();
 
    /**
-    * Body of a general-purpose child process. The argument, which must be
-    * declared void* to match the func prototype, is the vpr::OneThread
-    * structure that represents this process.   The contents of that
-    * struct, in particular threadWait(), MUST be initialized by the parent.
+    * Body of a general-purpose child process. The argument is the
+    * vpr::OneThread structure that represents this process. The contents of
+    * that struct, in particular threadWait(), MUST be initialized by the
+    * parent.
     */
-   void threadLoop(void* theThreadAsVoid);
+   void threadLoop(OneThread* myThread);
 
    /**
     * Waits for work to do.  Put a vpr::OneThread structure on the ready list

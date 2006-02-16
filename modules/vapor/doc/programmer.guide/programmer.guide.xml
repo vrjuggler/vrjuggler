@@ -1100,11 +1100,11 @@
                </indexterm>
 
                <para>The following example illustrates how to create a thread
-               that will execute a function called <function>run()</function>
-               that takes no arguments. The prototype for
-               <function>run()</function> is:</para>
+               that will execute a free function called
+               <function>run()</function> that takes no arguments. The
+               prototype for <function>run()</function> is:</para>
 
-               <programlisting>void run(void* args);</programlisting>
+               <programlisting>void run();</programlisting>
 
                <para>This will be the same across all platforms. The thread
                creation code is then:</para>
@@ -1123,39 +1123,61 @@ thread = new vpr::Thread(run);</programlisting>
                behavior can be modified based on some variables? Not
                surprisingly, that is fairly easy too. As mentioned above, if
                there is more than one argument to pass to the thread function,
-               they will have to be collected into a <type>struct</type>, and
-               pointer to that struct will have to be passed. A common way to
-               do this is as follows:</para>
+               they can be collected into a <type>struct</type>, and pointer
+               to that struct will have to be passed. A common way to do this
+               is as follows:</para>
 
                <programlisting>struct ThreadArgs
 {
    int id;
-   char name[40];
+   std::string name;
    // And so on...
 };
+
+void run(const ThreadArgs&amp; args)
+{
+   // Do work ...
+}
 
 void someFunc()
 {
    // Other code ...
 
-   ThreadArgs* args;
-   vpr::Thread* thread;
-
-   args = new ThreadArgs();
-
+   ThreadArgs args;
    // Fill in the elements of args ...
 
-   thread = new vpr::Thread(run, (void*) args);
+   vpr::Thread* thread;
+   thread = new vpr::Thread(boost::bind(run, args);
 }</programlisting>
 
                <para>When creating a single thread, this works beautifully. If
                multiple threads are needed, all taking the same type of
-               argument, there must be a separate argument structure instance
-               for each one. A bunch of pointers can be declared, or the same
-               pointer can be reused over and over. The address passed to each
-               thread will be unique either way. Using this method requires
-               that the argument memory be released before the thread exits,
-               of course.</para>
+               argument, there would usually have to be a separate argument
+               structure instance for each one. A bunch of objects can be
+               declared, or the same objects can be reused over and over.
+               Using this method requires that the argument memory be released
+               before the thread exits, of course.</para>
+
+               <para>The preceding example made use of <ulink
+               url="http://www.boost.org/libs/bind/bind.html">Boost.Bind</ulink>
+               to couple the <function>run()</function> function with a
+               pointer to a struct instance. Instead of declaring a struct to
+               bundle all the arguments together, we could take advantage of
+               the flexibility of Boost.Bind to couple multiple arguments with
+               the tunction. This is shown below:</para>
+
+               <programlisting>void run(int id, char* name)
+{
+   // Do work ...
+}
+
+void someFunc()
+{
+   // Other code ...
+
+   vpr::Thread* thread;
+   thread = new vpr::Thread(boost::bind(run, 50, "My Thread"));
+}</programlisting>
             </section>
 
             <section>
@@ -1485,19 +1507,12 @@ my_id = vpr::Thread::self();</programlisting>
          <section id="section.thread.functors">
             <title>Thread Functors</title>
 
-            <indexterm>
-               <primary>vpr::BaseThreadFunctor</primary>
-
-               <seealso>vpr::ThreadMemberFunctor, vpr::ThreadRunFunctor,
-               vpr::ThreadNonMemberFunctor</seealso>
-            </indexterm>
-
             <para>In this section, we explain the concept and use of
             <glossterm linkend="gloss.functor">functors</glossterm>. A functor
             is a high-level concept that encapsulates something quite simple.
             A functor is defined as <quote>something that performs an
             operation or a function.</quote> While this is not very detailed,
-            it is clear and concise. In VPR functors can be used as the code
+            it is clear and concise. In VPR functors are used as the code
             executed by a thread (refer to <xref
             linkend="section.vprThread" /> for more detail on the topic of
             <classname>vpr::Thread</classname>s). This section describes how
@@ -1527,9 +1542,13 @@ my_id = vpr::Thread::self();</programlisting>
                      <primary>classes</primary>
 
                      <secondary>vpr::Thread</secondary>
-                  </indexterm>. VPR's threads can execute two types of
-               functions: normal C/C++ functions and class methods or
-               functors. The former was described in the section about using
+                  </indexterm>. VPR threads utilize Boost.Function as the
+               functor implementation. A Boost.Function is a callable object.
+               In the section about using <classname>vpr::Thread</classname>s,
+               we have already seen how to use raw function pointers. VPR's
+               threads can execute two types of functions: normal C/C++
+               functions and class methods or functors. The former was
+               described in the section about using
                <classname>vpr::Thread</classname>s, and the latter is
                described here. The use of functors is given more attention
                because the concept may be foreign to some programmers. Those

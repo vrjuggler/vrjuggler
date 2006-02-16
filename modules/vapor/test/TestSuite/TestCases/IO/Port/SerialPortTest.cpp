@@ -2,7 +2,6 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/IO/Port/SerialPort.h>
 
 #include <TestCases/IO/Port/SerialPortTest.h>
@@ -548,22 +547,20 @@ void SerialPortTest::testSendRecv()
 {
    mState = NOT_READY;
 
-   vpr::ThreadMemberFunctor<SerialPortTest>* receiver_functor =
-      new vpr::ThreadMemberFunctor<SerialPortTest>(this, &SerialPortTest::testSendRecv_receiver);
-   vpr::Thread receiver_thread(receiver_functor);
+   vpr::Thread receiver_thread(
+      boost::bind(&SerialPortTest::testSendRecv_receiver, this)
+   );
 
-   vpr::ThreadMemberFunctor<SerialPortTest>* sender_functor =
-      new vpr::ThreadMemberFunctor<SerialPortTest>(this, &SerialPortTest::testSendRecv_sender);
-   vpr::Thread sender_thread(sender_functor);
+   vpr::Thread sender_thread(
+      boost::bind(&SerialPortTest::testSendRecv_sender, this)
+   );
 
    receiver_thread.join();
    sender_thread.join();
 }
 
-void SerialPortTest::testSendRecv_receiver(void* arg)
+void SerialPortTest::testSendRecv_receiver()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::SerialPort recv_port(mRecvPortName);
    //vpr::ReturnStatus status;
 
@@ -613,10 +610,8 @@ void SerialPortTest::testSendRecv_receiver(void* arg)
    }
 }
 
-void SerialPortTest::testSendRecv_sender(void* arg)
+void SerialPortTest::testSendRecv_sender()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::SerialPort send_port(mSendPortName);
    //vpr::ReturnStatus status;
 

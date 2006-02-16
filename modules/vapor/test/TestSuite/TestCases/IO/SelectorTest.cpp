@@ -24,7 +24,6 @@
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/CondVar.h>
 
@@ -55,24 +54,22 @@ void SelectorTest::testAcceptorPoolSelection ()
     mState = NOT_READY;                        // Initialize
 
     // Spawn acceptor thread
-    vpr::ThreadMemberFunctor<SelectorTest>* acceptor_functor =
-        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testAcceptorPoolSelection_acceptor);
-    vpr::Thread acceptor_thread(acceptor_functor);
+    vpr::Thread acceptor_thread(
+      boost::bind(&SelectorTest::testAcceptorPoolSelection_acceptor, this)
+    );
 
     // Spawn connector thread
-    vpr::ThreadMemberFunctor<SelectorTest>* connector_functor =
-        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testAcceptorPoolSelection_connector);
-    vpr::Thread connector_thread(connector_functor);
+    vpr::Thread connector_thread(
+      boost::bnid(&SelectorTest::testAcceptorPoolSelection_connector, this)
+    );
 
     // Wait for threads
     acceptor_thread.join();
     connector_thread.join();
 }
 
-void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
+void SelectorTest::testAcceptorPoolSelection_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    unsigned i,j;
    std::map<vpr::IOSys::Handle, vpr::SocketAcceptor*> acceptorTable;
    vpr::Selector selector;
@@ -155,10 +152,8 @@ void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
     }
 }
 
-void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
+void SelectorTest::testAcceptorPoolSelection_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    ReturnStatus ret_val;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;           // Connect to acceptor
@@ -211,24 +206,22 @@ void SelectorTest::testSendThenPoll ()
     mState = NOT_READY;                        // Initialize
 
     // Spawn acceptor thread
-    vpr::ThreadMemberFunctor<SelectorTest>* acceptor_functor =
-        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testSendThenPoll_acceptor);
-    vpr::Thread acceptor_thread(acceptor_functor);
+    vpr::Thread acceptor_thread(
+      boost::bind(&SelectorTest::testSendThenPoll_acceptor, this)
+    );
 
     // Spawn connector thread
-    vpr::ThreadMemberFunctor<SelectorTest>* connector_functor =
-        new vpr::ThreadMemberFunctor<SelectorTest>(this, &SelectorTest::testSendThenPoll_connector);
-    vpr::Thread connector_thread(connector_functor);
+    vpr::Thread connector_thread(
+      boost::bind(&SelectorTest::testSendThenPoll_connector, this)
+    );
 
     // Wait for threads
     acceptor_thread.join();
     connector_thread.join();
 }
 
-void SelectorTest::testSendThenPoll_acceptor (void* arg)
+void SelectorTest::testSendThenPoll_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    unsigned i;    // j;
    std::map<vpr::IOSys::Handle, vpr::Uint16> handleTable;      // Table mapping Handles to the socket index
    vpr::Selector selector;
@@ -392,10 +385,8 @@ random_sample(_InputIter __first, _InputIter __last,
 }
 #endif
 
-void SelectorTest::testSendThenPoll_connector (void* arg)
+void SelectorTest::testSendThenPoll_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    unsigned i,j;
    ReturnStatus ret_val;
    vpr::Uint32 bytes_written;

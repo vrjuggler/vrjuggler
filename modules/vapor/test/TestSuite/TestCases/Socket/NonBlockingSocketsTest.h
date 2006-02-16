@@ -65,9 +65,9 @@ public:
 
    void testNonBlockingTransfer();
 
-   void testNonBlockingTransfer_acceptor(void* arg);
+   void testNonBlockingTransfer_acceptor();
 
-   void testNonBlockingTransfer_connector(void* arg);
+   void testNonBlockingTransfer_connector();
 
    // 2 sockets... use select...
    // a/c:   Set OpenNonBlocking
@@ -87,9 +87,9 @@ public:
 
    void testSendUDP(void);
 
-   void testSendUDP_receiver(void* arg);
+   void testSendUDP_receiver();
 
-   void testSendUDP_sender(void* arg);
+   void testSendUDP_sender();
    
 
 protected:

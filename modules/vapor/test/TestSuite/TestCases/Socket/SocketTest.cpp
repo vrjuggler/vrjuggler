@@ -3,6 +3,7 @@
 #include <string.h>
 #include <vector>
 #include <string>
+#include <boost/bind.hpp>
 
 #include <cppunit/TestCaller.h>
 
@@ -14,7 +15,6 @@
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 
 #include <TestCases/Socket/SocketTest.h>
 
@@ -24,10 +24,8 @@ namespace vprTest
 {
 CPPUNIT_TEST_SUITE_REGISTRATION( SocketTest );
 
-void SocketTest::testOpenCloseOpen_connector( void* data )
+void SocketTest::testOpenCloseOpen_connector()
 {
-   boost::ignore_unused_variable_warning(data);
-
    int num_of_times_to_test = 9;
    vpr::Uint16 port = 6970;
    //const int backlog = 5;
@@ -57,10 +55,8 @@ void SocketTest::testOpenCloseOpen_connector( void* data )
    }
 }
 
-void SocketTest::testOpenCloseOpen_acceptor( void* data )
+void SocketTest::testOpenCloseOpen_acceptor()
 {
-   boost::ignore_unused_variable_warning(data);
-
    int num_of_times_to_test = 3;
    vpr::Uint16 port = 6970;
 
@@ -115,17 +111,17 @@ void SocketTest::testOpenCloseOpen ()
    //std::cout<<" OpenCloseOpen Test: \n"<<std::flush;
 
    // spawn an acceptor thread
-   vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testOpenCloseOpen_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&SocketTest::testOpenCloseOpen_acceptor, this)
+   );
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
 
    // spawn a connector thread
-   vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testOpenCloseOpen_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&SocketTest::testOpenCloseOpen_connector, this)
+   );
 
    // wait for both threads to terminate, then continue
    //vpr::System::sleep( 7 );
@@ -138,10 +134,8 @@ void SocketTest::testOpenCloseOpen ()
 
 }
 
-void SocketTest::testSendRecv_connector( void* data )
+void SocketTest::testSendRecv_connector()
 {
-  boost::ignore_unused_variable_warning(data);
-
    int num_of_times_to_test = 10;
    vpr::Uint16 port = 6940;
    //const int backlog = 5;
@@ -185,10 +179,8 @@ void SocketTest::testSendRecv_connector( void* data )
    }
 }
 
-void SocketTest::testSendRecv_acceptor( void* data )
+void SocketTest::testSendRecv_acceptor()
 {
-   boost::ignore_unused_variable_warning(data);
-
    int num_of_times_to_test = 10;
    vpr::Uint16 port = 6940;
    vpr::InetAddr local_addr;
@@ -246,17 +238,17 @@ void SocketTest::testSendRecv()
    //std::cout<<" SendRecv Test: \n"<<std::flush;
 
    // spawn an acceptor thread
-   vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testSendRecv_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&SocketTest::testSendRecv_acceptor, this)
+   );
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
 
    // spawn a connector thread
-   vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testSendRecv_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&SocketTest::testSendRecv_connector, this)
+   );
 
    // wait for both threads to terminate, then continue
    //vpr::System::sleep( 7 );
@@ -422,10 +414,8 @@ void SocketTest::reuseAddrSimpleTest()
    delete sock3;
 }
 
-void SocketTest::reuseAddrTest_connector( void* data )
+void SocketTest::reuseAddrTest_connector()
 {
-   boost::ignore_unused_variable_warning(data);
-
    vpr::Uint16 port = 6667;
    vpr::InetAddr remote_addr;
 
@@ -443,10 +433,8 @@ void SocketTest::reuseAddrTest_connector( void* data )
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Socket::close() failed", connector_socket.close());
 }
 
-void SocketTest::reuseAddrTest_acceptor( void* data )
+void SocketTest::reuseAddrTest_acceptor()
 {
-   boost::ignore_unused_variable_warning(data);
-
    vpr::InetAddr addr1;
 
    CPPUNIT_ASSERT_NO_THROW(addr1.setAddress( "localhost", 6667 ));
@@ -483,17 +471,17 @@ void SocketTest::reuseAddrTest()
    //std::cout<<" reuseAddr Test (cli/serv version): \n"<<std::flush;
 
    // spawn an acceptor thread
-   vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::reuseAddrTest_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&SocketTest::reuseAddrTest_acceptor, this)
+   );
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
 
    // spawn a connector thread
-   vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::reuseAddrTest_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&SocketTest::reuseAddrTest_connector, this)
+   );
 
    // wait for both threads to terminate, then continue
    //vpr::System::sleep( 1 );
@@ -502,10 +490,8 @@ void SocketTest::reuseAddrTest()
    connector_thread.join(); // join is broken.
 }
 
-void SocketTest::testBlocking_connector(void* arg)
+void SocketTest::testBlocking_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::Uint16 port = 7001;
    vpr::InetAddr remote_addr;
 
@@ -572,10 +558,8 @@ void SocketTest::testBlocking_connector(void* arg)
    vpr::System::usleep( 50000 );
 }
 
-void SocketTest::testBlocking_acceptor(void* arg)
+void SocketTest::testBlocking_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    int num_of_times_to_test = 20;
    vpr::Uint16 port = 7001;
    char  buffer[40];
@@ -670,17 +654,17 @@ void SocketTest::testBlocking_acceptor(void* arg)
 void SocketTest::testBlocking()
 {
    // spawn an acceptor thread
-   vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testBlocking_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&SocketTest::testBlocking_acceptor, this)
+   );
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
 
    // spawn a connector thread
-   vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testBlocking_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&SocketTest::testBlocking_connector, this)
+   );
 
    // wait for both threads to terminate, then continue
 
@@ -694,19 +678,16 @@ void SocketTest::testTcpConnection()
 {
    mServerCheck=0;
    //Creat a thread to do server listen:
-   vpr::ThreadMemberFunctor<SocketTest>* serverFunctor;
-   serverFunctor=new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::serverFunc);
-   vpr::Thread* serverThread;
-   serverThread=new vpr::Thread(serverFunctor);
+   vpr::Thread* serverThread =
+      new vpr::Thread(boost::bind(&SocketTest::serverFunc, this));
 
    vpr::System::sleep(1);
 
    //Creat a bunch of client thread.
-   std::vector<vpr::ThreadMemberFunctor<SocketTest>*> clientFunctors(mNumClient);
    std::vector<vpr::Thread*> clientThreads(mNumClient);
    for (int t=0; t<mNumClient; t++){
-      clientFunctors[t] = new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::clientFunc);
-      clientThreads[t] = new vpr::Thread(clientFunctors[t]);
+      clientThreads[t] = new vpr::Thread(boost::bind(&SocketTest::clientFunc,
+                                                     this));
    }
 
    vpr::System::sleep(1);
@@ -714,23 +695,18 @@ void SocketTest::testTcpConnection()
 
    CPPUNIT_ASSERT(mOpenServerSuccess ==-1 && "Open server failed");
    CPPUNIT_ASSERT(mServerCheck==0 && "Not all connections are correct.");
-   delete serverFunctor;
    delete serverThread;
 
    for (int t=0; t<mNumClient; t++){
-      delete clientFunctors[t];
       delete clientThreads[t];
    }
 }
 
-void SocketTest::serverFunc(void* arg)
+void SocketTest::serverFunc()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::Uint16 port=15432;
    vpr::Uint16 num=0;
 
-   std::vector<vpr::ThreadMemberFunctor<SocketTest>*> sServerFunctors(mNumSServer);
    std::vector<vpr::Thread*> sServerThreads(mNumSServer);
    vpr::InetAddr local_addr;
 
@@ -747,9 +723,9 @@ void SocketTest::serverFunc(void* arg)
          tArgs = new thread_args_t;
          tArgs->mSock= new vpr::SocketStream(client_sock);
 
-         sServerFunctors[num]=new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::sServerFunc, tArgs);
-         sServerFunctors[num]->setArg(tArgs);
-         sServerThreads[num]= new vpr::Thread(sServerFunctors[num]);
+         sServerThreads[num]= new vpr::Thread(
+            boost::bind(&SocketTest::sServerFunc, this, tArgs)
+         );
 
          num++;
       }
@@ -759,10 +735,8 @@ void SocketTest::serverFunc(void* arg)
    delete sock;
 }
 
-void SocketTest::clientFunc(void* arg)
+void SocketTest::clientFunc()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::SocketStream*   sock;
    vpr::InetAddr remote_addr;
 
@@ -787,9 +761,8 @@ void SocketTest::clientFunc(void* arg)
    delete sock;
 }
 
-void SocketTest::sServerFunc(void* arg)
+void SocketTest::sServerFunc(_thread_args* tArg)
 {
-   _thread_args* tArg=(_thread_args *) arg;
    char buffer1[] = "Hello there!";
    char buffer2[40];
    vpr::Uint32 bytes, bytes_written;
@@ -808,13 +781,11 @@ void SocketTest::sServerFunc(void* arg)
    ss_sock->close();
    delete ss_sock;
 
-   // Deleting void* is not "good"
-   //delete arg;
+   delete tArg;
 }
 
-void SocketTest::testReadnClient (void* arg)
+void SocketTest::testReadnClient(vpr::Uint16 port)
 {
-   vpr::Uint16 port = *((vpr::Uint16*) arg);
    vpr::InetAddr remote_addr;
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not assign address", remote_addr.setAddress("localhost", port));
@@ -851,10 +822,9 @@ void SocketTest::testReadn ()
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Server socket listen failed", server_sock.listen());
 
    // Start the client thread.
-   vpr::ThreadMemberFunctor<SocketTest>* func =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testReadnClient,
-                                               (void*) &server_port);
-   vpr::Thread* client_thread = new vpr::Thread(func);
+   vpr::Thread* client_thread =
+      new vpr::Thread(boost::bind(&SocketTest::testReadnClient, this,
+                                  server_port));
    CPPUNIT_ASSERT(client_thread->valid() && "Server could not create client thread");
 
    vpr::SocketStream client_sock;
@@ -940,24 +910,22 @@ void SocketTest::testIsConnected ()
    mAcceptorPort = 34568;
 
    // Spawn acceptor thread
-   vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testIsConnected_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&SocketTest::testIsConnected_acceptor, this)
+   );
 
    // Spawn connector thread
-   vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
-         new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testIsConnected_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&SocketTest::testIsConnected_connector, this)
+   );
 
    // Wait for threads
    acceptor_thread.join();
    connector_thread.join();
 }
 
-void SocketTest::testIsConnected_acceptor (void* arg)
+void SocketTest::testIsConnected_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::ReturnStatus status;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
@@ -1036,10 +1004,8 @@ void SocketTest::testIsConnected_acceptor (void* arg)
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor", acceptor.close());
 }
 
-void SocketTest::testIsConnected_connector (void* arg)
+void SocketTest::testIsConnected_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    std::string data;

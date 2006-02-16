@@ -50,8 +50,8 @@ public:
    // testCopyConnectedSocket -- spawns two threads as connector and acceptor
    // =========================================================================
    void testCopyConnectedSocket();
-   void testCopyConstructor_connector(void* arg);
-   void testCopyConstructor_acceptor(void* arg);
+   void testCopyConstructor_connector();
+   void testCopyConstructor_acceptor();
 
 protected:
     vpr::CondVar    mCondVar;       // Condition variable

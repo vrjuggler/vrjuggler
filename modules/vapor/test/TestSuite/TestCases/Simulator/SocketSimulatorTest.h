@@ -52,9 +52,9 @@ public:
 
    void multiThreadTest(void);
 
-   void multiThreadTest_acceptor(void* arg);
+   void multiThreadTest_acceptor();
 
-   void multiThreadTest_connector(void* arg);
+   void multiThreadTest_connector();
 
 protected:
    vpr::ReturnStatus constructGraph(void);

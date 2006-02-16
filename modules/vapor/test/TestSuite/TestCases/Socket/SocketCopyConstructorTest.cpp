@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/Socket.h>
@@ -8,7 +9,6 @@
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
-#include <vpr/Thread/ThreadFunctor.h>
 
 #include <TestCases/Socket/SocketCopyConstructorTest.h>
 
@@ -56,23 +56,23 @@ void SocketCopyConstructorTest::testCopyConnectedSocket ()
    mState = NOT_READY;                        // Initialize
 
    // Spawn acceptor thread
-   vpr::ThreadMemberFunctor<SocketCopyConstructorTest>* acceptor_functor =
-      new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>(this, &SocketCopyConstructorTest::testCopyConstructor_acceptor);
-   vpr::Thread acceptor_thread(acceptor_functor);
+   vpr::Thread acceptor_thread(
+      boost::bind(&SocketCopyConstructorTest::testCopyConstructor_acceptor,
+                  this)
+   );
 
    // spawn a connector thread
-   vpr::ThreadMemberFunctor<SocketCopyConstructorTest>* connector_functor =
-      new vpr::ThreadMemberFunctor<SocketCopyConstructorTest>(this, &SocketCopyConstructorTest::testCopyConstructor_connector);
-   vpr::Thread connector_thread(connector_functor);
+   vpr::Thread connector_thread(
+      boost::bind(&SocketCopyConstructorTest::testCopyConstructor_connector,
+                  this)
+   );
 
    connector_thread.join();
    acceptor_thread.join();
 }
 
-void SocketCopyConstructorTest::testCopyConstructor_connector (void* arg)
+void SocketCopyConstructorTest::testCopyConstructor_connector()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    const vpr::Uint16 port(13579);
    vpr::InetAddr remote_addr;
    char buffer[40];
@@ -116,10 +116,8 @@ void SocketCopyConstructorTest::testCopyConstructor_connector (void* arg)
    delete copy_connector;
 }
 
-void SocketCopyConstructorTest::testCopyConstructor_acceptor(void* arg)
+void SocketCopyConstructorTest::testCopyConstructor_acceptor()
 {
-   boost::ignore_unused_variable_warning(arg);
-
    const vpr::Uint16 port(13579);
    char buffer[]="Hello!";
    vpr::InetAddr local_addr;
