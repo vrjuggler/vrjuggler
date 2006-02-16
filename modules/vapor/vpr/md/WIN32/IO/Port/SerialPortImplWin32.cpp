@@ -84,7 +84,7 @@ vpr::ReturnStatus SerialPortImplWin32::open()
                          0,    // comm devices must be opened w/exclusive-access
                          NULL, // no security attributes
                          OPEN_EXISTING, // comm devices must use OPEN_EXISTING
-                         mBlocking,    // not overlapped I/O
+                         mBlocking,
                          NULL  // hTemplate must be NULL for comm devices
                        );
 
@@ -95,12 +95,14 @@ vpr::ReturnStatus SerialPortImplWin32::open()
       status.setCode(vpr::ReturnStatus::Fail);
       return status;
    }
-   gct.ReadIntervalTimeout =0;
-   gct.ReadTotalTimeoutConstant=0;
-   gct.ReadTotalTimeoutMultiplier=0;
-   gct.WriteTotalTimeoutConstant=5000;
-   gct.WriteTotalTimeoutMultiplier=0;
-   if ( !SetCommTimeouts(mHandle,&gct) )
+
+   gct.ReadIntervalTimeout         = 0;
+   gct.ReadTotalTimeoutConstant    = 0;
+   gct.ReadTotalTimeoutMultiplier  = 0;
+   gct.WriteTotalTimeoutConstant   = 5000;
+   gct.WriteTotalTimeoutMultiplier = 0;
+
+   if ( ! SetCommTimeouts(mHandle, &gct) )
    {
       std::cout << "Timeout initialization failed." << std::endl;
       status.setCode(vpr::ReturnStatus::Fail);
@@ -162,10 +164,8 @@ vpr::ReturnStatus SerialPortImplWin32::setBlocking(bool blocking)
 vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction()
    const
 {
-   std::cout << "Update Action is always NOW in Win32" << std::endl;
-   vpr::SerialTypes::UpdateActionOption update;
-   update = SerialTypes::NOW;
-   return update;
+   // Update Action is always NOW in Win32.
+   return vpr::SerialTypes::NOW;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::clearAll()
@@ -176,8 +176,8 @@ vpr::ReturnStatus SerialPortImplWin32::clearAll()
 
 void SerialPortImplWin32::setUpdateAction(SerialTypes::UpdateActionOption action)
 {
-   /* Do Nothing */
-   std::cout << "Update action always NOW in Win32" << std::endl;
+   // NOTE: Serial port update action is always NOW on Windows.
+   /* Do Nothing */ ;
 }
 
 // Query the serial port for the maximum buffer size.
@@ -185,8 +185,8 @@ vpr::ReturnStatus SerialPortImplWin32::getMinInputSize(vpr::Uint16 &size) const
 {
    vpr::ReturnStatus s;
    COMMPROP lpCommProp;
-   if ( !GetCommProperties(mHandle, &lpCommProp) ||
-        (int)lpCommProp.dwCurrentTxQueue == 0 )
+   if ( ! GetCommProperties(mHandle, &lpCommProp) ||
+        (int) lpCommProp.dwCurrentTxQueue == 0 )
    {
       s.setCode(vpr::ReturnStatus::Fail);
       std::cout << "Maximum buffer size is unavailable.\n";
@@ -203,7 +203,7 @@ vpr::ReturnStatus SerialPortImplWin32::getMinInputSize(vpr::Uint16 &size) const
 vpr::ReturnStatus SerialPortImplWin32::setMinInputSize(const vpr::Uint8 size)
 {
    ReturnStatus s;
-   if ( !SetupComm(mHandle, (int)size, (int)size) )
+   if ( ! SetupComm(mHandle, (int) size, (int) size) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
       std::cout << "Could not set the minimum buffer size - "<<GetLastError()<<"\n";
@@ -222,7 +222,7 @@ vpr::ReturnStatus SerialPortImplWin32::getTimeout(vpr::Uint8& timeout) const
       retval.setCode(vpr::ReturnStatus::Fail);
       std::cout << "The timeout value is unavailable.\n";
    }
-   timeout = (int)t.ReadTotalTimeoutConstant/100;
+   timeout = (int) t.ReadTotalTimeoutConstant / 100;
    return retval;
 }
 
@@ -235,10 +235,10 @@ vpr::ReturnStatus SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
    vpr::ReturnStatus retval;
    GetCommTimeouts(mHandle, &t);
 
-   mCurrentTimeout=timeout;
+   mCurrentTimeout = timeout;
 
-   t.ReadTotalTimeoutConstant = (int)timeout*100;
-   if ( !SetCommTimeouts(mHandle, &t) )
+   t.ReadTotalTimeoutConstant = (int) timeout * 100;
+   if ( ! SetCommTimeouts(mHandle, &t) )
    {
       retval.setCode(vpr::ReturnStatus::Fail);
       std::cout << "Could not set timeout value.\n";
@@ -344,7 +344,7 @@ vpr::ReturnStatus SerialPortImplWin32::setStopBits(const vpr::Uint8 numBits)
    vpr::ReturnStatus retval;
 
    GetCommState(mHandle, &dcb);
-   switch ( (int)numBits )
+   switch ( numBits )
    {
       case 1:
          dcb.StopBits = ONESTOPBIT;
@@ -366,7 +366,7 @@ bool SerialPortImplWin32::getInputParityCheckState() const
 {
    DCB dcb;
    bool b;
-   if ( !GetCommState(mHandle, &dcb) )
+   if ( ! GetCommState(mHandle, &dcb) )
    {
       std::cout << "Error attaining parity checking state.\n";
    }
@@ -387,13 +387,13 @@ vpr::ReturnStatus SerialPortImplWin32::setInputParityCheck(bool flag)
    vpr::ReturnStatus s;
    DCB dcb;
 
-   if ( !GetCommState(mHandle, &dcb) )
+   if ( ! GetCommState(mHandle, &dcb) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
    }
 
    dcb.fParity = flag;
-   if ( !SetCommState(mHandle, &dcb) )
+   if ( ! SetCommState(mHandle, &dcb) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
    }
@@ -545,7 +545,7 @@ vpr::ReturnStatus SerialPortImplWin32::readn_i(void* buffer,
                                                const vpr::Interval timeout)
 {
    //Call read_i for now
-   return read_i(buffer,length,bytesRead,timeout);
+   return read_i(buffer, length, bytesRead, timeout);
 }
 
 // Get the current state of ignoring bytes with framing errors (other than a
@@ -695,8 +695,8 @@ vpr::ReturnStatus SerialPortImplWin32::setOutputBaudRate(const vpr::Uint32& baud
    vpr::ReturnStatus s;
    DCB dcb;
    GetCommState(mHandle, &dcb);
-   dcb.BaudRate =baud;
-   if ( !SetCommState(mHandle, &dcb) )
+   dcb.BaudRate = baud;
+   if ( ! SetCommState(mHandle, &dcb) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
    }
@@ -740,8 +740,8 @@ bool SerialPortImplWin32::getHardwareFlowControlState() const
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
-   if ( dcb.fRtsControl==RTS_CONTROL_DISABLE &&
-        dcb.fDtrControl==DTR_CONTROL_DISABLE )
+   if ( dcb.fRtsControl == RTS_CONTROL_DISABLE &&
+        dcb.fDtrControl == DTR_CONTROL_DISABLE )
    {
       return false;
    }
@@ -760,13 +760,13 @@ vpr::ReturnStatus SerialPortImplWin32::setHardwareFlowControl(bool enable)
 
    if ( enable )
    {
-      dcb.fRtsControl=RTS_CONTROL_ENABLE;
-      dcb.fDtrControl=DTR_CONTROL_ENABLE;
+      dcb.fRtsControl = RTS_CONTROL_ENABLE;
+      dcb.fDtrControl = DTR_CONTROL_ENABLE;
    }
    else
    {
-      dcb.fRtsControl=RTS_CONTROL_DISABLE;
-      dcb.fDtrControl=DTR_CONTROL_DISABLE;
+      dcb.fRtsControl = RTS_CONTROL_DISABLE;
+      dcb.fDtrControl = DTR_CONTROL_DISABLE;
    }
    SetCommState(mHandle,&dcb);
 
