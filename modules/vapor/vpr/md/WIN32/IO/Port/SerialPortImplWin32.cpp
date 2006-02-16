@@ -580,6 +580,36 @@ void SerialPortImplWin32::write_i(const void* buffer,
    }
 }
 
+void SerialPortImplWin32::setDataTerminalReady(bool val)
+   throw (IOException)
+{
+   const DWORD func = (val ? SETDTR : CLRDTR);
+
+   if ( ! EscapeCommFunction(mHandle, func) )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to " << (val ? "set" : "clear")
+                 << " DTR on serial port " << mName << ": "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
+   }
+}
+
+void SerialPortImplWin32::setRequestToSend(bool val)
+   throw (IOException)
+{
+   const DWORD func = (val ? SETRTS : CLRRTS);
+
+   if ( ! EscapeCommFunction(mHandle, func) )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to " << (val ? "set" : "clear")
+                 << " RTS on serial port " << mName << ": "
+                 << getErrorMessageWithCode(GetLastError());
+      throw IOException(msg_stream.str(), VPR_LOCATION);
+   }
+}
+
 void SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
                                  vpr::Uint32& bytesRead,
                                  const vpr::Interval timeout)

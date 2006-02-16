@@ -922,10 +922,7 @@ public:
     * @throw vpr::IOException If the data terminal ready state could not be
     *                         set.
     */
-   void setDataTerminalReady(bool val) throw (IOException)
-   {
-      /* Do nothing. */ ;
-   }
+   void setDataTerminalReady(bool val) throw (IOException);
 
    /**
     * Sets or clears the ready-to-send line.
@@ -935,10 +932,7 @@ public:
     *
     * @throw vpr::IOException If request to send state could not be set.
     */
-   void setRequestToSend(bool val) throw (IOException)
-   {
-      /* Do nothing. */ ;
-   }
+   void setRequestToSend(bool val) throw (IOException);
 
    /**
     * Implementation of the read() template method.  This reads at most the
