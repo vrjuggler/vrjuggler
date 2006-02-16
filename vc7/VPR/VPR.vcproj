@@ -277,9 +277,6 @@
 				RelativePath="..\..\modules\vapor\vpr\Thread\TSObjectProxy.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadFunctor.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadManager.cpp">
 			</File>
 			<File
@@ -627,9 +624,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\Thread.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadFunctor.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Thread\ThreadKeyNSPR.h">
