@@ -57,8 +57,10 @@
 #include <sched.h>
 
 // To get the POSIX key stuff for storing self.
+#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 #include <vpr/md/POSIX/Sync/CondVarPosix.h>
+
 
 namespace vpr
 {
