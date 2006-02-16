@@ -132,24 +132,34 @@ void AudiereSoundImplementation::trigger(const std::string& alias,
 
    snx::SoundInfo si = this->lookup(alias);
 
-   if ( si.streaming )
+   if((trackMap.count(alias) == 0) && (effectMap.count(alias) == 0))
    {
       this->bind(alias);
- //     mCurrentTrack->play();
-      // Set audiere to loop indefinly if that is requested other wise play
-      // only once.
-      if ( trackMap.count(alias) > 0 )
-      {
-         trackMap[alias]->setRepeat(looping == -1);
-         trackMap[alias]->play();
-      }
    }
-   else
+
+   bool retriggerable = this->isRetriggerable( alias );
+   bool is_not_playing = !this->isPlaying( alias );
+   bool is_paused = this->isPaused( alias );
+
+   if (is_paused || retriggerable || is_not_playing)
    {
-      // if the sound is already bound then play it.
-      if ( effectMap.count(alias) > 0 )
+      if ( si.streaming )
       {
-         effectMap[alias]->play();
+         // Set audiere to loop indefinly if that is requested other wise play
+         // only once.
+         if ( trackMap.count(alias) > 0 )
+         {
+            trackMap[alias]->setRepeat(looping == -1);
+            trackMap[alias]->play();
+         }
+      }
+      else
+      {
+         // if the sound is already bound then play it.
+         if ( effectMap.count(alias) > 0 )
+         {
+            effectMap[alias]->play();
+         }
       }
    }
 }
