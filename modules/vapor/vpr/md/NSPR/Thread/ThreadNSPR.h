@@ -278,7 +278,7 @@ private:
     * @pre Called ONLY by a new thread.
     * @post The new thread will have started the user thread function.
     */
-   void startThread(void* null_param);
+   void startThread();
 
    PRThread* mThread;    /**<  PRThread data structure for this thread */
 

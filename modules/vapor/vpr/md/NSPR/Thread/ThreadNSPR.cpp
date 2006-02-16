@@ -44,9 +44,9 @@
 #include <iomanip>
 #include <typeinfo>
 #include <boost/concept_check.hpp>
+#include <boost/bind.hpp>
 
 #include <vpr/Util/Assert.h>
-//#include <vpr/Thread/Thread.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 
@@ -102,7 +102,7 @@ void ThreadNSPR::setFunctor(const vpr::thread_func_t& functor)
    vprASSERT(mThread == NULL && "Thread already running");
    vprASSERT(! functor.empty());
 
-   mUserThreadFunctor = functorPtr;
+   mUserThreadFunctor = functor;
 }
 
 // Creates a new thread that will execute mUserFunctorPtr.
@@ -226,10 +226,8 @@ std::ostream& Thread::outStream(std::ostream& out)
  *
  * @param null_param
  */
-void ThreadNSPR::startThread(void* nullParam)
+void ThreadNSPR::startThread()
 {
-   boost::ignore_unused_variable_warning(nullParam);
-
    // WE are a new thread... yeah!!!!
    // TELL EVERYONE THAT WE LIVE!!!!
    mThread = PR_GetCurrentThread();                   // Set the identity of the thread
