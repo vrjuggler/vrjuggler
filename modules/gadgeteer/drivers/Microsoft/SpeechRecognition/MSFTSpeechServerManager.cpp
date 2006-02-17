@@ -376,8 +376,9 @@ void MSFTSpeechServerManager::SpeakString(std::string TheString)
 {
    wchar_t* toSpeak;
 
+   unsigned int i;
    toSpeak = new wchar_t[TheString.size()+1];
-   for(unsigned int i = 0; i < TheString.size(); ++i)
+   for(i = 0; i < TheString.size(); ++i)
    {
       toSpeak[i] = TheString[i];
    }
