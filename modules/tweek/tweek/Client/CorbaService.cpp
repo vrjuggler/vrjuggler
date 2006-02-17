@@ -38,6 +38,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <sstream>
 #include <string>
 #include <boost/concept_check.hpp>
 
@@ -60,15 +61,14 @@ CorbaService::CorbaService(const std::string& nsHost, vpr::Uint16 nsPort,
    : mOrbFunctor(NULL), mOrbThread(NULL), mNsHost(nsHost), mNsPort(nsPort),
      mNameServiceURI("corbaloc:iiop:"), mSubContextId(subContextId)
 {
-   // Why isn't this conversion easier to do with std::string?
-   char nsPort_str[6];
-   std::sprintf(nsPort_str, "%hu", nsPort);
+   std::ostringstream port_stream;
+   port_stream << nsPort;
 
    mNameServiceURI += iiopVersion;
    mNameServiceURI += std::string("@");
    mNameServiceURI += nsHost;
    mNameServiceURI += std::string(":");
-   mNameServiceURI += nsPort_str;
+   mNameServiceURI += port_stream.str();
    mNameServiceURI += std::string("/NameService");
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)

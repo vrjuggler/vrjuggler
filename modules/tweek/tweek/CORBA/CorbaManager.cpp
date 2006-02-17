@@ -37,6 +37,8 @@
 #include <tweek/tweekConfig.h>
 
 #include <cstdio>
+#include <sstream>
+
 #include <vpr/vpr.h>
 //#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
@@ -109,16 +111,15 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
          // the Naming Service.
          else
          {
-            // Why isn't this conversion easier to do with std::string?
-            char nsPort_str[6];
-            std::sprintf(nsPort_str, "%hu", nsPort);
+            std::ostringstream port_stream;
+            port_stream << nsPort;
 
             std::string ns_uri("corbaloc:iiop:");
             ns_uri += iiopVersion;
             ns_uri += std::string("@");
             ns_uri += nsHost;
             ns_uri += std::string(":");
-            ns_uri += nsPort_str;
+            ns_uri += port_stream.str();
             ns_uri += std::string("/NameService");
 
             mRootContext = tweek::getRootNamingContextByURI(mORB, ns_uri);
