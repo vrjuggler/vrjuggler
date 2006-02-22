@@ -86,6 +86,8 @@ void GlWindow::configWindow(vrj::Display* displayWindow)
    mVrjDisplay->getOriginAndSize(mOriginX, mOriginY, mWindowWidth,
                                  mWindowHeight);
    mHasBorder = mVrjDisplay->shouldDrawBorder();
+   mIsFullScreen = mVrjDisplay->isFullScreen();
+   mAlwaysOnTop = mVrjDisplay->isAlwaysOnTop();
    mHideMouse = mVrjDisplay->shouldHideMouse();
 }
 

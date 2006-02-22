@@ -73,6 +73,8 @@ public:
       , mDirtyViewport(true)
       , mInStereo(false)
       , mHasBorder(false)
+      , mIsFullScreen(false)
+      , mAlwaysOnTop(false)
       , mHideMouse(false)
       , mWindowIsOpen(false)
       , mWindowWidth(0)
@@ -282,6 +284,8 @@ protected:
    bool mInStereo;
 
    bool mHasBorder;     /**< Do we have a border? */
+   bool mIsFullScreen;  /**< Is the window full screen? */
+   bool mAlwaysOnTop;   /**< Should the window always be on top? */
    bool mHideMouse;     /**< Should we hide the mouse pointer? */
    bool mWindowIsOpen;  /**< Is the window open? */
    int  mWindowWidth;

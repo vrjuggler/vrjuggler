@@ -34,6 +34,7 @@
 
 #include <iomanip>
 #include <vector>
+#include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
@@ -255,6 +256,96 @@ bool GlWindowXWin::open()
          }
       }
 
+      Atom net_wm_state = XInternAtom(mXDisplay, "_NET_WM_STATE\0", 0);
+      if (None == net_wm_state)
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED,"ERROR:")
+            << "vrj::GlWindowXWin: Could not get X atom for _NET_WM_STATE."
+            << std::endl << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         Atom fullscreen_hint = XInternAtom(mXDisplay, "_NET_WM_STATE_FULLSCREEN\0", 0);
+         Atom above_hint = XInternAtom(mXDisplay, "_NET_WM_STATE_ABOVE\0", 0);
+         Atom always_hint = XInternAtom(mXDisplay, "_NET_WM_STATE_STAYS_ON_TOP\0", 0);
+         //Atom maxh_hint = XInternAtom(mXDisplay, "_NET_WM_STATE_MAXIMIZED_HORZ\0", 0);
+         //Atom maxv_hint = XInternAtom(mXDisplay, "_NET_WM_STATE_MAXIMIZED_VERT\0", 0);
+         //Atom modal_hint = XInternAtom(mXDisplay, "_NET_WM_STATE_MODAL\0", 0);
+
+         Atom net_winstates[6] = { 0, 0, 0, 0, 0, 0 };
+         int curr_winstate = 0;
+
+         // Set full screen if specified.
+         if (mIsFullScreen)
+         {
+            if (None == fullscreen_hint)
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutNORM(clrRED,"ERROR:")
+                  << "vrj::GlWindowXWin: Could not get X atom for _NET_WM_STATE_FULLSCREEN."
+                  << std::endl << vprDEBUG_FLUSH;
+            }
+            else
+            {
+               net_winstates[curr_winstate++] = fullscreen_hint;
+            }
+         }
+
+         // Set always on top if specified.
+         if (mAlwaysOnTop)
+         {
+            if (None == above_hint || None == always_hint)
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutNORM(clrRED,"ERROR:")
+                  << "vrj::GlWindowXWin: Could not get X atoms for _NET_WM_STATE_ABOVE and _NET_WM_STATE_STAYS_ON_TOP."
+                  << std::endl << vprDEBUG_FLUSH;
+            }
+            else
+            {
+               net_winstates[curr_winstate++] = above_hint;
+               net_winstates[curr_winstate++] = always_hint;
+            }
+         }
+
+         /*
+         if (mMaximized)
+         {
+            if (None == maxh_hint || None == maxv_hint)
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutNORM(clrRED,"ERROR:")
+                  << "vrj::GlWindowXWin: Could not get X atoms for _NET_WM_STATE_MAXIMIZED_(HORZ/VERT)."
+                  << std::endl << vprDEBUG_FLUSH;
+            }
+            else
+            {
+               net_winstates[curr_winstate++] = ATOM(_NET_WM_STATE_MAXIMIZED_HORZ);
+               net_winstates[curr_winstate++] = ATOM(_NET_WM_STATE_MAXIMIZED_VERT);
+            }
+         }
+
+         if (mModal)
+         {
+            if (None == model_hint)
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutNORM(clrRED,"ERROR:")
+                  << "vrj::GlWindowXWin: Could not get X atom for _NET_WM_STATE_MODAL."
+                  << std::endl << vprDEBUG_FLUSH;
+            }
+            else
+            {
+               net_winstates[curr_winstate++] = modal_hint;
+            }
+         }
+         */
+
+         XChangeProperty(mXDisplay, mXWindow, net_wm_state, XA_ATOM,
+                         32, PropModeReplace, (unsigned char *) net_winstates, curr_winstate);
+      }
+         
       /********************* Mapping Window **************************/
 
       /* Open the window, select the input events, and wait until mapped (XIfEvent) */

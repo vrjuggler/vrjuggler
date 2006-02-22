@@ -60,6 +60,8 @@ public:
       , mHeight(-1)
       , mBorder(true)
       , mHideMouse(false)
+      , mFullScreen(false)
+      , mAlwaysOnTop(false)
       , mPipe(-1)
       , mActive(true)
       , mStereoRequested(false)
@@ -130,6 +132,23 @@ public:
    {
       return mHideMouse;
    }
+
+   /**
+    * Determines whether the window should be full screen.
+    */
+   bool isFullScreen() const
+   {
+      return mFullScreen;
+   }
+
+   /**
+    * Determines whether the window should always be on top.
+    */
+   bool isAlwaysOnTop() const
+   {
+      return mAlwaysOnTop;
+   }
+
 
    /**
     * Explicitly sets the origin and size of this display window.
@@ -222,6 +241,8 @@ protected:
    int  mHeight;              /**< Window height. */
    bool mBorder;              /**< Should we have a border? */
    bool mHideMouse;           /**< Should we hide the mouse pointer? */
+   bool mFullScreen;          /**< Should the window be full screen? */
+   bool mAlwaysOnTop;         /**< Should the window always be on top? */
    int  mPipe;                /**< Hardware pipe. Index of the rendering hardware. */
    bool mActive;              /**< Is the display active or not? */
    bool mStereoRequested;     /**< Has stereo been requested? */
