@@ -515,7 +515,7 @@
          <max>255.0</max>
          <device_host />
       </ibox>
-      <display_window name="big wall" version="4">
+      <display_window name="big wall" version="5">
          <origin>922</origin>
          <origin>768</origin>
          <size>1844</size>
@@ -541,6 +541,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>false</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">

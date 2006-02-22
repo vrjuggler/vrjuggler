@@ -11,7 +11,7 @@
          <x11_pipes>snow:0.0</x11_pipes>
          <use_swap_group>false</use_swap_group>
       </display_system>
-      <display_window name="RightScreen" version="4">
+      <display_window name="RightScreen" version="5">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -37,6 +37,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="RightScreen viewport" version="2">
@@ -68,7 +70,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="LeftScreen" version="4">
+      <display_window name="LeftScreen" version="5">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -94,6 +96,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="LeftScreen viewport" version="2">
@@ -125,7 +129,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="FrontScreen" version="4">
+      <display_window name="FrontScreen" version="5">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -151,6 +155,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="FrontScreen viewport" version="2">
@@ -182,7 +188,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="FloorScreen" version="4">
+      <display_window name="FloorScreen" version="5">
          <origin>0</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -208,6 +214,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="FloorScreen viewport" version="2">

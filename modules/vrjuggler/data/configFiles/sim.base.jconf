@@ -490,7 +490,7 @@
          <x11_pipes>:0.0</x11_pipes>
          <use_swap_group>false</use_swap_group>
       </display_system>
-      <display_window name="SimWindow1" version="4">
+      <display_window name="SimWindow1" version="5">
          <origin>0</origin>
          <origin>200</origin>
          <size>600</size>
@@ -516,6 +516,8 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <simulator_viewports>
             <simulator_viewport name="Contained Sim Viewports 0" version="3">

@@ -2,7 +2,7 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/home/patrick/src/Juggler/main/juggler/build.linux.posix.gcc34/modules/vrjuggler/samples/OpenSG/advanced/OpenSGNavGrab/example.multiview.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <display_window name="DisplayWindow0" version="4">
+      <display_window name="DisplayWindow0" version="5">
          <origin>50</origin>
          <origin>275</origin>
          <size>800</size>
@@ -28,6 +28,8 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <simulator_viewports>
             <simulator_viewport name="Simulator Viewport 0" version="3">
@@ -60,18 +62,18 @@
                <size>0.5</size>
                <size>1.0</size>
                <view>1</view>
-               <lower_left_corner>-1.524390243902439</lower_left_corner>
+               <lower_left_corner>-1.5243902</lower_left_corner>
                <lower_left_corner>0.0</lower_left_corner>
-               <lower_left_corner>-1.524390243902439</lower_left_corner>
-               <lower_right_corner>1.524390243902439</lower_right_corner>
+               <lower_left_corner>-1.5243902</lower_left_corner>
+               <lower_right_corner>1.5243902</lower_right_corner>
                <lower_right_corner>0.0</lower_right_corner>
-               <lower_right_corner>-1.524390243902439</lower_right_corner>
-               <upper_right_corner>1.524390243902439</upper_right_corner>
-               <upper_right_corner>3.048780487804878</upper_right_corner>
-               <upper_right_corner>-1.524390243902439</upper_right_corner>
-               <upper_left_corner>-1.524390243902439</upper_left_corner>
-               <upper_left_corner>3.048780487804878</upper_left_corner>
-               <upper_left_corner>-1.524390243902439</upper_left_corner>
+               <lower_right_corner>-1.5243902</lower_right_corner>
+               <upper_right_corner>1.5243902</upper_right_corner>
+               <upper_right_corner>3.0487804</upper_right_corner>
+               <upper_right_corner>-1.5243902</upper_right_corner>
+               <upper_left_corner>-1.5243902</upper_left_corner>
+               <upper_left_corner>3.0487804</upper_left_corner>
+               <upper_left_corner>-1.5243902</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>

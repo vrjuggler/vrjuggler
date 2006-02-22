@@ -2,7 +2,7 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <display_window name="Right Surface" version="4">
+      <display_window name="Right Surface" version="5">
          <origin>400</origin>
          <origin>400</origin>
          <size>200</size>
@@ -28,6 +28,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
@@ -59,7 +61,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="Front Surface" version="4">
+      <display_window name="Front Surface" version="5">
          <origin>200</origin>
          <origin>400</origin>
          <size>200</size>
@@ -85,6 +87,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
@@ -116,7 +120,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="Left Surface" version="4">
+      <display_window name="Left Surface" version="5">
          <origin>0</origin>
          <origin>400</origin>
          <size>200</size>
@@ -142,6 +146,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
@@ -173,7 +179,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="Floor Surface" version="4">
+      <display_window name="Floor Surface" version="5">
          <origin>200</origin>
          <origin>200</origin>
          <size>200</size>
@@ -199,6 +205,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
@@ -230,7 +238,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="Ceiling Surface" version="4">
+      <display_window name="Ceiling Surface" version="5">
          <origin>200</origin>
          <origin>600</origin>
          <size>200</size>
@@ -256,6 +264,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
@@ -287,7 +297,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="Entrance Surface" version="4">
+      <display_window name="Entrance Surface" version="5">
          <origin>600</origin>
          <origin>400</origin>
          <size>200</size>
@@ -313,6 +323,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
@@ -344,7 +356,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="rightSurfaceAngled" version="4">
+      <display_window name="rightSurfaceAngled" version="5">
          <origin>400</origin>
          <origin>200</origin>
          <size>200</size>
@@ -370,6 +382,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
@@ -401,7 +415,7 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </display_window>
-      <display_window name="Ceiling Surface Angled" version="4">
+      <display_window name="Ceiling Surface Angled" version="5">
          <origin>200</origin>
          <origin>800</origin>
          <size>200</size>
@@ -427,6 +441,8 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Contained Surface Viewports 0" version="2">
