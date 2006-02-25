@@ -1063,14 +1063,14 @@
                <listitem>
                   <para>Pass a <glossterm>functor</glossterm><indexterm>
                         <primary>functor</primary>
-                     </indexterm> to the <classname>vpr::Thread</classname>
-                  constructor</para>
+                     </indexterm> (a callable object) to the
+                  <classname>vpr::Thread</classname> constructor</para>
                </listitem>
             </orderedlist>
 
-            <para>The second appears easier, but to create the functor, an
-            argument to the function executed by the thread may still have to
-            be passed. The presence of the argument depends on the specific
+            <para>The second appears easier, but to create the functor,
+            parameters to the function executed by the thread may still have
+            to be passed. The presence of parameters depends on the specific
             function being run by the thread. In addition to the function
             pointer or functor, parameters such as the priority and the stack
             size may be passed to the <classname>vpr::Thread</classname>
@@ -1080,7 +1080,7 @@
             <para>A minor issue with creating a
             <classname>vpr::Thread</classname> is the concept of functors. The
             topic of functors will be put off until the next section. For now,
-            just think of them as wrappers around function pointers.</para>
+            just think of them as callable objects.</para>
 
             <para>Before writing code that uses
             <classname>vpr::Thread</classname>s, make sure that the header
@@ -1090,7 +1090,7 @@
             file <filename>vpr/Thread/Thread.h</filename> is all that is
             required.</para>
 
-            <section>
+            <section id="section.creating.threads">
                <title>Creating Threads</title>
 
                <indexterm>
@@ -1120,12 +1120,12 @@ thread = new vpr::Thread(run);</programlisting>
 
                <para>That was pretty easy. What if you want to pass one or
                more arguments to <function>run()</function> so that its
-               behavior can be modified based on some variables? Not
-               surprisingly, that is fairly easy too. As mentioned above, if
-               there is more than one argument to pass to the thread function,
-               they can be collected into a <type>struct</type>, and pointer
-               to that struct will have to be passed. A common way to do this
-               is as follows:</para>
+               behavior can be modified based on some variables? One approach
+               is to define the function so that it takes a parameter that is
+               an aggregate type (a struct or a class). The data needed by the
+               function is then collected into this aggregate type and
+               packaged with the function pointer. A common way to do this is
+               as follows:</para>
 
                <programlisting>struct ThreadArgs
 {
@@ -1144,7 +1144,9 @@ void someFunc()
    // Other code ...
 
    ThreadArgs args;
-   // Fill in the elements of args ...
+   args.id = 50;
+   args.name = "My Thread";
+   // And so on ...
 
    vpr::Thread* thread;
    thread = new vpr::Thread(boost::bind(run, args);
@@ -1154,17 +1156,16 @@ void someFunc()
                multiple threads are needed, all taking the same type of
                argument, there would usually have to be a separate argument
                structure instance for each one. A bunch of objects can be
-               declared, or the same objects can be reused over and over.
-               Using this method requires that the argument memory be released
-               before the thread exits, of course.</para>
+               declared, or the same objects can be reused over and
+               over.</para>
 
                <para>The preceding example made use of <ulink
                url="http://www.boost.org/libs/bind/bind.html">Boost.Bind</ulink>
-               to couple the <function>run()</function> function with a
-               pointer to a struct instance. Instead of declaring a struct to
-               bundle all the arguments together, we could take advantage of
-               the flexibility of Boost.Bind to couple multiple arguments with
-               the tunction. This is shown below:</para>
+               to couple the <function>run()</function> function with a struct
+               instance. Instead of declaring a struct to bundle all the
+               arguments together, we could take advantage of the flexibility
+               of Boost.Bind to couple multiple arguments with the function.
+               This is shown below:</para>
 
                <programlisting>void run(int id, char* name)
 {
@@ -1178,6 +1179,11 @@ void someFunc()
    vpr::Thread* thread;
    thread = new vpr::Thread(boost::bind(run, 50, "My Thread"));
 }</programlisting>
+
+               <para>There is a limit to the number of parameters that can be
+               passed in this way, so this approach must be used judiciously.
+               We will explain more about function objects and Boost.Bind in
+               <xref linkend="section.thread.functors" />.</para>
             </section>
 
             <section>
@@ -1313,8 +1319,7 @@ thread-&gt;setPrio(prio);</programlisting>
                using the <function>kill(2)</function> system call. With POSIX
                threads, signals are sent using
                <function>pthread_kill(3)</function>. VPR's thread interface
-               implements these ideas using a
-               <methodname>kill()</methodname><methodname></methodname>
+               implements these ideas using a <methodname>kill()</methodname>
                method. There are two ways to call this method: with an
                argument naming the signal to be delivered to the thread or
                without an argument which cancels the thread's execution. The
@@ -1511,12 +1516,21 @@ my_id = vpr::Thread::self();</programlisting>
             <glossterm linkend="gloss.functor">functors</glossterm>. A functor
             is a high-level concept that encapsulates something quite simple.
             A functor is defined as <quote>something that performs an
-            operation or a function.</quote> While this is not very detailed,
-            it is clear and concise. In VPR functors are used as the code
-            executed by a thread (refer to <xref
+            operation or a function.</quote> In VPR functors are used as the
+            code executed by a thread (refer to <xref
             linkend="section.vprThread" /> for more detail on the topic of
             <classname>vpr::Thread</classname>s). This section describes how
             to use functors for exactly that purpose.</para>
+
+            <important>
+               <para>Users of the VPR 1.0 thread API are encouraged to read
+               this section very carefully. At the end, there is an
+               explanation of how to update VPR 1.0 code to use the new thread
+               functor interface. The flexibility offered by the new approach
+               in VPR 1.1 and beyond should offer programmers many new
+               opportunities for how they handle and utilize threads in their
+               software.</para>
+            </important>
 
             <section>
                <title>High-Level Description</title>
@@ -1542,338 +1556,804 @@ my_id = vpr::Thread::self();</programlisting>
                      <primary>classes</primary>
 
                      <secondary>vpr::Thread</secondary>
-                  </indexterm>. VPR threads utilize Boost.Function as the
-               functor implementation. A Boost.Function is a callable object.
-               In the section about using <classname>vpr::Thread</classname>s,
-               we have already seen how to use raw function pointers. VPR's
-               threads can execute two types of functions: normal C/C++
-               functions and class methods or functors. The former was
-               described in the section about using
-               <classname>vpr::Thread</classname>s, and the latter is
-               described here. The use of functors is given more attention
-               because the concept may be foreign to some programmers. Those
-               who already know about functors can skip this short description
-               and go straight to the section on using functors.</para>
+                  </indexterm>. VPR threads utilize <ulink
+               url="http://www.boost.org/doc/html/function.html">Boost.Function</ulink>
+               as the functor implementation. A Boost.Function object is a
+               callable object, meaning that it has an overload of
+               <function>operator()</function> that takes zero or more
+               arguments. Earlier in <xref
+               linkend="section.creating.threads" />, we saw how to use raw
+               function pointers. Boost.Function can wrap four different types
+               of callable types:</para>
 
-               <para>In VPR, a functor is simply another object type that
-               happens to encapsulate a user-defined function. The details on
-               how this is done are not important here, but they are provided
-               later for those who are interested. What is important to know
-               is that a functor can be thought of as a normal function. When
-               using them, programmers simply implement a function and then
-               pass the function pointer (and the function's optional
-               argument) to the functor's constructor. The object does the
-               rest.</para>
+               <orderedlist>
+                  <listitem>
+                     <para>Free functions</para>
+                  </listitem>
 
-               <para>Observant readers may have noticed the parenthetical
-               phrase in the previous paragraph mentioning a function's
-               optional argument. Note that <quote>argument</quote> is
-               singular meaning that only one parameter can be passed to the
-               function that will be run by the created thread. The type of
-               that argument is the wonderfully vague <type>void*</type>, an
-               artifact of basing the threading subsystem on C libraries. As
-               discussed in the section on using
-               <classname>vpr::Thread</classname>s, if there is a need to pass
-               multiple arguments, they must be encapsulated in a struct or a
-               comparable object.</para>
+                  <listitem>
+                     <para>Static class functions</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Non-static member functions</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Objects overloading the member function
+                     <function>operator()</function></para>
+                  </listitem>
+               </orderedlist>
+
+               <para>Programmers already familiar with the use of
+               Boost.Function and Boost.Bind can skip this entire section
+               about thread functors. The remainder of this section is an
+               overview of how to use Boost.Function and Boost.Bind for
+               programmers who are unfamiliar with these tools.</para>
+
+               <para>Getting back to functors, a functor is simply another
+               object type that happens to encapsulate a user-defined
+               function. The details on how this is done are not important
+               here. What is important to know is that a functor can be
+               thought of as a normal function. When using them, programmers
+               usually just implement a function and then pass the function
+               pointer to the Boost.Function constructor. Boost.Function does
+               the rest.</para>
+
+               <para>The functor must behave as a function that returns
+               nothing and takes no parameters. In terms of function pointers,
+               the type must be <type>void(*)(void)</type>. A more readable
+               form of this is the Boost.Function type:
+               <type>boost::function&lt;void()&gt;</type>. Yet another form is
+               the portable Boost.Function type used for older compilers:
+               <type>boost::function0&lt;void&gt;</type>. Remember that we are
+               not restricted to using function pointers to create functions.
+               We are describing here callable objects that
+               <emphasis>behave</emphasis> as functions.</para>
+
+               <para>If the functor needs to be passed arguments, then <ulink
+               url="http://www.boost.org/libs/bind/bind.html">Boost.Bind</ulink>
+               must used to couple parameters with the functor. Those
+               parameters will be passed into the function later when the
+               functor is invoked. Boost.Bind is very powerful, and the full
+               usage of it is beyond the scope of this document. We will
+               demonstrate its use more fully later in this section, but we
+               provide some uses in <xref
+               linkend="example.quick.boost.bind" />.</para>
+
+               <example id="example.quick.boost.bind">
+                  <title>Using Boost.Bind to Create Thread Functors</title>
+
+                  <programlisting>struct ThreadArgs
+{
+   int id;
+   std::string name;
+};
+
+void run1(const ThreadArgs&amp; args);
+void run2(const int id, const std::string&amp; name);
+
+class MyClass
+{
+public:
+   // Bind a free function with an instance of an aggregate type.
+   void spawnThread1()
+   {
+      ThreadArgs args = { 50, "My Thread" };
+      mThread = new vpr::Thread(boost::bind(run1, args));
+   }
+
+   // Bind a free function with an instanced of an aggregate type that
+   // is a data member.
+   void spawnThread2()
+   {
+      // Copies mArgs.
+      mThread = new vpr::Thread(boost::bind(run1, mArgs));
+
+      // Passes a reference to mArgs.
+      mThread = new vpr::Thread(boost::bind(run1, boost::ref(mArgs)));
+   }
+
+   // Bind a free function with multiple parameters.
+   void spawnThread2()
+   {
+      mThread =
+         new vpr::Thread(boost::bind(run2, 50,
+                                     std::string("My Thread")));
+   }
+
+   // Bind a static member function with an argument.
+   void spawnThread3()
+   {
+      mThread = new vpr::Thread(boost::bind(MyClass::staticRun, 10));
+   }
+
+   // Bind a non-static member function.
+   void spawnThread4()
+   {
+      mThread = new vpr::Thread(boost::bind(&amp;MyClass::run, this));
+   }
+
+   // Bind a non-static member function with multiple parameters.
+   void spawnThread5()
+   {
+      mThread = new vpr::Thread(boost::bind(&amp;MyClass::run, this,
+                                            3.14159f, 16));
+   }
+
+private:
+   static void staticRun(int id);
+
+   void run();
+
+   void otherRun(const float someParam, short otherParam);
+
+   vpr::Thread* mThread;
+   ThreadArgs   mArgs;
+};</programlisting>
+               </example>
 
                <para>Once a functor object exists, it is passed to the
                <classname>vpr::Thread</classname> constructor, and the new
-               thread will execute the functor (which knows about the
-               function). The end result is the same as using a normal C/C++
-               function or a static class member function, but there is one
-               special benefit: with functors, non-static class member
-               functions can be passed. In many cases, there arises a need to
-               run a member function in a separate thread, but making it
-               static is infeasible or awkward. Thus, it would be best to pass
-               a non-static member function to the created thread. To get
-               access to the non-static data members, however, the C++
-               <varname>this</varname> pointer must be available to the
-               thread. By using a VPR functor, that is all handled behind the
-               scenes so that passing a non-static member function is
-               straightforward.</para>
+               thread will execute the functor (which knows what to do with
+               its held callable). The end result is the same as using a
+               normal C/C++ free function or a static class member function,
+               but there is one special benefit: with functors, non-static
+               class member functions can be passed. In many cases, there
+               arises a need to run a member function in a separate thread,
+               but making it static is infeasible or awkward. Thus, it would
+               be best to pass a non-static member function to the created
+               thread. To get access to the non-static data members, however,
+               the C++ <varname>this</varname> pointer must be available to
+               the thread. By using Boost.Bind with Boost.Function, that is
+               all handled behind the scenes so that passing a non-static
+               member function is straightforward. We have seen how to do this
+               in the methods <methodname>MyClass::spawnThread4()</methodname>
+               and <methodname>MyClass::spawnThread5()</methodname>.</para>
 
                <para>Before getting into specifics, there is a header file
-               that must be included to use VPR thread functors. In this case,
-               the header is <filename>vpr/Thread/ThreadFunctor.h</filename>.
-               Within this header,
-               <classname>vpr::BaseThreadFunctor</classname> is declared as an
-               abstract base class. It has two subclasses implementing its
-               interface: <classname>vpr::ThreadMemberFunctor</classname> and
-               <classname>vpr::ThreadNonMemberFunctor</classname>. Both of
-               these subclasses will be discussed in turn next.</para>
+               that must be included to use Boost.Function VPR thread
+               functors. In this case, the header is
+               <filename>boost/function.hpp</filename>. If Boost.Bind is
+               needed, then <filename>boost/bind.hpp</filename> must be
+               included. Finally, if <function>boost::ref()</function> is
+               needed, then <filename>boost/ref.hpp</filename> must be
+               included.</para>
             </section>
 
-            <section id="section.using.vprThreadMemberFunctor">
-               <title><classname>vpr::ThreadMemberFunctor</classname></title>
+            <section id="section.functor.member">
+               <title>Functors from (Non-Static) Member Functions</title>
 
-               <indexterm>
-                  <primary>vpr::ThreadMemberFunctor</primary>
+               <indexterm zone="section.functor.member">
+                  <primary>functors</primary>
 
-                  <secondary>use</secondary>
+                  <secondary>non-static member functions</secondary>
                </indexterm>
 
-               <para>This implementation of
-               <classname>vpr::BaseThreadFunctor</classname> is for all
-               functions that fall into the rather elite category of being
-               non-static class member functions. To be more specific, those
+               <indexterm zone="section.functor.member">
+                  <primary>functors</primary>
+
+                  <secondary>member functions</secondary>
+               </indexterm>
+
+               <para>We have already seen examples of how to create a
+               Boost.Function functor for a member function. In this section,
+               we will review in more detail using Boost.Function and
+               Boost.Bind to accomplish this. Just as with free functions, the
                member functions (heretofore referred to as
                <quote>methods</quote>) must have the following
                prototype:</para>
 
-               <programlisting>void methodName(void* arg);</programlisting>
+               <programlisting>void methodName();</programlisting>
 
-               <para>Those readers with experience in multi-threaded
-               programming will recognize this prototype instantly. It is no
-               different than that used in common threading implementations.
-               Constructing the functor to use this method, however, is quite
-               different than what readers may have seen before.</para>
+               <para>A common example of using
+               <classname>vpr::Thread</classname> with a member function as
+               the functor callable is shown in <xref
+               linkend="example.functor.member1" />. The key aspect in this
+               example is the implementation of the method
+               <methodname>MyObject::start()</methodname>. The usage of
+               Boost.Bind here is required because the object pointer has to
+               be bound with the member function pointer in order for it to be
+               invoked properly. Fortunately, this use is very simple—much
+               simpler than the use of
+               <classname>vpr::ThreadMemberFunctor&lt;T&gt;</classname> in VPR
+               1.0.</para>
 
-               <para>Say there is a class <classname>MyObject</classname> with
-               a method <methodname>run()</methodname> having the appropriate
-               prototype that will be executed by a
-               <classname>vpr::Thread</classname><indexterm>
-                     <primary>classes</primary>
+               <note>
+                  <para>This is not the only way of using
+                  <classname>vpr::Thread</classname>, nor is it strictly a
+                  recommended way of using it. It is simply an example. One
+                  missing aspect is protection of <varname>mRunning</varname>
+                  using a synchronization primitive such as a condition
+                  variable.</para>
+               </note>
 
-                     <secondary>vpr::Thread</secondary>
-                  </indexterm> object. In this case,
-               <methodname>run()</methodname> takes an argument that is a
-               pointer to a <emphasis>user-defined</emphasis> type
-               <type>thread_args_t</type>. Also assume that there is an
-               instance of <classname>MyObject</classname> pointed to by the
-               variable <varname>my_obj</varname>. The following code creates
-               the <classname>vpr::ThreadMemberFunctor</classname> object that
-               will encapsulate the method:</para>
+               <example id="example.functor.member1">
+                  <title>Member Function for Thread Functor (1)</title>
 
-               <programlisting>vpr::ThreadMemberFunctor&lt;MyObject&gt;* my_functor;
-thread_args_t* args;
-vpr::Thread* thread;
-
-args = new thread_args_t();
-
-// Fill in the arguments to be passed to the thread...
-
-my_functor = new vpr::ThreadMemberFunctor&lt;MyObject&gt;(my_obj, &amp;MyObject::run, (void*) args);
-thread = new vpr::Thread(my_functor);</programlisting>
-
-               <para>The important thing to note in this example is that
-               <classname>vpr::ThreadMemberFunctor</classname> is a template
-               class. When creating the functor instance, the class must be
-               specified as the template parameter. (If you do not understand
-               this syntax, take a look at a C++ book that covers the current
-               C++ standard.) Also note that when creating the new
-               <classname>vpr::Thread</classname> object, the argument
-               structure is not passed to the constructor. The argument to
-               <methodname>run()</methodname> is packaged up with the function
-               in the functor object <varname>my_functor</varname>. Once this
-               code has executed, a new thread is spawned that will run the
-               <methodname>run()</methodname> method given the provided
-               argument structure.</para>
-
-               <para>The <classname>vpr::BaseThreadFunctor</classname>
-               interface defines an extra method
-               <methodname>setArg()</methodname><indexterm>
-                     <primary>vpr::BaseThreadFunctor</primary>
-
-                     <secondary>setArg() method</secondary>
-                  </indexterm> that allows the function's argument to be set
-               after the functor object is created. The argument to the
-               constructor providing the function's argument is optional and
-               will default to <constant>NULL</constant> if not specified. At
-               a later time, should there be an argument to provide, the
-               following can be used:</para>
-
-               <programlisting>thread_args_t* args = new thread_args_t();
-
-// Fill in args ...
-
-my_functor-&gt;setArg(args);</programlisting>
-
-               <para>This assumes that there is already a functor object
-               instantiated called <varname>my_functor</varname>.
-               Alternatively, <methodname>setArg()</methodname> could be used
-               to remove a previously defined argument by passing
-               <constant>NULL</constant>.</para>
-
-               <para>The last thing to note is that a lot of memory is being
-               allocated dynamically in the example code. Be careful to
-               deallocate the memory when it is no longer needed.</para>
-            </section>
-
-            <section id="section.using.vprThreadRunFunctor">
-               <title><classname>vpr::ThreadRunFunctor</classname></title>
-
-               <indexterm>
-                  <primary>vpr::ThreadRunFunctor</primary>
-
-                  <secondary>use</secondary>
-               </indexterm>
-
-               <para>An extension to the concept of
-               <classname>vpr::ThreadMemberFunctor</classname> has been
-               written to handle a situation that often arises. Typically, a
-               class will have data members that define the state of a class
-               instance. Thus, when using a member functor to create a thread,
-               the object passed to the
-               <classname>vpr::ThreadMemberFunctor</classname> constructor
-               probably has all the state information that is required for the
-               thread to execute. In this case, the single <type>void*</type>
-               parameter held by the functor is ignored entirely when the
-               thread executes.</para>
-
-               <para>To address this case (and to simplify user code), the
-               class <classname>vpr::ThreadRunFunctor</classname> exists. A
-               class that implements the <quote>runnable</quote> concept can
-               be used to create a thread with
-               <classname>vpr::ThreadRunFunctor</classname>. Such a class has
-               a public method named <methodname>run()</methodname> that takes
-               no parameters and has a <type>void</type> return type. The
-               declaration of a runnable class would thus appear similar to
-               the following:</para>
-
-               <programlisting>class MyClass
+                  <programlisting>class MyObject
 {
 public:
-   void run();
+   MyObject()
+      : mThread(NULL)
+      , mRunning(false)
+   {
+   }
 
-   // Other public methods ...
+   ~MyObject()
+   {
+      if ( mRunning )
+      {
+         stop();
+      }
+
+      if ( NULL != mThread )
+      {
+         delete mThread;
+         mThread = NULL;
+      }
+   }
+
+   void start()
+   {
+      mThread  = new vpr::Thread(boost::bind(&amp;MyObject::run, this));
+      mRunning = true;
+   }
+
+   void stop()
+   {
+      mRunning = false;
+      mThread-&gt;join();
+   }
 
 private:
-   // Some internal data members ...
+   void run()
+   {
+      while ( mRunning )
+      {
+         // Do work ...
+      }
+   }
+
+   vpr::Thread* mThread;
+   bool         mRunning;
 };</programlisting>
+               </example>
 
-               <para>To create a thread using this class, the code would
-               appear as follows (assuming the existence of a heap-allocated
-               variable <varname>my_obj</varname> of type
-               <type>MyClass*</type>):</para>
+               <para>Now let us say that there is the method
+               <methodname>MyObject::run()</methodname> needs to take one or
+               more arguments. Boost.Bind makes this possible, and it is just
+               as easy as what we have seen in the previous example. We simply
+               have to bind the method arguments along with the
+               <varname>this</varname> pointer, as shown in <xref
+               linkend="example.functor.member2" />. For the purposes of this
+               example, we have changed
+               <methodname>MyObject::start()</methodname> so that it takes an
+               argument that specifies how many iterations the thread loop
+               will perform before exiting.</para>
 
-               <programlisting>vpr::ThreadRunFunctor&lt;MyClass&gt;* my_functor =
-   new vpr::ThreadRunFunctor&lt;MyClass&gt;(my_obj);
-vpr::Thread* my_thread = new vpr::Thread(my_functor);</programlisting>
+               <example id="example.functor.member2">
+                  <title>Member Function for Thread Functor (2)</title>
 
-               <para>The spawned thread will execute the method
-               <methodname>MyClass::run()</methodname>.</para>
+                  <programlisting>void MyObject::start(const int runCount)
+{
+   mThread = vpr::Thread(boost::bind(&amp;MyObject::run, this, runCount));
+}
 
-               <para>While the above code is much simpler than what was
-               presented in <xref
-               linkend="section.using.vprThreadMemberFunctor" />, there is one
-               major drawback. Namely, the <methodname>run()</methodname>
-               method must be public, and it could therefore be invoked
-               outside the scope of an executing thread. This would have to be
-               the case if VPR provided an abstract base class such as
-               <classname>Runnable</classname> (similar to the Java interface
-               <interfacename>Runnable</interfacename>) with a pure virtual
-               method named <methodname>run()</methodname>. If the visibility
-               of the member function executed by the thread is a concern, use
-               <classname>vpr::ThreadMemberFunctor</classname>.</para>
-            </section>
+void MyObject::run(const int runCount)
+{
+   for ( int i = 0; i &lt; runCount; ++i )
+   {
+      // Do work ...
+   }
+}</programlisting>
+               </example>
 
-            <section>
-               <title><classname>vpr::ThreadNonMemberFunctor</classname></title>
+               <para>What if the thread spawning is happening externally to
+               the class that does the work? Once again, Boost.Bind will be
+               necessary, and as we will see, the usage is familiar. Instead
+               of using <varname>this</varname>, we use the object instance
+               created by the external code. We will change the declaration of
+               <classname>MyObject</classname> and assume that there is an
+               aggregate type <type>thread_args_t</type> declared somewhere.
+               The code shown in <xref linkend="example.functor.member3" />
+               demonstrates how we make this happen, though it is a contrived
+               example. Note that the memory allocated for
+               <varname>args</varname> would have to be deleted at some point
+               after the thread is done using the data. That could be done at
+               the end of <methodname>MyObject::run()</methodname> or after
+               the thread is known to have completed its execution.</para>
 
-               <indexterm>
-                  <primary>vpr::ThreadNonMemberFunctor</primary>
+               <example id="example.functor.member3">
+                  <title>Member Function for Thread Functor (3)</title>
 
-                  <secondary>use</secondary>
-               </indexterm>
+                  <programlisting>struct thread_args_t;
 
-               <para>This implementation of
-               <classname>vpr::BaseThreadFunctor</classname> is the complement
-               of the set of functions contained by
-               <classname>vpr::ThreadMemberFunctor</classname>. It is used for
-               normal C/C++ functions and for static class member functions.
-               There is nothing terribly interesting about this class, and its
-               use is straightforward. The following example, an adaptation of
-               that presented in the previous section, shows how to use this
-               interface rather than passing a function pointer and an
-               argument to the <classname>vpr::Thread</classname><indexterm>
-                     <primary>classes</primary>
+class MyObject
+{
+public:
+   void run(thread_args_t* args)
+   {
+      // Do work ...
+   }
+};
 
-                     <secondary>vpr::Thread</secondary>
-                  </indexterm> constructor. In this case, assume that the
-               function <function>run()</function> is appropriately defined
-               for use here.</para>
+void spawnThread()
+{
+   MyObject* my_obj = new MyObject();
+   thread_args_t* args = new thread_args_t();
+   // Fill in the arguments to be passed to the thread...
 
-               <programlisting>vpr::ThreadNonMemberFunctor* my_functor;
-thread_args_t* args;
-vpr::Thread* thread;
+   vpr::Thread* thread = new vpr::Thread(boost::bind(&amp;MyObject::run,
+                                                     my_obj, args));
+}</programlisting>
+               </example>
 
-args = new thread_args_t();
+               <para>Creating so many heap-allocated objects is rather a
+               hassle. Parameters passed to <function>boost::bind()</function>
+               are copied by default. This allows the memory to be coupled
+               with the functor so that it is available when the functor is
+               invoked later. This means that it is safe to use
+               stack-allocated memory when calling
+               <function>boost::bind()</function>. It is not always desirable
+               to have all the data copied, and that is where
+               <function>boost::ref()</function> comes into the picture. In
+               <xref linkend="example.functor.member4" />, we see an example
+               of using <function>boost::ref()</function> to create a
+               reference to the instance of <classname>MyObject</classname>
+               while copying in the object of type <type>thread_args_t</type>.
+               Since <varname>my_obj</varname> is passed by reference, the
+               memory should not actually be allocated on the heap. Rather, it
+               would normally be a data member for the class creating the
+               thread. More generally, <varname>my_obj</varname> cannot be
+               deleted before the created thread exits. If
+               <varname>my_obj</varname> is deleted while the thread is
+               running, the application will crash. This is true of all data
+               bound to the function called by the spawned thread.</para>
+
+               <example id="example.functor.member4">
+                  <title>Member Function for Thread Functor (4)</title>
+
+                  <programlisting>MyObject my_obj;
+thread_args_t args;
 
 // Fill in the arguments to be passed to the thread...
 
-my_functor = new vpr::ThreadNonMemberFunctor(run, (void*) args);
-thread = new vpr::Thread(my_functor);</programlisting>
+vpr::Thread* thread = new vpr::Thread(boost::bind(&amp;MyObject::run,
+                                                  boost::ref(my_obj),
+                                                  args));</programlisting>
+               </example>
 
-               <para>That is all there is to it. Programmers end up doing more
-               work than if they had just passed the function pointer and the
-               associated argument to the <classname>vpr::Thread</classname>
-               constructor directly, but the
-               <classname>vpr::Thread</classname> constructor is relieved of
-               some work. (The reason for this is described below.) Thus,
-               either way is equally efficient, and what you use is up to
-               you.</para>
+               <important>
+                  <para>Objects bound as parameters to a function call through
+                  <function>boost::bind()</function> may be copied many, many
+                  times. If this copying of objects will be expensive,
+                  strongly consider using <function>boost::ref()</function> to
+                  prevent this from happening. Bear in mind that memory may
+                  have to be managed differently to ensure that the referenced
+                  bound parameter does not get deleted prematurely.</para>
+               </important>
+            </section>
+
+            <section id="section.functor.static.member">
+               <title>Functors from Static Member Functions</title>
+
+               <indexterm zone="section.functor.static.member">
+                  <primary>functors</primary>
+
+                  <secondary>static member functions</secondary>
+               </indexterm>
+
+               <example id="example.functor.static.member1">
+                  <title>Static Member Function for Thread Functor (1)</title>
+
+                  <programlisting>class MyObject
+{
+public:
+   MyObject()
+      : mThread(NULL)
+   {
+   }
+
+   ~MyObject()
+   {
+      // Need to ensure that the thread is not running.
+      if ( NULL != mThread )
+      {
+         delete mThread;
+         mThread = NULL;
+      }
+   }
+
+   void start()
+   {
+      mThread  = new vpr::Thread(MyObject::run);
+   }
+
+   void stop()
+   {
+      // Tell the thread to exit ...
+      mThread-&gt;join();
+   }
+
+private:
+   static void run()
+   {
+      // Do work ...
+   }
+
+   vpr::Thread* mThread;
+};</programlisting>
+               </example>
+
+               <example id="example.functor.static.member2">
+                  <title>Static Member Function for Thread Functor (2)</title>
+
+                  <programlisting>void MyObject::start(const int runCount)
+{
+   mThread = vpr::Thread(boost::bind(MyObject::run, runCount));
+}
+
+void MyObject::run(const int runCount)
+{
+   for ( int i = 0; i &lt; runCount; ++i )
+   {
+      // Do work ...
+   }
+}</programlisting>
+               </example>
+
+               <example id="example.functor.static.member3">
+                  <title>Static Member Function for Thread Functor (3)</title>
+
+                  <programlisting>struct thread_args_t;
+
+class MyObject
+{
+public:
+   static void run(thread_args_t* args)
+   {
+      // Do work ...
+   }
+};
+
+void spawnThread()
+{
+   thread_args_t* args = new thread_args_t();
+   // Fill in the arguments to be passed to the thread...
+
+   vpr::Thread* thread = new vpr::Thread(boost::bind(MyObject::run,
+                                                     args));
+}</programlisting>
+               </example>
+            </section>
+
+            <section id="section.functor.non.member">
+               <title>Functors from Non-Member Functions</title>
+
+               <indexterm zone="section.functor.non.member">
+                  <primary>functors</primary>
+
+                  <secondary>non-member functions</secondary>
+               </indexterm>
+
+               <para>Functors for threads can be created for non-member
+               functions. The process is basically the same as for using
+               static member functions. The only real difference is that the
+               class scoping does not need to be used since the non-member
+               functions will not be in a class. A simple example of this is
+               shown in <xref linkend="example.functor.non.member" />. As
+               usual, proper memory management would be needed for the
+               allocated <classname>vpr::Thread</classname> object. And, of
+               course, parameters to the non-member function can be bound to
+               the function using Boost.Bind.</para>
+
+               <example id="example.functor.non.member">
+                  <title>Non-Member Function for Thread Functor</title>
+
+                  <programlisting>void run()
+{
+   // Do some work ...
+}
+
+void startThread()
+{
+   vpr::Thread* thread = new vpr::Thread(run);
+}</programlisting>
+               </example>
             </section>
 
             <section>
-               <title>The Gory Details</title>
+               <title>Functors from Callable Objects</title>
 
-               <indexterm>
-                  <primary>vpr::BaseThreadFunctor</primary>
+               <para>A new capability not (easily) available with VPR 1.0 is
+               the use of callable objects as functors. This means using an
+               instance of a type that overloads
+               <function>operator()</function> as the callable handled by
+               Boost.Function. One way of doing this is shown in <xref
+               linkend="example.functor.callable1" />. Note that a
+               <emphasis>copy</emphasis> of <varname>c</varname> will be made
+               for use when the functor is invoked in the spawned
+               thread.</para>
 
-                  <secondary>details</secondary>
-               </indexterm>
+               <example id="example.functor.callable1">
+                  <title>Callable Object for Thread Functor (1)</title>
 
-               <indexterm>
-                  <primary>vpr::ThreadMemberFunctor</primary>
+                  <programlisting>class Callable
+{
+public:
+   void operator()()
+   {
+      // Do some work ...
+   }
+};
 
-                  <secondary>details</secondary>
-               </indexterm>
+void startThread()
+{
+   Callable c;
+   vpr::Thread* thread = new vpr::Thread(c);
+}</programlisting>
+               </example>
 
-               <indexterm>
-                  <primary>vpr::ThreadRunFunctor</primary>
+               <para>A more interesting use of a callable object would be one
+               that has state. There are two ways of using a stateful callable
+               object. The first is to use data members in the class (or
+               struct) declaration that are then accessed by the overload of
+               <function>operator()</function>. This is a very simple thing to
+               do since having data members in a class is so common.</para>
 
-                  <secondary>details</secondary>
-               </indexterm>
+               <para>The other is to use our old friend Boost.Bind, though it
+               is not as simple as in previous cases. Since Boost.Bind is
+               designed for binding parameters to function pointers, we have
+               to use a proper function pointer—or use Boost.Function. In
+               <xref linkend="example.functor.callable2" />, we see how
+               Boost.Bind is used to bind the parameter value 5 to the
+               invocation of <function>c.operator()(int)</function>. This is
+               not nearly as simple as what was shown in <xref
+               linkend="example.functor.callable1" />, even if data members of
+               <classname>Callable</classname> had to be initialized.</para>
 
-               <indexterm>
-                  <primary>vpr::ThreadNonMemberFunctor</primary>
+               <example id="example.functor.callable2">
+                  <title>Callable Object for Thread Functor (2)</title>
 
-                  <secondary>details</secondary>
-               </indexterm>
+                  <programlisting>class Callable
+{
+public:
+   void operator()(int arg)
+   {
+      // Do some work ...
+   }
+};
 
-               <para>The magic behind these functors is done by overloading
-               <methodname>operator()</methodname> for
-               <classname>vpr::BaseThreadFunctor</classname> objects. Both
-               implementations of the interface store the function pointer
-               (and optional argument pointer), and when
-               <methodname>vpr::BaseThreadFunctor::operator()</methodname> is
-               invoked, they call the function and pass the argument if there
-               is one. There is a little more magic with the
-               <classname>vpr::ThreadMemberFunctor</classname>, however, that
-               allows it to work with the non-static methods of a given
-               class.</para>
+void startThread()
+{
+   Callable c;
+   vpr::Thread* thread =
+      new vpr::Thread(boost::bind(&amp;Callable::operator(), c, 5));
+}</programlisting>
+               </example>
 
-               <para>The class <classname>vpr::ThreadMemberFunctor</classname>
-               works its extra-special magic through the use of a template and
-               one of C++'s dustier operators, ::*. This operator is used to
-               point to a member of a class. In this case, it points to the
-               method that will be executed by the thread. When used in
-               conjunction with the provided class instance (the
-               <varname>this</varname> pointer), the non-static method can be
-               invoked by the functor.</para>
+               <para>Since we are working with a callable object, it stands to
+               reason that we should be able to leverage Boost.Function
+               somehow. In <xref linkend="example.functor.callable3" />, we
+               see how <classname>boost::function&lt;T&gt;</classname> can be
+               used to reduce the apparent complexity of binding the parameter
+               value 5 to the invocation of
+               <function>c.operator()(int)</function>. To some, this may look
+               a little more friendly since there is no member function
+               pointer required. Ultimately, it requires slightly more typing
+               than the previous example. Either way, neither of these
+               approaches are very pleasing to the eye, but they do work. One
+               of these approaches may be necessary to use a legacy callable
+               type with <classname>vpr::Thread</classname>.</para>
 
-               <para>One interesting thing to note about
-               <classname>vpr::Thread</classname>s is that they deal only in
-               functors. More specifically, they deal only with objects that
-               subsume to <classname>vpr::BaseThreadFunctor</classname>. If a
-               function pointer and its argument are passed directly to the
-               <classname>vpr::Thread</classname> constructor, a
-               <classname>vpr::ThreadNonMemberFunctor</classname> object is
-               created to package those arguments. That new functor is then
-               used internally by the thread. Thus, whether you choose to
-               create a non-member functor or to pass the function pointer and
-               associated argument, the same code will be executed.</para>
+               <example id="example.functor.callable3">
+                  <title>Callable Object for Thread Functor (3)</title>
+
+                  <programlisting>class Callable
+{
+public:
+   void operator()(int arg)
+   {
+      // Do some work ...
+   }
+};
+
+void startThread()
+{
+   Callable c;
+   vpr::Thread* thread =
+      new vpr::Thread(boost::bind(boost::function&lt;void(int)&gt;(c), 5));
+}</programlisting>
+               </example>
+            </section>
+
+            <section>
+               <title>Updating from VPR 1.0</title>
+
+               <para>In VPR 1.0, thread functors were handled by subclasses of
+               <classname>vpr::BaseThreadFunctor</classname>. While this
+               approach worked, it was not anywhere near as flexible as what
+               is possible with Boost.Function and Boost.Bind. What has been
+               presented here is for VPR 1.1 and beyond. For those users
+               updating from VPR 1.0, we now present the simple process of
+               changing code using the VPR 1.0 thread API to the VPR 1.1
+               API.</para>
+
+               <para>First, the signature for the function called by the
+               spawned thread in VPR 1.0 took a single <type>void*</type>
+               parameter. In VPR 1.1, the function takes no argument. This
+               change was made for two reasons. First, most functions ignored
+               this parameter, so it was wasted memory on the stack. Second,
+               <type>void*</type> is a notoriously poor choice for a type
+               since it can point to anything. C++ is a strongly typed
+               language, and we should be taking advantage of that feature.
+               However, since the presence of the parameter acknowledged that
+               it was often necessary to pass data into the thread function,
+               it is still possible to do this using Boost.Bind. What this
+               means is that the callable invoked by the functor can have
+               <emphasis>any</emphasis> signature, but the default behavior is
+               for it to return nothing and take no parameters.</para>
+
+               <para>Next, the types
+               <classname>vpr::ThreadNonMemberFunctor</classname>,
+               <classname>vpr::ThreadMemberFunctor&lt;T&gt;</classname>, and
+               <classname>vpr::ThreadRunFunctor&lt;T&gt;</classname> have been
+               removed, as has the header file
+               <filename>vpr/Thread/ThreadFunctor.h</filename>. The
+               functionality provided by those types has been offloaded to
+               <ulink
+               url="http://www.boost.org/doc/html/function.html">Boost.Function</ulink>
+               and <ulink
+               url="http://www.boost.org/libs/bind/bind.html">Boost.Bind</ulink>.
+               In so doing, the flexibility of how threads are spawned has
+               been increased immensely while actually making it simpler to
+               spawn them.</para>
+
+               <para>For uses of
+               <classname>vpr::ThreadNonMemberFunctor</classname>, quite a bit
+               less code has to be written to spawn a thread. We see in <xref
+               linkend="example.functor.static.member.vpr10" /> how this type
+               was used with VPR 1.0 to spawn a thread that executed a static
+               member function. Then, in <xref
+               linkend="example.functor.static.member.vpr11" />, we see the
+               equivalent code using the VPR 1.1 (and newer) interface. No
+               longer must a functor object to instantiated on the heap and
+               stored for later deletion<footnote>
+                     <para>Leaking the instantiated functor was an
+                     all-too-common error with VPR 1.0.</para>
+                  </footnote>. Moreover, there is no need to pass
+               <literal>NULL</literal> as the parameter value, though if a
+               parameter value is needed, then Boost.Bind must be used. Refer
+               to <xref linkend="section.functor.static.member" /> for more
+               details on this topic.</para>
+
+               <example id="example.functor.static.member.vpr10">
+                  <title>VPR 1.0 Use of Thread Non-Member Functor</title>
+
+                  <programlisting>#include &lt;vpr/Thread/ThreadFunctor.h&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+
+class MyClass_VPR10
+{
+public:
+   void start()
+   {
+      mFunctor =
+         new vpr::ThreadNonMemberFunctor(MyClass_VPR10::run, NULL);
+      mThread = new vpr::Thread(mFunctor);
+   }
+
+private:
+   static void run(void* args)
+   {
+      // Do some work ...
+   }
+
+   vpr::ThreadNonMemberFunctor* mFunctor;
+   vpr::Thread* mThread;
+};</programlisting>
+               </example>
+
+               <example id="example.functor.static.member.vpr11">
+                  <title>Updated Use of Static Member Function for Thread
+                  Functor</title>
+
+                  <programlisting>#include &lt;vpr/Thread.h&gt;
+
+class MyClass
+{
+public:
+   void start()
+   {
+      mThread = new vpr::Thread(MyClass::run);
+   }
+
+private:
+   static void run()
+   {
+      // Do some work ...
+   }
+
+   vpr::Thread* mThread;
+};</programlisting>
+               </example>
+
+               <para>To use a non-static member function, either
+               <classname>vpr::ThreadMemberFunctor&lt;T&gt;</classname> or
+               <classname>vpr::ThreadRunFunctor&lt;T&gt;</classname> was used
+               with VPR 1.0, as shown in <xref
+               linkend="example.functor.non.static.member.vpr10" />. Now,
+               Boost.Bind comes to our rescue and vastly simplifies the code
+               needed to accomplish the very same thing. In <xref
+               linkend="example.functor.non.static.member.vpr11" />, we see
+               just how much less code is required. The nice thing is that the
+               parameters that were passed to the
+               <classname>vpr::ThreadMemberFunctor&lt;T&gt;</classname>
+               constructor are nearly the same as what must be passed to
+               <function>boost::bind()</function>. The order for the
+               <varname>this</varname> pointer and the member function pointer
+               are simply reversed—and the <literal>NULL</literal> value for
+               the function argument is removed. If arguments need to be
+               passed to the function, pass them in as arguments to
+               <function>boost::bind()</function> after the
+               <varname>this</varname> pointer. Refer to <xref
+               linkend="section.functor.member" /> for more details on this
+               topic.</para>
+
+               <example id="example.functor.non.static.member.vpr10">
+                  <title>VPR 1.0 Use of Thread Member Functor</title>
+
+                  <programlisting>#include &lt;vpr/Thread/ThreadFunctor.h&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+
+class MyClass_VPR10
+{
+public:
+   void start()
+   {
+      mFunctor =
+         new vpr::ThreadMemberFunctor&lt;MyClass_VPR10&gt;(
+            this, &amp;MyClass_VPR10::run, NUL
+         );
+      mThread = new vpr::Thread(mFunctor);
+   }
+
+private:
+   void run(void* args)
+   {
+      // Do some work ...
+   }
+
+   vpr::ThreadMemberFunctor&lt;MyClass_VPR10&gt;* mFunctor;
+   vpr::Thread* mThread;
+};</programlisting>
+               </example>
+
+               <example id="example.functor.non.static.member.vpr11">
+                  <title>Updated Use of Member Function for Thread
+                  Functor</title>
+
+                  <programlisting>#include &lt;boost/bind.hpp&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+
+class MyClass
+{
+public:
+   void start()
+   {
+      mThread = new vpr::Thread(boost::bind(&amp;MyClass::run, this));
+   }
+
+private:
+   void run()
+   {
+      // Do some work ...
+   }
+
+   vpr::Thread* mThread;
+};</programlisting>
+               </example>
             </section>
          </section>
       </chapter>
