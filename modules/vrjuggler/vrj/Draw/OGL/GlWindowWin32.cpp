@@ -82,15 +82,20 @@ bool GlWindowWin32::open()
    }
 
    HMODULE hMod = GetModuleHandle(NULL);
-   DWORD style;
    int root_height;
 
    // OpenGL requires WS_CLIPCHILDREN and WS_CLIPSIBLINGS.
-   style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+   DWORD style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
+   if ( mIsFullScreen )
+   {
+      style |= WS_MAXIMIZE | WS_POPUP;
+      mWindowWidth  = GetSystemMetrics(SM_CXSCREEN);
+      mWindowHeight = GetSystemMetrics(SM_CYSCREEN);
+   }
    // If we want a border, create an overlapped window.  This will have
    // a titlebar and a border.
-   if ( mHasBorder )
+   else if ( mHasBorder )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
          << "[vrj::GlWindowWin32::open()] Attempting to give window a border"
@@ -107,6 +112,13 @@ bool GlWindowWin32::open()
       style |= WS_OVERLAPPED | WS_POPUP | WS_VISIBLE;
    }
 
+   DWORD ex_style(0);
+
+   if ( mAlwaysOnTop )
+   {
+      ex_style = WS_EX_TOPMOST;
+   }
+
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
    // Ensure that the input window base class has the right dimension
@@ -114,11 +126,11 @@ bool GlWindowWin32::open()
    InputAreaWin32::resize(mWindowWidth, mWindowHeight);
 
    // Create the main application window
-   mWinHandle = CreateWindow(GL_WINDOW_WIN32_CLASSNAME, mWindowName.c_str(),
-                             style, mOriginX,
-                             root_height - mOriginY - mWindowHeight,
-                             mWindowWidth, mWindowHeight, NULL, NULL, hMod,
-                             NULL);
+   mWinHandle = CreateWindowEx(ex_style, GL_WINDOW_WIN32_CLASSNAME,
+                               mWindowName.c_str(), style, mOriginX,
+                               root_height - mOriginY - mWindowHeight,
+                               mWindowWidth, mWindowHeight, NULL, NULL, hMod,
+                               NULL);
 
    // If window was not created, quit
    if ( NULL == mWinHandle )
