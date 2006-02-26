@@ -48,6 +48,7 @@
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
 #else
+#  include <unistd.h>
 #  include <sys/types.h>
 #  include <sys/socket.h>
 
