@@ -443,8 +443,8 @@ bool SerialPortImplTermios::getParityErrorMarkingState() const throw (IOExceptio
 // Enable or disable parity error and framing error marking.
 void SerialPortImplTermios::setParityErrorMarking(bool flag) throw (IOException)
 {
-   return setBit(PARMRK, SerialPortImplTermios::IFLAG, flag,
-                 "Could not change parity error marking");
+   setBit(PARMRK, SerialPortImplTermios::IFLAG, flag,
+          "Could not change parity error marking");
 }
 
 // Get the current parity checking type (either odd or even).

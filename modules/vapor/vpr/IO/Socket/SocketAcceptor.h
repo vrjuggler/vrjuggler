@@ -152,7 +152,7 @@ public:
     */
    void close() throw (IOException)
    {
-      return mSocket.close();
+      mSocket.close();
    }
 
    /**
