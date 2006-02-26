@@ -45,10 +45,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
+#include <boost/bind.hpp>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 #include <vpr/md/SPROC/Thread/ThreadSGI.h>
 
 
@@ -94,7 +96,7 @@ ThreadSGI::~ThreadSGI()
 void ThreadSGI::setFunctor(const vpr::thread_func_t& functor)
 {
    vprASSERT(! mRunning && "Thread already running");
-   vprASSERT(! functorPtr.empty());
+   vprASSERT(! functor.empty());
 
    mUserThreadFunctor = functor;
 }
