@@ -46,6 +46,12 @@
 #include <iostream>
 #include <iomanip>
 
+/*-----------------------------OpenSG includes--------------------------------*/
+#include <OpenSG/OSGGL.h>
+#include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGTransform.h>
+/*----------------------------------------------------------------------------*/
+
 /*-----------------------------Juggler includes-------------------------------*/
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlApp.h>
@@ -66,11 +72,6 @@
 #include <Common/User.h>
 #include <Common/ViewPlatform.h>
 #include <Common/SelectionMethod.h>
-
-/*-----------------------------OpenSG includes--------------------------------*/
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGTransform.h>
-/*----------------------------------------------------------------------------*/
 
 
 class OpenSGViewer : public vrj::OpenSGApp

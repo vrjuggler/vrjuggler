@@ -40,6 +40,7 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGSimpleMaterial.h>
 #include <OpenSG/OSGTransform.h>
+#include <OpenSG/OSGGL.h>
 
 #include <gmtl/Matrix.h>
 

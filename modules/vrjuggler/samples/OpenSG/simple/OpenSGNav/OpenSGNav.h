@@ -33,6 +33,13 @@
 #ifndef _VRJ_OPENSG_NAV_H_
 #define _VRJ_OPENSG_NAV_H_
 
+
+/*-----------------------------OpenSG includes--------------------------------*/
+#include <OpenSG/OSGGL.h>
+#include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGTransform.h>
+/*----------------------------------------------------------------------------*/
+
 #include <iostream>
 #include <iomanip>
 
@@ -52,10 +59,6 @@
 
 #include <vrj/Draw/OGL/GlContextData.h>
 
-/*-----------------------------OpenSG includes--------------------------------*/
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGTransform.h>
-/*----------------------------------------------------------------------------*/
 
 
 class OpenSGNav : public vrj::OpenSGApp

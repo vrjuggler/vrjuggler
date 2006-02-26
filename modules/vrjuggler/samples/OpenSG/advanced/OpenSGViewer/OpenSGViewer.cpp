@@ -33,8 +33,6 @@
 #include <vrj/vrjConfig.h>
 
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
