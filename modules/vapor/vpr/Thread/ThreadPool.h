@@ -61,7 +61,6 @@ public:
    OneThread()
       : thread(NULL)
       , next(NULL)
-      , functor(NULL)
       , threadWait(0)
    {
       /* Do nothing. */ ;
