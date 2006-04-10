@@ -45,7 +45,7 @@ namespace jccl
 {
 
 // Initialize the singleton ptr
-vprSingletonImp(DependencyManager);
+vprSingletonImpLifetime(DependencyManager, 11);
 
 
 DependencyManager::DependencyManager(): mDepCheckers(), mDefaultChecker()
