@@ -77,6 +77,7 @@ boost::shared_ptr<ProxyConstructorBase> ProxyConstructor<PROXY>::create()
 
 ProxyFactory::~ProxyFactory()
 {
+   jccl::DependencyManager::instance()->unregisterChecker(&mDepChecker);
    mConstructors.clear();
 }
 
