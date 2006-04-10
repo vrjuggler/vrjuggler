@@ -109,6 +109,7 @@ sub recurseDir($$)
       if ( -d "$curfile" )
       {
          next if "$curfile" eq "CVS";           # Skip CVS directories
+         next if "$curfile" eq ".svn";          # Skip .svn directories
 
          newDir("$base_inst_dir", "$curfile");
          push(@dirstack, "$curfile");
