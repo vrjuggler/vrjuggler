@@ -41,6 +41,7 @@
 
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 #include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlExtensionLoaderWin32.h>
 
 namespace vrj
 {
@@ -159,7 +160,8 @@ protected:
 private:
    HGLRC mRenderContext;  /**< Permenant Rendering context */
    HDC   mDeviceContext;  /**< Private GDI Device context */
-
+   GlExtensionLoaderWin32   mExtensions;   /**< Extensions for this window. */
+   
    std::string  mWindowName;
    int          mPipe;
    std::string  mXDisplayName;       /**<  Name of the X11 display to use */
