@@ -183,7 +183,7 @@ std::string demangleTraceString(char* traceLine)
    std::string trace_line(traceLine);
    std::string mangled_name, demangled_name;
 
-   unsigned start(std::string::npos), end(std::string::npos);
+   std::string::size_type start(std::string::npos), end(std::string::npos);
    start = trace_line.find("(_");
    if(std::string::npos != start)
    {
