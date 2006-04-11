@@ -748,7 +748,7 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
    disallowedExts.append('.pdb')
    disallowedExts.append('.suo')
 
-   skip_dirs = ['CVS', 'autom4te.cache']
+   skip_dirs = ['.svn', 'CVS', 'autom4te.cache']
    for f in contents:
       if os.path.isdir(f):
          if f in skip_dirs:
