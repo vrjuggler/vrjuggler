@@ -47,7 +47,7 @@ use strict 'vars';
 use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
             $ECHO_PREFIX);
 use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
-            $SNX_ABI_FLAGS $SNX_ISA_FLAGS $Win32);
+            $PLATFORM $SNX_ABI_FLAGS $SNX_ISA_FLAGS $Win32);
 
 use File::Basename;
 use Getopt::Long;
@@ -70,21 +70,24 @@ my @DEP_SCRIPTS = (['vpr-config', 'VPR_BASE_DIR']);
 
 my $snx_default_abi = qq(@ABI@);
 my $snx_default_isa = qq(@ISA@);
-my $snx_n32_flags   = qq(@snx_n32_flags@);
-my $snx_64_flags    = qq(@snx_64_flags@);
+my $snx32_flags     = qq(@snx32_flags@);
+my $snx64_flags     = qq(@snx64_flags@);
 $LIBBITSUF          = qq(@LIBBITSUF@);
+$PLATFORM           = qq(@PLATFORM@);
 
 my $use_gcc = '@USE_GCC@';
 
 $SNX_ABI_FLAGS = '';
 
-if ( $snx_default_abi =~ /n32/i )
+# The default ABI is IRIX N32 or the default ISA is i386.
+if ( $snx_default_abi =~ /32$/i  || "$snx_default_isa" eq 'i386' )
 {
-   $SNX_ABI_FLAGS = "$snx_n32_flags";
+   $SNX_ABI_FLAGS = "$snx32_flags";
 }
-elsif ( $snx_default_abi =~ /64/ )
+# The default ABI or ISA is 64-bit.
+elsif ( "$snx_default_abi" eq '64' || "$snx_default_isa" eq 'x86_64' )
 {
-   $SNX_ABI_FLAGS = "$snx_64_flags";
+   $SNX_ABI_FLAGS = "$snx64_flags";
 }
 
 $SNX_ISA_FLAGS = '';
@@ -206,12 +209,12 @@ Options:
                                 alternate executable prefix to use when
                                 printing paths
         [--version]             Print the installed Sonix' version number
-        [--cxxflags [N32|64]]   Print the Sonix-specific flags for the C++
+        [--cxxflags [32|64]]    Print the Sonix-specific flags for the C++
                                 compiler
         [--includes]            Print out only the header path extension
                                 arguments
-        [--libs [N32|64]]       Print the basic Sonix-specific libraries
-        [--extra-libs [N32|64]] Print the extra linker options needed for
+        [--libs [32|64]]        Print the basic Sonix-specific libraries
+        [--extra-libs [32|64]]  Print the extra linker options needed for
                                 making an executable
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
@@ -290,13 +293,13 @@ sub make_CXXFLAGS ($;$)
    # Default setting from configure.
    my $snx_extra_cxxflags = qq(@snx_extra_cxxflags@);
 
-   if ( $cxxflags_arg =~ /n32/i )
+   if ( $cxxflags_arg =~ /32$/i )
    {
-      $snx_extra_cxxflags = "$snx_extra_cxxflags $snx_n32_flags $SNX_ISA_FLAGS";
+      $snx_extra_cxxflags = "$snx_extra_cxxflags $snx32_flags $SNX_ISA_FLAGS";
    }
-   elsif ( $cxxflags_arg =~ /64/ )
+   elsif ( "$cxxflags_arg" eq '64' )
    {
-      $snx_extra_cxxflags = "$snx_extra_cxxflags $snx_64_flags $SNX_ISA_FLAGS";
+      $snx_extra_cxxflags = "$snx_extra_cxxflags $snx64_flags $SNX_ISA_FLAGS";
    }
    elsif ( "$cxxflags_arg" eq '' )
    {
@@ -349,14 +352,14 @@ sub make_LDFLAGS ($;$$$)
 
    my $ldflags = '';
 
-   if ( $libs_arg =~ /n32/i )
+   if ( $libs_arg =~ /32$/i )
    {
-      $ldflags   = "$snx_n32_flags $SNX_ISA_FLAGS";
-      $LIBBITSUF = '32';
+      $ldflags   = "$snx32_flags $SNX_ISA_FLAGS";
+      $LIBBITSUF = ("$PLATFORM" eq 'IRIX' ? '32' : '');
    }
-   elsif ( $libs_arg =~ /64/ )
+   elsif ( "$libs_arg" eq '64' )
    {
-      $ldflags   = "$snx_64_flags $SNX_ISA_FLAGS";
+      $ldflags   = "$snx64_flags $SNX_ISA_FLAGS";
       $LIBBITSUF = '64';
    }
    elsif ( "$libs_arg" eq '' )
@@ -405,11 +408,11 @@ sub make_EXTRA_LDFLAGS($;$$$)
       }
    }
 
-   if ( $extra_libs_arg =~ /n32/i )
+   if ( $extra_libs_arg =~ /32$/i )
    {
-      $LIBBITSUF = '32';
+      $LIBBITSUF = ("$PLATFORM" eq 'IRIX' ? '32' : '');
    }
-   elsif ( $extra_libs_arg =~ /64/ )
+   elsif ( "$extra_libs_arg" eq '64' )
    {
       $LIBBITSUF = '64';
    }

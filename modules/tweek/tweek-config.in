@@ -42,7 +42,7 @@ use strict 'vars';
 use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
             $ECHO_PREFIX);
 use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
-            $TWEEK_ABI_FLAGS $TWEEK_ISA_FLAGS $Win32);
+            $PLATFORM $TWEEK_ABI_FLAGS $TWEEK_ISA_FLAGS $Win32);
 
 use File::Basename;
 use Getopt::Long;
@@ -65,21 +65,24 @@ my @DEP_SCRIPTS = (['vpr-config', 'VPR_BASE_DIR']);
 
 my $tweek_default_abi = qq(@ABI@);
 my $tweek_default_isa = qq(@ISA@);
-my $tweek_n32_flags   = qq(@tweek_n32_flags@);
-my $tweek_64_flags    = qq(@tweek_64_flags@);
+my $tweek32_flags     = qq(@tweek32_flags@);
+my $tweek64_flags     = qq(@tweek64_flags@);
 $LIBBITSUF            = qq(@LIBBITSUF@);
+$PLATFORM             = qq(@PLATFORM@);
 
 my $use_gcc = qq(@USE_GCC@);
 
 $TWEEK_ABI_FLAGS = '';
 
-if ( $tweek_default_abi =~ /n32/i )
+# The default ABI is IRIX N32 or the default ISA is i386.
+if ( $tweek_default_abi =~ /32$/i || "$tweek_default_isa" eq 'i386' )
 {
-   $TWEEK_ABI_FLAGS = "$tweek_n32_flags";
+   $TWEEK_ABI_FLAGS = "$tweek32_flags";
 }
-elsif ( $tweek_default_abi =~ /64/ )
+# The default ABI or ISA is 64-bit.
+elsif ( "$tweek_default_abi" eq '64' || "$tweek_default_isa" eq 'x86_64' )
 {
-   $TWEEK_ABI_FLAGS = "$tweek_64_flags";
+   $TWEEK_ABI_FLAGS = "$tweek64_flags";
 }
 
 $TWEEK_ISA_FLAGS = '';
@@ -314,12 +317,12 @@ Options:
                                 alternate executable prefix to use when
                                 printing paths
         [--version]             Print the installed Tweek's version number
-        [--cxxflags [N32|64]]   Print the Tweek-specific flags for the C++
+        [--cxxflags [32|64]]    Print the Tweek-specific flags for the C++
                                 compiler
         [--includes]            Print out only the header path extension
                                 arguments
-        [--libs [N32|64]]       Print the basic Tweek-specific libraries
-        [--extra-libs [N32|64]] Print the extra linker options needed for
+        [--libs [32|64]]        Print the basic Tweek-specific libraries
+        [--extra-libs [32|64]]  Print the extra linker options needed for
                                 making an executable
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
@@ -421,13 +424,13 @@ sub make_CXXFLAGS ($;$)
    # Default setting from configure.
    my $tweek_extra_cxxflags = qq(@tweek_extra_cxxflags@);
 
-   if ( $cxxflags_arg =~ /n32/i )
+   if ( $cxxflags_arg =~ /32$/i )
    {
-      $tweek_extra_cxxflags = "$tweek_extra_cxxflags $tweek_n32_flags $TWEEK_ISA_FLAGS";
+      $tweek_extra_cxxflags = "$tweek_extra_cxxflags $tweek32_flags $TWEEK_ISA_FLAGS";
    }
-   elsif ( $cxxflags_arg =~ /64/ )
+   elsif ( "$cxxflags_arg" eq '64' )
    {
-      $tweek_extra_cxxflags = "$tweek_extra_cxxflags $tweek_64_flags $TWEEK_ISA_FLAGS";
+      $tweek_extra_cxxflags = "$tweek_extra_cxxflags $tweek64_flags $TWEEK_ISA_FLAGS";
    }
    elsif ( "$cxxflags_arg" eq '' )
    {
@@ -480,14 +483,14 @@ sub make_LDFLAGS ($;$$$)
 
    my $ldflags = '';
 
-   if ( $libs_arg =~ /n32/i )
+   if ( $libs_arg =~ /32$/i )
    {
-      $ldflags   = "$tweek_n32_flags $TWEEK_ISA_FLAGS";
-      $LIBBITSUF = '32';
+      $ldflags   = "$tweek32_flags $TWEEK_ISA_FLAGS";
+      $LIBBITSUF = ("$PLATFORM" eq 'IRIX' ? '32' : '');
    }
-   elsif ( $libs_arg =~ /64/ )
+   elsif ( "$libs_arg" eq '64' )
    {
-      $ldflags   = "$tweek_64_flags $TWEEK_ISA_FLAGS";
+      $ldflags   = "$tweek64_flags $TWEEK_ISA_FLAGS";
       $LIBBITSUF = '64';
    }
    elsif ( "$libs_arg" eq '' )
@@ -536,11 +539,11 @@ sub make_EXTRA_LDFLAGS($;$$$)
       }
    }
 
-   if ( $extra_libs_arg =~ /n32/i )
+   if ( $extra_libs_arg =~ /32$/i )
    {
-      $LIBBITSUF = '32';
+      $LIBBITSUF = ("$PLATFORM" eq 'IRIX' ? '32' : '');
    }
-   elsif ( $extra_libs_arg =~ /64/ )
+   elsif ( "$extra_libs_arg" eq '64' )
    {
       $LIBBITSUF = '64';
    }

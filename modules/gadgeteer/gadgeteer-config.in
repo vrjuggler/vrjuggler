@@ -38,7 +38,7 @@ use strict 'vars';
 use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
             $ECHO_PREFIX);
 use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
-            $GADGET_ABI_FLAGS $GADGET_ISA_FLAGS $Win32);
+            $PLATFORM $GADGET_ABI_FLAGS $GADGET_ISA_FLAGS $Win32);
 
 use File::Basename;
 use Getopt::Long;
@@ -62,21 +62,24 @@ my @DEP_SCRIPTS = (['jccl-config', 'JCCL_BASE_DIR'],
 
 my $gadget_default_abi = qq(@ABI@);
 my $gadget_default_isa = qq(@ISA@);
-my $gadget_n32_flags   = qq(@gadget_n32_flags@);
-my $gadget_64_flags    = qq(@gadget_64_flags@);
-$LIBBITSUF          = qq(@LIBBITSUF@);
+my $gadget32_flags     = qq(@gadget32_flags@);
+my $gadget64_flags     = qq(@gadget64_flags@);
+$LIBBITSUF             = qq(@LIBBITSUF@);
+$PLATFORM              = qq(@PLATFORM@);
 
 my $use_gcc = '@USE_GCC@';
 
 $GADGET_ABI_FLAGS = '';
 
-if ( $gadget_default_abi =~ /n32/i )
+# The default ABI is IRIX N32 or the default ISA is i386.
+if ( $gadget_default_abi =~ /32$/i || "$gadget_default_isa" eq 'i386' )
 {
-   $GADGET_ABI_FLAGS = "$gadget_n32_flags";
+   $GADGET_ABI_FLAGS = "$gadget32_flags";
 }
-elsif ( $gadget_default_abi =~ /64/ )
+# The default ABI or ISA is 64-bit.
+elsif ( "$gadget_default_abi" eq '64' || "$gadget_default_isa" eq 'x86_64' )
 {
-   $GADGET_ABI_FLAGS = "$gadget_64_flags";
+   $GADGET_ABI_FLAGS = "$gadget64_flags";
 }
 
 $GADGET_ISA_FLAGS = '';
@@ -203,12 +206,12 @@ Options:
                                 alternate executable prefix to use when
                                 printing paths
         [--version]             Print the installed Gadgeteer's version number
-        [--cxxflags [N32|64]]   Print the Gadgeteer-specific flags for the C++
+        [--cxxflags [32|64]]    Print the Gadgeteer-specific flags for the C++
                                 compiler
         [--includes]            Print out only the header path extension
                                 arguments
-        [--libs [N32|64]]       Print the basic Gadgeteer-specific libraries
-        [--extra-libs [N32|64]] Print the extra linker options needed for
+        [--libs [32|64]]        Print the basic Gadgeteer-specific libraries
+        [--extra-libs [32|64]]  Print the extra linker options needed for
                                 making an executable
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
@@ -289,13 +292,13 @@ sub make_CXXFLAGS ($;$)
    # Default setting from configure.
    my $gadget_extra_cxxflags = qq(@gadget_extra_cxxflags@);
 
-   if ( $cxxflags_arg =~ /n32/i )
+   if ( $cxxflags_arg =~ /32$/i )
    {
-      $gadget_extra_cxxflags = "$gadget_extra_cxxflags $gadget_n32_flags $GADGET_ISA_FLAGS";
+      $gadget_extra_cxxflags = "$gadget_extra_cxxflags $gadget32_flags $GADGET_ISA_FLAGS";
    }
-   elsif ( $cxxflags_arg =~ /64/ )
+   elsif ( "$cxxflags_arg" eq '64' )
    {
-      $gadget_extra_cxxflags = "$gadget_extra_cxxflags $gadget_64_flags $GADGET_ISA_FLAGS";
+      $gadget_extra_cxxflags = "$gadget_extra_cxxflags $gadget64_flags $GADGET_ISA_FLAGS";
    }
    elsif ( "$cxxflags_arg" eq '' )
    {
@@ -348,14 +351,14 @@ sub make_LDFLAGS ($;$$$)
 
    my $ldflags = '';
 
-   if ( $libs_arg =~ /n32/i )
+   if ( $libs_arg =~ /32$/i )
    {
-      $ldflags   = "$gadget_n32_flags $GADGET_ISA_FLAGS";
-      $LIBBITSUF = '32';
+      $ldflags   = "$gadget32_flags $GADGET_ISA_FLAGS";
+      $LIBBITSUF = ("$PLATFORM" eq 'IRIX' ? '32' : '');
    }
-   elsif ( $libs_arg =~ /64/ )
+   elsif ( "$libs_arg" eq '64' )
    {
-      $ldflags   = "$gadget_64_flags $GADGET_ISA_FLAGS";
+      $ldflags   = "$gadget64_flags $GADGET_ISA_FLAGS";
       $LIBBITSUF = '64';
    }
    elsif ( "$libs_arg" eq '' )
@@ -404,11 +407,11 @@ sub make_EXTRA_LDFLAGS ($;$$$)
       }
    }
 
-   if ( $extra_libs_arg =~ /n32/i )
+   if ( $extra_libs_arg =~ /32$/i )
    {
-      $LIBBITSUF = '32';
+      $LIBBITSUF = ("$PLATFORM" eq 'IRIX' ? '32' : '');
    }
-   elsif ( $extra_libs_arg =~ /64/ )
+   elsif ( "$extra_libs_arg" eq '64' )
    {
       $LIBBITSUF = '64';
    }
