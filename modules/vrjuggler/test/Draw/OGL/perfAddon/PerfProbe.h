@@ -37,6 +37,8 @@
 #include <deque>
 #include <vpr/Util/Interval.h>
 #include <sstream>
+#include <vrj/Draw/OGL/GlContextData.h>
+#include <Text.h>
 
 
 class PerfProbe
@@ -71,6 +73,8 @@ public:
    float                mFrameRate;       /**< Running inst average frame rate. */
 
    std::stringstream    mOverlayTextStream;  /**< Text to write out each frame. */
+   std::string          mOverlayTextToDraw;
+   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
 
    std::deque<float>    mFrameRateHistory;
    unsigned             mNumTrackedFrames;   /**< Number of frame rates to keep. */

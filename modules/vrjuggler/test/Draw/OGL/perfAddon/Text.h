@@ -35,8 +35,12 @@ class Text {
 	};	
 	Text();
 	void drawString( Font, std::string );
-	static Text *getSingleton();
-	void *operator new( size_t size );
+	void drawTextBlock(std::string text, const float xPosFactor=0.05f, const float yPosFactor=0.05f, 
+                           float fontHeight=10.0f, 
+	                   float winHeight = 1000.0f, float winWidth = 1.4f * 1000.0f);
+
+	
+	static Text *getSingleton();	
 
     protected:
 

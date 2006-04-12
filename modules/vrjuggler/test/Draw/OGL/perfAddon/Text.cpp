@@ -11,6 +11,34 @@
  *
  ****************** <aqua heading END do not edit this line> ******************/
 #include "Text.h"
+#include <vector>
+#include <string>
+
+namespace
+{
+   template<class OutIt>
+   void splitStr(
+      const std::string& s,
+      const std::string& sep,
+      OutIt dest)
+   {
+      std::string::size_type left = s.find_first_not_of( sep );
+      std::string::size_type right = s.find_first_of( sep, left );
+      while( left < right )
+      {
+         *dest = s.substr( left, right-left );
+         ++dest;
+         left = s.find_first_not_of( sep, right );
+         right = s.find_first_of( sep, left );
+      }
+   }
+
+   //std::string s = "apple, orange, cherry, peach, grapefruit, cantalope,watermelon";
+
+   //std::vector<std::string> v;
+   //split( s, " ,", std::back_inserter(v) );
+
+}
 
 Text *Text::theText = NULL;
 
@@ -50,13 +78,6 @@ GLuint Text::loadFont( Text::Font font )
     return obj;
 }
 
-// Force singleton
-void *Text::operator new( size_t size )
-{
-    if( theText == NULL )
-      theText = (Text *)malloc( size );
-    return (void *)theText;
-}
 
 Text *Text::getSingleton()
 {
@@ -13756,9 +13777,68 @@ void Text::drawString(Font font, std::string str )
 {
     GLuint base = fontmap[font];
     if( base == 0 )
-   base = loadFont(font);
+    { base = loadFont(font); }
     glPushAttrib(GL_LIST_BIT);
     glListBase(base);
     glCallLists(str.length(), GL_UNSIGNED_BYTE, (unsigned char *)str.c_str());
     glPopAttrib();
 }
+
+void Text::drawTextBlock(std::string text, const float xPosFactor, const float yPosFactor, 
+                           float fontHeight, 
+	                   float winHeight, float winWidth)
+{
+   const float font_h_spacing(fontHeight*1.3f);
+   
+   std::vector<std::string> text_lines;
+   splitStr(text,"\n",std::back_inserter(text_lines));
+
+   float needed_h = font_h_spacing*float(text_lines.size());
+   if(needed_h > winHeight)
+   {
+      winHeight = needed_h * 1.1f;
+      winWidth = winHeight * 1.4f;
+   }
+
+   glMatrixMode( GL_PROJECTION );
+   glPushMatrix();
+   glLoadIdentity();
+   glOrtho( 0.0, winWidth, 0.0, winHeight, -1.0, 1.0);     // Setup virtual space 1000, 1000
+
+   glMatrixMode( GL_MODELVIEW );
+   glPushMatrix();
+   glLoadIdentity();
+
+   glDisable(GL_DEPTH_TEST);
+
+   /*
+   glBegin(GL_TRIANGLES);
+      glColor3f(1.0, 0.0, 0);
+      glVertex3f(100,100,-0.5);
+      glColor3f(0,1,0);
+      glVertex3f(900,100,-0.5);
+      glColor3f(0,0,1);
+      glVertex3f(450,800,-0.5);
+   glEnd();
+   */
+   //Text::getSingleton()->drawString(Text::StrokeFont, std::string("No Translation"));
+
+   glTranslatef(xPosFactor*winWidth, winHeight-(yPosFactor*winHeight), 0);
+   //float num_lines(overlay_lines.size());
+
+   for (unsigned l=0; l<text_lines.size(); ++l)
+   {
+      glPushMatrix();
+      glTranslatef(0,-font_h_spacing*float(l), 0);
+      drawString(Text::StrokeFont, text_lines[l]);
+      glPopMatrix();
+   }
+
+   glEnable(GL_DEPTH_TEST);
+
+   glMatrixMode(GL_PROJECTION);
+   glPopMatrix();
+   glMatrixMode( GL_MODELVIEW);
+   glPopMatrix();
+}
+
