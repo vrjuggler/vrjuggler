@@ -144,12 +144,12 @@ ifeq ($(ABI), 64)
 endif
 endif
 
-world release:
+world world-all-abi release:
 	@$(MAKE) buildworld
 	@$(MAKE) installworld
 
-all buildworld debug optim profiled dbg dbg-dso opt opt-dso prof	\
-prof-dso links:
+all all-abi buildworld debug optim profiled dbg dbg-dso opt opt-dso	\
+prof prof-dso links:
 	$(MKINSTALLDIRS) $(instlinks)/include
 	@for target in $(ALL_TARGETS) ; do				\
             $(MAKE) links-$$target || exit 1;				\
@@ -314,7 +314,7 @@ links-doozer:
 
 install install-debug install-optim install-dbg install-dbg-dso		\
 install-opt install-opt-dso install-profiled install-prof		\
-install-prof-dso installworld:
+install-prof-dso installworld install-all-abi:
 	@for target in $(BASE_TARGETS) ; do				\
             $(MAKE) install-$$target || exit 1;				\
           done

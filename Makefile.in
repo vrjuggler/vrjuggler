@@ -55,7 +55,8 @@ JUGGLERROOT_ABS=@JUGGLERROOT_ABS@
 DIRS=		@JUGGLER_PROJECTS@
 
 debug dbg dbg-dso optim opt opt-dso profiled prof prof-dso release	\
-world install-debug install-optim install-profiled links clean-links:
+world world-all-abi all-abi install-all-abi install-debug install-optim	\
+install-profiled links clean-links:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@"				\
           instlinks="$(topdir)/instlinks" recursive
 
