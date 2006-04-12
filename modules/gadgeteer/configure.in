@@ -366,8 +366,11 @@ case $OS_TYPE in
 esac
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    gadget_n32_flags='-n32'
-    gadget_64_flags='-64'
+    gadget32_flags='-n32'
+    gadget64_flags='-64'
+elif test "x$GCC" = "xyes" ; then
+    gadget32_flags='-m32'
+    gadget64_flags='-m64'
 fi
 
 gadget_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
@@ -408,8 +411,8 @@ AC_SUBST(Gadgeteer_lib)
 AC_SUBST(gadget_extra_ldflags_compiler)
 AC_SUBST(gadget_extra_ldflags_linker)
 AC_SUBST(gadget_extra_libs)
-AC_SUBST(gadget_n32_flags)
-AC_SUBST(gadget_64_flags)
+AC_SUBST(gadget32_flags)
+AC_SUBST(gadget64_flags)
 AC_SUBST(gadget_use_x11)
 
 # -----------------------------------------------------------------------------

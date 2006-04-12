@@ -550,8 +550,11 @@ case $OS_TYPE in
 esac
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    vrj_n32_flags='-n32'
-    vrj_64_flags='-64'
+    vrj32_flags='-n32'
+    vrj64_flags='-64'
+elif test "x$GCC" = "xyes" ; then
+    vrj32_flags='-m32'
+    vrj64_flags='-m64'
 fi
 
 vrj_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
@@ -602,8 +605,8 @@ AC_SUBST(vrj_ldflags_linker)
 AC_SUBST(vrj_extra_ldflags_compiler)
 AC_SUBST(vrj_extra_ldflags_linker)
 AC_SUBST(vrj_extra_libs)
-AC_SUBST(vrj_n32_flags)
-AC_SUBST(vrj_64_flags)
+AC_SUBST(vrj32_flags)
+AC_SUBST(vrj64_flags)
 
 AC_SUBST(vrj_lib)
 AC_SUBST(vrj_ogl_lib)

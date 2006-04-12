@@ -342,8 +342,11 @@ esac
 jccl_extra_cxxflags=''
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    jccl_n32_flags='-n32'
-    jccl_64_flags='-64'
+    jccl32_flags='-n32'
+    jccl64_flags='-64'
+elif test "x$GCC" = "xyes" ; then
+    jccl32_flags='-m32'
+    jccl64_flags='-m64'
 fi
 
 jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
@@ -408,8 +411,8 @@ AC_SUBST(jccl_prof_libs)
 AC_SUBST(jccl_extra_cxxflags)
 AC_SUBST(jccl_extra_ldflags)
 AC_SUBST(jccl_extra_libs)
-AC_SUBST(jccl_n32_flags)
-AC_SUBST(jccl_64_flags)
+AC_SUBST(jccl32_flags)
+AC_SUBST(jccl64_flags)
 AC_SUBST(jccl_java_api_jars)
 
 # -----------------------------------------------------------------------------

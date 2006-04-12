@@ -1273,8 +1273,11 @@ tweek_cxx_orb_root="$cxx_orb_root"
 tweek_extra_ldflags="$EXTRA_LDFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-   tweek_n32_flags='-n32'
-   tweek_64_flags='-64'
+   tweek32_flags='-n32'
+   tweek64_flags='-64'
+elif test "x$GCC" = "xyes" ; then
+   tweek32_flags='-m32'
+   tweek64_flags='-m64'
 fi
 
 jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar liquidlnf.jar looks.jar jaxen-core.jar jaxen-jdom.jar jdom.jar saxpath.jar xalan.jar xerces.jar xml-apis.jar'
@@ -1379,8 +1382,8 @@ AC_SUBST(tweek_extra_cxxflags)
 AC_SUBST(tweek_extra_include_dirs)
 AC_SUBST(tweek_extra_ldflags)
 AC_SUBST(tweek_extra_libs)
-AC_SUBST(tweek_n32_flags)
-AC_SUBST(tweek_64_flags)
+AC_SUBST(tweek32_flags)
+AC_SUBST(tweek64_flags)
 AC_SUBST(tweek_idlflags_cxx)
 AC_SUBST(tweek_idl_incflag_cxx)
 AC_SUBST(tweek_idlgendir_cxx)

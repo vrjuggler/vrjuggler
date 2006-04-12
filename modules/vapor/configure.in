@@ -999,9 +999,12 @@ vpr_extra_cxxflags=''
 vpr_extra_include_dirs=''
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    vpr_n32_flags='-n32'
-    vpr_64_flags='-64'
+    vpr32_flags='-n32'
+    vpr64_flags='-64'
     vpr_extra_include_dirs='boost/compatibility/cpp_c_headers'
+elif test "x$GCC" = "xyes" ; then
+    vpr32_flags='-m32'
+    vpr64_flags='-m64'
 fi
 
 VJ_VERSION_GROK(VERSION)
@@ -1054,8 +1057,8 @@ AC_SUBST(vpr_extra_include_dirs)
 AC_SUBST(vpr_extra_ldflags_compiler)
 AC_SUBST(vpr_extra_ldflags_linker)
 AC_SUBST(vpr_extra_libs)
-AC_SUBST(vpr_n32_flags)
-AC_SUBST(vpr_64_flags)
+AC_SUBST(vpr32_flags)
+AC_SUBST(vpr64_flags)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
