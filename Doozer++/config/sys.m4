@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2005/06/03 14:12:24
-dnl Version:       1.63
+dnl Date modified: 2006/04/12 15:15:24
+dnl Version:       1.64
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.63 2005/06/03 14:12:24 patrickh Exp
+dnl sys.m4,v 1.64 2006/04/12 15:15:24 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -235,7 +235,7 @@ AC_DEFUN([DPP_SYSTEM_SETUP],
                ABI_LIST='ELF_i386'
                ;;
             x86_64)
-               ABI_LIST='ELF_x64'
+               ABI_LIST='ELF_x86_64'
                ;;
             *)
                ABI_LIST="ELF_$target_cpu"
