@@ -87,13 +87,16 @@ namespace Elexol
       const vpr::Uint8 WriteWord('W');
       const vpr::Uint8 EraseWord('E');
       const vpr::Uint8 WriteDisable('0');
-      const vpr::Uint8 WriteEnable('0');
+      const vpr::Uint8 WriteEnable('1');
       const vpr::Uint8 Reset('@');
       const vpr::Uint8 EchoByte('`');
       const vpr::Uint8 EchoSpace('*');
       const vpr::Uint8 SendHostData('%');
       const vpr::Uint8 PortReadOffset('a');
       const vpr::Uint8 PortWriteOffset('A');
+      const vpr::Uint8 ControlBitsAddress(5);
+      const vpr::Uint8 IpMSBytesAddress(6);
+      const vpr::Uint8 IpLSBytesAddress(7);
    }
    
    typedef vpr::Uint8 CommandType;
@@ -315,6 +318,10 @@ public:
       return mActive;
    }
 
+   vpr::InetAddr getFixedIpAddress();
+   void setFixedIpAddress(const vpr::InetAddr& ipAddr);
+   void setEnableFixedIpAddress(bool val);
+
 private:
    /**
     * Returns the state for the specified command type.
@@ -343,6 +350,15 @@ private:
     */
    void setState(const Elexol::Port port, const Elexol::CommandType command,
                  const vpr::Uint8 value) const;
+
+   void enableWriting();
+   void disableWriting();
+
+   std::pair<vpr::Uint8, vpr::Uint8>
+      getMemoryValue(const Elexol::CommandType address);
+
+   void setMemoryValue(const Elexol::CommandType address,
+      std::pair<vpr::Uint8, vpr::Uint8> value);
 
 private:
    bool                 mActive;  /**< If the driver is active. */

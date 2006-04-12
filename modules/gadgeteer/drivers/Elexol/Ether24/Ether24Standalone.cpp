@@ -186,7 +186,7 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
    vpr::InetAddr from;
    vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
-   vpr::Interval read_timeout(500, vpr::Interval::Msec);
+   vpr::Interval read_timeout(5, vpr::Interval::Sec);
    mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
 
 
@@ -238,6 +238,162 @@ void Ether24Standalone::setState(const Elexol::Port port, const Elexol::CommandT
 
    vpr::Uint32 bytes_sent;
    mSocket->sendto(cmd, cmd.size(), mAddress, bytes_sent);
+}
+
+vpr::InetAddr Ether24Standalone::getFixedIpAddress()
+{
+   std::pair<vpr::Uint8, vpr::Uint8> msbytes =
+      getMemoryValue(Elexol::Command::IpMSBytesAddress);
+   std::pair<vpr::Uint8, vpr::Uint8> lsbytes =
+      getMemoryValue(Elexol::Command::IpLSBytesAddress);
+
+   vpr::Uint32 address_value(0);
+
+   address_value = (msbytes.second<< 24) | (msbytes.first << 16) |
+                   (lsbytes.second << 8) | (lsbytes.first);
+
+   vpr::InetAddr address;
+   address.setAddress(address_value, 2424);
+   return address;
+}
+
+void Ether24Standalone::setFixedIpAddress(const vpr::InetAddr& ipAddr)
+{
+   vpr::Uint32 network_address(vpr::System::Htonl(ipAddr.getAddressValue()));
+
+   vpr::Uint8 b3 = (network_address >> 24) & 0xFF;
+   vpr::Uint8 b2 = (network_address >> 16) & 0xFF;
+   vpr::Uint8 b1 = (network_address >> 8) & 0xFF;
+   vpr::Uint8 b0 = (network_address >> 0) & 0xFF;
+
+   enableWriting();
+   setMemoryValue(Elexol::Command::IpLSBytesAddress,
+      std::pair<vpr::Uint8, vpr::Uint8>(b3, b2));
+   vpr::System::msleep(50);
+
+   setMemoryValue(Elexol::Command::IpMSBytesAddress,
+      std::pair<vpr::Uint8, vpr::Uint8>(b1, b0));
+   vpr::System::msleep(50);
+   disableWriting();
+}
+
+void Ether24Standalone::setEnableFixedIpAddress(bool val)
+{
+   /*
+   std::pair<vpr::Uint8, vpr::Uint8> control_bits =
+      getMemoryValue(Elexol::Command::ControlBitsAddress);
+
+   // Clear bit 0
+   std::cout << std::hex << (int)control_bits.first << " " << (int) control_bits.second << std::endl;
+   control_bits.second &= 0xFE;
+   std::cout << std::hex << (int)control_bits.first << " " << (int) control_bits.second << std::endl;
+
+   enableWriting();
+   setMemoryValue(Elexol::Command::ControlBitsAddress, control_bits);
+   vpr::System::msleep(50);
+   disableWriting();
+   */
+}
+
+std::pair<vpr::Uint8, vpr::Uint8>
+   Ether24Standalone::getMemoryValue(const Elexol::CommandType address)
+{
+   //std::vector<vpr::Uint8> read_cmd(0);
+   std::string read_cmd;
+   read_cmd.push_back(Elexol::Command::EEPROM);
+   read_cmd.push_back(Elexol::Command::ReadWord);
+   read_cmd.push_back(address);
+   read_cmd.push_back(0x0);
+   read_cmd.push_back(0x0);
+
+   vprASSERT(5 == read_cmd.size());
+
+   //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+   vprDEBUG(vprDBG_ALL, 0)
+      << "Ether24StandalonegetState(): Sending command [" << read_cmd << "]"
+      << std::endl << vprDEBUG_FLUSH;
+
+   vpr::Uint32 bytes_sent;
+   mSocket->sendto(read_cmd, 5, mAddress, bytes_sent);
+
+   vpr::InetAddr from;
+   vpr::Uint32 bytes_read;
+   std::vector<vpr::Uint8> response(0);
+   vpr::Interval read_timeout(500, vpr::Interval::Msec);
+   mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
+
+   if (Elexol::Command::ReadWord != response[0])
+   {
+      throw Elexol::ElexolException("Response does not match command sent.",
+         VPR_LOCATION);
+   }
+   if (address != response[1])
+   {
+      throw Elexol::ElexolException("Response address does not match requested address.",
+         VPR_LOCATION);
+   }
+   std::cout << "Response [" << (int)response[2] << "][" << (int)response[3] << "]" << std::endl;
+   return std::pair<vpr::Uint8, vpr::Uint8>(response[2], response[3]);
+}
+
+void Ether24Standalone::enableWriting()
+{
+   std::string write_enable_cmd;
+   write_enable_cmd.push_back(Elexol::Command::EEPROM);
+   write_enable_cmd.push_back(Elexol::Command::WriteEnable);
+   write_enable_cmd.push_back(0x0);
+   write_enable_cmd.push_back(0xAA);
+   write_enable_cmd.push_back(0x55);
+   vprASSERT(5 == write_enable_cmd.size());
+   
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "Ether24StandalonegetState(): Sending enable writing command ["
+      << write_enable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
+
+   vpr::Uint32 bytes_sent;
+   mSocket->sendto(write_enable_cmd, 5, mAddress, bytes_sent);
+}
+
+void Ether24Standalone::disableWriting()
+{
+   std::string write_disable_cmd;
+   write_disable_cmd.push_back(Elexol::Command::EEPROM);
+   write_disable_cmd.push_back(Elexol::Command::WriteDisable);
+   write_disable_cmd.push_back(0x0);
+   write_disable_cmd.push_back(0x0);
+   write_disable_cmd.push_back(0x0);
+   vprASSERT(5 == write_disable_cmd.size());
+
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "Ether24StandalonegetState(): Sending disable writing command ["
+      << write_disable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
+
+   vpr::Uint32 bytes_sent;
+   mSocket->sendto(write_disable_cmd, 5, mAddress, bytes_sent);
+}
+
+void Ether24Standalone::setMemoryValue(const Elexol::CommandType address,
+   std::pair<vpr::Uint8, vpr::Uint8> value)
+{
+   //std::vector<vpr::Uint8> write_cmd(0);
+   std::string write_cmd;
+   write_cmd.push_back(Elexol::Command::EEPROM);
+   write_cmd.push_back(Elexol::Command::WriteWord);
+   write_cmd.push_back(address);
+   write_cmd.push_back(value.first);
+   write_cmd.push_back(value.second);
+
+   vprASSERT(5 == write_cmd.size());
+
+   vpr::Uint32 bytes_sent;
+   
+   //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+   vprDEBUG(vprDBG_ALL, 0)
+      << "Ether24StandalonegetState(): Sending command [" << write_cmd << "]"
+      << std::endl << vprDEBUG_FLUSH;
+   mSocket->sendto(write_cmd, 5, mAddress, bytes_sent);
+   
+
 }
 
 /*
