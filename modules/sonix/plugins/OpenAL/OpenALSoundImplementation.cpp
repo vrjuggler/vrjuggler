@@ -470,6 +470,10 @@ int OpenALSoundImplementation::startAPI()
       // Initialize ALUT
       int attrlist[] = { ALC_FREQUENCY, 22050, ALC_INVALID };
 
+#if defined(HAVE_ALUT_INIT_WITHOUT_CONTEXT)
+      alutInitWithoutContext(NULL, NULL);
+#endif
+
       // create context
       mContextId = alcCreateContext( mDev, attrlist );
       if (mContextId == NULL)
@@ -524,6 +528,8 @@ void OpenALSoundImplementation::shutdownAPI()
 
    this->unbindAll();
 
+   alutExit();
+
    if (mContextId != NULL)
    {
       alcDestroyContext( mContextId );
@@ -565,8 +571,8 @@ void OpenALSoundImplementation::bind( const std::string& alias )
    if (this->isStarted() == false)
    {
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-         << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, bind() failed\n")
-         << vprDEBUG_FLUSH;
+         << clrOutNORM(clrRED, "ERROR")
+         << ": OpenAL| API not started, bind() failed\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -629,19 +635,41 @@ void OpenALSoundImplementation::bind( const std::string& alias )
                                        std::string("\n"));
 
          ALenum format;
-         ALvoid* data;
-         ALsizei size, freq;
+         ALvoid* data(NULL);
+         ALsizei size;
 
+         // alutLoadWAVFile() is deprecated, so we try to avoid using it if we
+         // can.
+#if defined(HAVE_ALUT_LOAD_MEMORY_FROM_FILE)
+         ALfloat freq;
+         data = alutLoadMemoryFromFile(soundInfo.filename.c_str(), &format,
+                                       &size, &freq);
+#else
+         ALsizei freq;
          // The Mac OS X version of alutLoadWAVFile() does not have the loop
          // parameter.
-#if defined(VPR_OS_Darwin)
+#  if defined(VPR_OS_Darwin)
          alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
                          &size, &freq);
-#else
+#  else
          ALboolean loop;
          alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
                          &size, &freq, &loop);
-#endif
+#  endif
+#endif  /* defined(HAVE_ALUT_LOAD_MEMORY_FROM_FILE) */
+
+         // XXX: This should probably throw an exception or something.
+         if ( NULL == data )
+         {
+            vprDEBUG(snxDBG, vprDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED, "ERROR")
+               << ": OpenAL| Failed to load '" << soundInfo.filename << "'\n"
+               << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(snxDBG, vprDBG_CRITICAL_LVL)
+               << alutGetErrorString(alutGetError()) << std::endl
+               << vprDEBUG_FLUSH;
+            return;
+         }
 
          // Copy the memory in data into mBindLookup[alias].data.
          mBindLookup[alias].data.resize(size);
@@ -679,7 +707,12 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // put the data into an OpenAL buffer
          alBufferData(bufferID, format, &(mBindLookup[alias].data[0]),
                       mBindLookup[alias].data.size(), freq);
+
+#if defined(HAVE_ALUT_LOAD_MEMORY_FROM_FILE)
+         free(data);
+#else
          alutUnloadWAV(format, data, size, freq);
+#endif
 
          err = alGetError();
          if (err != AL_NO_ERROR)
