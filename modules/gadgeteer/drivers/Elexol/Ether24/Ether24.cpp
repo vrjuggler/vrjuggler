@@ -37,13 +37,6 @@
 #include <vpr/vprConfig.h>
 #include <vpr/System.h>
 
-//#include <gmtl/Matrix.h>
-//#include <gmtl/Vec.h>
-//#include <gmtl/MatrixOps.h>
-//#include <gmtl/Generate.h>
-//#include <gmtl/EulerAngle.h>
-//#include <gmtl/Quat.h>
-
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
@@ -237,11 +230,14 @@ vpr::Uint8 getByteValue(jccl::ConfigElementPtr elt, std::string base_name)
 
 void Ether24::writeInitialValues(Elexol::Port port, jccl::ConfigElementPtr elt)
 {
+   // Get the values out of the configuration.
    vpr::Uint8 initial_value = getByteValue(elt, "initial_value");
    vpr::Uint8 direction = getByteValue(elt, "direction");
    vpr::Uint8 pullup = getByteValue(elt, "pullup");
    vpr::Uint8 threshold = getByteValue(elt, "threshold");
    vpr::Uint8 schmitt_trigger = getByteValue(elt, "schmitt_trigger");
+
+   // Write them to the device.
    mDevice.setValue(port, initial_value);
    mDevice.setDirection(port, direction);
    mDevice.setPullUp(port, pullup);

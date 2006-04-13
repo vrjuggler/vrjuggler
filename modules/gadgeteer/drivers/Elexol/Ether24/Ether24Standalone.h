@@ -74,33 +74,116 @@ namespace Elexol
    };
 
    typedef std::map<std::string, vpr::InetAddr, Elexol::is_iless> device_map_t;
+   typedef vpr::Uint8 CommandType;
+   typedef vpr::Uint8 AddressType;
+   typedef vpr::Uint8 Port;
 
    namespace Command
    {
-      const vpr::Uint8 Value(0);
-      const vpr::Uint8 Direction('!');
-      const vpr::Uint8 PullUp('@');
-      const vpr::Uint8 Threshold('#');
-      const vpr::Uint8 SchmittTrigger('$');
-      const vpr::Uint8 EEPROM('\'');
-      const vpr::Uint8 ReadWord('R');
-      const vpr::Uint8 WriteWord('W');
-      const vpr::Uint8 EraseWord('E');
-      const vpr::Uint8 WriteDisable('0');
-      const vpr::Uint8 WriteEnable('1');
-      const vpr::Uint8 Reset('@');
-      const vpr::Uint8 EchoByte('`');
-      const vpr::Uint8 EchoSpace('*');
-      const vpr::Uint8 SendHostData('%');
-      const vpr::Uint8 PortReadOffset('a');
-      const vpr::Uint8 PortWriteOffset('A');
-      const vpr::Uint8 ControlBitsAddress(5);
-      const vpr::Uint8 IpMSBytesAddress(6);
-      const vpr::Uint8 IpLSBytesAddress(7);
+      const CommandType Value(0);
+      const CommandType Direction('!');
+      const CommandType PullUp('@');
+      const CommandType Threshold('#');
+      const CommandType SchmittTrigger('$');
+      const CommandType EEPROM('\'');
+      const CommandType ReadWord('R');
+      const CommandType WriteWord('W');
+      const CommandType EraseWord('E');
+      const CommandType WriteDisable('0');
+      const CommandType WriteEnable('1');
+      const CommandType Reset('@');
+      const CommandType EchoByte('`');
+      const CommandType EchoSpace('*');
+      const CommandType SendHostData('%');
+      const CommandType PortReadOffset('a');
+      const CommandType PortWriteOffset('A');
    }
-   
-   typedef vpr::Uint8 CommandType;
-   typedef vpr::Uint8 Port;
+
+   namespace Address
+   {
+      // Byte Address
+      const AddressType ControlBits1(10);
+      const AddressType ControlBits2(11);
+
+      // Word address
+      const AddressType IpAddressA(6);
+      const AddressType IpAddressB(7);
+
+      // Presets (byte addresses)
+      const AddressType ValueA(17);
+      const AddressType DirectionA(16);
+      const AddressType PullUpA(19);
+      const AddressType ThresholdA(18);
+      const AddressType DirectionB(21);
+      const AddressType SchmittTriggerA(20);
+      const AddressType ThresholdB(23);
+      const AddressType ValueB(22);
+      const AddressType SchmittTriggerB(25);
+      const AddressType PullUpB(24);
+      const AddressType ValueC(27);
+      const AddressType DirectionC(26);
+      const AddressType PullUpC(29);
+      const AddressType ThresholdC(28);
+      const AddressType SchmittTriggerC(30);
+
+      // User data (word addresses)
+      const AddressType FirstUserWord(48);
+      const AddressType LastUserWord(63);
+
+      // User data (byte addresses)
+      const AddressType FirstUserByte(96);
+      const AddressType LastUserByte(127);
+   }
+
+
+   /** TODO: Implement AutoScan
+    * The AutoScan mode will allow the module to originate communication with
+    * a remote device or another Ether I/O 24 module. This mode is very useful
+    * as it allows your software the freedom not to have to poll the module to
+    * check the state of the inputs.
+    *
+    * To allow the module to communicate through a router without having to
+    * set up Gateway addresses and Subnet masks, the module stores the Ethernet
+    * address of the target device as well as the IP address and Port number.
+    * If your target device is outside your local network then this address will
+    * be that of the gateway or router whereas if your target device is on your
+    * local area network then this address will be that of the device itself.
+    *
+    * Mask bits are used to allow some of the input pins of the module to toggle
+    * without generating messages from the module. Any input whose corresponding
+    * mask bit is low, is ignored by the AutoScan function. The Scan Rate is a 
+    * 16-bit value which is used to divide the scan rate of the AutoScan mode
+    * from it's base rate of 1,000 scans per second down to a user programmed
+    * rate from 500 scans per second to one scan per 65.5 seconds. When set at
+    * 1 the scan rate is 1,000 scans per second, it is 500 scans per second when
+    * the value is 2 and so on. You simply divide the 1,000 per second rate by
+    * your desired scan rate to find the value for word 18.
+    *
+    * The filter value which is in the MSB of Address 17 is used to count the
+    * number of identical reads that are required before a port value is
+    * considered valid and sent to the target device. When set at 0 the filter
+    * is turned off, when set at 1 the port must read the same for two scans to
+    * be considered valid and sent to the target. Higher numbers simply increase
+    * the number of identical reads required before the value is considered valid.
+    */
+   namespace AutoScan
+   {
+      // Word Address
+      const AddressType AutoScanScanRate(18);
+      const AddressType TargetMACAddress1(19);
+      const AddressType TargetMACAddress2(20);
+      const AddressType TargetMACAddress3(21);
+      const AddressType TargetIPAddress1(22);
+      const AddressType TargetIPAddress2(23);
+      const AddressType TargetPort(24);
+
+      // Byte Address
+      const AddressType PortAMask(32);
+      const AddressType PortBMask(33);
+      const AddressType PortCMask(34);
+      const AddressType FilterCount(35);
+   }
+
    const Port PortA(0);
    const Port PortB(1);
    const Port PortC(2);
@@ -111,6 +194,7 @@ class Ether24Standalone
 public:
    Ether24Standalone()
       : mActive(false)
+      , mSocket(NULL)
    {;}
 
    ~Ether24Standalone()
@@ -322,6 +406,10 @@ public:
    void setFixedIpAddress(const vpr::InetAddr& ipAddr);
    void setEnableFixedIpAddress(bool val);
 
+   vpr::Uint8 getByteValue(const Elexol::AddressType addr);
+   void setByteValue(const Elexol::AddressType addr, const vpr::Uint8 value);
+
+
 private:
    /**
     * Returns the state for the specified command type.
@@ -355,9 +443,9 @@ private:
    void disableWriting();
 
    std::pair<vpr::Uint8, vpr::Uint8>
-      getMemoryValue(const Elexol::CommandType address);
+      getWordValue(const Elexol::AddressType address);
 
-   void setMemoryValue(const Elexol::CommandType address,
+   void setWordValue(const Elexol::AddressType address,
       std::pair<vpr::Uint8, vpr::Uint8> value);
 
 private:
