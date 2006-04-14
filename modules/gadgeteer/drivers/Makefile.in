@@ -140,6 +140,7 @@ SUBDIR=	3Dconnexion/SpaceBall		\
 	Ascension/Flock 		\
 	Ascension/MotionStar		\
 	Ascension/Wanda			\
+	Elexol/Ether24			\
 	Fakespace/PinchGlove		\
 	Immersion/IBox			\
 	Intersense/IS900		\
