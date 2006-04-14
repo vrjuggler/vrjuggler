@@ -30,8 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Kernel/Kernel.h>
 #include <OpenSGNav.h>
+
+#include <vrj/Kernel/Kernel.h>
 
 int main(int argc, char* argv[])
 {

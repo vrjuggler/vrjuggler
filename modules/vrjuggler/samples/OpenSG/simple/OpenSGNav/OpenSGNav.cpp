@@ -30,11 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <OpenSG/OSGMatrix.h>
+#include <OpenSG/OSGSimpleGeometry.h>
+#include <OpenSG/OSGDirectionalLight.h>
+#include <OpenSG/OSGSceneFileHandler.h>
+
 #include <vrj/vrjConfig.h>
 
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -47,12 +50,6 @@
 #include <vrj/Display/CameraProjection.h>
 
 #include <OpenSGNav.h>
-
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGSimpleGeometry.h>
-#include <OpenSG/OSGDirectionalLight.h>
-#include <OpenSG/OSGSceneFileHandler.h>
-
 
 // Handle any initialization needed before API
 void OpenSGNav::init()
