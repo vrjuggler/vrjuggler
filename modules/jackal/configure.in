@@ -173,7 +173,7 @@ DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
 AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 DPP_PROG_INSTALL
-DPP_PROG_LINKER
+VJ_LINKER_SETUP
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.

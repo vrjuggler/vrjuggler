@@ -89,6 +89,11 @@ else
 LDOPTS+=	/DEF:$(srcdir)/corba_exports.def
 endif
 
+ifeq (@HAVE_LD_SONAME@, Y)
+CC_SONAME_FLAG=	@CC_SONAME_FLAG@
+LDOPTS+=	$(CC_SONAME_FLAG)$(notdir $@)
+endif
+
 # Add extra linking options on Darwin/OS X.
 ifeq (@PLATFORM@, Darwin)
 LDOPTS+=	-Wl,-dylib_compatibility_version,$(SHLIB_MAJOR).$(SHLIB_MINOR)
