@@ -140,6 +140,9 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoader.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlPipe.cpp">
 			</File>
 			<File
@@ -181,6 +184,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoader.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlPipe.h">
