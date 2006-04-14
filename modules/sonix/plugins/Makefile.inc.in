@@ -71,7 +71,7 @@ AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild:
-	@$(MKINSTALLDIRS) $(DSO_PLUGIN_DIR)
+	@$(MKINSTALLDIRS) $(DSO_PLUGIN_BASE_DIR)
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -136,11 +136,11 @@ BEFOREINSTALL=	beforeinstall
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
 beforeinstall:
-	if [ -d $(DSO_PLUGIN_DIR) ] ; then				\
+	if [ -d $(DSO_PLUGIN_BASE_DIR) ] ; then				\
           $(PERL) $(scriptdir)/install-dir.pl -m $(EXEC_PERMS)		\
             $(GROUP_OPT_UNIX) -e .so,.dll,.dylib $(EXTRA_INSTALL_ARGS)	\
             -o $(libdir)$(LIBBITSUF)/$(DSO_PLUGIN_SUBDIR) -i		\
-            $(DSO_PLUGIN_DIR) ;						\
+            $(DSO_PLUGIN_BASE_DIR) ;					\
         fi
 
 # =============================================================================
