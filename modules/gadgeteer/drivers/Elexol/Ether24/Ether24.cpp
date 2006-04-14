@@ -64,6 +64,19 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
+vpr::Uint8 getByteValue(jccl::ConfigElementPtr elt, std::string base_name)
+{
+   vpr::Uint8 result(0);
+   for (unsigned int i = 0; i < 8; i++)
+   {
+      std::stringstream ss;
+      ss << base_name << i;
+      vpr::Uint8 val = elt->getProperty<vpr::Uint8>(ss.str());
+      result = result | ((val & 0x1) << i);
+   }
+   return result;
+}
+
 Ether24::Ether24()
    : mDone(false)
    , mInvertA(0)
@@ -222,18 +235,6 @@ bool Ether24::startSampling()
    return true;
 }
 
-vpr::Uint8 getByteValue(jccl::ConfigElementPtr elt, std::string base_name)
-{
-   vpr::Uint8 result(0);
-   for (unsigned int i = 0; i < 8; i++)
-   {
-      std::stringstream ss;
-      ss << base_name << i;
-      vpr::Uint8 val = elt->getProperty<vpr::Uint8>(ss.str());
-      result = result | ((val & 0x1) << i);
-   }
-   return result;
-}
 
 void Ether24::writeInitialValues(Elexol::Port port, jccl::ConfigElementPtr elt)
 {
