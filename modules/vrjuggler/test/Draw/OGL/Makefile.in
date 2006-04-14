@@ -42,6 +42,7 @@ APPS	= analog	\
           digitalGlove	\
 	  logger	\
           simpleGlove	\
+          swapSync      \
           texture	\
           torus		\
 	  WallTest	\

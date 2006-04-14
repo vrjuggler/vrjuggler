@@ -30,63 +30,27 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# This file defines the specification for the test code directory tree for
-# the VR Juggler installation.
-#
-# $Id$
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/test/Draw/OGL/swapSync
+# This requires GNU make.
+# -----------------------------------------------------------------------------
 
-/set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
-.
-    test
-        Cluster
-            applicationData
-            ..
-        ..
-        Draw
-            OGL
-                WallTest
-                ..
-                analog
-                ..
-                combo
-                ..
-                cubes
-                ..
-                digitalGlove
-                ..
-                logger
-                ..
-                perfAddon
-                ..
-                simpleGlove
-                ..
-                swapSync
-                ..
-                texture
-                    ImageFileLoaderCode
-                    ..
-                ..
-                torus
-                ..
-                wand
-                ..
-            ..
-        ..
-        PerfMon
-            collideApp
-            ..
-        ..
-        RTRC
-            elements
-                startup
-                ..
-            ..
-        ..
-        TestSuite
-            TestCases
-                Pf
-                ..
-            ..
-        ..
-    ..
-..
+all: swapSync@EXEEXT@
+
+APP_NAME=	swapSync@EXEEXT@
+
+# Basic options.
+srcdir=		@srcdir@
+SRCS=		main.cpp swapSyncApp.cpp
+
+EXTRA_INCLUDES=
+EXTRA_PATH_FOR_SOURCES=
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+swapSync@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

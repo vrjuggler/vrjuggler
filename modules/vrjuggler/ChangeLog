@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-14-2006 patrick     Added swapSync test application.
 Apr-14-2006 aronb       Added GlExtensionLoader classes.
                         Added support for NV swap_group.
 Oct-18-2005 patrickh    Added the functions vrj::getVersionString() and
