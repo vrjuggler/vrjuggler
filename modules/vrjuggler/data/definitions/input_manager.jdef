@@ -36,6 +36,7 @@
             <enum label="DTrack_drv" value="DTrack_drv"/>
             <enum label="DataGlove_drv" value="DataGlove_drv"/>
             <enum label="DirectXJoystick_drv" value="DirectXJoystick_drv"/>
+            <enum label="ElexolEther24_drv" value="ElexolEther24_drv"/>
             <enum label="Fastrak_drv" value="Fastrak_drv"/>
             <enum label="Flock_drv" value="Flock_drv"/>
             <enum label="IBox_drv" value="IBox_drv"/>

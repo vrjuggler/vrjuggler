@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="elexol_ether24_port" icon_path="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Elexol Ether24 Port">
+      <abstract>false</abstract>
+      <help />
+      <category>/Devices/</category>
+      <property valuetype="integer" variable="false" name="invert0">
+         <help></help>
+         <value label="Invert 0" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="invert1">
+         <help></help>
+         <value label="Invert 1" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="invert2">
+         <help></help>
+         <value label="Invert 2" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="invert3">
+         <help></help>
+         <value label="Invert 3" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="invert4">
+         <help></help>
+         <value label="Invert 4" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="invert5">
+         <help></help>
+         <value label="Invert 5" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="invert6">
+         <help></help>
+         <value label="Invert 6" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="invert7">
+         <help></help>
+         <value label="Invert 7" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value0">
+         <help></help>
+         <value label="Initial Value 0" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value1">
+         <help></help>
+         <value label="Initial Value 1" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value2">
+         <help></help>
+         <value label="Initial Value 2" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value3">
+         <help></help>
+         <value label="Initial Value 3" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value4">
+         <help></help>
+         <value label="Initial Value 4" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value5">
+         <help></help>
+         <value label="Initial Value 5" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value6">
+         <help></help>
+         <value label="Initial Value 6" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="initial_value7">
+         <help></help>
+         <value label="Initial Value 7" defaultvalue="0" />
+         <enumeration editable="false">
+            <enum label="High" value="1" />
+            <enum label="Low" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction0">
+         <help></help>
+         <value label="Direction 0" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction1">
+         <help></help>
+         <value label="Direction 1" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction2">
+         <help></help>
+         <value label="Direction 2" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction3">
+         <help></help>
+         <value label="Direction 3" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction4">
+         <help></help>
+         <value label="Direction 4" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction5">
+         <help></help>
+         <value label="Direction 5" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction6">
+         <help></help>
+         <value label="Direction 6" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="direction7">
+         <help></help>
+         <value label="Direction 7" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Input" value="1" />
+            <enum label="Output" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup0">
+         <help></help>
+         <value label="Pull Up Resistor 0" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup1">
+         <help></help>
+         <value label="Pull Up Resistor 1" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup2">
+         <help></help>
+         <value label="Pull Up Resistor 2" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup3">
+         <help></help>
+         <value label="Pull Up Resistor 3" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup4">
+         <help></help>
+         <value label="Pull Up Resistor 4" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup5">
+         <help></help>
+         <value label="Pull Up Resistor 5" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup6">
+         <help></help>
+         <value label="Pull Up Resistor 6" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="pullup7">
+         <help></help>
+         <value label="Pull Up Resistor 7" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Off" value="1" />
+            <enum label="On" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold0">
+         <help></help>
+         <value label="Threshold 0" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold1">
+         <help></help>
+         <value label="Threshold 1" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold2">
+         <help></help>
+         <value label="Threshold 2" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold3">
+         <help></help>
+         <value label="Threshold 3" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold4">
+         <help></help>
+         <value label="Threshold 4" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold5">
+         <help></help>
+         <value label="Threshold 5" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold6">
+         <help></help>
+         <value label="Threshold 6" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="threshold7">
+         <help></help>
+         <value label="Threshold 7" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="1.4V" value="1" />
+            <enum label="2.5V" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger0">
+         <help></help>
+         <value label="Schmitt Trigger 0" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger1">
+         <help></help>
+         <value label="Schmitt Trigger 1" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger2">
+         <help></help>
+         <value label="Schmitt Trigger 2" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger3">
+         <help></help>
+         <value label="Schmitt Trigger 3" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger4">
+         <help></help>
+         <value label="Schmitt Trigger 4" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger5">
+         <help></help>
+         <value label="Schmitt Trigger 5" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger6">
+         <help></help>
+         <value label="Schmitt Trigger 6" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="schmitt_trigger7">
+         <help></help>
+         <value label="Schmitt Trigger 7" defaultvalue="1" />
+         <enumeration editable="false">
+            <enum label="Disabled" value="1" />
+            <enum label="Enabled" value="0" />
+         </enumeration>
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>
+

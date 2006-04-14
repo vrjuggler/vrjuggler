@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="elexol_ether24" icon_path="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Elexol Ether24">
+      <abstract>false</abstract>
+      <help />
+      <parent>digital_device</parent>
+      <category>/Devices/Digital</category>
+      <property valuetype="string" variable="false" name="ip_address">
+         <help></help>
+         <value label="IP Address" defaultvalue="" />
+      </property>
+      <property valuetype="string" variable="false" name="mac_address">
+         <help></help>
+         <value label="MAC Address" defaultvalue="" />
+      </property>
+      <property valuetype="string" variable="false" name="config_method">
+         <help></help>
+         <value label="Configuration Method" defaultvalue="find_mac" />
+         <enumeration editable="false">
+            <enum label="Match MAC Address" value="find_mac" />
+            <enum label="Static IP" value="static_ip" />
+         </enumeration>
+      </property>
+      <property valuetype="configelement" variable="false" name="port_a">
+         <help>Port A Settings</help>
+         <value label="Port A"/>
+         <allowed_type>elexol_ether24_port</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="false" name="port_b">
+         <help>Port B Settings</help>
+         <value label="Port B"/>
+         <allowed_type>elexol_ether24_port</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="false" name="port_c">
+         <help>Port C Settings</help>
+         <value label="Port C"/>
+         <allowed_type>elexol_ether24_port</allowed_type>
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>
+
