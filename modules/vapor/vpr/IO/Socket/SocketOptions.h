@@ -72,6 +72,7 @@ namespace SocketOptions
       IpTypeOfService,  /**< IP type of service option */
       AddMember,        /**< Multicast "add member" option */
       DropMember,       /**< Multicast "remove member" option */
+      Broadcast,        /**< Establish permission to send broadcast datagrams */
       McastInterface,   /**< Multicast interface option */
       McastTimeToLive,  /**< Multicast time to live (TTL) option */
       McastLoopback,    /**< Multicast loopback option */
@@ -111,6 +112,7 @@ namespace SocketOptions
       bool          reuse_addr;
       bool          keep_alive;
       bool          no_delay;
+      bool          broadcast;
       size_t        max_segment;
       size_t        recv_buffer_size;
       size_t        send_buffer_size;
