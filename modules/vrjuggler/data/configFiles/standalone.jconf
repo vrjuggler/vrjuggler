@@ -352,7 +352,7 @@
          <device>SimWandButtons</device>
          <unit>5</unit>
       </digital_proxy>
-      <display_system name="Pipe Setup" version="1">
+      <display_system name="Pipe Setup" version="2">
          <number_of_pipes>1</number_of_pipes>
          <x11_pipes>-1</x11_pipes>
          <x11_pipes>:0.1</x11_pipes>

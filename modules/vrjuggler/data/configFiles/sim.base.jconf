@@ -478,7 +478,7 @@
          </key_pair>
          <device_host />
       </simulated_digital_device>
-      <display_system name="Pipe Setup" version="1">
+      <display_system name="Pipe Setup" version="2">
          <number_of_pipes>1</number_of_pipes>
          <x11_pipes>-1</x11_pipes>
          <x11_pipes>-1</x11_pipes>
@@ -488,6 +488,7 @@
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
+         <use_swap_group>false</use_swap_group>
       </display_system>
       <display_window name="SimWindow1" version="4">
          <origin>0</origin>
