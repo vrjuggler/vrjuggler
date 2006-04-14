@@ -48,7 +48,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([tweek/tweekConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([1.99.18])
+DPP_PREREQ([2.1.0])
 DPP_INIT
 
 DPP_GEN_RECONFIG
