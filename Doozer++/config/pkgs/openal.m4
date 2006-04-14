@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2005/01/08 22:44:41
-dnl Version:       1.20
+dnl Date modified: 2006/04/14 00:37:37
+dnl Version:       1.21
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -40,11 +40,12 @@ dnl Variables defined:
 dnl     OPENAL      - do we have openal on the system?
 dnl     OALROOT     - The OpenAL installation directory.
 dnl     LIBOPENAL   - The list of libraries to link for OpenAL appliations.
+dnl     LIBALUT     - The list of libraries to link for ALUT appliations.
 dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.20 2005/01/08 22:44:41 patrickh Exp
+dnl openal.m4,v 1.21 2006/04/14 00:37:37 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
@@ -71,6 +72,7 @@ AC_DEFUN([DPP_HAVE_OPENAL],
    dnl initialize returned data...
    OPENAL='no'
    LIBOPENAL=''
+   LIBALUT=''
    AL_INCLUDES=''
    AL_LDFLAGS=''
    dpp_have_openal='no'
@@ -187,6 +189,12 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
             [dpp_have_openal='no'],
             [$DYN_LOAD_LIB -lm])
 
+         AC_CHECK_LIB([alut], [alutInit],
+            [AC_CHECK_HEADER([AL/alut.h], [dpp_have_alut='yes'],
+               [dpp_have_alut='no'])],
+            [dpp_have_alut='no'],
+            [$DYN_LOAD_LIB -lm])
+
          dnl This is necessary because AC_CHECK_LIB() adds -lopenal to
          dnl $LIBS.  We want to do that ourselves later.
          LIBS="$dpp_save_LIBS"
@@ -206,11 +214,15 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
       dnl helpful in some Makefiles.
       if test "x$dpp_have_openal" = "xyes" ; then
          if test "x$OS_TYPE" = "xWin32" ;  then
-            LIBOPENAL='ALut.lib OpenAL32.lib'
+            LIBOPENAL='OpenAL32.lib'
+            LIBALUT='ALut.lib'
          elif test "x$PLATFORM" = "xDarwin" ; then
             LIBOPENAL='-framework OpenAL'
          else
             LIBOPENAL="-lopenal -lm"
+            if test "x$dpp_have_alut" = "xyes" ; then
+               LIBALUT="-lalut"
+            fi
          fi
 
          if test "x$PLATFORM" = "xDarwin" ; then
@@ -243,6 +255,7 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
    AC_SUBST(OPENAL)
    AC_SUBST(OALROOT)
    AC_SUBST(LIBOPENAL)
+   AC_SUBST(LIBALUT)
    AC_SUBST(AL_INCLUDES)
    AC_SUBST(AL_LDFLAGS)
 ])

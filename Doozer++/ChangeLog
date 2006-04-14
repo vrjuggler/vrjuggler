@@ -1,5 +1,10 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2006-04-14 patrickh     dpp.libs.targets.mk no longer dictates naming
+                        conventions for static and shared libraries.
+                        NEW VERSION: 2.1.0
+
+[2.0.2 released - 4.14.2006]===================================================
 2005-11-16 patrickh     Provide $BOOST_LIB_VERSION from DPP_HAVE_BOOST as
                         extracted directly from boost/version.hpp.
 2005-08-23 patrickh     Added awareness of GCJ in the JDK detection macros.
