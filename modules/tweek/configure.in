@@ -385,6 +385,7 @@ DPP_HAVE_GNU_MAKE([3.78], ,
    [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 DPP_PROG_INSTALL
+VJ_LINKER_SETUP
 
 BUILD_JAVA='Y'
 
