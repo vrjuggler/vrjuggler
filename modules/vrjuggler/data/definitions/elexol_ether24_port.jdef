@@ -9,64 +9,64 @@
          <help></help>
          <value label="Invert 0" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="invert1">
          <help></help>
          <value label="Invert 1" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="invert2">
          <help></help>
          <value label="Invert 2" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="invert3">
          <help></help>
          <value label="Invert 3" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="invert4">
          <help></help>
          <value label="Invert 4" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="invert5">
          <help></help>
          <value label="Invert 5" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="invert6">
          <help></help>
          <value label="Invert 6" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="invert7">
          <help></help>
          <value label="Invert 7" defaultvalue="0" />
          <enumeration editable="false">
-            <enum label="High" value="1" />
-            <enum label="Low" value="0" />
+            <enum label="True" value="1" />
+            <enum label="False" value="0" />
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="initial_value0">

@@ -404,8 +404,8 @@ void Ether24Standalone::enableWriting()
    write_enable_cmd.push_back(Elexol::Command::EEPROM);
    write_enable_cmd.push_back(Elexol::Command::WriteEnable);
    write_enable_cmd.push_back(0x0);
-   write_enable_cmd.push_back((std::string::charT) 0xAA);
-   write_enable_cmd.push_back((std::string::charT) 0x55);
+   write_enable_cmd.push_back((char) 0xAA);
+   write_enable_cmd.push_back((char) 0x55);
    vprASSERT(5 == write_enable_cmd.size());
    
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)

@@ -110,6 +110,9 @@ private:
    vpr::InetAddr            mAddress;
    std::vector<DigitalData> mDigitalData;
    bool                     mDone;
+   vpr::Uint8               mInvertA;
+   vpr::Uint8               mInvertB;
+   vpr::Uint8               mInvertC;
 };
 
 } // End of gadget namespace

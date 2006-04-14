@@ -66,6 +66,9 @@ namespace gadget
 
 Ether24::Ether24()
    : mDone(false)
+   , mInvertA(0)
+   , mInvertB(0)
+   , mInvertC(0)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "=== Ether24::Ether24() ===" << std::endl << vprDEBUG_FLUSH;
@@ -212,6 +215,10 @@ bool Ether24::startSampling()
    writeInitialValues(Elexol::PortB, portb_elt);
    writeInitialValues(Elexol::PortC, portc_elt);
 
+   mInvertA = getByteValue(porta_elt, "invert");
+   mInvertB = getByteValue(portb_elt, "invert");
+   mInvertC = getByteValue(portc_elt, "invert");
+
    return true;
 }
 
@@ -263,9 +270,10 @@ bool Ether24::sample()
    std::vector<vpr::Uint8> port_values(0);
    try
    {
-      port_values.push_back(mDevice.getValue(Elexol::PortA));
-      port_values.push_back(mDevice.getValue(Elexol::PortB));
-      port_values.push_back(mDevice.getValue(Elexol::PortC));
+      // Use XOR to invert specified bits.
+      port_values.push_back(mInvertA ^ mDevice.getValue(Elexol::PortA));
+      port_values.push_back(mInvertB ^ mDevice.getValue(Elexol::PortB));
+      port_values.push_back(mInvertC ^ mDevice.getValue(Elexol::PortC));
    }
    catch(vpr::Exception& ex)
    {
