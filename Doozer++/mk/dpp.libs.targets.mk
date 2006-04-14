@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.targets.mk,v
-# Date modified: 2006/04/14 19:06:12
-# Version:       1.38
+# Date modified: 2006/04/14 21:53:40
+# Version:       1.40
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.38 2006/04/14 19:06:12 patrickh Exp
+# dpp.libs.targets.mk,v 1.40 2006/04/14 21:53:40 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
@@ -382,28 +382,36 @@ lib.links.generic:
 	@for LIB in $(LIBS) ; do					\
            cd $(LINK_DIR) ;						\
            for lib in $(PROF_STATIC_LIBS) ; do				\
-              rm -f $$lib &&						\
-                $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$lib ;		\
+              if [ -e $(DEST_DIR)/$(PROF_DIR)/$$lib ] ; then		\
+                 rm -f $$lib &&						\
+                   $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$lib ;	\
+              fi ;							\
            done ;							\
            for lib in $(STATIC_LIBS) ; do				\
-              rm -f $$lib &&						\
-                $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$lib ;	\
+              if [ -e $(DEST_DIR)/$(DEFAULT_DIR)/$$lib ] ; then		\
+                 rm -f $$lib &&						\
+                   $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$lib ;	\
+              fi ;							\
            done ;							\
            for lib in $(PROF_DYNAMIC_LIBS) ; do				\
-              rm -f $$lib &&						\
-                $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$lib ;		\
-              for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
-                 rm -f $$link &&					\
-                   $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$link ;	\
-              done ;							\
+              if [ -e $(DEST_DIR)/$(PROF_DIR)/$$lib ] ; then		\
+                 rm -f $$lib &&						\
+                   $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$lib ;	\
+                 for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
+                    rm -f $$link &&					\
+                      $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$link ;	\
+                 done ;							\
+              fi ;							\
            done ;							\
            for lib in $(DYNAMIC_LIBS) ; do				\
-              rm -f $$lib &&						\
-                $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$lib ;	\
-              for link in $(DYNAMIC_LIB_LINKS) ; do			\
-                 rm -f $$link &&					\
-                   $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$link ;	\
-              done ;							\
+              if [ -e $(DEST_DIR)/$(DEFAULT_DIR)/$$lib ] ; then		\
+                 rm -f $$lib &&						\
+                   $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$lib ;	\
+                 for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                    rm -f $$link &&					\
+                      $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$link ;	\
+                 done ;							\
+              fi ;							\
            done ;							\
         done
 ifeq ($(OS_TYPE), Win32)
@@ -411,23 +419,27 @@ ifeq ($(OS_TYPE), Win32)
            cd $(LINK_DIR) ;						\
            for lib in $(PROF_DYNAMIC_LIBS) ; do				\
               base_lib=`echo $$lib | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
-              rm -f $$base_lib.lib &&					\
-                 $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$base_lib.lib $$base_lib.lib ;	\
-              for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
-                 base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
-                 rm -f $$base_link.lib &&				\
-                    $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$base_lib.lib $$base_link.lib ;	\
-              done ;							\
+              if [ -e $(DEST_DIR)/$(PROF_DIR)/$$base_lib.lib ] ; then	\
+                 rm -f $$base_lib.lib &&				\
+                    $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$base_lib.lib $$base_lib.lib ; \
+                 for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
+                    base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+                    rm -f $$base_link.lib &&				\
+                       $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$base_lib.lib $$base_link.lib ;	\
+                 done ;							\
+              fi ;							\
            done ;							\
            for lib in $(DYNAMIC_LIBS) ; do				\
               base_lib=`echo $$lib | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
-              rm -f $$base_lib.lib &&		 			\
-                 $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$base_lib.lib $$base_lib.lib ;	\
-              for link in $(DYNAMIC_LIB_LINKS) ; do			\
-                 base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
-                 rm -f $$base_link.lib &&				\
-                    $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$base_lib.lib $$base_link.lib ; \
-              done ;							\
+              if [ -e $(DEST_DIR)/$(DEFAULT_DIR)/$$base_lib.lib ] ; then \
+                 rm -f $$base_lib.lib &&	 			\
+                    $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$base_lib.lib $$base_lib.lib ;	\
+                 for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                    base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+                    rm -f $$base_link.lib &&				\
+                       $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$base_lib.lib $$base_link.lib ; \
+                 done ;							\
+              fi ;							\
            done ;							\
         done
 endif
@@ -768,6 +780,12 @@ ifneq ("$(DYNAMIC_LIBS)", "")
               $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(DBG_LIBDIR)/$$lib		\
                 $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/$$lib ;		\
+              cur_dir=`pwd` ;						\
+              cd $(INSTALL_LIBDIR_ABS)/$(DBG_DIR) ;			\
+              for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                 rm -f $$link && $(LN_S) $$lib $$link ;			\
+              done ;							\
+              cd $$cur_dir ;						\
            done ;							\
         done
 ifeq ($(OS_TYPE), Win32)
@@ -778,6 +796,14 @@ ifeq ($(OS_TYPE), Win32)
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(DBG_LIBDIR)/$$base_lib.lib	\
                 $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/$$base_lib.lib ;	\
+              cur_dir=`pwd` ;						\
+              cd $(INSTALL_LIBDIR_ABS)/$(DBG_DIR) ;			\
+              for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                 base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+                 rm -f $$base_link.lib &&				\
+                    $(LN_S) $$base_lib.lib $$base_link.lib ;		\
+              done ;							\
+              cd $$cur_dir ;						\
            done ;							\
         done
 endif
@@ -840,6 +866,12 @@ ifneq ("$(DYNAMIC_LIBS)", "")
               $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(OPT_LIBDIR)/$$lib		\
                 $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/$$lib ;		\
+              cur_dir=`pwd` ;						\
+              cd $(INSTALL_LIBDIR_ABS)/$(OPT_DIR) ;			\
+              for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                 rm -f $$link && $(LN_S) $$lib $$link ;			\
+              done ;							\
+              cd $$cur_dir ;						\
            done ;							\
         done
 ifeq ($(OS_TYPE), Win32)
@@ -850,6 +882,14 @@ ifeq ($(OS_TYPE), Win32)
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(OPT_LIBDIR)/$$base_lib.lib	\
                 $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/$$base_lib.lib ;	\
+              cur_dir=`pwd` ;						\
+              cd $(INSTALL_LIBDIR_ABS)/$(OPT_DIR) ;			\
+              for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                 base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+                 rm -f $$base_link.lib &&				\
+                    $(LN_S) $$base_lib.lib $$base_link.lib ;		\
+              done ;							\
+              cd $$cur_dir ;						\
            done ;							\
         done
 endif
@@ -912,6 +952,12 @@ ifneq ("$(PROF_DYNAMIC_LIBS)", "")
               $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(PROF_LIBDIR)/$$lib		\
                 $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/$$lib ;		\
+              cur_dir=`pwd` ;						\
+              cd $(INSTALL_LIBDIR_ABS)/$(PROF_DIR) ;			\
+              for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
+                 rm -f $$link && $(LN_S) $$lib $$link ;			\
+              done ;							\
+              cd $$cur_dir ;						\
            done ;							\
         done
 ifeq ($(OS_TYPE), Win32)
@@ -922,6 +968,14 @@ ifeq ($(OS_TYPE), Win32)
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(PROF_LIBDIR)/$$base_lib.lib	\
                 $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/$$base_lib.lib ;	\
+              cur_dir=`pwd` ;						\
+              cd $(INSTALL_LIBDIR_ABS)/$(PROF_DIR) ;			\
+              for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
+                 base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+                 rm -f $$base_link.lib &&				\
+                    $(LN_S) $$base_lib.lib $$base_link.lib ;		\
+              done ;							\
+              cd $$cur_dir ;						\
            done ;							\
         done
 endif
