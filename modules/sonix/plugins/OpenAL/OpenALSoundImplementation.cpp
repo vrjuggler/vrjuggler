@@ -665,9 +665,11 @@ void OpenALSoundImplementation::bind( const std::string& alias )
                << clrOutNORM(clrRED, "ERROR")
                << ": OpenAL| Failed to load '" << soundInfo.filename << "'\n"
                << vprDEBUG_FLUSH;
+#if defined(HAVE_ALUT_GET_ERROR)
             vprDEBUG_NEXT(snxDBG, vprDBG_CRITICAL_LVL)
                << alutGetErrorString(alutGetError()) << std::endl
                << vprDEBUG_FLUSH;
+#endif
             return;
          }
 
