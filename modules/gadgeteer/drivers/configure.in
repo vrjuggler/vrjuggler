@@ -588,6 +588,8 @@ AC_CONFIG_FILES([
    Ascension/Flock/Makefile
    Ascension/MotionStar/Makefile
    Ascension/Wanda/Makefile
+   Elexol/Makefile
+   Elexol/Ether24/Makefile
    Fakespace/Makefile
    Fakespace/PinchGlove/Makefile
    Immersion/Makefile

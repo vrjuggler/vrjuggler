@@ -60,7 +60,7 @@ DEFS		= @APP_DEFS@
 EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@ $(DEBUG_CFLAGS)
 DEBUG_CFLAGS	= @APP_DEBUG_CFLAGS@
 OPTIM_CFLAGS	= @APP_OPTIM_CFLAGS@
-INCLUDES	= @APP_INCLUDES@ -I$(srcdir) -I$(srcdir)/../ -I$(srcdir)/../gadget/Devices/Ascension
+INCLUDES	= @APP_INCLUDES@ -I$(srcdir) -I$(srcdir)/../ -I$(srcdir)/../gadget/Devices/Ascension -I$(srcdir)/../drivers/Elexol/Ether24
 
 EXTRA_LFLAGS	= @APP_EXTRA_LFLAGS@ $(DEBUG_LFLAGS)
 DEBUG_LFLAGS	= @APP_DEBUG_LFLAGS@
@@ -78,7 +78,9 @@ LINK		= @APP_LINK@ $(LINK_FLAGS)
 LINKALL_ON	= @APP_LINKALL_ON@
 LINKALL_OFF	= @APP_LINKALL_OFF@
 
-VPATH	= @srcdir@:@srcdir@/../drivers/Ascension/Flock:@srcdir@/../drivers/Fakespace/PinchGlove
+VPATH	= @srcdir@:@srcdir@/../drivers/Ascension/Flock:@srcdir@/../drivers/Fakespace/PinchGlove:@srcdir@/../drivers/Immersion/IBox:@srcdir@/../drivers/Elexol/Ether24
+
+ElexolTest_OBJS	= Ether24Standalone.@OBJEXT@ ElexolTest.@OBJEXT@
 
 aFlockTest_OBJS	= FlockStandalone.@OBJEXT@ aFlockTest.@OBJEXT@
 
@@ -107,6 +109,9 @@ FlockTest_OBJS	= FlockTest.@OBJEXT@
 # -----------------------------------------------------------------------------
 all: gadgetTest
 
+ElexolTest@EXEEXT@: $(ElexolTest_OBJS)
+	$(LINK) @EXE_NAME_FLAG@ $(ElexolTest_OBJS) @APP_EXTRA_LIBS@
+	
 aFlockTest@EXEEXT@: $(aFlockTest_OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(aFlockTest_OBJS) @APP_EXTRA_LIBS@
 
@@ -153,9 +158,9 @@ FlockTest@EXEEXT@: $(FlockTest_OBJS)
 # Clean-up targets.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend *.@OBJEXT@ aFlockTest.ilk aMotionStarTest.ilk dummyTrackd.ilk fsPinchGloveTest.ilk go.ilk go-ibox.ilk go-inputgroup.ilk go-logiclass.ilk FlockTest.ilk  so_locations *.?db core*
+	rm -f Makedepend *.@OBJEXT@ ElexolTest.ilk aFlockTest.ilk aMotionStarTest.ilk IBoxTest.ilk dummyTrackd.ilk fsPinchGloveTest.ilk go.ilk go-ibox.ilk go-inputgroup.ilk go-logiclass.ilk FlockTest.ilk  so_locations *.?db core*
 	rm -rf ii_files
 
 clobber:
 	@$(MAKE) clean
-	rm -f aFlockTest@EXEEXT@ aMotionStarTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@ FlockTest@EXEEXT@ 
+	rm -f ElexolTest@EXEEXT@ aFlockTest@EXEEXT@ aMotionStarTest@EXEEXT@ IBoxTest@EXEEXT@ dummyTrackd@EXEEXT@ fsPinchGloveTest@EXEEXT@ go@EXEEXT@ go-ibox@EXEEXT@ go-inputgroup@EXEEXT@ go-logiclass@EXEEXT@ FlockTest@EXEEXT@ 
