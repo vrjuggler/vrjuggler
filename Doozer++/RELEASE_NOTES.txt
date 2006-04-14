@@ -8,6 +8,31 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.1.0
+Released: April 14, 2006
+
+    Differences from 2.0:
+        * Static and shared library naming is left up to user-level
+          makefiles instead of being dictated by dpp.libs.targets.mk.
+          To update, the assignment of $(STATIC_LIBS) and $(DYNAMIC_LIBS)
+          would change as follows:
+
+          Doozer++ 2.0 version
+          --------------------
+          LIBS=		mylib1 mylib2
+          STATIC_LIBS=	mylib1.$(STATICLIB_EXT) mylib2.$(STATICLIB_EXT)
+          DYNAMIC_LIBS=	mylib1.$(DYNAMICLIB_EXT) mylib2.$(DYNAMICLIB_EXT)
+
+          Doozer++ 2.1 version
+          --------------------
+          LIBS=		mylib1 mylib2
+          STATIC_LIBS=	$$LIB.$(STATICLIB_EXT)
+          DYNAMIC_LIBS=	$$LIB.$(DYNAMICLIB_EXT)
+
+	  This allows for user-level makefiles to set up arbitrary naming
+	  conventions, including the use of versioning in any manner
+	  desired.
+
  Version: 2.0.0
 Released: February 16, 2005
 

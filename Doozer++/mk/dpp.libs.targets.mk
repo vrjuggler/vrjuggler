@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.targets.mk,v
-# Date modified: 2005/01/08 22:44:43
-# Version:       1.37
+# Date modified: 2006/04/14 19:06:12
+# Version:       1.38
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.37 2005/01/08 22:44:43 patrickh Exp
+# dpp.libs.targets.mk,v 1.38 2006/04/14 19:06:12 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
@@ -373,49 +373,63 @@ endif
 # Make symlinks in $(_LIB_LINK_DIR) pointing to the library binaries in
 # $(DEFAULT_DIR).
 lib.links.build:
+	@$(MAKE) LINK_DIR=$(_LIB_LINK_DIR) DEST_DIR=. lib.links.generic
+
+lib.links.generic:
 	@echo "------------------------------------------------"
-	@echo "Creating symlinks in $(_LIB_LINK_DIR)"
+	@echo "Creating symlinks in $(LINK_DIR)"
 	@echo "------------------------------------------------"
-ifdef _HAVE_PROF_LIBS
-ifneq ($(STATIC_LIBS), )
-	@for lib in $(STATIC_LIBS) ; do					\
-            cd $(_LIB_LINK_DIR) &&					\
-              rm -f ./$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) && \
-              $(LN_S) $(PROF_DIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) ./ ; \
-	done
-endif
-ifneq ($(DYNAMIC_LIBS), )
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            cd $(_LIB_LINK_DIR) &&					\
-              rm -f ./$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT) &&	\
-              $(LN_S) $(PROF_DIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT) ./ ; \
-	done
+	@for LIB in $(LIBS) ; do					\
+           cd $(LINK_DIR) ;						\
+           for lib in $(PROF_STATIC_LIBS) ; do				\
+              rm -f $$lib &&						\
+                $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$lib ;		\
+           done ;							\
+           for lib in $(STATIC_LIBS) ; do				\
+              rm -f $$lib &&						\
+                $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$lib ;	\
+           done ;							\
+           for lib in $(PROF_DYNAMIC_LIBS) ; do				\
+              rm -f $$lib &&						\
+                $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$lib ;		\
+              for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
+                 rm -f $$link &&					\
+                   $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$lib $$link ;	\
+              done ;							\
+           done ;							\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              rm -f $$lib &&						\
+                $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$lib ;	\
+              for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                 rm -f $$link &&					\
+                   $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$lib $$link ;	\
+              done ;							\
+           done ;							\
+        done
 ifeq ($(OS_TYPE), Win32)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            cd $(_LIB_LINK_DIR) &&					\
-              rm -f ./$${lib}$(PROFLIB_EXT).lib &&			\
-              $(LN_S) $(PROF_DIR)/$${lib}$(PROFLIB_EXT).lib ./ ;	\
-	done
-endif
-endif
-endif # ifdef _HAVE_PROF_LIBS
-ifneq ($(STATIC_LIBS), )
-	@for lib in $(STATIC_LIBS) ; do					\
-            cd $(_LIB_LINK_DIR) && rm -f ./$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) && \
-              $(LN_S) $(DEFAULT_DIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) ./ ; \
-	done
-endif
-ifneq ($(DYNAMIC_LIBS), )
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            cd $(_LIB_LINK_DIR) && rm -f ./$$lib.$(DYNAMICLIB_EXT) &&	\
-              $(LN_S) $(DEFAULT_DIR)/$$lib.$(DYNAMICLIB_EXT) ./ ;	\
-	done
-ifeq ($(OS_TYPE), Win32)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            cd $(_LIB_LINK_DIR) && rm -f ./$$lib.lib &&			\
-              $(LN_S) $(DEFAULT_DIR)/$$lib.lib ./ ;			\
-	done
-endif
+	@for LIB in $(LIBS) ; do					\
+           cd $(LINK_DIR) ;						\
+           for lib in $(PROF_DYNAMIC_LIBS) ; do				\
+              base_lib=`echo $$lib | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+              rm -f $$base_lib.lib &&					\
+                 $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$base_lib.lib $$base_lib.lib ;	\
+              for link in $(PROF_DYNAMIC_LIB_LINKS) ; do		\
+                 base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+                 rm -f $$base_link.lib &&				\
+                    $(LN_S) $(DEST_DIR)/$(PROF_DIR)/$$base_lib.lib $$base_link.lib ;	\
+              done ;							\
+           done ;							\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              base_lib=`echo $$lib | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+              rm -f $$base_lib.lib &&		 			\
+                 $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$base_lib.lib $$base_lib.lib ;	\
+              for link in $(DYNAMIC_LIB_LINKS) ; do			\
+                 base_link=`echo $$link | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+                 rm -f $$base_link.lib &&				\
+                    $(LN_S) $(DEST_DIR)/$(DEFAULT_DIR)/$$base_lib.lib $$base_link.lib ; \
+              done ;							\
+           done ;							\
+        done
 endif
 
 # ----------------------------------------------------------------------------
@@ -548,84 +562,80 @@ lib.static.dbg.build:
 	@echo "================================================"
 	@echo "Building static debugging libraries"
 	@echo "================================================"
-ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$lib" LIBDIR="$(DBG_LIBDIR)" \
-              EXTRA_LDOPTS="$(LDOPTS_DBG)" DBG_LIB_BUILD=1		\
-              $(DBG_LIBDIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) ||	\
-                exit 1;							\
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(STATIC_LIBS) ; do				\
+              $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$LIB"			\
+                LIBDIR="$(DBG_LIBDIR)" EXTRA_LDOPTS="$(LDOPTS_DBG)"	\
+                DBG_LIB_BUILD=1 $(DBG_LIBDIR)/$$lib || exit 1;		\
+           done ;							\
+        done
 
 # Build the dynamic libraries with the debugging flags enabled.
 lib.dynamic.dbg.build:
 	@echo "================================================"
 	@echo "Building dynamic debugging libraries"
 	@echo "================================================"
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$lib" LIBDIR="$(DBG_LIBDIR)" \
-              EXTRA_LDOPTS="$(LDOPTS_DBG)" DBG_LIB_BUILD=1		\
-              $(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) || exit 1;		\
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$LIB"			\
+                LIBDIR="$(DBG_LIBDIR)" EXTRA_LDOPTS="$(LDOPTS_DBG)"	\
+                DBG_LIB_BUILD=1 $(DBG_LIBDIR)/$$lib || exit 1;		\
+           done ;							\
+        done
 
 # Build the static libraries with the optimization flags enabled.
 lib.static.opt.build:
 	@echo "================================================"
 	@echo "Building static optmized libraries"
 	@echo "================================================"
-ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$lib" LIBDIR="$(OPT_LIBDIR)" \
-              EXTRA_LDOPTS="$(LDOPTS_OPT)" OPT_LIB_BUILD=1		\
-              $(OPT_LIBDIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT)	\
-                || exit 1;						\
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(STATIC_LIBS) ; do				\
+              $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$LIB"			\
+                LIBDIR="$(OPT_LIBDIR)" EXTRA_LDOPTS="$(LDOPTS_OPT)"	\
+                OPT_LIB_BUILD=1 $(OPT_LIBDIR)/$$lib || exit 1;		\
+           done ;							\
+        done
 
 # Build the dynamic libraries with the optimization flags enabled.
 lib.dynamic.opt.build:
 	@echo "================================================"
 	@echo "Building dynamic optmized libraries"
 	@echo "================================================"
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$lib" LIBDIR="$(OPT_LIBDIR)" \
-              EXTRA_LDOPTS="$(LDOPTS_OPT)" OPT_LIB_BUILD=1		\
-              $(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) || exit 1;		\
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$LIB"			\
+                LIBDIR="$(OPT_LIBDIR)" EXTRA_LDOPTS="$(LDOPTS_OPT)"	\
+                OPT_LIB_BUILD=1 $(OPT_LIBDIR)/$$lib || exit 1;		\
+           done ;							\
+        done
 
 # Build the static libraries with the profiling flags enabled.
 lib.static.prof.build:
 	@echo "================================================"
 	@echo "Building static profiled libraries"
 	@echo "================================================"
-ifneq ("$(STATIC_LIBS)", "")
-	for lib in $(STATIC_LIBS) ; do					\
-            $(MAKE) OBJDIR="$(PROF_BUILDDIR)/$$lib"			\
-              LIBDIR="$(PROF_LIBDIR)" PROF_LIB_BUILD=1			\
-              EXTRA_LDOPTS="$(LDOPTS_PROF)"				\
-              $(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) \
-                || exit 1;						\
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(PROF_STATIC_LIBS) ; do				\
+              $(MAKE) OBJDIR="$(PROF_BUILDDIR)/$$LIB"			\
+                LIBDIR="$(PROF_LIBDIR)" PROF_LIB_BUILD=1		\
+                EXTRA_LDOPTS="$(LDOPTS_PROF)"				\
+                $(PROF_LIBDIR)/$$lib || exit 1;				\
+           done ;							\
+        done
 
 # Build the dynamic libraries with the profiling flags enabled.
 lib.dynamic.prof.build:
 	@echo "================================================"
 	@echo "Building dynamic profiled libraries"
 	@echo "================================================"
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            $(MAKE) OBJDIR="$(PROF_BUILDDIR)/$$lib"			\
-              LIBDIR="$(PROF_LIBDIR)" PROF_LIB_BUILD=1			\
-              EXTRA_LDOPTS="$(LDOPTS_PROF)"				\
-              $(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)	\
-                || exit 1;						\
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(PROF_DYNAMIC_LIBS) ; do				\
+              $(MAKE) OBJDIR="$(PROF_BUILDDIR)/$$LIB"			\
+                LIBDIR="$(PROF_LIBDIR)" PROF_LIB_BUILD=1		\
+                EXTRA_LDOPTS="$(LDOPTS_PROF)"				\
+                $(PROF_LIBDIR)/$$lib || exit 1;				\
+           done ;							\
+        done
 
 # =============================================================================
 # Installation targets.  The default (what is done by 'install') is to install
@@ -730,13 +740,14 @@ ifdef PREINSTALL
 	@$(MAKE) $(PREINSTALL)
 endif
 ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            echo "$(DBG_LIBDIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) ==> $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/" ; \
-            $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS)					\
-              $(DBG_LIBDIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT)	\
-              $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/ ;			\
-          done
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(STATIC_LIBS) ; do				\
+              echo "$(DBG_LIBDIR)/$$lib ==> $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/" ; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(DBG_LIBDIR)/$$lib $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/ ;	\
+           done ;							\
+        done
 	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" lib.links.install
 endif
 
@@ -751,27 +762,24 @@ ifdef PREINSTALL
 	@$(MAKE) $(PREINSTALL)
 endif
 ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ==> $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/" ; \
-            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS)					\
-              $(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
-              $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ; \
-          done
-ifneq ($(DYNAMICLIB_VER), )
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            cd $(INSTALL_LIBDIR_ABS)/$(DBG_DIR) &&			\
-              rm -f $$lib.$(DYNAMICLIB_EXT) ;				\
-              $(LN_S) $$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) $$lib.$(DYNAMICLIB_EXT) ; \
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              echo "$(DBG_LIBDIR)/$$lib ==> $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/" ; \
+              $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(DBG_LIBDIR)/$$lib		\
+                $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/$$lib ;		\
+           done ;							\
+        done
 ifeq ($(OS_TYPE), Win32)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(DBG_LIBDIR)/$$lib.lib ==> $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/" ; \
-            $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS) $(DBG_LIBDIR)/$$lib.lib		\
-              $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/$$lib.lib ;		\
-          done
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              base_lib=`echo $$lib | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+              echo "$(DBG_LIBDIR)/$$base_lib.lib ==> $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/" ; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(DBG_LIBDIR)/$$base_lib.lib	\
+                $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/$$base_lib.lib ;	\
+           done ;							\
+        done
 endif
 	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" lib.links.install
 endif
@@ -804,13 +812,14 @@ ifdef PREINSTALL
 	@$(MAKE) $(PREINSTALL)
 endif
 ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            echo "$(OPT_LIBDIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) ==> $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/" ; \
-            $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS)					\
-              $(OPT_LIBDIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT)	\
-              $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/ ;			\
-          done
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(STATIC_LIBS) ; do				\
+              echo "$(OPT_LIBDIR)/$$lib ==> $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/" ; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(OPT_LIBDIR)/$$lib		\
+                $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/ ;			\
+           done ;							\
+        done
 	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" lib.links.install
 endif
 
@@ -825,27 +834,24 @@ ifdef PREINSTALL
 	@$(MAKE) $(PREINSTALL)
 endif
 ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ==> $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/" ; \
-            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS)					\
-              $(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
-              $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ; \
-          done
-ifneq ($(DYNAMICLIB_VER), )
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            cd $(INSTALL_LIBDIR_ABS)/$(OPT_DIR) &&			\
-              rm -f $$lib.$(DYNAMICLIB_EXT) ;				\
-              $(LN_S) $$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) $$lib.$(DYNAMICLIB_EXT) ; \
-          done
-endif
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              echo "$(OPT_LIBDIR)/$$lib ==> $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/" ; \
+              $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(OPT_LIBDIR)/$$lib		\
+                $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/$$lib ;		\
+           done ;							\
+        done
 ifeq ($(OS_TYPE), Win32)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(OPT_LIBDIR)/$$lib.lib ==> $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/" ; \
-            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS) $(OPT_LIBDIR)/$$lib.lib		\
-              $(INSTALL_LIBDIR_ABS)/$(OPT_DIR) ;			\
-          done
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(DYNAMIC_LIBS) ; do				\
+              base_lib=`echo $$lib | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+              echo "$(OPT_LIBDIR)/$$base_lib.lib ==> $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/" ; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(OPT_LIBDIR)/$$base_lib.lib	\
+                $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/$$base_lib.lib ;	\
+           done ;							\
+        done
 endif
 	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" lib.links.install
 endif
@@ -878,13 +884,14 @@ ifdef PREINSTALL
 	@$(MAKE) $(PREINSTALL)
 endif
 ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            echo "$(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) ==> $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/" ; \
-            $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS)					\
-              $(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) \
-              $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/ ;			\
-          done
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(PROF_STATIC_LIBS) ; do				\
+              echo "$(PROF_LIBDIR)/$$lib ==> $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/" ; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(PROF_LIBDIR)/$$lib		\
+                $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/ ;			\
+           done ;							\
+        done
 	@$(MAKE) DEFAULT_DIR="$(PROF_DIR)" _HAVE_PROF_LIBS=1 lib.links.install
 endif
 
@@ -898,29 +905,25 @@ install-prof-dso:
 ifdef PREINSTALL
 	@$(MAKE) $(PREINSTALL)
 endif
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT) ==> $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/" ; \
-            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS)					\
-              $(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)	\
-              $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ; \
-          done
-ifneq ($(DYNAMICLIB_VER), )
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            cd $(INSTALL_LIBDIR_ABS)/$(PROF_DIR) &&			\
-              rm -f $${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT) ;		\
-              $(LN_S) $${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) $${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT) ; \
-          done
-endif
+ifneq ("$(PROF_DYNAMIC_LIBS)", "")
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(PROF_DYNAMIC_LIBS) ; do				\
+              echo "$(PROF_LIBDIR)/$$lib ==> $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/" ; \
+              $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(PROF_LIBDIR)/$$lib		\
+                $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/$$lib ;		\
+           done ;							\
+        done
 ifeq ($(OS_TYPE), Win32)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT).lib ==> $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/" ; \
-            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
-              $(EXTRA_INSTALL_ARGS)					\
-              $(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT).lib			\
-              $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/$${lib}$(PROFLIB_EXT).lib ; \
-          done
+	@for LIB in $(LIBS) ; do					\
+           for lib in $(PROF_DYNAMIC_LIBS) ; do				\
+              base_lib=`echo $$lib | sed -e 's/\.$(DYNAMICLIB_EXT)$$//'` ; \
+              echo "$(PROF_LIBDIR)/$$base_lib.lib ==> $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/" ; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(PROF_LIBDIR)/$$base_lib.lib	\
+                $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/$$base_lib.lib ;	\
+           done ;							\
+        done
 endif
 	@$(MAKE) DEFAULT_DIR="$(PROF_DIR)" _HAVE_PROF_LIBS=1 lib.links.install
 endif
@@ -930,135 +933,10 @@ endif
 lib.links.install:
 ifndef NOLINK
 ifdef MAKE_REL_SYMLINKS
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in $(libdir)$(LIBBITSUF)"
-	@echo "------------------------------------------------"
-ifdef _HAVE_PROF_LIBS
-ifneq ($(STATIC_LIBS), )
-	@for lib in $(STATIC_LIBS) ; do				\
-	  echo "$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) -> $(INSTALL_LIBDIR_REL)/$(PROF_DIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)" ; \
-          cur_dir=`pwd` ;						\
-          cd $(libdir)$(LIBBITSUF) && umask $(UMASK) &&		\
-            rm -f ./$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) && \
-            $(LN_S) $(INSTALL_LIBDIR_REL)/$(PROF_DIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) ./ ; \
-          cd "$$cur_dir" ;						\
-	done
-endif # ifneq ($(STATIC_LIBS), )
-ifneq ($(DYNAMIC_LIBS), )
-	@vals=`echo $(DYNAMICLIB_VER) | sed -e 's/\./ ./g' -e 's/^ *//'` ; \
-	for lib in $(DYNAMIC_LIBS) ; do				\
-          full_ver='' ;						\
-          for val in '' $$vals ; do					\
-              full_ver="$$full_ver$$val" ;				\
-              echo "$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$$full_ver -> $(INSTALL_LIBDIR_REL)/$(PROF_DIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)" ; \
-	      cur_dir=`pwd` ;						\
-	      cd $(libdir)$(LIBBITSUF) && umask $(UMASK) &&		\
-		rm -f ./$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$$full_ver && \
-		$(LN_S) $(INSTALL_LIBDIR_REL)/$(PROF_DIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ./$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$$full_ver ; \
-	      cd "$$cur_dir" ;					\
-	  done ;							\
-	done
-endif # ifneq ($(DYNAMIC_LIBS), )
-endif # ifdef _HAVE_PROF_LIBS
-ifneq ($(STATIC_LIBS), )
-	@for lib in $(STATIC_LIBS) ; do				\
-	  echo "$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) -> $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT)" ; \
-	  cur_dir=`pwd` ;						\
-	  cd $(libdir)$(LIBBITSUF) && umask $(UMASK) &&		\
-	    rm -f ./$$lib.$(STATICLIB_EXT) &&				\
-	    $(LN_S) $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) ./ ; \
-	  cd "$$cur_dir" ;						\
-	done
-endif # ifneq ($(STATIC_LIBS), )
-ifneq ($(DYNAMIC_LIBS), )
-	@vals=`echo $(DYNAMICLIB_VER) | sed -e 's/\./ ./g' -e 's/^ *//'` ; \
-	for lib in $(DYNAMIC_LIBS) ; do				\
-	  full_ver='' ;						\
-	  for val in '' $$vals ; do					\
-	      full_ver="$$full_ver$$val" ;				\
-	      echo "$$lib.$(DYNAMICLIB_EXT)$$full_ver -> $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)" ; \
-	      cur_dir=`pwd` ;						\
-	      cd $(libdir)$(LIBBITSUF) && umask $(UMASK) &&		\
-		rm -f ./$$lib.$(DYNAMICLIB_EXT)$$full_ver &&		\
-		$(LN_S) $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ./$$lib.$(DYNAMICLIB_EXT)$$full_ver ; \
-	      cd "$$cur_dir" ;					\
-	  done ;							\
-	done
-ifeq ($(OS_TYPE), Win32)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$$lib.lib -> $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$$lib.lib" ; \
-            cur_dir=`pwd` ;						\
-            cd $(libdir)$(LIBBITSUF) && rm -f ./$$lib.lib &&		\
-              $(LN_S) $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$$lib.lib ./$$lib.lib ; \
-            cd "$$cur_dir" ;						\
-          done
-endif # ifeq ($(OS_TYPE), Win32)
-endif # ifneq ($(DYNAMIC_LIBS), )
+	@$(MAKE) LINK_DIR=$(libdir)$(LIBBITSUF)				\
+          DEST_DIR=$(INSTALL_LIBDIR_REL) lib.links.generic
 endif # ifdef MAKE_REL_SYMLINKS
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in $(INSTALL_LIBDIR_ABS)"
-	@echo "------------------------------------------------"
-ifdef _HAVE_PROF_LIBS
-ifneq ($(STATIC_LIBS), )
-	@for lib in $(STATIC_LIBS) ; do				\
-	  echo "$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) -> $(DEFAULT_DIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)" ; \
-	  cur_dir=`pwd` ;						\
-	  cd $(INSTALL_LIBDIR_ABS) && umask $(UMASK) &&		\
-	    rm -f ./$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) &&		\
-	    $(LN_S) $(PROF_DIR)/$${lib}$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT) ./ ; \
-	  cd "$$cur_dir" ;						\
-	done
-endif # ifneq ($(STATIC_LIBS), )
-ifneq ($(DYNAMIC_LIBS), )
-	@vals=`echo $(DYNAMICLIB_VER) | sed -e 's/\./ ./g' -e 's/^ *//'` ; \
-	for lib in $(DYNAMIC_LIBS) ; do				\
-	  full_ver='' ;						\
-	  for val in '' $$vals ; do					\
-	      full_ver="$$full_ver$$val" ;				\
-	      echo "$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$$full_ver -> $(DEFAULT_DIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)" ; \
-	      cur_dir=`pwd` ;						\
-	      cd $(INSTALL_LIBDIR_ABS) && umask $(UMASK) &&		\
-		rm -f ./$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$$full_ver && \
-		$(LN_S) $(PROF_DIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ./$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$$full_ver ; \
-	      cd "$$cur_dir" ;					\
-	  done ;							\
-	done
-endif # ifneq ($(DYNAMIC_LIBS), )
-endif
-ifneq ($(STATIC_LIBS), )
-	@for lib in $(STATIC_LIBS) ; do				\
-	  echo "$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) -> $(DEFAULT_DIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT)" ; \
-	  cur_dir=`pwd` ;						\
-	  cd $(INSTALL_LIBDIR_ABS) && umask $(UMASK) &&			\
-	    rm -f ./$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) &&		\
-	    $(LN_S) $(DEFAULT_DIR)/$${lib}$(STATIC_SUFFIX).$(STATICLIB_EXT) ./ ;	\
-	  cd "$$cur_dir" ;						\
-	done
-endif # ifneq ($(STATIC_LIBS), )
-ifneq ($(DYNAMIC_LIBS), )
-	@vals=`echo $(DYNAMICLIB_VER) | sed -e 's/\./ ./g' -e 's/^ *//'` ; \
-	for lib in $(DYNAMIC_LIBS) ; do				\
-	  full_ver='' ;						\
-	  for val in '' $$vals ; do					\
-	      full_ver="$$full_ver$$val" ;				\
-	      echo "$$lib.$(DYNAMICLIB_EXT)$$full_ver -> $(DEFAULT_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)" ; \
-	      cur_dir=`pwd` ;						\
-	      cd $(INSTALL_LIBDIR_ABS) && umask $(UMASK) &&		\
-		rm -f ./$$lib.$(DYNAMICLIB_EXT)$$full_ver &&		\
-		$(LN_S) $(DEFAULT_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ./$$lib.$(DYNAMICLIB_EXT)$$full_ver ; \
-	      cd "$$cur_dir" ;					\
-	  done ;							\
-	done
-ifeq ($(OS_TYPE), Win32)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$$lib.lib -> $(DEFAULT_DIR)/$$lib.lib" ;		\
-            cur_dir=`pwd` ;						\
-            cd $(INSTALL_LIBDIR_ABS) && rm -f ./$$lib.lib &&		\
-              $(LN_S) $(DEFAULT_DIR)/$$lib.lib ./$$lib.lib ;		\
-            cd "$$cur_dir" ;						\
-          done
-endif # ifeq ($(OS_TYPE), Win32)
-endif # ifneq ($(DYNAMIC_LIBS), )
+	@$(MAKE) LINK_DIR=$(INSTALL_LIBDIR_ABS) DEST_DIR=. lib.links.generic
 endif # ifndef NOLINK
 
 # Install the header files.

@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2005/01/08 22:44:41
-dnl Version:       1.20
+dnl Date modified: 2006/04/14 00:37:37
+dnl Version:       1.21
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -45,7 +45,7 @@ dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.20 2005/01/08 22:44:41 patrickh Exp
+dnl openal.m4,v 1.21 2006/04/14 00:37:37 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
