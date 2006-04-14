@@ -156,6 +156,16 @@ public:
       option.mcast_drop_member = request;
       setOption(SocketOptions::DropMember, option);
    }
+
+   /**
+    *
+    */
+   void setBroadcast(const bool val) throw (IOException)
+   {
+      vpr::SocketOptions::Data option;
+      option.broadcast = val;
+      setOption(SocketOptions::Broadcast, option);
+   }
 };
 
 } // End of vpr namespace

@@ -577,6 +577,11 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
          opt_name  = SO_SNDBUF;
          opt_size  = sizeof(opt_data.size);
          break;
+      case vpr::SocketOptions::Broadcast:
+         opt_level = SOL_SOCKET;
+         opt_name  = SO_BROADCAST;
+         opt_size  = sizeof(opt_data.enabled);
+         break;
 
       // IP-level options.
       case vpr::SocketOptions::IpTimeToLive:
@@ -697,6 +702,9 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
          case vpr::SocketOptions::NoDelay:
             data.no_delay = (opt_data.enabled != 0 ? true : false);
             break;
+         case vpr::SocketOptions::Broadcast:
+            data.broadcast = (opt_data.enabled != 0 ? true : false);
+            break;
          case vpr::SocketOptions::MaxSegment:
             data.max_segment = opt_data.size;
             break;
@@ -769,6 +777,13 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
          opt_data.size = data.send_buffer_size;
          opt_size      = sizeof(size_t);
          break;
+      case vpr::SocketOptions::Broadcast:
+         opt_level = SOL_SOCKET;
+         opt_name  = SO_BROADCAST;
+         opt_data.enabled = (data.broadcast ? 1 : 0);
+         opt_size  = sizeof(int);
+         break;
+
 
       // IP-level options.
       case vpr::SocketOptions::IpTimeToLive:
