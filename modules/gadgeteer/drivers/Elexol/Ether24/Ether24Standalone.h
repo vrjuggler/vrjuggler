@@ -36,21 +36,22 @@
 #include <vpr/vpr.h>
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
-#include <vpr/Util/Exception.h>
 
 #include <boost/algorithm/string.hpp>
 
 #include <map>
+#include <stdexcept>
 
 namespace Elexol
 {
    // ------ Elexol exceptions ------ //
    /** Base exception for Elexol errors. */
-   class ElexolException : public vpr::Exception
+   class ElexolException : public std::runtime_error
    {
    public:
-      ElexolException(const std::string& msg, const std::string& location = "")
-         : vpr::Exception(msg, location)
+      ElexolException(const std::string& msg)
+         : std::runtime_error(msg)
+         , mDescription(msg)
       {
          /* Do nothing. */ ;
       }
@@ -59,6 +60,13 @@ namespace Elexol
       {
          /* Do nothing. */ ;
       }
+   
+      virtual const char* what() const throw()
+      {
+         std::string m_full_desc = "ElexolException: " + mDescription;
+         return m_full_desc.c_str();
+      }
+      std::string mDescription;
    };
 
    struct is_iless
@@ -207,8 +215,6 @@ public:
     *
     * @param addr The address of the device to communicate with.
     *
-    * @throw vpr::SocketException is thrown if the UDP socket could
-    *        not be created.
     */
    void open(vpr::InetAddr& addr);
 
@@ -415,11 +421,12 @@ private:
     * Returns the state for the specified command type.
     *
     * @pre This driver must be active (open has been called)
-    * @param port The port that you wish to change the direction value for.
+    * @param port The port that you wish to change the state value for.
     * @param command The command type.
     *
-    * @throw vpr::IOException if an error occured while communicating with
+    * @throw Elexol::ElexolException if an error occured while communicating with
     *        the Elxexol Ether I/O 24 device.
+    *
     * @see Elexol::Port
     */
    vpr::Uint8 getState(const Elexol::Port port,
@@ -429,11 +436,12 @@ private:
     * Sets the state for the specified command type.
     *
     * @pre This driver must be active (open has been called)
-    * @param port The port that you wish to change the direction value for.
+    * @param port The port that you wish to change the state for.
     * @param command The command type.
     *
-    * @throw vpr::IOException if an error occured while communicating with
+    * @throw Elexol::ElexolException if an error occured while communicating with
     *        the Elxexol Ether I/O 24 device.
+    *
     * @see Elexol::Port
     */
    void setState(const Elexol::Port port, const Elexol::CommandType command,

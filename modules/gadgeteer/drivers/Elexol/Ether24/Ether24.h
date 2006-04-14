@@ -71,7 +71,7 @@ public:
    virtual bool startSampling();
 
    /** Main thread of control for this active object. */
-   void controlLoop();
+   void controlLoop(void* nullParam);
 
    /** Stops sampling. */
    virtual bool stopSampling();

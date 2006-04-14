@@ -36,7 +36,6 @@
 #include <map>
 #include <string>
 
-#include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/Util/Debug.h>
@@ -52,16 +51,13 @@ void Ether24Standalone::open(vpr::InetAddr& addr)
          << " =====" << std::endl << vprDEBUG_FLUSH;
       // Open UDP connection.
       mSocket = new vpr::SocketDatagram();
-      try
-      {
-         mSocket->open();
-      }
-      catch (vpr::IOException& ex)
+
+      if (!mSocket->open().success())
       {
          delete mSocket;
          mSocket = NULL;
          mActive = false;
-         throw ex;
+         throw Elexol::ElexolException("Could not open socket");
       }
       mAddress = addr;
       mActive = true;
@@ -105,48 +101,44 @@ Elexol::device_map_t Ether24Standalone::getDevicesByMacAddress()
    vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_WARNING_LVL)
       << "=== Elexol Ether I/O 24 Devices Found ==="
       << std::endl << vprDEBUG_FLUSH;
-   try
+
+   vpr::ReturnStatus status(vpr::ReturnStatus::Succeed);
+
+   while (status.success())
    {
-      while (true)
+      vpr::Interval read_timeout(1, vpr::Interval::Sec);
+      status = socket->recvfrom(response, 12, from, bytes_read, read_timeout);
+      vpr::BufferObjectReader reader(&response);
+      std::string cmd_string((char*)reader.readRaw(4));
+
+      std::stringstream mac_ss;
+      std::stringstream fw_ss;
+
+      vpr::Uint8* mac_address = reader.readRaw(6);
+      vpr::Uint8* fw_version = reader.readRaw(2);
+      mac_ss << std::hex << std::setfill('0')
+         << std::setw(2) << (int)mac_address[0] << ":"
+         << std::setw(2) << (int)mac_address[1] << ":"
+         << std::setw(2) << (int)mac_address[2] << ":"
+         << std::setw(2) << (int)mac_address[3] << ":"
+         << std::setw(2) << (int)mac_address[4] << ":"
+         << std::setw(2) << (int)mac_address[5] << std::dec;
+      fw_ss << (int)fw_version[0] << "." << (int)fw_version[1];
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[" << mac_ss.str() << "] [" << fw_ss.str() << "] [" << from.getAddressString()
+         << ":" << from.getPort() << "]" << std::endl << vprDEBUG_FLUSH;
+
+      if (mac_to_addr_map.find(mac_ss.str()) != mac_to_addr_map.end())
       {
-         vpr::Interval read_timeout(1, vpr::Interval::Sec);
-         socket->recvfrom(response, 12, from, bytes_read, read_timeout);
-         vpr::BufferObjectReader reader(&response);
-         std::string cmd_string((char*)reader.readRaw(4));
-
-         std::stringstream mac_ss;
-         std::stringstream fw_ss;
-   
-         vpr::Uint8* mac_address = reader.readRaw(6);
-         vpr::Uint8* fw_version = reader.readRaw(2);
-         mac_ss << std::hex << std::setfill('0')
-            << std::setw(2) << (int)mac_address[0] << ":"
-            << std::setw(2) << (int)mac_address[1] << ":"
-            << std::setw(2) << (int)mac_address[2] << ":"
-            << std::setw(2) << (int)mac_address[3] << ":"
-            << std::setw(2) << (int)mac_address[4] << ":"
-            << std::setw(2) << (int)mac_address[5] << std::dec;
-         fw_ss << (int)fw_version[0] << "." << (int)fw_version[1];
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "[" << mac_ss.str() << "] [" << fw_ss.str() << "] [" << from.getAddressString()
-            << ":" << from.getPort() << "]" << std::endl << vprDEBUG_FLUSH;
-
-         if (mac_to_addr_map.find(mac_ss.str()) != mac_to_addr_map.end())
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-               << "WARNING: Already have a response for a device with MAC: "
-               << mac_ss.str() << std::endl << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            mac_to_addr_map[mac_ss.str()] = from;
-         }
-         
+            << "WARNING: Already have a response for a device with MAC: "
+            << mac_ss.str() << std::endl << vprDEBUG_FLUSH;
       }
-   }
-   catch (vpr::SocketException& ex)
-   {
-      /* Do nothing. */
+      else
+      {
+         mac_to_addr_map[mac_ss.str()] = from;
+      }
+      
    }
 
    vprDEBUG_END(vprDBG_ALL, vprDBG_WARNING_LVL)
@@ -181,30 +173,37 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
       << std::endl << vprDEBUG_FLUSH;
 
    vpr::Uint32 bytes_sent;
-   mSocket->sendto(cmd, cmd.size(), mAddress, bytes_sent);
+   if(!mSocket->sendto(cmd, cmd.size(), mAddress, bytes_sent).success())
+   {
+      throw Elexol::ElexolException("Error sending command: " + cmd);
+   }
 
    vpr::InetAddr from;
    vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
    vpr::Interval read_timeout(5, vpr::Interval::Sec);
-   mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
+
+   // Try reading data
+   vpr::ReturnStatus status
+      = mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
+   if(status.timeout())
+   {
+      throw Elexol::ElexolException("Timeour");
+   }
+   else if(!status.success())
+   {
+      throw Elexol::ElexolException("Error reading data.");
+   }
+
 
    if (Elexol::Command::Value == command)
    {
-      if (Elexol::Command::PortWriteOffset + port != response[0])
-      {
-         throw Elexol::ElexolException("Response does not match command sent.",
-            VPR_LOCATION);
-      }
+      vprASSERT(Elexol::Command::PortWriteOffset + port == response[0]);
    }
    else
    {
-      if(cmd[0] != response[0] ||
-         Elexol::Command::PortWriteOffset + port != response[1])
-      {
-         throw Elexol::ElexolException("Response does not match command sent.",
-            VPR_LOCATION);
-      }
+      vprASSERT(cmd[0] == response[0])
+      vprASSERT(Elexol::Command::PortWriteOffset + port == response[1]);
    }
    return response[response.size()-1];
 }
@@ -382,18 +381,22 @@ std::pair<vpr::Uint8, vpr::Uint8>
    std::vector<vpr::Uint8> response(0);
 
    vpr::Interval read_timeout(5, vpr::Interval::Sec);
-   mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
 
-   if (Elexol::Command::ReadWord != response[0])
+   // Try to read data
+   vpr::ReturnStatus status
+      = mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
+
+   if(status.timeout())
    {
-      throw Elexol::ElexolException("Response does not match command sent.",
-         VPR_LOCATION);
+      throw Elexol::ElexolException("Timeour");
    }
-   if (address != response[1])
+   else if(!status.success())
    {
-      throw Elexol::ElexolException("Response address does not match requested address.",
-         VPR_LOCATION);
+      throw Elexol::ElexolException("Error reading data.");
    }
+
+   vprASSERT(Elexol::Command::ReadWord == response[0]);
+   vprASSERT(address == response[1]);
    //std::cout << "Response [" << (int)response[2] << "][" << (int)response[3] << "]" << std::endl;
    return std::pair<vpr::Uint8, vpr::Uint8>(response[2], response[3]);
 }

@@ -160,8 +160,10 @@ Ether24::~Ether24() throw ()
 }
 
 // Main thread of control for this active object
-void Ether24::controlLoop()
+void Ether24::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    // Loop through and keep sampling until stopSampleing is called.
    while(!mDone)
    {
@@ -197,7 +199,7 @@ bool Ether24::startSampling()
       mDevice.open(mAddress);
       mActive = true;
    }
-   catch (vpr::Exception& ex)
+   catch (Elexol::ElexolException& ex)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
@@ -211,7 +213,10 @@ bool Ether24::startSampling()
    mDone = false;
 
    // Create a new thread to handle the control
-   mThread = new vpr::Thread(boost::bind(&Ether24::controlLoop, this));
+   vpr::ThreadMemberFunctor<Ether24>* run_thread =
+      new vpr::ThreadMemberFunctor<Ether24>(this, &Ether24::controlLoop, NULL);
+
+   mThread = new vpr::Thread(run_thread);
 
    if ( ! mThread->valid() )
    { return false; }
@@ -276,14 +281,14 @@ bool Ether24::sample()
       port_values.push_back(mInvertB ^ mDevice.getValue(Elexol::PortB));
       port_values.push_back(mInvertC ^ mDevice.getValue(Elexol::PortC));
    }
-   catch(vpr::Exception& ex)
+   catch (Elexol::ElexolException& ex)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "gadget::Ether24::sample() caught exception: ")
          << ex.what() << std::endl << vprDEBUG_FLUSH;
       return false;
    }
-   catch(...)
+   catch (...)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "gadget::Ether24::sample() caught unknown exception")
