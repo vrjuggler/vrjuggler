@@ -61,14 +61,14 @@ vpath %.in $(srcdir)
 
 # These are necessary to deal with the last-resort rule at the end of the file.
 Makefile.pre: ;
-configure.in: ;
+configure.ac: ;
 Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 
-configure: configure.in $(M4_DEPS)
+configure: configure.ac $(M4_DEPS)
 	cd $(srcdir) && ./autogen.sh
 
 config.status: configure ;
