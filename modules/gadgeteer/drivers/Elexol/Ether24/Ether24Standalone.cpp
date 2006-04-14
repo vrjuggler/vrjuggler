@@ -144,7 +144,7 @@ Elexol::device_map_t Ether24Standalone::getDevicesByMacAddress()
          
       }
    }
-   catch (vpr::TimeoutException& ex)
+   catch (vpr::SocketException& ex)
    {
       /* Do nothing. */
    }

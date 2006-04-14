@@ -182,7 +182,7 @@ public:
    /**
     *
     */
-   void setBroadcast(const bool val) throw (IOException)
+   void setBroadcast(const bool val)
    {
       vpr::SocketOptions::Data option;
       option.broadcast = val;
