@@ -158,7 +158,7 @@ public:
    }
 
    /**
-    *
+    * @since 1.1.17
     */
    void setBroadcast(const bool val) throw (IOException)
    {
