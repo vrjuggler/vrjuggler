@@ -1,0 +1,19 @@
+.SUFFIXES: .cpp .o
+
+CXX ?= g++
+LINK ?= g++
+
+INCLUDE = -I. 
+CCFLAGS = 
+COMPILE = $(CXX) $(INCLUDE) -g
+OBJECTS = standalone_sync.o
+LIB = -lm -lglut -lGL -lGLU
+
+test_sync: $(OBJECTS)
+	$(LINK) -o $@ $(OBJECTS) $(LIB)
+
+clean:
+	rm *.o
+
+.cpp.o:
+	$(COMPILE) -o $@ -c $(CCFLAGS) $<
