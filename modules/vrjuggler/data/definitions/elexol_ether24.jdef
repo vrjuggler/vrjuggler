@@ -22,18 +22,6 @@
             <enum label="Static IP" value="static_ip" />
          </enumeration>
       </property>
-      <property valuetype="integer" variable="false" name="autoscan_maska">
-         <help></help>
-         <value label="AutoScan Port A Mask " defaultvalue="255" />
-      </property>
-      <property valuetype="integer" variable="false" name="autoscan_maskb">
-         <help></help>
-         <value label="AutoScan Port B mask" defaultvalue="255" />
-      </property>
-      <property valuetype="integer" variable="false" name="autoscan_maskc">
-         <help></help>
-         <value label="AutoScan Port C Mask" defaultvalue="255" />
-      </property>
       <property valuetype="configelement" variable="false" name="port_a">
          <help>Port A Settings</help>
          <value label="Port A"/>
