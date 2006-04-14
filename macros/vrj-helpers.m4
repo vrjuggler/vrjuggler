@@ -294,6 +294,31 @@ AC_DEFUN([VJ_COMPILER_SETUP],
     DPP_CXX_TEMPLATES([AC_MSG_ERROR([*** The library requires C++ template support ***])])
 ])
 
+AC_DEFUN([VJ_LINKER_SETUP],
+[
+   AC_REQUIRE([DPP_SYSTEM_SETUP])
+
+   DPP_PROG_LINKER
+
+   HAVE_LD_SONAME='N'
+   LD_SONAME_FLAG=''
+   CC_SONAME_FLAG=''
+
+   if test "x$PLATFORM" = "xIRIX" ; then
+      HAVE_LD_SONAME='Y'
+      LD_SONAME_FLAG='-soname'
+      CC_SONAME_FLAG="-Wl,$LD_SONAME_FLAG,"
+   elif test "x$GNU_LD" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
+      HAVE_LD_SONAME='Y'
+      LD_SONAME_FLAG='-soname'
+      CC_SONAME_FLAG="-Wl,$LD_SONAME_FLAG,"
+   fi
+
+   AC_SUBST(HAVE_LD_SONAME)
+   AC_SUBST(LD_SONAME_FLAG)
+   AC_SUBST(CC_SONAME_FLAG)
+])
+
 dnl ---------------------------------------------------------------------------
 dnl This defines a handy little macro that will remove all duplicate strings
 dnl from arg-list and assign the result to variable.  The given argument list
