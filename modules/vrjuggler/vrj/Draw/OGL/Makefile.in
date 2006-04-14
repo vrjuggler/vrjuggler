@@ -52,6 +52,7 @@ SRCS=		GlApp.cpp			\
 		GlDrawManager.cpp		\
 		GlDrawHeadFunctors.cpp		\
 		GlDrawWandFunctors.cpp		\
+		GlExtensionLoader.cpp           \
 		GlPipe.cpp			\
 		GlProcApp.cpp			\
 		GlSimInterfaceFactory.cpp	\
@@ -63,11 +64,13 @@ else
    ifeq (@PLATFORM@, Darwin)
       ifeq (@GADGET_USE_X11@, yes)
          SRCS+=	GlWindowXWin.cpp
+	 SRCS+= GlxExtensionLoader.cpp
       else
          SRCS+=	GlWindowOSX.cpp
       endif
    else
       SRCS+=	GlWindowXWin.cpp
+      SRCS+=    GlxExtensionLoader.cpp
    endif
 endif
 

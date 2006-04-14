@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-07-2006 allenb      Added GlExtensionLoader classes.
+                        Added support for NV swap_group.
+			NEW VERSION: 2.1.6
 Oct-18-2005 patrickh    Added the functions vrj::getVersionString() and
                         vrj::getVersionNumber().
 

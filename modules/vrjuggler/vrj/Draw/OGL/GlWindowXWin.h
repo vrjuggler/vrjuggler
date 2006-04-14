@@ -42,6 +42,7 @@
 #include <GL/glx.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlxExtensionLoader.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 
 namespace vrj
@@ -87,9 +88,8 @@ public:
     */
    virtual void checkEvents();
    
-   void configWindow(vrj::Display* disp);
-
-   virtual bool createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wins);
+   /** Configure the window settings based on the display information. */
+   void configWindow(vrj::Display* disp);   
 
 protected:
    /** Do any extra event processing needed. */
@@ -126,6 +126,8 @@ private:
    //::Display*   mXDisplay;
    XVisualInfo* mVisualInfo;
    GLXContext   mGlxContext;
+   GlxExtensionLoader   mExtensions;   /**< Extensions for this window. */
+
    //::Window     mXWindow;
    std::string  mWindowName;
    int          mPipe;
