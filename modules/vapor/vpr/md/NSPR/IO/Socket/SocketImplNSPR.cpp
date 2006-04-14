@@ -631,7 +631,7 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
       case vpr::SocketOptions::SendBufferSize:
          opt_data.option = PR_SockOpt_SendBufferSize;
          break;
-      case vpr::SocketOptions::SendBufferSize:
+      case vpr::SocketOptions::Broadcast:
          opt_data.option = PR_SockOpt_Broadcast;
          break;
       case vpr::SocketOptions::IpTimeToLive:
@@ -694,7 +694,7 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
             case vpr::SocketOptions::SendBufferSize:
                data.send_buffer_size = opt_data.value.send_buffer_size;
                break;
-            case vpr::SocketOptions::SendBufferSize:
+            case vpr::SocketOptions::Broadcast:
                data.broadcast = opt_data.value.broadcast;
                break;
             case vpr::SocketOptions::IpTimeToLive:
@@ -793,7 +793,7 @@ void SocketImplNSPR::setOption(const vpr::SocketOptions::Types option,
          break;
       case vpr::SocketOptions::Broadcast:
          opt_data.option                 = PR_SockOpt_Broadcast;
-         opt_data.value.broadcast = data.broadcast
+         opt_data.value.broadcast = data.broadcast;
          break;
       case vpr::SocketOptions::IpTimeToLive:
          opt_data.option       = PR_SockOpt_IpTimeToLive;
