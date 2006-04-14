@@ -137,7 +137,7 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoader.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.cpp">
@@ -183,7 +183,7 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoader.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.h">
