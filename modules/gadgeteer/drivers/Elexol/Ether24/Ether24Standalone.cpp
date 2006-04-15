@@ -195,7 +195,7 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
       throw Elexol::ElexolException("Error reading data.");
    }
 
-
+#if defined(_DEBUG)
    if (Elexol::Command::Value == command)
    {
       vprASSERT(Elexol::Command::PortWriteOffset + port == response[0]);
@@ -205,6 +205,8 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
       vprASSERT(cmd[0] == response[0])
       vprASSERT(Elexol::Command::PortWriteOffset + port == response[1]);
    }
+#endif
+
    return response[response.size()-1];
 }
 
