@@ -1,20 +1,20 @@
 # Spec file for vrjuggler.
 %define name vrjuggler
 %define global_version 2.1.7
-%define release	1
+%define global_release 1
 
 %define vpr_version 1.1.17
-%define vpr_release %{release}
+%define vpr_release %{global_release}
 %define tweek_version 1.1.3
-%define tweek_release %{release}
+%define tweek_release %{global_release}
 %define jccl_version 1.1.3
-%define jccl_release %{release}
+%define jccl_release %{global_release}
 %define sonix_version 1.1.2
-%define sonix_release %{release}
+%define sonix_release %{global_release}
 %define gadgeteer_version 1.1.7
-%define gadgeteer_release %{release}
+%define gadgeteer_release %{global_release}
 %define vrjuggler_version %{global_version}
-%define vrjuggler_release %{release}
+%define vrjuggler_release %{global_release}
 
 # JDK 1.5.0 is the lowest version with native support for the x86_64
 # architecture.
@@ -39,11 +39,11 @@
 Name: vrjuggler
 Summary: VR Juggler is the virtual platform for VR application development
 Version: %{global_version}
-Release: %{release}
-Source: %{name}-%{global_version}-%{release}.src.tar.bz2
+Release: %{global_release}
+Source: %{name}-%{global_version}-%{global_release}.src.tar.bz2
 URL: http://www.vrjuggler.org/
 Group: Development/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{global_version}-%{release}-buildroot
+BuildRoot: %{_tmppath}/%{name}-%{global_version}-%{global_release}-buildroot
 License: LGPL
 Requires: vpr = %{vpr_version}-%{vpr_release}
 Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
@@ -453,8 +453,8 @@ cross-platform makefiles.
 %prep
 rm -rf %{buildroot}
 # For now don't keep unpacking
-%setup -q -n %{name}-%{global_version}-%{release}.src
-#%setup -DT -q -n %{name}-%{global_version}-%{release}.src
+%setup -q -n %{name}-%{global_version}-%{global_release}.src
+#%setup -DT -q -n %{name}-%{global_version}-%{global_release}.src
 ./configure.pl --with-boost=/usr --with-boost-includes=/usr/include     \
                --with-gmtl=/usr --with-openal=/usr --with-audiere=/usr  \
                --prefix=%{_prefix} %{abi_option}
