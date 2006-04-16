@@ -293,6 +293,10 @@ ifdef dppABI
       ABI=	ELF
       ISA=	i386
    endif
+   ifeq ($(dppABI), ELF_x86_64)
+      ABI=	ELF
+      ISA=	x86_64
+   endif
    ifeq ($(dppABI), MACINTOSH_PPC)
       ABI=	MAC
       ISA=	powerpc
@@ -306,6 +310,7 @@ endif
 ABI_LIST=	@ABI_LIST@
 PLATFORM=	@PLATFORM@
 
+# Not using GCC.
 ifneq ($(findstring gcc, $(CC)), gcc)
 ifeq ($(ABI), N32)
    ARFLAGS:=	-n32 $(ARFLAGS)
@@ -343,6 +348,23 @@ ifeq ($(ISA), mips4)
    CXXFLAGS+=	-mips4
    LDOPTS+=	-mips4
 endif
+
+# Using GCC.
+else
+
+ifeq ($(ABI), ELF)
+   ifeq ($(ISA), i386)
+      CFLAGS+=		-m32
+      CXXFLAGS+=	-m32
+      LDOPTS+=		-m32
+   endif
+   ifeq ($(ISA), x86_64)
+      CFLAGS+=		-m64
+      CXXFLAGS+=	-m64
+      LDOPTS+=		-m64
+   endif
+endif
+
 endif
 
 @SET_MAKE@
