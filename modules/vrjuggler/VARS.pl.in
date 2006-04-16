@@ -42,6 +42,7 @@
 # Generated for use on @PLATFORM@
 # ------------------------------------------------------------------------------
 
+$VARS{'prefix'}           = '@prefix@';
 $VARS{'ABI'}              = '@ABI@';
 $VARS{'ISA'}              = '@ISA@';
 
