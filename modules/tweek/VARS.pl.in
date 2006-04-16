@@ -47,6 +47,7 @@
 # ------------------------------------------------------------------------------
 
 # Compiler information.
+$VARS{'prefix'}               = '@prefix@';
 $VARS{'topdir'}               = '@topdir@';
 $VARS{'top_srcdir'}           = '@top_srcdir@';
 $VARS{'APP_CC'}               = '@APP_CC@';

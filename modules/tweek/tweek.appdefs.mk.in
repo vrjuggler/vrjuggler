@@ -40,6 +40,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+TWEEK_BASE_DIR=		@prefix@
 DZR_BASE_DIR?=		$(TWEEK_BASE_DIR)/share/Doozer
 
 CC=			@APP_CC@
