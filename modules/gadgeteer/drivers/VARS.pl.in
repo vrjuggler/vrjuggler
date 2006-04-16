@@ -42,6 +42,8 @@
 # Generated for use on @PLATFORM@
 # ------------------------------------------------------------------------------
 
+$VARS{'prefix'}          = '@prefix@';
+
 $VARS{'CC'}              = '@CC@';
 $VARS{'C_DLL'}           = '@C_DLL@';
 $VARS{'C_PLUGIN'}        = '@C_PLUGIN@';

@@ -49,10 +49,7 @@
 
 default: driver-dso
 
-# Don't require that the user has $GADGET_BASE_DIR set as an environment
-# variable.  We'll assume that if $VJ_BASE_DIR is set, it points to the place
-# where Gadgeteer is installed as well.
-GADGET_BASE_DIR?=	$(VJ_BASE_DIR)
+GADGET_BASE_DIR?=	@prefix@
 DZR_BASE_DIR?=		$(GADGET_BASE_DIR)/share/Doozer
 
 # -----------------------------------------------------------------------------
