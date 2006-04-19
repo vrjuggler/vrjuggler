@@ -51,7 +51,7 @@ namespace gadget
 /**
  * Gadgeteer wrapper around wanda::WandaStandalone driver.
  */
-class Wanda : public InputMixer<Input, InputMixer<Analog, Digital> >
+class Wanda : public InputMixer<Input, InputMixer<Digital, Analog> >
 {
 public:
    Wanda(const char* portName = "/dev/ttyS0");
