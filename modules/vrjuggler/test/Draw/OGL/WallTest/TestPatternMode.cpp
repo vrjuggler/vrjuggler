@@ -59,6 +59,12 @@ void TestPatternMode::draw(WallTest*)
    vrj::Viewport*   cur_vp    = user_data->getViewport();
    vrj::Projection* proj      = user_data->getProjection();
 
+   // XXX: How does this happen?
+   if ( NULL == cur_vp )
+   {
+      return;
+   }
+
    if ( cur_vp->isSimulator() )
    {
       vrj::DisplayManager* displayManager =
