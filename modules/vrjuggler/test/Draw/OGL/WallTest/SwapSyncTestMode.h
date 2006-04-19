@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2006 by Iowa State University
@@ -25,37 +24,45 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
+ * Date modified: $Date: 2006-02-08 13:44:09 -0600 (Wed, 08 Feb 2006) $
+ * Version:       $Revision: 18378 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _TEST_MODE_H_
-#define _TEST_MODE_H_
+#ifndef _SWAP_SYNC_TEST_MODE_H_
+#define _SWAP_SYNC_TEST_MODE_H_
 
-#include <boost/shared_ptr.hpp>
-#include <string>
-
-class TestMode;
-typedef boost::shared_ptr<TestMode> TestModePtr;
+#include <TestMode.h>
+#include <gmtl/Vec.h>
+#include <vector>
+#include <vrj/Draw/OGL/GlContextData.h>
+#include <Text.h>
 
 class WallTest;
 
-/** Base class for all test modes. */
-class TestMode
+class SwapSyncTestMode : public TestMode
 {
 public:
-   TestMode()
-   {;}
-   virtual ~TestMode()
-   {;}
-   virtual std::string getName() = 0;
-   virtual void update(WallTest* wallTest) = 0;
-   virtual void bufferPreDraw(WallTest* wallTest)
-   {;}
-   virtual void draw(WallTest* wallTest) = 0;
+   SwapSyncTestMode();
+   
+   virtual std::string getName()
+   {
+      return std::string("SwapSyncTestMode");
+   }
+
+   virtual void update(WallTest*);
+
+   virtual void bufferPreDraw(WallTest* wallTest);
+
+   virtual void draw(WallTest* wallTest);
+   
+protected:
+   std::vector<gmtl::Vec4f>  mLeftBufferColors;
+   std::vector<gmtl::Vec4f>  mRightBufferColors;
+   unsigned                  mFrameNum;
+   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
 };
 
-#endif
 
+#endif

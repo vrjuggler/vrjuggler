@@ -57,6 +57,7 @@
 #include "CubeLineMode.h"
 #include "TestPatternMode.h"
 #include "StereoEyeTestMode.h"
+#include "SwapSyncTestMode.h"
 #include "DisplayInfoMode.h"
 #include "WireSphereMode.h"
 
@@ -78,6 +79,7 @@ void WallTest::init()
    mTestModes.push_back(TestModePtr(new TestPatternMode));
    mTestModes.push_back(TestModePtr(new CubeLineMode));
    mTestModes.push_back(TestModePtr(new StereoEyeTestMode));
+   mTestModes.push_back(TestModePtr(new SwapSyncTestMode));
    mTestModes.push_back(TestModePtr(new DisplayInfoMode));
    mTestModes.push_back(TestModePtr(new WireSphereMode));   
    
@@ -118,6 +120,7 @@ void WallTest::preFrame()
 void WallTest::bufferPreDraw()
 {   
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+   mTestModes[mCurMode]->draw(this);
 }
 
 void WallTest::contextInit()

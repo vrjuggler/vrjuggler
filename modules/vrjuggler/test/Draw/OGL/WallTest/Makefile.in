@@ -44,6 +44,7 @@ srcdir=		@srcdir@
 SRCS=		CubeLineMode.cpp	\
 		DisplayInfoMode.cpp	\
 		StereoEyeTestMode.cpp	\
+		SwapSyncTestMode.cpp    \
 		TestPatternMode.cpp	\
 		Text.cpp		\
 		WallTest.cpp		\
