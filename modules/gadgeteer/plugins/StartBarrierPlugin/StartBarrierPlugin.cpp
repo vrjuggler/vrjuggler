@@ -209,7 +209,7 @@ void StartBarrierPlugin::preDraw()
 void StartBarrierPlugin::postPostFrame()
 {
    // -If we are not complete
-   //   -If all other plugins are ready
+   //   -If all other plugins are ready and cluster is fully connected.
    //     -If Slave
    //       -Find the barrier master
    //       -If connected
