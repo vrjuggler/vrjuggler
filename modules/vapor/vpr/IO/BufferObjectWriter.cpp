@@ -50,7 +50,8 @@ namespace vpr
 const unsigned int BufferObjectWriter::STRING_LENGTH_SIZE = 4;
 
 BufferObjectWriter::BufferObjectWriter()
-   : mData(new std::vector<vpr::Uint8>)
+   : mOwnDataBuffer(true)
+   , mData(new std::vector<vpr::Uint8>)
    , mCurHeadPos(0)
 {
    mIsBinary = true;
@@ -58,7 +59,8 @@ BufferObjectWriter::BufferObjectWriter()
 
 BufferObjectWriter::BufferObjectWriter(std::vector<vpr::Uint8>* data,
                                        const unsigned int curPos)
-   : mData(data)
+   : mOwnDataBuffer(false)
+   , mData(data)
    , mCurHeadPos(curPos)
 {
    mIsBinary = true;
@@ -66,7 +68,11 @@ BufferObjectWriter::BufferObjectWriter(std::vector<vpr::Uint8>* data,
 
 BufferObjectWriter::~BufferObjectWriter() throw ()
 {
-   /* Do nothing. */ ;
+   if(mOwnDataBuffer)
+   {
+      delete mData;
+      mData = NULL;
+   }
 }
 
 }

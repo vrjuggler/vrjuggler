@@ -69,8 +69,17 @@ public:
     */
    static const unsigned int STRING_LENGTH_SIZE;
 
+   /** Constructor.
+    * Build writer and point it at a fresh data buffer.
+    * This data buffer will be owned exclusively by this object
+    * and will be deleted on destruction.
+    */
    BufferObjectWriter();
 
+   /** Constructor.
+    * Build writer and point it at an existing data buffer.
+    * This buffer will not be owned or destroyed by the writer.
+    */
    BufferObjectWriter(std::vector<vpr::Uint8>* data,
                       const unsigned int curPos = 0);
 
@@ -103,7 +112,7 @@ public:
    {
       boost::ignore_unused_variable_warning(tagName);
    }
-   
+
    /**
     * Ends the most recently named tag.
     *
@@ -197,7 +206,13 @@ public:
                         const unsigned int len = 1)
       throw (IOException);
 
+private:
+   /** Do not allow copy.  To do so we would need to make the memory handling much smarter. */
+   BufferObjectWriter(const BufferObjectWriter& rhs)
+   {; }
+
 public:
+   bool                       mOwnDataBuffer;      /**< If true we allocated the data buffer and should delete it. */
    std::vector<vpr::Uint8>*   mData;
    unsigned int               mCurHeadPos;
 };
