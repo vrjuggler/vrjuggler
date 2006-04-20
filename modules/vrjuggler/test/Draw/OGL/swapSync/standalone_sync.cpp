@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+bool master = true;
+
 typedef void (*VoidExtFunc)(void);
 
 // NVIDIA swap control
@@ -87,7 +89,13 @@ void initExtensions()
 // Display method
 void display(void)
 {
+   //Display* display = glXGetCurrentDisplay();
+   //GLuint frame_num;
+   //mGlxFuncs.glXQueryFrameCountNV(display, 1, &frame_num);
    mFrameNum += 1;
+
+   //std::cout << "App Frame Count [" << mFrameNum << "] [" << frame_num << "]" << std::endl;
+   std::cout << "App Frame Count [" << mFrameNum << "]" << std::endl;
 
    unsigned clr_choice = (mFrameNum % 5);
 
@@ -110,13 +118,16 @@ void display(void)
    unsigned sleep_choice = rand() % 3;
    unsigned long sleep_ms;
 
-   if(0 == sleep_choice) { sleep_ms = 0; }
-   else if(1 == sleep_choice) { sleep_ms = 1000; }
-   else if(2 == sleep_choice) { sleep_ms = 4000; }
+   if (master)
+   {
+      if(0 == sleep_choice) { sleep_ms = 0; }
+      else if(1 == sleep_choice) { sleep_ms = 1000; }
+      else if(2 == sleep_choice) { sleep_ms = 4000; }
 
-   std::cout << "sleep: " << sleep_ms << "ms" << std::endl;
+      std::cout << "sleep: " << sleep_ms << "ms" << std::endl;
 
-   usleep(sleep_ms * 1000);
+      usleep(sleep_ms * 1000);
+   }
 
    glutSwapBuffers();
 
@@ -187,6 +198,15 @@ int main(int argc, char* argv[])
    glutMotionFunc(motion);
    glutKeyboardFunc(keyboard);
 
+   if (argc > 1)
+   {
+      std::cout << "ARG:" << argv[1] << std::endl;
+   }
+   if (argc > 1 && (0 == strcmp(argv[1], "-s")))
+   {
+      master = false;
+      std::cout << "We are a slave" << std::endl;
+   }
    initGraphics();
 
    glutMainLoop();
