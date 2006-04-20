@@ -34,6 +34,8 @@
 #define _STEREO_EYE_TEST_MODE_H_
 
 #include <TestMode.h>
+#include <Text.h>
+#include <vrj/Draw/OGL/GlContextData.h>
 
 
 class WallTest;
@@ -53,6 +55,8 @@ public:
    virtual void draw(WallTest* wallTest);
 
    void drawCubeOrTriangle();
+   
+   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
 };
 
 

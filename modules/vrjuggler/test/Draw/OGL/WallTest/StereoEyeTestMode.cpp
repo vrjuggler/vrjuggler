@@ -88,12 +88,14 @@ void StereoEyeTestMode::drawCubeOrTriangle()
 
    if ( currentEye == vrj::Projection::LEFT )
    {
+      mText->drawTextBlock("Left Eye", 0.1f, 0.1f);
       glTranslatef(-1.5f, 0.0f, 0.0f);
       glColor3f(0.0f, 1.0f, 0.0f);
       drawCube();
    }
    else
    {
+      mText->drawTextBlock("Right Eye", 0.7f, 0.1f);
       glTranslatef(1.5f, 0.0f, 0.0f);
       glColor3f(1.0f, 0.0f, 0.0f);
       drawPyramid();
