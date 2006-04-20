@@ -69,6 +69,21 @@ namespace Elexol
       std::string mDescription;
    };
 
+   class ElexolTimeoutException : public ElexolException
+   {
+   public:
+      ElexolTimeoutException(const std::string& msg)
+         : ElexolException(msg)
+      {
+         /* Do nothing. */ ;
+      }
+
+      virtual ~ElexolTimeoutException() throw ()
+      {
+         /* Do nothing. */ ;
+      }
+   };
+
    struct is_iless
    {
       bool operator()(const std::string& lhs,

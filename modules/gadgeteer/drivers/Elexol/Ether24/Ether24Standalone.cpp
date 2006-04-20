@@ -181,31 +181,43 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
    vpr::InetAddr from;
    vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
-   vpr::Interval read_timeout(5, vpr::Interval::Sec);
+   vpr::Interval read_timeout(100, vpr::Interval::Msec);
 
-   // Try reading data
-   vpr::ReturnStatus status
-      = mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
-   if(status.timeout())
+   bool received = false;
+
+   while (!received)
    {
-      throw Elexol::ElexolException("Timeour");
-   }
-   else if(!status.success())
-   {
-      throw Elexol::ElexolException("Error reading data.");
+      // Try reading data
+      vpr::ReturnStatus status
+         = mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
+      if(status.timeout())
+      {
+         throw Elexol::ElexolTimeoutException("Timeout");
+      }
+      else if(!status.success())
+      {
+         throw Elexol::ElexolException("Error reading data.");
+      }
+
+      if (Elexol::Command::Value == command)
+      {
+         received = Elexol::Command::PortWriteOffset + port == response[0];
+      }
+      else
+      {
+         received = (cmd[0] == response[0]) && 
+                    (Elexol::Command::PortWriteOffset + port == response[1]);
+      }
    }
 
-#if defined(_DEBUG)
-   if (Elexol::Command::Value == command)
+   /*
+   std::cout << "Response [";
+   for (unsigned int i = 0 ; i < response.size() ; i++)
    {
-      vprASSERT(Elexol::Command::PortWriteOffset + port == response[0]);
+      std::cout << "[" << (int)response[i] << "]";
    }
-   else
-   {
-      vprASSERT(cmd[0] == response[0])
-      vprASSERT(Elexol::Command::PortWriteOffset + port == response[1]);
-   }
-#endif
+   std::cout << std::endl;
+   */
 
    return response[response.size()-1];
 }
@@ -382,24 +394,25 @@ std::pair<vpr::Uint8, vpr::Uint8>
    vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
 
-   vpr::Interval read_timeout(5, vpr::Interval::Sec);
+   vpr::Interval read_timeout(50, vpr::Interval::Msec);
 
-   // Try to read data
-   vpr::ReturnStatus status
-      = mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
-
-   if(status.timeout())
+   while ( Elexol::Command::ReadWord != response[0] || address != response[1])
    {
-      throw Elexol::ElexolException("Timeour");
-   }
-   else if(!status.success())
-   {
-      throw Elexol::ElexolException("Error reading data.");
+      // Try to read data
+      vpr::ReturnStatus status
+         = mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
+
+      if(status.timeout())
+      {
+         throw Elexol::ElexolTimeoutException("Timeout");
+      }
+      else if(!status.success())
+      {
+         throw Elexol::ElexolException("Error reading data.");
+   	}
    }
 
-   vprASSERT(Elexol::Command::ReadWord == response[0]);
-   vprASSERT(address == response[1]);
-   //std::cout << "Response [" << (int)response[2] << "][" << (int)response[3] << "]" << std::endl;
+   std::cout << "Response [" << (int)response[2] << "][" << (int)response[3] << "]" << std::endl;
    return std::pair<vpr::Uint8, vpr::Uint8>(response[2], response[3]);
 }
 
@@ -432,7 +445,7 @@ void Ether24Standalone::disableWriting()
    vprASSERT(5 == write_disable_cmd.size());
 
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "Ether24StandalonegetState(): Sending disable writing command ["
+      << "Ether24Standalone::disableWriting(): Sending disable writing command ["
       << write_disable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
 
    vpr::Uint32 bytes_sent;
@@ -455,9 +468,9 @@ void Ether24Standalone::setWordValue(const Elexol::AddressType address,
    vpr::Uint32 bytes_sent;
    
    //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Ether24StandalonegetState(): Sending command [" << write_cmd << "]"
-   //   << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0)
+      << "Ether24Standalone::setWordValue(): Sending command [" << write_cmd << "]"
+      << std::endl << vprDEBUG_FLUSH;
    mSocket->sendto(write_cmd, 5, mAddress, bytes_sent);
 }
 

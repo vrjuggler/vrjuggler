@@ -281,6 +281,10 @@ bool Ether24::sample()
       port_values.push_back(mInvertB ^ mDevice.getValue(Elexol::PortB));
       port_values.push_back(mInvertC ^ mDevice.getValue(Elexol::PortC));
    }
+   catch (Elexol::ElexolTimeoutException& ex)
+   {
+      return false;
+   }
    catch (Elexol::ElexolException& ex)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
