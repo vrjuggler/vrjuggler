@@ -65,11 +65,6 @@ void TestPatternMode::draw(WallTest*)
       return;
    }
 
-   if (NULL == cur_vp)
-   {
-      return;
-   }
-
    if ( cur_vp->isSimulator() )
    {
       vrj::DisplayManager* displayManager =
