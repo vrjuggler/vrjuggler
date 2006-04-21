@@ -41,7 +41,8 @@ APP_NAME=	WallTest@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		CubeLineMode.cpp	\
+SRCS=		ClusterTestMode.cpp	\
+		CubeLineMode.cpp	\
 		DisplayInfoMode.cpp	\
 		StereoEyeTestMode.cpp	\
 		SwapSyncTestMode.cpp    \
