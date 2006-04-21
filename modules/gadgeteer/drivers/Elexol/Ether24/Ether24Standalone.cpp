@@ -190,7 +190,7 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
       // Try reading data
       vpr::ReturnStatus status
          = mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
-      if(status.timeout())
+      if ( status.timeout() || status.connectionAborted() )
       {
          throw Elexol::ElexolTimeoutException("Timeout");
       }
@@ -402,14 +402,14 @@ std::pair<vpr::Uint8, vpr::Uint8>
       vpr::ReturnStatus status
          = mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
 
-      if(status.timeout())
+      if ( status.timeout() || status.connectionAborted() )
       {
          throw Elexol::ElexolTimeoutException("Timeout");
       }
       else if(!status.success())
       {
          throw Elexol::ElexolException("Error reading data.");
-   	}
+      }
    }
 
    std::cout << "Response [" << (int)response[2] << "][" << (int)response[3] << "]" << std::endl;
