@@ -423,7 +423,7 @@ bool GlWindowXWin::open()
             << std::endl << vprDEBUG_FLUSH;
 
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-            << "Setting up NV swap group and barrier group."
+            << "Setting up NV swap group and barrier group. "
             << "Group: 1, Barrier: 1\n" << vprDEBUG_FLUSH;
          // For now, just assume both groups are group 1
          // Note: In the future this code may need to be refactored to be
