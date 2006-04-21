@@ -54,6 +54,7 @@
 #include "WallTest.h"
 #include "WallTestHelpers.h"
 
+#include "ClusterTestMode.h"
 #include "CubeLineMode.h"
 #include "TestPatternMode.h"
 #include "StereoEyeTestMode.h"
@@ -82,6 +83,7 @@ void WallTest::init()
    mTestModes.push_back(TestModePtr(new SwapSyncTestMode));
    mTestModes.push_back(TestModePtr(new DisplayInfoMode));
    mTestModes.push_back(TestModePtr(new WireSphereMode));   
+   mTestModes.push_back(TestModePtr(new ClusterTestMode));   
 }
 
 
@@ -121,7 +123,6 @@ void WallTest::bufferPreDraw()
    glClearColor(0.0, 0.0, 0.0, 0.0);      
    glClear(GL_COLOR_BUFFER_BIT);
    mTestModes[mCurMode]->bufferPreDraw(this);
-   mTestModes[mCurMode]->draw(this);
 }
 
 void WallTest::contextInit()
