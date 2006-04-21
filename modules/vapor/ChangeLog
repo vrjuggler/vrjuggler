@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-04-14 aronb    Added the ability to send UDP broadcast datagrams.
 2005-12-16 patrickh Added vpr::InetAddr::getAllLocalAddrs().
 
 [1.0.1 released - 8.29.2005]===================================================

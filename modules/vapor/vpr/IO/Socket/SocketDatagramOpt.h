@@ -180,7 +180,7 @@ public:
    }
 
    /**
-    *
+    * @since 1.0.2
     */
    void setBroadcast(const bool val)
    {
