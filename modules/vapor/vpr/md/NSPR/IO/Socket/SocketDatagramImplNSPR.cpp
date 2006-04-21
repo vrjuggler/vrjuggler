@@ -85,6 +85,10 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
       {
          retval.setCode(ReturnStatus::Timeout);
       }
+      else if ( err_code == PR_CONNECT_ABORTED_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::ConnectionAborted);
+      }
       else
       {
          vpr::Error::outputCurrentError(std::cerr,
@@ -126,6 +130,10 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
          retval.setCode(ReturnStatus::Timeout);
+      }
+      else if ( err_code == PR_CONNECT_ABORTED_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::ConnectionAborted);
       }
       else if ( err_code == PR_NOT_CONNECTED_ERROR )
       {

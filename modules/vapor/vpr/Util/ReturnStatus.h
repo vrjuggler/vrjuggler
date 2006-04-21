@@ -63,7 +63,8 @@ namespace vpr
          WouldBlock,       /**< Operation would block */
          Timeout,          /**< Timeout occurred */
          InProgress,       /**< Operation is still in progress */
-         NotConnected      /**< The given I/O device is closed */
+         NotConnected,     /**< The given I/O device is closed */
+         ConnectionAborted /**< Connection was aborted. */
       };
 
       /** Default constructor.  vpr::ReturnStatus::Succeed is default. */
@@ -205,6 +206,14 @@ namespace vpr
       bool timeout() const
       {
          return mReturnStatus == vpr::ReturnStatus::Timeout;
+      }
+
+      /**
+       * @since 1.0.2
+       */
+      bool connectionAborted() const
+      {
+         return mReturnStatus == vpr::ReturnStatus::ConnectionAborted;
       }
       //@}
 
