@@ -61,7 +61,7 @@ public:
 
    BOOL wglJoinSwapGroupNV(HDC hdc, GLuint group);
 
-   BOOL wglBindSwapBarrierNV(HDC hdc, GLuint group, GLuint barrier);
+   BOOL wglBindSwapBarrierNV(GLuint group, GLuint barrier);
 
    BOOL wglQuerySwapGroupNV(HDC hdc, GLuint *group, GLuint *barrier);
 

@@ -34,30 +34,34 @@
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
+#ifndef GLAPI
+#  define GLAPI __stdcall
+#  define __DEFINED_GLAPI
+#endif
+
 namespace vrj
 {
    // NVIDIA swap control
-   typedef BOOL ( * PFNWGLJOINSWAPGROUPNVPROC) (HDC hdc,
+   typedef BOOL (GLAPI * PFNWGLJOINSWAPGROUPNVPROC) (HDC hdc,
                                                 GLuint group);
    
-   typedef BOOL ( * PFNWGLBINDSWAPBARRIERNVPROC) (HDC hdc,
-                                                  GLuint group,
+   typedef BOOL (GLAPI * PFNWGLBINDSWAPBARRIERNVPROC) (GLuint group,
                                                   GLuint barrier);
    
-   typedef BOOL ( * PFNWGLQUERYSWAPGROUPNVPROC) (HDC hdc,
+   typedef BOOL (GLAPI * PFNWGLQUERYSWAPGROUPNVPROC) (HDC hdc,
                                                  GLuint *group,
                                                  GLuint *barrier);
    
-   typedef BOOL ( * PFNWGLQUERYMAXSWAPGROUPSNVPROC) (HDC hdc,
+   typedef BOOL (GLAPI * PFNWGLQUERYMAXSWAPGROUPSNVPROC) (HDC hdc,
                                                      /*int screen,*/
                                                      GLuint *maxGroups,
                                                      GLuint *maxBarriers);
    
-   typedef BOOL ( * PFNWGLQUERYFRAMECOUNTNVPROC) (HDC hdc,
+   typedef BOOL (GLAPI * PFNWGLQUERYFRAMECOUNTNVPROC) (HDC hdc,
                                                   /*int screen,*/
                                                   GLuint *count);
    
-   typedef BOOL ( * PFNWGLRESETFRAMECOUNTNVPROC) (HDC hdc/*, int screen*/);
+   typedef BOOL (GLAPI * PFNWGLRESETFRAMECOUNTNVPROC) (HDC hdc/*, int screen*/);
 
 
 struct GlExtensionLoaderWin32::WglFuncs
@@ -109,10 +113,10 @@ BOOL GlExtensionLoaderWin32::wglJoinSwapGroupNV(HDC hdc, GLuint group)
    return mWglFuncs->wglJoinSwapGroupNV(hdc, group);
 }
 
-BOOL GlExtensionLoaderWin32::wglBindSwapBarrierNV(HDC hdc, GLuint group, GLuint barrier)
+BOOL GlExtensionLoaderWin32::wglBindSwapBarrierNV(GLuint group, GLuint barrier)
 {
    vprASSERT(mWglFuncs->wglBindSwapBarrierNV != NULL && "Attemped to call unsupported extension.");
-   return mWglFuncs->wglBindSwapBarrierNV(hdc, group, barrier);
+   return mWglFuncs->wglBindSwapBarrierNV(group, barrier);
 }
 
 BOOL GlExtensionLoaderWin32::wglQuerySwapGroupNV(HDC hdc, GLuint *group, GLuint *barrier)
