@@ -167,32 +167,46 @@ bool GlWindowWin32::open()
    mExtensions.registerExtensions();
 
      // Check on using swap group
-   jccl::ConfigElementPtr disp_sys_elt = DisplayManager::instance()->getDisplaySystemElement();
+   jccl::ConfigElementPtr disp_sys_elt =
+      DisplayManager::instance()->getDisplaySystemElement();
    bool use_swap_group = disp_sys_elt->getProperty<bool>("use_swap_group");
 
    if(use_swap_group)
    {
-      vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL, "Attempting to setup WGL swap group.", "");
+      vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL,
+                           "Attempting to set up WGL swap group.\n", "");
        
       // Try NV swap group extension
       if(mExtensions.hasSwapGroupNV())
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL) << "SwapGroupNV: " << mExtensions.hasSwapGroupNV() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+            << "SwapGroupNV: " << mExtensions.hasSwapGroupNV() << std::endl
+            << vprDEBUG_FLUSH;
          GLuint max_groups, max_barriers;
-         mExtensions.wglQueryMaxSwapGroupsNV(mDeviceContext, &max_groups, &max_barriers);
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL) << "Max groups: " << max_groups << " Max Barriers:" << max_barriers << std::endl << vprDEBUG_FLUSH;
+         mExtensions.wglQueryMaxSwapGroupsNV(mDeviceContext, &max_groups,
+                                             &max_barriers);
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+            << "Max groups: " << max_groups << " Max Barriers:" << max_barriers
+            << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL) << "Setting up NV swap group and barrier group. Group: 1, Barrier: 1\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+            << "Setting up NV swap group and barrier group. "
+            << "Group: 1, Barrier: 1\n" << vprDEBUG_FLUSH;
          // For now, just assume both groups are group 1
-         // Note: In the future this code may need to be refactored to be controlled
-         //   from the GlPipe class since it is really the thing that would correspond
-         //   to the group and could group the correct windows to a group id.
+         // Note: In the future this code may need to be refactored to be
+         //   controlled from the GlPipe class since it is really the thing
+         //   that would correspond to the group and could group the correct
+         //   windows to a group id.
          mExtensions.wglJoinSwapGroupNV(mDeviceContext, 1);
          mExtensions.wglBindSwapBarrierNV(mDeviceContext, 1, 1);
       }
       else
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Could not detect any WGL extensions that support swap groups. Proceeding with no swap locking.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Could not detect any WGL extensions that support swap groups.\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Proceeding with no swap locking.\n" << vprDEBUG_FLUSH;
       }
    }
 
