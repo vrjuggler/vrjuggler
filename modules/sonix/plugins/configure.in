@@ -43,7 +43,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
-DPP_PREREQ([1.5.1])
+DPP_PREREQ([2.0.2])
 DPP_INIT
 
 # -----------------------------------------------------------------------------
