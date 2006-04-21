@@ -82,7 +82,6 @@ void WallTest::init()
    mTestModes.push_back(TestModePtr(new SwapSyncTestMode));
    mTestModes.push_back(TestModePtr(new DisplayInfoMode));
    mTestModes.push_back(TestModePtr(new WireSphereMode));   
-   
 }
 
 
@@ -118,8 +117,10 @@ void WallTest::preFrame()
 
 
 void WallTest::bufferPreDraw()
-{   
-   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+{
+   glClearColor(0.0, 0.0, 0.0, 0.0);      
+   glClear(GL_COLOR_BUFFER_BIT);
+   mTestModes[mCurMode]->bufferPreDraw(this);
    mTestModes[mCurMode]->draw(this);
 }
 
@@ -131,6 +132,8 @@ void WallTest::contextInit()
 
 void WallTest::draw()
 {   
+   glClear(GL_DEPTH_BUFFER_BIT);
+
    if(mUseLights)
    {
       glEnable(GL_NORMALIZE);
