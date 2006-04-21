@@ -45,6 +45,7 @@
 #include <prio.h>
 #include <prinrval.h>
 
+#include <vpr/IO/ConnectionAbortedException.h>
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/WouldBlockException.h>
 #include <vpr/IO/Socket/ConnectionResetException.h>
@@ -104,6 +105,17 @@ void SocketDatagramImplNSPR::recvfrom(void* msg, const vpr::Uint32 length,
          }
 
          throw TimeoutException(msg_stream.str(), VPR_LOCATION);
+      }
+      else if ( err_code == PR_CONNECT_ABORTED_ERROR )
+      {
+         msg_stream << "recvfrom connection aborted";
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw ConnectionAbortedException(msg_stream.str(), VPR_LOCATION);
       }
       else
       {
@@ -178,6 +190,17 @@ void SocketDatagramImplNSPR::sendto(const void* msg, const vpr::Uint32 length,
          }
 
          throw TimeoutException(msg_stream.str(), VPR_LOCATION);
+      }
+      else if ( err_code == PR_CONNECT_ABORTED_ERROR )
+      {
+         msg_stream << "Connection aborted while writing";
+
+         if ( ! nspr_err_msg.empty() )
+         {
+            msg_stream << ": " << nspr_err_msg;
+         }
+
+         throw ConnectionAbortedException(msg_stream.str(), VPR_LOCATION);
       }
       else if ( err_code == PR_NOT_CONNECTED_ERROR )
       {

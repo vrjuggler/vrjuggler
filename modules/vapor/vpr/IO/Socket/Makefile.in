@@ -56,7 +56,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		ConnectionRefusedException.cpp	\
+SRCS=		ConnectionAbortedException.cpp	\
+		ConnectionRefusedException.cpp	\
 		ConnectionResetException.cpp	\
 		NoRouteToHostException.cpp	\
 		SocketAcceptor.cpp		\

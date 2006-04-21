@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-04-21 patrickh Added vpr::ConnectionAbortedException.
+                    NEW VERSION: 1.1.18
 2006-04-14 aronb    Added a socket option for sending broadcast UDP packets.
                     NEW VERSION: 1.1.17
 2006-02-15 patrickh Replaced vpr::ThreadMemberFunctor<T> and
