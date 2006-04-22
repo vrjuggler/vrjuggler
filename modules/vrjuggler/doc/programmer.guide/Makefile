@@ -5,6 +5,7 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
+docdir=		../../../../doc
 NAME=		programmer.guide
 XML_FILES=	$(NAME).xml
 
@@ -34,7 +35,7 @@ instdir=	vrjuggler/$(PROJECT_NUMBER)/programmer.guide
 
 prefix=		$(webroot)/$(instdir)
 INSTALL_DIRS=	figures
-INSTALL_FILES=	$(webroot)/base_style.css
+INSTALL_FILES=	$(docdir)/base_style.css
 
 NEED_DB_IMAGES=	1
 
@@ -45,4 +46,4 @@ $(NAME).pdf: $(IMAGES)
 CLOBBER_FILES=	$(SVG_IMAGES:%.svg=%.png)
 
 include ../version.mk
-include ../../../../doc/docbook.mk
+include $(docdir)/docbook.mk

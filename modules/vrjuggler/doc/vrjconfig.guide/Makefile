@@ -5,6 +5,7 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
+docdir=		../../../../doc
 NAME=		vrjconfig.guide
 XML_FILES=	$(NAME).xml
 
@@ -14,7 +15,7 @@ instdir=	vrjuggler/$(PROJECT_NUMBER)/vrjconfig.guide
 
 prefix=		$(webroot)/$(instdir)
 #INSTALL_DIRS=	figures
-INSTALL_FILES=	$(webroot)/base_style.css
+INSTALL_FILES=	$(docdir)/base_style.css
 
 include ../version.mk
-include ../../../../doc/docbook.mk
+include $(docdir)/docbook.mk
