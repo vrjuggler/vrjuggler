@@ -44,8 +44,8 @@ namespace vrj
 
 /**
  * Retruns the "human-readable" VR Juggler version \em string. The full form
- * includes the version number (<major>.<minor>.<patch>-<build>), the canonical
- * name of the release, the threading subsystem, and the build date. The major
+ * includes the version number (major.minor.patch-build), the canonical name
+ * of the release, the threading subsystem, and the build date. The major
  * version number is updated when major architectural changes are made; the
  * minor when there are minor API changes; and the patch when there are bug
  * fixes. The build number is usually representative of the nightly build
