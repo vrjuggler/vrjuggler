@@ -91,7 +91,9 @@ AC_DEFUN([_TWEEK_VERSION_CHECK],
 [
    DPP_PREREQ([2.0.1])
 
-   AC_REQUIRE([_TWEEK_PATH_SETUP])
+   if test "x$TWEEK_CONFIG" = "x" ; then
+      _TWEEK_PATH_SETUP()
+   fi
 
    if test "x$TWEEK_CONFIG" = "xno" ; then
       ifelse([$3], , :, [$3])
@@ -134,7 +136,9 @@ dnl     TWEEK_CXX_IDL_GENDIR_OPT
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([TWEEK_PATH_CXX],
 [
-   AC_REQUIRE([_TWEEK_PATH_SETUP])
+   if test "x$TWEEK_CONFIG" = "x" ; then
+      _TWEEK_PATH_SETUP()
+   fi
 
    TWEEK_CXXFLAGS=""
    TWEEK_CXXFLAGS_MIN=""
@@ -254,7 +258,9 @@ dnl     TWEEK_EXT_JARS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([TWEEK_PATH_JAVA],
 [
-   AC_REQUIRE([_TWEEK_PATH_SETUP])
+   if test "x$TWEEK_CONFIG" = "x" ; then
+      _TWEEK_PATH_SETUP()
+   fi
 
    TWEEK_JAVA_IDL=''
    TWEEK_JAVA_IDL_OPTS=''
@@ -312,7 +318,9 @@ dnl     TWEEK_PYTHON_IDL_INCFLAG
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([TWEEK_PATH_PYTHON],
 [
-   AC_REQUIRE([_TWEEK_PATH_SETUP])
+   if test "x$TWEEK_CONFIG" = "x" ; then
+      _TWEEK_PATH_SETUP()
+   fi
 
    TWEEK_PYTHON_IDL=''
    TWEEK_PYTHON_IDL_OPTS=''
