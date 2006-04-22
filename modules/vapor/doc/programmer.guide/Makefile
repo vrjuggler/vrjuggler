@@ -5,6 +5,7 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
+docdir=		../../../../doc
 NAME=		programmer.guide
 
 XSLT_TOOL=	Saxon
@@ -20,7 +21,7 @@ instdir=	vapor/$(PROJECT_NUMBER)/programmer.guide
 
 prefix=		$(webroot)/$(instdir)
 #INSTALL_DIRS=	figures
-INSTALL_FILES=	$(webroot)/base_style.css
+INSTALL_FILES=	$(docdir)/base_style.css
 
 #NEED_DB_IMAGES=	1
 
@@ -31,4 +32,4 @@ INSTALL_FILES=	$(webroot)/base_style.css
 #CLOBBER_FILES=	$(IMAGES)
 
 include ../version.mk
-include ../../../../doc/docbook.mk
+include $(docdir)/docbook.mk

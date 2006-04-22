@@ -5,8 +5,9 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
+docdir=		../../../../doc
 NAME=		technical-overview
-XML_FILES=    $(NAME).xml
+XML_FILES=	$(NAME).xml
 
 # Define to use OpenJade to render PDF document.
 #USE_JADEPROC=1
@@ -43,7 +44,7 @@ instdir=	vrjuggler/$(PROJECT_NUMBER)/technical.guide
 
 prefix=		$(webroot)/$(instdir)
 INSTALL_DIRS=	figures
-INSTALL_FILES=	$(webroot)/base_style.css
+INSTALL_FILES=	$(docdir)/base_style.css
 
 $(NAME).txt: $(IMAGES)
 $(NAME).html: $(IMAGES)
@@ -51,4 +52,4 @@ $(NAME)/index.html: $(IMAGES)
 $(NAME).pdf: $(IMAGES)
 
 include ../version.mk
-include ../../../../doc/docbook.mk
+include $(docdir)/docbook.mk

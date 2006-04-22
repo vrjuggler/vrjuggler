@@ -1,0 +1,286 @@
+a:link
+{
+   color: rgb(1, 48, 90); 
+}
+a:visited
+{
+   color: rgb(21, 99, 13); 
+} 
+a:active, a:hover
+{
+   color: rgb(170, 23, 42);
+}
+a:hover
+{
+   font-style: bold;
+}
+
+a
+{
+}
+
+.vrj-body, p, td p, BODY, BODY p, .BODY, BODY:text, noframes, ul, ol, li, dl, dt, dd
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   font-size: 13px;
+   
+   background-color: rgb(255, 255, 255);
+   color: rgb(0, 0, 0);
+   verticle-align: top;
+}
+
+.vrj-foot
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   font-size: 11px;
+   background-color: rgb(255, 255, 255);
+   color: rgb(0, 0, 0);
+   verticle-align: top;
+}
+
+.vrj-blockbody, .vrj-menuitem
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   background-color: rgb(255, 255, 255);
+   cell-spacing: none;
+   border-spacing: 0;
+   color: rgb(0, 0, 0);
+   font-size: 11px;
+}
+
+.vrj-blocktitle
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   background-color: #f7f7e7;
+   font-size: 13px;
+   font-style: bold;
+   verticle-align: center;
+   text-align: center;
+}
+
+.vrj-blockborder
+{
+   background-color: #ebecff;
+   cell-spacing: none;
+   border-spacing: 0;   
+}
+
+.vrj-footborder
+{
+   background-color: #ebecfc;
+   text-align: right;
+}
+
+.vrj-blockborder, .vrj-menuitem, .vrj-blocktitle, .vrj-blockbody
+{
+   cell-spacing: none;
+   margin-top: 0;
+   matrgin-bottom: 0;
+   margin-right: 0;
+   margin-left: 0;
+   margin: 0;
+   padding-top: 0;
+   padding-bottom: 0;
+   padding-right: 0;
+   padding-left: 0;
+   padding: 0;
+   border-top-width: 0;
+   border-bottom-width: 0;
+   border-right-width: 0;
+   border-left-width: 0;
+   border-spacing: 0;
+   border: 0;
+}
+
+
+
+
+.vrj-downloadtitle
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   background-color: #ebecff;
+   font-size: 13px;
+   font-style: bold;
+   verticle-align: center;
+   text-align: center;
+}
+
+.vrj-cell, .vrj-cell1, .vrj-cell2
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   font-size: 13px;
+   font-style: bold;
+   verticle-align: top;
+   text-align: left;
+   
+   margin-top: 0;
+   matrgin-bottom: 13;
+   margin-right: 0;
+   margin-left: 0;
+   margin: 0;
+   padding-top: 0;
+   padding-bottom: 13;
+   padding-right: 0;
+   padding-left: 0;
+   padding: 13;
+   border-top-width: 0;
+   border-bottom-width: 13;
+   border-right-width: 0;
+   border-left-width: 0;
+   border-spacing: 0;
+   border: 0;
+}
+
+.vrj-cell1
+{
+   background-color: #f7f7e7;
+}
+
+.vrj-cell2
+{
+   background-color: #ebecff;
+}
+
+
+
+
+HR
+{
+   size: 1;
+}
+
+img, a img, p img, body img
+{
+   border-width: 0;
+}
+
+.red
+{
+   color: rgb(255, 0, 0);
+}
+.black
+{
+   color: rgb( 0,0,0 );
+}
+.darkblue
+{
+   color: rgb( 30,30,188 );
+}
+
+b h1, td h1, h1, h1style, p h1, a h1, .h1,
+h2, h3, h4, h5, h6, p h2, p h3, p h4, p h5, p h6, 
+b h2, td h2, b h3, td h3, b h4, td h4, b h5, td h5, td h6,
+a h2, a h3, a h4, a h5, a h6, 
+.h2, .h3, .h4, .h5, .h6
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   font-style: bold;
+   margin-bottom: 0cm;
+   verticle-align: bottom;
+}
+
+b h1, td h1, h1, h1style, p h1, a h1, .h1
+{
+   font-size: 19px; 
+}
+
+h2, h3, h4, h5, h6, p h2, p h3, p h4, p h5, p h6, 
+b h2, td h2, b h3, td h3, b h4, td h4, b h5, td h5, td h6,
+a h2, a h3, a h4, a h5, a h6, 
+.h2, .h3, .h4, .h5, .h6
+{
+   font-size: 16px; 
+}
+
+b h1, td h1, .h1, h1, h1style, .blue, .vrj-pagetitle, b .vrj-pagetitle
+{
+   color: rgb(0, 51, 102);
+}
+
+.vrj-pagetitle, b .vrj-pagetitle
+{
+   font-size: 13px; 
+   font-style: bold;
+}
+
+b h2, td h2, h2, h2style, .red
+{
+   color: rgb(113, 34, 55);
+}
+b h3, td h3, h3, h3style, .blue
+{
+color: rgb(96, 72, 130); 
+}
+b h4, td h4, h4, h4style, .purple
+{
+color: rgb(0, 55, 92);
+}
+b h5, td h5, h5, h5style, .orange
+{
+color: rgb(145, 60, 29);
+}
+h6, h6style, .darkred
+{
+color: rgb(60, 0, 0);
+}
+TT, tt, PRE, pre
+{
+   font-family: monospace,monospaced,courier,default,serif;
+   color: rgb(0, 0, 40);
+   font-size: 13px;
+}
+
+.hanging, .vrj-menuitem
+{
+   text-indent: -10px;
+   margin-left:  10px;
+}
+
+small small small, td small small small
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   font-size: 8px;
+   font-style: normal;
+}
+
+small small, td small small
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   font-size: 9px;
+   font-style: normal;
+}
+
+.small, small, td small 
+{
+   font-family: Tahoma, Verdana, sans-serif;
+   font-size: 10px;
+   font-style: normal;
+}
+
+.vrj-doc-title
+{
+   font-style: bold;
+}
+
+.vrj-doc-version-table,
+{
+   width: 500;
+}
+
+.vrj-doc-version-cell
+{
+   background-color: #f4f4bc;
+}
+
+.vrj-doc-content-table
+{
+}
+
+.vrj-doc-content-title
+{
+   background-color: #f7f7e7;
+}
+
+.vrj-doc-content-desc
+{
+}

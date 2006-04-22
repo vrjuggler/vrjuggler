@@ -5,6 +5,7 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
+docdir=		..
 NAME=		build.system
 
 XML_FILES=	$(NAME).xml
@@ -16,8 +17,8 @@ webroot=	$(HOME)/public_html/jugglerweb
 instdir=	docs/juggler.build.system
 
 prefix=		$(webroot)/$(instdir)
-INSTALL_FILES=	$(webroot)/base_style.css
+INSTALL_FILES=	$(docdir)/base_style.css
 
 NEED_DB_IMAGES=	1
 
-include ../docbook.mk
+include $(docdir)/docbook.mk
