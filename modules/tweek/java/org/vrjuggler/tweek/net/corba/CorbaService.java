@@ -252,28 +252,12 @@ public class CorbaService
                         mgrList.add(mgr);
                      }
                   }
-                  // What the heck is this??
-                  catch (org.omg.CORBA.TRANSIENT ex)
+                  // CORBA system exceptions mean that the current Subject
+                  // Manager reference is not available, so we cannot add it
+                  // to mgrList.
+                  catch (org.omg.CORBA.SystemException ex)
                   {
-                     System.err.println("Caught CORBA.TRANSIENT exception " +
-                                        "when trying to verify reference " +
-                                        "validity: " + ex.getMessage());
-//                     ex.printStackTrace();
-                  }
-                  // This exception pops up on Windows, and it seems to be
-                  // the result of invalid references.  Catching the exception
-                  // and doing nothing seems to be a valid way of handling
-                  // things.
-                  catch (org.omg.CORBA.COMM_FAILURE ex)
-                  {
-/*
-                     System.err.println("Caught CORBA.COMM_FAILURE " +
-                                        "exception when trying to verify " +
-                                        "reference validity: " +
-                                        ex.getMessage());
-                     System.out.println(ex);
-//                     ex.printStackTrace();
-*/
+                     // Ignore the exception.
                   }
                }
                catch (InvalidName e)
