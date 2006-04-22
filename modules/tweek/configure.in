@@ -450,8 +450,13 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.36.0], , [AC_MSG_ERROR([*** VPR required for Tweek C++ API ***])])
-VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+VPR_PATH([0.36.0], [BUILD_CXX='Y'],
+         [AC_MSG_WARN([*** VPR required for Tweek C++ API ***])
+          BUILD_CXX='N'])
+
+if test "x$BUILD_CXX" = "xY" ; then
+   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+fi
 
 AH_TEMPLATE([TWEEK_INCLUDE_CORBA_H],
    [Define to include the main CORBA header file -- for example: <omniORB3/CORBA.h>])
