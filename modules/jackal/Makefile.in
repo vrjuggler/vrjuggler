@@ -109,6 +109,7 @@ include @topdir@/make.defs.mk
 
 STARTTIME:=	$(shell LC_TIME=C date)
 
+BUILD_CXX=	@BUILD_CXX@
 BUILD_PROF_C=	@BUILD_PROF_C@
 BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 

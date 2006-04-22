@@ -178,18 +178,19 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.10], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
+VPR_PATH([1.1.10], BUILD_CXX='Y', 
+         [AC_MSG_WARN([*** VPR required for JCCL ***])
+          BUILD_CXX='N'])
 
 TWEEK_PATH_JAVA([0.19.2], ,
                 [AC_MSG_WARN([*** Tweek Java required for editor JavaBeans ***])
                  BUILD_JAVA='N'
                 ])
 
-# TODO: Make it possible to build just the java components of JCCL
-BUILD_CXX='Y'
-
-VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-DPP_HAVE_CPPUNIT([1.9.10])
+if test "x$BUILD_CXX" = "xY" ; then
+   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+   DPP_HAVE_CPPUNIT([1.9.10])
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for header files.

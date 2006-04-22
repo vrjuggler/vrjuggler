@@ -90,8 +90,12 @@ include $(MKPATH)/dpp.obj-common.mk
 # -----------------------------------------------------------------------------
 # Recursive make setup
 # -----------------------------------------------------------------------------
+BUILD_CXX=	@BUILD_CXX@
 DIRPRFX=	common/
-SUBDIR=		jccl
+
+ifeq ($(BUILD_CXX), Y)
+   SUBDIR=	jccl
+endif
 
 $(RECTARGET): recursive
 

@@ -104,9 +104,15 @@ include $(MKPATH)/dpp.clean.mk
 # -----------------------------------------------------------------------------
 # Recursive make setup
 # -----------------------------------------------------------------------------
+BUILD_CXX=	@BUILD_CXX@
 DIRPRFX=	config/
-SUBDIR=		jccl
+
+ifeq ($(BUILD_CXX), Y)
+   SUBDIR=		jccl
+endif
+
 $(RECTARGET): recursive
+
 include $(MKPATH)/dpp.subdir.mk
 
 # -----------------------------------------------
