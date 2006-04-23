@@ -39,11 +39,15 @@
 # Include common definitions.
 include @topdir@/make.defs.mk
 
+BUILD_CXX=	@BUILD_CXX@
+
 # Prefix for recursive stuff.
 DIRPRFX=	rtrc/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR=		jccl
+ifeq ($(BUILD_CXX), Y)
+   SUBDIR=	jccl
+endif
 
 $(RECTARGET): recursive
 
