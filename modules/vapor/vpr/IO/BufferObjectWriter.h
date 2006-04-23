@@ -207,9 +207,15 @@ public:
       throw (IOException);
 
 private:
-   /** Do not allow copy.  To do so we would need to make the memory handling much smarter. */
+   /**
+    * Do not allow copy.  To do so we would need to make the memory handling
+    * much smarter.
+    */
    BufferObjectWriter(const BufferObjectWriter& rhs)
-   {; }
+      : vpr::ObjectWriter(rhs)
+   {
+      /* Do nothihng. */ ;
+   }
 
 public:
    bool                       mOwnDataBuffer;      /**< If true we allocated the data buffer and should delete it. */
