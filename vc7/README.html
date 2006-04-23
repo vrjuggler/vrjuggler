@@ -259,6 +259,19 @@ The optional environment variables are as follows:
   <dd>
     The root directory of a Trackd API installation.
   </dd>
+  <dt><tt>GADGET_TRACKD_API_H</tt></dt>
+  <dd>
+    The name of the Trackd API header file to be included by the Trackd API
+    driver. Different versions of the Trackd API have different names for the
+    header file that proides the type declarations needed to use the Trackd
+    API driver. The build script <tt>buildwin32.py</tt> attempts to detect
+    automatically what value to use, but it has a finite number of choices
+    based on known possible values. The form for the value of this environment
+    variable must be either <tt>&lt;file.h&gt;</tt> or <tt>"file.h"</tt>
+    (including the quotes). For example, to compile against Trackd API 5.0,
+    set this environment variable to the value
+    <tt>&lt;trackdAPI_CC.h&gt;</tt>.
+  </dd>
 </dl>
 
 <a name="choose_configuration"><h1>4. Choose a Configuration to Build</h1></a>
