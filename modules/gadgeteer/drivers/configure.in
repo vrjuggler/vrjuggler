@@ -210,21 +210,37 @@ CPPFLAGS="$CPPFLAGS $TRACKD_API_INCLUDES"
 
 # Test to see if trackdAPI.h is available.  If so, we leave
 # $TRACKD_API_INCLUDES alone so that it may be used again later.  If it is
-# not there, we clear $TRACKD_API_INCLUDES to avoid polluting the compile
+# not there, we will clear $TRACKD_API_INCLUDES to avoid polluting the compile
 # line.
-AC_CHECK_HEADER([trackdAPI.h], [gadget_have_trackdapi='yes'],
-                [gadget_have_trackdapi='no'
-                 TRACKD_API_INCLUDES=''])
+trackdapi_header=''
+AC_CHECK_HEADER([trackdAPI.h], [trackdapi_header='trackdAPI.h'])
+
+if test "x$trackdapi_header" != "x" ; then
+   HAVE_TRACKDAPI='Y'
+else
+   # The test for Trackd API 4.x failed, so try the 5.x header file name.
+   AC_CHECK_HEADER([trackdAPI_CC.h], [trackdapi_header='trackdAPI_CC.h'])
+
+   if test "x$trackdapi_header" != "x" ; then
+      HAVE_TRACKDAPI='Y'
+   else
+      AC_MSG_WARN([*** Did not find TrackdAPI in $trackdapi_root ***])
+      TRACKD_API_INCLUDES=''
+      HAVE_TRACKDAPI='N'
+   fi
+fi
+
+# If the Trackd API was found, then define the preprocessor symbol
+# GADGET_INCLUDE_TRACKDAPI_H to be the name of the header file to be
+# included.
+if test "x$trackdapi_header" != "x" ; then
+   AC_DEFINE_UNQUOTED([GADGET_INCLUDE_TRACKDAPI_H],
+                      [<$trackdapi_header>]
+                      [Define to include the Trackd API header file -- for example: <trackdAPI_CC.h>])
+fi
 
 CFLAGS="$gadget_save_CFLAGS"
 CPPFLAGS="$gadget_save_CPPFLAGS"
-
-if test "x$gadget_have_trackdapi" = "xyes" ; then
-   HAVE_TRACKDAPI='Y'
-else
-   HAVE_TRACKDAPI='N'
-   AC_MSG_WARN([*** Did not find TrackdAPI in $trackdapi_root ***])
-fi
 
 DPP_LANG_RESTORE
 
