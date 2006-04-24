@@ -139,6 +139,9 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\BufferObjectWriter.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionAbortedException.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionRefusedException.cpp">
 			</File>
 			<File
@@ -348,6 +351,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\CondVarNSPR.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionAbortedException.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionRefusedException.h">
