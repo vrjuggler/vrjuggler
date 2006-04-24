@@ -250,6 +250,22 @@ public:
       return mNodes;
    }
 
+   /**
+    * Return the number of times that preDraw() has been called.
+    */
+   vpr::Uint64 preDrawCallCount()
+   {
+      return mPreDrawCallCount;
+   }
+
+   /**
+    * Return the number of times that postPostFrame() has been called.
+    */
+   vpr::Uint64 postPostFrameCallCount()
+   {
+      return mPostPostFrameCallCount;
+   }
+
 private:
    ClusterDepChecker            mDepChecker;
 
@@ -269,6 +285,9 @@ private:
    bool                         mClusterReady;       /**< Flag set true when all dependancies are satisfied. */
 
    ClusterNetwork*              mClusterNetwork;     /**< The network representation of the cluster. */
+
+   vpr::Uint64                  mPreDrawCallCount;       /**< # calls to preDraw() */
+   vpr::Uint64                  mPostPostFrameCallCount; /**< # calls to postPostFrame() */
 };
 
 } // end namespace
