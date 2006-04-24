@@ -157,6 +157,8 @@ namespace cluster
    ClusterManager::ClusterManager()
       : mClusterActive( false )
       , mClusterReady( false )
+      , mPreDrawCallCount(0)
+      , mPostPostFrameCallCount(0)
    {
       mClusterNetwork = new ClusterNetwork();
       jccl::ConfigManager::instance()->addConfigElementHandler( mClusterNetwork );
@@ -360,6 +362,7 @@ namespace cluster
       }
       if ( updateNeeded )
       {
+         mPreDrawCallCount++;
          sendEndBlocksAndSignalUpdate(2);
       }
    }
@@ -388,6 +391,7 @@ namespace cluster
       }
       if ( updateNeeded )
       {
+         mPostPostFrameCallCount++;
          sendEndBlocksAndSignalUpdate(3);
       }
    }
@@ -509,12 +513,12 @@ namespace cluster
                               std::string( "Cluster Manager: Adding config element.\n" ),
                               std::string( "...done adding element.\n" ) );
 
-      vprASSERT( configCanHandle( element ) );
+      vprASSERT(configCanHandle(element));
+      vprASSERT(recognizeClusterManagerConfig(element));
 
       bool ret_val = false;      // Flag to return success
 
-      if ( recognizeClusterManagerConfig( element ) )
-      {
+	  {
          vprDEBUG( gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "Configure the Cluster: " << element->getName()
@@ -781,23 +785,7 @@ namespace cluster
     */
    bool ClusterManager::configCanHandle( jccl::ConfigElementPtr element )
    {
-      if ( recognizeClusterManagerConfig( element ) )
-      {
-         return true;
-      }
-
-/*
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
-      {
-         if ((*i)->configCanHandle(element))
-         {
-            return true;
-         }
-      }
-*/
-      return false;
+      return(recognizeClusterManagerConfig( element ));
    }
 
    std::string ClusterManager::getElementType()
@@ -833,6 +821,8 @@ namespace cluster
    {
       out << std::endl << "========== ClusterManager Status =========="
           << std::endl;
+      out << "preDraw() call count:       " << mgr.mPreDrawCallCount << std::endl;
+      out << "postPostFrame() call count: " << mgr.mPostPostFrameCallCount << std::endl;
       out << "Plugins:" << std::endl;
 
       // Dump Plugins
