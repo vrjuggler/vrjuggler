@@ -91,6 +91,11 @@ void GlWindow::configWindow(vrj::Display* displayWindow)
    mHideMouse = mVrjDisplay->shouldHideMouse();
 }
 
+void GlWindow::swapBuffers()
+{
+   mSwapCount++;
+}
+
 /** Complete any setup that is needed after open
 * @pre Window is open
 */
@@ -255,6 +260,7 @@ std::ostream& operator<<(std::ostream& out, GlWindow& win)
    //out << "-------- GlWindow --------" << endl;
    out << "Open: " << (win.mWindowIsOpen ? "Yes" : "No") << std::endl;
    out << "Stereo: " << (win.mInStereo ? "Yes" : "No") << std::endl;
+   out << "Swap Count: " << win.mSwapCount << std::endl;
    out << "Display Info:\n" << *(win.mVrjDisplay) << std::endl;
    return out;
 }

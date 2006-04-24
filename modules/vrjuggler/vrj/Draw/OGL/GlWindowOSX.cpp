@@ -59,8 +59,11 @@ GlWindowOSX::~GlWindowOSX() {
     close();
 }
 
-void GlWindowOSX::swapBuffers() {
-    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)
+void GlWindowOSX::swapBuffers()
+{
+   GlWindow::swapBuffers();
+
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)
       << "vrj::GlWindowOSX::swapBuffers()" << std::endl << vprDEBUG_FLUSH;
 
     if(aglContext)

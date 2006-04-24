@@ -501,6 +501,7 @@ bool GlWindowXWin::close()
 // Buffer swapping method
 void GlWindowXWin::swapBuffers()
 {
+   GlWindow::swapBuffers();
    glXSwapBuffers(mXDisplay, mXWindow);
 }
 // Make context current
