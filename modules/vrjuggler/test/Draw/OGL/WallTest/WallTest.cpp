@@ -80,7 +80,7 @@ void WallTest::init()
    mTestModes.push_back(TestModePtr(new TestPatternMode));
    mTestModes.push_back(TestModePtr(new CubeLineMode));
    mTestModes.push_back(TestModePtr(new StereoEyeTestMode));
-   mTestModes.push_back(TestModePtr(new SwapSyncTestMode));
+   //mTestModes.push_back(TestModePtr(new SwapSyncTestMode));
    mTestModes.push_back(TestModePtr(new DisplayInfoMode));
    mTestModes.push_back(TestModePtr(new WireSphereMode));   
    mTestModes.push_back(TestModePtr(new ClusterTestMode));   

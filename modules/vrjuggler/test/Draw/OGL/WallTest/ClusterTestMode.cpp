@@ -32,10 +32,13 @@
 
 #include <cluster/ClusterManager.h>
 
+#include <gadget/Type/Digital.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Draw/OGL/GlWindow.h>
 
+#include <WallTest.h>
 #include <WallTestHelpers.h>
 #include <ClusterTestMode.h>
 
@@ -48,32 +51,35 @@ void ClusterTestMode::draw(WallTest* wallTest)
 {
    vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
    vrj::GlWindow* window = user_data->getGlWindow();
-   gmtl::Matrix wand_matrix = wallTest->mWand->getData();
+   gmtl::Matrix44f wand_matrix = wallTest->mWand->getData();
    gmtl::Vec3f wand_pos = gmtl::makeTrans<gmtl::Vec3f>(wand_matrix);
 
    std::stringstream display_text;
    display_text << "Wand Position: " << wand_pos << std::endl;
    display_text << "Wand Timestamp: " << wallTest->mWand->getTimeStamp().getBaseVal() << std::endl;
-   display_text << "Sleep Time: " << mSleepTime << std::endl;
+   display_text << "Sleep Time: " << mSleepTime << " ms" << std::endl;
    display_text << "Swap Count: " << window->getSwapCount() << std::endl;
-   display_test << cluster::ClusterManager::instance();
+   display_text << *cluster::ClusterManager::instance();
 
- 
-   glColor(1.0f, 1.0f, 1.0f);
-   mText->(display_text.str(), 0.4f, 0.4f);
+   int origin_x, origin_y, width, height;
+   window->getOriginSize(origin_x, origin_y, width, height);
+
+   glColor3f(1.0f, 1.0f, 1.0f);
+   height *= 1.5;
+   mText->drawTextBlock(display_text.str(), 0.4f, 0.4f, 10.0f, height, height*1.4);
 }
 
 void ClusterTestMode::update(WallTest* wallTest)
 {
    if (wallTest->mButton1->getData() == gadget::Digital::TOGGLE_ON)
    {
-      mSleepTime += 0.25;
+      mSleepTime += 25;
    }
    if (wallTest->mButton1->getData() == gadget::Digital::TOGGLE_ON &&
-       mSleepTime >= 0.25)
+       mSleepTime >=25)
    {
-      mSleepTime -= 0.25;
+      mSleepTime -= 25;
    }
 
-   vpr::System::sleep(mSleepTime);
+   vpr::System::msleep(mSleepTime);
 }
