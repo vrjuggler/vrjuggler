@@ -68,6 +68,7 @@ class VJ_CLASS_API GlWindow
 public:
    GlWindow()
       : mVrjDisplay(NULL)
+      , mSwapCount(0)
       // The context is always dirty when the window is first created
       , mDirtyContext(true)
       , mDirtyViewport(true)
@@ -129,8 +130,7 @@ public:
     * @post A glFlush must be called explicitly by the implementation
     *       or explicitly by the functions used in the implementation.
     */
-   virtual void swapBuffers()
-   {;}
+   virtual void swapBuffers();
 
    /**
     * Handles any window events that have occured.
@@ -263,6 +263,11 @@ public:
       height  = mWindowHeight;
    }
 
+   vpr::Uint64 getSwapCount()
+   {
+      return mSwapCount;
+   }
+
    friend std::ostream& operator<<(std::ostream& out, GlWindow& win);
 
 protected:
@@ -271,6 +276,8 @@ protected:
     * config and to get the viewing transforms from.
     */
    vrj::Display* mVrjDisplay;
+
+   vpr::Uint64 mSwapCount; /**< The number of times that swapBuffers() has been called. */
 
    bool mDirtyContext;  /**< The context is dirty.  We need to (re)initialize it next draw. */
    bool mDirtyViewport; /**< The GL window setup (viewport, etc) is dirty and needs to be reinited. */

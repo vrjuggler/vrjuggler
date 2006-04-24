@@ -357,6 +357,7 @@ void GlPipe::renderWindow(GlWindow* win)
    the_display->updateProjections(scale_factor);
 
    mGlDrawManager->setCurrentContext(win->getId());     // Set TSS data of context id
+   mGlDrawManager->currentUserData()->setGlWindow(win);
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
       << "[vrj::GlPipe::renderWindow()] Set context to: "
@@ -365,6 +366,7 @@ void GlPipe::renderWindow(GlWindow* win)
 
    // --- SET CONTEXT --- //
    win->makeCurrent();
+ 
 
    // VIEWPORT cleaning
    if (win->hasDirtyViewport())
@@ -376,7 +378,7 @@ void GlPipe::renderWindow(GlWindow* win)
    // - Must call when context is new OR application is new
    if (win->hasDirtyContext())
    {
-         // Have dirty context
+      // Have dirty context
       mGlDrawManager->currentUserData()->setUser(NULL);         // Set user data
       mGlDrawManager->currentUserData()->setProjection(NULL);
       mGlDrawManager->currentUserData()->setViewport(NULL);     // Set vp data
@@ -420,7 +422,6 @@ void GlPipe::renderWindow(GlWindow* win)
          // Set user information
          mGlDrawManager->currentUserData()->setUser(viewport->getUser());       // Set user data
          mGlDrawManager->currentUserData()->setViewport(viewport);              // Set the viewport
-         mGlDrawManager->currentUserData()->setGlWindow(win);                   // Set the gl window
 
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())

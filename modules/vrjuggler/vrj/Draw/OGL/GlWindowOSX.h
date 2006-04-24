@@ -96,7 +96,7 @@ public:
     GlWindowOSX();
     virtual ~GlWindowOSX();
 
-    void swapBuffers();
+    virtual void swapBuffers();
     virtual bool open();
     virtual bool close();
     bool makeCurrent();

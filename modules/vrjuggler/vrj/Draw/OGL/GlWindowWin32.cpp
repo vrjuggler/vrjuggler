@@ -198,7 +198,7 @@ bool GlWindowWin32::open()
          //   that would correspond to the group and could group the correct
          //   windows to a group id.
          mExtensions.wglJoinSwapGroupNV(mDeviceContext, 1);
-         mExtensions.wglBindSwapBarrierNV(mDeviceContext, 1, 1);
+         mExtensions.wglBindSwapBarrierNV(1, 1);
       }
       else
       {
@@ -261,6 +261,7 @@ bool GlWindowWin32::makeCurrent()
 void GlWindowWin32::swapBuffers()
 {
    vprASSERT(mDeviceContext != NULL);
+   GlWindow::swapBuffers();
    SwapBuffers(mDeviceContext);
 }
 
