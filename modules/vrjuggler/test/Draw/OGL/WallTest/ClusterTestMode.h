@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _STEREO_EYE_TEST_MODE_H_
-#define _STEREO_EYE_TEST_MODE_H_
+#ifndef _CLUSTER_TEST_MODE_H_
+#define _CLUSTER_TEST_MODE_H_
 
 #include <TestMode.h>
 #include <Text.h>
@@ -44,7 +44,7 @@ class ClusterTestMode : public TestMode
 {
 public:
    ClusterTestMode()
-      : mSleepTime(0.25f)
+      : mSleepTime(250)
    {;}
    virtual std::string getName()
    {
@@ -56,7 +56,7 @@ public:
    virtual void draw(WallTest* wallTest);
 
    vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
-   float mSleepTime;
+   vpr::Uint32 mSleepTime;
 };
 
 
