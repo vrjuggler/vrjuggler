@@ -45,9 +45,9 @@
 #include <prio.h>
 #include <prinrval.h>
 
-#include <vpr/IO/ConnectionAbortedException.h>
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/WouldBlockException.h>
+#include <vpr/IO/Socket/ConnectionAbortedException.h>
 #include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/Util/Error.h>
 #include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
