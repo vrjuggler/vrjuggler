@@ -197,7 +197,7 @@ bool Ether24::startSampling()
       mDevice.open(mAddress);
       mActive = true;
    }
-   catch (vpr::Exception& ex)
+   catch (vpr::Exception&)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
