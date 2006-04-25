@@ -48,15 +48,22 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
 
-#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
-#  include <al.h>
-#  include <alc.h>
-#  include <alut.h>
-#else
+#if defined(HAVE_AL_AL_H)
 #  include <AL/al.h>
 #  include <AL/alc.h>
-#  include <AL/alext.h>
+
+#  if ! defined(WIN32) && ! defined(WIN64)
+#     include <AL/alext.h>
+#  endif
+#else
+#  include <al.h>
+#  include <alc.h>
+#endif
+
+#if defined(HAVE_AL_ALUT_H)
 #  include <AL/alut.h>
+#else
+#  include <alut.h>
 #endif
 
 #include <gmtl/Math.h>

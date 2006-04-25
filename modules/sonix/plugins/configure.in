@@ -188,8 +188,13 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
             [AC_MSG_WARN([*** OpenAL plug-in cannot be built. ***])])
 
          LIBS="$snx_save_LIBS"
-         if test "x$HAVE_OPENAL" = "xyes" ; then
+         if test "x$HAVE_OPENAL" = "xY" ; then
             DPP_PTHREAD_FINISH
+
+            snxsave_CPPFLAGS="$CPPFLAGS"
+            CPPFLAGS="$CPPFLAGS $AL_INCLUDES $ALUT_INCLUDES"
+            AC_CHECK_HEADERS(AL/al.h AL/alut.h)
+            CPPFLAGS="$snxsave_CPPFLAGS"
          fi
       else
          AC_MSG_WARN([*** OpenAL cannot be used with a VPR installation that uses SPROC threads. ***])
