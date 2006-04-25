@@ -220,6 +220,8 @@ def getDefaultVars():
    optional.append(BuildOption('OPENAL_ROOT',
                                'OpenAL SDK installation directory', '',
                                required = False))
+   optional.append(BuildOption('ALUT_ROOT', 'ALUT SDK installation directory',
+                               '', required = False))
    optional.append(BuildOption('TRACKD_API_ROOT',
                                'TrackdAPI installation directory', '',
                                required = False))
@@ -328,6 +330,42 @@ def postProcessOptions(options):
          if match is not None:
             os.environ['OMNITHREAD_VERSION'] = match.group(1)
             break
+
+   # Determine if al.h is in the base include directory or in include\AL.
+   if os.environ['OPENAL_ROOT'] != '':
+      # TODO: Extend for Win64.
+      lib_dirs = [os.path.join(os.environ['OPENAL_ROOT'], 'libs'),
+                  os.path.join(os.environ['OPENAL_ROOT'], 'libs', 'Win32')]
+
+      for l in lib_dirs:
+         openal_lib = os.path.join(l, 'OpenAL32.lib')
+         if os.path.exists(openal_lib):
+            os.environ['OPENAL_LIB_DIR'] = l
+            break
+
+      header_file = os.path.join(os.environ['OPENAL_ROOT'], 'include', 'AL',
+                                 'al.h')
+      # If the file is include\AL\al.h, then set the environment variable
+      # %HAVE_AL_AL_H% to the preprocessor symbol 'HAVE_AL_AL_H'.
+      # See modules/sonix/plugins/OpenAL/OpenALSoundImplementation.cpp.
+      if os.path.exists(header_file):
+         os.environ['HAVE_AL_AL_H'] = 'HAVE_AL_AL_H'
+
+   # Determine if alut.h is in the base include directory or in include\AL.
+   openal_envs = ['ALUT_ROOT', 'OPENAL_ROOT']
+   for env in openal_envs:
+      if os.environ[env] != '':
+         header_file = os.path.join(os.environ[env], 'include', 'AL', 'alut.h')
+         # If the file is include\AL\alut.h, then set the environment variable
+         # %HAVE_AL_ALUT_H% to the preprocessor symbol 'HAVE_AL_ALUT_H'.
+         # See modules/sonix/plugins/OpenAL/OpenALSoundImplementation.cpp.
+         if os.path.exists(header_file):
+            os.environ['HAVE_AL_ALUT_H'] = 'HAVE_AL_ALUT_H'
+
+   # If the ALUT installation directory is not set, then assume that it is the
+   # same as the OpenAL installation directory.
+   if os.environ['ALUT_ROOT'] == '' and os.environ['OPENAL_ROOT'] != '':
+      os.environ['ALUT_ROOT'] = os.environ['OPENAL_ROOT']
 
    if os.environ['TRACKD_API_ROOT'] != '' and os.path.exists(os.environ['TRACKD_API_ROOT']):
       trackdapi_dir = os.environ['TRACKD_API_ROOT']
@@ -1435,11 +1473,29 @@ def installAudiere(prefix):
                  os.getenv('AUDIERE_ROOT', ''), prefix, True)
 
 def installOpenAL(prefix):
-   printStatus("Installing OpenAL DLL")
-   srcdir  = os.environ['OPENAL_ROOT']
+   srcdir = os.environ['OPENAL_ROOT']
+
    if srcdir != "":
-       destdir = os.path.join(prefix, 'bin')
-       shutil.copy2(os.path.join(srcdir, 'dll', 'OpenAL32.dll'), destdir)
+      printStatus("Installing OpenAL DLL")
+      destdir = os.path.join(prefix, 'bin')
+
+      # OpenAL 1.0 and 1.1 put the redistributable DLL in different places.
+      dll_dirs = [os.path.join(srcdir, 'dll'),
+                  os.path.join(r'C:\windows', 'system32')]
+
+      for d in dll_dirs:
+         dll = os.path.join(d, 'OpenAL32.dll')
+         if os.path.exists(dll):
+            shutil.copy2(dll, destdir)
+
+   srcdir = os.environ['ALUT_ROOT']
+   if srcdir != "":
+      printStatus("Installing ALUT DLL")
+      destdir = os.path.join(prefix, 'bin')
+
+      alut_dll = os.path.join(srcdir, 'lib', 'alut.dll')
+      if os.path.exists(alut_dll):
+         shutil.copy2(dll, destdir)
 
 def installOmniORB(prefix):
    root = os.getenv('OMNIORB_ROOT', '')

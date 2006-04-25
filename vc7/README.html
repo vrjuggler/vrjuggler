@@ -251,9 +251,24 @@ The optional environment variables are as follows:
   <dd>
     The root directory of an
     <a href="http://www.openal.org/downloads.html">OpenAL SDK</a> 1.0 or newer
-    installation.  The SDK can be
-    <a href="http://developer.creative.com/landing.asp?cat=1&sbcat=31&top=38">downloaded
-    from Creative Labs</a>.
+    installation.
+  </dd>
+  <dt><tt>ALUT_ROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://www.openal.org/downloads.html">ALUT SDK</a> 1.0 or newer
+    installation. With OpenAL 1.1 and newer, ALUT is distributed as a
+    separate package with its own DLL.
+
+    <blockquote>
+      <b>NOTE:</b> Free ALUT 1.0 includes the OpenAL headers relative to
+      the <tt>AL</tt> directory, but the OpenAL 1.1 SDK on Windows does not
+      put its header files in the <tt>AL</tt> subdirectory of
+      <tt>%OPENAL_ROOT%\include</tt>. It appears that the usal workaround
+      for this is to move or copy the OpenAL 1.1 SDK header files into the
+      directory <tt>%OPENAL_ROOT%\include\AL</tt> or to change the Free ALUT
+      headers. The Juggler build will handle either of these workarounds.
+    </blockquote>
   </dd>
   <dt><tt>TRACKD_API_ROOT</tt></dt>
   <dd>
