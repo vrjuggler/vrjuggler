@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
-	Name="Tweek_CXX_IDL"
+	Name="Tweek IDL to C++"
 	ProjectGUID="{3BCCC61B-04CC-4E14-9E47-397ADF93EEF6}"
 	Keyword="MakeFileProj">
 	<Platforms>
