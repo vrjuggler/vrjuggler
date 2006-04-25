@@ -192,6 +192,11 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
          if test "x$HAVE_OPENAL" = "xY" ; then
             DPP_PTHREAD_FINISH
 
+            snxsave_CPPFLAGS="$CPPFLAGS"
+            CPPFLAGS="$CPPFLAGS $AL_INCLUDES $ALUT_INCLUDES"
+            AC_CHECK_HEADERS(AL/al.h AL/alut.h)
+            CPPFLAGS="$snxsave_CPPFLAGS"
+
             if test "x$LIBALUT" != "x" ; then
                snxsave_CXXFLAGS="$CXXFLAGS"
                snxsave_CPPFLAGS="$CPPFLAGS"
