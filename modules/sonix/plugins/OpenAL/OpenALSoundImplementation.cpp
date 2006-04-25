@@ -83,6 +83,11 @@
 
 #include "OpenALSoundImplementation.h"
 
+#if defined(HAVE_ALUT_LOAD_MEMORY_FROM_FILE) || \
+	defined(ALUT_API_MAJOR_VERSION) && ALUT_API_MAJOR_VERSION >= 1
+#  define USE_ALUT_1_0
+#endif
+
 /////////////////////////
 // plugin API:
 #ifdef NO_SELF_REGISTER
@@ -647,7 +652,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
          // alutLoadWAVFile() is deprecated, so we try to avoid using it if we
          // can.
-#if defined(HAVE_ALUT_LOAD_MEMORY_FROM_FILE)
+#if defined(USE_ALUT_1_0)
          ALfloat freq;
          data = alutLoadMemoryFromFile(soundInfo.filename.c_str(), &format,
                                        &size, &freq);
@@ -663,7 +668,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
                          &size, &freq, &loop);
 #  endif
-#endif  /* defined(HAVE_ALUT_LOAD_MEMORY_FROM_FILE) */
+#endif  /* defined(USE_ALUT_1_0) */
 
          // XXX: This should probably throw an exception or something.
          if ( NULL == data )
@@ -717,7 +722,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          alBufferData(bufferID, format, &(mBindLookup[alias].data[0]),
                       mBindLookup[alias].data.size(), freq);
 
-#if defined(HAVE_ALUT_LOAD_MEMORY_FROM_FILE)
+#if defined(USE_ALUT_1_0)
          free(data);
 #else
          alutUnloadWAV(format, data, size, freq);
