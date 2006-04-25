@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="WallTest"
-	ProjectGUID="{E0C254B0-984A-4B74-A7E7-50994F9B22A2}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -67,13 +66,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -132,41 +125,24 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="CubeLineMode.cpp">
-			</File>
-			<File
-				RelativePath="SwapSyncTestMode.cpp">
-			</File>
-			<File
 				RelativePath="ClusterTestMode.cpp">
+			</File>
+			<File
+				RelativePath="CubeLineMode.cpp">
 			</File>
 			<File
 				RelativePath="DisplayInfoMode.cpp">
 			</File>
 			<File
-				RelativePath="main.cpp">
-			</File>
-			<File
 				RelativePath="StereoEyeTestMode.cpp">
-			</File>
-			<File
-				RelativePath="ClusterTestMode.cpp">
 			</File>
 			<File
 				RelativePath="TestPatternMode.cpp">
@@ -183,27 +159,24 @@
 			<File
 				RelativePath="WireSphereMode.cpp">
 			</File>
+			<File
+				RelativePath="main.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="CubeLineMode.h">
-			</File>
-			<File
-				RelativePath="SwapSyncTestMode.h">
-			</File>
-			<File
 				RelativePath="ClusterTestMode.h">
+			</File>
+			<File
+				RelativePath="CubeLineMode.h">
 			</File>
 			<File
 				RelativePath="DisplayInfoMode.h">
 			</File>
 			<File
 				RelativePath="StereoEyeTestMode.h">
-			</File>
-			<File
-				RelativePath="ClusterTestMode.h">
 			</File>
 			<File
 				RelativePath="TestMode.h">
