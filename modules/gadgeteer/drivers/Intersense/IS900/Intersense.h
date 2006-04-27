@@ -73,15 +73,14 @@ struct ISStationConfig
    int stationIndex;
    bool enabled;
 
-   int dig_min, dig_num;
-   int ana_min, ana_num;
+   int digMin;
+   int digNum;
+   int anaMin;
+   int anaNum;
 
-   bool useDigital, useAnalog;
+   bool useDigital;
+   bool useAnalog;
 };
-
-
-// XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
-//class Intersense : virtual public Position, virtual public Digital, virtual public Analog
 
 /**
  * Position derived class for running an IS900 tracking system.
@@ -110,7 +109,8 @@ struct ISStationConfig
  * See also: Position
  */
 //class Intersense : public Input, public Position, public Digital, public Analog
-class Intersense : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
+class Intersense :
+   public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>, Position>
 {
 protected:
    struct IsenseData
@@ -242,14 +242,16 @@ private:
     std::vector<DigitalData> mDigitalData;
     std::vector<AnalogData>  mAnalogData;
 
-//KLUDGE: work around the inherent difference between Position and Digital (and Analog)
-// Motivation: Positional expects multiple positional devices to be connected to the same
-// port and provides a means for accesses each positional device.  So, if there are four wands
-// there is one tracker unit that allows access to each wand...  For digital devices, there
-// may be limitless input, but each digital button is attached to the same digital device
-// The tracker with digital io uses its natural subset of positional devices to encapsulate
-// the digital IO as well. Therefore what is needed with four wands is a digital device that allows
-// access to subsets of digital buttons.
+// KLUDGE: work around the inherent difference between Position and Digital
+// (and Analog)
+// Motivation: Positional expects multiple positional devices to be connected
+// to the same port and provides a means for accesses each positional device.
+// So, if there are four wands there is one tracker unit that allows access to
+// each wand...  For digital devices, there may be limitless input, but each
+// digital button is attached to the same digital device The tracker with
+// digital io uses its natural subset of positional devices to encapsulate
+// the digital IO as well. Therefore what is needed with four wands is a
+// digital device that allows access to subsets of digital buttons.
 
     std::string mPortName;
     int         mBaudRate;
