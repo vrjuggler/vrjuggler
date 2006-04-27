@@ -385,9 +385,9 @@ def writeCacheFile(optionDict):
       cache_file.write(output)
    cache_file.close()
 
-def generateVersionHeaders():
+def generateVersionHeaders(vcDir = 'vc7'):
    class JugglerModule:
-      def __init__(self, srcDir, projDir, genFiles = None):
+      def __init__(self, srcDir, vcDir, projDir, genFiles = None):
          self.source_dir     = os.path.join(gJugglerDir, srcDir)
          self.version_params = os.path.join(self.source_dir, 'Makefile.inc.in')
          self.version_file   = os.path.join(self.source_dir, 'VERSION')
@@ -395,7 +395,7 @@ def generateVersionHeaders():
 
          if genFiles is not None:
             for f in genFiles:
-               output = os.path.join(gJugglerDir, 'vc7', projDir, f[0])
+               output = os.path.join(gJugglerDir, vcDir, projDir, f[0])
 
                if len(f) == 1 or f[1] is None:
                   template = os.path.join(self.source_dir, f[0] + '.in')
@@ -496,12 +496,12 @@ def generateVersionHeaders():
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
-   mods.append(JugglerModule(r'modules\vapor', 'VPR',
+   mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR',
                              [(r'vpr\vprParam.h',), (r'vpr\vprParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\tweek', 'Tweek_CXX',
+   mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
                              [(r'tweek\tweekParam.h',),
                               (r'tweek\tweekParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\jackal', 'JCCL',
+   mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL',
                              [(r'jccl\jcclParam.h',
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.h.in')),
@@ -509,42 +509,48 @@ def generateVersionHeaders():
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.cpp.in'))
                              ]))
-   mods.append(JugglerModule(r'modules\sonix', 'Sonix',
+   mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix',
                              [(r'snx\snxParam.h',), (r'snx\snxParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\gadgeteer', 'Gadgeteer',
+   mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                              [(r'gadget\gadgetParam.h',),
                               (r'gadget\gadgetParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\vrjuggler', 'VRJuggler',
+   mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              [(r'vrj\vrjParam.h',), (r'vrj\vrjParam.cpp',)]))
 
    for m in mods:
       m.generateParamFiles()
 
-def generateAntBuildFiles():
+def generateAntBuildFiles(vcDir = 'vc7'):
    class AntTarget:
-      def __init__(self, srcdir, moduleName, outputFile = 'build.xml',
-                   topSubDir = 'vc7'):
+      def __init__(self, srcdir, vcDir, moduleName, outputFile = 'build.xml',
+                   topSubDir = None):
          '''
-         __init__(srcdir, moduleName, outputFile, topSubDir)
+         __init__(srcdir, vcDir, moduleName, outputFile, topSubDir)
          Arguments:
          srcdir     -- The location of the Java source to be compiled.
-         moduleName -- The name of the Visual C++ project (under the 'vc7'
+         vcDir      -- The root of the directory tree containing the Visual
+                       C++ build system.
+         moduleName -- The name of the Visual C++ project (under the vcDir
                        subdirectory) associated with this Ant build.  When
-                       concatenated to 'vc7', this is where the the .class
+                       concatenated to vcDir, this is where the the .class
                        file(s) and the .jar file(s) will be created.
          outputFile -- The name of the Ant build file to generate.  If not
                        specified, this defaults to 'build.xml'.
          topSubDir  -- The root of the directory where all the work will be
                        done.  This is needed for Ant builds that depend on
                        previously constructed JAR files that will most likely
-                       exist somewhere in the 'vc7' directory tree.  This
+                       exist somewhere in the vcDir directory tree.  This
                        string is used as part of the replacment for the
                        string @topdir@ in the source build.xml.in file.  If
-                       not specified, this defaults to 'vc7'.
+                       not specified, this defaults to whatever value is
+                       passed in for vcDir.
          '''
+         if topSubDir is None:
+            topSubDir = vcDir
+
          self.srcdir      = os.path.join(gJugglerDir, srcdir)
          self.topdir      = os.path.join(gJugglerDir, topSubDir)
-         self.module_name = os.path.join(gJugglerDir, 'vc7', moduleName)
+         self.module_name = os.path.join(gJugglerDir, vcDir, moduleName)
          self.output_file = os.path.join(self.module_name, outputFile)
 
          if not os.path.exists(self.module_name):
@@ -552,6 +558,35 @@ def generateAntBuildFiles():
          elif not os.path.isdir(self.module_name):
             printStatus("ERROR: %s exists, but it is not a directory!" % self.module_name)
             sys.exit(EXIT_STATUS_INVALID_PATH)
+
+         self.tweek_jars = [
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'Tweek.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekBeans.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekEvents.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekNet.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
+                         'TweekBeanDelivery.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
+                         'TweekServices.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'Viewers.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
+                         'kunststoff-mod.jar')
+         ]
+
+         self.tweek_ext_jars = [
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'ui.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'wizard.jar')
+         ]
+
+         self.jccl_jars = [
+            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'jccl_config.jar'),
+            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'jccl_editors.jar')
+         ]
+
+         self.jccl_rtrc_jars = [
+            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'RTRC_Plugin_Java',
+                         'jccl_rtrc.jar')
+         ]
 
       # This form of regular expressions appears to be necessary because
       # the sub() method does not handle backslashes in the replacement string
@@ -575,32 +610,6 @@ def generateAntBuildFiles():
          os.path.join(gJugglerDir, r'external\jdom\lib\xerces.jar'),
          os.path.join(gJugglerDir, r'external\jdom\lib\xml-apis.jar'),
          os.path.join(gJugglerDir, r'external\jdom\lib\saxpath.jar')
-      ]
-
-      tweek_jars = [
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'Tweek.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekBeans.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekEvents.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekNet.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekBeanDelivery.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekServices.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'Viewers.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'kunststoff-mod.jar')
-      ]
-
-      tweek_ext_jars = [
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'ui.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'wizard.jar')
-      ]
-
-      jccl_jars = [
-         os.path.join(gJugglerDir, r'vc7\JCCL_Java', 'jccl_config.jar'),
-         os.path.join(gJugglerDir, r'vc7\JCCL_Java', 'jccl_editors.jar')
-      ]
-
-      jccl_rtrc_jars = [
-         os.path.join(gJugglerDir, r'vc7\JCCL_Java\RTRC_Plugin_Java',
-                      'jccl_rtrc.jar')
       ]
 
       jogl_jars = [
@@ -675,53 +684,56 @@ def generateAntBuildFiles():
          build_file.close()
 
    mods = []
-   mods.append(AntTarget(r'modules\tweek\java', 'Tweek_Java'))
-   mods.append(AntTarget(r'modules\tweek\extensions\java', 'Tweek_Java',
-                         'build-ext.xml'))
-   mods.append(AntTarget(r'modules\jackal\config', 'JCCL_Java',
+   mods.append(AntTarget(r'modules\tweek\java', vcDir, 'Tweek_Java'))
+   mods.append(AntTarget(r'modules\tweek\extensions\java', vcDir,
+                         'Tweek_Java', 'build-ext.xml'))
+   mods.append(AntTarget(r'modules\jackal\config', vcDir, 'JCCL_Java',
                          'build-config.xml'))
-   mods.append(AntTarget(r'modules\jackal\editors', 'JCCL_Java',
+   mods.append(AntTarget(r'modules\jackal\editors', vcDir, 'JCCL_Java',
                          'build-editors.xml'))
-   mods.append(AntTarget(r'modules\jackal\plugins\corba_rtrc',
+   mods.append(AntTarget(r'modules\jackal\plugins\corba_rtrc', vcDir,
                          r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
-   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
-                         'build.xml', r'vc7\VRJConfig'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', vcDir, 'VRJConfig',
+                         'build.xml', os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\commoneditors',
-                         r'VRJConfig\commoneditors',
+                         vcDir, r'VRJConfig\commoneditors',
                          'build-commoneditors.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\cave',
-                         'VRJConfig', 'build-cave.xml', r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-cave.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
-                         'VRJConfig', 'build-display_window.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-display_window.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\flock',
-                         'VRJConfig', 'build-flock.xml', r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-flock.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
-                         'VRJConfig', 'build-intersense.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-intersense.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\motionstar',
-                         'VRJConfig', 'build-motionstar.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-motionstar.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\pinchglove',
-                         'VRJConfig', 'build-pinchglove.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-pinchglove.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\proxyeditor',
-                         'VRJConfig', 'build-proxyeditor.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-proxyeditor.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
-                         'VRJConfig', 'build-surfacedisplayeditor.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-surfacedisplayeditor.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\cluster',
-                         'VRJConfig', 'build-wizard-cluster.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-wizard-cluster.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\newdevice',
-                         'VRJConfig', 'build-wizard-newdevice.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-wizard-newdevice.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\vrsystem',
-                         'VRJConfig', 'build-wizard-vrsystem.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-wizard-vrsystem.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\plugins\corba_perf_mon',
-                         r'VRJugglerPlugins\Perf_Plugin_Java', 'build.xml'))
+                         vcDir, r'VRJugglerPlugins\Perf_Plugin_Java',
+                         'build.xml'))
 
    for m in mods:
       m.generateBuildFile()
