@@ -42,7 +42,6 @@ void IntersenseStandalone::init()
   mHandle = 0;
   mActive = false;
   mNumStations = 0;
-  script = NULL;
 }
 
 bool IntersenseStandalone::open()

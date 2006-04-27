@@ -83,7 +83,7 @@ public:
 
     ~IntersenseStandalone()
     {
-       if(script != NULL) delete [] script;
+       /* Do nothing. */ ;
     }
 
     bool open();
@@ -194,12 +194,11 @@ public:
       return false;
    }
 
-    bool setScript(const char* inscript) {
-       if(script != NULL) delete [] script;
-       script = new char [strlen(inscript)+3];
-       strcpy(script, inscript);
-       return true;
-    }
+   bool setScript(const char* inscript)
+   {
+      mScript = inscript;
+      return true;
+   }
 
 //TODO: check for euler or quat values in the configstate.
 
@@ -252,7 +251,7 @@ private:
     bool mVerbose;
     bool mActive;
     std::string mPortName; //fix was implemented in all c drivers to allow precise control over the port used
-    char* script;
+    std::string mScript;
 //Station level data
     int mCurrentStation; //0-3 for current 9/2000 IS900
     ISD_STATION_INFO_TYPE mConfigData[ISD_MAX_STATIONS];
