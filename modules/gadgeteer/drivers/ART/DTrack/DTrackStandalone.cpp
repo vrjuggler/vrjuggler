@@ -26,6 +26,7 @@
  * DTrackStandalone.cpp,v 1.2 2005/06/16 14:44:01 kurt Exp
  */
 
+#include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -626,7 +627,7 @@ dtracklib_glove_type DTrackStandalone::get_glove(int ind)        // gl data (ind
 
 bool DTrackStandalone::send(unsigned short cmd, int val)
 {
-	char cmdstr[100];
+   std::ostringstream cmd_stream;
 	vpr::ReturnStatus stat;
 	vpr::Uint32 bytes;
 
@@ -642,27 +643,27 @@ bool DTrackStandalone::send(unsigned short cmd, int val)
 
 	switch(cmd){
 		case DTRACKLIB_CMD_CAMERAS_OFF:
-			strcpy(cmdstr, "dtrack 10 0");
+         cmd_stream << "dtrack 10 0";
 			break;
 			
 		case DTRACKLIB_CMD_CAMERAS_ON:
-			strcpy(cmdstr, "dtrack 10 1");
+         cmd_stream << "dtrack 10 1";
 			break;
 			
 		case DTRACKLIB_CMD_CAMERAS_AND_CALC_ON:
-			strcpy(cmdstr, "dtrack 10 3");
+         cmd_stream << "dtrack 10 3";
 			break;
 			
 		case DTRACKLIB_CMD_SEND_DATA:
-			strcpy(cmdstr, "dtrack 31");
+			cmd_stream << "dtrack 31";
 			break;
 			
 		case DTRACKLIB_CMD_STOP_DATA:
-			strcpy(cmdstr, "dtrack 32");
+			cmd_stream << "dtrack 32";
 			break;
 			
 		case DTRACKLIB_CMD_SEND_N_DATA:
-			sprintf(cmdstr, "dtrack 33 %d", val);
+         cmd_stream << "dtrack 33 " << val;
 			break;
 
 		default:
@@ -673,7 +674,7 @@ bool DTrackStandalone::send(unsigned short cmd, int val)
 
 	try
 	{
-		d_udpsock->sendto((const void *)cmdstr, strlen(cmdstr) + 1,
+		d_udpsock->sendto(cmd_stream.str(), cmd_stream.str().length(),
 				  d_remote, bytes, d_udptimeout);
 	}
 	catch (vpr::IOException&)
