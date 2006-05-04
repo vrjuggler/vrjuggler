@@ -47,6 +47,10 @@
 #  include <execinfo.h>
 #  include <sstream>
 #elif defined(VPR_OS_Windows)
+#  if _MSC_VER >= 1400
+#     include <intrin.h>
+#  endif
+
 #  include <stdlib.h>
 #  include <dbghelp.h>
 #  include <iomanip>
@@ -82,37 +86,57 @@ using boost::format;
 namespace
 {
 #if defined(VPR_OS_Windows) && defined(_DEBUG)
-// NOTE: There is no IA64 version of this function since the IA64 version
-// of Windows has been discontinued.
-#if defined(_M_IX86) || defined(_M_X64)
+#if _MSC_VER >= 1400
+#  pragma intrinsic(_ReturnAddress)
+#endif
 #pragma auto_inline(off)
 DWORD_PTR getProgramCounter()
 {
-#  if defined(_M_IX86)
-#     define PTR_SIZE 4
-#     define AXREG eax
-#     define BPREG ebp
-#  elif defined(_M_X64)
-#     define PTR_SIZE 8
-#     define AXREG rax
-#     define BPREG rbp
-#  endif   /* defined(_M_IX86) */
-
+#if _MSC_VER >= 1400
+   // The program counter for the caller will be the return address of this
+   // stack frame.
+   return (DWORD_PTR) _ReturnAddress();
+#else
    DWORD_PTR program_counter;
 
    // Get the return address from the current stack frame
    // and store it in program_counter.
-   __asm mov AXREG, [BPREG + PTR_SIZE]
-   __asm mov [program_counter], AXREG
+   __asm mov eax, [ebp + 4]
+   __asm mov [program_counter], eax
 
    return program_counter;
-
-#  undef BPREG
-#  undef AXREG
-#  undef PTR_SIZE
+#endif
 }
 #pragma auto_inline(on)
-#endif   /* defined(_M_IX86) || defined(_M_X64) */
+
+inline DWORD_PTR getFrameOffset()
+{
+   DWORD_PTR frame_offset;
+   EXCEPTION_POINTERS* exp_ptr(NULL);
+
+   __try
+   {
+      throw 0;
+   }
+   __except(((exp_ptr = GetExceptionInformation()) ? EXCEPTION_EXECUTE_HANDLER
+                                                   : EXCEPTION_EXECUTE_HANDLER))
+   {
+      /* Do nothing. */ ;
+   }
+
+   if ( NULL != exp_ptr )
+   {
+#if defined(_M_IX86)
+      frame_offset = exp_ptr->ContextRecord->Esp;
+#elif defined(_M_X64)
+      frame_offset = exp_ptr->ContextRecord->Rsp;
+#elif defined(_M_IA64)
+      frame_offset = exp_ptr->ContextRecord->RsBSP;
+#endif
+   }
+
+   return frame_offset;
+}
 
 // This is based on WheatyExceptionReport::GetLogicalAddress().  The
 // original can be found in the March 2002 issue of MSDN Magazine:
@@ -261,7 +285,12 @@ std::string SystemBase::getCallStack()
 
    ret_stack = trace_stream.str();
 #elif defined(VPR_OS_Windows)
-#if defined(_DEBUG)
+// XXX: The code for getting the stack trace on amd64 and ia64 is not working.
+// GetStackWalk64() always returns failure on the first call. This may be the
+// result of frame_offset being set incorrectly. Without having inline
+// assembly on amd64 or ia64 (as of Visual C++ 8.0), it is not clear how to
+// deal with these architectures.
+#if defined(_DEBUG) && defined(_M_IX86)
    // This will be used over and over again below.  In particular, we need
    // to be sure that SymInitialize() and SymCleanup() are called with the
    // same process handle value.
@@ -277,16 +306,19 @@ std::string SystemBase::getCallStack()
       DWORD arch;
       STACKFRAME64 sf;
       CONTEXT ctx;
-      DWORD_PTR frame_offset;
+      DWORD_PTR frame_offset(NULL);
 
-      // NOTE: There is no IA64 case here because the IA64 version of Windows
-      // has been discontinued.
 #if defined(_M_IX86)
       arch = IMAGE_FILE_MACHINE_I386;
       __asm mov [frame_offset], ebp
-#elif defined(_M_X64)
+#elif defined(_M_X64) || defined(_M_IA64)
+#  if defined(_M_X64)
       arch = IMAGE_FILE_MACHINE_AMD64;
-      __asm mov [frame_offset], rbp
+#  elif defined(_M_IA64)
+      arch = IMAGE_FILE_MACHINE_IA64;
+#  endif
+
+      frame_offset = getFrameOffset();
 #endif
 
       // Initialize the stack frame for this frame.  If this is not done,
@@ -315,6 +347,9 @@ std::string SystemBase::getCallStack()
          bool more = StackWalk64(arch, proc, GetCurrentThread(), &sf,
                                  &ctx, NULL, SymFunctionTableAccess64,
                                  SymGetModuleBase64, NULL);
+         std::cout << "More? " << (more ? "yes" : "no") << std::endl;
+         std::cout << "sf.AddrFrame.Offset == " << sf.AddrFrame.Offset
+                   << std::endl;
 
          // End of the stack frame.
          if ( ! more || 0 == sf.AddrFrame.Offset )
