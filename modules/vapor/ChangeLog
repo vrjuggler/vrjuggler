@@ -1,7 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
 2006-05-04 allenb   Added operator<< for ReturnStatus.
-                    NEW VERSION: 
+                    NEW VERSION: 1.1.19
 2006-04-21 patrickh Added vpr::ConnectionAbortedException.
                     NEW VERSION: 1.1.18
 2006-04-14 aronb    Added a socket option for sending broadcast UDP packets.
