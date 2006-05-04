@@ -3,7 +3,7 @@
 %define global_version 2.1.7
 %define global_release 1
 
-%define vpr_version 1.1.18
+%define vpr_version 1.1.19
 %define vpr_release %{global_release}
 %define tweek_version 1.1.3
 %define tweek_release %{global_release}
