@@ -339,24 +339,35 @@ vpr::ReturnStatus getIfAddrs(std::vector<vpr::InetAddr>& hostAddrs,
          continue;
       }
 
-      char netaddr[18];
+      std::ostringstream addr_stream;
+
 #if defined(VPR_OS_Windows)
       // inet_ntoa() returns a pointer to static memory, which means that
-      // it is not reentrant. There is a race condition here between the
-      // time of the return from inet_ntoa() and the time that strcpy()
-      // actually copies the memory. Unfortunately, WinSock2 does not
-      // provide inet_ntop().
-      strcpy(netaddr, inet_ntoa(addr->sin_addr));
-      char* temp_addr = netaddr;
-#else
-      const char* temp_addr = inet_ntop(addr->sin_family, &addr->sin_addr,
-                                        netaddr, sizeof(netaddr));
-#endif
+      // it is not reentrant. Unfortunately, WinSock2 does not provide
+      // inet_ntop(). The memory returned is guaranteed to be valid until
+      // the next socket call in this thread, so there should not be a
+      // race condition here.
+      const char* temp_addr = inet_ntoa(addr->sin_addr);
 
       if ( NULL != temp_addr )
       {
+         addr_stream << temp_addr;
+      }
+#else
+      char netaddr[18];
+      const char* temp_addr = inet_ntop(addr->sin_family, &addr->sin_addr,
+                                        netaddr, sizeof(netaddr));
+
+      if ( NULL != temp_addr )
+      {
+         addr_stream << netaddr;
+      }
+#endif
+
+      if ( ! addr_stream.str().empty() )
+      {
          vpr::InetAddr vpr_addr;
-         vpr_addr.setAddress(netaddr, 0);
+         vpr_addr.setAddress(addr_stream.str(), 0);
          hostAddrs.push_back(vpr_addr);
       }
    }
