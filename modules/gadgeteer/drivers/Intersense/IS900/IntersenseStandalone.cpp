@@ -36,83 +36,129 @@
 
 void IntersenseStandalone::init()
 {
-  mBaudRate = 9600;
-  mPort = 0;
-  mVerbose = false;
-  mHandle = 0;
-  mActive = false;
-  mNumStations = 0;
+   mBaudRate = 9600;
+   mPort = 0;
+   mVerbose = false;
+   mHandle = 0;
+   mActive = false;
+   mNumStations = 0;
 }
 
 bool IntersenseStandalone::open()
 {
-  //if(!mPortName.empty()) {
-  //    mHandle = ISD_OpenTrackerPort(mPortName.c_str(), FALSE, mVerbose, (DWORD)mBaudRate);
-  //} else {
-   std::cout << "IntersenseStandalone, trying to open: " << mPortName << " at " << mBaudRate << std::endl;
-      mHandle = ISD_OpenTracker(mPortName, mBaudRate, FALSE, mVerbose/*, (DWORD)mBaudRate*/);
-  //}
-  bool tracker_connect = false;
-  if (-1 != mHandle) {
-    tracker_connect = true;
-    //sendScript();
-  }
+//   if ( ! mPortName.empty() )
+//   {
+//      mHandle = ISD_OpenTrackerPort(mPortName.c_str(), FALSE, mVerbose,
+//                                    (DWORD) mBaudRate);
+//   }
+//   else
+//   {
+      std::cout << "IntersenseStandalone, trying to open: " << mPortName
+                << " at " << mBaudRate << std::endl;
+      mHandle = ISD_OpenTracker(mPortName, mBaudRate, FALSE,
+                                mVerbose /*, (DWORD)mBaudRate*/);
+//   }
 
-  mActive = true;
-  return tracker_connect;
+   bool tracker_connect(false);
+   if ( -1 != mHandle )
+   {
+      tracker_connect = true;
+      //sendScript();
+   }
 
+   mActive = true;
+   return tracker_connect;
 }
 
 bool IntersenseStandalone::close()
 {
-  return (bool)ISD_CloseTracker( mHandle );
+   return (bool) ISD_CloseTracker(mHandle);
 }
 
 bool IntersenseStandalone::updateData()
 {
+   bool is_data = false;
 
-  bool is_data = false;
-
-  if (FALSE != ISD_GetTrackerData(mHandle, &mData))
-  {
+   if ( FALSE != ISD_GetTrackerData(mHandle, &mData) )
+   {
       is_data = true;
-  }
-  
-  return is_data;
+   }
 
+   return is_data;
 }
-
-
 
 //TODO: verify that data is in euler angle form. or quaternion
 //FIX:  this is done in the Isense
-float& IntersenseStandalone::xPos( const int& i ) { return mData.Station[i].Position[0]; }
-float& IntersenseStandalone::yPos( const int& i ) { return mData.Station[i].Position[1]; }
-float& IntersenseStandalone::zPos( const int& i ) { return mData.Station[i].Position[2]; }
+float& IntersenseStandalone::xPos(const int& i)
+{
+   return mData.Station[i].Position[0];
+}
 
-float& IntersenseStandalone::xRot( const int& i ) { return mData.Station[i].Orientation[2]; }
-float& IntersenseStandalone::yRot( const int& i ) { return mData.Station[i].Orientation[1]; }
-float& IntersenseStandalone::zRot( const int& i ) { return mData.Station[i].Orientation[0]; }
+float& IntersenseStandalone::yPos(const int& i)
+{
+   return mData.Station[i].Position[1];
+}
 
-float& IntersenseStandalone::xQuat( const int& i ) { return mData.Station[i].Orientation[2]; }
-float& IntersenseStandalone::yQuat( const int& i ) { return mData.Station[i].Orientation[1]; }
-float& IntersenseStandalone::zQuat( const int& i ) { return mData.Station[i].Orientation[0]; }
-float& IntersenseStandalone::wQuat( const int& i ) { return mData.Station[i].Orientation[3]; }
+float& IntersenseStandalone::zPos(const int& i)
+{
+   return mData.Station[i].Position[2];
+}
+
+float& IntersenseStandalone::xRot(const int& i)
+{
+   return mData.Station[i].Orientation[2];
+}
+
+float& IntersenseStandalone::yRot(const int& i)
+{
+   return mData.Station[i].Orientation[1];
+}
+
+float& IntersenseStandalone::zRot(const int& i)
+{
+   return mData.Station[i].Orientation[0];
+}
+
+float& IntersenseStandalone::xQuat(const int& i)
+{
+   return mData.Station[i].Orientation[2];
+}
+
+float& IntersenseStandalone::yQuat(const int& i)
+{
+   return mData.Station[i].Orientation[1];
+}
+
+float& IntersenseStandalone::zQuat(const int& i)
+{
+   return mData.Station[i].Orientation[0];
+}
+
+float& IntersenseStandalone::wQuat(const int& i)
+{
+   return mData.Station[i].Orientation[3];
+}
 
 int IntersenseStandalone::buttonState(const int& i, const int& f)
 {
-  if(f < MAX_NUM_BUTTONS && i < mNumStations)
-     return mData.Station[i].ButtonState[f];
-  else
-     return 0;
+   if ( f < MAX_NUM_BUTTONS && i < mNumStations )
+   {
+      return mData.Station[i].ButtonState[f];
+   }
+   else
+   {
+      return 0;
+   }
 }
 
-
-int IntersenseStandalone::analogData(const int& i, const int& j) {
-  if(j < MAX_ANALOG_CHANNELS && i < mNumStations)
-     return mData.Station[i].AnalogData[j];
-  else
-     return 0;
+int IntersenseStandalone::analogData(const int& i, const int& j)
+{
+   if ( j < MAX_ANALOG_CHANNELS && i < mNumStations )
+   {
+      return mData.Station[i].AnalogData[j];
+   }
+   else
+   {
+      return 0;
+   }
 }
-
-

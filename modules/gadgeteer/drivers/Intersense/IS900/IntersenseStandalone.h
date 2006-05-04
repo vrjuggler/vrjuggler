@@ -43,13 +43,14 @@
 //        3) Support for intertrax has been disabled.  Without disabling this
 //        support, the intertrax driver will sometimes load when the IS driver
 //        fails to initially connect.  Intertrax is a 3DOF angular device, and
-//        reported angular variables alone do not satisfy a complete tracking solution
+//        reported angular variables alone do not satisfy a complete tracking
+//        solution
 //
-//     4) port can now be specified by an exact device name  (ex. /dev/ttyd0)
+//        4) port can now be specified by an exact device name (ex. /dev/ttyd0)
 //
 //        Modified: 11/27/00                        Author: Chris Johanson
 //                 Modified By: Ben Thompson
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 
 #ifndef isIntersense_h
@@ -62,127 +63,217 @@
 #include <drivers/Intersense/IS900/isense.h>
 //}
 
-struct isConfig {
-    bool State;
-    int InertiaCube;
-    int Enhancement;
-    int Sensitivity;
-    int Prediction;
-    int AngleFormat;
-    bool TimeStamped;
-    bool GetButtons;
-    bool GetAnalogData;
+struct InterSenseConfig
+{
+   bool state;
+   int inertiaCube;
+   int enhancement;
+   int sensitivity;
+   int prediction;
+   int angleFormat;
+   bool timeStamped;
+   bool getButtons;
+   bool getAnalogData;
 };
 
-class IntersenseStandalone {
+class IntersenseStandalone
+{
 public:
-    IntersenseStandalone() : mPortName("")
-    {
-       init();
-    }
+   IntersenseStandalone()
+      : mPortName("")
+   {
+      init();
+   }
 
-    ~IntersenseStandalone()
-    {
-       /* Do nothing. */ ;
-    }
+   ~IntersenseStandalone()
+   {
+      /* Do nothing. */ ;
+   }
 
-    bool open();
-    bool close();
-    void init();
+   bool open();
+   bool close();
+   void init();
 
-   /** New data is taken from the tracker; if a parameter has been changed,
-    *  such as baud rate, this will also occur during this frame.
+   /**
+    * New data is taken from the tracker; if a parameter has been changed,
+    * such as baud rate, this will also occur during this frame.
     */
    bool updateData();
 
 //TODO: Functions are Tracker specific and require an assert of isActive
-    
-    void setPortName(const std::string& portname)
-    { mPortName = portname; }
-    void setBaudRate(const int& baud_rate)
-    { mBaudRate = baud_rate; }
-    
-    const std::string setPortName()
-    { return mPortName; }
-    int setBaudRate()
-    { return mBaudRate; }
 
-    int& rNumStations() {return mNumStations;}
-    int NumStations() {return mNumStations;}
+   void setPortName(const std::string& portname)
+   {
+      mPortName = portname;
+   }
 
-    bool& rVerbose() { return mVerbose; }
-    bool Verbose() { return mVerbose; }
+   void setBaudRate(const int& baud_rate)
+   {
+      mBaudRate = baud_rate;
+   }
 
-// Station is ON or OFF
-    bool& rState(int currentStation) { return mLocalConfigData[currentStation].State; }
-    bool State(int currentStation) { return mLocalConfigData[currentStation].State; }
+   const std::string& setPortName()
+   {
+      return mPortName;
+   }
 
-// Inertia cubes numbered 1-4.  If none is assigned the number is -1
-    int& rInertiaCube(int currentStation)  { return mLocalConfigData[currentStation].InertiaCube; }
-    int InertiaCube(int currentStation) const { return mLocalConfigData[currentStation].InertiaCube; }
+   int setBaudRate()
+   {
+      return mBaudRate;
+   }
 
-    int& rEnhancement(int currentStation)  { return mLocalConfigData[currentStation].Enhancement; }
-    int Enhancement(int currentStation) const { return mLocalConfigData[currentStation].Enhancement; }
+   int& rNumStations()
+   {
+      return mNumStations;
+   }
 
-// Levels 1-4
-    int& rSensitivity(int currentStation) { return mLocalConfigData[currentStation].Sensitivity; }
-    int Sensitivity(int currentStation) const { return mLocalConfigData[currentStation].Sensitivity; }
+   int NumStations()
+   {
+      return mNumStations;
+   }
 
-// 0 - 50 ms
-    int& rPrediction(int currentStation) { return mLocalConfigData[currentStation].Prediction; }
-    int Prediction(int currentStation) const { return mLocalConfigData[currentStation].Prediction; }
+   bool& rVerbose()
+   {
+      return mVerbose;
+   }
 
-// 0 == ISD_EULER; 1 == ISD_QUATERNION
-    int& rAngleFormat(int currentStation) { return mLocalConfigData[currentStation].AngleFormat; }
-    int AngleFormat(int currentStation) const { return mLocalConfigData[currentStation].AngleFormat; }
+   bool Verbose()
+   {
+      return mVerbose;
+   }
 
-    bool& rTimeStamped(int currentStation) { return mLocalConfigData[currentStation].TimeStamped; }
-    bool TimeStamped(int currentStation) const { return mLocalConfigData[currentStation].TimeStamped; }
+   // Station is ON or OFF
+   bool& rState(int currentStation)
+   {
+      return mLocalConfigData[currentStation].state;
+   }
 
-    bool& rButtons(int currentStation) { return mLocalConfigData[currentStation].GetButtons; }
-    bool Buttons(int currentStation) const { return mLocalConfigData[currentStation].GetButtons; }
+   bool State(int currentStation)
+   {
+      return mLocalConfigData[currentStation].state;
+   }
 
-    bool& rAnalogData(int currentStation) { return mLocalConfigData[currentStation].GetAnalogData; }
-    bool AnalogData(int currentStation) const { return mLocalConfigData[currentStation].GetAnalogData; }
+   // Inertia cubes numbered 1-4.  If none is assigned the number is -1
+   int& rInertiaCube(int currentStation)
+   {
+      return mLocalConfigData[currentStation].inertiaCube;
+   }
 
-// TODO: check for valid station call.
-// WARNING: calls must surround a change to station configuration states
-// returns number of station
-    int getConfigState(int d)
-    {
-       ISD_GetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
+   int InertiaCube(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].inertiaCube;
+   }
 
-       // WARNING: the following lines should be removed.  For now this is a convenient way
-       // to see what the default tracker data is (as specified by the IS interface box).
-       // these numbers can then be used to initialize the configData properly
-       mLocalConfigData[d].InertiaCube = mConfigData[d].InertiaCube;
-       mLocalConfigData[d].Enhancement = mConfigData[d].Enhancement;
-       mLocalConfigData[d].Sensitivity = mConfigData[d].Sensitivity;
-       mLocalConfigData[d].Prediction = mConfigData[d].Prediction;
-       mLocalConfigData[d].AngleFormat = mConfigData[d].AngleFormat;
-       mLocalConfigData[d].TimeStamped = mConfigData[d].TimeStamped;
-       mLocalConfigData[d].GetButtons = mConfigData[d].GetButtons;
-       mLocalConfigData[d].GetAnalogData = mConfigData[d].GetAnalogData;
-       mLocalConfigData[d].State = mConfigData[d].State;
-       
-       return d;
-    }
+   int& rEnhancement(int currentStation)
+   {
+      return mLocalConfigData[currentStation].enhancement;
+   }
+   int Enhancement(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].enhancement;
+   }
 
-    int setConfigState(int d)
-    {
-       mConfigData[d].State = mLocalConfigData[d].State;
-       mConfigData[d].InertiaCube = mLocalConfigData[d].InertiaCube;
-       mConfigData[d].Enhancement = mLocalConfigData[d].Enhancement;
-       mConfigData[d].Sensitivity = mLocalConfigData[d].Sensitivity;
-       mConfigData[d].Prediction = mLocalConfigData[d].Prediction;
-       mConfigData[d].AngleFormat = mLocalConfigData[d].AngleFormat;
-       mConfigData[d].TimeStamped = mLocalConfigData[d].TimeStamped;
-       mConfigData[d].GetButtons = mLocalConfigData[d].GetButtons;
-       mConfigData[d].GetAnalogData = mLocalConfigData[d].GetAnalogData;
+   // Levels 1-4
+   int& rSensitivity(int currentStation)
+   {
+      return mLocalConfigData[currentStation].sensitivity;
+   }
+   int Sensitivity(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].sensitivity;
+   }
 
-       ISD_SetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
-       return d;
-    } // d  i'th station of tracker
+   // 0 - 50 ms
+   int& rPrediction(int currentStation)
+   {
+      return mLocalConfigData[currentStation].prediction;
+   }
+
+   int Prediction(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].prediction;
+   }
+
+   // 0 == ISD_EULER; 1 == ISD_QUATERNION
+   int& rAngleFormat(int currentStation)
+   {
+      return mLocalConfigData[currentStation].angleFormat;
+   }
+
+   int AngleFormat(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].angleFormat;
+   }
+
+   bool& rTimeStamped(int currentStation)
+   {
+      return mLocalConfigData[currentStation].timeStamped;
+   }
+
+   bool TimeStamped(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].timeStamped;
+   }
+
+   bool& rButtons(int currentStation)
+   {
+      return mLocalConfigData[currentStation].getButtons;
+   }
+
+   bool Buttons(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].getButtons;
+   }
+
+   bool& rAnalogData(int currentStation)
+   {
+      return mLocalConfigData[currentStation].getAnalogData;
+   }
+
+   bool AnalogData(int currentStation) const
+   {
+      return mLocalConfigData[currentStation].getAnalogData;
+   }
+
+   // TODO: check for valid station call.
+   // WARNING: calls must surround a change to station configuration states
+   // returns number of station
+   int getConfigState(int d)
+   {
+      ISD_GetStationConfig(mHandle, &mConfigData[d], d + 1, mVerbose);
+
+      // WARNING: the following lines should be removed.  For now this is a
+      // convenient way to see what the default tracker data is (as specified
+      // by the IS interface box). These numbers can then be used to
+      // initialize the configData properly
+      mLocalConfigData[d].inertiaCube = mConfigData[d].InertiaCube;
+      mLocalConfigData[d].enhancement = mConfigData[d].Enhancement;
+      mLocalConfigData[d].sensitivity = mConfigData[d].Sensitivity;
+      mLocalConfigData[d].prediction = mConfigData[d].Prediction;
+      mLocalConfigData[d].angleFormat = mConfigData[d].AngleFormat;
+      mLocalConfigData[d].timeStamped = mConfigData[d].TimeStamped;
+      mLocalConfigData[d].getButtons = mConfigData[d].GetButtons;
+      mLocalConfigData[d].getAnalogData = mConfigData[d].GetAnalogData;
+      mLocalConfigData[d].state = mConfigData[d].State;
+
+      return d;
+   }
+
+   int setConfigState(int d)
+   {
+      mConfigData[d].State = mLocalConfigData[d].state;
+      mConfigData[d].InertiaCube = mLocalConfigData[d].inertiaCube;
+      mConfigData[d].Enhancement = mLocalConfigData[d].enhancement;
+      mConfigData[d].Sensitivity = mLocalConfigData[d].sensitivity;
+      mConfigData[d].Prediction = mLocalConfigData[d].prediction;
+      mConfigData[d].AngleFormat = mLocalConfigData[d].angleFormat;
+      mConfigData[d].TimeStamped = mLocalConfigData[d].timeStamped;
+      mConfigData[d].GetButtons = mLocalConfigData[d].getButtons;
+      mConfigData[d].GetAnalogData = mLocalConfigData[d].getAnalogData;
+
+      ISD_SetStationConfig(mHandle, &mConfigData[d], d + 1, mVerbose);
+      return d;
+   } // d  i'th station of tracker
 
    /**
     *  sendScript
@@ -203,62 +294,65 @@ public:
 //TODO: check for euler or quat values in the configstate.
 
    /** Gets the x position of the i'th receiver. */
-   float& xPos( const int& i );
+   float& xPos(const int& i);
 
    /** Gets the y position of the i'th receiver. */
-   float& yPos( const int& i );
+   float& yPos(const int& i);
 
    /** Gets the z position of the i'th receiver. */
-   float& zPos( const int& i );
+   float& zPos(const int& i);
 
    /** Gets the z rotation of the i'th receiver. */
-   float& zRot( const int& i );
+   float& zRot(const int& i);
 
    /** Gets the y rotation of the i'th receiver. */
-   float& yRot( const int& i );
+   float& yRot(const int& i);
 
    /** Gets the x rotation of the i'th receiver. */
-   float& xRot( const int& i );
+   float& xRot(const int& i);
 
    /** Gets the x quaternion value of the i'th receiver. */
-   float& xQuat( const int& i);
+   float& xQuat(const int& i);
 
    /** Gets the y quaternion value of the i'th receiver. */
-   float& yQuat( const int& i);
+   float& yQuat(const int& i);
 
    /** Gets the z quaternion value of the i'th receiver. */
-   float& zQuat( const int& i);
+   float& zQuat(const int& i);
 
    /** Gets the w quaternion value of the i'th receiver. */
-   float& wQuat ( const int& i );
+   float& wQuat (const int& i);
 
-    int buttonState(const int& i, const int &f);
+   int buttonState(const int& i, const int &f);
 
-    int analogData(const int& i, const int& j);
+   int analogData(const int& i, const int& j);
 
-    bool isActive() {return mActive;}
+   bool isActive()
+   {
+      return mActive;
+   }
 
 private:
 
 //fcn called to apply current mConfigData
-    void configStation();
+   void configStation();
 
 //Tracker level data
-    ISD_TRACKER_HANDLE mHandle;
-//    ISD_TRACKER_TYPE mType;
-    int mBaudRate; //fix was implemented in all c drivers to user defined baudrate
-    int mPort;
-    bool mVerbose;
-    bool mActive;
-    std::string mPortName; //fix was implemented in all c drivers to allow precise control over the port used
-    std::string mScript;
+   ISD_TRACKER_HANDLE mHandle;
+//   ISD_TRACKER_TYPE mType;
+   int mBaudRate; //fix was implemented in all c drivers to user defined baudrate
+   int mPort;
+   bool mVerbose;
+   bool mActive;
+   std::string mPortName; //fix was implemented in all c drivers to allow precise control over the port used
+   std::string mScript;
 //Station level data
-    int mCurrentStation; //0-3 for current 9/2000 IS900
-    ISD_STATION_INFO_TYPE mConfigData[ISD_MAX_STATIONS];
-    isConfig mLocalConfigData[ISD_MAX_STATIONS];
+   int mCurrentStation; //0-3 for current 9/2000 IS900
+   ISD_STATION_INFO_TYPE mConfigData[ISD_MAX_STATIONS];
+   InterSenseConfig mLocalConfigData[ISD_MAX_STATIONS];
 
-    ISD_DATA_TYPE mData;
-    int mNumStations;
+   ISD_DATA_TYPE mData;
+   int mNumStations;
 };
 
 #endif //isIntersense_h
