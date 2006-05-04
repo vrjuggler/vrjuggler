@@ -385,9 +385,9 @@ def writeCacheFile(optionDict):
       cache_file.write(output)
    cache_file.close()
 
-def generateVersionHeaders():
+def generateVersionHeaders(vcDir):
    class JugglerModule:
-      def __init__(self, srcDir, projDir, genFiles = None):
+      def __init__(self, srcDir, vcDir, projDir, genFiles = None):
          self.source_dir     = os.path.join(gJugglerDir, srcDir)
          self.version_params = os.path.join(self.source_dir, 'Makefile.inc.in')
          self.version_file   = os.path.join(self.source_dir, 'VERSION')
@@ -395,7 +395,7 @@ def generateVersionHeaders():
 
          if genFiles is not None:
             for f in genFiles:
-               output = os.path.join(gJugglerDir, 'vc7', projDir, f[0])
+               output = os.path.join(gJugglerDir, vcDir, projDir, f[0])
 
                if len(f) == 1 or f[1] is None:
                   template = os.path.join(self.source_dir, f[0] + '.in')
@@ -496,12 +496,12 @@ def generateVersionHeaders():
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
-   mods.append(JugglerModule(r'modules\vapor', 'VPR',
+   mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR',
                              [(r'vpr\vprParam.h',), (r'vpr\vprParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\tweek', 'Tweek_CXX',
+   mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
                              [(r'tweek\tweekParam.h',),
                               (r'tweek\tweekParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\jackal', 'JCCL',
+   mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL',
                              [(r'jccl\jcclParam.h',
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.h.in')),
@@ -509,42 +509,48 @@ def generateVersionHeaders():
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.cpp.in'))
                              ]))
-   mods.append(JugglerModule(r'modules\sonix', 'Sonix',
+   mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix',
                              [(r'snx\snxParam.h',), (r'snx\snxParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\gadgeteer', 'Gadgeteer',
+   mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                              [(r'gadget\gadgetParam.h',),
                               (r'gadget\gadgetParam.cpp',)]))
-   mods.append(JugglerModule(r'modules\vrjuggler', 'VRJuggler',
+   mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              [(r'vrj\vrjParam.h',), (r'vrj\vrjParam.cpp',)]))
 
    for m in mods:
       m.generateParamFiles()
 
-def generateAntBuildFiles():
+def generateAntBuildFiles(vcDir):
    class AntTarget:
-      def __init__(self, srcdir, moduleName, outputFile = 'build.xml',
-                   topSubDir = 'vc7'):
+      def __init__(self, srcdir, vcDir, moduleName, outputFile = 'build.xml',
+                   topSubDir = None):
          '''
-         __init__(srcdir, moduleName, outputFile, topSubDir)
+         __init__(srcdir, vcDir, moduleName, outputFile, topSubDir)
          Arguments:
          srcdir     -- The location of the Java source to be compiled.
-         moduleName -- The name of the Visual C++ project (under the 'vc7'
+         vcDir      -- The root of the directory tree containing the Visual
+                       C++ build system.
+         moduleName -- The name of the Visual C++ project (under the vcDir
                        subdirectory) associated with this Ant build.  When
-                       concatenated to 'vc7', this is where the the .class
+                       concatenated to vcDir, this is where the the .class
                        file(s) and the .jar file(s) will be created.
          outputFile -- The name of the Ant build file to generate.  If not
                        specified, this defaults to 'build.xml'.
          topSubDir  -- The root of the directory where all the work will be
                        done.  This is needed for Ant builds that depend on
                        previously constructed JAR files that will most likely
-                       exist somewhere in the 'vc7' directory tree.  This
+                       exist somewhere in the vcDir directory tree.  This
                        string is used as part of the replacment for the
                        string @topdir@ in the source build.xml.in file.  If
-                       not specified, this defaults to 'vc7'.
+                       not specified, this defaults to whatever value is
+                       passed in for vcDir.
          '''
+         if topSubDir is None:
+            topSubDir = vcDir
+
          self.srcdir      = os.path.join(gJugglerDir, srcdir)
          self.topdir      = os.path.join(gJugglerDir, topSubDir)
-         self.module_name = os.path.join(gJugglerDir, 'vc7', moduleName)
+         self.module_name = os.path.join(gJugglerDir, vcDir, moduleName)
          self.output_file = os.path.join(self.module_name, outputFile)
 
          if not os.path.exists(self.module_name):
@@ -552,6 +558,35 @@ def generateAntBuildFiles():
          elif not os.path.isdir(self.module_name):
             printStatus("ERROR: %s exists, but it is not a directory!" % self.module_name)
             sys.exit(EXIT_STATUS_INVALID_PATH)
+
+         self.tweek_jars = [
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'Tweek.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekBeans.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekEvents.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekNet.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
+                         'TweekBeanDelivery.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
+                         'TweekServices.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'Viewers.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
+                         'kunststoff-mod.jar')
+         ]
+
+         self.tweek_ext_jars = [
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'ui.jar'),
+            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'wizard.jar')
+         ]
+
+         self.jccl_jars = [
+            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'jccl_config.jar'),
+            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'jccl_editors.jar')
+         ]
+
+         self.jccl_rtrc_jars = [
+            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'RTRC_Plugin_Java',
+                         'jccl_rtrc.jar')
+         ]
 
       # This form of regular expressions appears to be necessary because
       # the sub() method does not handle backslashes in the replacement string
@@ -575,32 +610,6 @@ def generateAntBuildFiles():
          os.path.join(gJugglerDir, r'external\jdom\lib\xerces.jar'),
          os.path.join(gJugglerDir, r'external\jdom\lib\xml-apis.jar'),
          os.path.join(gJugglerDir, r'external\jdom\lib\saxpath.jar')
-      ]
-
-      tweek_jars = [
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'Tweek.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekBeans.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekEvents.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekNet.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekBeanDelivery.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekServices.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'Viewers.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'kunststoff-mod.jar')
-      ]
-
-      tweek_ext_jars = [
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'ui.jar'),
-         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'wizard.jar')
-      ]
-
-      jccl_jars = [
-         os.path.join(gJugglerDir, r'vc7\JCCL_Java', 'jccl_config.jar'),
-         os.path.join(gJugglerDir, r'vc7\JCCL_Java', 'jccl_editors.jar')
-      ]
-
-      jccl_rtrc_jars = [
-         os.path.join(gJugglerDir, r'vc7\JCCL_Java\RTRC_Plugin_Java',
-                      'jccl_rtrc.jar')
       ]
 
       jogl_jars = [
@@ -675,76 +684,79 @@ def generateAntBuildFiles():
          build_file.close()
 
    mods = []
-   mods.append(AntTarget(r'modules\tweek\java', 'Tweek_Java'))
-   mods.append(AntTarget(r'modules\tweek\extensions\java', 'Tweek_Java',
-                         'build-ext.xml'))
-   mods.append(AntTarget(r'modules\jackal\config', 'JCCL_Java',
+   mods.append(AntTarget(r'modules\tweek\java', vcDir, 'Tweek_Java'))
+   mods.append(AntTarget(r'modules\tweek\extensions\java', vcDir,
+                         'Tweek_Java', 'build-ext.xml'))
+   mods.append(AntTarget(r'modules\jackal\config', vcDir, 'JCCL_Java',
                          'build-config.xml'))
-   mods.append(AntTarget(r'modules\jackal\editors', 'JCCL_Java',
+   mods.append(AntTarget(r'modules\jackal\editors', vcDir, 'JCCL_Java',
                          'build-editors.xml'))
-   mods.append(AntTarget(r'modules\jackal\plugins\corba_rtrc',
+   mods.append(AntTarget(r'modules\jackal\plugins\corba_rtrc', vcDir,
                          r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
-   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
-                         'build.xml', r'vc7\VRJConfig'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', vcDir, 'VRJConfig',
+                         'build.xml', os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\commoneditors',
-                         r'VRJConfig\commoneditors',
+                         vcDir, r'VRJConfig\commoneditors',
                          'build-commoneditors.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\cave',
-                         'VRJConfig', 'build-cave.xml', r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-cave.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
-                         'VRJConfig', 'build-display_window.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-display_window.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\flock',
-                         'VRJConfig', 'build-flock.xml', r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-flock.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
-                         'VRJConfig', 'build-intersense.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-intersense.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\motionstar',
-                         'VRJConfig', 'build-motionstar.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-motionstar.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\pinchglove',
-                         'VRJConfig', 'build-pinchglove.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-pinchglove.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\proxyeditor',
-                         'VRJConfig', 'build-proxyeditor.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-proxyeditor.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
-                         'VRJConfig', 'build-surfacedisplayeditor.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-surfacedisplayeditor.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\cluster',
-                         'VRJConfig', 'build-wizard-cluster.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-wizard-cluster.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\newdevice',
-                         'VRJConfig', 'build-wizard-newdevice.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-wizard-newdevice.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\vrsystem',
-                         'VRJConfig', 'build-wizard-vrsystem.xml',
-                         r'vc7\VRJConfig'))
+                         vcDir, 'VRJConfig', 'build-wizard-vrsystem.xml',
+                         os.path.join(vcDir, 'VRJConfig')))
    mods.append(AntTarget(r'modules\vrjuggler\plugins\corba_perf_mon',
-                         r'VRJugglerPlugins\Perf_Plugin_Java', 'build.xml'))
+                         vcDir, r'VRJugglerPlugins\Perf_Plugin_Java',
+                         'build.xml'))
 
    for m in mods:
       m.generateBuildFile()
 
-def doInstall(prefix):
+def doInstall(prefix, buildDir):
    makeTree(prefix)
-   installExternal(prefix)
-   installVPR(prefix)
-   installTweek(prefix)
-   installTweekJava(prefix)
-   installJCCL(prefix)
-   installJCCLJava(prefix)
-   installJCCLPlugins(prefix)
-   installJCCLPluginsJava(prefix)
-   installSonix(prefix)
-   installSonixPlugins(prefix)
-   installGadgeteer(prefix)
-   installGadgeteerDrivers(prefix)
-   installGadgeteerPlugins(prefix)
-   installVRJuggler(prefix)
-   installVRJConfig(prefix)
-   installVRJugglerPlugins(prefix)
-   installVRJugglerPluginsJava(prefix)
+   installExternal(prefix, buildDir)
+   installVPR(prefix, buildDir)
+   installTweek(prefix, buildDir)
+   installTweekJava(prefix, buildDir)
+   installJCCL(prefix, buildDir)
+   installJCCLJava(prefix, buildDir)
+   installJCCLPlugins(prefix, buildDir)
+   installJCCLPluginsJava(prefix, buildDir)
+   installSonix(prefix, buildDir)
+   installSonixPlugins(prefix, buildDir)
+   installGadgeteer(prefix, buildDir)
+   installGadgeteerDrivers(prefix, buildDir)
+   installGadgeteerPlugins(prefix, buildDir)
+   installVRJuggler(prefix, buildDir)
+   installVRJConfig(prefix, buildDir)
+   installVRJugglerPlugins(prefix, buildDir)
+   installVRJugglerPluginsJava(prefix, buildDir)
    installMsvcRT(prefix)
 
 def mkinstalldirs(dir):
@@ -817,25 +829,25 @@ def installLibs(srcRoot, destdir,
          if os.path.exists(srcdir):
             installDir(srcdir, destdir, extensions)
 
-def installExternal(prefix):
+def installExternal(prefix, buildDir):
    # Install Doozer (even though it probably won't be used).
    printStatus("Installing Doozer ...")
    destdir = os.path.join(prefix, 'share', 'Doozer')
    srcdir  = os.path.join(gJugglerDir, 'external', 'Doozer')
    installDir(srcdir, destdir, ['.mk'])
 
-def installVPR(prefix):
+def installVPR(prefix, buildDir):
    printStatus("Installing VPR headers and libraries ...")
 
    destdir = os.path.join(prefix, 'include', 'vpr')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'vpr')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(gJugglerDir, 'vc7', 'VPR', 'vpr')
+   srcdir  = os.path.join(buildDir, 'VPR', 'vpr')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'VPR')
+   srcroot = os.path.join(buildDir, 'VPR')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vpr', 'test')
@@ -851,18 +863,18 @@ def installVPR(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
-def installTweek(prefix):
+def installTweek(prefix, buildDir):
    printStatus("Installing Tweek C++ headers, libraries, and data files ...")
 
    destdir = os.path.join(prefix, 'include', 'tweek')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'tweek')
    installDir(srcdir, destdir, ['.h', '.idl'])
 
-   srcdir  = os.path.join(gJugglerDir, 'vc7', 'Tweek_CXX', 'tweek')
+   srcdir  = os.path.join(buildDir, 'Tweek_CXX', 'tweek')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'Tweek_CXX')
+   srcroot = os.path.join(buildDir, 'Tweek_CXX')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'tweek', 'test')
@@ -882,14 +894,14 @@ def installTweek(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
-def installTweekJava(prefix):
+def installTweekJava(prefix, buildDir):
    # Create an empty bin\beans directory in prefix. The Tweek Java GUI still
    # searches this directory for backwards compatibility with much older
    # versions of the code. This is not required, but it does eliminate a
    # Tweek Java GUI startup warning.
    mkinstalldirs(os.path.join(prefix, 'bin', 'beans'))
 
-   srcdir = os.path.join(gJugglerDir, 'vc7', 'Tweek_Java')
+   srcdir = os.path.join(buildDir, 'Tweek_Java')
 
    if os.path.exists(os.path.join(srcdir, 'Tweek.jar')):
       printStatus("Installing Tweek Java libraries and data files ...")
@@ -981,7 +993,7 @@ def installTweekJava(prefix):
    else:
       printStatus("Tweek Java API not built.  Skipping.")
 
-def installJCCL(prefix):
+def installJCCL(prefix, buildDir):
    printStatus("Installing JCCL C++ headers, libraries, and tools ...")
 
    destdir = os.path.join(prefix, 'include', 'jccl')
@@ -994,11 +1006,11 @@ def installJCCL(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'rtrc', 'jccl')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(gJugglerDir, 'vc7', 'JCCL', 'jccl')
+   srcdir  = os.path.join(buildDir, 'JCCL', 'jccl')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'JCCL')
+   srcroot = os.path.join(buildDir, 'JCCL')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'jccl', 'test')
@@ -1036,15 +1048,15 @@ def installJCCL(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
-def installJCCLPlugins(prefix):
+def installJCCLPlugins(prefix, buildDir):
    printStatus("Installing JCCL C++ plug-ins ...")
 
    destdir = os.path.join(prefix, 'lib', 'jccl', 'plugins')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'JCCL', 'RTRC_Plugin_CXX')
+   srcroot = os.path.join(buildDir, 'JCCL', 'RTRC_Plugin_CXX')
    installLibs(srcroot, destdir, extensions = ['.dll'])
 
-def installJCCLJava(prefix):
-   srcdir = os.path.join(gJugglerDir, 'vc7', 'JCCL_Java')
+def installJCCLJava(prefix, buildDir):
+   srcdir = os.path.join(buildDir, 'JCCL_Java')
 
    if os.path.exists(os.path.join(srcdir, 'jccl_config.jar')):
       printStatus("Installing JCCL Java libraries and data files ...")
@@ -1077,8 +1089,8 @@ def installJCCLJava(prefix):
    else:
       printStatus("JCCL Java API not built.  Skipping.")
 
-def installJCCLPluginsJava(prefix):
-   srcdir = os.path.join(gJugglerDir, 'vc7', 'JCCL_Java', 'RTRC_Plugin_Java')
+def installJCCLPluginsJava(prefix, buildDir):
+   srcdir = os.path.join(buildDir, 'JCCL_Java', 'RTRC_Plugin_Java')
 
    if os.path.exists(os.path.join(srcdir, 'jccl_rtrc.jar')):
       printStatus("Installing JCCL Java plug-ins ...")
@@ -1092,18 +1104,18 @@ def installJCCLPluginsJava(prefix):
    else:
       printStatus("JCCL Java plug-ins not built.  Skipping.")
 
-def installSonix(prefix):
+def installSonix(prefix, buildDir):
    printStatus("Installing Sonix headers, libraries, and samples ...")
 
    destdir = os.path.join(prefix, 'include', 'snx')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'sonix', 'snx')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'snx')
+   srcdir  = os.path.join(buildDir, 'Sonix', 'snx')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix')
+   srcroot = os.path.join(buildDir, 'Sonix')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'sonix', 'samples')
@@ -1123,32 +1135,32 @@ def installSonix(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
-def installSonixPlugins(prefix):
+def installSonixPlugins(prefix, buildDir):
    printStatus("Installing Sonix plug-ins ...")
 
    destdir_dbg = os.path.join(prefix, 'lib', 'snx', 'plugins', 'dbg')
    destdir_opt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
 
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'OpenAL')
+   srcroot = os.path.join(buildDir, 'Sonix', 'OpenAL')
    installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
                extensions = ['.dll'])
    installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
                extensions = ['.dll'])
 
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'Audiere')
+   srcroot = os.path.join(buildDir, 'Sonix', 'Audiere')
    installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
                extensions = ['.dll'])
    installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
                extensions = ['.dll'])
 
-def installGadgeteer(prefix):
+def installGadgeteer(prefix, buildDir):
    printStatus("Installing Gadgeteer headers, libraries, and samples ...")
 
    destdir = os.path.join(prefix, 'include', 'gadget')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'gadget')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer', 'gadget')
+   srcdir  = os.path.join(buildDir, 'Gadgeteer', 'gadget')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'include', 'cluster')
@@ -1156,7 +1168,7 @@ def installGadgeteer(prefix):
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
+   srcroot = os.path.join(buildDir, 'Gadgeteer')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'gadgeteer', 'data')
@@ -1184,11 +1196,11 @@ def installGadgeteer(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
-def installGadgeteerDrivers(prefix):
+def installGadgeteerDrivers(prefix, buildDir):
    printStatus("Installing Gadgeteer device drivers ...")
 
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'drivers')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
+   srcroot = os.path.join(buildDir, 'Gadgeteer')
 
    drivers = ['DTrack', 'DataGlove', 'DirectXJoystick', 'Ether24',
               'Fastrak', 'Flock', 'IBox', 'IntersenseAPI', 'IS900',
@@ -1199,7 +1211,7 @@ def installGadgeteerDrivers(prefix):
       srcdir = os.path.join(srcroot, d)
       installLibs(srcdir, destdir, extensions = ['.dll'])
 
-def installGadgeteerPlugins(prefix):
+def installGadgeteerPlugins(prefix, buildDir):
    printStatus("Installing Gadgeteer cluster plug-ins ...")
 
    destdir = os.path.join(prefix, 'include', 'plugins',
@@ -1209,7 +1221,7 @@ def installGadgeteerPlugins(prefix):
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'plugins')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
+   srcroot = os.path.join(buildDir, 'Gadgeteer')
 
    plugins = ['ApplicationDataManager', 'RemoteInputManager',
               'StartBarrierPlugin', 'SwapLockTCPPlugin']
@@ -1218,14 +1230,14 @@ def installGadgeteerPlugins(prefix):
       srcdir = os.path.join(srcroot, p)
       installLibs(srcdir, destdir, extensions = ['.dll'])
 
-def installVRJuggler(prefix):
+def installVRJuggler(prefix, buildDir):
    printStatus("Installing VR Juggler headers, libraries, and samples ...")
 
    destdir = os.path.join(prefix, 'include', 'vrj')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'vrj')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(gJugglerDir, 'vc7', 'VRJuggler', 'vrj')
+   srcdir  = os.path.join(buildDir, 'VRJuggler', 'vrj')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'include', 'deprecated')
@@ -1233,15 +1245,13 @@ def installVRJuggler(prefix):
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJuggler')
+   srcroot = os.path.join(buildDir, 'VRJuggler')
    installLibs(srcroot, destdir)
 
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJuggler',
-                          'OpenGL_Draw_Manager')
+   srcroot = os.path.join(buildDir, 'VRJuggler', 'OpenGL_Draw_Manager')
    installLibs(srcroot, destdir)
 
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJuggler',
-                          'Performer_Draw_Manager')
+   srcroot = os.path.join(buildDir, 'VRJuggler', 'Performer_Draw_Manager')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
@@ -1269,8 +1279,8 @@ def installVRJuggler(prefix):
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
-def installVRJConfig(prefix):
-   jardir = os.path.join(gJugglerDir, 'vc7', 'VRJConfig')
+def installVRJConfig(prefix, buildDir):
+   jardir = os.path.join(buildDir, 'VRJConfig')
 
    if os.path.exists(os.path.join(jardir, 'VRJConfig.jar')):
       printStatus("Installing VRJConfig ...")
@@ -1356,17 +1366,15 @@ def installVRJConfig(prefix):
    else:
       printStatus("VRJConfig not built.  Skipping.")
 
-def installVRJugglerPlugins(prefix):
+def installVRJugglerPlugins(prefix, buildDir):
    printStatus("Installing VR Juggler C++ plug-ins ...")
 
    destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'plugins')
-   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJugglerPlugins',
-                          'Perf_Plugin_CXX')
+   srcroot = os.path.join(buildDir, 'VRJugglerPlugins', 'Perf_Plugin_CXX')
    installLibs(srcroot, destdir, extensions = ['.dll'])
 
-def installVRJugglerPluginsJava(prefix):
-   srcdir = os.path.join(gJugglerDir, 'vc7', 'VRJugglerPlugins',
-                         'Perf_Plugin_Java')
+def installVRJugglerPluginsJava(prefix, buildDir):
+   srcdir = os.path.join(buildDir, 'VRJugglerPlugins', 'Perf_Plugin_Java')
 
    plugins = [('PerformanceMonitor', 'corba_perf_mon')]
 
@@ -1576,6 +1584,7 @@ class GuiFrontEnd:
       required, optional, options = getDefaultVars()
       self.mOptions   = options
       self.mTkOptions = {}
+      self.mVcDir     = 'vc7'
 
       # Make a StringVar dictionary.
       for k in options:
@@ -1884,7 +1893,8 @@ class GuiFrontEnd:
          self.BuildThread.start()
 
    def installJuggler(self):
-      doInstall(self.mTkOptions['prefix'].get())
+      doInstall(self.mTkOptions['prefix'].get(),
+                os.path.join(gJugglerDir, self.mVcDir))
 
    def installDeps(self):
       doDependencyInstall(self.mTkOptions['deps-prefix'].get())
@@ -1947,7 +1957,8 @@ class GuiFrontEnd:
 
       if self.mRoot.CommandFrame.InstallJugglerCheck.Variable.get() == "Yes":
          self.printMessage("Installing Juggler...")
-         doInstall(self.mTkOptions['prefix'].get())
+         doInstall(self.mTkOptions['prefix'].get(),
+                   os.path.join(gJugglerDir, self.mVcDir))
 
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
          self.printMessage("Installing Juggler Dependencies...")
@@ -1959,15 +1970,16 @@ class GuiFrontEnd:
    def runVisualStudio(self):
       #print "generateVersionHeaders()"
       self.printMessage("Generating Version Headers.")
-      generateVersionHeaders()
+      generateVersionHeaders(self.mVcDir)
       self.printMessage("Generating Ant Build Files.")
-      generateAntBuildFiles()
+      generateAntBuildFiles(self.mVcDir)
 
       devenv_cmd = getVSCmd()
       (devenv_cmd_no_exe, ext) = os.path.splitext(devenv_cmd)
       devenv_cmd_no_exe = '"%s"' % (devenv_cmd_no_exe)
 
-      solution_file = r'"%s"' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
+      solution_file = r'"%s"' % os.path.join(gJugglerDir, self.mVcDir,
+                                             'Juggler.sln')
       build_args = r'/build DebugDLL'
 
       if self.mRoot.CommandFrame.OpenVSCheck.Variable.get() == "No":
@@ -2044,11 +2056,12 @@ def main():
    # the text-based interface.
    if not gHaveTk or disable_tk:
       options = setVars()
-      generateVersionHeaders()
-      generateAntBuildFiles()
+      vc_dir  = 'vc7'
+      generateVersionHeaders(vc_dir)
+      generateAntBuildFiles(vc_dir)
 
       devenv_cmd    = getVSCmd()
-      solution_file = r'%s' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
+      solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir, 'Juggler.sln')
 
       try:
          status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
@@ -2057,7 +2070,7 @@ def main():
             print "Proceed with VR Juggler installation [y]: ",
             proceed = sys.stdin.readline().strip(" \n")
             if proceed == '' or proceed.lower().startswith('y'):
-               doInstall(options['prefix'])
+               doInstall(options['prefix'], os.path.join(gJugglerDir, vc_dir))
 
                print "Proceed with VR Juggler dependency installation [y]: ",
                proceed = sys.stdin.readline().strip(" \n")
