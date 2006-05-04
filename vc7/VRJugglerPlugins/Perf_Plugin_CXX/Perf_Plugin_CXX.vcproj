@@ -50,9 +50,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating C++ code from CORBA IDL..."
-				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\vrjuggler\plugins ..\..\..\modules\vrjuggler\plugins\corba_perf_mon\idl\PerformanceMonitorSubject.idl"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -106,9 +104,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating C++ code from CORBA IDL..."
-				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\vrjuggler\plugins ..\..\..\modules\vrjuggler\plugins\corba_perf_mon\idl\PerformanceMonitorSubject.idl"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
