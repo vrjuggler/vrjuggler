@@ -50,9 +50,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating C++ code from CORBA IDL..."
-				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\jackal\plugins ..\..\..\modules\jackal\plugins\corba_rtrc\idl\RemoteReconfigSubject.idl"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -106,9 +104,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating C++ code from CORBA IDL..."
-				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\jackal\plugins ..\..\..\modules\jackal\plugins\corba_rtrc\idl\RemoteReconfigSubject.idl"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
