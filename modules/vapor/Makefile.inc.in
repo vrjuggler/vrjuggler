@@ -186,11 +186,12 @@ $(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OB
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
-          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS)
-	rm -f $(@:.dylib=.lo)
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
+          $(DYLIB_DEPS)
+	rm -f $(subst .dylib,.lo,$@)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
           $(DYLIB_DEPS)
