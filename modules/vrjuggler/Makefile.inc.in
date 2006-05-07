@@ -70,6 +70,7 @@ SHLIB_MAJOR=	@MAJOR_VERSION@
 SHLIB_MINOR=	@MINOR_VERSION@
 SHLIB_MICRO=	@MICRO_VERSION@
 
+# We do not do version numbering for dynamic libraries on Win32.
 ifneq (@OS_TYPE@, Win32)
 DYNAMICLIB_VER=		.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 DYNAMIC_LIB_LINKS=	$$LIB.$(DYNAMICLIB_EXT)				\
@@ -206,11 +207,12 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
-          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_VJ)
-	rm -f $(@:.dylib=.lo)
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
+          $(DYLIB_DEPS_VJ)
+	rm -f $(subst .dylib,.lo,$@)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
           $(DYLIB_DEPS_VJ)
@@ -219,6 +221,14 @@ ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIBRARY).* .
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
+ifneq ($(VJ_LIB_DYNAMIC), $(VJ_LIBRARY).$(DYNAMICLIB_EXT))
+	@for d in $(LIBDIR) $(LIBDIR_BASE) ; do				\
+            curdir=`pwd` ;						\
+            cd $$d && $(RM_LN) $(VJ_LIBRARY).$(DYNAMICLIB_EXT) &&	\
+              $(LN_S) $@ ./$(VJ_LIBRARY).$(DYNAMICLIB_EXT) ;		\
+            cd $$curdir ;						\
+          done
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"

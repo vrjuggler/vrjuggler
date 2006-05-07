@@ -75,7 +75,7 @@ SHLIB_MAJOR=	@MAJOR_VERSION@
 SHLIB_MINOR=	@MINOR_VERSION@
 SHLIB_MICRO=	@MICRO_VERSION@
 
-# On non-Win32 platforms, we use versioning on the dynamic library.
+# We do not do version numbering for dynamic libraries on Win32.
 ifneq (@OS_TYPE@, Win32)
 DYNAMICLIB_VER=		.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 DYNAMIC_LIB_LINKS=	$$LIB.$(DYNAMICLIB_EXT)				\
@@ -213,11 +213,11 @@ $(LIBDIR)/$(TWEEK_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
-          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS)
-	rm -f $(@:.dylib=.lo)
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@) $(DYLIB_DEPS)
+	rm -f $(subst .dylib,.lo,$@)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
           $(DYLIB_DEPS)
