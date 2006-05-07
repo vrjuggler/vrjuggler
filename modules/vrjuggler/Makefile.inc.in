@@ -222,6 +222,14 @@ ifeq (@OS_TYPE@, Win32)
 else
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 endif
+ifneq ($(VJ_LIB_DYNAMIC), $(VJ_LIBRARY).$(DYNAMICLIB_EXT))
+	@for d in $(LIBDIR) $(LIBDIR_BASE) ; do				\
+            curdir=`pwd` ;						\
+            cd $$d && $(RM_LN) $(VJ_LIBRARY).$(DYNAMICLIB_EXT) &&	\
+              $(LN_S) $@ ./$(VJ_LIBRARY).$(DYNAMICLIB_EXT) ;		\
+            cd $$curdir ;						\
+          done
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
