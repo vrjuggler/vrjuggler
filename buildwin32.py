@@ -70,12 +70,15 @@ class BuildOption:
       self.required    = required
       self.isDirectory = isDirectory
 
-def guessBoostToolset(reattempt = False):
+def detectVisualStudioVersion(reattempt = False):
    (cl_stdin, cl_stdout, cl_stderr) = os.popen3('cl')
    cl_version_line = cl_stderr.readline()
 
    cl_ver_match = re.compile(r'Compiler Version ((\d+)\.(\d+)\.(\d+))')
    ver_string_match = cl_ver_match.search(cl_version_line)
+
+   cl_major = 0
+   cl_minor = 0
 
    if ver_string_match is not None:
       cl_major = int(ver_string_match.group(2))
@@ -83,17 +86,12 @@ def guessBoostToolset(reattempt = False):
 
       if cl_major == 13 and cl_minor < 10:
          vs_ver = '.NET 2002'
-         boost_tool_guess = 'vc7'
       elif cl_major == 13 and cl_minor >= 10:
          vs_ver = '.NET 2003'
-         boost_tool_guess = 'vc71'
       else:
          vs_ver = '2005'
-         boost_tool_guess = 'vc80'
 
       printStatus("It appears that we will be using Visual Studio " + vs_ver)
-   else:
-      boost_tool_guess = ''
 
    in_status  = cl_stdin.close()
    out_status = cl_stdout.close()
@@ -138,6 +136,29 @@ def guessBoostToolset(reattempt = False):
       else:
          noVisualStudioError()
 
+   return (cl_major, cl_minor)
+
+def chooseVisualStudioDir():
+   (cl_ver_major, cl_ver_minor) = detectVisualStudioVersion()
+
+   # For Visual Studio .NET 2002 and 2003 (versions 7.0 and 7.1 respectively),
+   # we will use the solution in the vc7 subtree.
+   if cl_ver_major == 13:
+      vc_dir = 'vc7'
+   # Otherwise, we use the solution in the vc8 subtree.
+   else:
+      vc_dir = 'vc8'
+
+   return (cl_ver_major, cl_ver_minor, vc_dir)
+
+def guessBoostToolset(clVerMajor, clVerMinor):
+   if clVerMajor == 13 and clVerMinor < 10:
+      boost_tool_guess = 'vc7'
+   elif clVerMajor == 13 and clVerMinor >= 10:
+      boost_tool_guess = 'vc71'
+   else:
+      boost_tool_guess = 'vc80'
+
    return boost_tool_guess
 
 def printStatus(msg):
@@ -176,8 +197,8 @@ def processInput(optionDict, envVar, inputDesc, required = False):
 
    return value_str
 
-def getDefaultVars():
-   boost_tool_fallback = guessBoostToolset()
+def getDefaultVars(clVerMajor, clVerMinor):
+   boost_tool_fallback = guessBoostToolset(clVerMajor, clVerMinor)
 
    required = []
    required.append(BuildOption('BOOST_ROOT',
@@ -241,8 +262,8 @@ def getDefaultVars():
 
    return required, optional, options
 
-def setVars():
-   required, optional, options = getDefaultVars()
+def setVars(clVerMajor, clVerMinor):
+   required, optional, options = getDefaultVars(clVerMajor, clVerMinor)
 
    print "+++ Required Settings"
    processInput(options, 'prefix', 'Installation prefix')
@@ -1570,10 +1591,11 @@ class GuiFrontEnd:
       global printStatus
       printStatus = self.printMessage
 
-      required, optional, options = getDefaultVars()
+      (cl_ver_major, cl_ver_minor, vc_dir) = chooseVisualStudioDir()
+      required, optional, options = getDefaultVars(cl_ver_major, cl_ver_minor)
       self.mOptions   = options
       self.mTkOptions = {}
-      self.mVcDir     = 'vc7'
+      self.mVcDir     = vc_dir
 
       # Make a StringVar dictionary.
       for k in options:
@@ -2044,8 +2066,8 @@ def main():
    # If Tkinter is not available or the user disabled the Tk frontend, use
    # the text-based interface.
    if not gHaveTk or disable_tk:
-      options = setVars()
-      vc_dir  = 'vc7'
+      (cl_ver_major, cl_ver_minor, vc_dir) = chooseVisualStudioDir()
+      options = setVars(cl_ver_major, cl_ver_minor)
       generateVersionHeaders(vc_dir)
       generateAntBuildFiles(vc_dir)
 
