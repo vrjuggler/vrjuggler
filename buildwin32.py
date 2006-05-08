@@ -1467,8 +1467,7 @@ def installBoost(prefix):
    destdir = os.path.join(prefix, 'lib')
    mkinstalldirs(destdir)
 
-   lib_list = glob.glob(os.path.join(srcdir, '*filesystem*')) + \
-              glob.glob(os.path.join(srcdir, '*python*'))
+   lib_list = glob.glob(os.path.join(srcdir, '*boost_*'))
 
    for f in lib_list:
       shutil.copy2(f, destdir)
