@@ -240,12 +240,12 @@ $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
-          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo)		\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
           $(DYLIB_PROF_DEPS_VJ)
-	rm -f $(@:.dylib=.lo)
+	rm -f $(subst .dylib,.lo,$@)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
           $(DYLIB_PROF_DEPS_VJ)
@@ -265,11 +265,12 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
-          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_GL)
-	rm -f $(@:.dylib=.lo)
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
+          $(DYLIB_DEPS_GL)
+	rm -f $(subst .dylib,.lo,$@)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
           $(DYLIB_DEPS_GL)
@@ -289,12 +290,12 @@ $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
-          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo)		\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
           $(DYLIB_PROF_DEPS_GL)
-	rm -f $(@:.dylib=.lo)
+	rm -f $(subst .dylib,.lo,$@)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
           $(DYLIB_PROF_DEPS_GL)
