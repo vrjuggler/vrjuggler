@@ -45,7 +45,6 @@
 namespace vrj
 {
 
-//vjDisplayManager* DisplayManager::_instance = NULL;
 vprSingletonImp(DisplayManager);
 
 std::vector<Display*> DisplayManager::getAllDisplays()
@@ -99,7 +98,8 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
 
 void DisplayManager::setDrawManager(DrawManager* drawMgr)
 {
-   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_STATE_LVL) << "vjDisplayManager: Setting draw manager.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_STATE_LVL)
+      << "vrj::DisplayManager: Setting draw manager.\n" << vprDEBUG_FLUSH;
 
    // set the draw manager
    mDrawManager = drawMgr;
@@ -272,7 +272,8 @@ bool DisplayManager::configRemoveDisplay(jccl::ConfigElementPtr element)
 // notifyDrawMgr = 0; Defaults to 0
 int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
 {
-   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_VERB_LVL) << "vjDisplayManager::addDisplay \n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_VERB_LVL)
+      << "vrj::DisplayManager::addDisplay()\n" << vprDEBUG_FLUSH;
 
    // Test if active or not, to determine correct list
    // The place it in the list
