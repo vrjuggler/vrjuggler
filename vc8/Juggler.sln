@@ -257,7 +257,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9915A2BE-A8B0-48DD-AB7B-85B9D57763D1}"
 	ProjectSection(SolutionItems) = preProject
 		..\INSTALL.html = ..\INSTALL.html
-		..\vc7\README.html = ..\vc7\README.html
+		..\README-WINDOWS.html = ..\README-WINDOWS.html
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JCCL CORBA Run-Time Reconfig Plug-in IDL to C++", "JCCL\RTRC_Plugin_CXX_IDL\RTRC_Plugin_CXX_IDL.vcproj", "{B0D8E82A-EAF5-4162-8136-C12B84DC5089}"

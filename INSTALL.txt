@@ -320,8 +320,8 @@ Compiling the Juggler Suite of Tools
 
  To build VR Juggler on Windows, you must use the Visual Studio solution.
  After getting the dependencies needed to compile VR Juggler (see the next
- section), refer to the README.html file located in the vc7 subdirectory of
- this directory. Do not bother to the rest of this document.
+ section), refer to the README-WINDOWS.html file located in this directory.
+ Do not bother to the rest of this document.
 
 
 Configuring the Juggler Build

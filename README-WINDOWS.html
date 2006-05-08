@@ -1,5 +1,5 @@
 <head>
-<title>Compiling the Juggler Suite Using Visual Studio 7.x</title>
+<title>Compiling the Juggler Suite Using Visual Studio</title>
 </head>
 
 <body>
@@ -27,7 +27,9 @@ of the steps for building and installing VR Juggler on Windows follow:
 
 <ol>
   <li>
-    Install <a href="http://www.python.org/">Python</a> 2.2 or newer.
+    Install <a href="http://www.python.org/">Python</a> 2.2 or newer. To build
+    a 64-bit version of VR Juggler on Windows, the 64-bit build of Python 2.5 is
+    required.
   </li>
   <li>
     Run <tt>buildwin32.py</tt> and fill in at least the paths to the
@@ -51,7 +53,8 @@ Each of the above steps is described in more detail below.
 In order to <a href="#run_buildwin32_py">run the helper script
 <tt>buildwin32.py</tt></a>, you must have
 <a href="http://www.python.org/">Python</a> 2.2 or newer installed on your
-system.  Visit the Python website for
+system. (To build a 64-bit version of VR Juggler, the 64-bit version of
+Python 2.5 must be installed.) Visit the Python website for
 <a href="http://www.python.org/download/">download and install
 instructions</a>.
 </p>
@@ -126,9 +129,9 @@ The required environment variables are as follows:
   <dt><tt>BOOST_TOOL</tt></dt>
   <dd>
     The name of the Boost Jam toolset used to compile Boost.  Generally,
-    this will be either <tt>vc7</tt> or <tt>vc71</tt>, but it depends on
-    how Boost was compiled.  To determine which toolset was used, look at
-    the names of the libraries in <tt>%BOOST_ROOT%\lib</tt>.  For example,
+    this will be either <tt>vc7</tt>, <tt>vc71</tt>, or <tt>vc80</tt>, but it
+    depends on how Boost was compiled.  To determine which toolset was used, look
+    at the names of the libraries in <tt>%BOOST_ROOT%\lib</tt>.  For example,
     the name of the Boost.Filesystem DLL may be
     <tt>boost_filesystem-<b>vc7</b>-mt-1_31.dll</tt> where the
     <tt>vc7</tt> part of the file name is the value to use for this

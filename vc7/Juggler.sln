@@ -540,7 +540,7 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		Item:1 = ..\INSTALL.html
-		Item:2 = README.html
+		Item:2 = ..\README-WINDOWS.html
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
