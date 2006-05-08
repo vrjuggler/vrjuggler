@@ -9,7 +9,7 @@
 <ul>
   <li><a href="#intro">Introduction</a></li>
   <li><a href="#install_python">Install Python</a></li>
-  <li><a href="#run_buildwin32_py">Run <tt>buildwin32.py</tt></a></li>
+  <li><a href="#run_build_windows_py">Run <tt>build_windows.py</tt></a></li>
   <li><a href="#choose_configuration">Choose a Configuration to Build</a></li>
   <li><a href="#install_vrj">Install VR Juggler</a></li>
   <li><a href="#install_deps">Install VR Juggler Dependencies</a></li>
@@ -32,7 +32,7 @@ of the steps for building and installing VR Juggler on Windows follow:
     required.
   </li>
   <li>
-    Run <tt>buildwin32.py</tt> and fill in at least the paths to the
+    Run <tt>build_windows.py</tt> and fill in at least the paths to the
     required dependencies.
   </li>
   <li>
@@ -50,8 +50,8 @@ Each of the above steps is described in more detail below.
 <a name="install_python"><h1>2. Install Python</h1></a>
 
 <p>
-In order to <a href="#run_buildwin32_py">run the helper script
-<tt>buildwin32.py</tt></a>, you must have
+In order to <a href="#run_build_windows_py">run the helper script
+<tt>build_windows.py</tt></a>, you must have
 <a href="http://www.python.org/">Python</a> 2.2 or newer installed on your
 system. (To build a 64-bit version of VR Juggler, the 64-bit version of
 Python 2.5 must be installed.) Visit the Python website for
@@ -59,12 +59,12 @@ Python 2.5 must be installed.) Visit the Python website for
 instructions</a>.
 </p>
 
-<a name="run_buildwin32_py"><h1>3. Run <tt>buildwin32.py</tt></h1></a>
+<a name="run_build_windows_py"><h1>3. Run <tt>build_windows.py</tt></h1></a>
 
 <p>
 Once you have Python installed, you can open the folder containing the
 Juggler Project source in Windows Explorer and double-click on the
-icon for the script <tt>buildwin32.py</tt>.  This script simplifies the
+icon for the script <tt>build_windows.py</tt>.  This script simplifies the
 process of building VR Juggler on Windows by setting up paths and
 environment variables based on input that you provide.  It then starts
 Visual Studio for you, and when the build is complete, it will perform
@@ -74,7 +74,7 @@ VR Juggler's C++ dependencies into a convenient, centralized location.
 
 <blockquote>
 <b>NOTE:</b> For the build to work correctly, you must use the
-<tt>buildwin32.py</tt> script.  It does more than just set environment
+<tt>build_windows.py</tt> script.  It does more than just set environment
 variables.
 </blockquote>
 
@@ -82,7 +82,7 @@ variables.
 Regarding the environment variables, the remainder of this
 section describes each of the required and optional environment variables
 used by the Visual Studio build.  You can read through them to get a
-better understanding of what <tt>buildwin32.py</tt> expects from your
+better understanding of what <tt>build_windows.py</tt> expects from your
 answers to its questions, or you can
 <a href="#choose_configuration">skip to the next section</a>.
 </p>
@@ -91,7 +91,7 @@ answers to its questions, or you can
 
 <p>
 Prior to starting the Visual Studio GUI, several environment variables
-must be set.  If you run the Python script <tt>buildwin32.py</tt>, all of
+must be set.  If you run the Python script <tt>build_windows.py</tt>, all of
 the necessary environment variables will be set (and cached) based on
 responses you provide to several questions.
 
@@ -282,7 +282,7 @@ The optional environment variables are as follows:
     The name of the Trackd API header file to be included by the Trackd API
     driver. Different versions of the Trackd API have different names for the
     header file that proides the type declarations needed to use the Trackd
-    API driver. The build script <tt>buildwin32.py</tt> attempts to detect
+    API driver. The build script <tt>build_windows.py</tt> attempts to detect
     automatically what value to use, but it has a finite number of choices
     based on known possible values. The form for the value of this environment
     variable must be either <tt>&lt;file.h&gt;</tt> or <tt>"file.h"</tt>
@@ -295,7 +295,7 @@ The optional environment variables are as follows:
 <a name="choose_configuration"><h1>4. Choose a Configuration to Build</h1></a>
 
 <p>
-After you answer the questions asked by <tt>buildwin32.py</tt>, the script
+After you answer the questions asked by <tt>build_windows.py</tt>, the script
 will start up the version of Visual Studio that you have in your path (or
 that it detected on your system if your environment does not have the
 <tt>devenv.exe</tt> command in your path).  Inside the Visual Studio GUI,
@@ -308,18 +308,18 @@ The chosen target should be either "Debug" or "Release".  Otherwise, select
 you choose to build everything but do not have all the
 <a href="#opt_env_vars">optional dependencies</a>, some optional targets
 such as device drivers or Java features may fail to build.  If this is not
-acceptable, you must <a href="#run_buildwin32_py">go back to Step 3</a>
-and run <tt>buildwin32.py</tt> again.
+acceptable, you must <a href="#run_build_windows_py">go back to Step 3</a>
+and run <tt>build_windows.py</tt> again.
 </p>
 
 <a name="install_vrj"><h1>5. Install VR Juggler</h1></a>
 
 <p>
-After successfully compiling VR Juggler, <tt>buildwin32.py</tt> will ask
+After successfully compiling VR Juggler, <tt>build_windows.py</tt> will ask
 if you want to install VR Juggler.  On Windows, you must install VR Juggler
 to be able to build and run applications.  Working out of the development
 tree is not possible the way it is on other platforms.  If you answer
-"yes" to the question of installing VR Juggler, <tt>buildwin32.py</tt> will
+"yes" to the question of installing VR Juggler, <tt>build_windows.py</tt> will
 go through the full process of installing everything that was compiled.
 </p>
 
