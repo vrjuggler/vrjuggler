@@ -160,9 +160,7 @@ links-boost:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
 	-$(RM_LN) $(instlinks)/include/boost
 	$(LN_S) $(BOOST_INCLUDES)/boost $(instlinks)/include
-	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost_filesystem*.$(DYNAMICLIB_EXT)*	\
-          $(instlinks)/lib$(LIBBITSUF)
-	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost_python*.$(DYNAMICLIB_EXT)*	\
+	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost_*.$(DYNAMICLIB_EXT)*	\
           $(instlinks)/lib$(LIBBITSUF)
 
 links-cppdom:
@@ -339,11 +337,7 @@ install-boost:
           -i $(BOOST_INCLUDES)/boost/compatibility/cpp_c_headers	\
           -o $(deps_prefix)/include/boost/compatibility/cpp_c_headers
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(BOOST_ROOT)/lib/libboost_filesystem*.$(DYNAMICLIB_EXT)*	\
-          $(deps_prefix)/lib
-	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(BOOST_ROOT)/lib/libboost_python*.$(DYNAMICLIB_EXT)*		\
-          $(deps_prefix)/lib
+          $(BOOST_ROOT)/lib/libboost_*.$(DYNAMICLIB_EXT)* $(deps_prefix)/lib
 
 install-cppdom:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
