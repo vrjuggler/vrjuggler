@@ -252,19 +252,6 @@ void ThreadNSPR::startThread()
       // --- CALL USER FUNCTOR --- //
       mUserThreadFunctor();
    }
-   catch (vpr::Exception& ex)
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << clrOutNORM(clrYELLOW, "WARNING:")
-         << " Caught an unhandled exception of type " << typeid(ex).name()
-         << " in thread:" << std::endl
-         << ex.getExtendedDescription() << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Thread exiting due to uncaught exception\n" << vprDEBUG_FLUSH;
-
-      mCaughtException = true;
-      mException.setException(ex);
-   }
    catch (std::exception& ex)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)

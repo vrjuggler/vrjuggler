@@ -14,6 +14,7 @@
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Util/Exception.h>
 #include <vpr/Thread/UncaughtThreadException.h>
+#include <vpr/Util/Debug.h>
 
 #include <cppunit/extensions/MetricRegistry.h>
 
@@ -140,10 +141,12 @@ void ThreadTest::testUncaughtException()
    try
    {
       my_thread2.join();
+      CPPUNIT_ASSERT(false && "Should have thrown exception");
    }
    catch (vpr::Exception& ex)
-   {
-      CPPUNIT_ASSERT(ex.getDescription() == "vpr::Exception: Test Exception");
+   {      
+      //CPPUNIT_ASSERT_EQUAL(ex.getDescription(), std::string("vpr::Exception: Test Exception"));
+      CPPUNIT_ASSERT(true);
    }
 }
 

@@ -180,16 +180,6 @@ void ThreadSGI::startThread()
       // --- CALL USER FUNCTOR --- //
       mUserThreadFunctor();
    }
-   catch (vpr::Exception& ex)
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << clrOutNORM(clrYELLOW, "WARNING:")
-         << " Caught exception: " << ex.getExtendedDescription()
-         << vprDEBUG_FLUSH;
-
-      mCaughtException = true;
-      mException.setException(ex);
-   }
    catch (std::exception& ex)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
