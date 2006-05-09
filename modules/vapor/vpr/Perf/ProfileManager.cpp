@@ -47,20 +47,22 @@ namespace vpr
 {
 
 // Initialize statics
-TSObjectProxy<ProfileManager::ThreadProfileData>  ProfileManager::mThreadData;
+TSObjectProxy<ProfileManager::ThreadProfileData> ProfileManager::mThreadData;
 
-   void  ProfileManager::startProfile( const char * profileName , const unsigned int queueSize)
+   void ProfileManager::startProfile(const char* profileName,
+                                     const unsigned int queueSize)
    {
       ThreadProfileData& prof_data(*mThreadData);
 
       if ( profileName != prof_data.mCurrentNode->getName() )
       {
-         prof_data.mCurrentNode = prof_data.mCurrentNode->getSubNode( profileName, queueSize);
+         prof_data.mCurrentNode =
+            prof_data.mCurrentNode->getSubNode(profileName, queueSize);
       }
       prof_data.mCurrentNode->startSample();
    }
 
-   void  ProfileManager::stopProfile( void )
+   void  ProfileManager::stopProfile()
    {
       ThreadProfileData& prof_data(*mThreadData);
 
@@ -100,11 +102,13 @@ TSObjectProxy<ProfileManager::ThreadProfileData>  ProfileManager::mThreadData;
          }
 
          /*
-         std::vector<vpr::Thread*> cur_threads = vpr::ThreadManager::instance()->getThreads();
+         std::vector<vpr::Thread*> cur_threads =
+            vpr::ThreadManager::instance()->getThreads();
 
          for(unsigned t=0;t<cur_threads.size();t++)
          {
-            std::cout << "Print thread: " << (void*)cur_threads[t] << std::endl;
+            std::cout << "Print thread: " << (void*)cur_threads[t]
+                      << std::endl;
             std::cout << "Thread: " << cur_threads[t] << std::endl;
             getRootNode(cur_threads[t])->printTree();
          }
@@ -112,8 +116,7 @@ TSObjectProxy<ProfileManager::ThreadProfileData>  ProfileManager::mThreadData;
       }
    }
 
-
-   void  ProfileManager::reset( void )
+   void ProfileManager::reset()
    {
       ThreadProfileData& prof_data(*mThreadData);
 
@@ -121,7 +124,7 @@ TSObjectProxy<ProfileManager::ThreadProfileData>  ProfileManager::mThreadData;
       prof_data.mResetTime.setNow();
    }
 
-   float ProfileManager::getTimeSinceReset( void )
+   float ProfileManager::getTimeSinceReset()
    {
       ThreadProfileData& prof_data(*mThreadData);
 
