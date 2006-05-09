@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "version.rc"
+#include "vrj/version.rc"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////

@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -152,6 +153,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -241,6 +243,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -332,6 +335,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -516,38 +520,6 @@
 			<File
 				RelativePath="..\..\..\vc7\VRJuggler\OpenGL_Draw_Manager\VRJuggler.rc"
 				>
-				<FileConfiguration
-					Name="DebugDLL|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseDLL|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DebugDLL|x64"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseDLL|x64"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

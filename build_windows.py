@@ -445,6 +445,7 @@ def generateVersionHeaders(vcDir):
       major_vernum_re = re.compile(r'@MAJOR_VER_NUMBER@')
       minor_vernum_re = re.compile(r'@MINOR_VER_NUMBER@')
       patch_vernum_re = re.compile(r'@PATCH_VER_NUMBER@')
+      build_vernum_re = re.compile(r'@BUILD_VER_NUMBER@')
       verstr_re       = re.compile(r'@VER_STRING@')
       zero_strip_re   = re.compile(r'^0*([^0]\d+)')
 
@@ -457,6 +458,7 @@ def generateVersionHeaders(vcDir):
          major   = int(ver_match.group(2))
          minor   = int(ver_match.group(3))
          patch   = int(ver_match.group(4))
+         build   = int(ver_match.group(5))
 
          # NOTE: This will not always be identical to the UNIX version because
          # Python does not have %e as a time formatting directive.
@@ -495,16 +497,21 @@ def generateVersionHeaders(vcDir):
 
             for i in xrange(len(input_lines)):
                line = input_lines[i]
+
                if self.vernum_re.search(line):
-                  input_lines[i] = self.vernum_re.sub(version_number, line)
-               elif self.major_vernum_re.search(line):
-                  input_lines[i] = self.major_vernum_re.sub(str(major), line)
-               elif self.minor_vernum_re.search(line):
-                  input_lines[i] = self.minor_vernum_re.sub(str(minor), line)
-               elif self.patch_vernum_re.search(line):
-                  input_lines[i] = self.patch_vernum_re.sub(str(patch), line)
-               elif self.verstr_re.search(line):
-                  input_lines[i] = self.verstr_re.sub(version_string, line)
+                  line = self.vernum_re.sub(version_number, line)
+               if self.major_vernum_re.search(line):
+                  line = self.major_vernum_re.sub(str(major), line)
+               if self.minor_vernum_re.search(line):
+                  line = self.minor_vernum_re.sub(str(minor), line)
+               if self.patch_vernum_re.search(line):
+                  line = self.patch_vernum_re.sub(str(patch), line)
+               if self.build_vernum_re.search(line):
+                  line = self.build_vernum_re.sub(str(build), line)
+               if self.verstr_re.search(line):
+                  line = self.verstr_re.sub(version_string, line)
+
+               input_lines[i] = line
 
             printStatus("Generating updated " + output)
             param_header = open(output, 'w')
@@ -518,25 +525,37 @@ def generateVersionHeaders(vcDir):
 
    mods = []
    mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR',
-                             [(r'vpr\vprParam.h',), (r'vpr\vprParam.cpp',)]))
+                             [(r'vpr\vprParam.h',), (r'vpr\vprParam.cpp',),
+                              (r'vpr\version.rc',
+                               os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
                              [(r'tweek\tweekParam.h',),
-                              (r'tweek\tweekParam.cpp',)]))
+                              (r'tweek\tweekParam.cpp',),
+                              (r'tweek\version.rc',
+                               os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL',
                              [(r'jccl\jcclParam.h',
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.h.in')),
                               (r'jccl\jcclParam.cpp',
                                os.path.join(gJugglerDir,
-                                            r'modules\jackal\common\jccl\jcclParam.cpp.in'))
+                                            r'modules\jackal\common\jccl\jcclParam.cpp.in')),
+                              (r'jccl\version.rc',
+                               os.path.join(gJugglerDir, 'version.rc.in'))
                              ]))
    mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix',
-                             [(r'snx\snxParam.h',), (r'snx\snxParam.cpp',)]))
+                             [(r'snx\snxParam.h',), (r'snx\snxParam.cpp',),
+                              (r'snx\version.rc',
+                               os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                              [(r'gadget\gadgetParam.h',),
-                              (r'gadget\gadgetParam.cpp',)]))
+                              (r'gadget\gadgetParam.cpp',),
+                              (r'gadget\version.rc',
+                               os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
-                             [(r'vrj\vrjParam.h',), (r'vrj\vrjParam.cpp',)]))
+                             [(r'vrj\vrjParam.h',), (r'vrj\vrjParam.cpp',),
+                              (r'vrj\version.rc',
+                               os.path.join(gJugglerDir, 'version.rc.in'))]))
 
    for m in mods:
       m.generateParamFiles()

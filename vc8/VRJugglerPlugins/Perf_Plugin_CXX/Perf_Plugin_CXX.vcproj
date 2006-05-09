@@ -64,6 +64,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="..\..\VRJuggler"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -153,6 +154,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="..\..\VRJuggler"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -244,6 +246,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="..\..\VRJuggler"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -337,6 +340,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="..\..\VRJuggler"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"

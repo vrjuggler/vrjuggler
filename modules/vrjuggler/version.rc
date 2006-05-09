@@ -1,5 +1,0 @@
-#pragma once
-
-#define VERSION_NUM     2,1,7,0
-#define VERSION_STR     "2.1.7.0"
-#define COPYRIGHT_STR   "Copyright © 1998–2006"
