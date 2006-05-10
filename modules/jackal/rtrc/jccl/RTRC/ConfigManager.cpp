@@ -307,7 +307,7 @@ static const int pending_repeat_limit = 3;    // Must be one or greater.  1 mean
  *
  * CONCURRENCY: concurrent
  */
-bool ConfigManager::pendingNeedsChecked()
+bool ConfigManager::shouldCheckPending()
 {
    // - Lock PendingCountMutex
    // - If the size of the pending list has changed
@@ -349,8 +349,7 @@ bool ConfigManager::pendingNeedsChecked()
       mPendingCheckCount++;
       
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "ConfigManager::pendingNeedsChecked: Pending list is now\n"
-         << vprDEBUG_FLUSH;
+         << "Pending list is now\n" << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrGREEN,"STALE: ")
          << cur_pending_size << " items still in the pending list\n"
@@ -730,7 +729,7 @@ int ConfigManager::attemptReconfiguration()
    // incoming list.
    mergeIncomingToPending();
 
-   if ( pendingNeedsChecked() )
+   if ( shouldCheckPending() )
    {
       vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_STATE_LVL,
       std::string("ConfigManager::attemptReconfiguration: Examining pending list.\n"),
