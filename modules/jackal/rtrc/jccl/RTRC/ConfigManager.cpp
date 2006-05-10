@@ -348,24 +348,24 @@ bool ConfigManager::shouldCheckPending()
    {
       mPendingCheckCount++;
       
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Pending list is now\n" << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrGREEN,"STALE: ")
-         << cur_pending_size << " items still in the pending list\n"
+      vprDEBUG(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
+         << "Pending list is now "
+         << clrOutNORM(clrGREEN, "STALE") << ":\n" << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
+         << cur_pending_size << " items are still in the pending list\n"
          << vprDEBUG_FLUSH;
 
       if ( cur_pending_size > 0 )
       {
-         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
             << "NOTE: These items have been specified in the configuration\n"
             << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
             << "      but have not been loaded.\n" << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
             << "      This may be a problem in the configuration OR\n"
             << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
             << "      it may be waiting for more configuration information.\n"
             << vprDEBUG_FLUSH;
       }
