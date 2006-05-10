@@ -148,7 +148,7 @@ bool GlWindowXWin::open()
       }
 
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-         << "Visual ID: 0x" << std::hex << mVisualInfo->visualid << std::dec
+         << "Visual ID: " << std::hex << mVisualInfo->visualid << std::dec
          << std::endl << vprDEBUG_FLUSH;
 
       // window attributes.
@@ -660,7 +660,7 @@ void GlWindowXWin::checkEvents()
    if ( visual_id != -1 )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-         << "Requesting visual 0x" << std::hex << visual_id << std::dec
+         << "Requesting visual " << std::hex << visual_id << std::dec
          << " from GLX." << std::endl << vprDEBUG_FLUSH;
 
       XVisualInfo vinfo_template;
@@ -690,7 +690,7 @@ void GlWindowXWin::checkEvents()
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutBOLD(clrRED, "ERROR:")
-            << " Failed to get X11 visual info for visual ID 0x"
+            << " Failed to get X11 visual info for visual ID "
             << std::hex << visual_id << std::dec << std::endl
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
