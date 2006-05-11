@@ -34,6 +34,7 @@
 
 #include <iomanip>
 #include <sstream>
+#include <cctype>
 
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
@@ -511,8 +512,16 @@ void InputAreaWin32::unlockMouse()
    BOOL result = ::ReleaseCapture();
 }
 
-gadget::Keys InputAreaWin32::VKKeyToKey(int vkKey)
+gadget::Keys InputAreaWin32::VKKeyToKey(const int vkKey)
 {
+   // The X Window System provides separate key codes for keys such as ':'
+   // or '*' that result from pressing SHIFT and another key. Windows does
+   // not do this. To be consistent, we will factor the modifier mask in
+   // to the conversion performed here.
+   // XXX: This could be very specific to U.S. keyboards.
+   const int mask(getModifierMask());
+   const bool shift_pressed(mask & gadget::KEY_SHIFT);
+
    switch ( vkKey )
    {
       case VK_UP      : return gadget::KEY_UP;
@@ -522,26 +531,41 @@ gadget::Keys InputAreaWin32::VKKeyToKey(int vkKey)
       case VK_CONTROL  : return gadget::KEY_CTRL;
       case VK_SHIFT   : return gadget::KEY_SHIFT;
       case VK_MENU     : return gadget::KEY_ALT;
-      case /*VK_1*/0x31  : return gadget::KEY_1;
+      case /*VK_1*/0x31   : return (shift_pressed ? gadget::KEY_EXCLAM
+                                                  : gadget::KEY_1);
       case VK_NUMPAD1   : return gadget::KEY_1;
-      case /*VK_2*/0x32  : return gadget::KEY_2;
+      case /*VK_2*/0x32   : return (shift_pressed ? gadget::KEY_AT
+                                                  : gadget::KEY_2);
       case VK_NUMPAD2   : return gadget::KEY_2;
-      case /*VK_3*/0x33 : return gadget::KEY_3;
+      case /*VK_3*/0x33   : return (shift_pressed ? gadget::KEY_NUMBER_SIGN
+                                                  : gadget::KEY_3);
       case VK_NUMPAD3   : return gadget::KEY_3;
-      case /*VK_4*/0x34  : return gadget::KEY_4;
+      case /*VK_4*/0x34   : return (shift_pressed ? gadget::KEY_DOLLAR
+                                                  : gadget::KEY_4);
       case VK_NUMPAD4   : return gadget::KEY_4;
-      case /*VK_5*/0x35 : return gadget::KEY_5;
+      case /*VK_5*/0x35   : return (shift_pressed ? gadget::KEY_PERCENT
+                                                  : gadget::KEY_5);
       case VK_NUMPAD5   : return gadget::KEY_5;
-      case /*VK_6*/0x36  : return gadget::KEY_6;
+      case /*VK_6*/0x36   : return (shift_pressed ? gadget::KEY_ASCII_CIRCUM
+                                                  : gadget::KEY_6);
       case VK_NUMPAD6   : return gadget::KEY_6;
-      case /*VK_7*/0x37  : return gadget::KEY_7;
+      case /*VK_7*/0x37   : return (shift_pressed ? gadget::KEY_AMPERSAND
+                                                  : gadget::KEY_7);
       case VK_NUMPAD7   : return gadget::KEY_7;
-      case /*VK_8*/0x38  : return gadget::KEY_8;
+      case /*VK_8*/0x38   : return (shift_pressed ? gadget::KEY_ASTERISK
+                                                  : gadget::KEY_8);
       case VK_NUMPAD8   : return gadget::KEY_8;
-      case /*VK_9*/0x39  : return gadget::KEY_9;
+      case /*VK_9*/0x39   : return (shift_pressed ? gadget::KEY_PAREN_LEFT
+                                                  : gadget::KEY_9);
       case VK_NUMPAD9   : return gadget::KEY_9;
-      case /*VK_0*/0x30  : return gadget::KEY_0;
+      case /*VK_0*/0x30   : return (shift_pressed ? gadget::KEY_PAREN_RIGHT
+                                                  : gadget::KEY_0);
       case VK_NUMPAD0   : return gadget::KEY_0;
+      case VK_ADD         : return gadget::KEY_PLUS;
+      case VK_MULTIPLY    : return gadget::KEY_ASTERISK;
+      case VK_SUBTRACT    : return gadget::KEY_MINUS;
+      case VK_DIVIDE      : return gadget::KEY_SLASH;
+      case VK_DECIMAL     : return gadget::KEY_PERIOD;
       case /*VK_A*/0x41   : return gadget::KEY_A;
       case /*VK_B*/0x42   : return gadget::KEY_B;
       case /*VK_C*/0x43   : return gadget::KEY_C;
@@ -614,7 +638,119 @@ gadget::Keys InputAreaWin32::VKKeyToKey(int vkKey)
       case VK_HELP  : return gadget::KEY_HELP;
       case VK_SPACE : return gadget::KEY_SPACE;
 
+      case 0xDB          : return (shift_pressed ? gadget::KEY_BRACE_LEFT
+                                                 : gadget::KEY_BRACKET_LEFT);
+      case 0xDD          : return (shift_pressed ? gadget::KEY_BRACE_RIGHT
+                                                 : gadget::KEY_BRACKET_RIGHT);
+      case 0xDC          : return (shift_pressed ? gadget::KEY_BAR
+                                                 : gadget::KEY_BACKSLASH);
+      case 0xC0          : return (shift_pressed ? gadget::KEY_ASCII_TILDE
+                                                 : gadget::KEY_QUOTE_LEFT);
+      case VK_OEM_COMMA  : return (shift_pressed ? gadget::KEY_LESS
+                                                 : gadget::KEY_COMMA);
+      case VK_OEM_PERIOD : return (shift_pressed ? gadget::KEY_GREATER
+                                                 : gadget::KEY_PERIOD);
+      case 0xBF          : return (shift_pressed ? gadget::KEY_QUESTION
+                                                 : gadget::KEY_SLASH);
+      case VK_OEM_PLUS   : return (shift_pressed ? gadget::KEY_PLUS
+                                                 : gadget::KEY_EQUAL);
+      case VK_OEM_MINUS  : return (shift_pressed ? gadget::KEY_UNDERSCORE
+                                                 : gadget::KEY_MINUS);
+      case VK_OEM_1      : return (shift_pressed ? gadget::KEY_COLON
+                                                 : gadget::KEY_SEMICOLON);
+      case 0xDE          : return (shift_pressed ? gadget::KEY_QUOTE_DBL
+                                                 : gadget::KEY_APOSTROPHE);
+      case VK_LWIN       : return gadget::KEY_SUPER_L;
+      case VK_RWIN       : return gadget::KEY_SUPER_R;
+      case VK_APPS       : return gadget::KEY_MENU;
+
       default: return gadget::KEY_UNKNOWN;
+   }
+}
+
+char InputAreaWin32::getAsciiKey(const int vkKey, const gadget::Keys key)
+{
+   if ( std::isalnum(vkKey) )
+   {
+      return static_cast<char>(vkKey);
+   }
+   // We could use std::isascii() here, but vkKey does not factor in whether
+   // the SHIFT key was pressed the way that the X Window System does. For
+   // consistency, we test key instead and use it to get the character to
+   // return.
+   else
+   {
+      switch ( key )
+      {
+         case gadget::KEY_AMPERSAND:
+            return '&';
+         case gadget::KEY_APOSTROPHE:
+            return '\'';
+         case gadget::KEY_ASCII_CIRCUM:
+            return '^';
+         case gadget::KEY_ASCII_TILDE:
+            return '~';
+         case gadget::KEY_ASTERISK:
+            return '*';
+         case gadget::KEY_AT:
+            return '@';
+         case gadget::KEY_BACKSLASH:
+            return '\\';
+         case gadget::KEY_BAR:
+            return '|';
+         case gadget::KEY_BRACE_LEFT:
+            return '{';
+         case gadget::KEY_BRACE_RIGHT:
+            return '}';
+         case gadget::KEY_BRACKET_LEFT:
+            return '[';
+         case gadget::KEY_BRACKET_RIGHT:
+            return ']';
+         case gadget::KEY_COLON:
+            return ':';
+         case gadget::KEY_COMMA:
+            return ',';
+         case gadget::KEY_DOLLAR:
+            return '$';
+         case gadget::KEY_EQUAL:
+            return '=';
+         case gadget::KEY_EXCLAM:
+            return '!';
+         case gadget::KEY_GREATER:
+            return '>';
+         case gadget::KEY_LESS:
+            return '<';
+         case gadget::KEY_MINUS:
+            return '-';
+         case gadget::KEY_NUMBER_SIGN:
+            return '#';
+         case gadget::KEY_PAREN_LEFT:
+            return '(';
+         case gadget::KEY_PAREN_RIGHT:
+            return ')';
+         case gadget::KEY_PERCENT:
+            return '%';
+         case gadget::KEY_PERIOD:
+            return '.';
+         case gadget::KEY_PLUS:
+            return '+';
+         case gadget::KEY_QUESTION:
+            return '?';
+         case gadget::KEY_QUOTE_DBL:
+            return '"';
+         case gadget::KEY_QUOTE_LEFT:
+            return '`';
+         case gadget::KEY_SEMICOLON:
+            return ';';
+         case gadget::KEY_SLASH:
+            return '/';
+         case gadget::KEY_SPACE:
+            return ' ';
+         case gadget::KEY_UNDERSCORE:
+            return '_';
+         default:
+            return '\0';
+      }
    }
 }
 
@@ -635,17 +771,18 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
       return;
    }
 
+   // The X Window System returns ASCII key characters as lowercase letters,
+   // so we force Windows to do the same for consistency.
+   const char ascii_rep(std::tolower(getAsciiKey(msg.wParam, key)));
    int mask = getModifierMask();
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
       << "[gadget::InputAreaWin32::addKeyEvent()] Key character '"
-      << (char) tolower(msg.wParam) << "' with modifier mask " << mask
-      << std::endl << vprDEBUG_FLUSH;
+      << ascii_rep << "' with modifier mask " << mask << std::endl
+      << vprDEBUG_FLUSH;
 
-   // The X Window System returns ASCII key characters as lowercase letters,
-   // so we force Windows to do the same for consistency.
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, mask, msg.time,
-                                                   tolower(msg.wParam)));
+                                                   ascii_rep));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 
