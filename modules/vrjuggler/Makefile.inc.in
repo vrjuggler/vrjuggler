@@ -140,7 +140,7 @@ PF_PROF_LIB_DYNAMIC=	$(PF_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_V
 # Version information.
 PARAM_HEADER=	vrj/vrjParam.h
 PARAM_SOURCE=	vrj/vrjParam.cpp
-BRANCH=		HEAD
+BRANCH=		trunk
 CANON_NAME=	Illuvatar
 VER_ARGS=	-f $(VJROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -n "$(CANON_NAME)"				\

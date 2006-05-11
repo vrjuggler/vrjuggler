@@ -125,7 +125,7 @@ TWEEK_PROF_LIB_DYNAMIC=	$(TWEEK_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMI
 # Version information.
 PARAM_HEADER=	tweek/tweekParam.h
 PARAM_SOURCE=	tweek/tweekParam.cpp
-BRANCH=		HEAD
+BRANCH=		trunk
 CANON_NAME=	Aule
 VER_ARGS=	-f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -n "$(CANON_NAME)"				\
