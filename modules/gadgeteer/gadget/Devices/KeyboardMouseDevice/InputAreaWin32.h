@@ -70,7 +70,8 @@ protected:
    void lockMouse();
    void unlockMouse();
    void resize(long width, long height);
-   gadget::Keys VKKeyToKey(int vkKey);
+   gadget::Keys VKKeyToKey(const int vkKey);
+   char getAsciiKey(const int vkKey, const gadget::Keys key);
    virtual void addKeyEvent(const gadget::Keys& key,
                             const gadget::EventType& type, const MSG& message);
    virtual void addMouseButtonEvent(const gadget::Keys& button,
