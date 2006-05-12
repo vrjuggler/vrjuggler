@@ -19,7 +19,7 @@
 %define jccl_release %{global_release}
 %define sonix_version 1.1.2
 %define sonix_release %{global_release}
-%define gadgeteer_version 1.1.7
+%define gadgeteer_version 1.1.8
 %define gadgeteer_release %{global_release}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}
