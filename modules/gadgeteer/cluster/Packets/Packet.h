@@ -70,12 +70,6 @@ public:
    virtual ~Packet();
 
    /**
-    * Construct a packet using the given packet header and socketstream.
-    */
-   void recv(Header* packet_head, gadget::Node* node)
-      throw(cluster::ClusterException);
-
-   /**
     * Dump all internal data to the screen.
     */
    void dump();
