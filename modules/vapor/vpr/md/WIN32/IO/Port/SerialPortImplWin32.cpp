@@ -295,6 +295,7 @@ void SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
 
 // Get the character size (the bits per byte).
 void SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size)
+   const
 {
    vpr::ReturnStatus retval;
    DCB dcb;

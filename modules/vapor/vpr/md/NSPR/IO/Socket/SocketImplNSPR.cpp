@@ -597,6 +597,7 @@ void SocketImplNSPR::write_i(const void* buffer, const vpr::Uint32 length,
 
 void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
                                vpr::SocketOptions::Data& data)
+   const
 {
    PRSocketOptionData opt_data;
    bool get_opt;
