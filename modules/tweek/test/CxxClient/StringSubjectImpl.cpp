@@ -1,13 +1,3 @@
-/***************** <Tweek heading BEGIN do not edit this line> ****************
- * Tweek
- *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- ***************** <Tweek heading END do not edit this line> *****************/
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2006 by Iowa State University

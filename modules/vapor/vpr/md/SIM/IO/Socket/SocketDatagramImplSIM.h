@@ -5,12 +5,6 @@
  * Original Authors:
  *   Allen Bierbaum, Patrick Hartling, Kevin Meinert
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  ***************** <Plexus heading END do not edit this line> ****************/
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************

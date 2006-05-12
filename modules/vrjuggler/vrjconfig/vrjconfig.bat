@@ -23,12 +23,6 @@ rem License along with this library; if not, write to the
 rem Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 rem Boston, MA 02111-1307, USA.
 rem
-rem -----------------------------------------------------------------
-rem File:          $RCSfile$
-rem Date modified: $Date$
-rem Version:       $Revision$
-rem -----------------------------------------------------------------
-rem
 rem ************** <auto-copyright.pl END do not edit this line> **************
 IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
 IF "%JDK_HOME%" == "" GOTO JAVA_ERR

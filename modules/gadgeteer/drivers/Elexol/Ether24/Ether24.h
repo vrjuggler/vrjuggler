@@ -22,12 +22,6 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile: Ether24.h,v $
- * Date modified: $Date: 2006/02/16 02:26:45 $
- * Version:       $Revision: 1.23 $
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _GADGET_ELEXOL_ETHER24_H_

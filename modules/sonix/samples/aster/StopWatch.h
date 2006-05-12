@@ -1,4 +1,3 @@
-
 //////////////////////////////////////////////////////////////////
 //
 //                   -=    StopWatch    =-
@@ -7,9 +6,6 @@
 //
 ///////////////// <auto-copyright BEGIN do not edit this line> /////////////////
 //
-//   $RCSfile$
-//   $Date$
-//   $Revision$
 //   Copyright (C) 1998, 1999, 2000  Kevin Meinert, kevin@vrsource.org
 //
 //   This library is free software; you can redistribute it and/or

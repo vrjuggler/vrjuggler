@@ -3,13 +3,8 @@
  * Copyright (c) 2004, 2005 Infiscape Corporation. All rights reserved.
  * (See accompanying file LICENSE.txt) 
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  ****************** <aqua heading END do not edit this line> ******************/
+
 #include "Text.h"
 #include <vector>
 #include <string>

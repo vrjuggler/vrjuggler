@@ -22,12 +22,6 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile: Ether24.cpp,v $
- * Date modified: $Date: 2006/02/16 02:26:45 $
- * Version:       $Revision: 1.37 $
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/Devices/DriverConfig.h>

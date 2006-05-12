@@ -22,12 +22,6 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date: 2006-02-08 13:44:09 -0600 (Wed, 08 Feb 2006) $
- * Version:       $Revision: 18378 $
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _CLUSTER_TEST_MODE_H_

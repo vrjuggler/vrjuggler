@@ -5,12 +5,6 @@ dnl
 dnl Original Authors:
 dnl   Kevin Meinert, Carolina Cruz-Neira
 dnl
-dnl -----------------------------------------------------------------
-dnl File:          $RCSfile$
-dnl Date modified: $Date$
-dnl Version:       $Revision$
-dnl -----------------------------------------------------------------
-dnl
 dnl ***************** <SNX heading END do not edit this line> *****************
 
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************

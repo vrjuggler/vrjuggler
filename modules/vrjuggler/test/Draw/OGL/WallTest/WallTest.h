@@ -22,12 +22,6 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 /* This Application draws a test pattern in 3D on all the walls in the application

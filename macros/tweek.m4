@@ -22,12 +22,6 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
-dnl -----------------------------------------------------------------
-dnl File:          $RCSfile$
-dnl Date modified: $Date$
-dnl Version:       $Revision$
-dnl -----------------------------------------------------------------
-dnl
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ---------------------------------------------------------------------------

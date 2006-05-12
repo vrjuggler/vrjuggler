@@ -20,12 +20,6 @@
  * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  ************ <VRJ VNC auto-copyright.pl END do not edit this line> **********/
 
 #include <vrj/vrjConfig.h>

@@ -23,12 +23,6 @@ rem License along with this library; if not, write to the
 rem Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 rem Boston, MA 02111-1307, USA.
 rem
-rem -----------------------------------------------------------------
-rem File:          $RCSfile$
-rem Date modified: $Date$
-rem Version:       $Revision$
-rem -----------------------------------------------------------------
-rem
 rem ************** <auto-copyright.pl END do not edit this line> **************
 
 IF NOT "%TWEEK_BASE_DIR%"=="" GOTO ELSE3

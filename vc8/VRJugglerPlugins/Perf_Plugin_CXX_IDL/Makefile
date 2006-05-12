@@ -22,12 +22,6 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
-# -----------------------------------------------------------------
-# File:          $RCSfile$
-# Date modified: $Date: 2006-01-08 14:43:44 -0600 (Sun, 08 Jan 2006) $
-# Version:       $Revision: 18342 $
-# -----------------------------------------------------------------
-#
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 IDL=		$(OMNIORB_BIN)\omniidl

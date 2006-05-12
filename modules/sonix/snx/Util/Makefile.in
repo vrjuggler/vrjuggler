@@ -5,12 +5,6 @@
 # Original Authors:
 #   Kevin Meinert
 #
-# -----------------------------------------------------------------
-# File:          $RCSfile$
-# Date modified: $Date$
-# Version:       $Revision$
-# -----------------------------------------------------------------
-#
 # ****************** <SNX heading END do not edit this line> ******************
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************

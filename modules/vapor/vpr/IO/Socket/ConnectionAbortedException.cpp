@@ -5,12 +5,6 @@
  * Original Authors:
  *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date: 2006-01-08 09:22:21 -0600 (Sun, 08 Jan 2006) $
- * Version:       $Revision: 18331 $
- * -----------------------------------------------------------------
- *
  ****************** <VPR heading END do not edit this line> ******************/
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************

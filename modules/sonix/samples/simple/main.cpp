@@ -31,12 +31,6 @@
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  ****************** <SNX heading END do not edit this line> ******************/
 
 #include <iostream>
