@@ -205,7 +205,7 @@ public:   // ----- PENDING LIST ----- //
     *  the pending and active lists have changed and will consider the
     *  pending list to be fresh.
     *
-    *  @see pendingNeedsChecked
+    *  @see shouldCheckPending
     */
    void refreshPendingList();
 
@@ -292,7 +292,7 @@ private:
     *
     *  @see attemptReconfiguration
     */
-   bool pendingNeedsChecked();
+   bool shouldCheckPending();
 
    /**
     * Merges the contents of the incoming config element list to the
@@ -460,7 +460,7 @@ private:
     * @name Variables used to implement some logic that "stales" the pending
     *       list.
     *
-    * @see pendingNeedsChecked
+    * @see shouldCheckPending
     */
 
    vpr::Mutex mPendingCountMutex; /**< Lock to protect mPendingCheckCount. */
