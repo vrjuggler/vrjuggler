@@ -97,7 +97,7 @@ public:
    KeyboardMouseDevice()
    {;}
 
-   ~KeyboardMouseDevice() throw ()
+   ~KeyboardMouseDevice()
    {
       stopSampling();
    }

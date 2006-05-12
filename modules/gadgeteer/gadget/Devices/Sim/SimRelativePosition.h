@@ -52,7 +52,7 @@ class SimRelativePosition : public InputMixer<Input,Position>
 {
 public:
    SimRelativePosition() {;}
-   virtual ~SimRelativePosition() throw ()
+   virtual ~SimRelativePosition()
    {
       /* Do nothing. */ ;
    }

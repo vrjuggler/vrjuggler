@@ -86,7 +86,7 @@ public:
     */
    MouseEvent();
 
-   ~MouseEvent() throw ()
+   ~MouseEvent()
    {
       /* Do nothing. */ ;
    }
@@ -145,15 +145,23 @@ public:
    }
 
    /**
-    * Serializes this event using the given ObjectWriter.
+    * Serializes this object into the given object writer.
+    *
+    * @param writer The object writer to which this object will be serialized.
+    *
+    * @throw vpr::IOException is thrown if serialization fails.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer)
-      throw (vpr::IOException);
+   virtual void writeObject(vpr::ObjectWriter* writer);
 
    /**
-    * De-serializes this event using the given ObjectReader.
+    * De-serializes this object.
+    *
+    * @param reader The object reader from which this object will be
+    *               de-serialized.
+    *
+    * @throw vpr::IOException is thrown if de-serialization fails.
     */
-   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException);
+   virtual void readObject(vpr::ObjectReader* reader);
 
 private:
    gadget::Keys mButton;        /**< The button associated with this event. */

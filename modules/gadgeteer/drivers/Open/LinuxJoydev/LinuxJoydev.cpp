@@ -71,7 +71,7 @@ LinuxJoydev::LinuxJoydev()
 }
 
 // Destructor.
-LinuxJoydev::~LinuxJoydev() throw ()
+LinuxJoydev::~LinuxJoydev()
 {
    /* Do nothing. */ ;
 }

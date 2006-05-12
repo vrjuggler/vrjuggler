@@ -315,8 +315,6 @@ MotionStarStandalone::~MotionStarStandalone()
 
 // Initializes the driver, setting the status for each bird.
 vpr::ReturnStatus MotionStarStandalone::start()
-   throw(mstar::NetworkException, mstar::ConnectException,
-         mstar::ScaleFactorUnknownException)
 {
    vpr::ReturnStatus retval;
 
@@ -516,7 +514,7 @@ vpr::ReturnStatus MotionStarStandalone::start()
 
 // Stop the data flow (if it is in continuous mode), shut down the server and
 // close the connection to it.
-void MotionStarStandalone::stop() throw(mstar::CommandException)
+void MotionStarStandalone::stop()
 {
    stopData();
    shutdown();
@@ -834,7 +832,6 @@ void MotionStarStandalone::sample()
 
 // Stops the data flow if it is in continuous mode.
 vpr::ReturnStatus MotionStarStandalone::stopData()
-   throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
 
@@ -884,7 +881,6 @@ vpr::ReturnStatus MotionStarStandalone::stopData()
 
 // Shut down the server chassis.
 vpr::ReturnStatus MotionStarStandalone::shutdown()
-   throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
 
@@ -928,7 +924,6 @@ vpr::ReturnStatus MotionStarStandalone::shutdown()
 
 // Get the current server address for the device.
 void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
-   throw(mstar::CommandException)
 {
    // If the driver is already active, we may need to do some communication
    // with the server before changing the run mode.
@@ -1129,7 +1124,6 @@ void MotionStarStandalone::getQuaternion(const FLOCK::data_format format,
 
 // Send a wake-up call to the MotionStar server.
 vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
-   throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
 
@@ -1207,7 +1201,6 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
 
 // Get the system status.
 BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
-   throw(mstar::CommandException)
 {
    BIRDNET::SYSTEM_STATUS* status_info;
 
@@ -1601,7 +1594,6 @@ vpr::ReturnStatus MotionStarStandalone::setBirdStatus(const unsigned char bird,
 // interpreted as a request for the overall system status.  The birds are
 // addressed from 1 through 120.
 BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char device)
-   throw(mstar::NoDeviceStatusException)
 {
    vpr::ReturnStatus status;
    BIRDNET::HEADER msg(BIRDNET::MSG_GET_STATUS);
@@ -1742,7 +1734,6 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
 
 // Tell the MotionStar server to sample continuously.
 vpr::ReturnStatus MotionStarStandalone::setContinuous()
-   throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
 
@@ -2048,7 +2039,6 @@ void MotionStarStandalone::getUnitInfo(const unsigned int bird,
 // Send the given message to the server.
 vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
                                                 const size_t packetSize)
-   throw(mstar::NetworkWriteException, mstar::NoDataWrittenException)
 {
    vpr::Uint32 bytes;
    vpr::ReturnStatus status(vpr::ReturnStatus::Succeed);
@@ -2084,7 +2074,6 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
 }
 
 vpr::ReturnStatus MotionStarStandalone::sendMsg(BIRDNET::HEADER* packet)
-   throw(mstar::NetworkWriteException, mstar::NoDataWrittenException)
 {
    vprASSERT(packet->sequence == 0 && "Sequence number already set");
 
@@ -2102,7 +2091,6 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(BIRDNET::HEADER* packet)
 // Get the server's response to a sent message.
 vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
                                                const size_t packetSize)
-   throw(mstar::NetworkReadException, mstar::NoDataReadException)
 {
    vpr::Uint32 bytes;
    vpr::ReturnStatus status(vpr::ReturnStatus::Succeed);
@@ -2136,7 +2124,6 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
 }
 
 vpr::ReturnStatus MotionStarStandalone::getRsp(BIRDNET::HEADER* packet)
-   throw(mstar::NetworkReadException, mstar::NoDataReadException)
 {
    vpr::ReturnStatus status;
 

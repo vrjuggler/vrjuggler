@@ -157,7 +157,7 @@ public:
       BaseTypeFactory::instance()->registerNetDevice(this);
    }
 
-   virtual ~BaseTypeConstructor() throw ()
+   virtual ~BaseTypeConstructor()
    {
       /* Do nothing. */ ;
    }

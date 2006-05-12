@@ -57,7 +57,7 @@ public:
    /** 
     * Destructor, shuts down the glove device. 
     */
-   virtual ~PinchGlove() throw ();
+   virtual ~PinchGlove();
 
    /**
     * Configure the PinchGlove's serial port and baud.

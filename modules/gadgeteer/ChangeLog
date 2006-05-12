@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-12-2005 patrick     Updated to VPR 1.1.20 and removed all exception
+                        specifications except those that are required by a
+                        base class.
+                        NEW VERSION: 1.1.8
 Feb-15-2006 patrickh    Updated to VPR 1.1.16.
                         NEW VERSION: 1.1.7
 Nov-12-2005 patrickh    Updated to VPR 1.1.10.

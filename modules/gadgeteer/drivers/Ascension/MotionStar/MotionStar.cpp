@@ -101,7 +101,7 @@ MotionStar::MotionStar(const char* address, const unsigned short port,
 }
 
 // Destructor.  Sampling is stopped, and the data pool is deallocated.
-MotionStar::~MotionStar() throw ()
+MotionStar::~MotionStar()
 {
    stopSampling();
 }

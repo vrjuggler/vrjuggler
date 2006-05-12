@@ -68,7 +68,22 @@ public:
    Header() : mPacketReader(NULL), mPacketWriter(NULL)
    {;}
 
-   void readData( vpr::SocketStream* stream ) throw( cluster::ClusterException );
+   /**
+    * Reads the packet header from the given socket.
+    *
+    * @pre \p stream is not NULL.
+    * @post The packet header will be read from \p stream. If reading from
+    *       \p stream fails, then \p stream is closed.
+    *
+    * @param stream The socket from which the header will be read.
+    * 
+    * @throw cluster::ClusterException is thrown if \p stream is NULL or if
+    *        the bytes read from \p stream is not equal to
+    *        \c RIM_PACKET_HEADER_SIZE.
+    * @throw vpr::IOException is thrown if an I/O error occurs when trying
+    *        to read from \p stream.
+    */
+   void readData(vpr::SocketStream* stream);
 
    Header( vpr::Uint16 RIM_code, vpr::Uint16 packet_type,
            vpr::Uint32 packet_length, vpr::Uint32 frame );
@@ -91,7 +106,17 @@ public:
 
    void parseHeader();
 
-   void send( vpr::SocketStream* socket ) throw (cluster::ClusterException);
+   /**
+    * Writes the packet header data to the given socket.
+    *
+    * @pre \p socket is not NULL.
+    * @post The contents of \c mData (which is \c RIM_PACKET_HEADER_SIZE bytes
+    *       long) are written to \p socket.
+    *
+    * @throw cluster::ClusterException is thrown if the packet header cannot
+    *        be written to \p socket.
+    */
+   void send(vpr::SocketStream* socket);
 
    void dump();
 

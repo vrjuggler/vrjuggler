@@ -54,7 +54,7 @@ class SimDigital : public InputMixer<InputMixer<SimInput,Input>,Digital>
 {
 public:
    SimDigital();
-   virtual ~SimDigital() throw ();
+   virtual ~SimDigital();
 
    virtual bool config(jccl::ConfigElementPtr element);
 

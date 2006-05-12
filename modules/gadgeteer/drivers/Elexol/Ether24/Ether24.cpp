@@ -145,7 +145,7 @@ bool Ether24::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-Ether24::~Ether24() throw ()
+Ether24::~Ether24()
 {
    if (isActive())
    {

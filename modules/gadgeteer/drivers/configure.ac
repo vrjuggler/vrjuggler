@@ -158,8 +158,8 @@ DPP_PROG_LINKER
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
-VPR_PATH([1.1.17], , [AC_MSG_ERROR([*** VPR required for Device Drivers ***])])
-GADGETEER_PATH([1.1.7], ,
+VPR_PATH([1.1.20], , [AC_MSG_ERROR([*** VPR required for Device Drivers ***])])
+GADGETEER_PATH([1.1.8], ,
                [AC_MSG_ERROR(*** Gadgeteer required for Device Drivers ***)])
 
 # TODO: Add this back in.

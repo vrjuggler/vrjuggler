@@ -169,7 +169,7 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-Vrpn::~Vrpn() throw ()
+Vrpn::~Vrpn()
 {
    stopSampling();
 }

@@ -64,7 +64,7 @@ public:
 
    KeyboardMouse();
 
-   virtual ~KeyboardMouse() throw ()
+   virtual ~KeyboardMouse()
    {
       /* Do nothing. */ ;
    }
@@ -72,17 +72,25 @@ public:
    virtual std::string getInputTypeName();
 
    /**
-    * Writes both mCurKeys and mCurEventQueueLock to a stream using the given
-    * object writer.
+    * Writes both \c mCurKeys and \c mCurEventQueueLock to a stream using the
+    * given object writer.
+    *
+    * @param writer The object writer to which this object will be serialized.
+    *
+    * @throw vpr::IOException is thrown if serialization fails.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer)
-      throw (vpr::IOException);
+   virtual void writeObject(vpr::ObjectWriter* writer);
 
    /**
-    * Reads mCurKeys and mCurEventQueueLock from a stream using the given
+    * Reads \c mCurKeys and \c mCurEventQueueLock from a stream using the given
     * object reader.
+    *
+    * @param reader The object reader from which this object will be
+    *               de-serialized.
+    *
+    * @throw vpr::IOException is thrown if de-serialization fails.
     */
-   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException);
+   virtual void readObject(vpr::ObjectReader* reader);
 
    virtual bool config(jccl::ConfigElementPtr element)
    {

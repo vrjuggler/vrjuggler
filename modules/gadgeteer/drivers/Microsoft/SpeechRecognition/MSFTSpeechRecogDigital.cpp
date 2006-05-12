@@ -57,7 +57,7 @@ bool MSFTSpeechRecogDigital::config(jccl::ConfigElementPtr c)
    return true;
 }
 
-MSFTSpeechRecogDigital::~MSFTSpeechRecogDigital() throw ()
+MSFTSpeechRecogDigital::~MSFTSpeechRecogDigital()
 {
    this->stopSampling();
 }

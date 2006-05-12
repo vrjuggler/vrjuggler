@@ -87,7 +87,7 @@ public:
       //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimInput::SimInput()\n"<< vprDEBUG_FLUSH;
    }
 
-   virtual ~SimInput() throw ()
+   virtual ~SimInput()
    {
       /* Do nothing. */ ;
    }
@@ -103,12 +103,12 @@ public:
        return std::string("SimInput");
    }
 
-   virtual void writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
+   virtual void writeObject(vpr::ObjectWriter* writer)
    {
       boost::ignore_unused_variable_warning(writer);
    }
 
-   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
+   virtual void readObject(vpr::ObjectReader* reader)
    {
       boost::ignore_unused_variable_warning(reader);
    }

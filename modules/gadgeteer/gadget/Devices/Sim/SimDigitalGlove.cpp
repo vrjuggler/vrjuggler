@@ -40,7 +40,7 @@ SimDigitalGlove::SimDigitalGlove()
 }
 
 /** Destructor */
-SimDigitalGlove::~SimDigitalGlove() throw ()
+SimDigitalGlove::~SimDigitalGlove()
 {
   // vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }

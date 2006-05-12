@@ -77,7 +77,7 @@ extern "C"
 	{ return __GADGET_version; }
 }
 
-PuckDevice::~PuckDevice() throw ()
+PuckDevice::~PuckDevice()
 {
     if (_running) stopSampling(); 
     if (_puck) delete _puck; 

@@ -51,7 +51,7 @@ public:
    /** Constructs a SimGloveGesture. */
    SimGloveGesture() {;}
 
-   ~SimGloveGesture() throw ()
+   ~SimGloveGesture()
    {
       /* Do nothing. */ ;
    }

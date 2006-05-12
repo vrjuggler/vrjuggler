@@ -38,7 +38,7 @@ SimDigital::SimDigital()
 }
 
 /** Destructor */
-SimDigital::~SimDigital() throw ()
+SimDigital::~SimDigital()
 {
    //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
 }

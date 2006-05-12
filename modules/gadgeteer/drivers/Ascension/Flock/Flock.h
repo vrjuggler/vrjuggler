@@ -77,7 +77,7 @@ public:
    Flock(const char* port = "/dev/ttyS0", const int baud = 38400,
          const int numBrds = 3, const int transmit = 3);
 
-   ~Flock() throw ();
+   ~Flock();
 
    /**  configure the Flock with a config element. */
    virtual bool config(jccl::ConfigElementPtr e);

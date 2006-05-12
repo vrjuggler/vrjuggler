@@ -56,7 +56,7 @@ public:
     *
     * @post Shared memory is released.
     */
-   virtual ~LinuxJoydev() throw ();
+   virtual ~LinuxJoydev();
 
    /**
     * Configure the driver.

@@ -54,15 +54,17 @@ public:
       this->setMin( 0.0f );
       this->setMax( 255.0f );
    }
-   virtual ~IBox() throw ();
+   virtual ~IBox();
 
    virtual bool config(jccl::ConfigElementPtr e);
 
-   // Input Pure Virtual Functions
+   /** @name  Input Pure Virtual Functions */
+   //@{
    bool startSampling();
    bool stopSampling();
    bool sample();
    void updateData();
+   //@}
 
    static std::string getElementType();
    void controlLoop();

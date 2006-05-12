@@ -56,7 +56,7 @@ class MSFTSpeechRecogDigital
 {
 public:
    MSFTSpeechRecogDigital();
-   virtual ~MSFTSpeechRecogDigital() throw ();
+   virtual ~MSFTSpeechRecogDigital();
 
    /** Configures the device with a config chunk. */
    virtual bool config(jccl::ConfigElementPtr c);

@@ -81,7 +81,7 @@ public:
       , mDRot(-1221.75f)
    {;}
 
-   virtual ~SimPosition() throw ()
+   virtual ~SimPosition()
    {
       /* Do nothing. */ ;
    }

@@ -46,7 +46,7 @@ namespace gadget
   * @pre None.
   * @post Shared memory is released.
   */
- TrackdAPISensor::~TrackdAPISensor() throw ()
+ TrackdAPISensor::~TrackdAPISensor()
  {
     // This may cause problems on windows
     delete mTrackerReader;

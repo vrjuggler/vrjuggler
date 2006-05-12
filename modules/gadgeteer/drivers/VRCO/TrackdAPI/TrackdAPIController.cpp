@@ -66,7 +66,7 @@ TrackdAPIController::TrackdAPIController(): mControllerReader(NULL)
  * @pre None.
  * @post Shared memory is released.
  */
-TrackdAPIController::~TrackdAPIController() throw ()
+TrackdAPIController::~TrackdAPIController()
 {
    delete mControllerReader;
 }

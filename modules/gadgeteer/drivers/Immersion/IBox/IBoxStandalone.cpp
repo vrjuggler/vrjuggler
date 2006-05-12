@@ -73,7 +73,6 @@ IBoxStandalone::~IBoxStandalone()
 }
 
 void IBoxStandalone::connect(const std::string& port_name, long int baud)
-   throw (vpr::IOException, IBoxException)
 {
    mPortName = port_name;
    mBaudRate = baud;
@@ -176,7 +175,7 @@ vpr::Uint8 IBoxStandalone::getCommandByte(const int timerFlag,
    return (timer_byte | analog_byte | encoder_byte);
 }
 
-void IBoxStandalone::getInfo() throw (vpr::IOException)
+void IBoxStandalone::getInfo()
 {
    printInfo(GET_PROD_NAME, mProductId, "Product Name");
    printInfo(GET_PROD_ID, mProductId, "Product ID");
@@ -264,7 +263,7 @@ bool IBoxStandalone::beginCommunication()
    return false;
 }
 
-void IBoxStandalone::sendEndCommand() throw (vpr::IOException)
+void IBoxStandalone::sendEndCommand()
 {
    vpr::Uint32 written;
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
@@ -272,7 +271,7 @@ void IBoxStandalone::sendEndCommand() throw (vpr::IOException)
    mSerialPort->write(END_STR, sizeof(END_STR) - 1, written);
 }
 
-void IBoxStandalone::disconnect() throw (vpr::IOException)
+void IBoxStandalone::disconnect()
 {
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
    sendEndCommand();
@@ -311,7 +310,7 @@ bool IBoxStandalone::sendStringCommand(const vpr::Uint8 command) const
    return true;
 }
 
-std::string IBoxStandalone::readString() throw (vpr::IOException)
+std::string IBoxStandalone::readString()
 {
    char buffer[MAX_STRING_SIZE];
    char* buffer_ptr = buffer;
@@ -329,8 +328,8 @@ std::string IBoxStandalone::readString() throw (vpr::IOException)
    return (std::string(buffer));
 }
 
-void IBoxStandalone::waitForUpdate(int timerFlag, int numAnalogs, int numEncoders)
-   throw (vpr::IOException)
+void IBoxStandalone::waitForUpdate(int timerFlag, int numAnalogs,
+                                   int numEncoders)
 {
    sendCommand(timerFlag, numAnalogs, numEncoders);
    waitForPacket();
@@ -361,7 +360,6 @@ void IBoxStandalone::waitForPacket()
 
 void IBoxStandalone::sendCommand(const int timerFlag, const int numAnalogs,
                                  const int numEncoders) const
-   throw (vpr::IOException)
 {
    vpr::Uint32 written;
    vpr::Uint8 command = getCommandByte(timerFlag, numAnalogs, numEncoders);
@@ -375,7 +373,7 @@ void IBoxStandalone::sendSimpleConfigCommand(const vpr::Uint8 command) const
 }
 
 void IBoxStandalone::sendPasswordCommand(const vpr::Uint8 command,
-   const std::vector<vpr::Uint8> args) throw (vpr::IOException, IBoxException)
+                                         const std::vector<vpr::Uint8> args)
 {
    vpr::Uint8 response;
    vpr::Uint32 bytes_written;
@@ -410,14 +408,12 @@ void IBoxStandalone::insertMarker(const vpr::Uint8 marker) const
 }
 
 void IBoxStandalone::getHomeRef()
-   throw (vpr::IOException, IBoxException)
 {
    sendSimpleConfigCommand(GET_HOME_REF);
    checkForPacket();
 }
 
 void IBoxStandalone::setHomeRef(int *homeref)
-   throw (vpr::IOException, IBoxException)
 {
    std::vector<vpr::Uint8> args;
    args.resize(2 * NUM_ENCODERS);
@@ -436,14 +432,13 @@ void IBoxStandalone::setHomeRef(int *homeref)
    sendPasswordCommand(SET_HOME_REF, args);
 }
 
-void IBoxStandalone::goHomePosition() throw (vpr::IOException, IBoxException)
+void IBoxStandalone::goHomePosition()
 {
    sendSimpleConfigCommand(HOME_POS);
    checkForPacket();
 }
 
 void IBoxStandalone::setHomePosition(int *homepos)
-   throw (vpr::IOException, IBoxException)
 {
    std::vector<vpr::Uint8> args;
    args.resize(2 * NUM_ENCODERS);
@@ -462,13 +457,13 @@ void IBoxStandalone::setHomePosition(int *homepos)
    sendPasswordCommand(SET_HOME, args);
 }
 
-void IBoxStandalone::getMaxValues() throw (vpr::IOException, IBoxException)
+void IBoxStandalone::getMaxValues()
 {
    sendSimpleConfigCommand(GET_MAXES);
    checkForPacket();
 }
 
-void IBoxStandalone::setFactoryDefaults() throw (vpr::IOException, IBoxException)
+void IBoxStandalone::setFactoryDefaults()
 {
    std::vector<vpr::Uint8> args;
    args.resize(0);
@@ -476,9 +471,10 @@ void IBoxStandalone::setFactoryDefaults() throw (vpr::IOException, IBoxException
 }
 
 void IBoxStandalone::startMotionMode(int timer_flag, int analog_reports,
-   int encoder_reports, int delay, vpr::Uint8 active_btns,
-   std::vector<vpr::Uint8>& analog_deltas,
-   std::vector<vpr::Uint8>& encoder_deltas) throw (vpr::IOException)
+                                     int encoder_reports, int delay,
+                                     vpr::Uint8 active_btns,
+                                     std::vector<vpr::Uint8>& analog_deltas,
+                                     std::vector<vpr::Uint8>& encoder_deltas)
 {
    boost::ignore_unused_variable_warning(active_btns);
    vpr::Uint32 written;
@@ -516,19 +512,19 @@ void IBoxStandalone::stopMotionMode()
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 }
 
-void IBoxStandalone::checkForPacket() throw (vpr::IOException, IBoxException)
+void IBoxStandalone::checkForPacket()
 {
    getDataPacket();
    parsePacket();
 }
 
-void IBoxStandalone::checkForMotion() throw (vpr::IOException, IBoxException)
+void IBoxStandalone::checkForMotion()
 {
    getDataPacket();
    parsePacket();
 }
 
-void IBoxStandalone::getDataPacket() throw (vpr::IOException, IBoxException)
+void IBoxStandalone::getDataPacket()
 {
    vpr::Uint8 packet_type;
    vpr::Uint32 written;
@@ -565,7 +561,7 @@ void IBoxStandalone::getDataPacket() throw (vpr::IOException, IBoxException)
    }
 }
 
-void IBoxStandalone::parsePacket() throw (IBoxException)
+void IBoxStandalone::parsePacket()
 {
    vpr::Uint8 command = mPacket.cmd_byte;
    unsigned char bits;
@@ -667,7 +663,7 @@ void IBoxStandalone::parsePacket() throw (IBoxException)
    }
 }
 
-void IBoxStandalone::parseConfigPacket() throw (IBoxException)
+void IBoxStandalone::parseConfigPacket()
 {
    vpr::Uint8 *dp = mPacket.data;
 

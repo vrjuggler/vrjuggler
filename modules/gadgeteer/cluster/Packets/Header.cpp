@@ -41,7 +41,7 @@ namespace cluster
       mFrame = frame;
    }
    
-   void Header::readData( vpr::SocketStream* stream ) throw ( cluster::ClusterException )
+   void Header::readData(vpr::SocketStream* stream)
    {
       vprASSERT( NULL != stream && "Can not create a Header using a NULL SocketStream" );
 
@@ -166,8 +166,8 @@ namespace cluster
             throw cluster::ClusterException( "Header::parseHeader() - Invalid packet header!" );
       }
    }
-   
-   void Header::send( vpr::SocketStream* socket ) throw (cluster::ClusterException)
+
+   void Header::send(vpr::SocketStream* socket)
    {
       vprASSERT( NULL != socket && "Socket is NULL" );
 

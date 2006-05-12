@@ -50,7 +50,7 @@ class Wanda : public InputMixer<Input, InputMixer<Digital, Analog> >
 public:
    Wanda(const char* portName = "/dev/ttyS0");
 
-   virtual ~Wanda() throw ();
+   virtual ~Wanda();
 
    static std::string getElementType();
 

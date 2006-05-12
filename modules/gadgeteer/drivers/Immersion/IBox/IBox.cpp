@@ -111,7 +111,7 @@ bool IBox::config(jccl::ConfigElementPtr e)
   do the rest.
 
 *********************************************** ahimberg */
-IBox::~IBox() throw ()
+IBox::~IBox()
 {
   stopSampling();
 }
@@ -182,7 +182,7 @@ bool IBox::startSampling()
   Each call to this function is not guaranteed to result in new data.
 
 *********************************************** ahimberg */
-bool IBox::sample() //throw (vpr::IOException)
+bool IBox::sample()
 {
    try
    {

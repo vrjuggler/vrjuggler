@@ -63,7 +63,7 @@ public:
     * @pre None.
     * @post Shared memory is released.
     */
-   virtual ~TrackdSensor() throw ();
+   virtual ~TrackdSensor();
 
    /**
     * Configure the trackd sensor with the given configuration element.

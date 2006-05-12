@@ -69,7 +69,7 @@ public:
     * @pre None.
     * @post Shared memory is released.
     */
-   ~TrackdAPIController() throw ();
+   ~TrackdAPIController();
 
    /**
     * Configures the trackd controller with the given config element.

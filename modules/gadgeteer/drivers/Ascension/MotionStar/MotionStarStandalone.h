@@ -486,12 +486,15 @@ public:
     *         started correctly.  vpr::ReturnStatus::Fail is returned
     *         otherwise.
     *
-    * @throws mstar::NetworkException, mstar::ConnectException,
-    *         mstar::ScaleFactorUnknownException
+    * @throw mstar::NetworkException is thrown if the socket to be used for
+    *        communication with the MotionStar chassis cannot be opened.
+    * @throw mstar::ConnectException is thrown if the connection to the
+    *        MotionStar chassis cannot be completed.
+    * @throw mstar::ScaleFactorUnknownException is thrown if parsing the
+    *        received data from the MotionStar chassis encounters in an
+    *        unknown data scale factor.
     */
-   vpr::ReturnStatus start()
-      throw(mstar::NetworkException, mstar::ConnectException,
-            mstar::ScaleFactorUnknownException);
+   vpr::ReturnStatus start();
 
    /**
     * The data flow from the server is stopped, the server is told to go to
@@ -502,9 +505,14 @@ public:
     *        stopped, the server is told to shut down, the state is set to
     *        inactive and the socket is closed.
     *
-    * @throws mstar::CommandException
+    * @throw mstar::CommandException is thrown if the command sent to the
+    *        MotionStar chassis telling it to stop communication fails or
+    *        if the command telling the MotionStar to go to sleep fails.
+    *
+    * @see stopData()
+    * @see shutdown()
     */
-   void stop() throw(mstar::CommandException);
+   void stop();
 
    /**
     * Based on the current run mode, a single sample is taken (run mode is
@@ -527,9 +535,10 @@ public:
     * @return vpr::ReturnStatus::Succeed if the data flow was stopped;
     *         vpr::ReturnStatus::Fail otherwise.
     *
-    * @throws mstar::CommandException
+    * @throw mstar::CommandException is thrown if the command send to the
+    *        MotionStar chassis telling it to stop communication fails.
     */
-   vpr::ReturnStatus stopData() throw(mstar::CommandException);
+   vpr::ReturnStatus stopData();
 
    /**
     * Shuts down the server chassis.
@@ -542,9 +551,10 @@ public:
     * @return vpr::ReturnStatus::Succeed if the data flow was stopped;
     *         vpr::ReturnStatus::Fail otherwise.
     *
-    * @throws mstar::CommandException
+    * @throw mstar::CommandException is thrown if the command send to the
+    *        MotionStar chassis telling it to go to sleep fails.
     */
-   vpr::ReturnStatus shutdown() throw(mstar::CommandException);
+   vpr::ReturnStatus shutdown();
 
    /**
     * Returns whether the MotionStar is active or not.
@@ -717,9 +727,10 @@ public:
     *
     * @param mode The new value for the run mode.
     *
-    * @throws mstar::CommandException
+    * @throw mstar::CommandException is thrown if communication with the
+    *        MotionStar chassis fails.
     */
-   void setRunMode(const BIRDNET::run_mode mode) throw(mstar::CommandException);
+   void setRunMode(const BIRDNET::run_mode mode);
 
    /**
     * Gets the current run mode for the device.
@@ -950,9 +961,11 @@ private:
     *
     * @return  0 if the server was awakened; -1 otherwise.
     *
-    * @throws mstar::CommandException
+    * @throw mstar::CommandException is thrown if it is necessary to
+    *        re-initialize the MotionStar chassis with a wake-up call but
+    *        that effort fails.
     */
-   vpr::ReturnStatus sendWakeUp() throw(mstar::CommandException);
+   vpr::ReturnStatus sendWakeUp();
 
    /**
     * Gets the system status.
@@ -967,9 +980,10 @@ private:
     *         describes the system state or NULL if the system status could
     *         not be read.
     *
-    * @throws mstar::CommandException
+    * @throws mstar::CommandException is thrown if communication with the
+    *         MotionStar chassis fails.
     */
-   BIRDNET::SYSTEM_STATUS* getSystemStatus() throw(mstar::CommandException);
+   BIRDNET::SYSTEM_STATUS* getSystemStatus();
 
    /**
     * Sets the system status.
@@ -1072,10 +1086,10 @@ private:
     *         status for the given device could not be requested for some
     *         reason.
     *
-    * @throws mstar::NoDeviceStatusException
+    * @throw mstar::NoDeviceStatusException is thrown if communication with
+    *        the MotionStar chassis fails.
     */
-   BIRDNET::DATA_PACKET* getDeviceStatus(const unsigned char device)
-      throw(mstar::NoDeviceStatusException);
+   BIRDNET::DATA_PACKET* getDeviceStatus(const unsigned char device);
 
    /**
     * Sets the status of the requested FBB device using the given
@@ -1115,9 +1129,10 @@ private:
     *         continuous data.  vpr::ReturnStatus::Fail is returned if the
     *         run mode could not be set to BIRDNET::CONTINUOUS.
     *
-    * @throws mstar::CommandException)
+    * @throw mstar::CommandException is thrown if communication with the
+    *        MotionStar chassis fails.
     */
-   vpr::ReturnStatus setContinuous() throw(mstar::CommandException);
+   vpr::ReturnStatus setContinuous();
 
    /**
     * Converts the raw positional information in the given array to the
@@ -1395,10 +1410,13 @@ private:
     *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
     *         is returned, or an exception is thrown.
     *
-    * @throws mstar::NetworkWriteException, mstar::NoDataWrittenException
+    * @throw mstar::NetworkWriteException is thrown if sending data on the
+    *        connected socket fails.
+    * @throw mstar::NoDataWrittenException is thrown if the write succeeds
+    *        but no data is written to the socket. This would mean that the
+    *        send failed to do anything.
     */
-   vpr::ReturnStatus sendMsg(const void* packet, const size_t packetSize)
-      throw(mstar::NetworkWriteException, mstar::NoDataWrittenException);
+   vpr::ReturnStatus sendMsg(const void* packet, const size_t packetSize);
 
    /**
     * Gets the server's response to a sent message.  This version takes a
@@ -1420,10 +1438,15 @@ private:
     *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
     *         is returned, or an exception is thrown.
     *
-    * @throws mstar::NetworkWriteException, mstar::NoDataWrittenException
+    * @throw mstar::NetworkWriteException is thrown if sending data on the
+    *        connected socket fails.
+    * @throw mstar::NoDataWrittenException is thrown if the write succeeds
+    *        but no data is written to the socket. This would mean that the
+    *        send failed to do anything.
+    *
+    * @see sendMsg(const void*, const size_t)
     */
-   vpr::ReturnStatus sendMsg(BIRDNET::HEADER* packet)
-      throw(mstar::NetworkWriteException, mstar::NoDataWrittenException);
+   vpr::ReturnStatus sendMsg(BIRDNET::HEADER* packet);
 
    /**
     * Gets the server's response to a sent message.
@@ -1439,10 +1462,13 @@ private:
     *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
     *         is returned, or an exception is thrown.
     *
-    * @throws mstar::NetworkReadException, mstar::NoDataReadException
+    * @throw mstar::NetworkReadException is thrown if reading data on the
+    *        connected socket fails.
+    * @throw mstar::NoDataReadException is thrown if the read succeeds but no
+    *        data was read from the socket. This would mean that the read
+    *        failed to do anything.
     */
-   vpr::ReturnStatus getRsp(void* packet, const size_t packetSize)
-      throw(mstar::NetworkReadException, mstar::NoDataReadException);
+   vpr::ReturnStatus getRsp(void* packet, const size_t packetSize);
 
    /**
     * Gets the server's response to a sent message.  This version takes a
@@ -1462,10 +1488,15 @@ private:
     *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
     *         is returned, or an exception is thrown.
     *
-    * @throws mstar::NetworkReadException, mstar::NoDataReadException
+    * @throw mstar::NetworkReadException is thrown if reading data on the
+    *        connected socket fails.
+    * @throw mstar::NoDataReadException is thrown if the read succeeds but no
+    *        data was read from the socket. This would mean that the read
+    *        failed to do anything.
+    *
+    * @see getRsp(void*, const size_t)
     */
-   vpr::ReturnStatus getRsp(BIRDNET::HEADER* packet)
-      throw(mstar::NetworkReadException, mstar::NoDataReadException);
+   vpr::ReturnStatus getRsp(BIRDNET::HEADER* packet);
 
    /**
     * Prints the system status as read from the server.

@@ -47,7 +47,7 @@ class Ether24
 {
 public:
    Ether24();
-   virtual ~Ether24() throw ();
+   virtual ~Ether24();
 
    /** Configures the device with specified config element. */
    bool config(jccl::ConfigElementPtr e);

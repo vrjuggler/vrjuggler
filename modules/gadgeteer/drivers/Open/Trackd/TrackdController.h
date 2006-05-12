@@ -64,7 +64,7 @@ public:
     * @pre None.
     * @post Shared memory is released
     */
-   virtual ~TrackdController() throw ();
+   virtual ~TrackdController();
 
    /**
     * Configure the trackd controller with the given configuration element.

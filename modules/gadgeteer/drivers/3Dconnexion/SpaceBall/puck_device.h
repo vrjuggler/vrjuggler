@@ -818,7 +818,7 @@ class PuckDevice : public gadget::InputMixer<gadget::InputMixer
 	    _puck = NULL;
 	}
     /// destructor
-    virtual ~PuckDevice() throw ();
+    virtual ~PuckDevice();
 
     
     //----------------------------------------

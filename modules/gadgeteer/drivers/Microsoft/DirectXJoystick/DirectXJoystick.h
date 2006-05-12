@@ -60,7 +60,7 @@ public:
     * @pre None.
     * @post Shared memory is released
     */
-   virtual ~DirectXJoystick() throw ();
+   virtual ~DirectXJoystick();
 
    /**
     * Configure the driver.

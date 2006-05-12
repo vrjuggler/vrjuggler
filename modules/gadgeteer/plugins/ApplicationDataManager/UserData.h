@@ -126,17 +126,33 @@ public:
       : ApplicationData(id, host_name)
    {;}
 
-   ~AppDataMixin() throw ()
+   ~AppDataMixin()
    {
       /* Do nothing. */ ;
    }
 
-   virtual void writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
+   /**
+    * Invokes BASE::writeOjbect() to serialize this object into the given
+    * object writer.
+    *
+    * @param writer The object writer to use for serializing this object.
+    *
+    * @throw vpr::IOException will be thrown if object serialization fails.
+    */
+   virtual void writeObject(vpr::ObjectWriter* writer)
    {
       BASE::writeObject(writer);
    }
 
-   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
+   /**
+    * Invokes BASE::readOjbect() to de-serialize this object from the data
+    * held in the given object reader.
+    *
+    * @param reader The object reader to use for de-serializing this object.
+    *
+    * @throw vpr::IOException will be thrown if object de-serialization fails.
+    */
+   virtual void readObject(vpr::ObjectReader* reader)
    {
       BASE::readObject(reader);
    }

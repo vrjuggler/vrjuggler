@@ -47,7 +47,7 @@ class SerialEncoder:public gadget::InputMixer<gadget::Input,gadget::Position>
 {
 public:
    SerialEncoder();
-   virtual ~SerialEncoder() throw ();
+   virtual ~SerialEncoder();
 
    static std::string getElementType()
    {

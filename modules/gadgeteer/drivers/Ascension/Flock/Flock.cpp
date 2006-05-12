@@ -132,7 +132,7 @@ bool Flock::config(jccl::ConfigElementPtr e)
    return status;
 }
 
-Flock::~Flock() throw ()
+Flock::~Flock()
 {
    this->stopSampling();
 }

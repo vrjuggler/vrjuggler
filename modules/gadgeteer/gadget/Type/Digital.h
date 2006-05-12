@@ -84,7 +84,7 @@ namespace gadget
          ;
       }
 
-      virtual ~Digital() throw ()
+      virtual ~Digital()
       {
       }
 
@@ -147,13 +147,25 @@ namespace gadget
          return std::string("Digital");
       }
 
-      /** Serializes this object. */
-      virtual void writeObject(vpr::ObjectWriter* writer)
-         throw (vpr::IOException);
+      /**
+       * Serializes this object into the given object writer.
+       *
+       * @param writer The object writer to which this object will be
+       *               serialized.
+       *
+       * @throw vpr::IOException is thrown if serialization fails.
+       */
+      virtual void writeObject(vpr::ObjectWriter* writer);
 
-      /** De-serializes this object. */
-      virtual void readObject(vpr::ObjectReader* reader)
-         throw (vpr::IOException);
+      /**
+       * De-serializes this object.
+       *
+       * @param reader The object reader from which this object will be
+       *               de-serialized.
+       *
+       * @throw vpr::IOException is thrown if de-serialization fails.
+       */
+      virtual void readObject(vpr::ObjectReader* reader);
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.

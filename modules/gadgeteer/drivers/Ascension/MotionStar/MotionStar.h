@@ -111,7 +111,7 @@ public:
     * @pre None.
     * @post Sampling is stopped, and the data pool is deallocated.
     */
-   virtual ~MotionStar() throw ();
+   virtual ~MotionStar();
 
    // ========================================================================
    // Input overrides (or methods with the same name anyway).

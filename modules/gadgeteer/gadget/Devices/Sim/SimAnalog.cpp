@@ -39,7 +39,7 @@ SimAnalog::SimAnalog()
 }
 
 /** Destructor */
-SimAnalog::~SimAnalog() throw ()
+SimAnalog::~SimAnalog()
 {
    //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimAnalog::~SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }

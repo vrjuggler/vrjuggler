@@ -77,7 +77,7 @@ class IBoxException : public vpr::Exception
 {
 public:
    IBoxException(const std::string& msg, const std::string& location = "")
-      throw() : vpr::Exception(msg, location)
+      : vpr::Exception(msg, location)
    {;}
 
    virtual ~IBoxException() throw()
@@ -161,7 +161,7 @@ public:
 
 
    /**
-    * Connects us to the ibox
+    * Connects us to the ibox.
     *
     * @post An attempt is made to connect to the ibox.  It if is successful, the
     *       port is opened and has synchronized with the ibox.
@@ -171,35 +171,37 @@ public:
     *                  port is held.
     * @param buad      The buad rate for input and output
     *
-    * @return SUCCESS is returned if the the ibox connects successfully. <br>
-    *         CANT_BEGIN if the ibox was synched but couldn't beginCommunication
-    *         reading data. <br>
-    *         NO_HCI if the ibox could not successfully synchronize. <br>
-    *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful.
+    * @throw vpr::IOException is thrown if an I/O exception occurs while
+    *        connecting to the IBox.
+    * @throw IBoxException is thrown if the serial port could not be opened or
+    *        if there is some other protocol error while communicating with
+    *        the IBox.
     */
-   void connect(const std::string& port_name, long int baud)
-      throw (vpr::IOException, IBoxException);
-    
-   /** Blocks while waiting of an update from the ibox.
+   void connect(const std::string& port_name, long int baud);
+
+   /**
+    * Blocks while waiting of an update from the ibox.
     * 
     * @post updates the ibox data and waits for packet before going on.
     *
-    * @param timerFlag is the whether or not to report the timer (0 or non-zero). <br>
-    * @param numAnalogs is the # of analog fields to report (0, 2, 4, or 8) <br>
-    * @param numEncoders is the # of encoder fields to report (0, 2, 3, or 6)
+    * @param timerFlag   Whether or not to report the timer (0 or non-zero).
+    * @param numAnalogs  The number of analog fields to report (0, 2, 4, or 8).
+    * @param numEncoders The number of encoder fields to report (0, 2, 3, or 6).
     *
     * @throws vpr::IOException if operation failed.
     */
-   void waitForUpdate(int timerFlag, int numAnalogs, int numEncoders)
-      throw (vpr::IOException);
+   void waitForUpdate(int timerFlag, int numAnalogs, int numEncoders);
 
    /**
     * Closes the connection to the ibox.
     *
     * @pre The port is open to the ibox
     * @post An attempt is made to disconnect from the ibox.
+    *
+    * @throw vpr::IOException is thrown if an I/O exception occurs while
+    *        closing the serial port.
     */
-   void disconnect() throw (vpr::IOException);
+   void disconnect();
 
    /** Returns the state of the button specified by pos.
     *
@@ -229,14 +231,14 @@ public:
     * @pre The ibox is connected.
     * @post writes the standard cmd and exits
     *
-    * @param timerFlag is the whether or not to report the timer (0 or non-zero). <br>
-    * @param numAnalogs is the # of analog fields to report (0, 2, 4, or 8) <br>
-    * @param numEncoders is the # of encoder fields to report (0, 2, 3, or 6)
+    * @param timerFlag   Whether or not to report the timer (0 or non-zero).
+    * @param numAnalogs  The number of analog fields to report (0, 2, 4, or 8).
+    * @param numEncoders The number of encoder fields to report (0, 2, 3, or 6).
     *
     * @throws vpr::IOException if operation failed.
     */
    void sendCommand(const int timerFlag, const int numAnalog,
-                    const int numEncoders) const throw (vpr::IOException);
+                    const int numEncoders) const;
 
    /** Sends the cmd byte of any 'simple' config cmd and immediately exits.
     *
@@ -247,7 +249,7 @@ public:
     * @pre The ibox is connected.
     * @post writes the cmd byte of any simple config cmd.
     *
-    * @param cmnd the byte that is being written.
+    * @param command the byte that is being written.
     */
    void sendSimpleConfigCommand(const vpr::Uint8 command) const;
 
@@ -272,11 +274,11 @@ public:
     *
     * @param cmnd byte designating serial number.
     *
-    * @throws vpr::IOException if operation timed out.
-    * @throws IBoxException if the password was refused.
+    * @throw vpr::IOException if operation timed out.
+    * @throw IBoxException if the password was refused.
     */
    void sendPasswordCommand(const vpr::Uint8 command,
-      const std::vector<vpr::Uint8> args) throw (vpr::IOException, IBoxException);
+                            const std::vector<vpr::Uint8> args);
    //@}
 
    /** Checks for a complete packet and parses it if it's ready.
@@ -284,12 +286,12 @@ public:
     * @pre The Ibox is connected.
     * @post checks for a complete packet and parses it if it's ready.
     *
-    * @throws vpr::TimeoueException if operation timed out.
-    * @throws vpr::IOException if operation failed.
-    * @throws IBoxException if an invalid packet was recieved or
-    *         packet parsing failed.
+    * @throw vpr::TimeoueException if operation timed out.
+    * @throw vpr::IOException if operation failed.
+    * @throw IBoxException if an invalid packet was recieved or packet parsing
+    *        failed.
     */
-   void checkForPacket() throw (vpr::IOException, IBoxException);
+   void checkForPacket();
 
    /** Blocks while waiting to receive a complete packet.
     *
@@ -303,20 +305,25 @@ public:
     * @pre The ibox is connected.
     * @post attempts to send a motion-sensitive cmd
     *
-    * @param timer_flag is the whether or not to report the timer (0 or non-zero). <br>
-    * @param analog_reports is the # of analog fields to report (0, 2, 4, or 8) <br>
-    * @param encoder_reports is the # of encoder fields to report (0, 2, 3, or 6)i <br>
-    * @param delay is minimum delay between packets, in (approx) msec. <br>
-    * @param active_btns is a bit mask indicating which buttons generate packets
-    *                    when clicked. <br>
-    * @param analog_deltas are min. change required to generate a packet. <br>
-    * @param encoder_delta are min. change required to generate a packet. <br>
+    * @param timer_flag      Whether or not to report the timer (0 or
+    *                        non-zero).
+    * @param analog_reports  The number of analog fields to report (0, 2, 4,
+    *                        or 8).
+    * @param encoder_reports The number of encoder fields to report (0, 2, 3,
+    *                        or 6).
+    * @param delay           The minimum delay between packets, in (approx)
+    *                        milliseconds.
+    * @param active_btns     A bit mask indicating which buttons generate
+    *                        packets when clicked.
+    * @param analog_deltas   Minimum change required to generate a packet.
+    * @param encoder_delta   Minimum change required to generate a packet.
     *
-    * @throws vpr::IOException if operation failed.
+    * @throw vpr::IOException if operation failed.
     */
-   void startMotionMode(int timer_flag, int analog_reports, int encoder_reports,
-      int delay, vpr::Uint8 active_btns, std::vector<vpr::Uint8>& analog_deltas, 
-      std::vector<vpr::Uint8>& encoder_deltas) throw (vpr::IOException);
+   void startMotionMode(int timer_flag, int analog_reports,
+                        int encoder_reports, int delay, vpr::Uint8 active_btns,
+                        std::vector<vpr::Uint8>& analog_deltas,
+                        std::vector<vpr::Uint8>& encoder_deltas);
 
    /** Cancels motion-reporting mode and clears all unparsed data.
     *
@@ -337,12 +344,12 @@ public:
     *       TIMED_OUT is not considered an error; we assume we're in motion-
     *       reporting mode, and packets may be few & far between.
     *
-    * @throws vpr::TimeoueException if operation timed out.
-    * @throws vpr::IOException if operation failed.
-    * @throws IBoxException if an invalid packet was recieved or
-    *         packet parsing failed.
+    * @throw vpr::TimeoueException if operation timed out.
+    * @throw vpr::IOException if operation failed.
+    * @throw IBoxException if an invalid packet was recieved or packet parsing
+    *        failed.
     */
-   void checkForMotion() throw (vpr::IOException, IBoxException);
+   void checkForMotion();
 
    /** Inserts a place marker packet into the HCI stream.
     *
@@ -366,12 +373,12 @@ public:
     * @pre The ibox is connected.
     * @post Attempts to get home reference offset from HCI.
     *
-    * @throws vpr::TimeoueException if operation timed out.
-    * @throws vpr::IOException if operation failed.
-    * @throws IBoxException if an invalid packet was recieved or
-    *         packet parsing failed.
+    * @throw vpr::TimeoueException if operation timed out.
+    * @throw vpr::IOException if operation failed.
+    * @throw IBoxException if an invalid packet was recieved or packet parsing
+    *        failed.
     */
-   void getHomeRef() throw (vpr::IOException, IBoxException);
+   void getHomeRef();
 
    /** Defines a new set of home references for the HCI encoders.
     *
@@ -380,22 +387,22 @@ public:
     *
     * @param homefer Pointer to the location of the new home reference.
     *
-    * @throws vpr::IOException if operation timed out.
-    * @throws IBoxException if the password was refused.
+    * @throw vpr::IOException if operation timed out.
+    * @throw IBoxException if the password was refused.
     */
-   void setHomeRef(int *homeref) throw (vpr::IOException, IBoxException);
+   void setHomeRef(int *homeref);
 
    /** Sets HCI encoders to home position, waits for response.
     *
     * @pre The ibox is connected.
     * @post The HCI encoder is set to its home position.
     *
-    * @throws vpr::TimeoueException if operation timed out.
-    * @throws vpr::IOException if operation failed.
-    * @throws IBoxException if an invalid packet was recieved or
-    *         packet parsing failed.
+    * @throw vpr::TimeoueException if operation timed out.
+    * @throw vpr::IOException if operation failed.
+    * @throw IBoxException if an invalid packet was recieved or packet parsing
+    *        failed.
     */
-   void goHomePosition() throw (vpr::IOException, IBoxException);
+   void goHomePosition();
 
    /** Defines a new home position for the HCI encoders.
     *
@@ -404,32 +411,32 @@ public:
     *
     * @param homepos Pointer to the new home position.
     *
-    * @throws vpr::IOException if operation timed out.
-    * @throws IBoxException if the password was refused.
+    * @throw vpr::IOException if operation timed out.
+    * @throw IBoxException if the password was refused.
     */
-   void setHomePosition(int *homepos) throw (vpr::IOException, IBoxException);
+   void setHomePosition(int *homepos);
 
    /** Asks HCI for max field values, waits for response
     *
     * @pre The ibox is connected.
     * @post reads the max field values.
     *
-    * @throws vpr::TimeoueException if operation timed out.
-    * @throws vpr::IOException if operation failed.
-    * @throws IBoxException if an invalid packet was recieved or
-    *         packet parsing failed.
+    * @throw vpr::TimeoueException if operation timed out.
+    * @throw vpr::IOException if operation failed.
+    * @throw IBoxException if an invalid packet was recieved or packet parsing
+    *        failed.
     */
-   void getMaxValues() throw (vpr::IOException, IBoxException);
+   void getMaxValues();
 
    /** Restores all factory settings
     *
     * @pre The ibox is connected.
     * @post resets all member variable information.
     *
-    * @throws vpr::IOException if operation timed out.
-    * @throws IBoxException if the password was refused.
+    * @throw vpr::IOException if operation timed out.
+    * @throw IBoxException if the password was refused.
     */
-   void setFactoryDefaults() throw (vpr::IOException, IBoxException);
+   void setFactoryDefaults();
 
 private:
    /** Reads chars from serial buffer into the packet array.
@@ -440,11 +447,11 @@ private:
     *       Sets num_bytes_expected to -1 if the cmd is not one that the standard
     *       parser (parsePacket()) can deal with.
     *
-    * @throws vpr::TimeoueException if operation timed out.
-    * @throws vpr::IOException if operation failed.
-    * @throws IBoxException if an invalid packet was recieved.
+    * @throw vpr::TimeoueException if operation timed out.
+    * @throw vpr::IOException if operation failed.
+    * @throw IBoxException if an invalid packet was recieved.
     */
-   void getDataPacket() throw (vpr::IOException, IBoxException);
+   void getDataPacket();
 
    /** @name Packet parsing functions. */
    //@{
@@ -455,18 +462,18 @@ private:
     * @post parsePacket() interprets the hci's packet and stores all HCI data.
     *       Also marks this hci's packet as having been parsed.
     *
-    * @throws IBoxException if packet could not be parsed.
+    * @throw IBoxException if packet could not be parsed.
     */
-   void parsePacket() throw (IBoxException);
+   void parsePacket();
 
    /** Parses a packet for a special configuration command.
     *
     * @pre The packet is COMPLETE.
     * @post parses a packet for a special configureation command.
     *
-    * @throws IBoxException if packet could not be parsed.
+    * @throw IBoxException if packet could not be parsed.
     */
-   void parseConfigPacket() throw (IBoxException);
+   void parseConfigPacket();
    
    //@}
 
@@ -474,12 +481,11 @@ private:
     *
     * @post returns the # of data bytes that FOLLOW a given cmd byte.
     *
-    * @param cmd is an int, not a byte, for compatibility reasons; It is the cmd
-    *        that marks the start for counting the number of bytes.
+    * @param cmd The cmd that marks the start for counting the number of bytes.
     *
-    * @return value of 0 means packet needs special handling (i.e. passwd) or has
-    *         uncertain length; too complicated for standard parser. <br>
-    *         Otherwise returns the number of bytes following cmd
+    * @return value of 0 means packet needs special handling (i.e. passwd) or
+    *         has uncertain length; too complicated for standard parser. <br>
+    *         Otherwise returns the number of bytes following cmd.
     */
    vpr::Uint32 getPacketSize(const vpr::Uint8 packetType);
 
@@ -490,9 +496,9 @@ private:
     *
     * @return String recieved from IBox.
     *
-    * @throws vpr::IOException if operation failed.
+    * @throw vpr::IOException if operation failed.
     */
-   std::string readString() throw (vpr::IOException);
+   std::string readString();
     
    /** Sets all updated fields to zero.
     */
@@ -506,21 +512,21 @@ private:
 
    /** Send end command to IBox.
     *
-    * @throws vpr::IOException if operation failed.
+    * @throw vpr::IOException if operation failed.
     */
-   void sendEndCommand() throw (vpr::IOException);
+   void sendEndCommand();
 
    /** Get information about the connected IBox device.
     *
-    * @throws vpr::IOException if operation failed.
+    * @throw vpr::IOException if operation failed.
     */
-   void getInfo() throw (vpr::IOException);
+   void getInfo();
 
    /** Get the command byte for the given parameters.
     *
-    * @param timerFlag is the whether or not to report the timer (0 or non-zero). <br>
-    * @param numAnalogs is the # of analog fields to report (0, 2, 4, or 8) <br>
-    * @param numEncoders is the # of encoder fields to report (0, 2, 3, or 6)
+    * @param timerFlag   Whether or not to report the timer (0 or non-zero).
+    * @param numAnalogs  The number of analog fields to report (0, 2, 4, or 8).
+    * @param numEncoders The number of encoder fields to report (0, 2, 3, or 6).
     */
    vpr::Uint8 getCommandByte(const int timerFlag, const int numAnalogs,
                              const int numEncoders) const;

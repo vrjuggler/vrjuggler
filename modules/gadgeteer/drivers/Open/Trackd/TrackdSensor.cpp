@@ -47,7 +47,7 @@ TrackdSensor::TrackdSensor(): mTrackdSensors(NULL)
  * @pre None.
  * @post Shared memory is released
  */
-TrackdSensor::~TrackdSensor() throw ()
+TrackdSensor::~TrackdSensor()
 {
    delete mTrackdSensors;
 }

@@ -76,7 +76,7 @@ bool PinchGlove::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-PinchGlove::~PinchGlove() throw ()
+PinchGlove::~PinchGlove()
 {
    stopSampling();      // Stop the glove
    delete mGlove;       // Delete the glove

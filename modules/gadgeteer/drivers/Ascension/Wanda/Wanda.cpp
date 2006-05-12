@@ -67,7 +67,7 @@ Wanda::Wanda(const char* portName)
    /* Do nothing. */ ;
 }
 
-Wanda::~Wanda() throw ()
+Wanda::~Wanda()
 {
    stopSampling();
 }

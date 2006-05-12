@@ -81,7 +81,7 @@ DTrack::DTrack()
 
 // Destructor:
 
-DTrack::~DTrack() throw ()
+DTrack::~DTrack()
 {
 
 	if(thrRunning){
