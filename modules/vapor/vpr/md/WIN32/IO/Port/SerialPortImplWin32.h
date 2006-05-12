@@ -347,7 +347,7 @@ public:
     *             object to be used as storage for the character size
     *             value.
     *
-    * @throw vpr::IOException If the character size could be retrieved.
+    * @throw vpr::IOException If the character size could not be retrieved.
     */
    void getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const;
 
