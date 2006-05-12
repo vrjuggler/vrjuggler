@@ -51,7 +51,7 @@ BufferObjectReader::BufferObjectReader(std::vector<vpr::Uint8>* data,
    mIsBinary = true;
 }
 
-BufferObjectReader::~BufferObjectReader() throw ()
+BufferObjectReader::~BufferObjectReader()
 {
    /* Do nothing. */ ;
 }

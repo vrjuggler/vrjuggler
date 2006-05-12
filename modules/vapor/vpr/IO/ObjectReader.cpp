@@ -54,7 +54,7 @@ ObjectReader::ObjectReader(const ObjectReader& o)
    /* Do nothing. */ ;
 }
 
-ObjectReader::~ObjectReader() throw ()
+ObjectReader::~ObjectReader()
 {
    /* Do nothing. */ ;
 }

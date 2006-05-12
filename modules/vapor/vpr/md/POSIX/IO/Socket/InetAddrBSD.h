@@ -100,7 +100,7 @@ public:
     *
     * @return A vpr::InetAddr object holding the local host's default address.
     */
-   static vpr::InetAddrBSD getLocalHost() throw (UnknownHostException);
+   static vpr::InetAddrBSD getLocalHost();
 
    /**
     * Retrieves all the IPv4 addresses associated with the local machine,
@@ -131,10 +131,10 @@ public:
     * @param address A string giving the address and port number separated by
     *                a colon.  The address can be a hostname or a
     *                dotted-decimal IP address.
-    *                
+    *
     * @throw UnknownHostException if no IP address for the host could be found.
     */
-   void setAddress(const std::string& address) throw (UnknownHostException);
+   void setAddress(const std::string& address);
 
    /**
     * Sets the address for this object using the given address and port
@@ -148,8 +148,7 @@ public:
     * @throw UnknownHostException if no IP address for the host could be
     *        found.
     */
-   void setAddress(const std::string& address, const Uint16 port)
-      throw (UnknownHostException);
+   void setAddress(const std::string& address, const Uint16 port);
 
    /**
     * Sets the address for this object using the given address and port
@@ -211,8 +210,7 @@ public:
     * @throw IllegalArgumentException is thrown if \p family is not a valid
     *        protocol family or if the identified family is not supported.
     */
-   void setFamily(const vpr::SocketTypes::Domain family)
-      throw (IllegalArgumentException);
+   void setFamily(const vpr::SocketTypes::Domain family);
 
    /**
     * Gets this address' port in host byte order.
@@ -265,14 +263,16 @@ public:
 
    /**
     * Returns the fully qualified hostname for this address.
+    * @throws UnknownHostException when host can not be found.
     */
-   std::string getHostname() const throw (UnknownHostException);
+   std::string getHostname() const;
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
+    * @throws UnknownHostException when host can not be found.
     */
-   std::vector<std::string> getHostnames() const throw (UnknownHostException);
+   std::vector<std::string> getHostnames() const;
 
    /**
     * Overloaded assignment operator to ensure that assignments work
@@ -414,7 +414,7 @@ protected:
     *
     * @throw UnknownHostException if address lookup failed.
     */
-   void lookupAddress(const std::string& addr) throw (UnknownHostException);
+   void lookupAddress(const std::string& addr);
 
    struct sockaddr_in mAddr;    /**< The Ineternet address structure */
 };

@@ -109,7 +109,7 @@ public:
     * @throws vpr::IOException if the socket could not be opened.
     * @see FileHandleImplUNIX::open()
     */
-   void open() throw (IOException)
+   void open()
    {
       mSocketImpl->open();
    }
@@ -125,7 +125,7 @@ public:
     * @throws vpr::IOException if the socke could not be closed.
     * @see FileHandleImplUNIX::close()
     */
-   void close() throw (IOException)
+   void close()
    {
       mSocketImpl->close();
    }
@@ -206,7 +206,7 @@ public:
     * @see FileHandleImplUNIX::setBlocking()
     * @see isOpen, open
     */
-   void setBlocking(bool blocking) throw (IOException)
+   void setBlocking(bool blocking)
    {
       mSocketImpl->setBlocking(blocking);
    }
@@ -233,7 +233,7 @@ public:
     *
     * @throws vpr::SocketException if socket could not be bound.
     */
-   void bind() throw (SocketException)
+   void bind()
    {
       mSocketImpl->bind();
    }
@@ -265,7 +265,6 @@ public:
     * @throws vpr::SocketException if could not connect.
     */
    void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (vpr::Exception)
    {
       mSocketImpl->connect(timeout);
    }
@@ -298,7 +297,6 @@ public:
    void recv(void* buffer, const vpr::Uint32 length,
              vpr::Uint32& bytesRead,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       read(buffer, length, bytesRead, timeout);
    }
@@ -332,7 +330,6 @@ public:
    void recv(std::string& buffer, const vpr::Uint32 length,
              vpr::Uint32& bytesRead,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       read(buffer, length, bytesRead, timeout);
    }
@@ -366,7 +363,6 @@ public:
    void recv(std::vector<vpr::Uint8>& buffer,
              const vpr::Uint32 length, vpr::Uint32& bytesRead,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       read(buffer, length, bytesRead, timeout);
    }
@@ -397,7 +393,6 @@ public:
    void recvn(void* buffer, const vpr::Uint32 length,
               vpr::Uint32& bytesRead,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       readn(buffer, length, bytesRead, timeout);
    }
@@ -429,7 +424,6 @@ public:
    void recvn(std::string& buffer, const vpr::Uint32 length,
               vpr::Uint32& bytesRead,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       readn(buffer, length, bytesRead, timeout);
    }
@@ -461,7 +455,6 @@ public:
    void recvn(std::vector<vpr::Uint8>& buffer,
               const vpr::Uint32 length, vpr::Uint32& bytesRead,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       readn(buffer, length, bytesRead, timeout);
    }
@@ -501,7 +494,6 @@ public:
    void send(const void* buffer, const vpr::Uint32 length,
              vpr::Uint32& bytesWritten,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       write(buffer, length, bytesWritten, timeout);
    }
@@ -536,7 +528,6 @@ public:
    void send(const std::string& buffer, const vpr::Uint32 length,
              vpr::Uint32& bytesWritten,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       write(buffer, length, bytesWritten, timeout);
@@ -573,7 +564,6 @@ public:
              const vpr::Uint32 length,
              vpr::Uint32& bytesWritten,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       write(buffer, length, bytesWritten,timeout);
@@ -709,7 +699,6 @@ protected:
    virtual void read_i(void* buffer, const vpr::Uint32 length,
                        vpr::Uint32& bytesRead,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSocketImpl->read_i(buffer, length, bytesRead, timeout);
    }
@@ -741,7 +730,6 @@ protected:
    virtual void readn_i(void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytesRead,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSocketImpl->readn_i(buffer, length, bytesRead, timeout);
    }
@@ -777,21 +765,18 @@ protected:
                         const vpr::Uint32 length,
                         vpr::Uint32& bytesWritten,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSocketImpl->write_i(buffer, length, bytesWritten, timeout);
    }
 
    virtual void getOption(const vpr::SocketOptions::Types option,
-                          struct vpr::SocketOptions::Data& data)
-      const throw (SocketException)
+                          struct vpr::SocketOptions::Data& data) const
    {
       mSocketImpl->getOption(option, data);
    }
 
    virtual void setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data)
-      throw (SocketException)
    {
       mSocketImpl->setOption(option, data);
    }

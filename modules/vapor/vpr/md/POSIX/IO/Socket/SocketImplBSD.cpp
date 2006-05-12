@@ -127,7 +127,7 @@ const std::string& SocketImplBSD::getName() const
 
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
-void SocketImplBSD::open() throw (IOException)
+void SocketImplBSD::open()
 {
    int domain, type, sock;
 
@@ -215,7 +215,7 @@ void SocketImplBSD::open() throw (IOException)
    }
 }
 
-void SocketImplBSD::close() throw (IOException)
+void SocketImplBSD::close()
 {
    mHandle->close();
 
@@ -228,7 +228,7 @@ void SocketImplBSD::close() throw (IOException)
 }
 
 // Reconfigures the socket so that it is in blocking mode.
-void SocketImplBSD::setBlocking(bool blocking) throw (IOException)
+void SocketImplBSD::setBlocking(bool blocking)
 {
    vprASSERT(! mBlockingFixed &&
              "Cannot change blocking state after a blocking call!");
@@ -250,7 +250,7 @@ void SocketImplBSD::setBlocking(bool blocking) throw (IOException)
 }
 
 // Bind this socket to the address in the host address member variable.
-void SocketImplBSD::bind() throw (SocketException)
+void SocketImplBSD::bind()
 {
    int status;
 
@@ -273,7 +273,7 @@ void SocketImplBSD::bind() throw (SocketException)
 // socket, this makes the address given to the constructor the default
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
-void SocketImplBSD::connect(vpr::Interval timeout) throw (vpr::Exception)
+void SocketImplBSD::connect(vpr::Interval timeout)
 {
    int status;
 
@@ -389,7 +389,7 @@ void SocketImplBSD::connect(vpr::Interval timeout) throw (vpr::Exception)
 
 // Idea:
 // - If have read or write and there are no socket errors, then we are connected
-bool SocketImplBSD::isConnected() const throw ()
+bool SocketImplBSD::isConnected() const
 {
    bool connected(false);
 
@@ -431,7 +431,7 @@ bool SocketImplBSD::isConnected() const throw ()
    return connected;
 }
 
-void SocketImplBSD::setLocalAddr(const InetAddr& addr) throw (SocketException)
+void SocketImplBSD::setLocalAddr(const InetAddr& addr)
 {
    if ( mBound || mConnectCalled )
    {
@@ -448,7 +448,7 @@ void SocketImplBSD::setLocalAddr(const InetAddr& addr) throw (SocketException)
    }
 }
 
-void SocketImplBSD::setRemoteAddr(const InetAddr& addr) throw (SocketException)
+void SocketImplBSD::setRemoteAddr(const InetAddr& addr)
 {
    if ( mConnectCalled )
    {
@@ -465,7 +465,6 @@ void SocketImplBSD::read_i(void* buffer,
                            const vpr::Uint32 length,
                            vpr::Uint32& bytesRead,
                            const vpr::Interval timeout)
-   throw (IOException)
 {
    mBlockingFixed = true;
    mHandle->read_i(buffer, length, bytesRead, timeout);
@@ -483,7 +482,6 @@ void SocketImplBSD::readn_i(void* buffer,
                             const vpr::Uint32 length,
                             vpr::Uint32& bytesRead,
                             const vpr::Interval timeout)
-   throw (IOException)
 {
    mBlockingFixed = true;
    mHandle->readn_i(buffer, length, bytesRead, timeout);
@@ -499,7 +497,6 @@ void SocketImplBSD::write_i(const void* buffer,
                             const vpr::Uint32 length,
                             vpr::Uint32& bytesWritten,
                             const vpr::Interval timeout)
-   throw (IOException)
 {
    mBlockingFixed = true;
 
@@ -531,7 +528,6 @@ union sockopt_data
 
 void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
                               struct vpr::SocketOptions::Data& data) const
-   throw (SocketException)
 {
    int opt_name, opt_level, status;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
@@ -724,7 +720,6 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
 
 void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
                               const struct vpr::SocketOptions::Data& data)
-   throw (SocketException)
 {
    int opt_name, opt_level;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)

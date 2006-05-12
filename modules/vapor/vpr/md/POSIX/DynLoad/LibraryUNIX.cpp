@@ -48,7 +48,7 @@
 namespace vpr
 {
 
-LibraryUNIX::~LibraryUNIX() throw ()
+LibraryUNIX::~LibraryUNIX()
 {
    if ( NULL != mLibrary )
    {

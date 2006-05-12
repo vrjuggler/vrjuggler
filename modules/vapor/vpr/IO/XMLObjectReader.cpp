@@ -61,7 +61,6 @@ namespace
 /** Helper to read the data from the current string. */
 template<class T>
 void readValueStringRep(T& val, std::stringstream* inStream)
-   throw (vpr::IOException)
 {
    if ( NULL == inStream )
    {
@@ -193,7 +192,6 @@ void XMLObjectReader::debugDumpStack(int debug_level)
 // Starting a new tag.
 // Get the local cdata into the current data source.
 void XMLObjectReader::beginTag(const std::string& tagName)
-   throw (IOException)
 {
    vprDEBUG_OutputGuard(vprDBG_ALL, XML_OR_LEVEL, std::string("beginTag:[") + tagName + std::string("]\n"), "endTag");
 
@@ -273,7 +271,6 @@ void XMLObjectReader::beginTag(const std::string& tagName)
 // Ends the most recently named tag.
 // Just pop of the current node state information.
 void XMLObjectReader::endTag()
-   throw (IOException)
 {
    if ( mCurNodeStack.empty() )
    {
@@ -286,7 +283,6 @@ void XMLObjectReader::endTag()
 // Starts an attribute of the name attributeName.
 // Get the attribute content and set the attribute source with that content.
 void XMLObjectReader::beginAttribute(const std::string& attributeName)
-   throw (IOException)
 {
    //std::cout << "beginAttribute: " << attributeName << std::endl;
    std::string attrib_content =
@@ -301,7 +297,6 @@ void XMLObjectReader::beginAttribute(const std::string& attributeName)
 
 // Ends the most recently named attribute.
 void XMLObjectReader::endAttribute()
-   throw (IOException)
 {
    mAttribSource.clear();
    mAttribSource.seekg(0,std::ios::beg);
@@ -331,7 +326,7 @@ void XMLObjectReader::popState()
 
 
 
-vpr::Uint8 XMLObjectReader::readUint8() throw (IOException)
+vpr::Uint8 XMLObjectReader::readUint8()
 {
    // Read a uint16 so that it does not treat it as a single char
    vpr::Uint16 temp_data;
@@ -339,44 +334,44 @@ vpr::Uint8 XMLObjectReader::readUint8() throw (IOException)
    return vpr::Uint8(temp_data);
 }
 
-vpr::Uint16 XMLObjectReader::readUint16() throw (IOException)
+vpr::Uint16 XMLObjectReader::readUint16()
 {
    vpr::Uint16 val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-vpr::Uint32 XMLObjectReader::readUint32() throw (IOException)
+vpr::Uint32 XMLObjectReader::readUint32()
 {
    vpr::Uint32 val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-vpr::Uint64 XMLObjectReader::readUint64() throw (IOException)
+vpr::Uint64 XMLObjectReader::readUint64()
 {
    vpr::Uint64 val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-float XMLObjectReader::readFloat() throw (IOException)
+float XMLObjectReader::readFloat()
 {
    float val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-double XMLObjectReader::readDouble() throw (IOException)
+double XMLObjectReader::readDouble()
 {
    double val;
    readValueStringRep(val, getCurSource());
    return val;
 }
 
-std::string XMLObjectReader::readString() throw (IOException)
+std::string XMLObjectReader::readString()
 {
-   std::string ret_val("");   
+   std::string ret_val("");
 
    if(AttribSource == mCurSource)   // Just return a copy of the attribute source
    {
@@ -401,7 +396,7 @@ std::string XMLObjectReader::readString() throw (IOException)
       // Get the contents of the string
       char next_char = mCurNodeStack.back().cdataSource.peek();
       bool done_reading(next_char == '"');                           // If next char is already ", then we are done reading empty string
-            
+
       while(!done_reading)
       {
          mCurNodeStack.back().cdataSource.get(char_buffer,1024, '"');      // Copy over to target until we have second "
@@ -415,7 +410,7 @@ std::string XMLObjectReader::readString() throw (IOException)
    return ret_val;
 }
 
-bool XMLObjectReader::readBool() throw (IOException)
+bool XMLObjectReader::readBool()
 {
    bool val;
    readValueStringRep(val, getCurSource());

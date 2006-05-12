@@ -67,7 +67,10 @@ public:
 public:
    GUID(const GenerateTag& tag);
 
-   virtual ~GUID() throw ()
+   /** Destructor.
+    * @throws nothing
+    */
+   virtual ~GUID()
    {
       /* Do nothing. */ ;
    }
@@ -177,10 +180,12 @@ public:
    void generate();
    void generate(const GUID& nsGuid, const std::string& name);
 
-   /** @name Reader/Writer methods */
+   /** @name Reader/Writer methods
+    * @throws vpr::IOException if the operation failed.
+    */
    //@{
-   virtual void writeObject(vpr::ObjectWriter* writer) throw (IOException);
-   virtual void readObject(vpr::ObjectReader* reader) throw (IOException);
+   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void readObject(vpr::ObjectReader* reader);
    //@}
 
    /**

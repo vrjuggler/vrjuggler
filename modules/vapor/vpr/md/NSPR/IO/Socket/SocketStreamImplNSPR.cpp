@@ -79,7 +79,7 @@ SocketStreamImplNSPR::SocketStreamImplNSPR(const vpr::InetAddr& localAddr,
 }
 
 // Listen on the socket for incoming connection requests.
-void SocketStreamImplNSPR::listen(const int backlog) throw (SocketException)
+void SocketStreamImplNSPR::listen(const int backlog)
 {
    if ( !mBound )        // To listen, we must be bound
    {
@@ -112,7 +112,6 @@ void SocketStreamImplNSPR::listen(const int backlog) throw (SocketException)
 // Accept an incoming connection request.
 void SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
                                   vpr::Interval timeout)
-   throw (SocketException)
 {
    vpr::InetAddr addr;
 

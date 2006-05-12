@@ -143,8 +143,9 @@ public:
 
    /**
     * Closes the accepting socket.
+    * @throws vpr::IOException if the operation failed.
     */
-   void close() throw (IOException)
+   void close()
    {
       mSocket.close();
    }

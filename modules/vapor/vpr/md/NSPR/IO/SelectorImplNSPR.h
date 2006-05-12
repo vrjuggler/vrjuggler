@@ -116,8 +116,7 @@ public:
     * @throws vpr::IOException      If the select failed.
     */
    void select(vpr::Uint16& numWithEvents,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the number of handles.

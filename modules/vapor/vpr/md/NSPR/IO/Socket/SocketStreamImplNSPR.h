@@ -107,7 +107,7 @@ public:
     *
     * @see open, bind
     */
-   void listen(const int backlog = 5) throw (SocketException);
+   void listen(const int backlog = 5);
 
    /**
     * Accepts an incoming connection request and returns the connected socket
@@ -133,8 +133,7 @@ public:
     * @see open, bind, listen
     */
    void accept(SocketStreamImplNSPR& sock,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (SocketException);
+               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 } // End of vpr namespace

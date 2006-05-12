@@ -58,7 +58,6 @@ void SocketDatagramImplNSPR::recvfrom(void* msg, const vpr::Uint32 length,
                                       vpr::InetAddr& from,
                                       vpr::Uint32& bytesRead,
                                       const vpr::Interval timeout)
-   throw (IOException)
 {
    PRInt32 bytes;
 
@@ -147,7 +146,6 @@ void SocketDatagramImplNSPR::sendto(const void* msg, const vpr::Uint32 length,
                                     const vpr::InetAddr& to,
                                     vpr::Uint32& bytesSent,
                                     const vpr::Interval timeout)
-   throw (IOException)
 {
    PRInt32 bytes;
 

@@ -50,7 +50,7 @@ std::vector<vpr::InetAddrNSPR> getIfAddrs(const bool withLoopback);
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
-vpr::InetAddrNSPR InetAddrNSPR::getLocalHost() throw (UnknownHostException)
+vpr::InetAddrNSPR InetAddrNSPR::getLocalHost()
 {
    char local_host_name[257];
    memset(local_host_name, 0, 257);
@@ -80,7 +80,6 @@ InetAddrNSPR::getAllLocalAddrs(const bool withLoopback)
 // form <address>:<port> where <address> can be a hostname or a dotted-decimal
 // IP address.
 void InetAddrNSPR::setAddress(const std::string& address)
-   throw (UnknownHostException)
 {
    std::string::size_type pos;
    std::string host_addr, host_port;
@@ -120,7 +119,6 @@ vpr::SocketTypes::Domain InetAddrNSPR::getFamily() const
 
 // Set the protocol family of this address structure.
 void InetAddrNSPR::setFamily(const vpr::SocketTypes::Domain family)
-   throw (IllegalArgumentException)
 {
    switch ( family )
    {
@@ -154,7 +152,7 @@ std::string InetAddrNSPR::getAddressString() const
    return temp;
 }
 
-std::string InetAddrNSPR::getHostname() const throw (UnknownHostException)
+std::string InetAddrNSPR::getHostname() const
 {
    char buffer[PR_NETDB_BUF_SIZE];
    memset(buffer, 0, PR_NETDB_BUF_SIZE);
@@ -181,7 +179,6 @@ std::string InetAddrNSPR::getHostname() const throw (UnknownHostException)
 }
 
 std::vector<std::string> InetAddrNSPR::getHostnames() const
-   throw (UnknownHostException)
 {
    std::vector<std::string> names;
    char buffer[PR_NETDB_BUF_SIZE];
@@ -212,7 +209,6 @@ std::vector<std::string> InetAddrNSPR::getHostnames() const
 
 // Look up the address in mName and store the address in mAddr.
 void InetAddrNSPR::lookupAddress(const std::string& address)
-   throw (UnknownHostException)
 {
    PRStatus ret_status;
    PRHostEnt host_entry;

@@ -68,8 +68,9 @@ public:
 
    /**
     * Gets the multicast interface for this datagram socket.
+    * @throws vpr::IOException if the operation failed.
     */
-   void getMcastInterface(vpr::InetAddr& mcastIf) throw (IOException)
+   void getMcastInterface(vpr::InetAddr& mcastIf)
    {
       vpr::SocketOptions::Data option;
 
@@ -79,8 +80,9 @@ public:
 
    /**
     * Sets the multicast interface for this datagram socket.
+    * @throws vpr::IOException if the operation failed.
     */
-   void setMcastInterface(const vpr::InetAddr& mcastIf) throw (IOException)
+   void setMcastInterface(const vpr::InetAddr& mcastIf)
    {
       vpr::SocketOptions::Data option;
       option.mcast_if = mcastIf;
@@ -90,8 +92,9 @@ public:
    /**
     * Gets the multicast time-to-live parameter for packets sent on this
     * socket.
+    * @throws vpr::IOException if the operation failed.
     */
-   void getMcastTimeToLive(vpr::Uint8& ttl) throw (IOException)
+   void getMcastTimeToLive(vpr::Uint8& ttl)
    {
       vpr::SocketOptions::Data option;
 
@@ -102,8 +105,9 @@ public:
    /**
     * Sets the multicast time-to-live parameter for packets sent on this
     * socket.
+    * @throws vpr::IOException if the operation failed.
     */
-   void setMcastTimeToLive(const vpr::Uint8 ttl) throw (IOException)
+   void setMcastTimeToLive(const vpr::Uint8 ttl)
    {
       vpr::SocketOptions::Data option;
       option.mcast_ttl = ttl;
@@ -111,9 +115,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void getMcastLoopback(vpr::Uint8& loop) throw (IOException)
+   void getMcastLoopback(vpr::Uint8& loop)
    {
       vpr::SocketOptions::Data option;
 
@@ -122,9 +126,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void setMcastLoopback(const vpr::Uint8 loop) throw (IOException)
+   void setMcastLoopback(const vpr::Uint8 loop)
    {
       vpr::SocketOptions::Data option;
       option.mcast_loopback = loop;
@@ -132,9 +136,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void addMcastMember(const vpr::McastReq& request) throw (IOException)
+   void addMcastMember(const vpr::McastReq& request)
    {
       vpr::SocketOptions::Data option;
       option.mcast_add_member = request;
@@ -142,9 +146,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void dropMcastMember(const vpr::McastReq& request) throw (IOException)
+   void dropMcastMember(const vpr::McastReq& request)
    {
       vpr::SocketOptions::Data option;
       option.mcast_drop_member = request;
@@ -152,9 +156,10 @@ public:
    }
 
    /**
+    * @throws vpr::IOException if the operation failed.
     * @since 1.1.17
     */
-   void setBroadcast(const bool val) throw (IOException)
+   void setBroadcast(const bool val)
    {
       vpr::SocketOptions::Data option;
       option.broadcast = val;

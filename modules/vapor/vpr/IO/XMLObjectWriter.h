@@ -68,7 +68,7 @@ public:
       mCurNode = curNode;
    }
 
-   virtual ~XMLObjectWriter() throw ()
+   virtual ~XMLObjectWriter()
    {
       /* Do nothing. */ ;
    }
@@ -80,7 +80,7 @@ public:
     * @throw IOException If I/O errors occur while trying to get the data
     *                    buffer.
     */
-   std::vector<vpr::Uint8> getData() throw (IOException);
+   std::vector<vpr::Uint8> getData();
 
    cppdom::NodePtr getRootNode()
    {
@@ -95,7 +95,7 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void beginTag(const std::string& tagName) throw (IOException);
+   virtual void beginTag(const std::string& tagName);
 
    /**
     * Ends the most recently named tag.
@@ -103,7 +103,7 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void endTag() throw (IOException);
+   virtual void endTag();
 
    /**
     * Starts an attribute of the name \p attributeName.
@@ -111,8 +111,7 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void beginAttribute(const std::string& attributeName)
-      throw (IOException);
+   virtual void beginAttribute(const std::string& attributeName);
 
    /**
     * Ends the most recently named attribute.
@@ -120,7 +119,7 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void endAttribute() throw (IOException);
+   virtual void endAttribute();
    //@}
 
    /**
@@ -130,49 +129,49 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint8(vpr::Uint8 val) throw (IOException);
+   virtual void writeUint8(vpr::Uint8 val);
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint16(vpr::Uint16 val) throw (IOException);
+   virtual void writeUint16(vpr::Uint16 val);
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint32(vpr::Uint32 val) throw (IOException);
+   virtual void writeUint32(vpr::Uint32 val);
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint64(vpr::Uint64 val) throw (IOException);
+   virtual void writeUint64(vpr::Uint64 val);
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeFloat(float val) throw (IOException);
+   virtual void writeFloat(float val);
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeDouble(double val) throw (IOException);
+   virtual void writeDouble(double val);
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeString(std::string val) throw (IOException);
+   virtual void writeString(std::string val);
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeBool(bool val) throw (IOException);
+   virtual void writeBool(bool val);
 
 protected:
    enum CurTarget
@@ -183,7 +182,7 @@ protected:
 
     /** Helper to write the data to the current string. */
     template<class T>
-    void writeValueStringRep(const T& val) throw (IOException)
+    void writeValueStringRep(const T& val)
     {
        std::ostringstream oss;
        oss << val;

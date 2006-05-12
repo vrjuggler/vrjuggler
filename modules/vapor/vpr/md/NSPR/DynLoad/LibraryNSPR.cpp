@@ -48,7 +48,7 @@
 namespace vpr
 {
 
-LibraryNSPR::~LibraryNSPR() throw ()
+LibraryNSPR::~LibraryNSPR()
 {
    if ( NULL != mLibrary )
    {

@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-05-12 allenb   Removed exception specifications from everything but
+                    the exception classes.
+                    NEW VERSION: 1.1.20
 2006-05-09 allenb   Change thread exception handling to output .what()
                     for all exceptions based on std::exception.
                     NEW VERSION: 1.1.19-1

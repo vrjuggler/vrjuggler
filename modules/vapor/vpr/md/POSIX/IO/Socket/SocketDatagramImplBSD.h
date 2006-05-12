@@ -91,7 +91,7 @@ public:
 
    /**
     * Receives a message from the specified address.
-    * 
+    *
     * @throws vpr::SocketException if the socket is not connected.
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
     *         and there is no data to read.
@@ -101,16 +101,14 @@ public:
     */
    void recvfrom(void* msg, const vpr::Uint32 length,
                  vpr::InetAddr& from, vpr::Uint32& bytesRead,
-                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                 const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Sends a message to the specified address.
     */
    void sendto(const void* msg, const vpr::Uint32 length,
                const vpr::InetAddr& to, vpr::Uint32& bytesSent,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 } // End of namespace

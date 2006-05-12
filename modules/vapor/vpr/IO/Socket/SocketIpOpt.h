@@ -50,10 +50,9 @@ class VPR_CLASS_API SocketIpOpt : public SocketBasicOpt
 {
 public:
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
    void getTypeOfService(vpr::SocketOptions::TypeOfService& tos)
-      throw (IOException)
    {
       vpr::SocketOptions::Data option;
 
@@ -62,10 +61,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
    void setTypeOfService(const vpr::SocketOptions::TypeOfService& tos)
-      throw (IOException)
    {
       vpr::SocketOptions::Data option;
       option.type_of_service = tos;
@@ -73,9 +71,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void getTimeToLive(vpr::Int32& ttl) throw (IOException)
+   void getTimeToLive(vpr::Int32& ttl)
    {
       vpr::SocketOptions::Data option;
 
@@ -84,9 +82,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void setTimeToLive(const vpr::Int32 ttl) throw (IOException)
+   void setTimeToLive(const vpr::Int32 ttl)
    {
       vpr::SocketOptions::Data option;
       option.ip_ttl = ttl;

@@ -139,7 +139,6 @@ vpr::Uint16 SelectorImplNSPR::getOut(IOSys::Handle handle)
  */
 void SelectorImplNSPR::select(vpr::Uint16& numWithEvents,
                               const vpr::Interval timeout)
-   throw (IOException)
 {
    PRInt32 result;
 

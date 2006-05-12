@@ -105,7 +105,7 @@ public:
    /**
     * Unloads the library if one has been loaded.
     */
-   ~LibraryUNIX() throw ();
+   ~LibraryUNIX();
 
    /**
     * Overlaoded assignment operator.

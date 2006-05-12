@@ -146,8 +146,7 @@ protected:
     *         could not be retrieved.
     */
    virtual void getOption(const vpr::SocketOptions::Types option,
-                          struct vpr::SocketOptions::Data& data) const
-      throw (SocketException) = 0;
+                          struct vpr::SocketOptions::Data& data) const = 0;
 
    /**
     * Sets a value for the given option on the socket using the given data
@@ -161,8 +160,7 @@ protected:
     *         could not be set.
     */
    virtual void setOption(const vpr::SocketOptions::Types option,
-                          const struct vpr::SocketOptions::Data& data)
-      throw (SocketException) = 0;
+                          const struct vpr::SocketOptions::Data& data) = 0;
 };
 
 } // End of vpr namespace

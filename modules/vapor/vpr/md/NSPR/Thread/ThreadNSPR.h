@@ -133,8 +133,9 @@ public:
     *
     * @return 0 is returned upon successful completion.  -1 is returned if
     *         an error occurred.
+    * @throw vpr::UncaughtThreadException.
     */
-   virtual int join(void** status = NULL)  throw (UncaughtThreadException);
+   virtual int join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -288,7 +289,7 @@ private:
    PRUint32           mStackSize;
    vpr::UncaughtThreadException mException;
    bool                         mCaughtException;
-   
+
    bool              mThreadStartCompleted;  /**< Flag for signaling when thread start is completed */
    vpr::CondVarNSPR  mThreadStartCondVar;    /**< CondVar for thread starting */
 

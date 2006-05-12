@@ -73,33 +73,37 @@ public:
    * @param timeout    The num msecs to wait (0 - NonBlocking).
    * @param localAddr  Our local address.  This defaults to
    *                   vpr::InetAddr::AnyAddr.
+   * @throws vpr::IOException if the operation failed.
    */
   void connect(vpr::SocketStream& newStream,
                const vpr::InetAddr& remoteAddr,
                vpr::Interval timeout = vpr::Interval::NoTimeout,
-               const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr) throw (IOException);
+               const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 
   /**
    * Tries to complete a non-blocking connection.
+   * @throws vpr::IOException if the operation failed.
    */
   void complete(vpr::SocketStream &newStream,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout) throw (IOException);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
    /**
     * Makes sure that we have opened the socket.  If not, then open it with
     * the given parameters.
+    * @throws vpr::IOException if the operation failed.
     */
-   void checkOpen(SocketStream& newStream) throw (IOException);
+   void checkOpen(SocketStream& newStream);
 
    /**
     * Performs pre-connection rituals.  If we are not bound, then bind to the
     * given local address.  If \p timeout is vpr::Interval::NoWait, then try
     * to set non-blocking status.
+    * @throws vpr::IOException if the operation failed.
     */
    void connectStart(vpr::SocketStream& newStream,
                      vpr::Interval timeout = vpr::Interval::NoTimeout,
-                     const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr) throw (IOException);
+                     const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 };
 
 }  // namespace vpr

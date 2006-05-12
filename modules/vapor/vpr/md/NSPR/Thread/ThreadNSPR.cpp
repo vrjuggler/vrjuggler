@@ -175,7 +175,7 @@ vpr::ReturnStatus ThreadNSPR::start()
    return status;
 }
 
-int ThreadNSPR::join(void** status)  throw (UncaughtThreadException)
+int ThreadNSPR::join(void** status)
 {
    boost::ignore_unused_variable_warning(status);
    if (mCaughtException)

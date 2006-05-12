@@ -190,7 +190,7 @@ void ThreadSGI::startThread()
  * Makes the calling thread wait for the termination of the specified
  * thread.
  */
-int ThreadSGI::join(void** arg)  throw (UncaughtThreadException)
+int ThreadSGI::join(void** arg)
 {
    int status, retval;
    pid_t pid;

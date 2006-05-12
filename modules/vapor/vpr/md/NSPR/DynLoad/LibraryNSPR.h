@@ -106,7 +106,7 @@ public:
    /**
     * Unloads the library if one has been loaded.
     */
-   ~LibraryNSPR() throw ();
+   ~LibraryNSPR();
 
    /**
     * Overlaoded assignment operator.

@@ -84,7 +84,6 @@ void SocketDatagramImplBSD::recvfrom(void* msg,
                                      vpr::InetAddr& from,
                                      vpr::Uint32& bytesRead,
                                      const vpr::Interval timeout)
-   throw (IOException)
 {
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int fromlen;
@@ -146,7 +145,6 @@ void SocketDatagramImplBSD::sendto(const void* msg,
                                    const vpr::InetAddr& to,
                                    vpr::Uint32& bytesSent,
                                    const vpr::Interval timeout)
-   throw (IOException)
 {
    // If not writable within timeout interval throw exception.
    if (!mHandle->isWriteable(timeout))
@@ -178,13 +176,13 @@ void SocketDatagramImplBSD::sendto(const void* msg,
                  to.getAddressString().c_str(), to.getPort(),
                  mRemoteAddr.getAddressString().c_str(),
                  mRemoteAddr.getPort(), strerror(errno));
-         
+
          std::stringstream ss;
          ss << "[vpr::SocketDatagramImplBSD] ERROR: Could not send to "
             << to.getAddressString() << ":" << to.getPort() << " on socket ("
             << mRemoteAddr.getAddressString() << ":" << mRemoteAddr.getPort()
             << "): " << std::string(strerror(errno));
-         
+
          throw SocketException(ss.str(), VPR_LOCATION);
       }
    }

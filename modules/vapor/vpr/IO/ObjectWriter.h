@@ -60,7 +60,7 @@ protected:
    ObjectWriter(const ObjectWriter& o);
 
 public:
-   virtual ~ObjectWriter() throw ();
+   virtual ~ObjectWriter();
 
    /**
     * Returns true if the writer is using a binary based format.
@@ -100,7 +100,7 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void beginTag(const std::string& tagName) throw (IOException) = 0;
+   virtual void beginTag(const std::string& tagName) = 0;
 
    /**
     * Ends the most recently named tag.
@@ -108,7 +108,7 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void endTag() throw (IOException) = 0;
+   virtual void endTag() = 0;
 
    /**
     * Starts an attribute of the name \p attributeName.
@@ -116,8 +116,7 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void beginAttribute(const std::string& attributeName)
-      throw (IOException) = 0;
+   virtual void beginAttribute(const std::string& attributeName) = 0;
 
    /**
     * Ends the most recently named attribute.
@@ -125,56 +124,56 @@ public:
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void endAttribute() throw (IOException) = 0;
+   virtual void endAttribute() = 0;
    //@}
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint8(vpr::Uint8 val) throw (IOException) = 0;
+   virtual void writeUint8(vpr::Uint8 val) = 0;
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint16(vpr::Uint16 val) throw (IOException) = 0;
+   virtual void writeUint16(vpr::Uint16 val) = 0;
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint32(vpr::Uint32 val) throw (IOException) = 0;
+   virtual void writeUint32(vpr::Uint32 val) = 0;
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeUint64(vpr::Uint64 val) throw (IOException) = 0;
+   virtual void writeUint64(vpr::Uint64 val) = 0;
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeFloat(float val) throw (IOException) = 0;
+   virtual void writeFloat(float val) = 0;
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeDouble(double val) throw (IOException) = 0;
+   virtual void writeDouble(double val) = 0;
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeString(std::string val) throw (IOException) = 0;
+   virtual void writeString(std::string val) = 0;
 
    /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
-   virtual void writeBool(bool val) throw (IOException) = 0;
+   virtual void writeBool(bool val) = 0;
 
 protected:
    bool mIsBinary;   /**< Is this a binary serializer? */

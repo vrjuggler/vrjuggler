@@ -108,10 +108,10 @@ public:
     * @throws vpr::WouldBlockException if the serial port is in non-blocking
     *         mode and could not be opened yet.
     * @throws vpr::IOException if the serial port could not be opened.
-    * 
-    * @see vpr::FileHandleImplUNIX::open() 
+    *
+    * @see vpr::FileHandleImplUNIX::open()
     */
-   void open() throw (IOException)
+   void open()
    {
       mSioImpl.open();
    }
@@ -124,9 +124,9 @@ public:
     *       status is returned to the caller.
     *
     * @throws vpr::IOException if the file handle could not be closed.
-    * @see vpr::FileHandleImplUNIX::close() 
+    * @see vpr::FileHandleImplUNIX::close()
     */
-   void close() throw (IOException)
+   void close()
    {
       mSioImpl.close();
    }
@@ -143,9 +143,9 @@ public:
     *                 of false makes it non-blocking.
     *
     * @throws vpr::IOException if the blocking mode could not be set.
-    * @see vpr::FileHandleImplUNIX::setBlocking() 
+    * @see vpr::FileHandleImplUNIX::setBlocking()
     */
-   void setBlocking(bool blocking) throw (IOException)
+   void setBlocking(bool blocking)
    {
       mSioImpl.setBlocking(blocking);
    }
@@ -158,7 +158,7 @@ public:
     *
     * @throws vpr::IOException if all attributes could not be cleared.
     */
-   void clearAll() throw (IOException)
+   void clearAll()
    {
       mSioImpl.clearAll();
    }
@@ -282,7 +282,7 @@ public:
     *
     * @see getTimeout
     */
-   void getMinInputSize(vpr::Uint16& size) const throw (IOException)
+   void getMinInputSize(vpr::Uint16& size) const
    {
       mSioImpl.getMinInputSize(size);
    }
@@ -302,7 +302,7 @@ public:
     *
     * @see setTimeout
     */
-   void setMinInputSize(const vpr::Uint8 size) throw (IOException)
+   void setMinInputSize(const vpr::Uint8 size)
    {
       mSioImpl.setMinInputSize(size);
    }
@@ -320,7 +320,7 @@ public:
     *
     * @throws vpr::IOException if the timeout could not be retrieved.
     */
-   void getTimeout(vpr::Uint8& timeout) const throw (IOException)
+   void getTimeout(vpr::Uint8& timeout) const
    {
       mSioImpl.getTimeout(timeout);
    }
@@ -338,7 +338,7 @@ public:
     *
     * @throws vpr::IOException if the timeout could not be set successfully.
     */
-   void setTimeout(const vpr::Uint8 timeout_val) throw (IOException)
+   void setTimeout(const vpr::Uint8 timeout_val)
    {
       mSioImpl.setTimeout(timeout_val);
    }
@@ -358,7 +358,6 @@ public:
     * @see vpr::SerialTypes::CharacterSizeOption
     */
    void getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
-      throw (IOException)
    {
       mSioImpl.getCharacterSize(size);
    }
@@ -378,7 +377,6 @@ public:
     * @see vpr::SerialTypes::CharacterSizeOption
     */
    void setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
-      throw (IOException)
    {
       mSioImpl.setCharacterSize(bpb);
    }
@@ -410,7 +408,7 @@ public:
     *
     * @throws vpr::IOException if read state could not be set.
     */
-   void setRead(bool flag) throw (IOException)
+   void setRead(bool flag)
    {
       mSioImpl.setRead(flag);
    }
@@ -442,7 +440,7 @@ public:
     *
     * @throws vpr::IOException if local attach state could not be set.
     */
-   void setLocalAttach(bool flag) throw (IOException)
+   void setLocalAttach(bool flag)
    {
       return mSioImpl.setLocalAttach(flag);
    }
@@ -459,7 +457,7 @@ public:
     *
     * @throws vpr::IOException if stop bits could not be retrieved.
     */
-   void getStopBits(vpr::Uint8& num_bits) const throw (IOException)
+   void getStopBits(vpr::Uint8& num_bits) const
    {
       mSioImpl.getStopBits(num_bits);
    }
@@ -475,7 +473,7 @@ public:
     *
     * @throws vpr::IOException if stop bits could not be set.
     */
-   void setStopBits(const vpr::Uint8 num_bits) throw (IOException)
+   void setStopBits(const vpr::Uint8 num_bits)
    {
       mSioImpl.setStopBits(num_bits);
    }
@@ -498,7 +496,7 @@ public:
     * @see getMinInputSize
     * @see getTimeout
     */
-   bool getCanonicalState() const throw (IOException)
+   bool getCanonicalState() const
    {
       return mSioImpl.getCanonicalState();
    }
@@ -514,7 +512,7 @@ public:
     *
     * @see getCanonicalState
     */
-   void setCanonicalInput(bool flag) throw (IOException)
+   void setCanonicalInput(bool flag)
    {
       mSioImpl.setCanonicalInput(flag);
    }
@@ -529,7 +527,7 @@ public:
     * @throws vpr::IOException if bad byte ignore state could not
     *         be retrieved.
     */
-   bool getBadByteIgnoreState() const throw (IOException)
+   bool getBadByteIgnoreState() const
    {
       return mSioImpl.getBadByteIgnoreState();
    }
@@ -546,7 +544,7 @@ public:
     *
     * @throws vpr::IOException if bad bytes ignore could not be set.
     */
-   void setBadByteIgnore(bool flag) throw (IOException)
+   void setBadByteIgnore(bool flag)
    {
       mSioImpl.setBadByteIgnore(flag);
    }
@@ -562,7 +560,7 @@ public:
     * @throws vpr::IOException if break byte ignore state could not
     *         be retrieved.
     */
-   bool getBreakByteIgnoreState() const throw (IOException)
+   bool getBreakByteIgnoreState() const
    {
       return mSioImpl.getBreakByteIgnoreState();
    }
@@ -578,7 +576,7 @@ public:
     *
     * @throws vpr::IOException if break byte ignore state could not be set.
     */
-   void setBreakByteIgnore(bool flag) throw (IOException)
+   void setBreakByteIgnore(bool flag)
    {
       mSioImpl.setBreakByteIgnore(flag);
    }
@@ -594,7 +592,7 @@ public:
     * @throws vpr::IOException if input parity check state
     *         could not be retrieved.
     */
-   bool getInputParityCheckState() const throw (IOException)
+   bool getInputParityCheckState() const
    {
       return mSioImpl.getInputParityCheckState();
    }
@@ -610,7 +608,7 @@ public:
     *
     * @throws vpr::IOException if input parity check state could not be set.
     */
-   void setInputParityCheck(bool flag) throw (IOException)
+   void setInputParityCheck(bool flag)
    {
       mSioImpl.setInputParityCheck(flag);
    }
@@ -626,7 +624,7 @@ public:
     *         false is returned if input bytes are not stripped.
     * @throws vpr::IOException if bit strip state could not be retrieved.
     */
-   bool getBitStripState() const throw (IOException)
+   bool getBitStripState() const
    {
       return mSioImpl.getBitStripState();
    }
@@ -642,7 +640,7 @@ public:
     *
     * @throws vpr::IOException if bit strip state could not be set.
     */
-   void setBitStripping(bool flag) throw (IOException)
+   void setBitStripping(bool flag)
    {
       mSioImpl.setBitStripping(flag);
    }
@@ -664,7 +662,7 @@ public:
     * @throws vpr::IOException if start stop input state could not
     *         be retrieved.
     */
-   bool getStartStopInputState() const throw (IOException)
+   bool getStartStopInputState() const
    {
       return mSioImpl.getStartStopInputState();
    }
@@ -681,7 +679,7 @@ public:
     *
     * @throws vpr::IOException if start stop input state could not be set.
     */
-   void setStartStopInput(bool flag) throw (IOException)
+   void setStartStopInput(bool flag)
    {
       mSioImpl.setStartStopInput(flag);
    }
@@ -701,7 +699,7 @@ public:
     * @throws vpr::IOException if start stop output state could not
     *         be retrieved.
     */
-   bool getStartStopOutputState() const throw (IOException)
+   bool getStartStopOutputState() const
    {
       return mSioImpl.getStartStopOutputState();
    }
@@ -720,7 +718,7 @@ public:
     *
     * @see getStartStopOutputState
     */
-   void setStartStopOutput(bool flag) throw (IOException)
+   void setStartStopOutput(bool flag)
    {
       mSioImpl.setStartStopOutput(flag);
    }
@@ -739,7 +737,7 @@ public:
     * @throws vpr::IOException if parity generation state could not
     *         be retrieved.
     */
-   bool getParityGenerationState() const throw (IOException)
+   bool getParityGenerationState() const
    {
       return mSioImpl.getParityGenerationState();
    }
@@ -756,7 +754,7 @@ public:
     *
     * @throws vpr::IOException if partiy generation state could not be set.
     */
-   void setParityGeneration(bool flag) throw (IOException)
+   void setParityGeneration(bool flag)
    {
       mSioImpl.setParityGeneration(flag);
    }
@@ -771,7 +769,7 @@ public:
     * @throws vpr::IOException if parity error marking state
     *         could not be retrieved.
     */
-   bool getParityErrorMarkingState() const throw (IOException)
+   bool getParityErrorMarkingState() const
    {
       return mSioImpl.getParityErrorMarkingState();
    }
@@ -794,7 +792,7 @@ public:
     *
     * @see setInputParityCheck
     */
-   void setParityErrorMarking(bool flag) throw (IOException)
+   void setParityErrorMarking(bool flag)
    {
       mSioImpl.setParityErrorMarking(flag);
    }
@@ -823,7 +821,7 @@ public:
     *
     * @throws vpr::IOException if parity could not be set.
     */
-   void setParity(const vpr::SerialTypes::ParityType& type) throw (IOException)
+   void setParity(const vpr::SerialTypes::ParityType& type)
    {
       mSioImpl.setParity(type);
    }
@@ -840,7 +838,7 @@ public:
     *
     * @throws vpr::IOException if input baud rate could not be retrieved.
     */
-   void getInputBaudRate(vpr::Uint32& rate) const throw (IOException)
+   void getInputBaudRate(vpr::Uint32& rate) const
    {
       mSioImpl.getInputBaudRate(rate);
    }
@@ -855,7 +853,7 @@ public:
     *
     * @throws vpr::IOException if input baud rate could not be set.
     */
-   void setInputBaudRate(const vpr::Uint32 baud) throw (IOException)
+   void setInputBaudRate(const vpr::Uint32 baud)
    {
       mSioImpl.setInputBaudRate(baud);
    }
@@ -872,7 +870,7 @@ public:
     *
     * @throws vpr::IOException if ouput baud rate could not be retrieved.
     */
-   void getOutputBaudRate(vpr::Uint32& rate) const throw (IOException)
+   void getOutputBaudRate(vpr::Uint32& rate) const
    {
       mSioImpl.getOutputBaudRate(rate);
    }
@@ -887,7 +885,7 @@ public:
     *
     * @throws vpr::IOException if ouput baud rate could not be set.
     */
-   void setOutputBaudRate(const vpr::Uint32 baud) throw (IOException)
+   void setOutputBaudRate(const vpr::Uint32 baud)
    {
       mSioImpl.setOutputBaudRate(baud);
    }
@@ -897,7 +895,7 @@ public:
     *
     * @throws vpr::IOException if failed to drain output.
     */
-   void drainOutput() throw (IOException)
+   void drainOutput()
    {
       mSioImpl.drainOutput();
    }
@@ -916,7 +914,7 @@ public:
     *
     * @throws vpr::IOException of control flow could not be changed.
     */
-   void controlFlow(SerialTypes::FlowActionOption opt) throw (IOException)
+   void controlFlow(SerialTypes::FlowActionOption opt)
    {
       mSioImpl.controlFlow(opt);
    }
@@ -933,7 +931,7 @@ public:
     *
     * @see controlFlow
     */
-   bool getHardwareFlowControlState() const throw (IOException)
+   bool getHardwareFlowControlState() const
    {
       return mSioImpl.getHardwareFlowControlState();
    }
@@ -948,7 +946,7 @@ public:
     *
     * @see controlFlow
     */
-   void setHardwareFlowControl(bool flag) throw (IOException)
+   void setHardwareFlowControl(bool flag)
    {
       mSioImpl.setHardwareFlowControl(flag);
    }
@@ -967,7 +965,7 @@ public:
     *
     * @throws vpr::IOException if queue could not be flushed.
     */
-   void flushQueue(SerialTypes::FlushQueueOption queue) throw (IOException)
+   void flushQueue(SerialTypes::FlushQueueOption queue)
    {
       mSioImpl.flushQueue(queue);
    }
@@ -984,10 +982,10 @@ public:
     *
     * @param duration The length of time to send a zero bit stream to the
     *                 serial port.
-    *                 
+    *
     * @throws vpr::IOException if break could not be sent.
     */
-   void sendBreak(const int duration) throw (IOException)
+   void sendBreak(const int duration)
    {
       mSioImpl.sendBreak(duration);
    }
@@ -999,7 +997,7 @@ public:
     *
     * @throws vpr::IOException if carrier detect state could not be retrieved.
     */
-   int getCarrierDetect() const throw (IOException)
+   int getCarrierDetect() const
    {
       return mSioImpl.getCarrierDetect();
    }
@@ -1008,10 +1006,10 @@ public:
     * Returns the status of the data set ready line.
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported
-    *         
+    *
     * @throws vpr::IOException if data set ready state could not be retrieved.
     */
-   int getDataSetReady() const throw (IOException)
+   int getDataSetReady() const
    {
       return mSioImpl.getDataSetReady();
    }
@@ -1023,7 +1021,7 @@ public:
     *
     * @throws vpr::IOException if clear to send state could not be retrieved.
     */
-   int getClearToSend() const throw (IOException)
+   int getClearToSend() const
    {
       return mSioImpl.getRequestToSend();
    }
@@ -1035,7 +1033,7 @@ public:
     *
     * @throws vpr::IOException if ring indicator state could not be retrieved.
     */
-   int getRingIndicator() const throw (IOException)
+   int getRingIndicator() const
    {
       return mSioImpl.getRingIndicator();
    }
@@ -1045,7 +1043,7 @@ public:
     * @throws vpr::IOException if data terminal ready state could
     *         not be set.
     */
-   void setDataTerminalReady(bool val) throw (IOException)
+   void setDataTerminalReady(bool val)
    {
       mSioImpl.setDataTerminalReady(val);
    }
@@ -1055,7 +1053,7 @@ public:
     * @throws vpr::IOException ifrequest to send state could
     *         not be set.
     */
-   void setRequestToSend(bool val) throw (IOException)
+   void setRequestToSend(bool val)
    {
       mSioImpl.setRequestToSend(val);
    }
@@ -1088,7 +1086,6 @@ protected:
    virtual void read_i(void* buffer, const vpr::Uint32 length,
                        vpr::Uint32& bytesRead,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSioImpl.read_i(buffer, length, bytesRead, timeout);
    }
@@ -1118,7 +1115,6 @@ protected:
    virtual void readn_i(void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytesRead,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSioImpl.readn_i(buffer, length, bytesRead, timeout);
    }
@@ -1149,7 +1145,6 @@ protected:
                         const vpr::Uint32 length,
                         vpr::Uint32& bytesWritten,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSioImpl.write_i(buffer, length, bytesWritten, timeout);
    }

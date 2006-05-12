@@ -79,7 +79,7 @@ InetAddrBSD::InetAddrBSD()
    setFamily(SocketTypes::INET);
 }
 
-vpr::InetAddrBSD InetAddrBSD::getLocalHost() throw (UnknownHostException)
+vpr::InetAddrBSD InetAddrBSD::getLocalHost()
 {
    vpr::InetAddrBSD localhost;
 
@@ -112,7 +112,6 @@ InetAddrBSD::getAllLocalAddrs(const bool withLoopback)
  * dotted-decimal IP address.
  */
 void InetAddrBSD::setAddress(const std::string& address)
-   throw (UnknownHostException)
 {
    std::string::size_type pos;
    std::string host_addr, host_port;
@@ -131,7 +130,6 @@ void InetAddrBSD::setAddress(const std::string& address)
 
 void InetAddrBSD::setAddress(const std::string& address,
                              const Uint16 port)
-   throw (UnknownHostException)
 {
    lookupAddress(address);
    setPort(port);
@@ -209,7 +207,6 @@ vpr::SocketTypes::Domain InetAddrBSD::getFamily() const
  * Sets the protocol family of this address structure.
  */
 void InetAddrBSD::setFamily(const vpr::SocketTypes::Domain family)
-   throw (IllegalArgumentException)
 {
    switch ( family )
    {
@@ -290,7 +287,6 @@ std::string InetAddrBSD::getAddressString() const
 }
 
 std::string InetAddrBSD::getHostname() const
-   throw (UnknownHostException)
 {
    socklen_t salen;
 #if defined(HAVE_SIN_LEN)
@@ -326,7 +322,6 @@ std::string InetAddrBSD::getHostname() const
 }
 
 std::vector<std::string> InetAddrBSD::getHostnames() const
-   throw (UnknownHostException)
 {
    std::vector<std::string> names;
    struct hostent* entry;
@@ -403,7 +398,6 @@ void InetAddrBSD::copy(const InetAddrBSD& addr)
  * Look up the given address and store the address in mAddr.
  */
 void InetAddrBSD::lookupAddress(const std::string& address)
-   throw (UnknownHostException)
 {
    struct addrinfo* addrs;
 

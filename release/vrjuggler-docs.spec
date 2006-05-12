@@ -11,7 +11,7 @@
 %define srcdir vrjuggler-%{global_version}-%{global_release}.src
 %define file_name %{srcdir}.tar.bz2
 
-%define vpr_version 1.1.19
+%define vpr_version 1.1.20
 %define vpr_release %{global_release}
 %define tweek_version 1.1.3
 %define tweek_release %{global_release}

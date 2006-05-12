@@ -134,7 +134,7 @@ public:
     * @throws vpr::SocketException if the socket could not be put into
     *         a listening state.
     */
-   void listen(const int backlog = 5) throw (SocketException)
+   void listen(const int backlog = 5)
    {
       mSocketStreamImpl->listen(backlog);
    }
@@ -163,7 +163,6 @@ public:
     */
    void accept(SocketStream_t& sock,
                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSocketStreamImpl->accept(*(sock.mSocketStreamImpl), timeout);
    }
@@ -190,7 +189,7 @@ public:
     *         of an error.
     */
    void openServer(const bool reuseAddr = true,
-                   const int backlog = 5) throw (IOException)
+                   const int backlog = 5)
    {
 
       // First, open the socket.
@@ -220,16 +219,21 @@ protected:
       this->mSocketImpl = mSocketStreamImpl;
    }
 
+   /**
+    * @THROWS vpr::SocketException.
+    */
    virtual void getOption(const vpr::SocketOptions::Types option,
                           struct vpr::SocketOptions::Data& data)
-      const throw (SocketException)
+      const
    {
       mSocketStreamImpl->getOption(option, data);
    }
 
+   /**
+    * @THROWS vpr::SocketException.
+    */
    virtual void setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data)
-      throw (SocketException)
    {
       mSocketStreamImpl->setOption(option, data);
    }

@@ -105,7 +105,7 @@ public:
     * @throws vpr::SocketException if the socket could not be put into
     *         a listening state.
     */
-   void listen(const int backlog = 5) throw (SocketException);
+   void listen(const int backlog = 5);
 
    /**
     * Accepts an incoming connection request and returns the connected socket
@@ -130,8 +130,7 @@ public:
     * @see open, bind, listen
     */
    void accept(SocketStreamImplBSD& sock,
-               vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+               vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 } // End of vpr namespace

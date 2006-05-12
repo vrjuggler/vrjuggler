@@ -56,7 +56,7 @@ class ObjectReader;
 class WriteableObject
 {
 public:
-   virtual ~WriteableObject() throw()
+   virtual ~WriteableObject()
    {;}
 
    /**
@@ -69,8 +69,7 @@ public:
     *
     * @throw IOException If an error occurs during object serialization.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer)
-      throw (IOException) = 0;
+   virtual void writeObject(vpr::ObjectWriter* writer) = 0;
 
 protected:
    WriteableObject()
@@ -94,7 +93,7 @@ private:
 class ReadableObject
 {
 public:
-   virtual ~ReadableObject() throw()
+   virtual ~ReadableObject()
    {;}
 
    /**
@@ -107,8 +106,7 @@ public:
     *
     * @throw IOException If an error occurs during object de-serialization.
     */
-   virtual void readObject(vpr::ObjectReader* reader)
-      throw (IOException) = 0;
+   virtual void readObject(vpr::ObjectReader* reader) = 0;
 
 protected:
    ReadableObject()
@@ -157,12 +155,10 @@ protected:
  * \code
  * void
  * vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
- *    throw (IOException)
  * { ... }
  *
  * void
  * vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* writer)
- *    throw (IOException)
  * { ... }
  * \endcode
  *
@@ -178,8 +174,8 @@ template<class BASE>
 class SerializableObjectMixin : public SerializableObject, public BASE
 {
 public:
-   virtual void writeObject(vpr::ObjectWriter* writer) throw (IOException);
-   virtual void readObject(vpr::ObjectReader* reader) throw (IOException);
+   virtual void writeObject(vpr::ObjectWriter* writer);
+   virtual void readObject(vpr::ObjectReader* reader);
 };
 
 } // namespace vpr

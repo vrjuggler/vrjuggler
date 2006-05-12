@@ -114,7 +114,7 @@ public:
     *         mode and could not be opened yet.
     * @throws vpr::IOException if the file handle could not be opened.
     */
-   void open() throw (IOException);
+   void open();
 
    /**
     * Closes the file handle.
@@ -126,7 +126,7 @@ public:
     *
     * @throws vpr::IOException if the file handle could not be closed.
     */
-   void close() throw (IOException);
+   void close();
 
    /**
     * Gets the open state of this file handle.
@@ -155,7 +155,7 @@ public:
     *
     * @throws vpr::IOException if the blocking mode could not be set.
     */
-   void setBlocking(bool blocking) throw (IOException);
+   void setBlocking(bool blocking);
 
    /**
     * Returns the contained handle.
@@ -222,7 +222,7 @@ public:
     * @throws vpr::IOException if the write mode could not be changed
     *         for some reason.
     */
-   void setAppend(bool flag) throw (IOException);
+   void setAppend(bool flag);
 
    /**
     * Reconfigures the file handle so that writes are synchronous or
@@ -238,7 +238,7 @@ public:
     * @throws vpr::IOException if the write mode could not be changed
     *         for some reason.
     */
-   void setSynchronousWrite(bool flag) throw (IOException);
+   void setSynchronousWrite(bool flag);
 
    /**
     * Tests if the I/O device is read-only.
@@ -283,7 +283,7 @@ public:
     * @post The buffer size is returned via the by-reference parameter.
     * @throws vpr::IOException if read buffer size could not be found.
     */
-   void getReadBufferSize(vpr::Int32& buffer) const throw (IOException);
+   void getReadBufferSize(vpr::Int32& buffer) const;
 
    /**
     * Implementation of the read template method.  This reads at most the
@@ -310,8 +310,7 @@ public:
     * @throws vpr::IOException if the read operation failed.
     */
    void read_i(void* buffer, const vpr::Uint32 length, vpr::Uint32& bytesRead,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn template method.  This reads exactly the
@@ -337,8 +336,7 @@ public:
     */
    void readn_i(void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesRead,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write template method.  This writes the buffer to
@@ -364,8 +362,7 @@ public:
     */
    void write_i(const void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesWritten,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Returns the number of bytes available for reading in the receive
@@ -414,15 +411,15 @@ protected:
     *
     * @throws IOException if error occured while querying read state.
     */
-   bool isReadable(const vpr::Interval timeout) const throw (IOException);
+   bool isReadable(const vpr::Interval timeout) const;
 
    /**
     * Tests if the file handle is ready for writing within the timeout
     * period.
-    * 
+    *
     * @throws IOException if error occured while querying write state.
     */
-   bool isWriteable(const vpr::Interval timeout) const throw (IOException);
+   bool isWriteable(const vpr::Interval timeout) const;
 
    std::string mName;           /**< The name of this file */
    bool        mOpen;           /**< Open state of this file */

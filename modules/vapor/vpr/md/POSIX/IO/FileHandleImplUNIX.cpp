@@ -103,7 +103,7 @@ FileHandleImplUNIX::~FileHandleImplUNIX()
 }
 
 // Open the file handle.
-void FileHandleImplUNIX::open() throw (IOException)
+void FileHandleImplUNIX::open()
 {
    int open_flags(mOpenMode);
 
@@ -145,7 +145,7 @@ void FileHandleImplUNIX::open() throw (IOException)
 }
 
 // Close the file handle.
-void FileHandleImplUNIX::close() throw (IOException)
+void FileHandleImplUNIX::close()
 {
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "[vpr::FileHandleImplUNIX::close()] Closing file descriptor "
@@ -168,7 +168,7 @@ void FileHandleImplUNIX::close() throw (IOException)
 }
 
 // Reconfigure the file handle so that it is in blocking mode.
-void FileHandleImplUNIX::setBlocking(bool blocking) throw (IOException)
+void FileHandleImplUNIX::setBlocking(bool blocking)
 {
    if ( ! mOpen )
    {
@@ -252,7 +252,7 @@ void FileHandleImplUNIX::setOpenReadWrite()
 }
 
 // Reconfigure the file handle to be in append mode.
-void FileHandleImplUNIX::setAppend(bool append) throw (IOException)
+void FileHandleImplUNIX::setAppend(bool append)
 {
    int cur_flags, new_flags, retval;
 
@@ -287,7 +287,7 @@ void FileHandleImplUNIX::setAppend(bool append) throw (IOException)
 }
 
 // Reconfigure the file handle so that writes are synchronous.
-void FileHandleImplUNIX::setSynchronousWrite(bool sync) throw (IOException)
+void FileHandleImplUNIX::setSynchronousWrite(bool sync)
 {
 #if ! defined(_POSIX_SOURCE) && defined(O_SYNC) && defined(O_ASYNC)
    int cur_flags, new_flags, retval;
@@ -353,7 +353,6 @@ bool FileHandleImplUNIX::isReadWrite() const
 }
 
 void FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) const
-   throw (IOException)
 {
    if ( ioctl(mFdesc, FIONREAD, &buffer) == -1 )
    {
@@ -371,7 +370,7 @@ void FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) const
 void FileHandleImplUNIX::read_i(void* buffer,
                                 const vpr::Uint32 length,
                                 vpr::Uint32& bytesRead,
-                                const vpr::Interval timeout) throw (IOException)
+                                const vpr::Interval timeout)
 {
    // If not readable within timeout interval throw exception.
    if (!isReadable(timeout))
@@ -426,7 +425,6 @@ void FileHandleImplUNIX::readn_i(void* buffer,
                                  const vpr::Uint32 buffer_size,
                                  vpr::Uint32& bytesRead,
                                  const vpr::Interval timeout)
-   throw (IOException)
 {
    size_t bytes_left;
    ssize_t bytes;
@@ -508,7 +506,6 @@ void FileHandleImplUNIX::write_i(const void* buffer,
                                  const vpr::Uint32 length,
                                  vpr::Uint32& bytesWritten,
                                  const vpr::Interval timeout)
-   throw (IOException)
 {
    // If not writable within timeout interval throw exception.
    if (!isWriteable(timeout))
@@ -572,7 +569,6 @@ int FileHandleImplUNIX::setFlags(const int flags)
 }
 
 bool FileHandleImplUNIX::isReadable(const vpr::Interval timeout) const
-   throw (IOException)
 {
    fd_set read_set;
    int num_events;
@@ -636,7 +632,6 @@ bool FileHandleImplUNIX::isReadable(const vpr::Interval timeout) const
 }
 
 bool FileHandleImplUNIX::isWriteable(const vpr::Interval timeout) const
-   throw (IOException)
 {
    fd_set write_set;
    int num_events;

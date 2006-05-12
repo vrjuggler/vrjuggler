@@ -60,7 +60,7 @@ BufferObjectWriter::BufferObjectWriter(std::vector<vpr::Uint8>* data,
    mIsBinary = true;
 }
 
-BufferObjectWriter::~BufferObjectWriter() throw ()
+BufferObjectWriter::~BufferObjectWriter()
 {
    if(mOwnDataBuffer)
    {

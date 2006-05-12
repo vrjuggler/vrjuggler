@@ -127,7 +127,6 @@ BlockIO::~BlockIO()
 void BlockIO::read_s(void* buffer, const vpr::Uint32 length,
                      vpr::Uint32& bytesRead,
                      const vpr::Interval timeout)
-   throw (IOException)
 {
    if(mStatsStrategy != NULL)
    {
@@ -142,7 +141,6 @@ void BlockIO::read_s(void* buffer, const vpr::Uint32 length,
 void BlockIO::readn_s(void* buffer, const vpr::Uint32 length,
                       vpr::Uint32& bytesRead,
                       const vpr::Interval timeout)
-   throw (IOException)
 {
    if(mStatsStrategy != NULL)
    {
@@ -158,7 +156,6 @@ void BlockIO::write_s(const void* buffer,
                       const vpr::Uint32 length,
                       vpr::Uint32& bytesWritten,
                       const vpr::Interval timeout)
-   throw (IOException)
 {
    if(mStatsStrategy != NULL)
    {

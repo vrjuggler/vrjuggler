@@ -46,7 +46,7 @@ namespace vpr
 void SocketConnector::connect(vpr::SocketStream& newStream,
                                            const vpr::InetAddr& remoteAddr,
                                            vpr::Interval timeout,
-                                           const vpr::InetAddr& localAddr) throw (IOException)
+                                           const vpr::InetAddr& localAddr)
 {
     //vpr::InetAddr remote_addr;
 
@@ -105,7 +105,7 @@ void SocketConnector::connect(vpr::SocketStream& newStream,
 // Complete a non-blocking connection
 // Try to complete a non-blocking connection.
 void SocketConnector::complete(vpr::SocketStream& newStream,
-                               const vpr::Interval timeout) throw (IOException)
+                               const vpr::Interval timeout)
 {
    if( newStream.isConnected() )
    {
@@ -150,7 +150,7 @@ void SocketConnector::complete(vpr::SocketStream& newStream,
    }
 }
 
-void SocketConnector::checkOpen(SocketStream& newStream) throw (IOException)
+void SocketConnector::checkOpen(SocketStream& newStream)
 {
    if (!newStream.isOpen())
    {
@@ -173,7 +173,7 @@ void SocketConnector::checkOpen(SocketStream& newStream) throw (IOException)
 // - If timeout == 0, then set nonblocking
 void SocketConnector::connectStart(SocketStream& newStream,
                                    vpr::Interval timeout,
-                                   const vpr::InetAddr& localAddr) throw (IOException)
+                                   const vpr::InetAddr& localAddr)
 {
    vprASSERT(newStream.isOpen());
 

@@ -58,7 +58,7 @@ protected:
    ObjectReader(const ObjectReader& o);
 
 public:
-   virtual ~ObjectReader() throw ();
+   virtual ~ObjectReader();
 
    /**
     * Returns true if this writer is using a binary-based format.
@@ -99,7 +99,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void beginTag(const std::string& tagName) throw (IOException) = 0;
+   virtual void beginTag(const std::string& tagName) = 0;
 
    /**
     * Ends the most recently named tag.
@@ -108,7 +108,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void endTag() throw (IOException) = 0;
+   virtual void endTag() = 0;
 
    /**
     * Starts an attribute of the name \p attributeName.
@@ -117,8 +117,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void beginAttribute(const std::string& attributeName)
-      throw (IOException) = 0;
+   virtual void beginAttribute(const std::string& attributeName) = 0;
 
    /**
     * Ends the most recently named attribute.
@@ -127,7 +126,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void endAttribute() throw (IOException) = 0;
+   virtual void endAttribute() = 0;
    //@}
 
    /**
@@ -151,56 +150,56 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual vpr::Uint8 readUint8() throw (IOException) = 0;
+   virtual vpr::Uint8 readUint8() = 0;
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual vpr::Uint16 readUint16() throw (IOException) = 0;
+   virtual vpr::Uint16 readUint16() = 0;
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual vpr::Uint32 readUint32() throw (IOException) = 0;
+   virtual vpr::Uint32 readUint32() = 0;
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual vpr::Uint64 readUint64() throw (IOException) = 0;
+   virtual vpr::Uint64 readUint64() = 0;
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual float readFloat() throw (IOException) = 0;
+   virtual float readFloat() = 0;
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual double readDouble() throw (IOException) = 0;
+   virtual double readDouble() = 0;
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual std::string readString() throw (IOException) = 0;
+   virtual std::string readString() = 0;
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual bool readBool() throw (IOException) = 0;
+   virtual bool readBool() = 0;
 
    /** @name Helper methods */
    //@{
@@ -210,7 +209,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint8(vpr::Uint8& val) throw (IOException)
+   virtual void readUint8(vpr::Uint8& val)
    {
       val = this->readUint8();
    }
@@ -220,7 +219,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint16(vpr::Uint16& val) throw (IOException)
+   virtual void readUint16(vpr::Uint16& val)
    {
       val = this->readUint16();
    }
@@ -230,7 +229,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint32(vpr::Uint32& val) throw (IOException)
+   virtual void readUint32(vpr::Uint32& val)
    {
       val = this->readUint32();
    }
@@ -240,7 +239,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint64(vpr::Uint64& val) throw (IOException)
+   virtual void readUint64(vpr::Uint64& val)
    {
       val = this->readUint64();
    }
@@ -250,7 +249,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readFloat(float& val) throw (IOException)
+   virtual void readFloat(float& val)
    {
       val = this->readFloat();
    }
@@ -260,7 +259,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readDouble(double& val) throw (IOException)
+   virtual void readDouble(double& val)
    {
       val = this->readDouble();
    }
@@ -270,7 +269,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readString(std::string& str) throw (IOException)
+   virtual void readString(std::string& str)
    {
       str = this->readString();
    }
@@ -280,7 +279,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readBool(bool& val) throw (IOException)
+   virtual void readBool(bool& val)
    {
       val = this->readBool();
    }

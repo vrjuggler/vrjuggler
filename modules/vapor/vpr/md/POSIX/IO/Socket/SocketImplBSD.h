@@ -86,7 +86,7 @@ public:
     * @throws vpr::IOException if the blocking state could not be set.
     * @see FileHandleImplUNIX::setBlocking()
     */
-   void open() throw (IOException);
+   void open();
 
    /**
     * Close the socket.
@@ -99,7 +99,7 @@ public:
     * @throws vpr::IOException if the socket could not be closed.
     * @see FileHandleImplUNIX::close()
     */
-   void close() throw (IOException);
+   void close();
 
    /**
     * Gets the open state of this socket.
@@ -134,7 +134,7 @@ public:
     *
     * @throws vpr::SocketException if socket could not be bound.
     */
-   void bind() throw (SocketException);
+   void bind();
 
    /** Returns the contained handle. */
    vpr::IOSys::Handle getHandle() const
@@ -170,7 +170,7 @@ public:
     * @see FileHandleImplUNIX::setBlocking()
     * @see isOpen, open
     */
-   void setBlocking(bool blocking) throw (IOException);
+   void setBlocking(bool blocking);
 
    /**
     * Gets the current blocking state for the socket.
@@ -211,8 +211,7 @@ public:
     *         in the given amount of time. This closes the socket before throw.
     * @throws vpr::SocketException if could not connect.
     */
-   void connect(vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (vpr::Exception);
+   void connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the status of a possibly connected socket.
@@ -222,7 +221,7 @@ public:
     * @return \c true is returned if this socket is still connected.
     * @return \c false is returned if this socket is not currently connected.
     */
-   bool isConnected() const throw ();
+   bool isConnected() const;
 
    /**
     * Gets the type of this socket (for example, vpr::SocketTypes::STREAM).
@@ -258,7 +257,7 @@ public:
     *
     * @see isBound, bind
     */
-   void setLocalAddr(const vpr::InetAddr& addr) throw (SocketException);
+   void setLocalAddr(const vpr::InetAddr& addr);
 
    /**
     * Returns the remote address for this socket.  This is typically the
@@ -282,7 +281,7 @@ public:
     *
     * @see isConnected, connect
     */
-   void setRemoteAddr(const vpr::InetAddr& addr) throw (SocketException);
+   void setRemoteAddr(const vpr::InetAddr& addr);
 
    /**
     * Implementation of the read() template method.  This reads at most the
@@ -311,8 +310,7 @@ public:
     */
    void read_i(void* buffer, const vpr::Uint32 length,
                vpr::Uint32& bytesRead,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -339,8 +337,7 @@ public:
     */
    void readn_i(void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesRead,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write() template method.  This writes the buffer
@@ -371,8 +368,7 @@ public:
     */
    void write_i(const void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesWritten,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::Uint32 availableBytes() const
    {
@@ -390,8 +386,7 @@ public:
     *         could not be retrieved.
     */
    void getOption(const vpr::SocketOptions::Types option,
-                  struct vpr::SocketOptions::Data& data) const
-      throw (SocketException);
+                  struct vpr::SocketOptions::Data& data) const;
 
    /**
     * Sets a value for the given option on the socket using the given data
@@ -405,8 +400,7 @@ public:
     *         could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
-                  const struct vpr::SocketOptions::Data& data)
-      throw (SocketException);
+                  const struct vpr::SocketOptions::Data& data);
 
    /**
     * Destructor.  This releases the memory allocated for mHandle (if it is

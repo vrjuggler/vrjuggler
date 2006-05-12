@@ -58,7 +58,7 @@ namespace vpr
 
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
-void SocketImplNSPR::open() throw (IOException)
+void SocketImplNSPR::open()
 {
    PRFileDesc* new_sock(NULL);
 
@@ -119,7 +119,7 @@ void SocketImplNSPR::open() throw (IOException)
 }
 
 // Close the socket.
-void SocketImplNSPR::close() throw (IOException)
+void SocketImplNSPR::close()
 {
    if ( NULL != mHandle )
    {
@@ -151,7 +151,7 @@ void SocketImplNSPR::close() throw (IOException)
 }
 
 // Bind this socket to the address in the host address member variable.
-void SocketImplNSPR::bind() throw (SocketException)
+void SocketImplNSPR::bind()
 {
    vprASSERT((true == mOpen) && "Trying to bind an un-opened socket");
    vprASSERT((mHandle != NULL) && "Trying to bind with NULL handle");
@@ -175,7 +175,7 @@ void SocketImplNSPR::bind() throw (SocketException)
    }
 }
 
-void SocketImplNSPR::setBlocking(bool blocking) throw (IOException)
+void SocketImplNSPR::setBlocking(bool blocking)
 {
    vprASSERT(! mBlockingFixed && "Can't change blocking state after blocking call");
 
@@ -236,7 +236,7 @@ void SocketImplNSPR::setBlocking(bool blocking) throw (IOException)
 // socket, this makes the address given to the constructor the default
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
-void SocketImplNSPR::connect(vpr::Interval timeout) throw (SocketException)
+void SocketImplNSPR::connect(vpr::Interval timeout)
 {
    vprASSERT((true == mOpen) && "Trying to connect an un-opened socket");
    vprASSERT((mHandle != NULL) && "Trying to connect with NULL handle");
@@ -339,7 +339,6 @@ void SocketImplNSPR::connect(vpr::Interval timeout) throw (SocketException)
 void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
                             vpr::Uint32& bytesRead,
                             const vpr::Interval timeout)
-   throw (IOException)
 {
    if ( mHandle == NULL )
    {
@@ -435,7 +434,6 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
 void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytesRead,
                              const vpr::Interval timeout)
-   throw (IOException)
 {
    if ( mHandle == NULL )
    {
@@ -524,7 +522,6 @@ void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
 void SocketImplNSPR::write_i(const void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytesWritten,
                              const vpr::Interval timeout)
-   throw (IOException)
 {
    if ( mHandle == NULL )
    {
@@ -600,7 +597,6 @@ void SocketImplNSPR::write_i(const void* buffer, const vpr::Uint32 length,
 
 void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
                                vpr::SocketOptions::Data& data)
-   const throw (SocketException)
 {
    PRSocketOptionData opt_data;
    bool get_opt;
@@ -758,7 +754,6 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
 
 void SocketImplNSPR::setOption(const vpr::SocketOptions::Types option,
                                const vpr::SocketOptions::Data& data)
-   throw (SocketException)
 {
    PRSocketOptionData opt_data;
 

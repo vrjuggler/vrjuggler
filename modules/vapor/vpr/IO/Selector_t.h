@@ -172,7 +172,6 @@ public:
     */
    void select(vpr::Uint16& numWithEvents,
                const vpr::Interval& timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mSelectorImp.select(numWithEvents, timeout);
    }

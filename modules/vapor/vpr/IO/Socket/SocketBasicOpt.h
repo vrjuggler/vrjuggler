@@ -53,9 +53,9 @@ class VPR_CLASS_API SocketBasicOpt : public vpr::SocketOptionWrapper
 {
 public:
    /**
-    *
+    * @throws vpr::IOException if the operation failed.
     */
-   void getKeepAlive(bool& enabled) throw (IOException)
+   void getKeepAlive(bool& enabled)
    {
       vpr::SocketOptions::Data option;
 
@@ -65,9 +65,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void setKeepAlive(const bool enableVal) throw (IOException)
+   void setKeepAlive(const bool enableVal)
    {
       vpr::SocketOptions::Data option;
       option.keep_alive = enableVal;
@@ -75,9 +75,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void getLingerOnClose(bool& enabled, int& lingerSec) throw (IOException)
+   void getLingerOnClose(bool& enabled, int& lingerSec)
    {
       vpr::SocketOptions::Data opt;
 
@@ -88,10 +88,10 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
    void setLingerOnClose(const bool enableVal,
-                         const int lingerSec) throw (IOException)
+                         const int lingerSec)
    {
       vpr::SocketOptions::Data opt;
 
@@ -102,12 +102,12 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void getRecvBufferSize(size_t& size) throw (IOException)
+   void getRecvBufferSize(size_t& size)
    {
       vpr::SocketOptions::Data opt;
-      
+
       try
       {
          getOption(vpr::SocketOptions::RecvBufferSize, opt);
@@ -121,9 +121,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void setRecvBufferSize(const Int32 size) throw (IOException)
+   void setRecvBufferSize(const Int32 size)
    {
       vpr::SocketOptions::Data opt;
 
@@ -133,12 +133,12 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void getSendBufferSize(size_t& size) throw (IOException)
+   void getSendBufferSize(size_t& size)
    {
       vpr::SocketOptions::Data opt;
-      
+
       try
       {
          getOption(vpr::SocketOptions::SendBufferSize, opt);
@@ -152,9 +152,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void setSendBufferSize(const Int32 size) throw (IOException)
+   void setSendBufferSize(const Int32 size)
    {
       vpr::SocketOptions::Data opt;
 
@@ -164,9 +164,9 @@ public:
    }
 
    /**
-    *
+    *@throws vpr::IOException if the operation failed.
     */
-   void getReuseAddr(bool& enabled) throw (IOException)
+   void getReuseAddr(bool& enabled)
    {
       vpr::SocketOptions::Data option;
 
@@ -179,8 +179,9 @@ public:
     * Enables reuse of the address that will be bound by the socket.
     *
     * @pre The socket has been opened, but bind() has not been called.
+    * @throws vpr::IOException if the operation failed.
     */
-   void setReuseAddr(const bool enableVal) throw (IOException)
+   void setReuseAddr(const bool enableVal)
    {
       vpr::SocketOptions::Data option;
       option.reuse_addr = enableVal;

@@ -44,7 +44,7 @@
 namespace vpr
 {
 
-std::vector<vpr::Uint8> XMLObjectWriter::getData() throw (IOException)
+std::vector<vpr::Uint8> XMLObjectWriter::getData()
 {
    if ( mRootNode.get() == NULL )
    {
@@ -63,7 +63,6 @@ std::vector<vpr::Uint8> XMLObjectWriter::getData() throw (IOException)
 // And also check the Root node to set it to (this is the first call to
 // beginTag).
 void XMLObjectWriter::beginTag(const std::string& tagName)
-   throw (IOException)
 {
    cppdom::NodePtr new_node;
 
@@ -100,7 +99,7 @@ void XMLObjectWriter::beginTag(const std::string& tagName)
 
 // Ends the most recently named tag.
 // Close off the current node and set current to its parent.
-void XMLObjectWriter::endTag() throw (IOException)
+void XMLObjectWriter::endTag()
 {
    if ( NULL == mCurNode )
    {
@@ -128,7 +127,6 @@ void XMLObjectWriter::endTag() throw (IOException)
 
 // Starts an attribute of the name attributeName.
 void XMLObjectWriter::beginAttribute(const std::string& attributeName)
-   throw (IOException)
 {
    // Make sure that we have not called beginAttribute without an endAttribute
    if ( ! mCurAttribName.empty() )
@@ -149,7 +147,7 @@ void XMLObjectWriter::beginAttribute(const std::string& attributeName)
 }
 
 // Ends the most recently named attribute.
-void XMLObjectWriter::endAttribute() throw (IOException)
+void XMLObjectWriter::endAttribute()
 {
    if ( AttribTarget != mCurTarget )
    {
@@ -165,38 +163,38 @@ void XMLObjectWriter::endAttribute() throw (IOException)
    mCurTarget = CdataTarget;
 }
 
-void XMLObjectWriter::writeUint8(vpr::Uint8 val) throw (IOException)
+void XMLObjectWriter::writeUint8(vpr::Uint8 val)
 {
    // Cast to uint16 so it doesn't get written as a char
    writeValueStringRep(vpr::Uint16(val));
 }
 
-void XMLObjectWriter::writeUint16(vpr::Uint16 val) throw (IOException)
+void XMLObjectWriter::writeUint16(vpr::Uint16 val)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeUint32(vpr::Uint32 val) throw (IOException)
+void XMLObjectWriter::writeUint32(vpr::Uint32 val)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeUint64(vpr::Uint64 val) throw (IOException)
+void XMLObjectWriter::writeUint64(vpr::Uint64 val)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeFloat(float val) throw (IOException)
+void XMLObjectWriter::writeFloat(float val)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeDouble(double val) throw (IOException)
+void XMLObjectWriter::writeDouble(double val)
 {
    writeValueStringRep(val);
 }
 
-void XMLObjectWriter::writeString(std::string val) throw (IOException)
+void XMLObjectWriter::writeString(std::string val)
 {
    if ( AttribTarget == mCurTarget )
    {
@@ -218,7 +216,7 @@ void XMLObjectWriter::writeString(std::string val) throw (IOException)
    }
 }
 
-void XMLObjectWriter::writeBool(bool val) throw (IOException)
+void XMLObjectWriter::writeBool(bool val)
 {
    writeValueStringRep(val);
 }

@@ -180,7 +180,6 @@ public:
    void read(void* buffer, const vpr::Uint32 length,
              vpr::Uint32& bytesRead,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       this->read_s(buffer, length, bytesRead, timeout);
    }
@@ -212,7 +211,6 @@ public:
    void read(std::string& buffer, const vpr::Uint32 length,
              vpr::Uint32& bytesRead,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
@@ -249,14 +247,13 @@ public:
    void read(std::vector<vpr::Uint8>& buffer,
              const vpr::Uint32 length, vpr::Uint32& bytesRead,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       buffer.resize(length);
 
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
       memset(&buffer[0], '\0', buffer.size());
-      
+
       this->read(&buffer[0], buffer.size(), bytesRead, timeout);
 
       // size it down if needed, if (bytesRead == length), then resize does
@@ -357,11 +354,11 @@ public:
    {
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
-      
+
       buffer.resize(length);
       memset(&buffer[0], '\0', buffer.size());
       this->readn(&buffer[0], buffer.size(), bytesRead, timeout);
-      
+
       buffer.resize(bytesRead);
    }
 
@@ -553,28 +550,28 @@ protected:
 
    /**
     * Read strategy.
+    * @throws vpr::IOException if the read operation failed.
     */
    virtual void read_s(void* buffer, const vpr::Uint32 length,
                        vpr::Uint32& bytesRead,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Read strategy.
+    * @throws vpr::IOException if the read operation failed.
     */
    virtual void readn_s(void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytesRead,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Write strategy.
+    * @throws vpr::IOException if the operation failed.
     */
    virtual void write_s(const void* buffer,
                         const vpr::Uint32 length,
                         vpr::Uint32& bytesWritten,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the read() template method.  This reads at most the

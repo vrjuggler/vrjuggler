@@ -224,7 +224,7 @@ void GUID::generate(const GUID& nsGuid, const std::string& name)
 #endif
 }
 
-void GUID::writeObject(vpr::ObjectWriter* writer) throw (IOException)
+void GUID::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint32(mGuid.standard.m0);
    writer->writeUint16(mGuid.standard.m1);
@@ -239,7 +239,7 @@ void GUID::writeObject(vpr::ObjectWriter* writer) throw (IOException)
    writer->writeUint8(mGuid.standard.m5[5]);
 }
 
-void GUID::readObject(vpr::ObjectReader* reader) throw (IOException)
+void GUID::readObject(vpr::ObjectReader* reader)
 {
    mGuid.standard.m0 = reader->readUint32();
    mGuid.standard.m1 = reader->readUint16();

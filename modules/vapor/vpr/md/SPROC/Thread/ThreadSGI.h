@@ -150,8 +150,9 @@ public:
     *
     * @return 0 is returned on successful completion.  -1 is returned on
     *         failure.
+    * @throws UncaughtThreadException
     */
-   virtual int join(void** = 0)  throw (UncaughtThreadException);
+   virtual int join(void** = 0);
 
    /**
     * Resumes the execution of a thread that was previously suspended using

@@ -163,7 +163,6 @@ vpr::Uint16 SelectorImplBSD::getOut (vpr::IOSys::Handle handle)
  */
 void SelectorImplBSD::select (vpr::Uint16& numWithEvents,
                               const vpr::Interval timeout)
-   throw (IOException)
 {
    int num_events, last_fd;
    fd_set read_set, write_set, exception_set;

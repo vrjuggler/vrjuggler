@@ -70,7 +70,10 @@ public:
    BufferObjectReader(std::vector<vpr::Uint8>* data,
                       const unsigned int curPos = 0);
 
-   virtual ~BufferObjectReader() throw ();
+   /** Destructor.
+    * @throws nothing
+    */
+   virtual ~BufferObjectReader();
 
    void setCurPos(const unsigned int val)
    {
@@ -117,7 +120,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void beginTag(const std::string& tagName) throw (IOException)
+   virtual void beginTag(const std::string& tagName)
    {
       boost::ignore_unused_variable_warning(tagName);
    }
@@ -129,7 +132,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void endTag() throw (IOException)
+   virtual void endTag()
    {;}
 
    /**
@@ -140,7 +143,6 @@ public:
     *                     the underlying data source.
     */
    virtual void beginAttribute(const std::string& attributeName)
-      throw (IOException)
    {
       boost::ignore_unused_variable_warning(attributeName);
    }
@@ -152,7 +154,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void endAttribute() throw (IOException)
+   virtual void endAttribute()
    {;}
    //@}
 
@@ -164,56 +166,56 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual vpr::Uint8 readUint8() throw (IOException);
+   inline virtual vpr::Uint8 readUint8();
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual vpr::Uint16 readUint16() throw (IOException);
+   inline virtual vpr::Uint16 readUint16();
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual vpr::Uint32 readUint32() throw (IOException);
+   inline virtual vpr::Uint32 readUint32();
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual vpr::Uint64 readUint64() throw (IOException);
+   inline virtual vpr::Uint64 readUint64();
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual float readFloat() throw (IOException);
+   inline virtual float readFloat();
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual double readDouble() throw (IOException);
+   inline virtual double readDouble();
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual std::string readString() throw (IOException);
+   inline virtual std::string readString();
 
    /**
     * @throw EOFException If end of file is reached while reading.
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   inline virtual bool readBool() throw (IOException);
+   inline virtual bool readBool();
 
    /** @name Helper methods */
    //@{
@@ -223,7 +225,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint8(vpr::Uint8& val) throw (IOException)
+   virtual void readUint8(vpr::Uint8& val)
    {
       val = this->readUint8();
    }
@@ -233,7 +235,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint16(vpr::Uint16& val) throw (IOException)
+   virtual void readUint16(vpr::Uint16& val)
    {
       val = this->readUint16();
    }
@@ -243,7 +245,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint32(vpr::Uint32& val) throw (IOException)
+   virtual void readUint32(vpr::Uint32& val)
    {
       val = this->readUint32();
    }
@@ -253,7 +255,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readUint64(vpr::Uint64& val) throw (IOException)
+   virtual void readUint64(vpr::Uint64& val)
    {
       val = this->readUint64();
    }
@@ -263,7 +265,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readFloat(float& val) throw (IOException)
+   virtual void readFloat(float& val)
    {
       val = this->readFloat();
    }
@@ -273,7 +275,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readDouble(double& val) throw (IOException)
+   virtual void readDouble(double& val)
    {
       val = this->readDouble();
    }
@@ -283,7 +285,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readString(std::string& str) throw (IOException)
+   virtual void readString(std::string& str)
    {
       str = this->readString();
    }
@@ -293,7 +295,7 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
-   virtual void readBool(bool& val) throw (IOException)
+   virtual void readBool(bool& val)
    {
       val = this->readBool();
    }
@@ -306,8 +308,9 @@ public:
     * @note data points to data owned elsewhere.
     *       DO NOT MODIFY THE DATA and DO NOT RELY ON THE DATA STAYING THERE
     *       LONG.
+    * @throws vpr::IOException if the operation failed.
     */
-   inline vpr::Uint8* readRaw(const unsigned int len = 1) throw (IOException);
+   inline vpr::Uint8* readRaw(const unsigned int len = 1);
 
 public:
    std::vector<vpr::Uint8>*   mData;
@@ -315,14 +318,14 @@ public:
    std::vector<unsigned int>  mHeadPosStateStack;  /**< Store pushed and popped state information */
 };
 
-inline vpr::Uint8 BufferObjectReader::readUint8() throw (IOException)
+inline vpr::Uint8 BufferObjectReader::readUint8()
 {
    vpr::Uint8 temp_data;
    memcpy(&temp_data, readRaw(1), 1);
    return temp_data;
 }
 
-inline vpr::Uint16 BufferObjectReader::readUint16() throw (IOException)
+inline vpr::Uint16 BufferObjectReader::readUint16()
 {
    vpr::Uint16 nw_val;
    memcpy(&nw_val, readRaw(2), 2);
@@ -330,7 +333,7 @@ inline vpr::Uint16 BufferObjectReader::readUint16() throw (IOException)
    return vpr::System::Ntohs(nw_val);
 }
 
-inline vpr::Uint32 BufferObjectReader::readUint32() throw (IOException)
+inline vpr::Uint32 BufferObjectReader::readUint32()
 {
    vpr::Uint32 nw_val;
    memcpy(&nw_val, readRaw(4), 4);
@@ -338,7 +341,7 @@ inline vpr::Uint32 BufferObjectReader::readUint32() throw (IOException)
    return vpr::System::Ntohl(nw_val);
 }
 
-inline vpr::Uint64 BufferObjectReader::readUint64() throw (IOException)
+inline vpr::Uint64 BufferObjectReader::readUint64()
 {
    vpr::Uint64 nw_val;
    memcpy(&nw_val, readRaw(8), 8);
@@ -347,7 +350,7 @@ inline vpr::Uint64 BufferObjectReader::readUint64() throw (IOException)
    return h_val;
 }
 
-inline float BufferObjectReader::readFloat() throw (IOException)
+inline float BufferObjectReader::readFloat()
 {
    // We are reading the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
@@ -359,7 +362,7 @@ inline float BufferObjectReader::readFloat() throw (IOException)
    return *((float*)&h_val);
 }
 
-inline double BufferObjectReader::readDouble() throw (IOException)
+inline double BufferObjectReader::readDouble()
 {
    // We are reading the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
@@ -372,7 +375,7 @@ inline double BufferObjectReader::readDouble() throw (IOException)
    return d_val;
 }
 
-inline std::string BufferObjectReader::readString() throw (IOException)
+inline std::string BufferObjectReader::readString()
 {
    // Note: If you change this, you need to change STRING_LENGTH_SIZE
    vpr::Uint32 str_len = readUint32();
@@ -386,13 +389,12 @@ inline std::string BufferObjectReader::readString() throw (IOException)
    return ret_val;
 }
 
-inline bool BufferObjectReader::readBool() throw (IOException)
+inline bool BufferObjectReader::readBool()
 {
    return (bool)*(readRaw(1));
 }
 
 inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
-   throw (IOException)
 {
    if ( mCurHeadPos >= mData->size() )
    {

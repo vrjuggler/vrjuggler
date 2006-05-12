@@ -88,7 +88,7 @@ public:
     * @throw vpr::SocketException If this socket could not be opened.
     * @throw vpr::IOException     If the blocking state could not be set.
     */
-   void open() throw (IOException);
+   void open();
 
    /**
     * Closes this socket.
@@ -100,7 +100,7 @@ public:
     *
     * @throws vpr::IOException If this socket could not be closed.
     */
-   void close() throw (IOException);
+   void close();
 
    /**
     * Gets the open state of this socket.
@@ -134,7 +134,7 @@ public:
     *
     * @throws vpr::SocketException If this socket could not be bound.
     */
-   void bind() throw (SocketException);
+   void bind();
 
    /**
     * Returns the contained handle.
@@ -162,14 +162,14 @@ public:
     * @param blocking The new blocking state.  A value of \c true indicates
     *                 that this will be a blocking socket.  A value of \c false
     *                 indicates that it will be a non-blocking socket.
-    * 
+    *
     * @throw vpr::SocketException If trying to call after a blocking
     *                             call has already been made.
     * @throw vpr::IOException     If the blocking state could not be set.
-    * 
+    *
     * @see isOpen, open
     */
-   void setBlocking(bool blocking) throw (IOException);
+   void setBlocking(bool blocking);
 
    /**
     * Gets the current blocking state for this socket.
@@ -205,8 +205,7 @@ public:
     *                                 timeout interval.
     * @throw vpr::SocketException     If could not connect.
     */
-   void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (SocketException);
+   void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the status of a possibly connected socket.
@@ -214,8 +213,9 @@ public:
     * @return \c true if this socket is connected to a remote address.
     * @return \c false if this socket is not currently connect (the other side
     *         may have disconnected).
+    * @throws nothing
     */
-   bool isConnected() const throw ()
+   bool isConnected() const
    {
       // If it is not open, then it can't be connected.
       if ( mConnectCalled )
@@ -277,7 +277,7 @@ public:
     *
     * @see isBound, bind
     */
-   void setLocalAddr(const vpr::InetAddr& addr) throw (SocketException)
+   void setLocalAddr(const vpr::InetAddr& addr)
    {
       if ( mBound )
       {
@@ -315,7 +315,7 @@ public:
     *
     * @see isConnected, connect
     */
-   void setRemoteAddr(const vpr::InetAddr& addr) throw (SocketException)
+   void setRemoteAddr(const vpr::InetAddr& addr)
    {
       if ( mConnectCalled )
       {
@@ -354,8 +354,7 @@ public:
     * @throw vpr::IOException         If the read operation failed.
     */
    void read_i(void* buffer, const vpr::Uint32 length, vpr::Uint32& bytesRead,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -381,8 +380,7 @@ public:
     * @throw vpr::IOException     If an error ocured while reading.
     */
    void readn_i(void* buffer, const vpr::Uint32 length, vpr::Uint32& bytesRead,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write() template method.  This writes the buffer
@@ -414,8 +412,7 @@ public:
     */
    void write_i(const void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesWritten,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Returns the number of bytes available to be read from this socket's
@@ -437,8 +434,7 @@ public:
     *                             could not be retrieved.
     */
    void getOption(const vpr::SocketOptions::Types option,
-                  vpr::SocketOptions::Data& data) const
-      throw (SocketException);
+                  vpr::SocketOptions::Data& data) const;
 
    /**
     * Sets a value for the given option on this socket using the given data
@@ -452,8 +448,7 @@ public:
     *         could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
-                  const vpr::SocketOptions::Data& data)
-      throw (SocketException);
+                  const vpr::SocketOptions::Data& data);
 
    /**
     * Destructor.

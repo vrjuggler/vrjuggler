@@ -100,7 +100,7 @@ public:
     *
     * @return A vpr::InetAddr object holding the local host's default address.
     */
-   static vpr::InetAddrNSPR getLocalHost() throw (UnknownHostException);
+   static vpr::InetAddrNSPR getLocalHost();
 
    /**
     * Retrieves all the IPv4 addresses associated with the local machine,
@@ -134,7 +134,7 @@ public:
     *
     * @throw UnknownHostException If no IP address for the host could be found.
     */
-   void setAddress(const std::string& address) throw (UnknownHostException);
+   void setAddress(const std::string& address);
 
    /**
     * Sets the address for this object using the given address and port
@@ -149,7 +149,6 @@ public:
     *                             found.
     */
    void setAddress(const std::string& address, const vpr::Uint16 port)
-      throw (UnknownHostException)
    {
       lookupAddress(address);
       setFamily(SocketTypes::INET);
@@ -195,8 +194,7 @@ public:
     * @throw IllegalArgumentException is thrown if \p family is not a valid
     *        protocol family or if the identified family is not supported.
     */
-   void setFamily(const vpr::SocketTypes::Domain family)
-      throw (IllegalArgumentException);
+   void setFamily(const vpr::SocketTypes::Domain family);
 
    /**
     * Get this address' port in host byte order.
@@ -259,14 +257,16 @@ public:
 
    /**
     * Returns the fully qualified hostname for this address.
+    * @throw UnknownHostException If no address for the host could be found.
     */
-   std::string getHostname() const throw (UnknownHostException);
+   std::string getHostname() const;
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
+    * @throw UnknownHostException If no address for the host could be found.
     */
-   std::vector<std::string> getHostnames() const throw (UnknownHostException);
+   std::vector<std::string> getHostnames() const;
 
    /**
     * Overloaded assignment operator to ensure that assignments work
@@ -343,7 +343,7 @@ protected:
     *
     * @throw UnknownHostException If address lookup failed.
     */
-   void lookupAddress(const std::string& address) throw (UnknownHostException);
+   void lookupAddress(const std::string& address);
 
    PRNetAddr   mAddr;         /**< Actual address */
 };

@@ -76,7 +76,6 @@ SocketStreamImplBSD::SocketStreamImplBSD(const SocketStreamImplBSD& sock)
 
 // Listen on the socket for incoming connection requests.
 void SocketStreamImplBSD::listen(const int backlog)
-   throw (SocketException)
 {
    // Put the socket into listning mode.  If that fails, print an error and
    // return error status.
@@ -93,7 +92,6 @@ void SocketStreamImplBSD::listen(const int backlog)
 
 // Accept an incoming connection request.
 void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Interval timeout)
-   throw (IOException)
 {
    int accept_sock;
    InetAddr addr;

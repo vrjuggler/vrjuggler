@@ -117,7 +117,7 @@ public:
     *         mode and could not be opened yet.
     * @throws vpr::IOException if the file handle could not be opened.
     */
-   virtual void open() throw (IOException)
+   virtual void open()
    {
       mHandleImpl.open();
    }
@@ -132,7 +132,7 @@ public:
     *
     * @throws vpr::IOException if the file handle could not be closed.
     */
-   virtual void close() throw (IOException)
+   virtual void close()
    {
       return mHandleImpl.close();
    }
@@ -146,7 +146,7 @@ public:
     *
     * @throws vpr::IOException if the blocking mode could not be set.
     */
-   virtual void setBlocking(bool blocking) throw (IOException)
+   virtual void setBlocking(bool blocking)
    {
       mHandleImpl.setBlocking(blocking);
    }
@@ -233,7 +233,7 @@ public:
     * @throws vpr::IOException if the write mode could not be changed
     *         for some reason.
     */
-   void setAppend(bool flag) throw (IOException)
+   void setAppend(bool flag)
    {
       mHandleImpl.setAppend(flag);
    }
@@ -252,7 +252,7 @@ public:
     * @throws vpr::IOException if the write mode could not be changed
     *         for some reason.
     */
-   void setSynchronousWrite(bool flag) throw (IOException)
+   void setSynchronousWrite(bool flag)
    {
       return mHandleImpl.setSynchronousWrite(flag);
    }
@@ -332,7 +332,6 @@ protected:
    void read_i(void* buffer, const vpr::Uint32 length,
                vpr::Uint32& bytesRead,
                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mHandleImpl.read_i(buffer, length, bytesRead, timeout);
    }
@@ -364,7 +363,6 @@ protected:
    void readn_i(void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesRead,
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mHandleImpl.readn_i(buffer, length, bytesRead, timeout);
    }
@@ -395,7 +393,6 @@ protected:
    void write_i(const void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesWritten,
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
-      throw (IOException)
    {
       mHandleImpl.write_i(buffer, length, bytesWritten, timeout);
    }

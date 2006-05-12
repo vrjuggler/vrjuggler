@@ -161,8 +161,9 @@ public:  // ----- Various other thread functions ------
     *
     * @return 0 is returned if this thread is "joined" successfully.<br>
     *         -1 is returned on an error condition.
+    * @throws UncaughtThreadException
     */
-   virtual int join(void** status = 0) throw (UncaughtThreadException)
+   virtual int join(void** status = 0)
    {
       int return_status = pthread_join(mThread, status);
 
