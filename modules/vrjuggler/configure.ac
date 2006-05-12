@@ -146,11 +146,11 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.7], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
+VPR_PATH([1.1.20], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 JCCL_PATH_CXX([0.92.1], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
-GADGETEER_PATH([0.22.0], ,
+GADGETEER_PATH([1.1.8], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 SNX_PATH([0.5.0], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 

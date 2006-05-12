@@ -40,19 +40,34 @@ struct MyType
 namespace vpr
 {
 
+/**
+ * Serializes an object of type vrjTest::MyType into the given object writer.
+ *
+ * @param writer The object writer used for serializing the vrjTest::MyType
+ *               object.
+ *
+ * @throw vpr::IOException is thrown if object serialization fails.
+ */
 template<>
 inline void
 vpr::SerializableObjectMixin<vrjTest::MyType>::writeObject(vpr::ObjectWriter* writer)
-   throw (vpr::IOException)
 { 
    writer->writeUint16(something);  
    writer->writeBool(drawBool);
 }
 
+/**
+ * De-serializes an object of type vrjTest::MyType using the data in the
+ * given object reader.
+ *
+ * @param reader The object reader used for de-serializing the vrjTest::MyType
+ *               object.
+ *
+ * @throw vpr::IOException is thrown if object de-serialization fails.
+ */
 template<>
 inline void
 vpr::SerializableObjectMixin<vrjTest::MyType>::readObject(vpr::ObjectReader* reader)
-   throw (vpr::IOException)
 {
    something = reader->readUint16();
    drawBool = reader->readBool();

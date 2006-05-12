@@ -47,7 +47,14 @@
 class NavData : public vpr::SerializableObject
 {
 public:
-   virtual void readObject(vpr::ObjectReader* reader) throw (vpr::IOException)
+   /**
+    * De-serializes this object using the data in the given object reader.
+    *
+    * @param reader The object reader used for de-serializing this object.
+    *
+    * @throw vpr::IOException is thrown if object de-serialization fails.
+    */
+   virtual void readObject(vpr::ObjectReader* reader)
    {
       float pos_data[16];
       for ( unsigned n=0;n<16;n++ )
@@ -58,7 +65,14 @@ public:
       mCurPos.set(pos_data);
    }
 
-   virtual void writeObject(vpr::ObjectWriter* writer) throw (vpr::IOException)
+   /**
+    * Serializes this object into the given object writer.
+    *
+    * @param writer The object reader used for serializing this object.
+    *
+    * @throw vpr::IOException is thrown if object serialization fails.
+    */
+   virtual void writeObject(vpr::ObjectWriter* writer)
    {
       const float* pos_data = mCurPos.getData();
       for ( int n=0;n<16;n++ )
