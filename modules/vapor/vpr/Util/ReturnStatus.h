@@ -43,6 +43,7 @@
 #define _VPR_RETURN_STATUS_H_
 
 #include <vpr/vprConfig.h>
+#include <iostream>
 
 
 namespace vpr
@@ -221,5 +222,35 @@ namespace vpr
       ReturnStatus::Code mReturnStatus;
    };
 } // namespace vpr
+
+inline std::ostream& operator<<(std::ostream& out, const vpr::ReturnStatus& ret)
+{
+   switch(ret.code())
+   {
+   case vpr::ReturnStatus::Succeed:
+      out << "Succeed";
+      break;
+   case vpr::ReturnStatus::Fail:             /**< Failure status */
+      out << "Fail";
+      break;
+   case vpr::ReturnStatus::WouldBlock:       /**< Operation would block */
+      out << "WouldBlock";
+      break;
+   case vpr::ReturnStatus::Timeout:          /**< Timeout occurred */
+      out << "Timeout";
+      break;
+   case vpr::ReturnStatus::InProgress:       /**< Operation is still in progress */
+      out << "InProgress";
+      break;
+   case vpr::ReturnStatus::NotConnected:
+      out << "NotConnected";
+      break;
+   default:
+      out << "Unknown";
+      break;
+   }
+
+   return out;
+}
 
 #endif

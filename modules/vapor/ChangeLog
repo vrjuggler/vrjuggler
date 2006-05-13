@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-05-13 patrick  Added operator<< for vpr::ReturnStatus.
 2006-04-21 aronb    Added vpr::ReturnStatus::ConnectionAborted.
 2006-04-14 aronb    Added the ability to send UDP broadcast datagrams.
 2005-12-16 patrickh Added vpr::InetAddr::getAllLocalAddrs().
