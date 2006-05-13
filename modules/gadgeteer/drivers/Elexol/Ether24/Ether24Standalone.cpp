@@ -180,7 +180,7 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
    vpr::InetAddr from;
    vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
-   vpr::Interval read_timeout(5, vpr::Interval::Sec);
+   vpr::Interval read_timeout(100, vpr::Interval::Msec);
    mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
 
    if (Elexol::Command::Value == command)
@@ -375,7 +375,7 @@ std::pair<vpr::Uint8, vpr::Uint8>
    vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
 
-   vpr::Interval read_timeout(5, vpr::Interval::Sec);
+   vpr::Interval read_timeout(50, vpr::Interval::Msec);
    mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
 
    if (Elexol::Command::ReadWord != response[0])
@@ -421,7 +421,7 @@ void Ether24Standalone::disableWriting()
    vprASSERT(5 == write_disable_cmd.size());
 
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "Ether24StandalonegetState(): Sending disable writing command ["
+      << "Ether24Standalone::disableWriting(): Sending disable writing command ["
       << write_disable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
 
    vpr::Uint32 bytes_sent;
@@ -445,7 +445,7 @@ void Ether24Standalone::setWordValue(const Elexol::AddressType address,
    
    //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
    //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Ether24StandalonegetState(): Sending command [" << write_cmd << "]"
+   //   << "Ether24Standalone::setWordValue(): Sending command [" << write_cmd << "]"
    //   << std::endl << vprDEBUG_FLUSH;
    mSocket->sendto(write_cmd, 5, mAddress, bytes_sent);
 }
