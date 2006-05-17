@@ -58,10 +58,10 @@ std::vector<Display*> DisplayManager::getAllDisplays()
 
 jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
 {
+   jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+
    if ( mDisplaySystemElement.get() == NULL )
    {
-      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-
       cfg_mgr->lockActive();
       {
          std::vector<jccl::ConfigElementPtr>::iterator i;
@@ -75,8 +75,20 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
          }
       }
       cfg_mgr->unlockActive();
-      
-      // XXX: This hack sucks but we need to ensure that we get the display_system element.
+   }
+
+   // XXX: We should never have to ask the pending list for the display_system element because
+   //      it should always be loaded first, and already in the active list. If for some reason
+   //      we have to look at the pending list it is possible to have a deadlock. This happens
+   //      when we call DisplaySystem::getDisplaySystemElement() while we are configuring anything
+   //      device in the system.
+   // XXX: This could be fixed in the furute using better dependancy managment so that we can ensure
+   //      that the display_system is always in the active list before configuring anythin that
+   //      calls this function while getting configured.
+
+   // If display_system element was not found in the active list.
+   if ( mDisplaySystemElement.get() == NULL )
+   {   
       cfg_mgr->lockPending();
       {
          std::list<jccl::ConfigManager::PendingElement>::iterator i;
@@ -90,7 +102,6 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
          }
       }
       cfg_mgr->unlockPending();
-
 //      vprASSERT(mDisplaySystemElement.get() != NULL && "No Display Manager config element found!");
    }
 
