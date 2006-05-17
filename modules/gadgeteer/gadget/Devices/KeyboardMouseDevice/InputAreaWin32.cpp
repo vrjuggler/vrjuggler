@@ -664,7 +664,9 @@ gadget::Keys InputAreaWin32::VKKeyToKey(const int vkKey)
 
 char InputAreaWin32::getAsciiKey(const int vkKey, const gadget::Keys key)
 {
-   if ( std::isalnum(vkKey) )
+   // We can return alphanumeric and white-space characters without any extra
+   // processing.
+   if ( std::isalnum(vkKey) || std::isspace(vkKey) )
    {
       return static_cast<char>(vkKey);
    }
