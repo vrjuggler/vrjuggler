@@ -670,12 +670,11 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
    }
    else
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
          << "Could not find GlWindow to process event."
          << std::endl << vprDEBUG_FLUSH;
 
       return DefWindowProc(hWnd, message, wParam, lParam);
-
    }
 }
 
