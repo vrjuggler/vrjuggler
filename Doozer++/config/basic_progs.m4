@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          basic_progs.m4,v
-dnl Date modified: 2005/03/20 17:17:12
-dnl Version:       1.19
+dnl Date modified: 2006/05/17 18:42:30
+dnl Version:       1.20
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl Variables defined:
 dnl     GMAKE                - The GNU make executable.
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.19 2005/03/20 17:17:12 patrickh Exp
+dnl basic_progs.m4,v 1.20 2006/05/17 18:42:30 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.
@@ -154,13 +154,16 @@ AC_DEFUN([DPP_HAVE_GNU_MAKE],
       fi
    fi
 
-   dnl The sed(1) expressions below will work with GNU Make 3.7x and 3.80.
+   dnl The sed(1) expressions below will work with GNU Make 3.7x and 3.8x.
    dnl The basic idea is to extract the "GNU Make x.yz" string and then pick
    dnl out the "x.yz" part.
+   dnl dpp_gmake_ver_exp2 handles cases such as "3.82alpha12" by taking out
+   dnl the "alpha12" part.
    changequote(<<, >>)
    dpp_gmake_ver_exp1='s/^\(.*\),.*$/\1/'
-   dpp_gmake_ver_exp2='s/^GNU Make[^0-9]*\(.*\)/\1/'
-   dpp_gmake_ver=`$GMAKE --version | grep 'GNU Make' | sed -e "$dpp_gmake_ver_exp1" -e "$dpp_gmake_ver_exp2"`
+   dpp_gmake_ver_exp2='s/^\(.*[0-9]\)[a-bA-B].*$/\1/'
+   dpp_gmake_ver_exp3='s/^GNU Make[^0-9]*\(.*\)/\1/'
+   dpp_gmake_ver=`$GMAKE --version | grep 'GNU Make' | sed -e "$dpp_gmake_ver_exp1" -e "$dpp_gmake_ver_exp2" -e "$dpp_gmake_ver_exp3"`
    changequote([, ])
 
    DPP_VERSION_CHECK_MSG_NO_CACHE([GNU make], [$dpp_gmake_ver], [$1], [$2],

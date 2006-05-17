@@ -1,5 +1,8 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2006-05-17 patrickh     Fixed a version detection bug in DPP_HAVE_GNU_MAKE for
+                        the case of GNU Make pre-releases.
+                        NEW VERSION: 2.1.1
 2006-04-14 patrickh     dpp.libs.targets.mk no longer dictates naming
                         conventions for static and shared libraries.
                         NEW VERSION: 2.1.0
