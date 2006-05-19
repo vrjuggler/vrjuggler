@@ -278,10 +278,21 @@ public class SelectDefinitionPanel extends JPanel implements EditorConstants
       {
          ClassLoader loader = getClass().getClassLoader();
 
-         // Load the icons.
-         mPositionalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/position16.png"));
-         mDigitalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/digital16.png"));
-         mAnalogIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/analog16.png"));
+         try
+         {
+            String img_base = "org/vrjuggler/vrjconfig/wizards/newdevice/images";
+            // Load the icons.
+            mPositionalIcon = new ImageIcon(loader.getResource(img_base + "/position16.png"));
+            mDigitalIcon = new ImageIcon(loader.getResource(img_base + "/digital16.png"));
+            mAnalogIcon = new ImageIcon(loader.getResource(img_base + "/analog16.png"));
+         }
+         catch (NullPointerException ex)
+         {
+            System.err.println("WARNING: " + ex.getMessage());
+            mPositionalIcon = new ImageIcon();
+            mDigitalIcon = new ImageIcon();
+            mAnalogIcon = new ImageIcon();
+         }
       }
 
       /**

@@ -41,8 +41,16 @@ public class FlockEditor
 {
    public FlockEditor()
    {
-      java.net.URL help_url =
-         getClass().getClassLoader().getResource("org/vrjuggler/vrjconfig/customeditors/flock/data/help.html");
+      java.net.URL help_url = null;
+      try
+      {
+         help_url = getClass().getClassLoader().getResource("org/vrjuggler/vrjconfig/customeditors/flock/data/help.html");
+      }
+      catch(NullPointerException ex)
+      {
+         System.err.println("WARNING: " + ex.getMessage());
+      }
+      
 
       mMainEditorPanel = new DeviceEditorPanel(help_url,
                                                new FlockEditorPanel(),
