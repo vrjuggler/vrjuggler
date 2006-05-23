@@ -46,6 +46,13 @@
  */
 #define __VPR_version @VER_NUMBER@
 
+/**
+ * The individual VPR version numbers.
+ */
+#define __VPR_MAJOR__ @MAJOR_VER_NUMBER@
+#define __VPR_MINOR__ @MINOR_VER_NUMBER@
+#define __VPR_PATCH__ @PATCH_VER_NUMBER@
+
 namespace vpr
 {
    /**
