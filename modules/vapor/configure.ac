@@ -96,6 +96,10 @@ AC_ARG_ENABLE([subsystem],
                           Define OS abstraction subsystem],
               [SUBSYSTEM="$enableval"], [SUBSYSTEM='none'])
 
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
+
 AC_ARG_ENABLE([simulator],
               [  --enable-simulator      Compile simulated sockets layer ],
               [SIMULATOR="$enableval"], [SIMULATOR='no'])
@@ -790,12 +794,22 @@ VJ_VERSION_GROK(VERSION)
 # Set the form of the version number used for versioned directory and file
 # naming. Unstable builds use all three version numbers; stable builds use
 # only the major and minor version numbers.
-VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
-VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
-HEADER_VERSION="vpr-$VERSION_DOT"
-CLOSE_HEADER_VERSION='..'
-LIBRARY_VERSION="-$VERSION_UNDERSCORE"
-DATA_VERSION="vpr-$VERSION_DOT"
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+
+   HEADER_VERSION="vpr-$VERSION_DOT"
+   CLOSE_HEADER_VERSION='..'
+   LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+   DATA_VERSION="vpr-$VERSION_DOT"
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+else
+   DATA_VERSION="vpr"
+fi
 
 vpr_cxxflags="$STDFLAGS"
 
