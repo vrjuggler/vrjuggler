@@ -224,14 +224,13 @@ VJ_VERSION_GROK(VERSION)
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
    VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
    VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
-
    HEADER_VERSION="gadget-$VERSION_DOT"
    CLOSE_HEADER_VERSION='..'
    LIBRARY_VERSION="-$VERSION_UNDERSCORE"
    DATA_VERSION="gadget-$VERSION_DOT"
 
 # If versioning is disabled, then none of the version variables need to be
-# set except for $DATA_VERSION. Its use is different than the others. The
+# set except for $DATA_VERSION. Their use is different than the others. The
 # important thing to note is that the directory name is unversioned in this
 # case.
 

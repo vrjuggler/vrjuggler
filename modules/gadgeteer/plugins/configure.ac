@@ -40,19 +40,22 @@ AC_CONFIG_AUX_DIR([../../../share/config])
 DPP_PREREQ([1.5.1])
 DPP_INIT
 
+DPP_STD_CPP(yes)
+
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
 
-# ------------------------------------------------------ #
-# --enable-feature[=arg] and --disable-feature arguments #
-# ------------------------------------------------------ #
-
-DPP_STD_CPP(yes)
-
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
+
+# ------------------------------------------------------ #
+# --enable-feature[=arg] and --disable-feature arguments #
+# ------------------------------------------------------ #
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
 
 # Force the use of GCC as the compiler.
 # NOTE: This is not fully implemented yet for any platform, but it is partially
@@ -168,6 +171,26 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+
+   HEADER_VERSION="gadget-$GADET_VERSION"
+   DATA_VERSION="gadget-$GADGET_VERSION"
+   PLUGIN_DIR_VERSION="gadgeteer-$GADGET_VERSION"
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+
+else
+   DATA_VERSION="gadget"
+   PLUGIN_DIR_VERSION="gadgeteer"
+fi
+
+
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
@@ -237,6 +260,8 @@ else
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
+includedir="$includedir/$HEADER_VERSION"
+
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -245,6 +270,10 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(PLUGIN_ROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SUBSYSTEM)
+
+AC_SUBST(HEADER_VERSION)
+AC_SUBST(DATA_VERSION)
+AC_SUBST(PLUGIN_DIR_VERSION)
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
