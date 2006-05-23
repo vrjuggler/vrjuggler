@@ -176,7 +176,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # only the major and minor version numbers.
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
 
-   HEADER_VERSION="gadget-$GADET_VERSION"
+   HEADER_VERSION="gadget-$GADGET_VERSION"
    DATA_VERSION="gadget-$GADGET_VERSION"
    PLUGIN_DIR_VERSION="gadgeteer-$GADGET_VERSION"
 
