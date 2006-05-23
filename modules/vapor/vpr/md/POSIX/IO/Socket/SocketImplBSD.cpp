@@ -45,6 +45,7 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <errno.h>
+#include <sstream>
 #include <boost/concept_check.hpp>
 
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
@@ -261,7 +262,9 @@ void SocketImplBSD::bind()
    // If that fails, print an error and return error status.
    if ( status == -1 )
    {
-      buildAndThrowException("[vpr::SocketImplBSD::bind] ", VPR_LOCATION);
+      std::ostringstream ex_text;
+      ex_text << "[vpr::SocketImplBSD::bind] " << " addr: [" << mLocalAddr << "] ";
+      buildAndThrowException(ex_text.str(), VPR_LOCATION);
    }
    else
    {
