@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-05-23 patrick  Applied versioning to the header and data directories.
+                    NEW VERSION: 1.1.22
 2006-05-23 patrick  Changed the static and shared library names to include the
                     VPR version as part of the base library name rather than
                     as part of the file extension.

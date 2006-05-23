@@ -792,7 +792,10 @@ VJ_VERSION_GROK(VERSION)
 # only the major and minor version numbers.
 VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
 VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+HEADER_VERSION="vpr-$VERSION_DOT"
+CLOSE_HEADER_VERSION='..'
 LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+DATA_VERSION="vpr-$VERSION_DOT"
 
 vpr_cxxflags="$STDFLAGS"
 
@@ -929,6 +932,21 @@ else
     DYLIB_DEPS="$APP_EXTRA_LIBS"
 fi
 
+# Set up some sed expressions that will help separate the share directory from
+# the full installation prefix.
+if test "x$prefix" = "xNONE" ; then
+   _prefix_exp="s|^$ac_default_prefix/||"
+else
+   _prefix_exp="s|^$prefix/||"
+fi
+
+# Make a best-effort attempt to extract the actual share directory from the
+# full installation prefix.  This is not foolproof, but it will work in almost
+# all cases.  A person would have to be doing something malicious or foolish
+# to make it break.
+VPR_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
+VPR_SHARE_DIR=`echo "$VPR_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
 vpr_lib_name="vpr$LIBRARY_VERSION"
 vpr_prof_lib_name="vpr_p$LIBRARY_VERSION"
 
@@ -1012,6 +1030,8 @@ elif test "x$GCC" = "xyes" ; then
     vpr64_flags='-m64'
 fi
 
+includedir="$includedir/$HEADER_VERSION"
+
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -1025,7 +1045,10 @@ AC_SUBST(RM_LN)
 
 AC_SUBST(VERSION_DOT)
 AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(HEADER_VERSION)
+AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
+AC_SUBST(DATA_VERSION)
 
 AC_SUBST(SUBSYSTEM)
 AC_SUBST(SIMULATOR)

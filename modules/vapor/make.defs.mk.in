@@ -88,10 +88,12 @@ VERSION_DOT=		@VERSION_DOT@
 VERSION_UNDERSCORE=	@VERSION_UNDERSCORE@
 
 mtreedir=		$(topdir)/mtree
-projdatadir=		$(datadir)/vpr
+projdatadir=		$(datadir)/@DATA_VERSION@
 releasedir=		$(JUGGLERROOT_ABS)/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
+instprefix=		@prefix@
+
 DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
 MAKEFLAGS+=		--no-print-directory
 DEPGEN_TOOL_CC=		@CC@
@@ -105,6 +107,7 @@ RM_LN=			@RM_LN@
 WARNS=			2
 VPRROOT_ABS=		@VPRROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+VPR_SHARE_DIR=		@VPR_SHARE_DIR@
 
 LOCAL_BOOST=		@LOCAL_BOOST@
 
@@ -114,7 +117,8 @@ LOCAL_BOOST=		@LOCAL_BOOST@
 EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB) @CPPDOM_CXXFLAGS@
 EXTRA_DEPEND_FLAGS=	-I$(VPRROOT_ABS) @BOOST_INCLUDES@
-EXTRA_DEFS+=		-D_VPR_BUILD_
+EXTRA_DEFS+=		-DVPR_ROOT_DIR="\"$(instprefix)\"" 		\
+			-DVPR_SHARE_DIR="\"$(VPR_SHARE_DIR)\"" -D_VPR_BUILD_
 EXTRA_INCLUDES=		-I$(top_srcdir) @BOOST_INCLUDES@
 EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@
 
