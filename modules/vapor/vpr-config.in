@@ -257,19 +257,17 @@ sub make_CXXFLAGS ($)
    }
 
    my $vpr_extra_includes = '';
+   my $hack_deps_dir = ("$deps_dir" ne "" ? "$deps_dir" : "$base_dir");
 
    # XXX: This is pretty lame, but I cannot think of a better way to ensure
    # that this extra directory is added when it is needed.
    if ( "$PLATFORM" eq "IRIX" )
    {
-      my $hack_deps_dir = ("$deps_dir" ne "" ? "$deps_dir" : "$base_dir");
       $vpr_extra_includes = "-I$hack_deps_dir/include/boost/compatibility/cpp_c_headers";
    }
 
    $cxxflags = qq(@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ ) .
-               qq(-I@includedir@ $vpr_extra_includes);
-
-   $cxxflags .= " -I$deps_dir/include" if $deps_dir;
+               qq(-I@includedir@ $vpr_extra_includes -I$hack_deps_dir/include);
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
