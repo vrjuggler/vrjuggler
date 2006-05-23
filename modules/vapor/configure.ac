@@ -785,6 +785,14 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
+VJ_VERSION_GROK(VERSION)
+
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+LIBRARY_VERSION="-$VERSION_UNDERSCORE"
 
 vpr_cxxflags="$STDFLAGS"
 
@@ -921,6 +929,9 @@ else
     DYLIB_DEPS="$APP_EXTRA_LIBS"
 fi
 
+vpr_lib_name="vpr$LIBRARY_VERSION"
+vpr_prof_lib_name="vpr_p$LIBRARY_VERSION"
+
 # Information needed to generate vpr-config.
 case $SUBSYSTEM in
     SPROC)
@@ -932,8 +943,8 @@ case $SUBSYSTEM in
         vpr_ldflags_linker="$vpr_ldflags_compiler"
         vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
-        vpr_libs='-lvpr'
-        vpr_prof_libs='-lvpr_p'
+        vpr_libs="-l$vpr_lib_name"
+        vpr_prof_libs="-l$vpr_prof_lib_name"
         ;;
     POSIX)
         subsystem_cxxflags="$subsystem_includes"
@@ -953,8 +964,8 @@ case $SUBSYSTEM in
         vpr_ldflags_linker="$vpr_ldflags_compiler"
         vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
-        vpr_libs='-lvpr'
-        vpr_prof_libs='-lvpr_p'
+        vpr_libs="-l$vpr_lib_name"
+        vpr_prof_libs="-l$vpr_prof_lib_name"
         ;;
     NSPR)
         if test "x$OS_TYPE" = "xWin32" ; then
@@ -964,8 +975,8 @@ case $SUBSYSTEM in
             vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
             vpr_extra_ldflags_compiler="/link $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
             vpr_extra_ldflags_linker="$CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
-            vpr_libs='vpr.lib'
-            vpr_prof_libs='vpr.lib'
+            vpr_libs="$vpr_lib_name.lib"
+            vpr_prof_libs="$vpr_prof_lib_name.lib"
         else
             subsystem_cxxflags="$subsystem_includes"
             subsystem_libs="$NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
@@ -973,8 +984,8 @@ case $SUBSYSTEM in
             vpr_ldflags_linker="$vpr_ldflags_compiler"
             vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
             vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
-            vpr_libs='-lvpr'
-            vpr_prof_libs='-lvpr_p'
+            vpr_libs="-l$vpr_lib_name"
+            vpr_prof_libs="-l$vpr_prof_lib_name"
 
             if test "x$PLATFORM" != "xDarwin" ; then
                 if test "x$GNU_LD" = "xyes" ; then
@@ -1001,8 +1012,6 @@ elif test "x$GCC" = "xyes" ; then
     vpr64_flags='-m64'
 fi
 
-VJ_VERSION_GROK(VERSION)
-
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -1013,6 +1022,10 @@ AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SHARE_DIR)
 
 AC_SUBST(RM_LN)
+
+AC_SUBST(VERSION_DOT)
+AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(LIBRARY_VERSION)
 
 AC_SUBST(SUBSYSTEM)
 AC_SUBST(SIMULATOR)

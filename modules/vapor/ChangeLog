@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-05-23 patrick  Changed the static and shared library names to include the
+                    VPR version as part of the base library name rather than
+                    as part of the file extension.
+                    NEW VERSION: 1.1.21
 2006-05-12 allenb   Removed exception specifications from everything but
                     the exception classes.
                     NEW VERSION: 1.1.20
