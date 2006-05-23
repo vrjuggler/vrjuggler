@@ -69,6 +69,10 @@
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
+MAJOR_VERSION=          @MAJOR_VERSION@
+MINOR_VERSION=          @MINOR_VERSION@
+MICRO_VERSION=          @MICRO_VERSION@
+
 mtreedir=		$(topdir)/mtree
 projdatadir=		$(datadir)/gadgeteer
 releasedir=		@JUGGLERROOT_ABS@/release

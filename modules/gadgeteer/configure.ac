@@ -209,11 +209,21 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
+VJ_VERSION_GROK(VERSION)
+
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+LIBRARY_VERSION="-$VERSION_UNDERSCORE"
 
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
+
+
 
 CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS_MIN $JCCL_CXXFLAGS_MIN $GMTL_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
@@ -327,6 +337,9 @@ else
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
+gadget_lib_name="gadget$LIBRARY_VERSION"
+gadget_prof_lib_name="gadget_p$LIBRARY_VERSION"
+
 # Information needed to generate gadgeteer-config.
 case $OS_TYPE in
     UNIX)
@@ -342,8 +355,8 @@ case $OS_TYPE in
             gadget_ldflags_linker="$gadget_ldflags_compiler"
         fi
 
-        gadget_libs='-lgadget'
-        gadget_prof_libs='-lgadget_p'
+        gadget_libs="-l$gadget_lib_name"
+        gadget_prof_libs="-l$gadget_prof_lib_name"
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"
 
         Gadgeteer_lib='-lgadget'
@@ -351,8 +364,8 @@ case $OS_TYPE in
     Win32)
         gadget_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
-        gadget_libs='gadget.lib'
-        gadget_prof_libs='gadget.lib'
+        gadget_libs="$gadget_lib_name.lib"
+        gadget_prof_libs="$gadget_prof_lib_name.lib"
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS comctl32.lib gdi32.lib user32.lib"
 
         Gadgeteer_lib='gadget.lib'
@@ -370,7 +383,6 @@ fi
 gadget_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 gadget_extra_ldflags_linker="$gadget_extra_ldflags_compiler"
 
-VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
 
@@ -384,6 +396,10 @@ AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
+
+AC_SUBST(VERSION_DOT)
+AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(LIBRARY_VERSION)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
