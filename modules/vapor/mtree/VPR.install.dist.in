@@ -41,8 +41,6 @@
     bin
     ..
     include
-        vpr
-        ..
     ..
     share
     ..

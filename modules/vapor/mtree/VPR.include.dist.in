@@ -39,85 +39,87 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     include
-        vpr
-            DynLoad
-            ..
-            IO
-                Port
+        @HEADER_VERSION@
+            vpr
+                DynLoad
                 ..
-                Socket
-                ..
-                Stats
-                ..
-            ..
-            Perf
-            ..
-            Sync
-            ..
-            Thread
-            ..
-            Util
-                detail
-                ..
-            ..
-            md
-                DARWIN
-                    DynLoad
+                IO
+                    Port
+                    ..
+                    Socket
+                    ..
+                    Stats
                     ..
                 ..
-                NSPR
-                    DynLoad
+                Perf
+                ..
+                Sync
+                ..
+                Thread
+                ..
+                Util
+                    detail
                     ..
-                    IO
-                        Socket
+                ..
+                md
+                    DARWIN
+                        DynLoad
                         ..
                     ..
-                    Sync
-                    ..
-                    Thread
-                    ..
-                    Util
-                    ..
-                ..
-                POSIX
-                    DynLoad
-                    ..
-                    IO
-                        Port
+                    NSPR
+                        DynLoad
                         ..
-                        Socket
+                        IO
+                            Socket
+                            ..
+                        ..
+                        Sync
+                        ..
+                        Thread
+                        ..
+                        Util
                         ..
                     ..
-                    Sync
-                    ..
-                    Thread
-                    ..
-                    Util
-                    ..
-                ..
-                SIM
-                    IO
-                        Socket
+                    POSIX
+                        DynLoad
+                        ..
+                        IO
+                            Port
+                            ..
+                            Socket
+                            ..
+                        ..
+                        Sync
+                        ..
+                        Thread
+                        ..
+                        Util
                         ..
                     ..
-                    Network
+                    SIM
+                        IO
+                            Socket
+                            ..
+                        ..
+                        Network
+                        ..
                     ..
-                ..
-                SPROC
-                    SharedMem
+                    SPROC
+                        SharedMem
+                        ..
+                        Sync
+                        ..
+                        Thread
+                        ..
                     ..
-                    Sync
-                    ..
-                    Thread
-                    ..
-                ..
-                WIN32
-                    IO
-                        Port
+                    WIN32
+                        IO
+                            Port
+                            ..
                         ..
                     ..
                 ..
             ..
-        ..
+        @CLOSE_HEADER_VERSION@
     ..
 ..
