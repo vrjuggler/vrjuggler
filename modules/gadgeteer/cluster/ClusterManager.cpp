@@ -635,7 +635,7 @@ namespace cluster
                {
                   // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
                   // we can append a default driver search path.
-                  base_dir = VJ_ROOT_DIR;
+                  base_dir = GADGET_ROOT_DIR;
                }
             }
 
