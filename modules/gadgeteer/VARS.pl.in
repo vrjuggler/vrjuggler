@@ -74,8 +74,9 @@ $VARS{'PLATFORM'}        = '@PLATFORM@';
 $VARS{'LIBBITSUF'}       = '@LIBBITSUF@';
 
 # Gadgeteer stuff.
-$VARS{'GAD_SHARE_DIR'}        = '@GAD_SHARE_DIR@';
+$VARS{'GADGET_SHARE_DIR'}        = '@GADGET_SHARE_DIR@';
 $VARS{'APP_GAD_LIBS_X11'}     = '@APP_GAD_LIBS_X11@';
+
 
 $VARS{'DEPEND_EXTRAS'}        = '@DEPEND_EXTRAS@';
 $VARS{'DEPEND_FLAGS'}         = '@DEPEND_FLAGS@';

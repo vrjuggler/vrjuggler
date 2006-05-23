@@ -63,6 +63,13 @@ DPP_STD_CPP(yes)
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
 
+# ------------------------------------------------------ #
+# --enable-feature[=arg] and --disable-feature arguments #
+# ------------------------------------------------------ #
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
+
 # Allow forcing the use of GCC as the compiler.
 DPP_WITH_GCC(no)
 
@@ -214,9 +221,23 @@ VJ_VERSION_GROK(VERSION)
 # Set the form of the version number used for versioned directory and file
 # naming. Unstable builds use all three version numbers; stable builds use
 # only the major and minor version numbers.
-VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
-VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
-LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+
+   HEADER_VERSION="gadget-$VERSION_DOT"
+   CLOSE_HEADER_VERSION='..'
+   LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+   DATA_VERSION="gadget-$VERSION_DOT"
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+
+else
+   DATA_VERSION="gadget"
+fi
 
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
@@ -295,6 +316,8 @@ if test "x$OS_TYPE" = "xUNIX" ; then
    fi
 fi
 
+
+
 # Remove duplicated arguments from each of the following.  This can help speed
 # up compile times, and it reduces the (perceived) complexity of the commands.
 # These steps are performed here because no further additions are made to any
@@ -336,6 +359,21 @@ else
     GADGETROOT_ABS="$GADGETROOT_ABS"
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
+
+# Set up some sed expressions that will help separate the share directory from
+# the full installation prefix.
+if test "x$prefix" = "xNONE" ; then
+   _prefix_exp="s|^$ac_default_prefix/||"
+else
+   _prefix_exp="s|^$prefix/||"
+fi
+
+# Make a best-effort attempt to extract the actual share directory from the
+# full installation prefix.  This is not foolproof, but it will work in almost
+# all cases.  A person would have to be doing something malicious or foolish
+# to make it break.
+GADGET_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
+GADGET_SHARE_DIR=`echo "$GADGET_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
 gadget_lib_name="gadget$LIBRARY_VERSION"
 gadget_prof_lib_name="gadget_p$LIBRARY_VERSION"
@@ -383,6 +421,8 @@ fi
 gadget_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 gadget_extra_ldflags_linker="$gadget_extra_ldflags_compiler"
 
+includedir="$includedir/$HEADER_VERSION"
+
 
 DPP_SUBST
 
@@ -399,7 +439,10 @@ AC_SUBST(RM_LN)
 
 AC_SUBST(VERSION_DOT)
 AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(HEADER_VERSION)
+AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
+AC_SUBST(DATA_VERSION)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)

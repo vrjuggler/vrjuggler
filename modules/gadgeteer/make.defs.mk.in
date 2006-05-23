@@ -74,7 +74,7 @@ MINOR_VERSION=          @MINOR_VERSION@
 MICRO_VERSION=          @MICRO_VERSION@
 
 mtreedir=		$(topdir)/mtree
-projdatadir=		$(datadir)/gadgeteer
+projdatadir=		$(datadir)/@DATA_VERSION@
 releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
@@ -94,6 +94,7 @@ RM_LN=			@RM_LN@
 WARNS=			2
 GADGETROOT_ABS=		@GADGETROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+GADGET_SHARE_DIR=       @GADGET_SHARE_DIR@
 
 STATICLIB_EXT=          @STATICLIB_EXT@
 DYNAMICLIB_EXT=         @DYNAMICLIB_EXT@
@@ -103,7 +104,9 @@ DYNAMICLIB_EXT=         @DYNAMICLIB_EXT@
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
-EXTRA_DEFS=		-D_GADGET_BUILD_
+EXTRA_DEFS=		-DGADGET_ROOT_DIR="\"$(instprefix)\"" \
+                        -DGADGET_SHARE_DIR="\"$(GADGET_SHARE_DIR)\"" \
+                        -D_GADGET_BUILD_
 EXTRA_DEPEND_FLAGS=	-I$(GADGETROOT_ABS)
 EXTRA_INCLUDES=		-I$(top_srcdir)
 EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@
