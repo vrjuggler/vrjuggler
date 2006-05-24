@@ -558,7 +558,6 @@ cppdom::NodePtr ConfigElement::getPropertyCdataNode(const std::string& prop, int
 std::string ConfigElement::getPropertyString(const std::string& prop, int ind) const
 {
    vprASSERT(mNode.get() != NULL);
-   vprASSERT(tokens::NAME != prop && "Use getName() to get an element's name");
 
    std::string prop_string_rep("");     // The String rep to convert from
    PropertyDefinition prop_def = mDef->getPropertyDefinition(prop);
