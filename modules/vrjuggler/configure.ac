@@ -69,6 +69,10 @@ AC_ARG_ENABLE(pf-api,
               [  --enable-pf-api         Use Perfromer API               [default=yes]],
               _enable_pf_api="$enableval", _enable_pf_api='yes')
 
+# Enable versioning by default
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -264,6 +268,34 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Finalize substitution settings.
 # -----------------------------------------------------------------------------
+
+VJ_VERSION_GROK(VERSION)
+
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+
+   HEADER_VERSION="vrjuggler-$VERSION_DOT"
+   CLOSE_HEADER_VERSION='..'
+   LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+   DATA_VERSION="vrjuggler-$VERSION_DOT"
+
+   AC_DEFINE([VRJ_USE_VERSIONING], ,
+             [Define if full package versioning capabilities are enabled])
+   AC_DEFINE_UNQUOTED([VRJ_VERSION_DOT], ["$VERSION_DOT"],
+                      [VR Juggler version string])
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+else
+   DATA_VERSION="vrjuggler"
+fi
+
 
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
@@ -496,8 +528,17 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-VJ_SHARE_DIR=`echo "$datadir/vrjuggler" | sed -e 's|^${prefix}/||'`
+VJ_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
 VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
+vrj_lib_name="vrj$LIBRARY_VERSION"
+vrj_prof_lib_name="$vrj_p$LIBRARY_VERSION"
+
+vrjogl_lib_name="vrj_ogl$LIBRARY_VERSION"
+vrjogl_prof_lib_name="$vrj_ogl_p$LIBRARY_VERSION"
+
+vrjpf_lib_name="vrj_pf$LIBRARY_VERSION"
+vrjpf_prof_lib_name="$vrj_pf_p$LIBRARY_VERSION"
 
 # Information needed to generate vrjuggler-config.
 # $vrj_extra_libs only lists the external (non-Juggler) libraries needed by
@@ -508,14 +549,14 @@ case $OS_TYPE in
         vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
 
-        vrj_lib='-lvrj'
-        vrj_prof_lib='-lvrj_p'
-        vrj_ogl_lib='-lvrj_ogl'
-        vrj_ogl_prof_lib='-lvrj_ogl_p'
+        vrj_lib="-l$vrj_lib_name"
+        vrj_prof_lib="-l$vrj_prof_lib_name"
+        vrj_ogl_lib="-l$vrjogl_lib_name"
+        vrj_ogl_prof_lib="-lvrjogl_prof_lib_name"
 
         if test "x$PERFORMER_API" = "xY" ; then
-            vrj_pf_lib='-lvrj_pf'
-            vrj_pf_prof_lib='-lvrj_pf_p'
+            vrj_pf_lib="-l$vrjpf_lib_name"
+            vrj_pf_prof_lib="-l$vrjpf_prof_lib_name"
             vrj_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         fi
 
@@ -528,16 +569,16 @@ case $OS_TYPE in
         vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $BASIC_WIN32_LIBS $LIBS"
 
-        vrj_lib='vrj.lib'
-        vrj_prof_lib='vrj.lib'
-        vrj_ogl_lib='vrj_ogl.lib'
-        vrj_ogl_prof_lib='vrj_ogl.lib'
+        vrj_lib="$vrj_lib_name.lib"
+        vrj_prof_lib="$vrj_prof_lib_name.lib"
+        vrj_ogl_lib="$vrjogl_lib_name.lib"
+        vrj_ogl_prof_lib="$vrjogl_prof_lib_name.lib"
         vrj_extra_libs="$LDFLAGS $BASIC_WIN32_LIBS $LIBS"
         vrj_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
 
         if test "x$PERFORMER_API" = "xY" ; then
-            vrj_pf_lib='vrj_pf.lib'
-            vrj_pf_prof_lib='vrj_pf.lib'
+            vrj_pf_lib="$vrjpf_lib_name.lib"
+            vrj_pf_prof_lib="$vrjpf_prof_lib_name.lib"
             vrj_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         fi
 
@@ -559,7 +600,6 @@ vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 
-VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
 
@@ -569,6 +609,13 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(VJROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VJ_SHARE_DIR)
+
+AC_SUBST(VERSION_DOT)
+AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(HEADER_VERSION)
+AC_SUBST(CLOSE_HEADER_VERSION)
+AC_SUBST(LIBRARY_VERSION)
+AC_SUBST(DATA_VERSION)
 
 AC_SUBST(ANT)
 AC_SUBST(EXTRA_LDFLAGS)

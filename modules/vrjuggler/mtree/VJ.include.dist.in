@@ -32,6 +32,7 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     include
+      @HEADER_VERSION@
         vrj
             Display
             ..
@@ -56,5 +57,6 @@
             Util
             ..
         ..
+      @CLOSE_HEADER_VERSION@
     ..
 ..

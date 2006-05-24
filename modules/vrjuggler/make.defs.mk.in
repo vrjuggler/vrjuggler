@@ -84,7 +84,7 @@ VERSION_DOT=            @VERSION_DOT@
 VERSION_UNDERSCORE=     @VERSION_UNDERSCORE@
 
 mtreedir=		$(topdir)/mtree
-projdatadir=		$(datadir)/vrjuggler
+projdatadir=		$(datadir)/@DATA_VERSION@
 releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
