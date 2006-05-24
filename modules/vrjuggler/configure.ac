@@ -599,7 +599,7 @@ vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
-
+includedir="$includedir/$HEADER_VERSION"
 
 DPP_SUBST
 

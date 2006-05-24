@@ -117,7 +117,8 @@ endif
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
-EXTRA_DEFS=		-DVJ_SHARE_DIR="\"$(VJ_SHARE_DIR)\"" -D_VRJ_BUILD_
+EXTRA_DEFS=		-DVJ_ROOT_DIR="\"$(instprefix)\""  \
+                        -DVJ_SHARE_DIR="\"$(VJ_SHARE_DIR)\"" -D_VRJ_BUILD_
 EXTRA_DEPEND_FLAGS=	-I$(VJROOT_ABS)
 EXTRA_INCLUDES=		-I$(top_srcdir)
 EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@
