@@ -50,6 +50,7 @@
 #include <gadget/Type/DeviceInterface.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Util/PluginVersionException.h>
+#include <gadget/Util/PathHelpers.h>
 #include <gadget/gadgetParam.h>
 
 #include <gadget/InputManager.h>
@@ -727,35 +728,8 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
       }
 
       // Append a default driver search path to search_path.
-      const std::string gadget_base_dir("GADGET_BASE_DIR");
-      const std::string vj_base_dir("VJ_BASE_DIR");
-      std::string base_dir;
-
-      // Try get to the value of $GADGET_BASE_DIR first.  If that fails,
-      // fall back on $VJ_BASE_DIR.
-      if ( ! vpr::System::getenv(gadget_base_dir, base_dir).success() )
-      {
-         if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
-         {
-            // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
-            // we can append a default driver search path.
-            base_dir = GADGET_ROOT_DIR;
-         }
-      }
-
-#if defined(VPR_OS_IRIX) && defined(_ABIN32)
-      const std::string bit_suffix("32");
-#elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
-      defined(VPR_OS_Linux) && defined(__x86_64__)
-      const std::string bit_suffix("64");
-#else
-      const std::string bit_suffix("");
-#endif
-
-      fs::path default_search_dir =
-         fs::path(base_dir, fs::native) /
-            (std::string("lib") + bit_suffix) /
-            std::string("gadgeteer") / std::string("drivers");
+      const fs::path default_search_dir =
+         gadget::getDefaultPluginRoot() / std::string("drivers");
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
          << "[gadget::InputManager::configureInputManager()] Appending "

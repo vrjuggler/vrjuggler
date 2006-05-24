@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-24-2006 patrick     Added gadget::getDefaultPluginRoot(), which provides
+                        a version-specific path to the directory containing
+                        the base set of Gadgeteer plug-ins.
+                        NEW VERSION: 1.1.11
 May-23-2006 dshipton    Added version information to data directory
                         NEW VERSION: 1.1.10
 May-23-2006 dshipton    Changed the static and shared library names to include
