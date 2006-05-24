@@ -70,7 +70,7 @@
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
 mtreedir=		$(topdir)/mtree
-projdatadir=		$(datadir)/vrjuggler
+projdatadir=		$(datadir)/@DATA_VERSION@
 releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
@@ -92,6 +92,7 @@ RM_LN=			@RM_LN@
 WARNS=			2
 PLUGIN_ROOT_ABS=	@PLUGIN_ROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+PLUGIN_DIR_VERSION=     @PLUGIN_DIR_VERSION@
 
 STATICLIB_EXT=          @STATICLIB_EXT@
 DYNAMICLIB_EXT=         @DYNAMICLIB_EXT@

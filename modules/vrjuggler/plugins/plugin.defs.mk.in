@@ -46,7 +46,7 @@ LIBDIR_NAME?=	lib$(LIBBITSUF)
 # $(LIBDIR_BASE) is the base directory where the libraries will be built.
 LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
 
-DSO_PLUGIN_SUBDIR=	vrjuggler/plugins
+DSO_PLUGIN_SUBDIR=	$(PLUGIN_DIR_VERSION)/plugins
 DSO_PLUGIN_DIR=		$(LIBDIR_BASE)/$(DSO_PLUGIN_SUBDIR)
 
 PLUGIN_DSO=	$(PLUGIN_NAME)$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
