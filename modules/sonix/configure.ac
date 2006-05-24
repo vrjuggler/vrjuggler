@@ -46,6 +46,7 @@ DPP_INIT
 # make the nice reconfig script.
 DPP_GEN_RECONFIG
 
+DPP_STD_CPP(yes)
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
@@ -53,7 +54,11 @@ DPP_GEN_RECONFIG
 # ------------------------------------------------------ #
 # --enable-feature[=arg] and --disable-feature arguments #
 # ------------------------------------------------------ #
-DPP_STD_CPP(yes)
+
+# Enable versioning by default
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
@@ -153,6 +158,28 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
+VJ_VERSION_GROK(VERSION)
+
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+
+   HEADER_VERSION="snx-$VERSION_DOT"
+   CLOSE_HEADER_VERSION='..'
+   LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+   DATA_VERSION="sonix-$VERSION_DOT"
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+else
+   DATA_VERSION="sonix"
+fi
+
 
 CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS_MIN $GMTL_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
@@ -251,6 +278,8 @@ else
    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
+snx_libs_name="snx$LIBRARY_VERSION"
+snx_prof_lib_name="-l$vpr_p$LIBRARY_VERSION"
 
 # Information needed to generate sonix-config.
 case $OS_TYPE in
@@ -267,8 +296,8 @@ case $OS_TYPE in
             snx_ldflags_linker="$snx_ldflags_compiler"
         fi
 
-        snx_libs='-lsonix'
-        snx_prof_libs='-lsonix_p'
+        snx_libs="-l$snx_lib_name"
+        snx_prof_libs="-l$snx_prof_lib_name"
         snx_extra_libs="$LDFLAGS $LIBS"
 
         Sonix_lib='-lsonix'
@@ -276,8 +305,8 @@ case $OS_TYPE in
     Win32)
         snx_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         snx_ldflags_linker="/libpath:\$prefix/lib/debug "
-        snx_libs='sonix.lib'
-        snx_prof_libs='sonix.lib'
+        snx_libs="$snx_lib_name.lib"
+        snx_prof_libs="$snx_prof_lib_name.lib"
         snx_extra_libs="$LDFLAGS $LIBS"
 
         Sonix_lib='sonix.lib'
@@ -295,7 +324,6 @@ fi
 snx_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 snx_extra_ldflags_linker="$snx_extra_ldflags_compiler"
 
-VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
 DPP_GET_PROJECTDIR
@@ -306,6 +334,10 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SNXROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SUBSYSTEM)
+
+AC_SUBST(VERSION_DOT)
+AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(LIBRARY_VERSION)
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
