@@ -38,6 +38,13 @@
  */
 #define __VJ_version @VER_NUMBER@
 
+/**
+ * The individual VR Juggler version numbers.
+ */
+#define __VJ_MAJOR__ @MAJOR_VER_NUMBER@
+#define __VJ_MINOR__ @MINOR_VER_NUMBER@
+#define __VJ_PATCH__ @PATCH_VER_NUMBER@
+
 namespace vrj
 {
    /**
