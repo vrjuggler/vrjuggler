@@ -45,6 +45,13 @@
  */
 #define __SNX_version @VER_NUMBER@
 
+/** 
+ * The individual SNX version numbers.
+ */
+#define __SNX_MAJOR__ @MAJOR_VER_NUMBER@
+#define __SNX_MINOR__ @MINOR_VER_NUMBER@
+#define __SNX_PATCH__ @PATCH_VER_NUMBER@
+
 namespace snx
 {
    /**
