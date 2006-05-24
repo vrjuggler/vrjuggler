@@ -38,6 +38,13 @@
  */
 #define __JCCL_version @VER_NUMBER@
 
+/**
+ * Individual JCCL verions numbers
+ */
+#define __JCCL_MAJOR__ @MAJOR_VER_NUMBER@
+#define __JCCL_MINOR__ @MINOR_VER_NUMBER@
+#define __JCCL_PATCH__ @PATCH_VER_NUMBER@
+
 namespace jccl
 {
    /**
