@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-24-2006 dshipton    Versioning of all data and libraries for parallel
+                        installations.
+                        NEW VERSION: 1.1.4
 Oct-10-2005 patrickh    jccl::ConfigManager is no longer responsible for
                         deleting the memory held its pointre to the remote
                         run-time reconfiguration interface implementation.
