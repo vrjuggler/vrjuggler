@@ -301,6 +301,7 @@ sub make_CXXFLAGS ($;$)
    }
 
    my $snx_extra_includes     = '';
+   my $hack_deps_dir = ("$deps_dir" ne "" ? "$deps_dir" : "$base_dir");
 #   my $snx_extra_include_dirs = qq(@snx_extra_include_dirs@);
 
 #   if ( "$snx_extra_include_dirs" ne "" )
@@ -313,8 +314,7 @@ sub make_CXXFLAGS ($;$)
 #   }
 
    my $cxxflags = qq(@snx_cxxflags@ $dep_cxxflags $snx_extra_cxxflags ) .
-                  qq(-I@includedir@ $snx_extra_includes);
-   $cxxflags   .= " -I$deps_dir/include" if $deps_dir;
+                  qq(-I@includedir@ $snx_extra_includes -I$hack_deps_dir/include);
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
