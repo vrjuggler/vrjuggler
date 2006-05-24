@@ -43,7 +43,7 @@ LIBDIR_NAME?=	lib$(LIBBITSUF)
 # $(LIBDIR_BASE) is the base directory where the libraries will be built.
 LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
 
-DSO_PLUGIN_SUBDIR=	snx/plugins
+DSO_PLUGIN_SUBDIR=	$(PLUGIN_DIR_VERSION)/plugins
 DSO_PLUGIN_BASE_DIR=	$(LIBDIR_BASE)/$(DSO_PLUGIN_SUBDIR)
 DSO_PLUGIN_DIR=		$(DSO_PLUGIN_BASE_DIR)/$(BUILD_TYPE_DIR)
 

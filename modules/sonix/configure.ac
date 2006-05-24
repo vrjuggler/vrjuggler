@@ -278,8 +278,23 @@ else
    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
-snx_libs_name="snx$LIBRARY_VERSION"
-snx_prof_lib_name="-l$vpr_p$LIBRARY_VERSION"
+# Set up some sed expressions that will help separate the share directory from
+# the full installation prefix.
+if test "x$prefix" = "xNONE" ; then
+   _prefix_exp="s|^$ac_default_prefix/||"
+else
+   _prefix_exp="s|^$prefix/||"
+fi
+
+# Make a best-effort attempt to extract the actual share directory from the
+# full installation prefix.  This is not foolproof, but it will work in almost
+# all cases.  A person would have to be doing something malicious or foolish
+# to make it break.
+SNX_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
+SNX_SHARE_DIR=`echo "$SNX_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
+snx_lib_name="sonix$LIBRARY_VERSION"
+snx_prof_lib_name="$sonix_p$LIBRARY_VERSION"
 
 # Information needed to generate sonix-config.
 case $OS_TYPE in
@@ -324,6 +339,7 @@ fi
 snx_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 snx_extra_ldflags_linker="$snx_extra_ldflags_compiler"
 
+includedir="$includedir/$HEADER_VERSION"
 
 DPP_SUBST
 DPP_GET_PROJECTDIR
@@ -337,7 +353,11 @@ AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(VERSION_DOT)
 AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(HEADER_VERSION)
+AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
+AC_SUBST(DATA_VERSION)
+
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)

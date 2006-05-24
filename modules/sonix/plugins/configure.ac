@@ -70,6 +70,10 @@ AC_ARG_ENABLE(audiere,
               [  --enable-audiere        Compile in Audiere support      [default=yes]],
               [AUDIERE_ENABLED="$enableval"], [AUDIERE_ENABLED='yes'])
 
+# Enable versioning by default
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -271,6 +275,23 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+
+   DATA_VERSION="sonix-$SNX_VERSION"
+   PLUGIN_DIR_VERSION="sonix-$SNX_VERSION"
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+else
+   DATA_VERSION="sonix"
+   PLUGIN_DIR_VERSION="sonix"
+fi
+
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
@@ -333,6 +354,9 @@ AC_SUBST(topdir)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(PLUGIN_ROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
+
+AC_SUBST(DATA_VERSION)
+AC_SUBST(PLUGIN_DIR_VERSION)
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)

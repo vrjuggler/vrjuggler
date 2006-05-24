@@ -60,21 +60,10 @@ endif
 # Library build information.
 # --------------------------------------------
 
-SHLIB_MAJOR=	@MAJOR_VERSION@
-SHLIB_MINOR=	@MINOR_VERSION@
-SHLIB_MICRO=	@MICRO_VERSION@
+LIBRARY_VERSION=	@LIBRARY_VERSION@
 
-# We do not do version numbering for dynamic libraries on Win32.
-ifneq (@OS_TYPE@, Win32)
-DYNAMICLIB_VER=		.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
-DYNAMIC_LIB_LINKS=	$$LIB.$(DYNAMICLIB_EXT)				\
-			$$LIB.$(DYNAMICLIB_EXT).$(SHLIB_MAJOR)		\
-			$$LIB.$(DYNAMICLIB_EXT).$(SHLIB_MAJOR).$(SHLIB_MINOR)
-PROF_DYNAMIC_LIB_LINKS=	$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)		\
-			$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT).$(SHLIB_MAJOR) \
-			$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT).$(SHLIB_MAJOR).$(SHLIB_MINOR)
-# But we will name the static libraries differently than the dynamic libraries.
-else
+# We will name static libs different dynamic libraries on Win32.
+ifeq (@OS_TYPE@, Win32)
 STATIC_SUFFIX=	_s
 endif
 
@@ -85,27 +74,40 @@ endif
 
 # Add extra linking options on Darwin/OS X.
 ifeq (@PLATFORM@, Darwin)
-LDOPTS+=	-Wl,-dylib_compatibility_version,$(SHLIB_MAJOR).$(SHLIB_MINOR)
-LDOPTS+=	-Wl,-dylib_current_version,$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+LDOPTS+=	-Wl,-dylib_compatibility_version,$(MAJOR_VERSION).$(MINOR_VERSION)
+LDOPTS+=	-Wl,-dylib_current_version,$(MAJOR_VERSION).$(MINOR_VERSION).$(MICRO_VERSION)
 LDOPTS_DBG=	-g
 LDOPTS_OPT=	-Wl,-x
 endif
 
-# Full list of the libraries to build.
-LIBS=			$(SNX_LIBRARY)
-STATIC_LIBS=		$$LIB.$(STATICLIB_EXT)
-DYNAMIC_LIBS=		$$LIB.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
-PROF_STATIC_LIBS=	$${LIB}$(PROFLIB_EXT).$(STATICLIB_EXT)
-PROF_DYNAMIC_LIBS=	$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
-
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS=		@DYLIB_DEPS@
 DYLIB_PROF_DEPS=	@DYLIB_PROF_DEPS@
+STATICLIB_EXT=		@STATICLIB_EXT@
+DYNAMICLIB_EXT=		@DYNAMICLIB_EXT@
 
-SNX_LIB_STATIC=		$(SNX_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
-SNX_LIB_DYNAMIC=	$(SNX_LIBRARY).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
-SNX_PROF_LIB_STATIC=	$(SNX_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
-SNX_PROF_LIB_DYNAMIC=	$(SNX_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
+# These functions build up the name of the library using a comon form.
+# Unfortunately, spaces have significance in GNU Make function calls, so there
+# cannot be spaces after any commas.
+make_libname=		$(1)$(2)$(LIBRARY_VERSION).$(3)
+make_static=		$(call make_libname,$(1),$(STATIC_SUFFIX),$(STATICLIB_EXT))
+make_dynamic=		$(call make_libname,$(1),,$(DYNAMICLIB_EXT))
+make_static_prof=	$(call make_libname,$(1),$(PROFLIB_EXT)$(STATIC_SUFFIX),$(STATICLIB_EXT))
+make_dynamic_prof=	$(call make_libname,$(1),$(PROFLIB_EXT),$(DYNAMICLIB_EXT))
+
+# Full list of the libraries to build. These are for Doozer++.
+LIBS=			$(SNX_LIBRARY)
+STATIC_LIBS=		$(call make_static,$${LIB})
+DYNAMIC_LIBS=		$(call make_dynamic,$${LIB})
+PROF_STATIC_LIBS=	$(call make_static_prof,$${LIB})
+PROF_DYNAMIC_LIBS=	$(call make_dynamic_prof,$${LIB})
+
+# The proper library names. These are used below in the targets that actually
+# build the libraries.
+SNX_LIB_STATIC=		$(call make_static,$(SNX_LIBRARY))
+SNX_LIB_DYNAMIC=	$(call make_dynamic,$(SNX_LIBRARY))
+SNX_PROF_LIB_STATIC=	$(call make_static_prof,$(SNX_LIBRARY))
+SNX_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(SNX_LIBRARY))
 
 # Version information.
 PARAM_HEADER=	snx/snxParam.h
@@ -122,7 +124,7 @@ endif
 # =============================================================================
 # Library targets.
 # =============================================================================
-
+OBJS=		$(OBJDIR)/*.$(OBJEXT)
 BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
@@ -149,12 +151,12 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJS)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
 	$(RANLIB) $@
 	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
@@ -164,19 +166,19 @@ $(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJE
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJS)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
-          $(OBJDIR)/*.$(OBJEXT)
+          $(OBJS)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@) $(DYLIB_DEPS)
 	rm -f $(subst .dylib,.lo,$@)
 else
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS)	\
           $(DYLIB_DEPS)
 endif
 ifeq (@OS_TYPE@, Win32)
@@ -191,20 +193,20 @@ endif
 # ---------------------------------------------------------
 # Construct the profiled dynamic version of the libraries.
 # ---------------------------------------------------------
-$(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJS)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
-          $(OBJDIR)/*.$(OBJEXT)
+          $(OBJS)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
           $(DYLIB_PROF_DEPS)
 	rm -f $(subst .dylib,.lo,$@)
 else
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS)	\
           $(DYLIB_PROF_DEPS)
 endif
 ifeq (@OS_TYPE@, Win32)
