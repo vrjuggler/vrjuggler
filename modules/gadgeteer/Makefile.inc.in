@@ -162,7 +162,7 @@ $(LIBDIR)/$(GADGET_LIB_STATIC) $(LIBDIR)/$(GADGET_PROF_LIB_STATIC): $(OBJS)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
 	$(RANLIB) $@
 	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
@@ -179,12 +179,12 @@ $(LIBDIR)/$(GADGET_LIB_DYNAMIC): $(OBJS)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
-          $(OBJDIR)/*.$(OBJEXT)
+          $(OBJS)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@) $(DYLIB_DEPS)
 	rm -f $(subst .dylib,.lo,$@)
 else
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS)	\
           $(DYLIB_DEPS)
 endif
 ifeq (@OS_TYPE@, Win32)
@@ -199,20 +199,20 @@ endif
 # ---------------------------------------------------------
 # Construct the profiled dynamic version of the libraries.
 # ---------------------------------------------------------
-$(LIBDIR)/$(GADGET_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GADGET_PROF_LIB_DYNAMIC): $(OBJS)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
-          $(OBJDIR)/*.$(OBJEXT)
+          $(OBJS)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
           $(DYLIB_PROF_DEPS)
 	rm -f $(subst .dylib,.lo,$@)
 else
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS)	\
           $(DYLIB_PROF_DEPS)
 endif
 ifeq (@OS_TYPE@, Win32)
