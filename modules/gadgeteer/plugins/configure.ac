@@ -147,7 +147,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 
 VPR_PATH([1.1.20], , [AC_MSG_ERROR([*** VPR required for Device Drivers ***])])
-GADGETEER_PATH([1.1.8], ,
+GADGETEER_PATH([1.1.12], ,
                [AC_MSG_ERROR(*** Gadgeteer required for Plugins ***)])
 
 # -----------------------------------------------------------------------------
