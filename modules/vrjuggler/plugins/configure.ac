@@ -183,8 +183,8 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # only the major and minor version numbers.
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
 
-   DATA_VERSION="vrjuggler-$VJ_VERSION"
-   PLUGIN_DIR_VERSION="vrjuggler-$VJ_VERSION"
+   DATA_VERSION="vrjuggler-$VRJ_VERSION"
+   PLUGIN_DIR_VERSION="vrjuggler-$VRJ_VERSION"
 
 # If versioning is disabled, then none of the version variables need to be
 # set except for $DATA_VERSION. Its use is different than the others. The
