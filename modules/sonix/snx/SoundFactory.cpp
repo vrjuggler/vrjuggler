@@ -96,19 +96,14 @@ SoundFactory::SoundFactory()
    }
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
-   std::string snx_lib_dir("${SNX_BASE_DIR}/lib32/snx/plugins");
+   std::string snx_base_dir("${SNX_BASE_DIR}/lib32/");
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
       defined(VPR_OS_Linux) && defined(__x86_64__)
-   std::string snx_lib_dir("${SNX_BASE_DIR}/lib64/snx/plugins");
+   std::string snx_base_dir("${SNX_BASE_DIR}/lib64/");
 #else
-   std::string snx_lib_dir("${SNX_BASE_DIR}/lib/snx/plugins");
+   std::string snx_base_dir("${SNX_BASE_DIR}/lib/");
 #endif
 
-#ifdef SNX_DEBUG
-   snx_lib_dir += std::string("/dbg");
-#else
-   snx_lib_dir += std::string("/opt");
-#endif
 
 #if defined(VPR_OS_Windows)
    const std::string driver_ext("dll");
@@ -118,7 +113,39 @@ SoundFactory::SoundFactory()
    const std::string driver_ext("so");
 #endif
 
-   search_paths.push_back(snx_lib_dir);
+   const std::string sonix_subdir_base("sonix");
+
+   // If versioning is enabled, then the name of the directory containing the
+   // Sonix plug-ins must contain version information.
+#if defined(SNX_USE_VERSIONING)
+   std::string sonix_ver_str;
+   const std::string sonix_version("SNX_VERSION");
+
+   // If $GADGET_VERSION is set, use the value of that environment variable
+   // as the version component of the plug-in subdirectory name. Otherwise,
+   // use the compile-time value provided by GADGET_VERSION_DOT.
+   if ( ! vpr::System::getenv(sonix_version, sonix_ver_str).success() )
+   {
+      sonix_ver_str = SNX_VERSION_DOT;
+   }
+
+   std::string sonix_subdir(sonix_subdir_base + std::string("-") +
+                             sonix_ver_str + "/plugins/");
+
+   // If versioning is not enabled, then the directory containing the
+   // Gadgeteer plug-ins will not incorporate version information.
+#else
+   std::string sonix_subdir(sonix_subdir_base + "/plugins/");
+#endif
+
+#ifdef SNX_DEBUG
+   std::string sonix_path(snx_base_dir + sonix_subdir + "dbg");
+#else
+   std::string sonix_path(snx_base_dir + sonix_subdir + "opt");
+#endif
+
+   search_paths.push_back(sonix_path);
+
    search_paths.push_back("${HOME}/.sonix/plugins");
 
    for (unsigned int x = 0; x < search_paths.size(); ++x)

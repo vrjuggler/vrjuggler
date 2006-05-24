@@ -172,6 +172,11 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
    LIBRARY_VERSION="-$VERSION_UNDERSCORE"
    DATA_VERSION="sonix-$VERSION_DOT"
 
+   AC_DEFINE([SNX_USE_VERSIONING], ,
+             [Define if full package versioning capabilities are enabled])
+   AC_DEFINE_UNQUOTED([SNX_VERSION_DOT], ["$VERSION_DOT"],
+                      [Sonix version string])
+
 # If versioning is disabled, then none of the version variables need to be
 # set except for $DATA_VERSION. Its use is different than the others. The
 # important thing to note is that the directory name is unversioned in this
