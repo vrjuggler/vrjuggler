@@ -36,6 +36,14 @@
  */
 #define __TWEEK_version @VER_NUMBER@
 
+/**
+ * The individual TWEEK version numbers
+ */
+#define __TWEEK_MAJOR__ @MAJOR_VER_NUMBER@
+#define __TWEEK_MINOR__ @MINOR_VER_NUMBER@
+#define __TWEEK_PATCH__ @PATCH_VER_NUMBER@
+
+
 namespace tweek
 {
    /**

@@ -73,11 +73,19 @@
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
-mtreedir=	$(topdir)/mtree
-projdatadir=	$(datadir)/tweek
-releasedir=	@JUGGLERROOT_ABS@/release
-scriptdir=	$(releasedir)/scripts
-topdir=		@topdir@
+MAJOR_VERSION=          @MAJOR_VERSION@
+MINOR_VERSION=          @MINOR_VERSION@
+MICRO_VERSION=          @MICRO_VERSION@
+
+VERSION_DOT=            @VERSION_DOT@
+VERSION_UNDERSCORE=     @VERSION_UNDERSCORE@
+
+mtreedir=	        $(topdir)/mtree
+projdatadir=	        $(datadir)/@DATA_VERSION@
+releasedir=	        @JUGGLERROOT_ABS@/release
+scriptdir=	        $(releasedir)/scripts
+topdir=		        @topdir@
+instprefix=             @prefix@
 
 ANT=			@ANT@
 CXX_IDL=		@CXX_IDL@
@@ -96,14 +104,16 @@ RM_LN=			@RM_LN@
 WARNS=			2
 TWEEKROOT_ABS=		@TWEEKROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
-TWEEK_SHARE_DIR=	@TWEEK_SHARE_DIR@
+TWEEK_SHARE_DIR=        @TWEEK_SHARE_DIR@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS=		$(CFLAGS_DYNLIB) @VPR_CFLAGS@
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB) @VPR_CXXFLAGS@
-EXTRA_DEFS=		-D_TWEEK_BUILD_ @EXTRA_DEFS@
+EXTRA_DEFS=		-DTWEEK_ROOT_DIR="\"$(instprefix)\""        \
+                        -DTWEEK_SHARE_DIR="\"$(TWEEK_SHARE_DIR)\""    \
+                        -D_TWEEK_BUILD_ @EXTRA_DEFS@
 EXTRA_DEPEND_FLAGS=	-I$(top_srcdir) -I$(topdir)/tweek/idl
 EXTRA_INCLUDES=		-I$(top_srcdir) -I$(topdir)/tweek/idl
 EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@

@@ -61,6 +61,11 @@ AC_ARG_ENABLE(extensions,
               [  --enable-extensions     Build in Tweek extensions       [default=yes]],
               use_tweek_extensions="$enableval", use_tweek_extensions='yes')
 
+# Enable versioning by default
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
+
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -1105,6 +1110,37 @@ fi
 
 DPP_INSTALLER(tweek, 0644, 0755, 0755)
 
+# Makefile Substitutions
+
+VJ_VERSION_GROK(VERSION)
+
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+
+   HEADER_VERSION="tweek-$VERSION_DOT"
+   CLOSE_HEADER_VERSION='..'
+   LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+   DATA_VERSION="tweek-$VERSION_DOT"
+
+   AC_DEFINE([TWEEK_USE_VERSIONING], ,
+             [Define if full package versioning capabilities are enabled])
+   AC_DEFINE_UNQUOTED([TWEEK_VERSION_DOT], ["$VERSION_DOT"],
+                      [Tweek version string])
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+else
+   DATA_VERSION="tweek"
+fi
+
+includedir="$includedir/$HEADER_VERSION"
+
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
@@ -1113,9 +1149,9 @@ DPP_INSTALLER(tweek, 0644, 0755, 0755)
 # For use in linking applications.
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 
-tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\$prefix/include"
-tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\$prefix/include"
-tweek_idlflags_python="$PYTHON_IDL_OPTS ${PYTHON_IDL_INCFLAG}\$prefix/include"
+tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\$includedir"
+tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\$includedir"
+tweek_idlflags_python="$PYTHON_IDL_OPTS ${PYTHON_IDL_INCFLAG}\$includedir"
 tweek_idlgendir_cxx="$CXX_IDL_GENDIR_OPT"
 tweek_idlgendir_java="$JAVA_IDL_GENDIR_OPT"
 tweek_idlgendir_python="$PYTHON_IDL_GENDIR_OPT"
@@ -1136,7 +1172,7 @@ esac
 
 for dir in "$idl_gen_dirs" ; do
    IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$dir"
-   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\$prefix/include/$dir"
+   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\$includedir/$dir"
 done
 
 #for dir in "$idl_src_dirs" ; do
@@ -1237,6 +1273,24 @@ else
    RM_LN='rm -f'
 fi
 
+# Set up some sed expressions that will help separate the share directory from
+# the full installation prefix.
+if test "x$prefix" = "xNONE" ; then
+   _prefix_exp="s|^$ac_default_prefix/||"
+else
+   _prefix_exp="s|^$prefix/||"
+fi
+
+# Make a best-effort attempt to extract the actual share directory from the
+# full installation prefix.  This is not foolproof, but it will work in almost
+# all cases.  A person would have to be doing something malicious or foolish
+# to make it break.
+TWEEK_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
+TWEEK_SHARE_DIR=`echo "$TWEEK_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
+tweek_lib_name="tweek$LIBRARY_VERSION"
+tweek_prof_lib_name="tweek_p$LIBRARY_VERSION"
+
 # Information needed to generate tweek-config.
 case $OS_TYPE in
    UNIX)
@@ -1252,15 +1306,15 @@ case $OS_TYPE in
 
       tweek_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
       tweek_ldflags_linker="$tweek_ldflags_compiler"
-      tweek_libs="-ltweek"
-      tweek_prof_libs="-ltweek_p"
+      tweek_libs="-l$tweek_lib_name"
+      tweek_prof_libs="-l$tweek_prof_lib_name"
       tweek_extra_libs="$CXX_ORB_LIB"
       ;;
    Win32)
       tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
-      tweek_libs="tweek.lib"
-      tweek_prof_libs="tweek.lib"
+      tweek_libs="$tweek_lib_name.lib"
+      tweek_prof_libs="$tweek_prof_lib_name.lib"
       tweek_extra_libs="$CXX_ORB_LIB_LINK_EXE"
       ;;
 esac
@@ -1294,7 +1348,6 @@ tweek_java_api_jars_bundle=`echo "$jars" | sed -e 's/\([A-Za-z0-9_][A-Za-z0-9_.-
 tweek_ext_jars=`echo "$ext_jars" | sed -e 's/\([a-z][a-z]*\.jar\)/${prefix}\/share\/tweek\/java\/\1/g' -e "s/ /$JCPS/g"`
 changequote([, ])
 
-VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
 
@@ -1304,6 +1357,13 @@ AC_SUBST(UNIX_TWEEKROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(TWEEKROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
+
+AC_SUBST(VERSION_DOT)
+AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(LIBRARY_VERSION)
+AC_SUBST(HEADER_VERSION)
+AC_SUBST(CLOSE_HEADER_VERSION)
+AC_SUBST(DATA_VERSION)
 
 AC_SUBST(ANT)
 AC_SUBST(BUILD_CXX)
