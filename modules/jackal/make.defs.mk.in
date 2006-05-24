@@ -78,7 +78,7 @@ VERSION_DOT=		@VERSION_DOT@
 VERSION_UNDERSCORE=	@VERSION_UNDERSCORE@
 
 mtreedir=		$(topdir)/mtree
-projdatadir=		$(datadir)/jccl
+projdatadir=		$(datadir)/@DATA_VERSION@
 releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
@@ -99,6 +99,7 @@ RM_LN=			@RM_LN@
 WARNS=			2
 JCCLROOT_ABS=		@JCCLROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+JCCL_SHARE_DIR=         @JCCL_SHARE_DIR@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
@@ -106,7 +107,9 @@ JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
 EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
 EXTRA_DEPEND_FLAGS=	-I$(JCCLROOT_ABS)
-EXTRA_DEFS+=		-D_JCCL_BUILD_
+EXTRA_DEFS+=	        -DJCCL_ROOT_DIR="\"$(instprefix)\""      \
+                        -DJCCL_SHARE_DIR="\"$(JCCL_SHARE_DIR)\""  \
+                        -D_JCCL_BUILD_
 EXTRA_INCLUDES=		-I$(top_srcdir)
 EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@
 

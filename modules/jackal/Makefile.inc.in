@@ -64,22 +64,10 @@ endif
 # --------------------------------------------
 # Library build information.
 # --------------------------------------------
+LIBRARY_VERSION=	@LIBRARY_VERSION@
 
-SHLIB_MAJOR=	@MAJOR_VERSION@
-SHLIB_MINOR=	@MINOR_VERSION@
-SHLIB_MICRO=	@MICRO_VERSION@
-
-# We do not do version numbering for dynamic libraries on Win32.
-ifneq (@OS_TYPE@, Win32)
-DYNAMICLIB_VER=	.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
-DYNAMIC_LIB_LINKS=	$$LIB.$(DYNAMICLIB_EXT)				\
-			$$LIB.$(DYNAMICLIB_EXT).$(SHLIB_MAJOR)		\
-			$$LIB.$(DYNAMICLIB_EXT).$(SHLIB_MAJOR).$(SHLIB_MINOR)
-PROF_DYNAMIC_LIB_LINKS=	$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)		\
-			$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT).$(SHLIB_MAJOR) \
-			$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT).$(SHLIB_MAJOR).$(SHLIB_MINOR)
-# But we will name the static libraries differently than the dynamic libraries.
-else
+# We will name the static libraries differently than the dynamic libraries.
+ifeq (@OS_TYPE@, Win32)
 STATIC_SUFFIX=	_s
 endif
 
@@ -90,32 +78,46 @@ endif
 
 # Add extra linking options on Darwin/OS X.
 ifeq (@PLATFORM@, Darwin)
-LDOPTS+=	-Wl,-dylib_compatibility_version,$(SHLIB_MAJOR).$(SHLIB_MINOR)
-LDOPTS+=	-Wl,-dylib_current_version,$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+LDOPTS+=	-Wl,-dylib_compatibility_version,$(MAJOR_VERSION).$(MINOR_VERSION)
+LDOPTS+=	-Wl,-dylib_current_version,$(MAJOR_VERSION).$(MINOR_VERSION).$(MICRO_VERSION)
 LDOPTS_DBG=	-g
 LDOPTS_OPT=	-Wl,-x
 endif
 
+DYLIB_DEPS=	@DYLIB_DEPS@
 STATICLIB_EXT=	@STATICLIB_EXT@
 DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
-
-# Full list of the libraries to build.
-ifeq ($(BUILD_CXX), Y)
-LIBS=			$(JCCL_LIBRARY)
-STATIC_LIBS=		$$LIB.$(STATICLIB_EXT)
-DYNAMIC_LIBS=		$$LIB.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
-PROF_STATIC_LIBS=	$${LIB}$(PROFLIB_EXT).$(STATICLIB_EXT)
-PROF_DYNAMIC_LIBS=	$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
-endif
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS_JCCL=	@DYLIB_DEPS_JCCL@
 DYLIB_PROF_DEPS_JCCL=	@DYLIB_PROF_DEPS_JCCL@
 
-JCCL_LIB_STATIC=	$(JCCL_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
-JCCL_LIB_DYNAMIC=	$(JCCL_LIBRARY).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
-JCCL_PROF_LIB_STATIC=	$(JCCL_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
-JCCL_PROF_LIB_DYNAMIC=	$(JCCL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
+# These functions build up the name of the library using a comon form.
+# Unfortunately, spaces have significance in GNU Make function calls, so there
+# cannot be spaces after any commas.
+make_libname=		$(1)$(2)$(LIBRARY_VERSION).$(3)
+make_static=		$(call make_libname,$(1),$(STATIC_SUFFIX),$(STATICLIB_EXT))
+make_dynamic=		$(call make_libname,$(1),,$(DYNAMICLIB_EXT))
+make_static_prof=	$(call make_libname,$(1),$(PROFLIB_EXT)$(STATIC_SUFFIX),$(STATICLIB_EXT))
+make_dynamic_prof=	$(call make_libname,$(1),$(PROFLIB_EXT),$(DYNAMICLIB_EXT))
+
+# Full list of the libraries to build. These are for Doozer++.
+ifeq ($(BUILD_CXX), Y)
+LIBS=			$(JCCL_LIBRARY)
+STATIC_LIBS=		$(call make_static,$${LIB})
+DYNAMIC_LIBS=		$(call make_dynamic,$${LIB})
+PROF_STATIC_LIBS=	$(call make_static_prof,$${LIB})
+PROF_DYNAMIC_LIBS=	$(call make_dynamic_prof,$${LIB})
+endif
+
+# The proper library names. These are used below in the targets that actually
+# build the libraries.
+JCCL_LIB_STATIC=	$(call make_static,$(JCCL_LIBRARY))
+JCCL_LIB_DYNAMIC=	$(call make_dynamic,$(JCCL_LIBRARY))
+JCCL_PROF_LIB_STATIC=	$(call make_static_prof,$(JCCL_LIBRARY))
+JCCL_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(JCCL_LIBRARY))
+
+
 
 # Version information.
 PARAM_HEADER=	common/jccl/jcclParam.h
@@ -133,7 +135,6 @@ endif
 # =============================================================================
 # Library targets.
 # =============================================================================
-
 BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 

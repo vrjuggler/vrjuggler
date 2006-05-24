@@ -69,12 +69,14 @@ fi
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
+DPP_STD_CPP(yes)
 
 # ------------------------------------------------------ #
 # --enable-feature[=arg] and --disable-feature arguments #
 # ------------------------------------------------------ #
-
-DPP_STD_CPP(yes)
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
@@ -199,6 +201,28 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
+VJ_VERSION_GROK(VERSION)
+
+# Set the form of the version number used for versioned directory and file
+# naming. Unstable builds use all three version numbers; stable builds use
+# only the major and minor version numbers.
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+
+   HEADER_VERSION="jccl-$VERSION_DOT"
+   CLOSE_HEADER_VERSION='..'
+   LIBRARY_VERSION="-$VERSION_UNDERSCORE"
+   DATA_VERSION="jccl-$VERSION_DOT"
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+else
+   DATA_VERSION="jccl"
+fi
+
 
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
@@ -310,6 +334,26 @@ else
     JCCLROOT_ABS="$JCCLROOT_ABS"
 fi
 
+# Set up some sed expressions that will help separate the share directory from
+# the full installation prefix.
+if test "x$prefix" = "xNONE" ; then
+   _prefix_exp="s|^$ac_default_prefix/||"
+else
+   _prefix_exp="s|^$prefix/||"
+fi
+
+# Make a best-effort attempt to extract the actual share directory from the
+# full installation prefix.  This is not foolproof, but it will work in almost
+# all cases.  A person would have to be doing something malicious or foolish
+# to make it break.
+JCCL_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
+JCCL_SHARE_DIR=`echo "$JCCL_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
+jccl_lib_name="jccl$LIBRARY_VERSION"
+jccl_prof_lib_name="jccl_p$LIBRARY_VERSION"
+
+
+
 # Information needed to generate jccl-config.
 case $OS_TYPE in
     UNIX)
@@ -323,14 +367,14 @@ case $OS_TYPE in
 
         jccl_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
 	jccl_ldflags_linker="$jccl_ldflags_compiler"
-        jccl_libs='-ljccl'
-        jccl_prof_libs='-ljccl_p'
+        jccl_libs="-l$jccl_lib_name"
+        jccl_prof_libs="-l$jccl_prof_lib_name"
         ;;
     Win32)
         jccl_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
         jccl_ldflags_linker="/libpath:\$prefix/lib/debug"
-        jccl_libs='jccl.lib'
-        jccl_prof_libs='jccl.lib'
+        jccl_libs="$jccl_lib_name.lib"
+        jccl_prof_libs="$jccl_prof_lib_name.lib"
         ;;
 esac
 
@@ -365,7 +409,7 @@ jccl_java_api_beans=`echo "$beans" | sed -e 's/\(jccl_[A-Za-z]*\.jar\)/${prefix}
 jccl_java_api_jars="${jccl_java_api_jars}${JCPS}${jccl_java_api_beans}"
 changequote([, ])
 
-VJ_VERSION_GROK(VERSION)
+includedir="$includedir/$HEADER_VERSION"
 
 DPP_SUBST
 
@@ -375,6 +419,14 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(JCCLROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SUBSYSTEM)
+AC_SUBST(JCCL_SHARE_DIR)
+
+AC_SUBST(VERSION_DOT)
+AC_SUBST(VERSION_UNDERSCORE)
+AC_SUBST(HEADER_VERSION)
+AC_SUBST(CLOSE_HEADER_VERSION)
+AC_SUBST(LIBRARY_VERSION)
+AC_SUBST(DATA_VERSION)
 
 AC_SUBST(BUILD_CXX)
 
