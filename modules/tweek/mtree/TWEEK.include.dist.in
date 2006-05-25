@@ -41,6 +41,6 @@
             idl
             ..
         ..
-      @HEADER_CLOSE_VERSION@
+      @CLOSE_HEADER_VERSION@
     ..
 ..
