@@ -47,7 +47,10 @@ DPP_GEN_RECONFIG
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
-
+# Enable versioning by default
+AC_ARG_ENABLE([versioning],
+              [  --disable-versioning    Disable all versioning capabilities],
+              [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -172,6 +175,23 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Finalize substitution settings.
 # -----------------------------------------------------------------------------
+#
+
+VJ_VERSION_GROK(../VERSION)
+
+if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   VRJ_VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
+   DATA_VERSION="vrjuggler-$VRJ_VERSION_DOT"
+   PLUGIN_DIR_VERSION="vrjuggler-$VRJ_VERSION_DOT"
+
+# If versioning is disabled, then none of the version variables need to be
+# set except for $DATA_VERSION. Its use is different than the others. The
+# important thing to note is that the directory name is unversioned in this
+# case.
+else
+   DATA_VERSION="vrjuggler"
+   PLUGIN_DIR_VERSION="vrjuggler"
+fi
 
 # Define the base path to the source directory using $(VJROOT_ABS) as an
 # alternative to using $(srcdir).
@@ -206,6 +226,8 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(VJROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 
+AC_SUBST(DATA_VERSION)
+AC_SUBST(PLUGIN_DIR_VERSION)
 AC_SUBST(ANT)
 AC_SUBST(RM_LN)
 

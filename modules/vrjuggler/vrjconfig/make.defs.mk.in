@@ -52,7 +52,7 @@
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
-projdatadir=		$(datadir)/vrjuggler
+projdatadir=		$(datadir)/@DATA_VERSION@
 releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
