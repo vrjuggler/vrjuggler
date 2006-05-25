@@ -1149,9 +1149,9 @@ includedir="$includedir/$HEADER_VERSION"
 # For use in linking applications.
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 
-tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\$includedir"
-tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\$includedir"
-tweek_idlflags_python="$PYTHON_IDL_OPTS ${PYTHON_IDL_INCFLAG}\$includedir"
+tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\$prefix/include/$HEADER_VERSION"
+tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\$prefix/include/$HEADER_VERSION"
+tweek_idlflags_python="$PYTHON_IDL_OPTS ${PYTHON_IDL_INCFLAG}\$prefix/include/$HEADER_VERSION"
 tweek_idlgendir_cxx="$CXX_IDL_GENDIR_OPT"
 tweek_idlgendir_java="$JAVA_IDL_GENDIR_OPT"
 tweek_idlgendir_python="$PYTHON_IDL_GENDIR_OPT"
@@ -1171,8 +1171,8 @@ esac
 #idl_src_dirs=''
 
 for dir in "$idl_gen_dirs" ; do
-   IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$dir"
-   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\$includedir/$dir"
+   IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$HEADER_VERSION/$dir"
+   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\$prefix/$dir"
 done
 
 #for dir in "$idl_src_dirs" ; do
@@ -1338,16 +1338,17 @@ if test "x$JAVA_ORB_JAR" != "xnone" ; then
    jars="$jars $strip_java_orb"
 fi
 
+share_dir="tweek$HEADER_VERSION"
+
 # The following takes a space-separated list of JAR files and creates a new
 # list separated by $JCPS.  Each file in the list is named by an absolute path
-# of ${prefix}/share/tweek/java/<file>.jar.  The variable ${prefix} is expanded
+# of ${prefix}/$TWEEK_SHARE_DIR/java/<file>.jar.  The variable ${prefix} is expanded
 # when tweek-config is executed.
 changequote(<<, >>)
-tweek_java_api_jars=`echo "$jars" | sed -e 's/\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)/${prefix}\/share\/tweek\/java\/\1/g' -e "s/ /$JCPS/g"`
+tweek_java_api_jars=`echo "$jars" | sed -e "s|\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)|\\\${prefix}/$TWEEK_SHARE_DIR/java/\1|g" -e "s/ /$JCPS/g"`
 tweek_java_api_jars_bundle=`echo "$jars" | sed -e 's/\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)/$JAVAROOT\/\1/g' -e "s/ /$JCPS/g"`
-tweek_ext_jars=`echo "$ext_jars" | sed -e 's/\([a-z][a-z]*\.jar\)/${prefix}\/share\/tweek\/java\/\1/g' -e "s/ /$JCPS/g"`
+tweek_ext_jars=`echo "$ext_jars" | sed -e "s|\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)|\\\${prefix}/$TWEEK_SHARE_DIR/java/\1|g" -e "s/ /$JCPS/g"`
 changequote([, ])
-
 
 DPP_SUBST
 
