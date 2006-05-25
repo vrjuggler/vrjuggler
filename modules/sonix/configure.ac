@@ -299,7 +299,7 @@ SNX_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
 SNX_SHARE_DIR=`echo "$SNX_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
 snx_lib_name="sonix$LIBRARY_VERSION"
-snx_prof_lib_name="$sonix_p$LIBRARY_VERSION"
+snx_prof_lib_name="sonix_p$LIBRARY_VERSION"
 
 # Information needed to generate sonix-config.
 case $OS_TYPE in
