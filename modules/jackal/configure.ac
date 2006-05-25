@@ -404,8 +404,8 @@ beans='jccl_config.jar jccl_editors.jar jccl_rtrc.jar'
 #fi
 
 changequote(<<, >>)
-jccl_java_api_jars=`echo "$jars" | sed -e 's/\([A-Za-z]*\.jar\)/${prefix}\/share\/jccl\/java\/\1/g' -e "s/ /$JCPS/g"`
-jccl_java_api_beans=`echo "$beans" | sed -e 's/\(jccl_[A-Za-z]*\.jar\)/${prefix}\/share\/jccl\/beans\/\1/g' -e "s/ /$JCPS/g"`
+jccl_java_api_jars=`echo "$jars" | sed -e "s|\([A-Za-z]*\.jar\)|\\\${prefix}/$JCCL_SHARE_DIR/java/\1|g" -e "s/ /$JCPS/g"`
+jccl_java_api_beans=`echo "$beans" | sed -e "s|\(jccl_[A-Za-z]*\.jar\)|\\\${prefix}/$JCCL_SHARE_DIR/beans/\1|g" -e "s/ /$JCPS/g"`
 jccl_java_api_jars="${jccl_java_api_jars}${JCPS}${jccl_java_api_beans}"
 changequote([, ])
 
