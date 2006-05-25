@@ -1172,7 +1172,7 @@ esac
 
 for dir in "$idl_gen_dirs" ; do
    IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$HEADER_VERSION/$dir"
-   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\$prefix/$dir"
+   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\$prefix/include/$HEADER_VERSION/$dir"
 done
 
 #for dir in "$idl_src_dirs" ; do
