@@ -215,6 +215,10 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
    LIBRARY_VERSION="-$VERSION_UNDERSCORE"
    DATA_VERSION="jccl-$VERSION_DOT"
 
+   AC_DEFINE([JCCL_USE_VERSIONING], ,
+             [Define if full package versioning capabilities are enabled])
+   AC_DEFINE_UNQUOTED([JCCL_VERSION_DOT], ["$VERSION_DOT"],
+                      [Jackal version string])
 # If versioning is disabled, then none of the version variables need to be
 # set except for $DATA_VERSION. Its use is different than the others. The
 # important thing to note is that the directory name is unversioned in this

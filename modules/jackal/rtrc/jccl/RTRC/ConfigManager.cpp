@@ -81,7 +81,7 @@ void ConfigManager::loadRemoteReconfig()
       }
       else
       {
-         base_dir = VJ_ROOT_DIR;
+         base_dir = JCCL_ROOT_DIR;
 
          vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
             << "Neither JCCL_BASE_DIR nor VJ_BASE_DIR is set."
@@ -113,11 +113,36 @@ void ConfigManager::loadRemoteReconfig()
 #else
    const std::string bit_suffix("");
 #endif
+   
+   const std::string jccl_subdir_base("jccl");
+   // If versioning is enabled, then the name of the directory containing the
+   // Sonix plug-ins must contain version information.
+#if defined(JCCL_USE_VERSIONING)
+   std::string jccl_ver_str;
+   const std::string jccl_version("JCCL_VERSION");
+
+   // If $JCCL_VERSION is set, use the value of that environment variable
+   // as the version component of the plug-in subdirectory name. Otherwise,
+   // use the compile-time value provided by JCCL_VERSION_DOT.
+   if ( ! vpr::System::getenv(jccl_version, jccl_ver_str).success() )
+   {
+      jccl_ver_str = JCCL_VERSION_DOT;
+   }
+
+   std::string jccl_subdir(jccl_subdir_base + std::string("-") +
+                             jccl_ver_str );
+
+   // If versioning is not enabled, then the directory containing the
+   // Jackal plug-ins will not incorporate version information.
+#else
+   std::string jccl_subdir(jccl_subdir_base);
+#endif
+
 
    std::vector<fs::path> search_path(1);
    search_path[0] = fs::path(base_dir, fs::native) /
                        (std::string("lib") + bit_suffix) /
-                       std::string("jccl") / std::string("plugins");
+                       std::string(jccl_subdir) / std::string("plugins");
 
    // In the long run, we may not want to hard-code the base name of the
    // plug-in we load.  If we ever reach a point where we have multiple ways
