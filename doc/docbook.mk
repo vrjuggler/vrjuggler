@@ -44,6 +44,12 @@ SAXON_VERSION?=		6.5.2
 FOP_VERSION?=		0.20.5
 BATIK_VERSION?=		1.5.1
 
+ifeq ($(FOP_VERSION), 0.20.5)
+FOP_SCRIPT=	fop.sh
+else
+FOP_SCRIPT=	fop
+endif
+
 # Installation paths.
 DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
 BATIK_ROOT?=	$(DOCBOOK_ROOT)/batik-$(BATIK_VERSION)
@@ -54,7 +60,7 @@ TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 # Application paths.
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
-FOP?=		sh $(DOCBOOK_ROOT)/fop-$(FOP_VERSION)/fop.sh
+FOP?=		sh $(DOCBOOK_ROOT)/fop-$(FOP_VERSION)/$(FOP_SCRIPT)
 HTML2TXT?=	html2text
 HTML2TXTOPTS?=	-ascii -nobs -style pretty -width 76 -rcfile html2text.rc
 HTML2TXTFILE?=	file:$<
@@ -84,8 +90,13 @@ recursive_copy=	tar --exclude .svn --exclude CVS -chvf - $(1) | tar -C $(2) -xpf
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
 # defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
 ifeq ($(FO_TOOL), FOP)
+ifeq ($(FOP_VERSION), 0.20.5)
    XALAN_FO_PARAMS=	-PARAM fop.extensions "1" -PARAM alignment "start"
    SAXON_FO_PARAMS=	fop.extensions=1 alignment="start"
+else
+   XALAN_FO_PARAMS=	-PARAM fop1.extensions "1" -PARAM alignment "start"
+   SAXON_FO_PARAMS=	fop1.extensions=1 alignment="start"
+endif
 else
 ifeq ($(FO_TOOL), XEP)
    XALAN_FO_PARAMS=	-PARAM xep.extensions "1"
