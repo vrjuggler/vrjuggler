@@ -97,18 +97,16 @@ else
    XALAN_FO_PARAMS=	-PARAM fop1.extensions "1" -PARAM alignment "start"
    SAXON_FO_PARAMS=	fop1.extensions=1 alignment="start"
 endif
-else
+endif
 ifeq ($(FO_TOOL), XEP)
    XALAN_FO_PARAMS=	-PARAM xep.extensions "1"
    SAXON_FO_PARAMS=	xep.extensions=1
-else
+endif
 ifeq ($(FO_TOOL), PASSIVE_TEX)
    XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"		\
 			-PARAM tex.math.in.alt "latex"
    SAXON_FO_PARAMS=	passivetex.extensions=1 tex.math.in.alt=latex
-endif # PASSIVE_TEX
-endif # XEP
-endif # FOP
+endif
 
 SAXON_HTML_PARAMS=	html.stylesheet=base_style.css
 XALAN_HTML_PARAMS=	-PARAM html.stylesheet "base_style.css"
