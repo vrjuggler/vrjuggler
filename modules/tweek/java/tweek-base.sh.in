@@ -75,6 +75,6 @@ else
    fi
 
    arch='@target_cpu@'
-   $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.library.path="$TWEEK_BASE_DIR/share/tweek/java/$arch" -Djava.security.policy="$TWEEK_BASE_DIR/share/tweek/java/java.security.policy.txt" $plaf -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek "$@"
+   $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.library.path="$TWEEK_BASE_DIR/share/@DATA_VERSION@/java/$arch" -Djava.security.policy="$TWEEK_BASE_DIR/share/@DATA_VERSION@/java/java.security.policy.txt" $plaf -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek "$@"
    status=0
 fi

@@ -79,8 +79,7 @@ public class TweekCore
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
       String default_path = System.getProperty("TWEEK_BASE_DIR") +
-                            File.separator + "share" +
-                            File.separator + "tweek" +
+                            File.separator + System.getProperty("TWEEK_DATA_DIR") +
                             File.separator + "beans";
       mBeanDirs.add(default_path);
 
