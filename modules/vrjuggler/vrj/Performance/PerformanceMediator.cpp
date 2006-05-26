@@ -156,11 +156,37 @@ namespace vrj
 #else
       const std::string bit_suffix("");
 #endif
+      
+   const std::string vrjuggler_subdir_base("vrjuggler");
+
+   // If versioning is enabled, then the name of the directory containing the
+   // vrjuggler plug-ins must contain version information.
+#if defined(VRJ_USE_VERSIONING)
+   std::string vrjuggler_ver_str;
+   const std::string vrjuggler_version("VRJ_VERSION");
+
+   // If $SNX_VERSION is set, use the value of that environment variable
+   // as the version component of the plug-in subdirectory name. Otherwise,
+   // use the compile-time value provided by SNX_VERSION_DOT.
+   if ( ! vpr::System::getenv(vrjuggler_version, vrjuggler_ver_str).success() )
+   {
+      vrjuggler_ver_str = VRJ_VERSION_DOT;
+   }
+
+   std::string vrjuggler_subdir(vrjuggler_subdir_base + std::string("-") +
+                             vrjuggler_ver_str);
+
+   // If versioning is not enabled, then the directory containing the
+   // vrjuggler plug-ins will not incorporate version information.
+#else
+   std::string vrjuggler_subdir(vrjuggler_subdir_base);
+#endif
+
 
       std::vector<fs::path> search_path(1);
       search_path[0] = fs::path(base_dir, fs::native) /
                        (std::string("lib") + bit_suffix) /
-                       std::string("vrjuggler") / std::string("plugins");
+                       std::string(vrjuggler_subdir) / std::string("plugins");
 
       try
       {
