@@ -121,9 +121,9 @@ SoundFactory::SoundFactory()
    std::string sonix_ver_str;
    const std::string sonix_version("SNX_VERSION");
 
-   // If $GADGET_VERSION is set, use the value of that environment variable
+   // If $SNX_VERSION is set, use the value of that environment variable
    // as the version component of the plug-in subdirectory name. Otherwise,
-   // use the compile-time value provided by GADGET_VERSION_DOT.
+   // use the compile-time value provided by SNX_VERSION_DOT.
    if ( ! vpr::System::getenv(sonix_version, sonix_ver_str).success() )
    {
       sonix_ver_str = SNX_VERSION_DOT;
@@ -133,7 +133,7 @@ SoundFactory::SoundFactory()
                              sonix_ver_str + "/plugins/");
 
    // If versioning is not enabled, then the directory containing the
-   // Gadgeteer plug-ins will not incorporate version information.
+   // Sonix plug-ins will not incorporate version information.
 #else
    std::string sonix_subdir(sonix_subdir_base + "/plugins/");
 #endif
