@@ -75,7 +75,7 @@ XALAN?=		$(XALAN_DIR)/bin/xalan.sh
 XEP?=		sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC?=	/usr/bin/xsltproc
 
-FO_VERSION?=	FOP
+FO_TOOL?=	FOP
 XSLT_TOOL?=	Xalan
 
 recursive_copy=	tar --exclude .svn --exclude CVS -chvf - $(1) | tar -C $(2) -xpf -
@@ -83,15 +83,15 @@ recursive_copy=	tar --exclude .svn --exclude CVS -chvf - $(1) | tar -C $(2) -xpf
 # Use one of the following depending on what will be processing the generated
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
 # defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
-ifeq ($(FO_VERSION), FOP)
+ifeq ($(FO_TOOL), FOP)
    XALAN_FO_PARAMS=	-PARAM fop.extensions "1" -PARAM alignment "start"
    SAXON_FO_PARAMS=	fop.extensions=1 alignment="start"
 else
-ifeq ($(FO_VERSION), XEP)
+ifeq ($(FO_TOOL), XEP)
    XALAN_FO_PARAMS=	-PARAM xep.extensions "1"
    SAXON_FO_PARAMS=	xep.extensions=1
 else
-ifeq ($(FO_VERSION), PASSIVE_TEX)
+ifeq ($(FO_TOOL), PASSIVE_TEX)
    XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"		\
 			-PARAM tex.math.in.alt "latex"
    SAXON_FO_PARAMS=	passivetex.extensions=1 tex.math.in.alt=latex
@@ -260,7 +260,7 @@ endif
 #	$(FOP) -fo $< -txt $@
 
 # Generate a PDF file from an FO file using FOP.
-ifeq ($(FO_VERSION), FOP)
+ifeq ($(FO_TOOL), FOP)
 $(PDF_FILES): $(FO_FILES)
 $(TXT_FILES): $(FO_FILES)
 
@@ -300,7 +300,7 @@ endif
 
 # Generate a PDF file from an XML file using PassiveTeX.  This one requires
 # that a simple TeX file be generated from the XML first (see below).
-ifeq ($(FO_VERSION), PASSIVE_TEX)
+ifeq ($(FO_TOOL), PASSIVE_TEX)
 $(PDF_FILES): $(FO_FILES)
 
 %.pdf: %.fo
@@ -320,7 +320,7 @@ endif
 
 # Generate a PDF file using XEP from RenderX.  This requires that an FO file
 # be generated first.
-ifeq ($(FO_VERSION), XEP)
+ifeq ($(FO_TOOL), XEP)
 $(PDF_FILES): $(FO_FILES)
 
 %.pdf: %.fo
