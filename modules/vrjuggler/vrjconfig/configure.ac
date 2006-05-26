@@ -34,7 +34,7 @@
 AC_INIT([VRJConfig], [1.1], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
-AC_CONFIG_SRCDIR([VRJConfig.xml])
+AC_CONFIG_SRCDIR([VRJConfig.xml.in])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
 DPP_PREREQ([1.99.17])
@@ -180,8 +180,10 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 VJ_VERSION_GROK(../VERSION)
 
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
+   TWEEK_DATA_DIR="tweek-$TWEEK_VERSION"
+   JCCL_DATA_DIR="jccl-$JCCL_VERSION"
    VRJ_VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
-   DATA_VERSION="vrjuggler-$VRJ_VERSION_DOT"
+   VRJ_DATA_VERSION="vrjuggler-$VRJ_VERSION_DOT"
    PLUGIN_DIR_VERSION="vrjuggler-$VRJ_VERSION_DOT"
 
 # If versioning is disabled, then none of the version variables need to be
@@ -189,7 +191,9 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
 # important thing to note is that the directory name is unversioned in this
 # case.
 else
-   DATA_VERSION="vrjuggler"
+   TWEEK_DATA_DIR="tweek"
+   JCCL_DATA_DIR="jccl"
+   VRJ_DATA_VERSION="vrjuggler"
    PLUGIN_DIR_VERSION="vrjuggler"
 fi
 
@@ -226,7 +230,9 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(VJROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 
-AC_SUBST(DATA_VERSION)
+AC_SUBST(TWEEK_DATA_DIR)
+AC_SUBST(JCCL_DATA_DIR)
+AC_SUBST(VRJ_DATA_VERSION)
 AC_SUBST(PLUGIN_DIR_VERSION)
 AC_SUBST(ANT)
 AC_SUBST(RM_LN)
@@ -256,6 +262,7 @@ AC_CONFIG_FILES([
    java.defs.mk
    make.defs.mk
    vrjconfig.sh
+   VRJConfig.xml
    commoneditors/build.xml
    commoneditors/Makefile
    customeditors/Makefile
