@@ -25,6 +25,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.tweek.beans;
 
+import org.vrjuggler.tweek.services.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -211,6 +213,9 @@ public class BeanAttributes
     */
    protected static String expandEnvVars (String name)
    {
+      EnvironmentService service = new EnvironmentServiceProxy();
+      return service.expandEnvVars(name);
+/*
       String new_name = name;
       int index, end_index;
       String env_var, value;
@@ -247,6 +252,7 @@ public class BeanAttributes
       }
 
       return new_name;
+      */
    }
 
    /**
