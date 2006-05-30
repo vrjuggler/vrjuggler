@@ -274,6 +274,11 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
             Note that you need the command <command>bjam</command> (referred
             to as <quote>boost-jam</quote> on the Boost download page) to
             build Boost.</para>
+
+            <important>
+               <para>Mac OS X users should compile the Boost libraries using
+               the <quote>darwin</quote> toolset.</para>
+            </important>
          </section>
 
          <section>
