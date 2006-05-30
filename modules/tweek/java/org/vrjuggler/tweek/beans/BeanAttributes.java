@@ -205,54 +205,13 @@ public class BeanAttributes
 
    /**
     * Expand environment variables found within XML files as we know how.
-    * This must exist here because the EnvironmentService is a JavaBean, and
-    * it is this class' responsibility to *find* JavaBeans.
-    *
-    * Post condition: Any environment variables known to the JVM as properties
-    * are expanded.  Unknown variables are left intact.
+    * This can use the EnvironmentService safely because that Serivce Bean
+    * is registered statically at application startup.
     */
    protected static String expandEnvVars (String name)
    {
       EnvironmentService service = new EnvironmentServiceProxy();
       return service.expandEnvVars(name);
-/*
-      String new_name = name;
-      int index, end_index;
-      String env_var, value;
-
-      while ( (index = new_name.indexOf("$")) != -1 )
-      {
-         if ( name.substring(index, index + 2).equals("$(") )
-         {
-            end_index = name.indexOf(")");
-         }
-         else if ( name.substring(index, index + 2).equals("${") )
-         {
-            end_index = name.indexOf("}");
-         }
-         else
-         {
-            continue;
-         }
-
-         env_var  = name.substring(index + 2, end_index);
-         value    = System.getProperty(env_var);
-
-         if ( value != null )
-         {
-            new_name = name.substring(0, index) + value +
-                       name.substring(end_index + 1);
-         }
-         else
-         {
-            System.err.println("WARNING: Environment variable " + env_var +
-                               " has no value");
-            new_name = name.substring(0, index) + name.substring(end_index + 1);
-         }
-      }
-
-      return new_name;
-      */
    }
 
    /**
