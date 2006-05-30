@@ -34,7 +34,7 @@
 AC_INIT([VRJConfig], [1.1], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
-AC_CONFIG_SRCDIR([vrjconfig.bat])
+AC_CONFIG_SRCDIR([VRJConfig.xml])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
 DPP_PREREQ([1.99.17])
@@ -265,7 +265,6 @@ AC_CONFIG_FILES([
    java.defs.mk
    make.defs.mk
    vrjconfig.sh
-   VRJConfig.xml
    commoneditors/build.xml
    commoneditors/Makefile
    customeditors/Makefile

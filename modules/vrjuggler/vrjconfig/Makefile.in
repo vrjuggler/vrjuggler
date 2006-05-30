@@ -130,13 +130,14 @@ ifneq ($(JARS), )
           done
 endif
 ifneq ($(BEANS), )
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/VRJConfig.xml $(beandir)/VRJConfig.xml
 	for bean in $(BEANS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(topdir)/$$bean.jar		\
                 $(beandir) || exit 1 ;					\
+	      $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+		$(EXTRA_INSTALL_ARGS)					\
+		$(top_srcdir)/$$bean.xml $(beandir) || exit 1;		\
           done
 endif
 ifeq (@PLATFORM@, Darwin)
