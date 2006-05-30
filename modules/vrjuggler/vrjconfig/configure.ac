@@ -184,6 +184,7 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
    JCCL_DATA_DIR="jccl-$JCCL_VERSION"
    VRJ_VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
    VRJ_DATA_VERSION="vrjuggler-$VRJ_VERSION_DOT"
+   VRJ_DATA_DIR="vrjuggler-$VRJ_VERSION_DOT"
    PLUGIN_DIR_VERSION="vrjuggler-$VRJ_VERSION_DOT"
 
 # If versioning is disabled, then none of the version variables need to be
@@ -194,6 +195,7 @@ else
    TWEEK_DATA_DIR="tweek"
    JCCL_DATA_DIR="jccl"
    VRJ_DATA_VERSION="vrjuggler"
+   VRJ_DATA_DIR="vrjuggler"
    PLUGIN_DIR_VERSION="vrjuggler"
 fi
 
@@ -233,6 +235,7 @@ AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(TWEEK_DATA_DIR)
 AC_SUBST(JCCL_DATA_DIR)
 AC_SUBST(VRJ_DATA_VERSION)
+AC_SUBST(VRJ_DATA_DIR)
 AC_SUBST(PLUGIN_DIR_VERSION)
 AC_SUBST(ANT)
 AC_SUBST(RM_LN)
