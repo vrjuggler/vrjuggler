@@ -2,36 +2,36 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <guipanel name="Configuration Editor">
-      <file name="${VJ_BASE_DIR}/share/@VRJ_DATA_VERSION@/beans/VRJConfig.jar"
+      <file name="${VJ_BASE_DIR}/share/${VRJ_DATA_DIR}/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.VrjConfig" />
       <dependencies>
          <bean>ConfigBroker</bean>
          <bean>RTRCDataSourceBroker</bean>
-         <jar path="${JCCL_BASE_DIR}/share/@JCCL_DATA_VERSION@/beans">jccl_editors.jar</jar>
-         <jar path="${JCCL_BASE_DIR}/share/@JCCL_DATA_VERSION@/java">TableLayout.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/@TWEEK_DATA_VERSION@/java">ui.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/share/${JCCL_DATA_DIR}/beans">jccl_editors.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/share/${JCCL_DATA_DIR}/java">TableLayout.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/${TWEEK_DATA_DIR}/java">ui.jar</jar>
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
    <guipanel name="Config Definition Editor">
-      <file name="${VJ_BASE_DIR}/share/@VRJ_DATA_VERSION@/beans/VRJConfig.jar"
+      <file name="${VJ_BASE_DIR}/share/${VRJ_DATA_DIR}/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.ConfigDefinitionEditor" />
       <dependencies>
          <bean>ConfigBroker</bean>
-         <jar path="${JCCL_BASE_DIR}/share/@JCCL_DATA_VERSION@/beans">jccl_editors.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/@TWEEK_DATA_VERSION@/java">ui.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/share/${JCCL_DATA_DIR}/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/${TWEEK_DATA_DIR}/java">ui.jar</jar>
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
    <guipanel name="Control Panel">
-      <file name="${VJ_BASE_DIR}/share/@VRJ_DATA_VERSION@/beans/VRJConfig.jar"
+      <file name="${VJ_BASE_DIR}/share/${VRJ_DATA_DIR}/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.controlpanel.ControlPanelView" />
       <dependencies>
          <bean>ConfigBroker</bean>
          <bean>RTRCDataSourceBroker</bean>
-         <jar path="${JCCL_BASE_DIR}/share/@JCCL_DATA_VERSION@/beans">jccl_editors.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/@TWEEK_DATA_VERSION@/java">ui.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/@TWEEK_DATA_VERSION@/java">wizard.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/share/${JCCL_DATA_DIR}/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/${TWEEK_DATA_DIR}/java">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/${TWEEK_DATA_DIR}/java">wizard.jar</jar>
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
