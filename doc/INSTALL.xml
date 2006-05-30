@@ -128,7 +128,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       </section>
 
       <section>
-         <title>Important Note for Win32 Users</title>
+         <title>Important Note for Windows Users</title>
 
          <para>VR Juggler 1.1 and newer use a lot of C++ features not
          supported by Visual Studio 6.0. Microsoft <ulink
@@ -385,6 +385,404 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
          (see the next section), refer to the <ulink
          url="README-WINDOWS.html">README-WINDOWS.html</ulink> file located in
          this directory. Do not bother to the rest of this document.</para>
+
+         <section>
+            <title>Per-Module Dependencies</title>
+
+            <para>Here, we provide per-module dependency information. Given
+            that the dependencies for any single module are met, the modules
+            may be reused effectively outside the scope of immersive VR
+            application development. Below, we list the
+            <emphasis>minimum</emphasis> required version for each dependency,
+            and where appropriate, we note which dependencies are
+            optional.</para>
+
+            <section>
+               <title>VPR</title>
+
+               <para>VPR provides a cross-platform, object-oriented operating
+               system abstraction. It is the foundation for all other Juggler
+               modules.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>CppDOM 0.3.2</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Boost headers and Boost.Filesystem 1.31.0</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>NSPR (Windows, Solaris, and HP-UX only) 4.4</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>Tweek C++ API</title>
+
+               <para>Tweek implements a distributed model/view/controller
+               system on top of CORBA. The Tweek C++ API provides the C++
+               component of that system. Code written on top of the Tweek C++
+               API normally acts as the model piece of the distributed
+               model/view/controller system.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>VPR</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>omniORB 4.0</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>Tweek Java API</title>
+
+               <para>Tweek implements a distributed model/view/controller
+               system on top of CORBA. The Tweek Java API provides the Java
+               component of that system. The main part of the Tweek Java API
+               is the Tweek JavaBean Loader, a GUI application that loads
+               Tweek Beans that normally function as the view and controller
+               pieces of the distributed module/view/controller system.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>J2SE SDK 1.4</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>JDOM (included with Juggler source)</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Ant (included with Juggler source)</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>JacORB IDL-to-Java compiler (included with Juggler
+                     source)</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>Tweek Python API</title>
+
+               <para>Tweek implements a distributed model/view/controller
+               system on top of CORBA. The Tweek Python API provides the
+               Python component of that system. The main part of the Tweek
+               Java API is the <emphasis>unfinished</emphasis> TweekQt GUI, an
+               application that loads Python modules that normally function as
+               the view and controller pieces of the distributed
+               module/view/controller system.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Python 2.3</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>omniORBpy 2.0</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>JCCL C++ API</title>
+
+               <para>The JCCL C++ API provides an interface for loading
+               XML-based configurations. It includes the run-time
+               reconfiguration feature of Juggler.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>VPR</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>JCCL Java API</title>
+
+               <para>The JCCL Java API provides a programming interface for
+               editing Juggler configuration files and config definition files
+               as well as JavaBeans for editing these files using a graphical
+               interface.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Tweek Java API</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>TableLayout package (included with Juggler
+                     source)</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>JCCL Remote Run-Time Reconfiguration Plug-in
+               (C++)</title>
+
+               <para>The C++ JCCL Remote Run-Time Reconfiguration Plug-in is
+               an optional extension to the JCCL Config Manager for allowing
+               remote manipulation of a Juggler configuration at run time
+               based on Tweek.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Tweek C++ API</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>JCCL Remote Run-Time Reconfiguration Plug-in
+               (Java)</title>
+
+               <para>The Java JCCL Remote Run-Time Reconfiguration Plug-in is
+               an optional extension that provides the features needed for a
+               Java-based editor to communicate with the C++ Remote Run-Time
+               Reconfiguration Plug-in to edit Juggler configurations
+               live.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Tweek Java API</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>Sonix</title>
+
+               <para>Sonix is an abstraction layer for positional sound
+               software. Sonix itself cannot play audio, but it includes
+               plug-ins based on popular interfaces for playing audio. Each
+               plug-in depends on a specific audio software library.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>VPR</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>GMTL 0.1.9</para>
+                  </listitem>
+               </itemizedlist>
+
+               <section>
+                  <title>Sonix OpenAL Plug-in</title>
+
+                  <itemizedlist>
+                     <listitem>
+                        <para>Sonix</para>
+                     </listitem>
+
+                     <listitem>
+                        <para>OpenAL</para>
+                     </listitem>
+
+                     <listitem>
+                        <para>Free ALUT</para>
+                     </listitem>
+                  </itemizedlist>
+               </section>
+
+               <section>
+                  <title>Sonix Audiere Plug-in</title>
+
+                  <itemizedlist>
+                     <listitem>
+                        <para>Sonix</para>
+                     </listitem>
+
+                     <listitem>
+                        <para>Audiere</para>
+                     </listitem>
+                  </itemizedlist>
+               </section>
+
+               <section>
+                  <title>Sonix AudioWorks Plug-in</title>
+
+                  <itemizedlist>
+                     <listitem>
+                        <para>Sonix</para>
+                     </listitem>
+
+                     <listitem>
+                        <para>AudioWorks</para>
+                     </listitem>
+                  </itemizedlist>
+               </section>
+            </section>
+
+            <section>
+               <title>Gadgeteer</title>
+
+               <para>Gadgeteer handles all input devices that can be used by
+               VR Juggler applications.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>VPR</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>JCCL</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>GMTL 0.1.9</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>X Window System (non-Windows platforms)</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>Gadgeteer Device Driver Plug-ins</title>
+
+               <para>The device driver plug-ins for Gadgeteer are independent
+               components that are discovered and used at run time based on
+               the application configuration. Drivers with dependencies are
+               optional.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Gadgeteer</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>VRPN 06.06 for the VRPN driver plug-in</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>TrackD API 4 for the TrackD API driver
+                     plug-in</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Microsoft Speech API for the MS Speech API driver
+                     plug-in</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>Gadgeteer Cluster Plug-ins</title>
+
+               <para>The cluster plug-ins extend the functionality of the
+               clustering infrastructure built into Gadgeteer.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Gadgeteer</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>VR Juggler</title>
+
+               <para>The VR Juggler module is the unifying piece that pulls
+               all the other Juggler modules together. It provides a virtual
+               platform for VR application development. Real-time rendering is
+               controlled by Draw Managers. The OpenGL Performer Draw Manager
+               is optional.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Gadgeteer</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Sonix</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>OpenGL</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>OpenGL Performer for the
+                     <emphasis>optional</emphasis> OpenGL Performer Draw
+                     Manager</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>VR Juggler Run-Time Performance Monitoring Plug-in
+               (C++)</title>
+
+               <para>The C++ VR Juggler Run-Time Performance Monitoring
+               Plug-in provides an optional extension to VR Juggler for remote
+               visualization of performance metrics that are captured while
+               running a VR Juggler application. Communication is performed
+               using the Tweek C++ API on top of CORBA.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Tweek C++ API</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>VR Juggler</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>VR Juggler Run-Time Performance Monitoring Plug-in
+               (Java)</title>
+
+               <para>The Java VR Juggler Run-Time Performance Monitoring
+               Plug-in is an optional extension that provides the features
+               needed for Java-based visualization of performance data
+               collected while a VR Juggler application is running. This is
+               another JavaBean handled by the Tweek JavaBean Loader, and it
+               uses CORBA to communicate with the C++ VR Juggler Run-Time
+               Performance Monitoring Plug-in.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>JCCL Java API</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>JFreeChart (included with Juggler source)</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+
+            <section>
+               <title>VRJConfig</title>
+
+               <para>VRJConfig is the graphical editor for Juggler
+               configurations. It is a JavaBean loaded by the Tweek JavaBean
+               Loader, and it makes use of the editor Beans provided by the
+               JCCL Java API.</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>JCCL Java API</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>JGraph (included with Juggler source)</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+         </section>
 
          <section id="config.vrjuggler.section">
             <title>Configuring the Juggler Build</title>
