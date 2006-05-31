@@ -29,9 +29,30 @@
 # Shell script for running Tweek under jdk 1.2 using the 'java' command.
 
 if test "x$TWEEK_BASE_DIR" = "x" ; then
-    echo "FATAL ERROR: TWEEK_BASE_DIR environment variable not set!"
+   prefix='@prefix@'
+   echo "NOTE: Setting TWEEK_BASE_DIR to $prefix"
+   TWEEK_BASE_DIR="$prefix"
+   export TWEEK_BASE_DIR
+fi
+
+# We have to have $TWEEK_BASE_DIR set.
+if test ! -d "$TWEEK_BASE_DIR" ; then
+    echo "WARNING: TWEEK_BASE_DIR directory ($TWEEK_BASE_DIR) does not exist!"
+    
+    # If $TWEEK_BASE_DIR is not set, fall back on the value of $VJ_BASE_DIR.  This
+    # is a reasonable default.
+    if test "x$VJ_BASE_DIR" = "x" ; then
+         echo "NOTE: Setting TWEEK_BASE_DIR to $VJ_BASE_DIR"
+         TWEEK_BASE_DIR="$VJ_BASE_DIR"
+    fi
+fi
+
+# Sanity check the $TWEEK_BASE_DIR setting.
+if test ! -d "$TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/beans" ; then
+    echo "FATAL ERROR: Directory $TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/beans does not exist!"
     exit 1
 fi
+
 
 EXTRA_JDK_ARGS="-Dsun.java2d.opengl=true"
 

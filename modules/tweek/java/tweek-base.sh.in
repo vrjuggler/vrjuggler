@@ -23,10 +23,9 @@
 # Boston, MA 02111-1307, USA.
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
-
 if test "x$TWEEK_BASE_DIR" = "x" ; then
-   echo "FATAL ERROR: TWEEK_BASE_DIR environment variable not set!"
-   exit 1
+    echo "FATAL ERROR: TWEEK_BASE_DIR environment variable not set!"
+    exit 1
 fi
 
 # Make sure tweek-config is executable
@@ -75,6 +74,6 @@ else
    fi
 
    arch='@target_cpu@'
-   $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.library.path="$TWEEK_BASE_DIR/share/@DATA_VERSION@/java/$arch" -Djava.security.policy="$TWEEK_BASE_DIR/share/@DATA_VERSION@/java/java.security.policy.txt" $plaf -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek "$@"
+   $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.library.path="$TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/java/$arch" -Djava.security.policy="$TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/java/java.security.policy.txt" $plaf -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" -DTWEEK_DATA_DIR=@TWEEK_DATA_DIR@ $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek "$@"
    status=0
 fi
