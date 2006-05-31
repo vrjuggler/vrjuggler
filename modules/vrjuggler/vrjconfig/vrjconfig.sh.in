@@ -42,8 +42,8 @@ if test ! -d "$VJ_BASE_DIR" ; then
 fi
 
 # Sanity check the $VJ_BASE_DIR setting.
-if test ! -d "$VJ_BASE_DIR/share/@VRJ_DATA_VERSION@/beans" ; then
-    echo "FATAL ERROR: Directory $VJ_BASE_DIR/share/@VRJ_DATA_VERSION@/beans does not exist!"
+if test ! -d "$VJ_BASE_DIR/@VRJ_DATA_DIR@/beans" ; then
+    echo "FATAL ERROR: Directory $VJ_BASE_DIR/@VRJ_DATA_DIR@/beans does not exist!"
     exit 1
 fi
 
@@ -69,13 +69,13 @@ if test "x$JCCL_DEFINITION_PATH" != "x" ; then
    export JCCL_DEFINITION_PATH
 fi
 
-EXTRA_JDK_ARGS="-Dsun.java2d.opengl=True -DTWEEK_DATA_DIR=@TWEEK_DATA_DIR@ -DJCCL_DATA_DIR=@JCCL_DATA_DIR@ -DVRJ_DATA_DIR=@VRJ_DATA_DIR@ -DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} $jccl_def_arg"
+EXTRA_JDK_ARGS="-Dsun.java2d.opengl=True -DTWEEK_DATA_DIR=@TWEEK_DATA_DIR@ -DJCCL_DATA_DIR=@JCCL_DATA_DIR@ -DVRJ_DATA_DIR=@VRJ_DATA_DIR@ -DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DTWEEK_BASE_DIR=${TWEEK_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} $jccl_def_arg"
 
 APP_NAME='VRJConfig'
 
 . $TWEEK_BASE_DIR/bin/tweek-base.sh \
-   --beanpath="$JCCL_BASE_DIR/share/@JCCL_DATA_DIR@/beans" \
-   --beanpath="$VJ_BASE_DIR/share/@VRJ_DATA_VERSION@/beans" \
+   --beanpath="$JCCL_BASE_DIR/@JCCL_DATA_DIR@/beans" \
+   --beanpath="$VJ_BASE_DIR/@VRJ_DATA_DIR@/beans" \
    --defaultbean="Configuration Editor" "$@"
 
 exit $status
