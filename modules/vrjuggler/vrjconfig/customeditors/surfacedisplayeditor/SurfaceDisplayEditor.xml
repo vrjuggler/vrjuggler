@@ -2,13 +2,13 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <generic name="SurfaceDisplayEditor">
-      <file name="${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/SurfaceDisplayEditor.jar"
+      <file name="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/beans/customeditors/SurfaceDisplayEditor.jar"
             class="org.vrjuggler.vrjconfig.customeditors.surfacedisplayeditor.SurfaceDisplayEditor"/>
       <dependencies>
          <bean>ConfigBroker</bean>
-         <jar path="${JCCL_BASE_DIR}/share/java/beans">jccl_editors.jar</jar>
-         <jar path="${JCCL_BASE_DIR}/share/jccl/java">TableLayout.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/${JCCL_DATA_DIR}/beans">jccl_editors.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/${JCCL_DATA_DIR}/java">TableLayout.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/${TWEEK_DATA_DIR}/java">ui.jar</jar>
       </dependencies>
    </generic>
 </beanlist>

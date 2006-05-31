@@ -2,7 +2,7 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd">
   <guipanel name="Test Bean">
-    <file name="${TWEEK_BASE_DIR}/share/tweek/beans/TestBean.jar" 
+    <file name="${TWEEK_BASE_DIR}/${TWEEK_DATA_DIR}/beans/TestBean.jar" 
           class="testbean.TestBean" />
     <tree path="/Beans" />
   </guipanel>

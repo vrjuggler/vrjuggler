@@ -2,7 +2,7 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd">
   <guipanel name="Network Tester">
-    <file name="${TWEEK_BASE_DIR}/share/tweek/beans/NetworkTestBean.jar" 
+    <file name="${TWEEK_BASE_DIR}/${TWEEK_DATA_DIR}/beans/NetworkTestBean.jar" 
           class="networktest.NetworkTest" />
     <tree path="/Beans" />
   </guipanel>

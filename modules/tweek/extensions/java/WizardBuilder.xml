@@ -2,17 +2,17 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <guipanel name="WizardBuilder">
-      <file name="${TWEEK_BASE_DIR}/share/tweek/beans/WizardBuilder.jar"
+      <file name="${TWEEK_BASE_DIR}/${TWEEK_DATA_DIR}/beans/WizardBuilder.jar"
             class="org.vrjuggler.tweek.wizard.builder.WizardBuilder" />
       <dependencies>
          <bean>ConfigBroker</bean>
-         <jar path="${TWEEK_BASE_DIR}/share/jccl/beans">jccl_editors.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">wizard.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/vrjuggler/java">Devices.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/vrjuggler/java">ClusterWizard.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/vrjuggler/java">Simulator.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/share/vrjuggler/java">NewDevice.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/${JCCL_DATA_DIR}/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/${TWEEK_DATA_DIR}/java">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/${TWEEK_DATA_DIR}/java">wizard.jar</jar>
+         <jar path="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/java">Devices.jar</jar>
+         <jar path="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/java">ClusterWizard.jar</jar>
+         <jar path="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/java">Simulator.jar</jar>
+         <jar path="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/java">NewDevice.jar</jar>
       </dependencies>
       <tree path="/Wizards/" />
    </guipanel>
