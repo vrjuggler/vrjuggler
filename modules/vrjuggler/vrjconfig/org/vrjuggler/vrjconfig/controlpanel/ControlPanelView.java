@@ -89,7 +89,6 @@ public class ControlPanelView
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
       String default_path = env_svc.getenv("VJ_BASE_DIR") + 
-                            File.separator + "share" +
                             File.separator + env_svc.getenv("VRJ_DATA_DIR") +
                             File.separator + "beans" +
                             File.separator + "customeditors";
@@ -173,7 +172,7 @@ public class ControlPanelView
       EnvironmentServiceProxy env_service = new EnvironmentServiceProxy();
       String controlpanel_path =
          env_service.expandEnvVars(
-            "${VJ_BASE_DIR}/share/${VRJ_DATA_DIR}/data/ControlPanel.xml"
+            "${VJ_BASE_DIR}/${VRJ_DATA_DIR}/data/ControlPanel.xml"
          );
       ControlPanelViewModel model =
          new ControlPanelViewModel(controlpanel_path);
