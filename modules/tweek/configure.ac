@@ -1139,6 +1139,8 @@ else
    DATA_VERSION="tweek"
 fi
 
+TWEEK_DATA_DIR="share/$DATA_VERSION"
+
 includedir="$includedir/$HEADER_VERSION"
 
 # Add these C++ options when compiling with G++.
@@ -1367,6 +1369,7 @@ AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(HEADER_VERSION)
 AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(DATA_VERSION)
+AC_SUBST(TWEEK_DATA_DIR)
 
 AC_SUBST(ANT)
 AC_SUBST(BUILD_CXX)
@@ -1479,6 +1482,7 @@ AC_CONFIG_FILES([
    java/Makefile
    java/Makefile.inc
    java/tweek-base.sh
+   java/tweek.sh
    python/Makefile
    python/Makefile.inc
    tweek/Makefile
@@ -1505,5 +1509,7 @@ AC_CONFIG_FILES([
    VARS.pl
    ],
    [chmod a+x tweek-config])
+
+   AC_CONFIG_COMMANDS([permission], [chmod a+x java/tweek.sh])
 
 AC_OUTPUT

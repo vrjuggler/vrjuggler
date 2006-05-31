@@ -154,7 +154,8 @@ tweek-install:
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(EXEC_PERMS)		\
-          $(GROUP_OPT_UNIX) $(TWEEKROOT_ABS)/java/tweek.sh $(bindir)/tweek
+          $(GROUP_OPT_UNIX) $(topdir)/java/tweek.sh			\
+          $(bindir)/tweek
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) $(topdir)/java/tweek-base.sh		\
           $(bindir)/tweek-base.sh

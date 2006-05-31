@@ -45,9 +45,22 @@ if test ! -d "$TWEEK_BASE_DIR" ; then
          echo "NOTE: Setting TWEEK_BASE_DIR to $VJ_BASE_DIR"
          TWEEK_BASE_DIR="$VJ_BASE_DIR"
     fi
+else
+   # Sanity check #1 on $TWEEK_BASE_DIR setting.
+   if test ! -d "$TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/beans" ; then
+       echo "Warning: Directory $TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/beans does not exist!"
+       echo "         Trying to fall back to VJ_BASE_DIR!"
+       
+       # If $TWEEK_BASE_DIR is not set, fall back on the value of $VJ_BASE_DIR.  This
+       # is a reasonable default.
+       if test "x$VJ_BASE_DIR" != "x" ; then
+          echo "NOTE: Setting TWEEK_BASE_DIR to $VJ_BASE_DIR"
+          TWEEK_BASE_DIR="$VJ_BASE_DIR"
+       fi
+   fi
 fi
 
-# Sanity check the $TWEEK_BASE_DIR setting.
+# Final sanity check the $TWEEK_BASE_DIR setting.
 if test ! -d "$TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/beans" ; then
     echo "FATAL ERROR: Directory $TWEEK_BASE_DIR/@TWEEK_DATA_DIR@/beans does not exist!"
     exit 1
