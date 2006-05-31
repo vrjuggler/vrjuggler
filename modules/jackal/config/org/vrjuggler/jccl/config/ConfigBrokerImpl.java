@@ -788,9 +788,12 @@ public class ConfigBrokerImpl
       EnvironmentService service = new EnvironmentServiceProxy();
 
       // Get the .jdef search path from the environment.
-      String data_path = service.getenv("VJ_SHARE_DIR");
-      String base_path = "${VJ_BASE_DIR}/" + data_path + "/data/definitions";
+      String data_path = service.getenv("VRJ_DATA_DIR");
+      String base_path = service.getenv("VJ_BASE_DIR") +  
+                         File.separator + data_path + File.separator +
+                         "data" + File.separator + "definitions";
       String ext_path  = service.getenv("JCCL_DEFINITION_PATH");
+      System.out.println(base_path);
 
       String path;
 

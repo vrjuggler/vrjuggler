@@ -52,13 +52,14 @@ public class ConfigSchemaResolver implements EntityResolver
       try
       {
          String full_schema_file;
+         EnvironmentServiceProxy service = new EnvironmentServiceProxy();
 
          // This is a remote schema that would have to be downloaded using
          // HTTP.
          if ( systemId.startsWith("http://") )
          {
             String base_dir =
-               (new EnvironmentServiceProxy()).getenv("JCCL_BASE_DIR");
+               service.getenv("JCCL_BASE_DIR");
 
             if ( null == base_dir )
             {
@@ -78,8 +79,8 @@ public class ConfigSchemaResolver implements EntityResolver
                schema_file = schema_file.replace('/', File.separatorChar);
             }
 
-            full_schema_file = base_dir + File.separator + "share" +
-                               File.separator + "jccl" +
+            full_schema_file = base_dir + File.separator + 
+                               service.getenv("JCCL_DATA_DIR") +
                                File.separator + "data" +
                                File.separator + "schema" +
                                File.separator + schema_file;
