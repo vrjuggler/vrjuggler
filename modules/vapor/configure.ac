@@ -959,8 +959,7 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||'`
-data_subdir=`echo "$data_subdir" | sed -e "${_prefix_exp}"`
+data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 VPR_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
 vpr_lib_name="vpr$LIBRARY_VERSION"
