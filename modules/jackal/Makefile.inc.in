@@ -191,7 +191,7 @@ $(LIBDIR)/$(JCCL_LIB_DYNAMIC): $(OBJS) $(DYLIB_DEP_FILES_JCCL)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)$ $(OBJS)
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
           $(DYLIB_DEPS_JCCL)
