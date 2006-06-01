@@ -959,8 +959,9 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-VPR_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
-VPR_SHARE_DIR=`echo "$VPR_SHARE_DIR" | sed -e "${_prefix_exp}"`
+data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||'`
+data_subdir=`echo "$data_subdir" | sed -e "${_prefix_exp}"`
+VPR_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
 vpr_lib_name="vpr$LIBRARY_VERSION"
 vpr_prof_lib_name="vpr_p$LIBRARY_VERSION"
@@ -1049,6 +1050,7 @@ includedir="$includedir/$HEADER_VERSION"
 
 DPP_SUBST
 
+AC_SUBST(data_subdir)
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VPRROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
