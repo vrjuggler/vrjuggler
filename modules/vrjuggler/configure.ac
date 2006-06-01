@@ -536,8 +536,8 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-VJ_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
-VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
+data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
+VJ_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
 vrj_lib_name="vrj$LIBRARY_VERSION"
 vrj_prof_lib_name="$vrj_p$LIBRARY_VERSION"
@@ -611,6 +611,7 @@ includedir="$includedir/$HEADER_VERSION"
 
 DPP_SUBST
 
+AC_SUBST(data_subdir)
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
