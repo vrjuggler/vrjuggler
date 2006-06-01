@@ -870,6 +870,53 @@ AC_DEFUN([VJ_APP_LINKER_DOOZER],
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Builds a list of the absolute path to each shared library that is linked
+dnl against when creating a shared library.
+dnl
+dnl Usage:
+dnl     VJ_BUILD_LIB_FILE_LIST(dynamic-lib-list, file-name-var)
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([VJ_BUILD_LIB_FILE_LIST],
+[
+   dirs=''
+   libs=''
+
+   dnl Extract the directories and library names from $1. We will use this to
+   dnl build up the full path to each library against which linking will be
+   dnl performed.
+   for d in $1 ; do
+      case $d in
+         -L*)
+            dir=`echo $d | sed -e 's#-L\(.*\)#\1#'`
+            if test -d "$dir" ; then
+               dirs="$dirs $dir"
+            fi
+            ;;
+         -l*)
+            lib=`echo $d | sed -e 's/-l\(.*\)/\1/'`
+            libs="$libs lib$lib.$DYNAMICLIB_EXT"
+            ;;
+      esac
+   done
+
+   $2=''
+
+   dnl Get the absolute path to each library in $libs. If we cannot find the
+   dnl absolute path for a library, then that library file will not be added
+   dnl to the variable named by $2. Should that occur, however, something is
+   dnl probably wrong with the above code for extracting the libraries and
+   dnl directories from $1.
+   for l in $libs ; do
+      for d in $dirs ; do
+         if test -e "$d/$l" ; then
+            $2="$[$2] $d/$l"
+            break
+         fi
+      done
+   done
+])
+
+dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_VERSION_GROK(version-file)
 dnl ---------------------------------------------------------------------------
