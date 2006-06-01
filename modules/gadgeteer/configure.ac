@@ -378,8 +378,8 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-GADGET_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
-GADGET_SHARE_DIR=`echo "$GADGET_SHARE_DIR" | sed -e "${_prefix_exp}"`
+data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
+GADGET_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
 gadget_lib_name="gadget$LIBRARY_VERSION"
 gadget_prof_lib_name="gadget_p$LIBRARY_VERSION"
@@ -429,9 +429,9 @@ gadget_extra_ldflags_linker="$gadget_extra_ldflags_compiler"
 
 includedir="$includedir/$HEADER_VERSION"
 
-
 DPP_SUBST
 
+AC_SUBST(data_subdir)
 AC_SUBST(topdir)
 AC_SUBST(UNIX_GADGETROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)

@@ -35,6 +35,7 @@
 # -----------------------------------------------------------------------------
 
 # Variables whose values are specific to this file.
+data_subdir=	@data_subdir@
 includedir=	@includedir@
 instlinks=	$(topdir)/instlinks
 srcdir=		@srcdir@
@@ -140,6 +141,7 @@ AFTERBUILD=	afterbuild
 beforebuild: $(PARAM_HEADER) $(PARAM_SOURCE)
 
 $(PARAM_HEADER): $(GADGETROOT_ABS)/$(PARAM_HEADER).in $(GADGETROOT_ABS)/VERSION
+	@$(MAKE) clean-version-links
 	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
           -i $(GADGETROOT_ABS)/$@.in $(VER_ARGS)
 
@@ -240,6 +242,14 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) links-dbg
 endif
+
+clean-version-links:
+	@rm -rf $(instlinks)/include/gadgeteer*				\
+           $(instlinks)/lib*/gadgeteer*					\
+           $(instlinks)/$(data_subdir)/gadgeteer*
+	@for l in $(LIBS) ; do						\
+            find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
+         done
 
 links-all:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
