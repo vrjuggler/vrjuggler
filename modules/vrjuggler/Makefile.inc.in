@@ -113,14 +113,19 @@ DYNAMIC_LIBS=		$(call make_dynamic,$${LIB})
 PROF_STATIC_LIBS=	$(call make_static_prof,$${LIB})
 PROF_DYNAMIC_LIBS=	$(call make_dynamic_prof,$${LIB})
 
-
 # Dependencies for each of the various dynamic libraries we build.
-DYLIB_DEPS_VJ=		@DYLIB_DEPS_VJ@
-DYLIB_DEPS_GL=		@DYLIB_DEPS_GL@
-DYLIB_DEPS_PF=		@DYLIB_DEPS_PF@
-DYLIB_PROF_DEPS_VJ=	@DYLIB_PROF_DEPS_VJ@
-DYLIB_PROF_DEPS_GL=	@DYLIB_PROF_DEPS_GL@
-DYLIB_PROF_DEPS_PF=	@DYLIB_PROF_DEPS_PF@
+DYLIB_DEPS_VJ=			@DYLIB_DEPS_VJ@
+DYLIB_DEPS_GL=			@DYLIB_DEPS_GL@
+DYLIB_DEPS_PF=			@DYLIB_DEPS_PF@
+DYLIB_DEP_FILES_VJ=		@DYLIB_DEP_FILES_VJ@
+DYLIB_DEP_FILES_GL=		@DYLIB_DEP_FILES_GL@
+DYLIB_DEP_FILES_PF=		@DYLIB_DEP_FILES_PF@
+DYLIB_PROF_DEPS_VJ=		@DYLIB_PROF_DEPS_VJ@
+DYLIB_PROF_DEPS_GL=		@DYLIB_PROF_DEPS_GL@
+DYLIB_PROF_DEPS_PF=		@DYLIB_PROF_DEPS_PF@
+DYLIB_PROF_DEP_FILES_VJ=	@DYLIB_PROF_DEP_FILES_VJ@
+DYLIB_PROF_DEP_FILES_GL=	@DYLIB_PROF_DEP_FILES_GL@
+DYLIB_PROF_DEP_FILES_PF=	@DYLIB_PROF_DEP_FILES_PF@
 
 VJ_LIB_STATIC=		$(call make_static,$(VJ_LIBRARY))
 VJ_LIB_DYNAMIC=		$(call make_dynamic,$(VJ_LIBRARY))
@@ -199,7 +204,7 @@ $(LIBDIR)/$(PF_LIB_STATIC) $(LIBDIR)/$(PF_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEP_FILES_VJ)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -232,7 +237,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_PROF_DEP_FILES_VJ)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -257,7 +262,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEP_FILES_GL)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -282,7 +287,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_PROF_DEP_FILES_GL)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -307,7 +312,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEP_FILES_PF)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -323,7 +328,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_PROF_DEP_FILES_PF)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"

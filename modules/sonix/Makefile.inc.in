@@ -82,7 +82,9 @@ endif
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS=		@DYLIB_DEPS@
+DYLIB_DEP_FILES=	@DYLIB_DEP_FILES@
 DYLIB_PROF_DEPS=	@DYLIB_PROF_DEPS@
+DYLIB_PROF_DEP_FILES=	@DYLIB_PROF_DEP_FILES@
 STATICLIB_EXT=		@STATICLIB_EXT@
 DYNAMICLIB_EXT=		@DYNAMICLIB_EXT@
 
@@ -166,7 +168,7 @@ $(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJS)
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJS)
+$(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJS) $(DYLIB_DEP_FILES)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -193,7 +195,7 @@ endif
 # ---------------------------------------------------------
 # Construct the profiled dynamic version of the libraries.
 # ---------------------------------------------------------
-$(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJS)
+$(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJS) $(DYLIB_PROF_DEP_FILES)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"

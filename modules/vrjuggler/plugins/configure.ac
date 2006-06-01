@@ -250,6 +250,9 @@ vrj_extra_prof_libs=`$VRJ_CONFIG vrj --profiled --extra-libs`
 DSO_PLUGIN_DEPS="$TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $vrj_libs $vrj_extra_libs"
 DSO_PLUGIN_PROF_DEPS="$TWEEK_PROF_LIBS_CC_MIN $TWEEK_PROF_EXTRA_LIBS_CC_MIN $vrj_prof_libs $vrj_extraprof__libs"
 
+VJ_BUILD_LIB_FILE_LIST([$DSO_PLUGIN_DEPS], [DSO_PLUGIN_DEP_FILES])
+VJ_BUILD_LIB_FILE_LIST([$DSO_PLUGIN_PROF_DEPS], [DSO_PLUGIN_PROF_DEP_FILES])
+
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -270,7 +273,9 @@ AC_SUBST(RM_LN)
 AC_SUBST(BUILD_JAVA)
 
 AC_SUBST(DSO_PLUGIN_DEPS)
+AC_SUBST(DSO_PLUGIN_DEP_FILES)
 AC_SUBST(DSO_PLUGIN_PROF_DEPS)
+AC_SUBST(DSO_PLUGIN_PROF_DEP_FILES)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

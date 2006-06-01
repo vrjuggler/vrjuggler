@@ -84,9 +84,11 @@ LDOPTS_OPT=	-Wl,-x
 endif
 
 DYLIB_DEPS=		@DYLIB_DEPS@
+DYLIB_DEP_FILES=	@DYLIB_DEP_FILES@
 STATICLIB_EXT=		@STATICLIB_EXT@
 DYNAMICLIB_EXT=		@DYNAMICLIB_EXT@
 DYLIB_PROF_DEPS=	@DYLIB_PROF_DEPS@
+DYLIB_PROF_DEP_FILES=	@DYLIB_PROF_DEP_FILES@
 
 # These functions build up the name of the library using a comon form.
 # Unfortunately, spaces have significance in GNU Make function calls, so there
@@ -198,7 +200,7 @@ endif
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(TWEEK_LIB_DYNAMIC): $(OBJS)
+$(LIBDIR)/$(TWEEK_LIB_DYNAMIC): $(OBJS) $(DYLIB_DEP_FILES)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -225,7 +227,7 @@ endif
 # ---------------------------------------------------------
 # Construct the profiled dynamic version of the libraries.
 # ---------------------------------------------------------
-$(LIBDIR)/$(TWEEK_PROF_LIB_DYNAMIC): $(OBJS)
+$(LIBDIR)/$(TWEEK_PROF_LIB_DYNAMIC): $(OBJS) $(DYLIB_PROF_DEP_FILES)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"

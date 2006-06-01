@@ -89,6 +89,7 @@ LDOPTS_OPT=	-Wl,-x
 endif
 
 DYLIB_DEPS=		@DYLIB_DEPS@
+DYLIB_DEP_FILES=	@DYLIB_DEP_FILES@
 STATICLIB_EXT=		@STATICLIB_EXT@
 DYNAMICLIB_EXT=		@DYNAMICLIB_EXT@
 
@@ -172,7 +173,7 @@ $(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJS)
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJS)
+$(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJS) $(DYLIB_DEP_FILES)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"

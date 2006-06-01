@@ -89,7 +89,9 @@ PROF_DYNAMIC_LIBS=	$${LIB}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER)
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS=		@DYLIB_DEPS@
+DYLIB_DEP_FILES=	@DYLIB_DEP_FILES@
 DYLIB_PROF_DEPS=	@DYLIB_PROF_DEPS@
+DYLIB_PROF_DEP_FILES=	@DYLIB_PROF_DEP_FILES@
 
 # These functions build up the name of the library using a comon form.
 # Unfortunately, spaces have significance in GNU Make function calls, so there
@@ -172,7 +174,7 @@ $(LIBDIR)/$(GADGET_LIB_STATIC) $(LIBDIR)/$(GADGET_PROF_LIB_STATIC): $(OBJS)
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(GADGET_LIB_DYNAMIC): $(OBJS)
+$(LIBDIR)/$(GADGET_LIB_DYNAMIC): $(OBJS) $(DYLIB_DEP_FILES)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -199,7 +201,7 @@ endif
 # ---------------------------------------------------------
 # Construct the profiled dynamic version of the libraries.
 # ---------------------------------------------------------
-$(LIBDIR)/$(GADGET_PROF_LIB_DYNAMIC): $(OBJS)
+$(LIBDIR)/$(GADGET_PROF_LIB_DYNAMIC): $(OBJS) $(DYLIB_PROF_DEP_FILES)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"

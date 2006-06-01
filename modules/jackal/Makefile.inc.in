@@ -89,8 +89,10 @@ STATICLIB_EXT=	@STATICLIB_EXT@
 DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
 # Dependencies for each of the various dynamic libraries we build.
-DYLIB_DEPS_JCCL=	@DYLIB_DEPS_JCCL@
-DYLIB_PROF_DEPS_JCCL=	@DYLIB_PROF_DEPS_JCCL@
+DYLIB_DEPS_JCCL=		@DYLIB_DEPS_JCCL@
+DYLIB_DEP_FILES_JCCL=		@DYLIB_DEP_FILES_JCCL@
+DYLIB_PROF_DEPS_JCCL=		@DYLIB_PROF_DEPS_JCCL@
+DYLIB_PROF_DEP_FILES_JCCL=	@DYLIB_PROF_DEP_FILES_JCCL@
 
 # These functions build up the name of the library using a comon form.
 # Unfortunately, spaces have significance in GNU Make function calls, so there
@@ -180,7 +182,7 @@ $(LIBDIR)/$(JCCL_LIB_STATIC) $(LIBDIR)/$(JCCL_PROF_LIB_STATIC): $(OBJDIR)/../*/*
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(JCCL_LIB_DYNAMIC): $(OBJDIR)/../*/*.$(OBJEXT)
+$(LIBDIR)/$(JCCL_LIB_DYNAMIC): $(OBJDIR)/../*/*.$(OBJEXT) $(DYLIB_DEP_FILES_JCCL)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -215,7 +217,7 @@ endif
 # ---------------------------------------------------------
 # Construct the profiled dynamic version of the libraries.
 # ---------------------------------------------------------
-$(LIBDIR)/$(JCCL_PROF_LIB_DYNAMIC): $(OBJDIR)/../*/*.$(OBJEXT)
+$(LIBDIR)/$(JCCL_PROF_LIB_DYNAMIC): $(OBJDIR)/../*/*.$(OBJEXT) $(DYLIB_PROF_DEP_FILES_JCCL)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
