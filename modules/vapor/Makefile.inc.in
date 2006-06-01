@@ -165,7 +165,7 @@ $(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJS)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
 	$(RANLIB) $@
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
@@ -181,15 +181,13 @@ $(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJS) $(DYLIB_
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
-          $(OBJDIR)/*.$(OBJEXT)
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
           $(DYLIB_DEPS)
 	rm -f $(subst .dylib,.lo,$@)
 else
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-          $(DYLIB_DEPS)
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS) $(DYLIB_DEPS)
 endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
