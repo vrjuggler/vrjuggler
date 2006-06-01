@@ -33,6 +33,8 @@ top_srcdir=	@top_srcdir@
 
 CONFIGURE_ARGS=	@CONFIGURE_ARGS@
 CFG_SHELL=	@CFG_SHELL@
+DEPS=		vapor
+VERSION_FILES=	$(foreach dep,$(DEPS),$(srcdir)/../$(dep)/VERSION)
 
 DPP_CFG_DIR=	$(top_srcdir)/Doozer++/config
 DPP_PKG_DIR=	$(top_srcdir)/Doozer++/config/pkgs
@@ -59,6 +61,7 @@ Makefile.inc.in: ;
 make.defs.mk.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
+$(VERSION_FILES): ;
 
 configure: configure.ac $(M4_DEPS)
 	cd $(srcdir) && ./autogen.sh
@@ -66,7 +69,7 @@ configure: configure.ac $(M4_DEPS)
 config.status: configure ;
 
 Makefile: $(srcdir)/VERSION configure config.status Makefile.in		\
-          Makefile.inc.in make.defs.mk.in
+          Makefile.inc.in make.defs.mk.in $(VERSION_FILES)
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 
 %:: Makefile
