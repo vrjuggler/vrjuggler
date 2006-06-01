@@ -298,8 +298,8 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-SNX_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
-SNX_SHARE_DIR=`echo "$SNX_SHARE_DIR" | sed -e "${_prefix_exp}"`
+data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
+SNX_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
 snx_lib_name="sonix$LIBRARY_VERSION"
 snx_prof_lib_name="sonix_p$LIBRARY_VERSION"
@@ -352,6 +352,7 @@ includedir="$includedir/$HEADER_VERSION"
 DPP_SUBST
 DPP_GET_PROJECTDIR
 
+AC_SUBST(data_subdir)
 AC_SUBST(topdir)
 AC_SUBST(UNIX_SNXROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
