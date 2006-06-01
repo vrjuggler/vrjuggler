@@ -353,13 +353,11 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-JCCL_SHARE_DIR=`echo "$datadir/$DATA_VERSION" | sed -e 's|^${prefix}/||'`
-JCCL_SHARE_DIR=`echo "$JCCL_SHARE_DIR" | sed -e "${_prefix_exp}"`
+data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
+JCCL_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
 jccl_lib_name="jccl$LIBRARY_VERSION"
 jccl_prof_lib_name="jccl_p$LIBRARY_VERSION"
-
-
 
 # Information needed to generate jccl-config.
 case $OS_TYPE in
@@ -420,6 +418,7 @@ includedir="$includedir/$HEADER_VERSION"
 
 DPP_SUBST
 
+AC_SUBST(data_subdir)
 AC_SUBST(topdir)
 AC_SUBST(UNIX_JCCLROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
