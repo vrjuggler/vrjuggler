@@ -35,6 +35,7 @@
 # -----------------------------------------------------------------------------
 
 # Variables whose values are specific to this file.
+data_subdir=	@data_subdir@
 includedir=	@includedir@
 instlinks=	$(topdir)/instlinks
 srcdir=		@srcdir@
@@ -149,6 +150,7 @@ beforebuild:
 	@$(MAKE) extensions-java
 
 $(PARAM_HEADER): $(TWEEKROOT_ABS)/$(PARAM_HEADER).in $(TWEEKROOT_ABS)/VERSION
+	@$(MAKE) clean-version-links
 	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
           -i $(TWEEKROOT_ABS)/$@.in $(VER_ARGS)
 
@@ -318,6 +320,12 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) links-dbg
 endif
+
+clean-version-links:
+	@rm -rf $(instlinks)/include/tweek* $(instlinks)/$(data_subdir)/tweek*
+	@for l in $(LIBS) ; do						\
+            find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
+         done
 
 links-all:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
