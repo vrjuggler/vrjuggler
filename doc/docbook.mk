@@ -50,6 +50,12 @@ SAXON_VERSION?=		6.5.2
 FOP_VERSION?=		0.20.5
 BATIK_VERSION?=		1.5.1
 
+ifeq ($(FOP_VERSION), 0.20.5)
+FOP_SCRIPT=	fop.sh
+else
+FOP_SCRIPT=	fop
+endif
+
 # Installation paths.
 DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
 BATIK_ROOT?=	$(DOCBOOK_ROOT)/batik-$(BATIK_VERSION)
@@ -60,7 +66,7 @@ TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 # Application paths.
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
-FOP?=		sh $(DOCBOOK_ROOT)/fop-$(FOP_VERSION)/fop.sh
+FOP?=		sh $(DOCBOOK_ROOT)/fop-$(FOP_VERSION)/$(FOP_SCRIPT)
 HTML2TXT?=	html2text
 HTML2TXTOPTS?=	-ascii -nobs -style pretty -width 76 -rcfile html2text.rc
 HTML2TXTFILE?=	file:$<
@@ -81,7 +87,7 @@ XALAN?=		$(XALAN_DIR)/bin/xalan.sh
 XEP?=		sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC?=	/usr/bin/xsltproc
 
-FO_VERSION?=	FOP
+FO_TOOL?=	FOP
 XSLT_TOOL?=	Xalan
 
 recursive_copy=	tar --exclude .svn --exclude CVS -chvf - $(1) | tar -C $(2) -xpf -
@@ -89,21 +95,24 @@ recursive_copy=	tar --exclude .svn --exclude CVS -chvf - $(1) | tar -C $(2) -xpf
 # Use one of the following depending on what will be processing the generated
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
 # defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
-ifeq ($(FO_VERSION), FOP)
+ifeq ($(FO_TOOL), FOP)
+ifeq ($(FOP_VERSION), 0.20.5)
    XALAN_FO_PARAMS=	-PARAM fop.extensions "1" -PARAM alignment "start"
    SAXON_FO_PARAMS=	fop.extensions=1 alignment="start"
 else
-ifeq ($(FO_VERSION), XEP)
+   XALAN_FO_PARAMS=	-PARAM fop1.extensions "1" -PARAM alignment "start"
+   SAXON_FO_PARAMS=	fop1.extensions=1 alignment="start"
+endif
+endif
+ifeq ($(FO_TOOL), XEP)
    XALAN_FO_PARAMS=	-PARAM xep.extensions "1"
    SAXON_FO_PARAMS=	xep.extensions=1
-else
-ifeq ($(FO_VERSION), PASSIVE_TEX)
+endif
+ifeq ($(FO_TOOL), PASSIVE_TEX)
    XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"		\
 			-PARAM tex.math.in.alt "latex"
    SAXON_FO_PARAMS=	passivetex.extensions=1 tex.math.in.alt=latex
-endif # PASSIVE_TEX
-endif # XEP
-endif # FOP
+endif
 
 SAXON_HTML_PARAMS=	html.stylesheet=base_style.css
 XALAN_HTML_PARAMS=	-PARAM html.stylesheet "base_style.css"
@@ -266,7 +275,7 @@ endif
 #	$(FOP) -fo $< -txt $@
 
 # Generate a PDF file from an FO file using FOP.
-ifeq ($(FO_VERSION), FOP)
+ifeq ($(FO_TOOL), FOP)
 $(PDF_FILES): $(FO_FILES)
 $(TXT_FILES): $(FO_FILES)
 
@@ -306,7 +315,7 @@ endif
 
 # Generate a PDF file from an XML file using PassiveTeX.  This one requires
 # that a simple TeX file be generated from the XML first (see below).
-ifeq ($(FO_VERSION), PASSIVE_TEX)
+ifeq ($(FO_TOOL), PASSIVE_TEX)
 $(PDF_FILES): $(FO_FILES)
 
 %.pdf: %.fo
@@ -326,7 +335,7 @@ endif
 
 # Generate a PDF file using XEP from RenderX.  This requires that an FO file
 # be generated first.
-ifeq ($(FO_VERSION), XEP)
+ifeq ($(FO_TOOL), XEP)
 $(PDF_FILES): $(FO_FILES)
 
 %.pdf: %.fo
