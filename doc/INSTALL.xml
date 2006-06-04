@@ -2,649 +2,671 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
-  <articleinfo>
-    <title>Building and Installing the Juggler Project (Version 2.0)</title>
+   <articleinfo>
+      <title>Building and Installing the Juggler Project (Version 2.0)</title>
 
-    <authorgroup>
-      <author>
-        <othername>The Juggler Team</othername>
-      </author>
-    </authorgroup>
+      <authorgroup>
+         <author>
+            <othername>The Juggler Team</othername>
+         </author>
+      </authorgroup>
 
-    <pubdate>$Date$</pubdate>
-  </articleinfo>
+      <pubdate>$Date$</pubdate>
+   </articleinfo>
 
-  <section>
-    <title>Introduction</title>
+   <section>
+      <title>Introduction</title>
 
-    <para>You have downloaded the source code for Version 2.0 of the Juggler
-    Project. This document explains how to build the modules of the Juggler
-    Project from the source code. We begin by explaining some issues related
-    to specific operating systems. We then explain how to get the source code
-    from our CVS repository. (Those users who downloaded a pre-packaged source
-    release can skip ahead to <xref linkend="using.configure.pl" />). We
-    conclude with instructions on how to build VR Juggler and its individual
-    components.</para>
+      <para>You have downloaded the source code for Version 2.0 of the Juggler
+      Project. This document explains how to build the modules of the Juggler
+      Project from the source code. We begin by explaining some issues related
+      to specific operating systems. We then explain how to get the source
+      code from our CVS repository. (Those users who downloaded a pre-packaged
+      source release can skip ahead to <xref linkend="using.configure.pl" />).
+      We conclude with instructions on how to build VR Juggler and its
+      individual components.</para>
 
-    <para>Before reading further, we recommend that readers take a look at the
-    Wiki page relating to building from CVS (<ulink
-    url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).
-    It is a <emphasis>supplement</emphasis> to this document containing tips
-    and reminders for those users building the CVS version of VR Juggler. It
-    is not a replacement for this document, nor can it stand on its own as
-    build instructions. You are reading the definitive build instructions; the
-    Wiki page merely provides informal, extra information.</para>
-
-    <section>
-      <title>Important Notes for IRIX Users</title>
-
-      <para>Despite our best efforts, there are some issues related to
-      compiling the Juggler Project on IRIX. We introduce them in this section
-      and explain how to work around them.</para>
+      <para>Before reading further, we recommend that readers take a look at
+      the Wiki page relating to building from CVS (<ulink
+      url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).
+      It is a <emphasis>supplement</emphasis> to this document containing tips
+      and reminders for those users building the CVS version of VR Juggler. It
+      is not a replacement for this document, nor can it stand on its own as
+      build instructions. You are reading the definitive build instructions;
+      the Wiki page merely provides informal, extra information.</para>
 
       <section>
-        <title>Perl Version</title>
+         <title>Important Notes for IRIX Users</title>
 
-        <para>There are many Perl scripts used as part of getting,
-        configuring, and building the Juggler Suite of tools. In particular,
-        two scripts required for compiling need Perl 5.005 or newer. The
-        version of Perl that ships with IRIX 6.5 is very old (circa 1997) and
-        does not work with many Perl scripts we have written. SGI provides a
-        much newer version of Perl (5.6.1) with their freeware tools (<ulink
-        url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>). It
-        will be necessary to install that version for our scripts to work.
-        This version is typically installed as
-        <filename>/usr/freeware/bin/perl</filename>.</para>
+         <para>Despite our best efforts, there are some issues related to
+         compiling the Juggler Project on IRIX. We introduce them in this
+         section and explain how to work around them.</para>
 
-        <para>Once you have a modern Perl installed, you can run various Perl
-        scripts as follows:</para>
+         <section>
+            <title>Perl Version</title>
 
-        <screen>/usr/freeware/bin/perl &lt;script-name&gt;</screen>
+            <para>There are many Perl scripts used as part of getting,
+            configuring, and building the Juggler Suite of tools. In
+            particular, two scripts required for compiling need Perl 5.005 or
+            newer. The version of Perl that ships with IRIX 6.5 is very old
+            (circa 1997) and does not work with many Perl scripts we have
+            written. SGI provides a much newer version of Perl (5.6.1) with
+            their freeware tools (<ulink
+            url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>).
+            It will be necessary to install that version for our scripts to
+            work. This version is typically installed as
+            <filename>/usr/freeware/bin/perl</filename>.</para>
 
-        <para>The above will be required any time a Perl script fails with an
-        error similar to the following:</para>
+            <para>Once you have a modern Perl installed, you can run various
+            Perl scripts as follows:</para>
 
-        <screen>Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
+            <screen>/usr/freeware/bin/perl &lt;script-name&gt;</screen>
+
+            <para>The above will be required any time a Perl script fails with
+            an error similar to the following:</para>
+
+            <screen>Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
 BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
-        <para>Furthermore, it is highly recommended that the
-        <option>--with-perl</option> argument be passed to
-        <command>configure.pl</command>. This argument gives all the
-        Autoconf-based configure scripts a hint about where the preferred
-        version of Perl lives. If using
-        <filename>/usr/freeware/bin/perl</filename> to run
-        <command>configure.pl</command>, we recommend that the
-        <command>configure.pl</command> command line appear similar to the
-        following:</para>
+            <para>Furthermore, it is highly recommended that the
+            <option>--with-perl</option> argument be passed to
+            <command>configure.pl</command>. This argument gives all the
+            Autoconf-based configure scripts a hint about where the preferred
+            version of Perl lives. If using
+            <filename>/usr/freeware/bin/perl</filename> to run
+            <command>configure.pl</command>, we recommend that the
+            <command>configure.pl</command> command line appear similar to the
+            following:</para>
 
-        <screen>/usr/freeware/bin/perl configure.pl --with-perl=/usr/freeware/bin</screen>
+            <screen>/usr/freeware/bin/perl configure.pl --with-perl=/usr/freeware/bin</screen>
 
-        <para>Note that the value given to <option>--with-perl</option> is the
-        <emphasis>directory</emphasis> where the <command>perl</command>
-        executable can be found. The configure scripts will add this directory
-        to the front of the search path when trying to find a suitable
-        <command>perl</command> executable. Once it is found, all the Perl
-        scripts used for configuration, compilation, and installation will use
-        that executable.</para>
+            <para>Note that the value given to <option>--with-perl</option> is
+            the <emphasis>directory</emphasis> where the
+            <command>perl</command> executable can be found. The configure
+            scripts will add this directory to the front of the search path
+            when trying to find a suitable <command>perl</command> executable.
+            Once it is found, all the Perl scripts used for configuration,
+            compilation, and installation will use that executable.</para>
 
-        <para>To simplify command execution somewhat, it can help to have
-        <filename>/usr/freeware/bin</filename> (or whatever path is
-        appropriate) in your path before <filename>/bin</filename> or
-        <filename>/usr/bin</filename> or any of the other myriad directories
-        where Perl might exist on IRIX. In such a situation, none of the above
-        extra steps should be necessary. The correct version of Perl will be
-        found simply by virtue of it being early in your path.</para>
+            <para>To simplify command execution somewhat, it can help to have
+            <filename>/usr/freeware/bin</filename> (or whatever path is
+            appropriate) in your path before <filename>/bin</filename> or
+            <filename>/usr/bin</filename> or any of the other myriad
+            directories where Perl might exist on IRIX. In such a situation,
+            none of the above extra steps should be necessary. The correct
+            version of Perl will be found simply by virtue of it being early
+            in your path.</para>
+         </section>
+
+         <section>
+            <title>MIPSpro Compiler Version</title>
+
+            <para>Reports have been made on the VR Juggler mailing list
+            regarding compile failures (including segmentation faults within
+            the compiler) occur when using the MIPSpro Compilers Version
+            7.3.1.1m. We have found upgrading to Version 7.3.1.3m (or newer)
+            fixes the problems.</para>
+
+            <para>A new feature of VR Juggler 1.1 and newer is support for GCC
+            on IRIX. Users who do not have MIPSpro or cannot upgrade can
+            compile and run VR Juggler (without OpenGL Performer support)
+            using the version of GCC distributed by SGI. It can be downloaded
+            from <ulink
+            url="http://freeware.sgi.com/index-by-alpha.html">http://freeware.sgi.com/index-by-alpha.html</ulink>
+            for free. When configuring the source with
+            <command>configure.pl</command> (described later), use the option
+            <option>--with-gcc</option>.</para>
+         </section>
       </section>
 
       <section>
-        <title>MIPSpro Compiler Version</title>
+         <title>Important Note for Win32 Users</title>
 
-        <para>Reports have been made on the VR Juggler mailing list regarding
-        compile failures (including segmentation faults within the compiler)
-        occur when using the MIPSpro Compilers Version 7.3.1.1m. We have found
-        upgrading to Version 7.3.1.3m (or newer) fixes the problems.</para>
-
-        <para>A new feature of VR Juggler 1.1 and newer is support for GCC on
-        IRIX. Users who do not have MIPSpro or cannot upgrade can compile and
-        run VR Juggler (without OpenGL Performer support) using the version of
-        GCC distributed by SGI. It can be downloaded from <ulink
-        url="http://freeware.sgi.com/index-by-alpha.html">http://freeware.sgi.com/index-by-alpha.html</ulink>
-        for free. When configuring the source with
-        <command>configure.pl</command> (described later), use the option
-        <option>--with-gcc</option>.</para>
+         <para>VR Juggler 1.1 and newer use a lot of C++ features not
+         supported by Visual Studio 6.0. Microsoft <ulink
+         url="http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q243/4/51.asp&amp;NoWebContent=1">acknowledges</ulink>
+         the issues concerning noncompliance to the C++ Standard with Visual
+         Studio 6.0, and it appears that they have no plans to fix these
+         problems. Therefore, we require the use of Visual Studio 7.x (.NET
+         2002 or 2003) to compile the source code.</para>
       </section>
-    </section>
+   </section>
 
-    <section>
-      <title>Important Note for Win32 Users</title>
+   <section id="source.code.section">
+      <title>Getting the Source Code and the Dependencies</title>
 
-      <para>VR Juggler 1.1 and newer use a lot of C++ features not supported
-      by Visual Studio 6.0. Microsoft <ulink
-      url="http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q243/4/51.asp&amp;NoWebContent=1">acknowledges</ulink>
-      the issues concerning noncompliance to the C++ Standard with Visual
-      Studio 6.0, and it appears that they have no plans to fix these
-      problems. Therefore, we require the use of Visual Studio 7.x (.NET 2002
-      or 2003) to compile the source code.</para>
-    </section>
-  </section>
+      <para>In this section, we explain how to get the Juggler Project source
+      code and the dependencies required to build Juggler. There are two ways
+      to get the source code: from a pre-packaged source release archive or
+      from the CVS repository on SourceForge. If you got the code from a
+      pre-packaged source archive, that code is a complete
+      <quote>snapshot</quote> of the CVS repository at the time of release. It
+      contains all dependencies that would otherwise have been acquired using
+      CVS. It <emphasis>does not</emphasis> contain binary dependencies that
+      must be downloaded separately (such as NSPR, the Java Developer Kit, a
+      C++ compiler, etc.).</para>
 
-  <section id="source.code.section">
-    <title>Getting the Source Code and the Dependencies</title>
+      <para>The current list of <emphasis>required</emphasis> software
+      packages is as follows:</para>
 
-    <para>In this section, we explain how to get the Juggler Project source
-    code and the dependencies required to build Juggler. There are two ways to
-    get the source code: from a pre-packaged source release archive or from
-    the CVS repository on SourceForge. If you got the code from a pre-packaged
-    source archive, that code is a complete <quote>snapshot</quote> of the CVS
-    repository at the time of release. It contains all dependencies that would
-    otherwise have been acquired using CVS. It <emphasis>does not</emphasis>
-    contain binary dependencies that must be downloaded separately (such as
-    NSPR, the Java Developer Kit, a C++ compiler, etc.).</para>
+      <itemizedlist>
+         <listitem>
+            <para>CppDOM (<ulink
+            url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>):
+            A lightweight, easy-to-use XML parser written in C++. CppDOM must
+            be compiled and installed for use with VR Juggler.</para>
+         </listitem>
 
-    <para>The current list of <emphasis>required</emphasis> software packages
-    is as follows:</para>
+         <listitem>
+            <para>Boost (<ulink
+            url="http://www.boost.org/">http://www.boost.org/</ulink>): A C++
+            library providing many powerful utility classes and libraries.
+            Boost must be compiled and installed for use with VR
+            Juggler.</para>
+         </listitem>
 
-    <itemizedlist>
-      <listitem>
-        <para>CppDOM (<ulink
-        url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>):
-        A lightweight, easy-to-use XML parser written in C++. CppDOM must be
-        compiled and installed for use with VR Juggler.</para>
-      </listitem>
+         <listitem>
+            <para>GMTL (<ulink
+            url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>): A
+            generic math library that makes use of C++ templates and STL
+            paradigms. GMTL must be installed for use with VR Juggler.</para>
+         </listitem>
+      </itemizedlist>
 
-      <listitem>
-        <para>Boost (<ulink
-        url="http://www.boost.org/">http://www.boost.org/</ulink>): A C++
-        library providing many powerful utility classes and libraries. Boost
-        must be compiled and installed for use with VR Juggler.</para>
-      </listitem>
+      <para>The following lists <emphasis>semi-optional</emphasis>
+      packages:</para>
 
-      <listitem>
-        <para>GMTL (<ulink
-        url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>): A
-        generic math library that makes use of C++ templates and STL
-        paradigms. GMTL must be installed for use with VR Juggler.</para>
-      </listitem>
-    </itemizedlist>
+      <itemizedlist>
+         <listitem>
+            <para>NSPR (<ulink
+            url="http://www.mozilla.org/projects/nspr/">http://www.mozilla.org/projects/nspr/</ulink>):
+            The Netscape Portable Runtime, which can be used by VPR for
+            threading and sockets (required on Win32 and Solaris).</para>
+         </listitem>
 
-    <para>The following lists <emphasis>semi-optional</emphasis>
-    packages:</para>
+         <listitem>
+            <para>Java Developer Kit (<ulink
+            url="http://java.sun.com/">http://java.sun.com/</ulink>): The J2SE
+            SDK (or JDK) is used to compile all the Java code used in the
+            Juggler Project. Without it, none of the Java code can be built.
+            We require version 1.4 or newer. The Java Standard Edition (J2SE)
+            can be downloaded from <ulink
+            url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.</para>
+         </listitem>
 
-    <itemizedlist>
-      <listitem>
-        <para>NSPR (<ulink
-        url="http://www.mozilla.org/projects/nspr/">http://www.mozilla.org/projects/nspr/</ulink>):
-        The Netscape Portable Runtime, which can be used by VPR for threading
-        and sockets (required on Win32 and Solaris).</para>
-      </listitem>
+         <listitem>
+            <para>omniORB (<ulink
+            url="http://www.jdom.org/">http://omniorb.sourceforge.net/</ulink>):
+            A C++ implementation of CORBA 2.3, required for the Tweek C++
+            API.</para>
+         </listitem>
+      </itemizedlist>
 
-      <listitem>
-        <para>Java Developer Kit (<ulink
-        url="http://java.sun.com/">http://java.sun.com/</ulink>): The J2SE SDK
-        (or JDK) is used to compile all the Java code used in the Juggler
-        Project. Without it, none of the Java code can be built. We require
-        version 1.4 or newer. The Java Standard Edition (J2SE) can be
-        downloaded from <ulink
-        url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.</para>
-      </listitem>
+      <para>The following are fully optional packages that are primarily of
+      interest only to people doing development on the Juggler Suite
+      itself:</para>
 
-      <listitem>
-        <para>omniORB (<ulink
-        url="http://www.jdom.org/">http://omniorb.sourceforge.net/</ulink>): A
-        C++ implementation of CORBA 2.3, required for the Tweek C++
-        API.</para>
-      </listitem>
-    </itemizedlist>
+      <itemizedlist>
+         <listitem>
+            <para>JUnit (<ulink
+            url="http://www.junit.org/">http://www.junit.org/</ulink>): A unit
+            testing framework for Java.</para>
+         </listitem>
 
-    <para>The following are fully optional packages that are primarily of
-    interest only to people doing development on the Juggler Suite
-    itself:</para>
+         <listitem>
+            <para>CppUnit (<ulink
+            url="http://cppunit.sourceforge.net/">http://cppunit.sourceforge.net/</ulink>):
+            A unit testing framework for C++. The Juggler C++ test suties make
+            use of extensions to CppUnit. An extended version of the CppUnit
+            source that includes these extensions can be acquired from the
+            Juggler CVS repository in the module <literal>cppunit</literal>.
+            Refer to <xref linkend="section.cvs.access" /> for instructions
+            about accessing the Juggler CVS repository.</para>
+         </listitem>
+      </itemizedlist>
 
-    <itemizedlist>
-      <listitem>
-        <para>JUnit (<ulink
-        url="http://www.junit.org/">http://www.junit.org/</ulink>): A unit
-        testing framework for Java.</para>
-      </listitem>
+      <para>The third-party dependencies must be downloaded from the sites
+      listed above and installed manually. You may also have to compile one or
+      more of the packages if binary distributions are not available. Which
+      packages you download depends on what you already have installed. Note
+      carefully which packages are needed based on the software you have
+      installed and what versions of tools (such as the JDK) that you
+      download.</para>
 
-      <listitem>
-        <para>CppUnit (<ulink
-        url="http://cppunit.sourceforge.net/">http://cppunit.sourceforge.net/</ulink>):
-        A unit testing framework for C++. The Juggler C++ test suties make use
-        of extensions to CppUnit. An extended version of the CppUnit source
-        that includes these extensions can be acquired from the Juggler CVS
-        repository in the module <literal>cppunit</literal>. Refer to <xref
-        linkend="section.cvs.access" /> for instructions about accessing the
-        Juggler CVS repository.</para>
-      </listitem>
-    </itemizedlist>
+      <section id="section.cvs.access">
+         <title>How to Get the Juggler Suite from CVS</title>
 
-    <para>The third-party dependencies must be downloaded from the sites
-    listed above and installed manually. You may also have to compile one or
-    more of the packages if binary distributions are not available. Which
-    packages you download depends on what you already have installed. Note
-    carefully which packages are needed based on the software you have
-    installed and what versions of tools (such as the JDK) that you
-    download.</para>
+         <para>You can optionally get the Juggler Project as a source code
+         tarball from the website (<ulink
+         url="http://www.vrjuggler.org/">http://www.vrjuggler.org/</ulink>) or
+         you can execute the following commands from a shell to get the code
+         from our CVS repository:</para>
 
-    <section id="section.cvs.access">
-      <title>How to Get the Juggler Suite from CVS</title>
-
-      <para>You can optionally get the Juggler Project as a source code
-      tarball from the website (<ulink
-      url="http://www.vrjuggler.org/">http://www.vrjuggler.org/</ulink>) or
-      you can execute the following commands from a shell to get the code from
-      our CVS repository:</para>
-
-      <screen>cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login
+         <screen>cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login
 cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
-    </section>
-
-    <section>
-      <title>Downloading Third-Party Dependencies</title>
-
-      <para>In addition to source the dependencies acquired through CVS, there
-      are some third-party dependencies that must be installed separately.
-      Remember that no Java code in VR Juggler can be used without the JDK and
-      a working Java version of CORBA.</para>
-
-      <section>
-        <title>Boost</title>
-
-        <para>The minimum required version of Boost, as of this writing, is
-        1.31.0. The Boost source can be downloaded from <ulink
-        url="http://www.sf.net/projects/boost/">http://www.sf.net/projects/boost/</ulink>.
-        To compile and install Boost, refer to its installation documentation
-        (<ulink
-        url="http://www.boost.org/more/getting_started.html#Build_Install">http://www.boost.org/more/getting_started.html#Build_Install</ulink>).
-        Note that you need the command <command>bjam</command> (referred to as
-        <quote>boost-jam</quote> on the Boost download page) to build
-        Boost.</para>
       </section>
 
       <section>
-        <title>CppDOM</title>
+         <title>Downloading Third-Party Dependencies</title>
 
-        <para>For XML processing, we use CppDOM 0.3.2 or newer. The source and
-        binary distributions for some platforms can be downloaded from <ulink
-        url="http://www.sf.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>.
-        If a binary version is not available for your operating system you
-        must compile and install CppDOM yourself. Note that you need SCons
-        (<ulink
-        url="http://scons.sourceforge.net/">http://scons.sourceforge.net/</ulink>)
-        to build and install CppDOM.</para>
+         <para>In addition to source the dependencies acquired through CVS,
+         there are some third-party dependencies that must be installed
+         separately. Remember that no Java code in VR Juggler can be used
+         without the JDK and a working Java version of CORBA.</para>
+
+         <section>
+            <title>Boost</title>
+
+            <para>The minimum required version of Boost, as of this writing,
+            is 1.31.0. The Boost source can be downloaded from <ulink
+            url="http://www.sf.net/projects/boost/">http://www.sf.net/projects/boost/</ulink>.
+            To compile and install Boost, refer to its installation
+            documentation (<ulink
+            url="http://www.boost.org/more/getting_started.html#Build_Install">http://www.boost.org/more/getting_started.html#Build_Install</ulink>).
+            Note that you need the command <command>bjam</command> (referred
+            to as <quote>boost-jam</quote> on the Boost download page) to
+            build Boost.</para>
+         </section>
+
+         <section>
+            <title>CppDOM</title>
+
+            <para>For XML processing, we use CppDOM 0.3.2 or newer. The source
+            and binary distributions for some platforms can be downloaded from
+            <ulink
+            url="http://www.sf.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>.
+            If a binary version is not available for your operating system you
+            must compile and install CppDOM yourself. Note that you need SCons
+            (<ulink
+            url="http://scons.sourceforge.net/">http://scons.sourceforge.net/</ulink>)
+            to build and install CppDOM.</para>
+         </section>
+
+         <section>
+            <title>GMTL</title>
+
+            <para>For high-level mathematical operations, we use GMTL 0.3.2 or
+            newer. The source distribution can be downloaded from <ulink
+            url="http://www.sf.net/projects/ggt/">http://www.sf.net/projects/ggt/</ulink>.
+            Note that you need SCons (<ulink
+            url="http://scons.sourceforge.net/">http://scons.sourceforge.net/</ulink>)
+            to build and install GMTL.</para>
+         </section>
+
+         <section>
+            <title>Netscape Portable Runtime (NSPR)</title>
+
+            <para>Our operating system abstraction, VPR, can make use of NSPR
+            for operating system primitives. On some platforms (IRIX, FreeBSD,
+            Linux, Mac OS X), the use of NSPR is strictly optional. On others
+            (Win32, HP-UX, and Solaris), it is required. Based on your local
+            system, you should decide whether you need NSPR. Binary versions
+            of NSPR can be downloaded from <ulink
+            url="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</ulink>.
+            At this time, we recommend the use of version 4.2 or newer.</para>
+         </section>
+
+         <section>
+            <title>Java Developer Kit (also called the J2SE SDK)</title>
+
+            <para>We make use of the Java programming language in addition to
+            C++. Java is used exclusively for GUIs such as Tweek and VRJConfig
+            (which is a JavaBean that is loaded into Tweek). To compile the
+            Java code, a JDK is necessary. We currently require version 1.4 or
+            newer. The Java Standard Edition can be downloaded from <ulink
+            url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.
+            More information can be found at <ulink
+            url="http://java.sun.com/">http://java.sun.com/</ulink>.</para>
+         </section>
+
+         <section>
+            <title>omniORB</title>
+
+            <para>omniORB is a C++ implementation of CORBA 2.3. It is required
+            in order to compile the Tweek C++ API. At this time, the Tweek C++
+            API is not required for VR Juggler, but this situation will change
+            in the near future. At this time, we primarily use omniORB 4.0.x.
+            omniORB can be downloaded from <ulink
+            url="http://omniorb.sourceforge.net/">http://omniorb.sourceforge.net/</ulink>.</para>
+
+            <para>omniORB 3.0 has strange conventions for how installations
+            are made. Within the <filename>bin</filename> and
+            <filename>lib</filename> directories, there are platform-specific
+            subdirectories that contain the actual binaries (except when
+            installed on FreeBSD via the Ports Collection). Because of this,
+            several extra options must be specified in order to tell the Tweek
+            configure script where to find everything. Please refer to <xref
+            linkend="tweek.build.section" /> for more details on this.</para>
+         </section>
+      </section>
+   </section>
+
+   <section id="compile.section">
+      <title>Compiling</title>
+
+      <para>In this section, we describe how to compile the Juggler Project.
+      We focus on VR Juggler as a whole, but information about some of the
+      individual components is provided later.</para>
+
+      <section>
+         <title>Important Note Regarding Compiling</title>
+
+         <para>You have downloaded <emphasis>developmental</emphasis> code. It
+         may not be stable, and it may not even compile. Compiling VR Juggler
+         itself can be a little complicated for anyone who does not have some
+         background in using CVS, Autoconf, C++, and <command>make</command>
+         or Visual Studio.</para>
       </section>
 
       <section>
-        <title>GMTL</title>
+         <title>Compiling the Juggler Suite of Tools</title>
 
-        <para>For high-level mathematical operations, we use GMTL 0.3.2 or
-        newer. The source distribution can be downloaded from <ulink
-        url="http://www.sf.net/projects/ggt/">http://www.sf.net/projects/ggt/</ulink>.
-        Note that you need SCons (<ulink
-        url="http://scons.sourceforge.net/">http://scons.sourceforge.net/</ulink>)
-        to build and install GMTL.</para>
-      </section>
+         <para>This section explains how to get, configure, and compile all of
+         the tools that make up VR Juggler. Each tool compiles to its own
+         library and can be installed individually. (Refer to the
+         <filename>README</filename> file in this directory for more
+         information about the specific modules.)</para>
 
-      <section>
-        <title>Netscape Portable Runtime (NSPR)</title>
+         <para>To build VR Juggler on Windows, you must use the Visual Studio
+         solution. After getting the dependencies needed to compile VR Juggler
+         (see the next section), refer to the <ulink
+         url="vc7/README.html">README.html</ulink> file located in the
+         <filename>vc7</filename> subdirectory of this directory. Do not
+         bother to the rest of this document.</para>
 
-        <para>Our operating system abstraction, VPR, can make use of NSPR for
-        operating system primitives. On some platforms (IRIX, FreeBSD, Linux,
-        Mac OS X), the use of NSPR is strictly optional. On others (Win32,
-        HP-UX, and Solaris), it is required. Based on your local system, you
-        should decide whether you need NSPR. Binary versions of NSPR can be
-        downloaded from <ulink
-        url="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</ulink>.
-        At this time, we recommend the use of version 4.2 or newer.</para>
-      </section>
+         <section id="config.vrjuggler.section">
+            <title>Configuring the Juggler Build</title>
 
-      <section>
-        <title>Java Developer Kit (also called the J2SE SDK)</title>
+            <para>We now explain the process by which the Juggler build is
+            configured. The Juggler Suite makes use of the well-known, widely
+            used GNU tools Autoconf and GNU Make. We provide a wrapper script
+            written in Perl called <command>configure.pl</command> that gets
+            the process started.</para>
 
-        <para>We make use of the Java programming language in addition to C++.
-        Java is used exclusively for GUIs such as Tweek and VRJConfig (which
-        is a JavaBean that is loaded into Tweek). To compile the Java code, a
-        JDK is necessary. We currently require version 1.4 or newer. The Java
-        Standard Edition can be downloaded from <ulink
-        url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.
-        More information can be found at <ulink
-        url="http://java.sun.com/">http://java.sun.com/</ulink>.</para>
-      </section>
+            <para>The Juggler build is highly automated. The trickiest part is
+            telling the build where to find the third-party dependencies. This
+            part can be simplified, however, by installing the third-party
+            dependencies in the default location where the search will be
+            performed. In most cases, this is <filename>/usr/local</filename>,
+            but in others it is <filename>/usr</filename>. The default search
+            location is determined by whether the dependency is considered to
+            be a fundamental part of the operating system installation (such
+            as OpenGL) or if it is an <quote>add-on</quote> package (such as
+            Boost, GMTL, CppDOM, or omniORB).</para>
 
-      <section>
-        <title>omniORB</title>
+            <sidebar>
+               <para>The distinction between <filename>/usr/local</filename>
+               and <filename>/usr</filename> is complicated by the fact that
+               most Linux distributions have <emphasis>everything</emphasis>
+               installed in <filename>/usr</filename>. While Linux may be
+               popular, it should not (yet) be considered a model example of
+               how to do things. In traditional UN*X distributions (BSD and
+               System V), <filename>/usr</filename> is only used for the
+               fundamental operating system pieces;
+               <filename>/usr/local</filename> is used for extra bits. The
+               Juggler build is based on these assumptions. Furthermore, most
+               open source software packages (e.g., Boost, omniORB, Perl,
+               Python) default to installing themselves in
+               <filename>/usr/local</filename>, which suggests that the
+               authors of those tools generally expect their software to be in
+               <filename>/usr/local</filename>.</para>
+            </sidebar>
 
-        <para>omniORB is a C++ implementation of CORBA 2.3. It is required in
-        order to compile the Tweek C++ API. At this time, the Tweek C++ API is
-        not required for VR Juggler, but this situation will change in the
-        near future. At this time, we primarily use omniORB 4.0.x. omniORB can
-        be downloaded from <ulink
-        url="http://omniorb.sourceforge.net/">http://omniorb.sourceforge.net/</ulink>.</para>
+            <section id="using.configure.pl">
+               <title>Using <command>configure.pl</command></title>
 
-        <para>omniORB 3.0 has strange conventions for how installations are
-        made. Within the <filename>bin</filename> and <filename>lib</filename>
-        directories, there are platform-specific subdirectories that contain
-        the actual binaries (except when installed on FreeBSD via the Ports
-        Collection). Because of this, several extra options must be specified
-        in order to tell the Tweek configure script where to find everything.
-        Please refer to <xref linkend="tweek.build.section" /> for more
-        details on this.</para>
-      </section>
-    </section>
-  </section>
+               <para>In the base <filename>juggler</filename> source
+               directory, we have a <quote>global</quote> configure script
+               written in Perl called <command>configure.pl</command>. To get
+               the command-line options for this script, use one of the
+               following (the second being much more detailed):</para>
 
-  <section id="compile.section">
-    <title>Compiling</title>
-
-    <para>In this section, we describe how to compile the Juggler Project. We
-    focus on VR Juggler as a whole, but information about some of the
-    individual components is provided later.</para>
-
-    <section>
-      <title>Important Note Regarding Compiling</title>
-
-      <para>You have downloaded <emphasis>developmental</emphasis> code. It
-      may not be stable, and it may not even compile. Compiling VR Juggler
-      itself can be a little complicated for anyone who does not have some
-      background in using CVS, Autoconf, C++, and <command>make</command> or
-      Visual Studio.</para>
-    </section>
-
-    <section>
-      <title>Compiling the Juggler Suite of Tools</title>
-
-      <para>This section explains how to get, configure, and compile all of
-      the tools that make up VR Juggler. Each tool compiles to its own library
-      and can be installed individually. (Refer to the
-      <filename>README</filename> file in this directory for more information
-      about the specific modules.)</para>
-
-      <para>To build VR Juggler on Windows, you must use the Visual Studio
-      solution. After getting the dependencies needed to compile VR Juggler
-      (see the next section), refer to the <ulink
-      url="vc7/README.html">README.html</ulink> file located in the
-      <filename>vc7</filename> subdirectory of this directory. Do not bother
-      to the rest of this document.</para>
-
-      <section id="config.vrjuggler.section">
-        <title>Configuring the Juggler Build</title>
-
-        <para>We now explain the process by which the Juggler build is
-        configured. The Juggler Suite makes use of the well-known, widely used
-        GNU tools Autoconf and GNU Make. We provide a wrapper script written
-        in Perl called <command>configure.pl</command> that gets the process
-        started.</para>
-
-        <para>The Juggler build is highly automated. The trickiest part is
-        telling the build where to find the third-party dependencies. This
-        part can be simplified, however, by installing the third-party
-        dependencies in the default location where the search will be
-        performed. In most cases, this is <filename>/usr/local</filename>, but
-        in others it is <filename>/usr</filename>. The default search location
-        is determined by whether the dependency is considered to be a
-        fundamental part of the operating system installation (such as OpenGL)
-        or if it is an <quote>add-on</quote> package (such as Boost, GMTL,
-        CppDOM, or omniORB).</para>
-
-        <sidebar>
-          <para>The distinction between <filename>/usr/local</filename> and
-          <filename>/usr</filename> is complicated by the fact that most Linux
-          distributions have <emphasis>everything</emphasis> installed in
-          <filename>/usr</filename>. While Linux may be popular, it should not
-          (yet) be considered a model example of how to do things. In
-          traditional UN*X distributions (BSD and System V),
-          <filename>/usr</filename> is only used for the fundamental operating
-          system pieces; <filename>/usr/local</filename> is used for extra
-          bits. The Juggler build is based on these assumptions. Furthermore,
-          most open source software packages (e.g., Boost, omniORB, Perl,
-          Python) default to installing themselves in
-          <filename>/usr/local</filename>, which suggests that the authors of
-          those tools generally expect their software to be in
-          <filename>/usr/local</filename>.</para>
-        </sidebar>
-
-        <section id="using.configure.pl">
-          <title>Using <command>configure.pl</command></title>
-
-          <para>In the base <filename>juggler</filename> source directory, we
-          have a <quote>global</quote> configure script written in Perl called
-          <command>configure.pl</command>. To get the command-line options for
-          this script, use one of the following (the second being much more
-          detailed):</para>
-
-          <screen>./configure.pl --help
+               <screen>./configure.pl --help
 ./configure.pl --manual</screen>
 
-          <para>To configure your system, you will need to see what options
-          all the Autoconf-based configure scripts in VR Juggler need. To get
-          this text, enter:</para>
+               <para>To configure your system, you will need to see what
+               options all the Autoconf-based configure scripts in VR Juggler
+               need. To get this text, enter:</para>
 
-          <screen>./configure.pl --all-help</screen>
+               <screen>./configure.pl --all-help</screen>
 
-          <para><important>
-              <para>In order for this to work, the configure script for each
-              of the Juggler modules must be generated. This can be done
-              manually by running <command>autogen.sh</command> in the
-              top-level <filename>juggler</filename> directory. It use is
-              simple:</para>
+               <para><important>
+                     <para>In order for this to work, the configure script for
+                     each of the Juggler modules must be generated. This can
+                     be done manually by running <command>autogen.sh</command>
+                     in the top-level <filename>juggler</filename> directory.
+                     It use is simple:</para>
 
-              <screen>./autogen.sh</screen>
+                     <screen>./autogen.sh</screen>
 
-              <para>This <command>autogen.sh</command> script must be run from
-              the directory where it exists. Do not try to run it from a build
-              directory or any other place in the Juggler source tree. The
-              same holds for the individual <command>autogen.sh</command>
-              scripts in the various modules, should you need to run one
-              individually.</para>
-            </important><command>configure.pl</command> can run in a unique
-          <quote>build</quote> directory or in the directory where it resides.
-          Here is how we (the Juggler Team) have been using it:</para>
+                     <para>This <command>autogen.sh</command> script must be
+                     run from the directory where it exists. Do not try to run
+                     it from a build directory or any other place in the
+                     Juggler source tree. The same holds for the individual
+                     <command>autogen.sh</command> scripts in the various
+                     modules, should you need to run one individually.</para>
+                  </important><command>configure.pl</command> can run in a
+               unique <quote>build</quote> directory or in the directory where
+               it resides. Here is how we (the Juggler Team) have been using
+               it:</para>
 
-          <orderedlist>
-            <listitem>
-              <para>Make a directory for compiling. There are many good
-              reasons to do this away from the main source tree (though they
-              will not be listed here).</para>
+               <orderedlist>
+                  <listitem>
+                     <para>Make a directory for compiling. There are many good
+                     reasons to do this away from the main source tree (though
+                     they will not be listed here).</para>
 
-              <screen>mkdir build.linux.posix</screen>
+                     <screen>mkdir build.linux.posix</screen>
 
-              <para>This example using an ad hoc naming convention based on
-              operating system and threading subsystem. Other examples could
-              be <filename>build.irix.sproc</filename>,
-              <filename>build.solaris.nspr</filename>, etc.</para>
-            </listitem>
+                     <para>This example using an ad hoc naming convention
+                     based on operating system and threading subsystem. Other
+                     examples could be <filename>build.irix.sproc</filename>,
+                     <filename>build.solaris.nspr</filename>, etc.</para>
+                  </listitem>
 
-            <listitem>
-              <para>Enter the new build directory.</para>
+                  <listitem>
+                     <para>Enter the new build directory.</para>
 
-              <screen>cd build.linux.posix</screen>
-            </listitem>
+                     <screen>cd build.linux.posix</screen>
+                  </listitem>
 
-            <listitem>
-              <para>Configure all the modules making up VR Juggler. This is
-              when you must tell the module configure scripts where all the
-              package dependencies are found.</para>
+                  <listitem>
+                     <para>Configure all the modules making up VR Juggler.
+                     This is when you must tell the module configure scripts
+                     where all the package dependencies are found.</para>
 
-              <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=JDK</screen>
+                     <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=JDK</screen>
 
-              <important>
-                <para>You will probably have to specify the paths to your
-                local CppDOM, GMTL, and Boost installations using the options
-                <option>--with-cppdom</option>, <option>--with-gmtl</option>,
-                and <option>--with-boost</option> unless they are installed in
-                the default location (<filename>/usr/local</filename>). By
-                default, Boost 1.31 installs its header files in a
-                subdirectory of <filename>include</filename> called
-                <filename>boost-1_31</filename>. That is, if Boost is
-                installed in <filename>/home/user1/pkgs/boost</filename>, the
-                header files will be in
-                <filename>/home/user1/pkgs/boost/include/boost-1_31</filename>.
-                In this case, you must also specify the option
-                <option>--with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31</option>
-                when running <command>configure.pl</command>.</para>
-              </important>
-            </listitem>
-          </orderedlist>
+                     <important>
+                        <para>You will probably have to specify the paths to
+                        your local CppDOM, GMTL, and Boost installations using
+                        the options <option>--with-cppdom</option>,
+                        <option>--with-gmtl</option>, and
+                        <option>--with-boost</option> unless they are
+                        installed in the default location
+                        (<filename>/usr/local</filename>). By default, Boost
+                        1.31 installs its header files in a subdirectory of
+                        <filename>include</filename> called
+                        <filename>boost-1_31</filename>. That is, if Boost is
+                        installed in
+                        <filename>/home/user1/pkgs/boost</filename>, the
+                        header files will be in
+                        <filename>/home/user1/pkgs/boost/include/boost-1_31</filename>.
+                        In this case, you must also specify the option
+                        <option>--with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31</option>
+                        when running <command>configure.pl</command>.</para>
+                     </important>
+                  </listitem>
+               </orderedlist>
 
-          <para>By default, the configuration process will configure VR
-          Juggler and all of its dependencies. This includes Sonix, which is
-          an interesting special case. Sonix can make use of Aaudiere, OpenAL,
-          or AudioWorks to add sound to VR Juggler applications. If none of
-          those packages is found, Sonix will <quote>stub out</quote> its
-          sound APIs. This means that Sonix and the VR Juggler Sound Manager
-          can still be used in applications, but no audio will be heard at run
-          time. See <xref linkend="sonix.compile.section" /> for more
-          information about how to configure Sonix to use Audiere, OpenAL, or
-          AudioWorks.</para>
+               <para>By default, the configuration process will configure VR
+               Juggler and all of its dependencies. This includes Sonix, which
+               is an interesting special case. Sonix can make use of Aaudiere,
+               OpenAL, or AudioWorks to add sound to VR Juggler applications.
+               If none of those packages is found, Sonix will <quote>stub
+               out</quote> its sound APIs. This means that Sonix and the VR
+               Juggler Sound Manager can still be used in applications, but no
+               audio will be heard at run time. See <xref
+               linkend="sonix.compile.section" /> for more information about
+               how to configure Sonix to use Audiere, OpenAL, or
+               AudioWorks.</para>
 
-          <para>For example uses of <command>configure.pl</command>, take a
-          look at the Wiki page relating to building from CVS (<ulink
-          url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).
-          It is not a replacement for this document, but it shows how some
-          members of the Juggler team configure VR Juggler. It also has
-          information on more advanced uses of <command>configure.pl</command>
-          that are beyond the scope of this document.</para>
-        </section>
+               <para>For example uses of <command>configure.pl</command>, take
+               a look at the Wiki page relating to building from CVS (<ulink
+               url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).
+               It is not a replacement for this document, but it shows how
+               some members of the Juggler team configure VR Juggler. It also
+               has information on more advanced uses of
+               <command>configure.pl</command> that are beyond the scope of
+               this document.</para>
+            </section>
 
-        <section>
-          <title>Using Locally Installed Software</title>
+            <section>
+               <title>Using Locally Installed Software</title>
 
-          <para>As noted in <xref linkend="source.code.section" />, VR Juggler
-          depends on several external software packages. As an example,
-          consider the case where the GMTL library is installed in
-          <filename>/home/user1/pkgs/GMTL</filename> with the headers in
-          <filename>/home/user1/pkgs/GMTL/include</filename>. To use this
-          installation, run <command>configure.pl</command> as follows:</para>
+               <para>As noted in <xref linkend="source.code.section" />, VR
+               Juggler depends on several external software packages. As an
+               example, consider the case where the GMTL library is installed
+               in <filename>/home/user1/pkgs/GMTL</filename> with the headers
+               in <filename>/home/user1/pkgs/GMTL/include</filename>. To use
+               this installation, run <command>configure.pl</command> as
+               follows:</para>
 
-          <screen>../configure.pl --with-gmtl=/home/user1/pkgs/GMTL</screen>
+               <screen>../configure.pl --with-gmtl=/home/user1/pkgs/GMTL</screen>
 
-          <para>The <option>--with-gmtl</option> option could of course be
-          mixed in with those shown in the previous section.</para>
-        </section>
+               <para>The <option>--with-gmtl</option> option could of course
+               be mixed in with those shown in the previous section.</para>
+            </section>
+         </section>
+
+         <section id="compile.vrjuggler.section">
+            <title>Compiling VR Juggler</title>
+
+            <para>Once the configuration process is complete, the code can be
+            compiled. Remember that we require the use of GNU make 3.78 or
+            newer.</para>
+
+            <orderedlist>
+               <listitem>
+                  <para>Compile the source tree using GNU make.</para>
+
+                  <screen>gmake build</screen>
+               </listitem>
+
+               <listitem>
+                  <para>Once this completes, you will have a full build of VR
+                  Juggler. For those who are not interested in developing VR
+                  Juggler or its component modules, it is recommended that you
+                  install the software and use the installed version for
+                  application development. Do this as follows:</para>
+
+                  <screen>gmake install</screen>
+               </listitem>
+            </orderedlist>
+         </section>
       </section>
 
-      <section id="compile.vrjuggler.section">
-        <title>Compiling VR Juggler</title>
+      <section id="compile.individual.section">
+         <title>Tips for Compiling Individual Tools in the Juggler
+         Suite</title>
 
-        <para>Once the configuration process is complete, the code can be
-        compiled. Remember that we require the use of GNU make 3.78 or
-        newer.</para>
+         <para>In this section, we provide tips for ensuring that individual
+         tools in the Juggler Suite are compiled correctly. For the most part,
+         this duplicates information that can be found on the Wiki page
+         relating to building from CVS (<ulink
+         url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).</para>
 
-        <orderedlist>
-          <listitem>
-            <para>Compile the source tree using GNU make.</para>
+         <section id="sonix.compile.section">
+            <title>Sonix</title>
 
-            <screen>gmake build</screen>
-          </listitem>
+            <para>Sonix wraps other audio subsystems such as OpenAL (<ulink
+            url="http://www.openal.org/">www.openal.org</ulink>), Audiere
+            (<ulink url="http://audiere.sf.net/">audiere.sf.net</ulink>), or
+            AudioWorks (<ulink
+            url="http://www.multigen.com/">multigen.com</ulink>). At least one
+            of these packages must be installed for use by Sonix in order to
+            hear sounds in VR Juggler applications. Once you have all the
+            necessary source code and third-party package installations, add
+            one or more of the following options to your
+            <command>configure.pl</command> command line to enable the
+            appropriate audio subsystem:</para>
 
-          <listitem>
-            <para>Once this completes, you will have a full build of VR
-            Juggler. For those who are not interested in developing VR Juggler
-            or its component modules, it is recommended that you install the
-            software and use the installed version for application
-            development. Do this as follows:</para>
+            <itemizedlist>
+               <listitem>
+                  <para><option>--enable-openal
+                  --with-openal=&lt;OPENAL_PATH&gt;</option>: Enable the use
+                  of OpenAL and tell the build where OpenAL is installed. The
+                  default search path is
+                  <filename>/usr/local</filename>.</para>
+               </listitem>
 
-            <screen>gmake install</screen>
-          </listitem>
-        </orderedlist>
-      </section>
-    </section>
+               <listitem>
+                  <para><option>--enable-audiere
+                  --with-audiere=&lt;AUDIERE_PATH&gt;</option>: Enable the use
+                  of Audiere and tell the build where Audiere is installed.
+                  The default search path is
+                  <filename>/usr/local</filename>.</para>
+               </listitem>
 
-    <section id="compile.individual.section">
-      <title>Tips for Compiling Individual Tools in the Juggler Suite</title>
+               <listitem>
+                  <para><option>--enable-audioworks
+                  --with-audioworks=&lt;AUDIOWORKS_PATH&gt;</option>: Enable
+                  the use of AudioWorks and tell the build where AudioWorks is
+                  installed. The default search path is
+                  <filename>/usr</filename>.</para>
+               </listitem>
+            </itemizedlist>
 
-      <para>In this section, we provide tips for ensuring that individual
-      tools in the Juggler Suite are compiled correctly. For the most part,
-      this duplicates information that can be found on the Wiki page relating
-      to building from CVS (<ulink
-      url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).</para>
+            <note>
+               <para>AudioWorks and OpenAL cannot be compiled together. They
+               depend on mutually exclusive VPR threading subsystems. Warnings
+               will be printed by the Sonix configure script indicating this
+               fact. OpenAL and Audiere can be compiled together,
+               however.</para>
+            </note>
+         </section>
 
-      <section id="sonix.compile.section">
-        <title>Sonix</title>
+         <section id="tweek.build.section">
+            <title>Tweek</title>
 
-        <para>Sonix wraps other audio subsystems such as OpenAL (<ulink
-        url="http://www.openal.org/">www.openal.org</ulink>), Audiere (<ulink
-        url="http://audiere.sf.net/">audiere.sf.net</ulink>), or AudioWorks
-        (<ulink url="http://www.multigen.com/">multigen.com</ulink>). At least
-        one of these packages must be installed for use by Sonix in order to
-        hear sounds in VR Juggler applications. Once you have all the
-        necessary source code and third-party package installations, add one
-        or more of the following options to your
-        <command>configure.pl</command> command line to enable the appropriate
-        audio subsystem:</para>
+            <para>Tweek needs JDK 1.4 or newer and a C++ CORBA implementation.
+            Currently, we primarily use omniORB 4.0, but omniORB 3.0 can be
+            used. Visit the <ulink
+            url="http://omniorb.sourceforge.net/">omniORB website</ulink> to
+            download omniORB.</para>
 
-        <itemizedlist>
-          <listitem>
-            <para><option>--enable-openal
-            --with-openal=&lt;OPENAL_PATH&gt;</option>: Enable the use of
-            OpenAL and tell the build where OpenAL is installed. The default
-            search path is <filename>/usr/local</filename>.</para>
-          </listitem>
+            <note>
+               <para>IRIX users must configure Tweek (and its VPR dependency)
+               to use the POSIX subsystem or the NSPR subsystem. omniORB
+               <emphasis>will not work</emphasis> with SPROC threads. To
+               configure VPR to use either POSIX threads or NSPR threads, pass
+               either <option>--enable-subsystem=POSIX</option> or
+               <option>--enable-subsystem=NSPR</option> respectively to
+               <command>configure.pl</command>.</para>
+            </note>
 
-          <listitem>
-            <para><option>--enable-audiere
-            --with-audiere=&lt;AUDIERE_PATH&gt;</option>: Enable the use of
-            Audiere and tell the build where Audiere is installed. The default
-            search path is <filename>/usr/local</filename>.</para>
-          </listitem>
+            <para>For the following steps, assume that you have omniORB
+            installed in <filename>&lt;OMNIORB_PATH&gt;</filename>. Assuming
+            you have the external packages installed, do the following from
+            the top-level <filename>juggler</filename> directory:</para>
 
-          <listitem>
-            <para><option>--enable-audioworks
-            --with-audioworks=&lt;AUDIOWORKS_PATH&gt;</option>: Enable the use
-            of AudioWorks and tell the build where AudioWorks is installed.
-            The default search path is <filename>/usr</filename>.</para>
-          </listitem>
-        </itemizedlist>
-
-        <note>
-          <para>AudioWorks and OpenAL cannot be compiled together. They depend
-          on mutually exclusive VPR threading subsystems. Warnings will be
-          printed by the Sonix configure script indicating this fact. OpenAL
-          and Audiere can be compiled together, however.</para>
-        </note>
-      </section>
-
-      <section id="tweek.build.section">
-        <title>Tweek</title>
-
-        <para>Tweek needs JDK 1.4 or newer and a C++ CORBA implementation.
-        Currently, we primarily use omniORB 4.0, but omniORB 3.0 can be used.
-        Visit the <ulink url="http://omniorb.sourceforge.net/">omniORB
-        website</ulink> to download omniORB.</para>
-
-        <note>
-          <para>IRIX users must configure Tweek (and its VPR dependency) to
-          use the POSIX subsystem or the NSPR subsystem. omniORB
-          <emphasis>will not work</emphasis> with SPROC threads. To configure
-          VPR to use either POSIX threads or NSPR threads, pass either
-          <option>--enable-subsystem=POSIX</option> or
-          <option>--enable-subsystem=NSPR</option> respectively to
-          <command>configure.pl</command>.</para>
-        </note>
-
-        <para>For the following steps, assume that you have omniORB installed
-        in <filename>&lt;OMNIORB_PATH&gt;</filename>. Assuming you have the
-        external packages installed, do the following from the top-level
-        <filename>juggler</filename> directory:</para>
-
-        <screen>mkdir build
+            <screen>mkdir build
 cd build
 ../configure.pl --with-cxx-orb=omniORB4 --with-cxx-orb-root=&lt;OMNIORB_PATH&gt; --with-java-orb=JDK --module=Tweek
 gmake build install</screen>
 
-        <para>If you are using omniORB 3.x, pass
-        <option>--with-cxx-orb=omniORB3</option> instead.</para>
+            <para>If you are using omniORB 3.x, pass
+            <option>--with-cxx-orb=omniORB3</option> instead.</para>
 
-        <para>Depending on your omniORB installation, you may have to pass
-        extra arguments to <command>configure.pl</command> so that the
-        configuration process can find the <command>omniidl</command> binary
-        and the omniORB libraries. For example, on Red Hat Linux 7.2 with
-        omniORB 3.0.x, the following arguments must be specified in addition
-        to the above:</para>
+            <para>Depending on your omniORB installation, you may have to pass
+            extra arguments to <command>configure.pl</command> so that the
+            configuration process can find the <command>omniidl</command>
+            binary and the omniORB libraries. For example, on Red Hat Linux
+            7.2 with omniORB 3.0.x, the following arguments must be specified
+            in addition to the above:</para>
 
-        <screen>--with-cxx-orb-bin=&lt;OMNIORB_PATH&gt;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&lt;OMNIORB_PATH&gt;/lib/i586_linux_2.0_glibc</screen>
+            <screen>--with-cxx-orb-bin=&lt;OMNIORB_PATH&gt;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&lt;OMNIORB_PATH&gt;/lib/i586_linux_2.0_glibc</screen>
+         </section>
       </section>
-    </section>
-  </section>
+   </section>
 </article>
