@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <sstream>
 #include <vector>
 
 #if defined(VPR_OS_Windows)
