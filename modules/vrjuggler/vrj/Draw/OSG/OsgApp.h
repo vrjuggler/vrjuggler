@@ -262,10 +262,6 @@ inline void OsgApp::draw()
    glMatrixMode(GL_PROJECTION);
    glPushMatrix();
 
-   glMatrixMode(GL_TEXTURE);
-   glPushMatrix();
-
-
    osg::ref_ptr<osgUtil::SceneView> sv;
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
@@ -313,9 +309,6 @@ inline void OsgApp::draw()
    sv->update();
    sv->cull();
    sv->draw();
-
-   glMatrixMode(GL_TEXTURE);
-   glPopMatrix();
 
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();
