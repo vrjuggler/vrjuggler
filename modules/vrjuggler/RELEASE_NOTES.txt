@@ -10,6 +10,16 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.0.2
+Released: MMM DD, 2006
+
+    Required application and configuration changes for upgrading from
+    all prior releases:
+
+        * Subclasses of vrj::OsgApp that override latePreFrame() must call
+          up to vrj::OsgApp::latePreFrame() as the last step of the override
+          implementation.
+
  Version: 2.0.1
 Released: August 29, 2005
 

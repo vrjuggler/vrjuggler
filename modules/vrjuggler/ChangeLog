@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-19-2006 patrick     Refactored vrj::OsgApp so that the scene view is
+                        updated only once per frame. Subclasses overriding
+                        vrj::OsgApp::latePreFrame() must be sure to call up to
+                        the base class implementation as the last step in the
+                        override.
 Apr-14-2006 patrick     Added swapSync test application.
 Apr-14-2006 aronb       Added GlExtensionLoader classes.
                         Added support for NV swap_group.
