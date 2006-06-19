@@ -248,7 +248,9 @@ sub installFile($$$$$;$)
    }
    else
    {
+      my @stats = (stat("$src_file"))[8,9];
       copy("$src_file", "$inst_dir") or warn "copy: $!\n";
+      utime(@stats, "$inst_dir/$src_file");
    }
 
    # Do not try to change file ownership or permissions when we are using

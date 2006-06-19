@@ -169,6 +169,7 @@ sub recurseAction
          }
 
          # Make a working copy of the input file to be safe.
+         my @stats = (stat("$curfile"))[8,9];
          copy("$curfile", "$workfile") unless "$curfile" eq "$workfile";
 
          # Replace the tags in $workfile with the values in %VARS.
@@ -184,6 +185,9 @@ sub recurseAction
             unlink("$workfile")
                or warn "WARNING: Could not delete $workfile: $!";
          }
+
+         # Apply the saved attributes of $curfile to $filename.
+         utime(@stats, "$filename");
 
          installFile("$filename", $uid, $gid, "$mode", "$dest_dir",
                      $make_symlink);
