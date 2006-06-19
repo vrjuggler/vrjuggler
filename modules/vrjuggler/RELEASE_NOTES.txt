@@ -10,6 +10,16 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.1.9
+Released: June 19, 2006
+
+    Required application and configuration changes for upgrading from
+    releases prior to 2.0.2 and 2.1.9:
+
+        * Subclasses of vrj::OsgApp that override latePreFrame() must call
+          up to vrj::OsgApp::latePreFrame() as the last step of the override
+          implementation.
+
  Version: 2.0.0
 Released: July 5, 2005
     Please refer to the following to get started with VR Juggler 2.0.0:

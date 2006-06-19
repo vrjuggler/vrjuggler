@@ -1,13 +1,19 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-19-2006 patrick     Refactored vrj::OsgApp so that the scene view is
+                        updated only once per frame. Subclasses overriding
+                        vrj::OsgApp::latePreFrame() must be sure to call up to
+                        the base class implementation as the last step in the
+                        override.
+                        NEW VERSION: 2.1.9
 May-24-2006 dshipton    Versioning of installables for multiple installations.
-			NEW VERSION: 2.1.8
+                        NEW VERSION: 2.1.8
 Feb-15-2006 patrickh    Updated to VPR 1.1.16.
-			NEW VERSION: 2.1.7
+                        NEW VERSION: 2.1.7
 Jan-08-2006 allenb      Added swapSync test application.
 Jan-07-2006 allenb      Added GlExtensionLoader classes.
                         Added support for NV swap_group.
-			NEW VERSION: 2.1.6
+                        NEW VERSION: 2.1.6
 Oct-18-2005 patrickh    Added the functions vrj::getVersionString() and
                         vrj::getVersionNumber().
                         NEW VERSION: 2.1.5

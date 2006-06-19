@@ -41,6 +41,7 @@
 #include <osg/Group>
 
 #include <osgUtil/SceneView>
+#include <osgUtil/UpdateVisitor>
 
 
 namespace vrj
@@ -48,16 +49,22 @@ namespace vrj
 
 /** \class OsgApp OsgApp.h vrj/Draw/OSG/OsgApp.h
  *
- * Encapulates an Open Scene Graph (OSG) application.  This defines the base
+ * Encapsulates an Open Scene Graph (OSG) application.  This defines the base
  * class from which OSG-based application classes should be derived.  It makes
  * use of the OpenGL Draw Manager.
+ *
+ * @note This class makes use of gadget::PositionInterface internally and
+ *       requires that a proxy or proxy alias named "VJHead" is defined in
+ *       the VR Juggler configuration.
  *
  * @see vrj::GlApp
  */
 class OsgApp : public GlApp
 {
 public:
-   OsgApp(Kernel* kern=NULL) : GlApp(kern)
+   OsgApp(Kernel* kern = NULL)
+      : GlApp(kern)
+      , mFrameNumber(0)
    {
       ;
    }
@@ -95,6 +102,25 @@ public:
    }
 
    /**
+    * Function called after preFrame() and application-specific data
+    * synchronization (in a cluster configuration) but before the start of a
+    * new frame.
+    *
+    * If this method is overridden, it must be called as the last thing done
+    * by the overriding version.  This calls update(), which is used to update
+    * this application object's scene graph.
+    *
+    * @note Subclasses overriding this method \em must call this method
+    *       implementation as the last step.
+    *
+    * @since 2.1.9
+    */
+   virtual void latePreFrame()
+   {
+      update();
+   }
+
+   /**
     * Function to set up and render the scene using OSG.  Override this
     * method with great care.  All the logic to handle multi-pipe rendering
     * and other VR Juggler features happens here.
@@ -106,7 +132,7 @@ public:
 
    /**
     * Application initialization function.
-    * Execute any initialization needed before the grahpics API is started.
+    * Execute any initialization needed before the graphics API is started.
     * If this method is overridden, it must be called by the overriding
     * version.  This calls initScene(), which is used to set up this
     * application object's scene graph.
@@ -115,7 +141,12 @@ public:
     */
    virtual void init()
    {
+      mUpdateVisitor = new osgUtil::UpdateVisitor();
+      mFrameStamp    = new osg::FrameStamp();
+
       GlApp::init();
+
+      mHead.init("VJHead");
 
       //Create the scene
       this->initScene();
@@ -192,7 +223,51 @@ public:
    }
 
 protected:
+   /**
+    * Performs the update stage on the scene graph.  This function should be
+    * called as the last thing that happens in latePreFrame(). If
+    * latePreFrame() is not overridden, then this happens automatically.
+    * Otherwise be sure to call vrj::OsgApp::latePreFrame() as the last thing
+    * in application object's override of latePreFrame().
+    *
+    * @pre The library is preparing to switch from the serial preDraw stages
+    *      to the parallel draw stages.
+    * @post The scene graph update stage is complete and it is ready for cull
+    *       and draw to be called in parallel.
+    *
+    * @note This function also takes care of time-based features in the scene
+    *       graph.
+    *
+    * @since 2.1.9
+    */
+   void update()
+   {
+      ++mFrameNumber;
+
+      // Update the frame stamp with information from this frame.
+      mFrameStamp->setFrameNumber(mFrameNumber);
+      mFrameStamp->setReferenceTime(mHead->getTimeStamp().secd());
+
+      // Set up the time and frame number so time-dependent things (animations,
+      // particle system) function correctly.
+      // XXX: This may not be necessary.
+      mUpdateVisitor->setTraversalNumber(mFrameNumber);
+
+      // Update the scene by traversing it with the the update visitor which
+      // will call all node update callbacks and animations. This is
+      // equivalent to calling osgUtil::SceneView::update() but does not
+      // require access to the context-specific osgUtil::SceneView instance.
+      getScene()->accept(*mUpdateVisitor);
+   }
+
    vrj::GlContextData< osg::ref_ptr<osgUtil::SceneView> > sceneViewer;
+
+private:
+   osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
+   osg::ref_ptr<osg::FrameStamp> mFrameStamp;
+
+   int mFrameNumber;
+   gadget::PositionInterface mHead;
 };
 
 inline void OsgApp::contextInit()
@@ -266,6 +341,9 @@ inline void OsgApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
 
+   // Set the timing information in the scene view.
+   sv->setFrameStamp(mFrameStamp.get());
+
    GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = GlDrawManager::instance();
 
@@ -306,7 +384,9 @@ inline void OsgApp::draw()
    sv->setViewMatrix(osg::Matrix(project->getViewMatrix().mData));
 
    //Draw the scene
-   sv->update();
+   // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
+   // should only be called by a single thread. The equivalent of calling
+   // osgUtil::SceneView::update() is in vrj::OsgApp::update().
    sv->cull();
    sv->draw();
 

@@ -53,6 +53,9 @@ void OsgNavGrab::latePreFrame()
    osg::Matrix osg_current_matrix;
    osg_current_matrix.set(world_transform.getData());
    mNavTrans->setMatrix(osg_current_matrix);
+
+   // Finish updating the scene graph.
+   vrj::OsgApp::latePreFrame();
 }
 
 void OsgNavGrab::preFrame()
