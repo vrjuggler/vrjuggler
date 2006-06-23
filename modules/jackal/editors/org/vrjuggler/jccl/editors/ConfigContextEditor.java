@@ -496,11 +496,7 @@ public class ConfigContextEditor
 
    private JSplitPane propsSplitPane = new JSplitPane();
    private JScrollPane helpScrollPane = new JScrollPane();
-   private JEditorPane helpPane = new JEditorPane("text/html", "")
-   {
-      public boolean getScrollableTracksViewportWidth() { return true; }
-      public boolean getScrollableTracksViewportHeight() { return true; }
-   };
+   private JEditorPane helpPane = new JEditorPane("text/html", "");
    private JFrame helpBrowserFrame = new JFrame();
    private TinyBrowser helpBrowser = new TinyBrowser();
 
