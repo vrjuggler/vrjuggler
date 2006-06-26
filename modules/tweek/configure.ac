@@ -38,7 +38,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([tweek/tweekConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.0])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 DPP_GEN_RECONFIG
@@ -445,7 +445,7 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.16], [BUILD_CXX='Y'],
+VPR_PATH([1.1.23], [BUILD_CXX='Y'],
          [AC_MSG_WARN([*** VPR required for Tweek C++ API ***])
           BUILD_CXX='N'])
 

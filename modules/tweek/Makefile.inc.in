@@ -208,11 +208,18 @@ $(LIBDIR)/$(TWEEK_LIB_DYNAMIC): $(OBJS) $(DYLIB_DEP_FILES)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
-          $(OBJS)
+ifeq ($(ISA), universal)
+	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
+            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+              $(subst .dylib,-$$a.lo,$@) $(OBJS) ;			\
+         done
+	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
+else
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
+endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@) $(DYLIB_DEPS)
-	rm -f $(subst .dylib,.lo,$@)
+	rm -f $(@D)/*.lo
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS)	\
           $(DYLIB_DEPS)

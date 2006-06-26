@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2006-06-25 patrick     Added support for building universal binaries on Mac
+                       OS X.
+                       NEW VERSION: 1.1.5
 2006-05-26 dshipton    Make and install fully versioned libraries.
                        NEW VERSION: 1.1.4
 2006-02-15 patrickh    Updated to VPR 1.1.16.
