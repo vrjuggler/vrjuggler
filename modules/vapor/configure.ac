@@ -48,7 +48,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([vpr/vprConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.0])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -680,7 +680,9 @@ vprsave_LDFLAGS="$LDFLAGS"
 
 CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 CPPFLAGS="$CPPFLAGS $BOOST_INCLUDES"
-LDFLAGS="$LDFLAGS $BOOST_LDFLAGS $ABI_FLAGS"
+# NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
+# are used together by AC_TRY_LINK().
+LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
 LIBS="$LIBS -l$boost_fs_name"
 
 DPP_LANG_SAVE
@@ -756,7 +758,12 @@ else
 fi
 
 # Verify that we have a new enough version of CppDOM.
-min_cppdom_version='0.3.1'
+if test "x$PLATFORM" = "xDarwin" -a "x$ISA" = "xuniversal" ; then
+   min_cppdom_version='0.6.4'
+else
+   min_cppdom_version='0.3.1'
+fi
+
 AC_MSG_CHECKING([whether CppDOM version is >= $min_cppdom_version])
 DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version],
    [AC_MSG_RESULT([yes (version $cppdom_version)])],
