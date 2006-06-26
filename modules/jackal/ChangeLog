@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-25-2006 patrick     Added support for building universal binaries on Mac
+                        OS X.
+                        NEW VERSION: 1.1.5
 May-24-2006 dshipton    Versioning of all data and libraries for parallel
                         installations.
                         NEW VERSION: 1.1.4

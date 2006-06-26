@@ -38,7 +38,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([common/jccl/jcclConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.0])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -174,7 +174,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.10], BUILD_CXX='Y', 
+VPR_PATH([1.1.23], BUILD_CXX='Y', 
          [AC_MSG_WARN([*** VPR required for JCCL ***])
           BUILD_CXX='N'])
 

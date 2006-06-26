@@ -37,7 +37,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
-DPP_PREREQ([1.5.1])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # -----------------------------------------------------------------------------
@@ -137,13 +137,13 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-jccl_version='1.1.3'
+jccl_version='1.1.5'
 JCCL_PATH_CXX([$jccl_version], [test_tweek_cxx='Y'],
    [AC_MSG_WARN([*** JCCL C++ API required for JCCL C++ plug-ins ***])
     test_tweek_cxx='N'
    ])
 
-min_tweek_version='0.20.0'
+min_tweek_version='1.1.5'
 if test "x$test_tweek_cxx" = "xY" ; then
    TWEEK_PATH_CXX([$min_tweek_version], [HAVE_TWEEK_CXX='Y'],
       [AC_MSG_WARN([*** Tweek C++ API required for remote reconfig ***])
