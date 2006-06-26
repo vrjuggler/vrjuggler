@@ -308,7 +308,11 @@ AC_DEFUN([VJ_LINKER_SETUP],
       HAVE_LD_SONAME='Y'
       LD_SONAME_FLAG='-soname'
       CC_SONAME_FLAG="-Wl,$LD_SONAME_FLAG,"
-   elif test "x$GNU_LD" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
+   elif test "x$PLATFORM" = "xDarwin" ; then
+      HAVE_LD_SONAME='Y'
+      LD_SONAME_FLAG='-dylib_install_name'
+      CC_SONAME_FLAG="-Wl,$LD_SONAME_FLAG,"
+   elif test "x$GNU_LD" = "xyes" ; then
       HAVE_LD_SONAME='Y'
       LD_SONAME_FLAG='-soname'
       CC_SONAME_FLAG="-Wl,$LD_SONAME_FLAG,"
