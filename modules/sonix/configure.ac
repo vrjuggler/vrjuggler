@@ -40,7 +40,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([snx/snxConfig.h])
 AC_REVISION([$Revision$])
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.0])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # make the nice reconfig script.
@@ -128,7 +128,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.10], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
+VPR_PATH([1.1.23], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
          [AC_MSG_ERROR([*** VPR required for Sonix ***])])
 
 # find and append GMTL flags...

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-25-2006 patrick     Added support for building universal binaries on Mac
+                        OS X.
+                        NEW VERSION: 1.1.4
 May-24-2006 dshipton    Libraries and plugins fully versioned for parallel
                         installations.
                         NEW VERSION: 1.1.3
