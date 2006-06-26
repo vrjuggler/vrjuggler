@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-25-2006 patrick     Added support for building universal binaries on Mac
+                        OS X.
+                        NEW VERSION: 1.1.13
 May-24-2006 patrick     Changed the names of the versioned header and data
                         directories to use the pre-1.1.10 naming convention
                         (gadgeteer-<version> instead of gadget-<version>).

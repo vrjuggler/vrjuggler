@@ -38,7 +38,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([gadget/gadgetConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.0])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -159,9 +159,9 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.20], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
+VPR_PATH([1.1.23], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH_CXX([1.1.2], ,
+JCCL_PATH_CXX([1.1.5], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
 
 gadsave_CPPFLAGS="$CPPFLAGS"
