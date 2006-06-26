@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2005/08/23 19:45:45
-dnl Version:       1.56
+dnl Date modified: 2006/06/26 02:01:39
+dnl Version:       1.57
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.56 2005/08/23 19:45:45 patrickh Exp
+dnl java.m4,v 1.57 2006/06/26 02:01:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -383,6 +383,8 @@ AC_DEFUN([DPP_CHECK_JNI],
    LDFLAGS="$LDFLAGS $JNI_LDFLAGS"
 
    if test "x$PLATFORM" = "xDarwin" ; then
+      dpp_save_CFLAGS="$CFLAGS"
+      CFLAGS="$CFLAGS $ABI_FLAGS"
       LIBS="$LIBS $JVM_LIB"
       AC_CACHE_CHECK([for JNI_CreateJavaVM in JavaVM framework],
                      [dpp_cv_JNI_CreateJavaVM_javavm_fw],
@@ -391,6 +393,7 @@ AC_DEFUN([DPP_CHECK_JNI],
                         [dpp_cv_JNI_CreateJavaVM_javavm_fw='yes'],
                         [dpp_cv_JNI_CreateJavaVM_javavm_fw='no'])])
       dpp_jni_libs="$dpp_cv_JNI_CreateJavaVM_javavm_fw"
+      CFLAGS="$dpp_save_CFLAGS"
    elif test "x$OS_TYPE" = "xUNIX" ; then
       AC_CHECK_LIB([$JVM_LIB], [JNI_CreateJavaVM],
          [AC_CHECK_HEADER([jni.h], [dpp_jni_libs='yes'], [dpp_jni_libs='no'])],

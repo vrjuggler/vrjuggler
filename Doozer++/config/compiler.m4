@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          compiler.m4,v
-dnl Date modified: 2005/01/08 22:44:39
-dnl Version:       1.43
+dnl Date modified: 2006/06/25 17:56:06
+dnl Version:       1.45
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -132,7 +132,7 @@ dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.43 2005/01/08 22:44:39 patrickh Exp
+dnl compiler.m4,v 1.45 2006/06/25 17:56:06 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for
@@ -279,10 +279,11 @@ AC_DEFUN([DPP_SETUP_COMPILER],
          AC_DEFINE(WIN32, , [define if compiling on a Win32 platform])
          AC_DEFINE(_MBCS, , [define if compiling on a Win32 platform])
          ;;
-      dnl A machine running OSX
+      dnl A machine running Mac OS X.
       darwin*)
-         AR='ar'
-         ARFLAGS='-ruv'
+         AR='libtool'
+         ARFLAGS='-static'
+         AR_NAME_FLAG='-o '
          LD='$(CXX) -dynamiclib'
          LDOPTS=''
          C_DLL='$(CC) -dynamiclib'

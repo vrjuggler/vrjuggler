@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2006/04/12 14:24:45
-dnl Version:       1.19
+dnl Date modified: 2006/06/26 02:01:39
+dnl Version:       1.20
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,43 +58,60 @@ dnl                      WIN32_i386 (WIN32/i386)
 dnl                      COFF_ALPHA (COFF/alpha)
 dnl                      ELF_ALPHA (ELF/alpha)
 dnl                      HP (pa-risc)
+dnl                      DARWIN_PPC (Mach-O/PowerPC)
+dnl                      DARWIN_i386 (Mach-O/i386)
+dnl                      DARWIN_UNIVERSAL (Mach-O/universal)
 dnl
 dnl Variables defined:
-dnl     ABI          - The ABI chosen.  It will have one of the following
-dnl                    values: 64, N32, ELF, WIN32
-dnl     ISA          - The ISA chosen.  It will have one of the following
-dnl                    values: mips3, mips4, i386
-dnl     LIBBITSUF    - The suffix for some library directories (which are
-dnl                    typically named in $LDFLAGS).  If it has a value, it
-dnl                    will be 32 or 64 which only has meaning on IRIX.
-dnl     ABI_FLAGS    - Any extra compiler flags needed for compiling with the
-dnl                    named ABI/ISA setting.  This should be appended to
-dnl                    $CFLAGS and $CXXFLAGS for all compile and link tests
-dnl                    that Autconf performs.
-dnl     DPP_ABI_TYPE - The argument given to --with-abi.
+dnl     ABI                 - The ABI chosen.
+dnl     ISA                 - The ISA chosen.
+dnl     LIBBITSUF           - The suffix for some library directories (which
+dnl                           are typically named in $LDFLAGS).
+dnl     ABI_FLAGS           - Any extra compiler flags needed for compiling
+dnl                           with the named ABI/ISA setting. This should be
+dnl                           appended to $CFLAGS and $CXXFLAGS for all
+dnl                           compile and link tests that Autconf performs.
+dnl     PLATFORM_SDK        - Subset of $ABI_FLAGS providing information about
+dnl                           the platform SDK required for building the
+dnl                           desired ABI/ISA combination(s).
+dnl     UNIVERSAL_ARHC_LIST - The list of architectures that will be supported
+dnl                           by universal binaries.
+dnl     DPP_ABI_TYPE        - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.19 2006/04/12 14:24:45 patrickh Exp
+dnl abi.m4,v 1.20 2006/06/26 02:01:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
 dnl for a given ABI.
 dnl
 dnl Usage:
-dnl     DPP_ABI_CFG([ ABI [, ISA [, library-suffix [, extra-flags]]]])
+dnl     DPP_ABI_CFG([ ABI [, ISA [, library-suffix [, extra-flags [, platform-sdk]]]]])
 dnl
 dnl Arguments:
 dnl     ABI            - The application binary interface to use.  This
 dnl                      argument is optional.
 dnl     ISA            - The instruction set architecture for the target CPU.
 dnl                      This argument is optional.
-dnl     library-suffix - The bit-width suffix for the library directory
-dnl                      tied to the ABI.  This is only meaningful on IRIX.
-dnl                      This argument is optional.
+dnl     library-suffix - The bit-width suffix for the library directory tied
+dnl                      to the ABI. This argument is optional.
 dnl     extra-flags    - Extra compiler flags related to the ABI and ISA.
 dnl                      This argument is optional.
+dnl     platform-sdk   - Yet more compler flags related to the ABI and ISA.
+dnl                      These are used to identify the platform SDK needed
+dnl                      for targeting the desird ABI/ISA combination. This
+dnl                      argument is optional and is appended to $ABI_FLAGS
+dnl                      and $_EXTRA_FLAGS.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([DPP_ABI_CFG], [ ABI=$1 ISA=$2 LIBBITSUF=$3 ABI_FLAGS=$4 _EXTRA_FLAGS=$4 ; ])
+AC_DEFUN([DPP_ABI_CFG],
+[
+   ABI=$1
+   ISA=$2
+   LIBBITSUF=$3
+   ABI_FLAGS="$4 $5"
+   _EXTRA_FLAGS="$4 $5"
+   PLATFORM_SDK=$5
+])
 
 dnl ---------------------------------------------------------------------------
 dnl Adds the --with-abi option and configure the ABI/ISA settings based on the
@@ -110,25 +127,40 @@ AC_DEFUN([DPP_ABI_SETUP],
 
    dnl -----------------------------------------------------------------------
    dnl Define the binary format.  Possible values are the following:
-   dnl     N32_M3        - On IRIX, use N32 mips3 binaries
-   dnl     N32_M4        - On IRIX, use N32 mips4 binaries
-   dnl     64_M3         - On IRIX, use 64-bit mips3 binaries
-   dnl     64_M4         - On IRIX, use 64-bit mips4 binaries
-   dnl     ELF_i386      - On an i386 OS (e.g., Linux/i386), use ELF binaries
-   dnl     ELF_x86_64    - On an AMD64/x86_64/x64 OS (e.g., Linux/amd64), use
-   dnl                     ELF binaries
-   dnl     WIN32_i386    - On an i386 Win32 OS, use Win32 binaries
-   dnl     COFF_ALPHA    - On an Alpha, use COFF binaries
-   dnl     ELF_ALPHA     - On an Alpha, use ELF binaries
-   dnl     HP            - On HP-UX, use PA-RISC binaries
-   dnl     HP64          - On HP-UX, use 64-bit PA-RISC binaries
-   dnl     DARWIN_PPC    - On Darwin, use PowerPC binaries
+   dnl     N32_M3           - On IRIX, use N32 mips3 binaries
+   dnl     N32_M4           - On IRIX, use N32 mips4 binaries
+   dnl     64_M3            - On IRIX, use 64-bit mips3 binaries
+   dnl     64_M4            - On IRIX, use 64-bit mips4 binaries
+   dnl     ELF_i386         - On an i386 OS (e.g., Linux/i386), use ELF
+   dnl                        binaries
+   dnl     ELF_x86_64       - On an AMD64/x86_64/x64 OS (e.g., Linux/amd64),
+   dnl                        use ELF binaries
+   dnl     WIN32_i386       - On an i386 Win32 OS, use Win32 binaries
+   dnl     COFF_ALPHA       - On an Alpha, use COFF binaries
+   dnl     ELF_ALPHA        - On an Alpha, use ELF binaries
+   dnl     HP               - On HP-UX, use PA-RISC binaries
+   dnl     HP64             - On HP-UX, use 64-bit PA-RISC binaries
+   dnl     DARWIN_PPC       - On Darwin, use PowerPC binaries
+   dnl     DARWIN_i386      - On Darwin, use i386 binaries
+   dnl     DARWIN_UNIVERSAL - On Darwin, use Mach-O universal binaries
    dnl -----------------------------------------------------------------------
    AC_ARG_WITH(abi,
-               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|ELF_x86_64|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|DARWIN_PPC>
+               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|ELF_x86_64|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|DARWIN_PPC|DARWIN_i386|DARWIN_UNIVERSAL>
                           Define the Application Binary
                           Interface to use],
                DPP_ABI_TYPE="$withval")
+
+   AC_ARG_WITH([macosx-sdk],
+               [  --with-macosx-sdk=<PATH>
+                          Path to Mac OS X platform SDK   [default=none]],
+               [osx_platform_sdk="$withval"], [dpp_platform_sdk=''])
+
+   if test "x$osx_platform_sdk" != "x" ; then
+      changequote(<<, >>)
+      min_osx_ver=`echo $osx_platform_sdk | sed -e 's/.*MacOSX\(10\.[^u]*\)u*\.sdk.*/\1/'`
+      changequote([, ])
+      osx_sdk_flags="-isysroot $osx_platform_sdk -mmacosx-version-min=$min_osx_ver"
+   fi
 
    dnl Set default values for these before checking $DPP_ABI_TYPE.
    dnl Currently, these are for non-IRIX platforms.
@@ -172,7 +204,19 @@ AC_DEFUN([DPP_ABI_SETUP],
          DPP_ABI_CFG('HP64', 'pa-risc', '/pa20_64', '+DD64')
          ;;
       xDARWIN_PPC)
-         DPP_ABI_CFG('Mach-O', 'powerpc')
+         DPP_ABI_CFG('Mach-O', 'powerpc', , [-arch ppc], [$osx_sdk_flags])
+         ;;
+      xDARWIN_i386)
+         DPP_ABI_CFG('Mach-O', 'i386', , [-arch i386], [$osx_sdk_flags])
+         ;;
+      xDARWIN_UNIVERSAL)
+         UNIVERSAL_ARCH_LIST='ppc i386'
+         dpp_universal_arch_flags=''
+         for a in $UNIVERSAL_ARCH_LIST ; do
+            dpp_universal_arch_flags="$dpp_universal_arch_flags -arch $a"
+         done
+         DPP_ABI_CFG('Mach-O', 'universal', , [$dpp_universal_arch_flags],
+                     [$osx_sdk_flags])
          ;;
    esac
 
@@ -182,4 +226,6 @@ AC_DEFUN([DPP_ABI_SETUP],
    AC_SUBST(ABI)
    AC_SUBST(ISA)
    AC_SUBST(LIBBITSUF)
+   AC_SUBST(PLATFORM_SDK)
+   AC_SUBST(UNIVERSAL_ARCH_LIST)
 ])

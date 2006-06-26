@@ -1,5 +1,8 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2006-06-25 patrickh     Added support for universal binaries on Mac OS X.
+                        NEW VERSION: 2.1.2
+2006-06-25 patrickh     Use libtool(1) instead of ar(1) on Mac OS X.
 2006-05-17 patrickh     Fixed a version detection bug in DPP_HAVE_GNU_MAKE for
                         the case of GNU Make pre-releases.
                         NEW VERSION: 2.1.1
