@@ -44,19 +44,6 @@ INSTALL=	@INSTALL@
 INSTALL_FILES=	
 SUBOBJDIR=	$(DRIVER_NAME)
 
-ifeq (@PLATFORM@, Darwin)
-EXTRA_DEFS+=	-DMACOSX
-endif
-ifeq (@PLATFORM@, HP)
-EXTRA_DEFS+=	-DHP
-endif
-ifeq (@PLATFORM@, Linux)
-EXTRA_DEFS+=	-DLINUX
-endif
-ifeq (@PLATFORM@, Solaris)
-EXTRA_DEFS+=	-DSUN
-endif
-
 C_AFTERBUILD=	driver-dso
 
 SRCS=		Ether24.cpp             \
