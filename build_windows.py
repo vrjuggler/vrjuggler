@@ -85,7 +85,8 @@ def detectVisualStudioVersion(reattempt = False):
       else:
          vs_ver = '2005'
 
-      printStatus("It appears that we will be using Visual Studio " + vs_ver)
+      printStatus("It appears that we will be using Visual Studio %s"%vs_ver)
+      #printStatus("   compiler version: %s.%s"%(cl_major,cl_minor))
 
    in_status  = cl_stdin.close()
    out_status = cl_stdout.close()
@@ -99,15 +100,19 @@ def detectVisualStudioVersion(reattempt = False):
       # be nice and extend the user's path to include their Visual Studio
       # installation.
       if not reattempt:
+         printStatus("Visual studio not in path, attempting to find...")
          # Common installation directories for Visual Studio 7.x.
-         vs_dirs = [r'C:\Program Files\Microsoft Visual Studio .NET',
+         vs_dirs = [r'C:\Program Files\Microsoft Visual Studio 8',
                     r'C:\Program Files\Microsoft Visual Studio .NET 2003',
-                    r'C:\Program Files\Microsoft Visual Studio 8'
+                    r'C:\Program Files\Microsoft Visual Studio .NET',
                    ]
 
          for d in vs_dirs:
-            if os.path.exists(d):
-               printStatus("NOTE: Using Visual Studio installation in")
+            printStatus("Trying path: %s"%d)
+            if not os.path.exists(d):
+               printStatus("  does not exist.")
+            else:
+               printStatus("   Existings.  Using: %s"%d)
                printStatus("      " + d)
                vs_path = [os.path.join(d, r'Common7\IDE'),
                           os.path.join(d, r'VC7\BIN'),
@@ -119,7 +124,7 @@ def detectVisualStudioVersion(reattempt = False):
                os.environ['PATH'] = path_add + os.pathsep + os.getenv('PATH', '')
 
                # Try again to guess the Visual Studio version.
-               return guessBoostToolset(True)
+               return detectVisualStudioVersion(True)               
 
          # If execution reaches this point, our attempts to guess the
          # location of a Visual Studio 7.x installation failed.
@@ -2119,6 +2124,9 @@ def usage():
    print "-h, --help               Print this usage text and quit."
 
 if __name__ == '__main__':
+   main()
+   
+if __name__ == '__main__' and False:
    try:
       main()
    except SystemExit, exitEx:
