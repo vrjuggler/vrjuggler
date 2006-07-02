@@ -2124,9 +2124,6 @@ def usage():
    print "-h, --help               Print this usage text and quit."
 
 if __name__ == '__main__':
-   main()
-   
-if __name__ == '__main__' and False:
    try:
       main()
    except SystemExit, exitEx:
