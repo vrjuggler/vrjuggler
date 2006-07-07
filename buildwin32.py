@@ -2087,8 +2087,9 @@ def main():
 
 def usage():
    print "Usage: %s [OPTIONS]" % (sys.argv[0])
-   print "Python script for building VRJuggler on Windows.\n"
-   print "-n, --nogui              Disable the Tkinter GUI FrontEnd, e.g. Run in command line mode."
+   print "Python script for building VR Juggler on Windows.\n"
+   print "-c, --nogui              Disable the Tkinter GUI front end"
+   print "                         (i.e., Run in command line mode)."
    #print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, 'options.cache' if it exists, or the file given by the -o option.  Only used in command line mode."
    print "-o, --options-file=FILE  Uses FILE to Load/Save Options."
    print "-h, --help               Print this usage text and quit."
