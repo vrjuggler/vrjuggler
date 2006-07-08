@@ -406,11 +406,20 @@ VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
+vrj_lib_name="vrj$LIBRARY_VERSION"
+vrj_prof_lib_name="vrj_p$LIBRARY_VERSION"
+
+vrjogl_lib_name="vrj_ogl$LIBRARY_VERSION"
+vrjogl_prof_lib_name="vrj_ogl_p$LIBRARY_VERSION"
+
+vrjpf_lib_name="vrj_pf$LIBRARY_VERSION"
+vrjpf_prof_lib_name="vrj_pf_p$LIBRARY_VERSION"
+
 if test "$OS_TYPE" = "UNIX" ; then
     REQ_EXTRA_LIBS="$LDFLAGS $SNX_LIBS_CC_MIN $GADGET_LIBS_CC_MIN $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
     DYLIB_DEPS_VJ="$REQ_EXTRA_LIBS"
-    DYLIB_DEPS_GL="-L\$(LIBDIR) -lvrj $REQ_EXTRA_LIBS"
-    DYLIB_DEPS_PF="-L\$(LIBDIR) -lvrj $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_GL="-L\$(LIBDIR) -l$vrj_lib_name $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_PF="-L\$(LIBDIR) -l$vrj_lib_name $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
 
     osx_frameworks=''
 
@@ -420,8 +429,8 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     REQ_EXTRA_PROF_LIBS="$LDFLAGS $SNX_PROF_LIBS_CC_MIN $GADGET_PROF_LIBS_CC_MIN $JCCL_PROF_LIBS_CC_MIN $VPR_PROF_LIBS_CC_MIN $VPR_EXTRA_LIBS_CC_MIN $LIBS -lm"
     DYLIB_PROF_DEPS_VJ="$REQ_EXTRA_PROF_LIBS"
-    DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -lvrj_p $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
-    DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lvrj_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
+    DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -l$vrj_prof_lib_name $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
+    DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -l$vrj_prof_lib_name $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
 
     if test "x$PLATFORM" = "xDarwin" ; then
         if test "x$VRJ_USE_X11" = "xyes" ; then
@@ -539,15 +548,6 @@ fi
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 VJ_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
-vrj_lib_name="vrj$LIBRARY_VERSION"
-vrj_prof_lib_name="$vrj_p$LIBRARY_VERSION"
-
-vrjogl_lib_name="vrj_ogl$LIBRARY_VERSION"
-vrjogl_prof_lib_name="$vrj_ogl_p$LIBRARY_VERSION"
-
-vrjpf_lib_name="vrj_pf$LIBRARY_VERSION"
-vrjpf_prof_lib_name="$vrj_pf_p$LIBRARY_VERSION"
-
 # Information needed to generate vrjuggler-config.
 # $vrj_extra_libs only lists the external (non-Juggler) libraries needed by
 # VR Juggler.
@@ -560,7 +560,7 @@ case $OS_TYPE in
         vrj_lib="-l$vrj_lib_name"
         vrj_prof_lib="-l$vrj_prof_lib_name"
         vrj_ogl_lib="-l$vrjogl_lib_name"
-        vrj_ogl_prof_lib="-lvrjogl_prof_lib_name"
+        vrj_ogl_prof_lib="-l$vrjogl_prof_lib_name"
 
         if test "x$PERFORMER_API" = "xY" ; then
             vrj_pf_lib="-l$vrjpf_lib_name"
