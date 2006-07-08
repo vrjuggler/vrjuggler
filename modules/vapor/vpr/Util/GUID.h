@@ -225,17 +225,27 @@ public:
    friend class vpr::GUIDFactory;
 
    static const vpr::GUID NullGUID;
+   
 
-   /**
-    * Hasher for vpr::GUID.  This can be used with std::hash_map and
-    * friends.
-    */
+   /** Hash trait/functor for vpr::GUID.
+   * - Implements interface needed for MS Compilers and all standard compilant STLs (stlport, sgi)
+   * This can be used with std::hash_map and friends.
+   */
    struct hash
    {
-      vpr::Uint32 operator() (const vpr::GUID& guid) const
+      enum
+      {
+         bucket_size = 4,
+         min_buckets = 8
+      };
+      size_t operator() (const vpr::GUID& guid) const
       {
          return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 +
                 guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
+      }
+      bool operator()(const vpr::GUID& guid1, vpr::GUID& guid2) const
+      { 
+         return (guid1 < guid2);
       }
    };
 
