@@ -177,20 +177,20 @@ class EnvironmentServiceImpl
 
       while ( (index = new_str.indexOf("$")) != -1 )
       {
-         if ( inputStr.substring(index, index + 2).equals("$(") )
+         if ( new_str.substring(index, index + 2).equals("$(") )
          {
-            end_index = inputStr.indexOf(")");
+            end_index = new_str.indexOf(")");
          }
-         else if ( inputStr.substring(index, index + 2).equals("${") )
+         else if ( new_str.substring(index, index + 2).equals("${") )
          {
-            end_index = inputStr.indexOf("}");
+            end_index = new_str.indexOf("}");
          }
          else
          {
             continue;
          }
 
-         env_var  = inputStr.substring(index + 2, end_index);
+         env_var  = new_str.substring(index + 2, end_index);
 
          // Treat $HOME as a special case since we can actually get its value
          // from the JVM without any aggrivating hacks.
@@ -205,15 +205,15 @@ class EnvironmentServiceImpl
 
          if ( value != null )
          {
-            new_str = inputStr.substring(0, index) + value +
-                      inputStr.substring(end_index + 1);
+            new_str = new_str.substring(0, index) + value +
+                      new_str.substring(end_index + 1);
          }
          else
          {
             System.err.println("WARNING: Environment variable " + env_var +
                                " has no value");
-            new_str = inputStr.substring(0, index) +
-                      inputStr.substring(end_index + 1);
+            new_str = new_str.substring(0, index) +
+                      new_str.substring(end_index + 1);
          }
       }
 
