@@ -44,7 +44,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([vrj/vrjConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.0])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -152,13 +152,13 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.92.3], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
+VPR_PATH([1.0.1], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH_CXX([0.92.1], ,
+JCCL_PATH_CXX([1.0.1], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
-GADGETEER_PATH([0.22.0], ,
+GADGETEER_PATH([1.0.1], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
-SNX_PATH([0.5.0], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
+SNX_PATH([1.0.1], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
 VRJ_USE_X11="$GADGET_USE_X11"
 if test "x$VRJ_USE_X11" = "xyes" ; then
@@ -381,8 +381,8 @@ APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
 if test "$OS_TYPE" = "UNIX" ; then
-    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC_MIN $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
-    DYLIB_DEPS_VJ="$SNX_LIBS_CC $REQ_EXTRA_LIBS"
+    REQ_EXTRA_LIBS="$LDFLAGS $SNX_LIBS_CC_MIN $GADGET_LIBS_CC_MIN $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
+    DYLIB_DEPS_VJ="$REQ_EXTRA_LIBS"
     DYLIB_DEPS_GL="-L\$(LIBDIR) -lvrj $REQ_EXTRA_LIBS"
     DYLIB_DEPS_PF="-L\$(LIBDIR) -lvrj $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
 
@@ -392,8 +392,8 @@ if test "$OS_TYPE" = "UNIX" ; then
         osx_frameworks="-framework AGL -framework ApplicationServices -framework Carbon"
     fi
 
-    REQ_EXTRA_PROF_LIBS="$LDFLAGS $GADGET_PROF_LIBS_CC_MIN $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
-    DYLIB_PROF_DEPS_VJ="$SNX_PROF_LIBS_CC $REQ_EXTRA_PROF_LIBS"
+    REQ_EXTRA_PROF_LIBS="$LDFLAGS $SNX_PROF_LIBS_CC_MIN $GADGET_PROF_LIBS_CC_MIN $JCCL_PROF_LIBS_CC_MIN $VPR_PROF_LIBS_CC_MIN $VPR_EXTRA_LIBS_CC_MIN $LIBS -lm"
+    DYLIB_PROF_DEPS_VJ="$REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -lvrj_p $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lvrj_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
 

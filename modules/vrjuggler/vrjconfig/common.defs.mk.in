@@ -217,6 +217,7 @@ OBJEXT=			@OBJEXT@
 OBJ_BUILD_FLAG=		@OBJ_BUILD_FLAG@
 OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
 OS_TYPE=		@OS_TYPE@
+PLATFORM_SDK=		@PLATFORM_SDK@
 PERL=			@PERL@
 RANLIB=			@RANLIB@
 RMIC=			@RMIC@
@@ -362,6 +363,23 @@ ifeq ($(ABI), ELF)
       CFLAGS+=		-m64
       CXXFLAGS+=	-m64
       LDOPTS+=		-m64
+   endif
+endif
+ifeq ($(ABI), Mach-O)
+   ifeq ($(ISA), powerpc)
+      CFLAGS+=		-arch ppc $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch ppc $(PLATFORM_SDK)
+      LDOPTS+=		-arch ppc $(PLATFORM_SDK)
+   endif
+   ifeq ($(ISA), i386)
+      CFLAGS+=		-arch i386 $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch i386 $(PLATFORM_SDK)
+      LDOPTS+=		-arch i386 $(PLATFORM_SDK)
+   endif
+   ifeq ($(ISA), universal)
+      CFLAGS+=		-arch ppc -arch i386 $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch ppc -arch i386 $(PLATFORM_SDK)
+      LDOPTS+=		-arch ppc -arch i386 $(PLATFORM_SDK)
    endif
 endif
 
