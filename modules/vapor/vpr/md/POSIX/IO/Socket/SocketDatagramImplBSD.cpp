@@ -46,9 +46,13 @@
 #include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/IO/Socket/UnknownHostException.h>
 #include <vpr/IO/Socket/NoRouteToHostException.h>
+#include <vpr/IO/IOException.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
+
 
 namespace vpr
 {

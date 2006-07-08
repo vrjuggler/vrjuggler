@@ -45,6 +45,8 @@
 
 #include <vpr/Util/Debug.h>
 #include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/WouldBlockException.h>
 
 
 namespace vpr

@@ -41,11 +41,7 @@
 #include <string>
 #include <vector>
 
-#include <vpr/IO/EOFException.h>
-#include <vpr/IO/IOException.h>
 #include <vpr/IO/IOSys.h>
-#include <vpr/IO/TimeoutException.h>
-#include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Interval.h>
 
 namespace vpr

@@ -53,6 +53,9 @@
 #include <vpr/IO/Socket/ConnectionRefusedException.h>
 #include <vpr/IO/Socket/UnknownHostException.h>
 #include <vpr/IO/Socket/NoRouteToHostException.h>
+#include <vpr/IO/IOException.h>
+#include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/WouldBlockException.h>
 #include <vpr/md/POSIX/IO/SelectorImplBSD.h>
 #include <vpr/Util/Debug.h>
 
