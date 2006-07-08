@@ -243,7 +243,7 @@ public:
          return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 +
                 guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
       }
-      bool operator()(const vpr::GUID& guid1, vpr::GUID& guid2) const
+      bool operator()(const vpr::GUID& guid1, const vpr::GUID& guid2) const
       { 
          return (guid1 < guid2);
       }
