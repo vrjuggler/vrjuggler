@@ -43,7 +43,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
-DPP_PREREQ([2.0.2])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # -----------------------------------------------------------------------------
@@ -146,10 +146,10 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.32.0], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
+VPR_PATH([1.0.1], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
          [AC_MSG_ERROR([*** VPR required for Sonix plug-ins ***])])
 
-SNX_PATH([0.5.0], [BUILD_PLUGINS='Y'],
+SNX_PATH([1.0.1], [BUILD_PLUGINS='Y'],
          [AC_MSG_WARN([*** Sonix required for Sonix plug-ins ***])
           BUILD_PLUGINS='N'
          ])
