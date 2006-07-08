@@ -103,11 +103,16 @@ BUILD_JNI=		@BUILD_JNI@
 
 ifeq (@PLATFORM@, Darwin)
    JNILIB_EXT=		jnilib
+
+ifeq ($(ISA), universal)
+   JNI_ABI_FLAGS=	$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
+			$(PLATFORM_SDK)
+endif
 else
    JNILIB_EXT=		@DYNAMICLIB_EXT@
 endif
 
-JNI_CFLAGS=		$(JNI_INC) $(CFLAGS_DYNLIB)
+JNI_CFLAGS=		$(JNI_INC) $(CFLAGS_DYNLIB) $(JNI_ABI_FLAGS)
 JNI_LDFLAGS=		@JNI_LDFLAGS@ $(JNI_LIB)
 TWEEK_JNI_LIB=		@LIB_PREFIX@tweek_jni.$(JNILIB_EXT)
 
