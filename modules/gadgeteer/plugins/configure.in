@@ -43,7 +43,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
-DPP_PREREQ([1.5.1])
+DPP_PREREQ([2.1.2])
 DPP_INIT
 
 # -----------------------------------------------------------------------------
@@ -149,7 +149,8 @@ DPP_PROG_LINKER
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
-GADGETEER_PATH([0.14], ,
+VPR_PATH([1.0.1], , [AC_MSG_ERROR([*** VPR required for Device Drivers ***])])
+GADGETEER_PATH([1.0.1], ,
                [AC_MSG_ERROR(*** Gadgeteer required for Plugins ***)])
 
 # -----------------------------------------------------------------------------
