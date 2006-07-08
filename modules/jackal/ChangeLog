@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-08-2006 patrick     Added support for building universal binaries on Mac
+                        OS X.
 Nov-12-2005 patrickh    jccl::ConfigManager is no longer responsible for
                         deleting the memory held its pointre to the remote
                         run-time reconfiguration interface implementation.
