@@ -138,7 +138,7 @@ endif
 # =============================================================================
 # Library targets.
 # =============================================================================
-
+OBJS=		$(OBJDIR)/*.$(OBJEXT)
 BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
@@ -165,12 +165,12 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJS)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
 	$(RANLIB) $@
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
@@ -180,21 +180,27 @@ $(LIBDIR)/$(VPR_LIB_STATIC) $(LIBDIR)/$(VPR_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJE
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJS)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 ifeq (@PLATFORM@, Darwin)
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
-          $(OBJDIR)/*.$(OBJEXT)
+ifeq ($(ISA), universal)
+	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
+            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+              $(subst .dylib,-$$a.lo,$@) $(OBJS) ;			\
+         done
+	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
+else
+	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
+endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\
           $(DYLIB_DEPS)
-	rm -f $(subst .dylib,.lo,$@)
+	rm -f $(@D)/*.lo
 else
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-          $(DYLIB_DEPS)
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS) $(DYLIB_DEPS)
 endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .

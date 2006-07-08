@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-07-08 patrick  Added support for building universal binaries on Mac OS X.
 2006-05-13 patrick  Added operator<< for vpr::ReturnStatus.
 2006-04-21 aronb    Added vpr::ReturnStatus::ConnectionAborted.
 2006-04-14 aronb    Added the ability to send UDP broadcast datagrams.
