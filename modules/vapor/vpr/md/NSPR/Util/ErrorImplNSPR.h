@@ -55,18 +55,17 @@ public:
    /** @since 1.1.6 */
    static std::string getCurrentErrorMsg();
 
-   static void outputCurrentError(std::ostream& out, const std::string& prefix)
-   {
-      out << "Error (NSPR): " << prefix << " (" << getCurrentErrorMsg() << ")"
-          << std::endl;
-   }
+   /** Output the current error message to a stream. */
+   static void outputCurrentError(std::ostream& out, const std::string& prefix);
 
    static ErrorType getCurrentError()
    {
+      // TODO: Implement error conversion to get the current error.
       return NoError;
    }
 
 protected:
+   /*
    static PRErrorCode convertErrorVprToNspr(ErrorType mask)
    {
       return PR_MAX_ERROR;
@@ -76,6 +75,7 @@ protected:
    {
       return NoError;
    }
+   */
 };
 
 } // End of vpr namespace

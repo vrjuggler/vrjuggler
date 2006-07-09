@@ -39,6 +39,7 @@
 #include <prerror.h>
 
 #include <vpr/md/NSPR/Util/ErrorImplNSPR.h>
+#include <boost/concept_check.hpp>
 
 
 namespace vpr
@@ -63,7 +64,7 @@ std::string ErrorImplNSPR::getCurrentErrorMsg()
       if ( err_name != NULL )
       {
          msg_stream << ": " << err_name;
-      } 
+      }
 
       if ( err_str != NULL )
       {
@@ -73,5 +74,12 @@ std::string ErrorImplNSPR::getCurrentErrorMsg()
 
    return msg_stream.str();
 }
+
+void ErrorImplNSPR::outputCurrentError(std::ostream& out, const std::string& prefix)
+{
+   out << "Error (NSPR): " << prefix << " (" << getCurrentErrorMsg() << ")"
+       << std::endl;
+}
+
 
 }
