@@ -278,8 +278,17 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
          
          WizardViewerBean viewer = new WizardViewerBean(mWhiteBoard);
          viewer.setWizard(wizard);
-         viewer.setSidebarImage(new ImageIcon(this.getClass().getClassLoader().getResource(
-                     "org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
+
+         try
+         {
+            viewer.setSidebarImage(new ImageIcon(this.getClass().getClassLoader().getResource(
+               "org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
+         }
+         catch (NullPointerException ex)
+         {
+            System.err.println("WARNING: " + ex.getMessage());
+         }
+
          viewer.addWizardViewListener(new WizardViewListener()
          {
             public void wizardStarted(WizardViewEvent evt) {}
@@ -484,10 +493,21 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
       {
          ClassLoader loader = getClass().getClassLoader();
 
-         // Load the icons.
-         mPositionalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/vrsystem/images/position16.png"));
-         mDigitalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/vrsystem/images/digital16.png"));
-         mAnalogIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/vrsystem/images/analog16.png"));
+         try
+         {
+            String img_base = "org/vrjuggler/vrjconfig/wizards/vrsystem/images";
+            // Load the icons.
+            mPositionalIcon = new ImageIcon(loader.getResource(img_base + "/position16.png"));
+            mDigitalIcon = new ImageIcon(loader.getResource(img_base + "/digital16.png"));
+            mAnalogIcon = new ImageIcon(loader.getResource(img_base + "/analog16.png"));
+         }
+         catch (NullPointerException ex)
+         {
+            mPositionalIcon = new ImageIcon();
+            mDigitalIcon = new ImageIcon();
+            mAnalogIcon = new ImageIcon();
+            System.err.println("WARNING: " + ex.getMessage());
+         }
       }
 
       /**

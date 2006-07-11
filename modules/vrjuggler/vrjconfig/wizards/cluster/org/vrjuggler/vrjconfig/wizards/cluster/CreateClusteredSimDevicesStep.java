@@ -86,7 +86,7 @@ public class CreateClusteredSimDevicesStep
    public List getRequiredResources()
    {
       List res = new ArrayList();
-      res.add("org/vrjuggler/vrjconfig/wizard/cluster/images/ClusterIcon.png");
+      res.add("org/vrjuggler/vrjconfig/wizards/cluster/images/ClusterIcon.png");
       return res;
    }
 

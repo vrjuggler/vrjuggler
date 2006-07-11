@@ -91,7 +91,7 @@ public class NodeSettingsPanel
 
       try
       {
-         jLabel2.setIcon(new ImageIcon(this.getClass().getClassLoader().getResource("org/vrjuggler/vrjconfig/wizard/cluster/images/ClusterIcon.png")));
+         jLabel2.setIcon(new ImageIcon(this.getClass().getClassLoader().getResource("org/vrjuggler/vrjconfig/wizards/cluster/images/ClusterIcon.png")));
       }
       catch(NullPointerException exp)
       {
