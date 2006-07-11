@@ -57,7 +57,7 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifeq (@SUBSYSTEM@, NSPR)
-#   SRCS=	
+   SRCS=	ErrorImplNSPR.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
