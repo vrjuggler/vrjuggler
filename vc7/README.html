@@ -123,26 +123,6 @@ The required environment variables are as follows:
     a directory that contains a sub-directory named <tt>boost</tt>, in
     which the Boost headers will be found.
   </dd>
-  <dt><tt>BOOST_TOOL</tt></dt>
-  <dd>
-    The name of the Boost Jam toolset used to compile Boost.  Generally,
-    this will be either <tt>vc7</tt> or <tt>vc71</tt>, but it depends on
-    how Boost was compiled.  To determine which toolset was used, look at
-    the names of the libraries in <tt>%BOOST_ROOT%\lib</tt>.  For example,
-    the name of the Boost.Filesystem DLL may be
-    <tt>boost_filesystem-<b>vc7</b>-mt-1_31.dll</tt> where the
-    <tt>vc7</tt> part of the file name is the value to use for this
-    setting.
-
-    <blockquote>
-      <b>NOTE:</b> There is some inconsistency between the name of the
-      toolset specified when running <tt>bjam</tt> to compile and install
-      Boost.  For example, the name of the Visual C++ 7.1 toolset is
-      <tt>vc7_1</tt>, but the compiled libraries names contain the
-      substring <tt>vc71</tt>.  <i>The value to use is the substring in the
-      library name.</i>
-    </blockquote>
-  </dd>
   <dt><tt>BOOST_VERSION</tt></dt>
   <dd>
     The version of Boost against which the Juggler code will be compiled.

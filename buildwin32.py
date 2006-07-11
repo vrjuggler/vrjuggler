@@ -70,7 +70,7 @@ class BuildOption:
       self.required    = required
       self.isDirectory = isDirectory
 
-def guessBoostToolset(reattempt = False):
+def detectVisualStudioVersion(reattempt = False):
    (cl_stdin, cl_stdout, cl_stderr) = os.popen3('cl')
    cl_version_line = cl_stderr.readline()
 
@@ -83,17 +83,12 @@ def guessBoostToolset(reattempt = False):
 
       if cl_major == 13 and cl_minor < 10:
          vs_ver = '.NET 2002'
-         boost_tool_guess = 'vc7'
       elif cl_major == 13 and cl_minor >= 10:
          vs_ver = '.NET 2003'
-         boost_tool_guess = 'vc71'
       else:
          vs_ver = '2005'
-         boost_tool_guess = 'vc80'
 
       printStatus("It appears that we will be using Visual Studio " + vs_ver)
-   else:
-      boost_tool_guess = ''
 
    in_status  = cl_stdin.close()
    out_status = cl_stdout.close()
@@ -127,7 +122,7 @@ def guessBoostToolset(reattempt = False):
                os.environ['PATH'] = path_add + os.pathsep + os.getenv('PATH', '')
 
                # Try again to guess the Visual Studio version.
-               return guessBoostToolset(True)
+               return detectVisualStudioVersion(True)
 
          # If execution reaches this point, our attempts to guess the
          # location of a Visual Studio 7.x installation failed.
@@ -137,8 +132,6 @@ def guessBoostToolset(reattempt = False):
       # something is wrong with the user's Visual Studio installation.
       else:
          noVisualStudioError()
-
-   return boost_tool_guess
 
 def printStatus(msg):
    '''
@@ -177,7 +170,7 @@ def processInput(optionDict, envVar, inputDesc, required = False):
    return value_str
 
 def getDefaultVars():
-   boost_tool_fallback = guessBoostToolset()
+   detectVisualStudioVersion()
 
    required = []
    required.append(BuildOption('BOOST_ROOT',
@@ -187,9 +180,6 @@ def getDefaultVars():
    required.append(BuildOption('BOOST_INCLUDES',
                                'Directory containing the Boost C++ header tree',
                                ''))
-   required.append(BuildOption('BOOST_TOOL',
-                               'The Boost.Build toolset library name component',
-                               boost_tool_fallback, False))
    required.append(BuildOption('NSPR_ROOT', 'NSPR installation directory', ''))
    required.append(BuildOption('CPPDOM_ROOT', 'CppDOM installation directory',
                                ''))
@@ -273,12 +263,6 @@ def setVars():
 
 def postProcessOptions(options):
    os.environ['instprefix'] = options['prefix'].replace('\\', '\\\\')
-
-   # Check for Boost 1.32 Visual C++ toolset names.
-   match = re.compile(r'vc-(\d)_(\d)').match(options['BOOST_TOOL'])
-
-   if match is not None:
-      os.environ['BOOST_TOOL'] = 'vc%s%s' % (match.group(1), match.group(2))
 
    # If the %JAVA_HOME% setting is a valid directory, add its bin subdirectory
    # to the path.
