@@ -150,16 +150,6 @@ def chooseVisualStudioDir():
 
    return (cl_ver_major, cl_ver_minor, vc_dir)
 
-def guessBoostToolset(clVerMajor, clVerMinor):
-   if clVerMajor == 13 and clVerMinor < 10:
-      boost_tool_guess = 'vc7'
-   elif clVerMajor == 13 and clVerMinor >= 10:
-      boost_tool_guess = 'vc71'
-   else:
-      boost_tool_guess = 'vc80'
-
-   return boost_tool_guess
-
 def printStatus(msg):
    '''
    This is a simple wrapper around the standard Python print function.
@@ -197,8 +187,6 @@ def processInput(optionDict, envVar, inputDesc, required = False):
    return value_str
 
 def getDefaultVars(clVerMajor, clVerMinor):
-   boost_tool_fallback = guessBoostToolset(clVerMajor, clVerMinor)
-
    required = []
    required.append(BuildOption('BOOST_ROOT',
                                'Boost C++ installation directory', ''))
@@ -207,9 +195,6 @@ def getDefaultVars(clVerMajor, clVerMinor):
    required.append(BuildOption('BOOST_INCLUDES',
                                'Directory containing the Boost C++ header tree',
                                ''))
-   required.append(BuildOption('BOOST_TOOL',
-                               'The Boost.Build toolset library name component',
-                               boost_tool_fallback, False))
    required.append(BuildOption('NSPR_ROOT', 'NSPR installation directory', ''))
    required.append(BuildOption('CPPDOM_ROOT', 'CppDOM installation directory',
                                ''))
@@ -293,12 +278,6 @@ def setVars(clVerMajor, clVerMinor):
 
 def postProcessOptions(options):
    os.environ['instprefix'] = options['prefix'].replace('\\', '\\\\')
-
-   # Check for Boost 1.32 Visual C++ toolset names.
-   match = re.compile(r'vc-(\d)_(\d)').match(options['BOOST_TOOL'])
-
-   if match is not None:
-      os.environ['BOOST_TOOL'] = 'vc%s%s' % (match.group(1), match.group(2))
 
    # If the %JAVA_HOME% setting is a valid directory, add its bin subdirectory
    # to the path.
