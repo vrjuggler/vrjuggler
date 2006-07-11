@@ -48,7 +48,6 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(SNX_LIBRARY)
-EXTRA_CXXFLAGS+= -DVJ_ROOT_DIR="\"$(instprefix)\""
 
 # Prefix for recursive stuff.
 DIRPRFX=	snx/
