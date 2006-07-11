@@ -33,6 +33,8 @@
 namespace gadget
 {
 
+const char* GADGET_VERSION(__GADGET_VERSION_STRING__);
+
 GADGET_IMPLEMENT(std::string) getVersionString ()
 {
    return std::string(GADGET_VERSION);

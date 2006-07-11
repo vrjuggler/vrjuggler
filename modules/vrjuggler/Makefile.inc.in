@@ -143,7 +143,6 @@ PF_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(PF_LIBRARY))
 
 # Version information.
 PARAM_HEADER=	vrj/vrjParam.h
-PARAM_SOURCE=	vrj/vrjParam.cpp
 BRANCH=		trunk
 CANON_NAME=	Illuvatar
 VER_ARGS=	-f $(VJROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
@@ -162,16 +161,10 @@ BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild:
-	@$(MAKE) $(PARAM_HEADER)
-	@$(MAKE) $(PARAM_SOURCE)
+beforebuild: $(PARAM_HEADER)
 
 $(PARAM_HEADER): $(VJROOT_ABS)/$(PARAM_HEADER).in $(VJROOT_ABS)/VERSION
 	@$(MAKE) clean-version-links
-	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
-          -i $(VJROOT_ABS)/$@.in $(VER_ARGS)
-
-$(PARAM_SOURCE): $(PARAM_HEADER) $(VJROOT_ABS)/$(PARAM_SOURCE).in
 	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
           -i $(VJROOT_ABS)/$@.in $(VER_ARGS)
 

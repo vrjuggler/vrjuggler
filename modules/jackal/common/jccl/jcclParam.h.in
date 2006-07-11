@@ -27,9 +27,6 @@
 #ifndef _JCCL_PARAM_H_
 #define _JCCL_PARAM_H_
 
-#include <jccl/jcclConfig.h>
-
-
 /**
  * The 9-digit JCCl version integer. This form provides three digits for each
  * of the major, minor, and patch numbers with no leading zeros. The number is
@@ -39,27 +36,16 @@
 #define __JCCL_version @VER_NUMBER@
 
 /**
+ * The JCCL version \em string. Instead of referencing this symbol, use
+ * jccl::JCCL_VERSION or jccl::getVersionString().
+ */
+#define __JCCL_VERSION_STRING__ @VER_STRING@
+
+/**
  * Individual JCCL verions numbers
  */
 #define __JCCL_MAJOR__ @MAJOR_VER_NUMBER@
 #define __JCCL_MINOR__ @MINOR_VER_NUMBER@
 #define __JCCL_PATCH__ @PATCH_VER_NUMBER@
-
-namespace jccl
-{
-   /**
-    * This is the "human-readable" JCCL version \em string. The full form
-    * includes the version number (major.minor.patch-build), the canonical
-    * name of the release, the threading subsystem, and the build date. The
-    * major version number is updated when major architectural changes are
-    * made; the minor when there are minor API changes; and the patch when
-    * there are bug fixes. The build number is usually representative of the
-    * nightly build process relative to a given version x.y.z.
-    *
-    * @see jccl::getVersionString()
-    */
-   extern JCCL_DATA_API(const char*) JCCL_VERSION;
-}
-
 
 #endif	/* _JCCL_PARAM_H_ */

@@ -31,6 +31,7 @@
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
+#include <vrj/Util/Version.h>
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/App.h>

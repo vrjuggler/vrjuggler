@@ -60,8 +60,7 @@ SRCS=		AbstractNetworkManager.cpp	\
        		ProxyDepChecker.cpp		\
 		ProxyFactory.cpp		\
 		RemoteInputManager.cpp		\
-		VirtualDevice.cpp		\
-		gadgetParam.cpp
+		VirtualDevice.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

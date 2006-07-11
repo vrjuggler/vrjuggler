@@ -36,7 +36,6 @@
 #ifndef _SNX_PARAM_H_
 #define _SNX_PARAM_H_
 
-
 /**
  * The 9-digit Sonix version integer. This form provides three digits for each
  * of the major, minor, and patch numbers with no leading zeros. The number is
@@ -45,28 +44,17 @@
  */
 #define __SNX_version @VER_NUMBER@
 
+/**
+ * The Sonix version \em string. Instead of referencing this symbol, use
+ * snx::SNX_VERSION or snx::getVersionString().
+ */
+#define __SNX_VERSION_STRING__ @VER_STRING@
+
 /** 
  * The individual SNX version numbers.
  */
 #define __SNX_MAJOR__ @MAJOR_VER_NUMBER@
 #define __SNX_MINOR__ @MINOR_VER_NUMBER@
 #define __SNX_PATCH__ @PATCH_VER_NUMBER@
-
-namespace snx
-{
-   /**
-    * This is the "human-readable" Sonix version \em string. The full form
-    * includes the version number (major.minor.patch-build), the canonical
-    * name of the release, the threading subsystem, and the build date. The
-    * major version number is updated when major architectural changes are
-    * made; the minor when there are minor API changes; and the patch when
-    * there are bug fixes. The build number is usually representative of the
-    * nightly build process relative to a given version x.y.z.
-    *
-    * @see snx::getVersionString()
-    */
-   extern SNX_DATA_API(const char*) SNX_VERSION;
-}
-
 
 #endif	/* _SNX_PARAM_H_ */

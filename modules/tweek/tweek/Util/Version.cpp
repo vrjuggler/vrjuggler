@@ -33,6 +33,8 @@
 namespace tweek
 {
 
+const char* TWEEK_VERSION(__TWEEK_VERSION_STRING__);
+
 std::string getVersionString()
 {
    return std::string(TWEEK_VERSION);

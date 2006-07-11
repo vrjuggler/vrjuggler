@@ -312,9 +312,6 @@
 			<File
 				RelativePath="..\..\external\md5-c\md5c.c">
 			</File>
-			<File
-				RelativePath="vpr\vprParam.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

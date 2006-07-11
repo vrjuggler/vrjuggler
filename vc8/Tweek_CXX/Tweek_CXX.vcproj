@@ -421,10 +421,6 @@
 				>
 			</File>
 			<File
-				RelativePath="tweek\tweekParam.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp"
 				>
 			</File>

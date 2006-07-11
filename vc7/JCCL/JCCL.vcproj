@@ -157,9 +157,6 @@
 			<File
 				RelativePath="..\..\modules\jackal\common\jccl\Util\Version.cpp">
 			</File>
-			<File
-				RelativePath="jccl\jcclParam.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

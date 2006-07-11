@@ -42,6 +42,8 @@
 namespace snx
 {
 
+const char* SNX_VERSION(__SNX_VERSION_STRING__);
+
 SNX_IMPLEMENT(std::string) getVersionString ()
 {
    return std::string(SNX_VERSION);

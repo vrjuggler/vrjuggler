@@ -119,7 +119,6 @@ VPR_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(VPR_LIBRARY))
 
 # Version information.
 PARAM_HEADER=	vpr/vprParam.h
-PARAM_SOURCE=	vpr/vprParam.cpp
 BRANCH=		trunk
 CANON_NAME=	Manwe
 VER_ARGS=	-f $(VPRROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
@@ -137,14 +136,10 @@ BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild: $(PARAM_HEADER) $(PARAM_SOURCE)
+beforebuild: $(PARAM_HEADER)
 
 $(PARAM_HEADER): $(VPRROOT_ABS)/$(PARAM_HEADER).in $(VPRROOT_ABS)/VERSION
 	@$(MAKE) clean-version-links
-	@$(SHELL) $(scriptdir)/make-ver.sh -o $@			\
-          -i $(VPRROOT_ABS)/$@.in $(VER_ARGS)
-
-$(PARAM_SOURCE): $(PARAM_HEADER) $(VPRROOT_ABS)/$(PARAM_SOURCE).in
 	@$(SHELL) $(scriptdir)/make-ver.sh -o $@			\
           -i $(VPRROOT_ABS)/$@.in $(VER_ARGS)
 

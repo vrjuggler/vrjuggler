@@ -627,10 +627,6 @@
 				>
 			</File>
 			<File
-				RelativePath="vpr\vprParam.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\WouldBlockException.cpp"
 				>
 			</File>

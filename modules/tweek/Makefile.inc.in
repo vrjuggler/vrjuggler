@@ -118,7 +118,6 @@ TWEEK_PROF_LIB_DYNAMIC=		$(call make_dynamic_prof,$(TWEEK_LIBRARY))
 
 # Version information.
 PARAM_HEADER=	tweek/tweekParam.h
-PARAM_SOURCE=	tweek/tweekParam.cpp
 BRANCH=		trunk
 CANON_NAME=	Aule
 VER_ARGS=	-f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
@@ -139,7 +138,6 @@ AFTERBUILD=	afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(MAKE) $(PARAM_HEADER)
-	@$(MAKE) $(PARAM_SOURCE)
 	@echo "------------------------------------------------"
 	@echo "IDL code generation phase"
 	@echo "------------------------------------------------"
@@ -151,10 +149,6 @@ beforebuild:
 
 $(PARAM_HEADER): $(TWEEKROOT_ABS)/$(PARAM_HEADER).in $(TWEEKROOT_ABS)/VERSION
 	@$(MAKE) clean-version-links
-	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
-          -i $(TWEEKROOT_ABS)/$@.in $(VER_ARGS)
-
-$(PARAM_SOURCE): $(PARAM_HEADER) $(TWEEKROOT_ABS)/$(PARAM_SOURCE).in
 	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
           -i $(TWEEKROOT_ABS)/$@.in $(VER_ARGS)
 

@@ -494,10 +494,6 @@
 				>
 			</File>
 			<File
-				RelativePath="gadget\gadgetParam.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\GestureProxy.cpp"
 				>
 			</File>

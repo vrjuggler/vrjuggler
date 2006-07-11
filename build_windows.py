@@ -503,35 +503,30 @@ def generateVersionHeaders(vcDir):
 
    mods = []
    mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR',
-                             [(r'vpr\vprParam.h',), (r'vpr\vprParam.cpp',),
+                             [(r'vpr\vprParam.h',),
                               (r'vpr\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
                              [(r'tweek\tweekParam.h',),
-                              (r'tweek\tweekParam.cpp',),
                               (r'tweek\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL',
                              [(r'jccl\jcclParam.h',
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.h.in')),
-                              (r'jccl\jcclParam.cpp',
-                               os.path.join(gJugglerDir,
-                                            r'modules\jackal\common\jccl\jcclParam.cpp.in')),
                               (r'jccl\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))
                              ]))
    mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix',
-                             [(r'snx\snxParam.h',), (r'snx\snxParam.cpp',),
+                             [(r'snx\snxParam.h',),
                               (r'snx\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                              [(r'gadget\gadgetParam.h',),
-                              (r'gadget\gadgetParam.cpp',),
                               (r'gadget\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
-                             [(r'vrj\vrjParam.h',), (r'vrj\vrjParam.cpp',),
+                             [(r'vrj\vrjParam.h',),
                               (r'vrj\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 

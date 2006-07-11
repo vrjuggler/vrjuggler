@@ -42,6 +42,8 @@
 namespace vpr
 {
 
+const char* VPR_VERSION(__VPR_VERSION_STRING__);
+
 VPR_IMPLEMENT(std::string) getVersionString ()
 {
    return std::string(VPR_VERSION);

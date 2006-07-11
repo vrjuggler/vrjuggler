@@ -152,9 +152,6 @@
 			<File
 				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
 			</File>
-			<File
-				RelativePath="tweek\tweekParam.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

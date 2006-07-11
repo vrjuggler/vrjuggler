@@ -119,7 +119,6 @@ GADGET_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(GADGET_LIBRARY))
 
 # Version information.
 PARAM_HEADER=	gadget/gadgetParam.h
-PARAM_SOURCE=	gadget/gadgetParam.cpp
 BRANCH=		trunk
 CANON_NAME=	Varda
 VER_ARGS=	-f $(GADGETROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
@@ -138,14 +137,10 @@ BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild: $(PARAM_HEADER) $(PARAM_SOURCE)
+beforebuild: $(PARAM_HEADER)
 
 $(PARAM_HEADER): $(GADGETROOT_ABS)/$(PARAM_HEADER).in $(GADGETROOT_ABS)/VERSION
 	@$(MAKE) clean-version-links
-	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
-          -i $(GADGETROOT_ABS)/$@.in $(VER_ARGS)
-
-$(PARAM_SOURCE): $(PARAM_HEADER) $(GADGETROOT_ABS)/$(PARAM_SOURCE).in
 	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
           -i $(GADGETROOT_ABS)/$@.in $(VER_ARGS)
 

@@ -453,10 +453,6 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Viewport.cpp"
 				>
 			</File>
-			<File
-				RelativePath="vrj\vrjParam.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

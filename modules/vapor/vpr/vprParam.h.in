@@ -36,8 +36,6 @@
 #ifndef _VPR_PARAM_H_
 #define _VPR_PARAM_H_
 
-#include <vpr/vprConfig.h>
-
 /**
  * The 9-digit VPR version integer. This form provides three digits for each of
  * the major, minor, and patch numbers with no leading zeros. The number is a
@@ -47,27 +45,16 @@
 #define __VPR_version @VER_NUMBER@
 
 /**
+ * The VPR version \em string. Instead of referencing this symbol, use
+ * vpr::VPR_VERSION or vpr::getVersionString().
+ */
+#define __VPR_VERSION_STRING__ @VER_STRING@
+
+/**
  * The individual VPR version numbers.
  */
 #define __VPR_MAJOR__ @MAJOR_VER_NUMBER@
 #define __VPR_MINOR__ @MINOR_VER_NUMBER@
 #define __VPR_PATCH__ @PATCH_VER_NUMBER@
-
-namespace vpr
-{
-   /**
-    * This is the "human-readable" VPR version \em string. The full form
-    * includes the version number (major.minor.patch-build), the canonical
-    * name of the release, the threading subsystem, and the build date. The
-    * major version number is updated when major architectural changes are
-    * made; the minor when there are minor API changes; and the patch when
-    * there are bug fixes. The build number is usually representative of the
-    * nightly build process relative to a given version x.y.z.
-    *
-    * @see vpr::getVersionString()
-    */
-   extern VPR_DATA_API(const char*) VPR_VERSION;
-}
-
 
 #endif	/* _VPR_PARAM_H_ */
