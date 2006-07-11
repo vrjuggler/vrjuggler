@@ -47,12 +47,12 @@ DIRPRFX=	cluster/
 # Subdirectories to compile.
 SUBDIR=		Packets
 
-SRCS=		ClusterException.cpp	\
+SRCS=		ClusterDelta.cpp	\
+		ClusterDepChecker.cpp	\
+		ClusterException.cpp	\
 		ClusterManager.cpp 	\
 		ClusterNode.cpp		\
-		ClusterDepChecker.cpp	\
-		ClusterPlugin.cpp	\
-		ClusterDelta.cpp
+		ClusterPlugin.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
