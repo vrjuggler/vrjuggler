@@ -27,7 +27,7 @@
 #ifndef _VRJ_PF_INPUT_HANDLER_H_
 #define _VRJ_PF_INPUT_HANDLER_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <string>
 

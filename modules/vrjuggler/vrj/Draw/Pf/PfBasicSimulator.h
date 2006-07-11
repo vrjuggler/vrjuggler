@@ -27,7 +27,7 @@
 #ifndef _VRJ_PF_BASIC_SIMULATOR_H_
 #define _VRJ_PF_BASIC_SIMULATOR_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <vrj/Draw/Pf/PfSimInterface.h>
 

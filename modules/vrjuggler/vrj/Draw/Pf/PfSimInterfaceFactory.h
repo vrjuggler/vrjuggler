@@ -27,7 +27,7 @@
 #ifndef _VRJ_PF_SIM_INTERFACE_FACTORY_H_
 #define _VRJ_PF_SIM_INTERFACE_FACTORY_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 #include <string>
 #include <vpr/Util/Factory.h>
 #include <vpr/Util/Singleton.h>
@@ -55,7 +55,7 @@ namespace vrj
  *
  * Simulator renderer factory.
  */
-class VJ_CLASS_API PfSimInterfaceFactory :
+class VJ_PF_CLASS_API PfSimInterfaceFactory :
    public vpr::Factory<DrawSimInterface, std::string>
 {
 public:

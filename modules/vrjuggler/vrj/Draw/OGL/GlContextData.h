@@ -28,7 +28,7 @@
 #define _VRJ_GL_CONTEXT_DATA_H_
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 #include <vector>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Util/Debug.h>

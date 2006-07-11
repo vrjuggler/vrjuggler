@@ -23,6 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include <vrj/Draw/Pf/Config.h>
 
 #include <gmtl/Vec.h>
 #include <gmtl/Generate.h>
@@ -30,7 +31,6 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Math.h>
 
-#include <vrj/vrjConfig.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 
 namespace vrj

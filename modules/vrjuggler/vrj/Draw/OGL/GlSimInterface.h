@@ -27,7 +27,7 @@
 #ifndef _VRJ_GL_SIM_INTERFACE_H_
 #define _VRJ_GL_SIM_INTERFACE_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/DeviceInterface.h>

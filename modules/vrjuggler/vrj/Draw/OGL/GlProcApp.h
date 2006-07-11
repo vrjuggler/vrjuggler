@@ -27,7 +27,7 @@
 #ifndef _VRJ_GL_PROC_APP_H_
 #define _VRJ_GL_PROC_APP_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #include <boost/function.hpp>     // Could use function pointers, but this is a little easier to read
 
@@ -45,7 +45,7 @@ namespace vrj
  * callbacks are invoked indirectly by the VR Juggler kernel through the
  * \c vrj::App and \c vrj::GlApp interface methods implemented in this class.
  */
-class VJ_CLASS_API GlProcAppWrapper : public vrj::GlApp
+class VJ_OGL_CLASS_API GlProcAppWrapper : public vrj::GlApp
 {
 public:
    typedef boost::function0<void> callback_t;      /** Type for callbacks */
@@ -116,22 +116,22 @@ protected:
  * Set of procedures for wrapping an application using a procedural interface.
  */
 //@{
-   VJ_API(void) VRJSetGLDrawMethod(vrj::GlProcAppWrapper::callback_t m);
+VJ_OGL_API(void) VRJSetGLDrawMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   VJ_API(void) VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m);
+VJ_OGL_API(void) VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   VJ_API(void) VRJSetBufferPredrawMethod(vrj::GlProcAppWrapper::callback_t m);
+VJ_OGL_API(void) VRJSetBufferPredrawMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   VJ_API(void) VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m);
+VJ_OGL_API(void) VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   VJ_API(void) VRJSetIntraFrameMethod(vrj::GlProcAppWrapper::callback_t m);
+VJ_OGL_API(void) VRJSetIntraFrameMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   VJ_API(void) VRJSetPostFrameMethod(vrj::GlProcAppWrapper::callback_t m);
+VJ_OGL_API(void) VRJSetPostFrameMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   VJ_API(void) VRJConfigure(int argc, char* argv[]);
+VJ_OGL_API(void) VRJConfigure(int argc, char* argv[]);
 
    /** Start everything running */
-   VJ_API(void) VRJProcRunSystem();
+VJ_OGL_API(void) VRJProcRunSystem();
 //@}
 }
 

@@ -27,7 +27,7 @@
 #ifndef _GL_DRAW_HEAD_FUNCTORS_H_
 #define _GL_DRAW_HEAD_FUNCTORS_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #ifdef VPR_OS_Darwin
 #   include <OpenGL/gl.h>

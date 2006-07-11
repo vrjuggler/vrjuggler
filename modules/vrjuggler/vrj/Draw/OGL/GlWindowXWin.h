@@ -28,7 +28,7 @@
 #define _VRJ_GLX_WIN_H
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 #include <vector>
 
 #include <X11/Xlib.h>

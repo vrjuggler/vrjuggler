@@ -24,7 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>

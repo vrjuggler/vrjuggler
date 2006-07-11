@@ -27,7 +27,7 @@
 #ifndef _VRJ_PF_DRAW_MANAGER_
 #define _VRJ_PF_DRAW_MANAGER_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <vector>
 #include <functional>
@@ -68,7 +68,7 @@ void PfAppFunc(pfChannel *chan, void* chandata);
  * Concrete singleton class for API-specific Draw Manager for OpenGL Performer.
  * Responsible for all Performer rendering and windowing.
  */
-class VJ_CLASS_API PfDrawManager : public DrawManager
+class VJ_PF_CLASS_API PfDrawManager : public DrawManager
 {
 protected:
 

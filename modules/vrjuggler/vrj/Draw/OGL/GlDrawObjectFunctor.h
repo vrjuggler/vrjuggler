@@ -27,7 +27,7 @@
 #ifndef GL_DRAW_OBJECT_FUNCTOR_H
 #define GL_DRAW_OBJECT_FUNCTOR_H
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 
 namespace vrj

@@ -26,7 +26,7 @@
 
 #define PF_C_API 1
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <iostream>
 #include <Performer/pf/pfPipeWindow.h>

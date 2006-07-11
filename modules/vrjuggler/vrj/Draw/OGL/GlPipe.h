@@ -27,7 +27,7 @@
 #ifndef _VRJ_GL_PIPE_H_
 #define _VRJ_GL_PIPE_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 #include <vector>
 
 #include <vrj/Draw/OGL/GlWindow.h>
@@ -48,7 +48,7 @@ namespace vrj
  *
  * @date 1-12-98
  */
-class VJ_CLASS_API GlPipe
+class VJ_OGL_CLASS_API GlPipe
 {
 public:
    /**

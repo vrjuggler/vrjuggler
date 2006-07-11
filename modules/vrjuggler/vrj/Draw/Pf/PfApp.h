@@ -27,7 +27,7 @@
 #ifndef _VRJ_PF_APP_H_
 #define _VRJ_PF_APP_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 #include <vector>
 #include <boost/concept_check.hpp>
 #include <Performer/pf/pfGroup.h>
@@ -51,7 +51,7 @@ namespace vrj
  * derived from.  The interface defined by this class is what the Performer
  * Draw Manager will use to interact with the user's application.
  */
-class VJ_CLASS_API PfApp : public App
+class VJ_PF_CLASS_API PfApp : public App
 {
 public:
    PfApp(Kernel* kern=NULL);
