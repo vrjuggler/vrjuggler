@@ -33,7 +33,7 @@
 #ifndef _VJ_GL_WINDOW_H_
 #define _VJ_GL_WINDOW_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 #include <vector>
 
 #include <stdio.h>
@@ -63,7 +63,7 @@ class CameraProjection;
  * used by the OpenGL Draw Manager in order to keep all platform-specific code
  * in this one class.
  */
-class VJ_CLASS_API GlWindow
+class VJ_OGL_CLASS_API GlWindow
 {
 public:
    GlWindow()

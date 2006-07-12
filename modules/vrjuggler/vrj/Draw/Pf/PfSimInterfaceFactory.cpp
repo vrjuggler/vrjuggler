@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
 

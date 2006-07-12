@@ -34,7 +34,7 @@
 #define _VRJ_GL_USER_DATA_H_
 //#pragma once
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 /*
 #include <vrj/Kernel/User.h>

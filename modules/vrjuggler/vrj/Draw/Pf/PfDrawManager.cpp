@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #define PF_C_API 1
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <iomanip>
 

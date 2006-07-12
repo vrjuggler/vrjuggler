@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_WINDOW_WIN32_H_
 #define _VRJ_GL_WINDOW_WIN32_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #pragma warning(disable:4786)  // identifier truncated to 255 characters in the debug information
 
@@ -71,7 +71,7 @@ namespace vrj
  *
  * Win32-specific OpenGL windowing class.
  */
-class VJ_CLASS_API GlWindowWin32
+class VJ_OGL_CLASS_API GlWindowWin32
    : public GlWindow
    , public gadget::InputAreaWin32
 {

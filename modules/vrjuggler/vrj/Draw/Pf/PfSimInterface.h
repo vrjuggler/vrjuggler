@@ -33,7 +33,7 @@
 #ifndef _VRJ_PF_SIM_INTERFACE_H_
 #define _VRJ_PF_SIM_INTERFACE_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/DeviceInterface.h>

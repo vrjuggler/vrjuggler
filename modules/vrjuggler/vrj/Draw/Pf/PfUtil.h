@@ -37,7 +37,7 @@
 * Performer helper routines                       *
 ***************************************************/
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/Pf/Config.h>
 
 #include <Performer/pr/pfLinMath.h>
 #include <gmtl/Matrix.h>
@@ -48,16 +48,16 @@ namespace vrj
 
 
 /** Converts Performer matrix to Juggler (GMTL) matrix. */
-VJ_API(gmtl::Matrix44f) GetVjMatrix(const pfMatrix& perfMat);
+VJ_PF_API(gmtl::Matrix44f) GetVjMatrix(const pfMatrix& perfMat);
 
 /** Converts Juggler (GMTL) matrix to Pf Matrix. */
-VJ_API(pfMatrix) GetPfMatrix(const gmtl::Matrix44f& mat);
+VJ_PF_API(pfMatrix) GetPfMatrix(const gmtl::Matrix44f& mat);
 
 /** Converts Performer 3-element vector to Juggler (GMTL) vector. */
-VJ_API(gmtl::Vec3f) GetVjVec(const pfVec3& vec);
+VJ_PF_API(gmtl::Vec3f) GetVjVec(const pfVec3& vec);
 
 /** Converts Juggler (GMTL) vector to Pf vector. */
-VJ_API(pfVec3) GetPfVec(const gmtl::Vec3f& vec);
+VJ_PF_API(pfVec3) GetPfVec(const gmtl::Vec3f& vec);
 
 
 }

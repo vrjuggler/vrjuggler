@@ -34,7 +34,7 @@
 #define GL_DRAW_WAND_FUNCTORS_H
 
 #include <vpr/vprConfig.h>
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #ifdef VPR_OS_Darwin
 #   include <OpenGL/gl.h>

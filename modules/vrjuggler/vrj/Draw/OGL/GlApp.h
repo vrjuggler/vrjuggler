@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_APP_H_
 #define _VRJ_GL_APP_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #include <vrj/Kernel/App.h>
 
@@ -77,7 +77,7 @@ namespace vrj
  *
  * @see vrj::App, vrj::Kernel
  */
-class VJ_CLASS_API GlApp : public App
+class VJ_OGL_CLASS_API GlApp : public App
 {
 public:
    GlApp(Kernel* kern=NULL);

@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_WIN_OSX_H_
 #define _VRJ_GL_WIN_OSX_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 #include <vector>
 
 #include <vrj/Draw/OGL/GlWindow.h>

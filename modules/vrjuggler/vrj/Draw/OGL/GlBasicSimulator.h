@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_BASIC_SIMULATOR_H_
 #define _VRJ_GL_BASIC_SIMULATOR_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #include <vrj/Draw/OGL/GlSimInterface.h>
 #include <vrj/Draw/OGL/GlDrawObjectFunctor.h>

@@ -33,7 +33,7 @@
 #ifndef _VRJ_GL_DRAW_MANAGER_H_
 #define _VRJ_GL_DRAW_MANAGER_H_
 
-#include <vrj/vrjConfig.h>
+#include <vrj/Draw/OGL/Config.h>
 #include <vector>
 
 #include <vpr/vpr.h>
@@ -79,7 +79,7 @@ namespace vrj
  *
  * @date 1-7-98
  */
-class VJ_CLASS_API GlDrawManager : public DrawManager
+class VJ_OGL_CLASS_API GlDrawManager : public DrawManager
 {
 public:
    friend class GlPipe;
