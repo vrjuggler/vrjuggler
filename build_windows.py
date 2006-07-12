@@ -384,7 +384,7 @@ def writeCacheFile(optionDict):
       cache_file.write(output)
    cache_file.close()
 
-def generateVersionHeaders(vcDir):
+def updateVersions(vcDir):
    class JugglerModule:
       def __init__(self, srcDir, vcDir, projDir, versionEnvVar,
                    genFiles = None):
@@ -395,10 +395,11 @@ def generateVersionHeaders(vcDir):
          self.version_env_var     = versionEnvVar
          self.version_env_var_dot = versionEnvVar + '_DOT'
          self.param_files         = []
+         self.proj_dir            = os.path.join(gJugglerDir, vcDir, projDir)
 
          if genFiles is not None:
             for f in genFiles:
-               output = os.path.join(gJugglerDir, vcDir, projDir, f[0])
+               output = os.path.join(self.proj_dir, f[0])
 
                if len(f) == 1 or f[1] is None:
                   template = os.path.join(self.source_dir, f[0] + '.in')
@@ -407,7 +408,7 @@ def generateVersionHeaders(vcDir):
 
                self.param_files.append((output, template))
 
-      def generateParamFiles(self):
+      def updateParamFiles(self):
          for (output, template) in self.param_files:
             if os.path.exists(output):
                mtime = os.path.getmtime
@@ -425,6 +426,20 @@ def generateVersionHeaders(vcDir):
          os.environ[self.version_env_var] = '%d_%d_%d' % (major, minor, patch)
          os.environ[self.version_env_var_dot] = '%d.%d.%d' % \
                                                    (major, minor, patch)
+
+      def removeOldVersions(self):
+         output_files = []
+         for ext in ['lib', 'dll', 'exp', 'ilk', 'pdb']:
+            output_files += glob.glob(os.path.join(self.proj_dir, '*', '*',
+                                                   '*.' + ext))
+
+         mtime = os.path.getmtime
+         for f in output_files:
+            if mtime(self.version_file) > mtime(f):
+               try:
+                  os.remove(f)
+               except:
+                  print "Failed to remove", f
 
       version_re      = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
       branch_re       = re.compile(r'BRANCH\s*=\s*([\w\d-]+)')
@@ -550,7 +565,8 @@ def generateVersionHeaders(vcDir):
 
    for m in mods:
       m.setVersionEnvVar()
-      m.generateParamFiles()
+      m.updateParamFiles()
+      m.removeOldVersions()
 
 def generateAntBuildFiles(vcDir):
    class AntTarget:
@@ -1990,9 +2006,9 @@ class GuiFrontEnd:
       self.updateCommandFrame()
 
    def runVisualStudio(self):
-      #print "generateVersionHeaders()"
+      #print "updateVersions()"
       self.printMessage("Generating Version Headers.")
-      generateVersionHeaders(self.mVcDir)
+      updateVersions(self.mVcDir)
       self.printMessage("Generating Ant Build Files.")
       generateAntBuildFiles(self.mVcDir)
 
@@ -2079,7 +2095,7 @@ def main():
    if not gHaveTk or disable_tk:
       (cl_ver_major, cl_ver_minor, vc_dir) = chooseVisualStudioDir()
       options = setVars(cl_ver_major, cl_ver_minor)
-      generateVersionHeaders(vc_dir)
+      updateVersions(vc_dir)
       generateAntBuildFiles(vc_dir)
 
       devenv_cmd    = getVSCmd()
