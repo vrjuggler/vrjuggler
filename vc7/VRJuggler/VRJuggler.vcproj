@@ -36,15 +36,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sonix_d.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vrj_d.dll"
-				Version="2.1.5"
+				AdditionalDependencies="cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vrj_d-$(VRJ_VERSION).dll"
+				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\Gadgeteer\$(OutDir)&quot;;&quot;..\Sonix\$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/vrj_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/vrj_d-$(VRJ_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/vrj_d.lib"
+				ImportLibrary="$(OutDir)/vrj_d-$(VRJ_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -89,16 +89,16 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sonix.lib gadget.lib jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vrj.dll"
-				Version="2.1.5"
+				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vrj-$(VRJ_VERSION).dll"
+				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\Gadgeteer\$(OutDir)&quot;;&quot;..\Sonix\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/vrj.lib"
+				ImportLibrary="$(OutDir)/vrj-$(VRJ_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -183,6 +183,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Test\Asserter.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\AutoLink.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\CameraProjection.h">

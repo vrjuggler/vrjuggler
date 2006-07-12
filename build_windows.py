@@ -386,11 +386,15 @@ def writeCacheFile(optionDict):
 
 def generateVersionHeaders(vcDir):
    class JugglerModule:
-      def __init__(self, srcDir, vcDir, projDir, genFiles = None):
-         self.source_dir     = os.path.join(gJugglerDir, srcDir)
-         self.version_params = os.path.join(self.source_dir, 'Makefile.inc.in')
-         self.version_file   = os.path.join(self.source_dir, 'VERSION')
-         self.param_files    = []
+      def __init__(self, srcDir, vcDir, projDir, versionEnvVar,
+                   genFiles = None):
+         self.source_dir          = os.path.join(gJugglerDir, srcDir)
+         self.version_params      = os.path.join(self.source_dir,
+                                                 'Makefile.inc.in')
+         self.version_file        = os.path.join(self.source_dir, 'VERSION')
+         self.version_env_var     = versionEnvVar
+         self.version_env_var_dot = versionEnvVar + '_DOT'
+         self.param_files         = []
 
          if genFiles is not None:
             for f in genFiles:
@@ -416,6 +420,12 @@ def generateVersionHeaders(vcDir):
             else:
                self.__genParamFile(output, template)
 
+      def setVersionEnvVar(self):
+         (version, major, minor, patch, build) = self.__getVersionInfo()
+         os.environ[self.version_env_var] = '%d_%d_%d' % (major, minor, patch)
+         os.environ[self.version_env_var_dot] = '%d.%d.%d' % \
+                                                   (major, minor, patch)
+
       version_re      = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
       branch_re       = re.compile(r'BRANCH\s*=\s*([\w\d-]+)')
       canon_name_re   = re.compile(r'CANON_NAME\s*=\s*(\S.+)')
@@ -427,7 +437,7 @@ def generateVersionHeaders(vcDir):
       verstr_re       = re.compile(r'@VER_STRING@')
       zero_strip_re   = re.compile(r'^0*([^0]\d+)')
 
-      def __genParamFile(self, output, template):
+      def __getVersionInfo(self):
          ver_file = open(self.version_file)
          cur_ver  = ver_file.readline()
          ver_file.close()
@@ -437,6 +447,11 @@ def generateVersionHeaders(vcDir):
          minor   = int(ver_match.group(3))
          patch   = int(ver_match.group(4))
          build   = int(ver_match.group(5))
+
+         return (version, major, minor, patch, build)
+
+      def __genParamFile(self, output, template):
+         (version, major, minor, patch, build) = self.__getVersionInfo()
 
          # NOTE: This will not always be identical to the UNIX version because
          # Python does not have %e as a time formatting directive.
@@ -502,35 +517,39 @@ def generateVersionHeaders(vcDir):
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
-   mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR',
+   mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
                              [(r'vpr\vprParam.h',),
                               (r'vpr\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
+                             'TWEEK_VERSION',
                              [(r'tweek\tweekParam.h',),
                               (r'tweek\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
-   mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL',
+   mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL', 'JCCL_VERSION',
                              [(r'jccl\jcclParam.h',
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.h.in')),
                               (r'jccl\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))
                              ]))
-   mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix',
+   mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix', 'SNX_VERSION',
                              [(r'snx\snxParam.h',),
                               (r'snx\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
+                             'GADGET_VERSION',
                              [(r'gadget\gadgetParam.h',),
                               (r'gadget\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
    mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
+                             'VRJ_VERSION',
                              [(r'vrj\vrjParam.h',),
                               (r'vrj\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 
    for m in mods:
+      m.setVersionEnvVar()
       m.generateParamFiles()
 
 def generateAntBuildFiles(vcDir):

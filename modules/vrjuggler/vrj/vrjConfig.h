@@ -147,6 +147,10 @@
 #   define VJ_API(__type)	VJ_IMPORT(__type)
 #   define VJ_CLASS_API		VJ_IMPORT_CLASS
 #   define VJ_DATA_API(__type)	VJ_IMPORT_DATA(__type)
+
+#   define VJ_LIB_NAME "vrj"
+#   include <vrj/AutoLink.h>
+#   undef VJ_LIB_NAME
 #endif
 
 #endif   /* _VRJ_CONFIG_H_ */

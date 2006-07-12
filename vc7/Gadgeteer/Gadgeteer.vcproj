@@ -36,15 +36,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="jccl_d.lib vpr_d.lib cppdom_d.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/gadget_d.dll"
-				Version="1.1.6"
+				AdditionalDependencies="cppdom_d.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/gadget_d-$(GADGET_VERSION).dll"
+				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/gadget_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/gadget_d-$(GADGET_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/gadget_d.lib"
+				ImportLibrary="$(OutDir)/gadget_d-$(GADGET_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -89,16 +89,16 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/gadget.dll"
-				Version="1.1.6"
+				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/gadget-$(GADGET_VERSION).dll"
+				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/gadget.lib"
+				ImportLibrary="$(OutDir)/gadget-$(GADGET_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -363,6 +363,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\ApplicationDataRequest.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\AutoLink.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\BaseTypeFactory.h">

@@ -146,6 +146,8 @@
 #   define TWEEK_API(__type)		TWEEK_IMPORT(__type)
 #   define TWEEK_CLASS_API		TWEEK_IMPORT_CLASS
 #   define TWEEK_DATA_API(__type)	TWEEK_IMPORT_DATA(__type)
+
+#   include <tweek/AutoLink.h>
 #endif
 
 #endif   /* _TWEEK_CONFIG_H_ */

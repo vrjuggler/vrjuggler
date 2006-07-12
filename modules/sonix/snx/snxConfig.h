@@ -156,6 +156,8 @@
 #   define SNX_API(__type)	SNX_IMPORT(__type)
 #   define SNX_CLASS_API	SNX_IMPORT_CLASS
 #   define SNX_DATA_API(__type)	SNX_IMPORT_DATA(__type)
+
+#   include <snx/AutoLink.h>
 #endif
 
 #endif   /* _SNX_CONFIG_H_ */

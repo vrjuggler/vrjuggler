@@ -35,15 +35,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/sonix_d.dll"
-				Version="1.1.2"
+				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/sonix_d-$(SNX_VERSION).dll"
+				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/sonix_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/sonix_d-$(SNX_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/sonix_d.lib"
+				ImportLibrary="$(OutDir)/sonix_d-$(SNX_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -87,16 +87,16 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/sonix.dll"
-				Version="1.1.2"
+				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/sonix-$(SNX_VERSION).dll"
+				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/sonix.lib"
+				ImportLibrary="$(OutDir)/sonix-$(SNX_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -140,6 +140,9 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\modules\sonix\snx\AutoLink.h">
+			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\Util\Debug.h">
 			</File>

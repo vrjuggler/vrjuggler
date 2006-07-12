@@ -138,6 +138,8 @@
 #    define JCCL_API(__type)	JCCL_IMPORT(__type)
 #    define JCCL_CLASS_API		JCCL_IMPORT_CLASS
 #    define JCCL_DATA_API(__type)	JCCL_IMPORT_DATA(__type)
+
+#    include <jccl/AutoLink.h>
 # endif
 
 #endif   /* _VRJ_JCCL_CONFIG_H_ */

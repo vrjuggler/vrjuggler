@@ -247,4 +247,8 @@ namespace std
 
 #include <vpr/vprDomain.h>
 
+#if ! defined(_VPR_BUILD_)
+#  include <vpr/AutoLink.h>
+#endif
+
 #endif   /* _VPR_CONFIG_H_ */

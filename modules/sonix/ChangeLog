@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-12-2006 patrick     Changed the DLL name to include the version as part of
+                        the base library name on Windows. Implemented automatic
+                        linking of the Sonix library.
+                        NEW VERSION: 1.1.5
 Jun-25-2006 patrick     Added support for building universal binaries on Mac
                         OS X.
                         NEW VERSION: 1.1.4

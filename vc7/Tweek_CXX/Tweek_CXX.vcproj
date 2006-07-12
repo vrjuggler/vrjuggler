@@ -34,16 +34,16 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vpr_d.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/tweek_d.dll"
-				Version="1.1.1"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).dll"
+				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/tweek_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/tweek_d.lib"
+				ImportLibrary="$(OutDir)/tweek_d-$(TWEEK_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -87,9 +87,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vpr.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/tweek.dll"
-				Version="1.1.1"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
+				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
@@ -97,7 +97,7 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/tweek.lib"
+				ImportLibrary="$(OutDir)/tweek-$(TWEEK_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -156,6 +156,9 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\modules\tweek\tweek\AutoLink.h">
+			</File>
 			<File
 				RelativePath="tweek\idl\BeanDeliverySubject.h">
 			</File>

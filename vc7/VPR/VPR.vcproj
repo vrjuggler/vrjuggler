@@ -36,15 +36,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vpr_d.dll"
-				Version="1.1.12"
+				OutputFile="$(OutDir)/vpr_d-$(VPR_VERSION).dll"
+				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/vpr_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/vpr_d-$(VPR_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/vpr_d.lib"
+				ImportLibrary="$(OutDir)/vpr_d-$(VPR_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -89,8 +89,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vpr.dll"
-				Version="1.1.12"
+				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
+				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
@@ -98,7 +98,7 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/vpr.lib"
+				ImportLibrary="$(OutDir)/vpr-$(VPR_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -321,6 +321,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\AttributeMapBase.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\AutoLink.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.h">

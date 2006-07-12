@@ -146,6 +146,8 @@
 #   define GADGET_API(__type)	GADGET_IMPORT(__type)
 #   define GADGET_CLASS_API	GADGET_IMPORT_CLASS
 #   define GADGET_DATA_API(__type)	GADGET_IMPORT_DATA(__type)
+
+#   include <gadget/AutoLink.h>
 #endif
 
 // #define GADGET_USING_RIM_SYNC

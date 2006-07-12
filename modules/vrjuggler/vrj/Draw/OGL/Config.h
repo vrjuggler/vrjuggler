@@ -128,6 +128,10 @@
 #   define VJ_OGL_API(__type)           VJ_OGL_IMPORT(__type)
 #   define VJ_OGL_CLASS_API             VJ_OGL_IMPORT_CLASS
 #   define VJ_OGL_DATA_API(__type)      VJ_OGL_IMPORT_DATA(__type)
+
+#   define VJ_LIB_NAME "vrj_ogl"
+#   include <vrj/AutoLink.h>
+#   undef VJ_LIB_NAME
 #endif
 
 #endif   /* _VRJ_DRAW_OGL_CONFIG_H_ */

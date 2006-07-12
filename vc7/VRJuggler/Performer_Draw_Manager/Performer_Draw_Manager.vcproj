@@ -36,15 +36,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib user32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vrj_pf_d.dll"
-				Version="2.1.2"
+				AdditionalDependencies="libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib user32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vrj_pf_d-$(VRJ_VERSION).dll"
+				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\Gadgeteer\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(PFROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/vrj_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/vrj_pf_d-$(VRJ_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/vrj_pf_d.lib"
+				ImportLibrary="$(OutDir)/vrj_pf_d-$(VRJ_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -91,16 +91,16 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib user32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vrj_pf.dll"
-				Version="2.1.2"
+				AdditionalDependencies="libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib user32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vrj_pf-$(VRJ_VERSION).dll"
+				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\Gadgeteer\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(PFROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/vrj_pf.lib"
+				ImportLibrary="$(OutDir)/vrj_pf-$(VRJ_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>

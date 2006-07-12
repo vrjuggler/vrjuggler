@@ -128,6 +128,10 @@
 #   define VJ_PF_API(__type)           VJ_PF_IMPORT(__type)
 #   define VJ_PF_CLASS_API             VJ_PF_IMPORT_CLASS
 #   define VJ_PF_DATA_API(__type)      VJ_PF_IMPORT_DATA(__type)
+
+#   define VJ_LIB_NAME "vrj_pf"
+#   include <vrj/AutoLink.h>
+#   undef VJ_LIB_NAME
 #endif
 
 #endif   /* _VRJ_DRAW_PF_CONFIG_H_ */

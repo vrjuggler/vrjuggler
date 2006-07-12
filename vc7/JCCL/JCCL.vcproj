@@ -35,15 +35,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/jccl_d.dll"
-				Version="1.1.2"
+				AdditionalDependencies="cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/jccl_d-$(JCCL_VERSION).dll"
+				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/jccl_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/jccl_d-$(JCCL_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/jccl_d.lib"
+				ImportLibrary="$(OutDir)/jccl_d-$(JCCL_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -87,16 +87,16 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/jccl.dll"
-				Version="1.1.2"
+				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/jccl-$(JCCL_VERSION).dll"
+				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/jccl.lib"
+				ImportLibrary="$(OutDir)/jccl-$(JCCL_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -161,6 +161,9 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\modules\jackal\common\jccl\AutoLink.h">
+			</File>
 			<File
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ConfigDefinition.h">
 			</File>

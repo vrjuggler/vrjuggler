@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-12-2006 patrick     Changed the DLL name to include the version as part of
+                        the base library name on Windows. Implemented automatic
+                        linking of the Gadgeteer library.
+                        NEW VERSION: 1.1.14
 Jun-25-2006 patrick     Added support for building universal binaries on Mac
                         OS X.
                         NEW VERSION: 1.1.13
@@ -11,10 +15,10 @@ May-24-2006 patrick     Added gadget::getDefaultPluginRoot(), which provides
                         a version-specific path to the directory containing
                         the base set of Gadgeteer plug-ins.
                         NEW VERSION: 1.1.11
-May-23-2006 dshipton    Added version information to data directory
+May-23-2006 dshipton    Added version information to data directory.
                         NEW VERSION: 1.1.10
 May-23-2006 dshipton    Changed the static and shared library names to include
-                        the version as part of the base library name
+                        the version as part of the base library name.
                         NEW VERSION: 1.1.9
 May-12-2005 patrick     Updated to VPR 1.1.20 and removed all exception
                         specifications except those that are required by a
