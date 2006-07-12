@@ -34,7 +34,6 @@
 # include <termios.h> 
 #endif
 
-#include <gadget/gadgetParam.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/InputManager.h>
