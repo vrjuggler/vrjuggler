@@ -417,6 +417,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\Config.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfApp.h"
 				>
 			</File>

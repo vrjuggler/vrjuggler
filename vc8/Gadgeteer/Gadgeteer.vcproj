@@ -574,6 +574,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Util\PathHelpers.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Util\PluginVersionException.cpp"
 				>
 			</File>
@@ -976,6 +980,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\PacketHandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Util\PathHelpers.h"
 				>
 			</File>
 			<File
