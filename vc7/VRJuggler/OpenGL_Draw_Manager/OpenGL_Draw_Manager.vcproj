@@ -164,6 +164,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\Config.h">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlApp.h">
 			</File>
 			<File
