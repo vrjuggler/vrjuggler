@@ -178,7 +178,7 @@ public:
    // Specializations of getProperty<T> placed inline for Visual Studio 7.
    // MIPSpro and GCC do not handle this.  They get out-of-line
    // specializations, found below.
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && _MSC_VER == 1300
    template<>
    std::string getProperty<std::string>(const std::string& prop, int ind) const
    {
@@ -202,7 +202,7 @@ public:
    {
       return getProperty_ElementPtr(prop, ind);
    }
-#endif /* ifdef _MSC_VER */
+#endif /* defined(_MSC_VER) && _MSC_VER == 1300 */
 
    /**
     * Gets value that defaults to property 0.
@@ -212,7 +212,7 @@ public:
     *       In other words we couldn't use a default value for the property
     *       index within the std::string and ConfigElementPtr specializations.
     */
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && _MSC_VER == 1300
    template<class T>
    T getProperty(const std::string& prop) const
    {
@@ -325,7 +325,7 @@ protected:
    bool                mValid; /**< Flag to signal whether element is valid. */
 };
 
-#ifndef _MSC_VER
+#if ! defined(_MSC_VER) || _MSC_VER > 1300
 template<>
 inline std::string ConfigElement::getProperty<std::string>(const std::string& prop, int ind) const
 {
@@ -358,7 +358,7 @@ inline T ConfigElement::getProperty(const std::string& prop) const
 {
    return getProperty<T>(prop, 0);
 }
-#endif /* ifndef _MSC_VER */
+#endif /* ! defined(_MSC_VER) || _MSC_VER > 1300 */
 
 } // namespace jccl
 
