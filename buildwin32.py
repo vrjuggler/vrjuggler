@@ -1800,9 +1800,9 @@ class GuiFrontEnd:
       next_row = next_row + 1
 
    def update(self):
-         self.updateRequiredOptions()
-         self.updateOptionsValidation()
-         self.updateCommandFrame()
+      self.updateRequiredOptions()
+      self.updateOptionsValidation()
+      self.updateCommandFrame()
 
    def entryValidation(self, entry, update = False):
       if os.path.isdir(entry.get()):
