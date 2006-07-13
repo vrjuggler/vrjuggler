@@ -121,6 +121,14 @@
 #    define JCCL_API(__type)	JCCL_IMPORT(__type)
 #    define JCCL_CLASS_API		JCCL_IMPORT_CLASS
 #    define JCCL_DATA_API(__type)	JCCL_IMPORT_DATA(__type)
+
+#   if defined(WIN32) || defined(WIN64)
+#      if defined(JCCL_DEBUG)
+#         pragma comment(lib, "jccl_d.lib")
+#      else
+#         pragma comment(lib, "jccl.lib")
+#      endif
+#   endif
 # endif
 
 #endif   /* _VRJ_JCCL_CONFIG_H_ */

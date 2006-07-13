@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-13-2006 patrick     Implemented automatic linking of the Gadgeteer library.
 Jul-08-2006 patrick     Added support for building universal binaries on Mac
                         OS X.
 Oct-26-2005 patrickh    gadget::MouseEvent objects on Windows now have correct

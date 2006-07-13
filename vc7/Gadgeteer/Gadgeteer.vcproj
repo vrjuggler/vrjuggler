@@ -36,7 +36,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="jccl_d.lib vpr_d.lib cppdom_d.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="cppdom_d.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget_d.dll"
 				Version="1.0.1"
 				LinkIncremental="0"
@@ -89,7 +89,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget.dll"
 				Version="1.0.1"
 				LinkIncremental="0"

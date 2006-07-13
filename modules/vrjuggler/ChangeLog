@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-13-2006 patrick     Implemented automatic linking of the VR Juggler
+                        libraries.
 Jul-08-2006 patrick     Added support for building universal binaries on Mac
                         OS X.
 Jun-19-2006 patrick     Refactored vrj::OsgApp so that the scene view is

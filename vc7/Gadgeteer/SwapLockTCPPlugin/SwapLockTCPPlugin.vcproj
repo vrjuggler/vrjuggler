@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SwapLockTCPPlugin_d.dll"
 				Version="1.0.1"
 				LinkIncremental="1"
@@ -88,7 +88,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SwapLockTCPPlugin.dll"
 				Version="1.0.1"
 				LinkIncremental="1"

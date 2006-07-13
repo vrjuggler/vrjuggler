@@ -138,6 +138,14 @@
 #   define SNX_API(__type)	SNX_IMPORT(__type)
 #   define SNX_CLASS_API	SNX_IMPORT_CLASS
 #   define SNX_DATA_API(__type)	SNX_IMPORT_DATA(__type)
+
+#   if defined(WIN32) || defined(WIN64)
+#      if defined(SNX_DEBUG)
+#         pragma comment(lib, "sonix_d.lib")
+#      else
+#         pragma comment(lib, "sonix.lib")
+#      endif
+#   endif
 #endif
 
 #endif   /* _SNX_CONFIG_H_ */

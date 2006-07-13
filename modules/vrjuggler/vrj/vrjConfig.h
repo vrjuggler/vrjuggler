@@ -128,6 +128,14 @@
 #   define VJ_API(__type)	VJ_IMPORT(__type)
 #   define VJ_CLASS_API		VJ_IMPORT_CLASS
 #   define VJ_DATA_API(__type)	VJ_IMPORT_DATA(__type)
+
+#   if defined(WIN32) || defined(WIN64)
+#      if defined(VJ_DEBUG)
+#         pragma comment(lib, "vrj_d.lib")
+#      else
+#         pragma comment(lib, "vrj.lib")
+#      endif
+#   endif
 #endif
 
 #endif   /* _VRJ_CONFIG_H_ */

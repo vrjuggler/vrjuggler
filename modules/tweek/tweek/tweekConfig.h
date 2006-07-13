@@ -132,6 +132,14 @@
 #   define TWEEK_API(__type)		TWEEK_IMPORT(__type)
 #   define TWEEK_CLASS_API		TWEEK_IMPORT_CLASS
 #   define TWEEK_DATA_API(__type)	TWEEK_IMPORT_DATA(__type)
+
+#   if defined(WIN32) || defined(WIN64)
+#      if defined(TWEEK_DEBUG)
+#         pragma comment(lib, "tweek_d.lib")
+#      else
+#         pragma comment(lib, "tweek.lib")
+#      endif
+#   endif
 #endif
 
 #endif   /* _TWEEK_CONFIG_H_ */

@@ -128,6 +128,14 @@
 #   define GADGET_API(__type)	GADGET_IMPORT(__type)
 #   define GADGET_CLASS_API	GADGET_IMPORT_CLASS
 #   define GADGET_DATA_API(__type)	GADGET_IMPORT_DATA(__type)
+
+#   if defined(WIN32) || defined(WIN64)
+#      if defined(GADGET_DEBUG)
+#         pragma comment(lib, "gadget_d.lib")
+#      else
+#         pragma comment(lib, "gadget.lib")
+#      endif
+#   endif
 #endif
 
 // #define GADGET_USING_RIM_SYNC

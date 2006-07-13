@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix_d.dll"
 				Version="1.0.1"
 				LinkIncremental="2"
@@ -87,7 +87,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix.dll"
 				Version="1.0.1"
 				LinkIncremental="1"

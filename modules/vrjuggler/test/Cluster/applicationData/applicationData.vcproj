@@ -38,7 +38,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj_d.lib vrj_ogl_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/applicationData.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
@@ -88,7 +88,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib vrj_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/applicationData.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
