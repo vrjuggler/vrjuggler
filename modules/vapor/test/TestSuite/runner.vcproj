@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(CPPUNIT_ROOT)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VPR_BASE_DIR)\include&quot;"
-				PreprocessorDefinitions="MODULE_DIR=&quot;\&quot;$(OutDir)\\modules\&quot;&quot;;_DEBUG;WIN32;_WINDOWS;CPPUNIT_DLL"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;MODULE_DIR=&quot;\&quot;$(OutDir)\\modules\&quot;&quot;;_DEBUG;WIN32;_WINDOWS;CPPUNIT_DLL"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppunitd_dll.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="cppunitd_dll.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/runner.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(CPPUNIT_ROOT)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VPR_BASE_DIR)\lib&quot;"
@@ -71,7 +71,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories=".;&quot;$(CPPUNIT_ROOT)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VPR_BASE_DIR)\include&quot;"
-				PreprocessorDefinitions="MODULE_DIR=&quot;\&quot;$(OutDir)\\modules\&quot;&quot;;_OPT;NDEBUG;WIN32;_WINDOWS;CPPUNIT_DLL"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;MODULE_DIR=&quot;\&quot;$(OutDir)\\modules\&quot;&quot;;_OPT;NDEBUG;WIN32;_WINDOWS;CPPUNIT_DLL"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="FALSE"
@@ -86,7 +86,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppunit_dll.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="cppunit_dll.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/runner.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(CPPUNIT_ROOT)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VPR_BASE_DIR)\lib&quot;"

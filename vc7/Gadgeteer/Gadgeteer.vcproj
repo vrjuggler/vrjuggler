@@ -21,7 +21,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(GMTL_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -36,7 +36,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom_d.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget_d-$(GADGET_VERSION).dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="0"
@@ -74,7 +74,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(GMTL_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;_OPT;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;_OPT;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -89,7 +89,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget-$(GADGET_VERSION).dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="0"

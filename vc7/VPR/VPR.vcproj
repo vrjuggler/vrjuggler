@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
@@ -73,7 +73,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_OPT"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_OPT"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -88,7 +88,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="1"

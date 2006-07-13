@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl_d-$(JCCL_VERSION).dll"
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="2"
@@ -72,7 +72,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;_OPT;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;_OPT;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
@@ -87,7 +87,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl-$(JCCL_VERSION).dll"
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="0"

@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib cppdom_d.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_perf_mon_d.dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -89,7 +89,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib cppdom.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_perf_mon.dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"
