@@ -1910,7 +1910,7 @@ class GuiFrontEnd:
       if not status:
          tkMessageBox.showwarning(
             "Invalid Directory",
-            "The following settings reference non-existant directories and must be set before proceeding.\n%s" % (inv_dir_list) )
+            "The following settings reference non-existent directories and must be set before proceeding.\n%s" % inv_dir_list)
          return status
 
       return status
