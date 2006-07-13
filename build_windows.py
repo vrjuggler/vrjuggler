@@ -198,6 +198,9 @@ def getDefaultVars(clVerMajor, clVerMinor):
    required.append(BuildOption('NSPR_ROOT', 'NSPR installation directory', ''))
    required.append(BuildOption('CPPDOM_ROOT', 'CppDOM installation directory',
                                ''))
+   required.append(BuildOption('CPPDOM_INCLUDES',
+                               'Directory containing the CppDOM header tree',
+                               ''))
    required.append(BuildOption('GMTL_ROOT', 'GMTL installation directory', ''))
 
    optional = []
@@ -264,6 +267,11 @@ def setVars(clVerMajor, clVerMinor):
       elif opt.envVar == 'BOOST_VERSION':
          boost_ver = result
          options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
+
+      # The following is a little hack to get a reasonable default set for
+      # the CPPDOM_INCLUDES variable before the user has to enter it manually.
+      if opt.envVar == 'CPPDOM_ROOT':
+         options['CPPDOM_INCLUDES'] = os.path.join(result, 'include')
 
    print "+++ Optional Settings"
    processInput(options, 'deps-prefix', 'Dependency installation prefix')
