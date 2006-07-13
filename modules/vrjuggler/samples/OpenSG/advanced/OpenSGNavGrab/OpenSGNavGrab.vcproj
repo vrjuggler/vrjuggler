@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib glut32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib OSGBaseD.lib OSGSystemD.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/OpenSGNavGrab.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -104,7 +104,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib glut32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib OSGBase.lib OSGSystem.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/OpenSGNavGrab.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
