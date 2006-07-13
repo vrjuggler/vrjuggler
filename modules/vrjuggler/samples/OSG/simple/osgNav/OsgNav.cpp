@@ -204,8 +204,10 @@ void OsgNav::myInit()
    mNavTrans->addChild(mModelTrans.get());
 
    // run optimization over the scene graph
-   osgUtil::Optimizer optimizer;
-   optimizer.optimize(mRootNode.get());
+   // NOTE: Using the optimizer may cause problems with textures not showing
+   // up on all walls.
+//   osgUtil::Optimizer optimizer;
+//   optimizer.optimize(mRootNode.get());
 
    // traverse the scene graph setting up all osg::GeoSet's so they will use
    // OpenGL display lists.

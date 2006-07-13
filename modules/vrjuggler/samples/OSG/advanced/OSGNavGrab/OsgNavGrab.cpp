@@ -274,9 +274,8 @@ void OsgNavGrab::myInit()
    mNavTrans->addChild( mModelTrans );
 
    // run optimization over the scene graph
-   osgUtil::Optimizer optimizer;
-   optimizer.optimize(mRootNode);
-
-
+   // NOTE: Using the optimizer may cause problems with textures not showing
+   // up on all walls.
+//   osgUtil::Optimizer optimizer;
+//   optimizer.optimize(mRootNode);
 }
-
