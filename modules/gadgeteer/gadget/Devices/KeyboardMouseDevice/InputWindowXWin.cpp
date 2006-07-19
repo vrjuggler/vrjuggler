@@ -327,6 +327,7 @@ bool InputWindowXWin::openLocalWindow()
    mSWA.event_mask = event_mask;
 
    mXWindow = createWindow(DefaultRootWindow(mXDisplay), 1);
+   createEmptyCursor(mXDisplay, mXWindow);
 
    setHints(mXWindow, const_cast<char*>(mInstName.c_str()),
             "VJm_keys" , "VJInputWindow", "VJInputD");
@@ -336,8 +337,6 @@ bool InputWindowXWin::openLocalWindow()
    XFlush(mXDisplay);
    XRaiseWindow(mXDisplay, mXWindow);
    XClearWindow(mXDisplay, mXWindow);    // Try to clear the background
-
-   createEmptyCursor(mXDisplay, mXWindow);
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "[gadget::InputWindowXWin::openTheWindow()] done." << std::endl
