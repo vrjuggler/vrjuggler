@@ -14,6 +14,7 @@
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/IO/Socket/SocketConnector.h>
 #include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/WouldBlockException.h>
 
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>

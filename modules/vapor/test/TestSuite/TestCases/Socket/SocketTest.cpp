@@ -12,6 +12,7 @@
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/IO/Socket/SocketConnector.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
