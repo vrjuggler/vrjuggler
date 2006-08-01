@@ -227,7 +227,7 @@ namespace std
 #   define VPR_DATA_API(__type) VPR_IMPORT_DATA(__type)
 
 #   if defined(WIN32) || defined(WIN64)
-#      if defined(VPR_DEBUG)
+#      if defined(VPR_DEBUG) && ! defined(_USE_RELEASE_RUNTIME)
 #         pragma comment(lib, "vpr_d.lib")
 #      else
 #         pragma comment(lib, "vpr.lib")

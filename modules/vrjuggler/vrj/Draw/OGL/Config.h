@@ -130,7 +130,7 @@
 #   define VJ_OGL_DATA_API(__type)      VJ_OGL_IMPORT_DATA(__type)
 
 #   if defined(WIN32) || defined(WIN64)
-#      if defined(VJ_DEBUG)
+#      if defined(VJ_DEBUG) && ! defined(_USE_RELEASE_RUNTIME)
 #         pragma comment(lib, "vrj_ogl_d.lib")
 #      else
 #         pragma comment(lib, "vrj_ogl.lib")

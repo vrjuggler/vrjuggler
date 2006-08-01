@@ -134,7 +134,7 @@
 #   define TWEEK_DATA_API(__type)	TWEEK_IMPORT_DATA(__type)
 
 #   if defined(WIN32) || defined(WIN64)
-#      if defined(TWEEK_DEBUG)
+#      if defined(TWEEK_DEBUG) && ! defined(_USE_RELEASE_RUNTIME)
 #         pragma comment(lib, "tweek_d.lib")
 #      else
 #         pragma comment(lib, "tweek.lib")

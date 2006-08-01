@@ -140,7 +140,7 @@
 #   define SNX_DATA_API(__type)	SNX_IMPORT_DATA(__type)
 
 #   if defined(WIN32) || defined(WIN64)
-#      if defined(SNX_DEBUG)
+#      if defined(SNX_DEBUG) && ! defined(_USE_RELEASE_RUNTIME)
 #         pragma comment(lib, "sonix_d.lib")
 #      else
 #         pragma comment(lib, "sonix.lib")

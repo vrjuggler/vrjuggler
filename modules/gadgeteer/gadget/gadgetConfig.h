@@ -130,7 +130,7 @@
 #   define GADGET_DATA_API(__type)	GADGET_IMPORT_DATA(__type)
 
 #   if defined(WIN32) || defined(WIN64)
-#      if defined(GADGET_DEBUG)
+#      if defined(GADGET_DEBUG) && ! defined(_USE_RELEASE_RUNTIME)
 #         pragma comment(lib, "gadget_d.lib")
 #      else
 #         pragma comment(lib, "gadget.lib")

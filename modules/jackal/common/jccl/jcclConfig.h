@@ -123,7 +123,7 @@
 #    define JCCL_DATA_API(__type)	JCCL_IMPORT_DATA(__type)
 
 #   if defined(WIN32) || defined(WIN64)
-#      if defined(JCCL_DEBUG)
+#      if defined(JCCL_DEBUG) && ! defined(_USE_RELEASE_RUNTIME)
 #         pragma comment(lib, "jccl_d.lib")
 #      else
 #         pragma comment(lib, "jccl.lib")
