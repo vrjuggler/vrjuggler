@@ -30,7 +30,7 @@
 #if defined(WIN32) || defined(WIN64)
 #  include <tweek/tweekParam.h>
 
-#  if defined(TWEEK_DEBUG)
+#  if defined(TWEEK_DEBUG) && !defined(_USE_RELEASE_RUNTIME)
 #     define TWEEK_LIB_RT_OPT "_d"
 #  else
 #     define TWEEK_LIB_RT_OPT ""
