@@ -30,7 +30,11 @@
 #include <iterator>
 #include <cstddef>
 
-#include <boost/format.hpp>
+#include <vpr/vpr.h>
+
+#if ! defined(VPR_OS_IRIX)
+#  include <boost/format.hpp>
+#endif
 #include <boost/lexical_cast.hpp>
 
 #include <gmtl/Generate.h>
@@ -38,7 +42,6 @@
 #include <gmtl/Quat.h>
 #include <gmtl/MatrixOps.h>
 
-#include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Assert.h> /* for vprASSERT */
