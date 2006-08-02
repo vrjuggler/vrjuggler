@@ -326,6 +326,7 @@ public:
                                                    << vprDEBUG_FLUSH;
          throw SocketException(err_msg, VPR_LOCATION);
       }
+      mRemoteAddr = addr;
    }
 
    /**
