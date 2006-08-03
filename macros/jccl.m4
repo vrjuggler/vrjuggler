@@ -29,51 +29,31 @@ dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([_JCCL_PATH_SETUP],
 [
-    dnl Get the cflags and libraries from the jccl-config script
-    AC_ARG_WITH(jccl,
-                [  --with-jccl=<PATH>      Directory where JCCL is
-                          installed                       [No default]],
+    dnl Get the cflags and libraries from the flagpoll script
+    AC_ARG_WITH(jccl-meta-file,
+                [  --with-jccl-meta-file=<PATH>      Flagpoll metadata file
+                          for JCCL                       [No default]],
                 jccl_config_prefix="$withval", jccl_config_prefix="")
-    AC_ARG_WITH(jccl-exec-prefix,
-                [  --with-jccl-exec-prefix=<PATH>
-                          Exec prefix where JCCL is
-                          installed (optional)            [No default]],
-                jccl_config_exec_prefix="$withval",
-                jccl_config_exec_prefix="")
 
-    if test "x$jccl_config_exec_prefix" != "x" ; then
-        jccl_config_args="$jccl_config_args --exec-prefix=$jccl_config_exec_prefix"
-
-        if test x${JCCL_CONFIG+set} != xset ; then
-            JCCL_CONFIG="$jccl_config_exec_prefix/bin/jccl-config"
-        fi
+    dnl See if the user specified where to find jccl
+    dnl if they didn't take a guess for them
+    if test "x$jccl_meta_file" != "x" ; then
+        jccl_flagpoll_args="--from-file=$jccl_meta_file"
+    else
+        jccl_flagpoll_args="--from-file=$instlinks/share/flagpoll/jccl.fpc"
     fi
 
-    if test "x$jccl_config_prefix" != "x" ; then
-        jccl_config_args="$jccl_config_args --prefix=$jccl_config_prefix"
+    jccl_flagpoll_args="jccl $jccl_flagpoll_args --no-deps"
 
-        if test x${JCCL_CONFIG+set} != xset ; then
-            JCCL_CONFIG="$jccl_config_prefix/bin/jccl-config"
-        fi
-    fi
+    AC_PATH_PROG(FLAGPOLL, flagpoll, no)
 
-    if test "x$JCCL_BASE_DIR" != "x" ; then
-        jccl_config_args="$jccl_config_args --prefix=$JCCL_BASE_DIR"
-
-        if test x${JCCL_CONFIG+set} != xset ; then
-            JCCL_CONFIG="$JCCL_BASE_DIR/bin/jccl-config"
-        fi
-    fi
-
-    AC_PATH_PROG(JCCL_CONFIG, jccl-config, no)
-
-    dnl Do a sanity check to ensure that $JCCL_CONFIG actually works.
-    if ! (eval $JCCL_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
-        JCCL_CONFIG='no'
-        echo "*** The jccl-config script installed by JCCL could not be found"
+    dnl Do a sanity check to ensure that $FLAGPOLL actually works.
+    if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
+        FLAGPOLL='no'
+        echo "*** The flagpoll metadata file installed by JCCL could not be found"
         echo "*** If JCCL was installed in PREFIX, make sure PREFIX/bin is in"
-        echo "*** your path, or set the JCCL_CONFIG environment variable to the"
-        echo "*** full path to jccl-config."
+        echo "*** your path, or set the FLAGPOLL environment variable to the"
+        echo "*** full path to flagpoll."
     fi
 ])
 
@@ -87,10 +67,10 @@ AC_DEFUN([_JCCL_VERSION_CHECK],
 
    AC_REQUIRE([_JCCL_PATH_SETUP])
 
-   if test "x$JCCL_CONFIG" = "xno" ; then
+   if test "x$FLAGPOLL" = "xno" ; then
       ifelse([$3], , :, [$3])
    else
-      JCCL_VERSION=`$JCCL_CONFIG --version`
+      JCCL_VERSION=`$FLAGPOLL $jccl_flagpoll_args --modversion`
 
       min_jccl_version=ifelse([$1], , 0.0.1, $1)
       DPP_VERSION_CHECK_MSG_NO_CACHE([JCCL], [$JCCL_VERSION],
@@ -103,56 +83,26 @@ dnl JCCL_PATH_CXX([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Tests for JCCL C++ API and then defines the following variables:
 dnl     JCCL_CXXFLAGS
-dnl     JCCL_CXXFLAGS_MIN
-dnl     JCCL_INCLUDES
-dnl     JCCL_INCLUDES_MIN
-dnl     JCCL_LIBS_LD
-dnl     JCCL_LIBS_LD_MIN
-dnl     JCCL_LIBS_STATIC_LD
-dnl     JCCL_LIBS_STATIC_LD_MIN
-dnl     JCCL_LIBS_CC
-dnl     JCCL_LIBS_CC_MIN
-dnl     JCCL_LIBS_STATIC_CC
-dnl     JCCL_LIBS_STATIC_CC_MIN
-dnl     JCCL_PROF_LIBS_LD
-dnl     JCCL_PROF_LIBS_LD_MIN
-dnl     JCCL_PROF_LIBS_STATIC_LD
-dnl     JCCL_PROF_LIBS_STATIC_LD_MIN
-dnl     JCCL_PROF_LIBS_CC
-dnl     JCCL_PROF_LIBS_CC_MIN
-dnl     JCCL_PROF_LIBS_STATIC_CC
-dnl     JCCL_PROF_LIBS_STATIC_CC_MIN
+dnl     JCCL_LIBS
+dnl     JCCL_LIBS_STATIC
+dnl     JCCL_PROF_LIBS
+dnl     JCCL_PROF_LIBS_STATIC
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([JCCL_PATH_CXX],
 [
    AC_REQUIRE([_JCCL_PATH_SETUP])
 
    JCCL_CXXFLAGS=""
-   JCCL_CXXFLAGS_MIN=""
-   JCCL_INCLUDES=""
-   JCCL_INCLUDES_MIN=""
-   JCCL_LIBS_LD=""
-   JCCL_LIBS_LD_MIN=""
-   JCCL_LIBS_STATIC_LD=""
-   JCCL_LIBS_STATIC_LD_MIN=""
-   JCCL_LIBS_CC=""
-   JCCL_LIBS_CC_MIN=""
-   JCCL_LIBS_STATIC_CC=""
-   JCCL_LIBS_STATIC_CC_MIN=""
-   JCCL_PROF_LIBS_LD=""
-   JCCL_PROF_LIBS_LD_MIN=""
-   JCCL_PROF_LIBS_STATIC_LD=""
-   JCCL_PROF_LIBS_STATIC_LD_MIN=""
-   JCCL_PROF_LIBS_CC=""
-   JCCL_PROF_LIBS_CC_MIN=""
-   JCCL_PROF_LIBS_STATIC_CC=""
-   JCCL_PROF_LIBS_STATIC_CC_MIN=""
+   JCCL_LIBS=""
+   JCCL_LIBS_STATIC=""
+   JCCL_PROF_LIBS=""
+   JCCL_PROF_LIBS_STATIC=""
 
-   if test "x$JCCL_CONFIG" = "xno" ; then
+   if test "x$FLAGPOLL" = "xno" ; then
       ifelse([$3], , :, [$3])
    else
       AC_MSG_CHECKING([whether JCCL C++ API is available])
-      has_cxx=`$JCCL_CONFIG --has-cxx`
+      has_cxx=`$FLAGPOLL $jccl_flagpoll_args --get-cxx-api-available`
 
       if test "x$has_cxx" = "xY" ; then
          AC_MSG_RESULT([yes])
@@ -163,32 +113,12 @@ AC_DEFUN([JCCL_PATH_CXX],
          fi
 
          if test "x$jccl_version_okay" = "xyes" ; then
-            JCCL_CXXFLAGS=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI`
-            JCCL_INCLUDES=`$JCCL_CONFIG $jccl_config_args --includes`
-            JCCL_EXTRA_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI`
-            JCCL_EXTRA_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --linker`
-            JCCL_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI`
-            JCCL_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker`
-            JCCL_PROF_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI --profiled`
-            JCCL_PROF_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --profiled`
-            JCCL_LIBS_STATIC_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static`
-            JCCL_LIBS_STATIC_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static`
-            JCCL_PROF_LIBS_STATIC_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --profiled`
-            JCCL_PROF_LIBS_STATIC_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --profiled`
-
-            JCCL_CXXFLAGS_MIN=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI --min`
-            JCCL_INCLUDES_MIN=`$JCCL_CONFIG $jccl_config_args --includes --min`
-            JCCL_EXTRA_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --min`
-            JCCL_EXTRA_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --linker --min`
-            JCCL_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --min`
-            JCCL_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min`
-            JCCL_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min`
-            JCCL_PROF_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --min --profiled`
-            JCCL_PROF_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min --profiled`
-            JCCL_LIBS_STATIC_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --min`
-            JCCL_LIBS_STATIC_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --min`
-            JCCL_PROF_LIBS_STATIC_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --min --profiled`
-            JCCL_PROF_LIBS_STATIC_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --min --profiled`
+            JCCL_CXXFLAGS=`$FLAGPOLL $jccl_flagpoll_args --cflags `
+            JCCL_LIBS=`$FLAGPOLL $jccl_flagpoll_args --get-libs`
+            JCCL_EXTRA_LIBS=`$FLAGPOLL $jccl_flagpoll_args --get-extra-libs`
+            JCCL_PROF_LIBS=`$FLAGPOLL $jccl_flagpoll_args --get-profiled-libs`
+            JCCL_LIBS_STATIC=`$FLAGPOLL $jccl_flagpoll_args --get-static-libs`
+            JCCL_PROF_LIBS_STATIC=`$FLAGPOLL $jccl_flagpoll_args --get-profiled-static-libs`
 
             ifelse([$2], , :, [$2])
          fi
@@ -199,27 +129,11 @@ AC_DEFUN([JCCL_PATH_CXX],
    fi
 
    AC_SUBST([JCCL_CXXFLAGS])
-   AC_SUBST([JCCL_LIBS_CC])
-   AC_SUBST([JCCL_LIBS_LD])
-   AC_SUBST([JCCL_PROF_LIBS_CC])
-   AC_SUBST([JCCL_PROF_LIBS_LD])
-   AC_SUBST([JCCL_LIBS_STATIC_LD])
-   AC_SUBST([JCCL_LIBS_STATIC_CC])
-   AC_SUBST([JCCL_PROF_LIBS_STATIC_LD])
-   AC_SUBST([JCCL_PROF_LIBS_STATIC_CC])
-   AC_SUBST([JCCL_EXTRA_LIBS_CC])
-   AC_SUBST([JCCL_EXTRA_LIBS_LD])
-
-   AC_SUBST([JCCL_CXXFLAGS_MIN])
-   AC_SUBST([JCCL_INCLUDES_MIN])
-   AC_SUBST([JCCL_LIBS_CC_MIN])
-   AC_SUBST([JCCL_LIBS_LD_MIN])
-   AC_SUBST([JCCL_PROF_LIBS_CC_MIN])
-   AC_SUBST([JCCL_PROF_LIBS_LD_MIN])
-   AC_SUBST([JCCL_LIBS_STATIC_CC_MIN])
-   AC_SUBST([JCCL_LIBS_STATIC_LD_MIN])
-   AC_SUBST([JCCL_PROF_LIBS_STATIC_CC_MIN])
-   AC_SUBST([JCCL_PROF_LIBS_STATIC_LD_MIN])
+   AC_SUBST([JCCL_LIBS])
+   AC_SUBST([JCCL_PROF_LIBS])
+   AC_SUBST([JCCL_LIBS_STATIC])
+   AC_SUBST([JCCL_PROF_LIBS_STATIC])
+   AC_SUBST([JCCL_EXTRA_LIBS])
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -234,11 +148,11 @@ AC_DEFUN([JCCL_PATH_JAVA],
 
    JCCL_JARS=''
 
-   if test "x$JCCL_CONFIG" = "xno" ; then
+   if test "x$FLAGPOLL" = "xno" ; then
       ifelse([$3], , :, [$3])
    else
       AC_MSG_CHECKING([whether JCCL Java API is available])
-      has_java=`$JCCL_CONFIG --has-java`
+      has_java=`$FLAGPOLL $jccl_flagpoll_args --get-java-api-available`
 
       if test "x$has_java" = "xY" ; then
          AC_MSG_RESULT([yes])
@@ -249,7 +163,7 @@ AC_DEFUN([JCCL_PATH_JAVA],
          fi
 
          if test "x$jccl_version_okay" = "xyes" ; then
-            JCCL_JARS="`$JCCL_CONFIG $jccl_config_args --jars`"
+            JCCL_JARS="`$FLAGPOLL $jccl_flagpoll_args --get-jars`"
 
             ifelse([$2], , :, [$2])
          fi
@@ -268,23 +182,10 @@ dnl
 dnl Tests for JCCL C++ and Java APIs and then defines the following
 dnl variables:
 dnl     JCCL_CXXFLAGS
-dnl     JCCL_CXXFLAGS_MIN
-dnl     JCCL_LIBS_LD
-dnl     JCCL_LIBS_LD_MIN
-dnl     JCCL_LIBS_STATIC_LD
-dnl     JCCL_LIBS_STATIC_LD_MIN
-dnl     JCCL_LIBS_CC
-dnl     JCCL_LIBS_CC_MIN
-dnl     JCCL_LIBS_STATIC_CC
-dnl     JCCL_LIBS_STATIC_CC_MIN
-dnl     JCCL_PROF_LIBS_LD
-dnl     JCCL_PROF_LIBS_LD_MIN
-dnl     JCCL_PROF_LIBS_STATIC_LD
-dnl     JCCL_PROF_LIBS_STATIC_LD_MIN
-dnl     JCCL_PROF_LIBS_CC
-dnl     JCCL_PROF_LIBS_CC_MIN
-dnl     JCCL_PROF_LIBS_STATIC_CC
-dnl     JCCL_PROF_LIBS_STATIC_CC_MIN
+dnl     JCCL_LIBS
+dnl     JCCL_LIBS_STATIC
+dnl     JCCL_PROF_LIBS
+dnl     JCCL_PROF_LIBS_STATIC
 dnl     JCCL_JARS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([JCCL_PATH],
