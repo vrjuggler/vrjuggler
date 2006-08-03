@@ -449,9 +449,9 @@ VPR_PATH([1.1.23], [BUILD_CXX='Y'],
          [AC_MSG_WARN([*** VPR required for Tweek C++ API ***])
           BUILD_CXX='N'])
 
-if test "x$BUILD_CXX" = "xY" ; then
-   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-fi
+#if test "x$BUILD_CXX" = "xY" ; then
+#   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+#fi
 
 AH_TEMPLATE([TWEEK_INCLUDE_CORBA_H],
    [Define to include the main CORBA header file -- for example: <omniORB3/CORBA.h>])
@@ -1327,14 +1327,6 @@ esac
 tweek_cxx_orb_root="$cxx_orb_root"
 tweek_extra_ldflags="$EXTRA_LDFLAGS"
 
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-   tweek32_flags='-n32'
-   tweek64_flags='-64'
-elif test "x$GCC" = "xyes" ; then
-   tweek32_flags='-m32'
-   tweek64_flags='-m64'
-fi
-
 jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar liquidlnf.jar looks.jar jaxen-core.jar jaxen-jdom.jar jdom.jar saxpath.jar xalan.jar xerces.jar xml-apis.jar'
 ext_jars='wizard.jar ui.jar'
 
@@ -1387,7 +1379,6 @@ AC_SUBST(IDL_CLIENT_EXT)
 AC_SUBST(EXTRA_DEFS)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
-AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
 AC_SUBST(BUILD_JNI)
@@ -1472,7 +1463,7 @@ AC_SUBST(tweek_idlgendir_python)
 VJ_MTREE_LIB_GEN(TWEEK, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
-   tweek-config
+   tweek.fpc
    Makefile
    Makefile.inc
    common.defs.mk
@@ -1513,8 +1504,7 @@ AC_CONFIG_FILES([
    mtree/TWEEK.python.dist
    mtree/TWEEK.test.dist
    VARS.pl
-   ],
-   [chmod a+x tweek-config])
+   ])
 
    AC_CONFIG_COMMANDS([permission], [chmod a+x java/tweek.sh])
 
