@@ -1043,15 +1043,6 @@ esac
 vpr_extra_cxxflags=''
 vpr_extra_include_dirs=''
 
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    vpr32_flags='-n32'
-    vpr64_flags='-64'
-    vpr_extra_include_dirs='boost/compatibility/cpp_c_headers'
-elif test "x$GCC" = "xyes" ; then
-    vpr32_flags='-m32'
-    vpr64_flags='-m64'
-fi
-
 includedir="$includedir/$HEADER_VERSION"
 
 DPP_SUBST
@@ -1097,6 +1088,12 @@ AC_SUBST(DYLIB_DEP_FILES)
 AC_SUBST(UUID_DEFS)
 AC_SUBST(USE_LEACH_UUID)
 
+AC_SUBST(ABI_FLAGS)
+
+AC_SUBST(PLATFORM_SDK)
+AC_SUBST(target_cpu)
+AC_SUBST(ABI_LIST)
+
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
@@ -1111,8 +1108,6 @@ AC_SUBST(vpr_extra_include_dirs)
 AC_SUBST(vpr_extra_ldflags_compiler)
 AC_SUBST(vpr_extra_ldflags_linker)
 AC_SUBST(vpr_extra_libs)
-AC_SUBST(vpr32_flags)
-AC_SUBST(vpr64_flags)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -1121,7 +1116,7 @@ AC_SUBST(vpr64_flags)
 VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
-   vpr-config
+   vpr.fpc
    Makefile
    Makefile.inc
    common.defs.mk
@@ -1192,7 +1187,6 @@ AC_CONFIG_FILES([
    mtree/VPR.install.dist
    mtree/VPR.test.dist
    VARS.pl
-   ],
-   [chmod a+x vpr-config])
+   ])
 
 AC_OUTPUT
