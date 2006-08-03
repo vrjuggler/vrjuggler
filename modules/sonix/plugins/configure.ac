@@ -144,8 +144,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.23], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
-         [AC_MSG_ERROR([*** VPR required for Sonix plug-ins ***])])
+VPR_PATH([1.1.23], ,[AC_MSG_ERROR([*** VPR required for Sonix plug-ins ***])])
 
 SNX_PATH([1.1.4], [BUILD_PLUGINS='Y'],
          [AC_MSG_WARN([*** Sonix required for Sonix plug-ins ***])
@@ -297,9 +296,9 @@ fi
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS_MIN $SNX_CXXFLAGS_MIN"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $SNX_CXXFLAGS_MIN"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_INCLUDES_MIN $SNX_INCLUDES_MIN"
+DEPEND_FLAGS="$VPR_INCLUDES $SNX_INCLUDES_MIN"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"

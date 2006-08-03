@@ -36,7 +36,6 @@
 #ifndef _SNX_DEBUG_H_
 #define _SNX_DEBUG_H_
 
-//  #define VJ_DEBUG  Defined in vjConfig.h
 #include <vpr/Util/Debug.h>
 #include <stdlib.h>
 #include <vpr/vpr.h>

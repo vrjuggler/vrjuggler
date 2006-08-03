@@ -128,8 +128,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.23], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
-         [AC_MSG_ERROR([*** VPR required for Sonix ***])])
+VPR_PATH([1.1.23], , [AC_MSG_ERROR([*** VPR required for Sonix ***])])
 
 # find and append GMTL flags...
 snx_save_CPPFLAGS="$CPPFLAGS"
@@ -186,9 +185,9 @@ else
 fi
 
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS_MIN $GMTL_INCLUDES"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $GMTL_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_INCLUDES_MIN $GMTL_INCLUDES"
+DEPEND_FLAGS="$VPR_CXXFLAGS $GMTL_INCLUDES"
 snx_cxxflags="$STDFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -234,11 +233,11 @@ UNIX_SNXROOT_ABS="$SNXROOT_ABS"
 # $APP_EXTRA_LIBS must list all the libraries need to link a Sonix-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
-   APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+   APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
    APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
 else
-   APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
-   APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
+   APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
+   APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS $LIBS $VPR_EXTRA_LIBS"
 fi
 
 # Put together the basic information needed to compile Sonix applications.
@@ -358,7 +357,6 @@ AC_SUBST(UNIX_SNXROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SNXROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
-AC_SUBST(VPR_SUBSYSTEM)
 AC_SUBST(SNX_SHARE_DIR)
 
 AC_SUBST(VERSION_DOT)
@@ -402,7 +400,7 @@ AC_SUBST(snx64_flags)
 VJ_MTREE_LIB_GEN(SNX, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
-   sonix-config
+   sonix.fpc
    Makefile
    Makefile.inc
    common.defs.mk
@@ -416,7 +414,7 @@ AC_CONFIG_FILES([
    mtree/SNX.install.dist
    mtree/SNX.samples.dist
    VARS.pl
-   ],
-   [chmod a+x sonix-config])
+   ]
+   )
 
 AC_OUTPUT
