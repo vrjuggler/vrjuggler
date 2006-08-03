@@ -43,144 +43,74 @@ AC_DEFUN([VPR_PATH],
     DPP_PREREQ([2.0.1])
 
     dnl Get the cflags and libraries from the vpr-config script
-    AC_ARG_WITH(vpr,
-                [  --with-vpr=<PATH>       Directory where VPR is
-                          installed (optional)            [No default]],
-                vpr_config_prefix="$withval", vpr_config_prefix="")
-    AC_ARG_WITH(vpr-exec-prefix,
-                [  --with-vpr-exec-prefix=<PATH>
-                          Exec prefix where VPR is
-                          installed (optional)            [No default]],
-                vpr_config_exec_prefix="$withval", vpr_config_exec_prefix="")
+    AC_ARG_WITH(vpr-meta-file,
+                [  --with-vpr-meta-file=<PATH>       Flagpoll metadata file
+                          for VPR (optional)            [No default]],
+                vpr_meta_file="$withval", vpr_meta_file="")
 
-    if test "x$vpr_config_exec_prefix" != "x" ; then
-        vpr_config_args="$vpr_config_args --exec-prefix=$vpr_config_exec_prefix"
-
-        if test x${VPR_CONFIG+set} != xset ; then
-            VPR_CONFIG="$vpr_config_exec_prefix/bin/vpr-config"
-        fi
+    dnl See if the user specified where to find vapor
+    dnl if they didn't take a guess for them
+    if test "x$vpr_meta_file" != "x" ; then
+        vpr_flagpoll_args="--from-file=$vpr_meta_file"
+    else
+        vpr_flagpoll_args="--from-file=$instlinks/share/flagpoll/vpr.fpc"
     fi
 
-    if test "x$vpr_config_prefix" != "x" ; then
-        vpr_config_args="$vpr_config_args --prefix=$vpr_config_prefix"
+    vpr_flagpoll_args="vpr $vpr_flagpoll_args"
 
-        if test x${VPR_CONFIG+set} != xset ; then
-            VPR_CONFIG="$vpr_config_prefix/bin/vpr-config"
-        fi
-    fi
-
-    if test "x$VPR_BASE_DIR" != "x" ; then
-        vpr_config_args="$vpr_config_args --prefix=$VPR_BASE_DIR"
-
-        if test x${VPR_CONFIG+set} != xset ; then
-            VPR_CONFIG="$VPR_BASE_DIR/bin/vpr-config"
-        fi
-    fi
-
-    AC_PATH_PROG(VPR_CONFIG, vpr-config, no)
+    AC_PATH_PROG(FLAGPOLL, flagpoll, no)
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
 
-    dnl Do a sanity check to ensure that $VPR_CONFIG actually works.
-    if ! (eval $VPR_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
-        VPR_CONFIG='no'
+    dnl Do a sanity check to ensure that all is well
+    if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
+        FLAGPOLL='no'
     fi
 
     no_vpr=''
-    if test "x$VPR_CONFIG" = "xno" ; then
+    if test "x$FLAGPOLL" = "xno" ; then
         no_vpr=yes
     else
-        VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI`
-        VPR_INCLUDES=`$VPR_CONFIG $vpr_config_args --includes`
-        VPR_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker`"
-        VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI`"
-        VPR_PROF_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --profiled`"
-        VPR_PROF_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --profiled`"
-        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static`"
-        VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static`"
-        VPR_PROF_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --profiled`"
-        VPR_PROF_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static --profiled`"
-        VPR_EXTRA_LIBS_CC=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
-        VPR_EXTRA_LIBS_LD=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker`
+        VPR_CXXFLAGS="`$FLAGPOLL $vpr_flagpoll_args --cflags`"
+        VPR_LIBS="`$FLAGPOLL $vpr_flagpoll_args --get-libs`"
+        VPR_PROF_LIBS="`$FLAGPOLL $vpr_flagpoll_args --get-profiled-libs`"
+        VPR_LIBS_STATIC="`$FLAGPOLL $vpr_flagpoll_args --get-static-libs`"
+        VPR_PROF_LIBS_STATIC="`$FLAGPOLL $vpr_flagpoll_args --get-profiled-static-libs`"
+        VPR_EXTRA_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-extra-libs`
 
-        VPR_CXXFLAGS_MIN=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI --min`
-        VPR_INCLUDES_MIN=`$VPR_CONFIG $vpr_config_args --includes --min`
-        VPR_LIBS_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --min`"
-        VPR_LIBS_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --min`"
-        VPR_PROF_LIBS_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --min --profiled`"
-        VPR_PROF_LIBS_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --min --profiled`"
-        VPR_LIBS_STATIC_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --min`"
-        VPR_LIBS_STATIC_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --static --min`"
-        VPR_PROF_LIBS_STATIC_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --min --profiled`"
-        VPR_PROF_LIBS_STATIC_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --static --min --profiled`"
-        VPR_EXTRA_LIBS_CC_MIN=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --min`
-        VPR_EXTRA_LIBS_LD_MIN=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker --min`
-        VPR_VERSION=`$VPR_CONFIG --version`
+        VPR_SUBSYSTEM=`$FLAGPOLL $vpr_flagpoll_args --get-subsystem`
+        VPR_VERSION=`$FLAGPOLL $vpr_flagpoll_args --modversion`
 
         DPP_VERSION_CHECK_MSG_NO_CACHE([VPR], [$VPR_VERSION],
                                        [$min_vpr_version], [$2], [$3])
     fi
 
     if test "x$no_vpr" != x ; then
-        if test "$VPR_CONFIG" = "no" ; then
+        if test "$FLAGPOLL" = "no" ; then
             echo "*** The vpr-config script installed by VPR could not be found"
             echo "*** If VPR was installed in PREFIX, make sure PREFIX/bin is in"
-            echo "*** your path, or set the VPR_CONFIG environment variable to the"
+            echo "*** your path, or set the FLAGPOLL environment variable to the"
             echo "*** full path to vpr-config."
         fi
 
         VPR_CXXFLAGS=''
-        VPR_LIBS_LD=''
-        VPR_LIBS_CC=''
-        VPR_PROF_LIBS_LD=''
-        VPR_PROF_LIBS_CC=''
-        VPR_LIBS_STATIC_LD=''
-        VPR_LIBS_STATIC_CC=''
-        VPR_PROF_LIBS_STATIC_LD=''
-        VPR_PROF_LIBS_STATIC_CC=''
-        VPR_EXTRA_LIBS_CC=''
-        VPR_EXTRA_LIBS_LD=''
+        VPR_LIBS=''
+        VPR_PROF_LIBS=''
+        VPR_LIBS_STATIC=''
+        VPR_PROF_LIBS_STATIC=''
+        VPR_EXTRA_LIBS=''
 
-        VPR_CXXFLAGS_MIN=''
-        VPR_INCLUDES_MIN=''
-        VPR_LIBS_LD_MIN=''
-        VPR_LIBS_CC_MIN=''
-        VPR_PROF_LIBS_LD_MIN=''
-        VPR_PROF_LIBS_CC_MIN=''
-        VPR_LIBS_STATIC_LD_MIN=''
-        VPR_LIBS_STATIC_CC_MIN=''
-        VPR_PROF_LIBS_STATIC_LD_MIN=''
-        VPR_PROF_LIBS_STATIC_CC_MIN=''
-        VPR_EXTRA_LIBS_CC_MIN=''
-        VPR_EXTRA_LIBS_LD_MIN=''
+        VPR_SUBSYSTEM=''
         VPR_VERSION='-1'
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(VPR_CXXFLAGS)
-    AC_SUBST(VPR_INCLUDES)
-    AC_SUBST(VPR_LIBS_LD)
-    AC_SUBST(VPR_LIBS_CC)
-    AC_SUBST(VPR_PROF_LIBS_LD)
-    AC_SUBST(VPR_PROF_LIBS_CC)
-    AC_SUBST(VPR_LIBS_STATIC_LD)
-    AC_SUBST(VPR_LIBS_STATIC_CC)
-    AC_SUBST(VPR_PROF_LIBS_STATIC_LD)
-    AC_SUBST(VPR_PROF_LIBS_STATIC_CC)
-    AC_SUBST(VPR_EXTRA_LIBS_CC)
-    AC_SUBST(VPR_EXTRA_LIBS_LD)
-    AC_SUBST(VPR_CXXFLAGS_MIN)
+    AC_SUBST(VPR_LIBS)
+    AC_SUBST(VPR_PROF_LIBS)
+    AC_SUBST(VPR_LIBS_STATIC)
+    AC_SUBST(VPR_PROF_LIBS_STATIC)
+    AC_SUBST(VPR_EXTRA_LIBS)
 
-    AC_SUBST(VPR_CXXFLAGS_MIN)
-    AC_SUBST(VPR_INCLUDES_MIN)
-    AC_SUBST(VPR_LIBS_LD_MIN)
-    AC_SUBST(VPR_LIBS_CC_MIN)
-    AC_SUBST(VPR_PROF_LIBS_LD_MIN)
-    AC_SUBST(VPR_PROF_LIBS_CC_MIN)
-    AC_SUBST(VPR_LIBS_STATIC_LD_MIN)
-    AC_SUBST(VPR_LIBS_STATIC_CC_MIN)
-    AC_SUBST(VPR_PROF_LIBS_STATIC_LD_MIN)
-    AC_SUBST(VPR_PROF_LIBS_STATIC_CC_MIN)
-    AC_SUBST(VPR_EXTRA_LIBS_CC_MIN)
-    AC_SUBST(VPR_EXTRA_LIBS_LD_MIN)
+    AC_SUBST(VPR_SUBSYSTEM)
     AC_SUBST(VPR_VERSION)
 ])
