@@ -184,7 +184,7 @@ TWEEK_PATH_JAVA([0.19.2], ,
                 ])
 
 if test "x$BUILD_CXX" = "xY" ; then
-   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+   #VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
    DPP_HAVE_CPPUNIT([1.9.10])
 fi
 
@@ -233,9 +233,9 @@ fi
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS_MIN"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_INCLUDES_MIN"
+DEPEND_FLAGS="$VPR_CXXFLAGS"
 jccl_cxxflags="$STD_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
@@ -284,12 +284,12 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 # $jccl_extra_libs only lists the external (non-Juggler) libraries needed by
 # JCCL.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
     jccl_extra_libs="$LDFLAGS $LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
-    APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
+    APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS $LIBS $VPR_EXTRA_LIBS"
     jccl_extra_libs="$LDFLAGS $LIBS"
 fi
 
@@ -424,7 +424,6 @@ AC_SUBST(UNIX_JCCLROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(JCCLROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
-AC_SUBST(VPR_SUBSYSTEM)
 AC_SUBST(JCCL_SHARE_DIR)
 
 AC_SUBST(VERSION_DOT)
@@ -477,7 +476,7 @@ AC_SUBST(jccl_java_api_jars)
 VJ_MTREE_LIB_GEN([JCCL], [mtree], [$PLATFORM], [$ISA])
 
 AC_CONFIG_FILES([
-   jccl-config
+   jccl.fpc
    Makefile
    Makefile.inc
    common.defs.mk
@@ -511,7 +510,7 @@ AC_CONFIG_FILES([
    mtree/JCCL.test.dist
    mtree/JCCL.tools.dist
    VARS.pl
-   ],
-   [chmod a+x jccl-config])
+   ]
+   )
 
 AC_OUTPUT
