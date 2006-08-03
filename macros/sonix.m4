@@ -38,162 +38,81 @@ dnl SNX_PATH([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Test for SNX and then define the following variables:
 dnl     SNX_CXXFLAGS
-dnl     SNX_CXXFLAGS_MIN
-dnl     SNX_INCLUDES
-dnl     SNX_INCLUDES_MIN
-dnl     SNX_LIBS_CC
-dnl     SNX_LIBS_LD
-dnl     SNX_PROF_LIBS_CC
-dnl     SNX_PROF_LIBS_LD
-dnl     SNX_LIBS_STATIC_CC
-dnl     SNX_LIBS_STATIC_LD
-dnl     SNX_PROF_LIBS_STATIC_CC
-dnl     SNX_PROF_LIBS_STATIC_LD
-dnl     SNX_EXTRA_LIBS_CC
-dnl     SNX_EXTRA_LIBS_LD
+dnl     SNX_LIBS
+dnl     SNX_PROF_LIBS
+dnl     SNX_LIBS_STATIC
+dnl     SNX_PROF_LIBS_STATIC
+dnl     SNX_EXTRA_LIBS
+dnl     SNX_VERSION
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([SNX_PATH],
 [
     DPP_PREREQ([2.0.1])
 
     dnl Get the cflags and libraries from the sonix-config script
-    AC_ARG_WITH(sonix,
-                [  --with-sonix=<PATH>     Directory where Sonix is
-                          installed                       [No default]],
-                sonix_config_prefix="$withval", sonix_config_prefix="")
-    AC_ARG_WITH(sonix-exec-prefix,
-                [  --with-sonix-exec-prefix=<PATH>
-                          Prefix where Sonix executables
-                          are installed (optional)        [No default]],
-                sonix_config_exec_prefix="$withval", sonix_config_exec_prefix="")
+    AC_ARG_WITH(sonix-meta-file,
+                [  --with-sonix-meta-file=<PATH>     Flagpoll metadata file
+                         for Sonix (optional)           [No default]],
+                sonix_meta_file="$withval", sonix_meta_file="")
 
-    if test "x$sonix_config_exec_prefix" != "x" ; then
-        sonix_config_args="$sonix_config_args --exec-prefix=$sonix_config_exec_prefix"
-
-        if test x${SNX_CONFIG+set} != xset ; then
-            SNX_CONFIG="$sonix_config_exec_prefix/bin/sonix-config"
-        fi
+    dnl See if the user specified where to find vapor
+    dnl if they didn't take a guess for them
+    if test "x$sonix_meta_file" != "x" ; then
+        sonix_flagpoll_args="--from-file=$sonix_meta_file"
+    else
+        sonix_flagpoll_args="--from-file=$instlinks/share/flagpoll/sonix.fpc"
     fi
 
-    if test "x$sonix_config_prefix" != "x" ; then
-        sonix_config_args="$sonix_config_args --prefix=$sonix_config_prefix"
+    sonix_flagpoll_args="sonix $vpr_flagpoll_args"
 
-        if test x${SNX_CONFIG+set} != xset ; then
-            SNX_CONFIG="$sonix_config_prefix/bin/sonix-config"
-        fi
-    fi
-
-    if test "x$SNX_BASE_DIR" != "x" ; then
-        sonix_config_args="$sonix_config_args --prefix=$SNX_BASE_DIR"
-
-        if test x${SNX_CONFIG+set} != xset ; then
-            SNX_CONFIG="$SNX_BASE_DIR/bin/sonix-config"
-        fi
-    fi
-
-    AC_PATH_PROG(SNX_CONFIG, sonix-config, no)
+    AC_PATH_PROG(FLAGPOLL, flagpoll, no)
     min_sonix_version=ifelse([$1], ,0.0.1, [$1])
 
-    dnl Do a sanity check to ensure that $SNX_CONFIG actually works.
-    if ! (eval $SNX_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
-        SNX_CONFIG='no'
+    dnl Do a sanity check to ensure that $FLAGPOLL actually works.
+    if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
+        FLAGPOLL='no'
     fi
 
     no_sonix=''
-    if test "x$SNX_CONFIG" = "xno" ; then
+    if test "x$FLAGPOLL" = "xno" ; then
         no_sonix=yes
     else
-        SNX_CXXFLAGS=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI`
-        SNX_INCLUDES=`$SNX_CONFIG $sonix_config_args --includes`
-        SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI`"
-        SNX_LIBS_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker`"
-        SNX_PROF_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --profiled`"
-        SNX_PROF_LIBS_LD="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --profiled`"
-        SNX_LIBS_STATIC_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --static`"
-        SNX_LIBS_STATIC_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker --static`"
-        SNX_PROF_LIBS_STATIC_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --static --profiled`"
-        SNX_PROF_LIBS_STATIC_LD="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --static --profiled`"
-        SNX_EXTRA_LIBS_CC=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
-        SNX_EXTRA_LIBS_LD=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --linker`
-        SNX_VERSION=`$SNX_CONFIG --version`
-
-        SNX_CXXFLAGS_MIN=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI --min`
-        SNX_INCLUDES_MIN=`$SNX_CONFIG $sonix_config_args --includes --min`
-        SNX_LIBS_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --min`"
-        SNX_LIBS_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --min`"
-        SNX_PROF_LIBS_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --min --profiled`"
-        SNX_PROF_LIBS_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --min --profiled`"
-        SNX_LIBS_STATIC_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --static --min`"
-        SNX_LIBS_STATIC_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --static --min`"
-        SNX_PROF_LIBS_STATIC_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --static --profiled --min`"
-        SNX_PROF_LIBS_STATIC_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --static --profiled --min`"
-        SNX_EXTRA_LIBS_CC_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --min`
-        SNX_EXTRA_LIBS_LD_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --min --linker`
+        SNX_CXXFLAGS=`$FLAGPOLL $sonix_flagpoll_args --cflags`
+        SNX_LIBS_LD="`$FLAGPOLL $sonix_flagpoll_args --get-libs`"
+        SNX_PROF_LIBS="`$FLAGPOLL $sonix_flagpoll_args --get-profiled-libs`"
+        SNX_LIBS_STATIC="`$FLAGPOLL $sonix_flagpoll_args --get-static-libs`"
+        SNX_PROF_LIBS_STATIC="`$FLAGPOLL $sonix_flagpoll_args --get-profiled-static-libs`"
+        SNX_EXTRA_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-extra-libs`
+        SNX_VERSION=`$FLAGPOLL $sonix_flagpoll_args --modversion`
 
         DPP_VERSION_CHECK_MSG_NO_CACHE([Sonix], [$SNX_VERSION],
                                        [$min_sonix_version], [$2], [$3])
     fi
 
     if test "x$no_sonix" != x ; then
-        if test "$SNX_CONFIG" = "no" ; then
+        if test "$FLAGPOLL" = "no" ; then
             echo "*** The sonix-config script installed by SNX could not be found"
             echo "*** If SNX was installed in PREFIX, make sure PREFIX/bin is in"
-            echo "*** your path, or set the SNX_CONFIG environment variable to the"
+            echo "*** your path, or set the FLAGPOLL environment variable to the"
             echo "*** full path to sonix-config."
         fi
         SNX_CXXFLAGS=""
-        SNX_INCLUDES=""
-        SNX_LIBS_CC=""
-        SNX_LIBS_LD=""
-        SNX_PROF_LIBS_CC=""
-        SNX_PROF_LIBS_LD=""
-        SNX_LIBS_STATIC_CC=""
-        SNX_LIBS_STATIC_LD=""
-        SNX_PROF_LIBS_STATIC_CC=""
-        SNX_PROF_LIBS_STATIC_LD=""
-        SNX_EXTRA_LIBS_CC=""
-        SNX_EXTRA_LIBS_LD=""
+        SNX_LIBS=""
+        SNX_PROF_LIBS=""
+        SNX_LIBS_STATIC=""
+        SNX_PROF_LIBS_STATIC=""
+        SNX_EXTRA_LIBS=""
         SNX_VERSION="-1"
 
-        SNX_CXXFLAGS_MIN=""
-        SNX_INCLUDES_MIN=""
-        SNX_LIBS_CC_MIN=""
-        SNX_LIBS_LD_MIN=""
-        SNX_PROF_LIBS_CC_MIN=""
-        SNX_PROF_LIBS_LD_MIN=""
-        SNX_LIBS_STATIC_CC_MIN=""
-        SNX_LIBS_STATIC_LD_MIN=""
-        SNX_PROF_LIBS_STATIC_CC_MIN=""
-        SNX_PROF_LIBS_STATIC_LD_MIN=""
-        SNX_EXTRA_LIBS_CC_MIN=""
-        SNX_EXTRA_LIBS_LD_MIN=""
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(SNX_CXXFLAGS)
-    AC_SUBST(SNX_INCLUDES)
-    AC_SUBST(SNX_LIBS_CC)
-    AC_SUBST(SNX_LIBS_LD)
-    AC_SUBST(SNX_PROF_LIBS_CC)
-    AC_SUBST(SNX_PROF_LIBS_LD)
-    AC_SUBST(SNX_LIBS_STATIC_CC)
-    AC_SUBST(SNX_LIBS_STATIC_LD)
-    AC_SUBST(SNX_PROF_LIBS_STATIC_CC)
-    AC_SUBST(SNX_PROF_LIBS_STATIC_LD)
-    AC_SUBST(SNX_EXTRA_LIBS_CC)
-    AC_SUBST(SNX_EXTRA_LIBS_LD)
+    AC_SUBST(SNX_LIBS)
+    AC_SUBST(SNX_PROF_LIBS)
+    AC_SUBST(SNX_LIBS_STATIC)
+    AC_SUBST(SNX_PROF_LIBS_STATIC)
+    AC_SUBST(SNX_EXTRA_LIBS)
     AC_SUBST(SNX_VERSION)
 
-    AC_SUBST(SNX_CXXFLAGS_MIN)
-    AC_SUBST(SNX_INCLUDES_MIN)
-    AC_SUBST(SNX_LIBS_CC_MIN)
-    AC_SUBST(SNX_LIBS_LD_MIN)
-    AC_SUBST(SNX_PROF_LIBS_CC_MIN)
-    AC_SUBST(SNX_PROF_LIBS_LD_MIN)
-    AC_SUBST(SNX_LIBS_STATIC_CC_MIN)
-    AC_SUBST(SNX_LIBS_STATIC_LD_MIN)
-    AC_SUBST(SNX_PROF_LIBS_STATIC_CC_MIN)
-    AC_SUBST(SNX_PROF_LIBS_STATIC_LD_MIN)
-    AC_SUBST(SNX_EXTRA_LIBS_CC_MIN)
-    AC_SUBST(SNX_EXTRA_LIBS_LD_MIN)
 ])
