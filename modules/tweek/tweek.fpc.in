@@ -48,7 +48,7 @@ tweek_extra_ldflags = @tweek_extra_ldflags@
 tweek_extra_libs = @tweek_extra_libs@
 
 libs = ${tweek_ldflags_linker} ${tweek_ldflags_compiler}
-extra_libs = ${tweek_extra_ldflags_linker} ${tweek_extra_ldflags_compiler} ${tweek_extra_libs}
+extra_libs = ${tweek_extra_ldflags} ${tweek_extra_libs}
 
 
 ########################### Public Variables ############################
@@ -63,7 +63,7 @@ Requires: vpr
 Arch: ${ISA}
 Libs: ${libs} ${tweek_libs} ${extra_libs}
 Libs.private: 
-Cflags: ${tweek_cxxflags} ${tweek_extra_cxxflags} -I${includedir} ${tweek_extra_includes}
+Cflags: ${tweek_cxxflags} ${tweek_extra_cxxflags} -I${includedir} ${tweek_extra_include_dirs}
 
 
 ######################### Tweek Specific Flagpoll Variables ###################
@@ -75,9 +75,9 @@ static_libs: ${static_begin} ${libs} ${tweek_libs} ${static_end}
 profiled_libs: ${libs} ${tweek_prof_libs}
 profiled_static_libs: ${static_begin} ${libs} ${tweek_prof_libs} ${static_end}
 cxx_idl: ${CXX_IDL_CMD}
-cxx_idl_flags: ${tweek_idlflags_cxx}
+cxx_idlflags: ${tweek_idlflags_cxx}
 cxx_idlgendir: ${tweek_idlgendir_cxx}
-cxx_idl_incflag: ${tweek_idl_inc_flag_cxx}
+cxx_idlincflag: ${tweek_idl_inc_flag_cxx}
 
 java_api_available: ${BUILD_JAVA}
 java_idl: ${config_java_idl}
@@ -90,8 +90,8 @@ ext_jars: ${tweek_ext_jars}
 
 python_idl_available: ${BUILD_PYTHON_IDL}
 python_idl: ${PYTHON_IDL}
-python_idl_flags: ${tweek_idlflags_python}
+python_idlflags: ${tweek_idlflags_python}
 python_idlgendir: ${tweek_idlgendir_python}
-python_idl_incflag: ${tweek_idl_inc_flag_python}
+python_idlincflag: ${tweek_idl_inc_flag_python}
 
 
