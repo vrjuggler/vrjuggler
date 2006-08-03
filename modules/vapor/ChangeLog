@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-08-03 patrick  Get rid of vpr-config and opt for flagpoll
+                    NEW VERSION: 1.1.25
 2006-07-12 patrick  Changed the DLL name to include the version as part of the
                     base library name on Windows. Implemented automatic
                     linking of the VPR library.
