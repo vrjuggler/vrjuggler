@@ -6,7 +6,6 @@ VERSION_DOT = @VERSION_DOT@
 
 ISA = @ISA@
 ABI = @ABI@
-SUBSYSTEM = @SUBSYSTEM@
 MAJOR_VERSION = @MAJOR_VERSION@
 MINOR_VERSION = @MINOR_VERSION@
 MICRO_VERSION = @MICRO_VERSION@
@@ -27,8 +26,6 @@ USE_GCC = @USE_GCC@
 includedir = @includedir@
 libdir = @libdir@
 
-subsystem_cxxflags = @subsystem_cxxflags@
-subsystem_libs = @subsystem_libs@
 
 static_begin = @static_begin@
 static_end = @static_end@
@@ -42,7 +39,6 @@ snx_libs =  @snx_libs@
 snx_prof_libs = @snx_prof_libs@
 
 snx_extra_cxxflags = @snx_extra_cxxflags@
-snx_extra_include_dirs = @snx_extra_include_dirs@
 
 snx_extra_ldflags_compiler = @snx_extra_ldflags_compiler@
 snx_extra_ldflags_linker = @snx_extra_ldflags_linker@
@@ -63,7 +59,7 @@ Version: ${snx_version}
 Provides: sonix
 Requires: vpr
 Arch: ${ISA}
-Cflags: ${snx_cxxflags} ${snx_extra_cxxflags} -I${includedir} ${snx_extra_includes}
+Cflags: ${snx_cxxflags} ${snx_extra_cxxflags} -I${includedir}
 Libs: ${libs} ${snx_libs} ${extra_libs}
 Libs.private: 
 

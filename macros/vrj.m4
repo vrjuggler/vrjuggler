@@ -29,128 +29,77 @@ dnl VRJUGGLER_PATH([minimum-version, [action-if-found [, action-if-not-found [, 
 dnl
 dnl Test for VR Juggler and then define the following variables:
 dnl     VRJ_CXXFLAGS
-dnl     VRJ_CXXFLAGS_MIN
-dnl     VRJ_INCLUDES
-dnl     VRJ_INCLUDES_MIN
-dnl     VRJ_LIBS_CC
-dnl     VRJ_LIBS_LD
-dnl     VRJ_LIBS_STATIC_CC
-dnl     VRJ_LIBS_STATIC_LD
-dnl     VRJ_EXTRA_LIBS_CC
-dnl     VRJ_EXTRA_LIBS_LD
+dnl     VRJ_LIBS
+dnl     VRJ_PROF_LIBS
+dnl     VRJ_LIBS_STATIC
+dnl     VRJ_PROF_LIBS_STATIC
+dnl     VRJ_EXTRA_LIBS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([VRJUGGLER_PATH],
 [
     DPP_PREREQ([2.0.1])
 
     dnl Get the cflags and libraries from the vrjuggler-config script
-    AC_ARG_WITH(vrjuggler,
-                [  --with-vrjuggler=<PATH> Directory where VR Juggler is
-                          installed                       [No default]],
+    AC_ARG_WITH(vrjuggler-meta-file,
+                [  --with-vrjuggler-meta-file=<PATH> Flagpoll metadata file
+                         for VR Juggler                       [No default]],
                 vrj_config_prefix="$withval", vrj_config_prefix="")
-    AC_ARG_WITH(vrjuggler-exec-prefix,
-                [  --with-vrjuggler-exec-prefix=<PATH>
-                          Exec prefix where VR Juggler is
-                          installed (optional)            [No default]],
-                vrj_config_exec_prefix="$withval", vrj_config_exec_prefix="")
 
-    if test "x$vrj_config_exec_prefix" != "x" ; then
-        vrj_config_args="$vrj_config_args --exec-prefix=$vrj_config_exec_prefix"
-
-        if test x${VRJ_CONFIG+set} != xset ; then
-            VRJ_CONFIG="$vrj_config_exec_prefix/bin/vrjuggler-config"
-        fi
+    dnl See if the user specified where to find the meta file 
+    dnl if they didn't take a guess for them
+    if test "x$vrj_meta_file" != "x" ; then
+        vrj_flagpoll_args="--from-file=$vrj_meta_file"
+    else
+        vrj_flagpoll_args="--from-file=$instlinks/share/flagpoll/vrjuggler.fpc"
     fi
 
-    if test "x$vrj_config_prefix" != "x" ; then
-        vrj_config_args="$vrj_config_args --prefix=$vrj_config_prefix"
+    vrj_flagpoll_args="vrjuggler $vrj_flagpoll_args --no-deps"
 
-        if test x${VRJ_CONFIG+set} != xset ; then
-            VRJ_CONFIG="$vrj_config_prefix/bin/vrjuggler-config"
-        fi
-    fi
-
-    if test "x$VJ_BASE_DIR" != "x" ; then
-        vrj_config_args="$vrj_config_args --prefix=$VJ_BASE_DIR"
-
-        if test x${VRJ_CONFIG+set} != xset ; then
-            VRJ_CONFIG="$VJ_BASE_DIR/bin/vrjuggler-config"
-        fi
-    fi
-
-    AC_PATH_PROG(VRJ_CONFIG, vrjuggler-config, no)
+    AC_PATH_PROG(FLAGPOLL, flagpoll, no)
     min_vrj_version=ifelse([$1], ,0.0.1,$1)
 
-    dnl Do a sanity check to ensure that $VRJ_CONFIG actually works.
-    if ! (eval $VRJ_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
-        VRJ_CONFIG='no'
+    dnl Do a sanity check to ensure that $FLAGPOLL actually works.
+    if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
+        FLAGPOLL='no'
     fi
 
     no_vrj=''
-    if test "x$VRJ_CONFIG" = "xno" ; then
+    if test "x$FLAGPOLL" = "xno" ; then
         no_vrj=yes
     else
-dnl        VRJ_LIBS="`$VRJ_CONFIG $vrj_config_args --libs $ABI` $VRJ_EXTRA_LIBS"
-dnl        VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` $VRJ_EXTRA_LIBS"
-
-        VRJ_CXXFLAGS=`$VRJ_CONFIG $vrj_config_args --cxxflags $ABI`
-        VRJ_INCLUDES=`$VRJ_CONFIG $vrj_config_args --includes`
-        VRJ_LIBS_CC="`$VRJ_CONFIG $vrj_config_args --libs $ABI`"
-        VRJ_LIBS_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI`"
-        VRJ_LIBS_STATIC_CC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static`"
-        VRJ_LIBS_STATIC_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI --static`"
-        VRJ_EXTRA_LIBS_CC=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI`
-        VRJ_EXTRA_LIBS_LD=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --linker`
-        VRJ_VERSION=`$VRJ_CONFIG --version`
-
-        VRJ_CXXFLAGS_MIN=`$VRJ_CONFIG $vrj_config_args --cxxflags $ABI --min`
-        VRJ_INCLUDES_MIN=`$VRJ_CONFIG $vrj_config_args --includes --min`
-        VRJ_LIBS_CC_MIN="`$VRJ_CONFIG $vrj_config_args --libs $ABI --min`"
-        VRJ_LIBS_LD_MIN="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI --min`"
-        VRJ_EXTRA_LIBS_CC_MIN=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --min`
-        VRJ_EXTRA_LIBS_LD_MIN=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --min --linker`
+        VRJ_CXXFLAGS=`$FLAGPOLL $vrj_flagpoll_args -cflags`
+        VRJ_LIBS="`$FLAGPOLL $vrj_flagpoll_args --get-libs`"
+        VRJ_PROF_LIBS="`$FLAGPOLL $vrj_flagpoll_args --get-profiled-libs`"
+        VRJ_LIBS_STATIC="`$FLAGPOLL $vrj_flagpoll_args --get-static-libs`"
+        VRJ_PROF_LIBS_STATIC="`$FLAGPOLL $vrj_flagpoll_args --get-profiled-static-libs`"
+        VRJ_EXTRA_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-extra-libs`
+        VRJ_VERSION=`$FLAGPOLL --version`
 
         DPP_VERSION_CHECK_MSG_NO_CACHE([VR Juggler], [$VRJ_VERSION],
                                        [$min_vrj_version], [$2], [$3])
     fi
 
     if test "x$no_vrj" != x ; then
-        if test "$VRJ_CONFIG" = "no" ; then
-            echo "*** The vrjuggler-config script installed by VR Juggler could not be found"
-            echo "*** If VR Juggler was installed in PREFIX, make sure PREFIX/bin is in"
-            echo "*** your path, or set the VRJ_CONFIG environment variable to the"
-            echo "*** full path to vrjuggler-config."
+        if test "$FLAGPOLL" = "no" ; then
+           echo "*** Flagpoll is required to build VR Juggler."
+           echo "*** Please check that the PATH variable is set to "
+           echo "*** include the proper path to flagpoll."
         fi
         VRJ_CXXFLAGS=""
-        VRJ_CXXFLAGS_MIN=""
-        VRJ_INCLUDES=""
-        VRJ_INCLUDES_MIN=""
-        VRJ_LIBS_CC=""
-        VRJ_LIBS_LD=""
-        VRJ_LIBS_STATIC_CC=""
-        VRJ_LIBS_STATIC_LD=""
-        VRJ_EXTRA_LIBS_CC=""
-        VRJ_EXTRA_LIBS_LD=""
-        VRJ_EXTRA_LIBS_CC_MIN=""
-        VRJ_EXTRA_LIBS_LD_MIN=""
+        VRJ_LIBS=""
+        VRJ_PROF_LIBS=""
+        VRJ_LIBS_STATIC=""
+        VRJ_PROF_LIBS_STATIC=""
+        VRJ_EXTRA_LIBS=""
         VRJ_VERSION="-1"
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(VRJ_CXXFLAGS)
-    AC_SUBST(VRJ_INCLUDES)
-    AC_SUBST(VRJ_LIBS_CC)
-    AC_SUBST(VRJ_LIBS_LD)
-    AC_SUBST(VRJ_LIBS_STATIC_CC)
-    AC_SUBST(VRJ_LIBS_STATIC_LD)
-    AC_SUBST(VRJ_EXTRA_LIBS_CC)
-    AC_SUBST(VRJ_EXTRA_LIBS_LD)
+    AC_SUBST(VRJ_LIBS)
+    AC_SUBST(VRJ_PROF_LIBS)
+    AC_SUBST(VRJ_LIBS_STATIC)
+    AC_SUBST(VRJ_PROF_LIBS_STATIC)
+    AC_SUBST(VRJ_EXTRA_LIBS)
     AC_SUBST(VRJ_VERSION)
-
-    AC_SUBST(VRJ_CXXFLAGS_MIN)
-    AC_SUBST(VRJ_INCLUDES_MIN)
-    AC_SUBST(VRJ_LIBS_CC_MIN)
-    AC_SUBST(VRJ_LIBS_LD_MIN)
-    AC_SUBST(VRJ_EXTRA_LIBS_CC_MIN)
-    AC_SUBST(VRJ_EXTRA_LIBS_LD_MIN)
 ])

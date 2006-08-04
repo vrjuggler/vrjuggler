@@ -74,7 +74,7 @@ dnl                           compile and link tests that Autconf performs.
 dnl     PLATFORM_SDK        - Subset of $ABI_FLAGS providing information about
 dnl                           the platform SDK required for building the
 dnl                           desired ABI/ISA combination(s).
-dnl     UNIVERSAL_ARHC_LIST - The list of architectures that will be supported
+dnl     UNIVERSAL_ARCH_LIST - The list of architectures that will be supported
 dnl                           by universal binaries.
 dnl     DPP_ABI_TYPE        - The argument given to --with-abi.
 dnl ===========================================================================

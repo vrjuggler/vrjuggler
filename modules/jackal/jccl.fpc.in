@@ -6,7 +6,6 @@ VERSION_DOT = @VERSION_DOT@
 
 ISA = @ISA@
 ABI = @ABI@
-SUBSYSTEM = @SUBSYSTEM@
 MAJOR_VERSION = @MAJOR_VERSION@
 MINOR_VERSION = @MINOR_VERSION@
 MICRO_VERSION = @MICRO_VERSION@
@@ -25,11 +24,6 @@ APP_BASE_DIR_INST = @APP_BASE_DIR_INST@
 USE_GCC = @USE_GCC@
 includedir = @includedir@
 libdir = @libdir@
-
-subsystem_cxxflags = @subsystem_cxxflags@
-subsystem_libs = @subsystem_libs@
-
-
 
 jccl_java_api_jars = @jccl_java_api_jars@
 BUILD_CXX = @BUILD_CXX@

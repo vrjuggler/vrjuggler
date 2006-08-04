@@ -6,7 +6,6 @@ VERSION_DOT = @VERSION_DOT@
 
 ISA = @ISA@
 ABI = @ABI@
-SUBSYSTEM = @SUBSYSTEM@
 MAJOR_VERSION = @MAJOR_VERSION@
 MINOR_VERSION = @MINOR_VERSION@
 MICRO_VERSION = @MICRO_VERSION@
@@ -27,9 +26,6 @@ USE_GCC = @USE_GCC@
 includedir = @includedir@
 libdir = @libdir@
 
-subsystem_cxxflags = @subsystem_cxxflags@
-subsystem_libs = @subsystem_libs@
-
 static_begin = @static_begin@
 static_end = @static_end@
 
@@ -42,7 +38,6 @@ gadget_libs =  @gadget_libs@
 gadget_prof_libs = @gadget_prof_libs@
 
 gadget_extra_cxxflags = @gadget_extra_cxxflags@
-gadget_extra_include_dirs = @gadget_extra_include_dirs@
 
 gadget_extra_ldflags_compiler = @gadget_extra_ldflags_compiler@
 gadget_extra_ldflags_linker = @gadget_extra_ldflags_linker@
@@ -65,7 +60,7 @@ Version: ${gadget_version}
 Provides: gadgeteer
 Requires: vpr
 Arch: ${ISA}
-Cflags: ${gadget_cxxflags} ${gadget_extra_cxxflags} -I${includedir} ${gadget_extra_includes}
+Cflags: ${gadget_cxxflags} ${gadget_extra_cxxflags} -I${includedir}
 Libs: ${libs} ${gadget_libs} ${extra_libs}
 Libs.private: 
 
