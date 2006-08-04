@@ -55,7 +55,7 @@ AC_DEFUN([SNX_PATH],
                          for Sonix (optional)           [No default]],
                 sonix_meta_file="$withval", sonix_meta_file="")
 
-    dnl See if the user specified where to find vapor
+    dnl See if the user specified where to find the meta file 
     dnl if they didn't take a guess for them
     if test "x$sonix_meta_file" != "x" ; then
         sonix_flagpoll_args="--from-file=$sonix_meta_file"
@@ -63,7 +63,7 @@ AC_DEFUN([SNX_PATH],
         sonix_flagpoll_args="--from-file=$instlinks/share/flagpoll/sonix.fpc"
     fi
 
-    sonix_flagpoll_args="sonix $vpr_flagpoll_args"
+    sonix_flagpoll_args="sonix $sonix_flagpoll_args"
 
     AC_PATH_PROG(FLAGPOLL, flagpoll, no)
     min_sonix_version=ifelse([$1], ,0.0.1, [$1])
@@ -91,10 +91,9 @@ AC_DEFUN([SNX_PATH],
 
     if test "x$no_sonix" != x ; then
         if test "$FLAGPOLL" = "no" ; then
-            echo "*** The sonix-config script installed by SNX could not be found"
-            echo "*** If SNX was installed in PREFIX, make sure PREFIX/bin is in"
-            echo "*** your path, or set the FLAGPOLL environment variable to the"
-            echo "*** full path to sonix-config."
+            echo "*** The metadata file that flagpoll uses to lookup information"
+            echo "*** about sonix is missing.  Please specify where it is"
+            echo "*** if you are not using the global build."
         fi
         SNX_CXXFLAGS=""
         SNX_LIBS=""
