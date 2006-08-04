@@ -67,7 +67,7 @@ Cflags: ${snx_cxxflags} ${snx_extra_cxxflags} -I${includedir} ${snx_extra_includ
 Libs: ${libs} ${snx_libs} ${extra_libs}
 Libs.private: 
 
-######################### Vapor Specific Flagpoll Variables ###################
+######################### Sonix Specific Flagpoll Variables ###################
 libs: ${libs} ${snx_libs}
 extra_libs : ${extra_libs}
 static_libs: ${static_begin} ${libs} ${snx_libs} ${static_end}
