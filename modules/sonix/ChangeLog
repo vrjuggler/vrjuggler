@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-04-2006 patrickh    Use flagpoll for building against sonix instead of
+                        sonix-config.
+                        NEW VERSION: 1.1.6
 Jul-12-2006 patrick     Changed the DLL name to include the version as part of
                         the base library name on Windows. Implemented automatic
                         linking of the Sonix library.
