@@ -56,7 +56,7 @@ AC_DEFUN([VPR_PATH],
         vpr_flagpoll_args="--from-file=$instlinks/share/flagpoll/vpr.fpc"
     fi
 
-    vpr_flagpoll_args="vpr $vpr_flagpoll_args"
+    vpr_flagpoll_args="vpr $vpr_flagpoll_args --no-deps"
 
     AC_PATH_PROG(FLAGPOLL, flagpoll, no)
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
@@ -86,10 +86,9 @@ AC_DEFUN([VPR_PATH],
 
     if test "x$no_vpr" != x ; then
         if test "$FLAGPOLL" = "no" ; then
-            echo "*** The vpr-config script installed by VPR could not be found"
-            echo "*** If VPR was installed in PREFIX, make sure PREFIX/bin is in"
-            echo "*** your path, or set the FLAGPOLL environment variable to the"
-            echo "*** full path to vpr-config."
+           echo "*** Flagpoll is required to build vapor."
+           echo "*** Please check that the PATH variable is set to "
+           echo "*** include the proper path to flagpoll."
         fi
 
         VPR_CXXFLAGS=''

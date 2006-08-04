@@ -63,7 +63,7 @@ AC_DEFUN([SNX_PATH],
         sonix_flagpoll_args="--from-file=$instlinks/share/flagpoll/sonix.fpc"
     fi
 
-    sonix_flagpoll_args="sonix $sonix_flagpoll_args"
+    sonix_flagpoll_args="sonix $sonix_flagpoll_args --no-deps"
 
     AC_PATH_PROG(FLAGPOLL, flagpoll, no)
     min_sonix_version=ifelse([$1], ,0.0.1, [$1])
@@ -91,9 +91,9 @@ AC_DEFUN([SNX_PATH],
 
     if test "x$no_sonix" != x ; then
         if test "$FLAGPOLL" = "no" ; then
-            echo "*** The metadata file that flagpoll uses to lookup information"
-            echo "*** about sonix is missing.  Please specify where it is"
-            echo "*** if you are not using the global build."
+           echo "*** Flagpoll is required to build sonix."
+           echo "*** Please check that the PATH variable is set to "
+           echo "*** include the proper path to flagpoll."
         fi
         SNX_CXXFLAGS=""
         SNX_LIBS=""

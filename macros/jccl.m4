@@ -50,10 +50,9 @@ AC_DEFUN([_JCCL_PATH_SETUP],
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
         FLAGPOLL='no'
-        echo "*** The flagpoll metadata file installed by JCCL could not be found"
-        echo "*** If JCCL was installed in PREFIX, make sure PREFIX/bin is in"
-        echo "*** your path, or set the FLAGPOLL environment variable to the"
-        echo "*** full path to flagpoll."
+        echo "*** Flagpoll is required to build jackal."
+        echo "*** Please check that the PATH variable is set to "
+        echo "*** include the proper path to flagpoll."
     fi
 ])
 

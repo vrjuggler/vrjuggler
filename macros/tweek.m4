@@ -50,10 +50,9 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
         FLAGPOLL='no'
-        echo "*** The tweek-config script installed by Tweek could not be found"
-        echo "*** If Tweek was installed in PREFIX, make sure PREFIX/bin is in"
-        echo "*** your path, or set the TWEEK_CONFIG environment variable to the"
-        echo "*** full path to tweek-config."
+        echo "*** Flagpoll is required to build tweek."
+        echo "*** Please check that the PATH variable is set to "
+        echo "*** include the proper path to flagpoll."
     fi
 ])
 
