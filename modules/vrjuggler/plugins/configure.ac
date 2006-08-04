@@ -148,6 +148,8 @@ VRJUGGLER_PATH([$vrj_version], [test_tweek_cxx='Y'],
     test_tweek_cxx='N'
    ])
 
+VPR_PATH([1.1.23], , [AC_MSG_ERROR([*** VPR required for plugins ***])])
+
 min_tweek_version='1.1.5'
 if test "x$test_tweek_cxx" = "xY" ; then
    TWEEK_PATH_CXX([$min_tweek_version], [HAVE_TWEEK_CXX='Y'],
@@ -155,6 +157,7 @@ if test "x$test_tweek_cxx" = "xY" ; then
        HAVE_TWEEK_CXX='N'
       ])
 fi
+
 
 if test "x$BUILD_JAVA" = "xY" ; then
    JCCL_PATH_JAVA([$jccl_version], [test_tweek_java='Y'],
@@ -200,11 +203,9 @@ fi
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-#XXX: Note the use of $VRJ_CXX_FLAGS instead of min flags.
-#     JCCL_CXXFLAGS_MIN did not seem to be available???
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VRJ_CXXFLAGS $TWEEK_CXXFLAGS_MIN"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $VRJ_CXXFLAGS $TWEEK_CXXFLAGS"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$TWEEK_INCLUDES_MIN"
+DEPEND_FLAGS="$VPR_CXXFLAGS $TWEEK_CXXFLAGS $VRJ_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -243,12 +244,8 @@ elif test "x$OS_TYPE" = "xWin32" ; then
 fi
 
 # $DSO_PLUGIN_DEPS must list all the libraries required to link a VRJ plug-in.
-vrj_libs=`$VRJ_CONFIG vrj --libs`
-vrj_extra_libs=`$VRJ_CONFIG vrj --extra-libs`
-vrj_prof_libs=`$VRJ_CONFIG vrj --profiled --libs`
-vrj_extra_prof_libs=`$VRJ_CONFIG vrj --profiled --extra-libs`
-DSO_PLUGIN_DEPS="$TWEEK_LIBS_CC_MIN $TWEEK_EXTRA_LIBS_CC_MIN $vrj_libs $vrj_extra_libs"
-DSO_PLUGIN_PROF_DEPS="$TWEEK_PROF_LIBS_CC_MIN $TWEEK_PROF_EXTRA_LIBS_CC_MIN $vrj_prof_libs $vrj_extraprof__libs"
+DSO_PLUGIN_DEPS="$VPR_LIBS $VPR_EXTRA_LIBS $TWEEK_LIBS $TWEEK_EXTRA_LIBS $VRJ_LIBS $VRJ_EXTRA_LIBS"
+DSO_PLUGIN_PROF_DEPS="$VPR_PROF_LIBS $VPR_EXTRA_LIBS $TWEEK_PROF_LIBS $TWEEK_PROF_EXTRA_LIBS $VRJ_PROF_LIBS $VRJ_EXTRA_LIBS"
 
 VJ_BUILD_LIB_FILE_LIST([$DSO_PLUGIN_DEPS], [DSO_PLUGIN_DEP_FILES])
 VJ_BUILD_LIB_FILE_LIST([$DSO_PLUGIN_PROF_DEPS], [DSO_PLUGIN_PROF_DEP_FILES])
