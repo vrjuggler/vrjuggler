@@ -350,7 +350,10 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
             mBlockingFixed = true;
          }
       }
-      buildAndThrowException("[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
+      else
+      {
+         buildAndThrowException("[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
+      }
    }
    // Otherwise, return success.
    else
