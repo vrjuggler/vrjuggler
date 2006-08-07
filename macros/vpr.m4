@@ -76,6 +76,7 @@ AC_DEFUN([VPR_PATH],
         VPR_LIBS_STATIC="`$FLAGPOLL $vpr_flagpoll_args --get-static-libs`"
         VPR_PROF_LIBS_STATIC="`$FLAGPOLL $vpr_flagpoll_args --get-profiled-static-libs`"
         VPR_EXTRA_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-extra-libs`
+        VPR_BUILD_INCLUDES=`$FLAGPOLL $vpr_flagpoll_args --get-build-includes`
 
         VPR_SUBSYSTEM=`$FLAGPOLL $vpr_flagpoll_args --get-subsystem`
         VPR_VERSION=`$FLAGPOLL $vpr_flagpoll_args --modversion`
@@ -109,6 +110,7 @@ AC_DEFUN([VPR_PATH],
     AC_SUBST(VPR_LIBS_STATIC)
     AC_SUBST(VPR_PROF_LIBS_STATIC)
     AC_SUBST(VPR_EXTRA_LIBS)
+    AC_SUBST(VPR_BUILD_INCLUDES)
 
     AC_SUBST(VPR_SUBSYSTEM)
     AC_SUBST(VPR_VERSION)

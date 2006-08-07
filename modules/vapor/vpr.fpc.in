@@ -52,6 +52,7 @@ vpr_prof_libs = @vpr_prof_libs@
 
 vpr_extra_cxxflags = @vpr_extra_cxxflags@
 vpr_extra_include_dirs = @vpr_extra_include_dirs@
+vpr_build_includes = @vpr_build_includes@
 
 vpr_extra_ldflags_compiler = @vpr_extra_ldflags_compiler@
 vpr_extra_ldflags_linker = @vpr_extra_ldflags_linker@
@@ -83,3 +84,6 @@ extra_libs : ${extra_libs}
 static_libs: ${static_begin} ${libs} ${vpr_libs} ${static_end}
 profiled_libs: ${libs} ${vpr_prof_libs}
 profiled_static_libs: ${static_begin} ${libs} ${vpr_prof_libs} ${static_end}
+
+######################## HELPER FOR GLOBAL BUILD ##############################
+build_includes: ${vpr_build_includes}

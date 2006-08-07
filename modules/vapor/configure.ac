@@ -920,6 +920,7 @@ VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VPR_BASE_DIR)'
 
+
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
     VPRROOT_ABS=`dospath -p "$VPRROOT_ABS"`
@@ -962,6 +963,7 @@ else
    _prefix_exp="s|^$prefix/||"
 fi
 
+
 # Make a best-effort attempt to extract the actual share directory from the
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
@@ -985,6 +987,7 @@ case $SUBSYSTEM in
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs="-l$vpr_lib_name"
         vpr_prof_libs="-l$vpr_prof_lib_name"
+        vpr_build_includes="-I\${prefix}/include/boost/compatibility/cpp_c_headers"
         ;;
     POSIX)
         subsystem_cxxflags="$subsystem_includes"
@@ -1039,6 +1042,11 @@ case $SUBSYSTEM in
         fi
         ;;
 esac
+if test "x$GLOBAL_BUILD" != "x" ; then
+   vpr_build_includes="$vpr_build_includes -I\${prefix}/include"
+else
+   vpr_build_includes=""
+fi
 
 vpr_extra_cxxflags=''
 vpr_extra_include_dirs=''
@@ -1108,6 +1116,7 @@ AC_SUBST(vpr_extra_include_dirs)
 AC_SUBST(vpr_extra_ldflags_compiler)
 AC_SUBST(vpr_extra_ldflags_linker)
 AC_SUBST(vpr_extra_libs)
+AC_SUBST(vpr_build_includes)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -1188,5 +1197,6 @@ AC_CONFIG_FILES([
    mtree/VPR.test.dist
    VARS.pl
    ])
+
 
 AC_OUTPUT
