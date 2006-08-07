@@ -73,7 +73,7 @@ AC_DEFUN([VRJUGGLER_PATH],
         VRJ_LIBS_STATIC="`$FLAGPOLL $vrj_flagpoll_args --get-static-libs`"
         VRJ_PROF_LIBS_STATIC="`$FLAGPOLL $vrj_flagpoll_args --get-profiled-static-libs`"
         VRJ_EXTRA_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-extra-libs`
-        VRJ_VERSION=`$FLAGPOLL --modversion`
+        VRJ_VERSION=`$FLAGPOLL $vrj_flagpoll_args --modversion`
 
         DPP_VERSION_CHECK_MSG_NO_CACHE([VR Juggler], [$VRJ_VERSION],
                                        [$min_vrj_version], [$2], [$3])
