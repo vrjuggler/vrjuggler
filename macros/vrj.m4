@@ -67,7 +67,7 @@ AC_DEFUN([VRJUGGLER_PATH],
     if test "x$FLAGPOLL" = "xno" ; then
         no_vrj=yes
     else
-        VRJ_CXXFLAGS=`$FLAGPOLL $vrj_flagpoll_args -cflags`
+        VRJ_CXXFLAGS=`$FLAGPOLL $vrj_flagpoll_args --cflags`
         VRJ_LIBS="`$FLAGPOLL $vrj_flagpoll_args --get-libs`"
         VRJ_PROF_LIBS="`$FLAGPOLL $vrj_flagpoll_args --get-profiled-libs`"
         VRJ_LIBS_STATIC="`$FLAGPOLL $vrj_flagpoll_args --get-static-libs`"
