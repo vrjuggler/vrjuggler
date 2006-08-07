@@ -77,7 +77,7 @@ AC_DEFUN([GADGETEER_PATH],
         GADGET_EXTRA_LIBS_LD=`$FLAGPOLL $gadget_flagpoll_args --get-extra-libs`
         GADGET_VERSION=`$FLAGPOLL $gadget_flagpoll_args --modversion`
 
-        GADGET_USE_X11=`$FLAGPOLL $gadget_flagpoll_args ---get-use-x11`
+        GADGET_USE_X11=`$FLAGPOLL $gadget_flagpoll_args --get-use-x11`
 
         DPP_VERSION_CHECK_MSG_NO_CACHE([Gadgeteer], [$GADGET_VERSION],
                                        [$min_gadget_version], [$2], [$3])
