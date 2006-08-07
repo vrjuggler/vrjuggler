@@ -341,9 +341,6 @@ std::string SystemBase::getCallStack()
          bool more = StackWalk64(arch, proc, GetCurrentThread(), &sf,
                                  &ctx, NULL, SymFunctionTableAccess64,
                                  SymGetModuleBase64, NULL);
-         std::cout << "More? " << (more ? "yes" : "no") << std::endl;
-         std::cout << "sf.AddrFrame.Offset == " << sf.AddrFrame.Offset
-                   << std::endl;
 
          // End of the stack frame.
          if ( ! more || 0 == sf.AddrFrame.Offset )
