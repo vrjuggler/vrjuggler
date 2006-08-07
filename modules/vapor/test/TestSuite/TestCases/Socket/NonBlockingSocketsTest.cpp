@@ -68,10 +68,14 @@ void NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThen
 void NonBlockingSocketTest::testConnect2NonBlockingSockets()
 {
    int port = 6275;
-   vpr::InetAddr local_addr;
-   local_addr.setPort( port );
-   vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
-   vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
+   vpr::InetAddr server_addr;
+   server_addr.setPort( port );
+
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
+   remote_addr.setPort( port );
+
+   vpr::SocketStream acceptor_socket( server_addr, vpr::InetAddr::AnyAddr );
+   vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
 
    // a/c: Open
    CPPUNIT_ASSERT_NO_THROW( acceptor_socket.open());
@@ -220,13 +224,13 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor()
 
 void NonBlockingSocketTest::testNonBlockingTransfer_connector()
 {
-   vpr::InetAddr remote_addr;
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
    vpr::SocketConnector connector;
    vpr::SocketStream con_sock;
    std::string data;
    vpr::Uint32 bytes_read;
 
-   remote_addr.setAddress("localhost", mAcceptorPort);
+   remote_addr.setPort(mAcceptorPort);
 
    mCondVar.acquire();
    {
@@ -289,10 +293,14 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector()
 void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
 {
    int port = 6275;
-   vpr::InetAddr local_addr;
-   local_addr.setPort( port );
-   vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
-   vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
+   vpr::InetAddr server_addr;
+   server_addr.setPort( port );
+
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
+   remote_addr.setPort( port );
+
+   vpr::SocketStream acceptor_socket( server_addr, vpr::InetAddr::AnyAddr );
+   vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
 
    // a/c: Set OpenNonBlocking
    acceptor_socket.setBlocking(false);
@@ -477,11 +485,11 @@ void NonBlockingSocketTest::testSendUDP_receiver()
 
 void NonBlockingSocketTest::testSendUDP_sender()
 {
-   vpr::InetAddr remote_addr;
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
    vpr::SocketDatagram send_sock;
    vpr::Uint32 bytes;
 
-   remote_addr.setAddress("localhost", mReceiverPort);
+   remote_addr.setPort(mReceiverPort);
 
    mCondVar.acquire();
    {
