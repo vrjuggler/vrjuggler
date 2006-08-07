@@ -47,12 +47,14 @@ namespace vpr
 {
    const InetAddrSIM InetAddrSIM::AnyAddr;
 
-   vpr::ReturnStatus InetAddrSIM::getLocalHost(vpr::InetAddrSIM& hostAddr)
+   vpr::InetAddrSIM InetAddrSIM::getLocalHost()
    {
-      return vpr::ReturnStatus::Fail;
+      throw UnknownHostException("No IP address for could be found for localhost.",
+                                 VPR_LOCATION);
+      return vpr::InetAddrSIM;
    }
 
-   vpr::ReturnStatus InetAddrSIM::setAddress(const std::string& address)
+   void InetAddrSIM::setAddress(const std::string& address)
    {
       std::string::size_type pos;
       std::string host_addr, host_port;
@@ -69,18 +71,15 @@ namespace vpr
       setPort( port );
       setFamily( vpr::SocketTypes::INET );
       setDebugData();
-
-      return vpr::ReturnStatus();
    }
 
-   vpr::ReturnStatus InetAddrSIM::setAddress(const std::string& address,
+   void InetAddrSIM::setAddress(const std::string& address,
                                              const vpr::Uint32 port)
    {
       mAddress = vpr::sim::DNS::instance()->lookupAddress(address);
       setPort( port );
       setFamily( vpr::SocketTypes::INET );
       setDebugData();
-      return vpr::ReturnStatus();
    }
 
    std::string InetAddrSIM::getAddressString() const
