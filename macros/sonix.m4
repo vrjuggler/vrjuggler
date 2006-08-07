@@ -78,7 +78,7 @@ AC_DEFUN([SNX_PATH],
         no_sonix=yes
     else
         SNX_CXXFLAGS=`$FLAGPOLL $sonix_flagpoll_args --cflags`
-        SNX_LIBS_LD="`$FLAGPOLL $sonix_flagpoll_args --get-libs`"
+        SNX_LIBS="`$FLAGPOLL $sonix_flagpoll_args --get-libs`"
         SNX_PROF_LIBS="`$FLAGPOLL $sonix_flagpoll_args --get-profiled-libs`"
         SNX_LIBS_STATIC="`$FLAGPOLL $sonix_flagpoll_args --get-static-libs`"
         SNX_PROF_LIBS_STATIC="`$FLAGPOLL $sonix_flagpoll_args --get-profiled-static-libs`"
