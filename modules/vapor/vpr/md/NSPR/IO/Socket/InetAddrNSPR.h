@@ -72,6 +72,7 @@ public:
     * Default constructor.
     *
     * @post Zero out the address and set it to \c PR_INADDR_ANY.
+    * @note This is not a valid destination address for client communication.
     */
    InetAddrNSPR()
    {

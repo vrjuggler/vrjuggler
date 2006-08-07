@@ -38,19 +38,76 @@
 #include <stdio.h>
 #include <sstream>
 #include <string.h>
+#include <sstream>
 #include <prinrval.h>
 #include <prio.h>
 #include <prerror.h>
 
+#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
+#include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
+#include <vpr/IO/Socket/ConnectionResetException.h>
+#include <vpr/IO/Socket/ConnectionRefusedException.h>
+#include <vpr/IO/Socket/UnknownHostException.h>
+#include <vpr/IO/Socket/NoRouteToHostException.h>
+#include <vpr/IO/IOException.h>
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/WouldBlockException.h>
-#include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/Util/Error.h>
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 
 
 namespace vpr
 {
+namespace
+{
+
+// Given an error number (or errno) build up an exception with the
+// correct type and error string and throw it.
+//
+// This helper comes in handy since we have to throw exceptions from so many places in
+// the socket implementation.
+void buildAndThrowException(std::string prefix, std::string location)
+{
+   PRErrorCode err_code = PR_GetError();
+   std::string err_string = vpr::Error::getCurrentErrorMsg();
+
+   // Build and throw exception
+   if (PR_IN_PROGRESS_ERROR == err_code ||
+       PR_WOULD_BLOCK_ERROR == err_code)
+   {
+      throw vpr::WouldBlockException(prefix + "Operation still in progress: " + err_string, location); 
+   }
+   else if( PR_IS_CONNECTED_ERROR == err_code)
+   {
+      throw vpr::SocketException(prefix + "Socket already connected: " + err_string, location);
+   }
+   else if(PR_CONNECT_REFUSED_ERROR == err_code)
+   {
+      throw vpr::ConnectionRefusedException(prefix + "Connection refused: " + err_string, location);
+   }
+   else if(PR_CONNECT_RESET_ERROR == err_code ||
+           PR_SOCKET_SHUTDOWN_ERROR == err_code ||
+           PR_CONNECT_ABORTED_ERROR == err_code ||
+           PR_NOT_CONNECTED_ERROR == err_code)
+   {
+      throw vpr::ConnectionResetException(prefix + "Connection reset: " + err_string, location);
+   }
+   else if (PR_NETWORK_UNREACHABLE_ERROR == err_code)
+   {
+      throw vpr::NoRouteToHostException(prefix + "No route to host: " + err_string, location);
+   }
+   else if (PR_CONNECT_TIMEOUT_ERROR == err_code ||
+            PR_IO_TIMEOUT_ERROR == err_code)
+   {
+      throw vpr::TimeoutException(prefix + "Timeout: " + err_string, location);
+   }
+   else
+   {
+      throw vpr::SocketException(prefix + "Error: " + err_string, location);
+   }
+
+}
+
+}
 
 // ============================================================================
 // Public methods.
@@ -70,51 +127,46 @@ void SocketImplNSPR::open()
 
       throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
-   else
+
+   // NSPR has not concept of domain in socket creation
+   // switch (mLocalAddr.getFamily())
+
+   switch (mType)
    {
-      // NSPR has not concept of domain in socket creation
-      // switch (mLocalAddr.getFamily())
-
-      switch (mType)
-      {
-        case vpr::SocketTypes::STREAM:
-          new_sock = PR_NewTCPSocket();
-          break;
-        case vpr::SocketTypes::DATAGRAM:
-          new_sock = PR_NewUDPSocket();
-          break;
-        default:
-          {
-             std::stringstream msg_stream;
-             msg_stream << "[vpr::SocketImplNSPR] ERROR: Unknown socket type "
-                        << "value " << mLocalAddr.getFamily();
-             throw SocketException(msg_stream.str(), VPR_LOCATION);
-          }
-          break;
-      }
-
-      // If socket(2) failed, print an error message and return error status.
-      if ( new_sock == NULL )
+      case vpr::SocketTypes::STREAM:
+         new_sock = PR_NewTCPSocket();
+         break;
+      case vpr::SocketTypes::DATAGRAM:
+         new_sock = PR_NewUDPSocket();
+         break;
+      default:
       {
          std::stringstream msg_stream;
-         msg_stream << "[vpr::SocketImplNSPR::open()] Could not create socket";
-         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
-         msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+         msg_stream << "[vpr::SocketImplNSPR] ERROR: Unknown socket type "
+                    << "value " << mLocalAddr.getFamily();
          throw SocketException(msg_stream.str(), VPR_LOCATION);
+         break;
       }
-      // Otherwise, return success.
-      else
-      {
-         mHandle = new_sock;
-         mOpen = true;
+   }
 
-         // Now that this socket is open, we can set the blocking state.
-         setBlocking(mOpenBlocking);
+   // If socket(2) failed, print an error message and return error status.
+   if ( new_sock == NULL )
+   {
+      buildAndThrowException("[vpr::SocketImplNSPR::open()] (" + getName() + ") ",
+         VPR_LOCATION);
+   }
+   // Otherwise, return success.
+   else
+   {
+      mHandle = new_sock;
+      mOpen = true;
+
+      // Now that this socket is open, we can set the blocking state.
+      setBlocking(mOpenBlocking);
 
 //         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
 //            << "[vpr::SocketImplNSPR::open()] handle = " << mHandle << "\n"
 //            << vprDEBUG_FLUSH;
-      }
    }
 }
 
@@ -142,10 +194,8 @@ void SocketImplNSPR::close()
       }
       else
       {
-         std::stringstream msg_stream;
-         msg_stream << "[vpr::SocketImplNSPR::open()] Could not close socket: "
-                    << vpr::Error::getCurrentErrorMsg();
-         throw SocketException(msg_stream.str(), VPR_LOCATION);
+         buildAndThrowException("[vpr::SocketImplNSPR::open()] Could not close socket:",
+            VPR_LOCATION);
       }
    }
 }
@@ -162,11 +212,9 @@ void SocketImplNSPR::bind()
    // If that fails, print an error and return error status.
    if ( status == PR_FAILURE )
    {
-      std::stringstream msg_stream;
-      msg_stream << "[vpr::SocketImplNSPR::bind()] Failed to bind";
-      vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
-      msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
-      throw SocketException(msg_stream.str(), VPR_LOCATION);
+      std::ostringstream ex_text;
+      ex_text << "[vpr::SocketImplNSPR::bind] " << " addr: [" << mLocalAddr << "] ";
+      buildAndThrowException(ex_text.str(), VPR_LOCATION);
    }
    // Otherwise, return success.
    else
@@ -251,66 +299,65 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
                                                 << vprDEBUG_FLUSH;
       throw SocketException(err_msg, VPR_LOCATION);
    }
-   else
+
+
+#ifdef VPR_OS_Win32
+   vprASSERT(vpr::InetAddr::AnyAddr != mRemoteAddr && "INADDR_ANY is not a valid desination on win32.");
+#endif
+
+   // Attempt to connect to the address in mAddr.
+   PRStatus status = PR_Connect(mHandle, mRemoteAddr.getPRNetAddr(),
+                                NSPR_getInterval(timeout));
+
+   if ( status == PR_FAILURE )
    {
-      // Attempt to connect to the address in mAddr.
-      PRStatus status = PR_Connect(mHandle, mRemoteAddr.getPRNetAddr(),
-                                   NSPR_getInterval(timeout));
+      PRInt32 err = PR_GetError();
 
-      if ( status == PR_FAILURE )
+      // This is a non-blocking connection.
+      if ( (err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR) && !isBlocking() )
       {
-         PRInt32 err;
-
-         err = PR_GetError();
-
-         // This is a non-blocking connection.
-         if ( err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR  )
+         // Use the timeout to wait for the connection to complete.
+         if ( vpr::Interval::NoWait != timeout )
          {
-            // Use the timeout to wait for the connection to complete.
-            if ( vpr::Interval::NoWait != timeout )
+            // Force socket to wait for timeout interval to expire before
+            // returning. This provides a way for the caller to specify
+            // that they want the connection process to block even with a
+            // non-blocking socket.
+            try
             {
-               PRPollDesc poll_desc;
+               // Wait for read/write on the socket.
+               SelectorImplNSPR selector;
+               selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write);
+               vpr::Uint16 num_events(0);
+               selector.select(num_events, timeout);
 
-               poll_desc.fd       = mHandle;
-               poll_desc.in_flags = PR_POLL_WRITE | PR_POLL_EXCEPT;
-
-               // Force socket to wait for timeout interval to expire before
-               // returning. This provides a way for the caller to specify
-               // that they want the connection process to block even with a
-               // non-blocking socket.
-               PR_Poll(&poll_desc, 1, NSPR_getInterval(timeout));
+               //XXX: Should check for error here.
+               
+               mBound = true;
+               mConnectCalled = true;
+               mBlockingFixed = true;
             }
-
+            catch(TimeoutException& te) // Select timed out, so the connect timed out
+            {
+               close();
+               throw TimeoutException("Timeout while connecting.", VPR_LOCATION);
+            }
+         }
+         else // non-blocking connect started
+         {
             mBound         = true;
             mConnectCalled = true;
             mBlockingFixed = true;
          }
-         else if ( err == PR_IO_TIMEOUT_ERROR )
-         {
-            // XXX: This exception will not be caught because it does not
-            // derive from SocketException.
-            throw TimeoutException("Connection timed out.", VPR_LOCATION);
-         }
-         else
-         {
-            std::stringstream msg_stream;
-
-            msg_stream << "[vpr::SocketImplNSPR::connect()] "
-                       << "Failed to connect to "
-                       << mRemoteAddr.getAddressString();
-            vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
-
-            msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
-            throw SocketException(msg_stream.str(), VPR_LOCATION);
-         }
       }
-      // Otherwise, return success.
-      else
-      {
-         mBound         = true;
-         mConnectCalled = true;
-         mBlockingFixed = true;
-      }
+      buildAndThrowException("[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
+   }
+   // Otherwise, return success.
+   else
+   {
+      mBound         = true;
+      mConnectCalled = true;
+      mBlockingFixed = true;
    }
 
    // Fill in the local address if has not already been assigned.
@@ -340,13 +387,9 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
                             vpr::Uint32& bytesRead,
                             const vpr::Interval timeout)
 {
-   if ( mHandle == NULL )
-   {
-      throw IOException("Cannot read from a NULL socket", VPR_LOCATION);
-   }
+   vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
 
    PRInt32 bytes;
-
    mBlockingFixed = true;
 
    bytes = PR_Recv(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
@@ -359,58 +402,7 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    else if ( bytes == -1 )
    {
-      PRErrorCode err_code = PR_GetError();
-
-      vpr::Error::outputCurrentError(
-         std::cerr,
-         "[vpr::SocketImplNSPR::read_i()] Error while reading"
-      );
-
-      bytesRead = 0;
-      const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
-      std::stringstream msg_stream;
-
-      if ( err_code == PR_WOULD_BLOCK_ERROR )
-      {
-         msg_stream << "Would block while reading";
-
-         if ( ! nspr_err_msg.empty() )
-         {
-            msg_stream << ": " << nspr_err_msg;
-         }
-
-         throw WouldBlockException(msg_stream.str(), VPR_LOCATION);
-      }
-      else if ( err_code == PR_IO_TIMEOUT_ERROR )
-      {
-         msg_stream << "Timeout occured while trying to read from '" << mName
-                    << "'";
-
-         if ( ! nspr_err_msg.empty() )
-         {
-            msg_stream << ": " << nspr_err_msg;
-         }
-
-         throw TimeoutException(msg_stream.str(), VPR_LOCATION);
-      }
-      else if ( err_code == PR_CONNECT_RESET_ERROR ||
-                err_code == PR_SOCKET_SHUTDOWN_ERROR ||
-                err_code == PR_CONNECT_ABORTED_ERROR )
-      {
-         msg_stream << "Connection reset";
-
-         if ( ! nspr_err_msg.empty() )
-         {
-            msg_stream << ": " << nspr_err_msg;
-         }
-
-         // XXX: Do we need a NotConnectedException?
-         throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
-      }
-      else
-      {
-         throw SocketException(nspr_err_msg, VPR_LOCATION);
-      }
+      buildAndThrowException("[vpr::SocketImplNSPR::read_i()] ", VPR_LOCATION);
    }
    // Indicates that the network connection is closed.
    else if ( bytes == 0 )
@@ -418,7 +410,7 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
       bytesRead = bytes;
 
       std::stringstream msg_stream;
-      msg_stream << "Connection closed";
+      msg_stream << "Socket disconnected cleanly. ";
       const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
 
       if ( ! nspr_err_msg.empty() )
@@ -426,7 +418,6 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
          msg_stream << ": " << nspr_err_msg;
       }
 
-      // XXX: Do we need a NotConnectedException?
       throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
    }
 }
@@ -435,10 +426,7 @@ void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytesRead,
                              const vpr::Interval timeout)
 {
-   if ( mHandle == NULL )
-   {
-      throw IOException("Cannot read from a NULL socket", VPR_LOCATION);
-   }
+   vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
 
    PRInt32 bytes;            // Number of bytes read each time
    vpr::Uint32 bytes_left(length);
@@ -468,37 +456,7 @@ void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
          {
             continue;
          }
-         // The last read took longer than we wanted.
-         else if ( err_code == PR_IO_TIMEOUT_ERROR )
-         {
-            // XXX: Is this correct behavior? Prior to the introduction of
-            // exception handling, this state would return
-            // vpr::ReturnStatus::Timeout.
-            continue;
-         }
-         // We lost the connection.  We're done.
-         else if ( err_code == PR_CONNECT_RESET_ERROR ||
-                   err_code == PR_SOCKET_SHUTDOWN_ERROR ||
-                   err_code == PR_CONNECT_ABORTED_ERROR )
-         {
-            std::stringstream msg_stream;
-            msg_stream << "Connection reset";
-            const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
-
-            if ( ! nspr_err_msg.empty() )
-            {
-               msg_stream << ": " << nspr_err_msg;
-            }
-
-            // XXX: Do we need a NotConnectedException?
-            throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
-         }
-         // Unrecognized error.
-         else
-         {
-            throw SocketException(vpr::Error::getCurrentErrorMsg(),
-                                  VPR_LOCATION);
-         }
+         buildAndThrowException("[vpr::SocketImplNSPR::readn_i] ", VPR_LOCATION);
       }
       // Read 0 bytes.
       else
@@ -513,7 +471,6 @@ void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
             msg_stream << ": " << nspr_err_msg;
          }
 
-         // XXX: Do we need a NotConnectedException?
          throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
       }
    }
@@ -523,71 +480,19 @@ void SocketImplNSPR::write_i(const void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytesWritten,
                              const vpr::Interval timeout)
 {
-   if ( mHandle == NULL )
-   {
-      throw IOException("Cannot write to a NULL socket", VPR_LOCATION);
-   }
+   vprASSERT(NULL != mHandle && "Can not write to a socket with a NULL handle.");
 
    PRInt32 bytes;
-
    mBlockingFixed = true;
 
    bytes = PR_Send(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
 
    if ( bytes == -1 )
    {
-      PRErrorCode err_code = PR_GetError();
-      vpr::Error::outputCurrentError(
-         std::cerr,
-         "[vpr::SocketImplNSPR::write_i()] Error while writing"
-      );
+      buildAndThrowException("[vpr::SocketImplNSPR::write_i()] (" + getName() + ") ",
+         VPR_LOCATION);
 
       bytesWritten = 0;
-
-      const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
-      std::stringstream msg_stream;
-
-      if ( err_code == PR_WOULD_BLOCK_ERROR )
-      {
-         msg_stream << "Would block while writing";
-
-         if ( ! nspr_err_msg.empty() )
-         {
-            msg_stream << ": " << nspr_err_msg;
-         }
-
-         throw WouldBlockException(msg_stream.str(), VPR_LOCATION);
-      }
-      else if ( err_code == PR_IO_TIMEOUT_ERROR )
-      {
-         msg_stream << "Write operation timed out";
-
-         if ( ! nspr_err_msg.empty() )
-         {
-            msg_stream << ": " << nspr_err_msg;
-         }
-
-         throw TimeoutException(msg_stream.str(), VPR_LOCATION);
-      }
-      else if ( err_code == PR_NOT_CONNECTED_ERROR ||
-                err_code == PR_CONNECT_RESET_ERROR ||
-                err_code == PR_SOCKET_SHUTDOWN_ERROR ||
-                err_code == PR_CONNECT_ABORTED_ERROR )
-      {
-         msg_stream << "Connection reset";
-
-         if ( ! nspr_err_msg.empty() )
-         {
-            msg_stream << ": " << nspr_err_msg;
-         }
-
-         // XXX: Do we need a NotConnectedException?
-         throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
-      }
-      else
-      {
-         throw SocketException(nspr_err_msg, VPR_LOCATION);
-      }
    }
    else
    {

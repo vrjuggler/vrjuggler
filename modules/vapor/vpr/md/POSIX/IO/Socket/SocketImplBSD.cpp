@@ -133,6 +133,15 @@ const std::string& SocketImplBSD::getName() const
 // options set through member variables.
 void SocketImplBSD::open()
 {
+   if (NULL != mHandle)
+   {
+      std::stringstream msg_stream;
+      msg_stream << "[vpr::SocketImplBSD::open] Socket " << getName()
+                 << " has already been opened";
+
+      throw SocketException(msg_stream.str(), VPR_LOCATION);
+   }
+
    int domain, type, sock;
 
    switch ( mLocalAddr.getFamily() )
@@ -186,11 +195,17 @@ void SocketImplBSD::open()
          type = SOCK_RAW;
          break;
       default:
+      {
          type = -1;
          fprintf(stderr,
                  "[vpr::SocketImplBSD] ERROR: Unknown socket type value %d\n",
                  mLocalAddr.getFamily());
+         std::stringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBSD] ERROR: Unknown socket type value "
+                    << mLocalAddr.getFamily();
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
          break;
+      }
    }
 
    // Attempt to create a new socket using the values in mLocalAddr and
@@ -200,7 +215,7 @@ void SocketImplBSD::open()
    // If socket(2) failed, print an error message and return error status.
    if ( sock == -1 )
    {
-      buildAndThrowException("[vpr::CocketImplBSD::open] (" + getName() + ") ", VPR_LOCATION);
+      buildAndThrowException("[vpr::SocketImplBSD::open] (" + getName() + ") ", VPR_LOCATION);
    }
    // Otherwise, return success.
    else
@@ -472,6 +487,8 @@ void SocketImplBSD::read_i(void* buffer,
                            vpr::Uint32& bytesRead,
                            const vpr::Interval timeout)
 {
+   vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
+
    mBlockingFixed = true;
    mHandle->read_i(buffer, length, bytesRead, timeout);
 
@@ -480,7 +497,7 @@ void SocketImplBSD::read_i(void* buffer,
    //       but in that case we throw WouldBlockException
    if ( 0 == bytesRead )
    {
-      throw SocketException("Socket disconnected cleanly.", VPR_LOCATION);
+      throw ConnectionResetException("Socket disconnected cleanly.", VPR_LOCATION);
    }
 }
 
@@ -489,13 +506,15 @@ void SocketImplBSD::readn_i(void* buffer,
                             vpr::Uint32& bytesRead,
                             const vpr::Interval timeout)
 {
+   vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
+
    mBlockingFixed = true;
    mHandle->readn_i(buffer, length, bytesRead, timeout);
 
    // XXX: Should never happen.
-   if ( bytesRead == 0 )
+   if ( 0 == bytesRead )
    {
-      throw SocketException("Socket not connected.", VPR_LOCATION);
+      throw ConnectionResetException("Socket closed.", VPR_LOCATION);
    }
 }
 
