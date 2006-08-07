@@ -140,10 +140,11 @@ void SocketTest::testSendRecv_connector()
    int num_of_times_to_test = 10;
    vpr::Uint16 port = 6940;
    //const int backlog = 5;
-   vpr::InetAddr remote_addr;
-
-   // make a new socket that will connect to port "port"
+   // Connect to local computer, but not using localhost loopback.
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
    remote_addr.setPort(port);
+
+   // Make a new socket that will connect to port "port"
    vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
 
    // run the test many times.
@@ -992,10 +993,7 @@ void SocketTest::testIsConnected_acceptor()
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor side of client socket", client_sock.close());
 
-   CPPUNIT_ASSERT_THROW_MESSAGE("Socket is closed",
-                                client_sock.send((void*)temp_buffer, 50, bytes_handled),
-                                vpr::IOException);
-
+   CPPUNIT_ASSERT(NULL == client_sock.getHandle() && "Socket handle should be NULL");
    CPPUNIT_ASSERT( !client_sock.isConnected() && "Should be fully disconnected after read and write");
 
    /*

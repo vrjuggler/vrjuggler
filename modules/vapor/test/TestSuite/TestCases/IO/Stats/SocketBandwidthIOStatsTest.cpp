@@ -20,6 +20,7 @@
 
 #include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
 
+#include <boost/bind.hpp>
 
 namespace vprTest
 {
@@ -72,8 +73,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor()
    vpr::Uint32 bytes_written;
 
    // Open the acceptor
-   ret_val = acceptor.open(local_acceptor_addr);
-   CPPUNIT_ASSERT((ret_val.success()) && "Acceptor did not open correctly");
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Acceptor did not open correctly", acceptor.open(local_acceptor_addr));
 
    for(int i=0;i<mNumItersA;i++)
    {
@@ -87,15 +87,15 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor()
 
       // ACCEPT connection
       sock = new vpr::SocketStream;
-      ret_val = acceptor.accept(*sock, vpr::Interval::NoTimeout );
-      CPPUNIT_ASSERT((ret_val.success()) && "Accepting socket failed");
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Accepting socket failed", acceptor.accept(*sock, vpr::Interval::NoTimeout ));
 
       CPPUNIT_ASSERT((sock->isOpen()) && "Accepted socket should be open");
       CPPUNIT_ASSERT((sock->isConnected()) && "Accepted socket should be connected");
       for(int j=0;j<mNumItersB;j++)
       {
-         ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message
-         CPPUNIT_ASSERT((ret_val.success()) && "Problem writing in acceptor");
+         // Send a message
+         CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem writing in acceptor",
+            sock->write(mMessageValue, mMessageLen, bytes_written));
          CPPUNIT_ASSERT((bytes_written == mMessageLen) && "Didn't send entire messag");
       }
 
@@ -131,8 +131,8 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor()
          std::cout << "SocketBWTest: Don't have BW Stats on stats. type is: " << typeid(stats).name() << std::endl;
       }
 
-      ret_val = sock->close();                                // Close the socket
-      CPPUNIT_ASSERT((ret_val.success()) && "Problem closing accepted socket");
+      // Close the socket
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem closing accepted socket", sock->close());
    }
 }
 
@@ -156,13 +156,13 @@ void SocketBandwidthIOStatsTest::testBandwidth_connector()
 
       vpr::SocketStream    con_sock;
       std::string          data;
-      ret_val = connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout );
-      CPPUNIT_ASSERT((ret_val.success()) && "Connector can't connect");
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect",
+         connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout ));
 
       for(int j=0;j<mNumItersB;j++)
       {
-         ret_val = con_sock.readn(data, mMessageLen, bytes_read);   // Recieve data
-         CPPUNIT_ASSERT((ret_val.success()) && "Read failed");
+         CPPUNIT_ASSERT_NO_THROW_MESSAGE("Read failed",
+            con_sock.readn(data, mMessageLen, bytes_read));   // Recieve data
          CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
       }
 
