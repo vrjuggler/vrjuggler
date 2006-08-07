@@ -987,7 +987,7 @@ case $SUBSYSTEM in
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs="-l$vpr_lib_name"
         vpr_prof_libs="-l$vpr_prof_lib_name"
-        vpr_build_includes="-I\${prefix}/include/boost/compatibility/cpp_c_headers"
+        vpr_build_includes="-I\${vpr_build_inc_prefix}/include/boost/compatibility/cpp_c_headers"
         ;;
     POSIX)
         subsystem_cxxflags="$subsystem_includes"
@@ -1043,7 +1043,7 @@ case $SUBSYSTEM in
         ;;
 esac
 if test "x$GLOBAL_BUILD" != "x" ; then
-   vpr_build_includes="$vpr_build_includes -I\${prefix}/include"
+   vpr_build_includes="$vpr_build_includes -I\${vpr_build_inc_prefix}/include"
 else
    vpr_build_includes=""
 fi

@@ -52,6 +52,7 @@ vpr_prof_libs = @vpr_prof_libs@
 
 vpr_extra_cxxflags = @vpr_extra_cxxflags@
 vpr_extra_include_dirs = @vpr_extra_include_dirs@
+vpr_build_inc_prefix = VPRBUILDINCPREFIX
 vpr_build_includes = @vpr_build_includes@
 
 vpr_extra_ldflags_compiler = @vpr_extra_ldflags_compiler@
