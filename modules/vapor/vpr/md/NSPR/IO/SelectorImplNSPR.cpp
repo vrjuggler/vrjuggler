@@ -78,11 +78,9 @@ bool SelectorImplNSPR::removeHandle(IOSys::Handle handle)
    {
       return false;
    }
-   else
-   {
-      mPollDescs.erase(i);
-      return true;
-   }
+
+   mPollDescs.erase(i);
+   return true;
 }
 
 /**
@@ -179,7 +177,9 @@ std::vector<PRPollDesc>::iterator SelectorImplNSPR::getHandle(PRFileDesc const* 
           i != mPollDescs.end();++i)
    {
       if((*i).fd == handle)
+      {
          return i;
+      }
    }
 
    return mPollDescs.end();

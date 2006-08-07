@@ -44,102 +44,77 @@ namespace vpr
 
 bool SelectorImplSIM::addHandle(vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
-   bool status;
-
-   if ( getHandle(handle) == mPollDescs.end() )
+   if ( getHandle(handle) != mPollDescs.end() )
    {
-      SimPollDesc new_desc;
-      new_desc.fd        = handle;
-      new_desc.in_flags  = mask;
-      new_desc.out_flags = 0;
-
-      mPollDescs.push_back(new_desc);
-      status = true;
-   }
-   else
-   {
-      status = false;
+      return false;
    }
 
-   return status;
+   SimPollDesc new_desc;
+   new_desc.fd        = handle;
+   new_desc.in_flags  = mask;
+   new_desc.out_flags = 0;
+
+   mPollDescs.push_back(new_desc);
+   status = true;
+
+   return true;
 }
 
 bool SelectorImplSIM::removeHandle(vpr::IOSys::Handle handle)
 {
-   bool status;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
-      status = false;
-   }
-   else
-   {
-      mPollDescs.erase(i);
-      status = true;
+      return false;
    }
 
-   return status;
+   mPollDescs.erase(i);
+   return true;
 }
 
 bool SelectorImplSIM::setIn(vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
-   bool status;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
-      status = false;
-   }
-   else
-   {
-      (*i).in_flags = mask;
-      status = true;
+      return  false;
    }
 
-   return status;
+   (*i).in_flags = mask;
+
+   return true;
 }
 
 vpr::Uint16 SelectorImplSIM::getIn(vpr::IOSys::Handle handle)
 {
-   vpr::Uint16 flags;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
       // XXX: This is VERY bad thing to do.  Need to have an error code instead
-      flags = 0;
+      return 0;
    }
-   else
-   {
-      flags = (*i).in_flags;
-   }
-
-   return flags;
+   return (*i).in_flags;
 }
 
 vpr::Uint16 SelectorImplSIM::getOut(vpr::IOSys::Handle handle)
 {
-   vpr::Uint16 flags;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
       // XXX: This is VERY bad thing to do.  Need to have an error code instead
-      flags = 0;
-   }
-   else
-   {
-      flags = (*i).out_flags;
+      return 0;
    }
 
-   return flags;
+   return (*i).out_flags;
 }
 
-vpr::ReturnStatus SelectorImplSIM::select(vpr::Uint16& numWithEvents,
+void SelectorImplSIM::select(vpr::Uint16& numWithEvents,
                                           const vpr::Interval timeout)
 {
-   vpr::ReturnStatus status;
    std::vector<SimPollDesc>::iterator i;
    bool has_event;
 
@@ -189,10 +164,9 @@ vpr::ReturnStatus SelectorImplSIM::select(vpr::Uint16& numWithEvents,
 
    if ( numWithEvents == 0 )
    {
-      status.setCode(vpr::ReturnStatus::Timeout);
+      numWithEvents = 0;
+      throw TimeoutException("Timeout occured while selecting.", VPR_LOCATION);
    }
-
-   return status;
 }
 
 std::vector<SelectorImplSIM::SimPollDesc>::iterator

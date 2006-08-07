@@ -141,15 +141,14 @@ public:
     *                      vpr::Interval::NoWait effects a poll
     *                      on the registered handles and returns immediately.
     *
-    * @return vpr::ReturnStatus::Success is returned if at least one
-    *         event was detected within the timeout interval.
-    * @return vpr::ReturnStatus::Timeout is returned if no events were
-    *         detected before the timeout expired or if vpr::Interval::NoWait
-    *         was passed.  In this case, \p numWithEvents should be checked
-    *         for a value greater than 0.
-    * @return vpr::ReturnStatus::Failure is returned if the select failed.
+    * @throws vpr::TimeoutException If no events were detected before the
+    *                               timeout expired or if
+    *                               vpr::Interval::NoWait was passed. In
+    *                               this case, \p numWithEvents should be
+    *                               checked for a value greater than 0.
+    * @throws vpr::IOException      If the select failed.
     */
-   vpr::ReturnStatus select(vpr::Uint16& numWithEvents,
+   void select(vpr::Uint16& numWithEvents,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**

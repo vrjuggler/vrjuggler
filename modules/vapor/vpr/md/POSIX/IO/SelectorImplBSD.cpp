@@ -60,24 +60,19 @@ namespace vpr
  */
 bool SelectorImplBSD::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
-   bool status;
-
-   if ( getHandle(handle) == mPollDescs.end() )
+   if ( getHandle(handle) != mPollDescs.end() )
    {
-      BSDPollDesc new_desc;
-      new_desc.fd        = handle;
-      new_desc.in_flags  = mask;
-      new_desc.out_flags = 0;
-
-      mPollDescs.push_back(new_desc);
-      status = true;
+      return false;
    }
-   else
-   {
-      status = false;
-   }
+   
+   BSDPollDesc new_desc;
+   new_desc.fd        = handle;
+   new_desc.in_flags  = mask;
+   new_desc.out_flags = 0;
 
-   return status;
+   mPollDescs.push_back(new_desc);
+
+   return true;
 }
 
 /**
@@ -85,77 +80,57 @@ bool SelectorImplBSD::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
  */
 bool SelectorImplBSD::removeHandle (vpr::IOSys::Handle handle)
 {
-   bool status;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
-      status = false;
-   }
-   else
-   {
-      mPollDescs.erase(i);
-      status = true;
+      return false;
    }
 
-   return status;
+   mPollDescs.erase(i);
+   return true;
 }
 
 /**< Sets the event flags going in to the select to mask. */
 bool SelectorImplBSD::setIn (vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
-   bool status;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
-      status = false;
-   }
-   else
-   {
-      (*i).in_flags = mask;
-      status = true;
+      return false;
    }
 
-   return status;
+   (*i).in_flags = mask;
+
+   return true;
 }
 
 /**< Gets the current in flag mask. */
 vpr::Uint16 SelectorImplBSD::getIn (vpr::IOSys::Handle handle)
 {
-   vpr::Uint16 flags;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
       // XXX: This is VERY bad thing to do.  Need to have an error code instead
-      flags = 0;
+      return 0;
    }
-   else
-   {
-      flags = (*i).in_flags;
-   }
-
-   return flags;
+   return (*i).in_flags;
 }
 
 /**< Gets the current out flag mask. */
 vpr::Uint16 SelectorImplBSD::getOut (vpr::IOSys::Handle handle)
 {
-   vpr::Uint16 flags;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
       // XXX: This is VERY bad thing to do.  Need to have an error code instead
-      flags = 0;
+      return 0;
    }
-   else
-   {
-      flags = (*i).out_flags;
-   }
-
-   return flags;
+   
+   return (*i).out_flags;
 }
 
 /**
@@ -287,7 +262,9 @@ std::vector<SelectorImplBSD::BSDPollDesc>::iterator SelectorImplBSD::getHandle (
        i != mPollDescs.end();++i )
    {
       if ( (*i).fd == handle )
+      {
          return i;
+      }
    }
 
    return mPollDescs.end();
