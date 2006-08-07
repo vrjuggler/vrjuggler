@@ -45,60 +45,60 @@
 
 namespace vpr
 {
-   const InetAddrSIM InetAddrSIM::AnyAddr;
+const InetAddrSIM InetAddrSIM::AnyAddr;
 
-   vpr::InetAddrSIM InetAddrSIM::getLocalHost()
+vpr::InetAddrSIM InetAddrSIM::getLocalHost()
+{
+   throw UnknownHostException("No IP address for could be found for localhost.",
+                              VPR_LOCATION);
+   return vpr::InetAddrSIM;
+}
+
+void InetAddrSIM::setAddress(const std::string& address)
+{
+   std::string::size_type pos;
+   std::string host_addr, host_port;
+   vpr::Uint32 port;
+
+   // Extract the address and the port number from the given string.
+   pos       = address.find( ":" );
+   host_addr = address.substr( 0, pos );
+   host_port = address.substr( pos + 1 );
+   port      = (vpr::Uint32) atoi( host_port.c_str() );
+
+   //setAddress( host_addr );
+   mAddress = vpr::sim::DNS::instance()->lookupAddress( host_addr );
+   setPort( port );
+   setFamily( vpr::SocketTypes::INET );
+   setDebugData();
+}
+
+void InetAddrSIM::setAddress(const std::string& address,
+                                          const vpr::Uint32 port)
+{
+   mAddress = vpr::sim::DNS::instance()->lookupAddress(address);
+   setPort( port );
+   setFamily( vpr::SocketTypes::INET );
+   setDebugData();
+}
+
+std::string InetAddrSIM::getAddressString() const
+{
+   char buffer[sizeof("255.255.255.255")];
+
+   union
    {
-      throw UnknownHostException("No IP address for could be found for localhost.",
-                                 VPR_LOCATION);
-      return vpr::InetAddrSIM;
-   }
+      vpr::Uint8 bytes[sizeof(vpr::Uint32)];
+      vpr::Uint32 value;
+   } addr;
 
-   void InetAddrSIM::setAddress(const std::string& address)
-   {
-      std::string::size_type pos;
-      std::string host_addr, host_port;
-      vpr::Uint32 port;
+   addr.value = vpr::System::Htonl(mAddress);
+   memset(buffer, '\0', sizeof(buffer));
+   sprintf(buffer, "%u.%u.%u.%u", addr.bytes[0], addr.bytes[1],
+           addr.bytes[2], addr.bytes[3]);
+   //std::string result = buffer;
 
-      // Extract the address and the port number from the given string.
-      pos       = address.find( ":" );
-      host_addr = address.substr( 0, pos );
-      host_port = address.substr( pos + 1 );
-      port      = (vpr::Uint32) atoi( host_port.c_str() );
-
-      //setAddress( host_addr );
-      mAddress = vpr::sim::DNS::instance()->lookupAddress( host_addr );
-      setPort( port );
-      setFamily( vpr::SocketTypes::INET );
-      setDebugData();
-   }
-
-   void InetAddrSIM::setAddress(const std::string& address,
-                                             const vpr::Uint32 port)
-   {
-      mAddress = vpr::sim::DNS::instance()->lookupAddress(address);
-      setPort( port );
-      setFamily( vpr::SocketTypes::INET );
-      setDebugData();
-   }
-
-   std::string InetAddrSIM::getAddressString() const
-   {
-      char buffer[sizeof("255.255.255.255")];
-
-      union
-      {
-         vpr::Uint8 bytes[sizeof(vpr::Uint32)];
-         vpr::Uint32 value;
-      } addr;
-
-      addr.value = vpr::System::Htonl(mAddress);
-      memset(buffer, '\0', sizeof(buffer));
-      sprintf(buffer, "%u.%u.%u.%u", addr.bytes[0], addr.bytes[1],
-              addr.bytes[2], addr.bytes[3]);
-      //std::string result = buffer;
-
-      return std::string(buffer);
-   }
+   return std::string(buffer);
+}
 
 } // End of vpr namespace
