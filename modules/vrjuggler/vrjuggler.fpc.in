@@ -37,6 +37,14 @@ vrj_ldflags_linker = @vrj_ldflags_linker@
 vrj_libs =  @vrj_lib@
 vrj_prof_libs = @vrj_prof_lib@
 
+vrj_ogl_lib = @vrj_ogl_lib@
+vrj_pf_lib = @vrj_pf_lib@
+vrj_ogl_prof_lib = @vrj_ogl_prof_lib@
+vrj_pf_prof_lib = @vrj_pf_prof_lib@
+vrj_ogl_extra_libs = @vrj_ogl_extra_libs@
+vrj_pf_extra_libs = @vrj_pf_extra_libs@
+
+
 vrj_extra_cxxflags = @vrj_extra_cxxflags@
 
 vrj_extra_ldflags_compiler = @vrj_extra_ldflags_compiler@
@@ -68,3 +76,9 @@ extra_libs : ${extra_libs}
 static_libs: ${static_begin} ${libs} ${vrj_libs} ${static_end}
 profiled_libs: ${libs} ${vrj_prof_libs}
 profiled_static_libs: ${static_begin} ${libs} ${vrj_prof_libs} ${static_end}
+
+# Draw Manager Choices
+vrj_ogl_libs: ${vrj_ogl_lib} ${vrj_ogl_extra_libs}
+vrj_ogl_prof_libs: ${vrj_ogl_prof_lib} ${vrj_ogl_extra_libs}
+vrj_pf_libs: ${vrj_pf_lib} ${vrj_pf_extra_libs}
+vrj_pf_prof_libs: ${vrj_pf_prof_lib} ${vrj_pf_extra_libs}
