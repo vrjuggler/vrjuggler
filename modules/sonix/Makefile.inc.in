@@ -242,8 +242,8 @@ links:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/sonix.fpc $(instlinks)/share/flagpoll/sonix.fpc
-
+          $(EXTRA_INSTALL_ARGS) $(topdir)/sonix.fpc			\
+          $(instlinks)/share/flagpoll/sonix.fpc
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else
@@ -383,8 +383,8 @@ install-flagpoll:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/sonix.fpc 			\
-	  $(libdir)$(LIBBITSUF)/flagpoll/sonix-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
+          $(topdir)/sonix.fpc 						\
+          $(libdir)$(LIBBITSUF)/flagpoll/sonix-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
 
 # =============================================================================
 # Clean-up targets.  '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME)
