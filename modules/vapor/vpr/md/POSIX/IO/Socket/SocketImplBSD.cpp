@@ -412,8 +412,6 @@ void SocketImplBSD::connect(vpr::Interval timeout)
 // - If have read or write and there are no socket errors, then we are connected
 bool SocketImplBSD::isConnected() const
 {
-   bool connected(false);
-
    if ( isOpen() && mConnectCalled )
    {
       //vpr::Int32 bytes;
@@ -446,10 +444,10 @@ bool SocketImplBSD::isConnected() const
       }
 
       // No error, so we are connected
-      connected = true;
+      return true;
    }
 
-   return connected;
+   return false;
 }
 
 void SocketImplBSD::setLocalAddr(const InetAddr& addr)
