@@ -68,7 +68,7 @@ configure: configure.ac $(M4_DEPS)
 config.status: configure ;
 
 Makefile: $(srcdir)/VERSION configure config.status Makefile.in		\
-          Makefile.inc.in make.defs.mk.in $(VERSION_FILES)
+          Makefile.inc.in make.defs.mk.in tweek.fpc.in $(VERSION_FILES)
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 	@$(MAKE) -f Makefile cleandepend
 
