@@ -32,6 +32,8 @@
 		<dict>
 			<key>TWEEK_BASE_DIR</key>
 			<string>$JAVAROOT</string>
+			<key>TWEEK_DATA_DIR</key>
+			<string>share/tweek</string>
 			<key>apple.laf.useScreenMenuBar</key>
 			<string>true</string>
 			<key>java.security.policy</key>
