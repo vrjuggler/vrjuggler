@@ -263,7 +263,8 @@ links:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/jccl.fpc $(instlinks)/share/flagpoll/jccl.fpc
+          $(EXTRA_INSTALL_ARGS) $(topdir)/jccl.fpc			\
+          $(instlinks)/share/flagpoll/jccl.fpc
 
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
@@ -416,8 +417,8 @@ install-flagpoll:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/jccl.fpc 			\
-	  $(libdir)$(LIBBITSUF)/flagpoll/jccl$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
+          $(topdir)/jccl.fpc 						\
+          $(libdir)$(LIBBITSUF)/flagpoll/jccl$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
 
 # Install the user tools code.
 install-tools:
