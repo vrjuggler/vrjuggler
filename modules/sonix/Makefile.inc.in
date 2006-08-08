@@ -241,7 +241,7 @@ links:
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/sonix.fpc $(instlinks)/share/flagpoll/sonix.fpc
 
 ifdef BUILD_TYPE
@@ -382,7 +382,7 @@ install-flagpoll:
 	@echo "Installing Flagpoll metadata file"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/sonix.fpc 			\
 	  $(libdir)$(LIBBITSUF)/flagpoll/sonix-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
 
