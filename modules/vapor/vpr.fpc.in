@@ -73,7 +73,7 @@ Version: ${vpr_version}
 Provides: vpr
 Requires: 
 Arch: ${ISA}
-Cflags: ${vpr_cxxflags} ${vpr_extra_cxxflags} ${subsystem_cxxflags} -I${includedir} ${vpr_extra_includes} ${ABI_FLAGS}
+Cflags: ${vpr_cxxflags} ${vpr_extra_cxxflags} ${subsystem_cxxflags} -I${includedir} ${ABI_FLAGS}
 Libs: ${libs} ${vpr_libs} ${extra_libs}
 Libs.private: 
 
