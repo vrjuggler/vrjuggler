@@ -215,32 +215,7 @@ public:
     *         may have disconnected).
     * @throws nothing
     */
-   bool isConnected() const
-   {
-      // If it is not open, then it can't be connected.
-      if ( mConnectCalled )
-      {
-         int num_avail = PR_Available(mHandle);
-         if ( num_avail == 0 )
-         {
-            PRPollDesc poll_desc;
-            poll_desc.fd = mHandle;
-            poll_desc.in_flags = PR_POLL_READ;
-
-            PR_Poll(&poll_desc, 1, PR_INTERVAL_NO_WAIT);
-            if ( !(poll_desc.out_flags & PR_POLL_READ) )
-            {
-               return false;             // Opened, but not connected
-            }
-         }
-
-         return true;        // Either have data, or are waiting for it
-      }
-      else
-      {
-         return false;           // Not open --> not connected
-      }
-   }
+   bool isConnected() const;
 
    /**
     * Gets the type of this socket (for example, vpr::SocketTypes::STREAM).

@@ -327,11 +327,21 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
             {
                // Wait for read/write on the socket.
                SelectorImplNSPR selector;
-               selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write);
+               selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write |
+                  SelectorBase::Except | SelectorBase::Error);
                vpr::Uint16 num_events(0);
                selector.select(num_events, timeout);
 
-               //XXX: Should check for error here.
+               vpr::Uint16 event = selector.getOut(getHandle());
+               if (SelectorBase::Except == event || SelectorBase::Error == event)
+               {
+                  close();
+                  // XXX: This throws a WouldBlockException, even though it shouldn't because
+                  //      the PR_Connect failed.
+                  //buildAndThrowException("[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
+                  throw SocketException("[vpr::SocketImplNSPR::connect() Non-Blocking socket "
+                     "with timeout failed: ] ", VPR_LOCATION);
+               }
                
                mBound = true;
                mConnectCalled = true;
@@ -385,6 +395,39 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
       }
    }
 }
+
+bool SocketImplNSPR::isConnected() const
+{
+   // If it is not open, then it can't be connected.
+   if ( isOpen() && mConnectCalled )
+   {
+      try
+      {
+         SelectorImplNSPR selector;
+         selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write |
+            SelectorBase::Except | SelectorBase::Error);
+
+         vpr::Uint16 num_events(0);
+         selector.select(num_events, vpr::Interval::NoWait);
+
+         vpr::Uint16 event = selector.getOut(getHandle());
+         if (SelectorBase::Except == event || SelectorBase::Error == event)
+         {
+            //close();
+            throw SocketException("[vpr::SocketImplNSPR::isConnected()] ", VPR_LOCATION);
+         }
+
+      }
+      catch(vpr::TimeoutException& ex)
+      {
+         boost::ignore_unused_variable_warning(ex);
+         return false;
+      }
+      return true;
+   }
+   return false;
+}
+
 
 void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
                             vpr::Uint32& bytesRead,
