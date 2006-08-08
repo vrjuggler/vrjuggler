@@ -138,7 +138,7 @@ void LibraryLoaderTest::findDSOAndCallEntryPointTest()
 
    try
    {
-      std::vector<fs::path> path2(1, fs::path(std::string(MODULE_DIR)));
+      std::vector<fs::path> path2(1, fs::path(std::string(MODULE_DIR), fs::native));
 
       vpr::LibraryPtr dso;
       vpr::LibraryLoader::findDSOAndCallEntryPoint("loadermod1", path2,
