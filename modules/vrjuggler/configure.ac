@@ -430,8 +430,8 @@ vrjpf_prof_lib_name="vrj_pf_p$LIBRARY_VERSION"
 if test "$OS_TYPE" = "UNIX" ; then
     REQ_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $VPR_EXTRA_LIBS $SNX_LIBS $GADGET_LIBS $JCCL_LIBS $JCCL_EXTRA_LIBS $LIBS -lm"
     DYLIB_DEPS_VJ="$REQ_EXTRA_LIBS"
-    DYLIB_DEPS_GL="-L\$(LIBDIR) -l$vrj_lib_name $REQ_EXTRA_LIBS"
-    DYLIB_DEPS_PF="-L\$(LIBDIR) -l$vrj_lib_name $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_GL="$REQ_EXTRA_LIBS"
+    DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
 
     osx_frameworks=''
 
@@ -492,6 +492,15 @@ if test "$OS_TYPE" = "UNIX" ; then
     VJ_BUILD_LIB_FILE_LIST([$DYLIB_PROF_DEPS_GL], [DYLIB_PROF_DEP_FILES_GL])
     VJ_BUILD_LIB_FILE_LIST([$DYLIB_PROF_DEPS_PF], [DYLIB_PROF_DEP_FILES_PF])
 
+    # This is done after the call to VJ_BUILD_LIB_FILE_LIST() to prevent the
+    # build from getting confused and using a path to the wrong libvrj.
+    # Unfortunately, this means that libvrj will not be identified as a
+    # dependency of libvrj_ogl or of libvrj_pf, but that generally shouldn't
+    # be a problem since the regular header file dependency stuff will cause
+    # object files to be rebuilt appropriately.
+    # XXX: This is, of cousre, a hack.
+    DYLIB_DEPS_GL="-L\$(LIBDIR) -l$vrj_lib_name $DYLIB_DEPS_GL"
+    DYLIB_DEPS_PF="-L\$(LIBDIR) -l$vrj_lib_name $DYLIB_DEPS_PF"
 elif test "$OS_TYPE" = "Win32" ; then
     REQ_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $VPR_EXTRA_LIBS $GADGET_LIBS $SNX_LIBS $JCCL_LIBS $JCCL_EXTRA_LIBS $LIBS"
     BASIC_WIN32_LIBS='comctl32.lib user32.lib gdi32.lib'
