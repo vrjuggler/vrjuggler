@@ -47,12 +47,18 @@
 		<dict>
 			<key>TWEEK_BASE_DIR</key>
 			<string>$JAVAROOT</string>
+			<key>TWEEK_DATA_DIR</key>
+			<string>share/tweek</string>
 			<key>JCCL_BASE_DIR</key>
 			<string>$JAVAROOT</string>
+			<key>JCCL_DATA_DIR</key>
+			<string>share/jccl</string>
 			<key>VJ_BASE_DIR</key>
 			<string>$JAVAROOT</string>
+			<key>VRJ_DATA_DIR</key>
+			<string>share/vrjuggler</string>
 			<key>JCCL_DEFINITION_PATH</key>
-			<string>@prefix@/share/vrjuggler/data/definitions</string>
+			<string>@prefix@/@VRJ_DATA_DIR@/data/definitions</string>
 			<key>apple.laf.useScreenMenuBar</key>
 			<string>true</string>
 			<key>java.security.policy</key>
