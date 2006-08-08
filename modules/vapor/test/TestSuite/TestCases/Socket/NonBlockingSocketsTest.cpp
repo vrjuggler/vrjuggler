@@ -191,6 +191,11 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor()
       {
          CPPUNIT_ASSERT_NO_THROW(throw);
       }
+      catch(...)
+      {
+         //vprDEBUG(vprDBG_ALL, 0) << "   Acceptor [ERROR]\n" << vprDEBUG_FLUSH;
+         CPPUNIT_ASSERT_NO_THROW(throw);
+      }
    }
 
    CPPUNIT_ASSERT(client_sock.isOpen() && "Accepted socket should be open");
@@ -198,6 +203,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor()
                     "Connected client socket should be non-blocking");
 
    client_sock.setNoDelay(true);
+
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to send message to client",
       client_sock.send(mMessage, mMessageLen, bytes_written));
 
@@ -217,8 +223,8 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor()
    }
    mCondVar.release();
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor side of client socket", client_sock.close());
 
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor side of client socket", client_sock.close());
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close acceptor", acceptor.close());
 }
 
@@ -242,12 +248,9 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector()
    mCondVar.release();
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to open connector socket", con_sock.open());
-
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to enable non-blocking for connector", con_sock.setBlocking(false));
-
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect",
       connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec)));
-
    CPPUNIT_ASSERT(! con_sock.isBlocking() && "Connector should be non-blocking");
 
    mCondVar.acquire();
@@ -269,8 +272,6 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector()
       while ( con_sock.isReadBlocked() )
       {
          vpr::System::usleep(10);
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Connector waiting for data\n"
-                                 << vprDEBUG_FLUSH;
       }
    }
    catch(...)
@@ -286,7 +287,6 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector()
       mCondVar.signal();
    }
    mCondVar.release();
-
    con_sock.close();
 }
 
@@ -479,7 +479,6 @@ void NonBlockingSocketTest::testSendUDP_receiver()
 
    CPPUNIT_ASSERT(bytes_read == mMessageLen && "Did not receive entire message");
    CPPUNIT_ASSERT(data == mMessage);
-
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close receiver socket", recv_sock.close());
 }
 

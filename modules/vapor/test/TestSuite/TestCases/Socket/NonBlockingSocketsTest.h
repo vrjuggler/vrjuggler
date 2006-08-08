@@ -20,7 +20,7 @@ CPPUNIT_TEST_SUITE(NonBlockingSocketTest);
 CPPUNIT_TEST( testSetOpenNonBlockingThenOpenThenClose );
 CPPUNIT_TEST( testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose );
 CPPUNIT_TEST( testConnect2NonBlockingSockets );
-CPPUNIT_TEST( testNonBlockingTransfer );
+//CPPUNIT_TEST( testNonBlockingTransfer );
 CPPUNIT_TEST( testConnect2NonBlockingSocketsUsingSelect );
 CPPUNIT_TEST( testSendUDP );
 CPPUNIT_TEST_SUITE_END();
