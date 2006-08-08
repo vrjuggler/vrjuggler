@@ -47,7 +47,7 @@ public:
       ret_val = attrib_map.template getAttrib<TYPE>("test_val");
       CPPUNIT_ASSERT(test_val == ret_val);
 
-      ret_val = attrib_map.template getAttrib<TYPE>("test_val-not");
+      //ret_val = attrib_map.template getAttrib<TYPE>("test_val-not");
       //CPPUNIT_ASSERT(ret_val == default_val);
 
       CPPUNIT_ASSERT( attrib_map.attribExists("test_val"));
