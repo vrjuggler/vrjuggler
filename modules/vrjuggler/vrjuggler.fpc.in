@@ -1,5 +1,5 @@
 ########################### Private Variables ############################
-prefix= ${fp_file_cwd}
+prefix= ${fp_file_cwd}/../..
 exec_prefix = ${prefix}
 
 VERSION_DOT = @VERSION_DOT@
