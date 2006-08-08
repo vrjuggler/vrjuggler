@@ -162,6 +162,18 @@ SNX_PATH([1.0.1], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
 VRJ_USE_X11="$GADGET_USE_X11"
 if test "x$VRJ_USE_X11" = "xyes" ; then
+   AC_PATH_XTRA
+
+   vjsave_CPPFLAGS="$CPPFLAGS"
+   AC_TRY_CPP([#include <GL/glx.h>], ,
+      [CPPFLAGS="$CPPFLAGS -I/usr/X11R6/include"
+       AC_TRY_CPP([#include <GL/glx.h>],
+          [X_CFLAGS="$X_CFLAGS -I/usr/X11R6/include"],
+          [AC_MSG_ERROR([*** GLX header required ***])]
+      )]
+   )
+   CPPFLAGS="$vjsave_CPPFLAGS"
+
    AC_DEFINE([VRJ_USE_X11], , [Define if the X Window System will be used.])
 fi
 
@@ -399,6 +411,8 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     if test "x$PLATFORM" = "xDarwin" ; then
         if test "x$VRJ_USE_X11" = "xyes" ; then
+            CFLAGS="$CFLAGS $X_CFLAGS"
+            CXXFLAGS="$CXXFLAGS $X_CFLAGS"
             DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
             DYLIB_PROF_DEPS_GL="$DYLIB_PROF_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
         else
