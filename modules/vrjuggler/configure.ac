@@ -412,7 +412,7 @@ fi
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $VJ_APP_CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 VJ_BASE_DIR, $DEFS, , ${_EXTRA_FLAGS})
 VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
-                     [$LDOPTS_OPT], ['$(VRJ_LIBS_MIN)'],
+                     [$LDOPTS_OPT], ['$(VRJ_LIBS)'],
                      [$VJ_APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
