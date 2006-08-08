@@ -1,5 +1,5 @@
 #include <TestCases/IO/Socket/InetAddrTest.h>
-
+#include <algorithm>
 
 namespace vprTest
 {
