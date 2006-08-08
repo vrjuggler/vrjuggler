@@ -49,7 +49,7 @@ void SelectorTest::testAcceptorPoolSelection ()
     mRendevousPort = 30000 + (rand_num % 30000);     // Get a partially random port
 
     mNumRendevousPorts = 13;
-    mNumIters = 50;
+    mNumIters = 10;
     mMessageValue = std::string("The Data");
     mMessageLen = mMessageValue.length();
 
@@ -83,15 +83,16 @@ void SelectorTest::testAcceptorPoolSelection_acceptor()
    // make lots of acceptors, set their addresses, and open them... saving each handle in a std::map
    for(i=0;i<mNumRendevousPorts;i++)
    {
-      vpr::SocketAcceptor* new_acceptor = new vpr::SocketAcceptor();          // Create acceptor
-      vpr::InetAddr local_acceptor_addr;
-      local_acceptor_addr.setAddress("localhost", (mRendevousPort+i));        // Set local address
-      new_acceptor->open(local_acceptor_addr);                                // Open acceptor
-      vpr::IOSys::Handle handle = new_acceptor->getHandle();                  // Get the Handle to register
+      vpr::SocketAcceptor* new_acceptor = new vpr::SocketAcceptor();    // Create acceptor
+      vpr::InetAddr local_acceptor_addr = vpr::InetAddr::getLocalHost();
+      local_acceptor_addr.setPort(mRendevousPort+i);                    // Set local address
+      new_acceptor->open(local_acceptor_addr);                          // Open acceptor
+      vpr::IOSys::Handle handle = new_acceptor->getHandle();            // Get the Handle to register
       acceptorTable[handle] = new_acceptor;
-      //selector.addHandle(handle);
-      selector.addHandle(handle, (vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except) );                      // Add to selector
-      //selector.setIn(handle, (vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except));
+      // Add to selector
+      selector.addHandle(handle, (vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except) );
+      //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "port: " << mRendevousPort+i
+      //   << std::endl << vprDEBUG_FLUSH;
    }
 
    // First test selector TIMEOUT
@@ -146,10 +147,11 @@ void SelectorTest::testAcceptorPoolSelection_acceptor()
        // Close the socket
        CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem closing accepted socket", sock.close());
     }
-
+ 
     // Delete acceptors (which in turn closes's and deletes their sockets)
     for( std::map<IOSys::Handle, vpr::SocketAcceptor*>::iterator a=acceptorTable.begin(); a != acceptorTable.end(); a++)
     {
+       (*a).second->close();
        delete (*a).second;
     }
 }
@@ -157,7 +159,6 @@ void SelectorTest::testAcceptorPoolSelection_acceptor()
 void SelectorTest::testAcceptorPoolSelection_connector()
 {
    ReturnStatus ret_val;
-   vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;           // Connect to acceptor
    vpr::Uint32 bytes_read;
 
@@ -165,7 +166,9 @@ void SelectorTest::testAcceptorPoolSelection_connector()
    mCondVar.acquire();
    {
       while(mState != ACCEPTOR_READY)
+      {
          mCondVar.wait();
+      }
    }
    mCondVar.release();
 
@@ -178,8 +181,11 @@ void SelectorTest::testAcceptorPoolSelection_connector()
       long rand_num(random());
 #endif
       vpr::Uint16 port_num = mRendevousPort+(rand_num % mNumRendevousPorts);
-      //std::cout << " p: " << port_num << std::flush;
-      remote_addr.setAddress("localhost", port_num);
+      //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "port: " << port_num
+      //   << std::endl << vprDEBUG_FLUSH;
+
+      vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
+      remote_addr.setPort(port_num);
       vpr::SocketStream con_sock;
       std::string       data;
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect", connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec) ));
