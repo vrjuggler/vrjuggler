@@ -62,6 +62,7 @@ configure.ac: ;
 Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
+vrjuggler.fpc.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 $(VERSION_FILES): ;

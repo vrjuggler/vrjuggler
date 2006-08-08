@@ -59,6 +59,7 @@ configure.ac: ;
 Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
+jccl.fpc.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 $(VERSION_FILES): ;

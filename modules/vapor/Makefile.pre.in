@@ -59,6 +59,7 @@ configure.ac: ;
 Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
+vpr.fpc.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 
