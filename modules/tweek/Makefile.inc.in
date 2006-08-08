@@ -325,7 +325,8 @@ links:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek.fpc $(instlinks)/share/flagpoll/tweek.fpc
+          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek.fpc			\
+          $(instlinks)/share/flagpoll/tweek.fpc
 
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
@@ -446,8 +447,8 @@ install-flagpoll:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/tweek.fpc 			\
-	  $(libdir)$(LIBBITSUF)/flagpoll/tweek-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
+          $(topdir)/tweek.fpc 						\
+          $(libdir)$(LIBBITSUF)/flagpoll/tweek-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
 
 PREINSTALL_HEADERS=	pre-install-headers
 
