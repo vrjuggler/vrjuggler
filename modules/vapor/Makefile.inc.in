@@ -217,7 +217,6 @@ links:
           $(EXTRA_INSTALL_ARGS) $(topdir)/vpr.fpc.tmp			\
           $(instlinks)/share/flagpoll/vpr.fpc
 	rm -f $(topdir)/vpr.fpc.tmp
-
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else

@@ -265,7 +265,6 @@ links:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/jccl.fpc			\
           $(instlinks)/share/flagpoll/jccl.fpc
-
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else
