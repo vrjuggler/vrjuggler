@@ -341,8 +341,6 @@ post-install:
 	@$(MAKE) install-data
 	@$(MAKE) install-m4
 	@$(MAKE) install-flagpoll
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/gadgeteer-config $(bindir)
 
 PREINSTALL_HEADERS=	pre-install-headers
 POSTINSTALL_HEADERS=	post-install-headers
