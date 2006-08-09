@@ -32,7 +32,7 @@ void SocketTest::testOpenCloseOpen_connector()
    //const int backlog = 5;
 
    // make a new socket that will connect to port "port"
-   vpr::InetAddr remote_addr;
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
    remote_addr.setPort(port);
    vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
 
@@ -419,7 +419,7 @@ void SocketTest::reuseAddrSimpleTest()
 void SocketTest::reuseAddrTest_connector()
 {
    vpr::Uint16 port = 6667;
-   vpr::InetAddr remote_addr;
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
 
    // make a new socket that will connect to port "port"
    remote_addr.setPort(port);
@@ -439,7 +439,7 @@ void SocketTest::reuseAddrTest_acceptor()
 {
    vpr::InetAddr addr1;
 
-   CPPUNIT_ASSERT_NO_THROW(addr1.setAddress( "localhost", 6667 ));
+   CPPUNIT_ASSERT_NO_THROW(addr1.setPort(6667));
 
    vpr::SocketStream sock1( addr1, vpr::InetAddr::AnyAddr );
    vpr::SocketStream sock2( addr1, vpr::InetAddr::AnyAddr );
@@ -452,16 +452,14 @@ void SocketTest::reuseAddrTest_acceptor()
    vpr::SocketStream child_socket;
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("child didn't spawn", sock1.accept(child_socket));
 
-      // assume server crashes, so lets restart it.
-      CPPUNIT_ASSERT_NO_THROW_MESSAGE("open(): server restart", sock2.open());
-      sock1.setReuseAddr( true ); // set the opt in-between for bind() to succeed
-      //std::cout<<"::::::::: " << result<<"\n"<<std::flush;
-      CPPUNIT_ASSERT_NO_THROW_MESSAGE("bind(): server restart", sock2.bind());
-      //std::cout<<"::::::::: " << result<<"\n"<<std::flush;
+   // Assume server crashes, so lets restart it.
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("open(): server restart", sock2.open());
+   sock2.setReuseAddr( true ); // set the opt in-between for bind() to succeed
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("bind(): server restart", sock2.bind());
+   //std::cout<<"::::::::: " << result<<"\n"<<std::flush;
 
-   // close the child socket
+   // close all sockets.
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("child Socket::close() failed", child_socket.close());
-
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("restarted server Socket::close() failed", sock2.close());
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("server Socket::close failed", sock1.close());
 }
@@ -495,7 +493,7 @@ void SocketTest::reuseAddrTest()
 void SocketTest::testBlocking_connector()
 {
    vpr::Uint16 port = 7001;
-   vpr::InetAddr remote_addr;
+   vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
 
    remote_addr.setPort(port);
 
