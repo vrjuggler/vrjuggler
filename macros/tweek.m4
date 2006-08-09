@@ -44,8 +44,8 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
     fi
 
     tweek_flagpoll_args="tweek $tweek_flagpoll_args --no-deps"
-
-    AC_PATH_PROG(FLAGPOLL, flagpoll, no)
+      
+    AM_PATH_FLAGPOLL([0.5.0], , [AC_MSG_ERROR(*** Flagpoll required for Tweek Flags ***)])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then

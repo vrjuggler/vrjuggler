@@ -54,8 +54,8 @@ AC_DEFUN([VRJUGGLER_PATH],
     fi
 
     vrj_flagpoll_args="vrjuggler $vrj_flagpoll_args --no-deps"
-
-    AC_PATH_PROG(FLAGPOLL, flagpoll, no)
+      
+    AM_PATH_FLAGPOLL([0.5.0], , [AC_MSG_ERROR(*** Flagpoll required for VR Juggler Flags ***)])
     min_vrj_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
