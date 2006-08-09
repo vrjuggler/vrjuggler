@@ -419,8 +419,6 @@ post-install:
 	@$(MAKE) install-m4
 	@$(MAKE) install-flagpoll
 	@$(MAKE) install-java-idl
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek-config $(bindir)
 
 install-java-idl:
 ifeq ($(BUILD_JAVA), Y)
