@@ -35,6 +35,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
+#include <boost/version.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -141,19 +142,22 @@ namespace jccl
 
             if (fs::exists(dir) && fs::is_directory(dir))
             {
+               // Only accept files with a .jdef extension
+               const std::string def_ext = ".jdef";
+
                fs::directory_iterator end_itr;
                for (fs::directory_iterator file(dir); file != end_itr; ++file)
                {
                   try
                   {
+#if BOOST_VERSION < 103400
                      // Ignore directories
                      if (!fs::is_directory(*file))
                      {
-                        // Only accept files with a .jdef extension
-                        const std::string def_ext = ".jdef";
                         const std::string file_name = file->leaf();
-                        
-                        std::string::size_type result = file_name.rfind(".");
+                        const std::string::size_type result =
+                           file_name.rfind(".");
+
                         if(result != std::string::npos && file_name.substr(result) == def_ext)
                         {
                            vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
@@ -162,12 +166,38 @@ namespace jccl
                            loadDef(file->native_file_string());
                         }
                      }
+#else
+                     // Ignore directories
+                     if ( ! fs::is_directory(file->status()) )
+                     {
+                        const std::string file_name = file->path().leaf();
+                        const std::string::size_type result =
+                           file_name.rfind(".");
+
+                        if ( result != std::string::npos &&
+                             file_name.substr(result) == def_ext )
+                        {
+                           vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
+                              << "Loading '"
+                              << file->path().native_file_string() << "'\n"
+                              << vprDEBUG_FLUSH;
+                           loadDef(file->path().native_file_string());
+                        }
+                     }
+#endif
                   }
                   catch (fs::filesystem_error& err)
                   {
+#if BOOST_VERSION < 103400
                      vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
                         << "Failed to read '" << file->native_file_string()
                         << "': " << err.what() << std::endl << vprDEBUG_FLUSH;
+#else
+                     vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
+                        << "Failed to read '"
+                        << file->path().native_file_string() << "': "
+                        << err.what() << std::endl << vprDEBUG_FLUSH;
+#endif
                   }
                }
             }
