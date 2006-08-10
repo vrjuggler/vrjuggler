@@ -36,6 +36,7 @@
 #include <vpr/vprConfig.h>
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/version.hpp>
 
 #include <vpr/Util/Debug.h>
 #include <vpr/DynLoad/LibraryFinder.h>
@@ -59,6 +60,7 @@ void LibraryFinder::rescan()
 
       for ( fs::directory_iterator file(mLibDir); file != end_itr; ++file )
       {
+#if BOOST_VERSION < 103400
          // Ignore directories.  Normal files and symlinks are fine.
          if ( ! fs::is_directory(*file) )
          {
@@ -73,6 +75,27 @@ void LibraryFinder::rescan()
                mLibList.push_back(vpr::LibraryPtr(new vpr::Library(file->native_file_string())));
             }
          }
+#else
+         // Ignore directories.  Normal files and symlinks are fine.
+         if ( ! fs::is_directory(file->status()) )
+         {
+            // Construct a substring of file->path.leaf() that contains only
+            // the file extension. We require that the file we will match have
+            // names that end with mLibExt.
+            const std::string::size_type pos =
+               file->path().leaf().size() - mLibExt.size();
+            const std::string file_ext = file->path().leaf().substr(pos);
+
+            if ( file_ext == mLibExt )
+            {
+               mLibList.push_back(
+                  vpr::LibraryPtr(
+                     new vpr::Library(file->path().native_file_string())
+                  )
+               );
+            }
+         }
+#endif
       }
    }
    else
