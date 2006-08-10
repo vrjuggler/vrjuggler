@@ -1,6 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Aug-09-2006 patrick     Updated for Boost.Filesystem changes in Boost 1.34.
+Aug-10-2006 patrick     Updated for Boost.Filesystem changes in Boost 1.34.
                         NEW VERSION: 1.1.8
 Aug-03-2006 dshipton    Flagpoll now used to build JCCL.
                         NEW VERSION: 1.1.7
