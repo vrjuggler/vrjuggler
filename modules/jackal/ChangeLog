@@ -1,6 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Aug-09-2006 patrick     Updated for Boost.Filesystem changes in Boost 1.34.
+Aug-10-2006 patrick     Updated for Boost.Filesystem changes in Boost 1.34.
 Jul-13-2006 patrick     Implemented automatic linking of the JCCL library.
 Jul-08-2006 patrick     Added support for building universal binaries on Mac
                         OS X.
