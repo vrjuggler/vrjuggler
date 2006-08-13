@@ -23,7 +23,7 @@ The Juggler Team
   Getting the Source Code and the Dependencies
 
 
-        How to Get the Juggler Suite from CVS
+        How to Get the Juggler Suite from Subversion
 
         Downloading Third-Party Dependencies
 
@@ -44,19 +44,20 @@ Introduction
  You have downloaded the source code for Version 2.0 of the Juggler Project.
  This document explains how to build the modules of the Juggler Project from
  the source code. We begin by explaining some issues related to specific
- operating systems. We then explain how to get the source code from our CVS
- repository. (Those users who downloaded a pre-packaged source release can
- skip ahead to the section called "Using configure.pl"). We
+ operating systems. We then explain how to get the source code from our
+ Subversion repository. (Those users who downloaded a pre-packaged source
+ release can skip ahead to the section called "Using configure.pl"). We
  conclude with instructions on how to build VR Juggler and its individual
  components.
 
  Before reading further, we recommend that readers take a look at the Wiki
- page relating to building from CVS (http://www.vrjuggler.org/twiki_public/
- bin/view/Juggler/BuildingFromCvs). It is a supplement to this document
- containing tips and reminders for those users building the CVS version of
- VR Juggler. It is not a replacement for this document, nor can it stand on
- its own as build instructions. You are reading the definitive build
- instructions; the Wiki page merely provides informal, extra information.
+ page relating to building from source (http://www.vrjuggler.org/
+ twiki_public/bin/view/Juggler/BuildingFromSvn). It is a supplement to this
+ document containing tips and reminders for those users building the SVN
+ version of VR Juggler. It is not a replacement for this document, nor can
+ it stand on its own as build instructions. You are reading the definitive
+ build instructions; the Wiki page merely provides informal, extra
+ information.
 
 
 Important Notes for IRIX Users
@@ -135,20 +136,20 @@ Important Note for Windows Users
  Studio 6.0. Microsoft acknowledges the issues concerning noncompliance to
  the C++ Standard with Visual Studio 6.0, and it appears that they have no
  plans to fix these problems. Therefore, we require the use of Visual Studio
- 7.x (.NET 2002 or 2003) to compile the source code.
+ 7.x (.NET 2002 or 2003) or newer to compile the source code.
 
 
 Getting the Source Code and the Dependencies
 
  In this section, we explain how to get the Juggler Project source code and
  the dependencies required to build Juggler. There are two ways to get the
- source code: from a pre-packaged source release archive or from the CVS
- repository on SourceForge. If you got the code from a pre-packaged source
- archive, that code is a complete "snapshot" of the CVS
- repository at the time of release. It contains all dependencies that would
- otherwise have been acquired using CVS. It does not contain binary
- dependencies that must be downloaded separately (such as NSPR, the Java
- Developer Kit, a C++ compiler, etc.).
+ source code: from a pre-packaged source release archive or from the
+ Subversion repository on RealityForge. If you got the code from a pre-
+ packaged source archive, that code is a complete "snapshot" of the
+ Subversion repository at the time of release. It contains all dependencies
+ that would otherwise have been acquired using Subversion. It does not
+ contain binary dependencies that must be downloaded separately (such as
+ NSPR, the Java Developer Kit, a C++ compiler, etc.).
 
  The current list of required software packages is as follows:
 
@@ -192,9 +193,10 @@ Getting the Source Code and the Dependencies
 *  CppUnit (http://cppunit.sourceforge.net/): A unit testing framework for
    C++. The Juggler C++ test suties make use of extensions to CppUnit. An
    extended version of the CppUnit source that includes these extensions can
-   be acquired from the Juggler CVS repository in the module cppunit. Refer
-   to the section called "How to Get the Juggler Suite from CVS"
-   for instructions about accessing the Juggler CVS repository.
+   be acquired from the Juggler Subversion repository in the module cppunit.
+   Refer to the section called "How to Get the Juggler Suite from
+   Subversion" for instructions about accessing the Juggler Subversion
+   repository.
 
 
  The third-party dependencies must be downloaded from the sites listed above
@@ -205,24 +207,23 @@ Getting the Source Code and the Dependencies
  versions of tools (such as the JDK) that you download.
 
 
-How to Get the Juggler Suite from CVS
+How to Get the Juggler Suite from Subversion
 
  You can optionally get the Juggler Project as a source code tarball from
  the website (http://www.vrjuggler.org/) or you can execute the following
- commands from a shell to get the code from our CVS repository:
+ command from a shell to get the code from our Subversion repository:
 
 
-  cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login
-  cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co
-  juggler
+  svn co https://realityforge.vrsource.org/svn/vrjuggler/juggler/branches/
+  2.0 juggler
 
 
 Downloading Third-Party Dependencies
 
- In addition to source the dependencies acquired through CVS, there are some
- third-party dependencies that must be installed separately. Remember that
- no Java code in VR Juggler can be used without the JDK and a working Java
- version of CORBA.
+ In addition to source the dependencies acquired through Subversion, there
+ are some third-party dependencies that must be installed separately.
+ Remember that no Java code in VR Juggler can be used without the JDK and a
+ working Java version of CORBA.
 
 
 Boost
@@ -231,14 +232,14 @@ Boost
  Boost source can be downloaded from http://www.sf.net/projects/boost/. To
  compile and install Boost, refer to its installation documentation (http://
  www.boost.org/more/getting_started.html#Build_Install). Note that you need
- the command bjam (referred to as "boost-jam" on the Boost
- download page) to build Boost.
+ the command bjam (referred to as "boost-jam" on the Boost download page) to
+ build Boost.
 
 
 Important
 
- Mac OS X users should compile the Boost libraries using the
- "darwin" toolset.
+ Mac OS X users should compile the Boost libraries using the "darwin"
+ toolset.
 
 
 CppDOM
@@ -292,8 +293,7 @@ omniORB
  that contain the actual binaries (except when installed on FreeBSD via the
  Ports Collection). Because of this, several extra options must be specified
  in order to tell the Tweek configure script where to find everything.
- Please refer to the section called "Tweek" for more details on
- this.
+ Please refer to the section called "Tweek" for more details on this.
 
 
 Compiling
@@ -307,8 +307,8 @@ Important Note Regarding Compiling
 
  You have downloaded developmental code. It may not be stable, and it may
  not even compile. Compiling VR Juggler itself can be a little complicated
- for anyone who does not have some background in using CVS, Autoconf, C++,
- and make or Visual Studio.
+ for anyone who does not have some background in using Subversion, Autoconf,
+ C++, and make or Visual Studio.
 
 
 Compiling the Juggler Suite of Tools
@@ -617,10 +617,10 @@ Configuring the Juggler Build
 
 Using configure.pl
 
- In the base juggler source directory, we have a "global"
- configure script written in Perl called configure.pl. To get the command-
- line options for this script, use one of the following (the second being
- much more detailed):
+ In the base juggler source directory, we have a "global" configure script
+ written in Perl called configure.pl. To get the command-line options for
+ this script, use one of the following (the second being much more
+ detailed):
 
 
   ./configure.pl --help
@@ -648,9 +648,8 @@ Important
  source tree. The same holds for the individual autogen.sh scripts in the
  various modules, should you need to run one individually.
 
- configure.pl can run in a unique "build" directory or in the
- directory where it resides. Here is how we (the Juggler Team) have been
- using it:
+ configure.pl can run in a unique "build" directory or in the directory
+ where it resides. Here is how we (the Juggler Team) have been using it:
 
 
   1.  Make a directory for compiling. There are many good reasons to do this
@@ -693,27 +692,26 @@ Important
  its dependencies. This includes Sonix, which is an interesting special
  case. Sonix can make use of Aaudiere, OpenAL, or AudioWorks to add sound to
  VR Juggler applications. If none of those packages is found, Sonix will
- "stub out" its sound APIs. This means that Sonix and the VR
- Juggler Sound Manager can still be used in applications, but no audio will
- be heard at run time. See the section called "Sonix" for more
- information about how to configure Sonix to use Audiere, OpenAL, or
- AudioWorks.
+ "stub out" its sound APIs. This means that Sonix and the VR Juggler Sound
+ Manager can still be used in applications, but no audio will be heard at
+ run time. See the section called "Sonix" for more information about how to
+ configure Sonix to use Audiere, OpenAL, or AudioWorks.
 
  For example uses of configure.pl, take a look at the Wiki page relating to
- building from CVS (http://www.vrjuggler.org/twiki_public/bin/view/Juggler/
- BuildingFromCvs). It is not a replacement for this document, but it shows
- how some members of the Juggler team configure VR Juggler. It also has
- information on more advanced uses of configure.pl that are beyond the scope
- of this document.
+ building from source (http://www.vrjuggler.org/twiki_public/bin/view/
+ Juggler/BuildingFromSvn). It is not a replacement for this document, but it
+ shows how some members of the Juggler team configure VR Juggler. It also
+ has information on more advanced uses of configure.pl that are beyond the
+ scope of this document.
 
 
 Using Locally Installed Software
 
  As noted in the section called "Getting the Source Code and the
- Dependencies", VR Juggler depends on several external software
- packages. As an example, consider the case where the GMTL library is
- installed in /home/user1/pkgs/GMTL with the headers in /home/user1/pkgs/
- GMTL/include. To use this installation, run configure.pl as follows:
+ Dependencies", VR Juggler depends on several external software packages. As
+ an example, consider the case where the GMTL library is installed in
+ /home/user1/pkgs/GMTL with the headers in /home/user1/pkgs/GMTL/include. To
+ use this installation, run configure.pl as follows:
 
 
   ../configure.pl --with-gmtl=/home/user1/pkgs/GMTL
@@ -748,8 +746,8 @@ Tips for Compiling Individual Tools in the Juggler Suite
  In this section, we provide tips for ensuring that individual tools in the
  Juggler Suite are compiled correctly. For the most part, this duplicates
  information that can be found on the Wiki page relating to building from
- CVS (http://www.vrjuggler.org/twiki_public/bin/view/Juggler/
- BuildingFromCvs).
+ source (http://www.vrjuggler.org/twiki_public/bin/view/Juggler/
+ BuildingFromSvn).
 
 
 Sonix

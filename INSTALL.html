@@ -1,17 +1,16 @@
 <html><head>
       <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Building and Installing the Juggler Project (Version 2.0)</title><link rel="stylesheet" href="base_style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 2.0)</h1></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e30">Important Notes for IRIX Users</a></span></dt><dt><span class="section"><a href="#d0e114">Important Note for Windows Users</a></span></dt></dl></dd><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#section.cvs.access">How to Get the Juggler Suite from CVS</a></span></dt><dt><span class="section"><a href="#d0e216">Downloading Third-Party Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e308">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e319">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler
+   <title>Building and Installing the Juggler Project (Version 2.0)</title><link rel="stylesheet" href="base_style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 2.0)</h1></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e30">Important Notes for IRIX Users</a></span></dt><dt><span class="section"><a href="#d0e114">Important Note for Windows Users</a></span></dt></dl></dd><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#section.cvs.access">How to Get the Juggler Suite from Subversion</a></span></dt><dt><span class="section"><a href="#d0e216">Downloading Third-Party Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e308">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e319">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler
          Suite</a></span></dt></dl></dd></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e15"></a>Introduction</h2></div></div></div><p>You have downloaded the source code for Version 2.0 of the Juggler
       Project. This document explains how to build the modules of the Juggler
       Project from the source code. We begin by explaining some issues related
       to specific operating systems. We then explain how to get the source
-      code from our CVS repository. (Those users who downloaded a pre-packaged
-      source release can skip ahead to <a href="#using.configure.pl" title="Using configure.pl">the section called &#8220;Using <span><strong class="command">configure.pl</strong></span>&#8221;</a>).
-      We conclude with instructions on how to build VR Juggler and its
-      individual components.</p><p>Before reading further, we recommend that readers take a look at
-      the Wiki page relating to building from CVS (<a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</a>).
+      code from our Subversion repository. (Those users who downloaded a
+      pre-packaged source release can skip ahead to <a href="#using.configure.pl" title="Using configure.pl">the section called &#8220;Using <span><strong class="command">configure.pl</strong></span>&#8221;</a>). We conclude with instructions on how
+      to build VR Juggler and its individual components.</p><p>Before reading further, we recommend that readers take a look at
+      the Wiki page relating to building from source (<a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).
       It is a <span class="emphasis"><em>supplement</em></span> to this document containing tips
-      and reminders for those users building the CVS version of VR Juggler. It
+      and reminders for those users building the SVN version of VR Juggler. It
       is not a replacement for this document, nor can it stand on its own as
       build instructions. You are reading the definitive build instructions;
       the Wiki page merely provides informal, extra information.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e30"></a>Important Notes for IRIX Users</h3></div></div></div><p>Despite our best efforts, there are some issues related to
@@ -65,16 +64,16 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
          the issues concerning noncompliance to the C++ Standard with Visual
          Studio 6.0, and it appears that they have no plans to fix these
          problems. Therefore, we require the use of Visual Studio 7.x (.NET
-         2002 or 2003) to compile the source code.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="source.code.section"></a>Getting the Source Code and the Dependencies</h2></div></div></div><p>In this section, we explain how to get the Juggler Project source
+         2002 or 2003) or newer to compile the source code.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="source.code.section"></a>Getting the Source Code and the Dependencies</h2></div></div></div><p>In this section, we explain how to get the Juggler Project source
       code and the dependencies required to build Juggler. There are two ways
       to get the source code: from a pre-packaged source release archive or
-      from the CVS repository on SourceForge. If you got the code from a
-      pre-packaged source archive, that code is a complete
-      &#8220;<span class="quote">snapshot</span>&#8221; of the CVS repository at the time of release. It
-      contains all dependencies that would otherwise have been acquired using
-      CVS. It <span class="emphasis"><em>does not</em></span> contain binary dependencies that
-      must be downloaded separately (such as NSPR, the Java Developer Kit, a
-      C++ compiler, etc.).</p><p>The current list of <span class="emphasis"><em>required</em></span> software
+      from the Subversion repository on RealityForge. If you got the code from
+      a pre-packaged source archive, that code is a complete
+      &#8220;<span class="quote">snapshot</span>&#8221; of the Subversion repository at the time of
+      release. It contains all dependencies that would otherwise have been
+      acquired using Subversion. It <span class="emphasis"><em>does not</em></span> contain
+      binary dependencies that must be downloaded separately (such as NSPR,
+      the Java Developer Kit, a C++ compiler, etc.).</p><p>The current list of <span class="emphasis"><em>required</em></span> software
       packages is as follows:</p><div class="itemizedlist"><ul type="disc"><li><p>CppDOM (<a href="http://www.sourceforge.net/projects/xml-cppdom/" target="_top">http://www.sf.net/projects/xml-cppdom/</a>):
             A lightweight, easy-to-use XML parser written in C++. CppDOM must
             be compiled and installed for use with VR Juggler.</p></li><li><p>Boost (<a href="http://www.boost.org/" target="_top">http://www.boost.org/</a>): A C++
@@ -98,22 +97,22 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
             A unit testing framework for C++. The Juggler C++ test suties make
             use of extensions to CppUnit. An extended version of the CppUnit
             source that includes these extensions can be acquired from the
-            Juggler CVS repository in the module <code class="literal">cppunit</code>.
-            Refer to <a href="#section.cvs.access" title="How to Get the Juggler Suite from CVS">the section called &#8220;How to Get the Juggler Suite from CVS&#8221;</a> for instructions
-            about accessing the Juggler CVS repository.</p></li></ul></div><p>The third-party dependencies must be downloaded from the sites
+            Juggler Subversion repository in the module
+            <code class="literal">cppunit</code>. Refer to <a href="#section.cvs.access" title="How to Get the Juggler Suite from Subversion">the section called &#8220;How to Get the Juggler Suite from Subversion&#8221;</a> for instructions about accessing
+            the Juggler Subversion repository.</p></li></ul></div><p>The third-party dependencies must be downloaded from the sites
       listed above and installed manually. You may also have to compile one or
       more of the packages if binary distributions are not available. Which
       packages you download depends on what you already have installed. Note
       carefully which packages are needed based on the software you have
       installed and what versions of tools (such as the JDK) that you
-      download.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="section.cvs.access"></a>How to Get the Juggler Suite from CVS</h3></div></div></div><p>You can optionally get the Juggler Project as a source code
+      download.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="section.cvs.access"></a>How to Get the Juggler Suite from Subversion</h3></div></div></div><p>You can optionally get the Juggler Project as a source code
          tarball from the website (<a href="http://www.vrjuggler.org/" target="_top">http://www.vrjuggler.org/</a>) or
-         you can execute the following commands from a shell to get the code
-         from our CVS repository:</p><pre class="screen">cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login
-cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e216"></a>Downloading Third-Party Dependencies</h3></div></div></div><p>In addition to source the dependencies acquired through CVS,
-         there are some third-party dependencies that must be installed
-         separately. Remember that no Java code in VR Juggler can be used
-         without the JDK and a working Java version of CORBA.</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e221"></a>Boost</h4></div></div></div><p>The minimum required version of Boost, as of this writing,
+         you can execute the following command from a shell to get the code
+         from our Subversion repository:</p><pre class="screen">svn co https://realityforge.vrsource.org/svn/vrjuggler/juggler/branches/2.0 juggler
+</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e216"></a>Downloading Third-Party Dependencies</h3></div></div></div><p>In addition to source the dependencies acquired through
+         Subversion, there are some third-party dependencies that must be
+         installed separately. Remember that no Java code in VR Juggler can be
+         used without the JDK and a working Java version of CORBA.</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e221"></a>Boost</h4></div></div></div><p>The minimum required version of Boost, as of this writing,
             is 1.31.0. The Boost source can be downloaded from <a href="http://www.sf.net/projects/boost/" target="_top">http://www.sf.net/projects/boost/</a>.
             To compile and install Boost, refer to its installation
             documentation (<a href="http://www.boost.org/more/getting_started.html#Build_Install" target="_top">http://www.boost.org/more/getting_started.html#Build_Install</a>).
@@ -155,8 +154,8 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
       individual components is provided later.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e308"></a>Important Note Regarding Compiling</h3></div></div></div><p>You have downloaded <span class="emphasis"><em>developmental</em></span> code. It
          may not be stable, and it may not even compile. Compiling VR Juggler
          itself can be a little complicated for anyone who does not have some
-         background in using CVS, Autoconf, C++, and <span><strong class="command">make</strong></span>
-         or Visual Studio.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e319"></a>Compiling the Juggler Suite of Tools</h3></div></div></div><p>This section explains how to get, configure, and compile all of
+         background in using Subversion, Autoconf, C++, and
+         <span><strong class="command">make</strong></span> or Visual Studio.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e319"></a>Compiling the Juggler Suite of Tools</h3></div></div></div><p>This section explains how to get, configure, and compile all of
          the tools that make up VR Juggler. Each tool compiles to its own
          library and can be installed individually. (Refer to the
          <code class="filename">README</code> file in this directory for more
@@ -313,7 +312,8 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
                audio will be heard at run time. See <a href="#sonix.compile.section" title="Sonix">the section called &#8220;Sonix&#8221;</a> for more information about
                how to configure Sonix to use Audiere, OpenAL, or
                AudioWorks.</p><p>For example uses of <span><strong class="command">configure.pl</strong></span>, take
-               a look at the Wiki page relating to building from CVS (<a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</a>).
+               a look at the Wiki page relating to building from source
+               (<a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).
                It is not a replacement for this document, but it shows how
                some members of the Juggler team configure VR Juggler. It also
                has information on more advanced uses of
@@ -335,7 +335,7 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
          Suite</h3></div></div></div><p>In this section, we provide tips for ensuring that individual
          tools in the Juggler Suite are compiled correctly. For the most part,
          this duplicates information that can be found on the Wiki page
-         relating to building from CVS (<a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</a>).</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="sonix.compile.section"></a>Sonix</h4></div></div></div><p>Sonix wraps other audio subsystems such as OpenAL (<a href="http://www.openal.org/" target="_top">www.openal.org</a>), Audiere
+         relating to building from source (<a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="sonix.compile.section"></a>Sonix</h4></div></div></div><p>Sonix wraps other audio subsystems such as OpenAL (<a href="http://www.openal.org/" target="_top">www.openal.org</a>), Audiere
             (<a href="http://audiere.sf.net/" target="_top">audiere.sf.net</a>), or
             AudioWorks (<a href="http://www.multigen.com/" target="_top">multigen.com</a>). At least one
             of these packages must be installed for use by Sonix in order to
