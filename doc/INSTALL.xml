@@ -140,6 +140,36 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       </section>
    </section>
 
+   <section>
+      <title>Build Tools</title>
+
+      <para>When building on non-Windows platforms, the GNU Autotools are
+      required. This means that, in addition to a C++ compiler (e.g., GCC),
+      the following packages must be installed in order to compile VR
+      Juggler:</para>
+
+      <itemizedlist>
+         <listitem>
+            <para>GNU Make 3.79 or newer</para>
+         </listitem>
+
+         <listitem>
+            <para>GNU Autoconf 2.53 or newer</para>
+         </listitem>
+
+         <listitem>
+            <para>GNU Automake 1.8 or newer</para>
+         </listitem>
+      </itemizedlist>
+
+      <para>Additionally, VR Juggler 2.1 and beyond require the <ulink
+      url="https://realityforge.vrsource.org/view/FlagPoll/">Flagpoll</ulink>
+      software tool. As of this writing, the minimum required version is
+      0.5.0. It is recommended that all of these tools be installed in either
+      the <filename>/usr</filename> or the <filename>/usr/local</filename>
+      directory trees so that search paths do not have to be extended.</para>
+   </section>
+
    <section id="source.code.section">
       <title>Getting the Source Code and the Dependencies</title>
 
@@ -905,6 +935,19 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
                         In this case, you must also specify the option
                         <option>--with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31</option>
                         when running <command>configure.pl</command>.</para>
+                     </important>
+
+                     <important>
+                        <para>If Flagpoll is not installed in a place where
+                        the <command>aclocal</command> tool searches for
+                        <filename>.m4</filename> files by default, then it is
+                        necessary to extend <command>aclocal</command>'s
+                        search path. This is done by setting the environment
+                        variable <envar>ACLOCAL_FLAGS</envar> to
+                        <quote><literal>-I .../share/alocal</literal></quote>
+                        where <quote><literal>...</literal></quote> is the
+                        path to the directory tree where Flagpoll is
+                        installed.</para>
                      </important>
                   </listitem>
                </orderedlist>
