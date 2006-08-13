@@ -74,6 +74,8 @@ BOOST_INCLUDES=		@BOOST_INCLUDES@
 CPPDOM_ROOT=		@CPPDOM_ROOT@
 GMTL_ROOT=		@GMTL_ROOT@
 GMTL_INC_DIR=		@GMTL_INC_DIR@
+CPPDOM_INC_DIR := $(shell $(CPPDOM_ROOT)/bin/cppdom-config --cxxflags | sed -e 's/-I\([^ ]*\)/\1/g')
+
 
 AUDIERE_ROOT=		@AUDIERE_ROOT@
 CPPUNIT_ROOT=		@CPPUNIT_ROOT@
@@ -164,7 +166,7 @@ links-cppdom:
 	-$(RM_LN) $(instlinks)/bin/cppdom-config
 	$(LN_S) $(CPPDOM_ROOT)/bin/cppdom-config $(instlinks)/bin/cppdom-config
 	-$(RM_LN) $(instlinks)/include/cppdom
-	$(LN_S) $(CPPDOM_ROOT)/include/cppdom $(instlinks)/include/cppdom
+	$(LN_S) $(CPPDOM_INC_DIR)/cppdom $(instlinks)/include/cppdom
 	$(INSTALL) -l $(CPPDOM_ROOT)/lib/libcppdom* $(instlinks)/lib$(LIBBITSUF)
 
 links-gmtl:
