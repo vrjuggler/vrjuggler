@@ -128,7 +128,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
          the issues concerning noncompliance to the C++ Standard with Visual
          Studio 6.0, and it appears that they have no plans to fix these
          problems. Therefore, we require the use of Visual Studio 7.x (.NET
-         2002 or 2003) to compile the source code.</para>
+         2002 or 2003) or newer to compile the source code.</para>
       </section>
    </section>
 
@@ -234,16 +234,16 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       download.</para>
 
       <section id="section.cvs.access">
-         <title>How to Get the Juggler Suite from CVS</title>
+         <title>How to Get the Juggler Suite from Subversion</title>
 
          <para>You can optionally get the Juggler Project as a source code
          tarball from the website (<ulink
          url="http://www.vrjuggler.org/">http://www.vrjuggler.org/</ulink>) or
-         you can execute the following commands from a shell to get the code
-         from our CVS repository:</para>
+         you can execute the following command from a shell to get the code
+         from our Subversion repository:</para>
 
-         <screen>cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login
-cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
+         <screen>svn co https://realityforge.vrsource.org/svn/vrjuggler/juggler/branches/2.0 juggler
+</screen>
       </section>
 
       <section>
