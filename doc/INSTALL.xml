@@ -21,16 +21,16 @@
       Project. This document explains how to build the modules of the Juggler
       Project from the source code. We begin by explaining some issues related
       to specific operating systems. We then explain how to get the source
-      code from our CVS repository. (Those users who downloaded a pre-packaged
-      source release can skip ahead to <xref linkend="using.configure.pl" />).
-      We conclude with instructions on how to build VR Juggler and its
-      individual components.</para>
+      code from our Subversion repository. (Those users who downloaded a
+      pre-packaged source release can skip ahead to <xref
+      linkend="using.configure.pl" />). We conclude with instructions on how
+      to build VR Juggler and its individual components.</para>
 
       <para>Before reading further, we recommend that readers take a look at
-      the Wiki page relating to building from CVS (<ulink
-      url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).
+      the Wiki page relating to building from source (<ulink
+      url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</ulink>).
       It is a <emphasis>supplement</emphasis> to this document containing tips
-      and reminders for those users building the CVS version of VR Juggler. It
+      and reminders for those users building the SVN version of VR Juggler. It
       is not a replacement for this document, nor can it stand on its own as
       build instructions. You are reading the definitive build instructions;
       the Wiki page merely provides informal, extra information.</para>
@@ -138,13 +138,13 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       <para>In this section, we explain how to get the Juggler Project source
       code and the dependencies required to build Juggler. There are two ways
       to get the source code: from a pre-packaged source release archive or
-      from the CVS repository on SourceForge. If you got the code from a
-      pre-packaged source archive, that code is a complete
-      <quote>snapshot</quote> of the CVS repository at the time of release. It
-      contains all dependencies that would otherwise have been acquired using
-      CVS. It <emphasis>does not</emphasis> contain binary dependencies that
-      must be downloaded separately (such as NSPR, the Java Developer Kit, a
-      C++ compiler, etc.).</para>
+      from the Subversion repository on RealityForge. If you got the code from
+      a pre-packaged source archive, that code is a complete
+      <quote>snapshot</quote> of the Subversion repository at the time of
+      release. It contains all dependencies that would otherwise have been
+      acquired using Subversion. It <emphasis>does not</emphasis> contain
+      binary dependencies that must be downloaded separately (such as NSPR,
+      the Java Developer Kit, a C++ compiler, etc.).</para>
 
       <para>The current list of <emphasis>required</emphasis> software
       packages is as follows:</para>
@@ -219,9 +219,10 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
             A unit testing framework for C++. The Juggler C++ test suties make
             use of extensions to CppUnit. An extended version of the CppUnit
             source that includes these extensions can be acquired from the
-            Juggler CVS repository in the module <literal>cppunit</literal>.
-            Refer to <xref linkend="section.cvs.access" /> for instructions
-            about accessing the Juggler CVS repository.</para>
+            Juggler Subversion repository in the module
+            <literal>cppunit</literal>. Refer to <xref
+            linkend="section.cvs.access" /> for instructions about accessing
+            the Juggler Subversion repository.</para>
          </listitem>
       </itemizedlist>
 
@@ -249,10 +250,10 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       <section>
          <title>Downloading Third-Party Dependencies</title>
 
-         <para>In addition to source the dependencies acquired through CVS,
-         there are some third-party dependencies that must be installed
-         separately. Remember that no Java code in VR Juggler can be used
-         without the JDK and a working Java version of CORBA.</para>
+         <para>In addition to source the dependencies acquired through
+         Subversion, there are some third-party dependencies that must be
+         installed separately. Remember that no Java code in VR Juggler can be
+         used without the JDK and a working Java version of CORBA.</para>
 
          <section>
             <title>Boost</title>
@@ -359,8 +360,8 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
          <para>You have downloaded <emphasis>developmental</emphasis> code. It
          may not be stable, and it may not even compile. Compiling VR Juggler
          itself can be a little complicated for anyone who does not have some
-         background in using CVS, Autoconf, C++, and <command>make</command>
-         or Visual Studio.</para>
+         background in using Subversion, Autoconf, C++, and
+         <command>make</command> or Visual Studio.</para>
       </section>
 
       <section>
@@ -915,8 +916,9 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
                AudioWorks.</para>
 
                <para>For example uses of <command>configure.pl</command>, take
-               a look at the Wiki page relating to building from CVS (<ulink
-               url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).
+               a look at the Wiki page relating to building from source
+               (<ulink
+               url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</ulink>).
                It is not a replacement for this document, but it shows how
                some members of the Juggler team configure VR Juggler. It also
                has information on more advanced uses of
@@ -976,8 +978,8 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
          <para>In this section, we provide tips for ensuring that individual
          tools in the Juggler Suite are compiled correctly. For the most part,
          this duplicates information that can be found on the Wiki page
-         relating to building from CVS (<ulink
-         url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>).</para>
+         relating to building from source (<ulink
+         url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</ulink>).</para>
 
          <section id="sonix.compile.section">
             <title>Sonix</title>
