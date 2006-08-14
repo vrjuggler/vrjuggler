@@ -46,6 +46,40 @@ EXIT_STATUS_MISSING_REQ_VALUE = 5
 gJugglerDir      = os.path.dirname(os.path.abspath(sys.argv[0]))
 gOptionsFileName = "options.cache"
 
+gJdomJars = [
+   'jdom.jar',
+   'jaxen-core.jar',
+   'jar',
+   'jaxen-jdom.jar',
+   'xerces.jar',
+   'xml-apis.jar',
+   'saxpath.jar'
+]
+
+gTweekJars = [
+   'Tweek.jar',
+   'TweekBeanDelivery.jar',
+   'TweekBeans.jar',
+   'TweekEvents.jar',
+   'TweekNet.jar',
+   'TweekServices.jar',
+   'kunststoff-mod.jar'
+]
+
+gTweekExtJars = [
+   'ui.jar',
+   'wizard.jar'
+]
+
+gJcclJars = [
+   'jccl_config.jar',
+   'jccl_editors.jar'
+]
+
+gJcclRtrcJars = [
+   'jccl_rtrc.jar'
+]
+
 gHaveTk = False
 try:
    import Tkinter
@@ -393,9 +427,9 @@ def writeCacheFile(optionDict):
       cache_file.write(output)
    cache_file.close()
 
-def updateVersions(vcDir):
+def updateVersions(vcDir, options):
    class JugglerModule:
-      def __init__(self, srcDir, vcDir, projDir, versionEnvVar,
+      def __init__(self, srcDir, vcDir, projDir, versionEnvVar, substVars,
                    genFiles = None):
          self.source_dir          = os.path.join(gJugglerDir, srcDir)
          self.version_params      = os.path.join(self.source_dir,
@@ -403,6 +437,7 @@ def updateVersions(vcDir):
          self.version_file        = os.path.join(self.source_dir, 'VERSION')
          self.version_env_var     = versionEnvVar
          self.version_env_var_dot = versionEnvVar + '_DOT'
+         self.subst_vars          = substVars
          self.param_files         = []
          self.proj_dir            = os.path.join(gJugglerDir, vcDir, projDir)
 
@@ -453,12 +488,7 @@ def updateVersions(vcDir):
       version_re      = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
       branch_re       = re.compile(r'BRANCH\s*=\s*([\w\d-]+)')
       canon_name_re   = re.compile(r'CANON_NAME\s*=\s*(\S.+)')
-      vernum_re       = re.compile(r'@VER_NUMBER@')
-      major_vernum_re = re.compile(r'@MAJOR_VER_NUMBER@')
-      minor_vernum_re = re.compile(r'@MINOR_VER_NUMBER@')
-      patch_vernum_re = re.compile(r'@PATCH_VER_NUMBER@')
-      build_vernum_re = re.compile(r'@BUILD_VER_NUMBER@')
-      verstr_re       = re.compile(r'@VER_STRING@')
+      subst_re        = re.compile(r'@(\w+)@')
       zero_strip_re   = re.compile(r'^0*([^0]\d+)')
 
       def __getVersionInfo(self):
@@ -507,28 +537,33 @@ def updateVersions(vcDir):
          # to do this?
          version_number = self.zero_strip_re.match(version_number).group(1)
 
+         subst_vars = self.subst_vars
+         subst_vars['VER_NUMBER']         = version_number
+         subst_vars['MAJOR_VER_NUMBER']   = str(major)
+         subst_vars['MAJOR_VERSION']      = str(major)
+         subst_vars['MINOR_VER_NUMBER']   = str(minor)
+         subst_vars['MINOR_VERSION']      = str(minor)
+         subst_vars['PATCH_VER_NUMBER']   = str(patch)
+         subst_vars['MICRO_VERSION']      = str(patch)
+         subst_vars['BUILD_VER_NUMBER']   = str(build)
+         subst_vars['VER_STRING']         = version_string
+         subst_vars['VERSION_DOT']        = '%d.%d.%d' % (major, minor, patch)
+         subst_vars['SUBSYSTEM']          = 'NSPR'
+         subst_vars['PLATFORM']           = 'Windows'
+         subst_vars['data_subdir']        = 'share'
+         subst_vars['USE_GCC']            = 'no'
+         subst_vars['includedir']         = r'${prefix}\include'
+         subst_vars['libdir']             = r'${exec_prefix}\lib'
+
          try:
             input_file  = open(template, 'r')
             input_lines = input_file.readlines()
             input_file.close()
 
             for i in xrange(len(input_lines)):
-               line = input_lines[i]
-
-               if self.vernum_re.search(line):
-                  line = self.vernum_re.sub(version_number, line)
-               if self.major_vernum_re.search(line):
-                  line = self.major_vernum_re.sub(str(major), line)
-               if self.minor_vernum_re.search(line):
-                  line = self.minor_vernum_re.sub(str(minor), line)
-               if self.patch_vernum_re.search(line):
-                  line = self.patch_vernum_re.sub(str(patch), line)
-               if self.build_vernum_re.search(line):
-                  line = self.build_vernum_re.sub(str(build), line)
-               if self.verstr_re.search(line):
-                  line = self.verstr_re.sub(version_string, line)
-
-               input_lines[i] = line
+               input_lines[i] = \
+                  self.subst_re.sub(lambda m: subst_vars.get(m.group(1), ''),
+                                    input_lines[i])
 
             printStatus("Generating updated " + output)
             param_header = open(output, 'w')
@@ -541,34 +576,113 @@ def updateVersions(vcDir):
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
+
+   vpr_subst_vars = {}
+   vpr_subst_vars['vpr_ldflags_compiler'] = r'/link /libpath:$libdir'
+   vpr_subst_vars['vpr_ldflags_linker'] = r'/libpath:$libdir'
+   vpr_subst_vars['vpr_libs'] = ''
    mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
-                             [(r'vpr\vprParam.h',),
+                             vpr_subst_vars,
+                             [(r'vpr\vprParam.h',), ('vpr.fpc',),
                               (r'vpr\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
+
+   # XXX: These are pretty weak assumptions.
+   tweek_have_cxx  = options.get('OMNIORB_ROOT', '') != ''
+   tweek_have_java = options.get('JAVA_HOME', '') != ''
+
+   tweek_jars = []
+   hack_jars = ['looks.jar', 'liquidlnf.jar', 'metouia.jar']
+   for j in gTweekJars + hack_jars + gJdomJars:
+      tweek_jars.append(os.path.join('${prefix}', 'share', 'tweek', 'java', j))
+
+   tweek_ext_jars = []
+   for j in gTweekExtJars:
+      tweek_ext_jars.append(os.path.join('${prefix}', 'share', 'tweek',
+                                         'java', j))
+
+   tweek_subst_vars = {}
+   if tweek_have_cxx:
+      tweek_subst_vars['tweek_cxxflags'] = '/DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I$prefix\\include\\tweek\\idl'
+   tweek_subst_vars['tweek_ldflags_compiler'] = r'/link /libpath:$libdir'
+   tweek_subst_vars['tweek_ldflags_linker'] = r'/libpath:$libdir'
+   tweek_subst_vars['tweek_libs'] = ''
+   tweek_subst_vars['tweek_idlflags_java'] = r'-I$prefix\include'
+   tweek_subst_vars['tweek_idlflags_cxx'] = r'-bcxx -Wbh=.h,s=.cpp -I$prefix\include'
+   tweek_subst_vars['tweek_idl_inc_flag_java'] = '-I'
+   tweek_subst_vars['tweek_idl_inc_flag_cxx'] = '-I'
+   tweek_subst_vars['tweek_idl_inc_flag_python'] = '-I'
+   tweek_subst_vars['tweek_idlgendir_java'] = '-d '
+   tweek_subst_vars['tweek_idlgendir_cxx'] = '-C'
+   tweek_subst_vars['tweek_idlgendir_python'] = '-C'
+   tweek_subst_vars['tweek_java_api_jars'] = ';'.join(tweek_jars)
+   tweek_subst_vars['tweek_ext_jars'] = ';'.join(tweek_ext_jars)
+
+   if tweek_have_cxx:
+      tweek_subst_vars['BUILD_CXX'] = 'Y'
+   else:
+      tweek_subst_vars['BUILD_CXX'] = 'N'
+
+   if tweek_have_java:
+      tweek_subst_vars['BUILD_JAVA'] = 'Y'
+   else:
+      tweek_subst_vars['BUILD_JAVA'] = 'N'
+
+   tweek_subst_vars['BUILD_PYTHON_IDL'] = 'N'
    mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
-                             'TWEEK_VERSION',
-                             [(r'tweek\tweekParam.h',),
+                             'TWEEK_VERSION', tweek_subst_vars,
+                             [(r'tweek\tweekParam.h',), ('tweek.fpc',),
                               (r'tweek\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
+
+   jccl_jars = []
+   for j in gJcclJars + gJcclRtrcJars:
+      jccl_jars.append(os.path.join('${prefix}', 'share', 'jccl', 'java', j))
+
+   jccl_subst_vars = {}
+   jccl_subst_vars['jccl_ldflags_compiler'] = r'/link /libpath:$libdir'
+   jccl_subst_vars['jccl_ldflags_linker'] = r'/libpath:$libdir'
+   jccl_subst_vars['jccl_libs'] = ''
+   jccl_subst_vars['BUILD_CXX'] = tweek_subst_vars['BUILD_CXX']
+   jccl_subst_vars['BUILD_JAVA'] = tweek_subst_vars['BUILD_JAVA']
+   jccl_subst_vars['jccl_java_api_jars'] = ';'.join(jccl_jars)
    mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL', 'JCCL_VERSION',
+                             jccl_subst_vars,
                              [(r'jccl\jcclParam.h',
                                os.path.join(gJugglerDir,
                                             r'modules\jackal\common\jccl\jcclParam.h.in')),
+                              ('jccl.fpc',),
                               (r'jccl\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))
                              ]))
+
+   snx_subst_vars = {}
+   snx_subst_vars['snx_ldflags_compiler'] = r'/link /libpath:$libdir'
+   snx_subst_vars['snx_ldflags_linker'] = r'/libpath:$libdir'
+   snx_subst_vars['snx_libs'] = ''
    mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix', 'SNX_VERSION',
-                             [(r'snx\snxParam.h',),
+                             snx_subst_vars,
+                             [(r'snx\snxParam.h',), ('sonix.fpc',),
                               (r'snx\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
+
+   gadget_subst_vars = {}
+   gadget_subst_vars['gadget_ldflags_compiler'] = r'/link /libpath:$libdir'
+   gadget_subst_vars['gadget_ldflags_linker'] = r'/libpath:$libdir'
+   gadget_subst_vars['gadget_libs'] = ''
    mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
-                             'GADGET_VERSION',
-                             [(r'gadget\gadgetParam.h',),
+                             'GADGET_VERSION', gadget_subst_vars,
+                             [(r'gadget\gadgetParam.h',), ('gadgeteer.fpc',),
                               (r'gadget\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
+
+   vrj_subst_vars = {}
+   vrj_subst_vars['vrj_ldflags_compiler'] = r'/link /libpath:$libdir'
+   vrj_subst_vars['vrj_ldflags_linker'] = r'/libpath:$libdir'
+   vrj_subst_vars['vrj_libs'] = ''
    mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
-                             'VRJ_VERSION',
-                             [(r'vrj\vrjParam.h',),
+                             'VRJ_VERSION', vrj_subst_vars,
+                             [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
                               (r'vrj\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 
@@ -616,34 +730,26 @@ def generateAntBuildFiles(vcDir):
             printStatus("ERROR: %s exists, but it is not a directory!" % self.module_name)
             sys.exit(EXIT_STATUS_INVALID_PATH)
 
-         self.tweek_jars = [
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'Tweek.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekBeans.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekEvents.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'TweekNet.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
-                         'TweekBeanDelivery.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
-                         'TweekServices.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'Viewers.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java',
-                         'kunststoff-mod.jar')
-         ]
+         self.tweek_jars = []
+         for j in gTweekJars:
+            self.tweek_jars.append(os.path.join(gJugglerDir, vcDir,
+                                                'Tweek_Java', j))
 
-         self.tweek_ext_jars = [
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'ui.jar'),
-            os.path.join(gJugglerDir, vcDir, 'Tweek_Java', 'wizard.jar')
-         ]
+         self.tweek_ext_jars = []
+         for j in gTweekExtJars:
+            self.tweek_jars.append(os.path.join(gJugglerDir, vcDir,
+                                                'Tweek_Java', j))
 
-         self.jccl_jars = [
-            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'jccl_config.jar'),
-            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'jccl_editors.jar')
-         ]
+         self.jccl_jars = []
+         for j in gJcclJars:
+            self.jccl_jars.append(os.path.join(gJugglerDir, vcDir,
+                                               'JCCL_Java', j))
 
-         self.jccl_rtrc_jars = [
-            os.path.join(gJugglerDir, vcDir, 'JCCL_Java', 'RTRC_Plugin_Java',
-                         'jccl_rtrc.jar')
-         ]
+         self.jccl_rtrc_jars = []
+         for j in gJcclRtrcJars:
+            self.jccl_jars.append(os.path.join(gJugglerDir, vcDir,
+                                               'JCCL_Java',
+                                               'RTRC_Plugin_Java', j))
 
       # This form of regular expressions appears to be necessary because
       # the sub() method does not handle backslashes in the replacement string
@@ -659,15 +765,13 @@ def generateAntBuildFiles(vcDir):
       jogl_jars_re      = re.compile(r'^(.*)@JOGL_JARS@(.*)$')
       java3d_jars_re    = re.compile(r'^(.*)@JAVA3D_JAR@(.*)$')
 
-      jdom_jars = [
-         os.path.join(gJugglerDir, r'external\jdom\build\jdom.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\lib\jaxen-core.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\lib\xalan.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\lib\jaxen-jdom.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\lib\xerces.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\lib\xml-apis.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\lib\saxpath.jar')
-      ]
+      jdom_jars = []
+      jdom_root = os.path.join(gJugglerDir, 'external', 'jdom')
+      for j in gJdomJars:
+         if j == 'jdom.jar':
+            jdom_jars.append(os.path.join(jdom_root, 'build', j))
+         else:
+            jdom_jars.append(os.path.join(jdom_root, 'lib', j))
 
       jogl_jars = [
          os.path.join(os.environ['JOGL_HOME'], 'jogl.jar'),
@@ -827,6 +931,7 @@ def makeTree(prefix):
    mkinstalldirs(os.path.join(prefix, 'bin'))
    mkinstalldirs(os.path.join(prefix, 'include'))
    mkinstalldirs(os.path.join(prefix, 'lib'))
+   mkinstalldirs(os.path.join(prefix, 'lib', 'flagpoll'))
    mkinstalldirs(os.path.join(prefix, 'share'))
 
 def smartCopy(srcfile, dst):
@@ -935,6 +1040,9 @@ def installVPR(prefix, buildDir):
    srcroot = os.path.join(buildDir, 'VPR')
    installLibs(srcroot, destdir)
 
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   smartCopy(os.path.join(buildDir, 'VPR', 'vpr.fpc'), destdir)
+
    destdir = os.path.join(prefix, 'share', 'vpr', 'test')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'test')
    installDir(srcdir, destdir, None, ['.in'])
@@ -962,6 +1070,9 @@ def installTweek(prefix, buildDir):
    srcroot = os.path.join(buildDir, 'Tweek_CXX')
    installLibs(srcroot, destdir)
 
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   smartCopy(os.path.join(buildDir, 'Tweek_CXX', 'tweek.fpc'), destdir)
+
    destdir = os.path.join(prefix, 'share', 'tweek', 'test')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'test')
    installDir(srcdir, destdir, None, ['.in'])
@@ -982,20 +1093,8 @@ def installTweek(prefix, buildDir):
 def installTweekJava(prefix, buildDir):
    srcdir = os.path.join(buildDir, 'Tweek_Java')
 
-   if os.path.exists(os.path.join(srcdir, 'Tweek.jar')):
+   if os.path.exists(os.path.join(srcdir, gTweekJars[0])):
       printStatus("Installing Tweek Java libraries and data files ...")
-
-      jars = [
-         'Tweek.jar',
-         'TweekBeanDelivery.jar',
-         'TweekBeans.jar',
-         'TweekEvents.jar',
-         'TweekNet.jar',
-         'TweekServices.jar',
-         'kunststoff-mod.jar',
-         'ui.jar',
-         'wizard.jar'
-      ]
 
       beans     = ['Viewers']
       ext_beans = []
@@ -1004,7 +1103,7 @@ def installTweekJava(prefix, buildDir):
       mkinstalldirs(destdir)
 
       # Install the base JAR files that make up the Tweek Java API.
-      for j in jars:
+      for j in gTweekJars + gTweekExtJars:
          smartCopy(os.path.join(srcdir, j), destdir)
 
       # Install the tweek_jni DLL.
@@ -1092,6 +1191,9 @@ def installJCCL(prefix, buildDir):
    srcroot = os.path.join(buildDir, 'JCCL')
    installLibs(srcroot, destdir)
 
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   smartCopy(os.path.join(buildDir, 'JCCL', 'jccl.fpc'), destdir)
+
    destdir = os.path.join(prefix, 'share', 'jccl', 'test')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'test')
    installDir(srcdir, destdir, None, ['.in'])
@@ -1171,11 +1273,12 @@ def installJCCLJava(prefix, buildDir):
 def installJCCLPluginsJava(prefix, buildDir):
    srcdir = os.path.join(buildDir, 'JCCL_Java', 'RTRC_Plugin_Java')
 
-   if os.path.exists(os.path.join(srcdir, 'jccl_rtrc.jar')):
+   if os.path.exists(os.path.join(srcdir, gJcclRtrcJars[0])):
       printStatus("Installing JCCL Java plug-ins ...")
 
       destdir = os.path.join(prefix, 'share', 'jccl', 'beans')
-      smartCopy(os.path.join(srcdir, 'jccl_rtrc.jar'), destdir)
+      for j in gJcclRtrcJars:
+         smartCopy(os.path.join(srcdir, j), destdir)
 
       srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'plugins',
                             'corba_rtrc')
@@ -1196,6 +1299,9 @@ def installSonix(prefix, buildDir):
    destdir = os.path.join(prefix, 'lib')
    srcroot = os.path.join(buildDir, 'Sonix')
    installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   smartCopy(os.path.join(buildDir, 'Sonix', 'sonix.fpc'), destdir)
 
    destdir = os.path.join(prefix, 'share', 'sonix', 'samples')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'sonix', 'samples')
@@ -1249,6 +1355,9 @@ def installGadgeteer(prefix, buildDir):
    destdir = os.path.join(prefix, 'lib')
    srcroot = os.path.join(buildDir, 'Gadgeteer')
    installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   smartCopy(os.path.join(buildDir, 'Gadgeteer', 'gadgeteer.fpc'), destdir)
 
    destdir = os.path.join(prefix, 'share', 'gadgeteer', 'data')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'data')
@@ -1328,6 +1437,9 @@ def installVRJuggler(prefix, buildDir):
 
    srcroot = os.path.join(buildDir, 'VRJuggler', 'Performer_Draw_Manager')
    installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc'), destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'data')
@@ -2048,7 +2160,7 @@ class GuiFrontEnd:
    def runVisualStudio(self):
       #print "updateVersions()"
       self.printMessage("Generating Version Headers.")
-      updateVersions(self.mVcDir)
+      updateVersions(self.mVcDir, self.mOptions)
       self.printMessage("Generating Ant Build Files.")
       generateAntBuildFiles(self.mVcDir)
 
@@ -2135,7 +2247,7 @@ def main():
    if not gHaveTk or disable_tk:
       (cl_ver_major, cl_ver_minor, vc_dir) = chooseVisualStudioDir()
       options = setVars(cl_ver_major, cl_ver_minor)
-      updateVersions(vc_dir)
+      updateVersions(vc_dir, options)
       generateAntBuildFiles(vc_dir)
 
       devenv_cmd    = getVSCmd()
