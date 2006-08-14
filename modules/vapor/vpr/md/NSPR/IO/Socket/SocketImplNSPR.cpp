@@ -74,7 +74,7 @@ void buildAndThrowException(std::string prefix, std::string location)
    if (PR_IN_PROGRESS_ERROR == err_code ||
        PR_WOULD_BLOCK_ERROR == err_code)
    {
-      throw vpr::WouldBlockException(prefix + "Operation still in progress: " + err_string, location); 
+      throw vpr::WouldBlockException(prefix + "Operation still in progress: " + err_string, location);
    }
    else if( PR_IS_CONNECTED_ERROR == err_code)
    {
@@ -139,14 +139,17 @@ void SocketImplNSPR::open()
       case vpr::SocketTypes::DATAGRAM:
          new_sock = PR_NewUDPSocket();
          break;
-      default:
-      {
-         std::stringstream msg_stream;
-         msg_stream << "[vpr::SocketImplNSPR] ERROR: Unknown socket type "
-                    << "value " << mLocalAddr.getFamily();
-         throw SocketException(msg_stream.str(), VPR_LOCATION);
+      case vpr::SocketTypes::RAW:
+         throw SocketException("RAW socket type not supported.", VPR_LOCATION);
          break;
-      }
+      default:
+         {
+            std::stringstream msg_stream;
+            msg_stream << "[vpr::SocketImplNSPR] ERROR: Unknown socket type "
+                       << "value: " << unsigned(mType);
+            throw SocketException(msg_stream.str(), VPR_LOCATION);
+            break;
+         }
    }
 
    // If socket(2) failed, print an error message and return error status.
@@ -342,7 +345,7 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
                   throw SocketException("[vpr::SocketImplNSPR::connect() Non-Blocking socket "
                      "with timeout failed: ] ", VPR_LOCATION);
                }
-               
+
                mBound = true;
                mConnectCalled = true;
                mBlockingFixed = true;
@@ -603,6 +606,9 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
       case vpr::SocketOptions::MaxSegment:
          opt_data.option = PR_SockOpt_MaxSegment;
          break;
+      default:
+         throw SocketException("Unsupported option passed to getOption.", VPR_LOCATION);
+         break;
    }
 
    if ( get_opt )
@@ -796,6 +802,9 @@ void SocketImplNSPR::setOption(const vpr::SocketOptions::Types option,
          opt_data.option            = PR_SockOpt_MaxSegment;
          opt_data.value.max_segment = data.max_segment;
          break;
+      default:
+         throw SocketException("Unsupported option passed to setOption.", VPR_LOCATION);
+         break;
    }
 
    if ( mHandle == NULL )
@@ -875,6 +884,12 @@ SocketImplNSPR::~SocketImplNSPR()
                    "Failed to close socket in SocketImplNSPR destructor");
       }
    }
+
+#ifdef _DEBUG
+   // Mark socket as destroyed
+   mHandle = (PRFileDesc*)(0xDEADBEEF);
+   mName = "Destructed";
+#endif
 }
 
 } // End of vpr namespace

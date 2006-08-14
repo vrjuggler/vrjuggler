@@ -94,6 +94,13 @@ public:
       mAddr = addr.mAddr;
    }
 
+   ~InetAddrNSPR()
+   {
+#ifdef _DEBUG
+      mAddr.inet.family = mAddr.inet.port = mAddr.inet.ip = 1221;
+#endif
+   }
+
    /**
     * Returns the local host's default address.
     *
