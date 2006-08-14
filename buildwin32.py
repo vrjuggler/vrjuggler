@@ -33,13 +33,14 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 import glob
-import os
+import os, os.path
 import re
 import shutil
 import sys
 import time
 import traceback
 import getopt
+pj = os.path.join
 
 EXIT_STATUS_SUCCESS           = 0
 EXIT_STATUS_NO_MSVS           = 1
@@ -764,8 +765,33 @@ def makeTree(prefix):
    mkinstalldirs(os.path.join(prefix, 'lib'))
    mkinstalldirs(os.path.join(prefix, 'share'))
 
+def smartCopy(srcfile, dst):
+   """ Only copy file if it has changed, and delete it first.
+       Drop in replacement for shutil.copy2.
+       srcfile - Full path to source file to copy.
+       dst - Destination filename or directory.
+   """   
+   if os.path.isdir(dst):
+      dst = os.path.join(dst, os.path.basename(srcfile))
+        
+   # Verify we need to copy and make sure to delete if needed
+   if os.path.isfile(dst):
+      stat_src = os.stat(srcfile)
+      stat_dst = os.stat(dst)
+      if (stat_src.st_size == stat_dst.st_size) and \
+         (stat_src.st_mtime == stat_dst.st_mtime):
+         #print "skipping: ", dst
+         return   # File doesn't need to be copied
+      #print "removing: ", dst
+      os.remove(dst)
+   
+   # Copy it
+   shutil.copy2(srcfile, dst)
+   
+   
 def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
                disallowedFiles = None):
+   #print "   %s ==> %s"%(startDir, destDir)
    cwd = os.getcwd()
 
    # Make sure that destDir specifies an absolute path.
@@ -801,13 +827,16 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
          installDir(start_dir, dest_dir, allowedExts, disallowedExts,
                     disallowedFiles)
       else:
-         (root, f_ext) = os.path.splitext(f)
-         if allowedExts is None:
-            if f_ext not in disallowedExts:
-               shutil.copy2(f, destDir)
-         elif f_ext in allowedExts:
-            if f not in disallowedFiles:
-               shutil.copy2(f, destDir)
+         try:
+            (root, f_ext) = os.path.splitext(f)
+            if allowedExts is None:
+               if f_ext not in disallowedExts:
+                  smartCopy(f, pj(destDir,f))
+            elif f_ext in allowedExts:
+               if f not in disallowedFiles:
+                  smartCopy(f, pj(destDir,f))
+         except (IOError, os.error), why:
+            print "Can't copy %s to %s: %s" % (f, destDir, str(why))
 
    os.chdir(cwd)
 
@@ -850,10 +879,10 @@ def installVPR(prefix, buildDir):
    destdir = os.path.join(prefix, 'share', 'vpr')
    srcroot = os.path.join(gJugglerDir, 'modules', 'vapor')
 
-   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   smartCopy(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
    extra_files = ['ChangeLog', 'README.txt', 'RELEASE_NOTES.txt']
    for f in extra_files:
-      shutil.copy2(os.path.join(srcroot, f), destdir)
+      smartCopy(os.path.join(srcroot, f), destdir)
 
 def installTweek(prefix, buildDir):
    printStatus("Installing Tweek C++ headers, libraries, and data files ...")
@@ -881,10 +910,10 @@ def installTweek(prefix, buildDir):
    destdir = os.path.join(prefix, 'share', 'tweek')
    srcroot = os.path.join(gJugglerDir, 'modules', 'tweek')
 
-   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   smartCopy(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
    extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
-      shutil.copy2(os.path.join(srcroot, f), destdir)
+      smartCopy(os.path.join(srcroot, f), destdir)
 
 def installTweekJava(prefix, buildDir):
    # Create an empty bin\beans directory in prefix. The Tweek Java GUI still
@@ -918,7 +947,7 @@ def installTweekJava(prefix, buildDir):
 
       # Install the base JAR files that make up the Tweek Java API.
       for j in jars:
-         shutil.copy2(os.path.join(srcdir, j), destdir)
+         smartCopy(os.path.join(srcdir, j), destdir)
 
       # Install the tweek_jni DLL.
       for p in ['Win32', 'x64']:
@@ -928,7 +957,7 @@ def installTweekJava(prefix, buildDir):
             arch = os.environ['PROCESSOR_ARCHITECTURE']
             destdir = os.path.join(destdir, arch)
             mkinstalldirs(destdir)
-            shutil.copy2(dll, destdir)
+            smartCopy(dll, destdir)
 
       destdir = os.path.join(prefix, 'share', 'tweek', 'beans')
       mkinstalldirs(destdir)
@@ -940,8 +969,8 @@ def installTweekJava(prefix, buildDir):
       for b in beans:
          jar = b + '.jar'
          xml = b + '.xml'
-         shutil.copy2(os.path.join(bean_srcdir, jar), destdir)
-         shutil.copy2(os.path.join(xml_srcdir, xml), destdir)
+         smartCopy(os.path.join(bean_srcdir, jar), destdir)
+         smartCopy(os.path.join(xml_srcdir, xml), destdir)
 
       xml_srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'extensions',
                                  'java')
@@ -950,18 +979,18 @@ def installTweekJava(prefix, buildDir):
       for b in ext_beans:
          jar = b + '.jar'
          xml = b + '.xml'
-         shutil.copy2(os.path.join(bean_srcdir, jar), destdir)
-         shutil.copy2(os.path.join(xml_srcdir, xml), destdir)
+         smartCopy(os.path.join(bean_srcdir, jar), destdir)
+         smartCopy(os.path.join(xml_srcdir, xml), destdir)
 
       # Install tweek.bat.
       srcdir = os.path.join(gJugglerDir, 'modules', 'tweek', 'java')
       destdir = os.path.join(prefix, 'bin')
-      shutil.copy2(os.path.join(srcdir, 'tweek.bat'), destdir)
+      smartCopy(os.path.join(srcdir, 'tweek.bat'), destdir)
 
       # Install JacORB IDL compiler.
       srcdir = os.path.join(gJugglerDir, 'external', 'JacORB')
       installDir(srcdir, destdir, ['.jar'])
-      shutil.copy2(os.path.join(srcdir, 'idl.bat'), destdir)
+      smartCopy(os.path.join(srcdir, 'idl.bat'), destdir)
 
       # Destination for all remaining .jar files.
       destdir = os.path.join(prefix, 'share', 'tweek', 'java')
@@ -981,7 +1010,7 @@ def installTweekJava(prefix, buildDir):
 
       srcroot = os.path.join(gJugglerDir, 'external', 'swing-laf')
       for j in laf_jars:
-         shutil.copy2(os.path.join(srcroot, j), destdir)
+         smartCopy(os.path.join(srcroot, j), destdir)
    else:
       printStatus("Tweek Java API not built.  Skipping.")
 
@@ -1019,12 +1048,12 @@ def installJCCL(prefix, buildDir):
    destdir = os.path.join(schema_root, 'www.vrjuggler.org', 'jccl', 'xsd',
                           '3.0')
    mkinstalldirs(destdir)
-   shutil.copy2(os.path.join(srcdir, 'configuration.xsd'), destdir)
+   smartCopy(os.path.join(srcdir, 'configuration.xsd'), destdir)
 
    destdir = os.path.join(schema_root, 'www.vrjuggler.org', 'jccl', 'xsd',
                           '3.1')
    mkinstalldirs(destdir)
-   shutil.copy2(os.path.join(srcdir, 'definition.xsd'), destdir)
+   smartCopy(os.path.join(srcdir, 'definition.xsd'), destdir)
 
    destdir = schema_root
    srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'data',
@@ -1035,10 +1064,10 @@ def installJCCL(prefix, buildDir):
    destdir = os.path.join(prefix, 'share', 'jccl')
    srcroot = os.path.join(gJugglerDir, 'modules', 'jackal')
 
-   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   smartCopy(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
    extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
-      shutil.copy2(os.path.join(srcroot, f), destdir)
+      smartCopy(os.path.join(srcroot, f), destdir)
 
 def installJCCLPlugins(prefix, buildDir):
    printStatus("Installing JCCL C++ plug-ins ...")
@@ -1062,10 +1091,10 @@ def installJCCLJava(prefix, buildDir):
       ]
 
       for j in jars:
-         shutil.copy2(os.path.join(srcdir, j), destdir)
+         smartCopy(os.path.join(srcdir, j), destdir)
 
       srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'config')
-      shutil.copy2(os.path.join(srcdir, 'jccl_config.xml'), destdir)
+      smartCopy(os.path.join(srcdir, 'jccl_config.xml'), destdir)
 
       # Install dependencies.
       dep_jars = [
@@ -1077,7 +1106,7 @@ def installJCCLJava(prefix, buildDir):
 
       mkinstalldirs(destdir)
       for j in dep_jars:
-         shutil.copy2(os.path.join(srcroot, j), destdir)
+         smartCopy(os.path.join(srcroot, j), destdir)
    else:
       printStatus("JCCL Java API not built.  Skipping.")
 
@@ -1088,11 +1117,11 @@ def installJCCLPluginsJava(prefix, buildDir):
       printStatus("Installing JCCL Java plug-ins ...")
 
       destdir = os.path.join(prefix, 'share', 'jccl', 'beans')
-      shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.jar'), destdir)
+      smartCopy(os.path.join(srcdir, 'jccl_rtrc.jar'), destdir)
 
       srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'plugins',
                             'corba_rtrc')
-      shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.xml'), destdir)
+      smartCopy(os.path.join(srcdir, 'jccl_rtrc.xml'), destdir)
    else:
       printStatus("JCCL Java plug-ins not built.  Skipping.")
 
@@ -1122,10 +1151,10 @@ def installSonix(prefix, buildDir):
    destdir = os.path.join(prefix, 'share', 'sonix')
    srcroot = os.path.join(gJugglerDir, 'modules', 'sonix')
 
-   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   smartCopy(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
    extra_files = ['ChangeLog', 'README.txt']
    for f in extra_files:
-      shutil.copy2(os.path.join(srcroot, f), destdir)
+      smartCopy(os.path.join(srcroot, f), destdir)
 
 def installSonixPlugins(prefix, buildDir):
    printStatus("Installing Sonix plug-ins ...")
@@ -1183,10 +1212,10 @@ def installGadgeteer(prefix, buildDir):
    destdir = os.path.join(prefix, 'share', 'gadgeteer')
    srcroot = os.path.join(gJugglerDir, 'modules', 'gadgeteer')
 
-   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   smartCopy(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
    extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
-      shutil.copy2(os.path.join(srcroot, f), destdir)
+      smartCopy(os.path.join(srcroot, f), destdir)
 
 def installGadgeteerDrivers(prefix, buildDir):
    printStatus("Installing Gadgeteer device drivers ...")
@@ -1266,10 +1295,10 @@ def installVRJuggler(prefix, buildDir):
    destdir = os.path.join(prefix, 'share', 'vrjuggler')
    srcroot = os.path.join(gJugglerDir, 'modules', 'vrjuggler')
 
-   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   smartCopy(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
    extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
-      shutil.copy2(os.path.join(srcroot, f), destdir)
+      smartCopy(os.path.join(srcroot, f), destdir)
 
 def installVRJConfig(prefix, buildDir):
    jardir = os.path.join(buildDir, 'VRJConfig')
@@ -1310,7 +1339,7 @@ def installVRJConfig(prefix, buildDir):
       for j in common_editors:
          jar_file = os.path.join(jardir, j)
          if os.path.exists(jar_file):
-            shutil.copy2(jar_file, destdir)
+            smartCopy(jar_file, destdir)
 
       # Install the base set of VRJConfig JavaBeans.
       destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans')
@@ -1318,9 +1347,9 @@ def installVRJConfig(prefix, buildDir):
       for j in bean_jars:
          jar_file = os.path.join(jardir, j)
          if os.path.exists(jar_file):
-            shutil.copy2(jar_file, destdir)
+            smartCopy(jar_file, destdir)
 
-      shutil.copy2(os.path.join(vrjconfig_src, 'VRJConfig.xml'), destdir)
+      smartCopy(os.path.join(vrjconfig_src, 'VRJConfig.xml'), destdir)
 
       # Install any custom editors that were compiled.
       destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans',
@@ -1330,8 +1359,8 @@ def installVRJConfig(prefix, buildDir):
          jar_file = os.path.join(jardir, e[1] + '.jar')
          xml_file = os.path.join(custom_editor_src, e[0], e[1] + '.xml')
          if os.path.exists(jar_file):
-            shutil.copy2(xml_file, destdir)
-            shutil.copy2(jar_file, destdir)
+            smartCopy(xml_file, destdir)
+            smartCopy(jar_file, destdir)
 
       # Install any wizards that were compiled.
       destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans', 'wizards')
@@ -1339,11 +1368,11 @@ def installVRJConfig(prefix, buildDir):
       for e in wizards:
          jar_file = os.path.join(jardir, e[1] + '.jar')
          if os.path.exists(jar_file):
-            shutil.copy2(jar_file, destdir)
+            smartCopy(jar_file, destdir)
 
       # Install vrjconfig.bat.
       destdir = os.path.join(prefix, 'bin')
-      shutil.copy2(os.path.join(vrjconfig_src, 'vrjconfig.bat'), destdir)
+      smartCopy(os.path.join(vrjconfig_src, 'vrjconfig.bat'), destdir)
 
       # Install dependencies.
       dep_jars = [
@@ -1354,7 +1383,7 @@ def installVRJConfig(prefix, buildDir):
       srcroot = os.path.join(gJugglerDir, 'external')
       destdir = os.path.join(prefix, 'share', 'vrjuggler', 'java')
       for j in dep_jars:
-         shutil.copy2(os.path.join(srcroot, j), destdir)
+         smartCopy(os.path.join(srcroot, j), destdir)
    else:
       printStatus("VRJConfig not built.  Skipping.")
 
@@ -1378,11 +1407,11 @@ def installVRJugglerPluginsJava(prefix, buildDir):
 
          destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans')
          mkinstalldirs(destdir)
-         shutil.copy2(os.path.join(srcdir, name + '.jar'), destdir)
+         smartCopy(os.path.join(srcdir, name + '.jar'), destdir)
 
          srcdir = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'plugins',
                                dir)
-         shutil.copy2(os.path.join(srcdir, name + '.xml'), destdir)
+         smartCopy(os.path.join(srcdir, name + '.xml'), destdir)
       else:
          printStatus("VR Juggler %s Java plug-ins not built.  Skipping." % name)
 
@@ -1404,9 +1433,10 @@ def installMsvcRT(prefix):
       dlls = glob.glob(os.path.join(sys_dir, 'msvc*.dll'))
 
       for d in dlls:
-         shutil.copy2(d, destdir)
+         smartCopy(d, pj(destdir,d))         
 
-      shutil.copy2(os.path.join(sys_dir, 'dbghelp.dll'), destdir)
+      #smartCopy(d, pj(destdir,d))
+      smartCopy(os.path.join(sys_dir, 'dbghelp.dll'), destdir)
    except KeyError, ex:
       printStatus("WARNING: Could not install MSVC runtime DLLs")
       print ex
@@ -1458,6 +1488,7 @@ def installCppDOM(prefix):
 
 def installBoost(prefix):
    printStatus("Installing Boost headers and libraries")
+   print "Installing Boost headers and libraries"
 
    srcroot = os.environ['BOOST_ROOT']
 
@@ -1472,7 +1503,8 @@ def installBoost(prefix):
    lib_list = glob.glob(os.path.join(srcdir, '*boost_*'))
 
    for f in lib_list:
-      shutil.copy2(f, destdir)
+      #print "  ==> ", f
+      smartCopy(f, destdir)
 
 def installGMTL(prefix):
    simpleInstall('GMTL headers', os.environ['GMTL_ROOT'], prefix)
@@ -1495,7 +1527,7 @@ def installOpenAL(prefix):
       for d in dll_dirs:
          dll = os.path.join(d, 'OpenAL32.dll')
          if os.path.exists(dll):
-            shutil.copy2(dll, destdir)
+            smartCopy(dll, destdir)
 
    srcdir = os.environ['ALUT_ROOT']
    if srcdir != "":
@@ -1504,7 +1536,7 @@ def installOpenAL(prefix):
 
       alut_dll = os.path.join(srcdir, 'lib', 'alut.dll')
       if os.path.exists(alut_dll):
-         shutil.copy2(dll, destdir)
+         smartCopy(dll, destdir)
 
 def installOmniORB(prefix):
    root = os.getenv('OMNIORB_ROOT', '')
