@@ -65,9 +65,8 @@ namespace
 //
 // This helper comes in handy since we have to throw exceptions from so many places in
 // the socket implementation.
-void buildAndThrowException(std::string prefix, std::string location)
+void buildAndThrowException(PRErrorCode err_code, std::string prefix, std::string location)
 {
-   PRErrorCode err_code = PR_GetError();
    std::string err_string = vpr::Error::getCurrentErrorMsg();
 
    // Build and throw exception
@@ -104,8 +103,14 @@ void buildAndThrowException(std::string prefix, std::string location)
    {
       throw vpr::SocketException(prefix + "Error: " + err_string, location);
    }
-
 }
+
+void buildAndThrowException(std::string prefix, std::string location)
+{
+   PRErrorCode err_code = PR_GetError();
+   buildAndThrowException(err_code,prefix,location);
+}
+
 
 }
 
@@ -365,7 +370,7 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
       }
       else
       {
-         buildAndThrowException("[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
+         buildAndThrowException(err, "[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
       }
    }
    // Otherwise, return success.
