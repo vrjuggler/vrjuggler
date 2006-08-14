@@ -417,7 +417,7 @@ install-flagpoll:
 	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/jccl.fpc 						\
-          $(libdir)$(LIBBITSUF)/flagpoll/jccl$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
+          $(libdir)$(LIBBITSUF)/flagpoll/jccl-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
 
 # Install the user tools code.
 install-tools:
