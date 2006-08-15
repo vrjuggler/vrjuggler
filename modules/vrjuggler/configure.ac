@@ -371,6 +371,10 @@ if test "x$PF_INCLUDES" != "x" ; then
    vrj_cxxflags="$vrj_cxxflags $PF_INCLUDES"
 fi
 
+if test "x$PLATFORM" = "xDarwin" -a "x$VRJ_USE_X11" = "xyes" ; then
+   vrj_cxxflags="$vrj_cxxflags $X_CFLAGS"
+fi
+
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
 if test "x$PLATFORM" = "xHP" ; then
