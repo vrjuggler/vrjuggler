@@ -578,9 +578,12 @@ def updateVersions(vcDir, options):
    mods = []
 
    vpr_subst_vars = {}
+   vpr_subst_vars['vpr_cxxflags'] = '/EHsc /GR'
    vpr_subst_vars['vpr_ldflags_compiler'] = r'/link /libpath:$libdir'
    vpr_subst_vars['vpr_ldflags_linker'] = r'/libpath:$libdir'
    vpr_subst_vars['vpr_libs'] = ''
+   vpr_subst_vars['vpr_extra_ldflags_linker'] = r'/libpath:${VJ_DEPS_DIR}\lib'
+   vpr_subst_vars['vpr_extra_libs'] = 'libnspr4.lib libplc4.lib'
    mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
                              vpr_subst_vars,
                              [(r'vpr\vprParam.h',), ('vpr.fpc',),
@@ -602,11 +605,17 @@ def updateVersions(vcDir, options):
                                          'java', j))
 
    tweek_subst_vars = {}
+   tweek_subst_vars['tweek_cxxflags'] = '/EHsc /GR'
    if tweek_have_cxx:
-      tweek_subst_vars['tweek_cxxflags'] = '/DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I$prefix\\include\\tweek\\idl'
+      tweek_subst_vars['tweek_cxxflags'] += ' /DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I$prefix\\include\\tweek\\idl'
    tweek_subst_vars['tweek_ldflags_compiler'] = r'/link /libpath:$libdir'
    tweek_subst_vars['tweek_ldflags_linker'] = r'/libpath:$libdir'
    tweek_subst_vars['tweek_libs'] = ''
+   tweek_subst_vars['tweek_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
+   tweek_subst_vars['tweek_extra_libs'] = \
+      'omnithread%s_rt.lib omniORB%s_rt.lib omniDynamic%s_rt.lib' % \
+         (os.environ['OMNITHREAD_VERSION'], os.environ['OMNIORB_VERSION'],
+          os.environ['OMNIORB_VERSION'])
    tweek_subst_vars['tweek_idlflags_java'] = r'-I$prefix\include'
    tweek_subst_vars['tweek_idlflags_cxx'] = r'-bcxx -Wbh=.h,s=.cpp -I$prefix\include'
    tweek_subst_vars['tweek_idl_inc_flag_java'] = '-I'
@@ -640,6 +649,7 @@ def updateVersions(vcDir, options):
       jccl_jars.append(os.path.join('${prefix}', 'share', 'jccl', 'java', j))
 
    jccl_subst_vars = {}
+   jccl_subst_vars['jccl_cxxflags'] = '/EHsc /GR'
    jccl_subst_vars['jccl_ldflags_compiler'] = r'/link /libpath:$libdir'
    jccl_subst_vars['jccl_ldflags_linker'] = r'/libpath:$libdir'
    jccl_subst_vars['jccl_libs'] = ''
@@ -657,6 +667,7 @@ def updateVersions(vcDir, options):
                              ]))
 
    snx_subst_vars = {}
+   snx_subst_vars['snx_cxxflags'] = '/EHsc /GR'
    snx_subst_vars['snx_ldflags_compiler'] = r'/link /libpath:$libdir'
    snx_subst_vars['snx_ldflags_linker'] = r'/libpath:$libdir'
    snx_subst_vars['snx_libs'] = ''
@@ -667,9 +678,12 @@ def updateVersions(vcDir, options):
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 
    gadget_subst_vars = {}
+   gadget_subst_vars['gadget_cxxflags'] = '/EHsc /GR'
    gadget_subst_vars['gadget_ldflags_compiler'] = r'/link /libpath:$libdir'
    gadget_subst_vars['gadget_ldflags_linker'] = r'/libpath:$libdir'
    gadget_subst_vars['gadget_libs'] = ''
+   gadget_subst_vars['gadget_extra_libs'] = \
+      'comctl32.lib ws2_32.lib user32.lib'
    mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                              'GADGET_VERSION', gadget_subst_vars,
                              [(r'gadget\gadgetParam.h',), ('gadgeteer.fpc',),
@@ -677,9 +691,13 @@ def updateVersions(vcDir, options):
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 
    vrj_subst_vars = {}
+   vrj_subst_vars['vrj_cxxflags'] = '/EHsc /GR'
    vrj_subst_vars['vrj_ldflags_compiler'] = r'/link /libpath:$libdir'
    vrj_subst_vars['vrj_ldflags_linker'] = r'/libpath:$libdir'
    vrj_subst_vars['vrj_libs'] = ''
+   vrj_subst_vars['vrj_ogl_extra_libs'] = 'opengl32.lib glu32.lib'
+   vrj_subst_vars['vrj_pf_extra_libs'] = \
+      '/libpath:${PFROOT}\lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib'
    mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              'VRJ_VERSION', vrj_subst_vars,
                              [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
