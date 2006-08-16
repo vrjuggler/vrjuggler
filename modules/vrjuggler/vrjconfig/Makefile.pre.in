@@ -64,13 +64,20 @@ Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
 $(M4_DEPS): ;
+$(srcdir)/../VERSION: ;
+$(srcdir)/../../tweek/VERSION: ;
+$(srcdir)/../../jackal/VERSION: ;
 
 configure: configure.in $(M4_DEPS)
 	cd $(srcdir) && ./autogen.sh
 
 config.status: configure ;
 
-Makefile: configure config.status Makefile.in make.defs.mk.in
+VERSION_DEPS=	$(srcdir)/../VERSION		\
+		$(srcdir)/../../tweek/VERSION	\
+		$(srcdir)/../../jackal/VERSION
+
+Makefile: $(VERSION_DEPS) configure config.status Makefile.in make.defs.mk.in
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 
 %:: Makefile
