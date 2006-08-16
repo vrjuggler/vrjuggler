@@ -47,8 +47,10 @@ EXTRA_INCLUDES=		-I$(srcdir)/../cubes -I$(srcdir)/../torus	\
 EXTRA_PATH_FOR_SOURCES=	$(srcdir)/../cubes $(srcdir)/../torus		\
 			$(srcdir)/../wand $(srcdir)/../perfAddon
 
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+DZR_BASE_DIR=	$(shell flagpoll doozer --get-prefix)
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+
 
 # -----------------------------------------------------------------------------
 # Application build targets.

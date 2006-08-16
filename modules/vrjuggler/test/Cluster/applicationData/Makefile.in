@@ -25,7 +25,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test/Draw/OGL/wand
+# Makefile.in for juggler/test/Cluster/applicationData
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
@@ -34,14 +34,15 @@ all: applicationData@EXEEXT@
 APP_NAME=	applicationData@EXEEXT@
 
 APP_NAME=	applicationData
-GADGET_CONFIG=		gadgeteer-config
-GADGET_LIBS_PARAM?=	Gadgeteer
+#GADGET_CONFIG=		gadgeteer-config
+#GADGET_LIBS_PARAM?=	Gadgeteer
 
 # Basic options.
 srcdir=		@srcdir@
 SRCS=		main.cpp applicationDataApp.cpp
 
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+DZR_BASE_DIR=	$(shell flagpoll doozer --get-prefix)
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
 # -----------------------------------------------------------------------------
