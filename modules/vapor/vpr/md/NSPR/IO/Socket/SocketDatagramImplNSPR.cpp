@@ -114,6 +114,10 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
    ReturnStatus retval;
    PRInt32 bytes;
 
+#ifdef VPR_OS_Win32
+   vprASSERT(vpr::InetAddr::AnyAddr != to && "INADDR_ANY is not a valid desination on win32.");
+#endif
+
    bytes = PR_SendTo(mHandle, msg, length, 0, to.getPRNetAddr(),
                      NSPR_getInterval(timeout));
 
