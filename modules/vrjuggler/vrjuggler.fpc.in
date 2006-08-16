@@ -31,6 +31,8 @@ static_end = @APP_LINK_STATIC_OFF@
 
 vrj_cxxflags = @vrj_cxxflags@
 
+vrj_share_dir = ${prefix}/@VJ_SHARE_DIR@
+
 vrj_ldflags_compiler = @vrj_ldflags_compiler@
 vrj_ldflags_linker = @vrj_ldflags_linker@
 
@@ -82,3 +84,6 @@ vrj_ogl_libs: ${vrj_ogl_lib} ${vrj_ogl_extra_libs}
 vrj_ogl_prof_libs: ${vrj_ogl_prof_lib} ${vrj_ogl_extra_libs}
 vrj_pf_libs: ${vrj_pf_lib} ${vrj_pf_extra_libs}
 vrj_pf_prof_libs: ${vrj_pf_prof_lib} ${vrj_pf_extra_libs}
+
+# Build bits
+vrj_app_defs_file: ${vrj_share_dir}/vrj.appdefs.mk
