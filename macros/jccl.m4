@@ -44,7 +44,7 @@ AC_DEFUN([_JCCL_PATH_SETUP],
     fi
 
     jccl_flagpoll_args="jccl $jccl_flagpoll_args --no-deps"
-    AM_PATH_FLAGPOLL([0.5.0], , [AC_MSG_ERROR(*** Flagpoll required for Jackal Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for Jackal Flags ***)])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then

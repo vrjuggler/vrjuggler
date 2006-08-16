@@ -56,7 +56,7 @@ AC_DEFUN([GADGETEER_PATH],
 
     gadget_flagpoll_args="gadgeteer $gadget_flagpoll_args --no-deps"
 
-    AM_PATH_FLAGPOLL([0.5.0], , [AC_MSG_ERROR(*** Flagpoll required for Gadgeteer Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for Gadgeteer Flags ***)])
     min_gadget_version=ifelse([$1], , 0.0.1, $1)
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
