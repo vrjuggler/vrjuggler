@@ -31,7 +31,6 @@
 # -----------------------------------------------------------------------------
 
 TWEEK_BASE_DIR=		@prefix@
-DZR_BASE_DIR?=		$(TWEEK_BASE_DIR)/share/Doozer
 
 CC=			@APP_CC@
 CXX=			@APP_CXX@
