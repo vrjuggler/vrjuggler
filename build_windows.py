@@ -608,14 +608,15 @@ def updateVersions(vcDir, options):
    tweek_subst_vars['tweek_cxxflags'] = '/EHsc /GR'
    if tweek_have_cxx:
       tweek_subst_vars['tweek_cxxflags'] += ' /DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I$prefix\\include\\tweek\\idl'
+      tweek_subst_vars['tweek_extra_libs'] = \
+         'omnithread%s_rt.lib omniORB%s_rt.lib omniDynamic%s_rt.lib' % \
+            (os.environ['OMNITHREAD_VERSION'], os.environ['OMNIORB_VERSION'],
+             os.environ['OMNIORB_VERSION'])
+
    tweek_subst_vars['tweek_ldflags_compiler'] = r'/link /libpath:$libdir'
    tweek_subst_vars['tweek_ldflags_linker'] = r'/libpath:$libdir'
    tweek_subst_vars['tweek_libs'] = ''
    tweek_subst_vars['tweek_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
-   tweek_subst_vars['tweek_extra_libs'] = \
-      'omnithread%s_rt.lib omniORB%s_rt.lib omniDynamic%s_rt.lib' % \
-         (os.environ['OMNITHREAD_VERSION'], os.environ['OMNIORB_VERSION'],
-          os.environ['OMNIORB_VERSION'])
    tweek_subst_vars['tweek_idlflags_java'] = r'-I$prefix\include'
    tweek_subst_vars['tweek_idlflags_cxx'] = r'-bcxx -Wbh=.h,s=.cpp -I$prefix\include'
    tweek_subst_vars['tweek_idl_inc_flag_java'] = '-I'
