@@ -47,8 +47,10 @@
 #include <prio.h>
 #include <prerror.h>
 
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
+
 
 namespace vpr
 {

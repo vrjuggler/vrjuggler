@@ -51,8 +51,9 @@
 #include <prio.h>
 #include <prinrval.h>
 
-#include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 
 
 namespace vpr

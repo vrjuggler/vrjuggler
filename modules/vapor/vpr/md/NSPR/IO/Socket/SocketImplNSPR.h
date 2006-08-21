@@ -50,13 +50,13 @@
 #include <prerror.h>
 
 #include <vpr/IO/Socket/InetAddr.h>
-#include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/IOSys.h>
+#include <vpr/Util/Interval.h>
 #include <vpr/Util/ReturnStatus.h>
-
 #include <vpr/Util/Debug.h>
+
 
 namespace vpr
 {

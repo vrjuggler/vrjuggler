@@ -45,6 +45,7 @@
 #include <prinrval.h>
 
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
 
 
