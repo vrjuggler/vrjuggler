@@ -46,7 +46,9 @@
 
 #include <string>
 #include <prinrval.h>
+#include <prlong.h>
 #include <vpr/Util/Interval.h>
+
 
 namespace vpr
 {
@@ -68,7 +70,9 @@ inline PRIntervalTime NSPR_getInterval(const vpr::Interval& interval)
    }
    else
    {
-      return PR_MicrosecondsToInterval(interval.usec());
+      PRUint32 usec;
+      LL_L2UI(usec, interval.usec());
+      return PR_MicrosecondsToInterval(usec);
    }
 }
 
