@@ -41,14 +41,13 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
-#include <string.h>
+#include <sstream>
 #include <prinrval.h>
 #include <prio.h>
 #include <prerror.h>
 
-#include <vpr/Util/Error.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/Util/Error.h>
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 
 
@@ -93,7 +92,11 @@ vpr::ReturnStatus SocketImplNSPR::open()
       // If socket(2) failed, print an error message and return error status.
       if ( new_sock == NULL )
       {
-         vpr::Error::outputCurrentError(std::cerr, "[vpr::SocketImplNSPR] Could not create socket");
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(err_stream, "Could not create socket");
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketImplNSPR::open()] " << err_stream.str()
+            << vprDEBUG_FLUSH;
          retval.setCode(vpr::ReturnStatus::Fail);
       }
       // Otherwise, return success.
@@ -160,8 +163,12 @@ vpr::ReturnStatus SocketImplNSPR::bind()
    // If that fails, print an error and return error status.
    if ( status == PR_FAILURE )
    {
+      std::ostringstream err_stream;
+      vpr::Error::outputCurrentError(err_stream, "Failed to bind");
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[vpr::SocketImplNSPR::bind()] " << err_stream.str()
+         << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
-      vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::bind: Failed to bind.");
    }
    // Otherwise, return success.
    else
@@ -209,8 +216,14 @@ vpr::ReturnStatus SocketImplNSPR::setBlocking(bool blocking)
          // If that fails, print an error and return error status.
          if ( status == PR_FAILURE )
          {
-            vpr::Error::outputCurrentError(std::cerr,
-                                           "SocketImplNSPR::setBlocking: Failed to set.");
+            std::ostringstream err_stream;
+            vpr::Error::outputCurrentError(err_stream, "");
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "[vpr::SocketImplNSPR::setBlocking()] Failed to set "
+               << (blocking ? "" : "non-") << "blocking state" << std::endl
+               << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << err_stream.str() << vprDEBUG_FLUSH;
             retval.setCode(vpr::ReturnStatus::Fail);
          }
          else
@@ -241,8 +254,9 @@ vpr::ReturnStatus SocketImplNSPR::connect(vpr::Interval timeout)
 
    if(mConnected)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketImplNSPR::connect: Socket already connected.  Can't connect again"
-                    << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[SocketImplNSPR::connect()] Socket already connected.  Can't connect again!\n"
+         << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
@@ -293,7 +307,11 @@ vpr::ReturnStatus SocketImplNSPR::connect(vpr::Interval timeout)
          }
          else
          {
-            vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::connect: Failed to connect.");
+            std::ostringstream err_stream;
+            vpr::Error::outputCurrentError(err_stream, "Failed to connect");
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "[vpr::SocketImplNSPR::connect()] ERROR: "
+               << err_stream.str() << vprDEBUG_FLUSH;
             retval.setCode(vpr::ReturnStatus::Fail);
          }
       }
@@ -323,8 +341,9 @@ vpr::ReturnStatus SocketImplNSPR::connect(vpr::Interval timeout)
       }
       else
       {
-          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Failed to get local socket name\n"
-                                          << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Failed to get local socket name\n"
+            << vprDEBUG_FLUSH;
       }
    }
 
@@ -355,7 +374,11 @@ vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
    else if ( bytes == -1 )      // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    {
       PRErrorCode err_code = PR_GetError();
-      vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::read_i::Error -->");
+      std::ostringstream err_stream;
+      vpr::Error::outputCurrentError(err_stream, "Read failed");
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[vpr::SocketImplNSPR::read_i()] " << err_stream.str()
+         << vprDEBUG_FLUSH;
 
       bytesRead = 0;
 
@@ -426,8 +449,15 @@ vpr::ReturnStatus SocketImplNSPR::readn_i(void* buffer,
          {
             continue;
          }
+
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(err_stream, "Read failed");
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketImplNSPR::readn_i()] " << err_stream.str()
+            << vprDEBUG_FLUSH;
+
          // The last read took longer than we wanted.
-         else if ( err_code == PR_IO_TIMEOUT_ERROR )
+         if ( err_code == PR_IO_TIMEOUT_ERROR )
          {
             retval.setCode(vpr::ReturnStatus::Timeout);
             return retval;
@@ -476,7 +506,12 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
    if ( bytes == -1 )
    {
       PRErrorCode err_code = PR_GetError();
-      vpr::Error::outputCurrentError(std::cerr, "SocketImplNspr::write_i: Error --> ");
+
+      std::ostringstream err_stream;
+      vpr::Error::outputCurrentError(err_stream, "Write failed");
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[vpr::SocketImplNSPR::write_i()] " << err_stream.str()
+         << vprDEBUG_FLUSH;
 
       bytesWritten = 0;
 
@@ -486,6 +521,7 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
+         vprASSERT(false);
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else if ( err_code == PR_NOT_CONNECTED_ERROR ||
@@ -651,8 +687,14 @@ vpr::ReturnStatus SocketImplNSPR::getOption(const vpr::SocketOptions::Types opti
       }
       else
       {
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(
+            err_stream, "Could not get socket option for socket"
+         );
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketImplNSPR::getOption()] " << err_stream.str()
+            << vprDEBUG_FLUSH;
          retval.setCode(vpr::ReturnStatus::Fail);
-         vpr::Error::outputCurrentError(std::cerr, "[vpr::SocketImplNSPR] ERROR: Could not get socket option for socket");
       }
    }
    else

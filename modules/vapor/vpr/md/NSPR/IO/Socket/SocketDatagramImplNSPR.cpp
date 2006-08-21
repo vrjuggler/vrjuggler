@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <sstream>
 #include <prio.h>
 #include <prinrval.h>
 
@@ -92,8 +93,12 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
       }
       else
       {
-         vpr::Error::outputCurrentError(std::cerr,
-                                        "SocketDatagramImplNSPR::recvfrom: Could not read from socket");
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(err_stream,
+                                        "Could not read from socket");
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketDatagramImplNSPR::recvfrom()] "
+            << err_stream.str() << std::endl << vprDEBUG_FLUSH;
          retval.setCode(ReturnStatus::Fail);
       }
    }
@@ -146,8 +151,11 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
       }
       else
       {
-         vpr::Error::outputCurrentError(std::cerr,
-                                        "SocketDatagramImplNSPR::sendto: Could not send message");
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(err_stream, "Could not send message");
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketDatagramImplNSPR::sendto()] " << err_stream.str()
+            << std::endl << vprDEBUG_FLUSH;
          retval.setCode(ReturnStatus::Fail);
       }
    }

@@ -41,13 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
-#include <string.h>
-
-#ifdef HAVE_STRINGS_H
-#  include <strings.h>
-#endif
-
+#include <sstream>
 #include <prio.h>
 #include <prinrval.h>
 
@@ -103,8 +97,11 @@ vpr::ReturnStatus SocketStreamImplNSPR::listen(const int backlog)
 
       if ( PR_FAILURE == status )
       {
-         vpr::Error::outputCurrentError(std::cerr,
-                                        "[vpr::SocketStreamImplNSPR::listen()] Cannot listen on socket: ");
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(err_stream, "Cannot listen on socket");
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketStreamImplNSPR::listen()] " << err_stream.str()
+            << std::endl << vprDEBUG_FLUSH;
          retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
@@ -152,8 +149,12 @@ vpr::ReturnStatus SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
          }
          else
          {
-            vpr::Error::outputCurrentError(std::cerr,
-                                           "[vpr::SocketStreamImplNSPR::accept()] Cannot accept on socket: ");
+            std::ostringstream err_stream;
+            vpr::Error::outputCurrentError(err_stream,
+                                           "Cannot accept on socket");
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "[vpr::SocketStreamImplNSPR::accept()] " << err_stream.str()
+               << std::endl << vprDEBUG_FLUSH;
             retval.setCode(vpr::ReturnStatus::Fail);
          }
       }
