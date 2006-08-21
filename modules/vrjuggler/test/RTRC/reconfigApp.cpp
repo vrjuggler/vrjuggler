@@ -178,9 +178,9 @@ void reconfigApp::preFrame()
 
          case 39:  status =       removeMachineSpecific_exec();  break;
 
-         case 40:  status =       addStupifiedAnalogProxy_exec();  break;
+         case 40:  status =       addStupefiedAnalogProxy_exec();  break;
 
-         case 41:  status =       removeStupifiedAnalogProxy_exec();  break;
+         case 41:  status =       removeStupefiedAnalogProxy_exec();  break;
 
 
          case 42:  status = true;
@@ -288,9 +288,9 @@ void reconfigApp::preFrame()
 
          case 39:  status =       removeMachineSpecific_check();break;
 
-         case 40:  status =       addStupifiedAnalogProxy_check();break;
+         case 40:  status =       addStupefiedAnalogProxy_check();break;
 
-         case 41:  status =       removeStupifiedAnalogProxy_check();break;
+         case 41:  status =       removeStupefiedAnalogProxy_check();break;
 
          default: status = true; break;
 
@@ -468,7 +468,7 @@ bool reconfigApp::verifyProxy( std::string proxyName, std::string deviceName )
 
    if (proxy->isStupefied())
    {
-      std::cout << "\tError: Proxy is stupified\n" << std::flush;
+      std::cout << "\tError: Proxy is Stupefied\n" << std::flush;
       return false;
    }
 
@@ -1198,7 +1198,7 @@ bool reconfigApp::removeKeyboardWin_check()
       return false;
    }
 
-   //Check the wand keyboard proxy that is supposed to point to it is stupified
+   //Check the wand keyboard proxy that is supposed to point to it is Stupefied
    jccl::Configuration fileDB2;
    fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.jconf" );
    fileElements.clear();
@@ -1220,7 +1220,7 @@ bool reconfigApp::removeKeyboardWin_check()
 
    if (!keyboard_proxy->isStupefied())
    {
-      std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is not stupified\n" << std::flush;
+      std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is not Stupefied\n" << std::flush;
       return false;
 
    }
@@ -1261,7 +1261,7 @@ bool reconfigApp::readdKeyboardWin_check()
       return false;
    }
 
-   //Check the wand keyboard proxy that is supposed to point to it is stupified
+   //Check the wand keyboard proxy that is supposed to point to it is Stupefied
    jccl::Configuration fileDB2;
    fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.jconf" );
    fileElements.clear();
@@ -1283,7 +1283,7 @@ bool reconfigApp::readdKeyboardWin_check()
 
    if (keyboard_proxy->isStupefied())
    {
-      std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is stupified\n" << std::flush;
+      std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is Stupefied\n" << std::flush;
       return false;
 
    }
@@ -1339,7 +1339,7 @@ bool reconfigApp::removeSimPos_check()
 
    if (!proxy->isStupefied())
    {
-      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      std::cout << "\tError: Proxy is not Stupefied\n" << std::flush;
       return false;
    }
 
@@ -1615,7 +1615,7 @@ bool reconfigApp::removeSimDigital_check()
 
    if (!proxy->isStupefied())
    {
-      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      std::cout << "\tError: Proxy is not Stupefied\n" << std::flush;
       return false;
    }
 
@@ -1673,7 +1673,7 @@ bool reconfigApp::removeSimAnalog_check()
 
    if (!proxy->isStupefied())
    {
-      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      std::cout << "\tError: Proxy is not Stupefied\n" << std::flush;
       return false;
    }
 
@@ -1869,13 +1869,13 @@ bool reconfigApp::removeKeyboardProxy_check()
    return true;
 }
 
-bool reconfigApp::addStupifiedAnalogProxy_exec()
+bool reconfigApp::addStupefiedAnalogProxy_exec()
 {
-   std::cout << "Beginning test for adding a stupified analog proxy...\n" << std::flush;
+   std::cout << "Beginning test for adding a Stupefied analog proxy...\n" << std::flush;
    return addElementFile( mPath + "sim.stupidproxy01.jconf" );
 }
 
-bool reconfigApp::addStupifiedAnalogProxy_check()
+bool reconfigApp::addStupefiedAnalogProxy_check()
 {
    //Try to get the new proxy and check its values
    gadget::Proxy* tempProxy = gadget::InputManager::instance()->getProxy( "StupidAnalogProxy01" );
@@ -1888,7 +1888,7 @@ bool reconfigApp::addStupifiedAnalogProxy_check()
    }
    if (!proxy->isStupefied())
    {
-      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      std::cout << "\tError: Proxy is not Stupefied\n" << std::flush;
       return false;
    }
    if (proxy->getData() != 0.0 )
@@ -1910,13 +1910,13 @@ bool reconfigApp::addStupifiedAnalogProxy_check()
 
    return true;
 }
-bool reconfigApp::removeStupifiedAnalogProxy_exec()
+bool reconfigApp::removeStupefiedAnalogProxy_exec()
 {
-   std::cout << "Beginning test for removing a stupified analog proxy...\n" << std::flush;
+   std::cout << "Beginning test for removing a Stupefied analog proxy...\n" << std::flush;
    return removeElementFile( mPath + "sim.stupidproxy01.jconf" );
 }
 
-bool reconfigApp::removeStupifiedAnalogProxy_check()
+bool reconfigApp::removeStupefiedAnalogProxy_check()
 {
 
    //Try to get the new proxy and check its values
