@@ -53,7 +53,7 @@
 namespace vpr
 {
 
-/** Prints out the current NSPR error message to stderr. */
+/** Prints the current NSPR error state to the given output stream. */
 extern void NSPR_PrintError(const std::string& errorPrefixString,
                             std::ostream& = std::cout);
 
