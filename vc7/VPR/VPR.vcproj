@@ -36,7 +36,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				RegisterOutput="FALSE"
-				AdditionalDependencies="cppdom_d.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d.dll"
 				Version="1.0.1"
 				LinkIncremental="2"
@@ -89,7 +89,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr.dll"
 				Version="1.0.1"
 				LinkIncremental="1"

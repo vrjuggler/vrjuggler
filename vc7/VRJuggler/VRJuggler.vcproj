@@ -36,7 +36,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d.dll"
 				Version="2.0.1"
 				LinkIncremental="2"
@@ -89,7 +89,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj.dll"
 				Version="2.0.1"
 				LinkIncremental="1"
