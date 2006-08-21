@@ -199,7 +199,7 @@ bool Ether24::startSampling()
       mDevice.open(mAddress);
       mActive = true;
    }
-   catch (Elexol::ElexolException& ex)
+   catch (Elexol::ElexolException&)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
