@@ -521,7 +521,6 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
-         vprASSERT(false);
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else if ( err_code == PR_NOT_CONNECTED_ERROR ||
