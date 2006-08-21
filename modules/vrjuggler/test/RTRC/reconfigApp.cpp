@@ -466,7 +466,7 @@ bool reconfigApp::verifyProxy( std::string proxyName, std::string deviceName )
       return false;
    }
 
-   if (proxy->isStupified())
+   if (proxy->isStupefied())
    {
       std::cout << "\tError: Proxy is stupified\n" << std::flush;
       return false;
@@ -1218,7 +1218,7 @@ bool reconfigApp::removeKeyboardWin_check()
       return false;
    }
 
-   if (!keyboard_proxy->isStupified())
+   if (!keyboard_proxy->isStupefied())
    {
       std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is not stupified\n" << std::flush;
       return false;
@@ -1281,7 +1281,7 @@ bool reconfigApp::readdKeyboardWin_check()
       return false;
    }
 
-   if (keyboard_proxy->isStupified())
+   if (keyboard_proxy->isStupefied())
    {
       std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is stupified\n" << std::flush;
       return false;
@@ -1337,7 +1337,7 @@ bool reconfigApp::removeSimPos_check()
       return false;
    }
 
-   if (!proxy->isStupified())
+   if (!proxy->isStupefied())
    {
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
       return false;
@@ -1613,7 +1613,7 @@ bool reconfigApp::removeSimDigital_check()
       return false;
    }
 
-   if (!proxy->isStupified())
+   if (!proxy->isStupefied())
    {
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
       return false;
@@ -1671,7 +1671,7 @@ bool reconfigApp::removeSimAnalog_check()
       return false;
    }
 
-   if (!proxy->isStupified())
+   if (!proxy->isStupefied())
    {
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
       return false;
@@ -1886,7 +1886,7 @@ bool reconfigApp::addStupifiedAnalogProxy_check()
       std::cout << "\tError: Could not find the proxy\n" << std::flush;
       return false;
    }
-   if (!proxy->isStupified())
+   if (!proxy->isStupefied())
    {
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
       return false;
