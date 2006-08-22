@@ -50,7 +50,7 @@ extern void NSPR_PrintError(const std::string& errorPrefixString,
                             std::ostream& = std::cout);
 
 /** Converts the given vpr::Interval object to an NSPR interval. */
-inline PRUint32 NSPR_getInterval(const vpr::Interval interval)
+inline PRIntervalTime NSPR_getInterval(const vpr::Interval& interval)
 {
    if(interval == vpr::Interval::NoTimeout)
    {
