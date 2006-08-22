@@ -715,10 +715,12 @@ void SocketTest::serverFunc()
    sock = new vpr::SocketStream(local_addr, vpr::InetAddr::AnyAddr);
    CPPUNIT_ASSERT_NO_THROW(sock->openServer());
    {
-      vpr::SocketStream client_sock;
       thread_args_t* tArgs;
 
       while ( num<mNumSServer) {
+         // client_sock has to be created fresh for each iteration to prevent
+         // state from being carried over to the next pass.
+         vpr::SocketStream client_sock;
          sock->accept(client_sock);
          tArgs = new thread_args_t;
          tArgs->mSock= new vpr::SocketStream(client_sock);
