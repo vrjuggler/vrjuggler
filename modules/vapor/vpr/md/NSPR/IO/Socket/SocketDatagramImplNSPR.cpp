@@ -115,7 +115,6 @@ void SocketDatagramImplNSPR::recvfrom(void* msg, const vpr::Uint32 length,
       {
          msg_stream << "[vpr::SocketDatagramImplNSPR::recvfrom()] Could not "
                     << "read from socket";
-         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
 
          if ( ! nspr_err_msg.empty() )
          {
@@ -215,7 +214,6 @@ void SocketDatagramImplNSPR::sendto(const void* msg, const vpr::Uint32 length,
       {
          msg_stream << "[vpr::SocketDatagramImplNSPR::sendto()] Could not "
                     << "send message";
-         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
 
          if ( ! nspr_err_msg.empty() )
          {

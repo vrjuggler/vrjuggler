@@ -35,14 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
 #include <sstream>
-#include <string.h>
-
-#ifdef HAVE_STRINGS_H
-#  include <strings.h>
-#endif
-
 #include <prio.h>
 #include <prinrval.h>
 
@@ -101,10 +94,8 @@ void SocketStreamImplNSPR::listen(const int backlog)
       {
          std::stringstream msg_stream;
          msg_stream << "[vpr::SocketStreamImplNSPR::listen()] "
-                    << "Cannot listen on socket";
-         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
-
-         msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+                    << "Cannot listen on socket: "
+                    << vpr::Error::getCurrentErrorMsg();
          throw SocketException(msg_stream.str(), VPR_LOCATION);
       }
    }
@@ -155,10 +146,8 @@ void SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
          {
             std::stringstream msg_stream;
             msg_stream << "[vpr::SocketStreamImplNSPR::listen()] "
-                       << "Cannot accept on socket";
-            vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
-
-            msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+                       << "Cannot accept on socket: "
+                       << vpr::Error::getCurrentErrorMsg();
             throw SocketException(msg_stream.str(), VPR_LOCATION);
          }
       }

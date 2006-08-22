@@ -35,9 +35,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
-#include <sstream>
-#include <string.h>
 #include <sstream>
 #include <prinrval.h>
 #include <prio.h>
@@ -269,9 +266,8 @@ void SocketImplNSPR::setBlocking(bool blocking)
          {
             std::stringstream msg_stream;
             msg_stream << "[vpr::SocketImplNSPR::setBlocking()] Failed to "
-                       << "change blocking state";
-            vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
-            msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+                       << "change blocking state: "
+                       << vpr::Error::getCurrentErrorMsg();
             throw IOException(msg_stream.str(), VPR_LOCATION);
          }
          else
@@ -702,10 +698,8 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
       {
          std::stringstream msg_stream;
          msg_stream << "[vpr::SocketImplNSPR::getOption()] ERROR: Could "
-                    << "not get socket option for socket";
-         vpr::Error::outputCurrentError(std::cerr, msg_stream.str());
-
-         msg_stream << ": " << vpr::Error::getCurrentErrorMsg();
+                    << "not get socket option for socket: "
+                    << vpr::Error::getCurrentErrorMsg();
          throw SocketException(msg_stream.str(), VPR_LOCATION);
       }
    }
