@@ -305,9 +305,9 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
       throw SocketException(err_msg, VPR_LOCATION);
    }
 
-
-#ifdef VPR_OS_Win32
-   vprASSERT(vpr::InetAddr::AnyAddr != mRemoteAddr && "INADDR_ANY is not a valid desination on win32.");
+#ifdef VPR_OS_Windows
+   vprASSERT(vpr::InetAddr::AnyAddr != mRemoteAddr &&
+             "INADDR_ANY is not a valid desination on Windows.");
 #endif
 
    // Attempt to connect to the address in mAddr.
