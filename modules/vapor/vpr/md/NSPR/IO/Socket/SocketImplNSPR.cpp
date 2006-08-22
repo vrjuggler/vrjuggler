@@ -43,8 +43,6 @@
 #include <prio.h>
 #include <prerror.h>
 
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
 #include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/IO/Socket/ConnectionRefusedException.h>
 #include <vpr/IO/Socket/UnknownHostException.h>
@@ -53,6 +51,9 @@
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
+#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 
 
 namespace vpr

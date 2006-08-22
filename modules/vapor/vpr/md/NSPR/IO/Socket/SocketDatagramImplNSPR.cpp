@@ -44,6 +44,7 @@
 #include <vpr/IO/Socket/ConnectionAbortedException.h>
 #include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
 
 
