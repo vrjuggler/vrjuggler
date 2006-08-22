@@ -418,7 +418,7 @@ void SocketTest::reuseAddrSimpleTest()
 
 void SocketTest::reuseAddrTest_connector()
 {
-   vpr::Uint16 port = 6667;
+   vpr::Uint16 port = 26667;
    vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
 
    // make a new socket that will connect to port "port"
@@ -439,7 +439,7 @@ void SocketTest::reuseAddrTest_acceptor()
 {
    vpr::InetAddr addr1;
 
-   CPPUNIT_ASSERT_NO_THROW(addr1.setPort(6667));
+   CPPUNIT_ASSERT_NO_THROW(addr1.setPort(26667));
 
    vpr::SocketStream sock1( addr1, vpr::InetAddr::AnyAddr );
    vpr::SocketStream sock2( addr1, vpr::InetAddr::AnyAddr );
