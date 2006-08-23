@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="VPR"
 	ProjectGUID="{00C860E8-6CC8-4638-B5D1-8E5C5A34C425}"
 	Keyword="Win32Proj">
@@ -60,7 +60,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL|Win32"
@@ -114,9 +120,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -149,9 +163,6 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\GUID.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\md\common\InetAddrHelpers.cpp">
 			</File>
 			<File
@@ -159,6 +170,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Interval.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\DynLoad\LibraryFinder.cpp">
@@ -171,6 +185,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\DynLoad\LoaderError.cpp">
+			</File>
+			<File
+				RelativePath="..\..\external\md5-c\md5c.c">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.cpp">
@@ -236,12 +253,6 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\TSObject.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\TSObjectProxy.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadFunctor.cpp">
 			</File>
 			<File
@@ -254,19 +265,22 @@
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadPool.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Thread\TSObject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Thread\TSObjectProxy.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Version.cpp">
+			</File>
+			<File
+				RelativePath="vpr\vprParam.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectReader.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectWriter.cpp">
-			</File>
-			<File
-				RelativePath="..\..\external\md5-c\md5c.c">
-			</File>
-			<File
-				RelativePath="vpr\vprParam.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -336,7 +350,7 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\FileUtils.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\Util\GUID.h">
+				RelativePath="..\..\external\md5-c\global.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\Guard.h">
@@ -345,16 +359,7 @@
 				RelativePath="..\..\modules\vapor\vpr\Sync\GuardedQueue.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Stats\IOStatsStrategyAdapter.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\IOSys.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\IOSysBase.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\Util\GUID.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\InetAddr.h">
@@ -367,6 +372,18 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Interval.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Stats\IOStatsStrategyAdapter.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\IOSys.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\IOSysBase.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\DynLoad\Library.h">
@@ -385,6 +402,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\McastReq.h">
+			</File>
+			<File
+				RelativePath="..\..\external\md5-c\md5.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\Mutex.h">
@@ -417,6 +437,12 @@
 				RelativePath="..\..\modules\vapor\vpr\Perf\ProfileNode.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\RefCountMemory.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\ReturnStatus.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\RWGuard.h">
 			</File>
 			<File
@@ -426,16 +452,13 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\RWMutexNSPR.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\Util\RefCountMemory.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\Util\ReturnStatus.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\SampleLimitedStatCollector.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Selector.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Selector_t.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\SelectorBase.h">
@@ -444,28 +467,25 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\SelectorImplNSPR.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Selector_t.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\Semaphore.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\SemaphoreNSPR.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Port\SerialPort.h">
+				RelativePath="..\..\modules\vapor\vpr\IO\SerializableObject.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\WIN32\IO\Port\SerialPortImplWin32.h">
+				RelativePath="..\..\modules\vapor\vpr\IO\Port\SerialPort.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Port\SerialPort_t.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Port\SerialTypes.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\IO\Port\SerialPortImplWin32.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\SerializableObject.h">
+				RelativePath="..\..\modules\vapor\vpr\IO\Port\SerialTypes.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\Signal.h">
@@ -475,6 +495,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\Socket.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\Socket_t.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketAcceptor.h">
@@ -489,13 +512,13 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagram.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagram_t.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketDatagramImplNSPR.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagramOpt.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagram_t.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketImplNSPR.h">
@@ -510,19 +533,16 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStream.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStream_t.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketStreamImplNSPR.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStreamOpt.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStream_t.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketTypes.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\Socket_t.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\StatCollector.h">
@@ -538,15 +558,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\TSObject.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\TSObjectProxy.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\TSTable.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\Thread.h">
@@ -570,19 +581,16 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\Timer.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Thread\TSObject.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Thread\TSObjectProxy.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Thread\TSTable.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Version.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectReader.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectWriter.h">
-			</File>
-			<File
-				RelativePath="..\..\external\md5-c\global.h">
-			</File>
-			<File
-				RelativePath="..\..\external\md5-c\md5.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\vpr.h">
@@ -604,6 +612,12 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\vprTypesNSPR.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectReader.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectWriter.h">
 			</File>
 		</Filter>
 		<Filter

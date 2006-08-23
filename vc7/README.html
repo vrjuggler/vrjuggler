@@ -149,6 +149,16 @@ The required environment variables are as follows:
     <tt>cppdom_d.dll</tt>), static release (<tt>cppdom_s.lib</tt>), and
     static debug (<tt>cppdom_s_d.lib</tt>).
   </dd>
+  <dt><tt>CPPDOM_INCLUDES</tt></dt>
+  <dd>
+    The directory containing the root of the CppDOM header tree. For CppDOM
+    0.7.3 and newer, the header tree may be in a versioned sub-directory of
+    <tt>%CPPDOM_ROOT%\include</tt> such as
+    <tt>%CPPDOM_ROOT%\include\cppdom-0.7.3</tt>. The requirement here is
+    that the value of this environment variable must be the full path to
+    a directory that contains a sub-directory named <tt>cppdom</tt>, in
+    which the CppDOM headers will be found.
+  </dd>
   <dt><tt>GMTL_ROOT</tt></dt>
   <dd>
     The root directory of an installed copy of
@@ -156,6 +166,16 @@ The required environment variables are as follows:
     0.3.2 or newer.  This must contain a directory named <tt>include</tt>
     which in turn has a subdirectory named <tt>gmtl</tt> containing the
     GMTL header files.
+  </dd>
+  <dt><tt>GMTL_INCLUDES</tt></dt>
+  <dd>
+    The directory containing the root of the CppDOM header tree. For GMTL
+    0.5.0 and newer, the header tree may be in a versioned sub-directory of
+    <tt>%GMTL_ROOT%\include</tt> such as
+    <tt>%GMTL_ROOT%\include\gmtl-0.5.0</tt>. The requirement here is that the
+    value of this environment variable must be the full path to a directory
+    that contains a sub-directory named <tt>gmtl</tt>, in which the GMTL
+    headers will be found.
   </dd>
 </dl>
 

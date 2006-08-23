@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="JCCL"
 	ProjectGUID="{5A96B2F8-7000-4988-AFD5-E85181B52BCF}"
 	Keyword="Win32Proj">
@@ -58,7 +58,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL|Win32"
@@ -111,9 +117,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -149,6 +163,9 @@
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ElementFactory.cpp">
 			</File>
 			<File
+				RelativePath="jccl\jcclParam.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ParseUtil.cpp">
 			</File>
 			<File
@@ -156,9 +173,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\jackal\common\jccl\Util\Version.cpp">
-			</File>
-			<File
-				RelativePath="jccl\jcclParam.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -207,6 +221,15 @@
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ElementFactory.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\jackal\common\jccl\jcclConfig.h">
+			</File>
+			<File
+				RelativePath="jccl\jcclDefines.h">
+			</File>
+			<File
+				RelativePath="jccl\jcclParam.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ParseUtil.h">
 			</File>
 			<File
@@ -220,15 +243,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\jackal\common\jccl\Util\Version.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\jackal\common\jccl\jcclConfig.h">
-			</File>
-			<File
-				RelativePath="jccl\jcclDefines.h">
-			</File>
-			<File
-				RelativePath="jccl\jcclParam.h">
 			</File>
 		</Filter>
 		<Filter

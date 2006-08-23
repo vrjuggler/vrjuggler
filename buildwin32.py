@@ -188,6 +188,9 @@ def getDefaultVars():
                                'Directory containing the CppDOM header tree',
                                ''))
    required.append(BuildOption('GMTL_ROOT', 'GMTL installation directory', ''))
+   required.append(BuildOption('GMTL_INCLUDES',
+                               'Directory containing the GMTL header tree',
+                               ''))
 
    optional = []
    optional.append(BuildOption('JAVA_HOME', 'Java installation directory',
@@ -258,6 +261,11 @@ def setVars():
       # the CPPDOM_INCLUDES variable before the user has to enter it manually.
       if opt.envVar == 'CPPDOM_ROOT':
          options['CPPDOM_INCLUDES'] = os.path.join(result, 'include')
+
+      # The following is a little hack to get a reasonable default set for
+      # the GMTL_INCLUDES variable before the user has to enter it manually.
+      if opt.envVar == 'GMTL_ROOT':
+         options['GMTL_INCLUDES'] = os.path.join(result, 'include')
 
    print "+++ Optional Settings"
    processInput(options, 'deps-prefix', 'Dependency installation prefix')
@@ -1510,7 +1518,8 @@ def installBoost(prefix):
       smartCopy(f, destdir)
 
 def installGMTL(prefix):
-   simpleInstall('GMTL headers', os.environ['GMTL_ROOT'], prefix)
+   simpleInstall('GMTL headers', os.environ['GMTL_ROOT'], prefix,
+                 os.environ['GMTL_INCLUDES'])
 
 def installAudiere(prefix):
    simpleInstall('Audiere headers, libraries, and executables',

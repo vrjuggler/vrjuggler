@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="JCCL CORBA Run-Time Reconfig Plug-in (Java)"
 	ProjectGUID="{C2438998-3FE5-4D34-A141-B49BDB9C9A10}"
 	Keyword="MakeFileProj">
@@ -23,6 +23,8 @@
 				Output="jccl_rtrc.jar"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
