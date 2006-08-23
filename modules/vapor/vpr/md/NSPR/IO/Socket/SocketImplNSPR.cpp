@@ -44,6 +44,7 @@
 #include <sstream>
 #include <prinrval.h>
 #include <prio.h>
+#include <private/pprio.h>
 #include <prerror.h>
 
 #include <vpr/md/NSPR/NSPRHelpers.h>
@@ -267,9 +268,7 @@ vpr::ReturnStatus SocketImplNSPR::connect(vpr::Interval timeout)
 
       if ( status == PR_FAILURE )
       {
-         PRInt32 err;
-
-         err = PR_GetError();
+         const PRErrorCode err = PR_GetError();
 
          // This is a non-blocking connection.
          if ( err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR  )
@@ -303,6 +302,13 @@ vpr::ReturnStatus SocketImplNSPR::connect(vpr::Interval timeout)
          }
          else if ( err == PR_IO_TIMEOUT_ERROR )
          {
+#if defined(WINNT)
+            // Handle the case of a timeout error on an NT socket. We have to
+            // tell NSPR to put the socket back into the right state. We do
+            // not need to worry about whether the socket is blocking because
+            // the timeout is ignored by non-blocking NSPR sockets.
+            PR_NT_CancelIo(mHandle);
+#endif
             retval.setCode(vpr::ReturnStatus::Timeout);
          }
          else
@@ -373,7 +379,8 @@ vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
    }
    else if ( bytes == -1 )      // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    {
-      PRErrorCode err_code = PR_GetError();
+      const PRErrorCode err_code = PR_GetError();
+
       std::ostringstream err_stream;
       vpr::Error::outputCurrentError(err_stream, "Read failed");
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
@@ -388,6 +395,13 @@ vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
+#if defined(WINNT)
+         // Handle the case of a timeout error on an NT socket. We have to
+         // tell NSPR to put the socket back into the right state. We do not
+         // need to worry about whether the socket is blocking because the
+         // timeout is ignored by non-blocking NSPR sockets.
+         PR_NT_CancelIo(mHandle);
+#endif
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else if ( err_code == PR_CONNECT_RESET_ERROR ||
@@ -441,7 +455,7 @@ vpr::ReturnStatus SocketImplNSPR::readn_i(void* buffer,
       }
       else if ( bytes < 0 )
       {
-         PRErrorCode err_code = PR_GetError();
+         const PRErrorCode err_code = PR_GetError();
 
          // Non-blocking socket, but this is basically a blocking call.  We
          // just keep reading.
@@ -459,6 +473,13 @@ vpr::ReturnStatus SocketImplNSPR::readn_i(void* buffer,
          // The last read took longer than we wanted.
          if ( err_code == PR_IO_TIMEOUT_ERROR )
          {
+#if defined(WINNT)
+            // Handle the case of a timeout error on an NT socket. We have to
+            // tell NSPR to put the socket back into the right state. We do
+            // not need to worry about whether the socket is blocking because
+            // the timeout is ignored by non-blocking NSPR sockets.
+            PR_NT_CancelIo(mHandle);
+#endif
             retval.setCode(vpr::ReturnStatus::Timeout);
             return retval;
          }
@@ -505,13 +526,22 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
 
    if ( bytes == -1 )
    {
-      PRErrorCode err_code = PR_GetError();
+      const PRErrorCode err_code = PR_GetError();
 
-      std::ostringstream err_stream;
-      vpr::Error::outputCurrentError(err_stream, "Write failed");
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[vpr::SocketImplNSPR::write_i()] " << err_stream.str()
-         << vprDEBUG_FLUSH;
+      // If we got a timeout error on a no-wait write call, do not print the
+      // error message. There *probably* wasn't an error.
+      // XXX: This is a hack to avoid spurious error messages from being
+      // printed, and having this arises from the fact that VPR 1.0 does not
+      // use exceptions for error reporting.
+      if ( ! (err_code == PR_IO_TIMEOUT_ERROR &&
+              vpr::Interval::NoWait == timeout) )
+      {
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(err_stream, "Write failed");
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketImplNSPR::write_i()] " << err_stream.str()
+            << vprDEBUG_FLUSH;
+      }
 
       bytesWritten = 0;
 
@@ -521,6 +551,13 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
+#if defined(WINNT)
+         // Handle the case of a timeout error on an NT socket. We have to
+         // tell NSPR to put the socket back into the right state. We do not
+         // need to worry about whether the socket is blocking because the
+         // timeout is ignored by non-blocking NSPR sockets.
+         PR_NT_CancelIo(mHandle);
+#endif
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
       else if ( err_code == PR_NOT_CONNECTED_ERROR ||
