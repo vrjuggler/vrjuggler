@@ -1451,14 +1451,17 @@ def doDependencyInstall(prefix):
    installOpenAL(prefix)
    installOmniORB(prefix)
 
-def simpleInstall(name, root, prefix, optional = False):
+def simpleInstall(name, root, prefix, includeDir = None, optional = False):
    if optional and root == '':
       return
 
    printStatus("Installing " + name)
 
    # Install all header files.
-   srcdir = os.path.join(root, 'include')
+   if includeDir is None:
+      includeDir = os.path.join(root, 'include')
+
+   srcdir = includeDir
 
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'include')
@@ -1484,7 +1487,7 @@ def installNSPR(prefix):
 
 def installCppDOM(prefix):
    simpleInstall('CppDOM headers and libraries', os.environ['CPPDOM_ROOT'],
-                 prefix)
+                 prefix, os.environ['CPPDOM_INCLUDES'])
 
 def installBoost(prefix):
    printStatus("Installing Boost headers and libraries")
@@ -1511,7 +1514,7 @@ def installGMTL(prefix):
 
 def installAudiere(prefix):
    simpleInstall('Audiere headers, libraries, and executables',
-                 os.getenv('AUDIERE_ROOT', ''), prefix, True)
+                 os.getenv('AUDIERE_ROOT', ''), prefix, optional = True)
 
 def installOpenAL(prefix):
    srcdir = os.environ['OPENAL_ROOT']
