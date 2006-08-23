@@ -42,20 +42,25 @@ class ApplicationData : public vpr::SerializableObject
 public:
    /**
     * Construct a new ApplicationData object.
+    */
+   ApplicationData()
+      : mIsLocal(false)
+   {;}
+
+   /**
+    * Initialize the application data for the given GUID and host name.
     *
     * @param guid      The GUID used to reference this object.
     * @param hostName  The hostname of the node that should be responsible for
     *                  updating this object.
     */
-   ApplicationData(const vpr::GUID& guid, const std::string& hostName)
-      : mIsLocal(false)
-      , mId(guid)
-      , mHostname(hostName)
+   void init(const vpr::GUID& guid, const std::string& hostName)
    {
+      mId = guid;
+      mHostname = hostName;
+
       ClusterPlugin* app_data_mgr =
-         ClusterManager::instance()->getPluginByGUID(
-            vpr::GUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5")
-         );
+         ClusterManager::instance()->getPluginByGUID(ApplicationDataManager::mPluginGUID);
 
       if (NULL != app_data_mgr)
       {

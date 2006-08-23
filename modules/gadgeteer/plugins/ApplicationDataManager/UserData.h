@@ -122,8 +122,7 @@ template<class BASE>
 class AppDataMixin : public BASE, public ApplicationData
 {
 public:
-   AppDataMixin(const vpr::GUID& id, const std::string& host_name)
-      : ApplicationData(id, host_name)
+   AppDataMixin()
    {;}
 
    ~AppDataMixin()
@@ -221,7 +220,8 @@ public:
    void init(const vpr::GUID& id,
              const std::string& writerAddr = std::string(""))
    {
-      mAppData = AppDataPtr(new AppDataMixin<TYPE>(id, writerAddr));
+      mAppData = AppDataPtr(new AppDataMixin<TYPE>());
+      mAppData->init(id, writerAddr);
    }
 
    virtual ~UserData()

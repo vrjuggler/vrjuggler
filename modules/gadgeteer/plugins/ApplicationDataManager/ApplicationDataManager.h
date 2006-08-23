@@ -61,7 +61,7 @@ public:
     */
    vpr::GUID getHandlerGUID()
    {
-      return mHandlerGUID;
+      return ApplicationDataManager::mPluginGUID;
    }
 
    /**
@@ -182,6 +182,10 @@ private:
     * Remove a ApplicationData request that has been fulfilled.
     */
    void removePendingApplicationDataRequest(const vpr::GUID& guid);
+
+public:
+   static const vpr::GUID                          mPluginGUID;
+
 private:
    std::map<vpr::GUID, ApplicationData*>           mRemoteApplicationData;              /**< Application level ApplicationData list. */
    vpr::Mutex                                      mRemoteApplicationDataLock;          /**< Lock on ApplicationData list.*/   
@@ -195,7 +199,6 @@ private:
    std::map<vpr::GUID, ApplicationDataServer*>     mApplicationDataServers;             /**< ApplicationData Server list. */
    vpr::Mutex                                      mApplicationDataServersLock;         /**< Lock ApplicationData Server list.*/   
 
-   vpr::GUID                                       mHandlerGUID;
    vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */   
 };
 

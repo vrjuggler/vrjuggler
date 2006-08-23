@@ -65,9 +65,10 @@ extern "C"
 
 namespace cluster
 {
+   const vpr::GUID ApplicationDataManager::mPluginGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5");
+
    ApplicationDataManager::ApplicationDataManager()
-      : mHandlerGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5")
-      , mFrameNumber(0)
+      : mFrameNumber(0)
    {;}
 
    ApplicationDataManager::~ApplicationDataManager()
@@ -216,7 +217,7 @@ namespace cluster
                   // Adding a new ApplicationData server.
                   vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);
                   ApplicationDataServer* new_appdata_server =
-                     new ApplicationDataServer(guid, (*i), mHandlerGUID);
+                     new ApplicationDataServer(guid, (*i), mPluginGUID);
                   mApplicationDataServers[guid] = new_appdata_server;
                }
                else
@@ -468,7 +469,7 @@ namespace cluster
 
             // Adding a new ApplicationData server.
             vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);
-            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mHandlerGUID);
+            ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mPluginGUID);
             mApplicationDataServers[id] = new_appdata_server;
          }
          else
