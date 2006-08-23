@@ -350,12 +350,21 @@ namespace cluster
          {
             (*i)->recv(&temp , 1, bytes_read,read_timeout);
          }
+         // If we time out while trying to receive a synchronization packet,
+         // print a warning about the barrier slipping and move on to the next
+         // node. Even when one node times out, there will still be
+         // synchronization packets to read from the remaining nodes.
+         // XXX: When the reading of a synchronization packet from a node
+         // times out, the next time we try to read a synchronization packet,
+         // it will be from the previous frame!
          catch (vpr::TimeoutException&)
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-               << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin::masterReceive()]")
-               << " SwapBarrier slip.\n" << vprDEBUG_FLUSH;
-            return;            
+            vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": [SwapLockTCPPlugin::masterReceive()] SwapBarrier slip "
+               << "from " << (*i)->getName() << " (addres "
+               << (*i)->getRemoteAddr().getAddressString() << ").\n"
+               << vprDEBUG_FLUSH;
 /*            static int numTimeouts = 0;
             numTimeouts++;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "[SwapLockTCPPlugin]: Received a timeout from a cluster node, it was removed" 
