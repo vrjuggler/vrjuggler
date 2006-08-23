@@ -253,18 +253,21 @@ def setVars():
       # the BOOST_INCLUDES variable before the user has to enter it manually.
       if opt.envVar == 'BOOST_ROOT':
          boost_dir = result
-      elif opt.envVar == 'BOOST_VERSION':
+      elif opt.envVar == 'BOOST_VERSION' and \
+           options.get('BOOST_INCLUDES', '') == '':
          boost_ver = result
          options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
 
       # The following is a little hack to get a reasonable default set for
       # the CPPDOM_INCLUDES variable before the user has to enter it manually.
-      if opt.envVar == 'CPPDOM_ROOT':
+      if opt.envVar == 'CPPDOM_ROOT' and \
+         options.get('CPPDOM_INCLUDES', '') == '':
          options['CPPDOM_INCLUDES'] = os.path.join(result, 'include')
 
       # The following is a little hack to get a reasonable default set for
       # the GMTL_INCLUDES variable before the user has to enter it manually.
-      if opt.envVar == 'GMTL_ROOT':
+      if opt.envVar == 'GMTL_ROOT' and \
+         options.get('GMTL_INCLUDES', '') == '':
          options['GMTL_INCLUDES'] = os.path.join(result, 'include')
 
    print "+++ Optional Settings"
