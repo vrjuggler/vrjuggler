@@ -37,6 +37,7 @@
 
 #include <sstream>
 #include <prio.h>
+#include <private/pprio.h>
 #include <prinrval.h>
 
 #include <vpr/IO/WouldBlockException.h>
@@ -139,6 +140,14 @@ void SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
          }
          else if ( err_code == PR_IO_TIMEOUT_ERROR )
          {
+#if defined(WINNT)
+            // Handle the case of a timeout error on an NT socket. We have to
+            // tell NSPR to put the socket back into the right state. We do
+            // not need to worry about whether the socket is blocking because
+            // the timeout is ignored by non-blocking NSPR sockets.
+            PR_NT_CancelIo(mHandle);
+#endif
+
             throw TimeoutException("Timeout occured when accepting connection.",
                                    VPR_LOCATION);
          }

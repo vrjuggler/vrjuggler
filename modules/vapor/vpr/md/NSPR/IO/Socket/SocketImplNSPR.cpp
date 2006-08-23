@@ -36,8 +36,10 @@
 #include <vpr/vprConfig.h>
 
 #include <sstream>
+#include <boost/concept_check.hpp>
 #include <prinrval.h>
 #include <prio.h>
+#include <private/pprio.h>
 #include <prerror.h>
 
 #include <vpr/IO/Socket/ConnectionResetException.h>
@@ -63,8 +65,14 @@ namespace
 //
 // This helper comes in handy since we have to throw exceptions from so many places in
 // the socket implementation.
-void buildAndThrowException(PRErrorCode err_code, std::string prefix, std::string location)
+void buildAndThrowException(PRFileDesc* handle, const PRErrorCode err_code,
+                            const std::string& prefix,
+                            const std::string& location)
 {
+#if ! defined(WINNT)
+   boost::ignore_unused_variable_warning(handle);
+#endif
+
    std::string err_string = vpr::Error::getCurrentErrorMsg();
 
    // Build and throw exception
@@ -95,6 +103,14 @@ void buildAndThrowException(PRErrorCode err_code, std::string prefix, std::strin
    else if (PR_CONNECT_TIMEOUT_ERROR == err_code ||
             PR_IO_TIMEOUT_ERROR == err_code)
    {
+#if defined(WINNT)
+      // Handle the case of a timeout error on an NT socket. We have to tell
+      // NSPR to put the socket back into the right state. We do not need to
+      // worry about whether the socket is blocking because the timeout is
+      // ignored by non-blocking NSPR sockets.
+      PR_NT_CancelIo(handle);
+#endif
+
       throw vpr::TimeoutException(prefix + "Timeout: " + err_string, location);
    }
    else
@@ -103,12 +119,11 @@ void buildAndThrowException(PRErrorCode err_code, std::string prefix, std::strin
    }
 }
 
-void buildAndThrowException(std::string prefix, std::string location)
+void buildAndThrowException(PRFileDesc* handle, const std::string& prefix,
+                            const std::string& location)
 {
-   PRErrorCode err_code = PR_GetError();
-   buildAndThrowException(err_code,prefix,location);
+   buildAndThrowException(handle, PR_GetError(), prefix, location);
 }
-
 
 }
 
@@ -158,8 +173,10 @@ void SocketImplNSPR::open()
    // If socket(2) failed, print an error message and return error status.
    if ( new_sock == NULL )
    {
-      buildAndThrowException("[vpr::SocketImplNSPR::open()] (" + getName() + ") ",
-         VPR_LOCATION);
+      buildAndThrowException(
+         mHandle, "[vpr::SocketImplNSPR::open()] (" + getName() + ") ",
+         VPR_LOCATION
+      );
    }
    // Otherwise, return success.
    else
@@ -200,8 +217,10 @@ void SocketImplNSPR::close()
       }
       else
       {
-         buildAndThrowException("[vpr::SocketImplNSPR::open()] Could not close socket:",
-            VPR_LOCATION);
+         buildAndThrowException(
+            mHandle, "[vpr::SocketImplNSPR::open()] Could not close socket:",
+            VPR_LOCATION
+         );
       }
    }
 }
@@ -220,7 +239,7 @@ void SocketImplNSPR::bind()
    {
       std::ostringstream ex_text;
       ex_text << "[vpr::SocketImplNSPR::bind] " << " addr: [" << mLocalAddr << "] ";
-      buildAndThrowException(ex_text.str(), VPR_LOCATION);
+      buildAndThrowException(mHandle, ex_text.str(), VPR_LOCATION);
    }
    // Otherwise, return success.
    else
@@ -316,7 +335,7 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
 
    if ( status == PR_FAILURE )
    {
-      PRInt32 err = PR_GetError();
+      const PRErrorCode err = PR_GetError();
 
       // This is a non-blocking connection.
       if ( (err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR) && !isBlocking() )
@@ -343,7 +362,9 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
                   close();
                   // XXX: This throws a WouldBlockException, even though it shouldn't because
                   //      the PR_Connect failed.
-                  //buildAndThrowException("[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
+                  //buildAndThrowException(mHandle,
+                  //                       "[vpr::SocketImplNSPR::connect()] ",
+                  //                       VPR_LOCATION);
                   throw SocketException("[vpr::SocketImplNSPR::connect() Non-Blocking socket "
                      "with timeout failed: ] ", VPR_LOCATION);
                }
@@ -367,7 +388,9 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
       }
       else
       {
-         buildAndThrowException(err, "[vpr::SocketImplNSPR::connect()] ", VPR_LOCATION);
+         buildAndThrowException(mHandle, err,
+                                "[vpr::SocketImplNSPR::connect()] ",
+                                VPR_LOCATION);
       }
    }
    // Otherwise, return success.
@@ -453,7 +476,8 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    else if ( bytes == -1 )
    {
-      buildAndThrowException("[vpr::SocketImplNSPR::read_i()] ", VPR_LOCATION);
+      buildAndThrowException(mHandle, "[vpr::SocketImplNSPR::read_i()] ",
+                             VPR_LOCATION);
    }
    // Indicates that the network connection is closed.
    else if ( bytes == 0 )
@@ -499,7 +523,7 @@ void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
       }
       else if ( bytes < 0 )
       {
-         PRErrorCode err_code = PR_GetError();
+         const PRErrorCode err_code = PR_GetError();
 
          // Non-blocking socket, but this is basically a blocking call.  We
          // just keep reading.
@@ -507,7 +531,8 @@ void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
          {
             continue;
          }
-         buildAndThrowException("[vpr::SocketImplNSPR::readn_i] ", VPR_LOCATION);
+         buildAndThrowException(mHandle, "[vpr::SocketImplNSPR::readn_i] ",
+                                VPR_LOCATION);
       }
       // Read 0 bytes.
       else
@@ -540,8 +565,10 @@ void SocketImplNSPR::write_i(const void* buffer, const vpr::Uint32 length,
 
    if ( bytes == -1 )
    {
-      buildAndThrowException("[vpr::SocketImplNSPR::write_i()] (" + getName() + ") ",
-         VPR_LOCATION);
+      buildAndThrowException(
+         mHandle, "[vpr::SocketImplNSPR::write_i()] (" + getName() + ") ",
+         VPR_LOCATION
+      );
 
       bytesWritten = 0;
    }
