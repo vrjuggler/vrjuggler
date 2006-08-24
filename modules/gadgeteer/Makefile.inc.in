@@ -430,7 +430,7 @@ install-flagpoll:
 	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/gadgeteer.fpc 					\
-          $(libdir)$(LIBBITSUF)/flagpoll/gadgeteer-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
+          $(libdir)$(LIBBITSUF)/flagpoll/gadgeteer-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
 
 # =============================================================================
 # Clean-up targets.  '_cleandepend' removes all the .d files in the Plugins

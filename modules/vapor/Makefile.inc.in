@@ -354,7 +354,7 @@ install-flagpoll:
               $(topdir)/vpr.fpc.tmp
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/vpr.fpc.tmp 					\
-          $(libdir)$(LIBBITSUF)/flagpoll/vpr-$(VERSION_DOT).$(PLATFORM).$(ISA).`date '+%s'`.fpc
+          $(libdir)$(LIBBITSUF)/flagpoll/vpr-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
 	rm -f $(topdir)/vpr.fpc.tmp
 
 # =============================================================================
