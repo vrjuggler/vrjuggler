@@ -29,10 +29,10 @@ if test "x$TWEEK_BASE_DIR" = "x" ; then
 fi
 
 # Make sure tweek-config is executable
-if test ! -x "$TWEEK_BASE_DIR/bin/tweek-config" ; then
-   echo "FATAL ERROR: Cannot execute tweek-config!"
-   exit 1
-fi
+#if test ! -x "$TWEEK_BASE_DIR/bin/tweek-config" ; then
+#   echo "FATAL ERROR: Cannot execute tweek-config!"
+#   exit 1
+#fi
 
 # If the environment variable JDK_HOME is not set, default it to /usr/java.
 if test "x$JDK_HOME" = "x" ; then
@@ -51,7 +51,7 @@ else
    # Java classpath separator character.
    JCPS="@JCPS@"
 
-   TWEEK_JARS=`$TWEEK_BASE_DIR/bin/tweek-config --jars`
+   TWEEK_JARS=`flagpoll tweek --get-jars`
    CLASSPATH="${TWEEK_JARS}${JCPS}${CLASSPATH}"
    export CLASSPATH
 
