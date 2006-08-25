@@ -439,17 +439,6 @@ monitoring through CORBA.
 %endif
 %endif
 
-%package -n doozer
-Summary: Doozer
-Version: 2.0.0
-Release: 1
-URL: http://sourceforge.net/projects/doozer/
-Group: Development
-
-%description -n doozer
-A build system build on top of GNU make aimed at the creation of simple,
-cross-platform makefiles.
-
 %prep
 rm -rf %{buildroot}
 # For now don't keep unpacking
@@ -786,10 +775,11 @@ rm -rf %{buildroot}
 %{_prefix}/share/vrjuggler/java/servlet.jar
 %endif
 
-%files -n doozer
-%{_prefix}/share/Doozer
-
 %changelog
+* Fri Aug 25 2006 Patrick Hartling
+- Removed the creation of an RPM for Doozer. Doozer 2.1.1 is the minimum
+  required version now, and it has its own RPM.
+
 * Thu Apr 14 2006 Patrick Hartling
 - Split into sub-packages.
 - Allow for optional sub-packages depending on the build environment.
