@@ -72,6 +72,7 @@ EXTS?=			.h
 BOOST_ROOT=		@BOOST_ROOT@
 BOOST_INCLUDES=		@BOOST_INCLUDES@
 CPPDOM_ROOT=		@CPPDOM_ROOT@
+DOOZER_ROOT=		@DOOZER_ROOT@
 GMTL_ROOT=		@GMTL_ROOT@
 GMTL_INC_DIR=		@GMTL_INC_DIR@
 CPPDOM_INC_DIR := $(shell $(CPPDOM_ROOT)/bin/cppdom-config --cxxflags | sed -e 's/-I\([^ ]*\)/\1/g')
@@ -303,8 +304,11 @@ links-openal:
 
 links-doozer:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
 	cd $(instlinks)/share && $(RM_LN) ./Doozer &&			\
-          $(LN_S) $(EXTROOT_ABS)/Doozer ./
+          $(LN_S) $(DOOZER_ROOT)/share/Doozer ./
+	cd $(instlinks)/share/flagpoll && $(RM_LN) ./doozer.fpc &&	\
+          $(LN_S) $(DOOZER_ROOT)/share/flagpoll/doozer.fpc ./
 
 install install-debug install-optim install-dbg install-dbg-dso		\
 install-opt install-opt-dso install-profiled install-prof		\
@@ -534,8 +538,11 @@ install-openal:
 
 install-doozer:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .mk -i $(EXTROOT_ABS)/Doozer		\
+          $(GROUP_OPT_UNIX) -e .mk -i $(DOOZER_ROOT)/share/Doozer	\
           -o $(datadir)/Doozer
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(DOOZER_ROOT)/share/flagpoll/doozer.fpc			\
+          $(datadir)/share/flagpoll
 
 generic-header-install:
 ifneq ($(DIRS), )

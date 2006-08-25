@@ -92,6 +92,10 @@ AC_ARG_WITH(cxx-orb-lib,
                           Path to C++ ORB libraries],
             [CXX_ORB_LIB_DIR="$withval"], [CXX_ORB_LIB_DIR='none'])
 
+AC_ARG_WITH(doozer,
+            [  --with-doozer=<PATH>    Doozer installation directory   [default=/usr/local]],
+            [DOOZER_ROOT="$withval"], [DOOZER_ROOT='/usr/local'])
+
 AC_ARG_WITH(gmtl,
             [  --with-gmtl=<PATH>      Prefix where GMTL is installed  [default=/usr/local]],
             [GMTL_ROOT="$withval"], [GMTL_ROOT=/usr/local])
@@ -298,6 +302,7 @@ AC_SUBST(TARGETS)
 AC_SUBST(BOOST_ROOT)
 AC_SUBST(BOOST_INCLUDES)
 AC_SUBST(CPPDOM_ROOT)
+AC_SUBST(DOOZER_ROOT)
 AC_SUBST(GMTL_ROOT)
 AC_SUBST(GMTL_INC_DIR)
 
