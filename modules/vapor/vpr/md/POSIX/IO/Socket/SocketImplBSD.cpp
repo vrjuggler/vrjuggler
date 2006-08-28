@@ -37,6 +37,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sstream>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -176,11 +177,14 @@ void SocketImplBSD::open()
 #endif
          break;
       default:
+      {
          domain = -1;
-         fprintf(stderr,
-                 "[vpr::SocketImplBSD] ERROR: Unknown socket domain value %d\n",
-                 mLocalAddr.getFamily());
+         std::ostringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBSD::open()] ERROR: Unknown socket "
+                    << "domain value " << (unsigned int) mLocalAddr.getFamily();
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
          break;
+      }
    }
 
    switch ( mType )
@@ -197,12 +201,9 @@ void SocketImplBSD::open()
       default:
       {
          type = -1;
-         fprintf(stderr,
-                 "[vpr::SocketImplBSD] ERROR: Unknown socket type value %d\n",
-                 mLocalAddr.getFamily());
-         std::stringstream msg_stream;
-         msg_stream << "[vpr::SocketImplBSD] ERROR: Unknown socket type value "
-                    << mLocalAddr.getFamily();
+         std::ostringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBSD::open()] ERROR: Unknown socket "
+                    << "type value " << (unsigned int) mType;
          throw SocketException(msg_stream.str(), VPR_LOCATION);
          break;
       }
@@ -454,12 +455,10 @@ void SocketImplBSD::setLocalAddr(const InetAddr& addr)
 {
    if ( mBound || mConnectCalled )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "SocketImplBSD::setLocalAddr: Can't set address of a "
-         << "bound or connected socket.\n" << vprDEBUG_FLUSH;
-
-      throw SocketException(std::string("SocketImplBSD::setLocalAddr: Can't set address of a ")
-         + std::string("bound or connected socket."), VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "[vpr::SocketImplBSD::setLocalAddr] Can't set address of "
+                 << "a bound or connected socket.";
+      throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
@@ -732,12 +731,11 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
    }
    else
    {
-      fprintf(stderr,
-              "[vpr::SocketImplBSD] ERROR: Could not get socket option for socket %s: %s\n",
-              mHandle->getName().c_str(), strerror(errno));
-
-      throw SocketException("[vpr::SocketImplBSD] ERROR: Could not get socket option for socket "
-         + mHandle->getName() + ": " + std::string(strerror(errno)), VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "[vpr::SocketImplBSD::getOption()] ERROR: Could not get "
+                 << "socket option for socket " << mHandle->getName() << ": "
+                 << strerror(errno);
+      throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
 }
 

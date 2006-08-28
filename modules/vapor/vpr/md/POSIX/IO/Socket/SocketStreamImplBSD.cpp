@@ -35,7 +35,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
 #include <sstream>
 #include <string.h>
 #include <strings.h>
@@ -83,12 +82,10 @@ void SocketStreamImplBSD::listen(const int backlog)
    // return error status.
    if ( ::listen(mHandle->mFdesc, backlog) == -1 )
    {
-      fprintf(stderr,
-              "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
-              strerror(errno));
-
-      throw SocketException("[vpr::SocketStreamImplBSD] Cannot listen on socket: "
-         + std::string(strerror(errno)), VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "[vpr::SocketStreamImplBSD::listen()] Cannot listen on "
+                 << "socket: " << strerror(errno);
+      throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
 }
 
@@ -125,12 +122,8 @@ void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Interval timeout
       }
       else
       {
-         fprintf(stderr,
-                 "[vpr::SocketStreamImplBSD] Error while accepting "
-                 "incoming connection: %s\n", strerror(errno));
-
-         std::stringstream ss;
-         ss << "[vpr::SocketStreamImplBSD] Error while accepting "
+         std::ostringstream ss;
+         ss << "[vpr::SocketStreamImplBSD::accept()] Error while accepting "
             << "incoming connection: " << strerror(errno);
          throw SocketException(ss.str(), VPR_LOCATION);
       }

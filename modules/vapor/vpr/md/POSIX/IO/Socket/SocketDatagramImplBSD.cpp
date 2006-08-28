@@ -35,7 +35,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
 #include <string.h>
 #include <strings.h>
 #include <sstream>
@@ -121,16 +120,10 @@ void SocketDatagramImplBSD::recvfrom(void* msg,
       }
       else
       {
-         fprintf(stderr,
-                 "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
-                 mRemoteAddr.getAddressString().c_str(),
-                 mRemoteAddr.getPort(), strerror(errno));
-
-         std::stringstream ss;
-         ss << "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket ("
-            << mRemoteAddr.getAddressString() << ":" << mRemoteAddr.getPort()
-            << "): " << std::string(strerror(errno));
-
+         std::ostringstream ss;
+         ss << "[vpr::SocketDatagramImplBSD::recvfrom()] ERROR: Could not "
+            << "read from socket (" << mRemoteAddr << "): "
+            << strerror(errno);
          throw SocketException(ss.str(), VPR_LOCATION);
       }
    }
@@ -175,17 +168,10 @@ void SocketDatagramImplBSD::sendto(const void* msg,
       }
       else
       {
-         fprintf(stderr,
-                 "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
-                 to.getAddressString().c_str(), to.getPort(),
-                 mRemoteAddr.getAddressString().c_str(),
-                 mRemoteAddr.getPort(), strerror(errno));
-
          std::stringstream ss;
-         ss << "[vpr::SocketDatagramImplBSD] ERROR: Could not send to "
-            << to.getAddressString() << ":" << to.getPort() << " on socket ("
-            << mRemoteAddr.getAddressString() << ":" << mRemoteAddr.getPort()
-            << "): " << std::string(strerror(errno));
+         ss << "[vpr::SocketDatagramImplBSD::sendto()] ERROR: Could not send "
+            << " to " << to << " on socket (" << mRemoteAddr << "): "
+            << strerror(errno);
 
          throw SocketException(ss.str(), VPR_LOCATION);
       }
