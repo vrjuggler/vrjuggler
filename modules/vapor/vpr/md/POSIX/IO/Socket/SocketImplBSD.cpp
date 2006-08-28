@@ -66,11 +66,12 @@ namespace
 // Given an error number (or errno) build up an exception with the
 // correct type and error string and throw it.
 //
-// This helper comes in handy since we have to throw exceptions from so many places in
-// the socket implementation.
-void buildAndThrowException(std::string prefix, std::string location, int error_number=-2)
+// This helper comes in handy since we have to throw exceptions from so many
+// places in the socket implementation.
+void buildAndThrowException(std::string prefix, std::string location,
+                            int error_number = -2)
 {
-   if (-2 == error_number)
+   if ( -2 == error_number )
    {
       error_number = errno;
    }
@@ -89,31 +90,38 @@ void buildAndThrowException(std::string prefix, std::string location, int error_
    }
 
    // Build and throw exception
-   if(ECONNREFUSED == error_number)
+   if ( ECONNREFUSED == error_number )
    {
-      throw vpr::ConnectionRefusedException(prefix + "Connection refused: " + err_string, location);
+      throw vpr::ConnectionRefusedException(
+         prefix + "Connection refused: " + err_string, location
+      );
    }
-   else if(ECONNRESET == error_number)
+   else if ( ECONNRESET == error_number )
    {
-      throw vpr::ConnectionResetException(prefix + "Connection reset: " + err_string, location);
+      throw vpr::ConnectionResetException(
+         prefix + "Connection reset: " + err_string, location
+      );
    }
-   else if (EHOSTUNREACH == error_number)
+   else if ( EHOSTUNREACH == error_number )
    {
-      throw vpr::NoRouteToHostException(prefix + "No route to host: " + err_string, location);
+      throw vpr::NoRouteToHostException(
+         prefix + "No route to host: " + err_string, location
+      );
    }
-   else if (EHOSTDOWN == error_number)
+   else if ( EHOSTDOWN == error_number )
    {
-      throw vpr::SocketException(prefix + "Host down: " + err_string, location);
+      throw vpr::SocketException(prefix + "Host down: " + err_string,
+                                 location);
    }
-   else if (ENETDOWN == error_number)
+   else if ( ENETDOWN == error_number )
    {
-      throw vpr::SocketException(prefix + "Network is down: " + err_string, location);
+      throw vpr::SocketException(prefix + "Network is down: " + err_string,
+                                 location);
    }
    else
    {
       throw vpr::SocketException(prefix + "Error: " + err_string, location);
    }
-
 }
 
 }
@@ -181,7 +189,8 @@ void SocketImplBSD::open()
          domain = -1;
          std::ostringstream msg_stream;
          msg_stream << "[vpr::SocketImplBSD::open()] ERROR: Unknown socket "
-                    << "domain value " << (unsigned int) mLocalAddr.getFamily();
+                    << "domain value "
+                    << (unsigned int) mLocalAddr.getFamily();
          throw SocketException(msg_stream.str(), VPR_LOCATION);
          break;
       }
@@ -216,7 +225,8 @@ void SocketImplBSD::open()
    // If socket(2) failed, print an error message and return error status.
    if ( sock == -1 )
    {
-      buildAndThrowException("[vpr::SocketImplBSD::open] (" + getName() + ") ", VPR_LOCATION);
+      buildAndThrowException("[vpr::SocketImplBSD::open] (" + getName() + ") ",
+                             VPR_LOCATION);
    }
    // Otherwise, return success.
    else
@@ -264,8 +274,9 @@ void SocketImplBSD::setBlocking(bool blocking)
    }
    else
    {
-      throw SocketException("Cannot change blocking state after a blocking call.",
-         VPR_LOCATION);
+      throw SocketException(
+         "Cannot change blocking state after a blocking call.", VPR_LOCATION
+      );
    }
 }
 
@@ -282,7 +293,8 @@ void SocketImplBSD::bind()
    if ( status == -1 )
    {
       std::ostringstream ex_text;
-      ex_text << "[vpr::SocketImplBSD::bind] " << " addr: [" << mLocalAddr << "] ";
+      ex_text << "[vpr::SocketImplBSD::bind()] " << " addr: ["
+              << mLocalAddr << "] ";
       buildAndThrowException(ex_text.str(), VPR_LOCATION);
    }
    else
@@ -309,8 +321,8 @@ void SocketImplBSD::connect(vpr::Interval timeout)
    if ( status == -1 )
    {
       // If this is a non-blocking connection, return normally with the
-      // post condition that users must call isConnected() after calling connect
-      // when using non-blocking sockets.
+      // post condition that users must call isConnected() after calling
+      // connect when using non-blocking sockets.
       // NOTE: I'm not sure if it's safe to set mConnectCalled and
       // mBlockingFixed at this point, but they have to be set sometime.
       if ( errno == EINPROGRESS && ! isBlocking() )
@@ -326,7 +338,8 @@ void SocketImplBSD::connect(vpr::Interval timeout)
             {
                // Wait for read/write on the socket
                SelectorImplBSD selector;
-               selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write);
+               selector.addHandle(getHandle(),
+                                  SelectorBase::Read | SelectorBase::Write);
                vpr::Uint16 num_events(0);
                selector.select(num_events, timeout);
 
@@ -335,10 +348,13 @@ void SocketImplBSD::connect(vpr::Interval timeout)
                getOption(SocketOptions::Error, opt_data);
                int sock_error = opt_data.error;
 
-               if(sock_error)
+               if ( sock_error )
                {
                   close();
-                  buildAndThrowException("[vpr::SocketImplBSD] Async-connection error: ", VPR_LOCATION, sock_error);
+                  buildAndThrowException(
+                     "[vpr::SocketImplBSD::connect()] Async-connection error: ",
+                     VPR_LOCATION, sock_error
+                  );
                }
                else  // Completed in time
                {
@@ -346,12 +362,13 @@ void SocketImplBSD::connect(vpr::Interval timeout)
                   mConnectCalled = true;
                   mBlockingFixed = true;
                }
-
             }
-            catch(TimeoutException& te)      // Select timed out, so the connect timed out
+            // Select timed out, so the connect timed out
+            catch (TimeoutException& te)
             {
                close();
-               throw TimeoutException("Timeout while connecting.", VPR_LOCATION);
+               throw TimeoutException("Timeout while connecting.",
+                                      VPR_LOCATION);
             }
 
          }
@@ -364,7 +381,8 @@ void SocketImplBSD::connect(vpr::Interval timeout)
       }
       else
       {
-         buildAndThrowException("[vpr::SocketImplBSD::Connect] ", VPR_LOCATION);
+         buildAndThrowException("[vpr::SocketImplBSD::connect()] ",
+                                VPR_LOCATION);
       }
    }
    // Otherwise, return success.
@@ -393,24 +411,23 @@ void SocketImplBSD::connect(vpr::Interval timeout)
       {
          mLocalAddr.setSockaddr(&temp_addr);
 /* XXX: This doesn't compile on IRIX, and I don't know why.
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Connected, local address is "
-                                          << mLocalAddr << std::endl
-                                          << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "Connected, local address is " << mLocalAddr << std::endl
+            << vprDEBUG_FLUSH;
 */
       }
       else
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Failed to get sock name: "
-                                                  << strerror(errno)
-                                                  << std::endl
-                                                  << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Failed to get sock name: " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
       }
    }
 }
 
-
 // Idea:
-// - If have read or write and there are no socket errors, then we are connected
+// - If have read or write and there are no socket errors, then we are
+//   connected
 bool SocketImplBSD::isConnected() const
 {
    if ( isOpen() && mConnectCalled )
@@ -425,7 +442,8 @@ bool SocketImplBSD::isConnected() const
       try
       {
          SelectorImplBSD selector;
-         selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write);
+         selector.addHandle(getHandle(),
+                            SelectorBase::Read | SelectorBase::Write);
          vpr::Uint16 num_events(0);
          selector.select(num_events, vpr::Interval::NoWait);
       }
@@ -441,7 +459,8 @@ bool SocketImplBSD::isConnected() const
       if(sock_error)
       {
          //close();
-         buildAndThrowException("[vpr::SocketImplBSD::isConnected] Error: ", VPR_LOCATION, sock_error);
+         buildAndThrowException("[vpr::SocketImplBSD::isConnected()] Error: ",
+                                VPR_LOCATION, sock_error);
       }
 
       // No error, so we are connected
@@ -470,8 +489,9 @@ void SocketImplBSD::setRemoteAddr(const InetAddr& addr)
 {
    if ( mConnectCalled )
    {
-      throw SocketException("Can not set remote address on a connected socket.",
-         VPR_LOCATION);
+      throw SocketException(
+         "Can not set remote address on a connected socket.", VPR_LOCATION
+      );
    }
    else
    {
@@ -479,12 +499,11 @@ void SocketImplBSD::setRemoteAddr(const InetAddr& addr)
    }
 }
 
-void SocketImplBSD::read_i(void* buffer,
-                           const vpr::Uint32 length,
-                           vpr::Uint32& bytesRead,
-                           const vpr::Interval timeout)
+void SocketImplBSD::read_i(void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytesRead, const vpr::Interval timeout)
 {
-   vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
+   vprASSERT(NULL != mHandle &&
+             "Can not read from a socket with a NULL handle.");
 
    mBlockingFixed = true;
    mHandle->read_i(buffer, length, bytesRead, timeout);
@@ -494,16 +513,17 @@ void SocketImplBSD::read_i(void* buffer,
    //       but in that case we throw WouldBlockException
    if ( 0 == bytesRead )
    {
-      throw ConnectionResetException("Socket disconnected cleanly.", VPR_LOCATION);
+      throw ConnectionResetException("Socket disconnected cleanly.",
+                                     VPR_LOCATION);
    }
 }
 
-void SocketImplBSD::readn_i(void* buffer,
-                            const vpr::Uint32 length,
+void SocketImplBSD::readn_i(void* buffer, const vpr::Uint32 length,
                             vpr::Uint32& bytesRead,
                             const vpr::Interval timeout)
 {
-   vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
+   vprASSERT(NULL != mHandle &&
+             "Can not read from a socket with a NULL handle.");
 
    mBlockingFixed = true;
    mHandle->readn_i(buffer, length, bytesRead, timeout);
@@ -515,8 +535,7 @@ void SocketImplBSD::readn_i(void* buffer,
    }
 }
 
-void SocketImplBSD::write_i(const void* buffer,
-                            const vpr::Uint32 length,
+void SocketImplBSD::write_i(const void* buffer, const vpr::Uint32 length,
                             vpr::Uint32& bytesWritten,
                             const vpr::Interval timeout)
 {
@@ -835,16 +854,20 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
       case vpr::SocketOptions::AddMember:
          opt_level = IPPROTO_IP;
          opt_name  = IP_ADD_MEMBERSHIP;
-         opt_data.mcast_req.imr_multiaddr.s_addr = data.mcast_add_member.getMulticastAddr().getAddressValue();
-         opt_data.mcast_req.imr_interface.s_addr = data.mcast_add_member.getInterfaceAddr().getAddressValue();
+         opt_data.mcast_req.imr_multiaddr.s_addr =
+            data.mcast_add_member.getMulticastAddr().getAddressValue();
+         opt_data.mcast_req.imr_interface.s_addr =
+            data.mcast_add_member.getInterfaceAddr().getAddressValue();
          opt_size  = sizeof(struct ip_mreq);
          break;
       case vpr::SocketOptions::DropMember:
-         opt_level          = IPPROTO_IP;
-         opt_name           = IP_DROP_MEMBERSHIP;
-         opt_data.mcast_req.imr_multiaddr.s_addr = data.mcast_drop_member.getMulticastAddr().getAddressValue();
-         opt_data.mcast_req.imr_interface.s_addr = data.mcast_drop_member.getInterfaceAddr().getAddressValue();
-         opt_size           = sizeof(struct ip_mreq);
+         opt_level = IPPROTO_IP;
+         opt_name  = IP_DROP_MEMBERSHIP;
+         opt_data.mcast_req.imr_multiaddr.s_addr =
+            data.mcast_drop_member.getMulticastAddr().getAddressValue();
+         opt_data.mcast_req.imr_interface.s_addr =
+            data.mcast_drop_member.getInterfaceAddr().getAddressValue();
+         opt_size  = sizeof(struct ip_mreq);
          break;
       case vpr::SocketOptions::McastInterface:
          opt_level                = IPPROTO_IP;
@@ -884,10 +907,16 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
          break;
    }
 
-   if ( ::setsockopt(mHandle->mFdesc, opt_level, opt_name, &opt_data, opt_size) != 0 )
+   int result = ::setsockopt(mHandle->mFdesc, opt_level, opt_name, &opt_data,
+                             opt_size);
+
+   if ( result != 0 )
    {
-      throw SocketException("[vpr::SocketImplBSD] ERROR: Could not set socket option for socket "
-         + mHandle->getName() + ": " + std::string(strerror(errno)), VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "[vpr::SocketImplBSD::setOption()] ERROR: Could not set "
+                 << "socket option for socket " << mHandle->getName() << ": "
+                 << strerror(errno);
+      throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
 }
 

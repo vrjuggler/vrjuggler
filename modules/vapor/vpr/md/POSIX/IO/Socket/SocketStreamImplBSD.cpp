@@ -90,7 +90,8 @@ void SocketStreamImplBSD::listen(const int backlog)
 }
 
 // Accept an incoming connection request.
-void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Interval timeout)
+void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,
+                                 vpr::Interval timeout)
 {
    int accept_sock;
    InetAddr addr;
@@ -118,7 +119,8 @@ void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Interval timeout
    {
       if ( errno == EWOULDBLOCK && ! isBlocking() )
       {
-         throw WouldBlockException("Would block while accepting.", VPR_LOCATION);
+         throw WouldBlockException("Would block while accepting.",
+                                   VPR_LOCATION);
       }
       else
       {
