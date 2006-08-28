@@ -133,7 +133,7 @@ const std::string& SocketImplBSD::getName() const
 // options set through member variables.
 void SocketImplBSD::open()
 {
-   if (NULL != mHandle)
+   if (NULL != mHandle && mHandle->mFdesc != -1)
    {
       std::stringstream msg_stream;
       msg_stream << "[vpr::SocketImplBSD::open] Socket " << getName()
