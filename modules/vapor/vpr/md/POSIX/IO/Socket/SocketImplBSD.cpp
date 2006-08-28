@@ -46,10 +46,8 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <errno.h>
-#include <sstream>
 #include <boost/concept_check.hpp>
 
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 #include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/IO/Socket/ConnectionRefusedException.h>
 #include <vpr/IO/Socket/UnknownHostException.h>
@@ -59,6 +57,8 @@
 #include <vpr/IO/WouldBlockException.h>
 #include <vpr/md/POSIX/IO/SelectorImplBSD.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
+
 
 namespace
 {
@@ -68,8 +68,8 @@ namespace
 //
 // This helper comes in handy since we have to throw exceptions from so many
 // places in the socket implementation.
-void buildAndThrowException(std::string prefix, std::string location,
-                            int error_number = -2)
+void buildAndThrowException(const std::string& prefix,
+                            const std::string& location, int error_number = -2)
 {
    if ( -2 == error_number )
    {
