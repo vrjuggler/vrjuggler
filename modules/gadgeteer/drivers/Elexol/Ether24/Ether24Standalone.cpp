@@ -36,6 +36,59 @@
 #include <vpr/Util/Debug.h>
 #include <drivers/Elexol/Ether24/Ether24Standalone.h>
 
+#include <boost/tokenizer.hpp>
+
+namespace Elexol
+{
+   
+std::vector<vpr::Uint8> convertMacStringToHexValues(const std::string& macAddress)
+{
+   typedef boost::tokenizer<boost::char_separator<char> > mac_tokenizer;
+   boost::char_separator<char> mac_sep(":");
+
+   mac_tokenizer tokens(macAddress, mac_sep);
+
+   std::vector<vpr::Uint8> mac_values;
+   for (mac_tokenizer::iterator tok_iter = tokens.begin();
+        tok_iter != tokens.end(); ++tok_iter)
+   {
+      vpr::Uint8 val = strtol((*tok_iter).c_str(), NULL, 16);
+      mac_values.push_back(val);
+      std::cout << "<" << *tok_iter << "> ";
+   }
+   std::cout << "\n";
+   for (std::vector<vpr::Uint8>::iterator itr = mac_values.begin();
+        itr != mac_values.end(); itr++)
+   {
+      std::cout << "<" << (int)(*itr) << "> ";
+   }
+   std::cout << "\n";
+
+   return mac_values;
+}
+
+std::string convertMacValuesToString(const std::vector<vpr::Uint8>& macValues)
+{
+   if (6 != macValues.size())
+   {
+      throw Elexol::ElexolException("Invalid mac values.",
+         VPR_LOCATION);
+   }
+   std::stringstream mac_ss;
+   
+   mac_ss << std::hex << std::setfill('0')
+      << std::setw(2) << (int)macValues[0] << ":"
+      << std::setw(2) << (int)macValues[1] << ":"
+      << std::setw(2) << (int)macValues[2] << ":"
+      << std::setw(2) << (int)macValues[3] << ":"
+      << std::setw(2) << (int)macValues[4] << ":"
+      << std::setw(2) << (int)macValues[5] << std::dec;
+
+   return (mac_ss.str());
+}
+
+}
+
 void Ether24Standalone::open(vpr::InetAddr& addr)
 {
    if (!mActive)
@@ -139,6 +192,10 @@ Elexol::device_map_t Ether24Standalone::getDevicesByMacAddress()
       }
    }
    catch (vpr::SocketException&)
+   {
+      /* Do nothing. */
+   }
+   catch (vpr::TimeoutException& ex)
    {
       /* Do nothing. */
    }
@@ -299,6 +356,73 @@ void Ether24Standalone::setFixedIpAddress(const vpr::InetAddr& ipAddr)
    disableWriting();
 }
 
+std::string Ether24Standalone::getMacAddress()
+{
+   std::pair<vpr::Uint8, vpr::Uint8> byte1 =
+      getWordValue(Elexol::Address::MacAddress1);
+   std::pair<vpr::Uint8, vpr::Uint8> byte2 =
+      getWordValue(Elexol::Address::MacAddress2);
+   std::pair<vpr::Uint8, vpr::Uint8> byte3 =
+      getWordValue(Elexol::Address::MacAddress3);
+
+   /**
+    * The Elexol driver seems to be using a middle-endian memory layout.
+    * The address: 00:11:ba:02:01:bd
+    *
+    * Memory Layout:
+    * 
+    *  word  MSB  LSB
+    *   2     00   11
+    *   3     ba   02
+    *   4     01   bd
+    */
+   std::vector<vpr::Uint8> mac_values;
+   mac_values.push_back(byte1.second);
+   mac_values.push_back(byte1.first);
+   mac_values.push_back(byte2.second);
+   mac_values.push_back(byte2.first);
+   mac_values.push_back(byte3.second);
+   mac_values.push_back(byte3.first);
+
+   return (Elexol::convertMacValuesToString(mac_values));
+}
+
+void Ether24Standalone::setMacAddress(const std::string& macAddress)
+{
+   std::vector<vpr::Uint8> mac_values =
+      Elexol::convertMacStringToHexValues(macAddress);
+
+   if (6 != mac_values.size())
+   {
+      throw Elexol::ElexolException("Invalid mac address: " + macAddress,
+         VPR_LOCATION);
+   }
+   /**
+    * The Elexol driver seems to be using a middle-endian memory layout.
+    * The address: 00:11:ba:02:01:bd
+    *
+    * Memory Layout:
+    * 
+    *  word  MSB  LSB
+    *   2     00   11
+    *   3     ba   02
+    *   4     01   bd
+    */
+   enableWriting();
+   setWordValue(Elexol::Address::MacAddress1,
+      std::pair<vpr::Uint8, vpr::Uint8>(mac_values[1], mac_values[0]));
+   vpr::System::msleep(50);
+
+   setWordValue(Elexol::Address::MacAddress2,
+      std::pair<vpr::Uint8, vpr::Uint8>(mac_values[3], mac_values[2]));
+   vpr::System::msleep(50);
+   
+   setWordValue(Elexol::Address::MacAddress3,
+      std::pair<vpr::Uint8, vpr::Uint8>(mac_values[5], mac_values[4]));
+   vpr::System::msleep(50);
+   disableWriting();
+}
+
 void Ether24Standalone::setEnableFixedIpAddress(bool val)
 {
    vpr::Uint8 control_bits = getByteValue(Elexol::Address::ControlBits1);
@@ -404,6 +528,24 @@ void Ether24Standalone::enableWriting()
    
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
       << "Ether24StandalonegetState(): Sending enable writing command ["
+      << write_enable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
+
+   vpr::Uint32 bytes_sent;
+   mSocket->sendto(write_enable_cmd, 5, mAddress, bytes_sent);
+}
+
+void Ether24Standalone::reset()
+{
+   std::string write_enable_cmd;
+   write_enable_cmd.push_back(Elexol::Command::EEPROM);
+   write_enable_cmd.push_back(Elexol::Command::Reset);
+   write_enable_cmd.push_back(0x0);
+   write_enable_cmd.push_back((char) 0xAA);
+   write_enable_cmd.push_back((char) 0x55);
+   vprASSERT(5 == write_enable_cmd.size());
+   
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "Ether24StandalonegetState(): Sending reset command ["
       << write_enable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
 
    vpr::Uint32 bytes_sent;

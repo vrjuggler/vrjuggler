@@ -54,13 +54,15 @@ void printSchmittTrigger(Ether24Standalone& elexol)
       << std::endl << vprDEBUG_FLUSH;
 }
 
-
 int main()
 {
-   Elexol::device_map_t devices = Ether24Standalone::getDevicesByMacAddress();
+   Elexol::device_map_t devices;
+   devices = Ether24Standalone::getDevicesByMacAddress();
 
    //vpr::InetAddr my_addr = devices["00:11:ba:02:01:bd"];
    vpr::InetAddr my_addr = devices["00:11:ba:00:00:01"];
+   std::cout << "Found IP address: " << my_addr.getAddressString() << std::endl;
+
    Ether24Standalone elexol;
    elexol.open(my_addr);
    printValue(elexol);
@@ -75,15 +77,27 @@ int main()
    printThreshold(elexol);
    printSchmittTrigger(elexol);
 
+   std::cout << "Current MAC address: " << elexol.getMacAddress() << std::endl;
+   
+   std::string mac_str = "00:11:ba:02:01:bd";
+   elexol.setMacAddress(mac_str);
+   std::cout << "Current MAC address: " << elexol.getMacAddress() << std::endl;
+
+   //elexol.reset();
+
+
+   /*
    vpr::InetAddr new_addr;
    new_addr.setAddress("192.168.1.200");
 
    elexol.setFixedIpAddress(new_addr);
    elexol.setEnableFixedIpAddress(true);
    elexol.setEnableFixedIpAddress(false);
-
+   */
+   /*
    vpr::InetAddr fixed_addr = elexol.getFixedIpAddress();
    std::cout << "Fixed Address: [" << fixed_addr.getAddressString() << ":"
       << fixed_addr.getPort() << "]" << std::endl;
+   */
    elexol.close();
 }

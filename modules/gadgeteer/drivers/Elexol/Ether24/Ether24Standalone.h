@@ -102,6 +102,9 @@ namespace Elexol
       // Word address
       const AddressType IpAddressA(6);
       const AddressType IpAddressB(7);
+      const AddressType MacAddress1(2);
+      const AddressType MacAddress2(3);
+      const AddressType MacAddress3(4);
 
       // Presets (byte addresses)
       const AddressType ValueA(17);
@@ -181,6 +184,9 @@ namespace Elexol
    const Port PortA(0);
    const Port PortB(1);
    const Port PortC(2);
+
+   std::vector<vpr::Uint8> convertMacStringToHexValues(const std::string& macAddress);
+   std::string convertMacValuesToString(const std::vector<vpr::Uint8>& macValues);
 }
 
 class Ether24Standalone
@@ -396,13 +402,23 @@ public:
       return mActive;
    }
 
+   void setMacAddress(const std::string& macAddress);
+   std::string getMacAddress();
+
    vpr::InetAddr getFixedIpAddress();
    void setFixedIpAddress(const vpr::InetAddr& ipAddr);
    void setEnableFixedIpAddress(bool val);
 
-   vpr::Uint8 getByteValue(const Elexol::AddressType addr);
-   void setByteValue(const Elexol::AddressType addr, const vpr::Uint8 value);
 
+   /**
+    * Resets the Elexol Ether I/O 24 device which causes all ports to be set
+    * to all default values(input) or as set up in the EEPROM. All EEPROM
+    * settings are read and activated.
+    * 
+    * @throw vpr::IOException if an error occured while communicating with
+    *        the Elxexol Ether I/O 24 device.
+    */
+   void reset();
 
 private:
    /**
@@ -433,14 +449,48 @@ private:
    void setState(const Elexol::Port port, const Elexol::CommandType command,
                  const vpr::Uint8 value) const;
 
+   /**
+    * Enable writing to the EEPROM values on the Elexol Ether I/O 24 device.
+    * 
+    * @throw vpr::IOException if an error occured while communicating with
+    *        the Elxexol Ether I/O 24 device.
+    */
    void enableWriting();
+
+   /**
+    * Disable writing to the EEPROM values on the Elexol Ether I/O 24 device.
+    * 
+    * @throw vpr::IOException if an error occured while communicating with
+    *        the Elxexol Ether I/O 24 device.
+    */
    void disableWriting();
 
+   /**
+    * Reads a word of memory from the Elexol Ether I/O 24 device's EEPROM.
+    * 
+    * @param address The address of the word to retrieve.
+    * @returns The byte pair for the specified word(MSB,LSB).
+    *
+    * @throw vpr::IOException if an error occured while communicating with
+    *        the Elxexol Ether I/O 24 device.
+    */
    std::pair<vpr::Uint8, vpr::Uint8>
       getWordValue(const Elexol::AddressType address);
 
+   /**
+    * Sets a word of memory to the Elexol Ether I/O 24 device's EEPROM.
+    * 
+    * @param address The address of the word to retrieve.
+    * @param value The byte pair for the specified word(MSB,LSB).
+    *
+    * @throw vpr::IOException if an error occured while communicating with
+    *        the Elxexol Ether I/O 24 device.
+    */
    void setWordValue(const Elexol::AddressType address,
       std::pair<vpr::Uint8, vpr::Uint8> value);
+
+   vpr::Uint8 getByteValue(const Elexol::AddressType addr);
+   void setByteValue(const Elexol::AddressType addr, const vpr::Uint8 value);
 
 private:
    bool                 mActive;  /**< If the driver is active. */
