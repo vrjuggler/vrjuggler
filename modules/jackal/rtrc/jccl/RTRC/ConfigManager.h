@@ -69,7 +69,7 @@ class RemoteReconfig;
  *
  * Requests to add config elements can be added via the network or by the
  * addPending*() methods of this class.  These requests are added to the
- * Configi Manager's "pending" list.  The Config Manager also maintains an
+ * Config Manager's "pending" list.  The Config Manager also maintains an
  * "active" list, containing all the config elements that have been
  * successfully configured.
  *
