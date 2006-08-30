@@ -43,7 +43,7 @@ AC_DEFUN([VRJUGGLER_PATH],
     AC_ARG_WITH(vrjuggler-meta-file,
                 [  --with-vrjuggler-meta-file=<PATH> Flagpoll metadata file
                           for VR Juggler (optional)      [No default]],
-                vrjuggler_meta_file="$withval", vrjuggler_meta_file="")
+                vrj_meta_file="$withval", vrj_meta_file="")
 
     dnl See if the user specified where to find the meta file 
     dnl if they didn't take a guess for them
