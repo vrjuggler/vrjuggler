@@ -49,7 +49,7 @@ AC_DEFUN([SNX_PATH],
 [
     DPP_PREREQ([2.0.1])
 
-    dnl Get the cflags and libraries from the sonix-config script
+    dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(sonix-meta-file,
                 [  --with-sonix-meta-file=<PATH>     Flagpoll metadata file
                          for Sonix (optional)           [No default]],

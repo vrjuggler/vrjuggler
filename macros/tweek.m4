@@ -29,7 +29,7 @@ dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([_TWEEK_PATH_SETUP],
 [
-    dnl Get the cflags and libraries from the tweek-config script
+    dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(tweek-meta-file,
                 [  --with-tweek-meta-file=<PATH>     Flagpoll metadata file
                           for VPR                       [No default]],

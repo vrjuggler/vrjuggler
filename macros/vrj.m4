@@ -39,7 +39,7 @@ AC_DEFUN([VRJUGGLER_PATH],
 [
     DPP_PREREQ([2.0.1])
 
-    dnl Get the cflags and libraries from the vrjuggler-config script
+    dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(vrjuggler-meta-file,
                 [  --with-vrjuggler-meta-file=<PATH> Flagpoll metadata file
                          for VR Juggler                       [No default]],

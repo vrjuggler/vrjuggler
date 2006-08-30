@@ -42,7 +42,7 @@ AC_DEFUN([VPR_PATH],
 [
     DPP_PREREQ([2.0.1])
 
-    dnl Get the cflags and libraries from the vpr-config script
+    dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(vpr-meta-file,
                 [  --with-vpr-meta-file=<PATH>       Flagpoll metadata file
                           for VPR (optional)            [No default]],

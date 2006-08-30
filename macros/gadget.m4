@@ -40,7 +40,7 @@ AC_DEFUN([GADGETEER_PATH],
 [
     DPP_PREREQ([2.0.1])
 
-    dnl Get the cflags and libraries from the gadgeteer-config script
+    dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(gadgeteer-meta-file,
                 [  --with-gadgeteer-meta-file=<PATH> Flagpoll metadata file
                           for Gadgeteer                       [No default]],
