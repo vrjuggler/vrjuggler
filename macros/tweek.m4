@@ -32,7 +32,7 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
     dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(tweek-meta-file,
                 [  --with-tweek-meta-file=<PATH>     Flagpoll metadata file
-                          for VPR                       [No default]],
+                          for VPR (optional)            [No default]],
                 tweek_meta_file="$withval", tweek_meta_file="")
 
     dnl See if the user specified where to find vapor

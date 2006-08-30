@@ -43,7 +43,7 @@ AC_DEFUN([GADGETEER_PATH],
     dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(gadgeteer-meta-file,
                 [  --with-gadgeteer-meta-file=<PATH> Flagpoll metadata file
-                          for Gadgeteer                       [No default]],
+                          for Gadgeteer (optional)      [No default]],
                 gadget_meta_file="$withval", gadget_meta_file="")
 
     dnl See if the user specified where to find the meta file

@@ -42,8 +42,8 @@ AC_DEFUN([VRJUGGLER_PATH],
     dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(vrjuggler-meta-file,
                 [  --with-vrjuggler-meta-file=<PATH> Flagpoll metadata file
-                         for VR Juggler                       [No default]],
-                vrj_config_prefix="$withval", vrj_config_prefix="")
+                          for VR Juggler (optional)      [No default]],
+                vrjuggler_meta_file="$withval", vrjuggler_meta_file="")
 
     dnl See if the user specified where to find the meta file 
     dnl if they didn't take a guess for them
