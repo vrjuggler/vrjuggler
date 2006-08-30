@@ -31,9 +31,9 @@ AC_DEFUN([_JCCL_PATH_SETUP],
 [
     dnl Get the cflags and libraries from the flagpoll script
     AC_ARG_WITH(jccl-meta-file,
-                [  --with-jccl-meta-file=<PATH>      Flagpoll metadata file
-                          for JCCL                       [No default]],
-                jccl_config_prefix="$withval", jccl_config_prefix="")
+                [  --with-jccl-meta-file=<PATH>       Flagpoll metadata file
+                          for JCCL (optional)            [No default]],
+                jccl_meta_file="$withval", jccl_meta_file="")
 
     dnl See if the user specified where to find jccl
     dnl if they didn't take a guess for them
