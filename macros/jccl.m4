@@ -39,8 +39,10 @@ AC_DEFUN([_JCCL_PATH_SETUP],
     dnl if they didn't take a guess for them
     if test "x$jccl_meta_file" != "x" ; then
         jccl_flagpoll_args="--from-file=$jccl_meta_file"
-    else
+    elif test -f "$instlinks/share/flagpoll/jccl.fpc" ; then
         jccl_flagpoll_args="--from-file=$instlinks/share/flagpoll/jccl.fpc"
+    else
+        jccl_flagpoll_args=""
     fi
 
     jccl_flagpoll_args="jccl $jccl_flagpoll_args --no-deps"

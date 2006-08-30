@@ -52,8 +52,10 @@ AC_DEFUN([VPR_PATH],
     dnl if they didn't take a guess for them
     if test "x$vpr_meta_file" != "x" ; then
         vpr_flagpoll_args="--from-file=$vpr_meta_file"
-    else
+    elif test -f "$instlinks/share/flagpoll/vpr.fpc" ; then
         vpr_flagpoll_args="--from-file=$instlinks/share/flagpoll/vpr.fpc"
+    else
+        vpr_flagpoll_args=""
     fi
 
     vpr_flagpoll_args="vpr $vpr_flagpoll_args --no-deps"

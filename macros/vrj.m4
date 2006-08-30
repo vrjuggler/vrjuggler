@@ -49,8 +49,10 @@ AC_DEFUN([VRJUGGLER_PATH],
     dnl if they didn't take a guess for them
     if test "x$vrj_meta_file" != "x" ; then
         vrj_flagpoll_args="--from-file=$vrj_meta_file"
-    else
+    elif test -f "$instlinks/share/flagpoll/vrjuggler.fpc" ; then
         vrj_flagpoll_args="--from-file=$instlinks/share/flagpoll/vrjuggler.fpc"
+    else
+        vrj_flagpoll_args=""
     fi
 
     vrj_flagpoll_args="vrjuggler $vrj_flagpoll_args --no-deps"

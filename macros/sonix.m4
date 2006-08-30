@@ -59,8 +59,10 @@ AC_DEFUN([SNX_PATH],
     dnl if they didn't take a guess for them
     if test "x$sonix_meta_file" != "x" ; then
         sonix_flagpoll_args="--from-file=$sonix_meta_file"
-    else
+    elif test -f "$instlinks/share/flagpoll/sonix.fpc" ; then
         sonix_flagpoll_args="--from-file=$instlinks/share/flagpoll/sonix.fpc"
+    else
+        sonix_flagpoll_args=""
     fi
 
     sonix_flagpoll_args="sonix $sonix_flagpoll_args --no-deps"

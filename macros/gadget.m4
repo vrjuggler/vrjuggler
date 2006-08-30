@@ -50,8 +50,10 @@ AC_DEFUN([GADGETEER_PATH],
     dnl if they didn't take a guess for them
     if test "x$gadget_meta_file" != "x" ; then
         gadget_flagpoll_args="--from-file=$gadget_meta_file"
-    else
+    elif test -f "$instlinks/share/flagpoll/gadgeteer.fpc" ; then
         gadget_flagpoll_args="--from-file=$instlinks/share/flagpoll/gadgeteer.fpc"
+    else
+        gadget_flagpoll_args=""
     fi
 
     gadget_flagpoll_args="gadgeteer $gadget_flagpoll_args --no-deps"

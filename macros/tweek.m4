@@ -39,8 +39,10 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
     dnl if they didn't take a guess for them
     if test "x$tweek_meta_file" != "x" ; then
         tweek_flagpoll_args="--from-file=$tweek_meta_file"
-    else
+    elif test -f "$instlinks/share/flagpoll/tweek.fpc" ; then
         tweek_flagpoll_args="--from-file=$instlinks/share/flagpoll/tweek.fpc"
+    else
+        tweek_flagpoll_args=""
     fi
 
     tweek_flagpoll_args="tweek $tweek_flagpoll_args --no-deps"
