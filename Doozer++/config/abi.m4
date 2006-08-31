@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2006/06/26 02:01:39
-dnl Version:       1.20
+dnl Date modified: 2006/08/31 15:46:33
+dnl Version:       1.22
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -74,12 +74,12 @@ dnl                           compile and link tests that Autconf performs.
 dnl     PLATFORM_SDK        - Subset of $ABI_FLAGS providing information about
 dnl                           the platform SDK required for building the
 dnl                           desired ABI/ISA combination(s).
-dnl     UNIVERSAL_ARHC_LIST - The list of architectures that will be supported
+dnl     UNIVERSAL_ARCH_LIST - The list of architectures that will be supported
 dnl                           by universal binaries.
 dnl     DPP_ABI_TYPE        - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.20 2006/06/26 02:01:39 patrickh Exp
+dnl abi.m4,v 1.22 2006/08/31 15:46:33 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -116,7 +116,17 @@ AC_DEFUN([DPP_ABI_CFG],
 dnl ---------------------------------------------------------------------------
 dnl Adds the --with-abi option and configure the ABI/ISA settings based on the
 dnl value given.  Substitution on the variables $ABI, $ISA and $LIBBITSUF is
-dnl also performed.
+dnl also performed. For generating universal binaries on Mac OS X, the default
+dnl set of architectures is 32-bit PowerPC and Intel. This can be overridden
+dnl by setting the variable UNIVERSAL_ARCH_LIST to a space-separated list of
+dnl architecture names supported by the Apple version of GCC. For example, to
+dnl target 32-bit PowerPC, 32-bit Intel, and 64-bit Intel, do the following:
+dnl
+dnl    UNIVERSAL_ARCH_LIST='ppc i386 x86_64'
+dnl    DPP_ABI_SETUP
+dnl
+dnl See the Mac OS X arch(3) man page for more details about architecture
+dnl names.
 dnl 
 dnl Usage:
 dnl     DPP_ABI_SETUP
@@ -210,7 +220,7 @@ AC_DEFUN([DPP_ABI_SETUP],
          DPP_ABI_CFG('Mach-O', 'i386', , [-arch i386], [$osx_sdk_flags])
          ;;
       xDARWIN_UNIVERSAL)
-         UNIVERSAL_ARCH_LIST='ppc i386'
+         : ${UNIVERSAL_ARCH_LIST='ppc i386'}
          dpp_universal_arch_flags=''
          for a in $UNIVERSAL_ARCH_LIST ; do
             dpp_universal_arch_flags="$dpp_universal_arch_flags -arch $a"
