@@ -4334,7 +4334,7 @@ public:
       <para>This chapter comprises the bulk of information about application
       development. This makes sense when one considers the importance of
       computer grahpics in the context of immersive applications. In each
-      section fo this chapter, we explain the use of different graphics
+      section of this chapter, we explain the use of different graphics
       application programming interfaces (APIs) within the scope of VR
       Juggler. While the sections of this chapter are tied to specific APIs,
       we highly recommend that all prospective programmers of VR Juggler
@@ -7243,7 +7243,7 @@ private:
           <classname>vrj::GlApp</classname>), there is a trade off to
           consider. If <methodname>latePreFrame()</methodname> is used, then
           the rendering state information must be stored in member variables
-          fo the application class. If <methodname>draw()</methodname> is
+          of the application class. If <methodname>draw()</methodname> is
           used, then the state can be defined using stack variables within the
           method, but the additional function call overhead and pointer
           derference (resulting from the use of the Smart Pointer pattern)
