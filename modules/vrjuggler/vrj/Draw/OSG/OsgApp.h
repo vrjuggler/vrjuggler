@@ -149,6 +149,7 @@ public:
    {
       mUpdateVisitor = new osgUtil::UpdateVisitor();
       mFrameStamp    = new osg::FrameStamp();
+      mUpdateVisitor->setFrameStamp(mFrameStamp.get());
 
       GlApp::init();
 
