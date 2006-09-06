@@ -377,16 +377,19 @@ bool ConfigManager::shouldCheckPending()
       if ( cur_pending_size > 0 )
       {
          vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
-            << "NOTE: These items have been specified in the configuration\n"
+            << "NOTE: These items have been specified in the\n"
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
-            << "      but have not been loaded.\n" << vprDEBUG_FLUSH;
+            << "      configuration but have not been loaded.\n"
+            << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
             << "      This may be a problem in the configuration OR\n"
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
-            << "      it may be waiting for more configuration information.\n"
+            << "      it may be waiting for more configuration\n"
             << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_CRITICAL_LVL)
+            << "      information.\n" << vprDEBUG_FLUSH;
       }
 
       lockPending();
