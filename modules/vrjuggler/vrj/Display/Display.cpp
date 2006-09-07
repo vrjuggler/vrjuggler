@@ -163,8 +163,20 @@ void Display::configViewports(jccl::ConfigElementPtr element)
       vp_elt = element->getProperty<jccl::ConfigElementPtr>("simulator_viewports",i);
       sim_vp = new SimViewport;
       sim_vp->setDisplay(this);
-      sim_vp->config(vp_elt);
-      mViewports.push_back(sim_vp);
+      if ( sim_vp->config(vp_elt) )
+      {
+         mViewports.push_back(sim_vp);
+      }
+      else
+      {
+         vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to configure simulator viewport named\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
+            << "       '" << vp_elt->getName() << "'\n" << vprDEBUG_FLUSH;
+         delete sim_vp;
+      }
    }
 
    // Create surface viewports
@@ -175,8 +187,21 @@ void Display::configViewports(jccl::ConfigElementPtr element)
       vp_elt = element->getProperty<jccl::ConfigElementPtr>("surface_viewports",i);
       surf_vp = new SurfaceViewport;
       surf_vp->setDisplay(this);
-      surf_vp->config(vp_elt);
-      mViewports.push_back(surf_vp);
+
+      if ( surf_vp->config(vp_elt) )
+      {
+         mViewports.push_back(surf_vp);
+      }
+      else
+      {
+         vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to configure surface viewport named\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
+            << "       '" << vp_elt->getName() << "'\n" << vprDEBUG_FLUSH;
+         delete surf_vp;
+      }
    }
 }
 

@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-07-2006 patrick     Improved error handling in viewport configurations.
 Jul-13-2006 patrick     Implemented automatic linking of the VR Juggler
                         libraries.
 Jul-08-2006 patrick     Added support for building universal binaries on Mac

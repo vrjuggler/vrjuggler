@@ -62,12 +62,17 @@ SimViewport::~SimViewport()
 }
 
    /**  Configure the simulator */
-void SimViewport::config(jccl::ConfigElementPtr element)
+bool SimViewport::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);
    vprASSERT(element->getID() == "simulator_viewport");
 
-   Viewport::config(element);
+   if ( ! Viewport::config(element) )
+   {
+      return false;
+   }
+
+   bool result(true);
 
    mType = SIM;
 
@@ -117,6 +122,8 @@ void SimViewport::config(jccl::ConfigElementPtr element)
       mSimulator->config(sim_element);
    }
    */
+
+   return result;
 }
 
 void SimViewport::updateProjections(const float positionScale)

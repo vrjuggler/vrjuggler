@@ -46,13 +46,32 @@
 #include <jccl/Config/ConfigElement.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
-
+#include <vrj/Display/Exceptions.h>
 #include <vrj/Display/SurfaceProjection.h>
 
 
 namespace vrj
 {
 
+void SurfaceProjection::validateCorners()
+{
+   gmtl::Vec3f norm1, norm2;
+   gmtl::Vec3f bot_side = mLRCorner-mLLCorner;
+   gmtl::Vec3f diag = mULCorner-mLRCorner;
+   gmtl::Vec3f right_side = mURCorner-mLRCorner;
+   gmtl::cross(norm1, bot_side, diag);
+   gmtl::cross(norm2, bot_side, right_side);
+   gmtl::normalize( norm1 ); gmtl::normalize(norm2);
+
+   if ( ! gmtl::isEqual(norm1, norm2, 1e-4f) )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "The corners " << mLLCorner << ", " << mLRCorner << ", "
+                 << mURCorner << ", " << mULCorner
+                 << " do not form a valid surface";
+      throw InvalidSurfaceException(msg_stream.str());
+   }
+}
 
 // Just call the base class constructor
 void SurfaceProjection::config(jccl::ConfigElementPtr element)
@@ -79,6 +98,7 @@ void SurfaceProjection::config(jccl::ConfigElementPtr element)
 void SurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
                                        const float scaleFactor)
 {
+   calculateOffsets();
    calcViewFrustum(eyePos, scaleFactor);
 
    //Coord eye_coord(eyePos);
@@ -182,8 +202,6 @@ void SurfaceProjection::calculateOffsets(){
 
 void SurfaceProjection::calculateSurfaceRotation()
 {
-   assertPtsLegal();
-
    // Find the base vectors for the surface axiis (in terms of the base coord system)
    // With z out, x to the right, and y up
    gmtl::Vec3f x_base, y_base, z_base;

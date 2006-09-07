@@ -24,75 +24,51 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
+ * Date modified: $Date: 2005-01-16 17:51:42 -0600 (Sun, 16 Jan 2005) $
+ * Version:       $Revision: 16627 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_DISPLAY_H_
-#define _VRJ_SIM_DISPLAY_H_
-//#pragma once
+#ifndef _VRJ_DISPLAY_EXCEPTIONS_H_
+#define _VRJ_DISPLAY_EXCEPTIONS_H_
 
-#include <vrj/vrjConfig.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
-
-#include <jccl/Config/ConfigElementPtr.h>
-#include <vrj/Draw/DrawSimInterface.h>
+#include <exception>
+#include <string>
 
 
 namespace vrj
 {
 
-/** \class SimViewport SimViewport.h vrj/Display/SimViewport.h
+/**
+ * The exception type thrown when the corners of a surface projection do not
+ * form a valid surface.
  *
- * Simulator viewport.
+ * @since 2.0.2
  */
-class VJ_CLASS_API SimViewport : public Viewport
+class InvalidSurfaceException : public std::exception
 {
 public:
-   SimViewport()
-      : Viewport()
+   InvalidSurfaceException(const std::string& msg) : mMessage(msg)
    {
       ;
    }
 
-   SimViewport(const SimViewport& sv)
-      : Viewport(sv)
-      , mSimulator(sv.mSimulator)
+   virtual ~InvalidSurfaceException() throw ()
    {
       ;
    }
 
-   virtual ~SimViewport();
-
-public:
-   /** Configures the simulator. */
-   virtual bool config(jccl::ConfigElementPtr element);
-
-   /**
-    * Updates the projections.
-    *
-    * @param positionScale Scale value for converting from Juggler units
-    *                      (meters) to the display units.
-    */
-   virtual void updateProjections(const float positionScale);
-
-   DrawSimInterface* getDrawSimInterface()
+   virtual const char* what() const throw ()
    {
-      return mSimulator;
-   }
-
-   void setDrawSimInterface(DrawSimInterface* draw_sim_i)
-   {
-      mSimulator = draw_sim_i;
+      return mMessage.c_str();
    }
 
 protected:
-   DrawSimInterface*    mSimulator;    /**< The simulator that we are using here */
+   std::string mMessage;
 };
 
 }
 
-#endif
+
+#endif /* _VRJ_DISPLAY_EXCEPTIONS_H_ */
