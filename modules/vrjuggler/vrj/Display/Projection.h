@@ -119,7 +119,7 @@ public:
     * @pre eyePos is scaled by position scale factor.  scaleFactor is the
     *      scale currently used.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos,
+   virtual void calcViewMatrix(const gmtl::Matrix44f& eyePos,
                                const float scaleFactor) = 0;
 
    /**

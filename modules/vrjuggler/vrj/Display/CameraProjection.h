@@ -63,7 +63,7 @@ public:
     * Auto-calculates aspect ratio from the current size of the window and
     * viewport.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& cameraPos,
+   virtual void calcViewMatrix(const gmtl::Matrix44f& cameraPos,
                                const float scaleFactor);
 
    virtual std::ostream& outStream(std::ostream& out,

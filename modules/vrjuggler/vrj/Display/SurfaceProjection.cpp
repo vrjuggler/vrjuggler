@@ -70,12 +70,13 @@ void SurfaceProjection::config(jccl::ConfigElementPtr element)
  * @pre eyePos is scaled by position factor.
  * @pre scaleFactor is the scale current used
  */
-void SurfaceProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleFactor )
+void SurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
+                                       const float scaleFactor)
 {
    calcViewFrustum(eyePos, scaleFactor);
 
    //Coord eye_coord(eyePos);
-   gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
+   const gmtl::Vec3f eye_pos(gmtl::makeTrans<gmtl::Vec3f>(eyePos));             // Non-xformed pos
 
    // Need to post translate to get the view matrix at the position of the eye
    mViewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
@@ -94,24 +95,22 @@ void SurfaceProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float sca
  * @pre m_base_M_surface and m_surface_M_base matrices must be set correctly.
  * @pre mOrigin*'s must all be set correctly.
  */
-void SurfaceProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleFactor)
+void SurfaceProjection::calcViewFrustum(const gmtl::Matrix44f& eyePos,
+                                        const float scaleFactor)
 {
-   float near_dist, far_dist;
-   near_dist = mNearDist;
-   far_dist = mFarDist;
+   const float near_dist = mNearDist;
+   const float far_dist = mFarDist;
 
    // Distance measurements from eye to screen/edges
    // Distance to edges is from the point on the screen plane
    // where a normal line would go through the origin.
    float eye_to_screen, eye_to_right, eye_to_left, eye_to_top, eye_to_bottom;
 
-   // Distances in near plane, in near plane from origin.  (Similar to above)
-   float n_eye_to_right, n_eye_to_left, n_eye_to_top, n_eye_to_bottom;
-
    // Compute transformed eye position
    // - Converts eye coords into the surface's coord system
-   gmtl::Point3f   eye_surface;         // Xformed position of eyes
-   eye_surface = m_surface_M_base * gmtl::makeTrans<gmtl::Point3f>(eyePos);
+   // Xformed position of eyes
+   const gmtl::Point3f eye_surface =
+      m_surface_M_base * gmtl::makeTrans<gmtl::Point3f>(eyePos);
 
    vprDEBUG(vrjDBG_DISP_MGR, vprDBG_HEX_LVL)
       << "SurfaceProjection::calcviewFrustum:    Base eye:" << gmtl::makeTrans<gmtl::Point3f>(eyePos)
@@ -126,12 +125,13 @@ void SurfaceProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float sca
    eye_to_top =    (scaleFactor * mOriginToTop) - eye_surface[gmtl::Yelt];
    eye_to_bottom = (scaleFactor * mOriginToBottom) + eye_surface[gmtl::Yelt];
 
+   // Distances in near plane, in near plane from origin.  (Similar to above)
    // Find dists on near plane using similar triangles
-   float near_distFront = near_dist/eye_to_screen;      // constant factor
-   n_eye_to_left = eye_to_left*near_distFront;
-   n_eye_to_right = eye_to_right*near_distFront;
-   n_eye_to_top = eye_to_top*near_distFront;
-   n_eye_to_bottom = eye_to_bottom*near_distFront;
+   const float near_distFront = near_dist/eye_to_screen; // constant factor
+   const float n_eye_to_left = eye_to_left*near_distFront;
+   const float n_eye_to_right = eye_to_right*near_distFront;
+   const float n_eye_to_top = eye_to_top*near_distFront;
+   const float n_eye_to_bottom = eye_to_bottom*near_distFront;
 
    // Set frustum and calulcate the matrix
    mFrustum.set(-n_eye_to_left, n_eye_to_right,

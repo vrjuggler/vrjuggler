@@ -49,7 +49,8 @@ void CameraProjection::config(jccl::ConfigElementPtr element)
 * Calculates a perspective transform for the given settings.
 * Auto-calculates aspect ratio from the current size of the window and viewport
 */
-void CameraProjection::calcViewMatrix(gmtl::Matrix44f& cameraPos, const float scaleFactor)
+void CameraProjection::calcViewMatrix(const gmtl::Matrix44f& cameraPos,
+                                      const float scaleFactor)
 {
    boost::ignore_unused_variable_warning(scaleFactor);
    mViewMat = cameraPos;
