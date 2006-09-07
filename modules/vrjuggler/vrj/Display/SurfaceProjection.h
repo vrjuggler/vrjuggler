@@ -82,14 +82,14 @@ public:
     * @pre scaleFactor is the scale current used
     * @post frustum has been recomputed for given eyePos.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos,
+   virtual void calcViewMatrix(const gmtl::Matrix44f& eyePos,
                                const float scaleFactor);
 
    /**
     * Calculates the frustum needed for the view matrix.
     * @note This function is called as part of calcViewMatrix.
     */
-   virtual void calcViewFrustum(gmtl::Matrix44f& eyePos,
+   virtual void calcViewFrustum(const gmtl::Matrix44f& eyePos,
                                 const float scaleFactor);
 
    std::ostream& outStream(std::ostream& out,

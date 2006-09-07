@@ -47,7 +47,8 @@
 namespace vrj
 {
 
-void TrackedSurfaceProjection::calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor)
+void TrackedSurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
+                                              const float scaleFactor)
 {
    updateSurfaceParams(scaleFactor);
 
