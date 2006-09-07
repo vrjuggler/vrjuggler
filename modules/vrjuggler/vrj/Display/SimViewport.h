@@ -63,7 +63,7 @@ public:
 
 public:
    /** Configures the simulator. */
-   virtual void config(jccl::ConfigElementPtr element);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /**
     * Updates the projections.

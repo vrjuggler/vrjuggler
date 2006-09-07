@@ -117,7 +117,7 @@ public:
     * @note All derived viewport classes MUST call this function
     *       after doing local configuration.
     */
-   virtual void config(jccl::ConfigElementPtr element);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /**
     * Updates the projection data for this viewport.  This uses the data from

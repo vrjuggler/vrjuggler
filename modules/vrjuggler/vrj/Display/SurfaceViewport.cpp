@@ -42,6 +42,7 @@
 
 #include <vrj/Display/SurfaceProjection.h>
 #include <vrj/Display/TrackedSurfaceProjection.h>
+#include <vrj/Display/Exceptions.h>
 #include <vrj/Display/SurfaceViewport.h>
 
 namespace vrj
@@ -62,12 +63,18 @@ SurfaceViewport::~SurfaceViewport()
    }
 }
 
-void SurfaceViewport::config(jccl::ConfigElementPtr element)
+bool SurfaceViewport::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);
    vprASSERT(element->getID() == "surface_viewport");
 
-   Viewport::config(element);     // Call base class config
+   // Call base class config
+   if ( ! Viewport::config(element) )
+   {
+      return false;
+   }
+
+   bool result(true);
 
    mType = SURFACE;
 
@@ -111,24 +118,65 @@ void SurfaceViewport::config(jccl::ConfigElementPtr element)
    //  the left(bottom) which is opposite the normal axis direction
    //vjMatrix rot_inv;
    //rot_inv.invert(mSurfaceRotation);
+   SurfaceProjection* left_proj(NULL);
+   SurfaceProjection* right_proj(NULL);
+
    if(!mTracked)
    {
-      mLeftProj = new SurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner);
-      mRightProj = new SurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner);
+      left_proj = new SurfaceProjection(mLLCorner, mLRCorner, mURCorner,
+                                        mULCorner);
+      right_proj = new SurfaceProjection(mLLCorner, mLRCorner, mURCorner,
+                                         mULCorner);
    }
    else
    {
-      mLeftProj = new TrackedSurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner,mTrackerProxyName);
-      mRightProj = new TrackedSurfaceProjection(mLLCorner,mLRCorner,mURCorner,mULCorner,mTrackerProxyName);
+      left_proj = new TrackedSurfaceProjection(mLLCorner, mLRCorner,
+                                               mURCorner, mULCorner,
+                                               mTrackerProxyName);
+      right_proj = new TrackedSurfaceProjection(mLLCorner, mLRCorner,
+                                                mURCorner, mULCorner,
+                                                mTrackerProxyName);
    }
-   // Configure the projections
-   mLeftProj->config(element);
-   mLeftProj->setEye(Projection::LEFT);
-   mLeftProj->setViewport(this);
 
-   mRightProj->config(element);
-   mRightProj->setEye(Projection::RIGHT);
-   mRightProj->setViewport(this);
+   try
+   {
+      left_proj->validateCorners();
+      right_proj->validateCorners();
+
+      // NOTE: Even if the corner validation above failed, we still proceed with
+      // setting up mLeftProj and mRightProj. This is because other code is not
+      // written to handle the case of a viewport having no projections. This
+      // could definitely be improved.
+      mLeftProj  = left_proj;
+      mRightProj = right_proj;
+
+      // Configure the projections
+      mLeftProj->config(element);
+      mLeftProj->setEye(Projection::LEFT);
+      mLeftProj->setViewport(this);
+
+      mRightProj->config(element);
+      mRightProj->setEye(Projection::RIGHT);
+      mRightProj->setViewport(this);
+   }
+   catch (InvalidSurfaceException& ex)
+   {
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": The surface defined by the viewport named\n" << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
+         << "       '" << element->getName() << "' is invalid!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+
+      delete left_proj;
+      delete right_proj;
+
+      result = false;
+   }
+
+   return result;
 }
 
 void SurfaceViewport::updateProjections(const float positionScale)

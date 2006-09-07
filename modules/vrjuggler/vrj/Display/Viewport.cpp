@@ -39,9 +39,11 @@
 namespace vrj
 {
 
-void Viewport::config(jccl::ConfigElementPtr element)
+bool Viewport::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);
+
+   bool result(true);
 
    // -- Get config info from element -- //
     float originX = element->getProperty<float>("origin", 0);
@@ -83,12 +85,17 @@ void Viewport::config(jccl::ConfigElementPtr element)
          << clrOutNORM(clrRED, "ERROR:") << " User not found named: '"
          << user_name << "'" << std::endl << vprDEBUG_FLUSH;
       vprASSERT(false && "User not found in Viewport::config");
+      result = false;
+   }
+   else
+   {
+      setName(name);
+      mViewportElement = element;        // Save the element for later use
+
+      std::string bufname = "Head Latency " + name;
    }
 
-   setName(name);
-   mViewportElement = element;        // Save the element for later use
-
-   std::string bufname = "Head Latency " + name;
+   return result;
 }
 
 std::ostream& operator<<(std::ostream& out, Viewport& viewport)

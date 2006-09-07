@@ -67,7 +67,7 @@ public:
     * @note All derived display classes MUST call this function
     *        after doing local configuration.
     */
-   virtual void config(jccl::ConfigElementPtr element);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    virtual void updateProjections(const float positionScale);
 

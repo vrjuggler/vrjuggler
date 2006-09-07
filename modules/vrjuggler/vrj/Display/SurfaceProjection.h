@@ -62,8 +62,19 @@ public:
       , mURCorner(urCorner)
       , mULCorner(ulCorner)
    {
-      calculateOffsets();
+      /* Do nothing. */ ;
    }
+
+   /**
+    * Checks the corner points to make sure they form a legal surface. If not,
+    * an exception of type vrj::InvalidSurfaceException is thrown.
+    *
+    * @throw vrj::InvalidSurfaceException is thrown if the corners do not form
+    *        a legal surface.
+    *
+    * @since 2.1.11
+    */
+   void validateCorners();
 
    /** Configures the projection using the element given. */
    virtual void config(jccl::ConfigElementPtr element);
@@ -90,24 +101,6 @@ public:
                            const unsigned int indentLevel = 0);
 
 protected:
-   /** Checks the pts to make sure they form a legal surface. */
-   void assertPtsLegal()
-   {
-      gmtl::Vec3f norm1, norm2;
-      gmtl::Vec3f bot_side = mLRCorner-mLLCorner;
-      gmtl::Vec3f diag = mULCorner-mLRCorner;
-      gmtl::Vec3f right_side = mURCorner-mLRCorner;
-      gmtl::cross(norm1, bot_side, diag);
-      gmtl::cross(norm2, bot_side, right_side);
-      gmtl::normalize( norm1 ); gmtl::normalize(norm2);
-
-      if(gmtl::isEqual(norm1,norm2,1e-4f)==false)
-      {
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
-      }
-   }
-
    /**
     * @name Screen calculation functions
     *
