@@ -223,6 +223,9 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\Exceptions.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\Exceptions.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Frustum.h">
 			</File>
 			<File
