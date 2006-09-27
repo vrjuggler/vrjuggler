@@ -62,6 +62,8 @@
 #include <string.h>
 #endif
 
+extern int errno;
+
 namespace vpr
 {
 
@@ -151,7 +153,15 @@ public:
     */
    vpr::ReturnStatus acquire() const
    {
-      if ( sem_wait(mSema) == 0 )
+      int result;
+
+      do
+      {
+         result = sem_wait(mSema);
+      }
+      while ( result == -1 && errno == EINTR );
+
+      if ( result == 0 )
       {
          return vpr::ReturnStatus();
       }
