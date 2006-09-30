@@ -39,6 +39,7 @@
 #include <sstream>
 
 #include <vpr/Util/ResourceException.h>
+#include <vpr/md/SPROC/SharedMem/MemPool.h>
 #include <vpr/md/SPROC/Sync/MutexSGI.h>
 
 

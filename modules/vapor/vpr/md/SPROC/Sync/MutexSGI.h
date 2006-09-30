@@ -46,11 +46,12 @@
 #include <boost/noncopyable.hpp>
 
 #include <vpr/Sync/LockException.h>
-#include <vpr/md/SPROC/SharedMem/MemPool.h>
 
 
 namespace vpr
 {
+
+class MemPoolSGI;
 
 /** \class MutexSGI MutexSGI.h vpr/Sync/Mutex.h
  *
