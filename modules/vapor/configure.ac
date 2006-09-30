@@ -912,14 +912,16 @@ else
     APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
 
+vpr_lib_name="vpr$LIBRARY_VERSION"
+vpr_prof_lib_name="vpr_p$LIBRARY_VERSION"
+
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 VPR_BASE_DIR, $DEFS, $INCLUDES, $ABI_FLAGS)
 VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
-              [VPR_BASE_DIR], [vpr], [$APP_EXTRA_LIBS])
+              [VPR_BASE_DIR], [$vpr_lib_name], [$APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VPR_BASE_DIR)'
-
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -970,9 +972,6 @@ fi
 # to make it break.
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 VPR_SHARE_DIR="$data_subdir/$DATA_VERSION"
-
-vpr_lib_name="vpr$LIBRARY_VERSION"
-vpr_prof_lib_name="vpr_p$LIBRARY_VERSION"
 
 # Information needed to generate vpr-config.
 case $SUBSYSTEM in
