@@ -50,7 +50,7 @@
 #include <prlock.h>
 #include <boost/noncopyable.hpp>
 
-#include <vpr/Util/Assert.h>
+#include <vpr/Sycn/LockException.h>
 
 
 namespace vpr
@@ -185,11 +185,19 @@ public:
     *
     * @pre This mutex must be locked.
     * @post This mutex is unlocked.
+    *
+    * @throw vpr::LockException is thrown if the unlock operation fails.
     */
    void release()
    {
       mLocked = false;
-      PR_Unlock(mMutex);
+      const PRStatus result = PR_Unlock(mMutex);
+
+      if ( PR_FAILURE == result )
+      {
+         throw vpr::LockException("Mutex unlock operation failed",
+                                  VPR_LOCATION);
+      }
    }
 
    /**

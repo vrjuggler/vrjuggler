@@ -38,12 +38,14 @@
 
 #include <vpr/vprConfig.h>
 
+#include <sstream>
 #include <string.h>
 #include <ulocks.h>
 #include <errno.h>
 #include <assert.h>
 #include <boost/noncopyable.hpp>
 
+#include <vpr/Sync/LockException.h>
 #include <vpr/md/SPROC/SharedMem/MemPool.h>
 
 
@@ -171,10 +173,19 @@ public:
     *
     * @pre This mutex must be locked.
     * @post This mutex is unlocked.
+    *
+    * @throw vpr::LockException is thrown if the unlock operation fails.
     */
    void release()
    {
-      usunsetlock(mMutex);
+      const int result = usunsetlock(mMutex);
+
+      if ( result != 0 )
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Mutex unlock operation failed: " << sterror(errno);
+         throw vpr::LockException(msg_stream.str(), VPR_LOCATION);
+      }
    }
 
    /**

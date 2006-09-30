@@ -51,6 +51,8 @@
 #include <assert.h>
 #include <boost/noncopyable.hpp>
 
+#include <vpr/Sync/LockException.h>
+
 
 namespace vpr
 {
@@ -77,19 +79,13 @@ public:
    /**
     * Destructor for vpr::MutexPosix class.
     *
-    * @pre The mutex variable should be unlocked before being destroyed,
-    *      but if it is not, this routine will unlock it and then destroy
-    *      it.
-    * @post The mutex variable is destroyed and unlocked.
+    * @pre No thread should be in a lock-specific function.
+    * @post The mutex variable is destroyed.
     */
    ~MutexPosix()
    {
-      // Destroy the mutex.
-      if ( pthread_mutex_destroy(&mMutex) == -1 )
-      {
-         pthread_mutex_unlock(&mMutex);
-         pthread_mutex_destroy(&mMutex);
-      }
+      const int result = pthread_mutex_destroy(&mMutex);
+      assert(result == 0);
    }
 
    /**
@@ -99,25 +95,23 @@ public:
     *       lock has already been acquired by another thread, the caller
     *       blocks until the mutex has been freed.
     *
-    * @note If building with \c _DEBUG defined, then the lock operation is
-    *       validated to ensure that the current thread did not try to lock
-    *       this mutex twice.
+    * @throw vpr::LockException is thrown if the current thread has already
+    *        locked this mutex.
     */
    void acquire()
    {
-#if ! defined(_DEBUG)
-      pthread_mutex_lock(&mMutex);
-#else
-      const int retval = pthread_mutex_lock(&mMutex);
+      const int result = pthread_mutex_lock(&mMutex);
 
       // This thread tried to lock the mutex twice, and a deadlock condition
       // was reported.
-      if ( retval == EDEADLK )
+      if ( EDEADLK == result )
       {
-         perror("Tried to lock mutex twice in the same thread");
-         assert(false && "Mutex deadlock detected");
+         throw vpr::LockException(
+            "Tried to lock mutex twice in the same thread", VPR_LOCATION
+         );
       }
-#endif
+
+      assert(result == 0);
    }
 
    /**
@@ -199,23 +193,22 @@ public:
     * @pre The mutex variable must be locked.
     * @post The mutex variable is unlocked.
     *
-    * @note If building with \c _DEBUG defined, then the unlock operation is
-    *       validated to ensure that the current thread actually owned this
-    *       lock.
+    * @throw vpr::LockException is thrown if the current thread was not the
+    *        one that locked this mutex.
     */
    void release()
    {
-#if ! defined(_DEBUG)
-      pthread_mutex_unlock(&mMutex);
-#else
-      const int retval = pthread_mutex_unlock(&mMutex);
+      const int result = pthread_mutex_unlock(&mMutex);
 
-      if ( EPERM == retval )
+      if ( EPERM == result )
       {
-         perror("Tried to release a mutex that this thread does not own");
-         assert(false && "Mutex release by non-owning thread.");
+         throw vpr::LockException(
+            "Tried to release a mutex that this thread does not own",
+            VPR_LOCATION
+         );
       }
-#endif
+
+      assert(result == 0);
    }
 
    /**
