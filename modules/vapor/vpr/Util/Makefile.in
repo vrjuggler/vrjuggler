@@ -70,6 +70,7 @@ SRCS=		Debug.cpp			\
 		GUID.cpp			\
 		IllegalArgumentException.cpp	\
 		Interval.cpp			\
+		ResourceException.cpp		\
 		StreamLock.cpp			\
 		Version.cpp
 

@@ -33,11 +33,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_Guard_h_
-#define _VPR_Guard_h_
-
-#include <vpr/vprConfig.h>
-#include <vpr/Util/ReturnStatus.h>
+#ifndef _VPR_GUARD_H_
+#define _VPR_GUARD_H_
 
 
 namespace vpr
@@ -45,7 +42,7 @@ namespace vpr
 
 /** \class Guard Guard.h vpr/Sync/Guard.h
  *
- * Guard wrapper.
+ * Scoped wrapper for a lock.
  *
  * @date January 31, 1997
  */
@@ -54,12 +51,21 @@ class Guard
 {
 public:
    /**
-    * Acquires the lock implicitly.
-    * If \p block is 1 then use a blocking mutex acquisition operationg.
+    * Acquires the lock implicitly. If \p block is true, then use a blocking
+    * mutex acquisition operation. Otherwise, use a non-blocking acquisition
+    * call.
+    *
+    * @post \c mLockStatus reflects whether the given lock was acquired.
+    *
+    * @param lock  The mutex to associate with this guard.
+    * @param block A flag indicating whether a blocking acquisition operation
+    *              should be used to acquire the lock. This parameter is
+    *              optional and defaults to true if it is not specified.
     */
-   Guard(LOCK_TYPE &lock, int block = 1) : mTheLock(&lock)
+   Guard(LOCK_TYPE& lock, const bool block = true)
+      : mTheLock(&lock)
    {
-      mLockStatus = block ? acquire().success() : tryAcquire().success();
+      mLockStatus = block ? acquire() : tryAcquire();
    }
 
    /** Releases the lock. */
@@ -72,31 +78,36 @@ public:
    }
 
    /**
-    * @return \c true is returned if this guard is locked.
-    * @return \c false is returned if this guard is not locked.
+    * Indicates whether this guard is currently locked.
+    *
+    * @return \c true is returned if this guard is locked; \c false is
+    *         returned otherwise.
     */
-   const bool& locked()
+   bool locked() const
    {
       return mLockStatus;
    }
 
    /** Acquires the lock. */
-   vpr::ReturnStatus acquire()
+   bool acquire()
    {
-      return mTheLock->acquire();
+      mTheLock->acquire();
+      mLockStatus = true;
+      return mLockStatus;
    }
 
    /** Tries to acquire lock. */
-   vpr::ReturnStatus tryAcquire()
+   bool tryAcquire()
    {
-      return mTheLock->tryAcquire();
+      mLockStatus = mTheLock->tryAcquire();
+      return mLockStatus;
    }
 
    /** Explicity releases the lock. */
-   vpr::ReturnStatus release()
+   void release()
    {
       mLockStatus = false;
-      return mTheLock->release();
+      mTheLock->release();
    }
 
 private:

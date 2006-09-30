@@ -35,52 +35,62 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstring>
+#include <sstream>
+
+#include <vpr/Util/ResourceException.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
+
 
 namespace vpr
 {
 
 MutexPosix::MutexPosix()
 {
+   int result(0);
+
    // Initialize the mutex.
 #ifndef _DEBUG
-   pthread_mutex_init(&mMutex, NULL);
+   result = pthread_mutex_init(&mMutex, NULL);
 #else
 #ifdef VPR_OS_Linux
    // If Linux and debug, then use error checking mutex
    pthread_mutexattr_t mutex_attr;
    pthread_mutexattr_init(&mutex_attr);
    pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_ERRORCHECK_NP);
-   pthread_mutex_init(&mMutex, &mutex_attr);
+   result = pthread_mutex_init(&mMutex, &mutex_attr);
    pthread_mutexattr_destroy(&mutex_attr);
 #else
-   pthread_mutex_init(&mMutex, NULL);
+   result = pthread_mutex_init(&mMutex, NULL);
 #endif
 #endif
+
+   if ( result != 0 )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Mutex allocation failed: " << std::strerror(result);
+      throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+   }
 }
 
 // Tests the current lock status.
-int MutexPosix::test() const
+bool MutexPosix::test() const
 {
-   int ret_val;
+   bool locked(true);
 
-   ret_val = pthread_mutex_trylock(const_cast<pthread_mutex_t*>(&mMutex));
+   const int status =
+      pthread_mutex_trylock(const_cast<pthread_mutex_t*>(&mMutex));
 
-   // If the return value from pthread_mutex_trylock() is 0, then this
-   // process now has a lock on mutex.  Therefore, no other process could
-   // have held a lock on it, so unlock the mutex and return 0.
-   if ( ret_val == 0 )
+   // If the return value from pthread_mutex_trylock(3) is 0, then this thread
+   // now has a lock on mMutex. Therefore, no other thread could have held the
+   // mutex, so unlock the mutex and return false.
+   if ( status == 0 )
    {
       pthread_mutex_unlock(const_cast<pthread_mutex_t*>(&mMutex));
-      ret_val = 0;
-   }
-   // The mutex is currently locked by some thread if ret_val is non-zero.
-   else
-   {
-      ret_val = 1;
+      locked = false;
    }
 
-   return ret_val;
+   return locked;
 }
 
 } // End of vpr namespace

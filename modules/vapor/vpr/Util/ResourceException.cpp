@@ -33,27 +33,24 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_MUTEX_H_
-#define _VPR_MUTEX_H_
-
-/**
- * \file
- *
- * Include this file to get the full declaration of the platform-specific
- * type that is typedef'd to vpr::Mutex.
- */
-
 #include <vpr/vprConfig.h>
-
-#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#   include <vpr/md/SPROC/Sync/MutexSGI.h>    
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#   include <vpr/md/POSIX/Sync/MutexPosix.h>
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#   include <vpr/md/NSPR/Sync/MutexNSPR.h>
-#endif
-
-#include <vpr/Sync/NullMutex.h>
+#include <vpr/Util/ResourceException.h>
 
 
-#endif	/* _VPR_MUTEX_H_ */
+namespace vpr
+{
+
+ResourceException::ResourceException(const std::string& msg,
+                                     const std::string& location)
+   throw ()
+   : vpr::Exception(msg, location)
+{
+   /* Do nothing. */ ;
+}
+
+ResourceException::~ResourceException() throw ()
+{
+   /* Do nothing. */ ;
+}
+
+}

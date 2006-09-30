@@ -37,12 +37,14 @@
 #define _VPR_MutexSGI_h_
 
 #include <vpr/vprConfig.h>
+
 #include <string.h>
 #include <ulocks.h>
 #include <errno.h>
+#include <assert.h>
+#include <boost/noncopyable.hpp>
+
 #include <vpr/md/SPROC/SharedMem/MemPool.h>
-#include <vpr/Util/Assert.h>
-#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -55,57 +57,27 @@ namespace vpr
  *
  * @date January 20, 1997
  */
-class MutexSGI
+class MutexSGI : boost::noncopyable
 {
 public:
-   MutexSGI() : mMutex(NULL)
-   {
-      // BUG: Possible race condition here
-      if ( mMutexPool == NULL )
-      {
-         mMutexPool = new MemPoolSGI(65536, 32,
-                                     "/var/tmp/memMutexPoolSGIXXXXXX");
-         mAttachedCounter = static_cast<int*>(mMutexPool->allocate(sizeof(int)));
-         *mAttachedCounter = 0;
-      }
+   /**
+    * Constructor for vpr::MutexSGI class.
+    *
+    * @post The mutex variable is initialized and ready for use. The mutex
+    *       operations will not fail.
+    *
+    * @throw vpr::ResourceException is thrown if the mutex cannot be
+    *        allocated.
+    */
+   MutexSGI();
 
-      // Track how many mutexes are allocated
-      *mAttachedCounter = *mAttachedCounter + 1;
-//      vprDEBUG << " vpr::MutexSGI::MutexSGI: mAttachedCounter: "
-//               << *mAttachedCounter << endl << vprDEBUG_FLUSH;
-
-      // ----- Allocate the mutex ----- //
-      mMutex = usnewlock(mMutexPool->getArena());
-
-      if ( NULL == mMutex )
-      {
-         std::cerr << "ERROR: Failed to allocate new mutex -- "
-                   << strerror(errno) << std::endl;
-         vprASSERT(mMutex != NULL && "in vpr::MutexSGI::MutexSGI() mMutex is NULL");
-      }
-   }
-
-   ~MutexSGI()
-   {
-      // ---- Delete the mutex --- //
-      usfreelock(mMutex, mMutexPool->getArena());
-
-      // ---- Deal with the pool --- //
-
-      // Track how many mutexes are allocated
-      *mAttachedCounter = *mAttachedCounter - 1;
-
-//      vprDEBUG << "vpr::MutexSGI::~MutexSGI: mAttachedCounter: "
-//               << *mAttachedCounter << endl << vprDEBUG_FLUSH;
-
-      if ( *mAttachedCounter == 0 )
-      {
-         mMutexPool->deallocate(mAttachedCounter);
-         mAttachedCounter = NULL;
-         delete mMutexPool;
-         mMutexPool = NULL;
-      }
-   }
+   /**
+    * Destructor for vpr::MutexPosix class.
+    *
+    * @pre No thread should be in a lock-specific function.
+    * @post The mutex variable is destroyed.
+    */
+   ~MutexSGI();
 
    /**
     * Locks this mutex.
@@ -113,21 +85,11 @@ public:
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller blocks
     *       until the mutex has been freed.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired
-    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus acquire() const
+   void acquire()
    {
-      vprASSERT(mMutex != NULL && "in vpr::MutexSGI::aquire() mMutex is NULL");
-      if ( ussetlock(mMutex) == 1 )
-      {
-         return vpr::ReturnStatus();
-      }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+      assert(mMutex != NULL && "in vpr::MutexSGI::aquire() mMutex is NULL");
+      ussetlock(mMutex);
    }
 
    /**
@@ -137,15 +99,11 @@ public:
     *       already been acquired by another process/thread, the caller
     *       blocks until the mutex has been freed.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read lock is
-    *         acquired successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
-    *
     * @note No special read mutex has been defined for now.
     */
-   vpr::ReturnStatus acquireRead() const
+   void acquireRead()
    {
-      return this->acquire();      // No special "read" semaphore -- For now
+      this->acquire();      // No special "read" semaphore -- For now
    }
 
    /**
@@ -155,15 +113,11 @@ public:
     *       already been acquired by another process/thread, the caller blocks
     *       until the mutex has been freed.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write lock is
-    *         acquired successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
-    *
     * @note No special write mutex has been defined for now.
     */
-   vpr::ReturnStatus acquireWrite() const
+   void acquireWrite()
    {
-      return this->acquire();      // No special "write" semaphore -- For now
+      this->acquire();      // No special "write" semaphore -- For now
    }
 
    /**
@@ -173,21 +127,13 @@ public:
     *       already been acquired by another process/thread, the caller
     *       returns does not wait for it to be unlocked.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
-    *         vpr::ReturnStatus::Fail is returned if another thread is
-    *         holding the lock already.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the mutex is already locked.
     */
-   vpr::ReturnStatus tryAcquire() const
+   bool tryAcquire()
    {
       // Try 100 spins.
-      if ( uscsetlock(mMutex, 100) == 1 )
-      {
-         return vpr::ReturnStatus();
-      }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+      return uscsetlock(mMutex, 100) == 1;
    }
 
    /**
@@ -197,11 +143,10 @@ public:
     *       already been acquired by another process/thread, the caller
     *       returns does not wait for it to be unlocked.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if another thread
-    *         is holding the lock already.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the mutex is already locked.
     */
-   vpr::ReturnStatus tryAcquireRead() const
+   bool tryAcquireRead()
    {
       return this->tryAcquire();
    }
@@ -213,11 +158,10 @@ public:
     *       already been acquired by another process/thread, the caller returns
     *       does not wait for it to be unlocked.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if another thread
-    *         is holding the lock already.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the mutex is already locked.
     */
-   vpr::ReturnStatus tryAcquireWrite() const
+   bool tryAcquireWrite()
    {
       return this->tryAcquire();
    }
@@ -227,20 +171,10 @@ public:
     *
     * @pre This mutex must be locked.
     * @post This mutex is unlocked.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if this mutex is unlocked
-    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus release() const
+   void release()
    {
-      if ( usunsetlock(mMutex) == 0 )
-      {
-         return vpr::ReturnStatus();
-      }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+      usunsetlock(mMutex);
    }
 
    /**
@@ -251,7 +185,7 @@ public:
     * @return 0 is returned if this mutex is not locked.  1 is returned if it
     *         is locked.
     */
-   int test() const
+   bool test() const
    {
       return ustestlock(const_cast<ulock_t>(mMutex));
    }
@@ -275,10 +209,6 @@ public:
 
 protected:
    ulock_t mMutex;
-
-   // = Prevent assignment and initialization.
-   void operator= (const MutexSGI &) {;}
-   MutexSGI (const MutexSGI &) {;}
 
    static MemPoolSGI* mMutexPool;
    static int* mAttachedCounter;

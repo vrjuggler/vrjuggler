@@ -35,8 +35,67 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/Sync/Mutex.h>
+#include <string.h>
+#include <sstream>
+
+#include <vpr/Util/ResourceException.h>
 #include <vpr/md/SPROC/Sync/MutexSGI.h>
+
 
 vpr::MemPoolSGI* vpr::MutexSGI::mMutexPool = NULL;
 int* vpr::MutexSGI::mAttachedCounter       = NULL;
+
+namespace vpr
+{
+
+MutexSGI::MutexSGI()
+   : mMutex(NULL)
+{
+   // BUG: Possible race condition here
+   if ( mMutexPool == NULL )
+   {
+      mMutexPool = new MemPoolSGI(65536, 32,
+                                  "/var/tmp/memMutexPoolSGIXXXXXX");
+      mAttachedCounter = static_cast<int*>(mMutexPool->allocate(sizeof(int)));
+      *mAttachedCounter = 0;
+   }
+
+   // Track how many mutexes are allocated
+   *mAttachedCounter = *mAttachedCounter + 1;
+//      vprDEBUG << " vpr::MutexSGI::MutexSGI: mAttachedCounter: "
+//               << *mAttachedCounter << endl << vprDEBUG_FLUSH;
+
+   // ----- Allocate the mutex ----- //
+   mMutex = usnewlock(mMutexPool->getArena());
+
+   if ( NULL == mMutex )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to allocate new mutex: " << strerror(errno);
+      throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+   }
+}
+
+MutexSGI::~MutexSGI()
+{
+   // ---- Delete the mutex --- //
+   usfreelock(mMutex, mMutexPool->getArena());
+
+   // ---- Deal with the pool --- //
+
+   // Track how many mutexes are allocated
+   *mAttachedCounter = *mAttachedCounter - 1;
+
+//      vprDEBUG << "vpr::MutexSGI::~MutexSGI: mAttachedCounter: "
+//               << *mAttachedCounter << endl << vprDEBUG_FLUSH;
+
+   if ( *mAttachedCounter == 0 )
+   {
+      mMutexPool->deallocate(mAttachedCounter);
+      mAttachedCounter = NULL;
+      delete mMutexPool;
+      mMutexPool = NULL;
+   }
+}
+
+}

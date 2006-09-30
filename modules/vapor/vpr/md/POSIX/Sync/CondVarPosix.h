@@ -48,6 +48,7 @@
 #include <pthread.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
 #include <vpr/Util/Interval.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -178,14 +179,10 @@ public:
     *      condition variable.  If a lock is acquired, the caller controls
     *      the mutex variable.  If it was previously locked, the caller
     *      blocks until it is unlocked.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock was acquired
-    *         successfully.
-    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus acquire()
+   void acquire()
    {
-      return mCondMutex->acquire();
+      mCondMutex->acquire();
    }
 
    /**
@@ -196,12 +193,10 @@ public:
     *       obtains a lock on it.  If it is already locked, the routine
     *       returns immediately to the caller.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock was acquired
-    *         successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the lock could not be
-    *         acquired.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the mutex is already locked.
     */
-   vpr::ReturnStatus tryAcquire()
+   bool tryAcquire()
    {
       return mCondMutex->tryAcquire();
    }
@@ -212,9 +207,9 @@ public:
     *
     * @post The lock held by the caller on the mutex variable is released.
     */
-   vpr::ReturnStatus release()
+   void release()
    {
-      return mCondMutex->release();
+      mCondMutex->release();
    }
 
    /**

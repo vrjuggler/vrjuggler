@@ -33,27 +33,36 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_MUTEX_H_
-#define _VPR_MUTEX_H_
-
-/**
- * \file
- *
- * Include this file to get the full declaration of the platform-specific
- * type that is typedef'd to vpr::Mutex.
- */
+#ifndef _VPR_RESOURCE_EXCEPTION_H_
+#define _VPR_RESOURCE_EXCEPTION_H_
 
 #include <vpr/vprConfig.h>
-
-#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#   include <vpr/md/SPROC/Sync/MutexSGI.h>    
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#   include <vpr/md/POSIX/Sync/MutexPosix.h>
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#   include <vpr/md/NSPR/Sync/MutexNSPR.h>
-#endif
-
-#include <vpr/Sync/NullMutex.h>
+#include <vpr/Util/Exception.h>
 
 
-#endif	/* _VPR_MUTEX_H_ */
+namespace vpr
+{
+
+/**
+ * Exception type thrown if resource allocation fails.
+ *
+ * @since 1.1.28
+ */
+class VPR_CLASS_API ResourceException : public vpr::Exception
+{
+public:
+   ResourceException(const std::string& msg, const std::string& location = "")
+      throw ();
+
+   virtual ~ResourceException() throw ();
+
+   virtual std::string getExceptionName() const
+   {
+      return "vpr::ResourceException";
+   }
+};
+
+}
+
+
+#endif /* _VPR_RESOURCE_EXCEPTION_H_ */
