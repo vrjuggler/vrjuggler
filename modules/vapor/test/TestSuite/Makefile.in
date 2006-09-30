@@ -88,6 +88,7 @@ OPTIM_LFLAGS=	@APP_OPTIM_LFLAGS@
 LINK=		@APP_LINK@ $(LINK_FLAGS)
 LINKALL_ON=	@APP_LINKALL_ON@
 LINKALL_OFF=	@APP_LINKALL_OFF@
+LIBRARY_VERSION=@LIBRARY_VERSION@
 
 # -----------------------------------------------------------------------------
 # Build stuff.
@@ -111,7 +112,7 @@ ifneq (@OS_TYPE@, Win32)
 EXTRA_LIBS+=	-lm
 endif
 
-$(APP): $(ALL_OBJS) $(VPR_BASE_DIR)/lib$(LIBBITSUF)/libvpr.a
+$(APP): $(ALL_OBJS) $(VPR_BASE_DIR)/lib$(LIBBITSUF)/libvpr$(LIBRARY_VERSION).a
 	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(BASIC_LIBS)	\
           $(EXTRA_LIBS)
 
