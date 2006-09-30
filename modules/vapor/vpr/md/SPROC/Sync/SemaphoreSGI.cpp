@@ -35,8 +35,71 @@
 
 #include <vpr/vprConfig.h>
 
+#include <sstream>
+#include <string.h>
+
 #include <vpr/Sync/Semaphore.h>
+#include <vpr/Util/ResourceException.h>
+#include <vpr/md/SPROC/SharedMem/MemPool.h>
 #include <vpr/md/SPROC/Sync/SemaphoreSGI.h>
 
-vpr::MemPoolSGI* vpr::SemaphoreSGI::semaphorePool = NULL;
-int* vpr::SemaphoreSGI::attachedCounter           = NULL;
+namespace vpr
+{
+
+vpr::MemPoolSGI* SemaphoreSGI::mSemaphorePool = NULL;
+int* SemaphoreSGI::mAttachedCounter           = NULL;
+
+SemaphoreSGI::SemaphoreSGI(const int initialValue)
+   : mSema(NULL)
+{
+   // BUG:
+   if ( NULL == mSemaphorePool )
+   {
+      mSemaphorePool = new MemPoolSGI(65536, 32,
+                                      "/var/tmp/memSemaphorePoolSGIXXXXXX");
+      mAttachedCounter =
+         static_cast<int*>(mSemaphorePool->allocate(sizeof(int)));
+      *mAttachedCounter = 0;
+   }
+
+   *mAttachedCounter = *mAttachedCounter + 1;      // Track how many semaphores are allocated
+
+//    DebugLock.acquire();
+//    vprDEBUG << " vpr::SemaphoreSGI::SemaphoreSGI: mAttachedCounter: "
+//             << *mAttachedCounter << endl << vprDEBUG_FLUSH;
+//    DebugLock.release();
+
+   // ----- Allocate the semaphore ----- //
+   mSema = usnewsema(mSemaphorePool->getArena(), initialValue);
+
+   if ( NULL == mSema )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Semaphore allocation failed: " << strerror(errno);
+      throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+   }
+}
+
+SemaphoreSGI::~SemaphoreSGI()
+{
+   // ---- Delete the semaphore --- //
+   usfreesema(mSema, mSemaphorePool->getArena());
+
+   // ---- Deal with the pool --- //
+   *mAttachedCounter = *mAttachedCounter - 1;     // Track how many Semaphore are allocated
+
+//      DebugLock.acquire();
+//      vprDEBUG << "vpr::SemaphoreSGI::~SemaphoreSGI: mAttachedCounter: "
+//               << *mAttachedCounter << endl << vprDEBUG_FLUSH;
+//      DebugLock.release();
+
+   if ( *mAttachedCounter == 0 )
+   {
+      mSemaphorePool->deallocate(mAttachedCounter);
+      mAttachedCounter = NULL;
+      delete mSemaphorePool;
+      mSemaphorePool = NULL;
+   }
+}
+
+}

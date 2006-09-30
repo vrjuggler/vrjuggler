@@ -37,14 +37,18 @@
 #define _VPR_SemaphoreSGI_h_
 
 #include <vpr/vprConfig.h>
-#include <ulocks.h>
 
-#include <vpr/md/SPROC/SharedMem/MemPool.h>
-#include <vpr/Util/ReturnStatus.h>
+#include <assert.h>
+#include <ulocks.h>
+#include <boost/noncopyable.hpp>
+
+#include <vpr/Sync/LockException.h>
 
 
 namespace vpr
 {
+
+class MemPoolSGI;
 
 /** \class SemaphoreSGI SemaphoreSGI.h vpr/Sync/Semaphore.h
  *
@@ -54,7 +58,7 @@ namespace vpr
  *
  * @date January 20, 1997
  */
-class SemaphoreSGI
+class SemaphoreSGI : boost::noncopyable
 {
 public:
    /**
@@ -65,49 +69,13 @@ public:
     *
     * @param initialValue The initial number of resources controlled by the
     *                     semaphore.  If not specified, the default value is 1.
+    *
+    * @throw vpr::ResourceException is thrown if the semaphore cannot be
+    *        allocated.
     */
-   SemaphoreSGI(int initialValue = 1)
-   {
-      // BUG:
-      if (semaphorePool == NULL)
-      {
-         semaphorePool = new MemPoolSGI(65536, 32,
-                                        "/var/tmp/memSemaphorePoolSGIXXXXXX");
-         attachedCounter = static_cast<int*>(semaphorePool->allocate(sizeof(int)));
-         *attachedCounter = 0;
-      }
-      *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
+   SemaphoreSGI(const int initialValue = 1);
 
-//      DebugLock.acquire();
-//      vprDEBUG << " vpr::SemaphoreSGI::SemaphoreSGI: attachedCounter: "
-//               << *attachedCounter << endl << vprDEBUG_FLUSH;
-//      DebugLock.release();
-
-      // ----- Allocate the semaphore ----- //
-      sema = usnewsema(semaphorePool->getArena(), initialValue);
-   }
-
-   ~SemaphoreSGI()
-   {
-      // ---- Delete the semaphore --- //
-      usfreesema(sema, semaphorePool->getArena());
-
-      // ---- Deal with the pool --- //
-      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated
-
-//      DebugLock.acquire();
-//      vprDEBUG << "vpr::SemaphoreSGI::~SemaphoreSGI: attachedCounter: "
-//               << *attachedCounter << endl << vprDEBUG_FLUSH;
-//      DebugLock.release();
-
-      if (*attachedCounter == 0)
-      {
-         semaphorePool->deallocate(attachedCounter);
-         attachedCounter = NULL;
-         delete semaphorePool;
-         semaphorePool = NULL;
-      }
-   }
+   ~SemaphoreSGI();
 
    /**
     * Locks this semaphore.
@@ -117,20 +85,19 @@ public:
     *       suspended until such time as it can be freed and allowed to acquire
     *       the semaphore itself.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @throw vpr::LockException is thrown if the current thread has already
+    *        locked this semaphore.
     */
-   vpr::ReturnStatus acquire() const
+   void acquire()
    {
-      vpr::ReturnStatus status;
+      const int result = uspsema(mSema);
 
-      if ( uspsema(sema) < 0 )
+      if ( result == -1 && ERANGE == errno )
       {
-         std::cerr << "vpr::SemphoreSGI::ERROR:" << std::endl;
-         status.setCode(vpr::ReturnStatus::Fail);
+         throw vpr::LockException("Semaphore queue overflowed", VPR_LOCATION);
       }
 
-      return status;
+      assert(result == 0);
    }
 
    /**
@@ -141,14 +108,11 @@ public:
     *       suspended until such time as it can be freed and allowed to acquire
     *       the semaphore itself.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource read lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned otherwise.
-    *
     * @note There is no special read semaphore for now.
     */
-   vpr::ReturnStatus acquireRead() const
+   void acquireRead()
    {
-      return this->acquire();     // No special "read" semaphore -- For now
+      this->acquire();     // No special "read" semaphore -- For now
    }
 
    /**
@@ -159,12 +123,9 @@ public:
     *       suspended until such time as it can be freed and allowed to acquire
     *       the semaphore itself.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource write lock
-    *         is acquired.  vpr::ReturnStatus::Fail is returned otherwise.
-    *
     * @note There is no special write semaphore for now.
     */
-   vpr::ReturnStatus acquireWrite() const
+   void acquireWrite()
    {
       return this->acquire();     // No special "write" semaphore -- For now
    }
@@ -177,20 +138,12 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a lock is acquired.
-    *         vpr::ReturnStatus::Fail is returned if no resource could be
-    *         locked without blocking.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the semaphore is already locked.
     */
-   vpr::ReturnStatus tryAcquire() const
+   bool tryAcquire()
    {
-      if ( uscpsema(sema) == 1 )
-      {
-         return vpr::ReturnStatus();
-      }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+      return uscpsema(mSema) == 1;
    }
 
    /**
@@ -201,11 +154,10 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a read lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
-    *         could be locked without blocking.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the semaphore is already locked.
     */
-   vpr::ReturnStatus tryAcquireRead() const
+   bool tryAcquireRead()
    {
       return this->tryAcquire();
    }
@@ -218,11 +170,10 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a write lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
-    *         could be locked without blocking.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the semaphore is already locked.
     */
-   vpr::ReturnStatus tryAcquireWrite () const
+   bool tryAcquireWrite()
    {
       return this->tryAcquire();
    }
@@ -233,22 +184,11 @@ public:
     * @pre The semaphore should have been locked before being released.
     * @post The semaphore is released and the thread at the head of the
     *       wait queue is allowed to execute again.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource is
-    *         unlocked successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
     */
-   vpr::ReturnStatus release() const
+   void release()
    {
-      vpr::ReturnStatus status;
-
-      if( usvsema(sema) < 0 )
-      {
-         std::cerr << "vpr::SemaphoreSGI::ERROR:" << std::endl;
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-
-      return status;
+      const int result = usvsema(mSema);
+      assert(result == 0);
    }
 
    /**
@@ -258,23 +198,13 @@ public:
     *
     * @param val The value to which the semaphore is reset.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the resource count is
-    *         reset successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
-    *
     * @note If processes are waiting on the semaphore, the results are
     *       undefined.
     */
-   vpr::ReturnStatus reset(int val)
+   void reset(const int val)
    {
-      if ( usinitsema(sema, val) == 0 )
-      {
-         return vpr::ReturnStatus();
-      }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+      const int result = usinitsema(mSema, val);
+      assert(result == 0);
    }
 
    /**
@@ -291,19 +221,15 @@ public:
    void dump(FILE* dest = stderr,
              const char* message = "\n------ Semaphore Status -----\n") const
    {
-      usdumpsema(sema, dest, message);
+      usdumpsema(mSema, dest, message);
    }
 
 protected:
-   usema_t* sema;
-
-   // = Prevent assignment and initialization.
-   void operator= (const SemaphoreSGI &) {;}
-   SemaphoreSGI (const SemaphoreSGI &) {}
+   usema_t* mSema;
 
    // Problem here.  Fork will not like these.
-   static MemPoolSGI* semaphorePool;
-   static int* attachedCounter;
+   static MemPoolSGI* mSemaphorePool;
+   static int* mAttachedCounter;
 };
 
 } // End of vpr namespace

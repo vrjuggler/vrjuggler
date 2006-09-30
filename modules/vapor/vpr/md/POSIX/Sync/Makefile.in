@@ -52,7 +52,8 @@ SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifeq (@SUBSYSTEM@, POSIX)
     SRCS=	CondVarPosix.cpp	\
-		MutexPosix.cpp
+		MutexPosix.cpp		\
+		SemaphorePosix.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk

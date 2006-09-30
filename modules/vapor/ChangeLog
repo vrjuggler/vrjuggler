@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-09-30 patrick  Removed the use of vpr::ReturnStatus in vpr::Semaphore.
+                    NEW VERSION: 1.1.30
 2006-09-30 patrick  Removed the use of vpr::ReturnStatus in vpr::CondVar.
                     NEW VERSION: 1.1.29
 2006-09-30 patrick  Removed the use of vpr::ReturnStatus in vpr::Mutex.

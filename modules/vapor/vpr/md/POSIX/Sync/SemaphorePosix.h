@@ -45,22 +45,17 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
+#include <stdio.h>
 #include <semaphore.h>
 #include <errno.h>
-#include <stdio.h>
+#include <assert.h>
 
-#include <vpr/Util/ReturnStatus.h>
+#include <vpr/Sync/LockException.h>
 
 #if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 8
 #define VPR_USE_NAMED_SEMAPHORE 1
 #endif
 
-#ifdef VPR_USE_NAMED_SEMAPHORE
-#include <string.h>
-#endif
 
 extern int errno;
 
@@ -86,59 +81,18 @@ public:
     * @param initialValue The initial number of resources controlled by
     *                     the semaphore.  If not specified, the default
     *                     value is 1.
+    *
+    * @throw vpr::ResourceException is thrown if the semaphore cannot be
+    *        allocated.
     */
-   SemaphorePosix(int initialValue = 1)
-   {
-#ifdef VPR_USE_NAMED_SEMAPHORE
-      // Use strdup(3) here so that mktemp(3) can modify the memory.  Trying
-      // to modify a constant string would be bad.
-      // NOTE: The memory allocated by strdup(3) will be released in the
-      // destructor.
-      mSemaFile = mktemp(strdup("/tmp/vprsema.XXXXXX"));
-
-      // ----- Allocate the named semaphore ----- //
-      mSema = sem_open(mSemaFile, O_CREAT, 0600, initialValue);
-
-      if ( mSema == (sem_t*) SEM_FAILED )
-      {
-         perror("sem_init() error");
-      }
-#else
-      // ----- Allocate the unnamed semaphore ----- //
-      mSema = (sem_t*) malloc(sizeof(sem_t));
-
-      if ( sem_init(mSema, 0, initialValue) != 0 )
-      {
-         perror("sem_init() error");
-      }
-#endif
-   }
+   SemaphorePosix(const int initialValue = 1);
 
    /**
     * Destructor for vpr::SemaphorePosix class.
     *
     * @post The resources used by the semaphore variable are freed.
     */
-   ~SemaphorePosix()
-   {
-      // ---- Delete the semaphore --- //
-#ifdef VPR_USE_NAMED_SEMAPHORE
-      if ( sem_close(mSema) != 0 )
-      {
-         perror("sem_close() error");
-      }
-
-      sem_unlink(mSemaFile);
-      free(mSemaFile);
-#else
-      if ( sem_destroy(mSema) != 0 )
-      {
-         perror("sem_destroy() error");
-      }
-
-      free(mSema);
-#endif
-   }
+   ~SemaphorePosix();
 
    /**
     * Locks this semaphore.
@@ -148,10 +102,10 @@ public:
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
-    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
+    * @throw vpr::LockException is thrown if the current thread has already
+    *        locked this semaphore.
     */
-   vpr::ReturnStatus acquire() const
+   void acquire()
    {
       int result;
 
@@ -159,17 +113,16 @@ public:
       {
          result = sem_wait(mSema);
       }
-      while ( result == -1 && errno == EINTR );
+      while ( -1 == result && EINTR == errno );
 
-      if ( result == 0 )
+      if ( -1 == result && EDEADLK == errno )
       {
-         return vpr::ReturnStatus();
+         throw vpr::LockException(
+            "Tried to lock semaphore twice in the same thread", VPR_LOCATION
+         );
       }
-      else
-      {
-         perror("sem_wait() error");
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+
+      assert(result == 0);
    }
 
    /**
@@ -186,9 +139,9 @@ public:
     *
     * @note There is no special read lock for now.
     */
-   vpr::ReturnStatus acquireRead() const
+   void acquireRead()
    {
-      return this->acquire();
+      this->acquire();
    }
 
    /**
@@ -205,7 +158,7 @@ public:
     *
     * @note There is no special write lock for now.
     */
-   vpr::ReturnStatus acquireWrite() const
+   void acquireWrite()
    {
       return this->acquire();
    }
@@ -218,20 +171,36 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is acquired.
-    * @return vpr::ReturnStatus::Fail is returned if the lock is not acquired.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the semaphore is already locked.
     */
-   vpr::ReturnStatus tryAcquire() const
+   bool tryAcquire()
    {
-      if ( sem_trywait(mSema) == 0 )
+      int result;
+
+      do
       {
-         return vpr::ReturnStatus();
+         result = sem_trywait(mSema);
       }
-      else
+      while ( -1 == result && EINTR == errno );
+
+      if ( -1 == result && EDEADLK == errno )
       {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+         throw vpr::LockException(
+            "Tried to lock semaphore twice in the same thread", VPR_LOCATION
+         );
       }
+
+#if defined(_DEBUG)
+      // If we are in an error state other than EAGAIN, something is very
+      // wrong.
+      if ( -1 == result && EAGAIN != errno )
+      {
+         assert(false);
+      }
+#endif
+
+      return result == 0;
    }
 
    /**
@@ -242,11 +211,10 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is acquired.
-    * @return vpr::ReturnStatus::Fail is returned if the lock is not acquired.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the semaphore is already locked.
     */
-   vpr::ReturnStatus tryAcquireRead() const
+   bool tryAcquireRead()
    {
       return this->tryAcquire();
    }
@@ -259,11 +227,10 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is acquired.
-    * @return vpr::ReturnStatus::Fail is returned if the lock is not acquired.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the semaphore is already locked.
     */
-   vpr::ReturnStatus tryAcquireWrite() const
+   bool tryAcquireWrite()
    {
       return this->tryAcquire();
    }
@@ -274,21 +241,11 @@ public:
     * @pre The semaphore should have been locked before being released.
     * @post The semaphore is released and the thread at the haed of the
     *       wait queue is allowed to execute again.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock on this
-    *         semaphore is released.
-    * @return vpr::ReturnStatus::Fail is returned if an error occurred.
     */
-   vpr::ReturnStatus release() const
+   void release()
    {
-      if ( sem_post(mSema) == 0 )
-      {
-         return vpr::ReturnStatus();
-      }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+      const int result = sem_post(mSema);
+      assert(result == 0);
    }
 
    /**
@@ -298,43 +255,13 @@ public:
     *
     * @param val The value to which the semaphore is reset.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this semaphore is
-    *         reset with the given value successfully.
-    * @return vpr::ReturnStatus::Fail is returned if this semaphore could not
-    *         be reset.
+    * @throw vpr::ResourceException is thrown if the semaphore cannot be
+    *        reset.
     *
     * @note If processes are waiting on the semaphore, the results are
     *       undefined.
     */
-   vpr::ReturnStatus reset(int val)
-   {
-      vpr::ReturnStatus status;
-
-#ifdef VPR_USE_NAMED_SEMAPHORE
-      // First destroy the current semaphore.
-      sem_unlink(mSemaFile);
-
-      // Now recreate it with the new value in val.
-      mSema = sem_open(mSemaFile, O_CREAT, 0600, val);
-
-      if ( mSema == (sem_t*) SEM_FAILED )
-      {
-         perror("sem_init() error");
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-#else
-      // First destroy the current semaphore.
-      sem_destroy(mSema);
-
-      // Now recreate it with the new value in val.
-      if ( sem_init(mSema, 0, val) != 0 )
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-#endif
-
-      return status;
-   }
+   void reset(const int val);
 
    /**
     * Dumps the semaphore debug stuff and current state.

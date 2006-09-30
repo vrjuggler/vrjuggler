@@ -40,6 +40,8 @@
 
 #include <stdio.h>
 #include <pratom.h>
+#include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <vpr/Sync/CondVar.h>
 
@@ -52,7 +54,7 @@ namespace vpr
  * Wrapper for semaphores implemented using condition variables.  This is
  * typedef'd to vpr::Semaphore.
  */
-class VPR_CLASS_API SemaphoreNSPR
+class SemaphoreNSPR : boost::noncopyable
 {
 public:
    /**
@@ -64,9 +66,11 @@ public:
     * @param initialValue The initial number of resources controlled by the
     *                     semaphore.  If not specified, the default value is 1.
     */
-   SemaphoreNSPR(int initialValue = 1)
+   SemaphoreNSPR(const int initialValue = 1)
    {
-      mCondVar = new CondVar;
+      // Use a shared pointer since the vpr::CondVar constructor may throw an
+      // exception.
+      mCondVar = boost::shared_ptr<CondVar>(new CondVar);
       PR_AtomicSet(&mValue, initialValue);
    }
 
@@ -77,7 +81,7 @@ public:
     */
    ~SemaphoreNSPR()
    {
-      delete mCondVar;
+      /* Do nothing. */ ;
    }
 
    /**
@@ -87,22 +91,19 @@ public:
     *       is called, or the caller is put at the tail of a wait and is
     *       suspended until such time as it can be freed and allowed to acquire
     *       the semaphore itself.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus acquire()
+   void acquire()
    {
       mCondVar->acquire();
       PR_AtomicDecrement(&mValue);
 
+      // Block until mValue is greater than or equal to 0. (mValue is
+      // incremented through calls to release().)
       while ( mValue < 0 )
       {
          mCondVar->wait();
       }
       mCondVar->release();
-
-      return vpr::ReturnStatus();
    }
 
    /**
@@ -113,14 +114,11 @@ public:
     *       suspended until such time as it can be freed and allowed to acquire
     *       the semaphore itself.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource read lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned otherwise.
-    *
     * @note There is no special read semaphore for now.
     */
-   vpr::ReturnStatus acquireRead()
+   void acquireRead()
    {
-      return this->acquire();
+      this->acquire();
    }
 
    /**
@@ -131,14 +129,11 @@ public:
     *       suspended until such time as it can be freed and allowed to acquire
     *       the semaphore itself.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource write lock
-    *         is acquired.  vpr::ReturnStatus::Fail is returned otherwise.
-    *
     * @note There is no special write semaphore for now.
     */
-   vpr::ReturnStatus acquireWrite()
+   void acquireWrite()
    {
-      return this->acquire();
+      this->acquire();
    }
 
    /**
@@ -149,20 +144,22 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a lock is acquired.
-    *         vpr::ReturnStatus::Fail is returned if no resource could be
-    *         locked without blocking.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the mutex is already locked.
     */
-   vpr::ReturnStatus tryAcquire()
+   bool tryAcquire()
    {
-      vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+      bool result(false);
 
+      // Only try to acquire the lock if mValue is greater than or equal to 0.
+      // Otherwise, the call to acquire() would block.
       if ( mValue >= 0 )
       {
-         status = this->acquire();
+         this->acquire();
+         result = true;
       }
 
-      return status;
+      return result;
    }
 
    /**
@@ -173,11 +170,10 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a read lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
-    *         could be locked without blocking.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the mutex is already locked.
     */
-   vpr::ReturnStatus tryAcquireRead()
+   bool tryAcquireRead()
    {
       return this->tryAcquire();
    }
@@ -190,11 +186,10 @@ public:
     *       locked, the routine returns immediately without suspending the
     *       calling thread.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a write lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
-    *         could be locked without blocking.
+    * @return \c true is returned if the lock is acquired, and \c false is
+    *         returned if the mutex is already locked.
     */
-   vpr::ReturnStatus tryAcquireWrite()
+   bool tryAcquireWrite()
    {
       return this->tryAcquire();
    }
@@ -205,21 +200,15 @@ public:
     * @pre The semaphore should have been locked before being released.
     * @post The semaphore is released and the thread at the head of the
     *       wait queue is allowed to execute again.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if a resource is
-    *         unlocked successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
     */
-   vpr::ReturnStatus release()
+   void release()
    {
-      vpr::ReturnStatus status;
-
       mCondVar->acquire();
-      PR_AtomicIncrement(&mValue);
-      status = mCondVar->signal();
+      {
+         PR_AtomicIncrement(&mValue);
+         mCondVar->signal();
+      }
       mCondVar->release();
-
-      return status;
    }
 
    /**
@@ -229,23 +218,17 @@ public:
     *
     * @param val The value to which the semaphore is reset.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the resource count is
-    *         reset successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
-    *
     * @note If processes are waiting on the semaphore, the results are
     *       undefined.
     */
-   vpr::ReturnStatus reset(int val)
+   void reset(const int val)
    {
-      vpr::ReturnStatus status;
-
       mCondVar->acquire();
-      PR_AtomicSet(&mValue, val);
-      status = mCondVar->broadcast();
+      {
+         PR_AtomicSet(&mValue, val);
+         mCondVar->broadcast();
+      }
       mCondVar->release();
-
-      return status;
    }
 
    /**
@@ -267,19 +250,9 @@ public:
    }
 
 protected:
-   CondVar*  mCondVar;     /**< Semaphore simulator variable for the class */
+   /** Semaphore simulator variable for the class. */
+   boost::shared_ptr<CondVar> mCondVar;
    PRInt32   mValue;       /**< The resource count */
-
-   // Prevent assignment and initialization.
-   void operator= (const SemaphoreNSPR &)
-   {
-      /* Do nothing. */ ;
-   }
-
-   SemaphoreNSPR(const SemaphoreNSPR &)
-   {
-      /* Do nothing. */ ;
-   }
 };
 
 } // End of vpr namespace
