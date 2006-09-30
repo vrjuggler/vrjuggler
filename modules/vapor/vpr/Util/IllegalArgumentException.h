@@ -44,7 +44,8 @@ namespace vpr
 {
 
 /**
- * Exception type thrown if an I/O operation times out.
+ * Exception type thrown if an illegal/invalid argument is passed in to a
+ * function.
  *
  * @since 1.1.11
  */
