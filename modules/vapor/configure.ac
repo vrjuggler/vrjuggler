@@ -916,7 +916,7 @@ vpr_lib_name="vpr$LIBRARY_VERSION"
 vpr_prof_lib_name="vpr_p$LIBRARY_VERSION"
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                VPR_BASE_DIR, $DEFS, $INCLUDES, $ABI_FLAGS)
+                VPR_BASE_DIR, $DEFS, $INCLUDES, $ABI_FLAGS, $HEADER_VERSION)
 VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
               [VPR_BASE_DIR], [$vpr_lib_name], [$APP_EXTRA_LIBS])
 

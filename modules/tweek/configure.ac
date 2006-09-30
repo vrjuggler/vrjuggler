@@ -1244,7 +1244,7 @@ fi
 # Put together the basic information needed to compile Tweek applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS $IDL_GEN_INCLUDES, $DBG_FLAGS,
                 $OPT_FLAGS, TWEEK_BASE_DIR, $DEFS $EXTRA_DEFS, $INCLUDES,
-                $ABI_FLAGS)
+                $ABI_FLAGS, $HEADER_VERSION)
 VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
                      [$LDOPTS_OPT], ['$(TWEEK_LIBS_MIN)'],
                      [$APP_EXTRA_LIBS])

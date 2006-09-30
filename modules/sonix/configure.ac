@@ -240,12 +240,15 @@ else
    APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS $LIBS $VPR_EXTRA_LIBS"
 fi
 
+snx_lib_name="sonix$LIBRARY_VERSION"
+snx_prof_lib_name="sonix_p$LIBRARY_VERSION"
+
 # Put together the basic information needed to compile Sonix applications.
 VJ_APP_COMPILER([$CC], [$CFLAGS], [$CXX], [$CXXFLAGS], [$DBG_FLAGS],
                 [$OPT_FLAGS], [SNX_BASE_DIR], [$DEFS], [$INCLUDES],
-                [${_EXTRA_FLAGS}])
+                [${_EXTRA_FLAGS}], [$HEADER_VERSION])
 VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
-              [SNX_BASE_DIR], [snx], [$APP_EXTRA_LIBS])
+              [SNX_BASE_DIR], [$snx_lib_name], [$APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(SNX_BASE_DIR)'
@@ -299,9 +302,6 @@ fi
 # to make it break.
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 SNX_SHARE_DIR="$data_subdir/$DATA_VERSION"
-
-snx_lib_name="sonix$LIBRARY_VERSION"
-snx_prof_lib_name="sonix_p$LIBRARY_VERSION"
 
 # Information needed to generate sonix-config.
 case $OS_TYPE in

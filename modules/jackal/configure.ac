@@ -293,6 +293,9 @@ else
     jccl_extra_libs="$LDFLAGS $LIBS"
 fi
 
+jccl_lib_name="jccl$LIBRARY_VERSION"
+jccl_prof_lib_name="jccl_p$LIBRARY_VERSION"
+
 # Variables set in Makefiles found in the application trees.  All variables
 # listed are for use only in the Makefile.in's found in that tree unless
 # otherwise noted.  They are used in the following way:
@@ -302,9 +305,9 @@ fi
 # Put together the basic information needed to compile JCCL applications.
 VJ_APP_COMPILER([$CC], [$CFLAGS], [$CXX], [$CXXFLAGS], [$DBG_FLAGS],
                 [$OPT_FLAGS], [JCCL_BASE_DIR], [$DEFS], [$INCLUDES],
-                [${_EXTRA_FLAGS}])
+                [${_EXTRA_FLAGS}], [$HEADER_VERSION])
 VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
-              [JCCL_BASE_DIR], [jccl], [$APP_EXTRA_LIBS])
+              [JCCL_BASE_DIR], [$jccl_lib_name], [$APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(JCCL_BASE_DIR)'
@@ -355,9 +358,6 @@ fi
 # to make it break.
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 JCCL_SHARE_DIR="$data_subdir/$DATA_VERSION"
-
-jccl_lib_name="jccl$LIBRARY_VERSION"
-jccl_prof_lib_name="jccl_p$LIBRARY_VERSION"
 
 # Information needed to generate jccl-config.
 case $OS_TYPE in

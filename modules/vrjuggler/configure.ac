@@ -417,7 +417,7 @@ fi
 
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $VJ_APP_CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                VJ_BASE_DIR, $DEFS, , ${_EXTRA_FLAGS})
+                VJ_BASE_DIR, $DEFS, , ${_EXTRA_FLAGS}, $HEADER_VERSION)
 VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
                      [$LDOPTS_OPT], ['$(VRJ_LIBS)'],
                      [$VJ_APP_EXTRA_LIBS])

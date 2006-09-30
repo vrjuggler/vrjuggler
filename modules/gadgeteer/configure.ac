@@ -247,8 +247,6 @@ fi
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-
-
 CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
@@ -319,7 +317,8 @@ if test "x$OS_TYPE" = "xUNIX" ; then
    fi
 fi
 
-
+gadget_lib_name="gadget$LIBRARY_VERSION"
+gadget_prof_lib_name="gadget_p$LIBRARY_VERSION"
 
 # Remove duplicated arguments from each of the following.  This can help speed
 # up compile times, and it reduces the (perceived) complexity of the commands.
@@ -334,9 +333,10 @@ VJ_STRIP_DUPLICATE_ARGS(gadget_cxxflags, [$gadget_cxxflags])
 
 # Put together the basic information needed to compile Gadgeteer applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                GADGET_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+                GADGET_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS},
+                $HEADER_VERSION)
 VJ_APP_LINKER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG], [$LDOPTS_OPT],
-              [GADGET_BASE_DIR], [gadget], [$APP_EXTRA_LIBS])
+              [GADGET_BASE_DIR], [$gadget_lib_name], [$APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
@@ -380,9 +380,6 @@ fi
 # to make it break.
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 GADGET_SHARE_DIR="$data_subdir/$DATA_VERSION"
-
-gadget_lib_name="gadget$LIBRARY_VERSION"
-gadget_prof_lib_name="gadget_p$LIBRARY_VERSION"
 
 # Information needed to generate gadgeteer-config.
 case $OS_TYPE in
