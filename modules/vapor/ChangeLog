@@ -1,7 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-09-30 patrick  Removed the use of vpr::ReturnStatus in vpr::CondVar.
+                    NEW VERSION: 1.1.29
 2006-09-30 patrick  Removed the use of vpr::ReturnStatus in vpr::Mutex.
-                    Introduced a new exception type vpr::ResourceException.
+                    Introduced new exception types vpr::ResourceException and
+                    vpr::LockException.
                     NEW VERSION: 1.1.28
 2006-08-23 patrick  Fixed bugs in the NSPR socket classes related to timeouts
                     on blocking sockets when using the WINNT configuration of

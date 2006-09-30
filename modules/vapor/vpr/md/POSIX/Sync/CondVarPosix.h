@@ -44,11 +44,15 @@
 #define _VPR_COND_VAR_POSIX_H_
 
 #include <vpr/vprConfig.h>
+
 #include <stdlib.h>
+#include <assert.h>
 #include <pthread.h>
+#include <boost/noncopyable.hpp>
+
+#include <vpr/Sync/LockException.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -60,58 +64,67 @@ namespace vpr
  * condition variables for the implementation.  This is typedef'd to
  * vpr::CondVar.
  */
-class VPR_CLASS_API CondVarPosix
+class CondVarPosix : boost::noncopyable
 {
 public:
    /**
     * Constructor for vpr::CondVarPosix class.
     *
     * @post The condition variable is intialized, and the mutex variable
-    *       associated with it is defined.  These two steps must be done
-    *       before any other member functions can use them.
+    *       associated with it is defined. The condition variable operations
+    *       will not fail.
     *
     * @param mutex Pointer to a vpr::MutexPosix variable that is used in
     *              association with this condition variable in this class
     *              (optional).
+    *
+    * @throw vpr::ResourceException is thrown if the condition variable cannot
+    *        be allocated.
     */
-   CondVarPosix(MutexPosix* mutex = NULL)
-   {
-      // Initialize the condition variable.
-      pthread_cond_init(&mCondVar, NULL);
-
-      // If the caller did not specify a mutex variable to use with
-      // the condition variable, use mDefaultMutex.
-      if ( mutex == NULL )
-      {
-         mutex = &mDefaultMutex;
-      }
-
-      mCondMutex = mutex;
-   }
+   CondVarPosix(MutexPosix* mutex = NULL);
 
    /**
     * Destructor for vpr::CondVarPosix class.
     *
+    * @pre This condition variable is not locked by another thread.
     * @post The condition variable is destroyed.
     */
    ~CondVarPosix()
    {
-      pthread_cond_destroy(&mCondVar);
+      const int result = pthread_cond_destroy(&mCondVar);
+      assert(result == 0);
    }
 
    /**
-    * Blocks on a condition.
+    * Wait for possible condition change. The lock asociated with this
+    * condition variable must be held prior to invoking this method. When
+    * invoked, the lock on the variable is released, and the calling thread
+    * is blocked until another thread informs it that the condition has
+    * changed or until the timeout expires.
     *
     * @pre The mutex variable associated with this condition variable must be
     *      locked.
-    * @post The condition variable is locked.  If it was previously locked,
-    *       the caller blocks until signaled.
+    * @post The condition variable is locked. If it was previously locked,
+    *       the caller blocks until signaled. The condition has been modified,
+    *       but it may not be satisfied.
     *
-    * @return vpr::ReturnStatus::Succeed is returned after blocking.
-    * @return vpr::ReturnStatus::Fail is returned if an error occurred when
-    *         trying to wait on the condition variable.
+    * @param timeToWait The time to wait on the condition. This parameter is
+    *                   optional and defaults to vpr::Interval::NoTimeout
+    *                   (block indefinitely) if not given.
+    *
+    * @return \c true is returned if the condition variable is locked.
+    *         \c false is returned if the wait operation times out before
+    *         acquiring the lock.
+    *
+    * @throw vpr::IllegalArgumentException is thrown if \p timeToWait is not
+    *        vpr::Interval::NoTimeout and an invalid value is passed to
+    *        pthread_cond_timedwait().
+    * @throw vpr::Exception is thrown if something goes wrong while trying to
+    *        wait on the condition variable.
+    *
+    * @note This call blocks until a condition change has been signaled.
     */
-   vpr::ReturnStatus wait(vpr::Interval timeToWait = vpr::Interval::NoTimeout);
+   bool wait(const vpr::Interval& timeToWait = vpr::Interval::NoTimeout);
 
    /**
     * Signals a thread waiting on this condition variable.
@@ -120,55 +133,43 @@ public:
     * @post The condition variable is unlocked, and a signal is sent to a
     *       thread waiting on it.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the signal is sent
-    *         successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the signalling failed.
+    * @throw vpr::LockException is thrown if the mutex for this condition
+    *        variable was not locked prior to invoking this method.
     */
-   vpr::ReturnStatus signal()
+   void signal()
    {
-      // ASSERT:  We have been locked
-      if ( pthread_cond_signal(&mCondVar) == 0 )
+      if ( ! mCondMutex->test() )
       {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Succeed);
+         throw vpr::LockException("Condition variable mutex must be locked",
+                                  VPR_LOCATION);
       }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+
+      const int result = pthread_cond_signal(&mCondVar);
+      assert(result == 0);
    }
 
    /**
     * Signals all waiting threads.
     *
     * @pre The mutex variable associated with this condition variable
-    *      should be locked.
+    *      must be locked.
     * @post The condition variable is unlocked, and all waiting threads
     *       are signaled of this event.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a signal was broadcast
-    *         to all waiting threads successfully.
-    * @return vpr::ReturnStatus::Fail is returned to indicate an error with the
-    *         signal broadcast.
+    * @throw vpr::LockException is thrown if the mutex for this condition
+    *        variable was not locked prior to invoking this method.
     */
-   vpr::ReturnStatus broadcast()
+   void broadcast()
    {
       // ASSERT:  We have been locked
-
-      // If not locked ...
-      if ( mCondMutex->test() == 0 )
+      if ( ! mCondMutex->test() )
       {
-         std::cerr << "vpr::CondVarPosix::broadcast: Mutex was not locked when "
-                   << "broadcast called!!!\n";
+         throw vpr::LockException("Condition variable mutex must be locked",
+                                  VPR_LOCATION);
       }
 
-      if ( pthread_cond_broadcast(&mCondVar) == 0 )
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Succeed);
-      }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+      const int result = pthread_cond_broadcast(&mCondVar);
+      assert(result == 0);
    }
 
    /**
@@ -176,9 +177,9 @@ public:
     * variable.
     *
     * @post A lock is acquired on the mutex variable associated with the
-    *      condition variable.  If a lock is acquired, the caller controls
-    *      the mutex variable.  If it was previously locked, the caller
-    *      blocks until it is unlocked.
+    *       condition variable.  If a lock is acquired, the caller controls
+    *       the mutex variable.  If it was previously locked, the caller
+    *       blocks until it is unlocked.
     */
    void acquire()
    {
@@ -186,7 +187,7 @@ public:
    }
 
    /**
-    * Try to acquire a lock on the mutex variable associated with this
+    * Tries to acquire a lock on the mutex variable associated with this
     * condition variable.
     *
     * @post If the mutex variable is not already locked, the caller
@@ -206,6 +207,8 @@ public:
     * variable.
     *
     * @post The lock held by the caller on the mutex variable is released.
+    *
+    * @see vpr::MutexPosix::release()
     */
    void release()
    {
@@ -232,8 +235,14 @@ public:
       mCondMutex = mutex;
    }
 
-   /** Tests the mutex to see if it is held. */
-   int test()
+   /**
+    * Tests the mutex associated with this condition variable to see if it
+    * is held.
+    *
+    * @return \c false is returned if this mutex is not currently locked.
+    *         \c true is returned if it is.
+    */
+   bool test() const
    {
       return mCondMutex->test();
    }
@@ -254,10 +263,6 @@ private:
    pthread_cond_t mCondVar;      /**< Condition variable */
    MutexPosix*    mCondMutex;    /**< Mutex for the condition variable */
    MutexPosix     mDefaultMutex; /**< A default mutex variable */
-
-   // = Prevent assignment and initialization.
-   void operator= (const CondVarPosix&) {;}
-   CondVarPosix(const CondVarPosix&) {;}
 };
 
 } // End of vpr namespace

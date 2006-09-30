@@ -51,7 +51,9 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifeq (@SUBSYSTEM@, NSPR)
-   SRCS=	RWMutexNSPR.cpp
+SRCS=		CondVarNSPR.cpp		\
+		MutexNSPR.cpp		\
+		RWMutexNSPR.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk

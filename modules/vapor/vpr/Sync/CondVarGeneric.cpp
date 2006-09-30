@@ -37,9 +37,14 @@
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
+#include <vpr/Util/Debug.h>
 #include <vpr/Sync/CondVarGeneric.h>
 
+
+namespace vpr
+{
 
 /**
  * Waits for possible condition change.
@@ -47,14 +52,15 @@
  * @post The condition has been modifed, but may not be satisfied.
  * @note The call blocks until a condition has been signaled
  */
-vpr::ReturnStatus vpr::CondVarGeneric::wait(vpr::Interval timeToWait)
+void CondVarGeneric::wait(const vpr::Interval& timeToWait)
 {
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
-   if ( mCondMutex->test() == 0 )    // Not locked
+   if ( ! mCondMutex->test() )    // Not locked
    {
-      std::cerr << " vpr::CondVarGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!"
-                << std::endl;
+      std::ostringstream msg_stream;
+      msg_stream << "Condition variable mutex must be locked before calling "
+                 << "wait()";
    }
 
    mWaiters++;              // We have lock already
@@ -71,4 +77,19 @@ vpr::ReturnStatus vpr::CondVarGeneric::wait(vpr::Interval timeToWait)
 
    std::cerr << std::setw(5) << getpid() << "  Wait: end:" << std::endl;
    return vpr::ReturnStatus();
+}
+
+void CondVarGeneric::dump() const
+{
+   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "------------- vpr::CondVarGeneric::Dump ---------\n"
+      << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "mWaiters: "
+                                             << mWaiters << std::endl
+                                             << vprDEBUG_FLUSH;
+   mCondMutex->dump();
+   vprDEBUG_END(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "-----------------------------------\n" << vprDEBUG_FLUSH;
+}
+
 }

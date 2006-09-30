@@ -35,51 +35,81 @@
 
 #include <vpr/vprConfig.h>
 
-#include <string.h>
+#include <sstream>
+#include <cstring>
 #include <sys/time.h>
 
-#include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/ResourceException.h>
+#include <vpr/Util/IllegalArgumentException.h>
 #include <vpr/md/POSIX/Sync/CondVarPosix.h>
 
 
 namespace vpr
 {
 
-vpr::ReturnStatus CondVarPosix::wait(vpr::Interval timeToWait)
+CondVarPosix::CondVarPosix(MutexPosix* mutex)
+   : mCondMutex(NULL)
 {
-   // ASSERT:  We have been locked
-   vpr::ReturnStatus status;
+   // Initialize the condition variable.
+   const int result = pthread_cond_init(&mCondVar, NULL);
+
+   if ( result != 0 )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Condition variable allocation failed: "
+                 << std::strerror(result);
+      throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+   }
+
+   // If the caller did not specify a mutex variable to use with
+   // the condition variable, use mDefaultMutex.
+   if ( mutex == NULL )
+   {
+      mutex = &mDefaultMutex;
+   }
+
+   mCondMutex = mutex;
+}
+
+bool CondVarPosix::wait(const vpr::Interval& timeToWait)
+{
+   bool result(true);
 
    // If not locked ...
-   if ( mCondMutex->test() == 0 )
+   if ( ! mCondMutex->test() )
    {
-      std::cerr << "[vpr::CondVarPosix::wait()] INCORRECT USAGE: Mutex was not "
-                << "locked when wait invoked!!!\n";
-
-      status.setCode(vpr::ReturnStatus::Fail);
+      std::ostringstream msg_stream;
+      msg_stream << "Condition variable mutex must be locked before calling "
+                 << "wait()";
+      throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
    }
+   // The mutex variable must be locked when passed to pthread_cond_wait().
    else
    {
-      // The mutex variable must be locked when passed to
-      // pthread_cond_wait().
+      // Wait indefinitely on the condition variable.
       if ( vpr::Interval::NoTimeout == timeToWait )
       {
-         int retcode = pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex));
+         const int retcode = pthread_cond_wait(&mCondVar, &mCondMutex->mMutex);
+
+         // If pthread_cond_wait(3) returned non-zero status, then we throw
+         // an exception. Otherwise, we return true.
          if ( retcode != 0 )
          {
 #ifdef HAVE_STRERROR_R
             char error_str[255];
             strerror_r(retcode, error_str, 254);
 #else
-            char* error_str = strerror(retcode);
+            char* error_str = std::strerror(retcode);
 #endif
-            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-               << "[vpr::CondVarPosix::wait()] Unexpected error: "
-               << error_str << std::endl << vprDEBUG_FLUSH;
-            status.setCode(vpr::ReturnStatus::Fail);
+            std::ostringstream msg_stream;
+            msg_stream << "Unexpected error in vpr::CondVarPosix::wait(): "
+                       << error_str;
+            throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
          }
       }
+      // Wait for no longer than the given timeout period to acquire the lock
+      // on the condition variable.
       else
       {
          struct timeval  now;                // The current time
@@ -90,16 +120,16 @@ vpr::ReturnStatus CondVarPosix::wait(vpr::Interval timeToWait)
          // Calculate the absolute time for wait timeout
          gettimeofday(&now, NULL);
 
-         // - Calculate the amount of usecs left as fractional seconds from
-         //   wait time
-         // - Calcualte the absolute time number of usecs
-         // - If greater then a second then addon on those seconds to abs
-         //   seconds
-         // - Add on the waiting secons and the current time in seconds
+         // - Calculate the amount of microseconds left as fractional seconds
+         //   from wait time.
+         // - Calcualte the absolute time number of microseconds.
+         // - If greater then a second, then add on on those seconds to abs
+         //   seconds.
+         // - Add on the waiting seconds and the current time in seconds.
          vpr::Uint64 abs_secs(0);
          const vpr::Uint64 left_over_usecs = timeToWait.usec() % UsecsPerSec;
          vpr::Uint64 abs_usecs = now.tv_usec + left_over_usecs;
-         if(abs_usecs > UsecsPerSec)    // Have extra seconds
+         if ( abs_usecs > UsecsPerSec )    // Have extra seconds
          {
             abs_secs = abs_usecs / UsecsPerSec;    // Get the number of seconds
             abs_usecs = abs_usecs % UsecsPerSec;
@@ -111,41 +141,52 @@ vpr::ReturnStatus CondVarPosix::wait(vpr::Interval timeToWait)
          vprASSERT(abs_timeout.tv_nsec < vpr::Int64(UsecsPerSec * 1000) &&
                    "Nano seconds out of range (greater then one second).");
 
-         int retcode = pthread_cond_timedwait(&mCondVar, &(mCondMutex->mMutex),
-                                              &abs_timeout);
+         const int retcode = pthread_cond_timedwait(&mCondVar,
+                                                    &mCondMutex->mMutex,
+                                                    &abs_timeout);
 
-         if(0 == retcode)
+         // Successful completion: return true.
+         if ( 0 == retcode )
          {
-            status.setCode(vpr::ReturnStatus::Succeed);
+            result = true;
          }
-         else if(ETIMEDOUT == retcode)
+         // Timeout: return false.
+         else if ( ETIMEDOUT == retcode )
          {
-            status.setCode(vpr::ReturnStatus::Timeout);
+            result = false;
          }
-         else if(EINVAL == retcode)
-         {
-            status.setCode(vpr::ReturnStatus::Fail);
-            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-               << "[vpr::CondVarPosix::wait()] Invalid value.\n"
-               << vprDEBUG_FLUSH;
-         }
+         // Throw an exception.
          else
          {
+            // Get the error description to include with the exception
+            // message.
 #ifdef HAVE_STRERROR_R
             char error_str[255];
             strerror_r(retcode, error_str, 254);
 #else
-            char* error_str = strerror(retcode);
+            char* error_str = std::strerror(retcode);
 #endif
-            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-               << "[vpr::CondVarPosix::wait()] Unexpected error: "
-               << error_str << std::endl << vprDEBUG_FLUSH;
-            status.setCode(vpr::ReturnStatus::Fail);
+
+            // Invalid argument passed to pthread_cond_timedwait(3).
+            if ( EINVAL == retcode )
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Invalid value error: " << error_str;
+               throw vpr::IllegalArgumentException(msg_stream.str(),
+                                                   VPR_LOCATION);
+            }
+            // Some other error.
+            else
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Unexpected error: " << error_str;
+               throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+            }
          }
       }
    }
 
-   return status;
+   return result;
 }
 
 } // End of vpr namespace
