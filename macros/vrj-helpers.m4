@@ -628,7 +628,7 @@ dnl
 dnl     * APP_EXTRA_CFLAGS: Extra flags for the compiler.
 dnl
 dnl Usage
-dnl     VJ_APP_COMPILER(C-compiler, C-flags, C++-compiler, C++-flags, debug-flags, optimization-flags, base-dir, defs, includes, extra-flags)
+dnl     VJ_APP_COMPILER(C-compiler, C-flags, C++-compiler, C++-flags, debug-flags, optimization-flags, base-dir, defs, includes, extra-flags, header-subdir)
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([VJ_APP_COMPILER],
 [
@@ -652,7 +652,7 @@ AC_DEFUN([VJ_APP_COMPILER],
     APP_DEBUG_CFLAGS="$5 -D_DEBUG"
     APP_OPTIM_CFLAGS="$6 -D_OPT -DNDEBUG"
     APP_DEFS="$8"
-    APP_INCLUDES=ifelse([$7], , "$9", "-I\$($7)/include $9")
+    APP_INCLUDES=ifelse([$7], , "$9", "-I\$($7)/include/$11 $9")
     APP_EXTRA_CFLAGS="$10"
 
     AC_SUBST(APP_CC)
