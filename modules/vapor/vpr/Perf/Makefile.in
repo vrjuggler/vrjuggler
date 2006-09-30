@@ -48,15 +48,11 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-# Prefix for recursive stuff.
-DIRPRFX=	vpr/Perf/
-
 SRCS=		ProfileIterator.cpp	 \
 		ProfileManager.cpp	  \
 		ProfileNode.cpp
-		
 
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
