@@ -297,7 +297,6 @@ void SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
 void SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size)
    const
 {
-   vpr::ReturnStatus retval;
    DCB dcb;
    if ( GetCommState(mHandle, &dcb) )
    {
@@ -334,7 +333,6 @@ void SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption
 // include the parity bit (if any).
 void SerialPortImplWin32::setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb)
 {
-   vpr::ReturnStatus retval;
    DCB dcb;
    GetCommState(mHandle, &dcb);
    switch ( bpb )
@@ -658,7 +656,6 @@ bool SerialPortImplWin32::getBadByteIgnoreState() const
 // Enable ignoring of received bytes with framing errors or parity errors.
 void SerialPortImplWin32::setBadByteIgnore(bool flag)
 {
-   vpr::ReturnStatus s;
    DCB dcb;
    GetCommState(mHandle, &dcb);
    dcb.fErrorChar = flag;
