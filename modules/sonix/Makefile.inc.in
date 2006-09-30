@@ -253,6 +253,7 @@ endif
 clean-version-links:
 	@rm -rf $(instlinks)/include/sonix* $(instlinks)/lib*/sonix*	\
            $(instlinks)/$(data_subdir)/sonix*
+	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/sonix*
 	@for l in $(LIBS) ; do						\
             find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
          done

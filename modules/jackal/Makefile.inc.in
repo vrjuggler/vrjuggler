@@ -274,6 +274,7 @@ endif
 clean-version-links:
 	@rm -rf $(instlinks)/include/jccl* $(instlinks)/lib*/jccl*	\
            $(instlinks)/$(data_subdir)/jccl*
+	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/jccl*
 	@for l in $(LIBS) ; do						\
             find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
          done

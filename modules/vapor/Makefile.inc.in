@@ -225,6 +225,7 @@ endif
 
 clean-version-links:
 	@rm -rf $(instlinks)/include/vpr* $(instlinks)/$(data_subdir)/vpr*
+	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/vpr*
 	@for l in $(LIBS) ; do						\
             find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
          done

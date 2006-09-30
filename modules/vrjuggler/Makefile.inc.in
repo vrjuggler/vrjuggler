@@ -394,6 +394,7 @@ clean-version-links:
 	@rm -rf $(instlinks)/include/vrjuggler*				\
            $(instlinks)/lib*/vrjuggler*					\
            $(instlinks)/$(data_subdir)/vrjuggler*
+	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/vrjuggler*
 	@for l in $(LIBS) ; do						\
             find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
          done

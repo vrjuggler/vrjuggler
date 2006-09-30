@@ -335,6 +335,7 @@ endif
 
 clean-version-links:
 	@rm -rf $(instlinks)/include/tweek* $(instlinks)/$(data_subdir)/tweek*
+	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/tweek*
 	@for l in $(LIBS) ; do						\
             find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
          done

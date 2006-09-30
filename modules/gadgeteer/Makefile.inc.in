@@ -260,6 +260,7 @@ clean-version-links:
 	@rm -rf $(instlinks)/include/gadgeteer*				\
            $(instlinks)/lib*/gadgeteer*					\
            $(instlinks)/$(data_subdir)/gadgeteer*
+	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/gadgeteer*
 	@for l in $(LIBS) ; do						\
             find $(instlinks) -name "$$l*" -exec rm {} ';' ;		\
          done
