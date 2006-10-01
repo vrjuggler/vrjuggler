@@ -66,16 +66,61 @@ class ThreadSGI : public BaseThread
 public:
    /** @name Constructors */
    //@{
-   /** Non-spawning constructor.  This will not start a new thread. */
+   /**
+    * Non-spawning constructor.  This will not start a thread.
+    *
+    * @param priority  The priority for this thread. This parameter is
+    *                  optional and defaults to VPR_PRIORITY_NORMAL if not
+    *                  specified.
+    * @param scope     The scheduling scope of this thread. This parameter is
+    *                  optional and defaults to VPR_GLOBAL_THREAD if not
+    *                  specified.
+    * @param state     The joinable state of this thread. This parameter is
+    *                  optional and defaults to VPR_JOINABLE_THREAD if not
+    *                  specified.
+    * @param stackSize The default stack size for this thread. This parameter
+    *                  is optional and defaults to 0 (indicating that the
+    *                  default stack size should be used) if not specified.
+    *                  This parameter is ignored for this implementation.
+    *
+    * @see start()
+    */
    ThreadSGI(BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
              BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
              size_t stackSize = 0);
 
    /**
-    * Spawning constructor.
-    * This will actually start a new thread that will execute the specified
-    * function.
+    * Spawning constructor with argument.  This will start a new thread that
+    * will execute the specified function.
+    *
+    * @param func      The functor that will be executed by the spawned thread.
+    *                  This can be any callable that returns nothing and takes
+    *                  no parameters. The use of boost::bind() is recommended
+    *                  to adapt other callables to this signature.
+    * @param priority  The priority for this thread. This parameter is
+    *                  optional and defaults to VPR_PRIORITY_NORMAL if not
+    *                  specified.
+    * @param scope     The scheduling scope of this thread. This parameter is
+    *                  optional and defaults to VPR_GLOBAL_THREAD if not
+    *                  specified.
+    * @param state     The joinable state of this thread. This parameter is
+    *                  optional and defaults to VPR_JOINABLE_THREAD if not
+    *                  specified.
+    * @param stackSize The default stack size for this thread. This parameter
+    *                  is optional and defaults to 0 (indicating that the
+    *                  default stack size should be used) if not specified.
+    *                  This parameter is ignored for this implementation.
+    *
+    * @throw vpr::IllegalArgumentException is thrown if an invalid attribute
+    *        is given to sproc(2) or if no functor has been set for this
+    *        thread object.
+    * @throw vpr::ResourceException is thrown if a thread could not be
+    *        allocated.
+    * @throw vpr::Exception is thrown if anything else went wrong during the
+    *        creation of the thread.
+    *
+    * @see start()
     */
    ThreadSGI(const vpr::thread_func_t& func,
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
@@ -102,8 +147,16 @@ public:
     *       executing our functor.  Depending on the scheduler, it may begin
     *       execution immediately, or it may block for a short time before
     *       beginning execution.
+    *
+    * @throw vpr::IllegalArgumentException is thrown if an invalid attribute
+    *        is given to sproc(2) or if no functor has been set for this
+    *        thread object.
+    * @throw vpr::ResourceException is thrown if a thread could not be
+    *        allocated.
+    * @throw vpr::Exception is thrown if anything else went wrong during the
+    *        creation of the thread.
     */
-   virtual vpr::ReturnStatus start();
+   virtual void start();
 
 private:
    /**
@@ -116,10 +169,14 @@ private:
     *
     * @param functorPtr Function to be executed by the thread.
     *
-    * @return A non-zero value is returned upon successful thread creation.
-    *         -1 is returned if an error occurred.
+    * @throw vpr::IllegalArgumentException is thrown if an invalid attribute
+    *        is given to sproc(2).
+    * @throw vpr::ResourceException is thrown if a thread could not be
+    *        allocated.
+    * @throw vpr::Exception is thrown if anything else went wrong during the
+    *        creation of the thread.
     */
-   vpr::ReturnStatus spawn();
+   void spawn();
 
    /**
     * Called by the spawn routine to start the user thread function.

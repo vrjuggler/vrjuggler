@@ -103,7 +103,7 @@ public:
    virtual void setFunctor(const vpr::thread_func_t& functor) = 0;
 
    /** Starts the thread's execution. */
-   virtual vpr::ReturnStatus start() = 0;
+   virtual void start() = 0;
 
 public:     // Thread specific data caching
    /**

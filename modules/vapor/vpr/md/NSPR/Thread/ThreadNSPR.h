@@ -77,21 +77,67 @@ namespace vpr
 class VPR_CLASS_API ThreadNSPR : public BaseThread
 {
 public:
-   /** Non-spawning constructor.  This will not start a thread. */
+   /** @name Constructors */
+   //@{
+   /**
+    * Non-spawning constructor.  This will not start a thread.
+    *
+    * @param priority  The priority for this thread. This parameter is
+    *                  optional and defaults to VPR_PRIORITY_NORMAL if not
+    *                  specified.
+    * @param scope     The scheduling scope of this thread. This parameter is
+    *                  optional and defaults to VPR_GLOBAL_THREAD if not
+    *                  specified.
+    * @param state     The joinable state of this thread. This parameter is
+    *                  optional and defaults to VPR_JOINABLE_THREAD if not
+    *                  specified.
+    * @param stackSize The default stack size for this thread. This parameter
+    *                  is optional and defaults to 0 (indicating that the
+    *                  default stack size should be used) if not specified.
+    *                  Note that this parameter is only honored on platforms
+    *                  that support changing the stack size for threads.
+    *
+    * @see start()
+    */
    ThreadNSPR(VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
               VPRThreadScope scope = VPR_GLOBAL_THREAD,
               VPRThreadState state = VPR_JOINABLE_THREAD,
-              PRUint32 stack_size = 0);
+              PRUint32 stackSize = 0);
 
    /**
-    * Spawning constructor.  This will start a new thread that will execute
-    * the specified function.
+    * Spawning constructor with argument.  This will start a new thread that
+    * will execute the specified function.
+    *
+    * @param func      The functor that will be executed by the spawned thread.
+    *                  This can be any callable that returns nothing and takes
+    *                  no parameters. The use of boost::bind() is recommended
+    *                  to adapt other callables to this signature.
+    * @param priority  The priority for this thread. This parameter is
+    *                  optional and defaults to VPR_PRIORITY_NORMAL if not
+    *                  specified.
+    * @param scope     The scheduling scope of this thread. This parameter is
+    *                  optional and defaults to VPR_GLOBAL_THREAD if not
+    *                  specified.
+    * @param state     The joinable state of this thread. This parameter is
+    *                  optional and defaults to VPR_JOINABLE_THREAD if not
+    *                  specified.
+    * @param stackSize The default stack size for this thread. This parameter
+    *                  is optional and defaults to 0 (indicating that the
+    *                  default stack size should be used) if not specified.
+    *                  Note that this parameter is only honored on platforms
+    *                  that support changing the stack size for threads.
+    *
+    * @throw vpr::ResourceException is thrown if a thread could not be
+    *        allocated.
+    *
+    * @see start()
     */
    ThreadNSPR(const vpr::thread_func_t& func,
               VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
               VPRThreadScope scope = VPR_GLOBAL_THREAD,
               VPRThreadState state = VPR_JOINABLE_THREAD,
-              PRUint32 stack_size = 0);
+              PRUint32 stackSize = 0);
+   //@}
 
    /**
     * Destructor.
@@ -118,10 +164,10 @@ public:
     *       execution immediately, or it may block for a short time before
     *       beginning execution.
     *
-    * @return A vpr::ReturnStatus obj is returned to indicate the result of
-    *         the thread creation.
+    * @throw vpr::ResourceException is thrown if a thread could not be
+    *        allocated.
     */
-   virtual vpr::ReturnStatus start();
+   virtual void start();
 
    /**
     * Makes the calling thread wait for the termination of this thread.

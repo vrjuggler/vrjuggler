@@ -41,6 +41,8 @@
 #include <boost/bind.hpp>
 
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/IllegalArgumentException.h>
+#include <vpr/Util/ResourceException.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 
@@ -100,19 +102,15 @@ void ThreadNSPR::setFunctor(const vpr::thread_func_t& functor)
 }
 
 // Creates a new thread that will execute mUserFunctorPtr.
-vpr::ReturnStatus ThreadNSPR::start()
+void ThreadNSPR::start()
 {
-   vpr::ReturnStatus status;
-
    if ( NULL != mThread )
    {
-      vprASSERT(false && "Thread already running");
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw vpr::Exception("Thread already started", VPR_LOCATION);
    }
    else if ( mUserThreadFunctor.empty() )
    {
-      vprASSERT(false && "No functor set");
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw vpr::IllegalArgumentException("No functor set", VPR_LOCATION);
    }
    else
    {
@@ -147,8 +145,9 @@ vpr::ReturnStatus ThreadNSPR::start()
          }
          ThreadManager::instance()->unlock();
 
-         NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
-         status.setCode(vpr::ReturnStatus::Fail);
+         std::ostringstream msg_stream;
+         NSPR_PrintError("Cannot create thread", msg_stream);
+         throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
       }
       else
       {
@@ -166,13 +165,8 @@ vpr::ReturnStatus ThreadNSPR::start()
          // ASSERT: Thread has completed registration
          vprASSERT(NULL != mThread && "Thread registration failed");
          vprASSERT(-1 != getTID() && "Thread id is invalid for successful thread");
-
-         // Set the return code to success
-         status.setCode(vpr::ReturnStatus::Succeed);
       }
    }
-
-   return status;
 }
 
 int ThreadNSPR::join(void** status)

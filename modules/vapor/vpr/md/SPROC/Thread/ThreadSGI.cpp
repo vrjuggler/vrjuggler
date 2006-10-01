@@ -36,15 +36,20 @@
 #include <vpr/vprConfig.h>
 
 #include <iomanip>
+#include <sstream>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
+#include <errno.h>
 #include <boost/bind.hpp>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/IllegalArgumentException.h>
+#include <vpr/Util/ResourceException.h>
 #include <vpr/md/SPROC/Thread/ThreadSGI.h>
 
 
@@ -95,28 +100,24 @@ void ThreadSGI::setFunctor(const vpr::thread_func_t& functor)
    mUserThreadFunctor = functor;
 }
 
-vpr::ReturnStatus ThreadSGI::start()
+void ThreadSGI::start()
 {
-   vpr::ReturnStatus status;
-
    if ( mRunning )
    {
-      vprASSERT(false && "Thread already running");
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw vpr::Exception("Thread already started", VPR_LOCATION);
    }
    else if ( mUserThreadFunctor.empty() )
    {
-      vprASSERT(false && "No functor set");
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw vpr::IllegalArgumentException("No functor set", VPR_LOCATION);
    }
    else
    {
       // Spawn the thread.
       mStartFunctor = boost::bind(&ThreadSGI::startThread, this);
-      status = spawn();
 
-      if ( status.success() )
+      try
       {
+         spawn();
          mRunning = true;
 
          ThreadManager::instance()->lock();
@@ -125,31 +126,43 @@ vpr::ReturnStatus ThreadSGI::start()
          }
          ThreadManager::instance()->unlock();
       }
-      else
+      catch (vpr::Exception& ex)
       {
          ThreadManager::instance()->lock();
          {
             registerThread(false);     // Failed to create
          }
          ThreadManager::instance()->unlock();
+
+         // Rethrow the exception.
+         throw;
       }
    }
-
-   return status;
 }
 
-vpr::ReturnStatus ThreadSGI::spawn()
+void ThreadSGI::spawn()
 {
-   vpr::ReturnStatus status;
    mThreadPID = sproc(vprThreadFunctorFunction, PR_SADDR | PR_SFDS,
                       &mStartFunctor);
 
    if ( mThreadPID == -1 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
-   }
+      std::ostringstream msg_stream;
+      msg_stream << "Cannot create thread: " << strerror(errno);
 
-   return status;
+      if ( ENOMEM == errno || EAGAIN == errno )
+      {
+         throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+      }
+      else if ( EINVAL == errno )
+      {
+         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+      }
+      else
+      {
+         throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+      }
+   }
 }
 
 /**

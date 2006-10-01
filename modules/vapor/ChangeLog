@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-10-01 patrick  Removed the use of vpr::ReturnStatus in vpr::Thread.
+                    Note that the spawning form of the vpr::Thread constructor
+                    now throws an exception if the thread does not start.
+                    NEW VERSION: 1.1.31
 2006-09-30 patrick  Removed the use of vpr::ReturnStatus in vpr::Semaphore.
                     NEW VERSION: 1.1.30
 2006-09-30 patrick  Removed the use of vpr::ReturnStatus in vpr::CondVar.

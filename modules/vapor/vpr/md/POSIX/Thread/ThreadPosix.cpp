@@ -35,8 +35,9 @@
 
 #include <vpr/vprConfig.h>
 
-#include <string.h>
+#include <cstring>
 #include <iomanip>
+#include <sstream>
 #include <typeinfo>
 #include <sys/types.h>
 #include <unistd.h>
@@ -56,6 +57,8 @@
 // It is safe to include Debug.h in this file because Debug.h does not
 // include vpr/Thread/Thread.h or ThreadPosix.h.
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/IllegalArgumentException.h>
+#include <vpr/Util/ResourceException.h>
 #include <vpr/md/POSIX/Thread/ThreadPosix.h>
 
 
@@ -120,19 +123,15 @@ void ThreadPosix::setFunctor(const vpr::thread_func_t& functor)
    mUserThreadFunctor = functor;
 }
 
-vpr::ReturnStatus ThreadPosix::start()
+void ThreadPosix::start()
 {
-   vpr::ReturnStatus status;
-
    if ( mRunning )
    {
-      vprASSERT(false && "Thread already started");
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw vpr::Exception("Thread already started", VPR_LOCATION);
    }
    else if ( mUserThreadFunctor.empty() )
    {
-      vprASSERT(false && "No functor set");
-      status.setCode(vpr::ReturnStatus::Fail);
+      throw vpr::IllegalArgumentException("No functor set", VPR_LOCATION);
    }
    else
    {
@@ -140,11 +139,12 @@ vpr::ReturnStatus ThreadPosix::start()
       // startThread() will register the actual thread info.
       mThreadStartCompleted = false;  // Make sure this is set correctly
       mStartFunctor = boost::bind(&ThreadPosix::startThread, this);
-      status = spawn();
 
-      // Thread spawned successfully.
-      if ( status.success() )
+      try
       {
+         spawn();
+
+         // The thread spawned successfully.
          // startThread() will register the thread, so we wait for
          // registration to complete here.
          mThreadStartCondVar.acquire();
@@ -159,27 +159,26 @@ vpr::ReturnStatus ThreadPosix::start()
          mRunning = true;
       }
       // Thread spawning failed.  Yikes!
-      else
+      catch (vpr::Exception& ex)
       {
          ThreadManager::instance()->lock();
          {
             registerThread(false);
          }
          ThreadManager::instance()->unlock();
+
+         // Rethrow the exception.
+         throw;
       }
    }
-
-   return status;
 }
 
 // Creates a new thread that will execute functorPtr.
-vpr::ReturnStatus ThreadPosix::spawn()
+void ThreadPosix::spawn()
 {
-   vpr::ReturnStatus status;
-   int ret_val;
    pthread_attr_t thread_attrs;
 
-   int pthread_prio = vprThreadPriorityToPOSIX(mPriority);
+   const int pthread_prio = vprThreadPriorityToPOSIX(mPriority);
 
    // Initialize thread_attrs and set the priority of the thread if it is
    // supported.
@@ -228,18 +227,29 @@ vpr::ReturnStatus ThreadPosix::spawn()
 #endif
 
    // Finally create the thread.
-   ret_val = pthread_create(&(mThread), &thread_attrs,
-                            vprThreadFunctorFunction, (void *) &mStartFunctor);
+   const int ret_val = pthread_create(&(mThread), &thread_attrs,
+                                      vprThreadFunctorFunction,
+                                      (void *) &mStartFunctor);
 
    // Inform the caller if the thread was not created successfully.
    if ( ret_val != 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
-      std::cerr << "vpr::ThreadPosix::spawn() - Cannot create thread:"
-                << strerror(ret_val) << std::endl;
-   }
+      std::ostringstream msg_stream;
+      msg_stream << "Cannot create thread: " << std::strerror(ret_val);
 
-   return status;
+      if ( EINVAL == ret_val )
+      {
+         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+      }
+      else if ( EAGAIN == ret_val )
+      {
+         throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+      }
+      else
+      {
+         throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+      }
+   }
 }
 
 // Called by the spawn routine to start the user thread function.
