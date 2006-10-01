@@ -67,7 +67,7 @@ namespace jccl
       // If $JCCL_DEFINITION_PATH is not set, use the given path as the
       // search path.
       std::string add_path, jccl_def_path(defaultPath);
-      if ( vpr::System::getenv("JCCL_DEFINITION_PATH", add_path).success() )
+      if ( vpr::System::getenv("JCCL_DEFINITION_PATH", add_path) )
       {
          // The path provided as a parameter to this function is empty.
          // Therefore, $JCCL_DEFINITION_PATH becomes the full search path.

@@ -134,7 +134,7 @@ ParseUtil::SearchPathData::SearchPathData()
    const std::string jccl_search_env("JCCL_CFG_PATH");
    std::string search_path;
 
-   if ( vpr::System::getenv(jccl_search_env, search_path).success() )
+   if ( vpr::System::getenv(jccl_search_env, search_path) )
    {
       this->setSearchPath(search_path);
    }
@@ -154,7 +154,7 @@ void ParseUtil::SearchPathData::setSearchPath(const std::string& path)
       std::string ostype;
 
       // If we are in a Cygwin environment, use ":" as the element separator.
-      if ( vpr::System::getenv("OSTYPE", ostype).success() )
+      if ( vpr::System::getenv("OSTYPE", ostype) )
       {
          if ( strcmp(ostype.c_str(), "cygwin") == 0 )
          {

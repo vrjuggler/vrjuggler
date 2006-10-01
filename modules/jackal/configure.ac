@@ -174,7 +174,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.23], BUILD_CXX='Y', 
+VPR_PATH([1.1.35], BUILD_CXX='Y', 
          [AC_MSG_WARN([*** VPR required for JCCL ***])
           BUILD_CXX='N'])
 

@@ -69,9 +69,9 @@ void ConfigManager::loadRemoteReconfig()
    const std::string vj_base_dir("VJ_BASE_DIR");
    std::string base_dir;
 
-   if ( ! vpr::System::getenv(jccl_base_dir, base_dir).success() )
+   if ( ! vpr::System::getenv(jccl_base_dir, base_dir) )
    {
-      if ( vpr::System::getenv(vj_base_dir, base_dir).success() )
+      if ( vpr::System::getenv(vj_base_dir, base_dir) )
       {
          vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
             << "JCCL_BASE_DIR environment variable not set.\n"
@@ -97,7 +97,7 @@ void ConfigManager::loadRemoteReconfig()
 
    // If the user has the environment variable NO_RTRC_PLUGIN set (to any
    // value), do not attempt to load the plug-in.
-   if ( vpr::System::getenv(no_rtrc_plugin, junk).success() )
+   if ( vpr::System::getenv(no_rtrc_plugin, junk) )
    {
       vprDEBUG(jcclDBG_RECONFIG, vprDBG_STATE_LVL)
          << "Remote reconfig plug-in loading disabled via NO_RTRC_PLUGIN."
@@ -124,7 +124,7 @@ void ConfigManager::loadRemoteReconfig()
    // If $JCCL_VERSION is set, use the value of that environment variable
    // as the version component of the plug-in subdirectory name. Otherwise,
    // use the compile-time value provided by JCCL_VERSION_DOT.
-   if ( ! vpr::System::getenv(jccl_version, jccl_ver_str).success() )
+   if ( ! vpr::System::getenv(jccl_version, jccl_ver_str) )
    {
       jccl_ver_str = JCCL_VERSION_DOT;
    }
