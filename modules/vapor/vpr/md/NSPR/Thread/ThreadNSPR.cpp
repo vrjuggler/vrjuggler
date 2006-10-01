@@ -36,6 +36,7 @@
 #include <vpr/vprConfig.h>
 
 #include <iomanip>
+#include <sstream>
 #include <typeinfo>
 #include <boost/concept_check.hpp>
 #include <boost/bind.hpp>
@@ -43,6 +44,9 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/IllegalArgumentException.h>
 #include <vpr/Util/ResourceException.h>
+// It is safe to include Debug.h in this file because Debug.h does not
+// include vpr/Thread/Thread.h or ThreadNSPR.h.
+#include <vpr/Util/Debug.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 
