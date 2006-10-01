@@ -139,6 +139,9 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\BufferObjectWriter.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\CondVarNSPR.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionAbortedException.cpp">
 			</File>
 			<File
@@ -146,6 +149,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionResetException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Sync\DeadlockException.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Debug.cpp">
@@ -202,6 +208,12 @@
 				RelativePath="..\..\modules\vapor\vpr\DynLoad\LoaderError.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Sync\LockException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\MutexNSPR.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.cpp">
 			</File>
 			<File
@@ -227,6 +239,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\RWMutexNSPR.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\ResourceException.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\SelectorImplNSPR.cpp">
@@ -365,6 +380,9 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\DateTime.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Sync\DeadlockException.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Debug.h">
 			</File>
 			<File
@@ -455,6 +473,9 @@
 				RelativePath="..\..\modules\vapor\vpr\DynLoad\LoaderError.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Sync\LockException.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\McastReq.h">
 			</File>
 			<File
@@ -501,6 +522,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\RefCountMemory.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\ResourceException.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\ReturnStatus.h">
