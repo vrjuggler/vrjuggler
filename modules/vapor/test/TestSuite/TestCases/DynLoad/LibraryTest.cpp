@@ -93,10 +93,10 @@ void LibraryTest::unloadTest()
 
 void LibraryTest::libraryPathTest()
 {
-   vpr::ReturnStatus status;
+   bool status;
    status = vpr::System::setenv(std::string("LD_LIBRARY_PATH"),
                                 std::string(MODULE_DIR));
-   CPPUNIT_ASSERT(status.success() && "Failed to extend library path");
+   CPPUNIT_ASSERT(status && "Failed to extend library path");
 
    try
    {

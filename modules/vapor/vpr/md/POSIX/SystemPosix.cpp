@@ -101,50 +101,34 @@ vpr::Uint64 SystemPosix::Htonll(vpr::Uint64 conversion)
    return ret_val;
 }
 
-vpr::ReturnStatus SystemPosix::getenv(const std::string& name,
-                                      std::string& result)
+bool SystemPosix::getenv(const std::string& name, std::string& result)
 {
    char* val;
-   ReturnStatus status;
+   bool status(false);
 
    val = ::getenv(name.c_str());
 
    if ( val != NULL )
    {
       result = val;
-   }
-   else
-   {
-      status.setCode(ReturnStatus::Fail);
+      status = true;
    }
 
    return status;
 }
 
-vpr::ReturnStatus SystemPosix::setenv(const std::string& name,
-                                      const std::string& value)
+bool SystemPosix::setenv(const std::string& name, const std::string& value)
 {
    std::string set_value(name);
    set_value += "=";
    set_value += value;
 
-   ReturnStatus status;
-
    // Purposely leak memory since putenv(3) may want to hold on to the
    // pointer we pass.
    char* env_str = strdup(set_value.c_str());
-   int ret_val = ::putenv(env_str);
+   const int ret_val = ::putenv(env_str);
 
-   if ( ret_val == 0 )
-   {
-      status.setCode(ReturnStatus::Succeed);
-   }
-   else
-   {
-      status.setCode(ReturnStatus::Fail);
-   }
-
-   return status;
+   return ret_val == 0;
 }
 
 std::string SystemPosix::getHostname()

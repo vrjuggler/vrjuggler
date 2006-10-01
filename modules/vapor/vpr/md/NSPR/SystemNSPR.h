@@ -54,7 +54,6 @@
 #include <prthread.h>      /* For PR_Sleep() */
 #include <prsystem.h>
 
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/vprTypes.h>
 #include <vpr/SystemBase.h>
 
@@ -204,27 +203,22 @@ public:
     * @param name   The name of the environment variable to query.
     * @param result Storage for the value of the named environment variable.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the named environment
-    *         variable is defined in the run-time environment and lookup of
-    *         the variable succeeded.
-    * @return vpr::ReturnStatus::Succeed is returned if the named environment
+    * @return \c true is returned if the named environment variable is
+    *         defined in the run-time environment and lookup of the variable
+    *         succeeded. \c false is returned if the named environment
     *         variable could not be found in the run-time environment.
     */
-   static vpr::ReturnStatus getenv(const std::string& name, std::string& result)
+   static bool getenv(const std::string& name, std::string& result)
    {
       char* val;
-      ReturnStatus status;
+      bool status(false);
 
       val = PR_GetEnv(name.c_str());
 
       if ( val != NULL )
       {
          result = val;
-         status.setCode(ReturnStatus::Succeed);
-      }
-      else
-      {
-         status.setCode(ReturnStatus::Fail);
+         status = true;
       }
 
       return status;
@@ -243,13 +237,11 @@ public:
     * @param name  The name of the environment variable to set.
     * @param value The value to assign to the named environment variable.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the named environment
-    *         was set to the new value successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the environment variable
-    *         set operation failed.
+    * @return \c true is returned if the named environment was set to the new
+    *         value successfully. \c false is returned if the environment
+    *         variable set operation failed.
     */
-   static vpr::ReturnStatus setenv(const std::string& name,
-                                   const std::string& value)
+   static bool setenv(const std::string& name, const std::string& value)
    {
       // NSPR requires form of "name=value"
       // NSPR takes possesion of the string memory, so we just leak here
@@ -257,20 +249,9 @@ public:
       (*set_value) += "=";
       (*set_value) += value;
 
-      ReturnStatus status;
+      const PRStatus ret_val = PR_SetEnv(set_value->c_str());
 
-      PRStatus ret_val = PR_SetEnv(set_value->c_str());
-
-      if ( ret_val == PR_SUCCESS )
-      {
-         status.setCode(ReturnStatus::Succeed);
-      }
-      else
-      {
-         status.setCode(ReturnStatus::Fail);
-      }
-
-      return status;
+      return ret_val == PR_SUCCESS;
    }
 
    /**

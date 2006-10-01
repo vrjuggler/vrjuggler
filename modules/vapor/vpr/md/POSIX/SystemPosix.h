@@ -59,7 +59,6 @@
 #include <netinet/in.h>
 #include <sys/param.h>
 
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/vprTypes.h>
 #include <vpr/SystemBase.h>
 
@@ -178,14 +177,12 @@ public:
     * @param name   The name of the environment variable to query.
     * @param result Storage for the value of the named environment variable.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the named environment
-    *         variable is defined in the run-time environment and lookup of
-    *         the variable succeeded.
-    * @return vpr::ReturnStatus::Succeed is returned if the named environment
-    *         variable could not be found in the run-time environment.
+    * @return \c true is returned if the named environment variable is defined
+    *         in the run-time environment and lookup of the variable succeeded.
+    *         \c false is returned if the named environment variable could not
+    *         be found in the run-time environment.
     */
-   static vpr::ReturnStatus getenv(const std::string& name,
-                                   std::string& result);
+   static bool getenv(const std::string& name, std::string& result);
 
    /**
     * Sets the value of the named environment variable in the run-time
@@ -200,13 +197,11 @@ public:
     * @param name  The name of the environment variable to set.
     * @param value The value to assign to the named environment variable.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the named environment
-    *         was set to the new value successfully.
-    * @return vpr::ReturnStatus::Fail is returned if the environment variable
-    *         set operation failed.
+    * @return \c true is returned if the named environment was set to the new
+    *         value successfully. \c false is returned if the environment
+    *         variable set operation failed.
     */
-   static vpr::ReturnStatus setenv(const std::string& name,
-                                   const std::string& value);
+   static bool setenv(const std::string& name, const std::string& value);
 
    /**
     * Returns the name of the local host.
