@@ -50,7 +50,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		LockException.cpp
+SRCS=		DeadlockException.cpp	\
+		LockException.cpp
 
 ifeq (@SUBSYSTEM@, SPROC)
 SRCS+=		CondVarGeneric.cpp	\

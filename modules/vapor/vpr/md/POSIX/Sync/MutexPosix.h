@@ -52,6 +52,7 @@
 #include <boost/noncopyable.hpp>
 
 #include <vpr/Sync/LockException.h>
+#include <vpr/Sync/DeadlockException.h>
 
 
 namespace vpr
@@ -95,8 +96,8 @@ public:
     *       lock has already been acquired by another thread, the caller
     *       blocks until the mutex has been freed.
     *
-    * @throw vpr::LockException is thrown if the current thread has already
-    *        locked this mutex.
+    * @throw vpr::DeaadockException is thrown if the current thread has
+    *        already locked this mutex.
     */
    void acquire()
    {
@@ -106,7 +107,7 @@ public:
       // was reported.
       if ( EDEADLK == result )
       {
-         throw vpr::LockException(
+         throw vpr::DeadlockException(
             "Tried to lock mutex twice in the same thread", VPR_LOCATION
          );
       }

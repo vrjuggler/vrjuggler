@@ -50,7 +50,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include <vpr/Sync/LockException.h>
+#include <vpr/Sync/DeadlockException.h>
 
 #if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 8
 #define VPR_USE_NAMED_SEMAPHORE 1
@@ -102,8 +102,8 @@ public:
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
-    * @throw vpr::LockException is thrown if the current thread has already
-    *        locked this semaphore.
+    * @throw vpr::DeadlockException is thrown if the current thread has
+    *        already locked this semaphore.
     */
    void acquire()
    {
@@ -117,7 +117,7 @@ public:
 
       if ( -1 == result && EDEADLK == errno )
       {
-         throw vpr::LockException(
+         throw vpr::DeadlockException(
             "Tried to lock semaphore twice in the same thread", VPR_LOCATION
          );
       }
@@ -132,6 +132,10 @@ public:
     *       release() is called, or the caller is put at the tail of a wait
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the read lock is
+    *         acquired.
+    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
     *
     * @note There is no special read lock for now.
     */
@@ -148,11 +152,15 @@ public:
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
+    * @return vpr::ReturnStatus::Succeed is returned if the write lock is
+    *         acquired.
+    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
+    *
     * @note There is no special write lock for now.
     */
    void acquireWrite()
    {
-      this->acquire();
+      return this->acquire();
    }
 
    /**
@@ -165,6 +173,9 @@ public:
     *
     * @return \c true is returned if the lock is acquired, and \c false is
     *         returned if the semaphore is already locked.
+    *
+    * @throw vpr::DeadlockException is thrown if the current thread has
+    *        already locked this semaphore.
     */
    bool tryAcquire()
    {
@@ -178,7 +189,7 @@ public:
 
       if ( -1 == result && EDEADLK == errno )
       {
-         throw vpr::LockException(
+         throw vpr::DeadlockException(
             "Tried to lock semaphore twice in the same thread", VPR_LOCATION
          );
       }
