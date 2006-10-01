@@ -46,7 +46,7 @@ CosNaming::NamingContext_var getRootNamingContextByInitRef(CORBA::ORB_ptr orb)
    // Naming Service.  To that end, print a warning saying as much when the
    // variable is not set.
    std::string temp;
-   if ( vpr::System::getenv("OMNIORB_CONFIG", temp).failure() )
+   if ( ! vpr::System::getenv("OMNIORB_CONFIG", temp) )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrYELLOW, "WARNING: OMNIORB_CONFIG not set!")

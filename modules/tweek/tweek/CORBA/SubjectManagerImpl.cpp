@@ -279,7 +279,7 @@ void SubjectManagerImpl::initInfoMap()
 
    std::string user_name;
 
-   if ( vpr::System::getenv("USER", user_name).success() )
+   if ( vpr::System::getenv("USER", user_name) )
    {
       mInfoMap[USERNAME_KEY] = user_name;
    }
