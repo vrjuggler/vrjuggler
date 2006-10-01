@@ -89,13 +89,17 @@ public:
    /** Acquires the lock. */
    vpr::ReturnStatus acquire()
    {
-      return mTheLock->acquire();
+      vpr::ReturnStatus status = mTheLock->acquire();
+      mLockStatus = status.success();
+      return status;
    }
 
    /** Tries to acquire lock. */
    vpr::ReturnStatus tryAcquire()
    {
-      return mTheLock->tryAcquire();
+      vpr::ReturnStatus status = mTheLock->tryAcquire();
+      mLockStatus = status.success();
+      return status;
    }
 
    /** Explicity releases the lock. */

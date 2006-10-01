@@ -87,13 +87,17 @@ public:
    /** Acquires the lock. */
    vpr::ReturnStatus acquire()
    {
-      return mTheLock->acquireRead();
+      vpr::ReturnStatus status = mTheLock->acquireRead();
+      mLockStatus = status.success();
+      return status;
    }
 
    /** Tries to acquire the lock. */
    vpr::ReturnStatus tryAcquire()
    {
-      return mTheLock->tryAcquireRead();
+      vpr::ReturnStatus status = mTheLock->tryAcquireRead();
+      mLockStatus = status.success();
+      return status;
    }
 
    /** Explicity releases the lock. */
@@ -145,13 +149,17 @@ public:
    /** Acquires the lock. */
    vpr::ReturnStatus acquire()
    {
-      return mTheLock->acquireWrite();
+      vpr::ReturnStatus status = mTheLock->acquireWrite();
+      mLockStatus = status.success();
+      return status;
    }
 
    /** Tries to acquire lock. */
    vpr::ReturnStatus tryAcquire()
    {
-      return mTheLock->tryAcquireWrite();
+      vpr::ReturnStatus status = mTheLock->tryAcquireWrite();
+      mLockStatus = status.success();
+      return status;
    }
 
    /** Explicity releases the lock. */
