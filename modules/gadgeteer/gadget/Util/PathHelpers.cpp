@@ -48,9 +48,9 @@ boost::filesystem::path getDefaultPluginRoot()
 
    // Try get to the value of $GADGET_BASE_DIR first.  If that fails,
    // fall back on $VJ_BASE_DIR.
-   if ( ! vpr::System::getenv(gadget_base_dir, base_dir).success() )
+   if ( ! vpr::System::getenv(gadget_base_dir, base_dir) )
    {
-      if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
+      if ( ! vpr::System::getenv(vj_base_dir, base_dir) )
       {
          // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
          // we can append a default driver search path.
@@ -78,7 +78,7 @@ boost::filesystem::path getDefaultPluginRoot()
    // If $GADGET_VERSION is set, use the value of that environment variable
    // as the version component of the plug-in subdirectory name. Otherwise,
    // use the compile-time value provided by GADGET_VERSION_DOT.
-   if ( ! vpr::System::getenv(gadget_version, gadgeteer_ver_str).success() )
+   if ( ! vpr::System::getenv(gadget_version, gadgeteer_ver_str) )
    {
       gadgeteer_ver_str = GADGET_VERSION_DOT;
    }

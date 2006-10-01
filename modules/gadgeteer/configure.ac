@@ -159,7 +159,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.31], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
+VPR_PATH([1.1.35], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 #VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 JCCL_PATH_CXX([1.1.5], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
