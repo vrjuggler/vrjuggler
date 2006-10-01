@@ -50,14 +50,14 @@ namespace vpr
 // vpr::SignalSet stuff.
 // ============================================================================
 
-vpr::ReturnStatus SignalSet::emptySet()
+bool SignalSet::emptySet()
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
 #ifdef HAVE_SIGEMPTYSET
    if ( sigemptyset(&mSigSet) != 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
    }
 #else
    mSigSet = 0;
@@ -66,13 +66,14 @@ vpr::ReturnStatus SignalSet::emptySet()
    return status;
 }
 
-vpr::ReturnStatus SignalSet::fillSet()
+bool SignalSet::fillSet()
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
 #ifdef HAVE_SIGFILLSET
-   if ( sigfillset(&mSigSet) != 0 ) {
-      status.setCode(vpr::ReturnStatus::Fail);
+   if ( sigfillset(&mSigSet) != 0 )
+   {
+      status = false;
    }
 #else
    mSigSet = ~(sigset_t) 0;
@@ -81,16 +82,16 @@ vpr::ReturnStatus SignalSet::fillSet()
    return status;
 }
 
-vpr::ReturnStatus SignalSet::addSignal(const int sigNum)
+bool SignalSet::addSignal(const int sigNum)
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
    vprASSERT(sigNum >= 1 && "Invalid signal number");
 
 #ifdef HAVE_SIGADDSET
    if ( sigaddset(&mSigSet, sigNum) != 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
    }
 #else
    mSigSet |= (1 << (sigNum - 1));
@@ -99,16 +100,16 @@ vpr::ReturnStatus SignalSet::addSignal(const int sigNum)
    return status;
 }
 
-vpr::ReturnStatus SignalSet::removeSignal(const int sigNum)
+bool SignalSet::removeSignal(const int sigNum)
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
    vprASSERT(sigNum >= 1 && "Invalid signal number");
 
 #ifdef HAVE_SIGDELSET
    if ( sigdelset(&mSigSet, sigNum) != 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
    }
 #else
    mSigSet &= ~(1 << (sigNum - 1)) ;
@@ -156,20 +157,19 @@ SignalAction::SignalAction(vpr::SignalHandler_t handler,
 // vpr::SigHandler stuff.
 // ============================================================================
 
-vpr::ReturnStatus SigHandler::registerHandler(const int sigNum,
-                                              vpr::SignalHandler_t handler,
-                                              const bool restart)
+bool SigHandler::registerHandler(const int sigNum,
+                                 vpr::SignalHandler_t handler,
+                                 const bool restart)
 {
    boost::ignore_unused_variable_warning(restart);
    vpr::SignalAction sa(handler);
    return registerHandler(sigNum, sa);
 }
 
-vpr::ReturnStatus SigHandler::registerHandler(const int sigNum,
-                                              vpr::SignalAction& action,
-                                              const bool restart)
+bool SigHandler::registerHandler(const int sigNum, vpr::SignalAction& action,
+                                 const bool restart)
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
 #ifdef SA_RESTART
    if ( sigNum != SIGALRM && restart )
@@ -180,7 +180,7 @@ vpr::ReturnStatus SigHandler::registerHandler(const int sigNum,
 
    if ( vpr::SigHandler::sigaction(sigNum, &action.mSA) != 0 )
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
    }
 
    return status;

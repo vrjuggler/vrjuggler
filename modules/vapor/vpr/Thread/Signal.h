@@ -47,8 +47,6 @@
 #error "I don't know what to do without signal.h!"
 #endif
 
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace vpr
 {
@@ -132,40 +130,38 @@ public:
    /**
     * Creates a set that includes no signals defined by the system.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this object's signal
-    *         set is emptied.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @return \c true is returned if this object's signal set is emptied.
+    *         \c false is returned otherwise.
     */
-   vpr::ReturnStatus emptySet();
+   bool emptySet();
 
    /**
     * Creates a set that includes all signals defined by the system.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if this object's signal
-    *         set is filled.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @return \c true is returned if this object's signal set is filled.
+    *         \c false is returned otherwise.
     */
-   vpr::ReturnStatus fillSet();
+   bool fillSet();
 
    /**
     * Adds the individual signal specified by \p sigNum to the set.
     *
     * @param sigNum The signal number to be added.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the given signal is
-    *         added to this object's signal set.  vpr::ReturnStatus::Fail is
-    *         returned otherwise.
+    * @return \c true is returned if the given signal is added to this
+    *         object's signal set. \c false is returned otherwise.
     */
-   vpr::ReturnStatus addSignal(const int sigNum);
+   bool addSignal(const int sigNum);
 
    /**
     * Deletes the individual signal specified by \p sigNum from the set.
     *
     * @param sigNum The signal number to be removed.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the given signal is
-    *         removed from this object's signal set.  vpr::ReturnStatus::Fail
-    *         is returned otherwise.
+    * @return \c true is returned if the given signal is removed from this
+    *         object's signal set.  \c false is returned otherwise.
     */
-   vpr::ReturnStatus removeSignal(const int sigNum);
+   bool removeSignal(const int sigNum);
 
    /**
     * Checks whether the signal specified by \p sigNum is in the set.
@@ -173,7 +169,7 @@ public:
     * @param sigNum The signal number being checked.
     *
     * @return \c true is returned if \p sigNum is in this object's set.
-    * @return \c false is returned otherwise.
+    *         \c false is returned otherwise.
     */
    bool isMember(const int sigNum) const;
 
@@ -284,12 +280,11 @@ public:
     *                However, if \p sigNum is \c SIGALARM, the restart
     *                parameter is ignored and set to false.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the given handler is
-    *         registered successfully; vpr::ReturnStatus::Fail otherwise.
+    * @return \c true is returned if the given handler is registered
+    *         successfully; \c false otherwise.
     */
-   static vpr::ReturnStatus registerHandler(const int sigNum,
-                                            vpr::SignalHandler_t handler,
-                                            const bool restart = true);
+   static bool registerHandler(const int sigNum, vpr::SignalHandler_t handler,
+                               const bool restart = true);
 
    /**
     * Reigsters the given callback as a handler for the named signal.  No
@@ -308,12 +303,11 @@ public:
     *                However, if \p sigNum is \c SIGALRM, the restart parameter
     *                is ignored and set to false.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the given action is
-    *         registered successfully; vpr::ReturnStatus::Fail otherwise.
+    * @return \c true is returned if the given action is registered
+    *         successfully; \c false otherwise.
     */
-   static vpr::ReturnStatus registerHandler(const int sigNum,
-                                            vpr::SignalAction& action,
-                                            const bool restart = true);
+   static bool registerHandler(const int sigNum, vpr::SignalAction& action,
+                               const bool restart = true);
 
 protected:
    /**
