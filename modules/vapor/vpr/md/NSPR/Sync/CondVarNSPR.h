@@ -45,6 +45,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <assert.h>
 #include <prcvar.h>
 #include <boost/noncopyable.hpp>
 
