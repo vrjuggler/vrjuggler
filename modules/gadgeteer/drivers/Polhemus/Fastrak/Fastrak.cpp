@@ -44,6 +44,7 @@
 
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/gadgetParam.h>
+#include <gadget/Util/Debug.h>
 
 #include <drivers/Polhemus/Fastrak/Fastrak.h>
 
@@ -435,7 +436,7 @@ bool Fastrak::config(jccl::ConfigElementPtr fastrakElement)
 
 bool Fastrak::startSampling()
 {
-   int status(0);
+   bool status(false);
 
    if ( mFastrakDev.open().success() )
    {
@@ -445,12 +446,20 @@ bool Fastrak::startSampling()
       }
 
       mExitFlag = false;
-      mSampleThread = new vpr::Thread(boost::bind(&Fastrak::controlLoop,
-                                                  this));
-
-      if ( mSampleThread->valid() )
+      try
       {
-         status = 1; // thread creation succeded
+         mSampleThread = new vpr::Thread(boost::bind(&Fastrak::controlLoop,
+                                                     this));
+         status = true; // thread creation succeded
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for Fastrak driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
       }
    }
 
@@ -461,7 +470,7 @@ bool Fastrak::startSampling()
 // this is called repeatedly by the sample thread created by startSampling()
 bool Fastrak::sample()
 {
-   int status(1);
+   bool status(true);
 
    // XXX: This should not be hard-coded to four.
    std::vector<gadget::PositionData> cur_pos_samples(4);
@@ -507,7 +516,6 @@ void Fastrak::updateData()
 // kill sample thread
 bool Fastrak::stopSampling()
 {
-
    if ( mSampleThread != NULL )
    {
       mExitFlag = true;
@@ -515,7 +523,8 @@ bool Fastrak::stopSampling()
       delete mSampleThread;
       mSampleThread = NULL;
    }
-   return 1;
+
+   return true;
 }
 
 // function for users to get the digital data.

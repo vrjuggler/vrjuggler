@@ -82,18 +82,27 @@ bool SerialEncoder::config(jccl::ConfigElementPtr e)
 bool SerialEncoder::startSampling()
 {
    mExitFlag = false;
-   mSampleThread =
-      new vpr::Thread(boost::bind(&SerialEncoder::threadedSampleFunction,
-                                  this));
 
-   if ( !mSampleThread->valid() )
+   bool started(false);
+
+   try
    {
-      return false; // thread creation failed
+      mSampleThread =
+         new vpr::Thread(boost::bind(&SerialEncoder::threadedSampleFunction,
+                                     this));
+      started = true;
    }
-   else
+   catch (vpr::Exception& ex)
    {
-      return true; // thread creation success
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for Serial Encoder driver!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
    }
+
+   return started;
 }
 
 bool SerialEncoder::sample()

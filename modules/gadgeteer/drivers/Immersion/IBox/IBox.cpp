@@ -153,23 +153,31 @@ bool IBox::startSampling()
 
       return false;
    }
-   
+
+   bool started(false);
+
    // Set exit flag and spawn sample thread
    mDoneFlag = false;
-   mThread = new vpr::Thread(boost::bind(&IBox::controlLoop, this));
-
-   if ( ! mThread->valid() )
+   try
    {
+      mThread = new vpr::Thread(boost::bind(&IBox::controlLoop, this));
+      started = true;
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for IBox driver!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+
       mIBox->disconnect();
       delete mIBox;
       mIBox = NULL;
+   }
 
-      return false;
-   }
-   else
-   {
-      return true;
-   }
+   return started;
 }
 
 /**********************************************************

@@ -188,17 +188,26 @@ bool IntersenseAPI::startSampling()
    // Set flag that will later allow us to stop the control loop.
    mDone = false;
 
-   // Create a new thread to handle the control
-   mThread = new vpr::Thread(boost::bind(&IntersenseAPI::controlLoop, this));
+   bool started(true);
 
-   if ( ! mThread->valid() )
+   // Create a new thread to handle the control
+   try
    {
-      return false;   // Failed
+      mThread = new vpr::Thread(boost::bind(&IntersenseAPI::controlLoop,
+                                this));
    }
-   else
+   catch (vpr::Exception& ex)
    {
-      return true;   // Succeeded
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for InterSense API driver!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+      started = false;
    }
+
+   return started;
 }
 
 bool IntersenseAPI::sample()

@@ -117,16 +117,26 @@ bool PuckDevice::startSampling()
      */
     initBuffers();    
     // Create a new thread to handle the control
-    mThread = new vpr::Thread(boost::bind(&PuckDevice::controlLoop, this));
-    if (mThread->valid())
+
+    bool started(false);
+
+    try
     {
-	return true;
+        mThread = new vpr::Thread(boost::bind(&PuckDevice::controlLoop, this));
+        started = true;
     }
-    else
+    catch (vpr::Exception& ex)
     {
-	_running = false;	
-	return false;
+        vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+           << clrOutBOLD(clrRED, "ERROR")
+           << ": Failed to spawn thread for 3DConnexion puck_device driver!\n"
+           << vprDEBUG_FLUSH;
+        vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+           << ex.what() << std::endl << vprDEBUG_FLUSH;
+        _running = false;	
     }
+
+    return started;
 }
 
 bool PuckDevice::stopSampling()

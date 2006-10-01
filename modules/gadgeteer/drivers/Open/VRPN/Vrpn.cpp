@@ -67,6 +67,7 @@
 #include <gadget/InputManager.h>
 #include <gadget/gadgetParam.h>
 #include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Util/Debug.h>
 
 #include <drivers/Open/VRPN/Vrpn.h>
 
@@ -176,12 +177,9 @@ Vrpn::~Vrpn()
 
 bool Vrpn::startSampling()
 {
-   if (NULL != mThread)
-   {
-      // Already sampling
-      return 0; 
-   }
-   else
+   bool started(false);
+
+   if ( NULL == mThread )
    {
       // Set flags and spawn sample thread
       mExitFlag = false;
@@ -189,21 +187,26 @@ bool Vrpn::startSampling()
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) 
          << "[VRPN] Spawning control thread." << std::endl  << vprDEBUG_FLUSH;
       
-      mReadThread = new vpr::Thread(boost::bind(&Vrpn::readLoop, this));
+      try
+      {
+         mThread = new vpr::Thread(boost::bind(&Vrpn::readLoop, this));
+         started = true;
 
-      if ( !mReadThread->valid() )
-      {
-         return 0;
-      }
-      else
-      {
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
             << "[VRPN] VRPN driver is active." << std::endl
             << vprDEBUG_FLUSH;
-
-         return 1;
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for VRPN driver!\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
       }
    }
+
+   return started;
 }
 
 void Vrpn::readLoop()
@@ -311,14 +314,14 @@ bool Vrpn::sample()
 
 bool Vrpn::stopSampling()
 {
-   if( mReadThread != NULL )
+   if ( mThread != NULL )
    {
       mExitFlag = true;
 
       // Wait for thread to exit..
-      mReadThread->join();
-      delete mReadThread;
-      mReadThread = NULL;
+      mThread->join();
+      delete mThread;
+      mThread = NULL;
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "[vrpn] stopping driver..." << std::endl << vprDEBUG_FLUSH;
    }

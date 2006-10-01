@@ -205,11 +205,21 @@ bool Ether24::startSampling()
    mDone = false;
 
    // Create a new thread to handle the control
-   mThread = new vpr::Thread(boost::bind(&Ether24::controlLoop, this));
 
-   if ( ! mThread->valid() )
-   { return false; }
-
+   try
+   {
+      mThread = new vpr::Thread(boost::bind(&Ether24::controlLoop, this));
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for Ether I/O 24 driver!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+      return false;
+   }
 
    jccl::ConfigElementPtr porta_elt
       = mConfigElement->getProperty<jccl::ConfigElementPtr>("port_a");

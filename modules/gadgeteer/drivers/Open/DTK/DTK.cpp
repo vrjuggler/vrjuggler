@@ -246,8 +246,10 @@ bool DTK::startSampling()
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::DTK was already started." << std::endl << vprDEBUG_FLUSH;
-      return 0;
+      return false;
    }
+
+   bool started(false);
 
 // Has the thread actually started already
    if ( mThread != NULL )
@@ -265,25 +267,28 @@ bool DTK::startSampling()
          vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED,"ERROR:") << "gadget::DTK: \n"
             << vprDEBUG_FLUSH;
-         return 0;
+         return false;
       }
 
       mExitFlag = false;
 
       // Create a new thread to handle the control
-      mThread = new vpr::Thread(boost::bind(&DTK::controlLoop, this));
-
-      if ( mThread->valid() )
+      try
       {
-         return 1;   // success
+         mThread = new vpr::Thread(boost::bind(&DTK::controlLoop, this));
+         started = true;
       }
-      else
+      catch (vpr::Exception& ex)
       {
-         return 0;  // Fail
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for DTK driver!\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
       }
    }
 
-   return 0;
+   return started;
 }
 
 bool DTK::sample()

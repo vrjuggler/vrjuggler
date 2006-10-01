@@ -125,7 +125,6 @@ protected:
    void controlLoop();
 
 private:
-   vpr::Thread*      mThread;      /**< The thread doing the Flock sampling */
    FlockStandalone   mFlockOfBirds; /**< The actual Flock device object */
    bool              mExitFlag;
 };

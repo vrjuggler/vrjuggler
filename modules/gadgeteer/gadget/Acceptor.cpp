@@ -67,10 +67,24 @@ namespace gadget
                << "Starting the listening thread...\n" << vprDEBUG_FLUSH;
 
                // Start a thread to monitor port
-            mAcceptThread = new vpr::Thread(boost::bind(&Acceptor::acceptLoop,
-                                                        this));
-            vprASSERT( mAcceptThread->valid() );
-            return true;
+            try
+            {
+               mAcceptThread =
+                  new vpr::Thread(boost::bind(&Acceptor::acceptLoop, this));
+               vprASSERT(mAcceptThread->valid());
+
+               return true;
+            }
+            catch (vpr::Exception& ex)
+            {
+               vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutBOLD(clrRED, "ERROR")
+                  << ": Failed to spawn acceptor thread!\n" << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL)
+                  << ex.what() << std::endl << vprDEBUG_FLUSH;
+
+               return false;
+            }
          }
          else
          {
@@ -326,6 +340,7 @@ namespace gadget
       if ( mAcceptThread )
       {
          mAcceptThread->kill();
+         delete mAcceptThread;
          mAcceptThread = NULL;
       }
    }

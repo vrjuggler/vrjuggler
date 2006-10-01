@@ -87,7 +87,8 @@ bool DataGlove::startSampling()
          << "[dataglove] Begin sampling\n"
          << vprDEBUG_FLUSH;
 
-   
+   bool started(false);
+
    if (mThread == NULL)
    {
       int maxAttempts=0;
@@ -117,25 +118,28 @@ bool DataGlove::startSampling()
       mExitFlag = false;
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[dataglove] Spawning control thread\n" << vprDEBUG_FLUSH;
-      mThread = new vpr::Thread(boost::bind(&DataGlove::controlLoop, this));
 
-      if ( ! mThread->valid() )
+      try
       {
-         return false;
-      }
-      else
-      {
+         mThread = new vpr::Thread(boost::bind(&DataGlove::controlLoop, this));
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "[dataglove] DataGlove is active " << std::endl
             << vprDEBUG_FLUSH;
          mActive = true;
-         return true;
+         started = true;
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for 5DT DataGlove driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
       }
    }
-   else
-   {
-      return false; // already sampling
-   }
+
+   return started;
 }
 
 void DataGlove::controlLoop()

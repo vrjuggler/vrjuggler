@@ -144,20 +144,27 @@ bool InputWindowXWin::startSampling()
       vprASSERT(false);
    }
 
+   bool started(false);
    mExitFlag = false;
    
    // Create a new thread to handle the control
-   mThread = new vpr::Thread(boost::bind(&InputWindowXWin::controlLoop, this));
+   try
+   {
+      mThread = new vpr::Thread(boost::bind(&InputWindowXWin::controlLoop,
+                                            this));
+      started = true;
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for X11 input window driver!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+   }
 
-   // return success value...
-   if ( ! mThread->valid() )
-   {
-      return false; // fail
-   }
-   else
-   {
-      return true; // success
-   }
+   return started;
 }
 
 bool InputWindowXWin::stopSampling()

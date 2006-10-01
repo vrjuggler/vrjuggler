@@ -81,7 +81,7 @@ class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
 public:
 
    /** Constructor. */
-   Vrpn() : mReadThread(NULL)
+   Vrpn()
    {
    };
 
@@ -148,7 +148,6 @@ protected:
    }
 
 private:
-   vpr::Thread* mReadThread;
    std::string mTrackerServer;
    std::string mButtonServer;
    int mTrackerNumber;

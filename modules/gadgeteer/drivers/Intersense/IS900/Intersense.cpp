@@ -230,15 +230,23 @@ bool Intersense::startSampling()
 
       // Create a new thread to handle the control and set flag to loop
       mExitFlag = false;
-      mThread = new vpr::Thread(boost::bind(&Intersense::controlLoop, this));
 
-      if ( ! mThread->valid() )
+      try
       {
-         return false;  // Fail
+         mThread = new vpr::Thread(boost::bind(&Intersense::controlLoop,
+                                               this));
+         return true;
       }
-      else
+      catch (vpr::Exception& ex)
       {
-         return true;   // success
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for IS-900 driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+
+         return false;
       }
    }
 

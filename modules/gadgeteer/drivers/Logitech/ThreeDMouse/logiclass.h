@@ -90,7 +90,6 @@ public:
    /** Default constructor. */
    ThreeDMouse() : mExitFlag(false)
    {
-      mThreadID = NULL;
    }
 
    virtual ~ThreeDMouse()
@@ -173,7 +172,6 @@ private:
 
    //gadget::PositionData mData[3];
 
-   vpr::Thread*   mThreadID; // Ptr to the thread object
    gmtl::Vec3f      baseVector; // Used to store the base location tooffset from
             // Originally set to 0,0,0
 

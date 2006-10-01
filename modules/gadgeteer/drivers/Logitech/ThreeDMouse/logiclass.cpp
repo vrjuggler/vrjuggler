@@ -59,6 +59,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/gadgetParam.h>
+#include <gadget/Util/Debug.h>
 #include <drivers/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
 
 
@@ -86,29 +87,32 @@ namespace gadget
 
 bool ThreeDMouse::startSampling()
 {
-   if ( mThreadID == NULL )
+   bool started(false);
+
+   if ( mThread == NULL )
    {
       openMouse(mPortName);
       void sampleMouse(void*);
 
       mExitFlag = false;
-      mThread = new vpr::Thread(boost::bind(&ThreeDMouse::controlLoop, this));
-
-      if ( ! mThread->valid() )
+      try
       {
-         return -1;
+         mThread =
+            new vpr::Thread(boost::bind(&ThreeDMouse::controlLoop, this));
+         started = true;
       }
-      else
+      catch (vpr::Exception& ex)
       {
-         std::cout << "going " << std::endl;
-         return 1;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for Logitech 3D mouse driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
       }
    }
-   else
-   {
-      return -2; // already sampling
-   }
 
+   return started;
 }
 
 void ThreeDMouse::controlLoop()
@@ -140,13 +144,14 @@ bool ThreeDMouse::stopSampling()
    {
       mExitFlag = true;
       mThread->join();
+      delete mThread;
+      mThread = NULL;
 
-      mThreadID = NULL;
       closeMouse();
       std::cout << "stopping the ThreeDMouse.." << std::endl;
    }
 
-   return 1;
+   return true;
 }
 
 void ThreeDMouse::updateData()

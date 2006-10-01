@@ -108,17 +108,12 @@ bool MSFTSpeechRecogDigital::startSampling()
    else
    {
       // Create a new thread to handle the sampling control
-      mThread =
-         new vpr::Thread(boost::bind(&MSFTSpeechRecogDigital::controlLoop,
-                                     this));
+      try
+      {
+         mThread =
+            new vpr::Thread(boost::bind(&MSFTSpeechRecogDigital::controlLoop,
+                                        this));
 
-      if ( ! mThread->valid() )
-      {
-         mIsInitializing = false;
-         return false;  // Fail
-      }
-      else
-      {
          mIsActive = true;
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "gadget::MSFTSpeechRecogDigital sampling control thread created."
@@ -126,7 +121,18 @@ bool MSFTSpeechRecogDigital::startSampling()
          mIsInitializing = false;
          return true;  // Fail
       }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for MS Digital Speech driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
 
+         mIsInitializing = false;
+         return false;  // Fail
+      }
    }
    mIsInitializing = false;
 

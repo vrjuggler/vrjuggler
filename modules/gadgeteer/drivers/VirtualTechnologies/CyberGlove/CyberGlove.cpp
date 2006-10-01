@@ -65,8 +65,9 @@ namespace gadget
 bool CyberGlove::config(jccl::ConfigElementPtr e)
 {
    if(! (Input::config(c) && Glove::config(c) ))
+   {
       return false;
-
+   }
 
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
@@ -116,10 +117,10 @@ CyberGlove::getElementType()
    return "cyber_glove";
 }
 
-int
-CyberGlove::startSampling()
+bool CyberGlove::startSampling()
 {
-   
+   bool started(false);
+
    if (mThread == NULL)
    {
       resetIndexes();
@@ -127,22 +128,27 @@ CyberGlove::startSampling()
       //Reset Exit flag in case of a shutdown and restart of the driver
       mExitFlag = false;
       // Create a new thread to handle the control
-      mThread = new vpr::Thread(boost::bind(&CyberGlove::controlLoop, this));
-
-      if ( ! mThread->valid() )
+      try
       {
-         return 0;   // Failure
-      }
-      else
-      {
+         mThread = new vpr::Thread(boost::bind(&CyberGlove::controlLoop,
+                                               this));
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "gadget::CyberGlove is active " << std::endl << vprDEBUG_FLUSH;
          mActive = true;
-         return 1;
+         started = true;
       }
-  }
-  else
-     return 0; // already sampling
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for CyberGlove driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
+   }
+
+   return started;
 }
 
 // -Opens the glove port
@@ -191,7 +197,6 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
 
 bool CyberGlove::stopSampling()
 {
-
    if (mThread != NULL)
    {
       //Signal for the thread to exit..
@@ -205,7 +210,8 @@ bool CyberGlove::stopSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "stopping CyberGlove.." << std::endl << vprDEBUG_FLUSH;
    }
-   return 1;
+
+   return true;
 }
 
 CyberGlove::~CyberGlove ()

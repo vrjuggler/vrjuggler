@@ -592,8 +592,20 @@ void FastrakStandalone::checkchild()
    mExitFlag = false;
    if ( NULL == mReadThread )
    {
-      mReadThread = new vpr::Thread(boost::bind(&FastrakStandalone::readloop,
-                                                this));
+      try
+      {
+         mReadThread =
+            new vpr::Thread(boost::bind(&FastrakStandalone::readloop, this));
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn read thread for Fastrak standalone driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
    }
 }
 

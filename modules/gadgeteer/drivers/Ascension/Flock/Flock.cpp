@@ -68,8 +68,7 @@ namespace gadget
  */
 Flock::Flock(const char* port, const int baud, const int numBrds,
              const int transmit)
-   : mThread(NULL)
-   , mFlockOfBirds(port, baud)
+   : mFlockOfBirds(port, baud)
 {
    boost::ignore_unused_variable_warning(numBrds);
    boost::ignore_unused_variable_warning(transmit);
@@ -160,6 +159,8 @@ bool Flock::startSampling()
       return false;
    }
 
+   bool started(false);
+
    if (mThread == NULL)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -181,21 +182,24 @@ bool Flock::startSampling()
 
       // Create a new thread to handle the control
       mExitFlag = false;
-      mThread = new vpr::Thread(boost::bind(&Flock::controlLoop, this));
+      try
+      {
+         mThread = new vpr::Thread(boost::bind(&Flock::controlLoop, this));
+         started = true;
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for Flock of Birds driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+         started = false;
+      }
+   }
 
-      if ( ! mThread->valid() )
-      {
-         return false;  // Fail
-      }
-      else
-      {
-         return true;   // success
-      }
-   }
-   else
-   {
-      return false; // already sampling
-   }
+   return started;
 }
 
 bool Flock::sample()

@@ -423,21 +423,31 @@ bool MSFTSpeechServerManager::startUpdating()
       return true;
    }
 
-   // Create a new thread to handle the sampling control
-   mUpdateThread =
-      new vpr::Thread(boost::bind(&MSFTSpeechServerManager::updateLoop, this));
+   bool started(false);
 
-   if ( ! mUpdateThread->valid() )
+   // Create a new thread to handle the sampling control
+   try
    {
-      return false;  // Fail
-   }
-   else
-   {
+      mUpdateThread =
+         new vpr::Thread(boost::bind(&MSFTSpeechServerManager::updateLoop,
+                                     this));
+      started = true;
+
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "gadget::MSFTSpeechServerManager update thread created."
          << std::endl << vprDEBUG_FLUSH;
-         return true;
    }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for MS Speech Server Manager!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+   }
+
+   return started;
 }
 
 bool MSFTSpeechServerManager::stopUpdating()

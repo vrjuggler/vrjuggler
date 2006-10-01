@@ -84,10 +84,12 @@ PinchGlove::~PinchGlove()
 
 bool PinchGlove::startSampling()
 {
+   bool started(true);
+
    if (NULL != mThread)
    {
       // Already sampling
-      return 0; 
+      started = false; 
    }
    else
    {
@@ -105,7 +107,7 @@ bool PinchGlove::startSampling()
       // Attempt to connect to the PinchGlove. 
       if(!mGlove->connect(mPortName, mBaud).success())
       {
-         return 0;
+         return false;
       }
 
       // Create a vector of strings to hold information about PinchGlove.
@@ -114,13 +116,13 @@ bool PinchGlove::startSampling()
       // Query the PinchGlove for its harware information.
       if(!mGlove->printHardwareInformation(info).success())
       {
-         return 0;
+         return false;
       }
       
       // Time stamps are on by default. (Pinch Glove Manual p. 8)
       if(!mGlove->setTimestampsOn(true).success())
       {
-         return 0;   
+         return false;
       }
       
       // Print out the hardware information.
@@ -132,23 +134,22 @@ bool PinchGlove::startSampling()
 
       mExitFlag = false;
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) 
-      << "[PinchGlove] Spawning control thread." << std::endl  << vprDEBUG_FLUSH;
+         << "[PinchGlove] Spawning control thread." << std::endl
+         << vprDEBUG_FLUSH;
 
       // Create a new thread to handle the control.
-      mThread = new vpr::Thread(boost::bind(&PinchGlove::controlLoop, this));
+      try
+      {
+         mThread = new vpr::Thread(boost::bind(&PinchGlove::controlLoop,
+                                               this));
 
-      if (!mThread->valid())
-      {
-         return 0;
-      }
-      else
-      {
          // We want to add an open hand sample first because the pinch glove
          // will not return data until there is a pinch. And until then, the
          // hand will be open.
          std::vector<DigitalData> digital_sample(10, 0);
          addDigitalSample(digital_sample);
-         std::vector<GloveData> gloveData = getGloveDataFromDigitalData(digital_sample);
+         std::vector<GloveData> gloveData =
+            getGloveDataFromDigitalData(digital_sample);
          addGloveSample(gloveData);
          swapDigitalBuffers();
          swapGloveBuffers();
@@ -156,9 +157,21 @@ bool PinchGlove::startSampling()
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "[PinchGlove] PinchGlove is active " << std::endl
             << vprDEBUG_FLUSH;
-         return 1;
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to spawn thread for PinchGlove driver!\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+
+         started = false;
       }
    }
+
+   return started;
 }
 
 void PinchGlove::controlLoop()

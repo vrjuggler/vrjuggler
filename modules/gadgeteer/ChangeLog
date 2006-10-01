@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-01-2006 patrick     Updated to handle the vpr::Thread constructor throwing
+			an exception.
+                        NEW VERSION: 1.1.16
 Aug-04-2006 dshipton    Flagpoll now used in the build...and simplifications.
                         NEW VERSION: 1.1.15
 Jul-12-2006 patrick     Changed the DLL name to include the version as part of

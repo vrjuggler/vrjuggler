@@ -127,9 +127,9 @@ bool InputWindowWin32::startSampling()
    if ( mThread != NULL )
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << "[gadget::InputWindowWin32::startSampling()] "
-         << "startSampling called, when already sampling.\n"
+         << clrOutNORM(clrRED, "ERROR")
+         << ": [gadget::InputWindowWin32::startSampling()] "
+         << "startSampling() called when already sampling.\n"
          << vprDEBUG_FLUSH;
       vprASSERT(mThread == NULL);
       return false;
@@ -139,17 +139,28 @@ bool InputWindowWin32::startSampling()
       << "gadget::InputWindowWin32::startSampling() : ready to go.."
       << std::endl << vprDEBUG_FLUSH;
 
+   bool started(false);
+
    // Create a new thread to handle the control
    mExitFlag = false;
-   mThread = new vpr::Thread(boost::bind(&InputWindowWin32::controlLoop, this));
 
-   // Ensure that we have a valid thread.
-   if ( ! mThread->valid() )
+   try
    {
-      return false;
+      mThread = new vpr::Thread(boost::bind(&InputWindowWin32::controlLoop,
+                                this));
+      started = true;
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for Win32 input window driver!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
    }
 
-   return true;
+   return started;
 }
 
 bool InputWindowWin32::stopSampling()

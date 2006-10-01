@@ -264,20 +264,21 @@ bool MotionStar::startSampling()
             // Set exit flag to not exit and start sample thread
             mExitFlag = false;
 
-            mMyThread = new vpr::Thread(boost::bind(&MotionStar::controlLoop,
-                                                    this));
-
-            if ( ! mMyThread->valid() )
+            try
+            {
+               mMyThread =
+                  new vpr::Thread(boost::bind(&MotionStar::controlLoop, this));
+               retval = true;   // success
+            }
+            catch (vpr::Exception& ex)
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << "gadget::MotionStar could not create sampling thread.\n"
+                  << clrOutBOLD(clrRED, "ERROR")
+                  << ": Failed to spawn thread for MotionStar driver!\n"
                   << vprDEBUG_FLUSH;
-                vprASSERT(false);  // Fail
-                retval = false;   // failure
-            }
-            else
-            {
-                retval = true;   // success
+               vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << ex.what() << std::endl << vprDEBUG_FLUSH;
+               retval = false;
             }
          }
          // Connection to server failed.  MotionStarStandalone prints out
