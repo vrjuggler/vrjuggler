@@ -53,16 +53,6 @@ void SocketConnector::connect(vpr::SocketStream& newStream,
     // Open the socket
     checkOpen(newStream);
 
-    /*  This actually happens in connect start
-    if ( localAddr != vpr::InetAddr::AnyAddr )
-    {
-       vpr::ReturnStatus status;
-       newStream.setLocalAddr(localAddr);
-       status = newStream.bind();
-       vprASSERT(status.success() && "Failed to bind local address");
-    }
-    */
-
     // Start the connection
     connectStart(newStream, timeout, localAddr);
 
@@ -70,36 +60,6 @@ void SocketConnector::connect(vpr::SocketStream& newStream,
 
     // Attempt the connection
     newStream.connect(timeout);
-
-    /*
-    // If the connect call did not return success, it may be the result of
-    // using non-blocking sockets.
-    if ( ! ret_val.success() )
-    {
-       // If connect() gave us a status saying that the connection is in
-       // progress, try to complete the connection after the timeout period.
-       // If there is no timeout period, simply return immediately.
-       if ( ret_val == vpr::ReturnStatus::InProgress ||
-            ret_val == vpr::ReturnStatus::WouldBlock )
-       {
-          if ( timeout != vpr::Interval::NoWait ) {
-             ret_val = complete(newStream, &remote_addr, timeout);
-          }
-       }
-    }
-    // Finish up successful connection.
-    else if(vpr::Interval::NoWait != timeout) {
-       ret_val = complete(newStream, &remote_addr, timeout);
-    }
-    */
-
-    /*
-    ** Since complete doesn't do anything really we don't need this
-    if(ret_val.success())
-    {
-       ret_val = complete(newStream, timeout);
-    }
-    */
 }
 
 // Complete a non-blocking connection
