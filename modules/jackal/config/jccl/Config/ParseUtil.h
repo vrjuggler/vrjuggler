@@ -31,6 +31,8 @@
 #include <vector>
 #include <string>
 
+#include <vpr/Util/ReturnStatus.h>
+
 
 namespace jccl
 {
