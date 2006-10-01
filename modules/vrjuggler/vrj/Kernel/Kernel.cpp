@@ -267,7 +267,8 @@ void Kernel::controlLoop()
 void Kernel::setApplication(App* newApp)
 {
    vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL)
-      << "vrj::Kernel::setApplication: New application set\n" << vprDEBUG_FLUSH;
+      << "[vrj::Kernel::setApplication()] New application set\n"
+      << vprDEBUG_FLUSH;
    mNewApp = newApp;
    mNewAppSet = true;
 }
@@ -292,7 +293,7 @@ void Kernel::checkForReconfig()
       if((mNewApp == NULL) || (mNewApp->depSatisfied()) )   // If app is NULL or dependencies satisfied
       {
          vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_STATUS_LVL)
-            << "vrj::Kernel: New application set, dependencies: Satisfied.\n"
+            << "New application set; dependencies satisfied.\n"
             << vprDEBUG_FLUSH;
          mNewAppSet = false;
          changeApplication(mNewApp);
@@ -300,7 +301,7 @@ void Kernel::checkForReconfig()
       else
       {
          vprDEBUG(vrjDBG_KERNEL,vprDBG_WARNING_LVL)
-            << "vrj::Kernel: New application set, dependencies: Not satisfied yet.\n"
+            << "New application set; dependencies not satisfied yet.\n"
             << vprDEBUG_FLUSH;
       }
    }
