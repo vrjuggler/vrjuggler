@@ -38,6 +38,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <string>
 #include <stdexcept>
 
 //#include <boost/preprocessor/cat.hpp>
