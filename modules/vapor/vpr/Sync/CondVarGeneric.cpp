@@ -76,7 +76,6 @@ void CondVarGeneric::wait(const vpr::Interval& timeToWait)
    mWaiters--;
 
    std::cerr << std::setw(5) << getpid() << "  Wait: end:" << std::endl;
-   return vpr::ReturnStatus();
 }
 
 void CondVarGeneric::dump() const
