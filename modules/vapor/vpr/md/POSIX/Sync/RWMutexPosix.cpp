@@ -36,70 +36,28 @@
 #include <vpr/vprConfig.h>
 
 #include <sstream>
+#include <cstring>
 
 #include <vpr/Util/ResourceException.h>
-#include <vpr/md/NSPR/NSPRHelpers.h>
-#include <vpr/md/NSPR/Sync/RWMutexNSPR.h>
+#include <vpr/md/POSIX/Sync/RWMutexPosix.h>
 
 
 namespace vpr
 {
 
-RWMutexNSPR::RWMutexNSPR()
+RWMutexPosix::RWMutexPosix()
    : mLocked(false)
-   , mRwLock(NULL)
 {
-   // Note the second argument "VPR RW Mutex" is for debug purposes only
-   mRwLock = PR_NewRWLock(0, "VPR RW Mutex");
+   // Initialize the mutex.
+   const int result = pthread_rwlock_init(&mRWMutex, NULL);
 
-   if ( NULL == mRwLock )
+   if ( result != 0 )
    {
       std::ostringstream msg_stream;
-      NSPR_PrintError("Read-write mutex allocation failed: ", msg_stream);
+      msg_stream << "Read-write mutex allocation failed: "
+                 << std::strerror(result);
       throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
    }
 }
 
-bool RWMutexNSPR::tryAcquireRead()
-{
-   bool locked(false);
-
-/*
-   stateLock.acquire();
-   {
-      if ( ! (mRefCount == -1 || numWaitingWriters > 0) )
-      {
-         mRefCount++;
-         locked = true;
-      }
-   }
-   stateLock.release();
-*/
-
-   throw vpr::Exception("Method not implemented!", VPR_LOCATION);
-
-   return locked;
 }
-
-bool RWMutexNSPR::tryAcquireWrite()
-{
-   bool locked(false);
-
-/*
-   stateLock.acquire();
-   {
-      if ( mRefCount == 0 )
-      {
-         mRefCount = -1;
-         locked = true;
-      }
-   }
-   stateLock.release();
-*/
-
-   throw vpr::Exception("Method not implemented!", VPR_LOCATION);
-
-   return locked;
-}
-
-} // End of vpr namespace

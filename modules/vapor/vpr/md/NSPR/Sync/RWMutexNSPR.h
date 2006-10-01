@@ -38,10 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
 #include <prrwlock.h>
-
-#include <vpr/Util/ReturnStatus.h>
+#include <boost/noncopyable.hpp>
 
 
 namespace vpr
@@ -52,100 +50,150 @@ namespace vpr
  * Read/write mutex implementation using NSPR read/write mutexes (PRRWLock).
  * This is typedef'd to vpr::RWMutex.
  */
-class VPR_CLASS_API RWMutexNSPR
+class VPR_CLASS_API RWMutexNSPR : boost::noncopyable
 {
 public:
-   RWMutexNSPR() : mRwLock(NULL)
-   {
-      // Note the second argument "VPR RW Mutex" is for debug purposes only
-      mRwLock = PR_NewRWLock(0, "VPR RW Mutex");
-   }
+   /**
+    * Constructor for vpr::RWMutexNSPR class.
+    *
+    * @post The mutex variable is initialized and ready for use. The mutex
+    *       operations will not fail.
+    *
+    * @throw vpr::ResourceException is thrown if the mutex cannot be
+    *        allocated.
+    */
+   RWMutexNSPR();
 
+   /**
+    * Destructor for vpr::RWMutexNSPR class.
+    *
+    * @pre No thread should be in a lock-specific function.
+    * @post The mutex variable is destroyed.
+    */
    ~RWMutexNSPR()
    {
-      PR_DestroyRWLock(mRwLock);
+      if ( NULL != mRwLock )
+      {
+         PR_DestroyRWLock(mRwLock);
+      }
    }
 
    /**
-    * Locks the mutex.
+    * Acquires a write lock on this mutex.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
-    * @return vpr::ReturnStatus::Fail is returned upon error.
+    * @post A write lock on the mutex variable is acquired by the caller. If a
+    *       lock has already been acquired by another thread, the caller
+    *       blocks until the mutex has been freed.
+    *
+    * @note Acquires the write lock.
+    *
+    * @see acquireWrite()
     */
-   vpr::ReturnStatus acquire()
+   void acquire()
    {
-      return acquireWrite();
+      acquireWrite();
    }
 
    /**
-    * Acquires a read mutex.
+    * Acquires a read lock on this mutex.
+    *
+    * @pre None.
+    * @post A read lock on the mutex variable is acquired by the caller. If a
+    *       lock has already been acquired by another thread, the caller
+    *       blocks until the mutex has been freed.
     */
-   vpr::ReturnStatus acquireRead()
+   void acquireRead()
    {
       PR_RWLock_Rlock(mRwLock);
-      return vpr::ReturnStatus();
    }
 
    /**
-    * Acquires a write mutex.
+    * Acquires a write lock on this mutex.
+    *
+    * @post A lock on the mutex variable is acquired by the caller. If a
+    *       lock has already been acquired by another thread, the caller
+    *       blocks until the mutex has been freed.
     */
-   vpr::ReturnStatus acquireWrite()
+   void acquireWrite()
    {
       PR_RWLock_Wlock(mRwLock);
-      return vpr::ReturnStatus();
    }
 
    /**
-    * Tries to acquire the mutex.
-    * Wait until the semaphore value is greater than 0.
-    * Then decrement by 1 and return.
-    * P operation.
+    * Tries to acquire a write lock on this mutex variable (does not block).
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
-    * @return vpr::ReturnStatus::Fail is returned if the mutex is not
-    *         acquired.
+    * @post If successful, a write lock on the mutex variable is acquired by
+    *       the caller. If a write lock could not be acquired, then the method
+    *       returns immdeiately.
+    *
+    * @return \c true is returned if the write lock is acquired, and \c false
+    *         is returned if the write lock could not be acquired.
+    *
+    * @note Tries to acquire the write mutex.
+    *
+    * @see tryAcquireWrite()
     */
-   vpr::ReturnStatus tryAcquire()
+   bool tryAcquire()
    {
       return tryAcquireWrite();
    }
 
    /**
-    * Tries to acquire a read mutex.
+    * Tries to acquire a read lock on this mutex (does not block).
+    *
+    * @post If successful, a read lock on the mutex variable is acquired by
+    *       the caller. If a read lock could not be acquired, then the method
+    *       returns immdeiately.
+    *
+    * @return \c true is returned if the read lock is acquired, and \c false
+    *         is returned if the read lock could not be acquired.
+    *
+    * @note Not implemented!
     */
-   vpr::ReturnStatus tryAcquireRead();
+   bool tryAcquireRead();
 
    /**
-    * Tries to acquire a write mutex.
+    * Tries to acquire a write lock on this mutex (does not block).
+    *
+    * @post If successful, a write lock on the mutex variable is acquired by
+    *       the caller. If a write lock could not be acquired, then the method
+    *       returns immdeiately.
+    *
+    * @return \c true is returned if the write lock is acquired, and \c false
+    *         is returned if the write lock could not be acquired.
+    *
+    * @note Not implemented!
     */
-   vpr::ReturnStatus tryAcquireWrite();
+   bool tryAcquireWrite();
 
    /**
     * Releases the mutex.
     *
-    * @return vpr::ReturnStatus::Succeed is returned on success.
-    * @return vpr::ReturnStatus::Fail is returned on error.
+    * @pre The mutex variable must be locked by the calling thread.
+    * @post The mutex variable is unlocked.
     */
-   vpr::ReturnStatus release()
+   void release()
    {
+      mLocked = false;
       PR_RWLock_Unlock(mRwLock);
-      return vpr::ReturnStatus();
    }
 
    /**
     * Tests the current lock status.
     *
-    * @return 0 is returned if this mutex is not locked.
-    * @return 1 is returned if this mutex is locked.
+    * @post The state of the mutex variable is returned.
+    *
+    * @return \c false is returned if this mutex is not currently locked.
+    *         \c true is returned if it is.
     */
-/*
-    int test()
-    {
-        return stateLock.test();
-    }
-*/
+   bool test() const
+   {
+      return mLocked;
+   }
 
 protected:
+   bool mLocked;
+
    int numWaitingReaders;    /**< Number of waiting readers. */
    int numWaitingWriters;    /**< Number of waiting writers. */
 
@@ -156,17 +204,6 @@ protected:
    int mRefCount;
 
    PRRWLock* mRwLock;
-
-   // = Prevent assignment and initialization.
-   void operator= (const RWMutexNSPR &)
-   {
-      /* Do nothing. */ ;
-   }
-
-   RWMutexNSPR(const RWMutexNSPR &)
-   {
-      /* Do nothing. */ ;
-   }
 };
 
 } // End of vpr namespace
