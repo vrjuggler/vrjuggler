@@ -150,7 +150,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.23], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
+VPR_PATH([1.1.31], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 
 JCCL_PATH_CXX([1.1.5], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])

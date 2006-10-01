@@ -66,15 +66,30 @@ GlPipe::~GlPipe()
  */
 int GlPipe::start()
 {
-    vprASSERT(mThreadRunning == false);        // We should not be running yet
+   vprASSERT(mThreadRunning == false);        // We should not be running yet
 
-    // Create a new thread to call the control loop
-    mActiveThread = new vpr::Thread(boost::bind(&GlPipe::controlLoop, this));
+   int started(0);
 
-    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-       << "[vrj::GlPipe::start()] Started control loop. " << mActiveThread
-       << std::endl << vprDEBUG_FLUSH;
-    return 1;        // XXX: Is this always true?
+   // Create a new thread to call the control loop
+   try
+   {
+      mActiveThread = new vpr::Thread(boost::bind(&GlPipe::controlLoop, this));
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "[vrj::GlPipe::start()] Started control loop. " << mActiveThread
+         << std::endl << vprDEBUG_FLUSH;
+      started = 1;
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": Failed to spawn thread for OpenGL pipe!\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+   }
+
+   return started;
 }
 
 /**

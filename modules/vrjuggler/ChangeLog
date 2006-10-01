@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-01-2006 patrick     Updated to handle the vpr::Thread constructor throwing
+                        an exception.
+                        NEW VERSION: 2.1.12
 Sep-07-2006 patrick     Improved error handling in viewport configurations.
 Jul-12-2006 patrick     Changed the DLL name to include the version as part of
                         the base library name on Windows. Implemented automatic

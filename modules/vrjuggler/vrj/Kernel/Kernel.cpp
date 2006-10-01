@@ -81,15 +81,27 @@ int Kernel::start()
    mIsRunning = true;
    initSignalButtons();    // Initialize the signal buttons that may be pressed
 
-   // Create a new thread to handle the control
-   // mControlThread is set in controlLoop().
-   new vpr::Thread(boost::bind(&Kernel::controlLoop, this));
+   int status(0);
 
-   vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL)
-      << "vrj::Kernel::start(): Just started control loop." << std::endl
-      << vprDEBUG_FLUSH;
+   // Create a new thread to handle the control.
+   try
+   {
+      // mControlThread is set in controlLoop().
+      new vpr::Thread(boost::bind(&Kernel::controlLoop, this));
 
-   return 1;
+      vprDEBUG(vrjDBG_KERNEL, vprDBG_STATE_LVL)
+         << "[vrj::Kernel::start()] Just started control loop." << std::endl
+         << vprDEBUG_FLUSH;
+      status = 1;
+   }
+   catch (vpr::Exception& ex)
+   {
+      vprDEBUG(vrjDBG_KERNEL, vprDBG_CRITICAL_LVL)
+         << "[vrj::Kernel::start()] Failed to start control loop thread!\n"
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
+   }
+
+   return status;
 }
 
 // Set the stop flag

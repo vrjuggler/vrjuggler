@@ -125,6 +125,8 @@ void GlDrawManager::start()
    // Create a new thread to handle the control
    mRunning = true;
 
+   // NOTE: Any exception thrown by spawning the thread will be propagated up
+   // to the caller.
    mControlThread = new vpr::Thread(boost::bind(&GlDrawManager::main, this));
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
