@@ -29,6 +29,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <vpr/Util/ReturnStatus.h>
+
 #include <gadget/AbstractNetworkManager.h>
 #include <gadget/Util/Debug.h>
 

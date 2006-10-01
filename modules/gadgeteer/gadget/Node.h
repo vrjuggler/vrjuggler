@@ -31,6 +31,7 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <gadget/Util/Debug.h>
 
 namespace cluster
