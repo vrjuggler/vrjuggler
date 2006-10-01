@@ -44,30 +44,30 @@ namespace vpr
 {
 
 void SocketConnector::connect(vpr::SocketStream& newStream,
-                                           const vpr::InetAddr& remoteAddr,
-                                           vpr::Interval timeout,
-                                           const vpr::InetAddr& localAddr)
+                              const vpr::InetAddr& remoteAddr,
+                              const vpr::Interval& timeout,
+                              const vpr::InetAddr& localAddr)
 {
-    //vpr::InetAddr remote_addr;
+   //vpr::InetAddr remote_addr;
 
-    // Open the socket
-    checkOpen(newStream);
+   // Open the socket
+   checkOpen(newStream);
 
-    // Start the connection
-    connectStart(newStream, timeout, localAddr);
+   // Start the connection
+   connectStart(newStream, timeout, localAddr);
 
-    newStream.setRemoteAddr(remoteAddr);
+   newStream.setRemoteAddr(remoteAddr);
 
-    // Attempt the connection
-    newStream.connect(timeout);
+   // Attempt the connection
+   newStream.connect(timeout);
 }
 
 // Complete a non-blocking connection
 // Try to complete a non-blocking connection.
 void SocketConnector::complete(vpr::SocketStream& newStream,
-                               const vpr::Interval timeout)
+                               const vpr::Interval& timeout)
 {
-   if( newStream.isConnected() )
+   if ( newStream.isConnected() )
    {
       // XXX: Should this actually be a failure
       return;
@@ -92,7 +92,8 @@ void SocketConnector::complete(vpr::SocketStream& newStream,
       if ( selector.getOut(handle) & (vpr::Selector::Read | vpr::Selector::Write) )
       {
          /*
-         if ( remoteAddr != NULL ) {
+         if ( remoteAddr != NULL )
+         {
             (*remoteAddr) = newStream.getRemoteAddr();
          }
          */
@@ -103,7 +104,8 @@ void SocketConnector::complete(vpr::SocketStream& newStream,
    {
       vprASSERT(false && "Should not call complete on a non-blocking socket");
       /*
-      if ( remoteAddr != NULL ) {
+      if ( remoteAddr != NULL )
+      {
          (*remoteAddr) = newStream.getRemoteAddr();
       }
       */
@@ -112,7 +114,7 @@ void SocketConnector::complete(vpr::SocketStream& newStream,
 
 void SocketConnector::checkOpen(SocketStream& newStream)
 {
-   if (!newStream.isOpen())
+   if ( ! newStream.isOpen() )
    {
       try
       {
@@ -120,7 +122,7 @@ void SocketConnector::checkOpen(SocketStream& newStream)
       }
       catch (IOException& ex)
       {
-         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "vpr::Connector:CheckOpen: Failed to open socket\n"
             << vprDEBUG_FLUSH;
          throw;
@@ -132,15 +134,15 @@ void SocketConnector::checkOpen(SocketStream& newStream)
 // - If not bound, then bind to local addr
 // - If timeout == 0, then set nonblocking
 void SocketConnector::connectStart(SocketStream& newStream,
-                                   vpr::Interval timeout,
+                                   const vpr::Interval& timeout,
                                    const vpr::InetAddr& localAddr)
 {
    vprASSERT(newStream.isOpen());
 
-   if(!newStream.isBound())      // If we are not bound yet
+   if ( ! newStream.isBound() )      // If we are not bound yet
    {
       // If timeout is 0, then we are non-blocking
-      if(vpr::Interval::NoWait == timeout)
+      if ( vpr::Interval::NoWait == timeout )
       {
          newStream.setBlocking(false);
       }
