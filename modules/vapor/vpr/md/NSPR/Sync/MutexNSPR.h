@@ -45,12 +45,11 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <prlock.h>
 #include <boost/noncopyable.hpp>
 
-#include <vpr/Sycn/LockException.h>
+#include <vpr/Sync/LockException.h>
 
 
 namespace vpr
