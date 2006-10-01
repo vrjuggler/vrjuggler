@@ -33,12 +33,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _vprNullMutex_h_
-#define _vprNullMutex_h_
+#ifndef _VPR_NULL_MUTEX_H_
+#define _VPR_NULL_MUTEX_H_
 
 #include <vpr/vprConfig.h>
 #include <stdio.h>
-#include <vpr/Util/ReturnStatus.h>
+#include <boost/noncopyable.hpp>
 
 
 namespace vpr
@@ -50,7 +50,7 @@ namespace vpr
  *
  * @date January 21, 1997
  */
-class VPR_CLASS_API NullMutex
+class NullMutex : boost::noncopyable
 {
 public:
    NullMutex()
@@ -61,70 +61,63 @@ public:
 
    /**
     * Locks the mutex.
-    *
-    * @return 1 is returned if the mutex is acquired.
-    * @return -1 is returned if an error occurs.
     */
-   vpr::ReturnStatus acquire() const
+   void acquire()
    {
-      return vpr::ReturnStatus();
+      /* Do nothing. */ ;
    }
 
    /** Acquires a read mutex. */
-   vpr::ReturnStatus acquireRead() const
+   void acquireRead()
    {
-      return this->acquire();     // No special "read" semaphore -- For now
+      this->acquire();     // No special "read" semaphore -- For now
    }
 
    /** Acquires a write mutex. */
-   vpr::ReturnStatus acquireWrite() const
+   void acquireWrite()
    {
-      return this->acquire();     // No special "write" semaphore -- For now
+      this->acquire();     // No special "write" semaphore -- For now
    }
 
    /**
     * Tries to acquire the lock.  Returns immediately even if we don't acquire
     * the lock.
     *
-    * @return 1 is returned if the mutex is acquired.
-    * @return 0 is returned if the mutex is not acquired.
+    * @return \c true is always returned.
     */
-   vpr::ReturnStatus tryAcquire() const
+   bool tryAcquire()
    {
-      return vpr::ReturnStatus();
+      return true;
    }
 
    /** Tries to acquire a read mutex. */
-   vpr::ReturnStatus tryacquire_read() const
+   bool tryAcquireRead()
    {
       return this->tryAcquire();
    }
 
    /** Tries to acquire a write mutex. */
-   vpr::ReturnStatus tryacquire_write() const
+   bool tryAcquireWrite()
    {
       return this->tryAcquire();
    }
 
    /**
     * Releases the mutex.
-    *
-    * @return 0 is returned on success; -1 is returned otherwise.
     */
-   vpr::ReturnStatus release() const
+   void release()
    {
-      return vpr::ReturnStatus();
+      /* Do nothing. */ ;
    }
 
    /**
     * Tests the current lock status.
     *
-    * @return 0 is returned if the mutex is not locked.
-    * @return 1 is returend if the mutex is locked.
+    * @return \c false is always returned.
     */
-   int test()
+   bool test() const
    {
-      return 0;     // Just return 0 since it is a null lock
+      return false;     // Just return false since it is a null lock
    }
 
    /** Dumps the mutex debug stuff and current state. */
@@ -133,11 +126,6 @@ public:
    {
       fprintf(dest, "%sNULL Mutex", message);
    }
-
-protected:
-   // = Prevent assignment and initialization.
-   void operator= (const NullMutex &) {}
-   NullMutex (const NullMutex &) {}
 };
 
 } // End of vpr namespace
