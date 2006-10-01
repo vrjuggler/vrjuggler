@@ -49,6 +49,7 @@
 #include <assert.h>
 #include <pthread.h>
 #include <boost/noncopyable.hpp>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Sync/LockException.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
@@ -93,6 +94,7 @@ public:
    {
       const int result = pthread_cond_destroy(&mCondVar);
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**
@@ -146,6 +148,7 @@ public:
 
       const int result = pthread_cond_signal(&mCondVar);
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**
@@ -170,6 +173,7 @@ public:
 
       const int result = pthread_cond_broadcast(&mCondVar);
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**

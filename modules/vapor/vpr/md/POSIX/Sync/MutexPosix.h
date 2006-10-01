@@ -50,6 +50,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <boost/noncopyable.hpp>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Sync/LockException.h>
 #include <vpr/Sync/DeadlockException.h>
@@ -87,6 +88,7 @@ public:
    {
       const int result = pthread_mutex_destroy(&mMutex);
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**
@@ -113,6 +115,7 @@ public:
       }
 
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**
@@ -210,6 +213,7 @@ public:
       }
 
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**

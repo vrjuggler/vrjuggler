@@ -49,6 +49,7 @@
 #include <semaphore.h>
 #include <errno.h>
 #include <assert.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Sync/DeadlockException.h>
 
@@ -123,6 +124,7 @@ public:
       }
 
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**
@@ -241,6 +243,7 @@ public:
    {
       const int result = sem_post(mSema);
       assert(result == 0);
+      boost::ignore_unused_variable_warning(result);
    }
 
    /**
