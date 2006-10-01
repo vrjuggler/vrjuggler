@@ -133,10 +133,6 @@ public:
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read lock is
-    *         acquired.
-    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
-    *
     * @note There is no special read lock for now.
     */
    void acquireRead()
@@ -151,10 +147,6 @@ public:
     *       release() is called, or the caller is put at the tail of a wait
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the write lock is
-    *         acquired.
-    * @return vpr::ReturnStatus::Fail is returnd if an error occurred.
     *
     * @note There is no special write lock for now.
     */
