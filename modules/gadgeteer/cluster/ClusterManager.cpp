@@ -514,7 +514,7 @@ namespace cluster
 
       bool ret_val = false;      // Flag to return success
 
-	  {
+      {
          vprDEBUG( gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "Configure the Cluster: " << element->getName()

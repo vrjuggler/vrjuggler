@@ -81,14 +81,18 @@ bool SimDigitalGlove::config(jccl::ConfigElementPtr element)
 void SimDigitalGlove::updateData()
 {
    std::vector<DigitalData> digital_sample(10);
-	
-    // -- Update digital data --- //
+
+   // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {
       if (checkKeyPair( mSimKeys[i] ))             // If keys pressed
+      {
          digital_sample[i] = 1;
+      }
       else
+      {
          digital_sample[i] = 0;
+      }
    }
 
    addDigitalSample(digital_sample);

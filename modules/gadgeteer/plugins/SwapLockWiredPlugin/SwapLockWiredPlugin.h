@@ -60,7 +60,7 @@ public:
 
    virtual ~SwapLockWiredPlugin()
    {;}
-   
+
    /**
     * Get the GUID associated with this plugin.
     */
@@ -75,29 +75,29 @@ public:
    virtual void handlePacket(Packet* packet, gadget::Node* node);
 
    /**
-    * Virtual function that is unused by this plug since we are only 
+    * Virtual function that is unused by this plug since we are only
     * concerned with creating a SwapLock barrier.
     */
    virtual void preDraw();
-   
+
    /**
-    * Virtual function that is unused by this plug since we are only 
+    * Virtual function that is unused by this plug since we are only
     * concerned with creating a SwapLock barrier.
     */
    virtual void postPostFrame();
-   
+
    /** Returns the status of SwapLockWiredPlugin(Not Used)
     *
     *  @return true If plugin is completly configured
     *               and has no pending tasks.
-    *  
+    *
     */
    virtual bool isPluginReady();
-   
+
    /**
     * Create a barrier that will be used to have SwapLock syncronization.
     */
-   virtual bool createBarrier();  
+   virtual bool createBarrier();
 
    /**
     * Returns the name of this plugin.
@@ -111,18 +111,18 @@ public:
    {
       return(std::string("SwapLockWiredPlugin"));
    }
-   
+
    virtual void recoverFromLostNode(gadget::Node* lost_node)
    {
       boost::ignore_unused_variable_warning(lost_node);
    }
-   
+
    /** Add the pending element to the configuration.
     *  PRE: configCanHandle (element) == true.
     *  @return true iff element was successfully added to configuration.
     */
    bool configAdd(jccl::ConfigElementPtr element);
-   
+
    /** Remove the pending element from the current configuration.
     *  PRE: configCanHandle (element) == true.
     *  @return true iff the element (and any objects it represented)
@@ -142,12 +142,12 @@ private:
     * Helper function that determaines if the given ConfigElement is a SwapLockWiredPlugin.
     */
    bool recognizeSwapLockWiredPluginConfig(jccl::ConfigElementPtr element);
-   
+
    /**
     * Returns the string representation of the element type used for the SwapLockWiredPlugin
-    */   
+    */
    static std::string getElementType() { return std::string( "swap_lock_wired_plugin" ); }
-   
+
    vpr::ReturnStatus ConnectToWiredParallel();
    vpr::ReturnStatus Init();
    /**
@@ -156,14 +156,14 @@ private:
     * Note: This will only be used by the barrier master.
     */
    bool startListening();
-   
+
    /**
     * Control loop that is run by mAcceptThread in order to accept incoming connection requests.
     *
     * Note: This will only be used by the barrier master.
     */
    void acceptLoop(void* nullParam);
-   
+
    /**
     * Sends the "complete" signal to all sync slaves.
     */
@@ -195,7 +195,7 @@ private:
 
    bool                             mIsMaster;           /**< Are we the sync master? */
    bool                             mActive;             /**< Is the plugin ready to be used? */
-   unsigned char		    mMasterWaitByte;
+   unsigned char                    mMasterWaitByte;
 };
 
 } // end namespace

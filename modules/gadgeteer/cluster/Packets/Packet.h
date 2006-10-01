@@ -124,8 +124,8 @@ public:
    virtual void parse(vpr::BufferObjectReader* reader) = 0;
 protected:
    Header* mHeader;                          /**< Header used to specify the type/size of this packet.*/
-   vpr::BufferObjectReader* mPacketReader;	 /**< ObjectReader that is used to parse all data. */
-   vpr::BufferObjectWriter* mPacketWriter;	 /**< ObjectWriter that is used to serialize all data. */
+   vpr::BufferObjectReader* mPacketReader;   /**< ObjectReader that is used to parse all data. */
+   vpr::BufferObjectWriter* mPacketWriter;   /**< ObjectWriter that is used to serialize all data. */
    std::vector<vpr::Uint8> mData;            /**< std::vector which contains all internal data */
    vpr::GUID mPluginId;                      /**< GUID that specifies which plugin is responcsible for this packet */
 };

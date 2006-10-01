@@ -51,15 +51,15 @@ namespace cluster
 
       //parseHeader();
    }
-   
+
    Packet::~Packet()
    {
       delete mHeader;
       delete mPacketReader;
-	  delete mPacketWriter;
-	  //delete mData;
+      delete mPacketWriter;
+      //delete mData;
    }
-   
+
    void Packet::dump()
    {
       if (mHeader != NULL)
@@ -78,32 +78,32 @@ namespace cluster
       }
       std::cout << std::endl;
    }
-   
+
    vpr::Uint16 Packet::getPacketType()
    {
       return mHeader->getPacketType();
    }
-   
+
    void Packet::printData(int debug_level)
    {
       if (mHeader != NULL)
       {
          mHeader->printData(debug_level);
          /*
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrCYAN,"\n====== Packet Header ======")
             << "\nRIMCode:    " << mHeader->getRIMCode()
             << "\nPacketType: " << mHeader->getPacketType()
             << "\nFrame #:    " << mHeader->getFrame()
             << "\nLength:     " << mHeader->getPacketLength() << std::endl
-            << vprDEBUG_FLUSH;               
-         */            
+            << vprDEBUG_FLUSH;
+         */
       }
       else
       {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << clrOutBOLD(clrRED,"[Packet::printData] Header is still NULL, can not print data!")
-         << vprDEBUG_FLUSH;               
+         << vprDEBUG_FLUSH;
       }
    }
 }   // end namespace gadget

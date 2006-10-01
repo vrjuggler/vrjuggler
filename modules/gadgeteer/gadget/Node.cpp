@@ -51,7 +51,7 @@
 namespace gadget
 {
 
-Node::Node(const std::string& name, const std::string& host_name, 
+Node::Node(const std::string& name, const std::string& host_name,
                          const vpr::Uint16& port, vpr::SocketStream* socket_stream,
                          AbstractNetworkManager* net_mgr)
    : mRunning(false), mStatus(DISCONNECTED), mUpdateTriggerSema(0),
@@ -81,12 +81,12 @@ void Node::shutdown()
    // This may break the accept code since we might not want to delete the Socket.
    // We may be able to just use a smart pointer to point to the SocketStream.
    mRunning = false;
-  
+
    // Make sure that the conrtol loop exits naturally.
    mUpdateTriggerSema.release();
-   
+
    //mNodeDoneSema.acquire();
-   
+
    if (NULL != mSockStream)
    {
       /*
@@ -106,13 +106,13 @@ void Node::debugDump(int debug_level)
                               std::string("-------------- Node --------------\n"),
                               std::string("-----------------------------------------\n"));
 
-   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "Node Name: " 
+   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "Node Name: "
       << mName << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "Hostname:  " 
+   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "Hostname:  "
       << mHostname << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "Port:      " 
+   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "Port:      "
       << mPort << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "SockStream " 
+   vprDEBUG(gadgetDBG_NET_MGR, debug_level) << "SockStream "
       << (NULL == mSockStream ? "is NULL" : "is NOT NULL") << std::endl << vprDEBUG_FLUSH;
    if (CONNECTED == getStatus())
    {
@@ -161,13 +161,13 @@ void Node::printStats(int debug_level)
 void Node::setStatus(int connect)
 {
    vpr::Guard<vpr::Mutex> guard(mStatusLock);
-   
+
    if (mStatus == CONNECTED && connect == DISCONNECTED)
    {
       //TODO: ADD This back in SOON
       //ClusterManager::instance()->recoverFromLostNode(this);
    }
-   
+
    mStatus = connect;
 }
 
@@ -185,9 +185,9 @@ void Node::update()
 
    vprASSERT(isConnected() && "Node is not connected, we can not update!\nWe must not be calling update from the correct location.");
    cluster::Packet* temp_packet = NULL;
-   
+
    temp_packet = recvPacket();
-   
+
    // Print Packet Information
    temp_packet->printData(vprDBG_CONFIG_LVL);
 
@@ -212,7 +212,7 @@ void Node::controlLoop()
       {
          mUpdateTriggerSema.acquire();
       }
-         
+
       mUpdated = false;
       while ( mRunning && !mUpdated )
       {
@@ -225,16 +225,16 @@ void Node::controlLoop()
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR: ")
                << cluster_exception.what()
                << std::endl << vprDEBUG_FLUSH;
-            
+
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<
                "Node::update() We have lost our connection to: " << getName() << ":" << getPort()
                << std::endl << vprDEBUG_FLUSH;
 
             debugDump(vprDBG_CONFIG_LVL);
-            
+
             // Set the Node as disconnected since we have lost the connection
             setStatus(DISCONNECTED);
-            
+
             // Shut down manually instead of calling shutdown since
             // we are in the control thread.
             mRunning = false;
@@ -249,7 +249,7 @@ void Node::controlLoop()
             //}
          }
       }
-      
+
       // Signal done with Update
       mNodeDoneSema.release();
    }
@@ -342,13 +342,13 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
       throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
    }
 
-   vpr::Uint32 bytes_written;      
+   vpr::Uint32 bytes_written;
 
    if(mHeader->getPacketLength() == cluster::Header::RIM_PACKET_HEAD_SIZE)
    {
       return(vpr::ReturnStatus::Succeed);
    }
-   
+
    // If we have a data packet we need to also send the raw data
    if (out_packet->getPacketType() != cluster::Header::RIM_DATA_PACKET)
    {
@@ -356,7 +356,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
 
       try
       {
-         mSockStream->send(*packet_data, 
+         mSockStream->send(*packet_data,
             mHeader->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE,
             bytes_written);
       }
@@ -372,7 +372,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
 
       // Since we are sending a DataPacket we are not actually sending all data here. We are only sending 2 GUIDs here
       int size = 32;
-      
+
       try
       {
          mSockStream->send(*packet_data, size, bytes_written);
@@ -397,14 +397,14 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
       std::cout << "1: " << test.toString() << " 2: " << test2.toString() << std::endl;
 
       delete testing;
-      
+
       // Testing ID
       testing = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
       std::cout << "ID: " << (int)testing->readUint16() << std::endl;
 
       delete testing;
       */
-      
+
       try
       {
          mSockStream->send(*(temp_data_packet->getDeviceData()),temp_data_packet->getDeviceData()->size(),bytes_written);
@@ -426,11 +426,11 @@ cluster::Packet* Node::recvPacket()
    // - Read in Packet data
    // - Parse data into new packet
    // - Return finished packet
-   
+
    vpr::Guard<vpr::Mutex> guard(mSockReadLock);
-   
+
    cluster::Header* packet_head = new cluster::Header();
-   
+
    try
    {
       packet_head->readData(mSockStream);
@@ -443,9 +443,9 @@ cluster::Packet* Node::recvPacket()
          << ex.what() << std::endl << vprDEBUG_FLUSH;
       throw ex;
    }
-   
+
    vprDEBUG( gadgetDBG_RIM, vprDBG_HVERB_LVL )
-      << "Node::recvPacket() PacketFactory is trying to make a packet type: " 
+      << "Node::recvPacket() PacketFactory is trying to make a packet type: "
       << packet_head->getPacketType()
       << std::endl << vprDEBUG_FLUSH;
 
@@ -458,11 +458,11 @@ cluster::Packet* Node::recvPacket()
    {
       throw cluster::ClusterException( "Node::recvPacket() - Packet was not found in Factory." );
    }
-   
+
    // - Recv the packet data
    //   - Copy over pointer to header
    //   - Continue reading packet from socket
-   
+
    // Set the header for the new packet.
    new_packet->setHeader( packet_head );
    // Allocate memory for incoming packet.
@@ -486,8 +486,8 @@ cluster::Packet* Node::recvPacket()
    //}
    else
    {
-      vpr::Uint32 bytes_read;	  
-   
+      vpr::Uint32 bytes_read;
+
       try
       {
          // Get packet data.
@@ -503,17 +503,17 @@ cluster::Packet* Node::recvPacket()
             << " Reading packet data failed. Expecting: "
             << packet_head->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE
             << " But got: " << bytes_read << std::endl << vprDEBUG_FLUSH;
-         
+
          // TODO: setCause(ex)
          throw cluster::ClusterException( "Node::recvPacket() - Reading packet data failed!" );
       }
    }
-   
+
    vpr::BufferObjectReader* reader = new vpr::BufferObjectReader( &incoming_data );
-   
+
    // Parse Packet with new data
    new_packet->parse( reader );
-   
+
    //NOTE: incoming_data goes out of scope here which means that we are left with only the data that we parsed.
    //TODO: We could save memory by not parsing the raw DataPacket but just passing the location of the memory that we want to use.
 

@@ -91,16 +91,16 @@ namespace cluster
       jccl::ConfigElementPtr barrier_machine_element = ClusterManager::instance()->getConfigElementPointer(barrier_machine_element_name);
       vprASSERT(NULL != barrier_machine_element.get() && "SwapLockWiredPlugin element must have a sync_server.");
       mBarrierMasterHostname = barrier_machine_element->getProperty<std::string>(std::string("host_name"));
-      
+
       //mTCPport = element->getProperty<int>(std::string("listen_port"));
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockWiredPlugin] ")
-         << "SwapLock Master Element Name is: " << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;         
+         << "SwapLock Master Element Name is: " << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockWiredPlugin] ")
-         << "SwapLock Master Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;         
+         << "SwapLock Master Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;
       // Starting Barrier Stuff
-      /////////////////////////////////////         
-     
+      /////////////////////////////////////
+
 
       bool slave_one = element->getProperty<bool>(std::string("slave_one"));
       bool slave_two = element->getProperty<bool>(std::string("slave_two"));
@@ -130,7 +130,7 @@ namespace cluster
       {
          mMasterWaitByte |= 0x80;
       }
-      
+
       if(ClusterNetwork::isLocalHost(mBarrierMasterHostname))
       {
          mIsMaster = true;
@@ -144,7 +144,7 @@ namespace cluster
       Init();
       return true;
    }
-   
+
    /** Remove the pending element from the current configuration.
    *  PRE: configCanHandle (element) == true.
    *  @return true iff the element (and any objects it represented)
@@ -154,7 +154,7 @@ namespace cluster
    {
       if (recognizeSwapLockWiredPluginConfig(element))
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SwapLockWiredPlugin] Disabling SwapLock: " << element->getName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SwapLockWiredPlugin] Disabling SwapLock: " << element->getName()
          << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
@@ -165,7 +165,7 @@ namespace cluster
          return(false);
       }
    }
-   
+
    /** Checks if this handler can process element.
    *  Typically, an implementation of handler will check the element's
    *  description name/token to decide if it knows how to deal with
@@ -174,9 +174,9 @@ namespace cluster
    */
    bool SwapLockWiredPlugin::configCanHandle(jccl::ConfigElementPtr element)
    {
-      return( recognizeSwapLockWiredPluginConfig(element) );   
+      return( recognizeSwapLockWiredPluginConfig(element) );
    }
-      
+
    bool SwapLockWiredPlugin::recognizeSwapLockWiredPluginConfig(jccl::ConfigElementPtr element)
    {
       return(element->getID() == getElementType());
@@ -193,7 +193,7 @@ namespace cluster
    {
       boost::ignore_unused_variable_warning(packet);
       boost::ignore_unused_variable_warning(node);
-   }     
+   }
 
    bool SwapLockWiredPlugin::isPluginReady()
    {
@@ -216,30 +216,30 @@ namespace cluster
 
       if (mIsMaster)
       {
-	   //std::cout << "Master-Wait-Signal-Up: " << (int)mMasterWaitByte << std::endl;
-	 waitSignalUp(mMasterWaitByte);
-	   //std::cout << "Master-Send-Signal-Up" << std::endl;
-	 sendSignal(255);
-	   //std::cout << "Master-Wait-Signal-Down" << std::endl;
-	 waitSignalDown(mMasterWaitByte);
-	   //std::cout << "Master-Send-Signal-Down" << std::endl;
-	 sendSignal(0);
+            //std::cout << "Master-Wait-Signal-Up: " << (int)mMasterWaitByte << std::endl;
+         waitSignalUp(mMasterWaitByte);
+            //std::cout << "Master-Send-Signal-Up" << std::endl;
+         sendSignal(255);
+            //std::cout << "Master-Wait-Signal-Down" << std::endl;
+         waitSignalDown(mMasterWaitByte);
+            //std::cout << "Master-Send-Signal-Down" << std::endl;
+         sendSignal(0);
       }
       else
       {
-	   //std::cout << "Slave-Send-Signal-Up" << std::endl;
-	 sendSignal(255);
-	   //std::cout << "Slave-Wait-Signal-Up" << std::endl;
-	 waitSignalUp(0x8);
-	   //std::cout << "Slave-Send-Signal-Down" << std::endl;
-	 sendSignal(0);
-	   //std::cout << "Slave-Wait-Signal-Down" << std::endl;
-         waitSignalDown(0x8); 	 
+            //std::cout << "Slave-Send-Signal-Up" << std::endl;
+         sendSignal(255);
+            //std::cout << "Slave-Wait-Signal-Up" << std::endl;
+         waitSignalUp(0x8);
+            //std::cout << "Slave-Send-Signal-Down" << std::endl;
+         sendSignal(0);
+            //std::cout << "Slave-Wait-Signal-Down" << std::endl;
+         waitSignalDown(0x8);
       }
 
       //second_time.setNow();
       //vpr::Interval diff_time(second_time-first_time);
-      //vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: " 
+      //vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: "
       //   << diff_time.getBaseVal() << " usecs\n"<< clrRESET << vprDEBUG_FLUSH;
 
       return(true);
@@ -247,38 +247,40 @@ namespace cluster
 
    vpr::ReturnStatus SwapLockWiredPlugin::Init()
    {
-	   vpr::ReturnStatus status;
-	   status = ConnectToWiredParallel(); 
-	   while(status != vpr::ReturnStatus::Succeed)
-	   {
-	      status = ConnectToWiredParallel();
-	      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SwapLockWiredPlugin::ConnectToWiredParallel() Barrier could not be initialized, FileHandle = " 
-		      << mWire << "\n" << vprDEBUG_FLUSH;
-	      
-	   }
-	   mActive = true;
-	   vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SwapLockWiredPlugin::ConnectToWiredParallel() Barrier has been Init() is success!" << vprDEBUG_FLUSH;
-	   return(status); 
+      vpr::ReturnStatus status;
+      status = ConnectToWiredParallel();
+      while ( status != vpr::ReturnStatus::Succeed )
+      {
+         status = ConnectToWiredParallel();
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "SwapLockWiredPlugin::ConnectToWiredParallel() Barrier could not be initialized, FileHandle = "
+            << mWire << "\n" << vprDEBUG_FLUSH;
+      }
+      mActive = true;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "SwapLockWiredPlugin::ConnectToWiredParallel() Barrier has been Init() is success!"
+         << vprDEBUG_FLUSH;
+      return(status);
    }
 
    vpr::ReturnStatus SwapLockWiredPlugin::ConnectToWiredParallel()
    {
-      mWire = open("/dev/wiredparallel",O_RDWR);      
+      mWire = open("/dev/wiredparallel",O_RDWR);
       if (mWire != -1)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-		 << clrOutBOLD(clrGREEN,"SwapLockWiredPlugin::ConnectToWiredParallel() Successfully connected to /dev/wiredParallel\n") 
-		 << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << clrOutBOLD(clrGREEN,"SwapLockWiredPlugin::ConnectToWiredParallel() Successfully connected to /dev/wiredParallel\n")
+            << vprDEBUG_FLUSH;
       }
       else
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-		 << clrOutBOLD(clrRED,"SwapLockWiredPlugin::ConnectToWiredParallel() ERROR: Could not connect to /dev/wiredparallel\n") 
-		 << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << clrOutBOLD(clrRED,"SwapLockWiredPlugin::ConnectToWiredParallel() ERROR: Could not connect to /dev/wiredparallel\n")
+            << vprDEBUG_FLUSH;
          return(vpr::ReturnStatus::Fail);
-      }      
+      }
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SwapLockWiredPlugin::ConnectToWiredParallel() Setting initial value to 0\n" << vprDEBUG_FLUSH;
-      
+
       // char send_char = 0;
       // Keep in mind that the hardware will invert pin 15 on the recveing side, so writeing 255 means to go low.
       // write(mWire,&send_char,1);
@@ -293,30 +295,30 @@ namespace cluster
    void SwapLockWiredPlugin::masterReceive()
    {
       vprASSERT(mActive==true && "Barrier is not active!");
-          
+
       char buf;
-      
+
       read(mWire,&buf,1);
 //      std::cout << "masterRecv: " << (int)buf << std::endl;
       buf=buf&0x8;//20
 //      std::cout << "masterRecv(after): " << (int)buf << std::endl;
       while((int)buf == 0)
       {
-          read(mWire,&buf,1);
-//          std::cout << "masterRecv: " << (int)buf << std::endl;
-          buf=buf&0x8;//20
-//     	  std::cout << "masterRecv(after): " << (int)buf << std::endl;
+         read(mWire,&buf,1);
+//         std::cout << "masterRecv: " << (int)buf << std::endl;
+         buf=buf&0x8;//20
+//         std::cout << "masterRecv(after): " << (int)buf << std::endl;
       }
-      
+
   }
      // MasterSend should act identical to MasterReceive since we have no concept of Master/Server with this Sync Method
    void SwapLockWiredPlugin::masterSend()
    {
-      char send_char = 255; 
+      char send_char = 255;
       write(mWire,&send_char,1);
 
       char buf;
-      
+
       read(mWire,&buf,1);
 //      std::cout << "masterSend: " << (int)buf << std::endl;
       buf=buf&0x8;//20
@@ -328,14 +330,14 @@ namespace cluster
           buf=buf&0x8;//20
 //          std::cout << "masterSend(after): " << (int)buf << std::endl;
       }
-      char send_char2 = 0; 
+      char send_char2 = 0;
       write(mWire,&send_char2,1);
    }
    void SwapLockWiredPlugin::slaveSend()
    {
       static int count = 0;
       count++;
-      
+
       vprASSERT(mActive==true && "Barrier is not active!");
       // Send Signal stating that we are at the barrier waiting
       // Keep in mind that the hardware will invert pin 15 on the recveing side, so writeing 0 means to go high.
@@ -349,12 +351,12 @@ namespace cluster
       // - Set the local signal wire low again
       static int count = 0;
       count++;
-      
+
       vprASSERT(mActive==true && "Barrier is not active!");
-          
+
       char buf;
-      
-        // Mask the value in the Parallel Port register to care 
+
+        // Mask the value in the Parallel Port register to care
         // only are about bit 4, which has the decimal value of 8
       std::cout << "Waiting: " << count << std::endl;
       read(mWire,&buf,1);
@@ -364,22 +366,22 @@ namespace cluster
           read(mWire,&buf,1);
           buf=buf&0x8;
       }
-      
+
       std::cout << "Got: " << count << std::endl;
-      // vpr::System::msleep(100); 
-      // Set the local signal wire low again   
-      char send_char = 0; 
+      // vpr::System::msleep(100);
+      // Set the local signal wire low again
+      char send_char = 0;
       // Keep in mind that the hardware will invert pin 15 on the recveing side, so writeing 255 means to go low.
       write(mWire,&send_char,1);
       std::cout << "Reset: " << count << std::endl;
    }
    */
-	   
+
    void SwapLockWiredPlugin::sendSignal(const unsigned char& val)
    {
       // static int count = 0;
       // count++;
-      
+
       vprASSERT(mActive==true && "Barrier is not active!");
       // Send Signal stating that we are at the barrier waiting
       // Keep in mind that the hardware will invert pin 15 on the recveing side, so writeing 0 means to go high.
@@ -387,19 +389,19 @@ namespace cluster
       write(mWire,&val,1);
       // std::cout << "Sent: " << count << std::endl;
    }
- 
+
    void SwapLockWiredPlugin::waitSignalUp(const unsigned char& val)
    {
       // - wait for signal
       // - set the local signal wire low again
       // static int count = 0;
       // count++;
-      
+
       vprASSERT(mActive==true && "barrier is not active!");
-          
+
       unsigned char buf;
-      
-        // mask the value in the parallel port register to care 
+
+        // mask the value in the parallel port register to care
         // only are about bit 4, which has the decimal value of 8
       // std::cout << "waiting: " << count << std::endl;
       read(mWire,&buf,1);
@@ -409,23 +411,23 @@ namespace cluster
           read(mWire,&buf,1);
           buf=buf&val;
       }
-      
+
       // std::cout << "got: " << count << std::endl;
-      // vpr::system::msleep(100); 
-      // set the local signal wire low again   
-      // char send_char = 0; 
+      // vpr::system::msleep(100);
+      // set the local signal wire low again
+      // char send_char = 0;
       // keep in mind that the hardware will invert pin 15 on the recveing side, so writeing 255 means to go low.
       // write(mwire,&send_char,1);
       // std::cout << "reset: " << count << std::endl;
-   }  
- 
+   }
+
    void SwapLockWiredPlugin::waitSignalDown(const unsigned char& val)
    {
       vprASSERT(mActive==true && "barrier is not active!");
-          
+
       unsigned char buf;
-      
-        // mask the value in the parallel port register to care 
+
+        // mask the value in the parallel port register to care
         // only are about bit 4, which has the decimal value of 8
       read(mWire,&buf,1);
       buf=buf&val;
@@ -435,5 +437,5 @@ namespace cluster
           buf=buf&val;
       }
   }
- 
+
 } // End of cluster namespace

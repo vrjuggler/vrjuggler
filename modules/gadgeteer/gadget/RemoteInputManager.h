@@ -32,7 +32,7 @@
 #include <list>
 
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Util/ReturnStatus.h>	
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Assert.h>
 
 #include <gadget/PacketHandler.h>
@@ -41,7 +41,7 @@
 #include <jccl/Config/ConfigElementPtr.h>
 
 namespace cluster
-{  
+{
    class DeviceRequest;
    class Packet;
 }
@@ -75,29 +75,29 @@ public:
     * from all device servers.
     */
    void recoverFromLostNode(Node* lost_node);
-   
+
    /**
     * Handle a incoming packet.
     */
    void handlePacket(cluster::Packet* packet, Node* node);
 
-   /** 
+   /**
     * Returns the name of the this plugin.
     */
    virtual std::string getHandlerName()
    {
       return(std::string("RemoteInputManager"));
    }
-   
+
    vpr::GUID getHandlerGUID()
    {
       return mHandlerGUID;
    }
-   
+
    /**
     * Calls any action needed by this plugin before postFrame().
     *
-    * This function was inherited from the Cluster Plugin abstract class. 
+    * This function was inherited from the Cluster Plugin abstract class.
     */
    void sendDataAndSync();
 
@@ -106,13 +106,13 @@ public:
    gadget::Input* getVirtualDevice(const vpr::GUID& device_id);
    gadget::Input* getVirtualDevice(const std::string& device_name);
    //@}
-   
+
    /** @name Configuration methods */
    //@{
    /*
    bool configAdd(jccl::ConfigElementPtr element);
    bool configRemove(jccl::ConfigElementPtr element);
-   bool configCanHandle(jccl::ConfigElementPtr element);  
+   bool configCanHandle(jccl::ConfigElementPtr element);
    */
    //@}
 
@@ -125,14 +125,14 @@ public:
 private:
    /** @name VirtualDevice methods */
    //@{
-   vpr::ReturnStatus addVirtualDevice(const vpr::GUID& device_id, const std::string& name, 
+   vpr::ReturnStatus addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
                                       const std::string& device_base_type, const std::string& hostname);
    void addVirtualDevice(VirtualDevice* device);
    void removeVirtualDevice(const std::string& device_name);
    void removeVirtualDevice(const vpr::GUID& device_id);
    vpr::ReturnStatus removeVirtualDevicesOnHost(const std::string& host_name);
    //@}
-   
+
    /** @name DeviceServer methods */
    //@{
    vpr::ReturnStatus addDeviceServer(const std::string& name, gadget::Input* device);
@@ -141,12 +141,12 @@ private:
    void removeDeviceServer(const vpr::Uint16& device_id);
    DeviceServer* getDeviceServer(const std::string& device_name);
    //@}
-   
+
    /** @name Connection management */
    //@{
    vpr::ReturnStatus removeDeviceClientsForHost(const std::string& host_name);
    //@}
-   
+
    /** @name Configuration helpers */
    //@{
    jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
@@ -163,13 +163,13 @@ private:
    void removePendingDeviceRequest(std::string device_name);
    vpr::Uint16 getNumberPendingDeviceRequests();
    //@}
-   
+
 protected:
    vpr::GUID                            mHandlerGUID;
-   std::map<cluster::DeviceRequest*, 
+   std::map<cluster::DeviceRequest*,
             Node*>               mPendingDeviceRequests;     /**< UserData Request list. */
-   vpr::Mutex                           mPendingDeviceRequestsLock; /**< Lock on UserData Request list.*/   
-   
+   vpr::Mutex                           mPendingDeviceRequestsLock; /**< Lock on UserData Request list.*/
+
    std::map<vpr::GUID, VirtualDevice*>  mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
    vpr::Mutex                           mVirtualDevicesLock; /**< Lock on Virtual Device list.*/
 
