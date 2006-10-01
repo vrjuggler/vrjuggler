@@ -35,10 +35,10 @@ void SignalTest::testSegFault ()
    vpr::SignalAction segv_action(handlerSIGSEGV);
    char buffer[80];
    char* bad_addr;
-   vpr::ReturnStatus status;
+   bool status;
 
    status = vpr::SigHandler::registerHandler(SIGSEGV, segv_action, false);
-   CPPUNIT_ASSERT(status.success() && "Handler registration failed");
+   CPPUNIT_ASSERT(status && "Handler registration failed");
 
    bad_addr = (char*) 0x1;
    memcpy(buffer, bad_addr, 1);
