@@ -130,7 +130,7 @@ namespace vrj
       const std::string vj_base_dir("VJ_BASE_DIR");
       std::string base_dir;
 
-      if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
+      if ( ! vpr::System::getenv(vj_base_dir, base_dir) )
       {
          return;
       }
@@ -140,7 +140,7 @@ namespace vrj
 
       // If the user has the environment variable NO_PERF_PLUGIN set (to any
       // value), do not attempt to load the plug-in.
-      if ( vpr::System::getenv(no_perf_plugin, junk).success() )
+      if ( vpr::System::getenv(no_perf_plugin, junk) )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "Remote performance visualization plug-in loading disabled "
@@ -168,7 +168,7 @@ namespace vrj
    // If $SNX_VERSION is set, use the value of that environment variable
    // as the version component of the plug-in subdirectory name. Otherwise,
    // use the compile-time value provided by SNX_VERSION_DOT.
-   if ( ! vpr::System::getenv(vrjuggler_version, vrjuggler_ver_str).success() )
+   if ( ! vpr::System::getenv(vrjuggler_version, vrjuggler_ver_str) )
    {
       vrjuggler_ver_str = VRJ_VERSION_DOT;
    }

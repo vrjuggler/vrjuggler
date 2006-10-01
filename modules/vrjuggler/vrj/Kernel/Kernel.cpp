@@ -687,7 +687,7 @@ Kernel::Kernel()
 
    // Load in the configuration definitions
    std::string def_path;
-   if ( vpr::System::getenv("VJ_BASE_DIR", def_path).success() )
+   if ( vpr::System::getenv("VJ_BASE_DIR", def_path) )
    {
       def_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions";
    }
@@ -711,9 +711,9 @@ Kernel::Kernel()
    // XXX: Should $VJ_CFG_PATH supercede $JCCL_CFG_PATH instead of doing it
    // this way?
    std::string cfg_path;
-   if ( ! vpr::System::getenv("JCCL_CFG_PATH", cfg_path).success() )
+   if ( ! vpr::System::getenv("JCCL_CFG_PATH", cfg_path) )
    {
-      if ( vpr::System::getenv("VJ_CFG_PATH", cfg_path).success() )
+      if ( vpr::System::getenv("VJ_CFG_PATH", cfg_path) )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "JCCL_CFG_PATH environment variable not set.\n"
@@ -723,7 +723,7 @@ Kernel::Kernel()
       }
       // Neither $JCCL_CFG_PATH nor $VJ_CFG_PATH is set, so use what basically
       // amounts to a hard-coded default.
-      else if ( vpr::System::getenv("VJ_BASE_DIR", cfg_path).success() )
+      else if ( vpr::System::getenv("VJ_BASE_DIR", cfg_path) )
       {
          cfg_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/configFiles";
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
