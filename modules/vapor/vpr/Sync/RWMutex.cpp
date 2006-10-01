@@ -130,7 +130,7 @@ vpr::ReturnStatus RWMutex::tryAcquireWrite ()
       if ( refCount == 0 )
       {
          refCount = -1;
-         status.setCode(vpr::ReturnStatus::Fail);
+         status.setCode(vpr::ReturnStatus::Succeed);
       }
       stateLock.release();
    }
