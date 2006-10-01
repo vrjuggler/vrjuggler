@@ -37,7 +37,6 @@
 #define _VPR_RWGuard_h_
 
 #include <vpr/vprConfig.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Sync/RWMutex.h>
 
 
