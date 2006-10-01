@@ -127,9 +127,6 @@ private:
 
    /** @name Sample Loop Members */
    //@{
-   /** The thread doing the Wanda sampling. */
-   vpr::Thread* mThread;
-
    bool mExitFlag;
    //@}
 

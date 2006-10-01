@@ -61,8 +61,7 @@ namespace gadget
 {
 
 Wanda::Wanda(const char* portName)
-   : mThread(NULL)
-   , mWanda(portName)
+   : mWanda(portName)
 {
    /* Do nothing. */ ;
 }
