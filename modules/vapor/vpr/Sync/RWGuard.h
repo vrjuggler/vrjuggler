@@ -52,12 +52,22 @@ class ReadGuard
 {
 public:
    /**
-    * Acquires the lock implicitly.
-    * If \p block is 1, then use a blocking acquire.
+    * Acquires the read lock implicitly. If \p block is true, then use a
+    * blocking read lock acquisition operation. Otherwise, use a non-blocking
+    * read lock acquisition call.
+    *
+    * @post \c mLockStatus reflects whether the given read lock was acquired.
+    *
+    * @param lock  The read-write mutex to associate with this guard.
+    * @param block A flag indicating whether a blocking read lock acquisition
+    *              operation should be used to acquire the lock. This
+    *              parameter is optional and defaults to true if it is not
+    *              specified.
     */
-   ReadGuard(RWMutex& lock, int block = 1) : mTheLock(&lock)
+   ReadGuard(RWMutex& lock, bool block = true)
+      : mTheLock(&lock)
    {
-      mLockStatus = block ? acquire().success() : tryAcquire().success();
+      mLockStatus = block ? acquire() : tryAcquire();
    }
 
    /** Releases the lock. */
@@ -70,31 +80,36 @@ public:
    }
 
    /**
-    * @return \c true is returned if this guard is locked.
-    * @return \c false is returned if this guard is not locked.
+    * Indicates whether this read guard is currently locked.
+    *
+    * @return \c true is returned if this guard is locked; \c false is
+    *         returned otherwise.
     */
-   const bool& locked()
+   bool locked() const
    {
       return mLockStatus;
    }
 
-   /** Acquires the lock. */
-   vpr::ReturnStatus acquire()
+   /** Acquires a read lock. */
+   bool acquire()
    {
-      return mTheLock->acquireRead();
+      mTheLock->acquireRead();
+      mLockStatus = true;
+      return mLockStatus;
    }
 
-   /** Tries to acquire the lock. */
-   vpr::ReturnStatus tryAcquire()
+   /** Tries to acquire a read lock. */
+   bool tryAcquire()
    {
-      return mTheLock->tryAcquireRead();
+      mLockStatus = mTheLock->tryAcquireRead();
+      return mLockStatus;
    }
 
-   /** Explicity releases the lock. */
-   vpr::ReturnStatus release()
+   /** Explicity releases the read lock. */
+   void release()
    {
       mLockStatus = false;
-      return mTheLock->release();
+      mTheLock->release();
    }
 
 private:
@@ -110,15 +125,25 @@ class WriteGuard
 {
 public:
    /**
-    * Acquires the lock implicitly.
-    * If \p block is 1, then use a blocking acquire.
+    * Acquires the write lock implicitly. If \p block is true, then use a
+    * blocking write lock acquisition operation. Otherwise, use a non-blocking
+    * write lock acquisition call.
+    *
+    * @post \c mLockStatus reflects whether the given write lock was acquired.
+    *
+    * @param lock  The read-write mutex to associate with this guard.
+    * @param block A flag indicating whether a blocking write lock acquisition
+    *              operation should be used to acquire the lock. This
+    *              parameter is optional and defaults to true if it is not
+    *              specified.
     */
-   WriteGuard(RWMutex& lock, int block = 1) : mTheLock(&lock)
+   WriteGuard(RWMutex& lock, bool block = true)
+      : mTheLock(&lock)
    {
-      mLockStatus = block ? acquire().success() : tryAcquire().success();
+      mLockStatus = block ? acquire() : tryAcquire();
    }
 
-   /** Releases the lock. */
+   /** Releases the write lock. */
    ~WriteGuard()
    {
       if ( mLockStatus )
@@ -128,31 +153,36 @@ public:
    }
 
    /**
-    * @return \c true is returned if this guard is locked.
-    * @return \c false is returned if this guard is not locked.
+    * Indicates whether this read guard is currently locked.
+    *
+    * @return \c true is returned if this guard is locked; \c false is
+    *         returned otherwise.
     */
-   const bool& locked()
+   bool locked() const
    {
       return mLockStatus;
    }
 
-   /** Acquires the lock. */
-   vpr::ReturnStatus acquire()
+   /** Acquires the write lock. */
+   bool acquire()
    {
-      return mTheLock->acquireWrite();
+      mTheLock->acquireWrite();
+      mLockStatus = true;
+      return mLockStatus;
    }
 
-   /** Tries to acquire lock. */
-   vpr::ReturnStatus tryAcquire()
+   /** Tries to acquire write lock. */
+   bool tryAcquire()
    {
-      return mTheLock->tryAcquireWrite();
+      mLockStatus = mTheLock->tryAcquireWrite();
+      return mLockStatus;
    }
 
-   /** Explicity releases the lock. */
-   vpr::ReturnStatus release()
+   /** Explicity releases the write lock. */
+   void release()
    {
       mLockStatus = false;
-      return mTheLock->release();
+      mTheLock->release();
    }
 
 private:
