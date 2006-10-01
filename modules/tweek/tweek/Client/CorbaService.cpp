@@ -156,6 +156,13 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
          << "  mesg: " << fe.errmsg() << std::endl << vprDEBUG_FLUSH;
    }
 #endif
+   catch (vpr::Exception& ex)
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught vpr::Exception during initialization.\n"
+         << ex.what() << vprDEBUG_FLUSH;
+   }
    catch(...)
    {
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
