@@ -53,6 +53,7 @@ SUBOBJDIR=	$(VPR_LIBRARY)
 ifeq (@SUBSYSTEM@, POSIX)
     SRCS=	CondVarPosix.cpp	\
 		MutexPosix.cpp		\
+		RWMutexPosix.cpp	\
 		SemaphorePosix.cpp
 endif
 

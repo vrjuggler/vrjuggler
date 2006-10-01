@@ -52,7 +52,7 @@
 #include <boost/noncopyable.hpp>
 
 #include <vpr/Sync/LockException.h>
-#include <vpr/Sync/DeadockException.h>
+#include <vpr/Sync/DeadlockException.h>
 
 
 namespace vpr
@@ -161,10 +161,10 @@ public:
     */
    void acquireWrite()
    {
-      const int retval = pthread_rwlock_wrlock(&mRWMutex);
+      const int result = pthread_rwlock_wrlock(&mRWMutex);
 
       // Locking succeeded.
-      if ( 0 == retval )
+      if ( 0 == result )
       {
          mLocked = true;
       }
