@@ -377,6 +377,7 @@ namespace snx
       if (hostname == "")
       {
          hostname = "localhost";
+         std::string rc_filepath;
          vpr::System::getenv("HOME", rc_filepath);
          rc_filepath += "/.sonix-aw";
          vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("AudioWorks| Reading "+rc_filepath+" for hostname"), std::string("\n")); 
