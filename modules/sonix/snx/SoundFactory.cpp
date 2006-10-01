@@ -86,7 +86,7 @@ SoundFactory::SoundFactory()
    const std::string envvar("SNX_BASE_DIR");
    std::string dummy_result;
 
-   if ( vpr::System::getenv(envvar, dummy_result).failure() )
+   if ( ! vpr::System::getenv(envvar, dummy_result) )
    {
       vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
          << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -124,7 +124,7 @@ SoundFactory::SoundFactory()
    // If $SNX_VERSION is set, use the value of that environment variable
    // as the version component of the plug-in subdirectory name. Otherwise,
    // use the compile-time value provided by SNX_VERSION_DOT.
-   if ( ! vpr::System::getenv(sonix_version, sonix_ver_str).success() )
+   if ( ! vpr::System::getenv(sonix_version, sonix_ver_str) )
    {
       sonix_ver_str = SNX_VERSION_DOT;
    }
