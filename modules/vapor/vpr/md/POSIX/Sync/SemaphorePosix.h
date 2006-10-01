@@ -152,7 +152,7 @@ public:
     */
    void acquireWrite()
    {
-      return this->acquire();
+      this->acquire();
    }
 
    /**
