@@ -26,6 +26,7 @@
 #include "puck_device.h"
 
 #include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Util/Debug.h>
 #include <gadget/Devices/DriverConfig.h>
 
 #include <stdio.h>
