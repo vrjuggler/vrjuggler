@@ -54,16 +54,21 @@ public:
    /**
     * Constructor.
     *
-    * @param num   The id number of the pipe.
-    * @param glMgr The GL Draw Manager instance associated with this pipe.
+    * @param num            The ID number of the pipe.
+    * @param glMgr          The OpenGL Draw Manager instance associated with
+    *                       this pipe.
+    * @param drawMgrWinLock Cross-pipe lock associated with the OpenGL Draw
+    *                       Manager to prevent windows from opening
+    *                       simultaneously on different pipes.
     *
     * @note All contained windows SHOULD have the same pipe number.
     */
-   GlPipe(size_t num, GlDrawManager* glMgr)
+   GlPipe(size_t num, GlDrawManager* glMgr, vpr::Mutex* drawMgrWinLock)
       : mActiveThread(NULL)
       , mPipeNum(num)
       , mControlExit(0)
       , mGlDrawManager(glMgr)
+      , mDrawMgrWinLock(drawMgrWinLock)
       , mRenderTriggerSema(0)
       , mRenderCompleteSema(0)
       , mSwapTriggerSema(0)
@@ -205,6 +210,8 @@ private:
 
    GlDrawManager*          mGlDrawManager;   /**< The openlGL manager that we are rendering for.
                                                   Needed to get app, etc. */
+   vpr::Mutex*             mDrawMgrWinLock;  /**< Cross-pipe lock associaed
+                                                  with the OpenGL Draw Manager */
 
    vpr::Semaphore    mRenderTriggerSema;  /**< Signals render trigger */
    vpr::Semaphore    mRenderCompleteSema; /**< Signals render completed */

@@ -312,7 +312,8 @@ void GlDrawManager::addDisplay(Display* disp)
    {                                         // +1 because if pipeNum = 0, I still need size() == 1
       while (pipes.size() < (pipe_num+1))     // While we need more pipes
       {
-         GlPipe* new_pipe = new GlPipe(pipes.size(), this);  // Create a new pipe to use
+         GlPipe* new_pipe = new GlPipe(pipes.size(), this,
+                                       &mCreateWindowMutex);  // Create a new pipe to use
          pipes.push_back(new_pipe);                          // Add the pipe
          new_pipe->start();                                  // Start the pipe running
                                                              // NOTE: Run pipe even if no windows.  Then it waits for windows.

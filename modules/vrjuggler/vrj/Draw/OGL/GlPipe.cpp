@@ -309,8 +309,15 @@ void GlPipe::checkForNewWindows()
 {
    if (mNewWins.size() > 0)  // If there are new windows added
    {
-      vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);
-      vpr::Guard<vpr::Mutex> guardOpen(mOpenWinLock);
+      // Cross-pipe lock to prevent a window from opening on another pipe
+      // while we are opening ours.
+      vpr::Guard<vpr::Mutex> guard_draw_mgr(*mDrawMgrWinLock);
+      // Pipe-specific lock to prevent mNewWins from being modified while
+      // the new windows are being opened.
+      vpr::Guard<vpr::Mutex> guard_new(mNewWinLock);
+      // Pipe-specific lock to prevent checkForWindowsToClose() from doing
+      // any work while new windows are being opened.
+      vpr::Guard<vpr::Mutex> guard_open(mOpenWinLock);
 
       for (unsigned int winNum=0; winNum<mNewWins.size(); winNum++)
       {

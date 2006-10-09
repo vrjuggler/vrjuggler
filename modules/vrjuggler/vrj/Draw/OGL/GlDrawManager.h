@@ -220,6 +220,8 @@ protected:
    bool              mRunning;         /**< Used to stop the drawing thread. */
 
    vpr::Thread* mControlThread;
+   vpr::Mutex   mCreateWindowMutex;    /**< Mutex for opening windows across
+                                            pipes. */
    //@}
 
 protected:
