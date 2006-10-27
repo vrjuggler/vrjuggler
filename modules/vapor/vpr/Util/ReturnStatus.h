@@ -53,7 +53,7 @@ namespace vpr
     * Class used to represent the status of a function or method upon its
     * return.
     */
-   class VPR_CLASS_API ReturnStatus
+   class ReturnStatus
    {
    public:
       /** Possible status codes. */
