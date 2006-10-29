@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class NoRouteToHostException NoRouteToHostException.h vpr/IO/Socket/NoRouteToHostException.h
+ *
  * Exception type thrown if a connection fails because there is no route to
  * the remote host.
  *

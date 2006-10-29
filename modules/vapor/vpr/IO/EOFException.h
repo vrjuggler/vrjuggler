@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class EOFException EOFException.h vpr/IO/EOFException.h
+ *
  * Exception type thrown if end of file (EOF) is reached unexpectedly.
  *
  * @since 1.1.5

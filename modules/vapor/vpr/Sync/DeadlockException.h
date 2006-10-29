@@ -43,7 +43,8 @@
 namespace vpr
 {
 
-/**
+/** \class DeadlockException DeadlockException.h vpr/Sync/DeadlockException.h
+ *
  * Exception type thrown if deadlock would occur when trying to perform an
  * operation on a lock object.
  *

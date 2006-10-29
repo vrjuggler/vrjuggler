@@ -42,7 +42,14 @@
 namespace vpr
 {
 
-/** Exceptions dealing with IO. */
+/** \class UncaughtThreadException UncaughtThreadException.h vpr/Thread/UncaughtThreadException.h
+ *
+ * Exception type used for handling an exception that propagates up to the
+ * top of the call stack of a spawned thread. This is primarily for internal
+ * use by vpr::Thread.
+ *
+ * @since 1.1.6
+ */
 class VPR_CLASS_API UncaughtThreadException : public Exception
 {
 public:

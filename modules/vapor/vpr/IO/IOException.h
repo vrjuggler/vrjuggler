@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class IOException IOException.h vpr/IO/IOException.h
+ *
  * Base class for exceptions dealing with I/O.
  *
  * @since 1.1.5

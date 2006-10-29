@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class ConnectionRefusedException ConnectionRefusedException.h vpr/IO/Socket/ConnectionRefusedException.h
+ *
  * Exception type thrown if a connection fails because the connection is
  * refused.
  *

@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class SocketException SocketException.h vpr/IO/Socket/SocketException.h
+ *
  * Base class for exceptions associated with network (socket) communication.
  *
  * @since 1.1.5

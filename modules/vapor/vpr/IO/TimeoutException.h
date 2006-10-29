@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class TimeoutException TimeoutException.h vpr/IO/TimeoutException.h
+ *
  * Exception type thrown if an I/O operation times out.
  *
  * @since 1.1.5

@@ -43,7 +43,8 @@
 namespace vpr
 {
 
-/**
+/** \class ResourceException ResourceException.h vpr/Util/ResourceException.h
+ *
  * Exception type thrown if resource allocation fails.
  *
  * @since 1.1.28

@@ -43,7 +43,8 @@
 namespace vpr
 {
 
-/**
+/** \class IllegalArgumentException IllegalArgumentException.h vpr/Util/IllegalArgumentException.h
+ *
  * Exception type thrown if an illegal/invalid argument is passed in to a
  * function.
  *

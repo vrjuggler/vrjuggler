@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class ConnectionResetException ConnectionResetException.h vpr/IO/Socket/ConnectionResetException.h
+ *
  * Exception type thrown if network communication fails because the connection
  * is reset.
  *

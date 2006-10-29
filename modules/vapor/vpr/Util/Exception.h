@@ -47,8 +47,19 @@
 #define VPR_LOCATION std::string(__FILE__) + std::string(":") + \
            std::string(BOOST_PP_STRINGIZE(__LINE__))
 
-// Example:
-//  throw vpr::Exception("ObjectProxy not ready in Node::objProxy_checked", VPR_LOCATION);
+/**
+ * @example "Example of using VPR exceptions"
+ *
+ * All VPR exceptions derive from vpr::Exception, and its constructor takes
+ * two parameters: a description of the error and an optional string
+ * describing the location in the code at which the error occurred. The
+ * easiest way to get the location information is to use the preprocessor
+ * symbol \c VPR_LOCATION.
+ *
+ * \code
+ * throw vpr::Exception("An error occurred", VPR_LOCATION);
+ * \endcode
+ */
 
 // Exception areas
 // - I/O loading/saving issues
@@ -58,7 +69,8 @@
 namespace vpr
 {
 
-/**
+/** \class Exception Exception.h vpr/Util/Exception.h
+ *
  * Base exception for all VPR exceptions.
  *
  * @since 1.1.5

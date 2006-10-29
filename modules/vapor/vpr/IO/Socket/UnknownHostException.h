@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class UnknownHostException UnknownHostException.h vpr/IO/Socket/UnknownHostException.h
+ *
  * Exception type thrown if a host lookup fails because the hostname is
  * unknown.
  *

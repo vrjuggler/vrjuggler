@@ -43,7 +43,8 @@
 namespace vpr
 {
 
-/**
+/** \class LibraryException LibraryException.h vpr/DynLoad/LibraryException.h
+ *
  * Base class for exceptions dealing with dynamic code loading.
  *
  * @since 1.1.10

@@ -43,7 +43,8 @@
 namespace vpr
 {
 
-/**
+/** \class LockException LockException.h vpr/Sync/LockException.h
+ *
  * Exception type thrown if an error occurs while performing an operation on
  * a lock object.
  *

@@ -42,7 +42,8 @@
 namespace vpr
 {
 
-/**
+/** \class WouldBlockException WouldBlockException.h vpr/IO/WouldBlockException.h
+ *
  * Exception type thrown if an I/O operation would block when using a
  * non-blocking I/O channel.
  *

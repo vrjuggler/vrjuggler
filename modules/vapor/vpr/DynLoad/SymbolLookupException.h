@@ -43,7 +43,8 @@
 namespace vpr
 {
 
-/**
+/** \class SymbolLookupException SymbolLookupException.h vpr/DynLoad/SymbolLookupException.h
+ *
  * Exception type thrown when the lookup of a symbol in dynamically loaded
  * code fails.
  *
