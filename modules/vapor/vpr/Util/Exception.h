@@ -78,18 +78,18 @@ namespace vpr
 class VPR_CLASS_API Exception : public std::runtime_error
 {
 public:
-   Exception(std::string desc, std::string location) throw();
+   Exception(const std::string& desc, const std::string& location) throw();
    virtual ~Exception() throw();
 
    virtual const char* what() const throw();
 
    virtual std::string getExceptionName() const;
 
-   std::string getDescription() const;
-   void setDescription(std::string desc);
+   const std::string& getDescription() const;
+   void setDescription(const std::string& desc);
 
-   std::string getLocation() const;
-   std::string getStackTrace() const;
+   const std::string& getLocation() const;
+   const std::string& getStackTrace() const;
 
    /** Slightly longer description */
    virtual std::string getExtendedDescription() const;
