@@ -41,13 +41,17 @@ namespace vpr
 {
 
 Exception::Exception(std::string desc, std::string location) throw()
-   : std::runtime_error(desc), mDescription(desc), mLocation(location)
+   : std::runtime_error(desc)
+   , mDescription(desc)
+   , mLocation(location)
 {
    mStackTrace = vpr::System::getCallStack();
 }
 
 Exception::~Exception() throw()
-{;}
+{
+   /* Do nothing. */ ;
+}
 
 const char* Exception::what() const throw()
 {
@@ -56,19 +60,29 @@ const char* Exception::what() const throw()
 }
 
 std::string Exception::getExceptionName() const
-{  return std::string("vpr::Exception"); }
+{
+   return std::string("vpr::Exception");
+}
 
 std::string Exception::getDescription() const
-{ return mDescription; }
+{
+   return mDescription;
+}
 
 void Exception::setDescription(std::string desc)
-{ mDescription = desc; }
+{
+   mDescription = desc;
+}
 
 std::string Exception::getLocation() const
-{ return mLocation; }
+{
+   return mLocation;
+}
 
 std::string Exception::getStackTrace() const
-{ return mStackTrace; }
+{
+   return mStackTrace;
+}
 
 std::string Exception::getExtendedDescription() const
 {
@@ -76,6 +90,9 @@ std::string Exception::getExtendedDescription() const
 }
 
 std::string Exception::getFullDescription() const
-{ return getExtendedDescription() + std::string("  ") + mLocation + std::string("\n") + mStackTrace; }
+{
+   return getExtendedDescription() + std::string("  ") + mLocation +
+             std::string("\n") + mStackTrace;
+}
 
 }
