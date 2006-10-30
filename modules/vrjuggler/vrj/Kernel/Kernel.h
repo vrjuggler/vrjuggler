@@ -128,6 +128,8 @@ public:
     *
     * @see addHandlerPreCallback
     * @see addHandlerPostCallback
+    *
+    * @since 2.1.14
     */
 #if defined(_MSC_VER) && _MSC_VER <= 1300
    typedef boost::function1<void, const int> signal_callback_t;
@@ -379,6 +381,8 @@ protected:
     * @see start()
     * @see addHandlerPreCallback()
     * @see addHandlerPostCallback()
+    *
+    * @since 2.1.14
     */
    void handleSignal(const int signum);
 
