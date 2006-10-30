@@ -32,6 +32,10 @@
 
 #include <vrj/vrjConfig.h>
 #include <string.h>
+#include <algorithm>
+#include <boost/bind.hpp>
+#include <boost/bind/apply.hpp>
+
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
@@ -45,6 +49,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/Thread/Signal.h>
 #include <vpr/System.h>
 #include <vpr/Util/Version.h>
 #include <vpr/Util/FileUtils.h>
@@ -65,6 +70,18 @@
 #include <boost/concept_check.hpp>
 
 
+namespace
+{
+
+vrj::Kernel::signal_callback_t gRealHandler;
+
+void signalHandler(int signum)
+{
+   gRealHandler(signum);
+}
+
+}
+
 namespace vrj
 {
 
@@ -73,6 +90,19 @@ vprSingletonImp(Kernel);
 // Starts the Kernel loop running.
 int Kernel::start()
 {
+   // Set the real signal handler to be invoked by signalHandler() (see
+   // above).
+   gRealHandler = boost::bind(&Kernel::handleSignal, this, _1);
+
+   vpr::SignalAction sig_action(signalHandler);
+   // Catch SIGINT, SIGTERM, and SIGBREAK so that we can shut down the kernel
+   // cleanly.
+   vpr::SigHandler::registerHandler(SIGINT, sig_action, false);
+   vpr::SigHandler::registerHandler(SIGTERM, sig_action, false);
+#if defined(VPR_OS_Windows)
+   vpr::SigHandler::registerHandler(SIGBREAK, sig_action, false);
+#endif
+
    if(mControlThread != NULL) // Have already started
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -136,6 +166,15 @@ void Kernel::waitForKernelStop()
    mExitWaitCondVar.release();
 }
 
+void Kernel::addHandlerPreCallback(signal_callback_t callback)
+{
+   mPreStopCallbacks.push_back(callback);
+}
+
+void Kernel::addHandlerPostCallback(signal_callback_t callback)
+{
+   mPostStopCallbacks.push_back(callback);
+}
 
 // The Kernel loop.
 void Kernel::controlLoop(void* nullParam)
@@ -642,6 +681,25 @@ User* Kernel::getUser(const std::string& userName)
    }
 
    return NULL;
+}
+
+void Kernel::handleSignal(const int signum)
+{
+   std::for_each(mPreStopCallbacks.begin(), mPreStopCallbacks.end(),
+                 boost::bind(boost::apply<void>(), _1, signum));
+
+   if ( isRunning() )
+   {
+      stop();
+   }
+
+   std::for_each(mPostStopCallbacks.begin(), mPostStopCallbacks.end(),
+                 boost::bind(boost::apply<void>(), _1, signum));
+
+   // Restore the default action for the signal now that we have done the
+   // handling that we wanted to do.
+   vpr::SignalAction default_action(vpr::SignalAction::DefaultAction);
+   vpr::SigHandler::registerHandler(signum, default_action, false);
 }
 
 Kernel::Kernel()

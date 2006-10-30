@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-30-2006 patrick     Register signal handlers for SIGINT, SIGTERM, and (on
+                        Windows only) SIGBREAK when the kernel is started.
+Oct-09-2006 patrick     Ensure that windows are not opened simultaneously on
+                        multiple pipes.
 Sep-07-2006 patrick     Improved error handling in viewport configurations.
 Jul-13-2006 patrick     Implemented automatic linking of the VR Juggler
                         libraries.

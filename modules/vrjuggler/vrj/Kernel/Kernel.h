@@ -36,6 +36,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vector>
+#include <boost/function.hpp>
 
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/CondVar.h>
@@ -79,8 +80,29 @@ class App;
 class VJ_CLASS_API Kernel : public jccl::ConfigElementHandler
 {
 public:
-
-   /** Starts the Kernel running by spawning the kernel thread. */
+   /** @name Kernel Control Loop Functions */
+   //@{
+   /**
+    * Starts the VR Juggler microkernel running by spawning the control loop
+    * thread. The methods of the user-supplied application object are invoked
+    * from the spawned thread.
+    *
+    * @post A signal handler is registered with the operating system for
+    *       \c SIGINT, \c SIGTERM, and (on Windows only) \c SIGBREAK. Upon
+    *       successful completion, a new thread is running the kernel control
+    *       loop.
+    *
+    * @return 0 is returned if the kernel control loop thread is started
+    *         successfully. 1 is returned if the thread fails to spawn.
+    *
+    * @see setApplication()
+    * @see waitForKernelStop()
+    * @see stop()
+    * @see addHandlerPreCallback()
+    * @see addHandlerPostCallback()
+    * @see handleSignal()
+    * @see controlLoop()
+    */
    int start();
 
    /**
@@ -97,8 +119,82 @@ public:
       return mIsRunning;
    }
 
-   /** Blocks until the kernel exits. */
+   /**
+    * Blocks until the kernel exits.
+    *
+    * @see stop()
+    */
    void waitForKernelStop();
+   //@}
+
+   /**
+    * Type definition fo the pre- and post-stop callbacks invoked by the
+    * kernel signal handler. These callbacks take a signal integer argument
+    * (the signal number) and return nothing.
+    *
+    * @see addHandlerPreCallback
+    * @see addHandlerPostCallback
+    *
+    * @since 2.0.2
+    */
+#if defined(_MSC_VER) && _MSC_VER <= 1300
+   typedef boost::function1<void, const int> signal_callback_t;
+#else
+   typedef boost::function<void(const int)> signal_callback_t;
+#endif
+
+   /** @name Signal Handler Callbacks */
+   //@{
+   /**
+    * Adds a "pre-stop" callback to be invoked if a handled signal is received
+    * by this kernel instance. The job of the kernel signal handler is to try
+    * to shut down the kernel cleanly upon receiving one of the handled
+    * signals. Prior to stopping the kernel, all registered pre-stop callbacks
+    * are invoked regardless of whether the control loop for this kernel is
+    * currently running.
+    *
+    * @post The given callback is appended to \c mPreStopCallbacks.
+    *
+    * @param callback The callback to be invoked by this kernel's signal
+    *                 handler prior to stopping the kernel control loop.
+    *
+    * @note To avoid a race condition wherein the signal handler gets
+    *       registered with the operating system and a signal is delivered
+    *       prior to this method being invoked, it is recommended that
+    *       pre-stop callbacks be registered prior to invoking start().
+    *
+    * @see start()
+    * @see handleSignal()
+    *
+    * @since 2.0.2
+    */
+   void addHandlerPreCallback(signal_callback_t callback);
+
+   /**
+    * Adds a "post-stop" callback to be invoked if a handled signal is
+    * received by this kernel instance. The job of the kernel signal handler
+    * is to try to shut down the kernel cleanly upon receiving one of the
+    * handled signals. After stopping the kernel, all registered post-stop
+    * callbacks are invoked regardless of whether the control loop for this
+    * kernel is currently running.
+    *
+    * @post The given callback is appended to \c mPostStopCallbacks.
+    *
+    * @param callback The callback to be invoked by this kernel's signal
+    *                 handler after stopping the kernel control loop.
+    *
+    * @note To avoid a race condition wherein the signal handler gets
+    *       registered with the operating system and a signal is delivered
+    *       prior to this method being invoked, it is recommended that
+    *       post-stop callbacks be registered prior to invoking start().
+    *
+    * @see start()
+    * @see handleSignal()
+    *
+    * @since 2.0.2
+    */
+   void addHandlerPostCallback(signal_callback_t callback);
+   //@}
 
    /**
     * Loads initial configuration data for the managers.
@@ -275,6 +371,27 @@ public:
    //@}
 
 protected:
+   /**
+    * Handles a signal delivered by the operating system. The signals to be
+    * handled were registered in start(). The job of this method is to stop
+    * the kernel if it is still running. User-provided callbacks (if any) are
+    * invoked before and after stopping the kernel regardless of whether this
+    * kernel is currently running.
+    *
+    * @post The action for \p signum is restored to use the default behavior.
+    *       Thus, if the same signal is delivered again, this method will not
+    *       be invoked.
+    *
+    * @param signum The signal ID.
+    *
+    * @see start()
+    * @see addHandlerPreCallback()
+    * @see addHandlerPostCallback()
+    *
+    * @since 2.0.2
+    */
+   void handleSignal(const int signum);
+
    vrj::App*      mApp;                  /**< The current active app object */
    vrj::App*      mNewApp;               /**< New application to set */
    bool           mNewAppSet;            /**< Flag to notify that a new application should be set */
@@ -302,6 +419,15 @@ protected:
 
    /** Control "signals" from input interfaces. */
    gadget::DigitalInterface   mStopKernelSignalButton;
+
+   /** @name Signal Handler Callbacks */
+   //@{
+   /** Callbacks invoked by handleSignal() before stopping the kernel. */
+   std::vector<signal_callback_t> mPreStopCallbacks;
+
+   /** Callbacks invoked by handleSignal() after stopping the kernel. */
+   std::vector<signal_callback_t> mPostStopCallbacks;
+   //@}
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
