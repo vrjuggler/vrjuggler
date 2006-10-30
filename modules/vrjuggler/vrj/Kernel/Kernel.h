@@ -157,6 +157,8 @@ public:
     *
     * @see start()
     * @see handleSignal()
+    *
+    * @since 2.1.14
     */
    void addHandlerPreCallback(signal_callback_t callback);
 
@@ -180,6 +182,8 @@ public:
     *
     * @see start()
     * @see handleSignal()
+    *
+    * @since 2.1.14
     */
    void addHandlerPostCallback(signal_callback_t callback);
    //@}
