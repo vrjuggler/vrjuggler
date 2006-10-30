@@ -1,0 +1,452 @@
+DATE        AUTHOR      CHANGE
+----------- ----------- -------------------------------------------------------
+[2.0 Beta 3 released - 6.7.2005]===============================================
+Jun-07-2005 patrickh    NEW VERSION: 1.1.172
+May-19-2005 aronb       Fixed a bug where the Draw Manager could direct an
+                        application object to render after the kernel told the
+                        application object that it was being closed.  This
+                        fixes a general problem with OpenSG-based applications
+                        crashing when exited through the kernel.
+                        NEW VERSION: 1.1.171
+May-11-2005 allenb      Updated OpenSG app to protect GL state with push/pop
+                        attrib.
+                        Added normals to the default sim wand drawing code.
+Apr-18-2005 allenb      Use default value for kernel parameter to app object
+                        constructors.
+                        NEW VERSION: 1.1.170
+Mar-11-2005 patrickh    Added a new sample application: OpenSGNavGrab
+Mar-10-2005 patrickh    Removed scale node from the scene graph set up by
+                        vrj::OpenSGApp.
+                        NEW VERSION: 1.1.169
+Mar-09-2005 patrickh    Added the ability to choose a specific GL visual when
+                        configuring a Performer window.
+Mar-09-2005 patrickh    Extended the OpenGL frame buffer configuration to allow
+                        setting preferences for the auxiliary buffers, the
+                        stencil buffer, and the accumulation buffer.
+                        NEW VERSION: 1.1.168
+Feb-03-2005 patrickh    Use JCCL 0.92.1 handling of the .jdef search path.
+                        Now, $JCCL_DEFINITION_PATH augments the .jdef search
+                        path rather than defining it outright.
+Jan-31-2005 patrickh    Separated the builds for VR Juggler and VRJConfig.
+
+[2.0 Beta 2 released - 1.18.2005]==============================================
+Jan-18-2005 patrickh    NEW VERSION: 1.1.167
+Jan-11-2005 patrickh    Added a VRJConfig custom editor for flock config
+                        elements.
+Jan-09-2005 patrickh    Added a VRJConfig custom editor for motion_star config
+                        elements.
+
+[2.0 Beta 1 released - 12.24.2004]=============================================
+Dec-23-2004 patrickh    NEW VERSION: 1.1.166
+Dec-22-2004 allenb      Added proof of concept code showing graphical display
+                        of performance data from the Kernel.
+                        Added performance collection to the kernel loop.
+Dec-22-2004 allenb      Make Kernel::getThread() return a vpr::Thread*.
+                        NEW VERSION: 1.1.165
+Dec-20-2004 dshipton    OpenSG's callback for getSceneRoot has been changed to
+                        getScene() to be in sync with Pf and OSG.
+Dec-01-2004 patrickh    Updated to require Gadgeteer 0.21.0.
+                        NEW VERSION: 1.1.164
+Nov-30-2004 patrickh    Updated to take advantage of .jdef file format
+                        extensions added in JCCL 0.24.0.
+                        NEW VERSION: 1.1.163
+Nov-26-2004 patrickh    Renamed the config element type sound_manager to
+                        sound_manager_sonix.
+Nov-18-2004 patrickh    Updated to require Sonix 0.5.0.
+Nov-13-2004 patrickh    Updated to require Gadgeteer 0.20.0.
+                        NEW VERSION: 1.1.162
+Nov-05-2004 patrickh    VRJConfig is now installed as a bundle on Mac OS X (in
+                        addition to the "traditional" UNIX installation
+                        launched by a shell script).
+Nov-04-2004 patrickh    Relocated the Java libraries and JavaBeans used by
+                        VRJConfig to $VJ_BASE_DIR/share/vrjuggler/java and
+                        $VJ_BASE_DIR/share/vrjuggler/beans respectively.
+                        NEW VERSION: 1.1.161
+Oct-29-2004 patrickh    Updated to require JCCL 0.20.
+Oct-29-2004 patrickh    Updated to require Tweek 0.18.
+Oct-18-2004 allenb      Refactored how GL and Performer windows allow event
+                        input.  They now work with a window registry
+                        in gadgeteer to allow event sampling from event window
+                        "devices".  Note: this only works on X.
+                        Win32 is currently broken.
+                        NEW VERSION 1.1.160
+Oct-11-2004 patrickh    Updated to require VPR 0.40.1, the first version that
+                        fully eliminates the need for NSPR on Mac OS X.
+Oct-11-2004 patrickh    Updated to require VPR 0.40.0.
+                        NEW VERSION 1.1.159
+Oct-01-2004 patrickh    Handle the case when it is necessary to link against
+                        the XFree86/X.org library libXxf86vm explicitly.
+Sep-24-2004 aronb       Updated to require Gadgeteer 0.17.0 in order to fix a
+                        cluster device data sharing bug.
+                        NEW VERSION 1.1.158
+Sep-17-2004 patrickh    Updated to require JCCL 0.18.0.  The only change is
+                        that all the .jdef files are now using version 3.1 of
+                        the config definition file format.
+                        NEW VERSION 1.1.157
+Sep-11-2004 patrickh    Updated for JDOM 1.0.
+                        NEW VERSION 1.1.156
+Aug-04-2004 dshipton    Added in PerformanceMediator into Juggler kernel
+                        loop.
+                        NEW VERSION 1.1.155
+Jul-28-2004 patrickh    Added the first version of the display window custom
+                        editor to the VRJConfig Control Panel.
+Jul-12-2004 patrickh    Began adding very basic exception handling to the
+                        kernel.
+                        NEW VERSION: 1.1.154
+Jun-06-2004 patrickh    Refactored surface viewport configurations to remove
+                        unnecessary nesting of configuration elements.
+May-22-2004 patrickh    Moved vrj::FileIO out of the vrj library and into the
+                        sample code tree under pfTools.
+                        NEW VERSION: 1.1.153
+May-22-2004 patrickh    Moved pfSoundNode and pfSoundTraverser out of the
+                        vrj_pf library and into the sample code tree under
+                        pfTools.
+                        NEW VERSION: 1.1.152
+May-22-2004 patrickh    Removed vrj::Timer.  vpr::Interval should be used
+                        instead.
+                        NEW VERSION: 1.1.151
+
+[2.0 Alpha 4 released - 4.28.2004]=============================================
+Apr-28-2004 aronb       NEW VERSION: 1.1.150
+Apr-11-2004 patrickh    VR Juggler now depends on an installed version of GMTL.
+Apr-05-2004 patrickh    Updated to JCCL 0.17.0.
+Mar-19-2004 patrickh    Restored the ability to specify a search path for
+                        configuration files using the environment variable
+                        $VJ_CFG_PATH (or $JCCL_CFG_PATH).  A default search
+                        path is now set if neither environment variable is
+                        defined.
+Mar-03-2004 pallindo    Tracked surfaces now track any positional device
+                        correctly.
+                        NEW VERSION: 1.1.149
+Dec-07-2003 allenb      Added vrj::App::latePreFrame()
+                        NEW VERSION: 1.1.148
+Oct-06-2003 allenb      Fixed bug where resizing of glx windows was not
+                        updating projection information for the display.
+                        Added code to allow glx windows to be closed at
+                        run-time.  This needs more testing.
+                        NEW VERSION: 1.1.147
+Sep-15-2003 patrick     Renamed the libraries Juggler, Juggler_ogl, and
+                        Juggler_pf to vrj, vrj_ogl, and vrj_pf respectively.
+                        NEW VERSION: 1.1.146
+Aug-25-1003 aronb       Fixed a bug in PfDrawManager which was causing the
+                        optimized build to go into an endless loop while running
+                        a Performer application.
+                        NEW VERSION: 1.1.145
+Aug-16-2003 patrickh    VRJConfig now depends on Tweek 0.15.
+Jul-10-2003 nonchocoboy Updated to JCCL 0.12.0 API for both Java and C++.
+                        This involved breaking vrj-chunks.desc into individual
+                        files for each configuration definition.
+                        NEW VERSION: 1.1.144
+
+[2.0 Alpha 2 released - 9.22.2003]==============================================
+Sep-22-2003 aronb       NEW VERSION: 1.1.143-1
+                        This version was chosen rather than 1.1.144 since we are
+                        making the VR Juggler 2.0 Alpha 3 from the
+                        VRJ_2_0_ALPHA_2_BRANCH branch.
+Aug-25-1003 aronb       Fixed a bug in PfDrawManager which was causing the
+                        optimized build to go into an endless loop while running
+                        a Performer application.
+                        
+[2.0 Alpha 2 released - 7.1.2003]==============================================
+Jul-01-2003 aronb       NEW VERSION: 1.1.143
+Jun-25-2003 patrickh    Allow the use of X11 and GLX on Mac OS X instead of
+                        Carbon and the OpenGL framework.
+                        NEW VERSION: 1.1.142
+Jun-03-2003 aronb       Created Draw Manager-specific simulator factories.
+                        NEW VERSION: 1.1.141
+Apr-29-2003 patrickh    configure.in requries Autoconf 2.53 or newer.
+Apr-28-2003 patrickh    Updated to Gadgeteer 0.10.0 API.
+                        NEW VERSION: 1.1.140
+Apr-14-2003 patrickh    Changed the return type of the member function
+                        vrj::DrawSimInterface::config() to be bool.
+                        NEW VERSION: 1.1.139
+Apr-13-2003 patrickh    Introduced vrj::DrawSimInterfaceFactory which creates
+                        vrj::DrawSimInterface instances based on configuration
+                        information.
+                        NEW VERSION: 1.1.138
+Apr-11-2003 allenb      Refactored simulator to allow for module simulators.
+                        NEW VERSION: 1.1.137
+Apr-10-2003 nonchocoboy Addded vrj::GlSimInterface to help ease the creation of
+                        custom simulators for OpenGL apps.
+                        NEW VERSION: 1.1.136
+
+[2.0 Alpha 1 released - 3.15.2003]=============================================
+Mar-15-2003 patrickh    NEW VERSION: 1.1.135
+Mar-03-2003 allenb      Fixed tracked projections.
+Feb-21-2003 patrickh    Removed vrj::SystemFactory and all platform-specific
+                        versions of it.  Removed the classes vrj::System and
+                        vrj::SystemData.
+Feb-07-2003 patrickh    The Performer DLL can be built on Windows.
+                        NEW VERSION: 1.1.134
+Feb-03-2003 allenb      Fixed bugs where projections were not being updated
+                        correctly.  This required API to be updated to pass
+                        scale factors to the projection update code.
+Feb-02-2003 allenb      Refactored the way the projection setup code is called
+                        Projections are now calculated immediately before
+                        being used.  This allows the projections to take into
+                        account the units that the application is using (feet
+                        vs. meters vs. other).
+Jan-21-2003 allenb      Updated to the gadget::PositionProxy interface changes.
+                        Added API to OpenGL Application class that returns
+                        the scale factor to use before drawing.  See
+                        GlApp::getDrawScaleFactor for more details.
+                        NEW VERSION: 1.1.133
+Jan-15-2003 allenb      Added vrj::test classes to vrjuggler.
+Jan-14-2003 patrickh    Added navgrab app under samples/OGL/advanced.
+Jan-11-2003 patrickh    Added full-screen anti-aliasing as a configurable
+                        parameter for OpenGL displays using GLX.
+Jan-11-2003 patrickh    Added the ability to configure the frame buffers used
+                        in display windows.
+                        NEW VERSION: 1.1.132
+Jan-06-2003 patrickh    Updated to VPR 0.22.0.
+                        NEW VERSION: 1.1.131
+Dec-24-2002 patrickh    Updated to VPR 0.21.0.
+                        NEW VERSION: 1.1.130
+Oct-29-2002 allenb      Migrated all pos device config chunks over to using
+                        position filters for data transformations.
+Oct-24-2002 allenb      Fix for context specific data performance bug.
+                        This change should increate the performance of context
+                        specific data in cases where we are using multiple
+                        display pipes.  The most recent cubes test application
+                        can help to give solid numbers for the new performance
+                        SF Bug: 521630
+                        NEW VERSION: 1.1.129
+Oct-14-2002 patrickh    Moved the contents of sonix-chunks.desc into
+                        vrj-chunks.desc.
+Oct-10-2002 nonchocoboy VRJConfig loads include files relative to the file that
+                        included it.
+
+[1.1 DR3 released - 9.29.2002]=================================================
+Sep-29-2002 nonchocoboy NEW VERSION: 1.1.128
+Sep-26-2002 patrickh    Regorganized the samples directory to separate simple
+                        applications from advanced examples.
+Sep-25-2002 nonchocoboy VRJConfig now uses a custom dialog for collection the
+                        information necessary to make a new configuration. As
+                        part of this, the user can specify additional files to
+                        include into the context by default.
+Sep-23-2002 nonchocoboy VRJConfig can now successfully close files.
+Sep-13-2002 nonchocoboy Build java sources using ant.
+                        NEW VERSION: 1.1.127
+
+[1.1 DR2 released - 9.6.2002]==================================================
+Aug-26-2002 nonchocoboy VRJConfig will now process vjInclude chunks when a file
+                        is opened and open the files they point to in the
+                        current context.
+                        NEW VERSION: 1.1.126
+Aug-19-2002 nonchocoboy Put vrj-chunks.desc in new contexts by default.
+Aug-16-2002 nonchocoboy Added support in VRJConfig for editing multiple
+                        configurations (of multiple files each) simultaneously.
+                        NEW VERSION: 1.1.125
+Aug-15-2002 allenb      Fixed some uninitialized values.
+                        Fixed assertion in Display.h that was asserting on the
+                        wrong value.
+Aug-06-2002 patrickh    Developer installations are now constructed using the
+                        standard installation targets.
+Jul-19-2002 subatomic   Sonix is now required to compile VR Juggler.
+Jul-16-2002 nonchocoboy New VRJConfig Tweek bean to replace VjControl.
+Jul-12-2002 allenb      Added OpenSG section to programmers guide.
+Jul-05-2002 subatomic   Enabled GlWindowWin32 to get window events.
+                        This change allows window events such as keyboard
+                        and mouse to be recieved in graphics windows while
+                        running with the Win32 build of vrjuggler.
+Jul-01-2002 allenb      Removed OSG hack and replaced with a much better
+                        (and less trusting) solution using new glUserData.
+Jul-01-2002 allenb      Temporary hack added to GlPipe.cpp to set viewport
+                        before each call to draw.  This was needed to work
+                        around a bug in OSG.  
+Jun-27-2002 patrickh    The application makefiles now require GNU make, Doozer
+                        and the *-config scripts.  This fixes path problems in
+                        the installation tree.
+                        NEW VERSION: 1.1.97
+Jun-25-2002 patrickh    The vrjuggler-config script is now written in Perl.  It
+                        is capable of determining its installation path at
+                        runtime.
+Jun-21-2002 allenb      Fixed bug where GLX window was not processing keyup or
+                        button events.
+Jun-20-2002 allenb      Remove multi-threading from the case where GLXWindow and 
+                        XWinKeyboard are sharing the window to process it as a 
+                        GFX window and as a keyboard window.
+                        This change should greatly increase the stability of GFX 
+                        window input under X with OpenGL.
+
+[1.1 DR1 released - 6.13.2002]=================================================
+Jun-13-2002 patrickh  Removed vrj::EnvironmentManager.
+May-30-2002 patrickh  Removed the Juggler_utils library.
+                      NEW VERSION: 1.1.95
+May-29-2002 patrickh  Installed dynamic libraries are now named based on the
+                      VR Juggler version.
+May-23-2002 patrickh  Updated to JCCL 0.2.0 API.
+                      NEW VERSION: 1.1.94
+May-22-2002 allenb    Updated to work with Boost 0.1.28.
+May-03-2002 patrickh  Remvoed catadf.pl which has been obsoleted by Sonix
+                      functionality.
+Apr-23-2002 patrickh  Data files now install into $VJ_BASE_DIR/share/vrjuggler
+                      by default.  This is done so that they do not conflict
+                      with data files from other Juggler modules or system
+                      data files.
+                      NEW VERSION: 1.1.93
+Apr-09-2002 allenb    The cyclic dependency between VR Juggler and Gadgeteer
+            patrickh  has been broken.  VR Juggler and Gadgeteer have both
+                      been ported to GMTL.
+                      NEW VERSION: 1.1.92
+Feb-27-2002 allenb    Added simple navigation to OpenSGNav app.
+Feb-26-2002 istoynov  OpenSG application class added.  The OpenSG application
+            reiners   class currently factors out all the commonality for
+            allenb    OpenSG-based Juggler applications.
+                      contributors: Ivan Stoynov & Dirk Reiners
+Feb-22-2002 allenb    OpenSG app now uses MatrixCamera to render displays.
+Jan-31-2002 allenb    Added SignalButtons init and check functions to the
+                      Kernel.  The only "signal" being checked currently
+                      is the VJSystemStopKernel button which triggers a kernel
+                      stop call.
+Jan-31-2002 allenb    Moved left and right projections from surface viewport
+                      to the base viewport class.  Now simulator viewports
+                      create to camera projections and just use one by default
+                      This simplifies the code and eliminates some redundancy.
+                      This should allow for stereo simulator views as well.
+Jan-31-2002 allenb    Moved Projection Enum values into an Enum named Eye.
+Jan-31-2002 allenb    Removed unneeded mType parameter from Projection classes.
+Jan-31-2002 allenb    Modified viewports to have handles to parent displays,
+                      and projections to have handles to parent viewports.
+                      This enabled camera projection to be calculated
+                      in CameraProjection class and to auto calculate
+                      the aspect ratio.
+                      Now CameraProjection actually calculates a frutum
+                      so we do not have to use a special case for
+                      simulator camera rendering where we use gluPerspective.
+Jan-30-2002 allenb    Changed order that oglApp functions are called.  Now
+                      contextInit() is called before bufferPreDraw().
+Jan-29-2002 allenb    Added new interface function oglApp::contextPostDraw()
+Nov-14-2001 allenb    Fixed OsgApp to allow for multi-window/multi-pipe apps.
+                      Added method for configuring new osgUtil::SceneViewers.
+Oct-17-2001 subatomic Fixed bug where vjGetVjMatrix returns the wrong 
+                      conversion.
+Oct-17-2001 patrick   Renamed the "Data" directory to "data".
+Oct-15-2001 patrick   Renamed the juggler-config script to vrjuggler-config.
+Oct-12-2001 allenb    Removed vrj::Debug.  We now use vpr::Debug for all
+                      debug output.  This involved introducing GUIDs for the 
+                      vrj debug categories.  They can be found in Debug.h
+Oct-11-2001 allenb    Added fix for synchronization errors when reading input
+                      from a GlWindowXwin as a keyboard device.
+Sep-21-2001 patrick   Complete restructuring of the VR Juggler source tree.
+                      Headers are now rooted in a vrj directory (to match the
+                      namespace), and all file names have had the "vj" prefix
+                      removed.  See RELEASE_NOTES.txt for more details on
+                      updating after this change.
+Sep-20-2001 patrick   The default chunk description file for VR Juggler is now
+                      vrj-chunks.desc.
+Sep-19-2001 subatomic Added compatibility include files put 
+                      -I$(VJ_BASE_DIR)/include/deprecated in your makefile.
+Sep-19-2001 subatomic Now using the vrj namespace instead of the prefix "vj"
+                      on classes.
+Aug-27-2001 patrick   We build DLLs on Win32 now.
+Aug-24-2001 allenb    Moved glWindow factory function to glDrawManager.
+                      This removes the dependency that Juggler had on
+                      Juggler_ogl.
+Aug-22-2001 cjust     Added XML-based configuration file support to the
+                      C++ side of Juggler (EnvironmentManager and ConfigIO
+                      classes).
+Aug-20-2001 cjust     Added a VjControl wizard for creating simulator-mode
+                      configuration files.
+Aug-20-2001 cjust     Merged support for XML-based configuration files in
+                      VjControl.  VjControl now requires JAXP (Java API for
+                      XML processing).
+Aug-20-2001 cjust     Added an improved default-value handling for ChunkDescs.
+                      Default values are now stored in the .desc files, and
+                      are editable directly from the ChunkDesc editing window
+                      in VjControl.  (This requires XML-format ChunkDesc 
+                      files).
+Aug-20-2001 cjust     Updated VjControl's protocol-selection system to use
+                      the new XML-like syntax.  This breaks communication
+                      with older versions of VR Juggler.
+Aug-20-2001 cjust     Fixed a redraw bug in VjControl that happened when
+                      updating the Active chunkdb from a network connection.
+                      This could cause the status bar label or the chunkdb's
+                      JTree to be shifted to the upper-left corner of the
+                      VjControl window.
+Aug-20-2001 cjust     Added lazy initialization of VjControl panels; this
+                      cuts startup time and improves scalability.
+Aug-20-2001 cjust     VjControl is no longer built into a compressed .jar
+                      file.  This cuts several seconds off startup time.
+Aug-10-2001 allenb    Added initial version of OSG (www.openscenegraph.org) 
+                      support to VR Juggler.
+                      This introduces and new application class called vjOsgApp
+                      that all OSG-based apps should derive from.
+                      There is also a new sample program called osgNav that 
+                      uses this class to create a basic navigation program.
+Aug-06-2001 allenb    tools/pfStatLinux contains a library that must be used
+                      with performer application on Linux due to a bug in
+                      performer.
+Jun-20-2001 allenb    Chunk types: simDisplay and surfaceDisplay have been
+                      removed from the system.  They have been replaced
+                      by the new chunk of type displayWindow.  Any old
+                      chunks will be ignored.
+Jun-20-2001 patrick   The Mac OS X port no longer requires Carbon SetupGL
+                      because the necessary SetupGL code has been copied into
+                      the library
+Jun-19-2001 allenb    Performer now fully uses run-time reconfiguration at
+                      startup and allows for the addition of new display
+                      windows at run-time.
+Jun-11-2001 allenb    First pass at (re)configurable pfDrawManager
+                      Currently only allows run-time addition of windows. 
+May-21-2001 patrick   Initial attempt to support HP-UX 11.x.  A newer version
+                      of Doozer++ is needed before the port can be completed.
+May-02-2001 allenb    Added new sync string descriptions to flock of birds
+                      chunk.  Added: CRT_Above_72hz and CRT_Below_72hz
+                      NOTE: This BREAKS old config files that had "Normal_72hz"
+Apr-12-2001 patrick   The MotionStar driver now supports setting the
+                      measurement rate
+Apr-03-2001 allenb    Refactored the vjDisplayManager to support viewports
+                      within display windows. This removes the old surface and
+                      simulator display classes and replaces them with new
+                      viewport based equivalents.
+                      This change also updates the vjGlDrawManager to
+                      support the new viewport abilities.  The pfDrawManager
+                      however does not work yet.
+                      This also changes the display configuration chunks and
+                      (unfortunately) completely breaks backwards
+                      compatibility with display configuration chunks.
+Apr-03-2001 allenb    Added vjGlApp::bufferPreDraw method to the vjGlApp
+                      interface.  This was needed because of the new viewport
+                      rendering abilities.  All applications must now execute
+                      glClear's ONLY within bufferPreDraw().
+Mar-28-2001 subatomic vjQuat interface is more fully featured, and now 
+                      contains documentation.  Added tan and atan to vjSystem
+Mar-01-2001 patrick   Added support for a new environment variable $VJ_CFG_PATH
+                      that allows users to specify a colon-separated path (or
+                      semi-colon-separated on Win32) where config files can
+                      be found.  This alleviates the need to specify the full
+                      path all the time.
+Feb-17-2001 patrick   Added support for NSPR as an operating system
+                      abstraction.  The operating system abstraction layer has
+                      been completely restructured into the VR Juggler
+                      Portable Runtime (VPR).  This code is now compiled into
+                      the Juggler_utils library.  Warnings have been added to
+                      deprecated header files to let programmers know to
+                      update their paths.  The vjDebug code has also been
+                      moved into the Juggler_utils library so that any code
+                      can use it without being tied to the primary Juggler
+                      library.  The vjSystem interface has been started.  It
+                      provides static inline functions such as sleep(),
+                      usleep(), gettimeofday(), cos(), atan2, and sqrt().
+Feb-07-2001 patrick   The extra VR Juggler data files, sample applications,
+                      sample config files, etc. now install in
+                      $VJ_BASE_DIR/share by default.  This includes the
+                      basic chunk description file, so local vjcontrol.cfg
+                      files must be updated.  The easiest way to do this is
+                      to change the descfiles property to have the value
+                      "$VJ_SHARE_DIR/Data/chunksDesc".  VjControl knows how to
+                      expand $VJ_SHARE_DIR on its own.
+Feb-05-2001 allenb    Major refactoring of Input Manager and Input classes
+                      Rewrote InputManager class removing redundancy and
+                      using templates classes to capture commonality.
+                      Redesigned input class hierarchy.
+                      Replaced proxies with typedef'ed template classes.  
+Jan-27-2001 patrick   The Juggler_utils library must now be linked for all
+                      applications.
+Jan-26-2001 cjust     Improved Navigation in VjControl help.
+Jan-20-2001 cjust     VjControl now recommends JDK1.3 (1.2 still minimum).
+Jan-09-2001 patrick   RELENG_1_0 CVS branch created in preparation for 1.0
+                      release.  This was branched at the same point as the
+                      now defunct RELENG_0_2 branch.  The HEAD is now moving
+                      towards 1.2.

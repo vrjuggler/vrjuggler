@@ -1,0 +1,133 @@
+DATE        AUTHOR      CHANGE
+----------- ----------- -------------------------------------------------------
+[1.0 release brach created - 1.9.2001]=========================================
+Dec-30-2000 patrick   Build system converted to use Doozer++ 1.0.  Automake 1.4
+                      is now required for compiling in addition to Autoconf.
+                      Use autogen.sh to do the auto generation phase before
+                      compiling.
+Dec-28-2000 patrick   Added initial version of serial and socket I/O
+                      abstraction layers.  These are to be used for making
+                      cross-platform drivers with very little effort.
+Dec-17-2000 bthomp    UNIX version of IS-900 driver converted to use termios
+                      which in turn fixes cross-platform building
+Dec-13-2000 patrick   RELENG_0_2 CVS branch created in preparation for 0.2.0
+                      release
+
+[0.2 release brach created - 12.13.2000]=======================================
+Nov-27-2000 bthomp    Added initial version of Intersense IS-900 driver
+Nov-02-2000 patrick   Finished new MotionStar driver--config files must be
+                      updated to reflect some new options
+Oct-28-2000 allenb    Fixed bug preventing right eye only mono in Performer
+Sep-30-2000 allenb    Moved src to SourceForge.net
+Sep-18-2000 allenb    Added interocular distance configuration
+Sep-15-2000 patrick   Fixed positioning of keyboard input windows on Win32
+Sep-03-2000 allenb    Fixed a couple of race conditions on start up.
+Sep-03-2000 allenb    Fixed bug that prevented X-Win keyboards from
+                      reconfiguring
+Sep-02-2000 allenb    Fixed several lingering seg fault bugs
+Aug-30-2000 allenb    Added ability to specify FOV and aspect ratio in sim
+                      windows.
+Aug-29-2000 allenb    Fixed bug with Performer calling app traversals
+                      once per channel.
+Aug-21-2000 allenb    Added initial trackd driver support
+Aug-05-2000 patrick   Now using std namespace for all C++ I/O
+Aug-03-2000 patrick   -LANG:std is now used when compiling on IRIX
+Jul-18-2000           VR Juggler 0.1.97 released
+
+[Version 0.1.97 - 7.19.2000]===================================================
+Jul-13-2000 cjust     Environment Manager works under NT
+                      Config files can have includes for chunkdesc files
+                      Config file includes now use relative paths correctly
+                      Vjcontrol fixes for editing embedded chunks
+                      Vjcontrol internal event architecture expanded
+                      Vjcontrol componentization (partial)
+                      Numerous fixes in ConfigChunkDB code
+Jul-13-2000 allenb    Initial ChangeLog file started
+Jul-11-2000 allenb    Rewrote the way that threads call self()
+                      Rewrote thread specific data
+                      Threads are now much faster (~10x)
+Jul-07-2000 patrick   Debugging symbols are now compiled into object files on
+                      Win32 which fixes long-standing (but unreported)
+                      problems with linking Juggler applications.
+Jun-29-2000 cjust     Java 1.1 compatability has been dropped from VjControl
+Jun-23-2000 patrick   Set the stereo bit in an OpenGL window on Win32 if
+                      stereo is enabled in the windwo's config chunk.
+                      _OLD_TERMIOS is no longer set on IRIX.  The serial
+                      drivers are using the latest termios functions.  This
+                      code will probably not work on versions of IRIX before
+                      6.5 as a result.
+                      Added the new utility library Juggler_utils which is
+                      required by most, if not all, applications after this
+                      date.
+Jun-17-2000 subatomic SoundManager added, juggler sound engine for audioworks 
+                      is available.
+Jun-08-2000 allenb    vjApp no longer needs to be passed a vjKernel instance
+Jun-06-2000 subatomic vjGetVJMatrix() has been renamed to vjGetVjMatrix()
+
+[ Version 0.1.96 - 3.10.2000 ]=================================================
+                      Bug fixes for OpenGL
+Jan-31-2000 patrick   Improved usability of the configure script on Solaris
+Jan-28-2000 patrick   Initial configure script support for AIX
+
+[ Version 0.1.95 - 1.27.2000 ]=================================================
+1.27.2000            Juggler
+                      - Many bug fixes.
+                      - Win32 and Linux ports.
+                      - Improved the run-time reconfiguration
+                      - Performer works now in Linux and Irix
+                      - Increased performance
+
+                     VjControl
+                      - Redesigned internals, rewritten to support 
+                        componentization.
+                      - Flexible event handling architechture.
+                      
+[ Beta 1 ]=====================================================================
+7.1.1999             Rewrote kernel
+                     Added dynamic run-time configuration
+                     Bug fixes
+                     
+[ Alpha 4 ]====================================================================
+2.13.1999            Added Glove Support
+                     - Added glove device abstraction
+                     - Added simulated glove device
+                     - Added glove proxy and interface classes
+
+                     Added Gesture support
+                     -Added support for gesture recognition
+                     -Added glove gesture simulator device
+
+                     Added simulated devices
+                     - Added proper simulated devices
+                     - SimDigital device
+                     - SimAnalog device
+                     - SimPosition device
+                     - SimGestureGlove device
+
+                     Added proper keyboard device
+                     - Keyboard devicesare now handled by the input manager
+                     - Keyboard devices aredevices that generate key events.
+                     - Added keyboard proxy
+                     - Added keyboard interface
+
+                     vjcontrol
+                     - User editable organizational tree
+                     - Smarter button layout
+                     - Various bug fixes
+
+                     Misc
+                     - Initial keyboard position
+                     - Fixed keyboard mousebug
+                     - Initial position forSimPos
+                     - 2 new sample programs for OpenGL
+                     - Added directory of sample config files
+
+[ Alpha 3 ]====================================================================
+                     - New vjcontrol interface program
+                     - Context specific data for OpenGL
+                     
+[ Alpha 2 ]====================================================================
+                     - Bug fixes
+                     
+[ Alpha 1 ]====================================================================
+                     - Initial version
