@@ -221,12 +221,14 @@ bool Configuration::load(const std::string& filename,
             << "Including " << cfg_filename << std::endl
             << vprDEBUG_FLUSH;
 
-         // Load the file
-         load(cfg_filename, filename);
+         // Load the file by making a recursive call to this method. We use
+         // mFileName so that the fully expanded path to the includin file is
+         // used as the "parent" file.
+         load(cfg_filename, mFileName);
       }
 
       // Load in the elements in the original file.
-      loadFromElementNode(cfg_node->getChild(tokens::ELEMENTS), filename);
+      loadFromElementNode(cfg_node->getChild(tokens::ELEMENTS), mFileName);
 
       status = true;
    }
