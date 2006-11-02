@@ -37,7 +37,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
-DPP_PREREQ([2.1.2])
+DPP_PREREQ([2.1.4])
 DPP_INIT
 
 # -----------------------------------------------------------------------------
@@ -174,9 +174,12 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
       fi
    fi
 
-   # Test for OpenAL.
-   HAVE_OPENAL='N'
+   # Test for OpenAL and ALUT.
+   BUILD_OPENAL='N'
    if test "x$OPENAL_ENABLED" = "xyes" ; then
+      HAVE_OPENAL='N'
+      HAVE_ALUT='N'
+
       if test "x$VPR_SUBSYSTEM" != "xSPROC"; then
          snx_save_LIBS="$LIBS"
          LIBS="$LIBS $DYN_LOAD_LIB"
@@ -188,68 +191,97 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
 
          if test "x$HAVE_OPENAL" = "xY" ; then
             DPP_PTHREAD_FINISH
+            DPP_HAVE_ALUT([/usr/local], [HAVE_ALUT='Y'],
+                          [AC_MSG_WARN([*** OpenAL plug-in cannot be built. ***])])
+         fi
+
+         echo "HAVE_OPENAL = $HAVE_OPENAL"
+         echo "HAVE_ALUT = $HAVE_ALUT"
+
+         # If we have both OpenAL and ALUT, then we can proceed with some
+         # final checks.
+         if test "x$HAVE_OPENAL" = "xY" -a "x$HAVE_ALUT" = "xY" ; then
+            # We know that we can build the OpenAL plug-in at this point. The
+            # remaining tests are for making compile-time decisions about the
+            # OpenAL and ALUT API versions.
+            BUILD_OPENAL="Y"
 
             snxsave_CPPFLAGS="$CPPFLAGS"
+
             CPPFLAGS="$CPPFLAGS $AL_INCLUDES $ALUT_INCLUDES"
-            AC_CHECK_HEADERS(AL/al.h AL/alut.h)
+            AC_CHECK_HEADERS([AL/al.h AL/alut.h alut.h])
+
+            snxsave_CXXFLAGS="$CXXFLAGS"
+            snxsave_LDFLAGS="$LDFLAGS"
+            snxsave_LIBS="$LIBS"
+
+            CFLAGS="$CFLAGS $ABI_FLAGS"
+            CPPFLAGS="$CPPFLAGS $AL_INCLUDES $ALUT_INCLUDES"
+            LDFLAGS="$LDFLAGS $AL_LDFLAGS $ALUT_LDFLAGS"
+            LIBS="$LIBS $LIBALUT"
+
+            DPP_LANG_SAVE
+            DPP_LANG_C
+
+            AC_CACHE_CHECK([for alutInitWithoutContext() in $LIBALUT],
+               [ac_cv_has_alutInitWithoutContext],
+               [AC_TRY_LINK([
+#if defined(HAVE_AL_ALUT_H)
+#include <AL/alut.h>
+#elif defined(HAVE_ALUT_H)
+#include <alut.h>
+#endif
+],
+                  [alutInitWithoutContext(0, 0);],
+                  [ac_cv_has_alutInitWithoutContext='yes'],
+                  [ac_cv_has_alutInitWithoutContext='no'])])
+
+            AC_CACHE_CHECK([for alutGetError() in $LIBALUT],
+               [ac_cv_has_alutGetError],
+               [AC_TRY_LINK([
+#if defined(HAVE_AL_ALUT_H)
+#include <AL/alut.h>
+#elif defined(HAVE_ALUT_H)
+#include <alut.h>
+#endif
+],
+                  [alutGetError();],
+                  [ac_cv_has_alutGetError='yes'],
+                  [ac_cv_has_alutGetError='no'])])
+
+            AC_CACHE_CHECK([for alutLoadMemoryFromFile() in $LIBALUT],
+               [ac_cv_has_alutLoadMemoryFromFile],
+               [AC_TRY_LINK([
+#if defined(HAVE_AL_ALUT_H)
+#include <AL/alut.h>
+#elif defined(HAVE_ALUT_H)
+#include <alut.h>
+#endif
+],
+                  [alutLoadMemoryFromFile("test", 0, 0, 0);],
+                  [ac_cv_has_alutLoadMemoryFromFile='yes'],
+                  [ac_cv_has_alutLoadMemoryFromFile='no'])])
+
+            DPP_LANG_RESTORE
+
+            CFLAGS="$snxsave_CFLAGS"
             CPPFLAGS="$snxsave_CPPFLAGS"
+            LDFLAGS="$snxsave_LDFLAGS"
+            LIBS="$snxsave_LIBS"
 
-            if test "x$LIBALUT" != "x" ; then
-               snxsave_CXXFLAGS="$CXXFLAGS"
-               snxsave_CPPFLAGS="$CPPFLAGS"
-               snxsave_LDFLAGS="$LDFLAGS"
-               snxsave_LIBS="$LIBS"
+            if test "x$ac_cv_has_alutInitWithoutContext" = "xyes" ; then
+               AC_DEFINE(HAVE_ALUT_INIT_WITHOUT_CONTEXT, ,
+                         [Define if alutInitWithoutContext() is available])
+            fi
 
-               CFLAGS="$CFLAGS $ABI_FLAGS"
-               CPPFLAGS="$CPPFLAGS $AL_INCLUDES"
-               LDFLAGS="$LDFLAGS $AL_LDFLAGS"
-               LIBS="$LIBS $LIBALUT"
+            if test "x$ac_cv_has_alutGetError" = "xyes" ; then
+               AC_DEFINE(HAVE_ALUT_GET_ERROR, ,
+                         [Define if alutGetError() is available])
+            fi
 
-               DPP_LANG_SAVE
-               DPP_LANG_C
-
-               AC_CACHE_CHECK([for alutInitWithoutContext() in $LIBALUT],
-                  [ac_cv_has_alutInitWithoutContext],
-                  [AC_TRY_LINK([#include <AL/alut.h> ],
-                     [alutInitWithoutContext(0, 0);],
-                     [ac_cv_has_alutInitWithoutContext='yes'],
-                     [ac_cv_has_alutInitWithoutContext='no'])])
-
-               AC_CACHE_CHECK([for aluGetError() in $LIBALUT],
-                  [ac_cv_has_alutGetError],
-                  [AC_TRY_LINK([#include <AL/alut.h> ],
-                     [alutGetError();],
-                     [ac_cv_has_alutGetError='yes'],
-                     [ac_cv_has_alutGetError='no'])])
-
-               AC_CACHE_CHECK([for alutLoadMemoryFromFile() in $LIBALUT],
-                  [ac_cv_has_alutLoadMemoryFromFile],
-                  [AC_TRY_LINK([#include <AL/alut.h> ],
-                     [alutLoadMemoryFromFile("test", 0, 0, 0);],
-                     [ac_cv_has_alutLoadMemoryFromFile='yes'],
-                     [ac_cv_has_alutLoadMemoryFromFile='no'])])
-
-               DPP_LANG_RESTORE
-
-               CFLAGS="$snxsave_CFLAGS"
-               CPPFLAGS="$snxsave_CPPFLAGS"
-               LDFLAGS="$snxsave_LDFLAGS"
-               LIBS="$snxsave_LIBS"
-
-               if test "x$ac_cv_has_alutInitWithoutContext" = "xyes" ; then
-                  AC_DEFINE(HAVE_ALUT_INIT_WITHOUT_CONTEXT, ,
-                            [Define if alutInitWithoutContext() is available])
-               fi
-
-               if test "x$ac_cv_has_alutGetError" = "xyes" ; then
-                  AC_DEFINE(HAVE_ALUT_GET_ERROR, ,
-                            [Define if alutGetError() is available])
-               fi
-
-               if test "x$ac_cv_has_alutLoadMemoryFromFile" = "xyes" ; then
-                  AC_DEFINE(HAVE_ALUT_LOAD_MEMORY_FROM_FILE, ,
-                            [Define if alutLoadMemoryFromFile() is available])
-               fi
+            if test "x$ac_cv_has_alutLoadMemoryFromFile" = "xyes" ; then
+               AC_DEFINE(HAVE_ALUT_LOAD_MEMORY_FROM_FILE, ,
+                         [Define if alutLoadMemoryFromFile() is available])
             fi
          fi
       else
@@ -371,7 +403,7 @@ AC_SUBST(DSO_PLUGIN_PROF_DEP_FILES)
 
 AC_SUBST(HAVE_AUDIERE)
 AC_SUBST(HAVE_AUDIOWORKS)
-AC_SUBST(HAVE_OPENAL)
+AC_SUBST(BUILD_OPENAL)
 AC_SUBST(HAVE_SUBSYNTH)
 
 # -----------------------------------------------------------------------------
