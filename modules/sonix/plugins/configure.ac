@@ -195,9 +195,6 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
                           [AC_MSG_WARN([*** OpenAL plug-in cannot be built. ***])])
          fi
 
-         echo "HAVE_OPENAL = $HAVE_OPENAL"
-         echo "HAVE_ALUT = $HAVE_ALUT"
-
          # If we have both OpenAL and ALUT, then we can proceed with some
          # final checks.
          if test "x$HAVE_OPENAL" = "xY" -a "x$HAVE_ALUT" = "xY" ; then
