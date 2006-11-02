@@ -532,7 +532,16 @@ public class ContextToolbar
       ConfigBroker broker = new ConfigBrokerProxy();
       for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
       {
-         broker.remove((String)itr.next());
+         try
+         {
+            broker.remove((String) itr.next());
+         }
+         // If the current file is no open in the Config Broker, an illegal
+         // argument exception will be thrown. We just ignore that occurrence.
+         catch (IllegalArgumentException ex)
+         {
+            /* Do nothing. */ ;
+         }
       }
 
       EventListenerRegistry.instance().unregisterListener(mTweekFrameListener,
