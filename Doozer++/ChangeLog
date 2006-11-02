@@ -1,5 +1,8 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2006-11-02 patrickh     Separated the ALUT test from DPP_HAVE_OPENAL. The new
+                        way to test for ALUT is to use DPP_HAVE_ALUT.
+                        NEW VERSION: 2.1.4
 2006-08-31 patrickh     Callers of DPP_ABI_SETUP can now override the default
                         set of architectures targeted when making universal
                         binaries on Mac OS X.
