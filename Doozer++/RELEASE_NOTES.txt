@@ -33,6 +33,9 @@ Released: April 14, 2006
 	  conventions, including the use of versioning in any manner
 	  desired.
 
+        * The tests for OpenAL and ALUT have been separated into
+          DPP_HAVE_OPENAL and DPP_HAVE_ALUT.
+
  Version: 2.0.0
 Released: February 16, 2005
 
