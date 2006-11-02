@@ -47,7 +47,7 @@ EXT_M4_DIR=	$(top_srcdir)/external/macros
 
 DPP_CFG_DEPS=	abi.m4 basic_progs.m4 cplusplus.m4 gcc.m4 general.m4	\
 		install.m4 linker.m4 perl.m4 pthreads.m4 sys.m4 win32.m4
-DPP_PKG_DEPS=	audiere.m4 audioworks.m4 openal.m4 subsynth.m4
+DPP_PKG_DEPS=	audiere.m4 audioworks.m4 openal.m4 alut.m4 subsynth.m4
 VJ_M4_DEPS=	sonix.m4 vpr.m4 vrj-helpers.m4
 
 M4_DEPS=	$(addprefix $(DPP_CFG_DIR)/, $(DPP_CFG_DEPS))		\

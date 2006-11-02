@@ -43,7 +43,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
-DPP_PREREQ([2.1.2])
+DPP_PREREQ([2.1.4])
 DPP_INIT
 
 # -----------------------------------------------------------------------------
@@ -177,9 +177,12 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
       fi
    fi
 
-   # Test for OpenAL.
-   HAVE_OPENAL='N'
+   # Test for OpenAL and ALUT.
+   BUILD_OPENAL='N'
    if test "x$OPENAL_ENABLED" = "xyes" ; then
+      HAVE_OPENAL='N'
+      HAVE_ALUT='N'
+
       if test "x$VPR_SUBSYSTEM" != "xSPROC"; then
          snx_save_LIBS="$LIBS"
          LIBS="$LIBS $DYN_LOAD_LIB"
@@ -190,10 +193,22 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
          LIBS="$snx_save_LIBS"
          if test "x$HAVE_OPENAL" = "xY" ; then
             DPP_PTHREAD_FINISH
+            DPP_HAVE_ALUT([/usr/local], [HAVE_ALUT='Y'],
+                          [AC_MSG_WARN([*** OpenAL plug-in cannot be built. ***])])
+         fi
+
+         # If we have both OpenAL and ALUT, then we can proceed with some
+         # final checks.
+         if test "x$HAVE_OPENAL" = "xY" -a "x$HAVE_ALUT" = "xY" ; then
+            # We know that we can build the OpenAL plug-in at this point. The
+            # remaining tests are for making compile-time decisions about the
+            # OpenAL and ALUT API versions.
+            BUILD_OPENAL="Y"
 
             snxsave_CPPFLAGS="$CPPFLAGS"
+
             CPPFLAGS="$CPPFLAGS $AL_INCLUDES $ALUT_INCLUDES"
-            AC_CHECK_HEADERS(AL/al.h AL/alut.h)
+            AC_CHECK_HEADERS([AL/al.h AL/alut.h alut.h])
             CPPFLAGS="$snxsave_CPPFLAGS"
          fi
       else
@@ -289,7 +304,7 @@ AC_SUBST(DSO_PLUGIN_PROF_DEPS)
 
 AC_SUBST(HAVE_AUDIERE)
 AC_SUBST(HAVE_AUDIOWORKS)
-AC_SUBST(HAVE_OPENAL)
+AC_SUBST(BUILD_OPENAL)
 AC_SUBST(HAVE_SUBSYNTH)
 
 # -----------------------------------------------------------------------------
