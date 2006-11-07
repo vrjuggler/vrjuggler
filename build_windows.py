@@ -271,7 +271,7 @@ def getDefaultVars(clVerMajor, clVerMinor):
    optional.append(BuildOption('TRACKD_API_ROOT',
                                'TrackdAPI installation directory', '',
                                required = False))
-   required.append(BuildOption('DOOZER_ROOT',
+   optional.append(BuildOption('DOOZER_ROOT',
                                'Doozer installation directory', ''))
 
    options = {
