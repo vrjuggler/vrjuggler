@@ -271,6 +271,8 @@ def getDefaultVars(clVerMajor, clVerMinor):
    optional.append(BuildOption('TRACKD_API_ROOT',
                                'TrackdAPI installation directory', '',
                                required = False))
+   required.append(BuildOption('DOOZER_ROOT',
+                               'Doozer installation directory', ''))
 
    options = {
       'prefix'      : r'C:\vrjuggler',
@@ -1050,11 +1052,7 @@ def installLibs(srcRoot, destdir,
             installDir(srcdir, destdir, extensions)
 
 def installExternal(prefix, buildDir):
-   # Install Doozer (even though it probably won't be used).
-   printStatus("Installing Doozer ...")
-   destdir = os.path.join(prefix, 'share', 'Doozer')
-   srcdir  = os.path.join(gJugglerDir, 'external', 'Doozer')
-   installDir(srcdir, destdir, ['.mk'])
+   pass
 
 def installVPR(prefix, buildDir):
    printStatus("Installing VPR headers and libraries ...")
@@ -1646,6 +1644,7 @@ def doDependencyInstall(prefix):
    installAudiere(prefix)
    installOpenAL(prefix)
    installOmniORB(prefix)
+   installDoozer(prefix)
 
 def simpleInstall(name, root, prefix, includeDir = None, optional = False):
    if optional and root == '':
@@ -1684,6 +1683,20 @@ def installNSPR(prefix):
 def installCppDOM(prefix):
    simpleInstall('CppDOM headers and libraries', os.environ['CPPDOM_ROOT'],
                  prefix, os.environ['CPPDOM_INCLUDES'])
+
+def installDoozer(prefix):
+   doozer_dir = os.environ['DOOZER_ROOT']
+
+   if doozer_dir != "":
+      printStatus("Installing Doozer makefile bits")
+
+      srcdir  = os.path.join(doozer_dir, 'share', 'Doozer')
+      destdir = os.path.join(prefix, 'share', 'Doozer')
+      installDir(srcdir, destdir, ['.mk'])
+
+      srcdir  = os.path.join(doozer_dir, 'share', 'flagpoll')
+      destdir = os.path.join(prefix, 'share', 'flagpoll')
+      installDir(srcdir, destdir, ['.fpc'])
 
 def installBoost(prefix):
    printStatus("Installing Boost headers and libraries")
