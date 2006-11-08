@@ -93,23 +93,23 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-void VRPN_CALLBACK staticHandleTracker(void *userdata, vrpn_TRACKERCB t)
+void VRPN_CALLBACK staticHandleTracker(void* userdata, vrpn_TRACKERCB t)
 {
-
-#if (VRPN_DEBUG&1)
+#if (VRPN_DEBUG & 1)
    std::cout << "HandleTracker" << std::endl;
 #endif
 
-   gadget::Vrpn *this_ptr = static_cast<gadget::Vrpn*>(userdata);
+   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->handleTracker(t);
 }
 
-void VRPN_CALLBACK staticHandleButton(void *userdata, vrpn_BUTTONCB b)
+void VRPN_CALLBACK staticHandleButton(void* userdata, vrpn_BUTTONCB b)
 {
-#if (VRPN_DEBUG&1)
+#if (VRPN_DEBUG & 1)
    std::cout << "HandleButton" << std::endl;
 #endif
-   gadget::Vrpn *this_ptr = static_cast<gadget::Vrpn*>(userdata);
+
+   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->handleButton(b);
 }
 
@@ -130,24 +130,26 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    if ( mTrackerServer == std::string("") )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Vrpn::config() VRPN tracker server name not set!\n" << vprDEBUG_FLUSH;
+         << "Vrpn::config() VRPN tracker server name not set!\n"
+         << vprDEBUG_FLUSH;
    }
    else
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-         << "Vrpn::config() VRPN tracker server name set to: " << mTrackerServer
-         << std::endl << vprDEBUG_FLUSH;
+         << "Vrpn::config() VRPN tracker server name set to: "
+         << mTrackerServer << std::endl << vprDEBUG_FLUSH;
    }
 
    // Get the number of tracked objects.
    mTrackerNumber = e->getProperty<int>("tracker_count");
 
    // Get the name of the VRPN button server.
-   mButtonServer = e->getProperty<std::string >("button_server");
+   mButtonServer = e->getProperty<std::string>("button_server");
    if ( mButtonServer == std::string("") )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Vrpn::config() VRPN button server name not set!\n" << vprDEBUG_FLUSH;
+         << "Vrpn::config() VRPN button server name not set!\n"
+         << vprDEBUG_FLUSH;
    }
    else
    {
@@ -211,23 +213,23 @@ bool Vrpn::startSampling()
 
 void Vrpn::readLoop()
 {
-   vrpn_Tracker_Remote *tracker;
-   vrpn_Button_Remote *button;
+   vrpn_Tracker_Remote* tracker(NULL);
+   vrpn_Button_Remote* button(NULL);
 
    if ( mTrackerNumber > 0 )
    {
       tracker = new vrpn_Tracker_Remote(mTrackerServer.c_str());
-      tracker->register_change_handler((void *) this, staticHandleTracker);
+      tracker->register_change_handler((void*) this, staticHandleTracker);
    }
 
    if ( mButtonNumber > 0 )
    {
       button = new vrpn_Button_Remote(mButtonServer.c_str());
-      button->register_change_handler((void *) this, staticHandleButton);
+      button->register_change_handler((void*) this, staticHandleButton);
    }
 
    // loop through  and keep sampling
-   while ( !mExitFlag )
+   while ( ! mExitFlag )
    {
       if ( mTrackerNumber > 0 )
       {
@@ -246,21 +248,20 @@ void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
 {
    if ( t.sensor > mTrackerNumber )
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "Vrpn: tracker " << t.sensor
-         << " out of declared range ("<<mPositions.size()<<")"<<std::endl
+         << " out of declared range (" << mPositions.size() << ")" << std::endl
          << vprDEBUG_FLUSH;
       mPositions.resize(t.sensor);
       mQuats.resize(t.sensor);
    }
 
-#if (VRPN_DEBUG&1)
-   std::cout << "Tracker #"<<t.sensor<< " quat " <<
-      mQuats[t.sensor][0] << " " <<
-      mQuats[t.sensor][1] << " " <<
-      mQuats[t.sensor][2] << " " <<
-      mQuats[t.sensor][3] << " " << std::endl;
-
+#if (VRPN_DEBU G& 1)
+   std::cout << "Tracker #"<<t.sensor<< " quat "
+             << mQuats[t.sensor][0] << " "
+             << mQuats[t.sensor][1] << " "
+             << mQuats[t.sensor][2] << " "
+             << mQuats[t.sensor][3] << " " << std::endl;
 #endif
 
    mQuats[t.sensor][0] = t.quat[0];
@@ -283,23 +284,24 @@ void Vrpn::handleButton(const vrpn_BUTTONCB& b)
          << vprDEBUG_FLUSH;
       mButtons.resize(b.button);
    }
-#if (VRPN_DEBUG&1)
-   std::cout << "Button #"<<b.button<< " state " 
-      << b.state << " " << std::endl;
 
+#if (VRPN_DEBUG & 1)
+   std::cout << "Button #" << b.button << " state " << b.state << " "
+             << std::endl;
 #endif
+
    mButtons[b.button] = b.state;
 }
 
 bool Vrpn::sample()
 {
-   for ( int i=0;i<mTrackerNumber;i++ )
+   for ( int i = 0; i < mTrackerNumber; ++i )
    {
       mCurPositions[i].setPosition(getSensorPos(i));
       mCurPositions[i].setTime();
    }
 
-   for ( int i=0;i<mButtonNumber;i++ )
+   for ( int i = 0; i < mButtonNumber; ++i )
    {
       mCurButtons[i] = getDigitalData(i);
       mCurButtons[i].setTime();
@@ -309,7 +311,7 @@ bool Vrpn::sample()
    addPositionSample(mCurPositions);
    addDigitalSample(mCurButtons);
 
-   return 1;
+   return true;
 }
 
 bool Vrpn::stopSampling()
