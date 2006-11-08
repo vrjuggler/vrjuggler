@@ -227,6 +227,8 @@ protected:
 
    vpr::ThreadMemberFunctor<GlDrawManager>* mMemberFunctor;
    vpr::Thread* mControlThread;
+   vpr::Mutex   mCreateWindowMutex;    /**< Mutex for opening windows across
+                                            pipes. */
    //@}
 
 protected:
