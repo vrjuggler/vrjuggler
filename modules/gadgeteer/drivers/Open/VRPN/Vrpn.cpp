@@ -340,17 +340,17 @@ void Vrpn::updateData()
    swapDigitalBuffers();
 }
 
-gmtl::Matrix44f Vrpn::getSensorPos(int d)
+gmtl::Matrix44f Vrpn::getSensorPos(const unsigned int i)
 {
    gmtl::Matrix44f ret_val;
-   gmtl::setRot( ret_val, mQuats[d]);
-   gmtl::setTrans( ret_val, mPositions[d]);
+   gmtl::setRot(ret_val, mQuats[i]);
+   gmtl::setTrans(ret_val, mPositions[i]);
    return ret_val;
 }
 
-gadget::DigitalData Vrpn::getDigitalData(int d)
+gadget::DigitalData Vrpn::getDigitalData(const unsigned int i)
 {
-   return mButtons[d];
+   return mButtons[i];
 }
 
 } // End of gadget namespace

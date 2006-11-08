@@ -160,9 +160,8 @@ private:
 
    bool mExitFlag;
 
-
-   gmtl::Matrix44f getSensorPos(int d);
-   gadget::DigitalData getDigitalData(int d);
+   gmtl::Matrix44f getSensorPos(const unsigned int i);
+   gadget::DigitalData getDigitalData(const unsigned int i);
 
    std::vector<DigitalData>  mCurButtons; /**< The current button states. */
    std::vector<PositionData> mCurPositions; /**< The current button states. */
