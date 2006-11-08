@@ -129,14 +129,14 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    mTrackerServer = e->getProperty<std::string>("tracker_server");
    if ( mTrackerServer == std::string("") )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Vrpn::config() VRPN tracker server name not set!\n"
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[Vrpn::config()] VRPN tracker server name not set!\n"
          << vprDEBUG_FLUSH;
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-         << "Vrpn::config() VRPN tracker server name set to: "
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
+         << "[Vrpn::config()] VRPN tracker server name set to: "
          << mTrackerServer << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -147,15 +147,15 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    mButtonServer = e->getProperty<std::string>("button_server");
    if ( mButtonServer == std::string("") )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Vrpn::config() VRPN button server name not set!\n"
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[Vrpn::config()] VRPN button server name not set!\n"
          << vprDEBUG_FLUSH;
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-         << "Vrpn::config() VRPN button server name set to: " << mButtonServer
-         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
+         << "[Vrpn::config()] VRPN button server name set to: "
+         << mButtonServer << std::endl << vprDEBUG_FLUSH;
    }
 
    // Get the number of buttons.
