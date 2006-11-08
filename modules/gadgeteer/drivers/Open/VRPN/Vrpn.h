@@ -52,6 +52,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Digital.h>
+#include <gadget/Type/Analog.h>
 #include <gadget/Type/InputMixer.h>
 
 #include <gmtl/Matrix.h>
@@ -61,6 +62,7 @@
 
 #include <vrpn_Tracker.h>
 #include <vrpn_Button.h>
+#include <vrpn_Analog.h>
 
 #if ! defined(VRPN_CALLBACK)
 #  define VRPN_CALLBACK
@@ -71,7 +73,7 @@ namespace gadget
 {
 
 /**
- * Class interfacing with vrpn sensor data located on the local machine in
+ * Class interfacing with VRPN sensor data located on the local machine in
  * a shared memory arena.
  *
  * @note A note on reciever access:
@@ -81,9 +83,10 @@ namespace gadget
  *
  * @see gadget::Digital, gadget::Analog, gadget::Position
  */
-class Vrpn : public InputMixer<InputMixer<Input,Digital>,Position>
+class Vrpn
+   : public InputMixer<InputMixer<InputMixer<Input, Analog>, Digital>,
+                       Position>
 {
-
 public:
 
    /** Constructor. */
@@ -157,30 +160,31 @@ private:
    vpr::Thread* mReadThread;
    std::string mTrackerServer;
    std::string mButtonServer;
+   std::string mAnalogServer;
    int mTrackerNumber;
    int mButtonNumber;
+   int mAnalogNumber;
 
-   void handleTracker(vrpn_TRACKERCB t);
-   void handleButton(vrpn_BUTTONCB b);
+   void handleTracker(const vrpn_TRACKERCB& t);
+   void handleButton(const vrpn_BUTTONCB& b);
+   void handleAnalog(const vrpn_ANALOGCB& b);
 
    void readLoop(void *nullParam);
 
    bool mExitFlag;
 
+   gmtl::Matrix44f getSensorPos(const unsigned int i);
+   gadget::DigitalData getDigitalData(const unsigned int i);
+   gadget::AnalogData getAnalogData(const unsigned int i);
 
-   gmtl::Matrix44f getSensorPos(int d);
-   gadget::DigitalData getDigitalData(int d);
-
-   std::vector<DigitalData>  mCurButtons; /**< The current button states. */
-   std::vector<PositionData> mCurPositions; /**< The current button states. */
-
-   // Working space - AJS to remove
    std::vector<gadget::DigitalData> mButtons;
+   std::vector<gadget::AnalogData> mAnalogs;
    std::vector<gmtl::Quatf> mQuats;
    std::vector<gmtl::Vec3f> mPositions;
 
    friend void VRPN_CALLBACK staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
    friend void VRPN_CALLBACK staticHandleButton(void *userdata, vrpn_BUTTONCB t);
+   friend void VRPN_CALLBACK staticHandleAnalog(void*, vrpn_ANALOGCB);
 };
 
 } // End of gadget namespace

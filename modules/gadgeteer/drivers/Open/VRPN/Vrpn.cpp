@@ -73,6 +73,7 @@
 #include <gadget/InputManager.h>
 #include <gadget/gadgetParam.h>
 #include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Util/Debug.h>
 
 #include <drivers/Open/VRPN/Vrpn.h>
 
@@ -98,24 +99,34 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-void VRPN_CALLBACK staticHandleTracker(void *userdata, vrpn_TRACKERCB t)
+void VRPN_CALLBACK staticHandleTracker(void* userdata, vrpn_TRACKERCB t)
 {
-
-#if (VRPN_DEBUG&1)
+#if (VRPN_DEBUG & 1)
    std::cout << "HandleTracker" << std::endl;
 #endif
 
-   gadget::Vrpn *this_ptr = static_cast<gadget::Vrpn*>(userdata);
+   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->handleTracker(t);
 }
 
-void VRPN_CALLBACK staticHandleButton(void *userdata, vrpn_BUTTONCB b)
+void VRPN_CALLBACK staticHandleButton(void* userdata, vrpn_BUTTONCB b)
 {
-#if (VRPN_DEBUG&1)
+#if (VRPN_DEBUG & 1)
    std::cout << "HandleButton" << std::endl;
 #endif
-   gadget::Vrpn *this_ptr = static_cast<gadget::Vrpn*>(userdata);
+
+   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->handleButton(b);
+}
+
+void VRPN_CALLBACK staticHandleAnalog(void* userdata, vrpn_ANALOGCB b)
+{
+#if (VRPN_DEBUG&1)
+   std::cout << "HandleAnalog" << std::endl;
+#endif
+
+   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
+   this_ptr->handleAnalog(b);
 }
 
 std::string Vrpn::getElementType()
@@ -125,7 +136,24 @@ std::string Vrpn::getElementType()
 
 bool Vrpn::config(jccl::ConfigElementPtr e)
 {
-   if ( ! (Input::config(e) && Position::config(e)) )
+   const unsigned int min_def_version(2);
+
+   if ( e->getVersion() < min_def_version )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:") << " Element named '"
+         << e->getName() << "'" << std::endl;
+      vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "is version " << e->getVersion()
+         << ", but we expect at least version " << min_def_version
+         << ".\n";
+      vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Default values will be used for some settings.\n"
+         << vprDEBUG_FLUSH;
+   }
+
+   if ( ! (Input::config(e) && Position::config(e) && Digital::config(e) &&
+           Analog::config(e)) )
    {
       return false;
    }
@@ -134,43 +162,61 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    mTrackerServer = e->getProperty<std::string>("tracker_server");
    if ( mTrackerServer == std::string("") )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Vrpn::config() VRPN tracker server name not set!\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[Vrpn::config()] VRPN tracker server name not set!\n"
+         << vprDEBUG_FLUSH;
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-         << "Vrpn::config() VRPN tracker server name set to: " << mTrackerServer
-         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
+         << "[Vrpn::config()] VRPN tracker server name set to: "
+         << mTrackerServer << std::endl << vprDEBUG_FLUSH;
    }
 
    // Get the number of tracked objects.
    mTrackerNumber = e->getProperty<int>("tracker_count");
 
    // Get the name of the VRPN button server.
-   mButtonServer = e->getProperty<std::string >("button_server");
+   mButtonServer = e->getProperty<std::string>("button_server");
    if ( mButtonServer == std::string("") )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Vrpn::config() VRPN button server name not set!\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "[Vrpn::config()] VRPN button server name not set!\n"
+         << vprDEBUG_FLUSH;
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-         << "Vrpn::config() VRPN button server name set to: " << mButtonServer
-         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
+         << "[Vrpn::config()] VRPN button server name set to: "
+         << mButtonServer << std::endl << vprDEBUG_FLUSH;
    }
 
    // Get the number of buttons.
    mButtonNumber = e->getProperty<int>("button_count");
 
+   // Get the name of the VRPN button server.
+   mAnalogServer = e->getProperty<std::string>("analog_server");
+   if ( mAnalogServer == std::string("") )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "[Vrpn::config()] VRPN analog server name not set!\n"
+         << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+         << "[Vrpn::config()] VRPN button server name set to: "
+         << mAnalogServer << std::endl << vprDEBUG_FLUSH;
+   }
+
+   // Get the number of analogs.
+   mAnalogNumber = e->getProperty<int>("analog_count");
+
    // Resize vectors to hold the right amount of data.
    mPositions.resize(mTrackerNumber);
    mQuats.resize(mTrackerNumber);
    mButtons.resize(mButtonNumber);
-
-   mCurPositions.resize(mTrackerNumber);
-   mCurButtons.resize(mButtonNumber);
+   mAnalogs.resize(mAnalogNumber);
 
    return true;
 }
@@ -217,23 +263,30 @@ void Vrpn::readLoop(void *nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
 
-   vrpn_Tracker_Remote *tracker;
-   vrpn_Button_Remote *button;
+   vrpn_Tracker_Remote* tracker(NULL);
+   vrpn_Button_Remote* button(NULL);
+   vrpn_Analog_Remote* analog(NULL);
 
    if ( mTrackerNumber > 0 )
    {
       tracker = new vrpn_Tracker_Remote(mTrackerServer.c_str());
-      tracker->register_change_handler((void *) this, staticHandleTracker);
+      tracker->register_change_handler((void*) this, staticHandleTracker);
    }
 
    if ( mButtonNumber > 0 )
    {
       button = new vrpn_Button_Remote(mButtonServer.c_str());
-      button->register_change_handler((void *) this, staticHandleButton);
+      button->register_change_handler((void*) this, staticHandleButton);
+   }
+
+   if ( mAnalogNumber > 0 )
+   {
+      analog = new vrpn_Analog_Remote(mAnalogServer.c_str());
+      analog->register_change_handler((void*) this, staticHandleAnalog);
    }
 
    // loop through  and keep sampling
-   while ( !mExitFlag )
+   while ( ! mExitFlag )
    {
       if ( mTrackerNumber > 0 )
       {
@@ -244,29 +297,34 @@ void Vrpn::readLoop(void *nullParam)
       {
          button->mainloop();
       }
+
+      if ( mAnalogNumber > 0 )
+      {
+         analog->mainloop();
+      }
+
       vpr::Thread::yield();
    }
 }
 
-void Vrpn::handleTracker(vrpn_TRACKERCB t)
+void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
 {
    if ( t.sensor > mTrackerNumber )
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "Vrpn: tracker " << t.sensor
-         << " out of declared range ("<<mPositions.size()<<")"<<std::endl
+         << " out of declared range (" << mPositions.size() << ")" << std::endl
          << vprDEBUG_FLUSH;
       mPositions.resize(t.sensor);
       mQuats.resize(t.sensor);
    }
 
-#if (VRPN_DEBUG&1)
-   std::cout << "Tracker #"<<t.sensor<< " quat " <<
-      mQuats[t.sensor][0] << " " <<
-      mQuats[t.sensor][1] << " " <<
-      mQuats[t.sensor][2] << " " <<
-      mQuats[t.sensor][3] << " " << std::endl;
-
+#if (VRPN_DEBUG & 1)
+   std::cout << "Tracker #"<<t.sensor<< " quat "
+             << mQuats[t.sensor][0] << " "
+             << mQuats[t.sensor][1] << " "
+             << mQuats[t.sensor][2] << " "
+             << mQuats[t.sensor][3] << " " << std::endl;
 #endif
 
    mQuats[t.sensor][0] = t.quat[0];
@@ -279,7 +337,7 @@ void Vrpn::handleTracker(vrpn_TRACKERCB t)
    mPositions[t.sensor][2] = t.pos[2];
 }
 
-void Vrpn::handleButton(vrpn_BUTTONCB b)
+void Vrpn::handleButton(const vrpn_BUTTONCB& b)
 {
    if ( b.button > mButtonNumber )
    {
@@ -289,33 +347,67 @@ void Vrpn::handleButton(vrpn_BUTTONCB b)
          << vprDEBUG_FLUSH;
       mButtons.resize(b.button);
    }
-#if (VRPN_DEBUG&1)
-   std::cout << "Button #"<<b.button<< " state " 
-      << b.state << " " << std::endl;
 
+#if (VRPN_DEBUG & 1)
+   std::cout << "Button #" << b.button << " state " << b.state << " "
+             << std::endl;
 #endif
+
    mButtons[b.button] = b.state;
+}
+
+void Vrpn::handleAnalog(const vrpn_ANALOGCB& b)
+{
+   if ( b.num_channel > mAnalogNumber )
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+         << "Vrpn: analog channel size " << b.num_channel
+         << " out of declared range (" << mAnalogs.size() << ")" << std::endl
+         << vprDEBUG_FLUSH;
+      mAnalogs.resize(b.num_channel);
+   }
+
+   for ( int i = 0; i < b.num_channel; ++i )
+   {
+#if (VRPN_DEBUG & 1)
+      std::cout << "Analog #" << i << " value " << b.channel[i] << " "
+                << std::endl;
+#endif
+
+      mAnalogs[i] = b.channel[i];
+   }
 }
 
 bool Vrpn::sample()
 {
-   for ( int i=0;i<mTrackerNumber;i++ )
+   std::vector<PositionData> positions(mTrackerNumber);
+   std::vector<DigitalData>  buttons(mButtonNumber);
+   std::vector<AnalogData>   analogs(mAnalogNumber);
+
+   for ( int i = 0; i < mTrackerNumber; ++i )
    {
-      mCurPositions[i].setPosition(getSensorPos(i));
-      mCurPositions[i].setTime();
+      positions[i].setPosition(getSensorPos(i));
+      positions[i].setTime();
    }
 
-   for ( int i=0;i<mButtonNumber;i++ )
+   for ( int i = 0; i < mButtonNumber; ++i )
    {
-      mCurButtons[i] = getDigitalData(i);
-      mCurButtons[i].setTime();
+      buttons[i] = getDigitalData(i);
+      buttons[i].setTime();
+   }
+
+   for ( int i = 0; i < mAnalogNumber; ++i )
+   {
+      analogs[i] = getAnalogData(i);
+      analogs[i].setTime();
    }
 
    // Update the data buffer
-   addPositionSample(mCurPositions);
-   addDigitalSample(mCurButtons);
+   addPositionSample(positions);
+   addDigitalSample(buttons);
+   addAnalogSample(analogs);
 
-   return 1;
+   return true;
 }
 
 bool Vrpn::stopSampling()
@@ -346,17 +438,22 @@ void Vrpn::updateData()
    swapDigitalBuffers();
 }
 
-gmtl::Matrix44f Vrpn::getSensorPos(int d)
+gmtl::Matrix44f Vrpn::getSensorPos(const unsigned int i)
 {
    gmtl::Matrix44f ret_val;
-   gmtl::setRot( ret_val, mQuats[d]);
-   gmtl::setTrans( ret_val, mPositions[d]);
+   gmtl::setRot(ret_val, mQuats[i]);
+   gmtl::setTrans(ret_val, mPositions[i]);
    return ret_val;
 }
 
-gadget::DigitalData Vrpn::getDigitalData(int d)
+gadget::DigitalData Vrpn::getDigitalData(const unsigned int i)
 {
-   return mButtons[d];
+   return mButtons[i];
+}
+
+gadget::AnalogData Vrpn::getAnalogData(const unsigned int i)
+{
+   return mAnalogs[i];
 }
 
 } // End of gadget namespace

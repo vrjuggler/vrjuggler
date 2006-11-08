@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-07-2006 patrick     Added analog support to the VRPN driver.
 Jul-13-2006 patrick     Implemented automatic linking of the Gadgeteer library.
 Jul-08-2006 patrick     Added support for building universal binaries on Mac
                         OS X.
