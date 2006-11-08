@@ -33,97 +33,100 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/Debug.h>
 
 
 int main (int argc, char* argv[])
 {
-   vpr::InetAddr remote_addr;
-   vpr::SocketStream* sock;
-
-   // If we got one argument, it is of the form <address>:<port>.
-   if ( argc == 2 )
+   try
    {
-      if ( ! remote_addr.setAddress(argv[1]).success() )
+      vpr::InetAddr remote_addr;
+
+      // If we got one argument, it is of the form <address>:<port>.
+      if ( argc == 2 )
       {
-         fprintf(stderr, "Failed to set address %s\n", argv[1]);
-         return 1;
+         remote_addr.setAddress(argv[1]);
+      }
+      // If we got two arguments, they are <address> and <port>.
+      else if ( argc == 3 )
+      {
+         remote_addr.setAddress(argv[1], atoi(argv[2]));
+      }
+      else
+      {
+         std::cerr << "Usage: " << argv[0] << " <address>:<port>\n"
+                   << "       " << argv[0] << " <address> <port>\n";
+         return EXIT_FAILURE;
       }
 
-      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
-   }
-   // If we got two arguments, they are <address> and <port>.
-   else if ( argc == 3 )
-   {
-      if ( ! remote_addr.setAddress(argv[1], atoi(argv[2])).success() )
+      try
       {
-         fprintf(stderr, "Failed to set address %s %s\n", argv[1], argv[2]);
-         return 1;
-      }
+         // The socket is a stack variable, so it will be deallocated if an
+         // exception gets thrown. The vpr::SocketStream destructor closes
+         // the socket if it is still open.
+         vpr::SocketStream sock(vpr::InetAddr::AnyAddr, remote_addr);
 
-      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
-   }
-   else
-   {
-      fprintf(stderr, "Usage: %s <address>:<port>\n", argv[0]);
-      fprintf(stderr, "       %s <address> <port>\n", argv[0]);
-      return 1;
-   }
+         sock.open();
 
-   if ( sock->open().success() )
-   {
-      char buffer[40];
+         // Connect to the server.
+         sock.connect();
 
-      // Connect to the server.
-      if ( sock->connect().success() )
-      {
-         vpr::ReturnStatus status;
-         vpr::Uint32 bytes;
-
-         // Read from teh server.
-         status = sock->read(buffer, 40, bytes,
-                             vpr::Interval(5, vpr::Interval::Sec));
-
-         if ( status.success() )
+         // Read from the server.
+         try
          {
+            char buffer[40]; 
+            vpr::Uint32 bytes;
+            sock.read(buffer, 40, bytes,
+                      vpr::Interval(5, vpr::Interval::Sec));
+
             // If we read anything, print it.
             if ( bytes > 0 )
             {
-               printf("Read %d bytes from server\n", bytes);
-               printf("    Got '%s'\n", buffer);
+               std::cout << "Read " << bytes << " bytes from server\n"
+                         << "     Got '" << buffer << "'" << std::endl;
             }
             else if ( bytes == -1 )
             {
-               printf("Error reading!\n");
+               std::cout << "Error reading!" << std::endl;
             }
             else
             {
-               printf("What the ???\n");
+               std::cout << "What the ???" << std::endl;
             }
          }
-         else if ( status == vpr::ReturnStatus::Timeout )
+         catch (vpr::TimeoutException&)
          {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "No resposne from server within timeout period!\n"
-            << vprDEBUG_FLUSH;
+            std::cerr << "No resposne from server within timeout period!\n";
          }
 
-         fflush(stdout);
-
-         sock->close();
+         sock.close();
+      }
+      catch (vpr::SocketException& ex)
+      {
+         std::cerr << "Caught a socket exception:\n" << ex.what()
+                   << std::endl;
+      }
+      catch (vpr::IOException& ex)
+      {
+         std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
       }
    }
-   else
+   catch (vpr::UnknownHostException& ex)
    {
-      printf("Socket failed to open!\n");
+      std::cerr << "Failed to set server address:\n" << ex.what()
+                << std::endl;
+      return EXIT_FAILURE;
+   }
+   catch (vpr::Exception& ex)
+   {
+      std::cerr << "Caught an exception:\n" << ex.what() << std::endl;
    }
 
-   delete sock;
-
-   return 0;
+   return EXIT_SUCCESS;
 }

@@ -37,7 +37,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Util/Debug.h>
+#include <vpr/IO/TimeoutException.h>
 #include <vpr/Util/Interval.h>
 
 
@@ -45,7 +45,7 @@ int main (int argc, char* argv[])
 {
    int app_status;
    vpr::InetAddr local;
-   vpr::Uint16 port = 15432;    // Default listening port
+   vpr::Uint16 port(15432);     // Default listening port
 
    // If we got an argument, it names a different value for the port.
    if ( argc == 2 )
@@ -57,46 +57,49 @@ int main (int argc, char* argv[])
    local.setPort(port);
    vpr::SocketStream sock(local, vpr::InetAddr::AnyAddr);
 
-   // Open in server mode.
-   if ( sock.openServer().success() )
+   try
    {
-      vpr::SocketStream client_sock;
-      vpr::ReturnStatus status;
-      vpr::Uint32 bytes;
+      // Open in server mode.
+      sock.openServer();
+      sock.setReuseAddr(true);
+
       char buffer[] = "Hello there!";
 //      std::string buffer = "Hello there!";
 
-      status = sock.setReuseAddr(true);
-
       // Loop forever handling all clients serially.
-      while ( 1 )
+      while ( true )
       {
          // Wait for an incoming connection.
-         status = sock.accept(client_sock,
-                              vpr::Interval(60, vpr::Interval::Sec));
-
-         if ( status.success() )
+         try
          {
+            vpr::SocketStream client_sock;
+            sock.accept(client_sock, vpr::Interval(60, vpr::Interval::Sec));
+
             // Using the new socket, send the buffer to the client and close
             // the socket.
-            status = client_sock.write(buffer, sizeof(buffer), bytes);
-//            status = client_sock.write(buffer, buffer.length(), bytes);
+            vpr::Uint32 bytes;
+            client_sock.write(buffer, sizeof(buffer), bytes);
+//            client_sock.write(buffer, buffer.length(), bytes);
             client_sock.close();
          }
-         else if ( status == vpr::ReturnStatus::Timeout )
+         catch (vpr::TimeoutException&)
          {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "No connections within timeout period!\n"
-               << vprDEBUG_FLUSH;
+            std::cerr << "No connections within timeout period!\n";
             break;
+         }
+         catch (vpr::SocketException& ex)
+         {
+            std::cerr << "Caught a socket exception:\n" << ex.what()
+                      << std::endl;
          }
       }
 
-      app_status = 0;
+      app_status = EXIT_SUCCESS;
    }
-   else
+   catch (vpr::IOException& ex)
    {
-      app_status = 1;
+      std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
+      app_status = EXIT_FAILURE;
    }
 
    return app_status;

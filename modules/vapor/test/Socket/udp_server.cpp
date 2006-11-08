@@ -34,6 +34,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
+#include <stdlib.h>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
@@ -43,8 +44,7 @@
 int main (int argc, char* argv[])
 {
    int status;
-   vpr::InetAddr local;
-   vpr::Uint16 port = 15432;   // Default listening port
+   vpr::Uint16 port(15432);     // Default listening port
 
    // If a command-line argument was given, use it as the port value instead
    // of the default.
@@ -53,42 +53,60 @@ int main (int argc, char* argv[])
       port = (unsigned short) atoi(argv[1]);
    }
 
-   // Create a datagram socket that will be bound to port.
-   local.setPort(port);
-   vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
-
-   // Bind the socket to the port.
-   if ( sock.open().success() && sock.bind().success() )
+   try
    {
+      // Create a datagram socket that will be bound to port.
+      vpr::InetAddr local;
+      local.setPort(port);
+
+      vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
+
+      // Bind the socket to the port.
+      sock.open();
+      sock.bind();
+
       char recv_buf[32];
       char send_buf[] = "Hello there!";
       vpr::Uint32 bytes;
-      vpr::ReturnStatus sock_stat;
 
       // Loop forever reading messages from clients.
-      while ( 1 )
+      while ( true )
       {
          vpr::InetAddr addr;
 
-         // Read a message from a client.
-         sock_stat = sock.recvfrom(recv_buf, sizeof(recv_buf), addr, bytes);
-
-         // If we read anything, print it and send a response.
-         if ( sock_stat.success() )
+         try
          {
+            // Read a message from a client.
+            sock.recvfrom(recv_buf, sizeof(recv_buf), addr, bytes);
+
+            // If we read anything, print it and send a response.
             std::cout << "Read '" << recv_buf << "' (" << bytes
                       << " bytes) from " << addr.getAddressString()
                       << std::endl;
 
             sock.sendto(send_buf, sizeof(send_buf), addr, bytes);
          }
+         catch (vpr::IOException& ex)
+         {
+            std::cerr << "Caught an I/O exception while communicating "
+                      << "with client at " << addr.getAddressString()
+                      << ":\n" << ex.what() << std::endl;
+         }
       }
 
-      status = 0;
+      sock.close();
+
+      status = EXIT_SUCCESS;
    }
-   else
+   catch (vpr::SocketException& ex)
    {
-      status = 1;
+      std::cerr << "Caught a socket exception:\n" << ex.what() << std::endl;
+      status = EXIT_FAILURE;
+   }
+   catch (vpr::IOException& ex)
+   {
+      std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
+      status = EXIT_FAILURE;
    }
 
    return status;

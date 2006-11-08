@@ -33,7 +33,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
@@ -41,42 +42,55 @@
 
 int main (int argc, char* argv[])
 {
-   vpr::InetAddr remote_addr;
-
    if ( argc != 3 )
    {
-      fprintf(stderr, "Usage: %s <address> <port>\n", argv[0]);
+      std::cerr << "Usage: " << argv[0] << " <address> <port>" << std::endl;
+      return EXIT_FAILURE;
    }
 
    // Create a socket that is sending to a remote host named in the first
    // argument listening on the port named in the second argument.
+   vpr::InetAddr remote_addr;
    remote_addr.setAddress(argv[1], atoi(argv[2]));
    vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
 
-   if ( sock.open().success() )
+   try
    {
-      char buffer[40];
+      sock.open();
 
-      // We only send to one host, so call connect().
-      if ( sock.connect().success() )
+      try
       {
+         // We only send to one host, so call connect().
+         sock.connect();
+
+         char buffer[40];
          vpr::Uint32 bytes;
 
-         // Read from the server.
+         memset(buffer, '\0', sizeof(buffer));
          strcpy(buffer, "Hi, I'm a client");
+
+         // Write to the server.
          sock.write(buffer, 40, bytes);
 
          // Read from the server.
-         vpr::ReturnStatus status = sock.read(buffer, 40, bytes);
+         sock.read(buffer, 40, bytes);
 
          // If the server reasponded, print the result.
-         if ( status.success() )
-         {
-            printf("Read %d bytes from server\n", bytes);
-            printf("    Got '%s'\n", buffer);
-         }
-
-         sock.close();
+         std::cout << "Read " << bytes << " from server\n"
+                   << "    Got '" << buffer << "'" << std::endl;
       }
+      catch (vpr::SocketException& ex)
+      {
+         std::cerr << "Caught a socket exception:\n" << ex.what()
+                   << std::endl;
+      }
+
+      sock.close();
    }
+   catch (vpr::IOException& ex)
+   {
+      std::cerr << "Caught an I/O exception:\n" << ex.what() << std::endl;
+   }
+
+   return EXIT_SUCCESS;
 }
