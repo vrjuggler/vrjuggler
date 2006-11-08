@@ -242,7 +242,7 @@ void Vrpn::readLoop()
    }
 }
 
-void Vrpn::handleTracker(vrpn_TRACKERCB t)
+void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
 {
    if ( t.sensor > mTrackerNumber )
    {
@@ -273,7 +273,7 @@ void Vrpn::handleTracker(vrpn_TRACKERCB t)
    mPositions[t.sensor][2] = t.pos[2];
 }
 
-void Vrpn::handleButton(vrpn_BUTTONCB b)
+void Vrpn::handleButton(const vrpn_BUTTONCB& b)
 {
    if ( b.button > mButtonNumber )
    {

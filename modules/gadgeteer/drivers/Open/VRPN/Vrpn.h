@@ -153,8 +153,8 @@ private:
    int mTrackerNumber;
    int mButtonNumber;
 
-   void handleTracker(vrpn_TRACKERCB t);
-   void handleButton(vrpn_BUTTONCB b);
+   void handleTracker(const vrpn_TRACKERCB& t);
+   void handleButton(const vrpn_BUTTONCB& b);
 
    void readLoop();
 
