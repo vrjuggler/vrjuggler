@@ -52,7 +52,7 @@ Description: JCCL (pronounced "Jackal") provides a collection of configuration a
 URL: http://www.vrjuggler.org/jccl/
 Version: ${jccl_version}
 Provides: jccl
-Requires: vpr tweek
+Requires: vpr
 Arch: ${ISA}
 Libs: ${libs} ${jccl_libs} ${extra_libs}
 Libs.private: 
