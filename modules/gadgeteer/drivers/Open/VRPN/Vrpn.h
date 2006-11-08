@@ -65,7 +65,7 @@ namespace gadget
 {
 
 /**
- * Class interfacing with vrpn sensor data located on the local machine in
+ * Class interfacing with VRPN sensor data located on the local machine in
  * a shared memory arena.
  *
  * @note A note on reciever access:
@@ -163,10 +163,6 @@ private:
    gmtl::Matrix44f getSensorPos(const unsigned int i);
    gadget::DigitalData getDigitalData(const unsigned int i);
 
-   std::vector<DigitalData>  mCurButtons; /**< The current button states. */
-   std::vector<PositionData> mCurPositions; /**< The current button states. */
-
-   // Working space - AJS to remove
    std::vector<gadget::DigitalData> mButtons;
    std::vector<gmtl::Quatf> mQuats;
    std::vector<gmtl::Vec3f> mPositions;

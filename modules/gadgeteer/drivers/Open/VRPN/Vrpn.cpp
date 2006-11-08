@@ -166,9 +166,6 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    mQuats.resize(mTrackerNumber);
    mButtons.resize(mButtonNumber);
 
-   mCurPositions.resize(mTrackerNumber);
-   mCurButtons.resize(mButtonNumber);
-
    return true;
 }
 
@@ -295,21 +292,24 @@ void Vrpn::handleButton(const vrpn_BUTTONCB& b)
 
 bool Vrpn::sample()
 {
+   std::vector<PositionData> positions(mTrackerNumber);
+   std::vector<DigitalData>  buttons(mButtonNumber);
+
    for ( int i = 0; i < mTrackerNumber; ++i )
    {
-      mCurPositions[i].setPosition(getSensorPos(i));
-      mCurPositions[i].setTime();
+      positions[i].setPosition(getSensorPos(i));
+      positions[i].setTime();
    }
 
    for ( int i = 0; i < mButtonNumber; ++i )
    {
-      mCurButtons[i] = getDigitalData(i);
-      mCurButtons[i].setTime();
+      buttons[i] = getDigitalData(i);
+      buttons[i].setTime();
    }
 
    // Update the data buffer
-   addPositionSample(mCurPositions);
-   addDigitalSample(mCurButtons);
+   addPositionSample(positions);
+   addDigitalSample(buttons);
 
    return true;
 }
