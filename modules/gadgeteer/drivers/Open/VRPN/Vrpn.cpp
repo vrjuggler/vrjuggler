@@ -253,7 +253,7 @@ void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
       mQuats.resize(t.sensor);
    }
 
-#if (VRPN_DEBU G& 1)
+#if (VRPN_DEBUG & 1)
    std::cout << "Tracker #"<<t.sensor<< " quat "
              << mQuats[t.sensor][0] << " "
              << mQuats[t.sensor][1] << " "
