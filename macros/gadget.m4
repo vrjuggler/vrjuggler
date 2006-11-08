@@ -44,10 +44,10 @@ AC_DEFUN([GADGETEER_PATH],
     AC_ARG_WITH(gadgeteer-meta-file,
                 [  --with-gadgeteer-meta-file=<PATH> Flagpoll metadata file
                           for Gadgeteer (optional)      [No default]],
-                gadget_meta_file="$withval", gadget_meta_file="")
+                [gadget_meta_file="$withval"], [gadget_meta_file=""])
 
-    dnl See if the user specified where to find the meta file
-    dnl if they didn't take a guess for them
+    dnl See if the user specified where to find the Gadgeteer meta file. If
+    dnl not, take a guess.
     if test "x$gadget_meta_file" != "x" ; then
         gadget_flagpoll_args="--from-file=$gadget_meta_file"
     elif test -f "$instlinks/share/flagpoll/gadgeteer.fpc" ; then
@@ -58,7 +58,8 @@ AC_DEFUN([GADGETEER_PATH],
 
     gadget_flagpoll_args="gadgeteer $gadget_flagpoll_args --no-deps"
 
-    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for Gadgeteer Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], ,
+                     [AC_MSG_ERROR(*** Flagpoll required for Gadgeteer flags ***)])
     min_gadget_version=ifelse([$1], , 0.0.1, $1)
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
@@ -71,10 +72,10 @@ AC_DEFUN([GADGETEER_PATH],
         no_gadgeteer=yes
     else
         GADGET_CXXFLAGS=`$FLAGPOLL $gadget_flagpoll_args --cflags`
-        GADGET_LIBS="`$FLAGPOLL $gadget_flagpoll_args --get-libs`"
-        GADGET_PROF_LIBS="`$FLAGPOLL $gadget_flagpoll_args --get-profiled-libs`"
-        GADGET_LIBS_STATIC="`$FLAGPOLL $gadget_flagpoll_args --get-static-libs`"
-        GADGET_PROF_LIBS_STATIC="`$FLAGPOLL $gadget_flagpoll_args --get-profiled-static-libs`"
+        GADGET_LIBS=`$FLAGPOLL $gadget_flagpoll_args --get-libs`
+        GADGET_PROF_LIBS=`$FLAGPOLL $gadget_flagpoll_args --get-profiled-libs`
+        GADGET_LIBS_STATIC=`$FLAGPOLL $gadget_flagpoll_args --get-static-libs`
+        GADGET_PROF_LIBS_STATIC=`$FLAGPOLL $gadget_flagpoll_args --get-profiled-static-libs`
         GADGET_EXTRA_LIBS_LD=`$FLAGPOLL $gadget_flagpoll_args --get-extra-libs`
         GADGET_VERSION=`$FLAGPOLL $gadget_flagpoll_args --modversion`
 
@@ -86,7 +87,7 @@ AC_DEFUN([GADGETEER_PATH],
 
     if test "x$no_gadgeteer" != x ; then
         if test "$FLAGPOLL" = "no" ; then
-           echo "*** Flagpoll is required to build gadgeteer."
+           echo "*** Flagpoll is required to build Gadgeteer."
            echo "*** Please check that the PATH variable is set to "
            echo "*** include the proper path to flagpoll."
         fi

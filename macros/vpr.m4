@@ -46,10 +46,10 @@ AC_DEFUN([VPR_PATH],
     AC_ARG_WITH(vpr-meta-file,
                 [  --with-vpr-meta-file=<PATH>       Flagpoll metadata file
                           for VPR (optional)            [No default]],
-                vpr_meta_file="$withval", vpr_meta_file="")
+                [vpr_meta_file="$withval"], [vpr_meta_file=""])
 
-    dnl See if the user specified where to find vapor
-    dnl if they didn't take a guess for them
+    dnl See if the user specified where to find the VPR meta file. If not,
+    dnl take a guess.
     if test "x$vpr_meta_file" != "x" ; then
         vpr_flagpoll_args="--from-file=$vpr_meta_file"
     elif test -f "$instlinks/share/flagpoll/vpr.fpc" ; then
@@ -60,7 +60,8 @@ AC_DEFUN([VPR_PATH],
 
     vpr_flagpoll_args="vpr $vpr_flagpoll_args --no-deps"
 
-    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for VPR Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], ,
+                     [AC_MSG_ERROR(*** Flagpoll required for VPR flags ***)])
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that all is well
@@ -72,11 +73,11 @@ AC_DEFUN([VPR_PATH],
     if test "x$FLAGPOLL" = "xno" ; then
         no_vpr=yes
     else
-        VPR_CXXFLAGS="`$FLAGPOLL $vpr_flagpoll_args --cflags`"
-        VPR_LIBS="`$FLAGPOLL $vpr_flagpoll_args --get-libs`"
-        VPR_PROF_LIBS="`$FLAGPOLL $vpr_flagpoll_args --get-profiled-libs`"
-        VPR_LIBS_STATIC="`$FLAGPOLL $vpr_flagpoll_args --get-static-libs`"
-        VPR_PROF_LIBS_STATIC="`$FLAGPOLL $vpr_flagpoll_args --get-profiled-static-libs`"
+        VPR_CXXFLAGS=`$FLAGPOLL $vpr_flagpoll_args --cflags`
+        VPR_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-libs`
+        VPR_PROF_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-profiled-libs`
+        VPR_LIBS_STATIC=`$FLAGPOLL $vpr_flagpoll_args --get-static-libs`
+        VPR_PROF_LIBS_STATIC=`$FLAGPOLL $vpr_flagpoll_args --get-profiled-static-libs`
         VPR_EXTRA_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-extra-libs`
         VPR_BUILD_INCLUDES=`$FLAGPOLL $vpr_flagpoll_args --get-build-includes`
 
@@ -89,7 +90,7 @@ AC_DEFUN([VPR_PATH],
 
     if test "x$no_vpr" != x ; then
         if test "$FLAGPOLL" = "no" ; then
-           echo "*** Flagpoll is required to build vapor."
+           echo "*** Flagpoll is required to build VPR."
            echo "*** Please check that the PATH variable is set to "
            echo "*** include the proper path to flagpoll."
         fi

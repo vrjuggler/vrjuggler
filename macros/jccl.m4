@@ -33,10 +33,10 @@ AC_DEFUN([_JCCL_PATH_SETUP],
     AC_ARG_WITH(jccl-meta-file,
                 [  --with-jccl-meta-file=<PATH>       Flagpoll metadata file
                           for JCCL (optional)            [No default]],
-                jccl_meta_file="$withval", jccl_meta_file="")
+                [jccl_meta_file="$withval"], [jccl_meta_file=""])
 
-    dnl See if the user specified where to find jccl
-    dnl if they didn't take a guess for them
+    dnl See if the user specified where to find the JCCL meta file. If not,
+    dnl take a guess.
     if test "x$jccl_meta_file" != "x" ; then
         jccl_flagpoll_args="--from-file=$jccl_meta_file"
     elif test -f "$instlinks/share/flagpoll/jccl.fpc" ; then
@@ -46,12 +46,13 @@ AC_DEFUN([_JCCL_PATH_SETUP],
     fi
 
     jccl_flagpoll_args="jccl $jccl_flagpoll_args --no-deps"
-    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for Jackal Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], ,
+                     [AC_MSG_ERROR(*** Flagpoll required for JCCl flags ***)])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
         FLAGPOLL='no'
-        echo "*** Flagpoll is required to build jackal."
+        echo "*** Flagpoll is required to build JCCL."
         echo "*** Please check that the PATH variable is set to "
         echo "*** include the proper path to flagpoll."
     fi
@@ -163,7 +164,7 @@ AC_DEFUN([JCCL_PATH_JAVA],
          fi
 
          if test "x$jccl_version_okay" = "xyes" ; then
-            JCCL_JARS="`$FLAGPOLL $jccl_flagpoll_args --get-jars`"
+            JCCL_JARS=`$FLAGPOLL $jccl_flagpoll_args --get-jars`
 
             ifelse([$2], , :, [$2])
          fi

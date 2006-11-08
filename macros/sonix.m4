@@ -53,10 +53,10 @@ AC_DEFUN([SNX_PATH],
     AC_ARG_WITH(sonix-meta-file,
                 [  --with-sonix-meta-file=<PATH>     Flagpoll metadata file
                          for Sonix (optional)           [No default]],
-                sonix_meta_file="$withval", sonix_meta_file="")
+                [sonix_meta_file="$withval"], [sonix_meta_file=""])
 
-    dnl See if the user specified where to find the meta file 
-    dnl if they didn't take a guess for them
+    dnl See if the user specified where to find the Sonix meta file. If not,
+    dnl take a guess.
     if test "x$sonix_meta_file" != "x" ; then
         sonix_flagpoll_args="--from-file=$sonix_meta_file"
     elif test -f "$instlinks/share/flagpoll/sonix.fpc" ; then
@@ -67,7 +67,8 @@ AC_DEFUN([SNX_PATH],
 
     sonix_flagpoll_args="sonix $sonix_flagpoll_args --no-deps"
 
-    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for Sonix Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], ,
+                     [AC_MSG_ERROR(*** Flagpoll required for Sonix flags ***)])
     min_sonix_version=ifelse([$1], ,0.0.1, [$1])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
@@ -80,10 +81,10 @@ AC_DEFUN([SNX_PATH],
         no_sonix=yes
     else
         SNX_CXXFLAGS=`$FLAGPOLL $sonix_flagpoll_args --cflags`
-        SNX_LIBS="`$FLAGPOLL $sonix_flagpoll_args --get-libs`"
-        SNX_PROF_LIBS="`$FLAGPOLL $sonix_flagpoll_args --get-profiled-libs`"
-        SNX_LIBS_STATIC="`$FLAGPOLL $sonix_flagpoll_args --get-static-libs`"
-        SNX_PROF_LIBS_STATIC="`$FLAGPOLL $sonix_flagpoll_args --get-profiled-static-libs`"
+        SNX_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-libs`
+        SNX_PROF_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-profiled-libs`
+        SNX_LIBS_STATIC=`$FLAGPOLL $sonix_flagpoll_args --get-static-libs`
+        SNX_PROF_LIBS_STATIC=`$FLAGPOLL $sonix_flagpoll_args --get-profiled-static-libs`
         SNX_EXTRA_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-extra-libs`
         SNX_VERSION=`$FLAGPOLL $sonix_flagpoll_args --modversion`
 
@@ -93,7 +94,7 @@ AC_DEFUN([SNX_PATH],
 
     if test "x$no_sonix" != x ; then
         if test "$FLAGPOLL" = "no" ; then
-           echo "*** Flagpoll is required to build sonix."
+           echo "*** Flagpoll is required to build Sonix."
            echo "*** Please check that the PATH variable is set to "
            echo "*** include the proper path to flagpoll."
         fi

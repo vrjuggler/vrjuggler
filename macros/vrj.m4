@@ -43,10 +43,10 @@ AC_DEFUN([VRJUGGLER_PATH],
     AC_ARG_WITH(vrjuggler-meta-file,
                 [  --with-vrjuggler-meta-file=<PATH> Flagpoll metadata file
                           for VR Juggler (optional)      [No default]],
-                vrj_meta_file="$withval", vrj_meta_file="")
+                [vrj_meta_file="$withval"], [vrj_meta_file=""])
 
-    dnl See if the user specified where to find the meta file 
-    dnl if they didn't take a guess for them
+    dnl See if the user specified where to find the VR Juggler meta file. If
+    dnl not, take a guess.
     if test "x$vrj_meta_file" != "x" ; then
         vrj_flagpoll_args="--from-file=$vrj_meta_file"
     elif test -f "$instlinks/share/flagpoll/vrjuggler.fpc" ; then
@@ -57,7 +57,8 @@ AC_DEFUN([VRJUGGLER_PATH],
 
     vrj_flagpoll_args="vrjuggler $vrj_flagpoll_args --no-deps"
       
-    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for VR Juggler Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], ,
+                     [AC_MSG_ERROR(*** Flagpoll required for VR Juggler flags ***)])
     min_vrj_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
@@ -70,10 +71,10 @@ AC_DEFUN([VRJUGGLER_PATH],
         no_vrj=yes
     else
         VRJ_CXXFLAGS=`$FLAGPOLL $vrj_flagpoll_args --cflags`
-        VRJ_LIBS="`$FLAGPOLL $vrj_flagpoll_args --get-libs`"
-        VRJ_PROF_LIBS="`$FLAGPOLL $vrj_flagpoll_args --get-profiled-libs`"
-        VRJ_LIBS_STATIC="`$FLAGPOLL $vrj_flagpoll_args --get-static-libs`"
-        VRJ_PROF_LIBS_STATIC="`$FLAGPOLL $vrj_flagpoll_args --get-profiled-static-libs`"
+        VRJ_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-libs`
+        VRJ_PROF_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-profiled-libs`
+        VRJ_LIBS_STATIC=`$FLAGPOLL $vrj_flagpoll_args --get-static-libs`
+        VRJ_PROF_LIBS_STATIC=`$FLAGPOLL $vrj_flagpoll_args --get-profiled-static-libs`
         VRJ_EXTRA_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-extra-libs`
         VRJ_VERSION=`$FLAGPOLL $vrj_flagpoll_args --modversion`
 

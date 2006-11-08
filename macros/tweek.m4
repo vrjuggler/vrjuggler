@@ -33,10 +33,10 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
     AC_ARG_WITH(tweek-meta-file,
                 [  --with-tweek-meta-file=<PATH>     Flagpoll metadata file
                           for VPR (optional)            [No default]],
-                tweek_meta_file="$withval", tweek_meta_file="")
+                [tweek_meta_file="$withval"], [tweek_meta_file=""])
 
-    dnl See if the user specified where to find vapor
-    dnl if they didn't take a guess for them
+    dnl See if the user specified where to find the Tweek meta file. If not,
+    dnl take a guess.
     if test "x$tweek_meta_file" != "x" ; then
         tweek_flagpoll_args="--from-file=$tweek_meta_file"
     elif test -f "$instlinks/share/flagpoll/tweek.fpc" ; then
@@ -47,12 +47,13 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
 
     tweek_flagpoll_args="tweek $tweek_flagpoll_args --no-deps"
       
-    AM_PATH_FLAGPOLL([0.7.0], , [AC_MSG_ERROR(*** Flagpoll required for Tweek Flags ***)])
+    AM_PATH_FLAGPOLL([0.7.0], ,
+                     [AC_MSG_ERROR(*** Flagpoll required for Tweek flags ***)])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
         FLAGPOLL='no'
-        echo "*** Flagpoll is required to build tweek."
+        echo "*** Flagpoll is required to build Tweek."
         echo "*** Please check that the PATH variable is set to "
         echo "*** include the proper path to flagpoll."
     fi
@@ -132,10 +133,10 @@ AC_DEFUN([TWEEK_PATH_CXX],
             TWEEK_LIBS_STATIC=`$FLAGPOLL $tweek_flagpoll_args --get-static-libs`
             TWEEK_PROF_LIBS_STATIC_LD=`$FLAGPOLL $tweek_flagpoll_args --get-profiled-static-libs`
 
-            TWEEK_CXX_IDL="`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idl`"
-            TWEEK_CXX_IDL_OPTS="`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlflags`"
-            TWEEK_CXX_IDL_GENDIR_OPT="`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlgendir`"
-            TWEEK_CXX_IDL_INCFLAG="`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlincflag`"
+            TWEEK_CXX_IDL=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idl`
+            TWEEK_CXX_IDL_OPTS=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlflags`
+            TWEEK_CXX_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlgendir`
+            TWEEK_CXX_IDL_INCFLAG=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlincflag`
 
             ifelse([$2], , :, [$2])
          fi
@@ -196,12 +197,12 @@ AC_DEFUN([TWEEK_PATH_JAVA],
          fi
 
          if test "x$tweek_version_okay" = "xyes" ; then
-            TWEEK_JAVA_IDL="`$FLAGPOLL $tweek_flagpoll_args --get-java-idl`"
-            TWEEK_JAVA_IDL_OPTS="`$FLAGPOLL $tweek_flagpoll_args --get-java-idlflags`"
-            TWEEK_JAVA_IDL_GENDIR_OPT="`$FLAGPOLL $tweek_flagpoll_args --get-java-idlgendir`"
-            TWEEK_JAVA_IDL_INCFLAG="`$FLAGPOLL $tweek_flagpoll_args --get-java-idlincflag`"
-            TWEEK_JARS="`$FLAGPOLL $tweek_flagpoll_args --get-jars`"
-            TWEEK_EXT_JARS="`$FLAGPOLL $tweek_flagpoll_args --get-ext-jars`"
+            TWEEK_JAVA_IDL=`$FLAGPOLL $tweek_flagpoll_args --get-java-idl`
+            TWEEK_JAVA_IDL_OPTS=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlflags`
+            TWEEK_JAVA_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlgendir`
+            TWEEK_JAVA_IDL_INCFLAG=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlincflag`
+            TWEEK_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-jars`
+            TWEEK_EXT_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-ext-jars`
 
             ifelse([$2], , :, [$2])
          fi
@@ -254,12 +255,12 @@ AC_DEFUN([TWEEK_PATH_PYTHON],
          fi
 
          if test "x$tweek_version_okay" = "xyes" ; then
-            TWEEK_PYTHON_IDL="`$FLAGPOLL $tweek_flagpoll_args --get-python-idl`"
-            TWEEK_PYTHON_IDL_OPTS="`$FLAGPOLL $tweek_flagpoll_args ---get-python-idlflags`"
-            TWEEK_PYTHON_IDL_GENDIR_OPT="`$FLAGPOLL $tweek_flagpoll_args --get-python-idlgendir`"
-            TWEEK_PYTHON_IDL_INCFLAG="`$FLAGPOLL $tweek_flagpoll_args --get-python-idlincflag`"
-            TWEEK_JARS="`$FLAGPOLL $tweek_flagpoll_args --get-jars`"
-            TWEEK_EXT_JARS="`$FLAGPOLL $tweek_flagpoll_args --get-ext-jars`"
+            TWEEK_PYTHON_IDL=`$FLAGPOLL $tweek_flagpoll_args --get-python-idl`
+            TWEEK_PYTHON_IDL_OPTS=`$FLAGPOLL $tweek_flagpoll_args ---get-python-idlflags`
+            TWEEK_PYTHON_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_flagpoll_args --get-python-idlgendir`
+            TWEEK_PYTHON_IDL_INCFLAG=`$FLAGPOLL $tweek_flagpoll_args --get-python-idlincflag`
+            TWEEK_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-jars`
+            TWEEK_EXT_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-ext-jars`
 
             ifelse([$2], , :, [$2])
          fi
