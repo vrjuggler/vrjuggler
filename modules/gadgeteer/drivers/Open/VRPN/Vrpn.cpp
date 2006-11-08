@@ -113,6 +113,16 @@ void VRPN_CALLBACK staticHandleButton(void* userdata, vrpn_BUTTONCB b)
    this_ptr->handleButton(b);
 }
 
+void VRPN_CALLBACK staticHandleAnalog(void* userdata, vrpn_ANALOGCB b)
+{
+#if (VRPN_DEBUG&1)
+   std::cout << "HandleAnalog" << std::endl;
+#endif
+
+   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
+   this_ptr->handleAnalog(b);
+}
+
 std::string Vrpn::getElementType()
 {
    return "vrpn";
@@ -120,7 +130,24 @@ std::string Vrpn::getElementType()
 
 bool Vrpn::config(jccl::ConfigElementPtr e)
 {
-   if ( ! (Input::config(e) && Position::config(e) && Digial::config(e)) )
+   const unsigned int min_def_version(2);
+
+   if ( e->getVersion() < min_def_version )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:") << " Element named '"
+         << e->getName() << "'" << std::endl;
+      vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "is version " << e->getVersion()
+         << ", but we expect at least version " << min_def_version
+         << ".\n";
+      vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Default values will be used for some settings.\n"
+         << vprDEBUG_FLUSH;
+   }
+
+   if ( ! (Input::config(e) && Position::config(e) && Digital::config(e) &&
+           Analog::config(e)) )
    {
       return false;
    }
@@ -161,10 +188,29 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    // Get the number of buttons.
    mButtonNumber = e->getProperty<int>("button_count");
 
+   // Get the name of the VRPN button server.
+   mAnalogServer = e->getProperty<std::string>("analog_server");
+   if ( mAnalogServer == std::string("") )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "[Vrpn::config()] VRPN analog server name not set!\n"
+         << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+         << "[Vrpn::config()] VRPN button server name set to: "
+         << mAnalogServer << std::endl << vprDEBUG_FLUSH;
+   }
+
+   // Get the number of analogs.
+   mAnalogNumber = e->getProperty<int>("analog_count");
+
    // Resize vectors to hold the right amount of data.
    mPositions.resize(mTrackerNumber);
    mQuats.resize(mTrackerNumber);
    mButtons.resize(mButtonNumber);
+   mAnalogs.resize(mAnalogNumber);
 
    return true;
 }
@@ -212,6 +258,7 @@ void Vrpn::readLoop()
 {
    vrpn_Tracker_Remote* tracker(NULL);
    vrpn_Button_Remote* button(NULL);
+   vrpn_Analog_Remote* analog(NULL);
 
    if ( mTrackerNumber > 0 )
    {
@@ -223,6 +270,12 @@ void Vrpn::readLoop()
    {
       button = new vrpn_Button_Remote(mButtonServer.c_str());
       button->register_change_handler((void*) this, staticHandleButton);
+   }
+
+   if ( mAnalogNumber > 0 )
+   {
+      analog = new vrpn_Analog_Remote(mAnalogServer.c_str());
+      analog->register_change_handler((void*) this, staticHandleAnalog);
    }
 
    // loop through  and keep sampling
@@ -237,6 +290,12 @@ void Vrpn::readLoop()
       {
          button->mainloop();
       }
+
+      if ( mAnalogNumber > 0 )
+      {
+         analog->mainloop();
+      }
+
       vpr::Thread::yield();
    }
 }
@@ -290,10 +349,33 @@ void Vrpn::handleButton(const vrpn_BUTTONCB& b)
    mButtons[b.button] = b.state;
 }
 
+void Vrpn::handleAnalog(const vrpn_ANALOGCB& b)
+{
+   if ( b.num_channel > mAnalogNumber )
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+         << "Vrpn: analog channel size " << b.num_channel
+         << " out of declared range (" << mAnalogs.size() << ")" << std::endl
+         << vprDEBUG_FLUSH;
+      mAnalogs.resize(b.num_channel);
+   }
+
+   for ( int i = 0; i < b.num_channel; ++i )
+   {
+#if (VRPN_DEBUG & 1)
+      std::cout << "Analog #" << i << " value " << b.channel[i] << " "
+                << std::endl;
+#endif
+
+      mAnalogs[i] = b.channel[i];
+   }
+}
+
 bool Vrpn::sample()
 {
    std::vector<PositionData> positions(mTrackerNumber);
    std::vector<DigitalData>  buttons(mButtonNumber);
+   std::vector<AnalogData>   analogs(mAnalogNumber);
 
    for ( int i = 0; i < mTrackerNumber; ++i )
    {
@@ -307,9 +389,16 @@ bool Vrpn::sample()
       buttons[i].setTime();
    }
 
+   for ( int i = 0; i < mAnalogNumber; ++i )
+   {
+      analogs[i] = getAnalogData(i);
+      analogs[i].setTime();
+   }
+
    // Update the data buffer
    addPositionSample(positions);
    addDigitalSample(buttons);
+   addAnalogSample(analogs);
 
    return true;
 }
@@ -353,6 +442,11 @@ gmtl::Matrix44f Vrpn::getSensorPos(const unsigned int i)
 gadget::DigitalData Vrpn::getDigitalData(const unsigned int i)
 {
    return mButtons[i];
+}
+
+gadget::AnalogData Vrpn::getAnalogData(const unsigned int i)
+{
+   return mAnalogs[i];
 }
 
 } // End of gadget namespace
