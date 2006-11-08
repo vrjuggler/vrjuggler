@@ -120,7 +120,7 @@ std::string Vrpn::getElementType()
 
 bool Vrpn::config(jccl::ConfigElementPtr e)
 {
-   if ( ! (Input::config(e) && Position::config(e)) )
+   if ( ! (Input::config(e) && Position::config(e) && Digial::config(e)) )
    {
       return false;
    }
