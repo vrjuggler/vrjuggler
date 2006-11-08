@@ -172,8 +172,8 @@ private:
    std::vector<gmtl::Quatf> mQuats;
    std::vector<gmtl::Vec3f> mPositions;
 
-   friend void VRPN_CALLBACK staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
-   friend void VRPN_CALLBACK staticHandleButton(void *userdata, vrpn_BUTTONCB t);
+   friend void VRPN_CALLBACK staticHandleTracker(void*, vrpn_TRACKERCB);
+   friend void VRPN_CALLBACK staticHandleButton(void*, vrpn_BUTTONCB);
 };
 
 } // End of gadget namespace
