@@ -109,8 +109,8 @@ TWEEK_SHARE_DIR=        @TWEEK_SHARE_DIR@
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
-EXTRA_CFLAGS=		$(CFLAGS_DYNLIB) @VPR_CFLAGS@
-EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB) @VPR_CXXFLAGS@
+EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
+EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
 EXTRA_DEFS=		-DTWEEK_ROOT_DIR="\"$(instprefix)\""        \
                         -DTWEEK_SHARE_DIR="\"$(TWEEK_SHARE_DIR)\""    \
                         -D_TWEEK_BUILD_ @EXTRA_DEFS@
