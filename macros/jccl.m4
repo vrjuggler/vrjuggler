@@ -98,7 +98,7 @@ AC_DEFUN([_JCCL_VERSION_CHECK],
    else
       JCCL_VERSION=`$JCCL_CONFIG --version`
 
-      min_jccl_version=ifelse([$1], , 0.0.1, $1)
+      min_jccl_version=ifelse([$1], ,0.0.1,[$1])
       DPP_VERSION_CHECK_MSG_NO_CACHE([JCCL], [$JCCL_VERSION],
                                      [$min_jccl_version], [$2], [$3])
    fi

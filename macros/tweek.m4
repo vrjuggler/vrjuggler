@@ -100,7 +100,7 @@ AC_DEFUN([_TWEEK_VERSION_CHECK],
    else
       TWEEK_VERSION=`$TWEEK_CONFIG --version`
 
-      min_tweek_version=ifelse([$1], , 0.0.1, $1)
+      min_tweek_version=ifelse([$1], ,0.0.1,[$1])
       DPP_VERSION_CHECK_MSG_NO_CACHE([Tweek], [$TWEEK_VERSION],
                                      [$min_tweek_version], [$2], [$3])
    fi

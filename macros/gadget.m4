@@ -91,7 +91,7 @@ AC_DEFUN([GADGETEER_PATH],
     fi
 
     AC_PATH_PROG(GADGETEER_CONFIG, gadgeteer-config, no)
-    min_gadget_version=ifelse([$1], , 0.0.1, $1)
+    min_gadget_version=ifelse([$1], ,0.0.1,[$1])
 
     dnl Do a sanity check to ensure that $GADGETEER_CONFIG actually works.
     if ! (eval $GADGETEER_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then

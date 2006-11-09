@@ -98,7 +98,7 @@ AC_DEFUN([SNX_PATH],
     fi
 
     AC_PATH_PROG(SNX_CONFIG, sonix-config, no)
-    min_sonix_version=ifelse([$1], ,0.0.1, [$1])
+    min_sonix_version=ifelse([$1], ,0.0.1,[$1])
 
     dnl Do a sanity check to ensure that $SNX_CONFIG actually works.
     if ! (eval $SNX_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
