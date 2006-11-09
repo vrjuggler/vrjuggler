@@ -58,7 +58,7 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class ObjectWriter : public AttributeMapBase
+class VPR_CLASS_API ObjectWriter : public AttributeMapBase
 {
 protected:
    ObjectWriter();
