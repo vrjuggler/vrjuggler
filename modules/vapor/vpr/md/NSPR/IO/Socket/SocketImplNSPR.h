@@ -199,9 +199,9 @@ public:
     * @throw UnknownHostException     If host does not exist.
     * @throw IOException              If network is down.
     * @throw vpr::WouldBlockException If the socket is in non-blocking mode,
-    *                                 and the write operation could not be
+    *                                 and the connect operation could not be
     *                                 completed.
-    * @throw vpr::TimeoutException    If the write could not begin within the
+    * @throw vpr::TimeoutException    If the connection could not complete within the
     *                                 timeout interval.
     * @throw vpr::SocketException     If could not connect.
     */
