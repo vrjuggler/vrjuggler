@@ -358,6 +358,16 @@ if test "x${_with_vrpn}" != "xno" ; then
       VRPNLIBDIR='pc_win32/Debug'
    elif test "x$PLATFORM" = "xLinux" ; then
       VRPNLIBDIR='pc_linux'
+
+      if test "x$ISA" = "xx86_64" ; then
+         if test -d "$VRPNROOT/vrpn/pc_linux64" ; then
+            VRPNLIBDIR='pc_linux64'
+         fi
+      elif test "x$ISA" = "ia64" ; then
+         if test -d "$VRPNROOT/vrpn/pc_linux_ia64" ; then
+            VRPNLIBDIR='pc_linux_ia64'
+         fi
+      fi
    elif test "x$PLATFORM" = "xFreeBSD" ; then
       VRPNLIBDIR='pc_FreeBSD'
    elif test "x$PLATFORM" = "xAIX" ; then
