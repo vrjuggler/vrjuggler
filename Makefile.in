@@ -61,9 +61,6 @@ build buildworld:
 install installworld:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="installworld" recursive
 
-install-deps:
-	$(MAKE) -C external $@
-
 regen:
 	@for dir in $(DIRS) ; do		\
             (cd $$dir && ./config.status) ;	\
