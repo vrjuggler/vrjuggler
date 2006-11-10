@@ -54,9 +54,9 @@ Introduction
  the source code. We begin by explaining some issues related to specific
  operating systems. We then explain how to get the source code from our
  Subversion repository. (Those users who downloaded a pre-packaged source
- release can skip ahead to the section called "Using configure.pl"). We
- conclude with instructions on how to build VR Juggler and its individual
- components.
+ release can skip ahead to the section called "Using
+ configure.pl"). We conclude with instructions on how to build VR
+ Juggler and its individual components.
 
  Before reading further, we recommend that readers take a look at the Wiki
  page relating to building from source (http://www.vrjuggler.org/
@@ -162,7 +162,7 @@ Build Tools
 
 
  Additionally, VR Juggler 2.1 and beyond require the Flagpoll software tool.
- As of this writing, the minimum required version is 0.5.0. It is
+ As of this writing, the minimum required version is 0.8.1. It is
  recommended that all of these tools be installed in either the /usr or the
  /usr/local directory trees so that search paths do not have to be extended.
 
@@ -173,11 +173,11 @@ Getting the Source Code and the Dependencies
  the dependencies required to build Juggler. There are two ways to get the
  source code: from a pre-packaged source release archive or from the
  Subversion repository on RealityForge. If you got the code from a pre-
- packaged source archive, that code is a complete "snapshot" of the
- Subversion repository at the time of release. It contains all dependencies
- that would otherwise have been acquired using Subversion. It does not
- contain binary dependencies that must be downloaded separately (such as
- NSPR, the Java Developer Kit, a C++ compiler, etc.).
+ packaged source archive, that code is a complete "snapshot" of
+ the Subversion repository at the time of release. It contains all
+ dependencies that would otherwise have been acquired using Subversion. It
+ does not contain binary dependencies that must be downloaded separately
+ (such as NSPR, the Java Developer Kit, a C++ compiler, etc.).
 
  The current list of required software packages is as follows:
 
@@ -260,19 +260,19 @@ Boost
  Boost source can be downloaded from http://www.sf.net/projects/boost/. To
  compile and install Boost, refer to its installation documentation (http://
  www.boost.org/more/getting_started.html#Build_Install). Note that you need
- the command bjam (referred to as "boost-jam" on the Boost download page) to
- build Boost.
+ the command bjam (referred to as "boost-jam" on the Boost
+ download page) to build Boost.
 
 
 Important
 
- Mac OS X users should compile the Boost libraries using the "darwin"
- toolset.
+ Mac OS X users should compile the Boost libraries using the
+ "darwin" toolset.
 
 
 CppDOM
 
- For XML processing, we use CppDOM 0.3.2 or newer. The source and binary
+ For XML processing, we use CppDOM 0.6.5 or newer. The source and binary
  distributions for some platforms can be downloaded from http://www.sf.net/
  projects/xml-cppdom/. If a binary version is not available for your
  operating system you must compile and install CppDOM yourself. Note that
@@ -281,7 +281,7 @@ CppDOM
 
 GMTL
 
- For high-level mathematical operations, we use GMTL 0.3.2 or newer. The
+ For high-level mathematical operations, we use GMTL 0.4.12 or newer. The
  source distribution can be downloaded from http://www.sf.net/projects/ggt/.
  Note that you need SCons (http://scons.sourceforge.net/) to build and
  install GMTL.
@@ -313,15 +313,8 @@ omniORB
  omniORB is a C++ implementation of CORBA 2.3. It is required in order to
  compile the Tweek C++ API. At this time, the Tweek C++ API is not required
  for VR Juggler, but this situation will change in the near future. At this
- time, we primarily use omniORB 4.0.x. omniORB can be downloaded from http:/
- /omniorb.sourceforge.net/.
-
- omniORB 3.0 has strange conventions for how installations are made. Within
- the bin and lib directories, there are platform-specific subdirectories
- that contain the actual binaries (except when installed on FreeBSD via the
- Ports Collection). Because of this, several extra options must be specified
- in order to tell the Tweek configure script where to find everything.
- Please refer to the section called "Tweek" for more details on this.
+ time, we primarily use omniORB 4.0.x; omniORB 3.0 is not supported. omniORB
+ can be downloaded from http://omniorb.sourceforge.net/.
 
 
 Compiling
@@ -367,7 +360,7 @@ VPR
  abstraction. It is the foundation for all other Juggler modules.
 
 
-*  CppDOM 0.3.2
+*  CppDOM 0.6.5
 
 *  Boost headers and Boost.Filesystem 1.31.0
 
@@ -479,7 +472,7 @@ Sonix
 
 *  VPR
 
-*  GMTL 0.1.9
+*  GMTL 0.4.12
 
 
 
@@ -522,7 +515,7 @@ Gadgeteer
 
 *  JCCL
 
-*  GMTL 0.1.9
+*  GMTL 0.4.12
 
 *  X Window System (non-Windows platforms)
 
@@ -537,7 +530,7 @@ Gadgeteer Device Driver Plug-ins
 
 *  Gadgeteer
 
-*  VRPN 06.06 for the VRPN driver plug-in
+*  VRPN 07.03 for the VRPN driver plug-in
 
 *  TrackD API 4 for the TrackD API driver plug-in
 
@@ -616,6 +609,49 @@ VRJConfig
 
 
 
+Preparing Flagpoll
+
+ The Flagpoll software has a default search path where it looks for .pc and
+ .fpc package metadata files. It searchs /usr/lib/pkgconfig, /usr/lib/
+ flagpoll, /usr/lib64/pkgconfig, /usr/lib64/flagpoll, /usr/share/pkgconfig,
+ and /usr/share/flagpoll. If LD_LIBRARY_PATH (or DYLD_LIBRARY_PATH on Mac OS
+ X) is set, Flagpoll will search each of the directories in that environment
+ variable for subdirectories named pkgconfig and flagpoll. Users can extend
+ this search path further by setting the environment variables
+ PKG_CONFIG_PATH and/or FLAGPOLL_PATH to list more directories for Flagpoll
+ to search. (All of the environment variables mentioned here have as their
+ value a colon-separated list of directories.)
+
+ The Juggler build relies upon Flagpoll for getting compiler and linker
+ flags for the following packages:
+
+
+*  CppDOM
+
+*  GMTL
+
+*  omniORB
+
+
+ Therefore, it is critical that Flagpoll be able to find the package
+ metadata file for each. For CppDOM, the .fpc file is under the CppDOM lib
+ (or lib64) directory in the flagpoll subdirectory. For omniORB, the .pc
+ files (there are several) are under the omniORB lib (or lib64) directory in
+ the pkgconfig subdirectory. Finally, for GMTL, the .pc file is under the
+ GMTL share directory in the pkgconfig subdirectory. If these packages are
+ installed in /usr, then Flagpoll will be able to find the information it
+ needs with no extra work on the part of the user.
+
+
+Important
+
+ If Flagpoll is not installed in a place where the aclocal tool searches for
+ .m4 files by default, then it is necessary to extend aclocal's search path.
+ This is done by setting the environment variable ACLOCAL_FLAGS to "-
+ I .../share/alocal" where "..." is the path to the
+ directory tree where Flagpoll is installed.
+
+
 Configuring the Juggler Build
 
  We now explain the process by which the Juggler build is configured. The
@@ -645,10 +681,10 @@ Configuring the Juggler Build
 
 Using configure.pl
 
- In the base juggler source directory, we have a "global" configure script
- written in Perl called configure.pl. To get the command-line options for
- this script, use one of the following (the second being much more
- detailed):
+ In the base juggler source directory, we have a "global"
+ configure script written in Perl called configure.pl. To get the command-
+ line options for this script, use one of the following (the second being
+ much more detailed):
 
 
   ./configure.pl --help
@@ -676,8 +712,9 @@ Important
  source tree. The same holds for the individual autogen.sh scripts in the
  various modules, should you need to run one individually.
 
- configure.pl can run in a unique "build" directory or in the directory
- where it resides. Here is how we (the Juggler Team) have been using it:
+ configure.pl can run in a unique "build" directory or in the
+ directory where it resides. Here is how we (the Juggler Team) have been
+ using it:
 
 
   1.  Make a directory for compiling. There are many good reasons to do this
@@ -705,34 +742,27 @@ Important
 
      Important
 
-      You will probably have to specify the paths to your local CppDOM,
-      GMTL, and Boost installations using the options --with-cppdom, --with-
-      gmtl, and --with-boost unless they are installed in the default
-      location (/usr/local). By default, Boost 1.31 installs its header
-      files in a subdirectory of include called boost-1_31. That is, if
-      Boost is installed in /home/user1/pkgs/boost, the header files will be
-      in /home/user1/pkgs/boost/include/boost-1_31. In this case, you must
-      also specify the option --with-boost-includes=/home/user1/pkgs/boost/
-      include/boost-1_31 when running configure.pl.
-
-
-     Important
-
-      If Flagpoll is not installed in a place where the aclocal tool
-      searches for .m4 files by default, then it is necessary to extend
-      aclocal's search path. This is done by setting the environment
-      variable ACLOCAL_FLAGS to "-I .../share/alocal" where "..." is the
-      path to the directory tree where Flagpoll is installed.
+      You will probably have to specify the path to your local Boost
+      installation using the option --with-boost unless it is installed in
+      the default location (/usr/local). By default, Boost 1.31 and newer
+      install the Boost header files in a subdirectory of include called
+      boost-VERSION (where VERSION is the Boost version number with
+      underscores instead of periods). That is, if Boost 1.34 is installed
+      in /home/user1/pkgs/boost, the header files will be in /home/user1/
+      pkgs/boost/include/boost-1_34. In this case, you must also specify the
+      option --with-boost-includes=/home/user1/pkgs/boost/include/boost-1_34
+      when running configure.pl.
 
 
  By default, the configuration process will configure VR Juggler and all of
  its dependencies. This includes Sonix, which is an interesting special
- case. Sonix can make use of Aaudiere, OpenAL, or AudioWorks to add sound to
+ case. Sonix can make use of Audiere, OpenAL, or AudioWorks to add sound to
  VR Juggler applications. If none of those packages is found, Sonix will
- "stub out" its sound APIs. This means that Sonix and the VR Juggler Sound
- Manager can still be used in applications, but no audio will be heard at
- run time. See the section called "Sonix" for more information about how to
- configure Sonix to use Audiere, OpenAL, or AudioWorks.
+ "stub out" its sound APIs. This means that Sonix and the VR
+ Juggler Sound Manager can still be used in applications, but no audio will
+ be heard at run time. See the section called "Sonix" for more
+ information about how to configure Sonix to use Audiere, OpenAL, or
+ AudioWorks.
 
  For example uses of configure.pl, take a look at the Wiki page relating to
  building from source (http://www.vrjuggler.org/twiki_public/bin/view/
@@ -745,16 +775,13 @@ Important
 Using Locally Installed Software
 
  As noted in the section called "Getting the Source Code and the
- Dependencies", VR Juggler depends on several external software packages. As
- an example, consider the case where the GMTL library is installed in
- /home/user1/pkgs/GMTL with the headers in /home/user1/pkgs/ GMTL/include.
- To use this installation, run configure.pl as follows:
+ Dependencies", VR Juggler depends on several external software
+ packages. As an example, consider the case where the Boost libraries are
+ installed in /home/user1/pkgs/boost with the headers in /home/user1/pkgs/
+ boost/include. To use this installation, run configure.pl as follows:
 
 
-  ../configure.pl --with-gmtl=/home/user1/pkgs/GMTL
-
- The --with-gmtl option could of course be mixed in with those shown in the
- previous section.
+  ../configure.pl --with-boost=/home/user1/pkgs/boost
 
 
 Compiling VR Juggler
@@ -823,8 +850,7 @@ Note
 Tweek
 
  Tweek needs JDK 1.4 or newer and a C++ CORBA implementation. Currently, we
- primarily use omniORB 4.0, but omniORB 3.0 can be used. Visit the omniORB
- website to download omniORB.
+ primarily use omniORB 4.0. Visit the omniORB website to download omniORB.
 
 
 Note
@@ -845,16 +871,4 @@ Note
   ../configure.pl --with-cxx-orb=omniORB4 --with-cxx-orb-root=<OMNIORB_PATH>
   --with-java-orb=JDK --module=Tweek
   gmake build install
-
- If you are using omniORB 3.x, pass --with-cxx-orb=omniORB3 instead.
-
- Depending on your omniORB installation, you may have to pass extra
- arguments to configure.pl so that the configuration process can find the
- omniidl binary and the omniORB libraries. For example, on Red Hat Linux 7.2
- with omniORB 3.0.x, the following arguments must be specified in addition
- to the above:
-
-
-  --with-cxx-orb-bin=<OMNIORB_PATH>/bin/i586_linux_2.0_glibc --with-cxx-orb-
-  lib=<OMNIORB_PATH>/lib/i586_linux_2.0_glibc
 
