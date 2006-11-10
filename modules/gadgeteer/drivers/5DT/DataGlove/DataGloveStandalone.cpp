@@ -181,6 +181,7 @@ int DataGloveStandalone::mConnectToHardware(const std::string& tty_port, int bau
    // Create new serial port
    mPort = new vpr::SerialPort(tty_port);
    mPort->setOpenReadWrite();
+   mPort->setBlocking(false);
 
    if (!mPort->open().success()) 
    {
@@ -192,7 +193,6 @@ int DataGloveStandalone::mConnectToHardware(const std::string& tty_port, int bau
    {
       std::cout<<"[dataGlove] Port ("<<tty_port<<") open success\n"<<std::flush;
       mPort->clearAll();      
-      baud = 9600;
       mPort->setRead(true);
       mPort->setMinInputSize(1);
       mPort->setOutputBaudRate(baud); // Put me before input to be safe
