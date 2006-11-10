@@ -63,4 +63,3 @@ CLASSPATH=		$(TWEEK_JARS)
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
-include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
