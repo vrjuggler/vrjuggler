@@ -445,7 +445,8 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.35], [BUILD_CXX='Y'],
+MIN_VPR_VERSION='1.1.35'
+VPR_PATH([$MIN_VPR_VERSION], [BUILD_CXX='Y'],
          [AC_MSG_WARN([*** VPR required for Tweek C++ API ***])
           BUILD_CXX='N'])
 
@@ -610,7 +611,7 @@ int omni_main_i(int argc, char** const argv)
          AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
          BUILD_CXX='N'
       else
-         CXX_IDL_CMD='omniidl'
+         CXX_IDL_CMD="$CXX_IDL"
          CXX_IDL_OPTS='-bcxx -Wbh=.h,s=.cpp'
          CXX_IDL_GENDIR_OPT='-C'
          CXX_IDL_INCFLAG='-I'
@@ -1182,10 +1183,10 @@ done
 #   tweek_idlflags_java="$tweek_idlflags_java ${JAVA_IDL_INCFLAG}\${prefix}/include/$dir"
 #done
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $VPR_BUILD_INCLUDES"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS"
 tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
 INCLUDES="$INCLUDES $CXX_ORB_INCLUDES"
-DEPEND_FLAGS="$VPR_CXXFLAGS $VPR_BUILD_INCLUDES"
+DEPEND_FLAGS="$VPR_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -1230,12 +1231,12 @@ fi
 # Dependencies for applications and for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
    APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS_LINK_EXE $CXX_ORB_LIB_LINK_EXE $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
-   DYLIB_DEPS="$APP_EXTRA_LIBS"
+   DYLIB_DEPS="$LDFLAGS $CXX_ORB_LDFLAGS_LINK_EXE $CXX_ORB_LIB_LINK_EXE $LIBS"
    DYLIB_PROF_DEPS="$DYLIB_DEPS"
 else
    APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
-   DYLIB_DEPS="$APP_EXTRA_LIBS"
-   DYLIB_PROF_DEPS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_PROF_LIBS $LIBS $VPR_EXTRA_LIBS"
+   DYLIB_DEPS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $LIBS"
+   DYLIB_PROF_DEPS="$DYLIB_DEPS"
 
    VJ_BUILD_LIB_FILE_LIST([$DYLIB_DEPS], [DYLIB_DEP_FILES])
    VJ_BUILD_LIB_FILE_LIST([$DYLIB_PROF_DEPS], [DYLIB_PROF_DEP_FILES])
@@ -1296,33 +1297,20 @@ TWEEK_SHARE_DIR="$data_subdir/$DATA_VERSION"
 tweek_lib_name="tweek$LIBRARY_VERSION"
 tweek_prof_lib_name="tweek_p$LIBRARY_VERSION"
 
-# Information needed to generate tweek-config.
-case $OS_TYPE in
-   UNIX)
-      if test "x$PLATFORM" != "xDarwin" ; then
-         if test "x$GXX" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-         else
-            static_begin="-B static"
-            static_end="-B dynamic"
-         fi
-      fi
+# Information needed to generate tweek.fpc.
+if test "x$PLATFORM" != "xDarwin" ; then
+   if test "x$GXX" = "xyes" ; then
+      static_begin="-Wl,-Bstatic"
+      static_end="-Wl,-Bdynamic"
+   else
+      static_begin="-B static"
+      static_end="-B dynamic"
+   fi
+fi
 
-      tweek_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
-      tweek_ldflags_linker="$tweek_ldflags_compiler"
-      tweek_libs="-l$tweek_lib_name"
-      tweek_prof_libs="-l$tweek_prof_lib_name"
-      tweek_extra_libs="$CXX_ORB_LIB"
-      ;;
-   Win32)
-      tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
-      tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
-      tweek_libs="$tweek_lib_name.lib"
-      tweek_prof_libs="$tweek_prof_lib_name.lib"
-      tweek_extra_libs="$CXX_ORB_LIB_LINK_EXE"
-      ;;
-esac
+tweek_ldflags="-L\$prefix/lib\$LIBBITSUF"
+tweek_libs="-l$tweek_lib_name"
+tweek_prof_libs="-l$tweek_prof_lib_name"
 
 tweek_cxx_orb_root="$cxx_orb_root"
 tweek_extra_ldflags="$EXTRA_LDFLAGS"
@@ -1366,6 +1354,8 @@ AC_SUBST(HEADER_VERSION)
 AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(DATA_VERSION)
 AC_SUBST(TWEEK_DATA_DIR)
+
+AC_SUBST(MIN_VPR_VERSION)
 
 AC_SUBST(ANT)
 AC_SUBST(BUILD_CXX)
@@ -1433,14 +1423,13 @@ AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(tweek_cxx_orb_root)
 AC_SUBST(tweek_cxxflags)
-AC_SUBST(tweek_ldflags_compiler)
-AC_SUBST(tweek_ldflags_linker)
+AC_SUBST(tweek_ldflags)
+AC_SUBST(tweek_ldflags)
 AC_SUBST(tweek_libs)
 AC_SUBST(tweek_prof_libs)
 AC_SUBST(tweek_extra_cxxflags)
 AC_SUBST(tweek_extra_include_dirs)
 AC_SUBST(tweek_extra_ldflags)
-AC_SUBST(tweek_extra_libs)
 AC_SUBST(tweek32_flags)
 AC_SUBST(tweek64_flags)
 AC_SUBST(tweek_idlflags_cxx)

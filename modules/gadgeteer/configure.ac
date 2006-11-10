@@ -159,16 +159,17 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.35], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
+MIN_VPR_VERSION='1.1.35'
+VPR_PATH([$MIN_VPR_VERSION], ,
+         [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 #VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH_CXX([1.1.5], ,
+MIN_JCCL_VERSION='1.1.5'
+JCCL_PATH_CXX([$MIN_JCCL_VERSION], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
 
-gadsave_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.1.9, [/usr/local], , ,
+MIN_GMTL_VERSION='0.4.11'
+GMTL_PATH([$MIN_GMTL_VERSION], ,
           [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
-CPPFLAGS="$gadsave_CPPFLAGS"
 
 AC_PATH_XTRA
 
@@ -247,9 +248,9 @@ fi
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
+DEPEND_FLAGS="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES"
 gadget_cxxflags="$STDFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -294,11 +295,11 @@ UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
 # $APP_EXTRA_LIBS must list all the libraries need to link a Gadgeteer-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS $JCCL_EXTRA_LIBS $VPR_LIBS $LIBS $VPR_EXTRA_LIBS comctl32.lib gdi32.lib user32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS $LIBS comctl32.lib gdi32.lib user32.lib"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS $JCCL_EXTRA_LIBS $VPR_LIBS $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS"
-    APP_EXTRA_PROF_LIBS="$LDFLAGS $JCCL_PROF_LIBS $JCCL_EXTRA_LIBS $VPR_PROF_LIBS $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS $LIBS $DTK_LDFLAGS"
+    APP_EXTRA_PROF_LIBS="$LDFLAGS $JCCL_PROF_LIBS $LIBS $DTK_LDFLAGS"
 
     if test "x$gadget_use_x11" = "xyes" ; then
        APP_EXTRA_LIBS="$APP_EXTRA_LIBS $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
@@ -344,6 +345,11 @@ APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
 DYLIB_DEPS="$APP_EXTRA_LIBS"
 DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
 
+VJ_STRIP_DUPLICATE_ARGS([CXXFLAGS], [$CXXFLAGS])
+VJ_STRIP_DUPLICATE_ARGS([DEPEND_FLAGS], [$DEPEND_FLAGS])
+#VJ_STRIP_DUPLICATE_ARGS_REVERSE([DYLIB_DEPS], [$DYLIB_DEPS])
+#VJ_STRIP_DUPLICATE_ARGS_REVERSE([DYLIB_PROF_DEPS], [$DYLIB_PROF_DEPS])
+
 VJ_BUILD_LIB_FILE_LIST([$DYLIB_DEPS], [DYLIB_DEP_FILES])
 VJ_BUILD_LIB_FILE_LIST([$DYLIB_PROF_DEPS], [DYLIB_PROF_DEP_FILES])
 
@@ -381,37 +387,19 @@ fi
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 GADGET_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
-# Information needed to generate gadgeteer-config.
-case $OS_TYPE in
-    UNIX)
-        if test "x$GNU_LD" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-            gadget_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF -Wl,--export-dynamic"
-            gadget_ldflags_linker="-L\$prefix/lib\$LIBBITSUF --export-dynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
-            gadget_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
-            gadget_ldflags_linker="$gadget_ldflags_compiler"
-        fi
+# Information needed to generate gadgeteer.fpc.
+if test "x$GNU_LD" = "xyes" ; then
+   static_begin="-Wl,-Bstatic"
+   static_end="-Wl,-Bdynamic"
+else
+   static_begin="-B static"
+   static_end="-B dynamic"
+fi
 
-        gadget_libs="-l$gadget_lib_name"
-        gadget_prof_libs="-l$gadget_prof_lib_name"
-        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"
-
-        Gadgeteer_lib='-lgadget'
-        ;;
-    Win32)
-        gadget_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
-        gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
-        gadget_libs="$gadget_lib_name.lib"
-        gadget_prof_libs="$gadget_prof_lib_name.lib"
-        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS comctl32.lib gdi32.lib user32.lib"
-
-        Gadgeteer_lib='gadget.lib'
-        ;;
-esac
+gadget_ldflags="-L\$prefix/lib\$LIBBITSUF"
+gadget_libs="-l$gadget_lib_name"
+gadget_prof_libs="-l$gadget_prof_lib_name"
+gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     gadget32_flags='-n32'
@@ -421,8 +409,7 @@ elif test "x$GCC" = "xyes" ; then
     gadget64_flags='-m64'
 fi
 
-gadget_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
-gadget_extra_ldflags_linker="$gadget_extra_ldflags_compiler"
+gadget_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
 includedir="$includedir/$HEADER_VERSION"
 
@@ -446,6 +433,10 @@ AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(DATA_VERSION)
 
+AC_SUBST(MIN_VPR_VERSION)
+AC_SUBST(MIN_JCCL_VERSION)
+AC_SUBST(MIN_GMTL_VERSION)
+
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
@@ -460,13 +451,10 @@ AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(gadget_cxxflags)
 AC_SUBST(gadget_extra_cxxflags)
-AC_SUBST(gadget_ldflags_compiler)
-AC_SUBST(gadget_ldflags_linker)
+AC_SUBST(gadget_ldflags)
 AC_SUBST(gadget_libs)
 AC_SUBST(gadget_prof_libs)
-AC_SUBST(Gadgeteer_lib)
-AC_SUBST(gadget_extra_ldflags_compiler)
-AC_SUBST(gadget_extra_ldflags_linker)
+AC_SUBST(gadget_extra_ldflags)
 AC_SUBST(gadget_extra_libs)
 AC_SUBST(gadget32_flags)
 AC_SUBST(gadget64_flags)

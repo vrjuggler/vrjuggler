@@ -31,21 +31,15 @@ static_end = @static_end@
 
 gadget_cxxflags = @gadget_cxxflags@
 
-gadget_ldflags_compiler = @gadget_ldflags_compiler@
-gadget_ldflags_linker = @gadget_ldflags_linker@
-
+gadget_ldflags = @gadget_ldflags@
 gadget_libs =  @gadget_libs@
 gadget_prof_libs = @gadget_prof_libs@
 
 gadget_extra_cxxflags = @gadget_extra_cxxflags@
 
-gadget_extra_ldflags_compiler = @gadget_extra_ldflags_compiler@
-gadget_extra_ldflags_linker = @gadget_extra_ldflags_linker@
-
 gadget_extra_libs = @gadget_extra_libs@
 
-libs = ${gadget_ldflags_linker} ${gadget_ldflags_compiler}
-extra_libs = ${gadget_extra_ldflags_linker} ${gadget_extra_ldflags_compiler} ${gadget_extra_libs}
+extra_libs = ${gadget_extra_libs}
 
 gadget_use_x11= @gadget_use_x11@
 
@@ -58,16 +52,16 @@ Description: Gadgeteer is a device management system. It handles the configurati
 URL: http://www.vrjuggler.org/gadgeteer/
 Version: ${gadget_version}
 Provides: gadgeteer
-Requires: vpr
+Requires: jccl = @JCCL_VERSION@ vpr = @VPR_VERSION@ gmtl >= @MIN_GMTL_VERSION@
 Arch: ${ISA}
 Cflags: ${gadget_cxxflags} ${gadget_extra_cxxflags} -I${includedir}
-Libs: ${libs} ${gadget_libs} ${extra_libs}
+Libs: ${gadget_ldflags} ${gadget_libs} ${extra_libs}
 Libs.private: 
 
 ######################### Gadget Specific Flagpoll Variables ###################
 use_x11 : ${gadget_use_x11}
-libs: ${libs} ${gadget_libs}
+libs: ${gadget_libs}
 extra_libs : ${extra_libs}
-static_libs: ${static_begin} ${libs} ${gadget_libs} ${static_end}
+static_libs: ${static_begin} ${gadget_libs} ${static_end}
 profiled_libs: ${libs} ${gadget_prof_libs}
-profiled_static_libs: ${static_begin} ${libs} ${gadget_prof_libs} ${static_end}
+profiled_static_libs: ${static_begin} ${gadget_prof_libs} ${static_end}

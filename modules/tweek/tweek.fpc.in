@@ -37,16 +37,14 @@ tweek_extra_cxxflags = @tweek_extra_cxxflags@
 tweek_extra_include_dirs = @tweek_extra_include_dirs@
 includedir = @includedir@
 tweek_cxxflags = @tweek_cxxflags@
+tweek_share_dir = ${prefix}/@TWEEK_SHARE_DIR@
 static_begin = @static_begin@
 static_end = @static_end@
-tweek_ldflags_linker = @tweek_ldflags_linker@
-tweek_ldflags_compiler = @tweek_ldflags_compiler@
+tweek_ldflags = @tweek_ldflags@
 tweek_prof_libs = @tweek_prof_libs@
 tweek_libs = @tweek_libs@
 tweek_extra_ldflags = @tweek_extra_ldflags@
-tweek_extra_libs = @tweek_extra_libs@
 
-libs = ${tweek_ldflags_linker} ${tweek_ldflags_compiler}
 extra_libs = ${tweek_extra_ldflags} ${tweek_extra_libs}
 
 
@@ -58,9 +56,9 @@ Description: Tweek is a portable GUI for applications. The Tweek GUI can be run 
 URL: http://www.vrjuggler.org/tweek/
 Version: ${tweek_version}
 Provides: tweek
-Requires: vpr
+Requires: omniORB4, omnithread3, omniDynamic4, vpr = @VPR_VERSION@
 Arch: ${ISA}
-Libs: ${libs} ${tweek_libs} ${extra_libs}
+Libs: ${tweek_ldflags} ${tweek_libs} ${extra_libs}
 Libs.private: 
 Cflags: ${tweek_cxxflags} ${tweek_extra_cxxflags} -I${includedir} ${tweek_extra_include_dirs}
 
@@ -86,6 +84,7 @@ java_idlincflag: ${tweek_idl_inc_flag_java}
 jars: ${tweek_java_api_jars}
 ext_jars: ${tweek_ext_jars}
 
+tweek_app_defs_file: ${tweek_share_dir}/tweek.appdefs.mk
 
 python_idl_available: ${BUILD_PYTHON_IDL}
 python_idl: ${PYTHON_IDL}

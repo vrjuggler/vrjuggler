@@ -178,11 +178,7 @@ if test "x$VRJ_USE_X11" = "xyes" ; then
    AC_DEFINE([VRJ_USE_X11], , [Define if the X Window System will be used.])
 fi
 
-vjsave_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.3.1, [/usr/local], , ,
-          [AC_MSG_ERROR([*** GMTL required for VR Juggler ***])])
-CPPFLAGS="$vjsave_CPPFLAGS"
+GMTL_PATH([0.4.11], , [AC_MSG_ERROR([*** GMTL required for VR Juggler ***])])
 
 # ------------
 # OpenGL API.
@@ -317,9 +313,9 @@ fi
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
+DEPEND_FLAGS="$GADGET_CXXFLAGS $SNX_CXXFLAGS"
 vrj_cxxflags="$STDFLAGS"
 
 # Compiler-specific settings when GCC is not being used.
@@ -353,8 +349,6 @@ if test "x$PLATFORM" = "xDarwin" ; then
 
    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -Wl,-bind_at_load"
 fi
-
-INCLUDES="$INCLUDES $GMTL_INCLUDES"
 
 if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
    INCLUDES="$INCLUDES -I$x_includes"
@@ -435,7 +429,7 @@ vrjpf_lib_name="vrj_pf$LIBRARY_VERSION"
 vrjpf_prof_lib_name="vrj_pf_p$LIBRARY_VERSION"
 
 if test "$OS_TYPE" = "UNIX" ; then
-    REQ_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $VPR_EXTRA_LIBS $SNX_LIBS $GADGET_LIBS $JCCL_LIBS $JCCL_EXTRA_LIBS $LIBS -lm"
+    REQ_EXTRA_LIBS="$LDFLAGS $SNX_LIBS $GADGET_LIBS -lm"
     DYLIB_DEPS_VJ="$REQ_EXTRA_LIBS"
     DYLIB_DEPS_GL="$REQ_EXTRA_LIBS"
     DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
@@ -446,7 +440,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         osx_frameworks="-framework AGL -framework ApplicationServices -framework Carbon"
     fi
 
-    REQ_EXTRA_PROF_LIBS="$LDFLAGS $SNX_PROF_LIBS $GADGET_PROF_LIBS $JCCL_PROF_LIBS $VPR_PROF_LIBS $VPR_EXTRA_LIBS $LIBS -lm"
+    REQ_EXTRA_PROF_LIBS="$LDFLAGS $SNX_PROF_LIBS $GADGET_PROF_LIBS $LIBS -lm"
     DYLIB_PROF_DEPS_VJ="$REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -l$vrj_prof_lib_name $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -l$vrj_prof_lib_name $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
@@ -509,7 +503,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS_GL="-L\$(LIBDIR) -l$vrj_lib_name $DYLIB_DEPS_GL"
     DYLIB_DEPS_PF="-L\$(LIBDIR) -l$vrj_lib_name $DYLIB_DEPS_PF"
 elif test "$OS_TYPE" = "Win32" ; then
-    REQ_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $VPR_EXTRA_LIBS $GADGET_LIBS $SNX_LIBS $JCCL_LIBS $JCCL_EXTRA_LIBS $LIBS"
+    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS $SNX_LIBS $LIBS"
     BASIC_WIN32_LIBS='comctl32.lib user32.lib gdi32.lib'
     DYLIB_DEPS_BASIC="$REQ_EXTRA_LIBS $BASIC_WIN32_LIBS"
     DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) $DYLIB_DEPS_BASIC"
@@ -581,47 +575,23 @@ VJ_SHARE_DIR="$data_subdir/$DATA_VERSION"
 # Information needed to generate vrjuggler-config.
 # $vrj_extra_libs only lists the external (non-Juggler) libraries needed by
 # VR Juggler.
-case $OS_TYPE in
-    UNIX)
-        vrj_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
-        vrj_ldflags_linker="$vrj_ldflags_compiler"
-        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
+vrj_ldflags="-L\$prefix/lib\$LIBBITSUF"
+vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
 
-        vrj_lib="-l$vrj_lib_name"
-        vrj_prof_lib="-l$vrj_prof_lib_name"
-        vrj_ogl_lib="-l$vrjogl_lib_name"
-        vrj_ogl_prof_lib="-l$vrjogl_prof_lib_name"
+vrj_lib="-l$vrj_lib_name"
+vrj_prof_lib="-l$vrj_prof_lib_name"
+vrj_ogl_lib="-l$vrjogl_lib_name"
+vrj_ogl_prof_lib="-l$vrjogl_prof_lib_name"
 
-        if test "x$PERFORMER_API" = "xY" ; then
-            vrj_pf_lib="-l$vrjpf_lib_name"
-            vrj_pf_prof_lib="-l$vrjpf_prof_lib_name"
-            vrj_pf_extra_libs="$APP_EXTRA_LIBS_PF"
-        fi
+if test "x$PERFORMER_API" = "xY" ; then
+   vrj_pf_lib="-l$vrjpf_lib_name"
+   vrj_pf_prof_lib="-l$vrjpf_prof_lib_name"
+   vrj_pf_extra_libs="$APP_EXTRA_LIBS_PF"
+fi
 
-        # XXX: Ideally, -lm would not be added "manually" like this.
-        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_X11 $LIBS -lm"
-        vrj_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
-        ;;
-    Win32)
-        vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
-        vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
-        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $BASIC_WIN32_LIBS $LIBS"
-
-        vrj_lib="$vrj_lib_name.lib"
-        vrj_prof_lib="$vrj_prof_lib_name.lib"
-        vrj_ogl_lib="$vrjogl_lib_name.lib"
-        vrj_ogl_prof_lib="$vrjogl_prof_lib_name.lib"
-        vrj_extra_libs="$LDFLAGS $BASIC_WIN32_LIBS $LIBS"
-        vrj_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
-
-        if test "x$PERFORMER_API" = "xY" ; then
-            vrj_pf_lib="$vrjpf_lib_name.lib"
-            vrj_pf_prof_lib="$vrjpf_prof_lib_name.lib"
-            vrj_pf_extra_libs="$APP_EXTRA_LIBS_PF"
-        fi
-
-        ;;
-esac
+# XXX: Ideally, -lm would not be added "manually" like this.
+vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_X11 $LIBS -lm"
+vrj_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     vrj32_flags='-n32'
@@ -631,8 +601,7 @@ elif test "x$GCC" = "xyes" ; then
     vrj64_flags='-m64'
 fi
 
-vrj_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
-vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
+vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
@@ -687,10 +656,8 @@ AC_SUBST(APP_EXTRA_LIBS_PF)
 
 AC_SUBST(vrj_cxxflags)
 AC_SUBST(vrj_extra_cxxflags)
-AC_SUBST(vrj_ldflags_compiler)
-AC_SUBST(vrj_ldflags_linker)
-AC_SUBST(vrj_extra_ldflags_compiler)
-AC_SUBST(vrj_extra_ldflags_linker)
+AC_SUBST(vrj_ldflags)
+AC_SUBST(vrj_extra_ldflags)
 AC_SUBST(vrj_extra_libs)
 AC_SUBST(vrj32_flags)
 AC_SUBST(vrj64_flags)

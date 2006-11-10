@@ -33,9 +33,7 @@ vrj_cxxflags = @vrj_cxxflags@
 
 vrj_share_dir = ${prefix}/@VJ_SHARE_DIR@
 
-vrj_ldflags_compiler = @vrj_ldflags_compiler@
-vrj_ldflags_linker = @vrj_ldflags_linker@
-
+vrj_ldflags = @vrj_ldflags@
 vrj_libs =  @vrj_lib@
 vrj_prof_libs = @vrj_prof_lib@
 
@@ -46,16 +44,12 @@ vrj_pf_prof_lib = @vrj_pf_prof_lib@
 vrj_ogl_extra_libs = @vrj_ogl_extra_libs@
 vrj_pf_extra_libs = @vrj_pf_extra_libs@
 
-
 vrj_extra_cxxflags = @vrj_extra_cxxflags@
-
-vrj_extra_ldflags_compiler = @vrj_extra_ldflags_compiler@
-vrj_extra_ldflags_linker = @vrj_extra_ldflags_linker@
-
+vrj_extra_ldflags = @vrj_extra_ldflags@
 vrj_extra_libs = @vrj_extra_libs@
 
-libs = ${vrj_ldflags_linker} ${vrj_ldflags_compiler}
-extra_libs = ${vrj_extra_ldflags_linker} ${vrj_extra_ldflags_compiler} ${vrj_extra_libs}
+vrj_ldflags = ${vrj_ldflags}
+extra_libs = ${vrj_extra_ldflags} ${vrj_extra_libs}
 
 ########################### Public Variables ############################
 
@@ -65,19 +59,19 @@ Description: VR Juggler provides virtual reality (VR) software developers with a
 URL: http://www.vrjuggler.org/
 Version: ${vrj_version}
 Provides: vrjuggler
-Requires: vpr gadgeteer jccl sonix
+Requires: gadgeteer = @GADGET_VERSION@ sonix = @SNX_VERSION@ jccl = @JCCL_VERSION@ vpr = @VPR_VERSION@
 Arch: ${ISA}
 Cflags: ${vrj_cxxflags} ${vrj_extra_cxxflags} -I${includedir}
-Libs: ${libs} ${vrj_libs} ${extra_libs}
+Libs: ${vrj_ldflags} ${vrj_libs} ${extra_libs}
 Libs.private: 
 
 ######################### VR Juggler Specific Flagpoll Variables ###################
 
-libs: ${libs} ${vrj_libs}
+libs: ${vrj_ldflags} ${vrj_libs}
 extra_libs : ${extra_libs}
-static_libs: ${static_begin} ${libs} ${vrj_libs} ${static_end}
-profiled_libs: ${libs} ${vrj_prof_libs}
-profiled_static_libs: ${static_begin} ${libs} ${vrj_prof_libs} ${static_end}
+static_libs: ${static_begin} ${vrj_ldflags} ${vrj_libs} ${static_end}
+profiled_libs: ${vrj_ldflags} ${vrj_prof_libs}
+profiled_static_libs: ${static_begin} ${vrj_ldflags} ${vrj_prof_libs} ${static_end}
 
 # Draw Manager Choices
 vrj_ogl_libs: ${vrj_ogl_lib} ${vrj_ogl_extra_libs}

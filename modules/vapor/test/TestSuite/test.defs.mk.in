@@ -56,7 +56,6 @@ include @topdir@/make.defs.mk
 test_topdir=	@topdir@/test/TestSuite
 test_topsrcdir=	$(VPRROOT_ABS)/test/TestSuite
 test_srcdir=	@srcdir@
-VPR_BASE_DIR?=	@APP_BASE_DIR@
 CPP_UNIT=	@CPPUNIT_ROOT@
 
 # -----------------------------------------------------------------------------
@@ -65,5 +64,5 @@ CPP_UNIT=	@CPPUNIT_ROOT@
 EXTRA_CFLAGS=	@APP_EXTRA_CFLAGS@
 EXTRA_CXXFLAGS=	@APP_EXTRA_CFLAGS@
 EXTRA_DEFS=	-DGRAPH_PATH="\"$(VPRROOT_ABS)\""
-EXTRA_INCLUDES=	@BOOST_INCLUDES@ $(shell flagpoll vpr --cflags-only-I)	\
+EXTRA_INCLUDES=	$(shell flagpoll vpr --cflags-only-I)   	\
 		-I$(test_topsrcdir) -I$(CPP_UNIT)/include

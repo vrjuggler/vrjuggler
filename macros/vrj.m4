@@ -48,16 +48,16 @@ AC_DEFUN([VRJUGGLER_PATH],
     dnl See if the user specified where to find the VR Juggler meta file. If
     dnl not, take a guess.
     if test "x$vrj_meta_file" != "x" ; then
-        vrj_flagpoll_args="--from-file=$vrj_meta_file"
+        vrj_meta_dir=`dirname $vrj_meta_file`
+        vrj_flagpoll_args="--extra-paths=$vrj_meta_dir vrj --from-file=$vrj_meta_file"
     elif test -f "$instlinks/share/flagpoll/vrjuggler.fpc" ; then
-        vrj_flagpoll_args="--from-file=$instlinks/share/flagpoll/vrjuggler.fpc"
+        vrj_meta_dir="$instlinks/share/flagpoll"
+        vrj_flagpoll_args="--extra-paths=$vrj_meta_dir vrjuggler --from-file=$vrj_meta_dir/vrjuggler.fpc"
     else
-        vrj_flagpoll_args=""
+        vrj_flagpoll_args="vrjuggler"
     fi
 
-    vrj_flagpoll_args="vrjuggler $vrj_flagpoll_args --no-deps"
-      
-    AM_PATH_FLAGPOLL([0.7.0], ,
+    AM_PATH_FLAGPOLL([0.8.1], ,
                      [AC_MSG_ERROR(*** Flagpoll required for VR Juggler flags ***)])
     min_vrj_version=ifelse([$1], ,0.0.1,$1)
 
@@ -70,16 +70,22 @@ AC_DEFUN([VRJUGGLER_PATH],
     if test "x$FLAGPOLL" = "xno" ; then
         no_vrj=yes
     else
-        VRJ_CXXFLAGS=`$FLAGPOLL $vrj_flagpoll_args --cflags`
-        VRJ_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-libs`
-        VRJ_PROF_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-profiled-libs`
-        VRJ_LIBS_STATIC=`$FLAGPOLL $vrj_flagpoll_args --get-static-libs`
-        VRJ_PROF_LIBS_STATIC=`$FLAGPOLL $vrj_flagpoll_args --get-profiled-static-libs`
-        VRJ_EXTRA_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-extra-libs`
-        VRJ_VERSION=`$FLAGPOLL $vrj_flagpoll_args --modversion`
+        if ! (eval $FLAGPOLL $vrj_flagpoll_args --modversion >/dev/null 2>&1)
+        then
+            AC_MSG_WARN([*** Flagpoll has no valid VR Juggler configuration ***])
+            no_vrj=yes
+        else
+            VRJ_CXXFLAGS=`$FLAGPOLL $vrj_flagpoll_args --cflags`
+            VRJ_LIBS=`$FLAGPOLL $vrj_flagpoll_args --libs`
+            VRJ_PROF_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-profiled-libs`
+            VRJ_LIBS_STATIC=`$FLAGPOLL $vrj_flagpoll_args --get-static-libs`
+            VRJ_PROF_LIBS_STATIC=`$FLAGPOLL $vrj_flagpoll_args --get-profiled-static-libs`
+            VRJ_EXTRA_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-extra-libs`
+            VRJ_VERSION=`$FLAGPOLL $vrj_flagpoll_args --modversion`
 
-        DPP_VERSION_CHECK_MSG_NO_CACHE([VR Juggler], [$VRJ_VERSION],
-                                       [$min_vrj_version], [$2], [$3])
+            DPP_VERSION_CHECK_MSG_NO_CACHE([VR Juggler], [$VRJ_VERSION],
+                                           [$min_vrj_version], [$2], [$3])
+        fi
     fi
 
     if test "x$no_vrj" != x ; then

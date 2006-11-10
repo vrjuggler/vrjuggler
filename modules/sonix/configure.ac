@@ -128,14 +128,12 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.23], , [AC_MSG_ERROR([*** VPR required for Sonix ***])])
+MIN_VPR_VERSION='1.1.23'
+VPR_PATH([$MIN_VPR_VERSION], , [AC_MSG_ERROR([*** VPR required for Sonix ***])])
 
-# find and append GMTL flags...
-snx_save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.1.9, [/usr/local], , ,
+MIN_GMTL_VERSION='0.4.11'
+GMTL_PATH([$MIN_GMTL_VERSION], ,
           [AC_MSG_ERROR([*** GMTL required for Sonix ***])])
-CPPFLAGS="$snx_save_CPPFLAGS"
 
 DPP_CHECK_DYNLOAD_LIB
 DPP_HAVE_CPPUNIT([1.9.10])
@@ -185,9 +183,9 @@ else
 fi
 
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $GMTL_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_CXXFLAGS $GMTL_INCLUDES $VPR_BUILD_INCLUDES"
+DEPEND_FLAGS="$VPR_CXXFLAGS $GMTL_INCLUDES"
 snx_cxxflags="$STDFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -256,6 +254,11 @@ APP_BASE_DIR_INST='$(SNX_BASE_DIR)'
 DYLIB_DEPS="$APP_EXTRA_LIBS"
 DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
 
+VJ_STRIP_DUPLICATE_ARGS([CXXFLAGS], [$CXXFLAGS])
+VJ_STRIP_DUPLICATE_ARGS([DEPEND_FLAGS], [$DEPEND_FLAGS])
+#VJ_STRIP_DUPLICATE_ARGS_REVERSE([DYLIB_DEPS], [$DYLIB_DEPS])
+#VJ_STRIP_DUPLICATE_ARGS_REVERSE([DYLIB_PROF_DEPS], [$DYLIB_PROF_DEPS])
+
 VJ_BUILD_LIB_FILE_LIST([$DYLIB_DEPS], [DYLIB_DEP_FILES])
 VJ_BUILD_LIB_FILE_LIST([$DYLIB_PROF_DEPS], [DYLIB_PROF_DEP_FILES])
 
@@ -303,37 +306,18 @@ fi
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 SNX_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
-# Information needed to generate sonix-config.
-case $OS_TYPE in
-    UNIX)
-        if test "x$GNU_LD" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-            snx_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF -Wl,--export-dynamic"
-            snx_ldflags_linker="-L\$prefix/lib\$LIBBITSUF --export-dynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
-            snx_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
-            snx_ldflags_linker="$snx_ldflags_compiler"
-        fi
+# Information needed to generate sonix.fpc.
+if test "x$GNU_LD" = "xyes" ; then
+   static_begin="-Wl,-Bstatic"
+   static_end="-Wl,-Bdynamic"
+else
+   static_begin="-B static"
+   static_end="-B dynamic"
+fi
 
-        snx_libs="-l$snx_lib_name"
-        snx_prof_libs="-l$snx_prof_lib_name"
-        snx_extra_libs="$LDFLAGS $LIBS"
-
-        Sonix_lib='-lsonix'
-        ;;
-    Win32)
-        snx_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
-        snx_ldflags_linker="/libpath:\$prefix/lib/debug "
-        snx_libs="$snx_lib_name.lib"
-        snx_prof_libs="$snx_prof_lib_name.lib"
-        snx_extra_libs="$LDFLAGS $LIBS"
-
-        Sonix_lib='sonix.lib'
-        ;;
-esac
+snx_ldflags="-L\$prefix/lib\$LIBBITSUF"
+snx_libs="-l$snx_lib_name"
+snx_prof_libs="-l$snx_prof_lib_name"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     snx32_flags='-n32'
@@ -343,8 +327,7 @@ elif test "x$GCC" = "xyes" ; then
     snx64_flags='-m64'
 fi
 
-snx_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
-snx_extra_ldflags_linker="$snx_extra_ldflags_compiler"
+snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
 includedir="$includedir/$HEADER_VERSION"
 
@@ -366,6 +349,8 @@ AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(DATA_VERSION)
 
+AC_SUBST(MIN_VPR_VERSION)
+AC_SUBST(MIN_GMTL_VERSION)
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
@@ -382,14 +367,9 @@ AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(snx_cxxflags)
 AC_SUBST(snx_extra_cxxflags)
-AC_SUBST(snx_ldflags_compiler)
-AC_SUBST(snx_ldflags_linker)
+AC_SUBST(snx_ldflags)
 AC_SUBST(snx_libs)
 AC_SUBST(snx_prof_libs)
-AC_SUBST(Sonix_lib)
-AC_SUBST(snx_extra_ldflags_compiler)
-AC_SUBST(snx_extra_ldflags_linker)
-AC_SUBST(snx_extra_libs)
 AC_SUBST(snx32_flags)
 AC_SUBST(snx64_flags)
 

@@ -49,18 +49,18 @@ AC_DEFUN([GADGETEER_PATH],
     dnl See if the user specified where to find the Gadgeteer meta file. If
     dnl not, take a guess.
     if test "x$gadget_meta_file" != "x" ; then
-        gadget_flagpoll_args="--from-file=$gadget_meta_file"
+        gadget_meta_dir=`dirname $gadget_meta_file`
+        gadget_flagpoll_args="--extra-paths=$gadget_meta_dir gadgeteer --from-file=$gadget_meta_file"
     elif test -f "$instlinks/share/flagpoll/gadgeteer.fpc" ; then
-        gadget_flagpoll_args="--from-file=$instlinks/share/flagpoll/gadgeteer.fpc"
+        gadget_meta_dir="$instlinks/share/flagpoll"
+        gadget_flagpoll_args="--extra-paths=$gadget_meta_dir gadgeteer --from-file=$gadget_meta_dir/gadgeteer.fpc"
     else
-        gadget_flagpoll_args=""
+        gadget_flagpoll_args="gadgeteer"
     fi
 
-    gadget_flagpoll_args="gadgeteer $gadget_flagpoll_args --no-deps"
-
-    AM_PATH_FLAGPOLL([0.7.0], ,
+    AM_PATH_FLAGPOLL([0.8.1], ,
                      [AC_MSG_ERROR(*** Flagpoll required for Gadgeteer flags ***)])
-    min_gadget_version=ifelse([$1], , 0.0.1, $1)
+    min_gadget_version=ifelse([$1], ,0.0.1,[$1])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
@@ -71,18 +71,24 @@ AC_DEFUN([GADGETEER_PATH],
     if test "x$FLAGPOLL" = "xno" ; then
         no_gadgeteer=yes
     else
-        GADGET_CXXFLAGS=`$FLAGPOLL $gadget_flagpoll_args --cflags`
-        GADGET_LIBS=`$FLAGPOLL $gadget_flagpoll_args --get-libs`
-        GADGET_PROF_LIBS=`$FLAGPOLL $gadget_flagpoll_args --get-profiled-libs`
-        GADGET_LIBS_STATIC=`$FLAGPOLL $gadget_flagpoll_args --get-static-libs`
-        GADGET_PROF_LIBS_STATIC=`$FLAGPOLL $gadget_flagpoll_args --get-profiled-static-libs`
-        GADGET_EXTRA_LIBS_LD=`$FLAGPOLL $gadget_flagpoll_args --get-extra-libs`
-        GADGET_VERSION=`$FLAGPOLL $gadget_flagpoll_args --modversion`
+        if ! (eval $FLAGPOLL $gadget_flagpoll_args --modversion >/dev/null 2>&1)
+        then
+            AC_MSG_WARN([*** Flagpoll has no valid Gadgeteer configuration ***])
+            no_gadgeteer=yes
+        else
+            GADGET_CXXFLAGS=`$FLAGPOLL $gadget_flagpoll_args --cflags`
+            GADGET_LIBS=`$FLAGPOLL $gadget_flagpoll_args --libs`
+            GADGET_PROF_LIBS=`$FLAGPOLL $gadget_flagpoll_args --get-profiled-libs`
+            GADGET_LIBS_STATIC=`$FLAGPOLL $gadget_flagpoll_args --get-static-libs`
+            GADGET_PROF_LIBS_STATIC=`$FLAGPOLL $gadget_flagpoll_args --get-profiled-static-libs`
+            GADGET_EXTRA_LIBS_LD=`$FLAGPOLL $gadget_flagpoll_args --get-extra-libs`
+            GADGET_VERSION=`$FLAGPOLL $gadget_flagpoll_args --modversion`
 
-        GADGET_USE_X11=`$FLAGPOLL $gadget_flagpoll_args --get-use-x11`
+            GADGET_USE_X11=`$FLAGPOLL $gadget_flagpoll_args --get-use-x11`
 
-        DPP_VERSION_CHECK_MSG_NO_CACHE([Gadgeteer], [$GADGET_VERSION],
-                                       [$min_gadget_version], [$2], [$3])
+            DPP_VERSION_CHECK_MSG_NO_CACHE([Gadgeteer], [$GADGET_VERSION],
+                                           [$min_gadget_version], [$2], [$3])
+        fi
     fi
 
     if test "x$no_gadgeteer" != x ; then

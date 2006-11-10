@@ -51,25 +51,26 @@ AC_DEFUN([SNX_PATH],
 
     dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(sonix-meta-file,
-                [  --with-sonix-meta-file=<PATH>     Flagpoll metadata file
-                         for Sonix (optional)           [No default]],
+                [  --with-sonix-meta-file=<PATH>
+                          Flagpoll metadata file for
+                          Sonix (optional)                [No default]],
                 [sonix_meta_file="$withval"], [sonix_meta_file=""])
 
     dnl See if the user specified where to find the Sonix meta file. If not,
     dnl take a guess.
     if test "x$sonix_meta_file" != "x" ; then
-        sonix_flagpoll_args="--from-file=$sonix_meta_file"
+        sonix_meta_dir=`dirname $sonix_meta_file`
+        sonix_flagpoll_args="--extra-paths=$sonix_meta_dir sonix --from-file=$sonix_meta_file"
     elif test -f "$instlinks/share/flagpoll/sonix.fpc" ; then
-        sonix_flagpoll_args="--from-file=$instlinks/share/flagpoll/sonix.fpc"
+        sonix_meta_dir="$instlinks/share/flagpoll"
+        sonix_flagpoll_args="--extra-paths=$sonix_meta_dir sonix --from-file=$sonix_meta_dir/sonix.fpc"
     else
-        sonix_flagpoll_args=""
+        sonix_flagpoll_args="sonix"
     fi
 
-    sonix_flagpoll_args="sonix $sonix_flagpoll_args --no-deps"
-
-    AM_PATH_FLAGPOLL([0.7.0], ,
+    AM_PATH_FLAGPOLL([0.8.1], ,
                      [AC_MSG_ERROR(*** Flagpoll required for Sonix flags ***)])
-    min_sonix_version=ifelse([$1], ,0.0.1, [$1])
+    min_sonix_version=ifelse([$1], ,0.0.1,[$1])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
     if ! (eval $FLAGPOLL --help >/dev/null 2>&1) 2>&1 ; then
@@ -80,16 +81,22 @@ AC_DEFUN([SNX_PATH],
     if test "x$FLAGPOLL" = "xno" ; then
         no_sonix=yes
     else
-        SNX_CXXFLAGS=`$FLAGPOLL $sonix_flagpoll_args --cflags`
-        SNX_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-libs`
-        SNX_PROF_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-profiled-libs`
-        SNX_LIBS_STATIC=`$FLAGPOLL $sonix_flagpoll_args --get-static-libs`
-        SNX_PROF_LIBS_STATIC=`$FLAGPOLL $sonix_flagpoll_args --get-profiled-static-libs`
-        SNX_EXTRA_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-extra-libs`
-        SNX_VERSION=`$FLAGPOLL $sonix_flagpoll_args --modversion`
+        if ! (eval $FLAGPOLL $sonix_flagpoll_args --modversion >/dev/null 2>&1)
+        then
+            AC_MSG_WARN([*** Flagpoll has no valid Sonix configuration ***])
+            no_sonix=yes
+        else
+            SNX_CXXFLAGS=`$FLAGPOLL $sonix_flagpoll_args --cflags`
+            SNX_LIBS=`$FLAGPOLL $sonix_flagpoll_args --libs`
+            SNX_PROF_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-profiled-libs`
+            SNX_LIBS_STATIC=`$FLAGPOLL $sonix_flagpoll_args --get-static-libs`
+            SNX_PROF_LIBS_STATIC=`$FLAGPOLL $sonix_flagpoll_args --get-profiled-static-libs`
+            SNX_EXTRA_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-extra-libs`
+            SNX_VERSION=`$FLAGPOLL $sonix_flagpoll_args --modversion`
 
-        DPP_VERSION_CHECK_MSG_NO_CACHE([Sonix], [$SNX_VERSION],
-                                       [$min_sonix_version], [$2], [$3])
+            DPP_VERSION_CHECK_MSG_NO_CACHE([Sonix], [$SNX_VERSION],
+                                           [$min_sonix_version], [$2], [$3])
+        fi
     fi
 
     if test "x$no_sonix" != x ; then

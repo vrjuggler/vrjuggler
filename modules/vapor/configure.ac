@@ -48,7 +48,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([vpr/vprConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.2])
+DPP_PREREQ([2.1.5])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -136,10 +136,6 @@ fi
 
 # Define the binary format.
 DPP_ABI_SETUP
-
-AC_ARG_WITH(cppdom,
-            [  --with-cppdom=<PATH>    CppDOM installation directory   [default=/usr/local]],
-            cppdom_root="$withval", cppdom_root="/usr/local")
 
 AC_ARG_WITH([boost-fs-lib],
             [  --with-boost-fs-lib=<LIB NAME>
@@ -527,6 +523,7 @@ DPP_LANG_RESTORE
 
 DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
                [AC_MSG_ERROR([*** Boost is required for VPR ***])])
+BOOST_VERSION_DOT="$dpp_boost_version"
 
 # -----------------------------------------------------------------------------
 # Checks for library functions.
@@ -682,21 +679,37 @@ CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 CPPFLAGS="$CPPFLAGS $BOOST_INCLUDES"
 # NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
 # are used together by AC_TRY_LINK().
-LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
-LIBS="$LIBS -l$boost_fs_name"
+LIBS="-l$boost_fs_name $vprsave_LIBS"
+
+if test "lib$LIBBITSUF" != "lib" ; then
+   libdirs="lib$LIBBITSUF lib"
+else
+   libdirs="lib"
+fi
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
-AC_CACHE_CHECK([for boost::filesystem::exists() in $boost_fs_name],
-   [ac_cv_has_boost_fs_exists],
-   [AC_TRY_LINK([#include <boost/filesystem/operations.hpp> ],
-                [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
-                [ac_cv_has_boost_fs_exists='yes'],
-                [ac_cv_has_boost_fs_exists='no'])])
-rm -rf ./ii_files
+
+for l in $libdirs ; do
+   cur_boost_libdir="$BOOST_ROOT/$l"
+   LDFLAGS="-L$cur_boost_libdir $vprsave_LDFLAGS"
+
+   AC_MSG_CHECKING([for boost::filesystem::exists() in $boost_fs_name in $cur_boost_libdir])
+   AC_TRY_LINK([#include <boost/filesystem/operations.hpp>],
+               [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
+               [vpr_have_boost_fs='yes'], [vpr_have_boost_fs='no'])
+   rm -rf ./ii_files
+   AC_MSG_RESULT([$vpr_have_boost_fs])
+
+   if test "$vpr_have_boost_fs" = "yes" ; then
+      BOOST_LIBDIR="$cur_boost_libdir"
+      break
+   fi
+done
+
 DPP_LANG_RESTORE
 
-if test "x$ac_cv_has_boost_fs_exists" = "xno" ; then
+if test "x$vpr_have_boost_fs" = "xno" ; then
    AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
 fi
 
@@ -712,62 +725,25 @@ _vpr_save_CXXFLAGS="$CXXFLAGS"
 _vpr_save_CPPFLAGS="$CPPFLAGS"
 _vpr_save_LDFLAGS="$LDFLAGS"
 
-# Ensure that /usr/include and /usr/lib are not included multiple times
-# if $cppdom_root is "/usr".
-if test "x$cppdom_root" != "x" ; then
-   cppdom_path="$cppdom_root/bin:$PATH"
-else
-   cppdom_path="$PATH"
+AM_PATH_FLAGPOLL([0.8.1], ,
+   [AC_MSG_ERROR([*** Flagpoll (https://realityforge.vrsource.org/view/FlagPoll/WebHome) is required to build Juggler ***])])
+
+if ! (eval $FLAGPOLL cppdom --modversion >/dev/null 2>&1) ; then
+   AC_MSG_ERROR([*** Flagpoll does not have a valid CppDOM configuration ***])
 fi
 
-if test "x$OS_TYPE" = "xWin32" ; then
-   CPPDOM_CXXFLAGS="-I$cppdom_root/include"
-   CPPDOM_LDFLAGS="/libpath:$cppdom_root/lib"
-   CPPDOM_LIBS="cppdom.lib"
-
-   # Get the CppDOM version number components.
-   cppdom_major_ver=`grep 'define CPPDOM_VERSION_MAJOR ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
-   cppdom_minor_ver=`grep 'define CPPDOM_VERSION_MINOR ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
-   cppdom_patch_ver=`grep 'define CPPDOM_VERSION_PATCH ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
-
-   cppdom_version="$cppdom_major_ver.$cppdom_minor_ver.$cppdom_patch_ver"
-else
-   AC_PATH_PROG(CPPDOM_CONFIG, [cppdom-config], [no], [$cppdom_path])
-
-   if test "x$CPPDOM_CONFIG" = "xno" ; then
-      AC_MSG_ERROR([*** CppDOM is required for VPR ***])
-   fi
-
-   # XXX: This expression is not as robust as it ought to be.  It assumes
-   # that cppdom-config is in a directory called 'bin'.  That is not
-   # entirely invalid, but it is not flexible either.
-   # Using `cppdom-config --prefix` would be simpler, but it wouldn't handle
-   # the case when CppDOM was transplanted without updating cppdom-config.
-   found_cppdom_root=`echo $CPPDOM_CONFIG | sed -e 's|\(.*\)/bin/cppdom-config$|\1|'`
-
-   CPPDOM_CXXFLAGS=`CPPDOM_BASE_DIR=$found_cppdom_root $CPPDOM_CONFIG --cxxflags --basedir`
-   cppdom_lib_output=`CPPDOM_BASE_DIR=$found_cppdom_root $CPPDOM_CONFIG --libs --basedir`
-
-   changequote(<<, >>)
-   # XXX: These sed(1) expressions could be improved.
-   CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/( |^)-l[^ ]*//g'`
-   CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/( |^)-L[^ ]*//g'`
-   changequote([, ])
-
-   cppdom_version=`$CPPDOM_CONFIG --version`
-fi
+CPPDOM_CXXFLAGS=`$FLAGPOLL cppdom --cflags`
+CPPDOM_LDFLAGS=`$FLAGPOLL cppdom --libs-only-L`
+CPPDOM_LIBS=`$FLAGPOLL cppdom --libs-only-l`
+CPPDOM_VERSION=`$FLAGPOLL cppdom --modversion`
 
 # Verify that we have a new enough version of CppDOM.
-if test "x$PLATFORM" = "xDarwin" -a "x$ISA" = "xuniversal" ; then
-   min_cppdom_version='0.6.4'
-else
-   min_cppdom_version='0.3.1'
-fi
+min_cppdom_version='0.6.5'
 
 AC_MSG_CHECKING([whether CppDOM version is >= $min_cppdom_version])
-DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version],
-   [AC_MSG_RESULT([yes (version $cppdom_version)])],
-   [AC_MSG_RESULT([no (version $cppdom_version)])
+DPP_VERSION_CHECK([$CPPDOM_VERSION], [$min_cppdom_version],
+   [AC_MSG_RESULT([yes (version $CPPDOM_VERSION)])],
+   [AC_MSG_RESULT([no (version $CPPDOM_VERSION)])
     AC_MSG_ERROR([*** CppDOM version $min_cppdom_version or newer is requried for VPR ***])])
 
 CXXFLAGS="$CPPDOM_CXXFLAGS $CXXFLAGS $STDFLAGS $ABI_FLAGS"
@@ -973,82 +949,46 @@ fi
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 VPR_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
+subsystem_cxxflags="$subsystem_includes"
+vpr_extra_cxxflags=''
+vpr_extra_include_dirs=''
+vpr_ldflags="-L\${prefix}/lib\${LIBBITSUF}"
+vpr_extra_ldflags="$EXTRA_LDFLAGS"
+vpr_libs="-l$vpr_lib_name"
+vpr_prof_libs="-l$vpr_prof_lib_name"
+
 # Information needed to generate vpr-config.
 case $SUBSYSTEM in
     SPROC)
-        subsystem_cxxflags="$subsystem_includes"
         subsystem_libs="$SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
-        vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
-        vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
-        vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
-        vpr_libs="-l$vpr_lib_name"
-        vpr_prof_libs="-l$vpr_prof_lib_name"
-        vpr_build_includes="-I\${vpr_build_inc_prefix}/include/boost/compatibility/cpp_c_headers"
+        # This is for the MIPSpro Compilers 7.3.
+        BOOST_INCLUDES="$BOOST_INCLUDES -I$BOOST_INCLUDE_DIR/boost/compatibility/cpp_c_headers"
         ;;
     POSIX)
-        subsystem_cxxflags="$subsystem_includes"
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
-
-        if test "x$PLATFORM" != "xDarwin" ; then
-            if test "x$GNU_LD" = "xyes" ; then
-                static_begin="-Wl,-Bstatic"
-                static_end="-Wl,-Bdynamic"
-            else
-                static_begin="-B static"
-                static_end="-B dynamic"
-            fi
-        fi
-
-        vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
-        vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
-        vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
-        vpr_libs="-l$vpr_lib_name"
-        vpr_prof_libs="-l$vpr_prof_lib_name"
         ;;
     NSPR)
-        if test "x$OS_TYPE" = "xWin32" ; then
-            subsystem_cxxflags="$subsystem_includes"
-            subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
-            vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
-            vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
-            vpr_extra_ldflags_compiler="/link $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
-            vpr_extra_ldflags_linker="$CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
-            vpr_libs="$vpr_lib_name.lib"
-            vpr_prof_libs="$vpr_prof_lib_name.lib"
-        else
-            subsystem_cxxflags="$subsystem_includes"
-            subsystem_libs="$NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
-            vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
-            vpr_ldflags_linker="$vpr_ldflags_compiler"
-            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
-            vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
-            vpr_libs="-l$vpr_lib_name"
-            vpr_prof_libs="-l$vpr_prof_lib_name"
+        vpr_extra_deps='nspr >= 4.6'
 
-            if test "x$PLATFORM" != "xDarwin" ; then
-                if test "x$GNU_LD" = "xyes" ; then
-                    static_begin="-Wl,-Bstatic"
-                    static_end="-Wl,-Bdynamic"
-                else
-                    static_begin="-B static"
-                    static_end="-B dynamic"
-                fi
-            fi
-        fi
+        subsystem_libs="$NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
         ;;
 esac
-if test "x$GLOBAL_BUILD" != "x" ; then
-   vpr_build_includes="$vpr_build_includes -I\${vpr_build_inc_prefix}/include"
-else
-   vpr_build_includes=""
-fi
 
-vpr_extra_cxxflags=''
-vpr_extra_include_dirs=''
+case $SUBSYSTEM in
+   POSIX|NSPR)
+      if test "x$PLATFORM" != "xDarwin" ; then
+         if test "x$GNU_LD" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+         else
+            static_begin="-B static"
+            static_end="-B dynamic"
+         fi
+      fi
+      ;;
+esac
 
 includedir="$includedir/$HEADER_VERSION"
 
@@ -1070,6 +1010,8 @@ AC_SUBST(HEADER_VERSION)
 AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(DATA_VERSION)
+
+AC_SUBST(CPPDOM_VERSION)
 
 AC_SUBST(SUBSYSTEM)
 AC_SUBST(SIMULATOR)
@@ -1101,21 +1043,21 @@ AC_SUBST(PLATFORM_SDK)
 AC_SUBST(target_cpu)
 AC_SUBST(ABI_LIST)
 
+AC_SUBST(BOOST_VERSION_DOT)
+AC_SUBST(BOOST_LIBDIR)
+AC_SUBST(boost_fs_name)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(vpr_cxxflags)
-AC_SUBST(vpr_ldflags_compiler)
-AC_SUBST(vpr_ldflags_linker)
+AC_SUBST(vpr_ldflags)
 AC_SUBST(vpr_libs)
 AC_SUBST(vpr_prof_libs)
 AC_SUBST(vpr_extra_cxxflags)
 AC_SUBST(vpr_extra_include_dirs)
-AC_SUBST(vpr_extra_ldflags_compiler)
-AC_SUBST(vpr_extra_ldflags_linker)
-AC_SUBST(vpr_extra_libs)
-AC_SUBST(vpr_build_includes)
+AC_SUBST(vpr_extra_ldflags)
+AC_SUBST(vpr_extra_deps)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -1124,6 +1066,8 @@ AC_SUBST(vpr_build_includes)
 VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
+   boost.fpc
+   boost_filesystem.fpc
    vpr.fpc
    Makefile
    Makefile.inc

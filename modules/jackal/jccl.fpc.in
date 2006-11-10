@@ -31,14 +31,12 @@ BUILD_JAVA = @BUILD_JAVA@
 jccl_extra_cxxflags = @jccl_extra_cxxflags@
 jccl_cxxflags = @jccl_cxxflags@
 includedir = @includedir@
-jccl_ldflags_linker = @jccl_ldflags_linker@
-jccl_ldflags_compiler = @jccl_ldflags_compiler@
+jccl_ldflags = @jccl_ldflags@
 jccl_prof_libs = @jccl_prof_libs@
 jccl_libs = @jccl_libs@
 jccl_extra_ldflags = @jccl_extra_ldflags@
 jccl_extra_libs = @jccl_extra_libs@
 
-libs = ${jccl_ldflags_linker} ${jccl_ldflags_compiler}
 extra_libs = ${jccl_extra_ldflags} ${jccl_extra_libs}
 
 static_begin = @static_begin@
@@ -51,21 +49,21 @@ Name: Juggler Configuration and Control Library
 Description: JCCL (pronounced "Jackal") provides a collection of configuration and performance monitoring tools for applications. Applications built with JCCL can easily access configuration information stored in XML-based files. JCCL configuration data is accessed using JCCL's multivariate type system. JCCL provides a Java-based GUI called VJ Control  for editing these configuration files. JCCL includes an additional tool (Java GUI and C++ classes) to monitor the performance of an application.
 URL: http://www.vrjuggler.org/jccl/
 Version: ${jccl_version}
-Provides: jccl
-Requires: vpr
+Provides: jccl JCCL
+Requires: vpr = @VPR_VERSION@
 Arch: ${ISA}
-Libs: ${libs} ${jccl_libs} ${extra_libs}
+Libs: ${jccl_ldflags} ${jccl_libs} ${extra_libs}
 Libs.private: 
 Cflags: ${jccl_cxxflags} ${jccl_extra_cxxflags} -I${includedir}
 
 ######################### Jackal Specific Flagpoll Variables ###################
 
 cxx_api_available: ${BUILD_CXX}
-libs: ${libs} ${jccl_libs}
+libs: ${jccl_ldflags} ${jccl_libs}
 extra_libs: ${extra_libs}
-static_libs: ${static_begin} ${libs} ${jccl_libs} ${static_end}
-profiled_libs: ${libs} ${jccl_prof_libs}
-profiled_static_libs: ${static_begin} ${libs} ${jccl_prof_libs} ${static_end}
+static_libs: ${static_begin} ${jccl_ldflags} ${jccl_libs} ${static_end}
+profiled_libs: ${jccl_ldflags} ${jccl_prof_libs}
+profiled_static_libs: ${static_begin} ${jccl_ldflags} ${jccl_prof_libs} ${static_end}
 
 java_api_available: ${BUILD_JAVA}
 jars: ${jccl_java_api_jars}

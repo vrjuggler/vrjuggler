@@ -100,23 +100,16 @@ SUBDIR=		TestCases
 # -----------------------------------------------------------------------------
 # Linking stuff.
 # -----------------------------------------------------------------------------
-BASIC_LIBS=	@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
-		@APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@	\
-		$(NULL)
-EXTRA_LIBS=	@APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@		\
-		@APP_EXTRA_LIBS_END@				\
-		$(CPPUNIT_LINK_FLAGS)		\
-		$(NULL)
+LIBS=		$(shell flagpoll vpr --libs) $(CPPUNIT_LINK_FLAGS)
 
 ifneq (@OS_TYPE@, Win32)
-EXTRA_LIBS+=	-lm
+LIBS+=	-lm
 endif
 
-$(APP): $(ALL_OBJS) $(VPR_BASE_DIR)/lib$(LIBBITSUF)/libvpr$(LIBRARY_VERSION).a
-	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(BASIC_LIBS)	\
-          $(EXTRA_LIBS)
+$(APP): $(ALL_OBJS)
+	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(LIBS)
 
-#$(APP_PROF): $(ALL_OBJS) $(VPR_BASE_DIR)/lib$(LIBBITSUF)/libvpr_p.a
+#$(APP_PROF): $(ALL_OBJS)
 #	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(BASIC_LIBS)	\
 #          $(EXTRA_LIBS)
 

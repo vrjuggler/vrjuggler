@@ -31,23 +31,24 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
 [
     dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(tweek-meta-file,
-                [  --with-tweek-meta-file=<PATH>     Flagpoll metadata file
-                          for VPR (optional)            [No default]],
+                [  --with-tweek-meta-file=<PATH>
+                          Flagpoll metadata file for
+                          Tweek (optional)                [No default]],
                 [tweek_meta_file="$withval"], [tweek_meta_file=""])
 
     dnl See if the user specified where to find the Tweek meta file. If not,
     dnl take a guess.
     if test "x$tweek_meta_file" != "x" ; then
-        tweek_flagpoll_args="--from-file=$tweek_meta_file"
+        tweek_meta_dir=`dirname $tweek_meta_file`
+        tweek_flagpoll_args="--extra-paths=$tweek_meta_dir tweek --from-file=$tweek_meta_file"
     elif test -f "$instlinks/share/flagpoll/tweek.fpc" ; then
-        tweek_flagpoll_args="--from-file=$instlinks/share/flagpoll/tweek.fpc"
+        tweek_meta_dir="$instlinks/share/flagpoll"
+        tweek_flagpoll_args="--extra-paths=$tweek_meta_dir tweek --from-file=$tweek_meta_dir/tweek.fpc"
     else
-        tweek_flagpoll_args=""
+        tweek_flagpoll_args="tweek"
     fi
 
-    tweek_flagpoll_args="tweek $tweek_flagpoll_args --no-deps"
-      
-    AM_PATH_FLAGPOLL([0.7.0], ,
+    AM_PATH_FLAGPOLL([0.8.1], ,
                      [AC_MSG_ERROR(*** Flagpoll required for Tweek flags ***)])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
@@ -76,7 +77,7 @@ AC_DEFUN([_TWEEK_VERSION_CHECK],
    else
       TWEEK_VERSION=`$FLAGPOLL $tweek_flagpoll_args --modversion`
 
-      min_tweek_version=ifelse([$1], , 0.0.1, $1)
+      min_tweek_version=ifelse([$1], ,0.0.1,[$1])
       DPP_VERSION_CHECK_MSG_NO_CACHE([Tweek], [$TWEEK_VERSION],
                                      [$min_tweek_version], [$2], [$3])
    fi
@@ -114,35 +115,41 @@ AC_DEFUN([TWEEK_PATH_CXX],
    if test "x$FLAGPOLL" = "xno" ; then
       ifelse([$3], , :, [$3])
    else
-      AC_MSG_CHECKING([whether Tweek C++ API is available])
-      has_cxx=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-api-available`
-
-      if test "x$has_cxx" = "xY" ; then
-         AC_MSG_RESULT([yes])
-         if test "x$TWEEK_VERSION" = "x" ; then
-            _TWEEK_VERSION_CHECK($1, [tweek_version_okay='yes'],
-                                 [tweek_version_okay='no'
-                                  $3])
-         fi
-
-         if test "x$tweek_version_okay" = "xyes" ; then
-            TWEEK_CXXFLAGS=`$FLAGPOLL $tweek_flagpoll_args --cflags`
-            TWEEK_LIBS=`$FLAGPOLL $tweek_flagpoll_args --get-libs`
-            TWEEK_EXTRA_LIBS=`$FLAGPOLL $tweek_flagpoll_args --get-extra-libs`
-            TWEEK_PROF_LIBS=`$FLAGPOLL $tweek_flagpoll_args --get-profiled_libs`
-            TWEEK_LIBS_STATIC=`$FLAGPOLL $tweek_flagpoll_args --get-static-libs`
-            TWEEK_PROF_LIBS_STATIC_LD=`$FLAGPOLL $tweek_flagpoll_args --get-profiled-static-libs`
-
-            TWEEK_CXX_IDL=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idl`
-            TWEEK_CXX_IDL_OPTS=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlflags`
-            TWEEK_CXX_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlgendir`
-            TWEEK_CXX_IDL_INCFLAG=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlincflag`
-
-            ifelse([$2], , :, [$2])
-         fi
-      else
-         AC_MSG_RESULT([no])
+      if ! (eval $FLAGPOLL $tweek_flagpoll_args --modversion >/dev/null 2>&1)
+      then
+         AC_MSG_ERROR([*** Flagpoll has no valid Tweek configuration ***])
          ifelse([$3], , :, [$3])
+      else
+         AC_MSG_CHECKING([whether Tweek C++ API is available])
+         has_cxx=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-api-available`
+
+         if test "x$has_cxx" = "xY" ; then
+            AC_MSG_RESULT([yes])
+            if test "x$TWEEK_VERSION" = "x" ; then
+               _TWEEK_VERSION_CHECK($1, [tweek_version_okay='yes'],
+                                    [tweek_version_okay='no'
+                                     $3])
+            fi
+
+            if test "x$tweek_version_okay" = "xyes" ; then
+               TWEEK_CXXFLAGS=`$FLAGPOLL $tweek_flagpoll_args --cflags`
+               TWEEK_LIBS=`$FLAGPOLL $tweek_flagpoll_args --libs`
+               TWEEK_EXTRA_LIBS=`$FLAGPOLL $tweek_flagpoll_args --get-extra-libs`
+               TWEEK_PROF_LIBS=`$FLAGPOLL $tweek_flagpoll_args --get-profiled_libs`
+               TWEEK_LIBS_STATIC=`$FLAGPOLL $tweek_flagpoll_args --get-static-libs`
+               TWEEK_PROF_LIBS_STATIC_LD=`$FLAGPOLL $tweek_flagpoll_args --get-profiled-static-libs`
+
+               TWEEK_CXX_IDL=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idl`
+               TWEEK_CXX_IDL_OPTS=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlflags`
+               TWEEK_CXX_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlgendir`
+               TWEEK_CXX_IDL_INCFLAG=`$FLAGPOLL $tweek_flagpoll_args --get-cxx-idlincflag`
+
+               ifelse([$2], , :, [$2])
+            fi
+         else
+            AC_MSG_RESULT([no])
+            ifelse([$3], , :, [$3])
+         fi
       fi
    fi
 
@@ -185,30 +192,36 @@ AC_DEFUN([TWEEK_PATH_JAVA],
    if test "x$FLAGPOLL" = "xno" ; then
       ifelse([$3], , :, [$3])
    else
-      AC_MSG_CHECKING([whether Tweek Java API is available])
-      has_java=`$FLAGPOLL $tweek_flagpoll_args --get-java-api-available`
-
-      if test "x$has_java" = "xY" ; then
-         AC_MSG_RESULT([yes])
-         if test "x$TWEEK_VERSION" = "x" ; then
-            _TWEEK_VERSION_CHECK($1, [tweek_version_okay='yes'],
-                                 [tweek_version_okay='no'
-                                  $3])
-         fi
-
-         if test "x$tweek_version_okay" = "xyes" ; then
-            TWEEK_JAVA_IDL=`$FLAGPOLL $tweek_flagpoll_args --get-java-idl`
-            TWEEK_JAVA_IDL_OPTS=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlflags`
-            TWEEK_JAVA_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlgendir`
-            TWEEK_JAVA_IDL_INCFLAG=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlincflag`
-            TWEEK_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-jars`
-            TWEEK_EXT_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-ext-jars`
-
-            ifelse([$2], , :, [$2])
-         fi
-      else
-         AC_MSG_RESULT([no])
+      if ! (eval $FLAGPOLL $tweek_flagpoll_args --modversion >/dev/null 2>&1)
+      then
+         AC_MSG_ERROR([*** Flagpoll has no valid Tweek configuration ***])
          ifelse([$3], , :, [$3])
+      else
+         AC_MSG_CHECKING([whether Tweek Java API is available])
+         has_java=`$FLAGPOLL $tweek_flagpoll_args --get-java-api-available`
+
+         if test "x$has_java" = "xY" ; then
+            AC_MSG_RESULT([yes])
+            if test "x$TWEEK_VERSION" = "x" ; then
+               _TWEEK_VERSION_CHECK($1, [tweek_version_okay='yes'],
+                                    [tweek_version_okay='no'
+                                     $3])
+            fi
+
+            if test "x$tweek_version_okay" = "xyes" ; then
+               TWEEK_JAVA_IDL=`$FLAGPOLL $tweek_flagpoll_args --get-java-idl`
+               TWEEK_JAVA_IDL_OPTS=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlflags`
+               TWEEK_JAVA_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlgendir`
+               TWEEK_JAVA_IDL_INCFLAG=`$FLAGPOLL $tweek_flagpoll_args --get-java-idlincflag`
+               TWEEK_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-jars`
+               TWEEK_EXT_JARS=`$FLAGPOLL $tweek_flagpoll_args --get-ext-jars`
+
+               ifelse([$2], , :, [$2])
+            fi
+         else
+            AC_MSG_RESULT([no])
+            ifelse([$3], , :, [$3])
+         fi
       fi
    fi
 

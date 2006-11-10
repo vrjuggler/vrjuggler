@@ -44,23 +44,24 @@ AC_DEFUN([VPR_PATH],
 
     dnl Get the cflags and libraries from flagpoll
     AC_ARG_WITH(vpr-meta-file,
-                [  --with-vpr-meta-file=<PATH>       Flagpoll metadata file
-                          for VPR (optional)            [No default]],
+                [  --with-vpr-meta-file=<PATH>
+                          Flagpoll metadata file for VPR
+                          (optional)                      [No default]],
                 [vpr_meta_file="$withval"], [vpr_meta_file=""])
 
     dnl See if the user specified where to find the VPR meta file. If not,
     dnl take a guess.
     if test "x$vpr_meta_file" != "x" ; then
-        vpr_flagpoll_args="--from-file=$vpr_meta_file"
+        vpr_meta_dir=`dirname $vpr_meta_file`
+        vpr_flagpoll_args="--extra-paths=$vpr_meta_dir vpr --from-file=$vpr_meta_file"
     elif test -f "$instlinks/share/flagpoll/vpr.fpc" ; then
-        vpr_flagpoll_args="--from-file=$instlinks/share/flagpoll/vpr.fpc"
+        vpr_meta_dir="$instlinks/share/flagpoll"
+        vpr_flagpoll_args="--extra-paths=$vpr_meta_dir vpr --from-file=$vpr_meta_dir/vpr.fpc"
     else
-        vpr_flagpoll_args=""
+        vpr_flagpoll_args="vpr"
     fi
 
-    vpr_flagpoll_args="vpr $vpr_flagpoll_args --no-deps"
-
-    AM_PATH_FLAGPOLL([0.7.0], ,
+    AM_PATH_FLAGPOLL([0.8.1], ,
                      [AC_MSG_ERROR(*** Flagpoll required for VPR flags ***)])
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
 
@@ -73,19 +74,24 @@ AC_DEFUN([VPR_PATH],
     if test "x$FLAGPOLL" = "xno" ; then
         no_vpr=yes
     else
-        VPR_CXXFLAGS=`$FLAGPOLL $vpr_flagpoll_args --cflags`
-        VPR_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-libs`
-        VPR_PROF_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-profiled-libs`
-        VPR_LIBS_STATIC=`$FLAGPOLL $vpr_flagpoll_args --get-static-libs`
-        VPR_PROF_LIBS_STATIC=`$FLAGPOLL $vpr_flagpoll_args --get-profiled-static-libs`
-        VPR_EXTRA_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-extra-libs`
-        VPR_BUILD_INCLUDES=`$FLAGPOLL $vpr_flagpoll_args --get-build-includes`
+        if ! (eval $FLAGPOLL $vpr_flagpoll_args --modversion >/dev/null 2>&1)
+        then
+           AC_MSG_WARN([*** Flagpoll has no valid VPR configuration ***])
+           no_vpr=yes
+        else
+           VPR_CXXFLAGS=`$FLAGPOLL $vpr_flagpoll_args --cflags`
+           VPR_LIBS=`$FLAGPOLL $vpr_flagpoll_args --libs`
+           VPR_PROF_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-profiled-libs`
+           VPR_LIBS_STATIC=`$FLAGPOLL $vpr_flagpoll_args --get-static-libs`
+           VPR_PROF_LIBS_STATIC=`$FLAGPOLL $vpr_flagpoll_args --get-profiled-static-libs`
+           VPR_EXTRA_LIBS=`$FLAGPOLL $vpr_flagpoll_args --get-extra-libs`
 
-        VPR_SUBSYSTEM=`$FLAGPOLL $vpr_flagpoll_args --get-subsystem`
-        VPR_VERSION=`$FLAGPOLL $vpr_flagpoll_args --modversion`
+           VPR_SUBSYSTEM=`$FLAGPOLL $vpr_flagpoll_args --get-subsystem`
+           VPR_VERSION=`$FLAGPOLL $vpr_flagpoll_args --modversion`
 
-        DPP_VERSION_CHECK_MSG_NO_CACHE([VPR], [$VPR_VERSION],
-                                       [$min_vpr_version], [$2], [$3])
+           DPP_VERSION_CHECK_MSG_NO_CACHE([VPR], [$VPR_VERSION],
+                                          [$min_vpr_version], [$2], [$3])
+        fi
     fi
 
     if test "x$no_vpr" != x ; then

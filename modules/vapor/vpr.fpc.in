@@ -44,9 +44,7 @@ static_end = @static_end@
 
 vpr_cxxflags = @vpr_cxxflags@
 
-vpr_ldflags_compiler = @vpr_ldflags_compiler@
-vpr_ldflags_linker = @vpr_ldflags_linker@
-
+vpr_ldflags = @vpr_ldflags@
 vpr_libs =  @vpr_libs@
 vpr_prof_libs = @vpr_prof_libs@
 
@@ -55,13 +53,10 @@ vpr_extra_include_dirs = @vpr_extra_include_dirs@
 vpr_build_inc_prefix = VPRBUILDINCPREFIX
 vpr_build_includes = @vpr_build_includes@
 
-vpr_extra_ldflags_compiler = @vpr_extra_ldflags_compiler@
-vpr_extra_ldflags_linker = @vpr_extra_ldflags_linker@
+vpr_extra_ldflags = @vpr_extra_ldflags@
 
-vpr_extra_libs = @vpr_extra_libs@
-
-libs = ${vpr_ldflags_linker} ${vpr_ldflags_compiler}
-extra_libs = ${vpr_extra_ldflags_linker} ${vpr_extra_ldflags_compiler} ${vpr_extra_libs} ${subsystem_libs}
+extra_libs = ${vpr_extra_ldflags} ${subsystem_libs}
+extra_deps = @vpr_extra_deps@
 
 ########################### Public Variables ############################
 
@@ -70,11 +65,11 @@ Name: The VR Juggler Portable Runtime (VPR)
 Description: The VR Juggler Portable Runtime (VPR) provides an object-oriented operating system abstraction layer that allows for easy development of cross-platform C++ applications.
 URL: http://www.vrjuggler.org/vapor/
 Version: ${vpr_version}
-Provides: vpr
-Requires: 
+Provides: vpr VPR
+Requires: Boost.Filesystem = @BOOST_VERSION_DOT@ boost >= @BOOST_VERSION_DOT@ cppdom = @CPPDOM_VERSION@ ${extra_deps}
 Arch: ${ISA}
 Cflags: ${vpr_cxxflags} ${vpr_extra_cxxflags} ${subsystem_cxxflags} -I${includedir} ${ABI_FLAGS}
-Libs: ${libs} ${vpr_libs} ${extra_libs}
+Libs: ${vpr_ldflags} ${vpr_libs} ${extra_libs}
 Libs.private: 
 
 ######################### Vapor Specific Flagpoll Variables ###################
@@ -85,6 +80,3 @@ extra_libs : ${extra_libs}
 static_libs: ${static_begin} ${libs} ${vpr_libs} ${static_end}
 profiled_libs: ${libs} ${vpr_prof_libs}
 profiled_static_libs: ${static_begin} ${libs} ${vpr_prof_libs} ${static_end}
-
-######################## HELPER FOR GLOBAL BUILD ##############################
-build_includes: ${vpr_build_includes}

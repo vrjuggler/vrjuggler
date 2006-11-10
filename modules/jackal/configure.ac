@@ -174,7 +174,8 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.35], BUILD_CXX='Y', 
+MIN_VPR_VERSION='1.1.35'
+VPR_PATH([$MIN_VPR_VERSION], BUILD_CXX='Y', 
          [AC_MSG_WARN([*** VPR required for JCCL ***])
           BUILD_CXX='N'])
 
@@ -233,9 +234,9 @@ fi
 #   CXXFLAGS="-fhonor-std $CXXFLAGS"
 #fi
 
-CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $VPR_BUILD_INCLUDES"
+CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
-DEPEND_FLAGS="$VPR_CXXFLAGS $VPR_BUILD_INCLUDES"
+DEPEND_FLAGS="$VPR_CXXFLAGS"
 jccl_cxxflags="$STD_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
@@ -284,12 +285,12 @@ UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 # $jccl_extra_libs only lists the external (non-Juggler) libraries needed by
 # JCCL.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
     jccl_extra_libs="$LDFLAGS $LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $VPR_EXTRA_LIBS"
-    APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS $LIBS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS"
+    APP_EXTRA_PROF_LIBS="$LDFLAGS $VPR_PROF_LIBS $LIBS"
     jccl_extra_libs="$LDFLAGS $LIBS"
 fi
 
@@ -359,30 +360,18 @@ fi
 data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 JCCL_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
-# Information needed to generate jccl-config.
-case $OS_TYPE in
-    UNIX)
-        if test "x$GNU_LD" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
-        fi
+# Information needed to generate jccl.fpc.
+if test "x$GNU_LD" = "xyes" ; then
+   static_begin="-Wl,-Bstatic"
+   static_end="-Wl,-Bdynamic"
+else
+   static_begin="-B static"
+   static_end="-B dynamic"
+fi
 
-        jccl_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
-	jccl_ldflags_linker="$jccl_ldflags_compiler"
-        jccl_libs="-l$jccl_lib_name"
-        jccl_prof_libs="-l$jccl_prof_lib_name"
-        ;;
-    Win32)
-        jccl_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
-        jccl_ldflags_linker="/libpath:\$prefix/lib/debug"
-        jccl_libs="$jccl_lib_name.lib"
-        jccl_prof_libs="$jccl_prof_lib_name.lib"
-        ;;
-esac
-
+jccl_ldflags="-L\$prefix/lib\$LIBBITSUF"
+jccl_libs="-l$jccl_lib_name"
+jccl_prof_libs="-l$jccl_prof_lib_name"
 jccl_extra_cxxflags=''
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -393,7 +382,7 @@ elif test "x$GCC" = "xyes" ; then
     jccl64_flags='-m64'
 fi
 
-jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
+jccl_extra_ldflags="$EXTRA_LDFLAGS"
 
 jars='TableLayout.jar'
 beans='jccl_config.jar jccl_editors.jar jccl_rtrc.jar'
@@ -433,6 +422,8 @@ AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(DATA_VERSION)
 
+AC_SUBST(MIN_VPR_VERSION)
+
 AC_SUBST(BUILD_CXX)
 
 AC_SUBST(ANT)
@@ -458,8 +449,7 @@ AC_SUBST(APP_EXTRA_LIBS)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(jccl_cxxflags)
-AC_SUBST(jccl_ldflags_compiler)
-AC_SUBST(jccl_ldflags_linker)
+AC_SUBST(jccl_ldflags)
 AC_SUBST(jccl_libs)
 AC_SUBST(jccl_prof_libs)
 AC_SUBST(jccl_extra_cxxflags)

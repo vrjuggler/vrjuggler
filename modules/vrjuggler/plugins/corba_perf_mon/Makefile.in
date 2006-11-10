@@ -137,7 +137,7 @@ _LOCAL_CLEAN=	_clean
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/plugin.defs.mk
 
-#PRE_DSO_PLUGIN_DEPS=	@TWEEK_PLUGIN_DEPS@
+PRE_DSO_PLUGIN_DEPS=	@TWEEK_PLUGIN_DEPS@
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
    CLEAN_FILES+=	$(IDL_CXX_FILES)
