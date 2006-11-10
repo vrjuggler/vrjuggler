@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          alut.m4,v
-dnl Date modified: 2006/11/02 17:31:43
-dnl Version:       1.1
+dnl Date modified: 2006/11/09 22:12:22
+dnl Version:       1.2
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -42,9 +42,12 @@ dnl     ALUT_ROOT     - The ALUT installation directory.
 dnl     LIBALUT       - The list of libraries to link for ALUT appliations.
 dnl     ALUT_INCLUDES - Extra include path for the ALUT header directory.
 dnl     ALUT_LDFLAGS  - Extra linker flags for the ALUT library directory.
+dnl     ALUT_LIBDIR   - The directory containing the ALUT library. On Mac OS X,
+dnl                     this is the directory containing the OpenAL framework
+dnl                     (since OpenAL and ALUT are not separated).
 dnl ===========================================================================
 
-dnl alut.m4,v 1.1 2006/11/02 17:31:43 patrickh Exp
+dnl alut.m4,v 1.2 2006/11/09 22:12:22 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has ALUT installed.  This adds the
@@ -115,6 +118,7 @@ AC_DEFUN([DPP_HAVE_ALUT],
          dnl is available, then ALUT is available.
          if test "x$PLATFORM" = "xDarwin" ; then
             ALUT="$OPENAL"
+            ALUT_LIBDIR="$AL_LIBDIR"
             dpp_have_alut="$dpp_have_openal"
          dnl Other platforms.
          else
@@ -124,28 +128,38 @@ AC_DEFUN([DPP_HAVE_ALUT],
                libdirs="lib"
             fi
 
+            LIBS="-lalut $DYN_LOAD_LIB $LIBOPENAL $LIBS"
+
             DPP_LANG_SAVE
             DPP_LANG_C
 
             for l in $libdirs ; do
+               cur_alut_libdir="$ALUT_ROOT/$l"
+
                dnl The pthreads-related macros will set only one of
                dnl $PTHREAD_ARG or $PTHREAD_LIB, so it's safe (and simpler)
                dnl for us to use both here.
-               LDFLAGS="-L$ALUT_ROOT/$l $dpp_saveLDFLAGS $AL_LDFLAGS $PTHREAD_ARG $PTHREAD_LIB"
+               LDFLAGS="-L$cur_alut_libdir $dpp_saveLDFLAGS $AL_LDFLAGS $PTHREAD_ARG $PTHREAD_LIB"
 
-               AC_CHECK_LIB([alut], [alutInit],
-                  [AC_CHECK_HEADER([AL/alut.h], [dpp_have_alut='yes'],
-                     [dpp_have_alut='no'])],
-                  [dpp_have_alut='no'],
-                  [$DYN_LOAD_LIB $LIBOPENAL])
+               AC_MSG_CHECKING([for alutInit in -lalut in $cur_alut_libdir])
+               AC_TRY_LINK([#include <AL/alut.h>], [alutInit(0, 0);],
+                           [dpp_have_alut='yes'], [dpp_have_alut='no'])
+               AC_MSG_RESULT([$dpp_have_alut])
 
                if test "x$dpp_have_alut" = "xyes" ; then
+                  ALUT_LIBDIR="$cur_alut_libdir"
                   break
                fi
             done
 
             DPP_LANG_RESTORE
          fi
+
+         dnl Restore all the variables now that we are done testing.
+         CFLAGS="$dpp_save_CFLAGS"
+         CPPFLAGS="$dpp_save_CPPFLAGS"
+         LDFLAGS="$dpp_save_LDFLAGS"
+         LIBS="$dpp_save_LIBS"
 
          dnl Success.
          if test "x$dpp_have_alut" = "xyes" ; then
@@ -173,12 +187,6 @@ AC_DEFUN([DPP_HAVE_ALUT],
 
             ALUT='yes'
          fi
-
-         dnl Restore all the variables now that we are done testing.
-         CFLAGS="$dpp_save_CFLAGS"
-         CPPFLAGS="$dpp_save_CPPFLAGS"
-         LDFLAGS="$dpp_save_LDFLAGS"
-         LIBS="$dpp_save_LIBS"
       fi
    fi
 
@@ -188,4 +196,5 @@ AC_DEFUN([DPP_HAVE_ALUT],
    AC_SUBST(LIBALUT)
    AC_SUBST(ALUT_INCLUDES)
    AC_SUBST(ALUT_LDFLAGS)
+   AC_SUBST(ALUT_LIBDIR)
 ])

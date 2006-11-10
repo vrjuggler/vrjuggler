@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          nspr.m4,v
-dnl Date modified: 2005/03/20 17:17:12
-dnl Version:       1.40
+dnl Date modified: 2006/11/09 22:12:22
+dnl Version:       1.41
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -59,6 +59,7 @@ dnl                             (safe for use with the msvccc shell script).
 dnl     NSPR_LDFLAGS          - The linker option for finding the NSPR
 dnl                             libraries (safe for use with the msvccc shell
 dnl                             script).
+dnl     NSPR_LIBDIR           - The directory containing the NSPR libraries.
 dnl     NSPR_LIB_MSVCCC       - The linker option for the basic NSPR library
 dnl                             for use with the msvccc shell script.
 dnl     PLC_LIB_MSVCCC        - The linker option for the NSPR PLC library
@@ -81,7 +82,7 @@ dnl     PLC_LIB_STATIC        - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC       - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.40 2005/03/20 17:17:12 patrickh Exp
+dnl nspr.m4,v 1.41 2006/11/09 22:12:22 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -148,8 +149,8 @@ AC_DEFUN([DPP_HAVE_NSPR],
                _with_nspr_lib="$withval", _with_nspr_lib="$NSPR_ROOT/lib")
 
    if test "x$NSPR_ROOT" != "xno" ; then
-      AC_LANG_SAVE
-      AC_LANG_C
+      DPP_LANG_SAVE
+      DPP_LANG_C
 
       dnl Add the user-specified NSPR installation directory to the
       dnl preprocessor arguments.  Ensure that /usr/include is not included
@@ -175,14 +176,22 @@ AC_DEFUN([DPP_HAVE_NSPR],
       then
          dnl No NSPR library directory, so append "/lib" to $NSPR_ROOT.
          if test "x${_with_nspr_lib}" = "x/usr/lib" ; then
-            dpp_nspr_libdir="$NSPR_ROOT/lib"
+            if test "lib$LIBBITSUF" != "lib" ; then
+               libdirs="$NSPR_ROOT/lib$LIBBITSUF $NSPR_ROOT/lib"
+            else
+               libdirs="$NSPR_ROOT/lib"
+            fi
          dnl We have a NSPR library directory, so we'll use it and hope for
          dnl the best.
          else
-            dpp_nspr_libdir="${_with_nspr_lib}"
+            libdirs="${_with_nspr_lib}"
          fi
       else
-         dpp_nspr_libdir="$NSPR_ROOT/lib"
+         if test "lib$LIBBITSUF" != "lib" ; then
+            libdirs="$NSPR_ROOT/lib$LIBBITSUF $NSPR_ROOT/lib"
+         else
+            libdirs="$NSPR_ROOT/lib"
+         fi
       fi
 
       dnl Check the NSPR version if a version number was given.
@@ -197,48 +206,70 @@ AC_DEFUN([DPP_HAVE_NSPR],
       dpp_save_LIBS="$LIBS"
 
       CPPFLAGS="$CPPFLAGS -I$dpp_nspr_incdir"
-      LDFLAGS="$PTHREAD_ARG -L$dpp_nspr_libdir $LDFLAGS"
+
+      AC_CHECK_HEADERS([nspr.h nspr/nspr.h])
 
       if test "x$dpp_os_type" = "xWin32" ; then
          NSPR_LIB_NAME_PREFIX='lib'
       fi
 
+      LIBS="$PTHREAD_LIB $SEM_LIB"
+
+      libname="$NSPR_LIB_NAME_PREFIXnspr4"
+
+      for l in libdirs ; do
+         cur_nspr_libdir="$l"
+         LDFLAGS="$PTHREAD_ARG -L$cur_nspr_libdir $dpp_save_LDFLAGS"
+
+         AC_MSG_CHECKING([for PR_Initialized in $libname in $cur_nspr_libdir])
+         AC_TRY_LINK([
+#if defined(HAVE_NSPR_H)
+#include <nspr.h>
+#else
+#include <nspr/nspr.h>
+#endif
+],
+            [PR_Initialized();], [dpp_have_nspr='yes'], [dpp_have_nspr='no'])
+
+         if test "x$dpp_have_nspr" = "xyes" ; then
+            NSPR_LIBDIR="$cur_nspr_libdir"
+            break
+         fi
+      done
+
+      DPP_LANG_RESTORE
+
       dpp_nspr_lib="${NSPR_LIB_NAME_PREFIX}nspr$NSPR_VER"
       dpp_plc_lib="${NSPR_LIB_NAME_PREFIX}plc$NSPR_VER"
       dpp_plds_lib="${NSPR_LIB_NAME_PREFIX}plds$NSPR_VER"
-
-      AC_CHECK_LIB([$dpp_nspr_lib], [PR_CreateThread],
-                   [AC_CHECK_HEADER([nspr.h],
-                      [dpp_nspr_inc="$dpp_nspr_incdir"],
-                      [AC_CHECK_HEADER([nspr/nspr.h],
-                         [dpp_nspr_inc="$dpp_nspr_incdir/nspr"], $3)])],
-                   $3, [$PTHREAD_LIB $SEM_LIB])
 
       CPPFLAGS="$dpp_save_CPPFLAGS"
       LDFLAGS="$dpp_save_LDFLAGS"
       LIBS="$dpp_save_LIBS"
 
-      AC_LANG_RESTORE
+      if test "x$dpp_have_nspr" = "xyes" ; then
+         NSPR_INCLUDES="-I$dpp_include_path"
+         NSPR_LIB="-l$dpp_nspr_lib"
+         PLC_LIB="-l$dpp_plc_lib"
+         PLDS_LIB="-l$dpp_plds_lib"
+         NSPR_LDFLAGS="-L$dpp_nspr_libdir"
 
-      NSPR_INCLUDES="-I$dpp_nspr_inc"
-      NSPR_LIB="-l$dpp_nspr_lib"
-      PLC_LIB="-l$dpp_plc_lib"
-      PLDS_LIB="-l$dpp_plds_lib"
-      NSPR_LDFLAGS="-L$dpp_nspr_libdir"
+         NSPR_LIB_MSVCCC="-l$dpp_nspr_lib"
+         PLC_LIB_MSVCCC="-l$dpp_plc_lib"
+         PLDS_LIB_MSVCCC="-l$dpp_plds_lib"
+         NSPR_LDFLAGS_MSVCCC="-L$dpp_nspr_libdir"
 
-      NSPR_LIB_MSVCCC="-l$dpp_nspr_lib"
-      PLC_LIB_MSVCCC="-l$dpp_plc_lib"
-      PLDS_LIB_MSVCCC="-l$dpp_plds_lib"
-      NSPR_LDFLAGS_MSVCCC="-L$dpp_nspr_libdir"
+         NSPR_LIB_LINK_EXE="$dpp_nspr_lib.lib"
+         PLC_LIB_LINK_EXE="$dpp_plc_lib.lib"
+         PLDS_LIB_LINK_EXE="$dpp_plds_lib.lib"
+         NSPR_LDFLAGS_LINK_EXE="/libpath:\"$dpp_nspr_libdir\""
 
-      NSPR_LIB_LINK_EXE="$dpp_nspr_lib.lib"
-      PLC_LIB_LINK_EXE="$dpp_plc_lib.lib"
-      PLDS_LIB_LINK_EXE="$dpp_plds_lib.lib"
-      NSPR_LDFLAGS_LINK_EXE="/libpath:\"$dpp_nspr_libdir\""
-
-      NSPR_LIB_STATIC="\$(NSPR_ROOT)/lib/libnspr$NSPR_VER.a"
-      PLC_LIB_STATIC="\$(NSPR_ROOT)/lib/libplc$NSPR_VER.a"
-      PLDS_LIB_STATIC="\$(NSPR_ROOT)/lib/libplds$NSPR_VER.a"
+         NSPR_LIB_STATIC="\$(NSPR_ROOT)/lib/libnspr$NSPR_VER.a"
+         PLC_LIB_STATIC="\$(NSPR_ROOT)/lib/libplc$NSPR_VER.a"
+         PLDS_LIB_STATIC="\$(NSPR_ROOT)/lib/libplds$NSPR_VER.a"
+      else
+         ifelse([$3], , :, [$3])
+      fi
    fi
 
    dnl -----------------------------------------------------------------------
@@ -248,6 +279,7 @@ AC_DEFUN([DPP_HAVE_NSPR],
    AC_SUBST(NSPR_LIB_STATIC)
    AC_SUBST(PLC_LIB_STATIC)
    AC_SUBST(PLDS_LIB_STATIC)
+   AC_SUBST(NSPR_LIBDIR)
 ])
 
 dnl ---------------------------------------------------------------------------

@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          glut.m4,v
-dnl Date modified: 2005/01/08 22:44:41
-dnl Version:       1.12
+dnl Date modified: 2006/11/09 22:12:22
+dnl Version:       1.15
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -40,9 +40,12 @@ dnl     GLUT_ROOT     - The GLUT installation directory.
 dnl     LIBGLUT       - The list of libraries to link for GLUT appliations.
 dnl     GLUT_INCLUDES - Extra include path for the GLUT header directory.
 dnl     GLUT_LDFLAGS  - Extra linker flags for the GLUT library directory.
+dnl     GLUT_LIBDIR   - The directory containing the GLUT library. On Mac OS X,
+dnl                     this is the directory containing the GLUT framework
+dnl                     directory.
 dnl ===========================================================================
 
-dnl glut.m4,v 1.12 2005/01/08 22:44:41 patrickh Exp
+dnl glut.m4,v 1.15 2006/11/09 22:12:22 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has GLUT installed.  This adds the
@@ -96,34 +99,84 @@ AC_DEFUN([DPP_HAVE_GLUT],
       if test "x$dpp_os_type" = "xWin32" ; then
          AC_MSG_WARN([Assuming that GLUT is available in a standard location])
          dpp_have_glut='yes'
-         ifelse([$3], , :, [$3])
+         ifelse([$2], , :, [$2])
+      elif test "x$PLATFORM" = "xDarwin" ; then
+         DPP_LANG_SAVE
+         DPP_LANG_C
+
+         CPPFLAGS="-F$GLUT_ROOT $CPPFLAGS"
+         LDFLAGS="-F$GLUT_ROOT $LDFLAGS"
+         LIBS="$LIBS -framework GLUT"
+
+         AC_CACHE_CHECK([for glutMainLoop in GLUT framework],
+                        [dpp_cv_glutMainLoop_glut_lib],
+                        [AC_TRY_LINK([#include <GLUT/glut.h>],
+                                     [glutMainLoop();],
+                                     [dpp_cv_glutMainLoop_lib='yes'],
+                                     [dpp_cv_glutMainLoop_lib='no'])])
+
+         DPP_LANG_RESTORE
+
+         dnl Restore all the variables now that we are done testing.
+         CFLAGS="$dpp_save_CFLAGS"
+         CPPFLAGS="$dpp_save_CPPFLAGS"
+         LDFLAGS="$dpp_save_LDFLAGS"
+         LIBS="$dpp_save_LIBS"
+
+         dnl Success.
+         if test "x$dpp_cv_glutMainLoop_lib" = "xyes" ; then
+            dpp_have_glut='yes'
+            GLUT_LIBDIR="$GLUT_ROOT"
+            ifelse([$2], , :, [$2])
+         dnl Failure.
+         else
+            dpp_have_glut='no'
+            ifelse([$3], , :, [$3])
+         fi
       else
          dpp_save_LIBS="$LIBS"
          LIBS="$LIBS -lglut $LIBOPENGL -lm"
 
-         AC_LANG_SAVE
-         AC_LANG_C
+         if test "lib$LIBBITSUF" != "lib" ; then
+            libdirs="lib$LIBBITSUF lib"
+         else
+            libdirs="lib"
+         fi
 
-         dnl Check the cache in case this test was run previously and if
-         dnl not, compile the given code and try to link it against the GL
-         dnl library.  We don't need to test for the existence of GL/gl.h
-         dnl after linking because the test program already includes it.
-         AC_CACHE_CHECK([for glutMainLoop in -lglut],
-            [dpp_cv_glutMainLoop_available],
-            [AC_TRY_LINK([#include <GL/glut.h>], [glutMainLoop()],
-               [dpp_cv_glutMainLoop_available='yes'],
-               [dpp_cv_glutMainLoop_available='no'])])
+         DPP_LANG_SAVE
+         DPP_LANG_C
 
+         for l in $libdirs ; do
+            cur_glut_libdir="$GLUT_ROOT/$l"
+            LDFLAGS="-L$cur_glut_libdir $dpp_save_LDFLAGS"
+
+            AC_MSG_CHECKING([for glutMainLoop in -lglut in $cur_glut_libdir])
+            AC_TRY_LINK([#include <GL/glut.h>], [glutMainLoop();],
+                        [dpp_have_glut='yes'], [dpp_have_glut='no'])
+            AC_MSG_RESULT([$dpp_have_glut])
+
+            LIBS="$dpp_save_LIBS"
+
+            if test "x$dpp_have_glut" = "xyes" ; then
+               GLUT_LIBDIR="$cur_glut_libdir"
+               break
+            fi
+         done
+
+         DPP_LANG_RESTORE
+
+         dnl Restore all the variables now that we are done testing.
+         CFLAGS="$dpp_save_CFLAGS"
+         CPPFLAGS="$dpp_save_CPPFLAGS"
+         LDFLAGS="$dpp_save_LDFLAGS"
          LIBS="$dpp_save_LIBS"
 
          if test "x$dpp_cv_glutMainLoop_available" = "xyes" ; then
             dpp_have_glut='yes'
-            ifelse([$3], , :, [$3])
+            ifelse([$2], , :, [$2])
          else
-            ifelse([$4], , :, [$4])
+            ifelse([$3], , :, [$3])
          fi
-
-         AC_LANG_RESTORE
       fi
 
       dnl If GLUT API files were found, define this extra stuff that may be
@@ -140,12 +193,10 @@ AC_DEFUN([DPP_HAVE_GLUT],
             GLUT_LDFLAGS="-L$GLUT_ROOT/lib\$(LIBBITSUF)"
          fi
       fi
-
-      dnl Restore all the variables now that we are done testing.
-      CFLAGS="$dpp_save_CFLAGS"
-      CPPFLAGS="$dpp_save_CPPFLAGS"
-      LDFLAGS="$dpp_save_LDFLAGS"
    fi
 
    AC_SUBST(GLUT_ROOT)
+   AC_SUBST(GLUT_INCLUDES)
+   AC_SUBST(GLUT_LDFLAGS)
+   AC_SUBST(GLUT_LIBDIR)
 ])
