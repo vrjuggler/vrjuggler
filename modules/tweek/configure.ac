@@ -81,7 +81,7 @@ AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
 AC_ARG_WITH(cxx-orb,
             [  --with-cxx-orb=<NAME>   Name of C++ ORB to use          [default=omniORB4]
                           Allowed values are:
-                            omniORB3, omniORB4, TAO],
+                            omniORB4, TAO],
             cxx_orb_name="$withval", cxx_orb_name='omniORB4')
 
 AC_ARG_WITH(cxx-orb-root,
@@ -455,9 +455,9 @@ VPR_PATH([$MIN_VPR_VERSION], [BUILD_CXX='Y'],
 #fi
 
 AH_TEMPLATE([TWEEK_INCLUDE_CORBA_H],
-   [Define to include the main CORBA header file -- for example: <omniORB3/CORBA.h>])
+   [Define to include the main CORBA header file -- for example: <omniORB4/CORBA.h>])
 AH_TEMPLATE([TWEEK_ORB_VER_STRING],
-   [Define to an ORB identifier string used to initialized the ORB -- for example: "omniORB3"])
+   [Define to an ORB identifier string used to initialized the ORB -- for example: "omniORB4"])
 
 # Find omniORB.  This one is a beast.
 setup_omniORB_cxx ( )
@@ -525,10 +525,6 @@ setup_omniORB_cxx ( )
          LIBS="$LIBS $omni_win32_libs"
       else
          LIBS="$LIBS -l$tweek_omni_lib -lomnithread"
-      fi
-
-      if test "x$OMNI_VER" = "x3" ; then
-         LIBS="$LIBS -lomniGK_stub"
       fi
 
       # This is done to deal with omniORB 4.0.0 not compiling out of the box
@@ -629,10 +625,6 @@ int omni_main_i(int argc, char** const argv)
 
             CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER"
             CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
-
-            if test "x$OMNI_VER" = "x3" ; then
-               CXX_ORB_LIB="$CXX_ORB_LIB -lomniGK_stub"
-            fi
 
             CXX_ORB_LIB_MSVCCC="$omni_win32_libs"
             CXX_ORB_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
@@ -952,9 +944,6 @@ if test "x$BUILD_CXX" != "xN" ; then
    tweeksave_LIBS="$LIBS"
 
    case $cxx_orb_name in
-      omniORB3)
-         setup_omniORB_cxx 3
-         ;;
       omniORB4)
          setup_omniORB_cxx 4
          ;;
