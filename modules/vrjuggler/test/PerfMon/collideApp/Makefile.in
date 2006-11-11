@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/test/Draw/OGL/collide
+# Makefile.in for vrjuggler/test/PerfMon/collideApp
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
