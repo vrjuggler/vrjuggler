@@ -63,6 +63,7 @@ configure.in: ;
 Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
+jccl.fpc.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 
@@ -72,7 +73,7 @@ configure: configure.in $(M4_DEPS)
 config.status: configure ;
 
 Makefile: $(srcdir)/VERSION configure config.status Makefile.in		\
-          Makefile.inc.in make.defs.mk.in
+          Makefile.inc.in make.defs.mk.in jccl.fpc.in
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 
 %:: Makefile
