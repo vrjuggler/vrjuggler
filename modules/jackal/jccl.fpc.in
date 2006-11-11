@@ -1,0 +1,66 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+ISA = @ISA@
+ABI = @ABI@
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+MICRO_VERSION = @MICRO_VERSION@
+LIBBITSUF = @LIBBITSUF@
+PLATFORM = @PLATFORM@
+jccl_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+topdir = @topdir@
+
+JUGGLERROOT_ABS = @JUGGLERROOT_ABS@
+
+APP_BASE_DIR = @APP_BASE_DIR@
+APP_BASE_DIR_INST = @APP_BASE_DIR_INST@
+
+
+USE_GCC = @USE_GCC@
+includedir = @includedir@
+libdir = @libdir@
+
+jccl_java_api_jars = @jccl_java_api_jars@
+BUILD_CXX = @BUILD_CXX@
+BUILD_JAVA = @BUILD_JAVA@
+jccl_extra_cxxflags = @jccl_extra_cxxflags@
+jccl_cxxflags = @jccl_cxxflags@
+includedir = @includedir@
+jccl_ldflags = @jccl_ldflags_compiler@
+jccl_prof_libs = @jccl_prof_libs@
+jccl_libs = @jccl_libs@
+jccl_extra_ldflags = @jccl_extra_ldflags@
+jccl_extra_libs = @jccl_extra_libs@
+
+extra_libs = ${jccl_extra_ldflags} ${jccl_extra_libs}
+
+static_begin = @static_begin@
+static_end = @static_end@
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+
+Name: Juggler Configuration and Control Library
+Description: JCCL (pronounced "Jackal") provides a collection of configuration and performance monitoring tools for applications. Applications built with JCCL can easily access configuration information stored in XML-based files. JCCL configuration data is accessed using JCCL's multivariate type system. JCCL provides a Java-based GUI called VJ Control  for editing these configuration files. JCCL includes an additional tool (Java GUI and C++ classes) to monitor the performance of an application.
+URL: http://www.vrjuggler.org/jccl/
+Version: ${jccl_version}
+Provides: jccl JCCL
+Requires: vpr = @VPR_VERSION@
+Arch: ${ISA}
+Libs: ${jccl_ldflags} ${jccl_libs} ${extra_libs}
+Libs.private: 
+Cflags: ${jccl_cxxflags} ${jccl_extra_cxxflags} -I${includedir}
+
+######################### Jackal Specific Flagpoll Variables ###################
+
+cxx_api_available: ${BUILD_CXX}
+libs: ${jccl_ldflags} ${jccl_libs}
+extra_libs: ${extra_libs}
+static_libs: ${static_begin} ${jccl_ldflags} ${jccl_libs} ${static_end}
+profiled_libs: ${jccl_ldflags} ${jccl_prof_libs}
+profiled_static_libs: ${static_begin} ${jccl_ldflags} ${jccl_prof_libs} ${static_end}
+
+java_api_available: ${BUILD_JAVA}
+jars: ${jccl_java_api_jars}

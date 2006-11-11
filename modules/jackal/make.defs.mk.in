@@ -76,6 +76,8 @@
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
+VERSION_DOT=		@VERSION_DOT@
+
 mtreedir=		$(topdir)/mtree
 projdatadir=		$(datadir)/jccl
 releasedir=		@JUGGLERROOT_ABS@/release

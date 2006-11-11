@@ -372,6 +372,7 @@ jccl_java_api_jars="${jccl_java_api_jars}${JCPS}${jccl_java_api_beans}"
 changequote([, ])
 
 VJ_VERSION_GROK(VERSION)
+VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
 
 DPP_SUBST
 
@@ -387,6 +388,8 @@ AC_SUBST(BUILD_CXX)
 AC_SUBST(ANT)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
+
+AC_SUBST(VERSION_DOT)
 
 AC_SUBST(BUILD_JAVA)
 
@@ -424,6 +427,7 @@ VJ_MTREE_LIB_GEN([JCCL], [mtree], [$PLATFORM], [$ISA])
 
 AC_CONFIG_FILES([
    jccl-config
+   jccl.fpc
    Makefile
    Makefile.inc
    common.defs.mk

@@ -266,6 +266,10 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/jccl.fpc			\
+          $(instlinks)/share/flagpoll/jccl.fpc
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else
@@ -356,6 +360,7 @@ post-install:
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
 	@$(MAKE) install-m4
+	@$(MAKE) install-flagpoll
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/jccl-config $(bindir)
 
@@ -404,6 +409,15 @@ install-m4:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/jccl.m4	\
           $(datadir)/aclocal
+
+install-flagpoll:
+	@echo "------------------------------------------------"
+	@echo "Installing Flagpoll metadata file"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/jccl.fpc 						\
+          $(libdir)$(LIBBITSUF)/flagpoll/jccl-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
 
 # Install the user tools code.
 install-tools:
