@@ -77,4 +77,4 @@ extern SNX_API(vpr::Uint32) getVersionNumber();
 }
 
 
-#endif /* _GADGET_VERSION_H_ */
+#endif /* _SNX_VERSION_H_ */
