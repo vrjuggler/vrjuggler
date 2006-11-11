@@ -238,6 +238,15 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
             A C++ implementation of CORBA 2.3, required for the Tweek C++
             API.</para>
          </listitem>
+
+         <listitem>
+            <para>Doozer (<ulink
+            url="http://sourceforge.net/projects/doozer">http://sourceforge.net/projects/doozer</ulink>):
+            A collection of makefile stubs written for use with GNU Make and
+            intended for simplifying the creation of cross-platform VR Juggler
+            application builds. Version 2.1.3 or newer is needed for building
+            VR Juggler sample applications.</para>
+         </listitem>
       </itemizedlist>
 
       <para>The following are fully optional packages that are primarily of
@@ -429,7 +438,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
                <itemizedlist>
                   <listitem>
-                     <para>CppDOM 0.6.5</para>
+                     <para>CppDOM 0.6.6</para>
                   </listitem>
 
                   <listitem>
