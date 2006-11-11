@@ -33,8 +33,6 @@ all: applicationData@EXEEXT@
 
 APP_NAME=	applicationData@EXEEXT@
 
-APP_NAME=	applicationData
-
 # Basic options.
 srcdir=		@srcdir@
 SRCS=		main.cpp applicationDataApp.cpp
