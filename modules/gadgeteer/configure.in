@@ -165,6 +165,7 @@ JCCL_PATH_CXX([1.0.1], ,
 
 gadsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
+MIN_GMTL_VERSION='0.4.12'
 GMTL_PATH(0.1.9, [/usr/local], , ,
           [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
 CPPFLAGS="$gadsave_CPPFLAGS"
@@ -377,6 +378,7 @@ gadget_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 gadget_extra_ldflags_linker="$gadget_extra_ldflags_compiler"
 
 VJ_VERSION_GROK(VERSION)
+VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
 
 DPP_SUBST
 
@@ -390,6 +392,10 @@ AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
+
+AC_SUBST(VERSION_DOT)
+
+AC_SUBST(MIN_GMTL_VERSION)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
@@ -423,6 +429,7 @@ VJ_MTREE_LIB_GEN(GADGET, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    gadgeteer-config
+   gadgeteer.fpc
    Makefile
    Makefile.inc
    common.defs.mk
