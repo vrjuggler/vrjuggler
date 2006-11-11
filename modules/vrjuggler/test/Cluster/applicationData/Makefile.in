@@ -34,8 +34,6 @@ all: applicationData@EXEEXT@
 APP_NAME=	applicationData@EXEEXT@
 
 APP_NAME=	applicationData
-#GADGET_CONFIG=		gadgeteer-config
-#GADGET_LIBS_PARAM?=	Gadgeteer
 
 # Basic options.
 srcdir=		@srcdir@
