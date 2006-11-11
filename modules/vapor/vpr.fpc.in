@@ -1,0 +1,79 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = @VERSION_DOT@
+
+ISA = @ISA@
+ABI = @ABI@
+SUBSYSTEM = @SUBSYSTEM@
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+MICRO_VERSION = @MICRO_VERSION@
+LIBBITSUF = @LIBBITSUF@
+PLATFORM = @PLATFORM@
+
+vpr_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+ABI_FLAGS = @ABI_FLAGS@
+ABI_LIST = @ABI_LIST@
+PLATFORM_SDK = @PLATFORM_SDK@
+target_cpu = @target_cpu@
+
+topdir = @topdir@
+
+UNIX_VPRROOT_ABS = @UNIX_VPRROOT_ABS@
+UNIX_VPRROOT_ABS = @UNIX_JUGGLERROOT_ABS@
+VPRROOT_ABS = @VPRROOT_ABS@
+JUGGLERROOT_ABS = @JUGGLERROOT_ABS@
+
+APP_BASE_DIR = @APP_BASE_DIR@
+APP_BASE_DIR_INST = @APP_BASE_DIR_INST@
+
+
+USE_GCC = @USE_GCC@
+includedir = @includedir@
+libdir = @libdir@
+
+subsystem_cxxflags = @subsystem_cxxflags@
+subsystem_libs = @subsystem_libs@
+
+static_begin = @static_begin@
+static_end = @static_end@
+
+vpr_cxxflags = @vpr_cxxflags@
+
+vpr_ldflags = @vpr_ldflags_compiler@
+vpr_libs =  @vpr_libs@
+vpr_prof_libs = @vpr_prof_libs@
+
+vpr_extra_cxxflags = @vpr_extra_cxxflags@
+vpr_extra_include_dirs = @vpr_extra_include_dirs@
+
+vpr_extra_ldflags = @vpr_extra_ldflags_compiler@
+
+extra_libs = ${vpr_extra_ldflags} ${subsystem_libs}
+extra_deps = @vpr_extra_deps@
+
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+Name: The VR Juggler Portable Runtime (VPR)
+Description: The VR Juggler Portable Runtime (VPR) provides an object-oriented operating system abstraction layer that allows for easy development of cross-platform C++ applications.
+URL: http://www.vrjuggler.org/vapor/
+Version: ${vpr_version}
+Provides: vpr VPR
+Requires: Boost.Filesystem = @BOOST_VERSION_DOT@ boost >= @BOOST_VERSION_DOT@ cppdom = @CPPDOM_VERSION@ ${extra_deps}
+Arch: ${ISA}
+Cflags: ${vpr_cxxflags} ${vpr_extra_cxxflags} ${subsystem_cxxflags} -I${includedir} ${ABI_FLAGS}
+Libs: ${vpr_ldflags} ${vpr_libs} ${extra_libs}
+Libs.private: 
+
+######################### Vapor Specific Flagpoll Variables ###################
+
+subsystem: ${SUBSYSTEM}
+libs: ${libs} ${vpr_libs}
+extra_libs : ${extra_libs}
+static_libs: ${static_begin} ${libs} ${vpr_libs} ${static_end}
+profiled_libs: ${libs} ${vpr_prof_libs}
+profiled_static_libs: ${static_begin} ${libs} ${vpr_prof_libs} ${static_end}

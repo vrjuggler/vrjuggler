@@ -1,0 +1,13 @@
+# Private Variables
+prefix = @BOOST_ROOT@
+
+# Standard Flagpoll Variables
+Name: Boost.Filesystem
+Description: The Boost.Filesystem Library provides portable facilities to query and manipulate paths, files, and directories.
+URL: http://www.boost.org/libs/filesystem/doc/index.htm
+Version: @BOOST_VERSION_DOT@
+Provides: Boost.Filesystem boost.filesystem
+Requires: boost = @BOOST_VERSION_DOT@
+Arch: @ISA@
+Cflags: @BOOST_INCLUDES@
+Libs: -L@BOOST_LIBDIR@ -l@boost_fs_name@

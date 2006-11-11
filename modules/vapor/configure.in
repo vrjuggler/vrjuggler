@@ -529,6 +529,7 @@ DPP_LANG_RESTORE
 
 DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
                [AC_MSG_ERROR([*** Boost is required for VPR ***])])
+BOOST_VERSION_DOT="$dpp_boost_version"
 
 # -----------------------------------------------------------------------------
 # Checks for library functions.
@@ -684,21 +685,37 @@ CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 CPPFLAGS="$CPPFLAGS $BOOST_INCLUDES"
 # NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
 # are used together by AC_TRY_LINK().
-LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
-LIBS="$LIBS -l$boost_fs_name"
+LIBS="-l$boost_fs_name $vprsave_LIBS"
+
+if test "lib$LIBBITSUF" != "lib" ; then
+   libdirs="lib$LIBBITSUF lib"
+else
+   libdirs="lib"
+fi
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
-AC_CACHE_CHECK([for boost::filesystem::exists() in $boost_fs_name],
-   [ac_cv_has_boost_fs_exists],
-   [AC_TRY_LINK([#include <boost/filesystem/operations.hpp> ],
-                [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
-                [ac_cv_has_boost_fs_exists='yes'],
-                [ac_cv_has_boost_fs_exists='no'])])
-rm -rf ./ii_files
+
+for l in $libdirs ; do
+   cur_boost_libdir="$BOOST_ROOT/$l"
+   LDFLAGS="-L$cur_boost_libdir $vprsave_LDFLAGS"
+
+   AC_MSG_CHECKING([for boost::filesystem::exists() in $boost_fs_name in $cur_boost_libdir])
+   AC_TRY_LINK([#include <boost/filesystem/operations.hpp>],
+               [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
+               [vpr_have_boost_fs='yes'], [vpr_have_boost_fs='no'])
+   rm -rf ./ii_files
+   AC_MSG_RESULT([$vpr_have_boost_fs])
+
+   if test "$vpr_have_boost_fs" = "yes" ; then
+      BOOST_LIBDIR="$cur_boost_libdir"
+      break
+   fi
+done
+
 DPP_LANG_RESTORE
 
-if test "x$ac_cv_has_boost_fs_exists" = "xno" ; then
+if test "x$vpr_have_boost_fs" = "xno" ; then
    AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
 fi
 
@@ -732,7 +749,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
    cppdom_minor_ver=`grep 'define CPPDOM_VERSION_MINOR ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
    cppdom_patch_ver=`grep 'define CPPDOM_VERSION_PATCH ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
 
-   cppdom_version="$cppdom_major_ver.$cppdom_minor_ver.$cppdom_patch_ver"
+   CPPDOM_VERSION="$cppdom_major_ver.$cppdom_minor_ver.$cppdom_patch_ver"
 else
    AC_PATH_PROG(CPPDOM_CONFIG, [cppdom-config], [no], [$cppdom_path])
 
@@ -756,7 +773,7 @@ else
    CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/( |^)-L[^ ]*//g'`
    changequote([, ])
 
-   cppdom_version=`$CPPDOM_CONFIG --version`
+   CPPDOM_VERSION=`$CPPDOM_CONFIG --version`
 fi
 
 # Verify that we have a new enough version of CppDOM.
@@ -767,9 +784,9 @@ else
 fi
 
 AC_MSG_CHECKING([whether CppDOM version is >= $min_cppdom_version])
-DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version],
-   [AC_MSG_RESULT([yes (version $cppdom_version)])],
-   [AC_MSG_RESULT([no (version $cppdom_version)])
+DPP_VERSION_CHECK([$CPPDOM_VERSION], [$min_cppdom_version],
+   [AC_MSG_RESULT([yes (version $CPPDOM_VERSION)])],
+   [AC_MSG_RESULT([no (version $CPPDOM_VERSION)])
     AC_MSG_ERROR([*** CppDOM version $min_cppdom_version or newer is requried for VPR ***])])
 
 CXXFLAGS="$CPPDOM_CXXFLAGS $CXXFLAGS $STDFLAGS $ABI_FLAGS"
@@ -967,6 +984,8 @@ case $SUBSYSTEM in
         vpr_prof_libs='-lvpr_p'
         ;;
     NSPR)
+        vpr_extra_deps='nspr >= 4.6'
+
         if test "x$OS_TYPE" = "xWin32" ; then
             subsystem_cxxflags="$subsystem_includes"
             subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
@@ -1012,6 +1031,7 @@ elif test "x$GCC" = "xyes" ; then
 fi
 
 VJ_VERSION_GROK(VERSION)
+VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
 
 DPP_SUBST
 
@@ -1023,6 +1043,10 @@ AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VPR_SHARE_DIR)
 
 AC_SUBST(RM_LN)
+
+AC_SUBST(VERSION_DOT)
+
+AC_SUBST(CPPDOM_VERSION)
 
 AC_SUBST(SUBSYSTEM)
 AC_SUBST(SIMULATOR)
@@ -1047,6 +1071,15 @@ AC_SUBST(DYLIB_DEPS)
 AC_SUBST(UUID_DEFS)
 AC_SUBST(USE_LEACH_UUID)
 
+AC_SUBST(ABI_FLAGS)
+
+AC_SUBST(PLATFORM_SDK)
+AC_SUBST(target_cpu)
+AC_SUBST(ABI_LIST)
+
+AC_SUBST(BOOST_VERSION_DOT)
+AC_SUBST(BOOST_LIBDIR)
+AC_SUBST(boost_fs_name)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
@@ -1063,6 +1096,7 @@ AC_SUBST(vpr_extra_ldflags_linker)
 AC_SUBST(vpr_extra_libs)
 AC_SUBST(vpr32_flags)
 AC_SUBST(vpr64_flags)
+AC_SUBST(vpr_extra_deps)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -1072,6 +1106,9 @@ VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    vpr-config
+   boost.fpc
+   boost_filesystem.fpc
+   vpr.fpc
    Makefile
    Makefile.inc
    common.defs.mk

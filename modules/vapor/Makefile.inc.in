@@ -55,6 +55,8 @@ instlinks=	$(topdir)/instlinks
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 
+BOOST_VERSION=	@BOOST_VERSION_DOT@
+
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
 OPT_FLAGS=	-D_OPT -DNDEBUG @OPT_FLAGS@
@@ -220,6 +222,13 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vpr.fpc			\
+          $(instlinks)/share/flagpoll/vpr.fpc
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/boost*.fpc			\
+          $(instlinks)/share/flagpoll
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else
@@ -302,6 +311,7 @@ pre-install:
 post-install:
 	@$(MAKE) install-test
 	@$(MAKE) install-m4
+	@$(MAKE) install-flagpoll
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/vpr-config $(bindir)
 
@@ -341,6 +351,21 @@ install-m4:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/vpr.m4	\
           $(datadir)/aclocal
+
+install-flagpoll:
+	@echo "------------------------------------------------"
+	@echo "Installing Flagpoll metadata file"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/vpr.fpc 						\
+          $(libdir)$(LIBBITSUF)/flagpoll/vpr-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/boost.fpc						\
+          $(libdir)$(LIBBITSUF)/flagpoll/boost-$(BOOST_VERSION).$(ISA).fpc
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/boost_filesystem.fpc				\
+          $(libdir)$(LIBBITSUF)/flagpoll/boost_filesystem-$(BOOST_VERSION).$(ISA).fpc
 
 # =============================================================================
 # Clean-up targets.  '_clobber' removes the developer installation links.
