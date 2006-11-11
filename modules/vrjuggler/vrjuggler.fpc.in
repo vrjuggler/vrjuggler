@@ -1,0 +1,82 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = @VERSION_DOT@
+
+ISA = @ISA@
+ABI = @ABI@
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+MICRO_VERSION = @MICRO_VERSION@
+LIBBITSUF = @LIBBITSUF@
+PLATFORM = @PLATFORM@
+vrj_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+topdir = @topdir@
+
+JUGGLERROOT_ABS = @JUGGLERROOT_ABS@
+
+APP_BASE_DIR = @APP_BASE_DIR@
+APP_BASE_DIR_INST = @APP_BASE_DIR_INST@
+
+
+USE_GCC = @USE_GCC@
+includedir = @includedir@
+libdir = @libdir@
+
+static_begin = @APP_LINK_STATIC_ON@
+static_end = @APP_LINK_STATIC_OFF@
+
+vrj_cxxflags = @vrj_cxxflags@
+
+vrj_share_dir = ${prefix}/@VJ_SHARE_DIR@
+
+vrj_ldflags = @vrj_ldflags_compiler@
+vrj_libs =  @vrj_lib@
+vrj_prof_libs = @vrj_prof_lib@
+
+vrj_ogl_lib = @vrj_ogl_lib@
+vrj_pf_lib = @vrj_pf_lib@
+vrj_ogl_prof_lib = @vrj_ogl_prof_lib@
+vrj_pf_prof_lib = @vrj_pf_prof_lib@
+vrj_ogl_extra_libs = @vrj_ogl_extra_libs@
+vrj_pf_extra_libs = @vrj_pf_extra_libs@
+
+vrj_extra_cxxflags = @vrj_extra_cxxflags@
+vrj_extra_ldflags = @vrj_extra_ldflags_compiler@
+vrj_extra_libs = @vrj_extra_libs@
+
+vrj_ldflags = ${vrj_ldflags}
+extra_libs = ${vrj_extra_ldflags} ${vrj_extra_libs}
+
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+Name: VR Juggler
+Description: VR Juggler provides virtual reality (VR) software developers with a suite of application programming interfaces (APIs) that abstract, and hence simplify, all interface aspects of their program including the display surfaces, object tracking, selection and navigation, graphics rendering engines, and graphical user interfaces. An application written with VR Juggler is essentially independent of device, computer platform, and VR system. VR Juggler may be run with any combination of immersive technologies and computational hardware.
+URL: http://www.vrjuggler.org/
+Version: ${vrj_version}
+Provides: vrjuggler
+Requires: gadgeteer = @GADGET_VERSION@ sonix = @SNX_VERSION@ jccl = @JCCL_VERSION@ vpr = @VPR_VERSION@
+Arch: ${ISA}
+Cflags: ${vrj_cxxflags} ${vrj_extra_cxxflags} -I${includedir}
+Libs: ${vrj_ldflags} ${vrj_libs} ${extra_libs}
+Libs.private: 
+
+######################### VR Juggler Specific Flagpoll Variables ###################
+
+libs: ${vrj_ldflags} ${vrj_libs}
+extra_libs : ${extra_libs}
+static_libs: ${static_begin} ${vrj_ldflags} ${vrj_libs} ${static_end}
+profiled_libs: ${vrj_ldflags} ${vrj_prof_libs}
+profiled_static_libs: ${static_begin} ${vrj_ldflags} ${vrj_prof_libs} ${static_end}
+
+# Draw Manager Choices
+vrj_ogl_libs: ${vrj_ogl_lib} ${vrj_ogl_extra_libs}
+vrj_ogl_prof_libs: ${vrj_ogl_prof_lib} ${vrj_ogl_extra_libs}
+vrj_pf_libs: ${vrj_pf_lib} ${vrj_pf_extra_libs}
+vrj_pf_prof_libs: ${vrj_pf_prof_lib} ${vrj_pf_extra_libs}
+
+# Build bits
+vrj_app_defs_file: ${vrj_share_dir}/vrj.appdefs.mk

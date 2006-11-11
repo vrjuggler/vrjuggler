@@ -84,7 +84,9 @@ EXTRA_LIBS+=		@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
 			$(NULL)
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+ifndef VRJ_VERSION
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk
+endif
 
 ifeq ($(HOSTTYPE), Win32)
 PLUGIN_DEFS=		-DVRJ_APP_PLUGIN="extern \"C\" _declspec(dllexport)"
