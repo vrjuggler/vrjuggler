@@ -214,12 +214,9 @@ links:
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/flagpoll
-	cat $(topdir)/vpr.fpc |						\
-           sed -e "s|VPRBUILDINCPREFIX|$(instlinks)|g" > $(topdir)/vpr.fpc.tmp
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/vpr.fpc.tmp			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vpr.fpc			\
           $(instlinks)/share/flagpoll/vpr.fpc
-	rm -f $(topdir)/vpr.fpc.tmp
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/boost*.fpc			\
           $(instlinks)/share/flagpoll
@@ -356,13 +353,9 @@ install-flagpoll:
 	@echo "Installing Flagpoll metadata file"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(libdir)$(LIBBITSUF)/flagpoll
-	cat $(topdir)/vpr.fpc |						\
-           sed -e "s|VPRBUILDINCPREFIX|\$$(VJ_DEPS_DIR)|g" >		\
-              $(topdir)/vpr.fpc.tmp
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vpr.fpc.tmp 					\
+          $(topdir)/vpr.fpc 						\
           $(libdir)$(LIBBITSUF)/flagpoll/vpr-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
-	rm -f $(topdir)/vpr.fpc.tmp
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/boost.fpc						\
           $(libdir)$(LIBBITSUF)/flagpoll/boost-$(BOOST_VERSION).$(ISA).fpc
