@@ -243,11 +243,11 @@ public:
    bool removeKeyboardProxy_exec();
    bool removeKeyboardProxy_check();
    
-   bool addStupifiedAnalogProxy_exec();
-   bool addStupifiedAnalogProxy_check();
+   bool addStupefiedAnalogProxy_exec();
+   bool addStupefiedAnalogProxy_check();
    
-   bool removeStupifiedAnalogProxy_exec();
-   bool removeStupifiedAnalogProxy_check();
+   bool removeStupefiedAnalogProxy_exec();
+   bool removeStupefiedAnalogProxy_check();
 
 private:
 
