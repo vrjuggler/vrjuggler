@@ -211,6 +211,11 @@ Getting the Source Code and the Dependencies
 *  omniORB (http://omniorb.sourceforge.net/): A C++ implementation of CORBA
    2.3, required for the Tweek C++ API.
 
+*  Doozer (http://sourceforge.net/projects/doozer): A collection of makefile
+   stubs written for use with GNU Make and intended for simplifying the
+   creation of cross-platform VR Juggler application builds. Version 2.1.3
+   or newer is needed for building VR Juggler sample applications.
+
 
  The following are fully optional packages that are primarily of interest
  only to people doing development on the Juggler Suite itself:
@@ -360,7 +365,7 @@ VPR
  abstraction. It is the foundation for all other Juggler modules.
 
 
-*  CppDOM 0.6.5
+*  CppDOM 0.6.6
 
 *  Boost headers and Boost.Filesystem 1.31.0
 
@@ -647,8 +652,8 @@ Important
 
  If Flagpoll is not installed in a place where the aclocal tool searches for
  .m4 files by default, then it is necessary to extend aclocal's search path.
- This is done by setting the environment variable ACLOCAL_FLAGS to "-
- I .../share/alocal" where "..." is the path to the
+ This is done by setting the environment variable ACLOCAL_FLAGS to
+ "- I .../share/alocal" where "..." is the path to the
  directory tree where Flagpoll is installed.
 
 
