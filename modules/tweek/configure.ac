@@ -450,10 +450,6 @@ VPR_PATH([$MIN_VPR_VERSION], [BUILD_CXX='Y'],
          [AC_MSG_WARN([*** VPR required for Tweek C++ API ***])
           BUILD_CXX='N'])
 
-#if test "x$BUILD_CXX" = "xY" ; then
-#   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-#fi
-
 AH_TEMPLATE([TWEEK_INCLUDE_CORBA_H],
    [Define to include the main CORBA header file -- for example: <omniORB4/CORBA.h>])
 AH_TEMPLATE([TWEEK_ORB_VER_STRING],
