@@ -1,0 +1,60 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = @VERSION_DOT@
+
+ISA = @ISA@
+ABI = @ABI@
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+MICRO_VERSION = @MICRO_VERSION@
+LIBBITSUF = @LIBBITSUF@
+PLATFORM = @PLATFORM@
+snx_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+topdir = @topdir@
+data_subdir = @data_subdir@
+
+JUGGLERROOT_ABS = @JUGGLERROOT_ABS@
+
+APP_BASE_DIR = @APP_BASE_DIR@
+APP_BASE_DIR_INST = @APP_BASE_DIR_INST@
+
+
+USE_GCC = @USE_GCC@
+includedir = @includedir@
+libdir = @libdir@
+
+
+static_begin = @static_begin@
+static_end = @static_end@
+
+snx_cxxflags = @snx_cxxflags@
+
+snx_ldflags = @snx_ldflags_compiler@
+snx_libs = @snx_libs@
+snx_prof_libs = @snx_prof_libs@
+
+snx_extra_cxxflags = @snx_extra_cxxflags@
+
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+
+Name: Sonix
+Description: Sonix provides simple audio sound objects on top of several audio APIs. The interface to Sonix is kept very simple in order to get people up and running with sound as fast as possible.
+URL: http://www.vrjuggler.org/sonix/
+Version: ${snx_version}
+Provides: sonix
+Requires: vpr = @VPR_VERSION@ gmtl >= @MIN_GMTL_VERSION@
+Arch: ${ISA}
+Cflags: ${snx_cxxflags} ${snx_extra_cxxflags} -I${includedir}
+Libs: ${snx_ldflags} ${snx_libs}
+Libs.private: 
+
+######################### Sonix Specific Flagpoll Variables ###################
+libs: ${snx_ldflags} ${snx_libs}
+static_libs: ${static_begin} ${snx_ldflags} ${snx_libs} ${static_end}
+profiled_libs: ${libs} ${snx_prof_libs}
+profiled_static_libs: ${static_begin} ${libs} ${snx_prof_libs} ${static_end}
