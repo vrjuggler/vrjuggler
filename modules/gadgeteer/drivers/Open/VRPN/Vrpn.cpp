@@ -374,7 +374,9 @@ void Vrpn::handleAnalog(const vrpn_ANALOGCB& b)
                 << std::endl;
 #endif
 
-      normalizeMinToMax(b.channel[i], mAnalogs[i]);
+      float value(0.0f);
+      normalizeMinToMax(b.channel[i], value);
+      mAnalogs[i] = value;
    }
 }
 
