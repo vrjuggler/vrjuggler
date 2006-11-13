@@ -663,8 +663,7 @@ if test "x$given_boost_fs_libname" = "x" ; then
       fi
    fi
 
-   # Include the detected Boost version number in the library name.
-   boost_fs_name="boost_filesystem$toolset$threading-$BOOST_LIB_VERSION"
+   boost_suffixes="$toolset$threading-$BOOST_LIB_VERSION $toolset$threading $threading"
 else
    boost_fs_name="$given_boost_fs_libname"
 fi
@@ -677,9 +676,6 @@ vprsave_LDFLAGS="$LDFLAGS"
 
 CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 CPPFLAGS="$CPPFLAGS $BOOST_INCLUDES"
-# NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
-# are used together by AC_TRY_LINK().
-LIBS="-l$boost_fs_name $vprsave_LIBS"
 
 if test "lib$LIBBITSUF" != "lib" ; then
    libdirs="lib$LIBBITSUF lib"
@@ -690,16 +686,45 @@ fi
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-for l in $libdirs ; do
-   cur_boost_libdir="$BOOST_ROOT/$l"
-   LDFLAGS="-L$cur_boost_libdir $vprsave_LDFLAGS"
+testBoostFilesystem ( )
+{
+   libname="$1"
+   orig_LIBS="$2"
 
-   AC_MSG_CHECKING([for boost::filesystem::exists() in $boost_fs_name in $cur_boost_libdir])
+   # NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
+   # are used together by AC_TRY_LINK().
+   LIBS="-l$libname $orig_LIBS"
+
+   AC_MSG_CHECKING([for boost::filesystem::exists() in $libname in $cur_boost_libdir])
    AC_TRY_LINK([#include <boost/filesystem/operations.hpp>],
                [boost::filesystem::path p("dir"); boost::filesystem::exists(p);],
                [vpr_have_boost_fs='yes'], [vpr_have_boost_fs='no'])
    rm -rf ./ii_files
    AC_MSG_RESULT([$vpr_have_boost_fs])
+
+   LIBS="$orig_LIBS"
+}
+
+for l in $libdirs ; do
+   cur_boost_libdir="$BOOST_ROOT/$l"
+   LDFLAGS="-L$cur_boost_libdir $vprsave_LDFLAGS"
+
+   if test "x$boost_fs_name" != "x" ; then
+      testBoostFilesystem $boost_fs_name $vprsave_LIBS
+   else
+      # The extra empty string is to allow for no suffix to be used on the
+      # boost_filesystem library name.
+      for s in $boost_suffixes "" ; do
+         cur_boost_fs_name="boost_filesystem$s"
+
+         testBoostFilesystem $cur_boost_fs_name $vprsave_LIBS
+
+         if test "$vpr_have_boost_fs" = "yes" ; then
+            boost_fs_name="$cur_boost_fs_name"
+            break
+         fi
+      done
+   fi
 
    if test "$vpr_have_boost_fs" = "yes" ; then
       BOOST_LIBDIR="$cur_boost_libdir"
@@ -709,7 +734,7 @@ done
 
 DPP_LANG_RESTORE
 
-if test "x$vpr_have_boost_fs" = "xno" ; then
+if test "x$vpr_have_boost_fs" != "xyes" ; then
    AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
 fi
 
