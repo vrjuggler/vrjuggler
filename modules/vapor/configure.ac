@@ -140,8 +140,8 @@ DPP_ABI_SETUP
 AC_ARG_WITH([boost-fs-lib],
             [  --with-boost-fs-lib=<LIB NAME>
                           The name of the Boost.Filesystem
-                          library binary for linking      [default=Auto-detect]
-                          *** USE WITH CAUTION! ***],
+                          library suitable for the -l
+                          compiler option                 [default=Auto-detect]],
             [given_boost_fs_libname="$withval"], [given_boost_fs_libname=''])
 
 # -----------------------------------------------------------------------------
