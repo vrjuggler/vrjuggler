@@ -269,10 +269,10 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
    if ( NULL != mReconfigIf )
    {
       // Attempt to initialize the remote run-time reconfiguration component.
-      if ( mReconfigIf->init().success() )
+      if ( mReconfigIf->init() )
       {
          // Now, attempt to enable remote run-time reconfiguration.
-         if ( ! mReconfigIf->enable().success() )
+         if ( ! mReconfigIf->enable() )
          {
             vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING:")

@@ -137,7 +137,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-jccl_version='1.1.5'
+jccl_version='1.1.10'
 JCCL_PATH_CXX([$jccl_version], [test_tweek_cxx='Y'],
    [AC_MSG_WARN([*** JCCL C++ API required for JCCL C++ plug-ins ***])
     test_tweek_cxx='N'

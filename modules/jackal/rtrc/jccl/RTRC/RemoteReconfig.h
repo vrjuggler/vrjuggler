@@ -29,8 +29,6 @@
 
 #include <jccl/jcclConfig.h>
 
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace jccl 
 {
@@ -50,13 +48,13 @@ public:
    /**
     * Initializes the remote reconfiguration interface.
     */
-   virtual vpr::ReturnStatus init() = 0;
+   virtual bool init() = 0;
 
    /**
     * Turns on the interface to remote reconfiguration (allow incoming
     * connections).
     */   
-   virtual vpr::ReturnStatus enable() = 0;
+   virtual bool enable() = 0;
 
    /** Indicates whether this remote reconfiguration object is active. */
    virtual bool isEnabled() const = 0;

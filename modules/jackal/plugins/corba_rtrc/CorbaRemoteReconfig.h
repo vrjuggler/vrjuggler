@@ -31,7 +31,6 @@
 
 #include <string>
 
-#include <vpr/Util/ReturnStatus.h>
 #include <tweek/CORBA/CorbaManager.h>
 #include <jccl/RTRC/RemoteReconfig.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
@@ -68,10 +67,10 @@ public:
    bool configRemove(jccl::ConfigElementPtr e);
 
    /** Stubbed out function required by the jccl::RemoteReconfig interface. */
-   vpr::ReturnStatus init();
+   bool init();
 
    /** Stubbed out function required by the jccl::RemoteReconfig interface. */
-   vpr::ReturnStatus enable();
+   bool enable();
 
    bool isEnabled() const;
 
@@ -107,9 +106,8 @@ private:
     * @param iiopVer The version of IIOP the Naming Service is using.  This
     *                is normally 1.0 or 1.2.
     */
-   vpr::ReturnStatus startCorba(const std::string& nsHost,
-                                const vpr::Uint16 nsPort,
-                                const std::string& iiopVer);
+   bool startCorba(const std::string& nsHost, const vpr::Uint16 nsPort,
+                   const std::string& iiopVer);
 
    /**
     * Disables the local CORBA instance and releases the resources allocated
