@@ -31,8 +31,6 @@
 #include <vector>
 #include <string>
 
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace jccl
 {
@@ -85,11 +83,11 @@ private:
     * @param absoluteFile Storage for the absolute path to the file if it was
     *                     found in the path.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if a file is found in the
-    *         path; vpr::ReturnStatus::Fail otherwise.
+    * @return \c true is returned if a file is found in the path; \c false
+    *         otherwise.
     */
-   static vpr::ReturnStatus findFileUsingPath(const std::string& fileName,
-                                              std::string& absoluteFile);
+   static bool findFileUsingPath(const std::string& fileName,
+                                 std::string& absoluteFile);
 
    /**
     * Simple helper type to ensure that the static data in this class is

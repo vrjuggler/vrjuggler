@@ -69,7 +69,7 @@ std::string ParseUtil::expandFileName(const std::string& name,
                << "' using search path ...\n" << vprDEBUG_FLUSH;
 
             std::string absolute_fname;
-            if ( findFileUsingPath(fname, absolute_fname).success() )
+            if ( findFileUsingPath(fname, absolute_fname) )
             {
                fname_path = fs::path(absolute_fname, fs::native);
             }
@@ -93,10 +93,10 @@ void ParseUtil::setCfgSearchPath(const std::string& path)
    mSearchInfo.setSearchPath(path);
 }
 
-vpr::ReturnStatus ParseUtil::findFileUsingPath(const std::string& fileName,
-                                               std::string& absoluteFile)
+bool ParseUtil::findFileUsingPath(const std::string& fileName,
+                                  std::string& absoluteFile)
 {
-   vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+   bool status(false);
    fs::path filename_path(fileName, fs::native);
 
    for ( std::vector<std::string>::iterator i = mSearchInfo.mPath.begin();
@@ -113,7 +113,7 @@ vpr::ReturnStatus ParseUtil::findFileUsingPath(const std::string& fileName,
       {
          if ( fs::exists(full_path) && ! fs::is_directory(full_path) )
          {
-            status.setCode(vpr::ReturnStatus::Succeed);
+            status = true;
             absoluteFile = full_path.native_file_string();
             break;
          }
