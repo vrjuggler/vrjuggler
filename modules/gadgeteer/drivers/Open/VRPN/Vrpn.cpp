@@ -60,12 +60,10 @@
 #include <boost/concept_check.hpp>
 
 #include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/EulerAngle.h>
 #include <gmtl/Quat.h>
-#include <gmtl/AxisAngle.h>
+#include <gmtl/Output.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
@@ -333,11 +331,8 @@ void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
    }
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
-      << "Tracker #"<< t.sensor << " quat "
-      << mQuats[t.sensor][0] << " "
-      << mQuats[t.sensor][1] << " "
-      << mQuats[t.sensor][2] << " "
-      << mQuats[t.sensor][3] << std::endl << vprDEBUG_FLUSH;
+      << "Tracker #"<< t.sensor << " quat " << mQuats[t.sensor] << std::endl
+      << vprDEBUG_FLUSH;
 
    mQuats[t.sensor][0] = t.quat[0];
    mQuats[t.sensor][1] = t.quat[1];
