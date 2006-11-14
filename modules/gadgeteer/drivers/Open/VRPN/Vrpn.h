@@ -152,6 +152,16 @@ protected:
    }
 
 private:
+   void registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
+                                       vrpn_MESSAGEHANDLER dropHandler,
+                                       vrpn_MESSAGEHANDLER lastDropHandler);
+
+   void unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
+                                        const vrpn_int32 type,
+                                        vrpn_MESSAGEHANDLER handler);
+
+   void readLoop();
+
    /** @name VRPN Data Handlers */
    //@{
    void trackerChange(const vrpn_TRACKERCB& t);
@@ -171,16 +181,6 @@ private:
                                 vrpn_MESSAGEHANDLER handler,
                                 const bool deleteHandle);
    //@}
-
-   void registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
-                                       vrpn_MESSAGEHANDLER dropHandler,
-                                       vrpn_MESSAGEHANDLER lastDropHandler);
-
-   void unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
-                                        const vrpn_int32 type,
-                                        vrpn_MESSAGEHANDLER handler);
-
-   void readLoop();
 
    bool mExitFlag;
 
