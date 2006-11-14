@@ -42,7 +42,10 @@
 #define _GADGET_VRPN_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
+
+#include <vpr/Sync/Mutex.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Digital.h>
@@ -166,12 +169,11 @@ private:
 
    bool mExitFlag;
 
-   gmtl::Matrix44f getSensorPos(const unsigned int i);
-   gadget::DigitalData getDigitalData(const unsigned int i);
-   gadget::AnalogData getAnalogData(const unsigned int i);
-
+   vpr::Mutex mButtonMutex;
    std::vector<gadget::DigitalData> mButtons;
+   vpr::Mutex mAnalogMutex;
    std::vector<gadget::AnalogData> mAnalogs;
+   vpr::Mutex mTrackerMutex;
    std::vector<gmtl::Quatf> mQuats;
    std::vector<gmtl::Vec3f> mPositions;
 
