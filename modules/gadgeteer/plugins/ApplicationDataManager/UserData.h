@@ -40,7 +40,6 @@
 #include <boost/smart_ptr.hpp>
 
 #include <plugins/ApplicationDataManager/ApplicationData.h>
-#include <cluster/SerializableData.h>
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
