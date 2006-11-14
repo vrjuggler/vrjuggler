@@ -68,6 +68,7 @@
 #include <gmtl/AxisAngle.h>
 
 #include <vpr/vpr.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/InputManager.h>
@@ -319,6 +320,8 @@ void Vrpn::readLoop(void *nullParam)
 
 void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
 {
+   vpr::Guard<vpr::Mutex> g(mTrackerMutex);
+
    if ( t.sensor > mTrackerNumber )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
@@ -348,6 +351,8 @@ void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
 
 void Vrpn::handleButton(const vrpn_BUTTONCB& b)
 {
+   vpr::Guard<vpr::Mutex> g(mButtonMutex);
+
    if ( b.button > mButtonNumber )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
@@ -366,6 +371,8 @@ void Vrpn::handleButton(const vrpn_BUTTONCB& b)
 
 void Vrpn::handleAnalog(const vrpn_ANALOGCB& b)
 {
+   vpr::Guard<vpr::Mutex> g(mAnalogMutex);
+
    if ( b.num_channel > mAnalogNumber )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
@@ -392,10 +399,15 @@ bool Vrpn::sample()
    if ( mTrackerNumber > 0 )
    {
       std::vector<PositionData> positions(mTrackerNumber);
+      vpr::Guard<vpr::Mutex> g(mTrackerMutex);
 
       for ( int i = 0; i < mTrackerNumber; ++i )
       {
-         positions[i].setPosition(getSensorPos(i));
+         gmtl::Matrix44f pos;
+         gmtl::setRot(pos, mQuats[i]);
+         gmtl::setTrans(pos, mPositions[i]);
+
+         positions[i].setPosition(pos);
          positions[i].setTime();
       }
 
@@ -405,10 +417,11 @@ bool Vrpn::sample()
    if ( mButtonNumber > 0 )
    {
       std::vector<DigitalData> buttons(mButtonNumber);
+      vpr::Guard<vpr::Mutex> g(mButtonMutex);
 
       for ( int i = 0; i < mButtonNumber; ++i )
       {
-         buttons[i] = getDigitalData(i);
+         buttons[i] = mButtons[i];
          buttons[i].setTime();
       }
 
@@ -418,10 +431,11 @@ bool Vrpn::sample()
    if ( mAnalogNumber > 0 )
    {
       std::vector<AnalogData> analogs(mAnalogNumber);
+      vpr::Guard<vpr::Mutex> g(mAnalogMutex);
 
       for ( int i = 0; i < mAnalogNumber; ++i )
       {
-         analogs[i] = getAnalogData(i);
+         analogs[i] = mAnalogs[i];
          analogs[i].setTime();
       }
 
@@ -458,24 +472,6 @@ void Vrpn::updateData()
    swapPositionBuffers();
    swapDigitalBuffers();
    swapAnalogBuffers();
-}
-
-gmtl::Matrix44f Vrpn::getSensorPos(const unsigned int i)
-{
-   gmtl::Matrix44f ret_val;
-   gmtl::setRot(ret_val, mQuats[i]);
-   gmtl::setTrans(ret_val, mPositions[i]);
-   return ret_val;
-}
-
-gadget::DigitalData Vrpn::getDigitalData(const unsigned int i)
-{
-   return mButtons[i];
-}
-
-gadget::AnalogData Vrpn::getAnalogData(const unsigned int i)
-{
-   return mAnalogs[i];
 }
 
 } // End of gadget namespace
