@@ -391,32 +391,44 @@ void Vrpn::handleAnalog(const vrpn_ANALOGCB& b)
 
 bool Vrpn::sample()
 {
-   std::vector<PositionData> positions(mTrackerNumber);
-   std::vector<DigitalData>  buttons(mButtonNumber);
-   std::vector<AnalogData>   analogs(mAnalogNumber);
-
-   for ( int i = 0; i < mTrackerNumber; ++i )
+   if ( mTrackerNumber > 0 )
    {
-      positions[i].setPosition(getSensorPos(i));
-      positions[i].setTime();
+      std::vector<PositionData> positions(mTrackerNumber);
+
+      for ( int i = 0; i < mTrackerNumber; ++i )
+      {
+         positions[i].setPosition(getSensorPos(i));
+         positions[i].setTime();
+      }
+
+      addPositionSample(positions);
    }
 
-   for ( int i = 0; i < mButtonNumber; ++i )
+   if ( mButtonNumber > 0 )
    {
-      buttons[i] = getDigitalData(i);
-      buttons[i].setTime();
+      std::vector<DigitalData> buttons(mButtonNumber);
+
+      for ( int i = 0; i < mButtonNumber; ++i )
+      {
+         buttons[i] = getDigitalData(i);
+         buttons[i].setTime();
+      }
+
+      addDigitalSample(buttons);
    }
 
-   for ( int i = 0; i < mAnalogNumber; ++i )
+   if ( mAnalogNumber > 0 )
    {
-      analogs[i] = getAnalogData(i);
-      analogs[i].setTime();
-   }
+      std::vector<AnalogData> analogs(mAnalogNumber);
 
-   // Update the data buffer
-   addPositionSample(positions);
-   addDigitalSample(buttons);
-   addAnalogSample(analogs);
+      for ( int i = 0; i < mAnalogNumber; ++i )
+      {
+         analogs[i] = getAnalogData(i);
+         analogs[i].setTime();
+      }
+
+      addAnalogSample(analogs);
+   }
 
    return true;
 }
