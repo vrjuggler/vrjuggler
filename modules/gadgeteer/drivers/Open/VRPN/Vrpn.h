@@ -93,9 +93,7 @@ class Vrpn
 public:
 
    /** Constructor. */
-   Vrpn() : mReadThread(NULL)
-   {
-   };
+   Vrpn();
 
    /**
     * Destructor.
@@ -160,33 +158,85 @@ protected:
    }
 
 private:
-   vpr::Thread* mReadThread;
-   std::string mTrackerServer;
-   std::string mButtonServer;
-   std::string mAnalogServer;
-   int mTrackerNumber;
-   int mButtonNumber;
-   int mAnalogNumber;
+   /** @name VRPN Data Handlers */
+   //@{
+   void trackerChange(const vrpn_TRACKERCB& t);
+   void buttonChange(const vrpn_BUTTONCB& b);
+   void analogChange(const vrpn_ANALOGCB& b);
+   //@}
 
-   void handleTracker(const vrpn_TRACKERCB& t);
-   void handleButton(const vrpn_BUTTONCB& b);
-   void handleAnalog(const vrpn_ANALOGCB& b);
+   /** @name Connection Drop Handlers */
+   //@{
+   void trackerConnectionDropped(const vrpn_int32 type,
+                                 vrpn_MESSAGEHANDLER handler,
+                                 const bool deleteHandle);
+   void buttonConnectionDropped(const vrpn_int32 type,
+                                vrpn_MESSAGEHANDLER handler,
+                                const bool deleteHandle);
+   void analogConnectionDropped(const vrpn_int32 type,
+                                vrpn_MESSAGEHANDLER handler,
+                                const bool deleteHandle);
+   //@}
 
    void readLoop(void *nullParam);
 
+   void registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
+                                       vrpn_MESSAGEHANDLER dropHandler,
+                                       vrpn_MESSAGEHANDLER lastDropHandler);
+
+   void unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
+                                        const vrpn_int32 type,
+                                        vrpn_MESSAGEHANDLER handler);
+
+   vpr::Thread* mReadThread;
    bool mExitFlag;
 
-   vpr::Mutex mButtonMutex;
-   std::vector<gadget::DigitalData> mButtons;
-   vpr::Mutex mAnalogMutex;
-   std::vector<gadget::AnalogData> mAnalogs;
-   vpr::Mutex mTrackerMutex;
+   /** @name Tracker Data */
+   //@{
+   std::string              mTrackerServer;
+   int                      mTrackerNumber;
+   vrpn_Tracker_Remote*     mTrackerHandle;
+   bool                     mTrackerChangeHandlerRegistered;
+   vpr::Mutex               mTrackerMutex;
    std::vector<gmtl::Quatf> mQuats;
    std::vector<gmtl::Vec3f> mPositions;
+   //@}
 
-   friend void VRPN_CALLBACK staticHandleTracker(void *userdata, vrpn_TRACKERCB t);
-   friend void VRPN_CALLBACK staticHandleButton(void *userdata, vrpn_BUTTONCB t);
-   friend void VRPN_CALLBACK staticHandleAnalog(void*, vrpn_ANALOGCB);
+   /** @name Button Data */
+   //@{
+   std::string                      mButtonServer;
+   int                              mButtonNumber;
+   vrpn_Button_Remote*              mButtonHandle;
+   bool                             mButtonChangeHandlerRegistered;
+   vpr::Mutex                       mButtonMutex;
+   std::vector<gadget::DigitalData> mButtons;
+   //@}
+
+   /** @name Analog Data */
+   //@{
+   std::string                     mAnalogServer;
+   int                             mAnalogNumber;
+   vrpn_Analog_Remote*             mAnalogHandle;
+   bool                            mAnalogChangeHandlerRegistered;
+   vpr::Mutex                      mAnalogMutex;
+   std::vector<gadget::AnalogData> mAnalogs;
+   //@}
+
+   friend void VRPN_CALLBACK handleTrackerChange(void*, vrpn_TRACKERCB);
+   friend int VRPN_CALLBACK handleTrackerConnectionDropped(void*,
+                                                           vrpn_HANDLERPARAM);
+   friend int VRPN_CALLBACK handleLastTrackerConnectionDropped(void*,
+                                                               vrpn_HANDLERPARAM);
+   friend void VRPN_CALLBACK handleButtonChange(void*, vrpn_BUTTONCB);
+   friend int VRPN_CALLBACK handleButtonConnectionDropped(void*,
+                                                         vrpn_HANDLERPARAM);
+   friend int VRPN_CALLBACK handleLastButtonConnectionDropped(void*,
+                                                              vrpn_HANDLERPARAM);
+   friend void VRPN_CALLBACK handleAnalogChange(void*, vrpn_ANALOGCB);
+   friend int VRPN_CALLBACK handleAnalogConnectionDropped(void*,
+                                                          vrpn_HANDLERPARAM);
+   friend int VRPN_CALLBACK handleLastAnalogConnectionDropped(void*,
+                                                              vrpn_HANDLERPARAM);
 };
 
 } // End of gadget namespace
