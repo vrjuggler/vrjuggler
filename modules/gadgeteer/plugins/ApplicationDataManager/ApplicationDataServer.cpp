@@ -71,7 +71,6 @@ namespace cluster
 
       // This updates the mApplicationData which both mBufferedObjectReader and mDevicePacket point to
       mApplicationData->writeObject(mBufferObjectWriter);
-      //vpr::ReturnStatus status = mApplicationData->writeObject(mBufferObjectWriter);
 
       // If we do not successfully serialize the object, don't send it.
       // This allows the developer to create a object that only gets

@@ -160,7 +160,7 @@ private:
     *
     * @post -If we successfully connect to the sync master, mActive will become true.
     */
-   vpr::ReturnStatus ConnectToMasterSocket();
+   bool ConnectToMasterSocket();
 
    /**
     * Start listening for incoming connection requests.

@@ -29,10 +29,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-namespace vpr
-{
-   class ReturnStatus;
-}
 
 namespace gadget
 {
@@ -61,7 +57,7 @@ public:
    /**
     * Attempt to connect to the given node.
     */
-   vpr::ReturnStatus attemptConnect( Node* node );
+   bool attemptConnect(Node* node);
 };
 
 } // end namespace gadget

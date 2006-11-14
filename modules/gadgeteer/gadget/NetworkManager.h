@@ -29,10 +29,9 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vpr/Util/ReturnStatus.h>
-
 #include <gadget/AbstractNetworkManager.h>
 #include <gadget/Util/Debug.h>
+
 
 namespace gadget
 {
@@ -53,9 +52,9 @@ public:
       : AbstractNetworkManager(),
         mAcceptor(this)
    {;}
-   virtual vpr::ReturnStatus attemptConnect(Node* node)
+   virtual bool attemptConnect(Node* node)
    {
-      return(mConnector.attemptConnect(node));
+      return mConnector.attemptConnect(node);
    }
    virtual void startListening(int listen_port, bool accept_anonymous)
    {

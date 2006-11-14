@@ -33,7 +33,6 @@
 
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Util/ReturnStatus.h>	
 #include <vpr/Util/Assert.h>
 
 #include <cluster/ClusterPlugin.h>

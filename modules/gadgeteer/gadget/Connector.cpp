@@ -29,7 +29,6 @@
 #include <gadget/Node.h>
 
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/ConnectionAck.h>
@@ -37,7 +36,7 @@
 namespace gadget
 {
 
-vpr::ReturnStatus Connector::attemptConnect( Node* node )
+bool Connector::attemptConnect(Node* node)
 {
    // - Try to connect to remote host
    // - If successful
@@ -73,7 +72,7 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          << clrOutBOLD( clrBLUE, "[Connector]" )
          << clrOutBOLD( clrRED, " ERROR:" )
          << " Failed to set address" << std::endl << vprDEBUG_FLUSH;
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
 
    // Create a new socket stream to this address
@@ -102,7 +101,7 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          << node->getHostname() << " : " << node->getPort()
          << std::endl << vprDEBUG_FLUSH;
          
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
 
    try
@@ -158,7 +157,7 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
       {
          node->setSockStream( NULL );
          delete sock_stream; 
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
    }
    catch (vpr::IOException& ex)
@@ -173,10 +172,10 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          << std::endl << ex.what()
          << std::endl << vprDEBUG_FLUSH;
          
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
    
-   return vpr::ReturnStatus::Succeed;
+   return true;
 }
 
 } // end namespace gadget

@@ -32,7 +32,6 @@
 #include <list>
 
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Assert.h>
 
 #include <gadget/PacketHandler.h>
@@ -125,17 +124,18 @@ public:
 private:
    /** @name VirtualDevice methods */
    //@{
-   vpr::ReturnStatus addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
-                                      const std::string& device_base_type, const std::string& hostname);
+   bool addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
+                         const std::string& device_base_type,
+                         const std::string& hostname);
    void addVirtualDevice(VirtualDevice* device);
    void removeVirtualDevice(const std::string& device_name);
    void removeVirtualDevice(const vpr::GUID& device_id);
-   vpr::ReturnStatus removeVirtualDevicesOnHost(const std::string& host_name);
+   bool removeVirtualDevicesOnHost(const std::string& host_name);
    //@}
 
    /** @name DeviceServer methods */
    //@{
-   vpr::ReturnStatus addDeviceServer(const std::string& name, gadget::Input* device);
+   bool addDeviceServer(const std::string& name, gadget::Input* device);
    void addDeviceServer(DeviceServer* device);
    void removeDeviceServer(const std::string& device_name);
    void removeDeviceServer(const vpr::Uint16& device_id);
@@ -144,14 +144,14 @@ private:
 
    /** @name Connection management */
    //@{
-   vpr::ReturnStatus removeDeviceClientsForHost(const std::string& host_name);
+   bool removeDeviceClientsForHost(const std::string& host_name);
    //@}
 
    /** @name Configuration helpers */
    //@{
    jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
-   vpr::ReturnStatus createPendingConfigRemove(std::string device_name);
-   vpr::ReturnStatus createPendingConfigRemoveAndAdd(std::string device_name);
+   bool createPendingConfigRemove(std::string device_name);
+   bool createPendingConfigRemoveAndAdd(std::string device_name);
    //@}
 
    /** @name Device request management */

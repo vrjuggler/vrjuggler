@@ -228,8 +228,10 @@ namespace gadget
    }
 
 
-   vpr::ReturnStatus RemoteInputManager::addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
-                                                          const std::string& device_base_type, const std::string& hostname)
+   bool RemoteInputManager::addVirtualDevice(const vpr::GUID& device_id,
+                                             const std::string& name,
+                                             const std::string& device_base_type,
+                                             const std::string& hostname)
    {
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
 
@@ -242,7 +244,7 @@ namespace gadget
 
       mVirtualDevices[device_id] = temp_virtual_device;
 
-      return(vpr::ReturnStatus::Succeed);
+      return true;
    }
 
    void RemoteInputManager::addVirtualDevice(VirtualDevice* device)
@@ -282,7 +284,8 @@ namespace gadget
       return NULL;
    }
 
-   vpr::ReturnStatus RemoteInputManager::removeVirtualDevicesOnHost(const std::string& host_name)
+   bool RemoteInputManager::
+   removeVirtualDevicesOnHost(const std::string& host_name)
    {
       // - Get a list of all remote devices on the given host
       // - Remove them from the current configuration
@@ -306,24 +309,27 @@ namespace gadget
          // removeVirtualDevice(*i);
          createPendingConfigRemoveAndAdd(*i);
       }
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
-   vpr::ReturnStatus RemoteInputManager::removeDeviceClientsForHost(const std::string& host_name)
+   bool RemoteInputManager::
+   removeDeviceClientsForHost(const std::string& host_name)
    {
-      // - Loop through all Device Servers and remove any device clients that may exist for the given host
+      // Loop through all Device Servers and remove any device clients that
+      // may exist for the given host
       vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-      << clrOutBOLD(clrMAGENTA,"[RemoteInputManager]")
-      << " Removing client, " << host_name << " from all Device Servers.\n" << vprDEBUG_FLUSH;
+         << clrOutBOLD(clrMAGENTA,"[RemoteInputManager]")
+         << " Removing client, " << host_name << " from all Device Servers.\n"
+         << vprDEBUG_FLUSH;
 
       for ( std::vector<DeviceServer*>::iterator i = mDeviceServers.begin();
           i != mDeviceServers.end() ; i++ )
       {
          (*i)->removeClient(host_name);
       }
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
    void RemoteInputManager::removeVirtualDevice(const vpr::GUID& device_id)
@@ -380,7 +386,8 @@ namespace gadget
 
    // ===================== DEVICE SERVERS =============================
 
-   vpr::ReturnStatus RemoteInputManager::addDeviceServer(const std::string& name, gadget::Input* device)
+   bool RemoteInputManager::addDeviceServer(const std::string& name,
+                                            gadget::Input* device)
    {
       vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
 
@@ -388,7 +395,7 @@ namespace gadget
          new DeviceServer(name, device, mHandlerGUID);
       mDeviceServers.push_back(temp_device_server);
 
-      return(vpr::ReturnStatus::Succeed);
+      return true;
    }
 
    void RemoteInputManager::addDeviceServer(DeviceServer* device)
@@ -574,7 +581,7 @@ namespace gadget
       return(mPendingDeviceRequests.size());
    }
 
-   vpr::ReturnStatus RemoteInputManager::createPendingConfigRemove(std::string device_name)
+   bool RemoteInputManager::createPendingConfigRemove(std::string device_name)
    {
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
@@ -596,10 +603,11 @@ namespace gadget
          }
       }
       cfg_mgr->unlockActive();
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
-   vpr::ReturnStatus RemoteInputManager::createPendingConfigRemoveAndAdd(std::string device_name)
+   bool RemoteInputManager::
+   createPendingConfigRemoveAndAdd(std::string device_name)
    {
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
@@ -620,7 +628,7 @@ namespace gadget
          }
       }
       cfg_mgr->unlockActive();
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
    void RemoteInputManager::addPendingDeviceRequest(cluster::DeviceRequest* new_device_req, Node* node)

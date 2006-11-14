@@ -30,7 +30,6 @@
 
 //#include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Util/ReturnStatus.h>
 //#include <jccl/Config/ConfigElement.h>
 //#include <vpr/Util/Error.h>
 
@@ -305,7 +304,7 @@ void Node::sync()
    mNodeDoneSema.acquire();
 }
 
-vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
+bool Node::send(cluster::Packet* out_packet)
 {
    vprASSERT(NULL != out_packet && "Can not send a NULL packet.");
 
@@ -346,7 +345,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
 
    if(mHeader->getPacketLength() == cluster::Header::RIM_PACKET_HEAD_SIZE)
    {
-      return(vpr::ReturnStatus::Succeed);
+      return true;
    }
 
    // If we have a data packet we need to also send the raw data
@@ -415,7 +414,7 @@ vpr::ReturnStatus Node::send(cluster::Packet* out_packet)
          throw cluster::ClusterException("Packet::recv() - Sending Packet Data failed!!");
       }
    }
-   return vpr::ReturnStatus::Succeed;
+   return true;
 }
 
 cluster::Packet* Node::recvPacket()

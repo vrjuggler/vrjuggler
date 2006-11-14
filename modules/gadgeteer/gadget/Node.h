@@ -31,8 +31,8 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Thread/Thread.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <gadget/Util/Debug.h>
+
 
 namespace cluster
 {
@@ -211,7 +211,7 @@ public:
    /**
     * Send the given packet to this node.
     */
-   vpr::ReturnStatus send(cluster::Packet* out_packet);
+   bool send(cluster::Packet* out_packet);
 
    /**
     * Receive a packet from the network.

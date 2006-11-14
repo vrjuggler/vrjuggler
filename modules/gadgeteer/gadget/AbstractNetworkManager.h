@@ -29,7 +29,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Connector.h>
+#include <map>
 
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketStream.h>
@@ -41,12 +41,8 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
-#include <map>
+#include <gadget/Connector.h>
 
-namespace vpr
-{
-   class ReturnStatus;
-}
 
 namespace cluster
 {
@@ -97,8 +93,9 @@ public:
     * The caller of this method mustlock the Nodes list
     * first by callinf lockNodes()
     */
-   vpr::ReturnStatus addNode(const std::string& name, const std::string& host_name,
-                             const vpr::Uint16& port, vpr::SocketStream* socketStream = NULL);
+   bool addNode(const std::string& name, const std::string& host_name,
+                const vpr::Uint16& port,
+                vpr::SocketStream* socketStream = NULL);
 
    /**
     * Adds the given Node to the std::map of Nodes
@@ -217,7 +214,7 @@ public:
    PacketHandler* getHandlerByGUID(const vpr::GUID& handler_guid);
    void addHandler(PacketHandler* new_handler);
 
-   virtual vpr::ReturnStatus attemptConnect(Node* node) = 0;
+   virtual bool attemptConnect(Node* node) = 0;
    virtual void startListening(int listen_port, bool accept_anonymous) = 0;
 
 private:

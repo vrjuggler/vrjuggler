@@ -148,8 +148,8 @@ private:
     */
    static std::string getElementType() { return std::string( "swap_lock_wired_plugin" ); }
 
-   vpr::ReturnStatus ConnectToWiredParallel();
-   vpr::ReturnStatus Init();
+   bool ConnectToWiredParallel();
+   bool Init();
    /**
     * Start listening for incoming connection requests.
     *

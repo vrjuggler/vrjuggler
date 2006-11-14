@@ -26,8 +26,11 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <iomanip>
 #include <boost/concept_check.hpp>
 #include <boost/bind.hpp>
+
+#include <vpr/IO/Socket/InetAddr.h>
 
 #include <cluster/ClusterManager.h>
 #include <cluster/Packets/Header.h>
@@ -35,17 +38,14 @@
 #include <cluster/Packets/PacketFactory.h>
 
 #include <gadget/Node.h>
-#include <gadget/AbstractNetworkManager.h>
 #include <gadget/PacketHandler.h>
 #include <gadget/Util/Debug.h>
 
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-#include <vpr/IO/Socket/InetAddr.h>
-#include <vpr/Util/ReturnStatus.h>
+#include <gadget/AbstractNetworkManager.h>
 
-#include <iomanip>
 
 namespace gadget
 {
@@ -216,8 +216,10 @@ namespace gadget
       }
    }
 
-   vpr::ReturnStatus AbstractNetworkManager::addNode(const std::string& name, const std::string& host_name,
-                                                    const vpr::Uint16& port, vpr::SocketStream* socketStream)
+   bool AbstractNetworkManager::addNode(const std::string& name,
+                                        const std::string& host_name,
+                                        const vpr::Uint16& port,
+                                        vpr::SocketStream* socketStream)
    {
       // -Create a new Node using the given information
       // -Add the new node to the AbstractNetworkManager
@@ -230,7 +232,7 @@ namespace gadget
       Node* temp_node = new Node(name, host_name, port, socketStream, this);
       mNodes.push_back( temp_node );
       
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
    void AbstractNetworkManager::addNode(Node* node)
@@ -341,7 +343,7 @@ namespace gadget
       {
          if ( Node::PENDING == (*i)->getStatus() )
          {
-            if ( attemptConnect(*i).success() )
+            if ( attemptConnect(*i) )
             {
                // If any of the nodes were successful connecting
                // then we should return true

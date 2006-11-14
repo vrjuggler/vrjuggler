@@ -33,7 +33,6 @@
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Port/SerialPort.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #include <gadget/Util/Debug.h>
 #include <gadget/gadgetParam.h>
@@ -218,9 +217,10 @@ namespace cluster
       return(true);
    }
 
-   vpr::ReturnStatus SwapLockTCPPlugin::ConnectToMasterSocket()
+   bool SwapLockTCPPlugin::ConnectToMasterSocket()
    {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SwapLockTCPPlugin]: Attempting to connect to SyncServer:  " 
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "[SwapLockTCPPlugin]: Attempting to connect to SyncServer:  " 
          << mBarrierMasterHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
 
       vpr::InetAddr inet_addr;
@@ -232,11 +232,12 @@ namespace cluster
       }
       catch (vpr::IOException&)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"[SwapLockTCPPlugin]: Failed to set address\n") 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED,"[SwapLockTCPPlugin]: Failed to set address\n") 
             << vprDEBUG_FLUSH;
          mActive = false;
 
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
          // Create a new socket stream to this address
       mSyncServerSocket = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
@@ -254,12 +255,14 @@ namespace cluster
          // Free unused memory since we could not connect
          delete mSyncServerSocket;
          mSyncServerSocket = NULL;
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
 
       {   
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SwapLockTCPPlugin]: Successfully connected to sync server: " 
-            << mBarrierMasterHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "[SwapLockTCPPlugin]: Successfully connected to sync server: " 
+            << mBarrierMasterHostname <<":"<< mTCPport << "\n"
+            << vprDEBUG_FLUSH;
          
          // Send request
          // Wait for responce
@@ -291,11 +294,11 @@ namespace cluster
             // add to list
             // respond true
             mActive = true;
-            return(vpr::ReturnStatus::Succeed);
+            return true;
          }
       }
 
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
 
    void SwapLockTCPPlugin::masterSend()

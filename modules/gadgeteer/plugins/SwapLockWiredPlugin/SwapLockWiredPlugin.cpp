@@ -33,7 +33,6 @@
 
 #include <vpr/Thread/Thread.h>
 
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Port/SerialPort.h>
 #include <gadget/Util/Debug.h>
@@ -245,11 +244,10 @@ namespace cluster
       return(true);
    }
 
-   vpr::ReturnStatus SwapLockWiredPlugin::Init()
+   bool SwapLockWiredPlugin::Init()
    {
-      vpr::ReturnStatus status;
-      status = ConnectToWiredParallel();
-      while ( status != vpr::ReturnStatus::Succeed )
+      bool status = ConnectToWiredParallel();
+      while ( ! status )
       {
          status = ConnectToWiredParallel();
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
@@ -260,10 +258,10 @@ namespace cluster
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << "SwapLockWiredPlugin::ConnectToWiredParallel() Barrier has been Init() is success!"
          << vprDEBUG_FLUSH;
-      return(status);
+      return status;
    }
 
-   vpr::ReturnStatus SwapLockWiredPlugin::ConnectToWiredParallel()
+   bool SwapLockWiredPlugin::ConnectToWiredParallel()
    {
       mWire = open("/dev/wiredparallel",O_RDWR);
       if (mWire != -1)
@@ -277,7 +275,7 @@ namespace cluster
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrRED,"SwapLockWiredPlugin::ConnectToWiredParallel() ERROR: Could not connect to /dev/wiredparallel\n")
             << vprDEBUG_FLUSH;
-         return(vpr::ReturnStatus::Fail);
+         return false;
       }
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SwapLockWiredPlugin::ConnectToWiredParallel() Setting initial value to 0\n" << vprDEBUG_FLUSH;
 
@@ -288,7 +286,7 @@ namespace cluster
       // Clear the local output bits
       std::cout << "Sending low" << std::endl;
       sendSignal((unsigned char)0);
-      return(vpr::ReturnStatus::Succeed);
+      return true;
    }
    /*
      // MasterReceive should act identical to SlaveSend since we have no concept of Master/Server with this Sync Method
