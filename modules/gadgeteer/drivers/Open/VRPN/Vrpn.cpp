@@ -380,6 +380,7 @@ bool Vrpn::stopSampling()
    }
    return true;
 }
+
 bool Vrpn::sample()
 {
    if ( mTrackerNumber > 0 )
