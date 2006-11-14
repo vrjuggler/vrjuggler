@@ -77,7 +77,6 @@ DTrackStandalone::DTrackStandalone(
 	int udpbufsize, unsigned long udptimeout_us
 )
 {
-	vpr::ReturnStatus stat;
 	vpr::InetAddr addr;
 
 	d_udpbuf = NULL;
@@ -230,7 +229,6 @@ void DTrackStandalone::set_parseerror(void)  // 'parse error'
 
 bool DTrackStandalone::receive(void)
 {
-	vpr::ReturnStatus stat;
 	vpr::Uint32 len;
 	vpr::InetAddr addr;
 	
@@ -628,7 +626,6 @@ dtracklib_glove_type DTrackStandalone::get_glove(int ind)        // gl data (ind
 bool DTrackStandalone::send(unsigned short cmd, int val)
 {
    std::ostringstream cmd_stream;
-	vpr::ReturnStatus stat;
 	vpr::Uint32 bytes;
 
 	if(!valid()){
