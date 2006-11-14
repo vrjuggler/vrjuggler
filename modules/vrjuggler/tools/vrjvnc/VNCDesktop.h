@@ -136,9 +136,8 @@ protected:     // Helpers
    }
 
 private:
-   VNCInterface                         mVncIf;
-   vpr::ThreadRunFunctor<VNCInterface>* mVncThreadFunctor;
-   vpr::Thread*                         mVncThread;
+   VNCInterface mVncIf;
+   vpr::Thread* mVncThread;
 
    gadget::PositionInterface      mWand;
    gadget::DigitalInterface       mLeftButton;

@@ -28,6 +28,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <sstream>
+#include <boost/bind.hpp>
+#include <boost/ref.hpp>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -66,7 +69,6 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
                        const std::string& password,
                        const float& desktopSideLength)
    : mVncIf(hostname, port, password)
-   , mVncThreadFunctor(NULL)
    , mVncThread(NULL)
    , mHaveKeyboard(false)
    , mDesktopWandIsect(false)
@@ -116,21 +118,20 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    // Request the first update.
    mVncIf.sendFramebufferUpdateRequest(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
 
-   // Spawn off a thread to keep updating the data vnc connection
-   mVncThreadFunctor = new vpr::ThreadRunFunctor<VNCInterface>(&mVncIf);
-   mVncThread        = new vpr::Thread(mVncThreadFunctor);
-   vprASSERT(mVncThread->valid() && "VNC sample thread failed to start");
+   // Spawn off a thread to keep updating the VNC data link.
+   mVncThread = new vpr::Thread(boost::bind(&VNCInterface::run,
+                                            boost::ref(mVncIf)));
    // And we're off!
 }
 
 VNCDesktop::~VNCDesktop()
 {
-   if ( NULL != mVncThreadFunctor )
+   if ( NULL != mVncThread )
    {
       mVncIf.stop();
 //      mVncThread->join();
-      delete mVncThreadFunctor;
       delete mVncThread;
+      mVncThread = NULL;
    }
 
    if ( NULL != mTextureData )
