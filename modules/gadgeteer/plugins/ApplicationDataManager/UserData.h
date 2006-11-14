@@ -37,7 +37,6 @@
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-#include <vpr/Util/ReturnStatus.h>
 
 
 /**
@@ -255,8 +254,8 @@ public:
     * \code
     * struct MyType : vpr::SerializableObject
     * {
-    *    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-    *    vpr::ReturnStatus readObject(vpr::ObjectWriter* reader);
+    *    void writeObject(vpr::ObjectWriter* writer);
+    *    void readObject(vpr::ObjectWriter* reader);
     *    bool boolVal;
     * };
     *
@@ -279,8 +278,8 @@ public:
     * \code
     * struct MyType : vpr::SerializableObject
     * {
-    *    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-    *    vpr::ReturnStatus readObject(vpr::ObjectWriter* reader);
+    *    void writeObject(vpr::ObjectWriter* writer);
+    *    void readObject(vpr::ObjectWriter* reader);
     *    bool boolVal;
     * };
     *
