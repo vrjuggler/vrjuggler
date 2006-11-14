@@ -253,10 +253,10 @@ namespace vrj
       if ( NULL != mPerfIf )
       {
          // Attempt to initialize the remote performance monitoring component.
-         if ( mPerfIf->init().success() )
+         if ( mPerfIf->init() )
          {
             // Now, attempt to enable remote performance monitoring hooks.
-            if ( ! mPerfIf->enable().success() )
+            if ( ! mPerfIf->enable() )
             {
                vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING:")

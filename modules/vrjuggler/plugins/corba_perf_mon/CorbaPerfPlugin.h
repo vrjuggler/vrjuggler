@@ -31,10 +31,10 @@
 
 #include <string>
 
-#include <vpr/Util/ReturnStatus.h>
 #include <tweek/CORBA/CorbaManager.h>
 #include <vrj/Performance/PerfPlugin.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
+
 
 namespace jccl
 {
@@ -69,10 +69,10 @@ namespace vrj
       bool configRemove(jccl::ConfigElementPtr e);
 
       /** Stubbed out function required by the vrj::PerfPlugin interface. */
-      vpr::ReturnStatus init();
+      bool init();
 
       /** Stubbed out function required by the vrj::PerfPlugin interface. */
-      vpr::ReturnStatus enable();
+      bool enable();
 
       bool isEnabled() const;
 
@@ -108,9 +108,8 @@ namespace vrj
        * @param iiopVer The version of IIOP the Naming Service is using.  This
        *                is normally 1.0 or 1.2.
        */
-      vpr::ReturnStatus startCorba(const std::string& nsHost,
-                                   const vpr::Uint16 nsPort,
-                                   const std::string& iiopVer);
+      bool startCorba(const std::string& nsHost, const vpr::Uint16 nsPort,
+                      const std::string& iiopVer);
 
       /**
        * Disables the local CORBA instance and releases the resources allocated

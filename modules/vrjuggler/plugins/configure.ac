@@ -141,7 +141,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-vrj_version='2.1.10'
+vrj_version='2.1.15'
 jccl_version='1.1.5'
 VRJUGGLER_PATH([$vrj_version], [test_tweek_cxx='Y'],
    [AC_MSG_WARN([*** VRJ C++ API required for VRJ C++ plug-ins ***])

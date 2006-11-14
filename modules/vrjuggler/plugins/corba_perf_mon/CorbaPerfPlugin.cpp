@@ -119,14 +119,14 @@ namespace vrj
       return true;
    }
 
-   vpr::ReturnStatus CorbaPerfPlugin::init()
+   bool CorbaPerfPlugin::init()
    {
-      return vpr::ReturnStatus();
+      return true;
    }
 
-   vpr::ReturnStatus CorbaPerfPlugin::enable()
+   bool CorbaPerfPlugin::enable()
    {
-      return vpr::ReturnStatus();
+      return true;
    }
 
    bool CorbaPerfPlugin::isEnabled() const
@@ -176,22 +176,24 @@ namespace vrj
       mEnabled = false;
    }
 
-   vpr::ReturnStatus CorbaPerfPlugin::startCorba(const std::string& nsHost,
-                                                 const vpr::Uint16 nsPort,
-                                                 const std::string& iiopVer)
+   bool CorbaPerfPlugin::startCorba(const std::string& nsHost,
+                                    const vpr::Uint16 nsPort,
+                                    const std::string& iiopVer)
    {
       // Create new CORBA Manager and initialize it.
       mCorbaManager = new tweek::CorbaManager;
       std::string err_msg("Error occured during initialization");
-      vpr::ReturnStatus status;
+      bool result(true);
 
       try
       {
          int dummy_int(0);
 
          // Attempt to initialize the CORBA Manager.
-         status = mCorbaManager->init("corba_perf_mon", dummy_int, NULL, nsHost,
-                                      nsPort, iiopVer);
+         vpr::ReturnStatus status = mCorbaManager->init("corba_perf_mon",
+                                                        dummy_int, NULL,
+                                                        nsHost, nsPort,
+                                                        iiopVer);
 
          // Test to see if init succeeded.
          if ( status.success() )
@@ -228,7 +230,7 @@ namespace vrj
                      vprDEBUG_NEXT(vrjDBG_PLUGIN, vprDBG_WARNING_LVL)
                      << "Disabling CORBAmremote performance monitoring.\n"
                         << vprDEBUG_FLUSH;
-                     status.setCode(vpr::ReturnStatus::Fail);
+                     result = false;
                   }
                }
                else
@@ -262,10 +264,10 @@ namespace vrj
 
          delete mCorbaManager;
          mCorbaManager = NULL;
-         status.setCode(vpr::ReturnStatus::Fail);
+         result = false;
       }
 
-      return status;
+      return result;
    }
 
    void CorbaPerfPlugin::stopCorba()

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-14-2006 patrick     Replaced vpr::ReturnStatus usage with bool in the
+                        vrj::PerfPlugin interface.
+                        NEW VERSION: 2.1.15
 Oct-30-2006 patrick     Register signal handlers for SIGINT, SIGTERM, and (on
                         Windows only) SIGBREAK when the kernel is started.
                         NEW VERSION: 2.1.14

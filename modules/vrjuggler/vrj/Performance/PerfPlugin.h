@@ -29,8 +29,6 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace vrj
 {
@@ -51,13 +49,13 @@ namespace vrj
       /**
        * Initializes the performance monitoring interface.
        */
-      virtual vpr::ReturnStatus init() = 0;
+      virtual bool init() = 0;
 
       /**
        * Turns on the interface to performance monitoring (allow incoming
        * connections).
        */   
-      virtual vpr::ReturnStatus enable() = 0;
+      virtual bool enable() = 0;
 
       /** Indicates whether this performance monitoring object is active. */
       virtual bool isEnabled() const = 0;
