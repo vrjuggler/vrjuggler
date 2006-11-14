@@ -71,9 +71,6 @@
 
 #include <drivers/Open/VRPN/Vrpn.h>
 
-#define VRPN_DEBUG 0
-// 1 == reporting
-// 2 == misc
 
 extern "C"
 {
@@ -95,9 +92,8 @@ namespace gadget
 
 void VRPN_CALLBACK staticHandleTracker(void* userdata, vrpn_TRACKERCB t)
 {
-#if (VRPN_DEBUG & 1)
-   std::cout << "HandleTracker" << std::endl;
-#endif
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "VRPN driver staticHanldeTracker() called\n" << vprDEBUG_FLUSH;
 
    gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->handleTracker(t);
@@ -105,9 +101,8 @@ void VRPN_CALLBACK staticHandleTracker(void* userdata, vrpn_TRACKERCB t)
 
 void VRPN_CALLBACK staticHandleButton(void* userdata, vrpn_BUTTONCB b)
 {
-#if (VRPN_DEBUG & 1)
-   std::cout << "HandleButton" << std::endl;
-#endif
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "VRPN driver staticHanldeButton() called\n" << vprDEBUG_FLUSH;
 
    gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->handleButton(b);
@@ -115,9 +110,8 @@ void VRPN_CALLBACK staticHandleButton(void* userdata, vrpn_BUTTONCB b)
 
 void VRPN_CALLBACK staticHandleAnalog(void* userdata, vrpn_ANALOGCB b)
 {
-#if (VRPN_DEBUG&1)
-   std::cout << "HandleAnalog" << std::endl;
-#endif
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "VRPN driver staticHanldeAnalog() called\n" << vprDEBUG_FLUSH;
 
    gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->handleAnalog(b);
@@ -328,13 +322,12 @@ void Vrpn::handleTracker(const vrpn_TRACKERCB& t)
       mQuats.resize(t.sensor);
    }
 
-#if (VRPN_DEBUG & 1)
-   std::cout << "Tracker #"<<t.sensor<< " quat "
-             << mQuats[t.sensor][0] << " "
-             << mQuats[t.sensor][1] << " "
-             << mQuats[t.sensor][2] << " "
-             << mQuats[t.sensor][3] << " " << std::endl;
-#endif
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+      << "Tracker #"<< t.sensor << " quat "
+      << mQuats[t.sensor][0] << " "
+      << mQuats[t.sensor][1] << " "
+      << mQuats[t.sensor][2] << " "
+      << mQuats[t.sensor][3] << std::endl << vprDEBUG_FLUSH;
 
    mQuats[t.sensor][0] = t.quat[0];
    mQuats[t.sensor][1] = t.quat[1];
@@ -350,17 +343,16 @@ void Vrpn::handleButton(const vrpn_BUTTONCB& b)
 {
    if ( b.button > mButtonNumber )
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "Vrpn: button " << b.button
          << " out of declared range ("<<mButtons.size()<<")"<<std::endl
          << vprDEBUG_FLUSH;
       mButtons.resize(b.button);
    }
 
-#if (VRPN_DEBUG & 1)
-   std::cout << "Button #" << b.button << " state " << b.state << " "
-             << std::endl;
-#endif
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+      << "Button #" << b.button << " state " << b.state << std::endl
+      << vprDEBUG_FLUSH;
 
    mButtons[b.button] = b.state;
 }
@@ -369,7 +361,7 @@ void Vrpn::handleAnalog(const vrpn_ANALOGCB& b)
 {
    if ( b.num_channel > mAnalogNumber )
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "Vrpn: analog channel size " << b.num_channel
          << " out of declared range (" << mAnalogs.size() << ")" << std::endl
          << vprDEBUG_FLUSH;
@@ -378,10 +370,9 @@ void Vrpn::handleAnalog(const vrpn_ANALOGCB& b)
 
    for ( int i = 0; i < b.num_channel; ++i )
    {
-#if (VRPN_DEBUG & 1)
-      std::cout << "Analog #" << i << " value " << b.channel[i] << " "
-                << std::endl;
-#endif
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+	 << "Analog #" << i << " value " << b.channel[i] << std::endl
+	 << vprDEBUG_FLUSH;
 
       float value(0.0f);
       normalizeMinToMax(b.channel[i], value);
