@@ -404,9 +404,8 @@ void VNCInterface::readData(std::string& data, vpr::Uint32 len)
    }
    catch (vpr::IOException& ex)
    {
-      std::cerr << ex.what() << std::endl;
       std::stringstream msg_stream;
-      msg_stream << "Failed to read " << len << " bytes";
+      msg_stream << "Failed to read " << len << " bytes: " << ex.what();
       // XXX: setCause(ex) ?
       throw NetReadException(msg_stream.str());
    }
@@ -419,28 +418,31 @@ void VNCInterface::readData(void* data, vpr::Uint32 len)
                         "readData(void*, vpr::Uint32) done.\n");
 
    vpr::Uint32 bytes_read;
-   vpr::ReturnStatus read_status;
 
    vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "Reading " << len << " bytes from socket\n" << vprDEBUG_FLUSH;
 
-   mSock.recvn(data, len, bytes_read);
-
-   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
-      << "Got " << bytes_read << " bytes from socket\n" << vprDEBUG_FLUSH;
-
-   if ( ! read_status.success() || len != bytes_read )
+   try
    {
-      char msg[256];
-      sprintf(msg, "Failed to read %u bytes", len);
-      throw NetReadException(msg);
+      mSock.recvn(data, len, bytes_read);
+      vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
+         << "Got " << bytes_read << " bytes from socket\n" << vprDEBUG_FLUSH;
+
+      if ( len != bytes_read )
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Failed to read " << len << " bytes";
+         throw NetReadException(msg_stream.str());
+      }
+   }
+   catch (vpr::IOException& ex)
+   {
+      throw NetReadException(ex.what());
    }
 }
 
 void VNCInterface::writeData(const void* data, vpr::Uint32 len)
 {
-   vpr::ReturnStatus write_status;
-
    try
    {
       vpr::Uint32 bytes_written;
