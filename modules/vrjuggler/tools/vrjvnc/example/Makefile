@@ -26,8 +26,7 @@
 # Makefile for vrjuggler/tools/vrjvnc/example.  This requires GNU make.
 # -----------------------------------------------------------------------------
 
-# XXX: This is kind of bad.  What if Doozer didn't come with VR Juggler?
-DZR_BASE_DIR?=	$(VJ_BASE_DIR)/share/Doozer
+DZR_BASE_DIR?=	$(shell flagpoll doozer --get-prefix)
 
 include $(DZR_BASE_DIR)/mk/dzr.hosttype.mk
 include $(DZR_BASE_DIR)/ext/vpr/dzr.vpr.mk
@@ -54,7 +53,7 @@ EXTRA_PATH_FOR_SOURCES=	$(srcdir)/..
 OBJDIR=	$(SYS_SETTING).obj
 DEPDIR=	$(SYS_SETTING).obj
 
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
 # -----------------------------------------------------------------------------
