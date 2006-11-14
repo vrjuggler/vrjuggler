@@ -97,10 +97,13 @@ public:
     * This is called immediately after a new scene viewer is created for a
     * context.  This is the place to configure application background colors
     * and other viewer-specific information.
+    *
+    * @post \p newSceneViewer is initialized.
     */
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
       newSceneViewer->setDefaults();
+      newSceneViewer->init();
       newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
       // Needed for stereo to work.
