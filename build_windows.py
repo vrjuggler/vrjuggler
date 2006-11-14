@@ -272,7 +272,8 @@ def getDefaultVars(clVerMajor, clVerMinor):
                                'TrackdAPI installation directory', '',
                                required = False))
    optional.append(BuildOption('DOOZER_ROOT',
-                               'Doozer installation directory', ''))
+                               'Doozer installation directory', '',
+                               required = False))
 
    options = {
       'prefix'      : r'C:\vrjuggler',
