@@ -447,6 +447,7 @@ void Vrpn::updateData()
    // Swap it
    swapPositionBuffers();
    swapDigitalBuffers();
+   swapAnalogBuffers();
 }
 
 gmtl::Matrix44f Vrpn::getSensorPos(const unsigned int i)
