@@ -1,6 +1,6 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# VR Juggler is (C) Copyright 1998-2006 by Iowa State University
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
 #
 # Original Authors:
 #   Allen Bierbaum, Christopher Just,
@@ -23,14 +23,14 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          $RCSfile: Makefile,v $
+# File:          $RCSfile$
 # Date modified: $Date$
 # Version:       $Revision$
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-IDL=		$(OMNIORB_BIN)\omniidl.exe
+IDL=		$(OMNIORB_BIN)\omniidl
 IDL_OPTS=	-bcxx -Wbh=.h,s=.cpp -C$(IDL_OUT_DIR)
 IDL_INCLUDES=	-I../../modules/tweek
 IDL_OUT_DIR=	..\Tweek_CXX\tweek\idl 

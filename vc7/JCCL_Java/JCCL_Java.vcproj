@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="JCCL Java API"
 	ProjectGUID="{A50E05B2-E96E-4455-BD3F-011CF1D2FF79}"
 	Keyword="MakeFileProj">
@@ -23,8 +23,6 @@
 				Output="jccl_conifg.jar"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"

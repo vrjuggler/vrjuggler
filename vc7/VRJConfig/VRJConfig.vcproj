@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="VRJConfig"
 	ProjectGUID="{67DD23CD-584C-46E0-AF9E-2DFCAF2A99D5}"
 	Keyword="MakeFileProj">
@@ -23,8 +23,6 @@
 				Output="VRJConfig.jar"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"

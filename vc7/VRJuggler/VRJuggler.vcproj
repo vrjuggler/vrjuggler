@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="VR Juggler"
 	ProjectGUID="{8CD85B68-8E87-4289-9CD3-0C0012781BF2}"
 	Keyword="Win32Proj">
@@ -59,13 +59,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL|Win32"
@@ -119,17 +113,9 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -235,10 +221,10 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Test\Message.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerformanceMediator.h">
+				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerfPlugin.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerfPlugin.h">
+				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerformanceMediator.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PluginConfig.h">

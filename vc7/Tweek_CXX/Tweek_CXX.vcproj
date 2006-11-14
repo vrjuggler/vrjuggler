@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="Tweek C++ API"
 	ProjectGUID="{0FBA5DC5-0D51-4394-9615-A60B0F570B66}"
 	Keyword="Win32Proj">
@@ -58,13 +58,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL|Win32"
@@ -118,17 +112,9 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -164,10 +150,10 @@
 				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectManagerImpl.cpp">
 			</File>
 			<File
-				RelativePath="tweek\tweekParam.cpp">
+				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
+				RelativePath="tweek\tweekParam.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -207,6 +193,9 @@
 				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectManagerImpl.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\tweek\tweek\Util\Version.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\tweek\tweek\tweek.h">
 			</File>
 			<File
@@ -217,9 +206,6 @@
 			</File>
 			<File
 				RelativePath="tweek\tweekParam.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\tweek\tweek\Util\Version.h">
 			</File>
 		</Filter>
 		<Filter
