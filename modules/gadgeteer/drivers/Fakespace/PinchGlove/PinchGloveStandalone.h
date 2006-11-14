@@ -118,7 +118,7 @@ public:
    /**
     * Set proper serial port settings and open serial port.
     */
-   vpr::ReturnStatus connect(const std::string& port_name, int baud);
+   bool connect(const std::string& port_name, int baud);
 
    /**
     * Query the PinchGlove device for various information and print it to the
@@ -129,13 +129,13 @@ public:
     *       Processor code.
     *       Length of tick length returned in timestamp.
     */
-   vpr::ReturnStatus printHardwareInformation(std::vector<std::string>& info);
+   bool printHardwareInformation(std::vector<std::string>& info);
    
    /**
     * Informs the PinchGlove hardware if it shoulf include timestamps with 
     * data packet. Timestamps are on by default. (Pinch Glove Manual p. 8)
     */
-   vpr::ReturnStatus setTimestampsOn(const bool val);
+   bool setTimestampsOn(const bool val);
    
    /**
     * To support different backwardly compatible interfaces, this sets the
@@ -143,7 +143,7 @@ public:
     * to date is version 1. But in the future it will be possible to set the
     * version and have new hardware emulate this data packet format version.
     */
-   vpr::ReturnStatus setDataFormatVersion(const vpr::Uint8& format);
+   bool setDataFormatVersion(const vpr::Uint8& format);
   
    /**
     * Return the next data packet waiting in the serial port buffer.
@@ -152,7 +152,7 @@ public:
     *       data when a "pinch" occurs. And in order to eliminate data
     *       possibility of a deadlock this method must not be blocking.
     */
-   vpr::ReturnStatus sample(std::vector<int>& data, int& timestamp);
+   bool sample(std::vector<int>& data, int& timestamp);
 
 private:
    /**
@@ -161,14 +161,17 @@ private:
     * @param first  First byte to send, the command.
     * @param second Second byte to send, the parameter.
     */
-   vpr::ReturnStatus sendCommand(const vpr::Uint8& first, 
-                                 const vpr::Uint8& second);
+   void sendCommand(const vpr::Uint8& first, const vpr::Uint8& second);
 
    /**
-    * Read any data from the PinchGlove into result that is of the correct type.
+    * Read any data from the PinchGlove into result that is of the correct
+    * type. Errors are reported by throwing exceptions.
+    *
+    * @throw PinchGlove::TimeoutException is thrown if any I/O exception
+    *        occurs while tryign to read from the device.
     */
-   vpr::ReturnStatus readData(std::vector<vpr::Uint8>& result, 
-                              const vpr::Uint8& data_type);
+   void readData(std::vector<vpr::Uint8>& result,
+                 const vpr::Uint8& data_type);
 
 private:
    vpr::SerialPort*     mPort; /**< Serial port used to communicate with device. */

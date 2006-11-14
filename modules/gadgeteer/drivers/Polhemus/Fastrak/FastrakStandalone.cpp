@@ -36,9 +36,9 @@
 
 #include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
 
-vpr::ReturnStatus FastrakStandalone::open()
+bool FastrakStandalone::open()
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
    mSerialPort = new vpr::SerialPort(std::string(mConf.port));
    mSerialPort->setBlocking(false);
@@ -50,7 +50,7 @@ vpr::ReturnStatus FastrakStandalone::open()
    }
    catch (vpr::IOException&)
    {
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
 
    {
@@ -104,7 +104,6 @@ void FastrakStandalone::trackerFinish()
 int FastrakStandalone::Read(int len)
 {
    vpr::Uint32 bytes_read;
-   vpr::ReturnStatus status;
 
    int rem = len;
    unsigned char tempBuf[256];
@@ -180,9 +179,8 @@ void FastrakStandalone::readloop()
    }
 }
 
-vpr::ReturnStatus FastrakStandalone::readStatus()
+bool FastrakStandalone::readStatus()
 {
-   vpr::ReturnStatus retval;
    vpr::Uint32 bytes_read, bytes_written;
 
    //Set to non-continuous mode
@@ -194,7 +192,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    {
       fprintf(stderr,
               "[FastrakStandalone] Failure setting non-continuous mode for tracker");
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
 
    mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
@@ -210,7 +208,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    {
       fprintf(stderr,
               "[FastrakStandalone] Failure writing status command to tracker");
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
 
    int numPasses = 0;
@@ -238,7 +236,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       {
          fprintf(stderr,
                  "[FastrakStandalone] Failure reading status byte from tracker");
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
 
       /* Read next byte and try matching status reply's prefix: */
@@ -306,7 +304,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
             << "continuous mode. You may need to manually reset if the "
             << "software reset doesn't work. Attempting reset..."
             << std::endl << vprDEBUG_FLUSH;
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
    }
 
@@ -315,7 +313,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    {
       fprintf(stderr,
               "[FastrakStandalone] Failure getting status message from tracker)");
-      return vpr::ReturnStatus::Fail;
+      return false;
    }
 
    /* Read rest of status reply until final CR/LF pair: */
@@ -346,7 +344,7 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       {
          fprintf(stderr,
                  "[FastrakStandalone] Failure reading second round status byte from tracker\n");
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
 
       char input = *cPtr;
@@ -385,10 +383,10 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       << "[FastrakStandalone] Tracker status: " << buffer
       << std::endl << vprDEBUG_FLUSH;
 
-   return vpr::ReturnStatus::Succeed;
+   return true;
 }
 
-vpr::ReturnStatus FastrakStandalone::trackerInit()
+bool FastrakStandalone::trackerInit()
 {
    vprASSERT(mSerialPort->isOpen() && "Port must be open before initializing");
    vpr::Uint32 bytes_written;
@@ -398,8 +396,7 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
    char c;
 
    //Added this to help check on the status of the tracker at startup
-   vpr::ReturnStatus retval;
-   if ( !(retval = readStatus()).success() )
+   if ( ! readStatus() )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
          << "[FastrakStandalone] Not able to read status from tracker. Attempting reset..."
@@ -410,13 +407,12 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
       vpr::System::msleep(15000);//Sleep for 15 seconds
 
       //Added this to help check on the status of the tracker at startup
-      vpr::ReturnStatus retval;
-      if ( !(retval = readStatus()).success() )
+      if ( ! readStatus() )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
             << "[FastrakStandalone] Not able to read status from tracker "
             << std::endl << vprDEBUG_FLUSH;
-         return retval;
+         return false;
       }
    }
 
@@ -568,7 +564,7 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
       checkchild();
    }
 
-   return vpr::ReturnStatus();
+   return true;
 }
 
 void FastrakStandalone::checkchild()

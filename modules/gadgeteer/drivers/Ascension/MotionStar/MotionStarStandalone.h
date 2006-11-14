@@ -35,7 +35,6 @@
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/Socket.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #include <drivers/Ascension/MotionStar/MotionStarExceptions.h>
 
@@ -482,9 +481,8 @@ public:
     *       connection attempt fails, error status is returned to the
     *       caller.
     *
-    * @return vpr::ReturnStatus::Success is returned if the device is
-    *         started correctly.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
+    * @return \c true is returned if the device is started correctly.
+    *         \c false is returned otherwise.
     *
     * @throw mstar::NetworkException is thrown if the socket to be used for
     *        communication with the MotionStar chassis cannot be opened.
@@ -494,7 +492,7 @@ public:
     *        received data from the MotionStar chassis encounters in an
     *        unknown data scale factor.
     */
-   vpr::ReturnStatus start();
+   bool start();
 
    /**
     * The data flow from the server is stopped, the server is told to go to
@@ -532,13 +530,10 @@ public:
     *      receiving data.
     * @post A MSG_STOP_DATA command is sent to the server.
     *
-    * @return vpr::ReturnStatus::Succeed if the data flow was stopped;
-    *         vpr::ReturnStatus::Fail otherwise.
-    *
     * @throw mstar::CommandException is thrown if the command send to the
     *        MotionStar chassis telling it to stop communication fails.
     */
-   vpr::ReturnStatus stopData();
+   void stopData();
 
    /**
     * Shuts down the server chassis.
@@ -548,13 +543,10 @@ public:
     * @post A MSG_SHUT_DOWN command is sent to the server.  If the server is
     *       shut down successfully, m_active is set to false.
     *
-    * @return vpr::ReturnStatus::Succeed if the data flow was stopped;
-    *         vpr::ReturnStatus::Fail otherwise.
-    *
     * @throw mstar::CommandException is thrown if the command send to the
     *        MotionStar chassis telling it to go to sleep fails.
     */
-   vpr::ReturnStatus shutdown();
+   void shutdown();
 
    /**
     * Returns whether the MotionStar is active or not.
@@ -959,13 +951,11 @@ private:
     *       responds but has set an error code, send a MSG_SHUT_DOWN packet
     *       and another MSG_WAKE_UP packet to restart the server.
     *
-    * @return  0 if the server was awakened; -1 otherwise.
-    *
     * @throw mstar::CommandException is thrown if it is necessary to
     *        re-initialize the MotionStar chassis with a wake-up call but
     *        that effort fails.
     */
-   vpr::ReturnStatus sendWakeUp();
+   void sendWakeUp();
 
    /**
     * Gets the system status.
@@ -998,12 +988,11 @@ private:
     * @param xmtrNum   The transmitter number to use.
     * @param dataRate  The data measurement rate to use.
     *
-    * @return vpr::ReturnStatus::Succeed if the configuration was sent
-    *         successfully; vpr::ReturnStatus::Fail otherwise.
+    * @return \c true if the configuration was sent successfully; \c false
+    *         otherwise.
     */
-   vpr::ReturnStatus setSystemStatus(BIRDNET::SYSTEM_STATUS* sysStatus,
-                                     const unsigned char xmtrNum,
-                                     const char dataRate[6]);
+   bool setSystemStatus(BIRDNET::SYSTEM_STATUS* sysStatus,
+                        const unsigned char xmtrNum, const char dataRate[6]);
 
    /**
     * Read the configurations of all the birds and send our configuration
@@ -1060,11 +1049,11 @@ private:
     * @param status A pointer to a BIRDNET::BIRD_STATUS object describing
     *               the new configuration for the given bird.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the bird was
-    *         configured successfully.  vpr::ReturnStatus::Fail is returned
-    *         if the bird could not be configured for some reason.
+    * @return \c true is returned if the bird was configured successfully.
+    *         \c false is returned if the bird could not be configured for
+    *         some reason.
     */
-   vpr::ReturnStatus setBirdStatus(const unsigned char bird,
+   bool setBirdStatus(const unsigned char bird,
                                    BIRDNET::BIRD_STATUS* status);
 
    /**
@@ -1113,9 +1102,8 @@ private:
     *                    sent to the server.
     * @param buffer_size The size of the configuration buffer.
     */
-   vpr::ReturnStatus setDeviceStatus(const unsigned char device,
-                                     const char* buffer,
-                                     const unsigned short buffer_size);
+   bool setDeviceStatus(const unsigned char device, const char* buffer,
+                        const unsigned short buffer_size);
 
    /**
     * Tells the MotionStar server to sample continuously.
@@ -1125,14 +1113,14 @@ private:
     * @post A MSG_RUN_CONTINUOUS packet is sent to the server.  The server
     *       responds and then begins sending a continuous stream of data.
     *
-    * @return vpr::ReturnStatus::Success if the server is now sending
-    *         continuous data.  vpr::ReturnStatus::Fail is returned if the
-    *         run mode could not be set to BIRDNET::CONTINUOUS.
+    * @return \c true if the server is now sending continuous data.
+    *         \c false is returned if the run mode could not be set to
+    *         BIRDNET::CONTINUOUS.
     *
     * @throw mstar::CommandException is thrown if communication with the
     *        MotionStar chassis fails.
     */
-   vpr::ReturnStatus setContinuous();
+   bool setContinuous();
 
    /**
     * Converts the raw positional information in the given array to the
@@ -1406,17 +1394,13 @@ private:
     * @param packet     A pointer to the message to be sent to the server.
     * @param packetSize The size of the message being sent.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the network send
-    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
-    *         is returned, or an exception is thrown.
-    *
     * @throw mstar::NetworkWriteException is thrown if sending data on the
     *        connected socket fails.
     * @throw mstar::NoDataWrittenException is thrown if the write succeeds
     *        but no data is written to the socket. This would mean that the
     *        send failed to do anything.
     */
-   vpr::ReturnStatus sendMsg(const void* packet, const size_t packetSize);
+   void sendMsg(const void* packet, const size_t packetSize);
 
    /**
     * Gets the server's response to a sent message.  This version takes a
@@ -1434,10 +1418,6 @@ private:
     *
     * @param packet A pointer to the message to be sent to the server.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the network send
-    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
-    *         is returned, or an exception is thrown.
-    *
     * @throw mstar::NetworkWriteException is thrown if sending data on the
     *        connected socket fails.
     * @throw mstar::NoDataWrittenException is thrown if the write succeeds
@@ -1446,7 +1426,7 @@ private:
     *
     * @see sendMsg(const void*, const size_t)
     */
-   vpr::ReturnStatus sendMsg(BIRDNET::HEADER* packet);
+   void sendMsg(BIRDNET::HEADER* packet);
 
    /**
     * Gets the server's response to a sent message.
@@ -1458,17 +1438,13 @@ private:
     *                   server's response packet will be read.
     * @param packetSize The size of the given memory block.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the network read
-    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
-    *         is returned, or an exception is thrown.
-    *
     * @throw mstar::NetworkReadException is thrown if reading data on the
     *        connected socket fails.
     * @throw mstar::NoDataReadException is thrown if the read succeeds but no
     *        data was read from the socket. This would mean that the read
     *        failed to do anything.
     */
-   vpr::ReturnStatus getRsp(void* packet, const size_t packetSize);
+   void getRsp(void* packet, const size_t packetSize);
 
    /**
     * Gets the server's response to a sent message.  This version takes a
@@ -1484,10 +1460,6 @@ private:
     * @param packet A pointer to the memory block into which the server's
     *               response packet will be read.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the network read
-    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
-    *         is returned, or an exception is thrown.
-    *
     * @throw mstar::NetworkReadException is thrown if reading data on the
     *        connected socket fails.
     * @throw mstar::NoDataReadException is thrown if the read succeeds but no
@@ -1496,7 +1468,7 @@ private:
     *
     * @see getRsp(void*, const size_t)
     */
-   vpr::ReturnStatus getRsp(BIRDNET::HEADER* packet);
+   void getRsp(BIRDNET::HEADER* packet);
 
    /**
     * Prints the system status as read from the server.

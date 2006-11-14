@@ -438,9 +438,9 @@ bool Fastrak::startSampling()
 {
    bool status(false);
 
-   if ( mFastrakDev.open().success() )
+   if ( mFastrakDev.open() )
    {
-      if (mFastrakDev.trackerInit().failure())
+      if ( ! mFastrakDev.trackerInit() )
       {
          return status;
       }

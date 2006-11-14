@@ -105,7 +105,7 @@ bool PinchGlove::startSampling()
          << std::setw(port_width) << mPortName << std::endl << vprDEBUG_FLUSH;
      
       // Attempt to connect to the PinchGlove. 
-      if(!mGlove->connect(mPortName, mBaud).success())
+      if ( ! mGlove->connect(mPortName, mBaud) )
       {
          return false;
       }
@@ -114,13 +114,13 @@ bool PinchGlove::startSampling()
       std::vector<std::string> info(0);
 
       // Query the PinchGlove for its harware information.
-      if(!mGlove->printHardwareInformation(info).success())
+      if ( ! mGlove->printHardwareInformation(info) )
       {
          return false;
       }
       
       // Time stamps are on by default. (Pinch Glove Manual p. 8)
-      if(!mGlove->setTimestampsOn(true).success())
+      if ( ! mGlove->setTimestampsOn(true) )
       {
          return false;
       }
@@ -202,7 +202,7 @@ bool PinchGlove::sample()
    int timestamp = 0;
    
    // Get data from PinchGlove;
-   if(mGlove->sample(data, timestamp).success())
+   if ( mGlove->sample(data, timestamp) )
    {
       // Copy the data into a new digital sample.
       std::copy(data.begin(), data.end(), digital_sample.begin());
@@ -219,9 +219,9 @@ bool PinchGlove::sample()
       //   std::cout << (data[i] > 0 ? "1" : "0");
       //}
       //std::cout << std::endl;
-      return 1;
+      return true;
    }
-   return 0;
+   return false;
 }
 
 void PinchGlove::updateData()

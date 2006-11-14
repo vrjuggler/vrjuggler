@@ -94,9 +94,9 @@ public:
     *
     * @pre The configuration must have been set using setConfig().
     */
-   vpr::ReturnStatus open();
+   bool open();
 
-   vpr::ReturnStatus trackerInit();
+   bool trackerInit();
 
    void getNewCoords(unsigned int station, float *vecXYZ, float *vecAER);
    int getNewButtonStatus(unsigned int station);
@@ -105,7 +105,7 @@ public:
    int getCoords(unsigned int stations, float *vecXYZ, float *vecAER);
 
 private:
-   vpr::ReturnStatus readStatus();
+   bool readStatus();
 
    int Read(int len);
    void readloop();

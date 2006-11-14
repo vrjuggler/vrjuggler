@@ -50,7 +50,7 @@ namespace gadget
       }
    }
 
-   vpr::ReturnStatus PinchGloveStandalone::connect(const std::string& port_name, int baud)
+   bool PinchGloveStandalone::connect(const std::string& port_name, int baud)
    {
       // Create a new serial port
       mPort = new vpr::SerialPort(port_name);
@@ -64,7 +64,7 @@ namespace gadget
       }
       catch (vpr::IOException&)
       {
-         return(vpr::ReturnStatus::Fail);
+         return false;
       }
       
       // Reset all port settings to false.
@@ -86,12 +86,11 @@ namespace gadget
       // Set the output/input baud rates. Put output first to be safe.
       mPort->setOutputBaudRate(baud);
       mPort->setInputBaudRate(baud);
-      return(vpr::ReturnStatus::Succeed);
+      return true;
    }
    
-   vpr::ReturnStatus PinchGloveStandalone::setTimestampsOn(const bool val)
+   bool PinchGloveStandalone::setTimestampsOn(const bool val)
    {
-      vpr::ReturnStatus status;
       std::vector<vpr::Uint8> result;
       vpr::Uint8 data_type = PinchGlove::Control::START_BYTE_INFO;
     
@@ -102,59 +101,61 @@ namespace gadget
                                 PinchGlove::Parameter::TimeStampsOff);
       try
       {
-         status = sendCommand(PinchGlove::Command::TimeStamp, param);
+         sendCommand(PinchGlove::Command::TimeStamp, param);
          
          // If we could not read from the device, or the device responded with a
          // different value then we sent it.
-         if(!readData(result, data_type).success() ||
-            result[0] != param)
+         readData(result, data_type);
+         if ( result[0] != param )
          {
-            return vpr::ReturnStatus::Fail;
+            return false;
          }
       }
       catch(PinchGlove::TimeoutException& e)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << e.getMessage() << std::endl << vprDEBUG_FLUSH;
-         return vpr::ReturnStatus::Timeout;
+         // XXX: This used to return vpr::ReturnStatus::Timeout. Should it now
+         // rethrow the caught exception instead of returning false?
+         return false;
       }
       
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
    
-   vpr::ReturnStatus 
+   bool 
    PinchGloveStandalone::setDataFormatVersion(const vpr::Uint8& format_version)
    {
-      vpr::ReturnStatus status;
       std::vector<vpr::Uint8> result;
       vpr::Uint8 data_type = PinchGlove::Control::START_BYTE_INFO;
       
       try
       {
-         status = sendCommand(PinchGlove::Command::TimeStamp, format_version);
+         sendCommand(PinchGlove::Command::TimeStamp, format_version);
          
          // If we could not read from the device, or the device responded with a
          // different value then we sent it.
-         if(!readData(result, data_type).success() ||
-            result[0] != format_version)
+         readData(result, data_type);
+         if ( result[0] != format_version )
          {
-            return vpr::ReturnStatus::Fail;
+            return false;
          }
       }
       catch(PinchGlove::TimeoutException& e)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << e.getMessage() << std::endl << vprDEBUG_FLUSH;
-         return vpr::ReturnStatus::Timeout;
+         // XXX: This used to return vpr::ReturnStatus::Timeout. Should it now
+         // rethrow the caught exception instead of returning false?
+         return false;
       }
       
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
-   vpr::ReturnStatus
+   bool
    PinchGloveStandalone::printHardwareInformation(std::vector<std::string>& info)
    {
-      vpr::ReturnStatus status;
       std::vector<vpr::Uint8> result;
       std::string result_string;
       vpr::Uint8 data_type = PinchGlove::Control::START_BYTE_INFO;
@@ -166,36 +167,36 @@ namespace gadget
          info.push_back("================ FakeSpace PinchGlove ================");
 
          // Query the version of the left glove.
-         status = sendCommand(PinchGlove::Command::QueryHardware,
-                              PinchGlove::Parameter::LeftVersion);
-         status = readData(result, data_type);
+         sendCommand(PinchGlove::Command::QueryHardware,
+                     PinchGlove::Parameter::LeftVersion);
+         readData(result, data_type);
          result_string.resize(result.size());
          std::copy(result.begin(), result.end(), result_string.begin());
          result_string = "[PinchGlove] Version for Left Glove:   " + result_string;
          info.push_back(result_string);
 
          // Query the version of the right glove.
-         status = sendCommand(PinchGlove::Command::QueryHardware,
-                              PinchGlove::Parameter::RightVersion);
-         status = readData(result, data_type);
+         sendCommand(PinchGlove::Command::QueryHardware,
+                     PinchGlove::Parameter::RightVersion);
+         readData(result, data_type);
          result_string.resize(result.size());
          std::copy(result.begin(), result.end(), result_string.begin());
          result_string = "[PinchGlove] Version for Right Glove:  " + result_string;
          info.push_back(result_string);
          
          // Query the processor code.
-         status = sendCommand(PinchGlove::Command::QueryHardware,
-                              PinchGlove::Parameter::ProcessorCode);
-         status = readData(result, data_type);
+         sendCommand(PinchGlove::Command::QueryHardware,
+                     PinchGlove::Parameter::ProcessorCode);
+         readData(result, data_type);
          result_string.resize(result.size());
          std::copy(result.begin(), result.end(), result_string.begin());
          result_string = "[PinchGlove] Processor Code:           " + result_string;
          info.push_back(result_string);
          
          // Query the length of each timestamp tick.
-         status = sendCommand(PinchGlove::Command::QueryHardware,
-                              PinchGlove::Parameter::TickLength);
-         status = readData(result, data_type);
+         sendCommand(PinchGlove::Command::QueryHardware,
+                     PinchGlove::Parameter::TickLength);
+         readData(result, data_type);
          result_string.resize(result.size());
          std::copy(result.begin(), result.end(), result_string.begin());
          result_string = "[PinchGlove] Length of timestamp tick: " + result_string;
@@ -207,13 +208,15 @@ namespace gadget
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << e.getMessage() << std::endl << vprDEBUG_FLUSH;
-         return vpr::ReturnStatus::Timeout;
+         // XXX: This used to return vpr::ReturnStatus::Timeout. Should it now
+         // rethrow the caught exception instead of returning false?
+         return false;
       }
       
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
-   vpr::ReturnStatus PinchGloveStandalone::sample(std::vector<int>& data, int& timestamp)
+   bool PinchGloveStandalone::sample(std::vector<int>& data, int& timestamp)
    {
       std::vector<vpr::Uint8> input_data(0);
       vpr::Uint8 data_type;
@@ -231,14 +234,15 @@ namespace gadget
       // Try to get data from serial port.
       try
       {
-         vpr::ReturnStatus status 
-               = readData(input_data, data_type);
+         readData(input_data, data_type);
       }
       catch(PinchGlove::TimeoutException)
       {
          // We recieved a timeout, this is normal since the PinchGlove only
          // returns data when a pinch occurs.
-         return vpr::ReturnStatus::Timeout;
+         // XXX: This used to return vpr::ReturnStatus::Timeout. Should it now
+         // rethrow the caught exception instead of returning false?
+         return false;
       }
       
       int num_pinch_bytes;
@@ -272,10 +276,11 @@ namespace gadget
          data[9] |= ((input_data[i+1] & 0x10)>>4);
       }
 
-      return vpr::ReturnStatus::Succeed;
+      return true;
    }
 
-   vpr::ReturnStatus PinchGloveStandalone::sendCommand(const vpr::Uint8& first, const vpr::Uint8& second)
+   void PinchGloveStandalone::sendCommand(const vpr::Uint8& first,
+                                          const vpr::Uint8& second)
    {
       vpr::Uint32 written;
       unsigned char buf[10];
@@ -303,12 +308,10 @@ namespace gadget
       vpr::System::msleep(100);
       // Wait between sending bytes.
       mPort->write(&second, 1, written);
-
-      return vpr::ReturnStatus::Succeed;
    }
 
-   vpr::ReturnStatus PinchGloveStandalone::readData(std::vector<vpr::Uint8>& result,
-                                                    const vpr::Uint8& data_type)
+   void PinchGloveStandalone::readData(std::vector<vpr::Uint8>& result,
+                                       const vpr::Uint8& data_type)
    {
       vpr::Uint32 read;
       vpr::Uint8  temp_byte;
@@ -371,6 +374,6 @@ namespace gadget
          }
          vprASSERT(1 == read);
       }
-      return vpr::ReturnStatus::Succeed;
    }
+
 } // End gadget namespace

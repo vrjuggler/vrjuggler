@@ -685,7 +685,7 @@ public:
     * @note We ask the Flock for its configuration here so we can change it
     *       later before calling the configure commands.
     */
-   vpr::ReturnStatus open();
+   bool open();
 
    /**
     * Configures the Flock for execution.
@@ -694,7 +694,7 @@ public:
     * @post Flock is setup and configured to start getting samples.  It is
     *       ready to run.
     */
-   vpr::ReturnStatus configure();
+   void configure();
 
    /** Close the connection to the Flock. */
    int close();
@@ -713,12 +713,12 @@ public:
     * Start the Flock streaming data.
     * @pre Flock must have been configured and in READY mode.
     */
-   vpr::ReturnStatus startStreaming();
+   void startStreaming();
 
    /** Stop streaming data.
    * @pre Flock must be currently streaming.
    */
-   vpr::ReturnStatus stopStreaming();
+   void stopStreaming();
 
    /**
     * Sets the port to use.

@@ -149,9 +149,9 @@ FlockStandalone::~FlockStandalone()
 // Open the port.
 // - Opens the flock port and configures it for communication
 // - Acquires the initial configuration of the flock
-vpr::ReturnStatus FlockStandalone::open()
+bool FlockStandalone::open()
 {
-   vpr::ReturnStatus ret_stat;
+   bool status(true);
 
    // - Open and close the port to reset the tracker, then
    // - Open the port
@@ -169,7 +169,7 @@ vpr::ReturnStatus FlockStandalone::open()
       mSerialPort = new vpr::SerialPort(mPort);
       if (!mSerialPort)
       {
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
    }
 
@@ -199,7 +199,7 @@ vpr::ReturnStatus FlockStandalone::open()
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
             << "Port open failed\n" << vprDEBUG_FLUSH;
-         return vpr::ReturnStatus::Fail;
+         return false;
       }
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
@@ -295,7 +295,7 @@ vpr::ReturnStatus FlockStandalone::open()
             mSerialPort = new vpr::SerialPort(mPort);
             if (!mSerialPort)
             {
-               return vpr::ReturnStatus::Fail;
+               return false;
             }
 
             vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
@@ -310,12 +310,12 @@ vpr::ReturnStatus FlockStandalone::open()
    // Print the status information
    printFlockStatus();
 
-   return vpr::ReturnStatus::Succeed;
+   return status;
 }
 
 /** Configures the flock and gets it ready to go.
  */
-vpr::ReturnStatus FlockStandalone::configure()
+void FlockStandalone::configure()
 {
    //setErrorModeIgnore();      // Set to mode where fatal errors are ignored
 
@@ -404,9 +404,6 @@ vpr::ReturnStatus FlockStandalone::configure()
 
    // flock is active.
    mStatus = FlockStandalone::RUNNING;
-
-   // return success
-   return vpr::ReturnStatus::Succeed;
 }
 
 /** Call this repeatedly to update the data from the birds. */
@@ -455,7 +452,6 @@ void FlockStandalone::sample()
 
             // Read the reply data record
             bytes_remaining = data_record_size;                     // How many bytes do we have left to read
-            vpr::ReturnStatus read_ret(vpr::ReturnStatus::Succeed);
 
             while(bytes_remaining)        // While more left to read
             {
@@ -527,7 +523,6 @@ void FlockStandalone::sample()
 
             // Now read the rest of the record
             bytes_remaining = (data_record_size-1);                     // How many bytes do we have left to read
-            vpr::ReturnStatus read_ret(vpr::ReturnStatus::Succeed);
 
             while(bytes_remaining)        // While more left to read
             {
@@ -640,7 +635,7 @@ int FlockStandalone::close()
 
 /** Sets the flock into streaming mode.
  */
-vpr::ReturnStatus FlockStandalone::startStreaming()
+void FlockStandalone::startStreaming()
 {
    // If port closed right now
    vprASSERT(mStatus == RUNNING && "Tried to start streaming before configuring flock");
@@ -661,12 +656,10 @@ vpr::ReturnStatus FlockStandalone::startStreaming()
 
    // flock is streaming now
    mStatus = FlockStandalone::STREAMING;
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 /** Stops the streaming. */
-vpr::ReturnStatus FlockStandalone::stopStreaming()
+void FlockStandalone::stopStreaming()
 {
    vprASSERT(mStatus == STREAMING && "Tried to stop streaming we are not currently doing it");
 
@@ -675,8 +668,6 @@ vpr::ReturnStatus FlockStandalone::stopStreaming()
       << vprDEBUG_FLUSH;
    sendStreamStopCommand();
    mStatus = FlockStandalone::RUNNING;
-
-   return vpr::ReturnStatus::Succeed;
 }
 
 /** Sets the port to use. */
@@ -785,14 +776,7 @@ void FlockStandalone::setOutputFormat(Flock::Output::Format format)
          << Flock::Output::getFormatString(mOutputFormat) << "\n"
          << vprDEBUG_FLUSH;
       vpr::System::msleep(50);
-      //vpr::ReturnStatus ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
       sendOutputFormatCmd(mOutputFormat, true);
-      //if(!ret_stat.success())
-      //{
-      //   throw Flock::CommandFailureException(
-      //      "Failed to flush queue before command", VPR_LOCATION
-      //   );
-      //}
    }
    if(was_streaming)
    {
@@ -1448,7 +1432,6 @@ void FlockStandalone::sendCommandAll(vpr::Uint8 cmd,
 void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
                                    std::vector<vpr::Uint8>& respData)
 {
-   vpr::ReturnStatus ret_stat;
    vpr::Uint8 exam_cmd[2];       // The command to send for the examine
    exam_cmd[0] = Flock::Command::ExamineValue;
    exam_cmd[1] = attrib;
