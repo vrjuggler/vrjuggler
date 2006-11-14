@@ -747,7 +747,7 @@ public class ConfigToolbar
    private void showLoadErrorMessage(String fileName, Exception ex)
    {
       JOptionPane.showMessageDialog(getParentFrame(),
-         "Caught an I/O exception while trying to load\n" + fileName + "\n" +
+         "Caught an exception while trying to load\n" + fileName + "\n" +
             ex.getMessage() + "\n" +
             "The contents of this file will not be available!",
          "Config File Load Failure",
