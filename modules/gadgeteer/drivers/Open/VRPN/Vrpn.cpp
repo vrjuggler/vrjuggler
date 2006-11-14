@@ -223,9 +223,9 @@ Vrpn::Vrpn()
    /* Do nothing. */ ;
 }
 
-std::string Vrpn::getElementType()
+Vrpn::~Vrpn()
 {
-   return "vrpn";
+   stopSampling();
 }
 
 bool Vrpn::config(jccl::ConfigElementPtr e)
@@ -331,11 +331,6 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-Vrpn::~Vrpn()
-{
-   stopSampling();
-}
-
 bool Vrpn::startSampling()
 {
    if (NULL != mThread)
@@ -367,6 +362,96 @@ bool Vrpn::startSampling()
          return 1;
       }
    }
+}
+
+bool Vrpn::stopSampling()
+{
+   if ( NULL != mReadThread )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[Vrpn::stopSampling()] Stopping sample thread" << std::endl
+         << vprDEBUG_FLUSH;
+
+      mExitFlag = true;
+
+      // Wait for thread to exit..
+      mReadThread->join();
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[Vrpn::stopSampling()] Sample thread stopped" << std::endl
+         << vprDEBUG_FLUSH;
+      delete mReadThread;
+      mReadThread = NULL;
+   }
+   return true;
+}
+
+bool Vrpn::sample()
+{
+   if ( mTrackerNumber > 0 )
+   {
+      std::vector<PositionData> positions(mTrackerNumber);
+      vpr::Guard<vpr::Mutex> g(mTrackerMutex);
+
+      for ( int i = 0; i < mTrackerNumber; ++i )
+      {
+         gmtl::Matrix44f pos;
+         gmtl::setRot(pos, mQuats[i]);
+         gmtl::setTrans(pos, mPositions[i]);
+
+         positions[i].setPosition(pos);
+         positions[i].setTime();
+      }
+
+      addPositionSample(positions);
+   }
+
+   if ( mButtonNumber > 0 )
+   {
+      std::vector<DigitalData> buttons(mButtonNumber);
+      vpr::Guard<vpr::Mutex> g(mButtonMutex);
+
+      for ( int i = 0; i < mButtonNumber; ++i )
+      {
+         buttons[i] = mButtons[i];
+         buttons[i].setTime();
+      }
+
+      addDigitalSample(buttons);
+   }
+
+   if ( mAnalogNumber > 0 )
+   {
+      std::vector<AnalogData> analogs(mAnalogNumber);
+      vpr::Guard<vpr::Mutex> g(mAnalogMutex);
+
+      for ( int i = 0; i < mAnalogNumber; ++i )
+      {
+         analogs[i] = mAnalogs[i];
+         analogs[i].setTime();
+      }
+
+      addAnalogSample(analogs);
+   }
+
+   return true;
+}
+
+void Vrpn::updateData()
+{
+   // Sample the data from the device.
+   // NOTE: This is done here because the readLoop is asyncronous and
+   //       if we place it there we get very large buffer sizes.
+   sample();
+   
+   // Swap it
+   swapPositionBuffers();
+   swapDigitalBuffers();
+   swapAnalogBuffers();
+}
+
+std::string Vrpn::getElementType()
+{
+   return "vrpn";
 }
 
 void Vrpn::registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
@@ -602,91 +687,6 @@ void Vrpn::analogConnectionDropped(const vrpn_int32 type,
       delete mAnalogHandle;
       mAnalogHandle = NULL;
    }
-}
-
-bool Vrpn::sample()
-{
-   if ( mTrackerNumber > 0 )
-   {
-      std::vector<PositionData> positions(mTrackerNumber);
-      vpr::Guard<vpr::Mutex> g(mTrackerMutex);
-
-      for ( int i = 0; i < mTrackerNumber; ++i )
-      {
-         gmtl::Matrix44f pos;
-         gmtl::setRot(pos, mQuats[i]);
-         gmtl::setTrans(pos, mPositions[i]);
-
-         positions[i].setPosition(pos);
-         positions[i].setTime();
-      }
-
-      addPositionSample(positions);
-   }
-
-   if ( mButtonNumber > 0 )
-   {
-      std::vector<DigitalData> buttons(mButtonNumber);
-      vpr::Guard<vpr::Mutex> g(mButtonMutex);
-
-      for ( int i = 0; i < mButtonNumber; ++i )
-      {
-         buttons[i] = mButtons[i];
-         buttons[i].setTime();
-      }
-
-      addDigitalSample(buttons);
-   }
-
-   if ( mAnalogNumber > 0 )
-   {
-      std::vector<AnalogData> analogs(mAnalogNumber);
-      vpr::Guard<vpr::Mutex> g(mAnalogMutex);
-
-      for ( int i = 0; i < mAnalogNumber; ++i )
-      {
-         analogs[i] = mAnalogs[i];
-         analogs[i].setTime();
-      }
-
-      addAnalogSample(analogs);
-   }
-
-   return true;
-}
-
-bool Vrpn::stopSampling()
-{
-   if ( NULL != mReadThread )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[Vrpn::stopSampling()] Stopping sample thread" << std::endl
-         << vprDEBUG_FLUSH;
-
-      mExitFlag = true;
-
-      // Wait for thread to exit..
-      mReadThread->join();
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[Vrpn::stopSampling()] Sample thread stopped" << std::endl
-         << vprDEBUG_FLUSH;
-      delete mReadThread;
-      mReadThread = NULL;
-   }
-   return true;
-}
-
-void Vrpn::updateData()
-{
-   // Sample the data from the device.
-   // NOTE: This is done here because the readLoop is asyncronous and
-   //       if we place it there we get very large buffer sizes.
-   sample();
-   
-   // Swap it
-   swapPositionBuffers();
-   swapDigitalBuffers();
-   swapAnalogBuffers();
 }
 
 } // End of gadget namespace

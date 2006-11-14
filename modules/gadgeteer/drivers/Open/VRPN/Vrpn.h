@@ -101,7 +101,7 @@ public:
     * @pre None.
     * @post Shared memory is released.
     */
-   ~Vrpn();
+   virtual ~Vrpn();
 
    /**
     * Configures the VRPN with the given config element.
@@ -158,6 +158,16 @@ protected:
    }
 
 private:
+   void registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
+                                       vrpn_MESSAGEHANDLER dropHandler,
+                                       vrpn_MESSAGEHANDLER lastDropHandler);
+
+   void unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
+                                        const vrpn_int32 type,
+                                        vrpn_MESSAGEHANDLER handler);
+
+   void readLoop(void *nullParam);
+
    /** @name VRPN Data Handlers */
    //@{
    void trackerChange(const vrpn_TRACKERCB& t);
@@ -177,16 +187,6 @@ private:
                                 vrpn_MESSAGEHANDLER handler,
                                 const bool deleteHandle);
    //@}
-
-   void readLoop(void *nullParam);
-
-   void registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
-                                       vrpn_MESSAGEHANDLER dropHandler,
-                                       vrpn_MESSAGEHANDLER lastDropHandler);
-
-   void unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
-                                        const vrpn_int32 type,
-                                        vrpn_MESSAGEHANDLER handler);
 
    vpr::Thread* mReadThread;
    bool mExitFlag;
