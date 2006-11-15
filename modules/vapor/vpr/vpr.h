@@ -45,6 +45,5 @@
 
 #include <vpr/vprConfig.h>
 #include <vpr/vprTypes.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #endif	/* _VPR_H_INCLUDED_ */
