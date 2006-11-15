@@ -36,8 +36,6 @@
 #include <orbsvcs/CosNamingC.h>
 #endif
 
-#include <vpr/Util/ReturnStatus.h>
-
 
 namespace tweek
 {
