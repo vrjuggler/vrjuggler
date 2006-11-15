@@ -9,7 +9,7 @@
 
 
 /*****************************************************************
- tests out the functionality expected of vpr::ReturnStatus
+ tests out the functionality expected of VPR file utility functions
 *******************************************************************/
 
 namespace vprTest

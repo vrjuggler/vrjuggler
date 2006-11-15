@@ -11,7 +11,7 @@
 
 
 /*****************************************************************
- tests out the functionality expected of vpr::ReturnStatus
+ tests out the functionality expected of vpr::AttributeMapBase
 *******************************************************************/
 
 namespace vprTest
