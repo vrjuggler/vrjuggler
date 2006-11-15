@@ -46,6 +46,10 @@ namespace vpr
     *
     * Class used to represent the status of a function or method upon its
     * return.
+    *
+    * @deprecated vpr::ReturnStatus is deprecated in favor of using Boolean
+    *             return types and/or exceptions for error reporting. This
+    *             class may be removed in a future version of VPR.
     */
    class ReturnStatus
    {
