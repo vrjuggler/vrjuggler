@@ -62,7 +62,7 @@
          <tracker_count>2</tracker_count>
          <button_count>4</button_count>
          <analog_count>0</analog_count>
-         <min>0.0</min>
+         <min>-1.0</min>
          <max>1.0</max>
          <position_filters>
             <position_transform_filter name="Position Filters" version="1">
