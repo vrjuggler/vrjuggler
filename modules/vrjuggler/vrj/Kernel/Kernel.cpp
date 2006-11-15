@@ -687,7 +687,7 @@ User* Kernel::getUser(const std::string& userName)
 void Kernel::handleSignal(const int signum)
 {
    std::for_each(mPreStopCallbacks.begin(), mPreStopCallbacks.end(),
-                 boost::bind(boost::apply<void>(), _1, signum));
+                 boost::bind<void>(boost::apply<void>(), _1, signum));
 
    if ( isRunning() )
    {
@@ -695,7 +695,7 @@ void Kernel::handleSignal(const int signum)
    }
 
    std::for_each(mPostStopCallbacks.begin(), mPostStopCallbacks.end(),
-                 boost::bind(boost::apply<void>(), _1, signum));
+                 boost::bind<void>(boost::apply<void>(), _1, signum));
 
    // Restore the default action for the signal now that we have done the
    // handling that we wanted to do.
