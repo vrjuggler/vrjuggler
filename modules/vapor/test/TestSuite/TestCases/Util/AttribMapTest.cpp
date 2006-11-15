@@ -8,7 +8,7 @@
 
 
 /*****************************************************************
- tests out the functionality expected of vpr::ReturnStatus
+ tests out the functionality expected of vpr::AttibuteMapBase
 *******************************************************************/
 
 namespace vprTest
