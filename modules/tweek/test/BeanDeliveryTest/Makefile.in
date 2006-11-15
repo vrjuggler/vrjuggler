@@ -44,7 +44,8 @@ JAVA_SRCS=	beandeliverytest/TestIntrospector.java		\
 		beandeliverytest/TestBean.java
 ALL_CLASSES=	beandeliverytest/*.class
 
-include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+DZR_BASE_DIR=	$(shell flagpoll doozer --get-prefix)
+include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
 
 # -----------------------------------------------------------------------------
 # Application build targets.

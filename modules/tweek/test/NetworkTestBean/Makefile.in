@@ -61,7 +61,8 @@ JAVA_SRCS=	networktest/NetworkTest.java			\
 		networktest/WhiteboardSubjectHolder.java
 ALL_CLASSES=	networktest/*.class
 
-include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+DZR_BASE_DIR=	$(shell flagpoll doozer --get-prefix)
+include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
 
 CXX_GEN_DIR=		.
 CXX_IDL=		$(TWEEK_IDL_CXX)
