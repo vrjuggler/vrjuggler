@@ -169,12 +169,11 @@ void CorbaRemoteReconfig::disable()
    {
       // Unregister the subject (note that observers must handle this
       // disconnection).
-      vpr::ReturnStatus status;
-
       // Attempt to un-register the subject.
-      status = mCorbaManager->getSubjectManager()->unregisterSubject(mInterfaceName.c_str());
+      const bool status =
+         mCorbaManager->getSubjectManager()->unregisterSubject(mInterfaceName.c_str());
 
-      if ( ! status.success() )
+      if ( ! status )
       {
          vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -206,21 +205,20 @@ bool CorbaRemoteReconfig::startCorba(const std::string& nsHost,
    try
    {
       int dummy_int(0);
-      vpr::ReturnStatus status;
 
       // Attempt to initialize the CORBA Manager.
-      status = mCorbaManager->init("corba_rtrc", dummy_int, NULL, nsHost,
-                                   nsPort, iiopVer);
+      bool status = mCorbaManager->init("corba_rtrc", dummy_int, NULL, nsHost,
+                                        nsPort, iiopVer);
 
-      // Test to see if init succeeded.
-      if ( status.success() )
+      // Test to see if init() succeeded.
+      if ( status )
       {
          try
          {
             // Attempt to create the Subject Manager.
             status = mCorbaManager->createSubjectManager();
 
-            if ( status.success() )
+            if ( status )
             {
                // Customize the Subject Manager information a little to help
                // users.
