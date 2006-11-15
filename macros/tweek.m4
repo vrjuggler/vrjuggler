@@ -104,6 +104,8 @@ AC_DEFUN([_TWEEK_VERSION_CHECK],
       DPP_VERSION_CHECK_MSG_NO_CACHE([Tweek], [$TWEEK_VERSION],
                                      [$min_tweek_version], [$2], [$3])
    fi
+
+   AC_SUBST(TWEEK_VERSION)
 ])
 
 dnl ---------------------------------------------------------------------------

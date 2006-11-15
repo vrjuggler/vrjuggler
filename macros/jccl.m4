@@ -102,6 +102,8 @@ AC_DEFUN([_JCCL_VERSION_CHECK],
       DPP_VERSION_CHECK_MSG_NO_CACHE([JCCL], [$JCCL_VERSION],
                                      [$min_jccl_version], [$2], [$3])
    fi
+
+   AC_SUBST(JCCL_VERSION)
 ])
 
 dnl ---------------------------------------------------------------------------
