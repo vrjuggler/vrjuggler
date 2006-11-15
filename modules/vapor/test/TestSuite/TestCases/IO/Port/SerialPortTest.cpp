@@ -562,7 +562,6 @@ void SerialPortTest::testSendRecv()
 void SerialPortTest::testSendRecv_receiver()
 {
    vpr::SerialPort recv_port(mRecvPortName);
-   //vpr::ReturnStatus status;
 
    recv_port.setOpenReadOnly();
    recv_port.setBlocking(true);
@@ -613,7 +612,6 @@ void SerialPortTest::testSendRecv_receiver()
 void SerialPortTest::testSendRecv_sender()
 {
    vpr::SerialPort send_port(mSendPortName);
-   //vpr::ReturnStatus status;
 
    send_port.setOpenWriteOnly();
    send_port.setBlocking(true);

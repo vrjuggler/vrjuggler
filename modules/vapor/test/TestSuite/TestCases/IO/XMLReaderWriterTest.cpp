@@ -1,5 +1,4 @@
 #include <vpr/vprConfig.h>
-#include <vpr/Util/ReturnStatus.h>
 #include <vpr/IO/SerializableObject.h>
 
 #include <TestCases/IO/XMLReaderWriterTest.h>

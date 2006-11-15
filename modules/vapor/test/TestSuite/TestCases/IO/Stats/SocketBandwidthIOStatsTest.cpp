@@ -69,7 +69,6 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor()
    local_acceptor_addr.setAddress("localhost", mRendevousPort);
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream* sock(NULL);
-   vpr::ReturnStatus ret_val;
    vpr::Uint32 bytes_written;
 
    // Open the acceptor
@@ -138,7 +137,6 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor()
 
 void SocketBandwidthIOStatsTest::testBandwidth_connector()
 {
-   vpr::ReturnStatus ret_val;
    vpr::Uint32 bytes_read;
    vpr::InetAddr remote_addr;
    remote_addr.setAddress("localhost", mRendevousPort);

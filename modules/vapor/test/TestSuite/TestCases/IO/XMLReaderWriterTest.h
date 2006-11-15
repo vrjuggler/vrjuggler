@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include <vpr/Util/ReturnStatus.h>
-
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <MySuites.h>

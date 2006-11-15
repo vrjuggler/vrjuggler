@@ -21,7 +21,6 @@
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #include <vpr/System.h>
 
@@ -76,7 +75,6 @@ void SelectorTest::testAcceptorPoolSelection_acceptor()
    std::map<vpr::IOSys::Handle, vpr::SocketAcceptor*> acceptorTable;
    vpr::Selector selector;
    //vpr::SocketStream* sock(NULL);
-   ReturnStatus ret_val;
    vpr::Uint32 bytes_written;
    vpr::Uint16 num_events = 0;
 
@@ -158,7 +156,6 @@ void SelectorTest::testAcceptorPoolSelection_acceptor()
 
 void SelectorTest::testAcceptorPoolSelection_connector()
 {
-   ReturnStatus ret_val;
    vpr::SocketConnector connector;           // Connect to acceptor
    vpr::Uint32 bytes_read;
 
@@ -235,7 +232,6 @@ void SelectorTest::testSendThenPoll_acceptor()
    vpr::Selector selector;
    std::vector<vpr::SocketStream>     socks;                        // The acceptor side sockets
    std::vector<vpr::SocketAcceptor*>  acceptors;
-   vpr::ReturnStatus ret_val;
    //bool ret_val(false);
 
    // Bind to the accepting ports
@@ -396,7 +392,6 @@ random_sample(_InputIter __first, _InputIter __last,
 void SelectorTest::testSendThenPoll_connector()
 {
    unsigned i,j;
-   ReturnStatus ret_val;
    vpr::Uint32 bytes_written;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;           // Connect to acceptor

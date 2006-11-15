@@ -928,7 +928,6 @@ void SocketTest::testIsConnected ()
 
 void SocketTest::testIsConnected_acceptor()
 {
-   vpr::ReturnStatus status;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
    vpr::InetAddr acceptor_addr;
@@ -1005,7 +1004,6 @@ void SocketTest::testIsConnected_acceptor()
 
 void SocketTest::testIsConnected_connector()
 {
-   vpr::ReturnStatus status;
    vpr::InetAddr remote_addr;
    std::string data;
 
