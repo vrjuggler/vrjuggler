@@ -611,9 +611,6 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\SampleBuffer.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\cluster\SerializableDevice.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\Sim\SimAnalog.h">
 			</File>
 			<File
