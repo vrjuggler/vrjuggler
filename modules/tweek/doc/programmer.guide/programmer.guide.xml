@@ -2700,7 +2700,7 @@ public class NetworkTest
 
 class FrameListener extends TweekFrameAdapter              <co
                         id="NetworkTest.java.helper"
-                        linkends="NetworkTest.java.helpers.co" />
+                        linkends="NetworkTest.java.helper.co" />
 {
 ...
 }</programlisting>
