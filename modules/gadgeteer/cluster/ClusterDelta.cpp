@@ -187,7 +187,7 @@ namespace cluster
       vpr::Uint32 bytes_read;
       syncPacket.clear();
       mReader->setCurPos(0);
-      //vpr::ReturnStatus status = mSocketStream->readn(syncPacket,SYNC_PACKET_LENGTH,bytes_read);
+      //mSocketStream->readn(syncPacket,SYNC_PACKET_LENGTH,bytes_read);
       mSocketStream->readn(syncPacket,num ,bytes_read);
    }
    void ClusterDelta::clearIntervals()
