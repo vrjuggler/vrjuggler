@@ -60,7 +60,7 @@ public:
       mHostname = hostName;
 
       ClusterPlugin* app_data_mgr =
-         ClusterManager::instance()->getPluginByGUID(ApplicationDataManager::mPluginGUID);
+         ClusterManager::instance()->getPluginByGUID(vpr::GUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"));
 
       if (NULL != app_data_mgr)
       {
