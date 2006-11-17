@@ -290,7 +290,7 @@ public:
     */
    float xQuat(const unsigned int i) const
    {
-      return mData.Station[i].Orientation[2];
+      return mData.Station[i].Orientation[0];
    }
 
    /**
@@ -306,7 +306,7 @@ public:
     */
    float zQuat(const unsigned int i) const
    {
-      return mData.Station[i].Orientation[0];
+      return mData.Station[i].Orientation[2];
    }
 
    /**
