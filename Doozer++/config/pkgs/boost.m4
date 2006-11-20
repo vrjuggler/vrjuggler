@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          boost.m4,v
-dnl Date modified: 2005/11/16 14:42:21
-dnl Version:       1.27
+dnl Date modified: 2006/11/09 21:58:31
+dnl Version:       1.28
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -39,13 +39,17 @@ dnl
 dnl Variables defined:
 dnl     BOOST             - do we have boost on the system?
 dnl     BOOST_ROOT        - The Boost installation directory.
+dnl     BOOST_INCLUDE_DIR - The directory containing the Boost header tree.
 dnl     BOOST_INCLUDES    - Extra include path for the Boost header directory.
 dnl     BOOST_LDFLAGS     - Extra library path for the Boost libraries.
+dnl                         Note that the value set in this variable is an
+dnl                         educated guess. No test is performed to validate
+dnl                         the setting!
 dnl     BOOST_VERSION     - The integer Boost version (see boost/version.hpp).
 dnl     BOOST_LIB_VERSION - The version substring in Boost library names.
 dnl ===========================================================================
 
-dnl boost.m4,v 1.27 2005/11/16 14:42:21 patrickh Exp
+dnl boost.m4,v 1.28 2006/11/09 21:58:31 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Boost installed.  This adds the
@@ -152,6 +156,7 @@ Using the option --with-boost-includes may help fix this.])
       dnl helpful in some Makefiles.
       if test "x$dpp_have_boost" = "xyes" ; then
          if test "x$dpp_boost_incdir" != "x" ; then
+            BOOST_INCLUDE_DIR="$dpp_boost_incdir"
             BOOST_INCLUDES="-I$dpp_boost_incdir"
          fi
 
@@ -179,6 +184,7 @@ Using the option --with-boost-includes may help fix this.])
 
    dnl Export all of the output vars for use by makefiles and configure script.
    AC_SUBST(BOOST_ROOT)
+   AC_SUBST(BOOST_INCLUDE_DIR)
    AC_SUBST(BOOST_INCLUDES)
    AC_SUBST(BOOST_LDFLAGS)
    AC_SUBST(BOOST_LDFLAGS_LINK_EXE)

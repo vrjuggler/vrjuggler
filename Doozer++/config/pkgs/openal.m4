@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2006/11/02 17:31:43
-dnl Version:       1.23
+dnl Date modified: 2006/11/09 22:12:22
+dnl Version:       1.24
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -42,9 +42,11 @@ dnl     OALROOT     - The OpenAL installation directory.
 dnl     LIBOPENAL   - The list of libraries to link for OpenAL appliations.
 dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
+dnl     AL_LIBDIR   - The directory containing the OpenAL library. On Mac OS X,
+dnl                   this is the directory containing the OpenAL framework.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.23 2006/11/02 17:31:43 patrickh Exp
+dnl openal.m4,v 1.24 2006/11/09 22:12:22 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
@@ -130,19 +132,24 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
                            [dpp_cv_alEnable_openal_lib='yes'],
                            [dpp_cv_alEnable_openal_lib='no'])])
 
+         DPP_LANG_RESTORE
+
+         dnl Restore all the variables now that we are done testing.
+         CFLAGS="$dpp_save_CFLAGS"
+         CPPFLAGS="$dpp_save_CPPFLAGS"
+         LDFLAGS="$dpp_save_LDFLAGS"
          LIBS="$dpp_save_LIBS"
 
          dnl Success.
          if test "x$dpp_cv_alEnable_openal_lib" = "xyes" ; then
             dpp_have_openal='yes'
+            AL_LIBDIR="$OALROOT/libs"
             ifelse([$2], , :, [$2])
          dnl Failure.
          else
             dpp_have_openal='no'
             ifelse([$3], , :, [$3])
          fi
-
-         DPP_LANG_RESTORE
       elif test "x$PLATFORM" = "xDarwin" ; then
          DPP_LANG_SAVE
          DPP_LANG_C
@@ -157,33 +164,63 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
                            [dpp_cv_alEnable_openal_lib='yes'],
                            [dpp_cv_alEnable_openal_lib='no'])])
 
+         DPP_LANG_RESTORE
+
+         dnl Restore all the variables now that we are done testing.
+         CFLAGS="$dpp_save_CFLAGS"
+         CPPFLAGS="$dpp_save_CPPFLAGS"
+         LDFLAGS="$dpp_save_LDFLAGS"
          LIBS="$dpp_save_LIBS"
 
          dnl Success.
          if test "x$dpp_cv_alEnable_openal_lib" = "xyes" ; then
             dpp_have_openal='yes'
+            AL_LIBDIR="$OALROOT"
             ifelse([$2], , :, [$2])
          dnl Failure.
          else
             dpp_have_openal='no'
             ifelse([$3], , :, [$3])
          fi
-
-         DPP_LANG_RESTORE
       dnl Other platforms.
       else
+         if test "lib$LIBBITSUF" != "lib" ; then
+            libdirs="lib$LIBBITSUF lib"
+         else
+            libdirs="lib"
+         fi
+
+         LIBS="-lopenal $LIBS $DYN_LOAD_LIB -lm"
+
          DPP_LANG_SAVE
          DPP_LANG_C
 
-         dnl The pthreads-related macros will set only one of $PTHREAD_ARG or
-         dnl $PTHREAD_LIB, so it's safe (and simpler) for us to use both here.
-         LDFLAGS="-L$OALROOT/lib $LDFLAGS $PTHREAD_ARG $PTHREAD_LIB"
+         for l in $libdirs ; do
+            cur_al_libdir="$OALROOT/$l"
 
-         AC_CHECK_LIB([openal], [alEnable],
-            [AC_CHECK_HEADER([AL/al.h], [dpp_have_openal='yes'],
-               [dpp_have_openal='no'])],
-            [dpp_have_openal='no'],
-            [$DYN_LOAD_LIB -lm])
+            dnl The pthreads-related macros will set only one of
+            dnl $PTHREAD_ARG or $PTHREAD_LIB, so it's safe (and simpler)
+            dnl for us to use both here.
+            LDFLAGS="-L$cur_al_libdir $dpp_save_LDFLAGS $PTHREAD_ARG $PTHREAD_LIB"
+
+            AC_MSG_CHECKING([for alEnable in -lopenal in $cur_al_libdir])
+            AC_TRY_LINK([#include <AL/al.h>], [alEnable(0);],
+                        [dpp_have_openal='yes'], [dpp_have_openal='no'])
+            AC_MSG_RESULT([$dpp_have_openal])
+
+            if test "$dpp_have_openal" = "yes" ; then
+               AL_LIBDIR="$cur_al_libdir"
+               break
+            fi
+         done
+
+         DPP_LANG_RESTORE
+
+         dnl Restore all the variables now that we are done testing.
+         CFLAGS="$dpp_save_CFLAGS"
+         CPPFLAGS="$dpp_save_CPPFLAGS"
+         LDFLAGS="$dpp_save_LDFLAGS"
+         LIBS="$dpp_save_LIBS"
 
          dnl Success.
          if test "x$dpp_have_openal" = "xyes" ; then
@@ -192,8 +229,6 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
          else
             ifelse([$3], , :, [$3])
          fi
-
-         DPP_LANG_RESTORE
       fi
 
       dnl If OpenAL API files were found, define this extra stuff that may be
@@ -226,12 +261,6 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
 
          OPENAL='yes'
       fi
-
-      dnl Restore all the variables now that we are done testing.
-      CFLAGS="$dpp_save_CFLAGS"
-      CPPFLAGS="$dpp_save_CPPFLAGS"
-      LDFLAGS="$dpp_save_LDFLAGS"
-      LIBS="$dpp_save_LIBS"
    fi
 
    dnl Export all of the output vars for use by makefiles and configure script.
@@ -240,4 +269,5 @@ dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
    AC_SUBST(LIBOPENAL)
    AC_SUBST(AL_INCLUDES)
    AC_SUBST(AL_LDFLAGS)
+   AC_SUBST(AL_LIBDIR)
 ])

@@ -1,5 +1,22 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2006-11-20 patrickh     Extended the NSPR detection tests to provide more
+                        information to the caller regarding the NSPR
+                        installation.
+                        NEW VERSION: 2.1.9
+2006-11-20 patrickh     Fixed NSPR detection tests.
+                        NEW VERSION: 2.1.8
+2006-11-09 patrickh     Extended the tests for OpenAL, ALUT, GLUT, NSPR, and
+                        Audiere to be smarter about 64-bit installations and to
+                        report the directory containing the library (or
+                        libraries) for the package.
+                        NEW VERSION: 2.1.7
+2006-11-09 patrickh     Extended DPP_HAVE_GLUT to handle the Mac OS X GLUT
+                        framework.
+                        NEW VERSION: 2.1.6
+2006-11-09 patrickh     Store the Boost header directory path in
+                        $BOOST_INCLUDE_DIR.
+                        NEW VERSION: 2.1.5
 2006-11-02 patrickh     Separated the ALUT test from DPP_HAVE_OPENAL. The new
                         way to test for ALUT is to use DPP_HAVE_ALUT.
                         NEW VERSION: 2.1.4
