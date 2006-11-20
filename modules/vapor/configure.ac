@@ -48,7 +48,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2006 by Iowa State University])
 AC_CONFIG_SRCDIR([vpr/vprConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.5])
+DPP_PREREQ([2.1.9])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -1093,6 +1093,7 @@ VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 AC_CONFIG_FILES([
    boost.fpc
    boost_filesystem.fpc
+   nspr.fpc
    vpr.fpc
    Makefile
    Makefile.inc

@@ -1,0 +1,12 @@
+# Private Variables
+prefix = @NSPR_ROOT@
+
+# Standard Flagpoll Variables
+Name: NSPR
+Description: The Netscape Portable Runtime (NSPR) provides a platform-neutral API for system level and libc like functions.
+URL: http://www.mozilla.org/projects/nspr/
+Version: @NSPR_VERSION_DOT@
+Provides: nspr NSPR nspr4 plc PLC plc4
+Arch: @ISA@
+Cflags: @NSPR_INCLUDES@
+Libs: -L@NSPR_LIBDIR@ @NSPR_LIB@ @PLC_LIB@

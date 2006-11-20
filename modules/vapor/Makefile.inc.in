@@ -51,6 +51,13 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 
 BOOST_VERSION=	@BOOST_VERSION_DOT@
+NSPR_VERSION=	@NSPR_VER@
+
+ifeq (@SUBSYSTEM@, NSPR)
+   USE_NSPR=	Y
+else
+   USE_NSPR=	N
+endif
 
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
@@ -220,6 +227,10 @@ links:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/boost*.fpc			\
           $(instlinks)/share/flagpoll
+ifeq ($(USE_NSPR), Y)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/nspr.fpc $(instlinks)/share/flagpoll
+endif
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else
@@ -362,6 +373,11 @@ install-flagpoll:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/boost_filesystem.fpc				\
           $(libdir)$(LIBBITSUF)/flagpoll/boost_filesystem-$(BOOST_VERSION).$(ISA).fpc
+ifeq ($(USE_NSPR), Y)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/nspr.fpc						\
+          $(libdir)$(LIBBITSUF)/flagpoll/nspr-$(NSPR_VERSION).$(ISA).fpc
+endif
 
 # =============================================================================
 # Clean-up targets.  '_clobber' removes the developer installation links.
