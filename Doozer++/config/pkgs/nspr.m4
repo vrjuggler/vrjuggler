@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          nspr.m4,v
-dnl Date modified: 2006/11/09 22:12:22
-dnl Version:       1.41
+dnl Date modified: 2006/11/20 19:32:57
+dnl Version:       1.42
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -82,7 +82,7 @@ dnl     PLC_LIB_STATIC        - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC       - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.41 2006/11/09 22:12:22 patrickh Exp
+dnl nspr.m4,v 1.42 2006/11/20 19:32:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -213,11 +213,10 @@ AC_DEFUN([DPP_HAVE_NSPR],
          NSPR_LIB_NAME_PREFIX='lib'
       fi
 
-      LIBS="$PTHREAD_LIB $SEM_LIB"
+      libname="${NSPR_LIB_NAME_PREFIX}nspr4"
+      LIBS="-l$libname $PTHREAD_LIB $SEM_LIB"
 
-      libname="$NSPR_LIB_NAME_PREFIXnspr4"
-
-      for l in libdirs ; do
+      for l in $libdirs ; do
          cur_nspr_libdir="$l"
          LDFLAGS="$PTHREAD_ARG -L$cur_nspr_libdir $dpp_save_LDFLAGS"
 
@@ -230,6 +229,7 @@ AC_DEFUN([DPP_HAVE_NSPR],
 #endif
 ],
             [PR_Initialized();], [dpp_have_nspr='yes'], [dpp_have_nspr='no'])
+         AC_MSG_RESULT([$dpp_have_nspr])
 
          if test "x$dpp_have_nspr" = "xyes" ; then
             NSPR_LIBDIR="$cur_nspr_libdir"
@@ -297,8 +297,6 @@ dnl                           met.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([DPP_NSPR_VER],
 [
-   AC_REQUIRE([DPP_PROG_CC_NOSTDINC])
-
    dnl -----------------------------------------------------------------------
    dnl Define the version number of the NSPR installation.  This is the number
    dnl at the end of the library names (e.g., libnspr4.so).
@@ -319,12 +317,12 @@ AC_DEFUN([DPP_NSPR_VER],
       dnl If we have a user-specified header directory, use it.
       if test "x$2" != "x" ; then
          dpp_nspr_headerdir="$2"
-         CPPFLAGS="$CPPFLAGS $CC_NOSTDINC_FLAGS -I$2"
+         CPPFLAGS="$CPPFLAGS -I$2 -I/usr/include"
       dnl Otherwise, fall back on the basic include sub-directory of the
       dnl base NSPR directory.
       else
          dpp_nspr_headerdir="$1/include"
-         CPPFLAGS="$CPPFLAGS $CC_NOSTDINC_FLAGS -I$1/include"
+         CPPFLAGS="$CPPFLAGS -I$1/include -I/usr/include"
       fi
    dnl If we have neither a base directory nor an include directory, fall back
    dnl on /usr.  Doing this allows us to check for NSPR headers without

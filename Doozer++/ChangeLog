@@ -1,5 +1,7 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2006-11-20 patrickh     Fixed NSPR detection tests.
+                        NEW VERSION: 2.1.8
 2006-11-09 patrickh     Extended the tests for OpenAL, ALUT, GLUT, NSPR, and
                         Audiere to be smarter about 64-bit installations and to
                         report the directory containing the library (or
