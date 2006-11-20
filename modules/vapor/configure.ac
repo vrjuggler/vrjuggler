@@ -995,7 +995,7 @@ case $SUBSYSTEM in
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
         ;;
     NSPR)
-        vpr_extra_deps='nspr >= 4.6'
+        vpr_extra_deps='nspr >= 4.0'
 
         subsystem_libs="$NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
         ;;
