@@ -9,14 +9,3 @@ Version: @BOOST_VERSION_DOT@
 Provides: Boost boost
 Arch: no_arch
 Cflags: @BOOST_INCLUDES@
-# Private Variables
-prefix = @BOOST_ROOT@
-
-# Standard Flagpoll Variables
-Name: Boost Headers
-Description: The header files for Boost.
-URL: http://www.boost.org/
-Version: @BOOST_VERSION_DOT@
-Provides: Boost boost
-Arch: no_arch
-Cflags: @BOOST_INCLUDES@
