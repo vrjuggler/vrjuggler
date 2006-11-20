@@ -132,16 +132,13 @@ public:
     *
     * @throw vpr::LockException is thrown if the mutex for this condition
     *        variable was not locked prior to invoking this method.
+    *
+    * @note No exception is thrown by this method because it is not currently
+    *       possible for us to verify that the mutex is locked. NSPR hides
+    *       this detail.
     */
    void signal()
    {
-      // ASSERT:  We have been locked
-      if ( ! mCondMutex->test() )
-      {
-         throw vpr::LockException("Condition variable mutex must be locked",
-                                  VPR_LOCATION);
-      }
-
       const PRStatus result = PR_NotifyCondVar(mCondVar);
       assert(result == PR_SUCCESS);
    }
@@ -156,16 +153,13 @@ public:
     *
     * @throw vpr::LockException is thrown if the mutex for this condition
     *        variable was not locked prior to invoking this method.
+    *
+    * @note No exception is thrown by this method because it is not currently
+    *       possible for us to verify that the mutex is locked. NSPR hides
+    *       this detail.
     */
    void broadcast()
    {
-      // ASSERT:  We have been locked
-      if ( ! mCondMutex->test() )
-      {
-         throw vpr::LockException("Condition variable mutex must be locked",
-                                  VPR_LOCATION);
-      }
-
       const PRStatus result = PR_NotifyAllCondVar(mCondVar);
       assert(result == PR_SUCCESS);
    }
