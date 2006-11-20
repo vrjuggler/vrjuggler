@@ -56,7 +56,7 @@ Description: Tweek is a portable GUI for applications. The Tweek GUI can be run 
 URL: http://www.vrjuggler.org/tweek/
 Version: ${tweek_version}
 Provides: tweek
-Requires: omniORB4, omnithread3, omniDynamic4, vpr = @VPR_VERSION@
+Requires: @CXX_ORB_DEPS@ vpr = @VPR_VERSION@
 Arch: ${ISA}
 Libs: ${tweek_ldflags} ${tweek_libs} ${extra_libs}
 Libs.private: 

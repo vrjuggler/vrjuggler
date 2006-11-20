@@ -615,6 +615,8 @@ int omni_main_i(int argc, char** const argv)
          if test "x$tweek_cv_CORBA__ORB_init_in_omniORB" = "xyes" ; then
             BUILD_CXX='Y'
 
+            CXX_ORB_DEPS="omniORB$OMNI_VER omnithread3 omniDynamic$OMNI_VER"
+
             if test "x$cxx_orb_root" != "x/usr" ; then
                CXX_ORB_INCLUDES="-I$cxx_orb_root/include"
             fi
@@ -1345,6 +1347,7 @@ AC_SUBST(MIN_VPR_VERSION)
 
 AC_SUBST(ANT)
 AC_SUBST(BUILD_CXX)
+AC_SUBST(CXX_ORB_DEPS)
 AC_SUBST(CXX_IDL_CMD)
 AC_SUBST(CXX_IDL_OPTS)
 AC_SUBST(CXX_IDL_GENDIR_OPT)
