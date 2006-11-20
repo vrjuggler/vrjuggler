@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          nspr.m4,v
-dnl Date modified: 2006/11/20 19:32:57
-dnl Version:       1.42
+dnl Date modified: 2006/11/20 19:56:21
+dnl Version:       1.43
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -48,6 +48,9 @@ dnl     --with-nsprver       - Define the NSPR version number.
 dnl
 dnl Variables defined:
 dnl     NSPR_ROOT             - The root of the NSPR installation.
+dnl     NSPR_INCLUDE_DIR      - The directory containing the root of the NSPR
+dnl                             header files. This may contain a subdirectory
+dnl                             called 'nspr'.
 dnl     NSPR_INCLUDES         - The compiler option giving the NSPR include
 dnl                             path.
 dnl     NSPR_LIB              - The linker option for the basic NSPR library
@@ -82,7 +85,7 @@ dnl     PLC_LIB_STATIC        - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC       - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.42 2006/11/20 19:32:57 patrickh Exp
+dnl nspr.m4,v 1.43 2006/11/20 19:56:21 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -248,6 +251,7 @@ AC_DEFUN([DPP_HAVE_NSPR],
       LIBS="$dpp_save_LIBS"
 
       if test "x$dpp_have_nspr" = "xyes" ; then
+         NSPR_INCLUDE_DIR="$dpp_include_path"
          NSPR_INCLUDES="-I$dpp_include_path"
          NSPR_LIB="-l$dpp_nspr_lib"
          PLC_LIB="-l$dpp_plc_lib"
@@ -272,14 +276,18 @@ AC_DEFUN([DPP_HAVE_NSPR],
       fi
    fi
 
-   dnl -----------------------------------------------------------------------
-   dnl Do the substition step for $NSPR_ROOT.
-   dnl -----------------------------------------------------------------------
    AC_SUBST(NSPR_ROOT)
+   AC_SUBST(NSPR_INCLUDE_DIR)
+   AC_SUBST(NSPR_INCLUDES)
+   AC_SUBST(NSPR_LIB)
+   AC_SUBST(PLC_LIB)
+   AC_SUBST(PLDS_LIB)
    AC_SUBST(NSPR_LIB_STATIC)
    AC_SUBST(PLC_LIB_STATIC)
    AC_SUBST(PLDS_LIB_STATIC)
    AC_SUBST(NSPR_LIBDIR)
+   AC_SUBST(NSPR_LDFLAGS)
+   AC_SUBST(NSPR_LDFLAGS_LINK_EXE)
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -353,5 +361,8 @@ AC_DEFUN([DPP_NSPR_VER],
       DPP_VERSION_CHECK_MSG_NO_CACHE([NSPR], [$dpp_nspr_ver], [$3], , [$4])
 
       NSPR_VER="$dpp_nspr_ver_major"
+      NSPR_VERSION_DOT="$dpp_nspr_ver_major.$dpp_nspr_ver_minor.$dpp_nspr_ver_patch"
    fi
+
+   AC_SUBST(NSPR_VERSION_DOT)
 ])
