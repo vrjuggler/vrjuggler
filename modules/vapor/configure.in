@@ -54,7 +54,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([vpr/vprConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.2])
+DPP_PREREQ([2.1.9])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -1009,7 +1009,7 @@ case $SUBSYSTEM in
         vpr_prof_libs='-lvpr_p'
         ;;
     NSPR)
-        vpr_extra_deps='nspr >= 4.6'
+        vpr_extra_deps='nspr >= 4.0'
 
         if test "x$OS_TYPE" = "xWin32" ; then
             subsystem_cxxflags="$subsystem_includes"
@@ -1133,6 +1133,7 @@ AC_CONFIG_FILES([
    vpr-config
    boost.fpc
    boost_filesystem.fpc
+   nspr.fpc
    vpr.fpc
    Makefile
    Makefile.inc
