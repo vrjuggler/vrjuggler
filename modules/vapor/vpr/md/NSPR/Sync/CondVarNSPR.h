@@ -298,7 +298,7 @@ private:
       /* Do nothing.*/ ;
    }
 
-   CondVarNSPR(const CondVarNSPR &c)
+   CondVarNSPR(const CondVarNSPR&)
    {
       /* Do nothing.*/ ;
    }
