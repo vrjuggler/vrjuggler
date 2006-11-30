@@ -120,6 +120,10 @@ public:
     *        wait on the condition variable.
     *
     * @note This call blocks until a condition change has been signaled.
+    *
+    * @note No exception is thrown by this method because it is not currently
+    *       possible for us to verify that the mutex is locked. NSPR hides
+    *       this detail.
     */
    bool wait(const vpr::Interval& timeToWait = vpr::Interval::NoTimeout);
 

@@ -73,32 +73,18 @@ CondVarNSPR::CondVarNSPR(MutexNSPR* mutex)
 
 bool CondVarNSPR::wait(const vpr::Interval& timeToWait)
 {
-   bool result(true);
+   const PRStatus status = PR_WaitCondVar(mCondVar,
+                                          NSPR_getInterval(timeToWait));
 
-   // If not locked ...
-   if ( ! mCondMutex->test() )
+   // XXX: How do we deal with a timeout?
+   if ( PR_SUCCESS != status )
    {
       std::ostringstream msg_stream;
-      msg_stream << "Condition variable mutex must be locked before calling "
-                 << "wait()";
+      NSPR_PrintError("Unexpected error: ", msg_stream);
       throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
    }
-   // The mutex variable must be locked when passed to pthread_cond_wait().
-   else
-   {
-      const PRStatus status = PR_WaitCondVar(mCondVar,
-                                             NSPR_getInterval(timeToWait));
 
-      // XXX: How do we deal with a timeout?
-      if ( PR_SUCCESS != status )
-      {
-         std::ostringstream msg_stream;
-         NSPR_PrintError("Unexpected error: ", msg_stream);
-         throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
-      }
-   }
-
-   return result;
+   return true;
 }
 
 }
