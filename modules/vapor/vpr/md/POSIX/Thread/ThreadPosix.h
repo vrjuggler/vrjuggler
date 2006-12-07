@@ -103,7 +103,6 @@ public:  // ---- Thread CREATION and SPAWNING -----
                VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
                size_t stack_size = 0);
-   //@}
 
    /**
     * Spawning constructor with argument.  This will start a new thread that
@@ -144,6 +143,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
                VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
                size_t stackSize = 0);
+   //@}
 
    /**
     * Destructor.
@@ -226,7 +226,9 @@ public:  // ----- Various other thread functions ------
     *
     * @return 0 is returned if this thread is "joined" successfully.<br>
     *         -1 is returned on an error condition.
-    * @throws UncaughtThreadException
+    *
+    * @throw vpr::UncaughtThreadException is thrown if an exception was
+    *        thrown by code executing in this thread and was not caught.
     */
    virtual int join(void** status = 0)
    {
@@ -250,7 +252,7 @@ public:  // ----- Various other thread functions ------
     *       executing again.
     *
     * @return 0 is returned if this thread resumes execuation successfully.
-    * @return -1 is returned otherwise.
+    *         -1 is returned otherwise.
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
@@ -266,11 +268,11 @@ public:  // ----- Various other thread functions ------
     *       from execution until the member function resume() is called.
     *
     * @return 0 is returned if this thread is suspended successfully.
-    * @return -1 is returned otherwise.
+    *         -1 is returned otherwise.
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
-   virtual int suspend (void)
+   virtual int suspend()
    {
       return kill(SIGSTOP);
    }
@@ -285,7 +287,7 @@ public:  // ----- Various other thread functions ------
     *             priority stored in it.
     *
     * @return 0 is returned if the priority was retrieved successfully.
-    * @return -1 is returned if the priority could not be read.
+    *         -1 is returned if the priority could not be read.
     *
     * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
@@ -300,7 +302,7 @@ public:  // ----- Various other thread functions ------
     * @param prio The new priority for this thread.
     *
     * @return 0 is returned if this thread's priority was set successfully.
-    * @return -1 is returned otherwise.
+    *         -1 is returned otherwise.
     *
     * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
@@ -317,7 +319,7 @@ public:  // ----- Various other thread functions ------
     * @param cpu The CPU on which this thread will run exclusively.
     *
     * @return 0 is returned if the affinity is set successfully.
-    * @return -1 is returned otherwise.
+    *         -1 is returned otherwise.
     *
     * @note This is currently only available on IRIX 6.5 and is non-portable.
     */
@@ -336,7 +338,7 @@ public:  // ----- Various other thread functions ------
     *                call to setRunOn().
     *
     * @return 0 is returned if the affinity is retrieved successfully.
-    * @return -1 is returned otherwise.
+    *         -1 is returned otherwise.
     *
     * @note This is currently only available on IRIX 6.5 and is non-portable.
     */
@@ -362,7 +364,7 @@ public:  // ----- Various other thread functions ------
     * @param signum The signal to send to the specified thread.
     *
     * @return 0 is returned if the signal was sent successfully.
-    * @return -1 is returned otherwise.
+    *         -1 is returned otherwise.
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
@@ -391,7 +393,7 @@ public:  // ----- Various other thread functions ------
     * Get a pointer to the thread we are in.
     *
     * @return NULL is returned if this thread is not in the global table.
-    * @return A non-NULL pointer is returned that points to the thread in
+    *         A non-NULL pointer is returned that points to the thread in
     *         which we are currently running.
     */
    static Thread* self();
@@ -407,13 +409,14 @@ private:
    VPRThreadScope    mScope;         /**< Scope (process or system) of this thread */
    VPRThreadState    mState;
    size_t            mStackSize;
+
    vpr::UncaughtThreadException mException;
    bool                         mCaughtException;
 
    /** Flag for signaling when thread start is completed. */
    bool mThreadStartCompleted;
 
-   /** CondVar for thread starting. */
+   /** Condition variable for thread starting. */
    vpr::CondVarPosix mThreadStartCondVar;
 
    /**

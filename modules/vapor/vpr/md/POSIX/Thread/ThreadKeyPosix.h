@@ -98,7 +98,7 @@ public:
     *                   This parameter is optional and defaults to NULL.
     *
     * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
+    *         -1 is returned if an error occurs.
     */
    int keycreate(KeyDestructor destructor = NULL)
    {
@@ -114,7 +114,7 @@ public:
     *       associated with it, and its resources are freed.
     *
     * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
+    *         -1 is returned if an error occurs.
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
@@ -135,7 +135,7 @@ public:
     *              specified key for the current thread.
     *
     * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
+    *         -1 is returned if an error occurs.
     */
    int setspecific(void* value)
    {
@@ -155,7 +155,7 @@ public:
     *               key.
     *
     * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
+    *         -1 is returned if an error occurs.
     */
    int getspecific(void** valuep)
    {
