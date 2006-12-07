@@ -60,7 +60,7 @@ MutexWin32::MutexWin32()
       std::ostringstream msg_stream;
       msg_stream << "Mutex allocation failed: "
                  << vpr::Error::getCurrentErrorMsg();
-      throw vpr::ResourceException("Mutex allocation failed", VPR_LOCATION);
+      throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
    }
 }
 
