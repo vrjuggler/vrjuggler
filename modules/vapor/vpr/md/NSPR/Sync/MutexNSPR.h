@@ -135,7 +135,7 @@ public:
     *       already been acquired by another thread, the caller returns does
     *       not wait for it to be unlocked.
     *
-    * @return \c true is returned if the lock is acquired, and \c false is
+    * @return \c true is returned if the lock is acquired by this thread, and \c false is
     *         returned if the mutex is already locked.
     */
    bool tryAcquire()
@@ -144,9 +144,9 @@ public:
       if ( mLocked == false )
       {
          this->acquire();
+         return true;
       }
-
-      return mLocked;
+      return false;
    }
 
    /**
