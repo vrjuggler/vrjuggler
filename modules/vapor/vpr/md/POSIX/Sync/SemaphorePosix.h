@@ -50,6 +50,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <boost/concept_check.hpp>
+#include <boost/noncopyable.hpp>
 
 #include <vpr/Sync/DeadlockException.h>
 
@@ -68,7 +69,7 @@ namespace vpr
  * Semaphore wrapper for POSIX.4-compliant systems.  This is typedef'd to
  * vpr::Semaphore.
  */
-class SemaphorePosix
+class SemaphorePosix : boost::noncopyable
 {
 public:
    /**
@@ -286,17 +287,6 @@ protected:
    char* mSemaFile;
 #endif
    sem_t* mSema;   /**< Semaphore variable for the class. */
-
-   // Prevent assignment and initialization.
-   void operator=(const SemaphorePosix &)
-   {
-      /* Do nothing. */ ;
-   }
-
-   SemaphorePosix(const SemaphorePosix &)
-   {
-      /* Do nothing. */ ;
-   }
 };
 
 } // End of vpr namespace
