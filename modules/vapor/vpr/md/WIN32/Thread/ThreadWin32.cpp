@@ -35,6 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstdlib>
 #include <iomanip>
 #include <sstream>
 #include <errno.h>
@@ -51,8 +52,6 @@
 #include <vpr/Util/ResourceException.h>
 #include <vpr/md/WIN32/Thread/ThreadWin32.h>
 
-
-extern int errno;
 
 namespace vpr
 {
