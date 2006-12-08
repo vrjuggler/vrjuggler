@@ -45,7 +45,6 @@
 #include <vpr/vprConfig.h>
 
 #include <process.h>
-#include <assert.h>
 
 // To get the Win32 key stuff for storing self.
 #include <vpr/md/WIN32/Thread/ThreadKeyWin32.h>
@@ -226,22 +225,7 @@ public:  // ----- Various other thread functions ------
     * @throw vpr::UncaughtThreadException is thrown if an exception was
     *        thrown by code executing in this thread and was not caught.
     */
-   virtual int join(void** status = 0)
-   {
-      int result(0);
-      result = WaitForSingleObject(mThreadHandle, INFINITE);
-      assert(result == WAIT_OBJECT_0);
-      result = CloseHandle(mThreadHandle);
-      assert(result);
-      boost::ignore_unused_variable_warning(result);
-
-      if ( mCaughtException )
-      {
-         throw mException;
-      }
-
-      return 0;
-   }
+   virtual int join(void** status = 0);
 
    /**
     * Resumes the execution of a thread that was previously suspended using

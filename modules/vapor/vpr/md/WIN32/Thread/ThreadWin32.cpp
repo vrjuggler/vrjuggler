@@ -38,6 +38,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <sstream>
+#include <assert.h>
 #include <errno.h>
 #include <boost/bind.hpp>
 
@@ -233,6 +234,23 @@ void ThreadWin32::startThread()
       mCaughtException = true;
       mException.setException(ex);
    }
+}
+
+int ThreadWin32::join(void** status)
+{
+   int result(0);
+   result = WaitForSingleObject(mThreadHandle, INFINITE);
+   assert(result == WAIT_OBJECT_0);
+   result = CloseHandle(mThreadHandle);
+   assert(result);
+   boost::ignore_unused_variable_warning(result);
+
+   if ( mCaughtException )
+   {
+      throw mException;
+   }
+
+   return 0;
 }
 
 int ThreadWin32::getPrio(VPRThreadPriority* prio)
