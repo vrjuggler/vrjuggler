@@ -64,6 +64,10 @@
 
 #undef _POSIX_C_SOURCE
 
+/* Win32 */
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
+#  include <vpr/md/WIN32/Thread/ThreadWin32.h>
+
 /* NSPR */
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #  include <vpr/md/NSPR/Thread/ThreadNSPR.h>

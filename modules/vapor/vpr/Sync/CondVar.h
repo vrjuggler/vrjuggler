@@ -57,6 +57,8 @@
 
 #undef _POSIX_C_SOURCE
 
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
+#  include <vpr/md/WIN32/Sync/CondVarWin32.h>
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #  include <vpr/md/NSPR/Sync/CondVarNSPR.h>
 #endif   /* VPR_IRIX_SPROC */

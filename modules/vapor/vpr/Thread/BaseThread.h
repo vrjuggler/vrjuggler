@@ -320,6 +320,8 @@ VPR_API(std::ostream&) operator<<(std::ostream& out, Thread* threadPtr);
 // It must be extern "C".
 #if defined(VPR_USE_PTHREADS)
 extern "C" void* vprThreadFunctorFunction(void* args);
+#elif defined(VPR_USE_WINTHREADS)
+extern "C" unsigned __stdcall vprThreadFunctorFunction(void* args);
 #else
 extern "C" void vprThreadFunctorFunction(void* args);
 #endif

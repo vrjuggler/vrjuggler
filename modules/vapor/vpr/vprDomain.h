@@ -45,6 +45,7 @@
 #define VPR_DOMAIN_POSIX      2
 #define VPR_DOMAIN_IRIX_SPROC 3
 #define VPR_DOMAIN_SIMULATOR  4
+#define VPR_DOMAIN_WIN32      5
 
 // This is the VPR I/O domain.  It defines all the platform-independent types
 // used for doing I/O (sockets and serial ports mostly) in VPR.
@@ -160,7 +161,18 @@ namespace vpr
 // programming.
 namespace vpr
 {
-#ifdef VPR_USE_NSPR
+#if defined(VPR_USE_WINTHREADS)
+#  define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_WIN32
+
+   typedef class ErrorImplWin32 Error;
+   typedef class SystemNSPR     System;
+   typedef class CondVarWin32   CondVar;
+   typedef class MutexWin32     Mutex;
+   typedef class SemaphoreWin32 Semaphore;
+   typedef class ThreadWin32    Thread;
+   typedef class ThreadKeyWin32 KeyId;
+
+#elif defined(VPR_USE_NSPR)
 #  define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_NSPR
 
    typedef class ErrorImplNSPR Error;

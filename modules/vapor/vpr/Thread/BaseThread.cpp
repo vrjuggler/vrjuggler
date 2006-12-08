@@ -112,6 +112,14 @@ void* vprThreadFunctorFunction(void* arg)
 
    return (void*) NULL;
 }
+#elif defined(VPR_USE_WINTHREADS)
+unsigned __stdcall vprThreadFunctorFunction(void* arg)
+{
+   vpr::thread_func_t& func = *((vpr::thread_func_t*) arg);
+   vprASSERT(! func.empty());
+   func();
+   return 0;
+}
 #else
 void vprThreadFunctorFunction(void* arg)
 {
