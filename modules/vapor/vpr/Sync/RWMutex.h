@@ -50,7 +50,7 @@
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #  include <vpr/md/POSIX/Sync/RWMutexPosix.h>
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC || \
-      VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WINTHREADS
+      VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
 
 #  include <boost/noncopyable.hpp>
 
@@ -195,13 +195,6 @@ public:
    bool test() const
    {
       return stateLock.test();
-   }
-
-   /** Dumps the mutex debug stuff and current state. */
-   void dump (FILE* dest = stderr,
-              const char* message = "\n------ Mutex Dump -----\n") const
-   {
-      stateLock.dump();
    }
 
 protected:
