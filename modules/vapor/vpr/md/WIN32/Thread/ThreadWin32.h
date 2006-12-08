@@ -230,7 +230,7 @@ public:  // ----- Various other thread functions ------
    {
       int result(0);
       result = WaitForSingleObject(mThreadHandle, INFINITE);
-      assert(result);
+      assert(result == WAIT_OBJECT_0);
       result = CloseHandle(mThreadHandle);
       assert(result);
       boost::ignore_unused_variable_warning(result);
