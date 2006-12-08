@@ -150,7 +150,7 @@ public:
     */
    bool tryAcquire()
    {
-      const DWORD dw = WaitForSingleObject(mutex, 0);
+      const DWORD dw = WaitForSingleObject(mMutex, 0);
       if ( dw == WAIT_OBJECT_0 )
       {
          mLocked = true;

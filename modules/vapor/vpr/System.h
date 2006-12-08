@@ -46,7 +46,8 @@
 #include <vpr/vprConfig.h>
 
 // determine which implementation of vpr::System to include.
-#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR || \
+    VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
 #  include <vpr/md/NSPR/SystemNSPR.h>
 #elif (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX) ||  \
       (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC)

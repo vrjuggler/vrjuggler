@@ -49,7 +49,9 @@
 #include <vpr/Util/ErrorBase.h>
 
 // make the connection
-#ifdef VPR_USE_NSPR
+#if defined(VPR_USE_WINTHREADS)
+#   include <vpr/md/WIN32/Util/ErrorImplWin32.h>
+#elif defined(VPR_USE_NSPR)
 #   include <vpr/md/NSPR/Util/ErrorImplNSPR.h>
 #else
 #   include <vpr/md/POSIX/Util/ErrorImplPosix.h>

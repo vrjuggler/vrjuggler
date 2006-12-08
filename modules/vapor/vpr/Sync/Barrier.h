@@ -48,8 +48,9 @@
 #if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
 #  include <ulocks.h>
 #  include <vpr/md/SPROC/Sync/BarrierSGI.h>
-#elif (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR) || \
-      (VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX)
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR || \
+      VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX || \
+      VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
 #  include <vpr/Sync/CondVar.h>
 #  include <vpr/Sync/Mutex.h>
 #  include <vpr/Sync/Guard.h>

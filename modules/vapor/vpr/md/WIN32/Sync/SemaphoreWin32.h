@@ -112,7 +112,7 @@ public:
     *
     * @note There is no special read lock for now.
     */
-   void acquireRead() const
+   void acquireRead()
    {
       this->acquire();
    }
@@ -127,7 +127,7 @@ public:
     *
     * @note There is no special write lock for now.
     */
-   void acquireWrite() const
+   void acquireWrite()
    {
       this->acquire();
    }

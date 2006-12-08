@@ -41,6 +41,7 @@
 
 #include <vpr/Sync/LockException.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Error.h>
 #include <vpr/Util/ResourceException.h>
 #include <vpr/Util/IllegalArgumentException.h>
 #include <vpr/md/WIN32/Sync/CondVarWin32.h>
@@ -175,7 +176,7 @@ bool CondVarWin32::wait(const vpr::Interval& timeToWait)
             mBlocked -= mGone;
             result = ReleaseSemaphore(mGate, 1, 0);
             assert(result);
-            mGnome = 0;
+            mGone = 0;
          }
 
          result = ReleaseMutex(mMutex);
@@ -185,7 +186,7 @@ bool CondVarWin32::wait(const vpr::Interval& timeToWait)
          {
             for ( ; was_gone; --was_gone )
             {
-               result = WaitForSingleObject(mQueue, INFTINIE);
+               result = WaitForSingleObject(mQueue, INFINITE);
                assert(result == WAIT_OBJECT_0);
             }
 
@@ -207,7 +208,10 @@ bool CondVarWin32::wait(const vpr::Interval& timeToWait)
 
             if ( result == WAIT_TIMEOUT )
             {
-               if ( vpr::Interval::now() - timeToWait > 0 )
+               vpr::Interval diff(vpr::Interval::now());
+               diff = diff - timeToWait;
+
+               if ( diff.msec() > 0 )
                {
                   continue;
                }
@@ -261,7 +265,7 @@ bool CondVarWin32::wait(const vpr::Interval& timeToWait)
             mBlocked -= mGone;
             result = ReleaseSemaphore(mGate, 1, 0);
             assert(result);
-            mGnome = 0;
+            mGone = 0;
          }
 
          result = ReleaseMutex(mMutex);
@@ -271,7 +275,7 @@ bool CondVarWin32::wait(const vpr::Interval& timeToWait)
          {
             for ( ; was_gone; --was_gone )
             {
-               result = WaitForSingleObject(mQueue, INFTINIE);
+               result = WaitForSingleObject(mQueue, INFINITE);
                assert(result == WAIT_OBJECT_0);
             }
 

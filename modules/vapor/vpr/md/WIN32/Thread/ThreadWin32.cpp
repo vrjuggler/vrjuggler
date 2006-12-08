@@ -162,8 +162,11 @@ void ThreadWin32::start()
 void ThreadWin32::spawn()
 {
    unsigned int thread_id;
-   mThreadHandle = _beginthreadex(NULL, mStackSize, &vprThreadFunctorFunction,
-                                  (void*) &mStartFunctor, 0, thread_id);
+   mThreadHandle =
+      reinterpret_cast<HANDLE>(_beginthreadex(NULL, mStackSize,
+                                              &vprThreadFunctorFunction,
+                                              (void*) &mStartFunctor, 0,
+                                              &thread_id));
 
    // Inform the caller if the thread was not created successfully.
    if ( NULL == mThreadHandle )
@@ -185,12 +188,12 @@ void ThreadWin32::spawn()
          throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
       }
    }
-   else if ( VPR_THREAD_PRIORITY_NORMAL != mPriority )
+   else if ( VPR_PRIORITY_NORMAL != mPriority )
    {
       setPrio(mPriority);
    }
 
-   mThreadID = thread_id;
+   mThreadTID = thread_id;
 }
 
 // Called by the spawn routine to start the user thread function.
