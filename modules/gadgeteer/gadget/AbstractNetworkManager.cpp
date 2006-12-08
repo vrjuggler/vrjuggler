@@ -27,12 +27,9 @@
 #include <gadget/gadgetConfig.h>
 
 #include <iomanip>
-#include <boost/concept_check.hpp>
-#include <boost/bind.hpp>
 
 #include <vpr/IO/Socket/InetAddr.h>
 
-#include <cluster/ClusterManager.h>
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/PacketFactory.h>

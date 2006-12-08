@@ -31,17 +31,11 @@
 
 #include <map>
 
-#include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Sync/RWGuard.h>
-#include <vpr/Sync/RWMutex.h>
 #include <vpr/Util/GUID.h>
-#include <vpr/Util/Singleton.h>
 
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Config/ConfigElementPtr.h>
-
-#include <gadget/Connector.h>
 
 
 namespace cluster
