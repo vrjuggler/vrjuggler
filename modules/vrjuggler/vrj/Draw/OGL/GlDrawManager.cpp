@@ -35,6 +35,8 @@
 #include <stdlib.h>
 #include <boost/concept_check.hpp>
 
+#include <jccl/Config/ConfigElement.h>
+
 #include <cluster/ClusterManager.h>
 
 #include <vrj/Display/DisplayManager.h>
