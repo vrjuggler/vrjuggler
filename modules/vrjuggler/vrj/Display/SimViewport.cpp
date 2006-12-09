@@ -29,6 +29,7 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
+#include <jccl/Config/ConfigElement.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/CameraProjection.h>
 #include <vrj/Display/Projection.h>

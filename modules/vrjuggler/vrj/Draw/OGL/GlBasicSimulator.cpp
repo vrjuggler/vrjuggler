@@ -36,6 +36,8 @@
 #include <gmtl/Xforms.h>
 #include <gmtl/Output.h>
 
+#include <jccl/Config/ConfigElement.h>
+
 #include <vrj/Kernel/User.h>
 
 #include <vrj/Draw/OGL/GlDrawManager.h>
