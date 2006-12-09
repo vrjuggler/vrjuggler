@@ -33,7 +33,7 @@
 
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
-#include <jccl/Config/ConfigElement.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Util/Debug.h>
 #include <vpr/Util/Interval.h>
 
@@ -47,29 +47,16 @@ namespace gadget
    class GADGET_CLASS_API Proxy
    {
    public:
-      Proxy()
-         : mName("")
-         , mStupefied(true)
-         , mNeedUpdate(true)
-      {
-         ;
-      }
+      Proxy();
 
-      virtual ~Proxy()
-      {
-         ;
-      }
+      virtual ~Proxy();
 
       /**
        * Configures the proxy.
        * @post Proxy is configured (it is not registered yet though).
        * @return success.
        */
-      virtual bool config(jccl::ConfigElementPtr element)
-      {
-         mName = element->getFullName();
-         return true;
-      }
+      virtual bool config(jccl::ConfigElementPtr element);
 
       /**
        * Refreshes the proxy.

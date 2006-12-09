@@ -65,6 +65,7 @@ SRCS=		Analog.cpp			\
 		KeyboardMouseProxy.cpp		\
 		Position.cpp			\
 		PositionProxy.cpp		\
+		Proxy.cpp			\
 		StringProxy.cpp			\
 		String.cpp
 
