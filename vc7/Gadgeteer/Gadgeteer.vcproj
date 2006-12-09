@@ -274,6 +274,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Filter\Position\PositionXformFilter.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\Proxy.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\ProxyDepChecker.cpp">
 			</File>
 			<File
