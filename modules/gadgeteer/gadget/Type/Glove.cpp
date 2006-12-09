@@ -44,6 +44,7 @@
 #include <gmtl/Xforms.h>
 #include <gmtl/EulerAngle.h>
 
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/Glove.h>
 #include <gadget/Util/DeviceSerializationTokens.h>
 
