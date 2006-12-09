@@ -141,6 +141,19 @@ public:
    virtual void updateData() = 0;
 
    /**
+    * @since 1.0.2
+    */
+   void updateDataIfNeeded();
+
+   /**
+    * @since 1.0.2
+    */
+   void resetData()
+   {
+      mNeedUpdate = true;
+   }
+
+   /**
     * Returns the string rep of the element type used to config this device.
     * This string is used by the device factory to look up device drivers
     * based up the type of element it is trying to load.
@@ -224,6 +237,7 @@ protected:
    std::string    mInstName;
    vpr::Thread*   mThread;       /**< The thread being used by the driver. */
    bool           mActive;       /**< Is the driver active? */
+   bool           mNeedUpdate;   /**< @since 1.0.2 */
 
    Input(const Input& o) : vpr::SerializableObject(o)
    {;}

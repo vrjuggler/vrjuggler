@@ -276,6 +276,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    if(ret_val)
    {
+      resetAllDevicesAndProxies();
       updateAllDevices();                             // Update all the input data
       updateAllProxies();                             // Update all the input data
       BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
@@ -332,6 +333,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    if(ret_val)
    {
+      resetAllDevicesAndProxies();
       updateAllDevices();                             // Update all the input data
       updateAllProxies();                             // Update all the input data
       BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
@@ -548,6 +550,26 @@ bool InputManager::addRemoteDevice(Input* devPtr, const std::string& device_name
    return true;
 }
 
+void InputManager::resetAllDevicesAndProxies()
+{
+   typedef std::map<std::string, Proxy*>::iterator iter_type;
+   for ( iter_type i_p = mProxyTable.begin(); i_p != mProxyTable.end(); ++i_p )
+   {
+      (*i_p).second->resetData();
+   }
+
+   // all DEVICES
+   for ( tDevTableType::iterator i = mDevTable.begin();
+         i != mDevTable.end();
+         ++i )
+   {
+      if ( (*i).second != NULL )
+      {
+         (*i).second->resetData();
+      }
+   }
+}
+
 void InputManager::updateAllProxies()
 {
    // Update proxies MIGHT NOT NEED
@@ -555,7 +577,7 @@ void InputManager::updateAllProxies()
         i_p != mProxyTable.end();
         ++i_p)
    {
-      (*i_p).second->updateData();
+      (*i_p).second->updateDataIfNeeded();
    }
 }
 
@@ -569,7 +591,7 @@ void InputManager::updateAllDevices()
    {
       if ((*i).second != NULL)
       {
-         i->second->updateData();
+         i->second->updateDataIfNeeded();
       }
    }
 

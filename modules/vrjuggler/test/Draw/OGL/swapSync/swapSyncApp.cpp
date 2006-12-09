@@ -64,6 +64,8 @@ void SwapSyncApp::preFrame()
 void SwapSyncApp::bufferPreDraw()
 {
    unsigned choice = (mFrameNum % 5);
+   std::cout << "frame num: " << mFrameNum << std::endl;
+   std::cout << "choice: " << choice << std::endl;
    
    if(0 == choice)
    { glClearColor(0.0, 0.0, 0.0, 0.0); }     // Black
@@ -88,8 +90,8 @@ void SwapSyncApp::draw()
    vpr::Uint32 sleep_ms;
    
    if(0 == sleep_choice) { sleep_ms = 0; }
-   else if(1 == sleep_choice) { sleep_ms = 1000; }   
-   else if(2 == sleep_choice) { sleep_ms = 4000; }      
+   else if(1 == sleep_choice) { sleep_ms = 500; }   
+   else if(2 == sleep_choice) { sleep_ms = 1000; }      
    
    /*
    float rand_num = drand48();
@@ -99,8 +101,9 @@ void SwapSyncApp::draw()
    vpr::Uint32 sleep_ms = vpr::Uint32(float(base_ms + (var_ms * rand_num)));
    */
    
+   vprDEBUG(vprDBG_ALL, 0) << "Frame: " << mFrameNum << std::endl << vprDEBUG_FLUSH;;
    vpr::System::msleep(sleep_ms);   
-   vprDEBUG(vprDBG_ALL, 0) << mFrameNum << ": Sleep: " << sleep_ms << "ms\n" << vprDEBUG_FLUSH;;
+   //vprDEBUG(vprDBG_ALL, 0) << mFrameNum << ": Sleep: " << sleep_ms << "ms\n" << vprDEBUG_FLUSH;;
 }
 
 void SwapSyncApp::initGLState()

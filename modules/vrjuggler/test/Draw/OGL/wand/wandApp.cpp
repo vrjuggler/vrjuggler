@@ -62,6 +62,8 @@ void wandApp::init()
    mButton3.init("VJButton3");
    mButton4.init("VJButton4");
    mButton5.init("VJButton5");
+   mButton6.init("VJButton6");
+   mButton7.init("VJButton7");
 }
 
 void wandApp::contextInit()
@@ -72,15 +74,15 @@ void wandApp::contextInit()
 
 void wandApp::preFrame()
 {
-    /*
     std::cout  << "Wand Buttons:"
            << " 0:" << mButton0->getData()
            << " 1:" << mButton1->getData()
            << " 2:" << mButton2->getData()
            << " 3:" << mButton3->getData()
            << " 4:" << mButton4->getData()
-           << " 5:" << mButton5->getData() << std::endl;
-   */
+           << " 5:" << mButton5->getData()
+           << " 6:" << mButton6->getData()
+           << " 7:" << mButton7->getData() << std::endl;
 
    mHeadHistory.push_back(gmtl::makeTrans<gmtl::Vec3f>(mHead->getData()));
 

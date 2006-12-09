@@ -56,6 +56,7 @@ namespace gadget
       Proxy()
          : mName("")
          , mStupefied(true)
+         , mNeedUpdate(true)
       {
          ;
       }
@@ -85,6 +86,26 @@ namespace gadget
       virtual void updateData()
       {
          ;
+      }
+
+      /**
+       * @since 1.0.2
+       */
+      void updateDataIfNeeded()
+      {
+         if ( mNeedUpdate )
+         {
+            mNeedUpdate = false;
+            updateData();
+         }
+      }
+
+      /**
+       * @since 1.0.2
+       */
+      void resetData()
+      {
+         mNeedUpdate = true;
       }
 
       /**
@@ -175,6 +196,7 @@ namespace gadget
    protected:
       std::string mName;         /**< The name of the proxy */
       bool        mStupefied;    /**< Is the proxy current stupefied (returns default data) */
+      bool        mNeedUpdate;   /**< @since 1.0.2 */
    };
 
    /** \class TypedProxy Proxy.h gadget/Type/Proxy.h

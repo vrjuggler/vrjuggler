@@ -108,6 +108,8 @@ private:
    gadget::DigitalInterface     mButton3;
    gadget::DigitalInterface     mButton4;
    gadget::DigitalInterface     mButton5;
+   gadget::DigitalInterface     mButton6;
+   gadget::DigitalInterface     mButton7;
 
    std::vector<gmtl::Vec3f>     mHeadHistory;
 

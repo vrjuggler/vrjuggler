@@ -63,6 +63,10 @@ bool SimRelativePosition::config(jccl::ConfigElementPtr element)
 
 void SimRelativePosition::updateData()
 {
+   // Make sure dependencies are updated.
+   mBaseFrame->updateDataIfNeeded();
+   mRelativePos->updateDataIfNeeded();
+
    gmtl::mult( mPos.mPosData, mBaseFrame->getData(gadget::PositionUnitConversion::ConvertToMeters), 
                               mRelativePos->getData(gadget::PositionUnitConversion::ConvertToMeters) );
 

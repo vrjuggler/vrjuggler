@@ -67,10 +67,13 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
 void DigitalProxy::updateData()
 {
-
    if (!isStupefied())
    {
       int old_state = mData.getDigital();
+
+      // Make sure dependencies are updated.
+      getProxiedInputDevice()->updateDataIfNeeded();
+
       mData = mTypedDevice->getDigitalData(mUnitNum);
       int new_state = mData.getDigital();
 

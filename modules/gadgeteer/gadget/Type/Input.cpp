@@ -41,9 +41,10 @@ namespace gadget
 {
 
 Input::Input()
- : mInstName(""),
-   mThread(NULL),
-   mActive(false)
+   : mInstName("")
+   , mThread(NULL)
+   , mActive(false)
+   , mNeedUpdate(true)
 {
 }
 
@@ -60,6 +61,15 @@ bool Input::config(jccl::ConfigElementPtr e)
   mInstName = e->getFullName();
 
   return true;
+}
+
+void Input::updateDataIfNeeded()
+{
+   if ( mNeedUpdate )
+   {
+      mNeedUpdate = false;
+      updateData();
+   }
 }
 
 } // End of gadget namespace

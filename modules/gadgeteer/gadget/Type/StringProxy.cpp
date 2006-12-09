@@ -67,6 +67,9 @@ void StringProxy::updateData()
 {
    if (!isStupefied())
    {
+      // Make sure dependencies are updated.
+      getProxiedInputDevice()->updateDataIfNeeded();
+
       std::string old_state = mData.getString();
       mData = mTypedDevice->getStringData(mUnitNum);
       std::string new_state = mData.getString();
