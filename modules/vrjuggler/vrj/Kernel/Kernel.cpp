@@ -277,6 +277,8 @@ void Kernel::controlLoop()
       checkSignalButtons();      // Check for any pending control requests
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
+         vpr::prof::next("resetAllDevicesAndProxies", 10);
+      getInputManager()->resetAllDevicesAndProxies();
          vpr::prof::next("updateAllDevices",10);
       getInputManager()->updateAllDevices();
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)

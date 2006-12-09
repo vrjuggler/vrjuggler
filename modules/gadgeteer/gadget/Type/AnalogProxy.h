@@ -70,6 +70,8 @@ public:
    {
       if(!isStupefied())
       {
+         // Make sure dependencies are updated.
+         getProxiedInputDevice()->updateDataIfNeeded();
          mData = mTypedDevice->getAnalogData(mUnitNum);
       }
    }

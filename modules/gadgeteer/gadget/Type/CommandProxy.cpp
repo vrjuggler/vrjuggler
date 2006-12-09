@@ -61,6 +61,8 @@ void CommandProxy::updateData()
 {
    if (!isStupefied())
    {
+      // Make sure dependencies are updated.
+      getProxiedInputDevice()->updateDataIfNeeded();
       mData = mTypedDevice->getCommandData(mUnitNum);
    }
 }

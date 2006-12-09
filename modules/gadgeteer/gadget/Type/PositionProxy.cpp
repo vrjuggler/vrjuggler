@@ -143,6 +143,9 @@ void PositionProxy::updateData()
 {
    if((!mStupefied) && (mTypedDevice != NULL))
    {
+      // Make sure dependencies are updated.
+      getProxiedInputDevice()->updateDataIfNeeded();
+
       mPositionData = (mTypedDevice->getPositionData (mUnitNum));
 
       // Create a vector to hold all 1 of our position data samples.

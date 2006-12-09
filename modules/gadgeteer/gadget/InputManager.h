@@ -148,6 +148,11 @@ public:
     */
    //@{
    /**
+    * @since 1.1.19
+    */
+   void resetAllDevicesAndProxies();
+
+   /**
     * Updates the data in all the devices.
     * This calls updateData() on all the devices in the device table.
     */
