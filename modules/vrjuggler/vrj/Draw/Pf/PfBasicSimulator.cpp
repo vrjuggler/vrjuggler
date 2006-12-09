@@ -50,7 +50,7 @@
 #include <Performer/pf/pfTraverser.h>
 
 #include <vpr/Util/FileUtils.h>
-
+#include <jccl/Config/ConfigElement.h>
 
 #include <vrj/Kernel/User.h>
 
