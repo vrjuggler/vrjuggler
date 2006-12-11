@@ -295,6 +295,9 @@
 				RelativePath="..\..\modules\vapor\vpr\Thread\TSObjectProxy.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Thread\ThreadKeyNSPR.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadManager.cpp">
 			</File>
 			<File
