@@ -333,7 +333,7 @@ void CondVarWin32::signal()
             mGone     = 0;
          }
 
-         signals = mWaiting + 1;
+         signals = mWaiting = 1;
          --mBlocked;
       }
       else
