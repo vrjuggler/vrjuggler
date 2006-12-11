@@ -148,7 +148,10 @@ public:
 
       if ( 0xffffffff != mKeyID )
       {
-         mDestructor();
+         if ( ! mDestructor.empty() )
+         {
+            mDestructor();
+         }
 
          if ( ! TlsFree(mKeyID) )
          {
