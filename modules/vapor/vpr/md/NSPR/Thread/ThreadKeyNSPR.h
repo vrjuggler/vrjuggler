@@ -45,6 +45,8 @@
 #include <vpr/vprConfig.h>
 #include <prthread.h>
 
+#include <vpr/Util/IllegalArgumentException.h>
+
 
 namespace vpr
 {
@@ -57,7 +59,7 @@ typedef PRThreadPrivateDTOR KeyDestructor;
  * Wrapper around NSPR thread-specific data.  It is typedef'd to
  * vpr::ThreadKey.
  */
-class ThreadKeyNSPR
+class VPR_CLASS_API ThreadKeyNSPR
 {
 public:
    /**
@@ -65,6 +67,9 @@ public:
     * overloads must be called to finish the key allocation process.
     *
     * @see keycreate
+    *
+    * @throw vpr::ResourceException is thrown if the thread-specific key
+    *        could not be created.
     */
    ThreadKeyNSPR(KeyDestructor destructor = NULL)
    {
@@ -74,10 +79,7 @@ public:
    /**
     * Releases this key.
     */
-   ~ThreadKeyNSPR()
-   {
-      keyfree();
-   }
+   ~ThreadKeyNSPR();
 
    /**
     * Allocates a key that is used to identify data that is specific to each
@@ -89,15 +91,10 @@ public:
     *
     * @param destructor The destructor function for the key.
     *
-    * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
+    * @throw vpr::ResourceException is thrown if the thread-specific key
+    *        could not be created.
     */
-   int keycreate(KeyDestructor destructor = NULL)
-   {
-      PRStatus ret = PR_NewThreadPrivateIndex(&mKeyID,
-                                              (KeyDestructor) destructor);
-      return (PR_SUCCESS == ret ? 0 : -1);
-   }
+   void keycreate(KeyDestructor destructor = NULL);
 
    /**
     * Frees up this key so that other threads may reuse it.
@@ -107,14 +104,13 @@ public:
     * @post This key is destroyed using the destructor function previously
     *       associated with it, and its resources are freed.
     *
-    * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
+    * @throw vpr::IllegalArgumentException is thrown if this key is invalid
+    *        and therefore cannot be deleted.
     */
-   int keyfree()
+   void keyfree()
    {
-      // Key auto-matically freed
+      // Key automatically freed.
       setspecific(NULL);
-      return 0;
    }
 
    /**
@@ -128,13 +124,20 @@ public:
     * @param value Address containing data to be associated with the
     *              specified key for the current thread.
     *
-    * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
+    * @throw vpr::IllegalArgumentException is thrown if this key is invalid
+    *        and therefore cannot have a value associated with it.
     */
-   int setspecific(void* value)
+   void setspecific(void* value)
    {
-      PRStatus ret = PR_SetThreadPrivate(mKeyID, value);
-      return (PR_SUCCESS == ret ? 0 : -1);
+      const PRStatus ret = PR_SetThreadPrivate(mKeyID, value);
+
+      if ( PR_FAILURE == ret )
+      {
+         throw vpr::IllegalArgumentException(
+            "Tried to set value on an invalid thread-specific key.",
+            VPR_LOCATION
+         );
+      }
    }
 
    /**
@@ -147,14 +150,10 @@ public:
     *       pointer valuep so that the caller may work with it.
     *
     * @param valuep Address of the current data value associated with the key.
-    *
-    * @return 0 is returned upon successful completion.
-    * @return -1 is returned if an error occurs.
     */
-   int getspecific(void** valuep)
+   void getspecific(void** valuep)
    {
       *valuep = PR_GetThreadPrivate(mKeyID);
-      return 0;
    }
 
 private:

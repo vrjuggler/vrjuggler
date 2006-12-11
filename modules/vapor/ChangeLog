@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2006-12-11 patrick  Replaced integer return codes in vpr::ThreadKey with
+                    exceptions.
+                    NEW VERSION: 1.1.37
 2006-12-08 patrick  Added Windows-specific threading wrappers and
                     synchronization primitives for use instead of NSPR's
                     equivalent types and functions.

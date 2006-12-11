@@ -51,7 +51,8 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifeq (@SUBSYSTEM@, NSPR)
-   SRCS=	ThreadNSPR.cpp
+   SRCS=	ThreadKeyNSPR.cpp	\
+		ThreadNSPR.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk

@@ -44,9 +44,15 @@
 
 #include <vpr/vprConfig.h>
 
-#include <boost/function.hpp>
+#include <cstring>
+#include <sstream>
+#include <errno.h>
+#include <assert.h>
 #include <pthread.h>
 #include <sys/types.h>
+
+#include <vpr/Util/ResourceException.h>
+#include <vpr/Util/IllegalArgumentException.h>
 
 
 namespace vpr
@@ -71,6 +77,9 @@ public:
     *       function and argument.
     *
     * @param destructor The destructor function for the key.
+    *
+    * @throw vpr::ResourceException is thrown if the thread-specific key
+    *        could not be created.
     */
    ThreadKeyPosix(KeyDestructor destructor = NULL)
    {
@@ -80,10 +89,7 @@ public:
    /**
     * Releases this key.
     */
-   ~ThreadKeyPosix()
-   {
-      keyfree();
-   }
+   ~ThreadKeyPosix();
 
    /**
     * Allocates a key that is used to identify data that is specific to
@@ -97,13 +103,10 @@ public:
     * @param destructor A pointer to the destructor function for the key.
     *                   This parameter is optional and defaults to NULL.
     *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
+    * @throw vpr::ResourceException is thrown if the thread-specific key
+    *        could not be created.
     */
-   int keycreate(KeyDestructor destructor = NULL)
-   {
-      return pthread_key_create(&mKeyID, destructor);
-   }
+   void keycreate(KeyDestructor destructor = NULL);
 
    /**
     * Frees up this key so that other threads may reuse it.
@@ -113,15 +116,12 @@ public:
     * @post This key is destroyed using the destructor function previously
     *       associated with it, and its resources are freed.
     *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
+    * @throw vpr::IllegalArgumentException is thrown if this key is invalid
+    *        and therefore cannot be deleted.
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
-   int keyfree()
-   {
-      return pthread_key_delete(mKeyID);
-   }
+   void keyfree();
 
    /**
     * Binds value to the thread-specific data key for the calling thread.
@@ -134,12 +134,31 @@ public:
     * @param value Address containing data to be associated with the
     *              specified key for the current thread.
     *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
+    * @throw vpr::ResourceException is thrown if the thread-specific key
+    *        could not be created.
+    * @throw vpr::IllegalArgumentException is thrown if this key is invalid
+    *        and therefore cannot have a value associated with it.
     */
-   int setspecific(void* value)
+   void setspecific(void* value)
    {
-      return pthread_setspecific(mKeyID, value);
+      const int result = pthread_setspecific(mKeyID, value);
+
+      if ( ENOMEM == result )
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Failed to set thread-specific value: "
+                    << std::strerror(result);
+         throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+      }
+      else if ( EINVAL == result )
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Failed to set thread-specific value: "
+                    << std::strerror(result);
+         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+      }
+
+      assert(result == 0);
    }
 
    /**
@@ -153,14 +172,10 @@ public:
     *
     * @param valuep Address of the current data value associated with the
     *               key.
-    *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
     */
-   int getspecific(void** valuep)
+   void getspecific(void** valuep)
    {
       *valuep = pthread_getspecific(mKeyID);
-      return 0;
    }
 
 private:

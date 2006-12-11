@@ -35,23 +35,14 @@
 
 #include <vpr/vprConfig.h>
 
-#include <sstream>
-
 #include <vpr/Util/ResourceException.h>
-#include <vpr/Util/IllegalArgumentException.h>
-#include <vpr/md/WIN32/Thread/ThreadKeyWin32.h>
+#include <vpr/md/NSPR/Thread/ThreadKeyNSPR.h>
 
 
 namespace vpr
 {
 
-ThreadKeyWin32::ThreadKeyWin32(KeyDestructor destructor)
-   : mKeyID(0xffffffff)
-{
-   keycreate(destructor);
-}
-
-ThreadKeyWin32::~ThreadKeyWin32()
+ThreadKeyNSPR::~ThreadKeyNSPR()
 {
    try
    {
@@ -63,48 +54,15 @@ ThreadKeyWin32::~ThreadKeyWin32()
    }
 }
 
-void ThreadKeyWin32::keycreate(KeyDestructor destructor)
+void ThreadKeyNSPR::keycreate(KeyDestructor destructor)
 {
-   if ( 0xffffffff != mKeyID )
+   const PRStatus ret = PR_NewThreadPrivateIndex(&mKeyID, destructor);
+
+   if ( PR_FAILURE == ret )
    {
-      keyfree();
-   }
-
-   mDestructor = destructor;
-
-   const DWORD key_id = TlsAlloc();
-
-   if ( TLS_OUT_OF_INDEXES == key_id )
-   {
-      std::ostringstream msg_stream;
-      msg_stream << "Could not allocate thread local storage: "
-                 << std::strerror(errno);
-      throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
-   }
-   else
-   {
-      mKeyID = key_id;
-   }
-}
-
-void ThreadKeyWin32::keyfree()
-{
-   if ( 0xffffffff != mKeyID )
-   {
-      if ( ! mDestructor.empty() )
-      {
-         mDestructor();
-      }
-
-      if ( ! TlsFree(mKeyID) )
-      {
-         std::ostringstream msg_stream;
-         msg_stream << "Could not free thread local storage: "
-                    << std::strerror(errno);
-         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
-      }
-
-      mKeyID = 0xffffffff;
+      throw vpr::ResourceException(
+         "Cannot create more than 128 thread-specific keys!", VPR_LOCATION
+      );
    }
 }
 

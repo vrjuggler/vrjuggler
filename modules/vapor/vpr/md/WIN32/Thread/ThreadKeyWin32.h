@@ -44,8 +44,11 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
+#include <cstring>
+#include <sstream>
 #include <boost/function.hpp>
+
+#include <vpr/Util/IllegalArgumentException.h>
 
 
 namespace vpr
@@ -76,6 +79,9 @@ public:
     *       function and argument.
     *
     * @param destructor The destructor function for the key.
+    *
+    * @throw vpr::ResourceException is thrown if the thread-specific key
+    *        could not be created.
     */
    ThreadKeyWin32(KeyDestructor destructor = NULL);
 
@@ -96,10 +102,10 @@ public:
     * @param destructor A pointer to the destructor function for the key.
     *                   This parameter is optional and defaults to NULL.
     *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
+    * @throw vpr::ResourceException is thrown if the thread-specific key
+    *        could not be created.
     */
-   int keycreate(KeyDestructor destructor = NULL);
+   void keycreate(KeyDestructor destructor = NULL);
 
    /**
     * Frees up this key so that other threads may reuse it.
@@ -109,10 +115,10 @@ public:
     * @post This key is destroyed using the destructor function previously
     *       associated with it, and its resources are freed.
     *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
+    * @throw vpr::IllegalArgumentException is thrown if this key is invalid
+    *        and therefore cannot be deleted.
     */
-   int keyfree();
+   void keyfree();
 
    /**
     * Binds value to the thread-specific data key for the calling thread.
@@ -125,19 +131,18 @@ public:
     * @param value Address containing data to be associated with the
     *              specified key for the current thread.
     *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
+    * @throw vpr::IllegalArgumentException is thrown if this key is invalid
+    *        and therefore cannot have a value associated with it.
     */
-   int setspecific(void* value)
+   void setspecific(void* value)
    {
-      int retval(0);
       if ( ! TlsSetValue(mKeyID, value) )
       {
-         perror("Could not store thread local storage");
-         retval = -1;
+         std::ostringstream msg_stream;
+         msg_stream << "Could not store thread local storage: "
+                    << std::strerror(errno);
+         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
       }
-
-      return retval;
    }
 
    /**
@@ -151,14 +156,10 @@ public:
     *
     * @param valuep Address of the current data value associated with the
     *               key.
-    *
-    * @return 0 is returned upon successful completion.
-    *         -1 is returned if an error occurs.
     */
-   int getspecific(void** valuep)
+   void getspecific(void** valuep)
    {
       *valuep = TlsGetValue(mKeyID);
-      return 0;
    }
 
 private:

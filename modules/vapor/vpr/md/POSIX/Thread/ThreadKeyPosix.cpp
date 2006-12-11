@@ -35,23 +35,18 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstring>
 #include <sstream>
 
 #include <vpr/Util/ResourceException.h>
 #include <vpr/Util/IllegalArgumentException.h>
-#include <vpr/md/WIN32/Thread/ThreadKeyWin32.h>
+#include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 
 
 namespace vpr
 {
 
-ThreadKeyWin32::ThreadKeyWin32(KeyDestructor destructor)
-   : mKeyID(0xffffffff)
-{
-   keycreate(destructor);
-}
-
-ThreadKeyWin32::~ThreadKeyWin32()
+ThreadKeyPosix::~ThreadKeyPosix()
 {
    try
    {
@@ -63,49 +58,30 @@ ThreadKeyWin32::~ThreadKeyWin32()
    }
 }
 
-void ThreadKeyWin32::keycreate(KeyDestructor destructor)
+void ThreadKeyPosix::keycreate(KeyDestructor destructor)
 {
-   if ( 0xffffffff != mKeyID )
-   {
-      keyfree();
-   }
+   const int result = pthread_key_create(&mKeyID, destructor);
 
-   mDestructor = destructor;
-
-   const DWORD key_id = TlsAlloc();
-
-   if ( TLS_OUT_OF_INDEXES == key_id )
+   if ( result != 0 )
    {
       std::ostringstream msg_stream;
-      msg_stream << "Could not allocate thread local storage: "
-                 << std::strerror(errno);
+      msg_stream << "Failed to create thread-specific key: "
+                 << std::strerror(result);
       throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
    }
-   else
-   {
-      mKeyID = key_id;
-   }
 }
 
-void ThreadKeyWin32::keyfree()
+void ThreadKeyPosix::keyfree()
 {
-   if ( 0xffffffff != mKeyID )
+   const int result = pthread_key_delete(mKeyID);
+
+   if ( EINVAL == result )
    {
-      if ( ! mDestructor.empty() )
-      {
-         mDestructor();
-      }
-
-      if ( ! TlsFree(mKeyID) )
-      {
-         std::ostringstream msg_stream;
-         msg_stream << "Could not free thread local storage: "
-                    << std::strerror(errno);
-         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
-      }
-
-      mKeyID = 0xffffffff;
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to delete invalid thread-specific key: "
+                 << std::strerror(result);
+      throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
    }
 }
 
-} // End of vpr namespace
+}
