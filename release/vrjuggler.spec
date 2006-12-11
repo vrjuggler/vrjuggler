@@ -1,17 +1,17 @@
 # Spec file for vrjuggler.
 %define name vrjuggler
-%define global_version 2.0.1
-%define global_release 3
+%define global_version 2.0.2
+%define global_release 1
 
-%define vpr_version 1.0.1
+%define vpr_version 1.0.2
 %define vpr_release %{global_release}
-%define tweek_version 1.0.1
+%define tweek_version 1.0.2
 %define tweek_release %{global_release}
-%define jccl_version 1.0.1
+%define jccl_version 1.0.2
 %define jccl_release %{global_release}
-%define sonix_version 1.0.1
+%define sonix_version 1.0.2
 %define sonix_release %{global_release}
-%define gadgeteer_version 1.0.1
+%define gadgeteer_version 1.0.2
 %define gadgeteer_release %{global_release}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}

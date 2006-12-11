@@ -6,8 +6,8 @@
 #    http://www.vrjuggler.org/view/Juggler/WritingDocumentationUsingDocBook
 
 %define name vrjuggler-docs
-%define global_version 2.0.1
-%define global_release 3
+%define global_version 2.0.2
+%define global_release 1
 %define srcdir vrjuggler-%{global_version}-%{global_release}.src
 %define file_name %{srcdir}.tar.bz2
 
