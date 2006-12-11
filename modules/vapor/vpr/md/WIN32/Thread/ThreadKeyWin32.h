@@ -56,9 +56,9 @@ namespace vpr
 
 // Key destructor function type.
 #if defined(_MSC_VER) && _MSC_VER <= 1300
-typedef boost::function0<void> KeyDestructor;
+typedef boost::function1<void, void*> KeyDestructor;
 #else
-typedef boost::function<void ()> KeyDestructor;
+typedef boost::function<void (void*)> KeyDestructor;
 #endif
 
 /** \class ThreadKeyWin32 ThreadKeyWin32.h vpr/Thread/Thread.h

@@ -93,7 +93,9 @@ void ThreadKeyWin32::keyfree()
    {
       if ( ! mDestructor.empty() )
       {
-         mDestructor();
+         void* value(NULL);
+         getspecific(&value);
+         mDestructor(value);
       }
 
       if ( ! TlsFree(mKeyID) )
