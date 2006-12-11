@@ -66,7 +66,7 @@ typedef boost::function<void ()> KeyDestructor;
  * @note This class was originally part of VR Juggler 1.0 and was brought back
  *       into VPR in version 1.1.36.
  */
-class ThreadKeyWin32
+class VPR_CLASS_API ThreadKeyWin32
 {
 public:
    /**
@@ -77,19 +77,12 @@ public:
     *
     * @param destructor The destructor function for the key.
     */
-   ThreadKeyWin32(KeyDestructor destructor = NULL)
-      : mKeyID(0xffffffff)
-   {
-      keycreate(destructor);
-   }
+   ThreadKeyWin32(KeyDestructor destructor = NULL);
 
    /**
     * Releases this key.
     */
-   ~ThreadKeyWin32()
-   {
-      keyfree();
-   }
+   ~ThreadKeyWin32();
 
    /**
     * Allocates a key that is used to identify data that is specific to
@@ -106,30 +99,7 @@ public:
     * @return 0 is returned upon successful completion.
     *         -1 is returned if an error occurs.
     */
-   int keycreate(KeyDestructor destructor = NULL)
-   {
-      if ( 0xffffffff != mKeyID )
-      {
-         keyfree();
-      }
-
-      mDestructor = destructor;
-
-      int retval(0);
-      const DWORD key_id = TlsAlloc();
-
-      if ( TLS_OUT_OF_INDEXES == key_id )
-      {
-         perror("Could not allocate thread local storage");
-         retval = -1;
-      }
-      else
-      {
-         mKeyID = key_id;
-      }
-
-      return retval;
-   }
+   int keycreate(KeyDestructor destructor = NULL);
 
    /**
     * Frees up this key so that other threads may reuse it.
@@ -142,28 +112,7 @@ public:
     * @return 0 is returned upon successful completion.
     *         -1 is returned if an error occurs.
     */
-   int keyfree()
-   {
-      int retval(0);
-
-      if ( 0xffffffff != mKeyID )
-      {
-         if ( ! mDestructor.empty() )
-         {
-            mDestructor();
-         }
-
-         if ( ! TlsFree(mKeyID) )
-         {
-            perror("Could not free thread local storage");
-            retval = -1;
-         }
-
-         mKeyID = 0xffffffff;
-      }
-
-      return retval;
-   }
+   int keyfree();
 
    /**
     * Binds value to the thread-specific data key for the calling thread.
