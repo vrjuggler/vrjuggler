@@ -109,9 +109,12 @@ CondVarWin32::~CondVarWin32()
    assert(result);
    result = CloseHandle(mQueue);
    assert(result);
+   result = CloseHandle(mMutex);
+   assert(result);
 
    mGate  = NULL;
    mQueue = NULL;
+   mMutex = NULL;
 }
 
 bool CondVarWin32::wait(const vpr::Interval& timeToWait)
