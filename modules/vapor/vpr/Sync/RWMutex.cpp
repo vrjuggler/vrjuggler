@@ -122,7 +122,7 @@ bool RWMutex::tryAcquireWrite()
    }
    stateLock.release();
 
-   return status;
+   return locked;
 }
 
 // Releases the mutex.
