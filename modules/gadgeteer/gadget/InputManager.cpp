@@ -78,6 +78,11 @@ InputManager::InputManager()
  */
 InputManager::~InputManager()
 {
+   shutdown();
+}
+
+void InputManager::shutdown()
+{
    for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); ++a)    // Stop all devices
    {
       if ((*a).second != NULL)
@@ -272,7 +277,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       resetAllDevicesAndProxies();
       updateAllDevices();                             // Update all the input data
       updateAllProxies();                             // Update all the input data
-      BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
+      BaseDeviceInterface::refreshAllInterfaces();    // Refresh all the device interface handles
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "Updated all devices" << std::endl << vprDEBUG_FLUSH;
    }
@@ -329,7 +334,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       resetAllDevicesAndProxies();
       updateAllDevices();                             // Update all the input data
       updateAllProxies();                             // Update all the input data
-      BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
+      BaseDeviceInterface::refreshAllInterfaces();      // Refresh all the device interface handles
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
          << "InputManager::configRemove(): Updated all data" << std::endl
          << vprDEBUG_FLUSH;

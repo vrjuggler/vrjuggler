@@ -125,6 +125,10 @@ public:
     */
    bool configureDevice(jccl::ConfigElementPtr element);
 
+   /**
+    * Shutdown all devices and proxies.
+    */
+   void shutdown();
 private:
    /**
     * Loads the Proxy for the given element.

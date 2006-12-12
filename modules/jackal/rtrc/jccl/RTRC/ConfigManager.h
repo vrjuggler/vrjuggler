@@ -435,6 +435,15 @@ public:
    //int attemptHandlerReconfiguration(ConfigElementHandler* h);
    //@}
 
+   /**
+    * Shutdown the Configuration system. Removes all new, pending, and active
+    * configuration elements.
+    *
+    * @param attemptRemoval If true, add all active ConfigElements as removals
+    *                       and attempt to reconfig.
+    */
+   void shutdown(bool attemptRemoval = false);
+
    void setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin);
 
 private:

@@ -76,7 +76,7 @@ public:
    /**
     * Refreshes the interface based on the current configuration.
     *
-    * This method is called by refreshAllDevices when system
+    * This method is called by refreshAllInterfaces when system
     * @post (mProxyIndex == -1) ==> Proxy not initialized yet.<br>
     *       (mProxyIndex != -1) ==> mProxyName has name of device && local
     *       proxy pointer is set to the device.
@@ -102,7 +102,7 @@ protected:
 
 public:
    /** Refreshes all the known device interface objects. */
-   static void refreshAllDevices();
+   static void refreshAllInterfaces();
 
 private:    // Static information
    /* We need to keep track of all the allocated device interfaces

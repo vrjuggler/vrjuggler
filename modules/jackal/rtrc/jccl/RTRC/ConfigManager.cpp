@@ -742,6 +742,51 @@ void ConfigManager::removeConfigElementHandler(ConfigElementHandler* h)
    }
 }
 
+void ConfigManager::shutdown(bool attemptRemoval)
+{
+   // Attempt to remove configutation elements
+   // the "correct" way.
+   if (attemptRemoval)
+   {
+      mActiveLock.acquire();
+      addConfigurationRemovals(&mActiveConfig);
+      mActiveLock.release();
+
+      unsigned num_processed(0);
+
+      do
+      {
+         num_processed = attemptReconfiguration();
+      }
+      while (num_processed > 0);
+   }
+
+   // Clear all pending configuration elements.
+   mPendingLock.acquire();
+   mPendingConfig.clear();
+   mPendingLock.release();
+
+   // Clear all active configuration elements.
+   mActiveLock.acquire();
+   mActiveConfig.vec().clear();
+   mActiveConfig = Configuration();
+   mActiveLock.release();
+
+   // Clear all incoming configuration elements.
+   mIncomingLock.acquire();
+   mIncomingConfig.clear();
+   mIncomingLock.release();
+
+   // Clear all element handlers.
+   mElementHandlers.clear();
+
+   // Reset all count values.
+   mPendingCountMutex.acquire();
+   mPendingCheckCount = 0;
+   mLastPendingSize = 0;
+   mPendingCountMutex.release();
+}
+
 int ConfigManager::attemptReconfiguration()
 {
    int elements_processed(0);     // Needs to return this value

@@ -142,7 +142,7 @@ void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
    }
 }
 
-void BaseDeviceInterface::refreshAllDevices()
+void BaseDeviceInterface::refreshAllInterfaces()
 {
    for ( unsigned int i = 0; i < mAllocatedDevices.size(); ++i )
    {
