@@ -95,7 +95,7 @@ private:
    /**
     * Return true if the specified ClusterPlugin exists.
     */
-   bool doesPluginExist( ClusterPlugin* old_manager );
+   bool doesPluginExist( ClusterPlugin* old_plugin );
 
    /**
     * Send end block to all other connected nodes and
@@ -194,6 +194,7 @@ public:
       0        1  = 1
 
       (NOT(Active AND (NOT READY)))
+      (NOT(Active) OR (Active AND Ready))
    */
 
    /**
