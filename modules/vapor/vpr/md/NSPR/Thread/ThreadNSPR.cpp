@@ -172,7 +172,7 @@ void ThreadNSPR::start()
    }
 }
 
-int ThreadNSPR::join(void**)
+void ThreadNSPR::join(void**)
 {
    const PRStatus result = PR_JoinThread(mThread);
 
