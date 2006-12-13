@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-13-2006 aronb       Added gadget::InputManager::shutdown(). Renamed
+                        gadget::BaseDeviceInterface::refreshAllDevices() to
+                        gadget::BaseDeviceInterface::refreshAllInterfaces().
+                        NEW VERSION: 1.1.20
 Dec-09-2006 patrick     Fixed frame delay problems in devices that are relative
                         to other proxied devices. Patch submitted by Frederic
                         Drolet.

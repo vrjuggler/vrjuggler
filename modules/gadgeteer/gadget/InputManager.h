@@ -127,6 +127,8 @@ public:
 
    /**
     * Shutdown all devices and proxies.
+    *
+    * @since 1.1.20
     */
    void shutdown();
 private:

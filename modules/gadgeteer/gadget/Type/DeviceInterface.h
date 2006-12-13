@@ -101,7 +101,14 @@ protected:
    bool        mNameSet;    /**< Has the user set a name?? */
 
 public:
-   /** Refreshes all the known device interface objects. */
+   /**
+    * Refreshes all the known device interface objects.
+    *
+    * @since 1.1.20
+    *
+    * @note Prior to version 1.1.20, this function was called
+    *       refreshAllDevices().
+    */
    static void refreshAllInterfaces();
 
 private:    // Static information
