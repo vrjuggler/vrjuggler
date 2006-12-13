@@ -207,9 +207,11 @@ public:
     *
     * @return 0 is returned on successful completion.  -1 is returned on
     *         failure.
-    * @throws UncaughtThreadException
+    *
+    * @throw vpr::UncaughtThreadException is thrown if an exception was
+    *        thrown by code executing in this thread and was not caught.
     */
-   virtual int join(void** = 0);
+   virtual void join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -217,71 +219,67 @@ public:
     *
     * @pre The specified thread was previously suspended using the
     *       suspend() member function.
-    * @post The specified thread is sent the SIGCONT signal and is allowed
+    * @post The specified thread is sent the \c SIGCONT signal and is allowed
     *        to begin executing again.
     *
-    * @return 0 is returned on successful completion.  -1 is returned on
-    *         failure.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal or if the given signal
+    *        number is invalid.
+    * @throw vpr::Exception is thrown if the calling thread does not have
+    *        permission to kill this thread.
     */
-   virtual int resume()
+   virtual void resume()
    {
-      return ::kill(mThreadPID, SIGCONT);
+      this->kill(SIGCONT);
    }
 
    /**
     * Suspends the execution of this thread.
     *
-    * @post This thread is sent the SIGSTOP signal and is thus suspended
+    * @pre This is a valid thread.
+    * @post This thread is sent the \c SIGSTOP signal and is thus suspended
     *        from execution until the member function resume() is called.
     *
-    * @return 0 is returned on successful completion.  -1 is returned on
-    *         failure.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal or if the given signal
+    *        number is invalid.
+    * @throw vpr::Exception is thrown if the calling thread does not have
+    *        permission to kill this thread.
     */
-   virtual int suspend()
+   virtual void suspend()
    {
-      return ::kill(mThreadPID, SIGSTOP);
+      this->kill(SIGSTOP);
    }
 
    /**
     * Gets this thread's priority.
     *
-    * @post The priority of this thread is returned in the integer pointer
-    *        variable.
+    * @pre This is a valid thread.
     *
-    * @param prio  Pointer to an int variable that will have the thread's
-    *               priority stored in it.
+    * @return The VPRThreadPriority value indicating the priority of this
+    *         thread is returned. If the priority cannot be queried, then
+    *         \c VPR_PRIORITY_NORMAL is returned.
     *
-    * @return 0 is returned on successful completion.  -1 is returned on
-    *         failure.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread (and thus cannot have its scheduling queried).
     */
-   virtual int getprio(int* prio)
-   {
-      *prio = getpriority(PRIO_PROCESS, mThreadPID);
-
-      if ((*prio)== -1)
-      {
-         return -1;
-      }
-      else
-      {
-         return 0;
-      }
-   }
+   virtual VPRThreadPriority getPrio();
 
    /**
     * Sets this thread's priority.
     *
+    * @pre This is a valid thread.
     * @post This thread has its priority set to the specified value.
     *
-    * @param prio  The new priority of the specified thread.
+    * @param prio The new priority of the specified thread.
     *
-    * @return 0 is returned on successful completion.  -1 is returned on
-    *         failure.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread (and thus cannot have its scheduling changed) or if the
+    *        given priority is invalid.
+    * @throw vpr::Exception is thrown if the calling thread does not have
+    *        permission to set the priority of this thread.
     */
-   int setprio(int prio)
-   {
-      return setpriority(PRIO_PROCESS, mThreadPID, prio);
-   }
+   void setPrio(const VPRThreadPriority prio);
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -302,13 +300,13 @@ public:
     *
     * @param signum The signal to send to the specified thread.
     *
-    * @return 0 is returned on successful completion.  -1 is returned on
-    *         failure.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal or if the given signal
+    *        number is invalid.
+    * @throw vpr::Exception is thrown if the calling thread does not have
+    *        permission to kill this thread.
     */
-   virtual int kill(int signum)
-   {
-      return ::kill(mThreadPID, signum);
-   }
+   virtual void kill(const int signum);
 
    /**
     * Kills (cancels) this thread.
@@ -318,10 +316,6 @@ public:
     *       immediately, it may wait until a pre-defined cancel point to
     *       stop or it may ignore the cancel altogether.  Thus, immediate
     *       cancellation is not guaranteed.
-    *
-    * @note For the sake of clarity, it is probably better to use the
-    *       cancel() routine instead of kill() because a two-argument
-    *       version of kill() is also used for sending signals to threads.
     */
    virtual void kill()
    {
@@ -354,6 +348,10 @@ public:
    }
 
 private:
+   int vprThreadPriorityToUNIX(const VPRThreadPriority priority);
+
+   VPRThreadPriority unixThreadPriorityToVPR(const int priority);
+
    /**
     * Sets the thread ptr stored in the local PRDA area.
     *

@@ -236,7 +236,7 @@ void ThreadWin32::startThread()
    }
 }
 
-int ThreadWin32::join(void** status)
+void ThreadWin32::join(void**)
 {
    int result(0);
    result = WaitForSingleObject(mThreadHandle, INFINITE);
@@ -249,36 +249,55 @@ int ThreadWin32::join(void** status)
    {
       throw mException;
    }
-
-   return 0;
 }
 
-int ThreadWin32::getPrio(VPRThreadPriority* prio)
+void ThreadWin32::resume()
 {
-   int status(0);
+   if ( 1 != ResumeThread(mThreadHandle) )
+   {
+      // Throw an exception
+   }
+}
+
+void ThreadWin32::suspend()
+{
+   if ( -1 == SuspendThread(mThreadHandle) )
+   {
+      // Throw an exception
+   }
+}
+
+BaseThread::VPRThreadPriority ThreadWin32::getPrio()
+{
    const int priority = GetThreadPriority(mThreadHandle);
 
    if ( THREAD_PRIORITY_ERROR_RETURN == priority )
    {
-      return -1;
-   }
-   else
-   {
-      *prio = win32ThreadPriorityToVPR(priority);
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to query thread priority: "
+                 << vpr::Error::getCurrentErrorMsg();
+      // XXX: Throwing this exception type is done only to be consistent with
+      // the other implementations.
+      throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
    }
 
-   return status;
+   return win32ThreadPriorityToVPR(priority);
 }
 
-int ThreadWin32::setPrio(VPRThreadPriority prio)
+void ThreadWin32::setPrio(const VPRThreadPriority prio)
 {
-   if ( SetThreadPriority(mThreadHandle, vprThreadPriorityToWin32(prio)) == 0 )
+   const BOOL result = SetThreadPriority(mThreadHandle,
+                                         vprThreadPriorityToWin32(prio));
+
+   if ( result == FALSE )
    {
-      return -1;
-   }
-   else
-   {
-      return 0;
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to set thread priority to "
+                 << vprThreadPriorityToWin32(prio) << ": "
+                 << vpr::Error::getCurrentErrorMsg();
+      // XXX: Throwing this exception type is done only to be consistent with
+      // the other implementations.
+      throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
    }
 }
 

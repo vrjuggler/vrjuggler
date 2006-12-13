@@ -49,7 +49,6 @@
 
 #include <prthread.h>
 #include <prtypes.h>
-#include <boost/concept_check.hpp>
 
 #include <vpr/Thread/BaseThread.h>
 #include <vpr/Thread/ThreadManager.h>
@@ -172,16 +171,20 @@ public:
    /**
     * Makes the calling thread wait for the termination of this thread.
     *
-    * @pre None.
-    * @post The caller blocks until this thread finishes its execution
-    *        (i.e., finishes its root function).  This routine may return
-    *        immediately if this thread has already exited.
+    * @post The caller blocks until this thread finishes its execution. This
+    *       routine may return immediately if this thread has already exited.
     *
-    * @return 0 is returned upon successful completion.  -1 is returned if
-    *         an error occurred.
-    * @throw vpr::UncaughtThreadException.
+    * @param status Current state of the terminating thread when that
+    *               thread calls the exit routine (optional). This parameter
+    *               is not used by this implementation.
+    *
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread or not a joinable thread. In either case, this thread
+    *        cannot be joined.
+    * @throw vpr::UncaughtThreadException is thrown if an exception was
+    *        thrown by code executing in this thread and was not caught.
     */
-   virtual int join(void** status = NULL);
+   virtual void join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -189,82 +192,74 @@ public:
     *
     * @pre This thread was previously suspended using the suspend() member
     *       function.
-    * @post This thread is sent the SIGCONT signal and is allowed to begin
+    * @post This thread is sent the \c SIGCONT signal and is allowed to begin
     *        executing again.
     *
-    * @return 0 is returned upon successful completion.  -1 is returned if
-    *         an error occurred.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal.
+    *
+    * @note This operation is not currently supported with NSPR threads.
     */
-   virtual int resume()
+   virtual void resume()
    {
-//      return kill(SIGCONT);
-      return -1;
+//      this->kill(SIGCONT);
    }
 
    /**
     * Suspends the execution of this thread.
     *
-    * @post This thread is sent the SIGSTOP signal and is thus suspended
-    *        from execution until the member function resume() is called.
+    * @pre This is a valid thread.
+    * @post This thread is sent the \c SIGSTOP signal and is thus suspended
+    *       from execution until the member function resume() is called.
     *
-    * @return 0 is returned upon successful completion.  -1 is returned if
-    *         an error occurred.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal.
+    *
+    * @note This operation is not currently supported with NSPR threads.
     */
-   virtual int suspend()
+   virtual void suspend()
    {
-//      return kill(SIGSTOP);
-      return -1;
+//      this->kill(SIGSTOP);
    }
 
    /**
     * Gets this thread's priority.
     *
     * @pre This is a valid thread.
-    * @post The priority of this thread is returned in the integer pointer
-    *        variable.
     *
-    * @param prio Pointer to an int variable that will have the thread's
-    *             priority stored in it.
-    *
-    * @return 0 is returned upon successful completion.  -1 is returned if
-    *         an error occurred.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread (and thus cannot have its scheduling queried).
     */
-   virtual int getPrio(VPRThreadPriority* prio)
-   {
-      *prio = nsprThreadPriorityToVPR(PR_GetThreadPriority(mThread));
-
-      return 0;
-   }
+   virtual VPRThreadPriority getPrio();
 
    /**
     * Sets this thread's priority.
     *
     * @post This thread has its priority set to the specified value.
     *
-    * @param prio  The new priority for this thread.
-    *
-    * @return 0 is returned upon successful completion.  -1 is returned if
-    *         an error occurred.
+    * @param prio The new priority for this thread.
     *
     * @note The priority must correspond to a value in the PRThreadPriority
     *        enumerated type.
     */
-   virtual int setPrio(VPRThreadPriority prio);
+   virtual void setPrio(const VPRThreadPriority prio);
 
    /**
-    * Sends the specified signal to this thread (not necessarily SIGKILL).
+    * Sends the specified signal to this thread (not necessarily \c SIGKILL).
     *
     * @post This thread receives the specified signal.
     *
-    * @param signum  The signal to send to the specified thread.
+    * @param signum The signal to send to the specified thread.
     *
-    * @return 0 is returned upon successful completion.  -1 is returned if
-    *         an error occurred.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal or if the given signal
+    *        number is invalid.
+    *
+    * @note This operation is not currently supported by NSPR threads.
     */
-   virtual int kill(int signum)
+   virtual void kill(const int)
    {
-      boost::ignore_unused_variable_warning(signum);
-      return -1;
+      /* Do nothing. */ ;
    }
 
    /**
@@ -276,13 +271,11 @@ public:
     *        stop or it may ignore the cancel altogether.  Thus, immediate
     *        cancellation is not guaranteed.
     *
-    * @note For the sake of clarity, it is probably better to use the
-    *        cancel() routine instead of kill() because a two-argument
-    *        version of kill() is also used for sending signals to threads.
-    *        This kill() and cancel() do exactly the same thing.
+    * @note This operation is not currently supported by NSPR threads.
     */
    virtual void kill()
    {
+      /* Do nothing. */ ;
    }
 
    /**

@@ -203,42 +203,132 @@ void ThreadSGI::startThread()
  * Makes the calling thread wait for the termination of the specified
  * thread.
  */
-int ThreadSGI::join(void** arg)
+void ThreadSGI::join(void** status)
 {
-   int status, retval;
    pid_t pid;
 
    do
    {
-      pid = ::waitpid(mThreadPID, &status, 0);
-   } while ( WIFSTOPPED(status) != 0 );
+      pid = ::waitpid(mThreadPID, &exit_status, 0);
+   } while ( WIFSTOPPED(exit_status) != 0 );
 
    if ( pid > -1 )
    {
       vprASSERT(pid == mThreadPID);
 
-      if ( WIFEXITED(status) != 0 && arg != NULL )
+      if ( WIFEXITED(exit_status) != 0 && arg != NULL )
       {
-         **((int**) arg) = WEXITSTATUS(status);
+         **((int**) arg) = WEXITSTATUS(exit_status);
       }
-      else if ( WIFSIGNALED(status) != 0 && arg != NULL )
+      else if ( WIFSIGNALED(exit_status) != 0 && arg != NULL )
       {
-         **((int**) arg) = WTERMSIG(status);
+         **((int**) arg) = WTERMSIG(exit_status);
       }
-
-      retval = 0;
    }
    else
    {
-      retval = -1;
+      throw vpr::IllegalArgumentException("Cannot join an invalid thread",
+                                          VPR_LOCATION);
    }
 
-   if (mCaughtException)
+   if ( mCaughtException )
    {
       throw mException;
    }
+}
 
-   return retval;
+BaseThread::VPRThreadPriority ThreadSGI::getPrio()
+{
+   int prio = getpriority(PRIO_PROCESS, mThreadPID);
+
+   if ( prio == -1 )
+   {
+      switch ( errno )
+      {
+         case ESRCH:
+            throw vpr::IllegalArgumentException(
+               "Cannot query priority for invalid thread", VPR_LOCATION
+            );
+            break;
+      }
+   }
+
+   return unixThreadPriorityToVPR(prio);
+}
+
+void ThreadSGI::setPrio(const VPRThreadPriority prio)
+{
+   const int result = setpriority(PRIO_PROCESS, mThreadPID,
+                                  vprThreadPriorityToUNIX(prio));
+
+   if ( result == -1 )
+   {
+      switch ( errno )
+      {
+         case ESRCH:
+            throw vpr::IllegalArgumentException(
+               "Cannot set priority for invalid thread", VPR_LOCATION
+            );
+            break;
+         case EPERM:
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Permission denied when setting thread priority: "
+                          << strerror(errno);
+               throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+            }
+            break;
+         case EACCESS:
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Only super-user can lower a process priority: "
+                          << strerror(errno);
+               throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+            }
+            break;
+      }
+   }
+
+   vprASSERT(result == 0);
+}
+
+void ThreadSGI::kill(const int signum)
+{
+   const int result = ::kill(mThreadPID, signum);
+
+   if ( result == -1 )
+   {
+      switch ( errno )
+      {
+         case EINVAL:
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Invalid signal number " << signum;
+               throw vpr::IllegalArgumentException(msg_stream.str(),
+                                                   VPR_LOCATION);
+            }
+            break;
+         case ESRCH:
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Cannot kill an invallid thread: "
+                          << strerror(errno);
+               throw vpr::IllegalArgumentException(msg_stream.str(),
+                                                   VPR_LOCATION);
+            }
+            break;
+         case EPERM:
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Permission denied when sending signal to thread: "
+                          << strerror(errno);
+               throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+            }
+            break;
+      }
+   }
+
+   vprASSERT(result == 0);
 }
 
 std::ostream& ThreadSGI::outStream(std::ostream& out)
@@ -249,6 +339,51 @@ std::ostream& ThreadSGI::outStream(std::ostream& out)
    BaseThread::outStream(out);
    out << std::setfill(' ');
    return out;
+}
+
+int ThreadSGI::vprThreadPriorityToUNIX(const VPRThreadPriority priority)
+{
+   int unix_prio(0);
+
+   switch ( priority )
+   {
+      case VPR_PRIORITY_LOW:
+         unix_prio = 20;
+         break;
+      case VPR_PRIORITY_NORMAL:
+         unix_prio = 0;
+         break;
+      case VPR_PRIORITY_HIGH:
+         unix_prio = -10;
+         break;
+      case VPR_PRIORITY_URGENT:
+         unix_prio = -20;
+         break;
+   }
+
+   return unix_prio;
+}
+
+BaseThread::VPRThreadPriority ThreadSGI::
+unixThreadPriorityToVPR(const int priority)
+{
+   VPRThreadPriority vpr_prio(VPR_PRIORITY_NORMAL);
+
+   // XXX: This are sort of magic numbers.
+   if ( priority >= 10 )
+   {
+      vpr_prio = VPR_PRIORITY_LOW;
+   }
+   else if ( priority < -5 && priority > -15 )
+   {
+      vpr_prio = VPR_PRIORITY_HIGH;
+   }
+   else if ( priority <= -15 )
+   {
+      vpr_prio = VPR_PRIORITY_URGENT;
+   }
+
+   return vpr_prio;
 }
 
 } // End of vpr namespace

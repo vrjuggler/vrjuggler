@@ -38,7 +38,6 @@
 #include <iomanip>
 #include <sstream>
 #include <typeinfo>
-#include <boost/concept_check.hpp>
 #include <boost/bind.hpp>
 
 #include <vpr/Util/Assert.h>
@@ -173,17 +172,20 @@ void ThreadNSPR::start()
    }
 }
 
-int ThreadNSPR::join(void** status)
+int ThreadNSPR::join(void**)
 {
-   boost::ignore_unused_variable_warning(status);
-   int return_status = PR_JoinThread(mThread);
+   const PRStatus result = PR_JoinThread(mThread);
 
-   if (mCaughtException)
+   if ( PR_FAILURE == result )
+   {
+      throw vpr::IllegalArgumentException("Failed to join invalid thread",
+                                          VPR_LOCATION);
+   }
+
+   if ( mCaughtException )
    {
       throw mException;
    }
-
-   return return_status;
 }
 
 Thread* ThreadNSPR::self()
@@ -262,22 +264,15 @@ void ThreadNSPR::startThread()
    }
 }
 
+BaseThread::VPRThreadPriority ThreadNSPR::getPrio()
+{
+   return nsprThreadPriorityToVPR(PR_GetThreadPriority(mThread));
+}
 
 // Set this thread's priority.
-int ThreadNSPR::setPrio(VPRThreadPriority prio)
+void ThreadNSPR::setPrio(const VPRThreadPriority prio)
 {
-   int retval(0);
-
-   if ( prio > 3 )
-   {
-      retval = -1;
-   }
-   else
-   {
-      PR_SetThreadPriority(mThread, vprThreadPriorityToNSPR(prio));
-   }
-
-   return retval;
+   PR_SetThreadPriority(mThread, vprThreadPriorityToNSPR(prio));
 }
 
 // ===========================================================================

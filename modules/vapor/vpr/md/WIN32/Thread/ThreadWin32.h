@@ -212,20 +212,20 @@ public:  // ----- Various other thread functions ------
    /**
     * Makes the calling thread wait for the termination of this thread.
     *
-    * @post The caller blocks until this thread finishes its execution
-    *       (i.e., calls the exit() method).  This routine may return
-    *       immediately if this thread has already exited.
+    * @post The caller blocks until this thread finishes its execution. This
+    *       routine may return immediately if this thread has already exited.
     *
     * @param status Current state of the terminating thread when that
-    *               thread calls the exit routine (optional).
+    *               thread calls the exit routine (optional). This parameter
+    *               is not used by this implementation.
     *
-    * @return 0 is returned if this thread is "joined" successfully.<br>
-    *         -1 is returned on an error condition.
-    *
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread or not a joinable thread. In either case, this thread
+    *        cannot be joined.
     * @throw vpr::UncaughtThreadException is thrown if an exception was
     *        thrown by code executing in this thread and was not caught.
     */
-   virtual int join(void** status = 0);
+   virtual void join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -234,52 +234,22 @@ public:  // ----- Various other thread functions ------
     * @pre This thread was previously suspended using the suspend() member
     *      function.
     *
-    * @return 0 is returned if this thread resumes execuation successfully.
-    *         -1 is returned otherwise.
     */
-   virtual int resume()
-   {
-      if ( 1 == ResumeThread(mThreadHandle) )
-      {
-         return 0;
-      }
-      else
-      {
-         return -1;
-      }
-   }
+   virtual void resume();
 
    /**
     * Suspends the execution of this thread.
     *
-    * @return 0 is returned if this thread is suspended successfully.
-    *         -1 is returned otherwise.
     */
-   virtual int suspend()
-   {
-      if ( -1 == SuspendThread(mThreadHandle) )
-      {
-         return -1;
-      }
-      else
-      {
-         return 0;
-      }
-   }
+   virtual void suspend();
 
    /**
     * Gets this thread's priority.
     *
-    * @post The priority of this thread is returned in the integer pointer
-    *       variable.
-    *
-    * @param prio Pointer to an int variable that will have the thread's
-    *             priority stored in it.
-    *
-    * @return 0 is returned if the priority was retrieved successfully.
-    *         -1 is returned if the priority could not be read.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread (and thus cannot have its scheduling queried).
     */
-   virtual int getPrio(VPRThreadPriority* prio);
+   virtual VPRThreadPriority getPrio();
 
    /**
     * Sets this thread's priority.
@@ -287,11 +257,8 @@ public:  // ----- Various other thread functions ------
     * @post This thread has its priority set to the specified value.
     *
     * @param prio The new priority for this thread.
-    *
-    * @return 0 is returned if this thread's priority was set successfully.
-    *         -1 is returned otherwise.
     */
-   virtual int setPrio(VPRThreadPriority prio);
+   virtual void setPrio(const VPRThreadPriority prio);
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -307,27 +274,22 @@ public:  // ----- Various other thread functions ------
    }
 
    /**
-    * Sends the specified signal to this thread (not necessarily SIGKILL).
-    *
-    * @post This thread receives the specified signal.
+    * Sends the specified signal to this thread (not necessarily \c SIGKILL).
     *
     * @param signum The signal to send to the specified thread.
     *
-    * @return 0 is returned if the signal was sent successfully.
-    *         -1 is returned otherwise.
-    *
-    * @note This method does nothing and always returns -1. Use kill()
-    *       instead.
+    * @note This method does nothing. Use kill() instead.
     */
-   virtual int kill(int signum)
+   virtual void kill(const int)
    {
       std::cerr << "vpr::ThreadWin32::kill() is not implemented!"
                 << std::endl;
-      return -1;
    }
 
    /**
     * Kills (cancels) this thread.
+    *
+    * @post This thread is cancelled.
     */
    virtual void kill()
    {

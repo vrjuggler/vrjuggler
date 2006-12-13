@@ -217,30 +217,21 @@ public:  // ----- Various other thread functions ------
    /**
     * Makes the calling thread wait for the termination of this thread.
     *
-    * @post The caller blocks until this thread finishes its execution
-    *       (i.e., calls the exit() method).  This routine may return
-    *       immediately if this thread has already exited.
+    * @post The caller blocks until this thread finishes its execution. This
+    *       routine may return immediately if this thread has already exited.
     *
     * @param status Current state of the terminating thread when that
     *               thread calls the exit routine (optional).
     *
-    * @return 0 is returned if this thread is "joined" successfully.<br>
-    *         -1 is returned on an error condition.
-    *
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread or not a joinable thread. In either case, this thread
+    *        cannot be joined.
+    * @throw vpr::DeadlockException is thrown if deadlock is detected when
+    *        trying to join this thread.
     * @throw vpr::UncaughtThreadException is thrown if an exception was
     *        thrown by code executing in this thread and was not caught.
     */
-   virtual int join(void** status = 0)
-   {
-      int return_status = pthread_join(mThread, status);
-
-      if (mCaughtException)
-      {
-         throw mException;
-      }
-
-      return return_status;
-   }
+   virtual void join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -248,51 +239,52 @@ public:  // ----- Various other thread functions ------
     *
     * @pre This thread was previously suspended using the suspend() member
     *      function.
-    * @post This thread is sent the SIGCONT signal and is allowed to begin
+    * @post This thread is sent the \c SIGCONT signal and is allowed to begin
     *       executing again.
     *
-    * @return 0 is returned if this thread resumes execuation successfully.
-    *         -1 is returned otherwise.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal.
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
-   virtual int resume()
+   virtual void resume()
    {
-      return kill(SIGCONT);
+      this->kill(SIGCONT);
    }
 
    /**
     * Suspends the execution of this thread.
     *
-    * @post This thread is sent the SIGSTOP signal and is thus suspended
+    * @pre This is a valid thread.
+    * @post This thread is sent the \c SIGSTOP signal and is thus suspended
     *       from execution until the member function resume() is called.
     *
-    * @return 0 is returned if this thread is suspended successfully.
-    *         -1 is returned otherwise.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal.
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
-   virtual int suspend()
+   virtual void suspend()
    {
-      return kill(SIGSTOP);
+      this->kill(SIGSTOP);
    }
 
    /**
     * Gets this thread's priority.
     *
-    * @post The priority of this thread is returned in the integer pointer
-    *       variable.
+    * @pre This is a valid thread.
     *
-    * @param prio Pointer to an int variable that will have the thread's
-    *             priority stored in it.
+    * @return The VPRThreadPriority value indicating the priority of this
+    *         thread is returned. If the priority cannot be queried, then
+    *         \c VPR_PRIORITY_NORMAL is returned.
     *
-    * @return 0 is returned if the priority was retrieved successfully.
-    *         -1 is returned if the priority could not be read.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread (and thus cannot have its scheduling queried).
     *
     * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
     */
-   virtual int getPrio(VPRThreadPriority* prio);
+   virtual VPRThreadPriority getPrio();
 
    /**
     * Sets this thread's priority.
@@ -301,13 +293,14 @@ public:  // ----- Various other thread functions ------
     *
     * @param prio The new priority for this thread.
     *
-    * @return 0 is returned if this thread's priority was set successfully.
-    *         -1 is returned otherwise.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread (and thus cannot have its scheduling changed) or if the
+    *        given priority is invalid.
     *
     * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
     */
-   virtual int setPrio(VPRThreadPriority prio);
+   virtual void setPrio(const VPRThreadPriority prio);
 
    /**
     * Sets the CPU affinity for this thread (the CPU on which this thread
@@ -318,12 +311,12 @@ public:  // ----- Various other thread functions ------
     *
     * @param cpu The CPU on which this thread will run exclusively.
     *
-    * @return 0 is returned if the affinity is set successfully.
-    *         -1 is returned otherwise.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a
+    *        system-scope (i.e., global) thread.
     *
     * @note This is currently only available on IRIX 6.5 and is non-portable.
     */
-   virtual int setRunOn(int cpu);
+   virtual void setRunOn(const int cpu);
 
    /**
     * Gets the CPU affinity for this thread (the CPU on which this thread
@@ -334,15 +327,15 @@ public:  // ----- Various other thread functions ------
     * @post The CPU affinity for this thread is stored in the cur_cpu
     *       pointer.
     *
-    * @param cur_cpu The CPU affinity for this thread (set by a previous
-    *                call to setRunOn().
+    * @return The CPU affinity for this thread (set by a previous call to
+    *         setRunOn());
     *
-    * @return 0 is returned if the affinity is retrieved successfully.
-    *         -1 is returned otherwise.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a
+    *        system-scope (i.e., global) thread.
     *
     * @note This is currently only available on IRIX 6.5 and is non-portable.
     */
-   virtual int getRunOn(int* cur_cpu);
+   virtual int getRunOn();
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -357,18 +350,20 @@ public:  // ----- Various other thread functions ------
    }
 
    /**
-    * Sends the specified signal to this thread (not necessarily SIGKILL).
+    * Sends the specified signal to this thread (not necessarily \c SIGKILL).
     *
+    * @pre This is a valid thread.
     * @post This thread receives the specified signal.
     *
-    * @param signum The signal to send to the specified thread.
+    * @param signum The signal to send to this thread.
     *
-    * @return 0 is returned if the signal was sent successfully.
-    *         -1 is returned otherwise.
+    * @throw vpr::IllegalArgumentException is thrown if this is not a valid
+    *        thread and thus cannot receive a signal or if the given signal
+    *        number is invalid.
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
-   virtual int kill(int signum);
+   virtual void kill(const int signum);
 
    /**
     * Kills (cancels) this thread.
@@ -378,11 +373,6 @@ public:  // ----- Various other thread functions ------
     *       immediately, it may wait until a pre-defined cancel point to
     *       stop or it may ignore the cancel altogether.  Thus, immediate
     *       cancellation is not guaranteed.
-    *
-    * @note For the sake of clarity, it is probably better to use the
-    *       cancel() routine instead of kill() because a two-argument
-    *       version of kill() is also used for sending signals to threads.
-    *       This kill() and cancel() do exactly the same thing.
     */
    virtual void kill()
    {

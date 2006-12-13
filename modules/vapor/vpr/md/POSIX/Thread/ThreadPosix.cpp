@@ -59,6 +59,7 @@
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/IllegalArgumentException.h>
 #include <vpr/Util/ResourceException.h>
+#include <vpr/Sync/DeadlockException.h>
 #include <vpr/md/POSIX/Thread/ThreadPosix.h>
 
 
@@ -292,91 +293,149 @@ void ThreadPosix::startThread()
    }
 }
 
+void ThreadPosix::join(void** status)
+{
+   const int result = pthread_join(mThread, status);
+
+   if ( EINVAL == result )
+   {
+      throw vpr::IllegalArgumentException("Cannot join an unjoinable thread",
+                                          VPR_LOCATION);
+   }
+   else if ( ESRCH == result )
+   {
+      throw vpr::IllegalArgumentException("Cannot join an invalid thread",
+                                          VPR_LOCATION);
+   }
+   else if ( EDEADLK == result )
+   {
+      throw vpr::DeadlockException("Deadlock detected when joining thread",
+                                   VPR_LOCATION);
+   }
+
+   vprASSERT(result == 0);
+
+   if ( mCaughtException )
+   {
+      throw mException;
+   }
+}
+
 // Get this thread's priority.
-int ThreadPosix::getPrio(VPRThreadPriority* prio)
+BaseThread::VPRThreadPriority ThreadPosix::getPrio()
 {
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-   int policy, ret_val;
+   int policy;
    sched_param_t fifo_sched_param;
 
-   ret_val = pthread_getschedparam(mThread, &policy, &fifo_sched_param);
-   *prio = posixThreadPriorityToVPR(fifo_sched_param.sched_priority);
+   const int result = pthread_getschedparam(mThread, &policy,
+                                            &fifo_sched_param);
 
-   return ret_val;
+   if ( ESRCH == result )
+   {
+      throw vpr::IllegalArgumentException(
+         "Cannot query priority for invalid thread", VPR_LOCATION
+      );
+   }
+
+   vprASSERT(result == 0);
+
+   return posixThreadPriorityToVPR(fifo_sched_param.sched_priority);
 #else
    std::cerr << "vpr::ThreadPosix::getPrio(): Not supported\n";
 
-   return -1;
+   return VPR_PRIORITY_NORMAL;
 #endif
 }
 
 // Set this thread's priority.
-int ThreadPosix::setPrio(VPRThreadPriority prio)
+void ThreadPosix::setPrio(VPRThreadPriority prio)
 {
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
    sched_param_t sched_param;
-   sched_param.sched_priority = prio;
+   sched_param.sched_priority = vprThreadPriorityToPOSIX(prio);
 
-   return pthread_setschedparam(mThread, SCHED_RR, &sched_param);
+   const int result = pthread_setschedparam(mThread, SCHED_RR, &sched_param);
+
+   if ( EINVAL == result || ENOTSUP == result )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Invalid priority value " << sched_param.sched_priority;
+      throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+   }
+   else if ( ESRCH == result )
+   {
+      throw vpr::IllegalArgumentException(
+         "Cannot set priority for invalid thread", VPR_LOCATION
+      );
+   }
+
+   vprASSERT(result == 0);
 #else
    boost::ignore_unused_variable_warning(prio);
    std::cerr << "vpr::ThreadPosix::setPrio(): Not supported\n";
-
-   return -1;
 #endif
 }
 
-int ThreadPosix::setRunOn(int cpu)
+void ThreadPosix::setRunOn(const int cpu)
 {
 #ifdef VPR_OS_IRIX
-   int ret_val;
-
-   if ( mScope == PTHREAD_SCOPE_SYSTEM )
+   if ( mScope == VPR_GLOBAL_THREAD )
    {
-      ret_val = pthread_setrunon_np(cpu);
+      pthread_setrunon_np(cpu);
    }
    else
    {
-      std::cerr << "This thread is not a system-scope thread!\n";
-      ret_val = -1;
+      throw vpr::IllegalArgumentException(
+         "This thread is not a system-scope thread", VPR_LOCATION
+      );
    }
-
-   return ret_val;
 #else
    boost::ignore_unused_variable_warning(cpu);
    std::cerr << "vpr::ThreadPosix::setRunOn(): Not available on this system.\n";
-
-   return -1;
 #endif
 }
 
-int ThreadPosix::getRunOn(int* cur_cpu)
+int ThreadPosix::getRunOn()
 {
 #ifdef VPR_OS_IRIX
-   int ret_val;
+   int cur_cpu;
 
-   if ( mScope == PTHREAD_SCOPE_SYSTEM )
+   if ( mScope == VPR_GLOBAL_THREAD )
    {
-      ret_val = pthread_getrunon_np(cur_cpu);
+      pthread_getrunon_np(&cur_cpu);
    }
    else
    {
-      std::cerr << "This thread is not a system-scope thread!\n";
-      ret_val = -1;
+      throw vpr::IllegalArgumentException(
+         "This thread is not a system-scope thread", VPR_LOCATION
+      );
    }
 
-   return ret_val;
+   return cur_cpu;
 #else
-   boost::ignore_unused_variable_warning(cur_cpu);
    std::cerr << "vpr::ThreadPosix::getRunOn(): Not available on this system.\n";
-
-   return -1;
+   return 0;
 #endif
 }
 
-int ThreadPosix::kill(int signum)
+void ThreadPosix::kill(const int signum)
 {
-   return pthread_kill(mThread, signum);
+   const int result = pthread_kill(mThread, signum);
+
+   if ( ESRCH == result )
+   {
+      throw vpr::IllegalArgumentException("Cannot kill an invalid thread",
+                                          VPR_LOCATION);
+   }
+   else if ( EINVAL == result )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Invalid signal number " << signum;
+      throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+   }
+
+   vprASSERT(result == 0);
 }
 
 Thread* ThreadPosix::self()
@@ -472,7 +531,8 @@ int ThreadPosix::vprThreadStateToPOSIX(const VPRThreadState state)
    return posix_state;
 }
 
-BaseThread::VPRThreadPriority ThreadPosix::posixThreadPriorityToVPR(const int priority)
+BaseThread::VPRThreadPriority ThreadPosix::
+posixThreadPriorityToVPR(const int priority)
 {
    VPRThreadPriority vpr_prio;
    int min_prio, max_prio;

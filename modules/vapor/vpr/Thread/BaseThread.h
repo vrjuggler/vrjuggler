@@ -38,7 +38,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <boost/concept_check.hpp>
 #include <boost/function.hpp>
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
@@ -154,61 +153,53 @@ public:
    /**
     * Causes the calling thread wait for the termination of this thread.
     *
-    * @post The caller blocks until this thread finishes its execution
-    *       (i.e., calls the exit() method).  This routine may return
-    *       immediately if this thread has already exited.
+    * @post The caller blocks until this thread finishes its execution.
+    *       This routine may return immediately if this thread has already
+    *       exited.
     *
     * @param status Current state of the terminating thread when that thread
     *               calls the exit routine (optional).
     *
-    * @return 0 is returned if this thread is "joined" successfully.
-    * @return -1 is returned on an error condition.
+    * @note This implementation does onthing. See the derived classes for more
+    *       information.
     */
-   virtual int join(void** status = 0)
+   virtual void join(void** = NULL)
    {
-      boost::ignore_unused_variable_warning(status);
-      return -1;
+      /* Do nothing. */ ;
    }
 
    /**
     * Resumes the execution of this thread (if it was previously suspended
     * using suspend()).
     *
-    * @return 0 is returned if this thread resumes execuation successfully.
-    * @return -1 is returned otherwise.
+    * @note This implementation does nothing. See the derived classes for more
+    *       information.
     */
-   virtual int resume()
+   virtual void resume()
    {
-      return -1;
+      /* Do nothing. */ ;
    }
 
    /**
     * Suspends the execution of this thread.
     *
-    * @return 0 is returned if this thread is suspended successfully.
-    * @return -1 is returned otherwise.
+    * @note This implementation does nothing. See the derived classes for more
+    *       information.
     */
-   virtual int suspend()
+   virtual void suspend()
    {
-      return -1;
+      /* Do nothing. */ ;
    }
 
    /**
-    * Gets this thread's current priority.
+    * Gets this thread's priority.
     *
-    * @post The priority of this thread is returned in the integer pointer
-    *       variable.
-    *
-    * @param prio Pointer to an int variable that will have the thread's
-    *             priority stored in it.
-    *
-    * @return 0 is returned if the priority was retrieved successfully.
-    * @return -1 is returned if the priority could not be read.
+    * @return This implementation always returns \c VPR_PRIORITY_NORMAL. See
+    *         the derived classes for more information.
     */
-   virtual int getPrio(VPRThreadPriority* prio)
+   virtual VPRThreadPriority getPrio()
    {
-      boost::ignore_unused_variable_warning(prio);
-      return -1;
+      return VPR_PRIORITY_NORMAL;
    }
 
    /**
@@ -216,13 +207,12 @@ public:
     *
     * @param prio The new priority for this thread.
     *
-    * @return 0 is returned if this thread's priority was set successfully.
-    * @return -1 is returned otherwise.
+    * @note This implementation does nothing. See the derived classes for more
+    *       information.
     */
-   virtual int setPrio(VPRThreadPriority prio)
+   virtual void setPrio(const VPRThreadPriority)
    {
-      boost::ignore_unused_variable_warning(prio);
-      return -1;
+      /* Do nothing. */ ;
    }
 
    /**
@@ -259,24 +249,28 @@ public:
     *
     * @post This thread receives the specified signal.
     *
-    * @param signum The signal to send to the specified thread.
+    * @param signum The signal to send to this thread.
     *
-    * @return 0 is returned if the thread was sent the given signal.
-    * @return -1 is returned if an error occurred.
+    * @note This implementation does nothing. See the derived classes for
+    *       more information.
     */
-   virtual int kill(int signum)
+   virtual void kill(const int)
    {
-      boost::ignore_unused_variable_warning(signum);
-      return -1;
+      /* Do nothing. */ ;
    }
 
    /**
     * Kills (cancels) this thread.
     *
     * @post This thread is cancelled. Immediate cancellation is not guaranteed.
+    *
+    * @note This implementation does nothing. See the derived classes for
+    *       more information.
     */
    virtual void kill()
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
     * Ouputs the state of the object.

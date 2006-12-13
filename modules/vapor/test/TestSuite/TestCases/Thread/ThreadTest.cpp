@@ -173,8 +173,7 @@ void ThreadTest::testCreateJoin()
 
    for(int t=0;t<num_threads;t++)
    {
-      if(threads[t]->join() == false)
-         CPPUNIT_ASSERT(false && "Thread was not able to be joined");
+      threads[t]->join();
       delete threads[t];
    }
 
@@ -377,8 +376,7 @@ void ThreadTest::interactiveTestCPUGrind()
 
    for(int t=0;t<num_threads;t++)
    {
-      if(threads[t]->join() == false)
-         CPPUNIT_ASSERT(false && "Thread was not able to be joined");
+      threads[t]->join();
       delete threads[t];
    }
 
@@ -414,7 +412,7 @@ void ThreadTest::testThreadStackSize()
                       vpr::BaseThread::VPR_JOINABLE_THREAD, stack_size);
    CPPUNIT_ASSERT(the_thread != NULL);
 
-   CPPUNIT_ASSERT(the_thread->join() && "Failed to join with testThreadStackSize thread");
+   the_thread->join();
 
    //CPPUNIT_ASSERT(mCounter == (num_threads*50000));
 }
