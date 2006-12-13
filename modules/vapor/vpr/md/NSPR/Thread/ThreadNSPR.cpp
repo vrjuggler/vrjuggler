@@ -396,6 +396,7 @@ BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR(const PRThreadScope 
          vpr_scope = VPR_LOCAL_THREAD;
          break;
       case PR_GLOBAL_THREAD:
+      case PR_GLOBAL_BOUND_THREAD:
          vpr_scope = VPR_GLOBAL_THREAD;
          break;
    };
