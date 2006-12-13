@@ -126,10 +126,8 @@ bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
             // XXX: Still need to do something with user-specified context...
          }
       }
-      catch (CORBA::ORB::InvalidName& ex)
+      catch (CORBA::ORB::InvalidName&)
       {
-         boost::ignore_unused_variable_warning(ex);
-
          // This should not happen!
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "NameService name invalid in CorbaManager::init!\n"
@@ -279,16 +277,14 @@ bool CorbaManager::createSubjectManager()
    }
    // This will be raised if the IdUniqunessPolicy within our child POA is set
    // to UNIQUE_ID.
-   catch (PortableServer::POA::ServantAlreadyActive& active_ex)
+   catch (PortableServer::POA::ServantAlreadyActive&)
    {
-      boost::ignore_unused_variable_warning(active_ex);
       vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
          << "WARNING: Servant already active within our POA\n"
          << vprDEBUG_FLUSH;
    }
-   catch (PortableServer::POA::WrongPolicy& policy_ex)
+   catch (PortableServer::POA::WrongPolicy&)
    {
-      boost::ignore_unused_variable_warning(policy_ex);
       status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Invalid policy used when activating Subject Manager object\n"
@@ -355,17 +351,15 @@ bool CorbaManager::createSubjectManager()
                   << vprDEBUG_FLUSH;
             }
          }
-         catch (CosNaming::NamingContext::AlreadyBound& ex)
+         catch (CosNaming::NamingContext::AlreadyBound&)
          {
-            boost::ignore_unused_variable_warning(ex);
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                << "WARNING: Subject manager reference already bound!\n"
                << vprDEBUG_FLUSH;
          }
       }
-      catch (CORBA::COMM_FAILURE& ex)
+      catch (CORBA::COMM_FAILURE&)
       {
-         boost::ignore_unused_variable_warning(ex);
          status = false;
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Unable to contact the naming service\n" << vprDEBUG_FLUSH;
@@ -450,17 +444,15 @@ bool CorbaManager::createChildPOA(const std::string& local_id)
                                        PortableServer::POAManager::_nil(),
                                        policy_list);
    }
-   catch (PortableServer::POA::AdapterAlreadyExists& ex)
+   catch (PortableServer::POA::AdapterAlreadyExists&)
    {
-      boost::ignore_unused_variable_warning(ex);
       status = false;
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Child POA named '" << poa_name << "' already exists!\n"
          << vprDEBUG_FLUSH;
    }
-   catch (PortableServer::POA::InvalidPolicy& ex)
+   catch (PortableServer::POA::InvalidPolicy&)
    {
-      boost::ignore_unused_variable_warning(ex);
       status = false;
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Failed to set IdUniquenessPolicy for child POA\n"
