@@ -64,8 +64,8 @@ ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
-   , mCaughtException(false)
    , mException("No exception caught")
+   , mCaughtException(false)
 {
 }
 
@@ -79,8 +79,8 @@ ThreadNSPR::ThreadNSPR(const vpr::thread_func_t& func,
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
-   , mCaughtException(false)
    , mException("No exception caught")
+   , mCaughtException(false)
 {
    setFunctor(func);
    start();
@@ -370,6 +370,7 @@ BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR(const PRThreadScope 
          vpr_scope = VPR_LOCAL_THREAD;
          break;
       case PR_GLOBAL_THREAD:
+      case PR_GLOBAL_BOUND_THREAD:
          vpr_scope = VPR_GLOBAL_THREAD;
          break;
    };
