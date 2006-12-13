@@ -94,15 +94,6 @@ namespace gadget
          return mId;
       }
 
-      void start();
-      void controlLoop();
-
-      void go();
-
-      void sync();
-
-      void shutdown();
-
    private:
       std::string                         mName;   /**< DeviceServer name */
       std::vector<gadget::Node*>  mClients;

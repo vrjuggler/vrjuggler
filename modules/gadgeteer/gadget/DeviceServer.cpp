@@ -57,27 +57,14 @@ namespace gadget
       mDeviceData = new std::vector<vpr::Uint8>;
       mDataPacket = new cluster::DataPacket(plugin_guid, mId, mDeviceData);
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
-      start();
    }
 
    DeviceServer::~DeviceServer()
    {
-      shutdown();
       delete mDataPacket;
       // mDataPacket will clean up the memory that mDeviceData points
       // to since mDataPacket contains a reference to the ame memory.
       mDeviceData = NULL;
-   }
-
-   void DeviceServer::shutdown()
-   {
-      // TODO: Make the device server actually shutdown
-      if ( mControlThread )
-      {
-         mThreadActive = false;
-         mControlThread->kill();
-         mControlThread = NULL;
-      }
    }
 
    void DeviceServer::send()
@@ -204,78 +191,5 @@ namespace gadget
                << vprDEBUG_FLUSH;
          }
       }
-   }
-
-   void DeviceServer::controlLoop()
-   {
-      // -Block on an update call
-      // -Update Local Data
-      // -Send
-      // -Signal Sync
-
-      while(true)
-      {
-         // Wait for trigger
-         deviceServerTriggerSema.acquire();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         //   << "DeviceServer: " << getName() << " triggered\n"
-         //   << vprDEBUG_FLUSH;
-
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         //   << "Before Update Data\n" << vprDEBUG_FLUSH;
-         updateLocalData();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         //   << "After Update Data\n" << vprDEBUG_FLUSH;
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         //   << "Before send Data\n" << vprDEBUG_FLUSH;
-         send();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         //   << "After Send Data\n" << vprDEBUG_FLUSH;
-
-         // Signal Done Rendering
-         deviceServerDoneSema.release();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         //   << "DeviceServer synced\n" << vprDEBUG_FLUSH;
-      }
-   }
-
-   /** Starts the control loop. */
-   void DeviceServer::start()
-   {
-      // --- Setup Multi-Process stuff --- //
-      // Create a new thread to handle the control
-
-      mControlThread = new vpr::Thread(boost::bind(&DeviceServer::controlLoop,
-                                                   this));
-
-      if (mControlThread->valid())
-      {
-         mThreadActive = true;
-      }
-      vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
-         << "DeviceServer " << getName() << " started. thread: "
-         << mControlThread << std::endl << vprDEBUG_FLUSH;
-   }
-
-   void DeviceServer::go()
-   {
-      while(!mThreadActive)
-      {
-         vprDEBUG(gadgetDBG_RIM,/*vprDBG_HVERB_LVL*/1)
-            << "Waiting in for thread to start DeviceServer::go().\n"
-            << vprDEBUG_FLUSH;
-         vpr::Thread::yield();
-      }
-      deviceServerTriggerSema.release();
-   }
-
-   /**
-    * Blocks until the end of the frame.
-    * @post The frame has been drawn.
-    */
-   void DeviceServer::sync()
-   {
-      vprASSERT(mThreadActive == true);
-      deviceServerDoneSema.acquire();
    }
 } // End of gadget namespace

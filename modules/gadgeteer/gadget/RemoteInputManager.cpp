@@ -457,16 +457,11 @@ namespace gadget
 
       vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
 
-      // Start sending data from all device servers.
+      // Update all local device servers and send their data.
       for ( unsigned int i=0; i<mDeviceServers.size(); i++ )
       {
-         mDeviceServers[i]->go();
-      }
-
-      // Wait for all device servers to finish sending.
-      for ( unsigned int i=0; i<mDeviceServers.size(); i++ )
-      {
-         mDeviceServers[i]->sync();
+         mDeviceServers[i]->updateLocalData();
+         mDeviceServers[i]->send();
       }
 
       //      second.setNow();
