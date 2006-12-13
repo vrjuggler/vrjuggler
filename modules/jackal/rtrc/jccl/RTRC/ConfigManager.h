@@ -441,6 +441,8 @@ public:
     *
     * @param attemptRemoval If true, add all active ConfigElements as removals
     *                       and attempt to reconfig.
+    *
+    * @since 1.1.11
     */
    void shutdown(bool attemptRemoval = false);
 
