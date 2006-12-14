@@ -193,7 +193,7 @@ bool InputWindowWin32::stopSampling()
          LocalFree(msg_buffer);
       }
 
-//      mThread->join();
+      mThread->join();
       delete mThread;
       mThread = NULL;
    }
