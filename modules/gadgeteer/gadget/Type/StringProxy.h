@@ -61,8 +61,11 @@ class GADGET_CLASS_API StringProxy : public TypedProxy<String>
 public:
    /** @name Construction/Destruction */
    //@{
-   StringProxy()
-      : mUnitNum(-1), mData("")
+   StringProxy(const std::string& deviceName = "UnknownString",
+               const int unitNum = -1)
+      : TypedProxy<String>(deviceName)
+      , mUnitNum(unitNum)
+      , mData("")
    {;}
 
    virtual ~StringProxy()

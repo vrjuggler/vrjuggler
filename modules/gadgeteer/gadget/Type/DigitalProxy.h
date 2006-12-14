@@ -52,8 +52,10 @@ class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 public:
    /** @name Construction/Destruction */
    //@{
-   DigitalProxy() 
-      : mUnitNum(-1)
+   DigitalProxy(const std::string& deviceName = "UnknownDigital",
+                const int unitNum = -1) 
+      : TypedProxy<Digital>(deviceName)
+      , mUnitNum(unitNum)
       , mData(0)
    {;}
 

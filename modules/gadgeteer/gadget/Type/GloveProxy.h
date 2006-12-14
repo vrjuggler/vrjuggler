@@ -53,9 +53,11 @@ public:
     * Constructs the proxy to point to the given glove device and sub-unit
     * number.
     */
-   GloveProxy()
+   GloveProxy(const std::string& deviceName = "UnknownGlove",
+              const int unitNum = -1)
+      : TypedProxy<Glove>(deviceName)
+      , mUnitNum(unitNum)
    {
-      mUnitNum = -1;
       mVisible = true;
    }
 

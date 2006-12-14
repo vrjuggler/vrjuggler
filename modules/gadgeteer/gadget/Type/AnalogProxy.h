@@ -24,12 +24,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/////////////////////////////////////////////////////////////////////////
-//
-// positional proxy class
-//
-////////////////////////////////////////////////////////////////////////
-
 #ifndef _GADGET_ANALOGPROXY_H_
 #define _GADGET_ANALOGPROXY_H_
 
@@ -57,8 +51,10 @@ class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 
 public:
    /** Constructor. */
-   AnalogProxy()
-      : mUnitNum(-1)
+   AnalogProxy(const std::string& deviceName = "UnknownAnalog",
+               const int unitNum = -1)
+      : TypedProxy<Analog>(deviceName)
+      , mUnitNum(unitNum)
       , mData(-1.0f)
    {;}
 

@@ -24,13 +24,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/////////////////////////////////////////////////////////////////////////
-// GestureProxy.h
-//
-// Gesture proxy class
-//
-////////////////////////////////////////////////////////////////////////
-
 #ifndef _GADGET_GESTURE_PROXY_H_
 #define _GADGET_GESTURE_PROXY_H_
 
@@ -59,11 +52,12 @@ class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
 public:
    /** Constructs the proxy to point to the given gesture device. */
-   GestureProxy()
-   { ;}
+   GestureProxy(const std::string& deviceName = "UnknownGesture")
+      : TypedProxy<Gesture>(deviceName)
+   {;}
 
    virtual ~GestureProxy()
-   {}
+   {;}
 
    /**
     * Gets the current gesture.

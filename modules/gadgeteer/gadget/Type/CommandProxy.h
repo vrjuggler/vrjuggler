@@ -52,8 +52,11 @@ class GADGET_CLASS_API CommandProxy : public TypedProxy<Command>
 public:
    /** @name Construction/Destruction */
    //@{
-   CommandProxy()
-      : mUnitNum(-1), mData(0)
+   CommandProxy(const std::string& deviceName = "UnknownCommand",
+                const int unitNum = -1)
+      : TypedProxy<Command>(deviceName)
+      , mUnitNum(unitNum)
+      , mData(0)
    {;}
 
    virtual ~CommandProxy()

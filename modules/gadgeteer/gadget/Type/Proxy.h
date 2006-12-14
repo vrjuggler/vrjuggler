@@ -161,8 +161,8 @@ namespace gadget
    class TypedProxy : public Proxy
    {
    public:
-      TypedProxy()
-         : mDeviceName("Unknown")
+      TypedProxy(const std::string& deviceName = "Unknown")
+         : mDeviceName(deviceName)
          , mTypedDevice(NULL)
       {
          ;
