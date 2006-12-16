@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-14-2006 aronb       Allow programmatic creation of usable device proxy
+                        objects.
+                        NEW VERSION: 1.1.21
 Dec-13-2006 aronb       Added gadget::InputManager::shutdown(). Renamed
                         gadget::BaseDeviceInterface::refreshAllDevices() to
                         gadget::BaseDeviceInterface::refreshAllInterfaces().
