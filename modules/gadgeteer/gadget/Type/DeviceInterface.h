@@ -82,7 +82,7 @@ public:
    /**
     * Refreshes the interface based on the current configuration.
     *
-    * This method is called by refreshAllDevices when system
+    * This method is called by refreshAllInterfaces when system
     * @post (mProxyIndex == -1) ==> Proxy not initialized yet.<br>
     *       (mProxyIndex != -1) ==> mProxyName has name of device && local
     *       proxy pointer is set to the device.
@@ -107,7 +107,21 @@ protected:
    bool        mNameSet;    /**< Has the user set a name?? */
 
 public:
-   /** Refreshes all the known device interface objects. */
+   /**
+    * Refreshes all the known device interface objects.
+    *
+    * @since 1.0.2
+    */
+   static void refreshAllInterfaces();
+
+   /**
+    * Refreshes all the known device interface objects.
+    *
+    * @deprecated This method has been renamed to refreshAllInterfaces() and
+    *             will be removed in Gadgeteer 1.2.
+    *
+    * @see refreshAllInterfaces()
+    */
    static void refreshAllDevices();
 
 private:    // Static information

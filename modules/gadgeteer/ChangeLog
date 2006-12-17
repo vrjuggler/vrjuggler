@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-17-2006 patrick     Deprecated the method
+                        gadget::BaseDeviceInterface::refreshAllDevices() in
+                        favor of the new name
+                        gadget::BaseDeviceInterface::refreshAllInterfaces().
 Dec-09-2006 patrick     Fixed frame delay problems in devices that are relative
                         to other proxied devices. Patch submitted by Frederic
                         Drolet.

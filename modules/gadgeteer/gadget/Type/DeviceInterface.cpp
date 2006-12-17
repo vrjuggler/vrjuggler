@@ -148,13 +148,25 @@ void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
    }
 }
 
-void BaseDeviceInterface::refreshAllDevices()
+void BaseDeviceInterface::refreshAllInterfaces()
 {
    for ( unsigned int i = 0; i < mAllocatedDevices.size(); ++i )
    {
       BaseDeviceInterface* dev = mAllocatedDevices[i];
       dev->refresh();
    }
+}
+
+void BaseDeviceInterface::refreshAllDevices()
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << clrOutBOLD(clrYELLOW, "NOTICE:")
+      << " gadget::BaseDeviceInterface::refreshAllDevices() has been replaced"
+      << std::endl;
+   vprDEBUG_NEXTnl(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "by gadget::BaseDeviceInterface::refreshAllInterfaces()."
+      << std::endl << vprDEBUG_FLUSH;
+   refreshAllInterfaces();
 }
 
 std::vector<BaseDeviceInterface*> BaseDeviceInterface::mAllocatedDevices;
