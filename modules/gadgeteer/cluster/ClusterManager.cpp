@@ -282,42 +282,32 @@ namespace cluster
 
       mPluginMap.erase( old_plugin->getHandlerGUID() );
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
-      {
-         if ( (*i) == old_plugin )
-         {
-            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-               << clrOutBOLD( clrCYAN, "[ClusterManager] " )
-               << "Removing Plugin: " << old_plugin->getPluginName()
-               << std::endl << vprDEBUG_FLUSH;
+      std::list<ClusterPlugin*>::iterator found
+         = std::find(mPlugins.begin(), mPlugins.end(), old_plugin);
 
-            mPlugins.erase(i);
-            jccl::ConfigManager::instance()->removeConfigElementHandler(*i);
-            return;
-         }
+      if (mPlugins.end() != found)
+      {
+         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+            << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+            << "Removing Plugin: " << old_plugin->getPluginName()
+            << std::endl << vprDEBUG_FLUSH;
+         mPlugins.erase(found);
+         jccl::ConfigManager::instance()->removeConfigElementHandler(*found);
       }
    }
 
    /**
     * Checks if a plugin exists in the ClusterManager
     */
-   bool ClusterManager::doesPluginExist( ClusterPlugin* old_manager )
+   bool ClusterManager::doesPluginExist( ClusterPlugin* old_plugin )
    {
       vprASSERT( mPluginsLock.test() == 1 &&
                  "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()" );
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
-      {
-         if ( (*i) == old_manager )
-         {
-            return( true );
-         }
-      }
-      return( false );
+      std::list<ClusterPlugin*>::iterator found
+         = std::find(mPlugins.begin(), mPlugins.end(), old_plugin);
+
+      return (mPlugins.end() != found);
    }
 
    void ClusterManager::sendRequests()
@@ -337,6 +327,8 @@ namespace cluster
          (*i)->sendRequests();
          updateNeeded = true;
       }
+
+      // Only send end blocks if we really need to.
       if ( updateNeeded )
       {
          sendEndBlocksAndSignalUpdate(1);
