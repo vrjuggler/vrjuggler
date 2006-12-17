@@ -160,10 +160,7 @@ namespace gadget
        *             will be removed in Gadgeteer 1.2.  Use isStupefied()
        *             instead.
        */
-      virtual bool isStupified() const
-      {
-         return isStupefied();
-      }
+      virtual bool isStupified() const;
 
       /**
        * Sets the stupefication state of this proxy.
@@ -173,10 +170,7 @@ namespace gadget
        * @deprecated The name of this method is spelled incorrectly, and it
        *             will be removed in Gadgeteer 1.2.  Use stupefy() instead.
        */
-      void stupify(const bool newState = true)
-      {
-         stupefy(newState);
-      }
+      void stupify(const bool newState = true);
 
       /** Returns the time of last update. */
       virtual vpr::Interval getTimeStamp() const = 0;

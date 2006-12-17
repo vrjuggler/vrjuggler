@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
 
 #include <gadget/Type/Proxy.h>
@@ -57,6 +58,28 @@ bool Proxy::config(jccl::ConfigElementPtr element)
 {
    mName = element->getFullName();
    return true;
+}
+
+bool Proxy::isStupified() const
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << clrOutBOLD(clrYELLOW, "NOTICE:")
+      << " gadget::Proxy::isStupified() has been deprecated." << std::endl;
+   vprDEBUG_NEXTnl(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Use gadget::Proxy::isStupefied() instead." << std::endl
+      << vprDEBUG_FLUSH;
+   return isStupefied();
+}
+
+void Proxy::stupify(const bool newState)
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << clrOutBOLD(clrYELLOW, "NOTICE:")
+      << " gadget::Proxy::stupify() has been deprecated." << std::endl;
+   vprDEBUG_NEXTnl(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "Use gadget::Proxy::stupefy() instead." << std::endl
+      << vprDEBUG_FLUSH;
+   stupefy(newState);
 }
 
 } // end namespace
