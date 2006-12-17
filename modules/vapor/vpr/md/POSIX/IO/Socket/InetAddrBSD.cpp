@@ -311,10 +311,9 @@ std::string InetAddrBSD::getHostname() const
    {
       // inet_ntoa(3) could change errno if it fails, so we save the current
       // value while we have it.
-      const int err_code(errno);
       std::ostringstream msg_stream;
       msg_stream << "Could not find hostname for "
-                 << inet_ntoa(mAddr.sin_addr) << ": " << strerror(err_code);
+                 << inet_ntoa(mAddr.sin_addr) << ": " << gai_strerror(result);
       throw UnknownHostException(msg_stream.str(), VPR_LOCATION);
    }
 
