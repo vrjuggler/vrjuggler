@@ -323,7 +323,7 @@ vpr::ReturnStatus InetAddrBSD::getHostname(std::string& hostname) const
       vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
          << clrOutBOLD(clrRED, "ERROR")
          << ": [vpr::InetAddrBSD::getHostname()] Could not find hostname for "
-         << inet_ntoa(mAddr.sin_addr) << ": " << strerror(err_code)
+         << inet_ntoa(mAddr.sin_addr) << ": " << gai_strerror(err_code)
          << std::endl << vprDEBUG_FLUSH;
    }
 
