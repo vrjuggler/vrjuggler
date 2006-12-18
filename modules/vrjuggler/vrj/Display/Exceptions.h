@@ -27,23 +27,26 @@
 #ifndef _VRJ_DISPLAY_EXCEPTIONS_H_
 #define _VRJ_DISPLAY_EXCEPTIONS_H_
 
-#include <exception>
-#include <string>
+#include <vpr/Util/Exception.h>
 
 
 namespace vrj
 {
 
-/**
+/** \class InvalidSurfaceException Exceptions.h vrj/Display/Exceptions.h
+ *
  * The exception type thrown when the corners of a surface projection do not
  * form a valid surface.
  *
- * @since 2.0.2
+ * @since 2.1.12
  */
-class InvalidSurfaceException : public std::exception
+class InvalidSurfaceException : public vpr::Exception
 {
 public:
-   InvalidSurfaceException(const std::string& msg) : mMessage(msg)
+   InvalidSurfaceException(const std::string& msg,
+                           const std::string& location = "")
+      throw ()
+      : vpr::Exception(msg, location)
    {
       ;
    }
@@ -52,14 +55,6 @@ public:
    {
       ;
    }
-
-   virtual const char* what() const throw ()
-   {
-      return mMessage.c_str();
-   }
-
-protected:
-   std::string mMessage;
 };
 
 }
