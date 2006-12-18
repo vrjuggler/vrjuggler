@@ -202,27 +202,20 @@ void CrateApp::draw(LPDIRECT3DDEVICE9 renderDevice)
    // select which vertex format we are using
    renderDevice->SetFVF(CUSTOMFVF);
 
-   // SET UP THE TRANSFORMS
-
-   D3DXMATRIX matView;    // the view transform matrix
-   D3DXMatrixLookAtLH(&matView,
-   &D3DXVECTOR3 (0.0f, 8.0f, 25.0f),    // the camera position
-   &D3DXVECTOR3 (0.0f, 0.0f, 0.0f),      // the look-at position
-   &D3DXVECTOR3 (0.0f, 1.0f, 0.0f));    // the up direction
-   renderDevice->SetTransform(D3DTS_VIEW, &matView);    // set the view transform to matView
-
-   D3DXMATRIX matProjection;    // the projection transform matrix
-   D3DXMatrixPerspectiveFovLH(&matProjection,
-                      D3DXToRadian(45),    // the horizontal field of view
-                      SCREEN_WIDTH / SCREEN_HEIGHT,    // the aspect ratio
-                      1.0f,    // the near view-plane
-                      100.0f);    // the far view-plane
-   //renderDevice->SetTransform(D3DTS_PROJECTION, &matProjection);    // set the projection
-
    static float index = 0.0f; index+=0.03f;    // an ever-increasing float value
    D3DXMATRIX matRotateY;    // a matrix to store the rotation for each triangle
    D3DXMatrixRotationY(&matRotateY, index);    // the rotation matrix
+
+   // Translate in front of us.
+   matRotateY(3, 0) = 0.0f;
+   matRotateY(3, 1) = 0.0f;
+   matRotateY(3, 2) = 25.0f;
+
    renderDevice->SetTransform(D3DTS_WORLD, &(matRotateY));    // set the world transform
+
+   // -- Draw box on wand --- //
+   //gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
+   //renderDevice->SetTransform(D3DTS_WORLD, (const D3DMATRIX*)&wandMatrix.mData);    // set the world transform
 
    // select the vertex buffer to display
    renderDevice->SetStreamSource(0, mTBuffer, 0, sizeof(CUSTOMVERTEX));
