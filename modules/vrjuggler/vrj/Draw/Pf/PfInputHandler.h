@@ -85,7 +85,7 @@ public:
     * Creates an adaptor which will route events from Performer into
     * platform-specific events.
     *
-    * @param pWin        Performer window to grab events from.
+    * @param pipeWindow  Performer window to grab events from.
     * @param displayName The name of the display.
     */
    PfInputHandler(pfPipeWindow* pipeWindow, const std::string& displayName);

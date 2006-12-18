@@ -48,6 +48,8 @@ class SurfaceProjection : public Projection
 {
 public:
    /**
+    * Constructs a new surface projection using the given corner points.
+    *
     * @param llCorner Lower left corner.
     * @param lrCorner Lower right corner.
     * @param urCorner Upper right corner.
