@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sonix", "Sonix\Sonix.vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VR Juggler OpenGL Draw Manager", "VRJuggler\OpenGL_Draw_Manager\OpenGL_Draw_Manager.vcproj", "{3E0ED861-C434-40E0-8D76-E31D76EA185B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VR Juggler Direct3D Draw Manager", "VRJuggler\Direct3D_Draw_Manager\Direct3D_Draw_Manager.vcproj", "{927ADA64-5D2E-4066-ABDA-3D65A9CF524B}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Ascension Flock of Birds", "Gadgeteer\Flock\Flock.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - 5DT DataGlove", "Gadgeteer\DataGlove\DataGlove.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8433}"
