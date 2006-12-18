@@ -27,7 +27,7 @@
 #ifndef _VJ_D3D_WINDOW_H_
 #define _VJ_D3D_WINDOW_H_
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 #include <vector>
 
 #include <stdio.h>
@@ -69,10 +69,10 @@ class CameraProjection;
 // TODO: Try to find a way to process PAINT event at the same
 //       time as input events.
 
-/** \class D3dWindow D3dWindow.h vrj/Draw/DirectX/D3dWindow.h
+/** \class D3dWindow D3dWindow.h vrj/Draw/Direct3D/D3dWindow.h
  *
- * Represent cross-platform interface to DirectX windows.  This interface is
- * used by the DirectX Draw Manager in order to keep all platform-specific code
+ * Represent cross-platform interface to Direct3D windows.  This interface is
+ * used by the Direct3D Draw Manager in order to keep all platform-specific code
  * in this one class.
  */
 class VJ_D3D_CLASS_API D3dWindow
@@ -150,7 +150,7 @@ public:
    virtual void configWindow(vrj::Display* displayWindow);
 
    /**
-    * Performs an DirectX swap buffers command.
+    * Performs an Direct3D swap buffers command.
     * @post A glFlush must be called explicitly by the implementation
     *       or explicitly by the functions used in the implementation.
     */

@@ -24,43 +24,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_D3D_SIM_INTERFACE_H_
-#define _VRJ_D3D_SIM_INTERFACE_H_
+#include <vrj/Draw/Direct3D/Config.h>
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/D3dSimInterfaceFactory.h>
 
-#include <gadget/Type/KeyboardMouseProxy.h>
-#include <gadget/Type/DeviceInterface.h>
-
-#include <vrj/Draw/DrawSimInterface.h>
 
 namespace vrj
 {
-   /** \class D3dSimInterface D3dSimInterface.h vrj/Draw/DirectX/D3dSimInterface.h
-    *
-    * Interface for objects that wish to perform simulator function with an
-    * DirectX application.
-    */
-   class D3dSimInterface : public DrawSimInterface
-   {
-   public:
-      virtual ~D3dSimInterface()
-      {
-         /* Do nothing. */ ;
-      }
 
-      /**
-       * Draws this sim device using the given information about the Window it
-       * will be drawing into.
-       */
-      virtual void draw(const float scaleFactor) = 0;
+vprSingletonImp(D3dSimInterfaceFactory)
 
-      /**
-       * Sets the keyboard/mouse device the simulator can use to get input from
-       * the user.
-       */
-      virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface) = 0;
-   };
 }
-
-#endif

@@ -24,7 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 
 #include <boost/concept_check.hpp>
 
@@ -40,7 +40,7 @@
 
 #include <vrj/Kernel/User.h>
 
-#include <vrj/Draw/DirectX/D3dDrawManager.h>
+#include <vrj/Draw/Direct3D/D3dDrawManager.h>
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
@@ -49,8 +49,8 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
-#include <vrj/Draw/DirectX/D3dSimInterfaceFactory.h>
-#include <vrj/Draw/DirectX/D3dBasicSimulator.h>
+#include <vrj/Draw/Direct3D/D3dSimInterfaceFactory.h>
+#include <vrj/Draw/Direct3D/D3dBasicSimulator.h>
 
 
 namespace vrj

@@ -27,9 +27,9 @@
 #ifndef _VRJ_D3D_BASIC_SIMULATOR_H_
 #define _VRJ_D3D_BASIC_SIMULATOR_H_
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 
-#include <vrj/Draw/DirectX/D3dSimInterface.h>
+#include <vrj/Draw/Direct3D/D3dSimInterface.h>
 
 #include <gadget/Type/PositionInterface.h>
 
@@ -40,10 +40,10 @@
 namespace vrj
 {
 
-/** \class D3dBasicSimulator D3dBasicSimulator.h vrj/Draw/DirectX/D3dBasicSimulator.h
+/** \class D3dBasicSimulator D3dBasicSimulator.h vrj/Draw/Direct3D/D3dBasicSimulator.h
  *
  * Interface for objects that wish to perform simulator function with an
- * DirectX application.
+ * Direct3D application.
  */
 class D3dBasicSimulator : public D3dSimInterface
 {
@@ -53,7 +53,7 @@ public:
    virtual ~D3dBasicSimulator();
 
    /**
-    * Configures the basic DirectX simulator.
+    * Configures the basic Direct3D simulator.
     *
     * @pre element is a valid configuration element.
     * @post It should be configured.
@@ -123,12 +123,12 @@ protected: // Drawing functions used by library
     */
    void drawObjects();
 
-   /** Draws projections in DirectX. */
+   /** Draws projections in Direct3D. */
    void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor,
                         const float scaleFactor);
 
    /**
-    * Draws a simulator using DirectX commands.
+    * Draws a simulator using Direct3D commands.
     *
     * @note This is called internally by the library.
     */

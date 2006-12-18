@@ -27,7 +27,7 @@
 #ifndef _VRJ_D3D_APP_H_
 #define _VRJ_D3D_APP_H_
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 
 #include <vrj/Kernel/App.h>
 
@@ -43,9 +43,9 @@ namespace vrj
 
 /** \class D3dApp D3dApp.h vrj/Draw/D3D/D3dApp.h
  *
- * vrj::D3dApp encapulates an actual DirectX application object.
- * This defines the base class from which DirectX-based application classes
- * should be derived.  The interface given is what the kernel and the DirectX
+ * vrj::D3dApp encapulates an actual Direct3D application object.
+ * This defines the base class from which Direct3D-based application classes
+ * should be derived.  The interface given is what the kernel and the Direct3D
  * Draw Manager expect in order to interact with the application.
  *
  * The control loop will look similar to this:
@@ -85,7 +85,7 @@ public:
     * Function that renders the scene.
     * Override this function with the user rendering routine.
     *
-    * @pre DirectX state has correct transformation and buffer selected.
+    * @pre Direct3D state has correct transformation and buffer selected.
     * @post The current scene has been drawn.
     */
    virtual void draw(LPDIRECT3DDEVICE9 renderDevice) = 0;
@@ -96,7 +96,7 @@ public:
     * display lists and texture objects that are known to be required when
     * the context is created.
     *
-    * @pre The DirectX context has been set to the new context.
+    * @pre The Direct3D context has been set to the new context.
     * @post The application has completed context-specific initialization.
     */
    virtual void contextInit(LPDIRECT3DDEVICE9 renderDevice)
@@ -113,7 +113,7 @@ public:
     * Function that is called upon entry into the context before rendering.
     * This can be used to allocate context-specific data dynamically.
     *
-    * @pre The DirectX context has been set to the context for drawing.
+    * @pre The Direct3D context has been set to the context for drawing.
     * @post The application object has executed any commands that need to be
     *       executed only once per context, per frame.
     *
@@ -126,23 +126,23 @@ public:
    /**
     * Function that is called upon exit of the context after rendering.
     *
-    * @pre The DirectX context has been set to the context for drawing.
+    * @pre The Direct3D context has been set to the context for drawing.
     */
    virtual void contextPostDraw()
    {;}
 
    /**
-    * Function that is called once for each frame buffer of an DirectX context.
+    * Function that is called once for each frame buffer of an Direct3D context.
     * This function is executed after contextInit() (if needed) but before
     * contextPreDraw().  It is called once per frame buffer (see note).
     *
-    * @pre The DirectX context has been set to the context for drawing.
+    * @pre The Direct3D context has been set to the context for drawing.
     * @post The application object has executed any commands that need to be
     *        executed once per context, per buffer, per frame.
     *
     * @note This function is designed to be used when some task must be
     *       performed only once per frame buffer (i.e., once for the left
-    *       buffer, once for the right buffer).  For example, the DirectX clear
+    *       buffer, once for the right buffer).  For example, the Direct3D clear
     *       color should be defined and glClear(GL_COLOR_BUFFER_BIT) should be
     *       called in this method.
     */
@@ -155,7 +155,7 @@ public:
     * @pre The library is preparing to render all windows on a given pipe.
     * @post Any pre-pipe user calls have been done.
     *
-    * @note Currently the DirectX context is not set when this function is
+    * @note Currently the Direct3D context is not set when this function is
     *       called.  This is a TEST function.  USE AT YOUR OWN RISK!!!
     */
    virtual void pipePreDraw()
@@ -167,7 +167,7 @@ public:
     */
 
    /** Get the DrawManager to use.
-    * Returns the DirectX Draw Manager.
+    * Returns the Direct3D Draw Manager.
     */
    virtual DrawManager* getDrawManager();
 

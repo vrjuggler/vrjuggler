@@ -24,14 +24,34 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 
-#include <vrj/Draw/DirectX/D3dSimInterfaceFactory.h>
+#include <vrj/Draw/Direct3D/D3dDrawManager.h>
+#include <vrj/Draw/Direct3D/D3dApp.h>
 
 
 namespace vrj
 {
 
-vprSingletonImp(D3dSimInterfaceFactory)
+// NOTE: These member functions are implemented here rather than being
+// inlined within D3dApp.h so that vrj::D3dApp is properly compiled into the
+// VR Juggler Direct3D Draw Manager library.  Sometimes, full inlining is a
+// bad thing.
+
+D3dApp::D3dApp(Kernel* kern) : App(kern)
+{
+   /* Do nothing. */ ;
+}
+
+
+D3dApp::~D3dApp()
+{
+   /* Do nothing. */ ;
+}
+
+DrawManager* D3dApp::getDrawManager()
+{
+   return D3dDrawManager::instance();
+}
 
 }

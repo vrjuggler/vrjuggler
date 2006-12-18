@@ -27,7 +27,7 @@
 #ifndef _VRJ_D3D_DRAW_MANAGER_H_
 #define _VRJ_D3D_DRAW_MANAGER_H_
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 #include <vector>
 
 #include <vpr/vpr.h>
@@ -46,7 +46,7 @@ namespace vrj
    class D3dApp;
    class D3dWindow;
 
-/** \class D3dDrawManager D3dDrawManager.h vrj/Draw/DirectX/D3dDrawManager.h
+/** \class D3dDrawManager D3dDrawManager.h vrj/Draw/Direct3D/D3dDrawManager.h
  *
  * Concrete Singleton Class for OpenGL drawing.  Responsible for all
  * OpenGL-based rendering.

@@ -27,7 +27,7 @@
 #ifndef _VRJ_D3D_SIM_INTERFACE_FACTORY_H_
 #define _VRJ_D3D_SIM_INTERFACE_FACTORY_H_
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 #include <string>
 #include <vpr/Util/Factory.h>
 #include <vpr/Util/Singleton.h>
@@ -51,7 +51,7 @@ const bool reg_ctr_ ## SimIfType = \
 namespace vrj
 {
 
-/** \class D3dSimInterfaceFactory D3dSimInterfaceFactory.h vrj/Draw/DirectX/D3dSimInterfaceFactory.h
+/** \class D3dSimInterfaceFactory D3dSimInterfaceFactory.h vrj/Draw/Direct3D/D3dSimInterfaceFactory.h
  *
  * Simulator renderer factory.
  */

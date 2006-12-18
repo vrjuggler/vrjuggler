@@ -24,34 +24,43 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Draw/DirectX/Config.h>
+#ifndef _VRJ_D3D_SIM_INTERFACE_H_
+#define _VRJ_D3D_SIM_INTERFACE_H_
 
-#include <vrj/Draw/DirectX/D3dDrawManager.h>
-#include <vrj/Draw/DirectX/D3dApp.h>
+#include <vrj/Draw/Direct3D/Config.h>
 
+#include <gadget/Type/KeyboardMouseProxy.h>
+#include <gadget/Type/DeviceInterface.h>
+
+#include <vrj/Draw/DrawSimInterface.h>
 
 namespace vrj
 {
+   /** \class D3dSimInterface D3dSimInterface.h vrj/Draw/Direct3D/D3dSimInterface.h
+    *
+    * Interface for objects that wish to perform simulator function with an
+    * Direct3D application.
+    */
+   class D3dSimInterface : public DrawSimInterface
+   {
+   public:
+      virtual ~D3dSimInterface()
+      {
+         /* Do nothing. */ ;
+      }
 
-// NOTE: These member functions are implemented here rather than being
-// inlined within D3dApp.h so that vrj::D3dApp is properly compiled into the
-// VR Juggler DirectX Draw Manager library.  Sometimes, full inlining is a
-// bad thing.
+      /**
+       * Draws this sim device using the given information about the Window it
+       * will be drawing into.
+       */
+      virtual void draw(const float scaleFactor) = 0;
 
-D3dApp::D3dApp(Kernel* kern) : App(kern)
-{
-   /* Do nothing. */ ;
+      /**
+       * Sets the keyboard/mouse device the simulator can use to get input from
+       * the user.
+       */
+      virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface) = 0;
+   };
 }
 
-
-D3dApp::~D3dApp()
-{
-   /* Do nothing. */ ;
-}
-
-DrawManager* D3dApp::getDrawManager()
-{
-   return D3dDrawManager::instance();
-}
-
-}
+#endif

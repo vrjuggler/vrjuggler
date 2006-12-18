@@ -24,7 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Draw/DirectX/Config.h>
+#include <vrj/Draw/Direct3D/Config.h>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -34,11 +34,11 @@
 #include <vrj/Display/Frustum.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
-#include <vrj/Draw/DirectX/D3dWindow.h>
+#include <vrj/Draw/Direct3D/D3dWindow.h>
 
 #include <jccl/Config/ConfigElement.h>
 
-#include <vrj/Draw/DirectX/D3dSimInterface.h>
+#include <vrj/Draw/Direct3D/D3dSimInterface.h>
 
 // This variable determines which matrix stack we put the viewing transformation
 // If it is on the proj matrix, then lighting and env maps work but fog breaks.
@@ -298,7 +298,7 @@ bool D3dWindow::close()
 }
 
 /**
- * Sets the current DirectX context to this window.
+ * Sets the current Direct3D context to this window.
  * @post this.context is active context.
  */
 bool D3dWindow::makeCurrent()
