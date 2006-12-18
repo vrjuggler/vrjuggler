@@ -26,7 +26,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Display/Exceptions.h>
+#include <vrj/Display/DisplayExceptions.h>
 
 
 namespace vrj

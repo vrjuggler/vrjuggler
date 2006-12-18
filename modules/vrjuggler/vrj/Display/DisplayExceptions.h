@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2006 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2005 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -24,8 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KERNEL_EXCEPTIONS_H_
-#define _VRJ_KERNEL_EXCEPTIONS_H_
+#ifndef _VRJ_DISPLAY_DISPLAY_EXCEPTIONS_H_
+#define _VRJ_DISPLAY_DISPLAY_EXCEPTIONS_H_
 
 #include <vrj/vrjConfig.h>
 
@@ -35,32 +35,24 @@
 namespace vrj
 {
 
-/** \class ManagerException Exceptions.h vrj/Kernel/Exceptions.h
+/** \class InvalidSurfaceException DisplayExceptions.h vrj/Display/DisplayExceptions.h
  *
- * General exception type for managers held by vrj::Kernel.
+ * The exception type thrown when the corners of a surface projection do not
+ * form a valid surface.
+ *
+ * @since 2.1.12
  */
-class VJ_CLASS_API ManagerException : public vpr::Exception
+class VJ_CLASS_API InvalidSurfaceException : public vpr::Exception
 {
 public:
-   ManagerException(const std::string& msg, const std::string& location = "")
+   InvalidSurfaceException(const std::string& msg,
+                           const std::string& location = "")
       throw ();
 
-   virtual ~ManagerException() throw ();
-};
-
-/** \class DrawMgrException Exceptions.h vrj/Kernel/Exceptions.h
- *
- * Exception type to be used by Draw Managers.
- */
-class VJ_CLASS_API DrawMgrException : public ManagerException
-{
-public:
-   DrawMgrException(const std::string& msg, const std::string& location = "")
-      throw ();
-
-   virtual ~DrawMgrException() throw ();
+   virtual ~InvalidSurfaceException() throw ();
 };
 
 }
 
-#endif /* _VRJ_KERNEL_EXCEPTIONS_H_ */
+
+#endif /* _VRJ_DISPLAY_DISPLAY_EXCEPTIONS_H_ */

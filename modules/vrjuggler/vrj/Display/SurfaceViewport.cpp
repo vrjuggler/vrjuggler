@@ -42,7 +42,7 @@
 
 #include <vrj/Display/SurfaceProjection.h>
 #include <vrj/Display/TrackedSurfaceProjection.h>
-#include <vrj/Display/Exceptions.h>
+#include <vrj/Display/DisplayExceptions.h>
 #include <vrj/Display/SurfaceViewport.h>
 
 namespace vrj
