@@ -28,13 +28,15 @@
 #define _VRJ_DRAW_D3D_CONFIG_H_
 /* #pragma once */
 
-/*
- * ----------------------------------------------------------------------------
- * This file (vjConfig.h) includes header files common to most, if not all,
- * files in the VR Juggler source tree.  It must be included at the top of
- * every .h and .cpp file before any other headers because it includes system
- * headers.
- * ----------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * This file is to be used by code in the Direct3D Draw Manager for ensuring
+ * that platform-specific preprocessor symbols are defined correctly. In
+ * particular, this file handles the Windows DLL and automatic linking
+ * features for the Direct3D Draw Manager shared library. It must be included
+ * at the top of every .h and .cpp file in the Direct3D Draw Manager source
+ * before any other headers.
  */
 
 /* This should always be included first. */
