@@ -27,6 +27,8 @@
 #ifndef _VRJ_DISPLAY_EXCEPTIONS_H_
 #define _VRJ_DISPLAY_EXCEPTIONS_H_
 
+#include <vrj/vrjConfig.h>
+
 #include <vpr/Util/Exception.h>
 
 
@@ -40,21 +42,14 @@ namespace vrj
  *
  * @since 2.1.12
  */
-class InvalidSurfaceException : public vpr::Exception
+class VJ_CLASS_API InvalidSurfaceException : public vpr::Exception
 {
 public:
    InvalidSurfaceException(const std::string& msg,
                            const std::string& location = "")
-      throw ()
-      : vpr::Exception(msg, location)
-   {
-      ;
-   }
+      throw ();
 
-   virtual ~InvalidSurfaceException() throw ()
-   {
-      ;
-   }
+   virtual ~InvalidSurfaceException() throw ();
 };
 
 }

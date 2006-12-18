@@ -24,43 +24,38 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KERNEL_EXCEPTIONS_H_
-#define _VRJ_KERNEL_EXCEPTIONS_H_
-
 #include <vrj/vrjConfig.h>
 
-#include <vpr/Util/Exception.h>
+#include <vrj/Kernel/Exceptions.h>
 
 
 namespace vrj
 {
 
-/** \class ManagerException Exceptions.h vrj/Kernel/Exceptions.h
- *
- * General exception type for managers held by vrj::Kernel.
- */
-class VJ_CLASS_API ManagerException : public vpr::Exception
+ManagerException::ManagerException(const std::string& msg,
+                                   const std::string& location)
+   throw ()
+   : vpr::Exception(msg, location)
 {
-public:
-   ManagerException(const std::string& msg, const std::string& location = "")
-      throw ();
-
-   virtual ~ManagerException() throw ();
-};
-
-/** \class DrawMgrException Exceptions.h vrj/Kernel/Exceptions.h
- *
- * Exception type to be used by Draw Managers.
- */
-class VJ_CLASS_API DrawMgrException : public ManagerException
-{
-public:
-   DrawMgrException(const std::string& msg, const std::string& location = "")
-      throw ();
-
-   virtual ~DrawMgrException() throw ();
-};
-
+   /* Do nothing. */ ;
 }
 
-#endif /* _VRJ_KERNEL_EXCEPTIONS_H_ */
+ManagerException::~ManagerException() throw ()
+{
+   /* Do nothing. */ ;
+}
+
+DrawMgrException::DrawMgrException(const std::string& msg,
+                                   const std::string& location)
+   throw ()
+   : ManagerException(msg, location)
+{
+   /* Do nothing. */ ;
+}
+
+DrawMgrException::~DrawMgrException() throw ()
+{
+   /* Do nothing. */ ;
+}
+
+}
