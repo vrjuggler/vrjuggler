@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-18-2006 aronb       Added initial support for Direct3D.
+                        NEW VERSION: 2.1.16
 Nov-14-2006 patrick     Replaced vpr::ReturnStatus usage with bool in the
                         vrj::PerfPlugin interface.
                         NEW VERSION: 2.1.15
