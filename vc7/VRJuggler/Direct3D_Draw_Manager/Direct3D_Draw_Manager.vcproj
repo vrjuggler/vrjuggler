@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
@@ -92,7 +92,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d3d-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"
@@ -169,13 +169,13 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
+				RelativePath=".\VRJuggler.rc">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj_d3d.rc">
 			</File>
 			<File
 				RelativePath=".\vrjuggler.ico">
-			</File>
-			<File
-				RelativePath=".\VRJuggler.rc">
 			</File>
 		</Filter>
 	</Files>
