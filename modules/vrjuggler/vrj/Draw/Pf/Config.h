@@ -28,13 +28,15 @@
 #define _VRJ_DRAW_PF_CONFIG_H_
 /* #pragma once */
 
-/*
- * ----------------------------------------------------------------------------
- * This file (vjConfig.h) includes header files common to most, if not all,
- * files in the VR Juggler source tree.  It must be included at the top of
- * every .h and .cpp file before any other headers because it includes system
- * headers.
- * ----------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * This file is to be used by code in the OpenGL Performer Draw Manager for
+ * ensuring that platform-specific preprocessor symbols are defined correctly.
+ * In particular, this file handles the Windows DLL and automatic linking
+ * features for the OpenGL Performer Draw Manager shared library. It must be
+ * included at the top of every .h and .cpp file in the OpenGL Performer Draw
+ * Manager source before any other headers.
  */
 
 /* This should always be included first. */

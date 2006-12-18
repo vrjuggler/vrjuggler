@@ -34,13 +34,18 @@
 #define _VRJ_CONFIG_H_
 /* #pragma once */
 
-/*
- * ----------------------------------------------------------------------------
- * This file (vjConfig.h) includes header files common to most, if not all,
- * files in the VR Juggler source tree.  It must be included at the top of
- * every .h and .cpp file before any other headers because it includes system
- * headers.
- * ----------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * This file is to be used by code in the base VR Juggler library for ensuring
+ * that platform-specific preprocessor symbols are defined correctly. In
+ * particular, this file handles the Windows DLL and automatic linking
+ * features for the base VR Juggler shared library. It must be included at the
+ * top of every .h and .cpp file in the source tree (other than for the Draw
+ * Manager implementations) before any other headers.
+ *
+ * @note The Draw Manager implementations have their own Config.h files that
+ *       include this file.
  */
 
 /* This should always be included first. */
