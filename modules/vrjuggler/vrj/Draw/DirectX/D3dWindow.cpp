@@ -120,9 +120,9 @@ void D3dWindow::setProjection(vrj::Projection* proj)
    D3DXMATRIX proj_matrix;
    ZeroMemory( &proj_matrix, sizeof( D3DXMATRIX ) );
 
-   D3DXMatrixPerspectiveLH(&proj_matrix,
-      frust[Frustum::VJ_RIGHT] - frust[Frustum::VJ_LEFT],
-      frust[Frustum::VJ_TOP] - frust[Frustum::VJ_BOTTOM],
+   D3DXMatrixPerspectiveOffCenterLH(&proj_matrix,
+      frust[Frustum::VJ_LEFT], frust[Frustum::VJ_RIGHT],
+      frust[Frustum::VJ_BOTTOM], frust[Frustum::VJ_TOP],
       frust[Frustum::VJ_NEAR], frust[Frustum::VJ_FAR]);
 
    mRenderDevice->SetTransform( D3DTS_PROJECTION, &proj_matrix );
