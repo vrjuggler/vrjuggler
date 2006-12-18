@@ -28,7 +28,7 @@
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <vrj/Draw/DirectX/D3dApp.h>
+#include <vrj/Draw/Direct3D/D3dApp.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 
