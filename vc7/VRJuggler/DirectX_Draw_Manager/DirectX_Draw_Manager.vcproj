@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="VR Juggler DirectX Draw Manager"
+	Name="VR Juggler Direct3D Draw Manager"
 	ProjectGUID="{927ADA64-5D2E-4066-ABDA-3D65A9CF524B}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -139,44 +139,44 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dApp.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dApp.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dBasicSimulator.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dBasicSimulator.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dDrawManager.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dDrawManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dSimInterfaceFactory.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dSimInterfaceFactory.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dWindow.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dWindow.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\Config.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\Config.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dApp.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dApp.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dBasicSimulator.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dBasicSimulator.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dDrawManager.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dDrawManager.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dSimInterface.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dSimInterface.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dSimInterfaceFactory.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dSimInterfaceFactory.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\DirectX\D3dWindow.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Direct3D\D3dWindow.h">
 			</File>
 		</Filter>
 		<Filter
