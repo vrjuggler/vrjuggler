@@ -48,19 +48,19 @@ namespace vrj
 
 /** \class D3dDrawManager D3dDrawManager.h vrj/Draw/Direct3D/D3dDrawManager.h
  *
- * Concrete Singleton Class for OpenGL drawing.  Responsible for all
- * OpenGL-based rendering.
+ * Concrete Singleton Class for Direct3D drawing.  Responsible for all
+ * Direct3D-based rendering.
  *
- * vrj::D3dDrawManager is an active object.  It manages OpenGL pipes and
+ * vrj::D3dDrawManager is an active object.  It manages Direct3D pipes and
  * windows.  In addition, it triggers rendering, swapping, and syncing of the
  * windows under its control.
  *
- * All access to the OpenGL rendering structures has to happen from the control
- * thread or in the case of context sensitive functions, from the control
- * thread of the managed pipes.  Because of this, the object uses queues to
- * hold new windows.
+ * All access to the Direct3D rendering structures has to happen from the
+ * control thread or in the case of context sensitive functions, from the
+ * control thread of the managed pipes.  Because of this, the object uses
+ * queues to hold new windows.
  *
- * @date 1-7-98
+ * @since 2.1.16
  */
 class VJ_D3D_CLASS_API D3dDrawManager : public DrawManager
 {

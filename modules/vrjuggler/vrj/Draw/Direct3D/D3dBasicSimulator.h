@@ -42,8 +42,10 @@ namespace vrj
 
 /** \class D3dBasicSimulator D3dBasicSimulator.h vrj/Draw/Direct3D/D3dBasicSimulator.h
  *
- * Interface for objects that wish to perform simulator function with an
+ * Interface for objects that wish to perform simulator function with a
  * Direct3D application.
+ *
+ * @since 2.1.16
  */
 class D3dBasicSimulator : public D3dSimInterface
 {

@@ -72,8 +72,10 @@ class CameraProjection;
 /** \class D3dWindow D3dWindow.h vrj/Draw/Direct3D/D3dWindow.h
  *
  * Represent cross-platform interface to Direct3D windows.  This interface is
- * used by the Direct3D Draw Manager in order to keep all platform-specific code
- * in this one class.
+ * used by the Direct3D Draw Manager in order to keep all platform-specific
+ * code in this one class.
+ *
+ * @since 2.1.16
  */
 class VJ_D3D_CLASS_API D3dWindow
    : public gadget::InputAreaWin32

@@ -54,6 +54,8 @@ namespace vrj
 /** \class D3dSimInterfaceFactory D3dSimInterfaceFactory.h vrj/Draw/Direct3D/D3dSimInterfaceFactory.h
  *
  * Simulator renderer factory.
+ *
+ * @since 2.1.16
  */
 class VJ_D3D_CLASS_API D3dSimInterfaceFactory :
    public vpr::Factory<DrawSimInterface, std::string>

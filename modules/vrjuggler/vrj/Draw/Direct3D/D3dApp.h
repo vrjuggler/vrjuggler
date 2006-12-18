@@ -73,6 +73,8 @@ namespace vrj
  * @note One time through the loop is a Juggler Frame.
  *
  * @see vrj::App, vrj::Kernel
+ *
+ * @since 2.1.16
  */
 class VJ_D3D_CLASS_API D3dApp : public App
 {
@@ -132,7 +134,7 @@ public:
    {;}
 
    /**
-    * Function that is called once for each frame buffer of an Direct3D context.
+    * Function that is called once for each frame buffer of a Direct3D context.
     * This function is executed after contextInit() (if needed) but before
     * contextPreDraw().  It is called once per frame buffer (see note).
     *
