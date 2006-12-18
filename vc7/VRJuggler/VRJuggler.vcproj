@@ -130,6 +130,9 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Display.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\DisplayExceptions.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\DisplayManager.cpp">
 			</File>
 			<File
@@ -140,6 +143,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\Kernel.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\KernelExceptions.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerformanceMediator.cpp">
@@ -197,6 +203,9 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Display.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\DisplayExceptions.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\DisplayManager.h">
 			</File>
 			<File
@@ -206,16 +215,13 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterface.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\Exceptions.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vrjuggler\vrj\Display\Exceptions.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Frustum.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\Kernel.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\KernelExceptions.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Test\Message.h">
