@@ -601,6 +601,7 @@
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Proxy.cpp"
 				>
+			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\ProxyDepChecker.cpp"
 				>
