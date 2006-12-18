@@ -240,8 +240,6 @@ void CrateApp::draw(LPDIRECT3DDEVICE9 renderDevice)
 
    renderDevice->EndScene(); 
 
-   renderDevice->Present(NULL, NULL, NULL, NULL);
-
    return;
 }
 
