@@ -36,7 +36,7 @@
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Kernel/Exceptions.h>
+#include <vrj/Kernel/KernelExceptions.h>
 
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
