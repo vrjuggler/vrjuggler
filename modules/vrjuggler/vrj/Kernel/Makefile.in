@@ -48,8 +48,9 @@ INSTALL=		@INSTALL@
 SUBOBJDIR=		$(VJ_LIBRARY)
 EXTRA_CXXFLAGS+=	-DVJ_ROOT_DIR="\"$(instprefix)\""
 
-SRCS=		App.cpp		\
-		Kernel.cpp	\
+SRCS=		App.cpp			\
+		Kernel.cpp		\
+		KernelExceptions.cpp	\
 		User.cpp
 
 include $(MKPATH)/dpp.obj.mk

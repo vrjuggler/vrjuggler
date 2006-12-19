@@ -43,7 +43,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/User.h>
-#include <vrj/Kernel/Exceptions.h>
+#include <vrj/Kernel/KernelExceptions.h>
 #include <vrj/Performance/PerformanceMediator.h>
 #include <vrj/Sound/SoundManager.h>
 

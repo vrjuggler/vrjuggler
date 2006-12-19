@@ -24,14 +24,16 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
- * Date modified: $Date: 2005-01-16 17:51:42 -0600 (Sun, 16 Jan 2005) $
- * Version:       $Revision: 16627 $
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DISPLAY_EXCEPTIONS_H_
-#define _VRJ_DISPLAY_EXCEPTIONS_H_
+#ifndef _VRJ_KERNEL_KERNEL_EXCEPTIONS_H_
+#define _VRJ_KERNEL_KERNEL_EXCEPTIONS_H_
+
+#include <vrj/vrjConfig.h>
 
 #include <exception>
 #include <string>
@@ -40,35 +42,35 @@
 namespace vrj
 {
 
-/**
- * The exception type thrown when the corners of a surface projection do not
- * form a valid surface.
+/** \class ManagerException Exceptions.h vrj/Kernel/Exceptions.h
  *
- * @since 2.0.2
+ * General exception type for managers held by vrj::Kernel.
  */
-class InvalidSurfaceException : public std::exception
+class VJ_CLASS_API ManagerException : public std::exception
 {
 public:
-   InvalidSurfaceException(const std::string& msg) : mMessage(msg)
-   {
-      ;
-   }
+   ManagerException(const std::string& msg) throw ();
 
-   virtual ~InvalidSurfaceException() throw ()
-   {
-      ;
-   }
+   virtual ~ManagerException() throw ();
 
-   virtual const char* what() const throw ()
-   {
-      return mMessage.c_str();
-   }
+   virtual const char* what() const throw ();
 
 protected:
    std::string mMessage;
 };
 
+/** \class DrawMgrException KernelExceptions.h vrj/Kernel/KernelExceptions.h
+ *
+ * Exception type to be used by Draw Managers.
+ */
+class VJ_CLASS_API DrawMgrException : public ManagerException
+{
+public:
+   DrawMgrException(const std::string& msg) throw ();
+
+   virtual ~DrawMgrException() throw ();
+};
+
 }
 
-
-#endif /* _VRJ_DISPLAY_EXCEPTIONS_H_ */
+#endif /* _VRJ_KERNEL_KERNEL_EXCEPTIONS_H_ */

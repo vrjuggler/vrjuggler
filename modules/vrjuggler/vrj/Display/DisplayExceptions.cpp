@@ -22,68 +22,32 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_KERNEL_EXCEPTIONS_H_
-#define _VRJ_KERNEL_EXCEPTIONS_H_
+#include <vrj/vrjConfig.h>
 
-#include <exception>
-#include <string>
+#include <vrj/Display/DisplayExceptions.h>
 
 
 namespace vrj
 {
 
-/** \class ManagerException Exceptions.h vrj/Kernel/Exceptions.h
- *
- * General exception type for managers held by vrj::Kernel.
- */
-class ManagerException : public std::exception
+InvalidSurfaceException::InvalidSurfaceException(const std::string& msg)
+   throw ()
+   : std::exception()
+   , mMessage(msg)
 {
-public:
-   ManagerException(const std::string& msg) : mMessage(msg)
-   {
-      ;
-   }
-
-   virtual ~ManagerException() throw()
-   {
-      ;
-   }
-
-   virtual const char* what() const throw()
-   {
-      return mMessage.c_str();
-   }
-
-protected:
-   std::string mMessage;
-};
-
-/** \class DrawMgrException Exceptions.h vrj/Kernel/Exceptions.h
- *
- * Exception type to be used by Draw Managers.
- */
-class DrawMgrException : public ManagerException
-{
-public:
-   DrawMgrException(const std::string& msg) : ManagerException(msg)
-   {
-      ;
-   }
-
-   virtual ~DrawMgrException() throw()
-   {
-      ;
-   }
-};
-
+   /* Do nothing. */ ;
 }
 
-#endif /* _VRJ_KERNEL_EXCEPTIONS_H_ */
+InvalidSurfaceException::~InvalidSurfaceException() throw ()
+{
+   /* Do nothing. */ ;
+}
+
+const char* InvalidSurfaceException::what() const throw ()
+{
+   return mMessage.c_str();
+}
+
+}

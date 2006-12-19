@@ -49,6 +49,7 @@ SUBOBJDIR=	$(VJ_LIBRARY)
 
 SRCS=		CameraProjection.cpp		\
 		Display.cpp			\
+		DisplayExceptions.cpp		\
 		DisplayManager.cpp		\
 		Frustum.cpp			\
 		Projection.cpp			\
