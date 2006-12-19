@@ -4,17 +4,17 @@
 %define global_release 1
 
 %define vpr_version 1.0.2
-%define vpr_release %{global_release}
+%define vpr_release %{global_release}%{?dist}
 %define tweek_version 1.0.2
-%define tweek_release %{global_release}
+%define tweek_release %{global_release}%{?dist}
 %define jccl_version 1.0.2
-%define jccl_release %{global_release}
+%define jccl_release %{global_release}%{?dist}
 %define sonix_version 1.0.2
-%define sonix_release %{global_release}
+%define sonix_release %{global_release}%{?dist}
 %define gadgeteer_version 1.0.2
-%define gadgeteer_release %{global_release}
+%define gadgeteer_release %{global_release}%{?dist}
 %define vrjuggler_version %{global_version}
-%define vrjuggler_release %{global_release}
+%define vrjuggler_release %{global_release}%{?dist}
 
 # JDK 1.5.0 is the lowest version with native support for the x86_64
 # architecture.
@@ -38,8 +38,8 @@
 
 Name: vrjuggler
 Summary: VR Juggler is the virtual platform for VR application development
-Version: %{global_version}
-Release: %{global_release}
+Version: %{vrjuggler_version}
+Release: %{vrjuggler_release}
 Source: %{name}-%{global_version}-%{global_release}.src.tar.bz2
 URL: http://www.vrjuggler.org/
 Group: Development/Libraries
