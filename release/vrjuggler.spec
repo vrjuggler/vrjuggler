@@ -546,6 +546,8 @@ rm -rf %{buildroot}
 %{_libdir}/libvpr.so
 %{_libdir}/%{vj_arch}/libvpr.so
 %{_libdir}/%{vj_arch}/*/libvpr.so
+%{_libdir}/flagpoll/boost*.fpc
+%{_libdir}/flagpoll/vpr*.fpc
 %{_prefix}/share/aclocal/vpr.m4
 %{_prefix}/share/aclocal/vrj-helpers.m4
 %{_prefix}/share/vpr
@@ -571,6 +573,7 @@ rm -rf %{buildroot}
 %{_libdir}/libtweek.so
 %{_libdir}/%{vj_arch}/libtweek.so
 %{_libdir}/%{vj_arch}/*/libtweek.so
+%{_libdir}/flagpoll/tweek*.fpc
 %{_prefix}/share/aclocal/tweek.m4
 %{_prefix}/share/tweek/test
 %{_prefix}/share/tweek/tweek.appdefs.mk
@@ -608,6 +611,7 @@ rm -rf %{buildroot}
 %{_libdir}/libjccl.so
 %{_libdir}/%{vj_arch}/libjccl.so
 %{_libdir}/%{vj_arch}/*/libjccl.so
+%{_libdir}/flagpoll/jccl*.fpc
 %{_prefix}/share/aclocal/jccl.m4
 %{_prefix}/share/jccl/test
 
@@ -648,6 +652,7 @@ rm -rf %{buildroot}
 %{_libdir}/libsonix.so
 %{_libdir}/%{vj_arch}/libsonix.so
 %{_libdir}/%{vj_arch}/*/libsonix.so
+%{_libdir}/flagpoll/sonix*.fpc
 %{_prefix}/share/aclocal/sonix.m4
 %{_prefix}/share/sonix/samples
 
@@ -685,6 +690,7 @@ rm -rf %{buildroot}
 %{_libdir}/libgadget.so
 %{_libdir}/%{vj_arch}/libgadget.so
 %{_libdir}/%{vj_arch}/*/libgadget.so
+%{_libdir}/flagpoll/gadgeteer*.fpc
 %{_prefix}/share/aclocal/gadget.m4
 %{_prefix}/share/gadgeteer/*.mk
 %{_prefix}/share/gadgeteer/samples
@@ -717,6 +723,7 @@ rm -rf %{buildroot}
 %{_libdir}/libvrj.so
 %{_libdir}/%{vj_arch}/libvrj.so
 %{_libdir}/%{vj_arch}/*/libvrj.so
+%{_libdir}/flagpoll/vrjuggler*.fpc
 %{_prefix}/share/aclocal/vrj.m4
 %{_prefix}/share/vrjuggler/*.mk
 %{_prefix}/share/vrjuggler/samples
