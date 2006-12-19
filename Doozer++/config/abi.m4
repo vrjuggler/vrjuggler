@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2006/08/31 15:46:33
-dnl Version:       1.22
+dnl Date modified: 2006/12/19 14:36:16
+dnl Version:       1.23
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -79,7 +79,7 @@ dnl                           by universal binaries.
 dnl     DPP_ABI_TYPE        - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.22 2006/08/31 15:46:33 patrickh Exp
+dnl abi.m4,v 1.23 2006/12/19 14:36:16 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -181,43 +181,43 @@ AC_DEFUN([DPP_ABI_SETUP],
    dnl Makefile substitution variables $LIBBITSUF and $ISA.
    case "x$DPP_ABI_TYPE" in
       x64_M3)
-         DPP_ABI_CFG('64', 'mips3', '64', '-64 -mips3')
+         DPP_ABI_CFG([64], [mips3], [64], [-64 -mips3])
          ;;
       x64_M4)
-         DPP_ABI_CFG('64', 'mips4', '64', '-64 -mips4')
+         DPP_ABI_CFG([64], [mips4], [64], [-64 -mips4])
          ;;
       xN32_M3)
-         DPP_ABI_CFG('N32', 'mips3', '32', '-n32 -mips3')
+         DPP_ABI_CFG([N32], [mips3], [32], [-n32 -mips3])
          ;;
       xN32_M4)
-         DPP_ABI_CFG('N32', 'mips4', '32', '-n32 -mips4')
+         DPP_ABI_CFG([N32], [mips4], [32], [-n32 -mips4])
          ;;
       xELF_i386)
-         DPP_ABI_CFG('ELF', 'i386', '', '-m32')
+         DPP_ABI_CFG([ELF], [i386], , [-m32])
          ;;
       xELF_x86_64)
-         DPP_ABI_CFG('ELF', 'x86_64', '64', '-m64')
+         DPP_ABI_CFG([ELF], [x86_64], [64], [-m64])
          ;;
       xWIN32_i386)
-         DPP_ABI_CFG('WIN32')
+         DPP_ABI_CFG([WIN32])
          ;;
       xCOFF_ALPHA)
-         DPP_ABI_CFG('COFF', 'alpha')
+         DPP_ABI_CFG([COFF], [alpha])
          ;;
       xELF_ALPHA)
-         DPP_ABI_CFG('ELF', 'alpha')
+         DPP_ABI_CFG([ELF], [alpha])
          ;;
       xHP)
-         DPP_ABI_CFG('HP', 'pa-risc')
+         DPP_ABI_CFG([HP], [pa-risc])
          ;;
       xHP64)
-         DPP_ABI_CFG('HP64', 'pa-risc', '/pa20_64', '+DD64')
+         DPP_ABI_CFG([HP64], [pa-risc], [/pa20_64], [+DD64])
          ;;
       xDARWIN_PPC)
-         DPP_ABI_CFG('Mach-O', 'powerpc', , [-arch ppc], [$osx_sdk_flags])
+         DPP_ABI_CFG([Mach-O], [powerpc], , [-arch ppc], [$osx_sdk_flags])
          ;;
       xDARWIN_i386)
-         DPP_ABI_CFG('Mach-O', 'i386', , [-arch i386], [$osx_sdk_flags])
+         DPP_ABI_CFG([Mach-O], [i386], , [-arch i386], [$osx_sdk_flags])
          ;;
       xDARWIN_UNIVERSAL)
          : ${UNIVERSAL_ARCH_LIST='ppc i386'}
@@ -225,7 +225,7 @@ AC_DEFUN([DPP_ABI_SETUP],
          for a in $UNIVERSAL_ARCH_LIST ; do
             dpp_universal_arch_flags="$dpp_universal_arch_flags -arch $a"
          done
-         DPP_ABI_CFG('Mach-O', 'universal', , [$dpp_universal_arch_flags],
+         DPP_ABI_CFG([Mach-O], [universal], , [$dpp_universal_arch_flags],
                      [$osx_sdk_flags])
          ;;
    esac

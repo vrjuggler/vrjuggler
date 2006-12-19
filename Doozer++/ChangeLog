@@ -1,5 +1,7 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2006-12-19 patrickh     Fixed a serious bug in DPP_ABI_SETUP.
+                        NEW VERSION: 2.1.10
 2006-11-20 patrickh     Extended the NSPR detection tests to provide more
                         information to the caller regarding the NSPR
                         installation.
