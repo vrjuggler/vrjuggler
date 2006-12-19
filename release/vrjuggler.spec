@@ -470,53 +470,53 @@ mv %{buildroot}%{_bindir}/tweek-base.sh.tmp %{buildroot}%{_bindir}/tweek-base.sh
 %clean
 rm -rf %{buildroot}
 
-#%post -n vpr
-#/sbin/ldconfig
+%post -n vpr
+/sbin/ldconfig
 
-#%post -n tweek-c++
-#/sbin/ldconfig
+%post -n tweek-c++
+/sbin/ldconfig
 
-#%post -n jccl-c++
-#/sbin/ldconfig
+%post -n jccl-c++
+/sbin/ldconfig
 
-#%post -n sonix
-#/sbin/ldconfig
+%post -n sonix
+/sbin/ldconfig
 
-#%post -n gadgeteer
-#/sbin/ldconfig
+%post -n gadgeteer
+/sbin/ldconfig
 
-#%post -n vrjuggler
-#/sbin/ldconfig
+%post -n vrjuggler
+/sbin/ldconfig
 
-#%post -n vrjuggler-opengl
-#/sbin/ldconfig
+%post -n vrjuggler-opengl
+/sbin/ldconfig
 
-#%post -n vrjuggler-performer
-#/sbin/ldconfig
+%post -n vrjuggler-performer
+/sbin/ldconfig
 
-#%postun -n vpr
-#/sbin/ldconfig
+%postun -n vpr
+/sbin/ldconfig
 
-#%postun -n tweek-c++
-#/sbin/ldconfig
+%postun -n tweek-c++
+/sbin/ldconfig
 
-#%postun -n jccl-c++
-#/sbin/ldconfig
+%postun -n jccl-c++
+/sbin/ldconfig
 
-#%postun -n sonix
-#/sbin/ldconfig
+%postun -n sonix
+/sbin/ldconfig
 
-#%postun -n gadgeteer
-#/sbin/ldconfig
+%postun -n gadgeteer
+/sbin/ldconfig
 
-#%postun -n vrjuggler
-#/sbin/ldconfig
+%postun -n vrjuggler
+/sbin/ldconfig
 
-#%postun -n vrjuggler-opengl
-#/sbin/ldconfig
+%postun -n vrjuggler-opengl
+/sbin/ldconfig
 
-#%postun -n vrjuggler-performer
-#/sbin/ldconfig
+%postun -n vrjuggler-performer
+/sbin/ldconfig
 
 %files -n vpr
 %defattr(-, root, root)
