@@ -634,8 +634,6 @@ rm -rf %{buildroot}
 %{_libdir}/%{vj_arch}/libtweek.so.*
 %{_libdir}/%{vj_arch}/*/libtweek.so.*
 %{_prefix}/share/tweek/data
-%{_prefix}/share/tweek/LICENSE
-%{_prefix}/share/tweek/README.source
 %doc COPYING.txt modules/tweek/ChangeLog
 
 %files -n tweek-c++-devel
@@ -669,6 +667,8 @@ rm -rf %{buildroot}
 %{_prefix}/share/tweek/beans
 %{_prefix}/share/tweek/java/*.jar
 %{_prefix}/share/tweek/java/*.txt
+%{_prefix}/share/tweek/LICENSE
+%{_prefix}/share/tweek/README.source
 %doc COPYING.txt modules/tweek/ChangeLog
 %endif
 
