@@ -35,6 +35,7 @@ URL: http://www.vrjuggler.org/
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{global_version}-%{global_release}-buildroot
 License: GNU Free Documentation License
+BuildArch: noarch
 BuildRequires: doxygen
 BuildRequires: graphviz
 
@@ -53,6 +54,7 @@ Version: %{vpr_version}
 Release: %{vpr_release}
 URL: http://www.vrjuggler.org/vapor/
 Group: Development/C++
+BuildArch: noarch
 BuildRequires: doxygen
 BuildRequires: graphviz
 
@@ -67,6 +69,7 @@ Version: %{tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/C++
+BuildArch: noarch
 BuildRequires: doxygen
 BuildRequires: graphviz
 
@@ -83,6 +86,7 @@ Version: %{tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
+BuildArch: noarch
 BuildRequires: j2sdk
 
 %description -n tweek-java-docs
@@ -100,6 +104,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
+BuildArch: noarch
 BuildRequires: doxygen
 BuildRequires: graphviz
 
@@ -112,6 +117,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/Java
+BuildArch: noarch
 BuildRequires: j2sdk
 
 %description -n jccl-java-docs
@@ -126,6 +132,7 @@ Version: %{sonix_version}
 Release: %{sonix_release}
 URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
+BuildArch: noarch
 BuildRequires: doxygen
 BuildRequires: graphviz
 
@@ -138,6 +145,7 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
+BuildArch: noarch
 BuildRequires: doxygen
 BuildRequires: graphviz
 
@@ -152,6 +160,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
+BuildArch: noarch
 BuildRequires: j2sdk
 
 %description -n vrjconfig-docs
