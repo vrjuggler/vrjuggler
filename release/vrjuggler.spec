@@ -476,7 +476,7 @@ Group: Development/C++
 License: LGPL
 URL: http://www.vrjuggler.org/
 Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl = %{jccl_version}-%{jccl_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
 Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
 Requires: sonix = %{sonix_version}-%{sonix_release}
 Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
@@ -500,7 +500,7 @@ Group: Development/C++
 License: LGPL
 URL: http://www.vrjuggler.org/
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
-Requires: jccl-devel = %{jccl_version}-%{jccl_release}
+Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
 Requires: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
 Requires: sonix-devel = %{sonix_version}-%{sonix_release}
 Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
