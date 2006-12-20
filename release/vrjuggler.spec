@@ -127,6 +127,20 @@ Provides: tweek-c++-devel = %{tweek_version}-%{tweek_release}
 The header files and libraries needed for developing programs using the
 Tweek C++ API.
 
+%package -n tweek-java-jni
+Summary: The JNI parts of the Tweek Java API
+Version: %{tweek_version}
+Release: %{tweek_release}
+URL: http://www.vrjuggler.org/tweek/
+Group: Development/Java
+Requires: j2sdk >= %{min_jdk}
+Provides: tweek-java-jni = %{tweek_version}-%{tweek_release}
+AutoReqProv: no
+
+%description -n tweek-java-jni
+The Tweek Java API JNI library proivdes a natively compiled extension used
+by some parts of the Tweek Java GUI.
+
 %package -n tweek-java
 Summary: The Tweek Java API and GUI
 Version: %{tweek_version}
@@ -134,6 +148,7 @@ Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
 Requires: j2sdk >= %{min_jdk}
+Requires: tweek-java-jni = %{tweek_version}-%{tweek_release}
 Provides: tweek-java = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
 
@@ -580,6 +595,10 @@ rm -rf %{buildroot}
 %endif
 
 %if %have_java
+%files -n tweek-java-jni
+%defattr(-, root, root)
+%{_prefix}/share/tweek/java/%{vj_arch}
+
 %files -n tweek-java
 %defattr(-, root, root)
 %{_bindir}/idl
@@ -588,7 +607,8 @@ rm -rf %{buildroot}
 %{_bindir}/tweek
 %{_bindir}/tweek-base.sh
 %{_prefix}/share/tweek/beans
-%{_prefix}/share/tweek/java
+%{_prefix}/share/tweek/java/*.jar
+%{_prefix}/share/tweek/java/*.txt
 %doc COPYING.txt modules/tweek/ChangeLog
 %endif
 
