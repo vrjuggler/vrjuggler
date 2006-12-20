@@ -25,7 +25,7 @@
 %endif
 
 %ifarch i386 i486 i586
-%define vj_arch i686
+%define vj_arch i386
 %else
 %define vj_arch %{_arch}
 %endif
