@@ -26,14 +26,16 @@
 
 %ifarch i386 i486 i586
 %define vj_arch i386
+%define tweek_arch i686
 %else
 %define vj_arch %{_arch}
+%define tweek_arch %{_arch}
 %endif
 
 %ifarch x86_64
 %define abi_option --with-abi=ELF_x86_64
 %else
-%ifarch i386
+%ifarch i386 i486 i586
 %define abi_option --with-abi=ELF_i386
 %endif
 %endif
@@ -655,7 +657,7 @@ rm -rf %{buildroot}
 %if %have_java
 %files -n tweek-java-jni
 %defattr(-, root, root)
-%{_prefix}/share/tweek/java/%{vj_arch}
+%{_prefix}/share/tweek/java/%{tweek_arch}
 
 %files -n tweek-java
 %defattr(-, root, root)
