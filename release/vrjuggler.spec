@@ -460,7 +460,7 @@ rm -rf %{buildroot}
                --prefix=%{_prefix} %{abi_option}
 
 %build
-make BUILD_PROF_C=N BUILD_PROF_CXX=N build
+make %{?_smp_mflags} BUILD_PROF_C=N BUILD_PROF_CXX=N build
 
 %install
 make BUILD_PROF_C=N BUILD_PROF_CXX=N install prefix=%{buildroot}%{_prefix}
