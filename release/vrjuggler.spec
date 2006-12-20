@@ -30,6 +30,14 @@
 %define vj_arch %{_arch}
 %endif
 
+%ifarch x86_64
+%define abi_option --with-abi=ELF_x86_64
+%else
+%ifarch i386
+%define abi_option --with-abi=ELF_i386
+%endif
+%endif
+
 %define have_omniorb %(if [ -x /usr/bin/omniidl ] ; then echo 1; else echo 0; fi)
 %define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
 %define have_audiere %(if [ -x /usr/bin/audiere-config ] ; then echo 1; else echo 0; fi)
@@ -436,7 +444,7 @@ Summary: The VR Juggler Remote Run-Time Performance Monitoring JavaBean
 Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
-Group: Development/C++
+Group: Development/Java
 Requires: j2sdk >= %{min_jdk}
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
@@ -446,24 +454,76 @@ A plug-in to the VR Juggler Performance Mediator written in Java that
 provides the functionality needed for remote run-time application performance
 monitoring through CORBA.
 
-%ifarch x86_64
-%define abi_option --with-abi=ELF_x86_64
-%else
-%ifarch i386
-%define abi_option --with-abi=ELF_i386
-%endif
-%endif
-
 %package -n doozer
 Summary: Doozer
 Version: 2.0.0
 Release: 1
 URL: http://sourceforge.net/projects/doozer/
 Group: Development
+License: LGPL
 
 %description -n doozer
 A build system build on top of GNU make aimed at the creation of simple,
 cross-platform makefiles.
+
+%package -n juggler
+Summary: The Juggler Suite
+Version: %{vrjuggler_version}
+Release: %{vrjuggler_release}
+Group: Development/C++
+License: LGPL
+URL: http://www.vrjuggler.org/
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl = %{jccl_version}-%{jccl_release}
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: sonix = %{sonix_version}-%{sonix_release}
+Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-opengl = %{vrjuggler_version}-%{vrjuggler_release}
+
+%description -n juggler
+The Juggler Suite provides virtual reality (VR) software developers with a
+collection of application programming interfaces (APIs) that abstract, and
+hence simplify, all interface aspects of their program including the display
+surfaces, object tracking, selection and navigation, graphics rendering
+engines, and graphical user interfaces. An application written with the
+Juggler Suite is essentially independent of device, computer platform, and
+VR system. Applications based on the Juggler Suite may be run with any
+combination of immersive technologies and computational hardware.
+
+%package -n juggler-devel
+Summary: The Juggler Suite C++ developer interface
+Version: %{vrjuggler_version}
+Release: %{vrjuggler_release}
+Group: Development/C++
+License: LGPL
+URL: http://www.vrjuggler.org/
+Requires: vpr-devel = %{vpr_version}-%{vpr_release}
+Requires: jccl-devel = %{jccl_version}-%{jccl_release}
+Requires: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: sonix-devel = %{sonix_version}-%{sonix_release}
+Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-opengl-devel = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: doozer < 2.1
+
+%description -n juggler-devel
+The header files and libraries needed for developing VR applications using
+the Juggler Suite.
+
+%package -n juggler-java
+Summary: The Juggler Suite Java software
+Version: %{vrjuggler_version}
+Release: %{vrjuggler_release}
+Group: Development/Java
+License: LGPL
+URL: http://www.vrjuggler.org/
+Requires: tweek-java = %{vpr_version}-%{vpr_release}
+Requires: jccl-java = %{jccl_version}-%{jccl_release}
+Requires: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
+Requires: vrjconfig = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
+
+%description -n juggler-java
+The Java software from the Juggler Suite including VRJConfig.
 
 %prep
 rm -rf %{buildroot}
@@ -816,6 +876,20 @@ rm -rf %{buildroot}
 
 %files -n doozer
 %{_prefix}/share/Doozer
+
+%files -n juggler
+%defattr(-, root, root)
+# Empty RPM
+
+%files -n juggler-devel
+%defattr(-, root, root)
+# Empty RPM
+
+%if %have_java
+%files -n juggler-java
+%defattr(-, root, root)
+# Empty RPM
+%endif
 
 %changelog
 * Thu Apr 14 2006 Patrick Hartling
