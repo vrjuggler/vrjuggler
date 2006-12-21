@@ -25,9 +25,19 @@
 %endif
 
 %ifarch i386 i486 i586
-%define vj_arch i686
+%define vj_arch i386
+%define tweek_arch i686
 %else
 %define vj_arch %{_arch}
+%define tweek_arch %{_arch}
+%endif
+
+%ifarch x86_64
+%define abi_option --with-abi=ELF_x86_64
+%else
+%ifarch i386 i486 i586
+%define abi_option --with-abi=ELF_i386
+%endif
 %endif
 
 %define have_omniorb %(if [ -x /usr/bin/omniidl ] ; then echo 1; else echo 0; fi)
@@ -127,6 +137,20 @@ Provides: tweek-c++-devel = %{tweek_version}-%{tweek_release}
 The header files and libraries needed for developing programs using the
 Tweek C++ API.
 
+%package -n tweek-java-jni
+Summary: The JNI parts of the Tweek Java API
+Version: %{tweek_version}
+Release: %{tweek_release}
+URL: http://www.vrjuggler.org/tweek/
+Group: Development/Java
+Requires: j2sdk >= %{min_jdk}
+Provides: tweek-java-jni = %{tweek_version}-%{tweek_release}
+AutoReqProv: no
+
+%description -n tweek-java-jni
+The Tweek Java API JNI library proivdes a natively compiled extension used
+by some parts of the Tweek Java GUI.
+
 %package -n tweek-java
 Summary: The Tweek Java API and GUI
 Version: %{tweek_version}
@@ -134,6 +158,7 @@ Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
 Requires: j2sdk >= %{min_jdk}
+Requires: tweek-java-jni = %{tweek_version}-%{tweek_release}
 Provides: tweek-java = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
 
@@ -421,7 +446,7 @@ Summary: The VR Juggler Remote Run-Time Performance Monitoring JavaBean
 Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
-Group: Development/C++
+Group: Development/Java
 Requires: j2sdk >= %{min_jdk}
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
@@ -431,13 +456,64 @@ A plug-in to the VR Juggler Performance Mediator written in Java that
 provides the functionality needed for remote run-time application performance
 monitoring through CORBA.
 
-%ifarch x86_64
-%define abi_option --with-abi=ELF_x86_64
-%else
-%ifarch i386
-%define abi_option --with-abi=ELF_i386
-%endif
-%endif
+%package -n juggler
+Summary: The Juggler Suite
+Version: %{vrjuggler_version}
+Release: %{vrjuggler_release}
+Group: Development/C++
+License: LGPL
+URL: http://www.vrjuggler.org/
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: sonix = %{sonix_version}-%{sonix_release}
+Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-opengl = %{vrjuggler_version}-%{vrjuggler_release}
+
+%description -n juggler
+The Juggler Suite provides virtual reality (VR) software developers with a
+collection of application programming interfaces (APIs) that abstract, and
+hence simplify, all interface aspects of their program including the display
+surfaces, object tracking, selection and navigation, graphics rendering
+engines, and graphical user interfaces. An application written with the
+Juggler Suite is essentially independent of device, computer platform, and
+VR system. Applications based on the Juggler Suite may be run with any
+combination of immersive technologies and computational hardware.
+
+%package -n juggler-devel
+Summary: The Juggler Suite C++ developer interface
+Version: %{vrjuggler_version}
+Release: %{vrjuggler_release}
+Group: Development/C++
+License: LGPL
+URL: http://www.vrjuggler.org/
+Requires: vpr-devel = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
+Requires: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: sonix-devel = %{sonix_version}-%{sonix_release}
+Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-opengl-devel = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: doozer < 2.1
+
+%description -n juggler-devel
+The header files and libraries needed for developing VR applications using
+the Juggler Suite.
+
+%package -n juggler-java
+Summary: The Juggler Suite Java software
+Version: %{vrjuggler_version}
+Release: %{vrjuggler_release}
+Group: Development/Java
+License: LGPL
+URL: http://www.vrjuggler.org/
+Requires: tweek-java = %{vpr_version}-%{vpr_release}
+Requires: jccl-java = %{jccl_version}-%{jccl_release}
+Requires: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
+Requires: vrjconfig = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
+
+%description -n juggler-java
+The Java software from the Juggler Suite including VRJConfig.
 
 %prep
 rm -rf %{buildroot}
@@ -449,7 +525,7 @@ rm -rf %{buildroot}
                --prefix=%{_prefix} %{abi_option}
 
 %build
-make BUILD_PROF_C=N BUILD_PROF_CXX=N build
+make %{?_smp_mflags} BUILD_PROF_C=N BUILD_PROF_CXX=N build
 
 %install
 make BUILD_PROF_C=N BUILD_PROF_CXX=N install prefix=%{buildroot}%{_prefix}
@@ -548,8 +624,6 @@ rm -rf %{buildroot}
 %{_libdir}/%{vj_arch}/libtweek.so.*
 %{_libdir}/%{vj_arch}/*/libtweek.so.*
 %{_prefix}/share/tweek/data
-%{_prefix}/share/tweek/LICENSE
-%{_prefix}/share/tweek/README.source
 %doc COPYING.txt modules/tweek/ChangeLog
 
 %files -n tweek-c++-devel
@@ -569,6 +643,10 @@ rm -rf %{buildroot}
 %endif
 
 %if %have_java
+%files -n tweek-java-jni
+%defattr(-, root, root)
+%{_prefix}/share/tweek/java/%{tweek_arch}
+
 %files -n tweek-java
 %defattr(-, root, root)
 %{_bindir}/idl
@@ -577,7 +655,10 @@ rm -rf %{buildroot}
 %{_bindir}/tweek
 %{_bindir}/tweek-base.sh
 %{_prefix}/share/tweek/beans
-%{_prefix}/share/tweek/java
+%{_prefix}/share/tweek/java/*.jar
+%{_prefix}/share/tweek/java/*.txt
+%{_prefix}/share/tweek/LICENSE
+%{_prefix}/share/tweek/README.source
 %doc COPYING.txt modules/tweek/ChangeLog
 %endif
 
@@ -780,6 +861,20 @@ rm -rf %{buildroot}
 %{_prefix}/share/vrjuggler/java/jcommon.jar
 %{_prefix}/share/vrjuggler/java/jfreechart.jar
 %{_prefix}/share/vrjuggler/java/servlet.jar
+%endif
+
+%files -n juggler
+%defattr(-, root, root)
+# Empty RPM
+
+%files -n juggler-devel
+%defattr(-, root, root)
+# Empty RPM
+
+%if %have_java
+%files -n juggler-java
+%defattr(-, root, root)
+# Empty RPM
 %endif
 
 %changelog
