@@ -147,7 +147,7 @@ def detectVisualStudioVersion(reattempt = False):
             if not os.path.exists(d):
                printStatus("  does not exist.")
             else:
-               printStatus("   Existings.  Using: %s"%d)
+               printStatus("   Using: %s"%d)
                printStatus("      " + d)
                vs_path = [os.path.join(d, r'Common7\IDE'),
                           os.path.join(d, r'VC7\BIN'),
@@ -2249,10 +2249,19 @@ class GuiFrontEnd:
 
 def getVSCmd():
    devenv_cmd = None
+   # devenv is used by the full version of Visual Studio. VCExpress is the
+   # launch command used by Visual C++ Express Edition.
+   cmds = ['devenv.exe', 'VCExpress.exe']
+
    for p in str.split(os.getenv('PATH', ''), os.pathsep):
 #      print "Searching in", p
-      if os.path.exists(os.path.join(p, 'devenv.exe')):
-         devenv_cmd = os.path.join(p, 'devenv.exe')
+      for c in cmds:
+         cmd = os.path.join(p, c)
+         if os.path.exists(cmd):
+            devenv_cmd = cmd
+            break
+
+      if devenv_cmd is not None:
          break
 
    if devenv_cmd is None:
