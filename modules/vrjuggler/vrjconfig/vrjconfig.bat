@@ -1,7 +1,7 @@
 @ECHO OFF
 rem ************* <auto-copyright.pl BEGIN do not edit this line> *************
 rem
-rem VR Juggler is (C) Copyright 1998-2006 by Iowa State University
+rem VR Juggler is (C) Copyright 1998-2007 by Iowa State University
 rem
 rem Original Authors:
 rem   Allen Bierbaum, Christopher Just,

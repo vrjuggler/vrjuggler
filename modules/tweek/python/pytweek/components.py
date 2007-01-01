@@ -1,6 +1,6 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# TweekQt is (C) Copyright 2003-2006 by Patrick Hartling
+# TweekQt is (C) Copyright 2003-2007 by Patrick Hartling
 #
 # This application is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as

@@ -1,6 +1,6 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# VR Juggler is (C) Copyright 1998-2006 by Iowa State University
+# VR Juggler is (C) Copyright 1998-2007 by Iowa State University
 #
 # Original Authors:
 #   Allen Bierbaum, Christopher Just,
@@ -82,7 +82,7 @@ docs:
           -windowtitle "$(APP_NAME) v$(PROJECT_NUMBER)"			\
           -doctitle "$(APP_NAME) v$(PROJECT_NUMBER)"			\
           -header "<p><b>$(APP_NAME)</b><br>v$(PROJECT_NUMBER)</p>"	\
-          -bottom "<font size=1>Copyright &copy; 1998&ndash;2006 Iowa State University. All rights reserved.</font>" \
+          -bottom "<font size=1>Copyright &copy; 1998&ndash;2007 Iowa State University. All rights reserved.</font>" \
           -link "http://java.sun.com/j2se/1.4.2/docs/api/"		\
           -link "http://www.jdom.org/docs/apidocs/" 			\
           $(DOC_PKGS)

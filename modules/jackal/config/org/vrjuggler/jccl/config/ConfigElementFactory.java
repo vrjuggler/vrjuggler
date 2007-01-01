@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2006 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2007 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -11,7 +11,7 @@
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
- *a
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
