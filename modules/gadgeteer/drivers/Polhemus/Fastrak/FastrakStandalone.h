@@ -27,66 +27,40 @@
 #ifndef _GADGET_FASTRAK_STANDALONE_H_
 #define _GADGET_FASTRAK_STANDALONE_H_
 
-// driver R.E.
-
 #include <stdio.h>
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/IO/Port/SerialPort.h>
 
-#define NSTATION 4
-//#define XYZ 3
-const vpr::Uint8 XYZ = 3;
-// 3 first letters forced in lower case
-#define LC3(x) (0x202020|(((x)[0]<<16)|((x)[1]<<8)|(x)[2]))
-// 2 first letters forced in lower case
-#define LC2(x) (0x2020|(((x)[0]<<8)|(x)[1]))
+#include <gmtl/Matrix.h>
 
-
-
-struct perstation
+namespace Fastrak
 {
-   int begin;
-   int posoff;
-   int angoff;
-   int quatoff;
-   int butoff;
-   int rec;
-   float tip[XYZ];
-   float inc;
-   float hem[XYZ];
-   float arf[3*XYZ];
-   float tmf[XYZ];
-};
+   namespace Command
+   {
+      const vpr::Uint8 Point('P');
+      const vpr::Uint8 BinaryMode('f');
+      const vpr::Uint8 AsciiMode('F');
+      const vpr::Uint8 EnableContinuous('C');
+      const vpr::Uint8 DisableContinuous('c');
+      const vpr::Uint8 SetOutputList('O');
+      const vpr::Uint8 StationStatus('l');
+   };
+}
 
-struct FastrakConfig
-{
-   int found;         // flags: one bit for each feature found in the element
-   int len;           // total length of a message sent by the tracker
-   char port[20];     // port the tracker is attached to
-   int baud;          // port speed
-   char button;
-   char cont;
-   struct perstation perstation[NSTATION];
-};
 
 class FastrakStandalone
 {
 public:
-   FastrakStandalone()
-      : mSerialPort(NULL), mReadThread(NULL), mDoFlush(false)
+   FastrakStandalone(const std::string& port, const int baud)
+      : mPort(port)
+      , mBaud(baud)
+      , mSerialPort(NULL)
+      , mReadThread(NULL)
    {
-      ;
-   }
-
-   void setConfig(const FastrakConfig& conf)
-   {
-      mConf = conf;
-   }
-
-   const FastrakConfig& getConfig() const
-   {
-      return mConf;
+      mReadTimeout = vpr::Interval(2,vpr::Interval::Sec);
+      mStationStatus.resize(4, false);
+      mStationData.resize(4, gmtl::Matrix44f());
    }
 
    /**
@@ -96,52 +70,78 @@ public:
     */
    bool open();
 
-   bool trackerInit();
+   /**
+    * Initialize the tracker with default settings.
+    *
+    * This sets the output mode to binary and asks the tracker to return position
+    * and quaternion data.
+    */
+   void init();
 
-   void getNewCoords(unsigned int station, float *vecXYZ, float *vecAER);
-   int getNewButtonStatus(unsigned int station);
-   void trackerFinish();
+   /**
+    * Read a single data sample.
+    *
+    * @post The latest tracker data has been placed into mStationData.
+    */
+   void readData();
 
-   int getCoords(unsigned int stations, float *vecXYZ, float *vecAER);
+   /**
+    * Tell the tracker to return data in binary or ascii mode.
+    */
+   void setBinaryMode(const bool binary);
+
+   /**
+    * Tell the tracker what data we want to receive.
+    */
+   void setOutputDataList(const vpr::Uint16 unit, const std::string& list);
+
+   /**
+    * @brief Return the current status of the given station.
+    *
+    * @param station The index (1-4) of the station to get status for.
+    * @returns True if the given station is enabled.
+    */
+   bool getStationStatus(const vpr::Uint16 station);
+
+   /**
+    * Print the current status information for the tracker.
+    */
+   void printStatus();
+
+   /**
+    * Return the position of the given station.
+    */
+   gmtl::Matrix44f& getStationPosition(unsigned int station)
+   {
+      vprASSERT(station >= 1 && station <= 4 && "Invalid station index.");
+      return mStationData[station];
+   }
 
 private:
-   bool readStatus();
+   /**
+    * Send a command to the tracker.
+    */
+   void sendCommand(vpr::Uint8 cmd, std::string data = std::string(""));
 
-   int Read(int len);
-   void readloop();
-   void checkchild();
-   void getTrackerInfo(struct perstation* psp, unsigned char c);
-   void getTrackerBuf();
-   bool mExitFlag;
+   /**
+    * Get a 32-bit floating point value from the front of the given buffer.
+    */
+   float getFloatValue(vpr::Uint8* buff);
 
-   vpr::SerialPort* mSerialPort;
-   vpr::Thread* mReadThread;
-   unsigned char mTrackerBuf[256];
-   bool mDoFlush;
+   /**
+    * Process tracker data read from serial port.
+    */
+   void processDataRecord(std::vector<vpr::Uint8>& dataRecord);
+private:
+   std::string       mPort;         /**< Port name to open for serial port connection */
+   int               mBaud;         /**< Baud rate to use for connection */
+   vpr::SerialPort*  mSerialPort;   /**< Serial port object connected to the bird */
 
-   FastrakConfig mConf;
+   vpr::Thread*         mReadThread;    /**< Sample thread. */
+   vpr::Interval        mReadTimeout;   /**< Standard timeout for all reads */
+   std::vector<bool>    mStationStatus; /**< Active status of each station. */
+   vpr::Uint32          mNumActiveStations;
+   std::vector<gmtl::Matrix44f> mStationData;
 };
 
-// bits positions of bits in flag word "config.found"
-enum conf
-{
-   DEV, BAUD, BUTTON,
-   REC, REC1, REC2, REC3,
-   TIP, TIP1, TIP2, TIP3,
-   INC, INC1, INC2, INC3,
-   HEM, HEM1, HEM2, HEM3,
-   ARF, ARF1, ARF2, ARF3,
-   TMF, TMF1, TMF2, TMF3,
-};
-
-// each reportable thing is identified by a bit in config.perstation[n].rec
-// the following enum defines the bit positions
-enum rec
-{
-   Pos, Ang, Quat, But
-};
-
-// end driver R.E.
-
-
-#endif /* _GADGET_ASTRACK_STANDALONE_H_ */
+#endif //_GADGET_FASTRAK_STANDALONE_H_

@@ -33,14 +33,26 @@
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/WouldBlockException.h>
 #include <vpr/Util/Assert.h>
+#include <boost/lexical_cast.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/format.hpp>
+#include <limits>
+#include <gmtl/Generate.h>
+#include <gmtl/Output.h>
+#include <gmtl/Quat.h>
+#include <gmtl/Vec.h>
 
 #include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
 
+void printBinary(const vpr::Uint32 val);
+
 bool FastrakStandalone::open()
 {
-   bool status(true);
+   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "====== Opening Fastrak serial port: " << mPort << " =====\n"
+      << vprDEBUG_FLUSH;
 
-   mSerialPort = new vpr::SerialPort(std::string(mConf.port));
+   mSerialPort = new vpr::SerialPort(mPort);
    mSerialPort->setBlocking(false);
    mSerialPort->setOpenReadWrite();
 
@@ -50,732 +62,403 @@ bool FastrakStandalone::open()
    }
    catch (vpr::IOException&)
    {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << "Port open failed\n" << vprDEBUG_FLUSH;
       return false;
    }
 
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Port opened successfully\n" << vprDEBUG_FLUSH ;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Configuring port attributes\n" << vprDEBUG_FLUSH;
+
+
+   vpr::Uint32 baud;
+
+   mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);      // Changed apply immediately
+
+   mSerialPort->clearAll();
+   mSerialPort->setCanonicalInput(false);              // enable binary reading and timeouts
+   mSerialPort->setTimeout(10);                       // Set to 1 inter-byte read second timeout
+   mSerialPort->setRead(true);
+   mSerialPort->setLocalAttach(true);
+   mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+   mSerialPort->setBreakByteIgnore(true);
+   mSerialPort->setBadByteIgnore(true);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;
+   mSerialPort->setInputBaudRate(mBaud);
+   mSerialPort->setOutputBaudRate(mBaud);
+
+   mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+   mSerialPort->setHardwareFlowControl(false);     // No hardware flow control
+   mSerialPort->setParityGeneration(false);        // No parity checking
+
+   try
    {
-      vpr::Uint32 baud;
-
-      mSerialPort->clearAll();
-
-      mSerialPort->setBreakByteIgnore(true);
-      mSerialPort->setBadByteIgnore(true);
-      mSerialPort->setRead(true);
-      mSerialPort->setLocalAttach(true);
-      mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);
-      mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-
-      if ( mConf.found & (1 << BAUD) )
+      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   }
+   catch (vpr::IOException&)
+   {
+      if (mSerialPort->isOpen())
       {
-         baud = mConf.baud;
+         mSerialPort->close();
       }
-      else
-      {
-         baud = 9600;
-      }
-      mSerialPort->setOutputBaudRate(baud);
-      mSerialPort->setInputBaudRate(baud);
+      delete mSerialPort;
+      mSerialPort = NULL;
 
-      mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
-      mSerialPort->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "FlockStandalone::open: Failed to open successfully."
+         << std::endl << vprDEBUG_FLUSH;
+
+      return false;
    }
 
-   return status;
+   vprDEBUG_END(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "========== Port setup completed. ==========\n" << vprDEBUG_FLUSH;
+
+
+   return true;
 }
 
-void FastrakStandalone::trackerFinish()
+void FastrakStandalone::init()
 {
-   vpr::Uint32 bytes_written;
-   mSerialPort->write("c", 1, bytes_written);
-   vpr::System::sleep(1);
-
-   mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
-   mSerialPort->close();
-
-   mExitFlag = true;
-   if ( NULL != mReadThread )
-   {
-      mReadThread->join();
-      delete mReadThread;
-      mReadThread = NULL;
-   }
+   sendCommand(Fastrak::Command::DisableContinuous);
+   setBinaryMode(true);
+   printStatus();
+   setOutputDataList(1, "2,11,1");
+   setOutputDataList(2, "2,11,1");
+   // Getting the status of any station saves the status of all stations in mStationStatus.
+   getStationStatus(1);
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Num stations: " << mNumActiveStations << std::endl << vprDEBUG_FLUSH;
 }
 
-int FastrakStandalone::Read(int len)
+void FastrakStandalone::readData()
 {
+   /*
    vpr::Uint32 bytes_read;
+   std::string respData;
+   unsigned int respSize = 10;
+   
+   std::cout << "Before READ: " << std::endl;
+   mSerialPort->read(respData, respSize, bytes_read, mReadTimeout);
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   std::cout << "READ: " << respData << std::endl;
+   */
 
-   int rem = len;
-   unsigned char tempBuf[256];
-   char *cp = (char *) tempBuf;
+   // can't sample when not streaming
+   //vprASSERT( (STREAMING == mStatus) || (RUNNING == mStatus) );
 
-   vpr::Interval timeoutVal(100, vpr::Interval::Msec);
-   for ( ;; )
+   std::vector<vpr::Uint8> data_record;
+   std::vector<vpr::Uint8> temp_data_record;    // Temp buffer for reading data
+   vpr::Uint8 buffer;                           // Temporary single byte buffer
+
+   vpr::Uint32 bytes_read;
+   vpr::Uint32 bytes_remaining;
+   //const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
+
+   //unsigned int single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
+   //unsigned int single_bird_data_size = 28 + 3;
+   unsigned int single_bird_data_size = 28 + 5;
+   const unsigned int data_record_size(mNumActiveStations*single_bird_data_size);    // Size of the data record to read
+
+   sendCommand(Fastrak::Command::Point);       // Triggers a data record update
+
+   // Read the reply data record
+   bytes_remaining = data_record_size;                     // How many bytes do we have left to read
+
+   while(bytes_remaining)        // While more left to read
    {
-      //Passing in timeout val here to wait for input
       try
       {
-         mSerialPort->read(cp, rem, bytes_read, timeoutVal);
-      }
-      catch (vpr::TimeoutException&)
-      {
-         continue;
-      }
-      catch (vpr::IOException&)
-      {
-         tempBuf[len - rem] = '\0';
-         memcpy(mTrackerBuf, tempBuf, 256);
-         return len - rem;
-      }
-
-      if ( (rem -= bytes_read) == 0 )
-      {
-         tempBuf[len] = '\0';
-         memcpy(mTrackerBuf, tempBuf, 256);
-         return len;
-      }
-
-      cp += bytes_read;
-   }
-}
-
-
-void FastrakStandalone::readloop()
-{
-   vpr::Uint32 bytes_written;
-   vpr::Uint32 sleep_time(10000000/mConf.baud);
-
-/*
-   // XXX: Maybe this could be replaced with VPR's signal abstraction?
-#ifndef VPR_OS_Windows
-   sigignore(SIGINT);
-#endif
-*/
-
-   while ( !mExitFlag )
-   {
-      if ( mDoFlush )
-      {
-         mSerialPort->write("c", 1, bytes_written);
-         vpr::System::usleep(sleep_time);
-         mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
-         vpr::System::usleep(sleep_time);
-         mSerialPort->write("C", 1, bytes_written);
-      }
-
-      Read(mConf.len);
-
-      // The Polhemus docs state that you won't get more than 100 samples a
-      // second best case (with one station), so I figure this is safe, and
-      // it help with performance.
-      vpr::System::msleep(10);
-
-      mDoFlush = false;
-//      if ( getppid() == 1 )
-//      {
-//         trackerFinish();
-//         _exit(0);
-//      }
-   }
-}
-
-bool FastrakStandalone::readStatus()
-{
-   vpr::Uint32 bytes_read, bytes_written;
-
-   //Set to non-continuous mode
-   try
-   {
-      mSerialPort->write("c", 1, bytes_written);
-   }
-   catch (vpr::IOException&)
-   {
-      fprintf(stderr,
-              "[FastrakStandalone] Failure setting non-continuous mode for tracker");
-      return false;
-   }
-
-   mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
-   mSerialPort->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
-   vpr::System::msleep(100);//Sleep for 0.1 seconds
-
-   //Set to non-continuous and request status
-   try
-   {
-      mSerialPort->write("S", 1, bytes_written);
-   }
-   catch (vpr::IOException&)
-   {
-      fprintf(stderr,
-              "[FastrakStandalone] Failure writing status command to tracker");
-      return false;
-   }
-
-   int numPasses = 0;
-   int numElapsedWaits=0;
-   char buffer[1024];
-   int state=0;
-   while (numElapsedWaits<100&&state<4)
-   {
-      vpr::Interval timeoutVal(100, vpr::Interval::Msec);
-      try
-      {
-         mSerialPort->read(buffer, 1, bytes_read, timeoutVal);
-      }
-      catch (vpr::TimeoutException)
-      {
-         ++numElapsedWaits;
-         continue;
-      }
-      catch (vpr::WouldBlockException)
-      {
-         ++numElapsedWaits;
-         continue;
-      }
-      catch (vpr::IOException&)
-      {
-         fprintf(stderr,
-                 "[FastrakStandalone] Failure reading status byte from tracker");
-         return false;
-      }
-
-      /* Read next byte and try matching status reply's prefix: */
-      char input = buffer[0];
-      switch (state)
-      {
-         case 0: // Haven't matched anything
-            if (input == '2')
-            {
-               state = 1;
-            }
-            break;
-         case 1: // Have matched '2'
-            if (input == '2')
-            {
-               state = 2;
-            }
-            else if (input >= '1'  &&  input <= '4')
-            {
-               state = 3;
-            }
-            else
-            {
-               state = 0;
-            }
-            break;
-         case 2: // Have matched '22'
-            if (input == 'S')
-            {
-               state = 4;
-            }
-            else if (input == '2')
-            {
-               state = 2;
-            }
-            else if (input >= '1'  &&  input <= '4')
-            {
-               state = 3;
-            }
-            else
-            {
-               state = 0;
-            }
-            break;
-         case 3: // Have matched 2[1,3,4]
-            if (input == 'S')
-            {
-               state = 4;
-            }
-            else if (input == '2')
-            {
-               state = 1;
-            }
-            else
-            {
-               state = 0;
-            }
-            break;
-      }
-
-      if (numPasses++ > 1000)
-      {
-         vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-            << "[FastrakStandalone] Tracker appears to be stuck in "
-            << "continuous mode. You may need to manually reset if the "
-            << "software reset doesn't work. Attempting reset..."
-            << std::endl << vprDEBUG_FLUSH;
-         return false;
-      }
-   }
-
-   /* Fail if we timed out while trying to match the prefix: */
-   if (state != 4)
-   {
-      fprintf(stderr,
-              "[FastrakStandalone] Failure getting status message from tracker)");
-      return false;
-   }
-
-   /* Read rest of status reply until final CR/LF pair: */
-   char* cPtr=buffer;
-   numElapsedWaits = 0;
-   state=0;
-   while (numElapsedWaits < 100  &&
-          state < 2)
-   {
-      vpr::Interval timeoutVal(100, vpr::Interval::Msec);
-      try
-      {
-         mSerialPort->read(cPtr, 1, bytes_read, timeoutVal);
-      }
-      catch (vpr::TimeoutException&)
-      {
-         vpr::System::msleep(100);//Sleep for 0.1 seconds
-         ++numElapsedWaits;
-         continue;
+         mSerialPort->read(temp_data_record, bytes_remaining,
+                           bytes_read, mReadTimeout);
+         // Append the temp data onto the end of the data record
+         data_record.insert(data_record.end(), temp_data_record.begin(),
+                            temp_data_record.end());
+         bytes_remaining -= bytes_read;
       }
       catch (vpr::WouldBlockException&)
       {
-         vpr::System::msleep(100);//Sleep for 0.1 seconds
-         ++numElapsedWaits;
-         continue;
+         // Do nothing.
       }
+      // If timeout or fail
       catch (vpr::IOException&)
       {
-         fprintf(stderr,
-                 "[FastrakStandalone] Failure reading second round status byte from tracker\n");
-         return false;
-      }
-
-      char input = *cPtr;
-      ++cPtr;
-      switch (state)
-      {
-         case 0: // Haven't matched anything
-            if (input == '\r')
-            {
-               state = 1;
-            }
-            else
-            {
-               state = 0;
-            }
-            break;
-         case 1: // Have matched CR
-            if (input == 10)
-            {
-               state=2;
-            }
-            else if(input==13)
-            {
-               state=1;
-            }
-            else
-            {
-               state=0;
-            }
-            break;
+         //num_stream_read_failures++;
+         throw vpr::Exception("Did not read full data record in point mode.", VPR_LOCATION);
+         //throw Flock::CommandFailureException(
+         //   "Did not read full data record in point mode.",
+         //   VPR_LOCATION
+         //);
       }
    }
-
-   *cPtr=0;
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-      << "[FastrakStandalone] Tracker status: " << buffer
-      << std::endl << vprDEBUG_FLUSH;
-
-   return true;
+   vprASSERT(data_record.size() == data_record_size);            // Assert: We actually read the number of bytes we set out too
+   processDataRecord(data_record);
 }
 
-bool FastrakStandalone::trackerInit()
+void FastrakStandalone::processDataRecord(std::vector<vpr::Uint8>& dataRecord)
 {
-   vprASSERT(mSerialPort->isOpen() && "Port must be open before initializing");
+   vpr::Uint8 record_type = dataRecord[0];
+   vpr::Uint8 station_number = dataRecord[0];
+   vpr::Uint8 system_error_code = dataRecord[0];
+
+   //unsigned int single_bird_data_size = 28 + 3;
+   unsigned int single_bird_data_size = 28 + 5;
+
+   // For each station
+   // - Get matrix from data format
+   vpr::Uint8 station = 0;
+   for(unsigned int i=0; i < mNumActiveStations; ++i)
+   {
+      unsigned int data_offset = (single_bird_data_size*i);
+      vprASSERT(dataRecord[data_offset] == '0');
+      unsigned int station_index = boost::lexical_cast<unsigned int>(dataRecord[data_offset+1]);
+      //std::cout << "Station: " << station_index << std::endl;
+      vprASSERT(station_index >= 1 && station_index <= 4 && "Invalid station index.");
+      vprASSERT(dataRecord[data_offset+2] == ' ');
+
+      // Position and orientation offsets into data buffer.
+      unsigned int pos_offset = data_offset + 3;
+      unsigned int ori_offset = data_offset + 3 + 12;
+
+      gmtl::Vec3f pos;
+      gmtl::Quatf ori;
+
+      // Get position values.
+      pos[0] = getFloatValue(&dataRecord[pos_offset]);
+      pos[1] = getFloatValue(&dataRecord[pos_offset+4]);
+      pos[2] = getFloatValue(&dataRecord[pos_offset+8]);
+
+      // Get quaternion for orientation.
+      ori[0] = getFloatValue(&dataRecord[ori_offset]);
+      ori[1] = getFloatValue(&dataRecord[ori_offset+4]);
+      ori[2] = getFloatValue(&dataRecord[ori_offset+8]);
+      ori[3] = getFloatValue(&dataRecord[ori_offset+12]);
+
+      // Create a gmtl::Matrix for easy storage.
+      gmtl::Matrix44f position;
+      gmtl::setRot(position, ori);
+      gmtl::setTrans(position, pos);
+
+      vprASSERT(4 == mStationData.size());
+      mStationData[station_index] = position;
+   }
+}
+
+float FastrakStandalone::getFloatValue(vpr::Uint8* buff)
+{
+   vpr::Uint32 value = ((vpr::Uint32*)buff)[0];
+   float fvalue = *((float*)&value);
+   return fvalue;
+}
+
+void FastrakStandalone::sendCommand(vpr::Uint8 cmd, std::string data)
+{
+   try
+   {
+      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
+   }
+   catch (vpr::IOException&)
+   {
+      throw vpr::Exception("Failed to flush queue before command.", VPR_LOCATION);
+   }
    vpr::Uint32 bytes_written;
-
-//   static struct termios tc;
-   char buf[256];
-   char c;
-
-   //Added this to help check on the status of the tracker at startup
-   if ( ! readStatus() )
+   mSerialPort->write(&cmd, 1, bytes_written);
+   if(!data.empty())
    {
-      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-         << "[FastrakStandalone] Not able to read status from tracker. Attempting reset..."
-         << std::endl << vprDEBUG_FLUSH;
-
-      //Try resetting the system. Make sure to give it enough time to cycle
-      mSerialPort->write("\31", 1, bytes_written);
-      vpr::System::msleep(15000);//Sleep for 15 seconds
-
-      //Added this to help check on the status of the tracker at startup
-      if ( ! readStatus() )
-      {
-         vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-            << "[FastrakStandalone] Not able to read status from tracker "
-            << std::endl << vprDEBUG_FLUSH;
-         return false;
-      }
+      mSerialPort->write(data, data.size(), bytes_written);
+      vprASSERT(data.size() == bytes_written);
    }
-
-   mSerialPort->write("uf", 2, bytes_written); // unites: cm, mode binaire
-
-   //Set the stylus button mode. NOTE: The station number is ignored by the
-   //tracker. No need to set it to anything but one.
-   mSerialPort->write("e1,", 3, bytes_written);
-   mSerialPort->write(&mConf.button,1, bytes_written);
-   mSerialPort->write("\r",1, bytes_written);
-
-   for ( unsigned int station = 0; station < NSTATION; ++station )
-   {
-      struct perstation *psp = &(mConf.perstation[station]);
-      int len;
-      c = '1' + station;
-
-      mSerialPort->write("l",1, bytes_written);
-      mSerialPort->write(&c, 1, bytes_written);
-
-      if ( mConf.found&(1<<(REC+station)) )
-      {
-         if ( psp->rec == 0 )
-         {
-            mSerialPort->write(",0\r", 3, bytes_written);
-         }
-         else
-         {
-            mSerialPort->write(",1\rO", 4, bytes_written);
-            mSerialPort->write(&c, 1, bytes_written);
-
-            if ( psp->rec & (1<<Pos) )
-            {
-               mSerialPort->write(",2", 2, bytes_written);
-            }
-            if ( psp->rec & (1<<Ang) )
-            {
-               mSerialPort->write(",4", 2, bytes_written);
-            }
-            if ( psp->rec & (1<<Quat) )
-            {
-               mSerialPort->write(",11", 3, bytes_written);
-            }
-            if ( psp->rec & (1<<But) )
-            {
-               mSerialPort->write(",16", 3, bytes_written);
-            }
-            mSerialPort->write(",1\r", 3, bytes_written);
-         }
-      }
-
-      if ( mConf.found & (1<<(TIP+station)) )
-      {
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-         len = _snprintf_s(buf, sizeof(buf),
-#elif defined(_MSC_VER)
-         len = _snprintf(buf, sizeof(buf),
-#elif defined(HAVE_SNPRINTF)
-         len = snprintf(buf, sizeof(buf),
-#else
-         len = sprintf(buf,
-#endif
-                       "N%c,%.2f,%.2f,%.2f\r", c, psp->tip[0], psp->tip[1],
-                       psp->tip[2]);
-         mSerialPort->write(buf, len, bytes_written);
-      }
-
-      if ( mConf.found & (1<<(INC+station)) )
-      {
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-         len = _snprintf_s(buf, sizeof(buf),
-#elif defined(_MSC_VER)
-         len = _snprintf(buf, sizeof(buf),
-#elif defined(HAVE_SNPRINTF)
-         len = snprintf(buf, sizeof(buf),
-#else
-         len = sprintf(buf,
-#endif
-                       "I%c,%.2f\r", c, psp->inc);
-         mSerialPort->write(buf, len, bytes_written);
-      }
-
-      if ( mConf.found & (1<<(HEM+station)) )
-      {
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-         len = _snprintf_s(buf, sizeof(buf),
-#elif defined(_MSC_VER)
-         len = _snprintf(buf, sizeof(buf),
-#elif defined(HAVE_SNPRINTF)
-         len = snprintf(buf, sizeof(buf),
-#else
-         len = sprintf(buf,
-#endif
-                       "H%c,%.2f,%.2f,%.2f\r", c, psp->hem[0], psp->hem[1],
-                       psp->hem[2]);
-         mSerialPort->write(buf, len, bytes_written);
-      }
-
-      if ( mConf.found & (1<<(TMF+station)) )
-      {
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-         len = _snprintf_s(buf, sizeof(buf),
-#elif defined(_MSC_VER)
-         len = _snprintf(buf, sizeof(buf),
-#elif defined(HAVE_SNPRINTF)
-         len = snprintf(buf, sizeof(buf),
-#else
-         len = sprintf(buf,
-#endif
-                       "r%c,%.2f,%.2f,%.2f\r", c, psp->tmf[0], psp->tmf[1],
-                       psp->tmf[2]);
-         mSerialPort->write(buf, len, bytes_written);
-      }
-
-      if ( mConf.found & (1<<(ARF+station)) )
-      {
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-         len = _snprintf_s(buf, sizeof(buf),
-#elif defined(_MSC_VER)
-         len = _snprintf(buf, sizeof(buf),
-#elif defined(HAVE_SNPRINTF)
-         len = snprintf(buf, sizeof(buf),
-#else
-         len = sprintf(buf,
-#endif
-                       "A%c,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r",
-                       c, psp->arf[0], psp->arf[1], psp->arf[2], psp->arf[3],
-                       psp->arf[4], psp->arf[5], psp->arf[6], psp->arf[7],
-                       psp->arf[8]);
-         mSerialPort->write(buf, len, bytes_written);
-      }
-   }
-
-   /*
-   if (mConf.cont == 'C')
-   {
-      ReadPid = sproc(readloop, PR_SALL);
-      if (ReadPid == -1)
-      {
-         perror("Can't creat read process");
-         exit(1);
-      }
-    }
-    */
-   mSerialPort->write(&mConf.cont, 1, bytes_written);
-
-   if (mConf.cont == 'C')
-   {
-      checkchild();
-   }
-
-   return true;
+   mSerialPort->drainOutput();
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
 }
 
-void FastrakStandalone::checkchild()
+void FastrakStandalone::setOutputDataList(const vpr::Uint16 unit,
+   const std::string& list)
 {
-   // XXX: This is commented out because I do not know how useful it is.
-/*
-   if ( NULL != mReadThread )
+   std::string data = boost::lexical_cast<std::string>(unit)
+      + "," + list + "\r";
+
+   sendCommand(Fastrak::Command::SetOutputList, data);
+}
+
+bool FastrakStandalone::getStationStatus(const vpr::Uint16 station)
+{
+   vprASSERT(station >= 1 && station <= 4 && "Station index must between 1-4");
+
+   std::string data = boost::lexical_cast<std::string>(station) + "\r";
+   sendCommand(Fastrak::Command::StationStatus, data);
+   std::vector<vpr::Uint8> data_record;
+   vpr::Uint32 bytes_read;
+
+   try
    {
-      if ( waitpid(mReadPid, 0, WNOHANG) == 0 )
+      mSerialPort->read(data_record, 9,
+                        bytes_read, mReadTimeout);
+   }
+   catch (vpr::IOException&)
+   {
+      throw vpr::Exception("Failed to get station status.", VPR_LOCATION);
+   }
+
+   vprASSERT('2' == data_record[0]);
+   vprASSERT('l' == data_record[2]);
+
+   mStationStatus.resize(4, false);
+   mStationStatus[0] = boost::lexical_cast<bool>(data_record[3]);
+   mStationStatus[1] = boost::lexical_cast<bool>(data_record[4]);
+   mStationStatus[2] = boost::lexical_cast<bool>(data_record[5]);
+   mStationStatus[3] = boost::lexical_cast<bool>(data_record[6]);
+
+   // Save the number of active stations.
+   mNumActiveStations = std::count(mStationStatus.begin(), mStationStatus.end(), true);
+
+   // Fastrak uses 1-4 indexes, but in memory we store as 0-3.
+   return mStationStatus[station-1];
+}
+
+void printBinary(const vpr::Uint32 val)
+{
+   for (int i = 31; i >= 0; i--)
+   {
+      if (val & 1<<i)
       {
-         return;
+         std::cout << 1;
       }
       else
       {
-         mReadThread->kill(9);
+         std::cout << 0;
       }
-   }
-   mReadThread = new vpr::Thread(boost::bind(&FastrakStandalone::readloop,
-                                             this));
-*/
-   mExitFlag = false;
-   if ( NULL == mReadThread )
-   {
-      try
+      if (0 == i % 8)
       {
-         mReadThread =
-            new vpr::Thread(boost::bind(&FastrakStandalone::readloop, this));
-      }
-      catch (vpr::Exception& ex)
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << clrOutBOLD(clrRED, "ERROR")
-            << ": Failed to spawn read thread for Fastrak standalone driver!\n"
-            << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << ex.what() << std::endl << vprDEBUG_FLUSH;
+         std::cout << " ";
       }
    }
+   std::cout << std::endl;
 }
 
-void FastrakStandalone::getTrackerBuf()
+void FastrakStandalone::printStatus()
 {
-   if ( mConf.button == '0' )
-   {
-      vpr::Uint32 bytes_written;
-      mSerialPort->write("P", 1, bytes_written);
-   }
-   Read(mConf.len);
-}
+   vpr::Uint32 bytes_written;
+   vpr::Uint32 bytes_read;
+   std::vector<vpr::Uint8> respData;
+   unsigned int respSize = 55;
 
-void FastrakStandalone::getTrackerInfo(struct perstation* psp, unsigned char c)
-{
-   unsigned char *cp;
-   retry:
-   if ( mConf.cont != 'C')
+   if (NULL == mSerialPort)
    {
-      getTrackerBuf();
+      throw vpr::Exception("NULL port.", VPR_LOCATION);
    }
 
-   cp = (unsigned char *)mTrackerBuf + psp->begin;
-   if ( cp[0] != '0' || cp[1] != c )
+   vpr::System::msleep(50);
+   try
    {
-      if ( mConf.cont != 'C' )
-      {
-         mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
-      }
-      else
-      {
-         mDoFlush = true;
-         while ( mDoFlush )
-         {
-            vpr::Uint32 sleep_time(10000000/mConf.baud);
-            vpr::System::usleep(sleep_time);
-         }
-      }
+      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
+   }
+   catch (vpr::IOException&)
+   {
+      throw vpr::Exception("Failed to flush queue before command.", VPR_LOCATION);
+   }
 
-      goto retry;
+   // Send command
+   mSerialPort->write("S", 1, bytes_written);
+   vprASSERT(1 == bytes_written);
+   mSerialPort->drainOutput();
+
+   if(bytes_written != 1)
+   {
+      throw vpr::Exception("Full command not written.", VPR_LOCATION);
+   }
+
+   // Read response and then flush the port to make sure we don't leave
+   // anything extra.
+   mSerialPort->readn(respData, respSize, bytes_read);
+   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+
+   // Check response size
+   if(bytes_read != respSize)
+   {
+      throw vpr::Exception("Incomplete command response.", VPR_LOCATION);
+      //throw Flock::CommandFailureException("Incomplete command response",
+      //                                     VPR_LOCATION);
+   }
+
+
+   std::string blank;
+   std::string software_version_id;
+   std::string system_id;
+   std::string system_flags_string;
+   vpr::Uint32 system_flags;
+
+   vprASSERT('2' == respData[0]);
+   vprASSERT('S' == respData[2]);
+
+   vpr::Uint32 bit_error = (respData[8] << 16) + (respData[7] << 8) + respData[6];
+   for (unsigned int i = 3; i < 6; i++)
+   {
+      system_flags_string += respData[i];
+   }
+   system_flags = strtol(system_flags_string.c_str(), NULL, 16);
+
+   for (unsigned int i = 9; i < 15; i++)
+   {
+      blank += respData[i];
+   }
+   vprASSERT(std::string::npos == blank.find_first_not_of(' '));
+   for (unsigned int i = 15; i < 21; i++)
+   {
+      software_version_id += respData[i];
+   }
+   for (unsigned int i = 21; i < 53; i++)
+   {
+      system_id += respData[i];
+   }
+
+   vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "==== Fastrak Status ====" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Software Version: " << software_version_id << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "System ID: " << system_id << std::endl << vprDEBUG_FLUSH;
+
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Output Format: " << (system_flags & 0x01 ? "Binary" : "ASCII") << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Units: " << (system_flags & 0x02 ? "Centimeters" : "Inches") << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Compensation: " << (system_flags & 0x04 ? "On" : "Off") << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Transmit Mode: " << (system_flags & 0x08 ? "Continuous" : "Non-Continuous") << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Configuration: " << (system_flags & 0x10 ? "Tracker" : "Other") << std::endl << vprDEBUG_FLUSH;
+
+   vprASSERT(system_flags & 0x11 && "Bit 5 should always by 1");
+
+
+
+   std::stringstream ss;
+
+   for (std::vector<vpr::Uint8>::iterator itr = respData.begin(); itr != respData.end(); itr++)
+   {
+      ss << (*itr);
+   }
+
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "STATUS: " << ss.str() << vprDEBUG_FLUSH;
+   vprDEBUG_END(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "========================" << std::endl << vprDEBUG_FLUSH;
+}
+
+void FastrakStandalone::setBinaryMode(const bool binary)
+{
+   if (binary)
+   {
+      sendCommand(Fastrak::Command::BinaryMode);
+   }
+   else
+   {
+      sendCommand(Fastrak::Command::AsciiMode);
    }
 }
-
-static float littlendian(unsigned char *src)
-{
-   int tempNum = (src[3]<<24)|(src[2]<<16)|(src[1]<<8)|src[0];
-   float tempFloat = *(float *)(&tempNum);
-   return tempFloat;
-}
-
-int FastrakStandalone::getCoords(unsigned int stations, float *vecXYZ,
-                                  float *vecAER)
-{
-   unsigned char *cp;
-   int i, station, button = 0;
-   struct perstation *psp;
-   unsigned char c = '1';
-   for ( station = 0; station < NSTATION; ++station, ++c )
-   {
-      if ( (stations&(1<<station)) == 0 ) continue;
-      psp  = &mConf.perstation[station];
-      if ( psp->rec )
-      {
-         getTrackerInfo(psp, c);
-         if ( psp->rec & (1<<Pos) )
-         {
-            cp = (unsigned char *)mTrackerBuf + psp->posoff;
-            for ( i = 0; i < 3; ++i )
-            {
-               *(vecXYZ+i) = littlendian(cp);
-               cp += 4;
-            }
-         }
-         else
-         {
-            memset((void *)vecXYZ, 0, 3*sizeof (float));
-         }
-
-         vecXYZ += 3;
-         if ( psp->rec & (1<<Ang) )
-         {
-            cp = (unsigned char *)mTrackerBuf + psp->angoff;
-            for ( i = 0; i < 3; ++i )
-            {
-               *(vecAER+i) = littlendian(cp);
-               cp += 4;
-            }
-         }
-         else
-         {
-            memset((void *)vecAER, 0, 3*sizeof (float));
-         }
-
-         vecAER += 3;
-         if ( psp->rec & (1<<But) )
-         {
-            button = mTrackerBuf[psp->butoff] - '0';
-         }
-      }
-   }
-   return button;
-}
-
-void FastrakStandalone::getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
-{
-   unsigned char *cp;
-   int i;
-   struct perstation *psp;
-   unsigned char c;
-
-
-   if ( (unsigned)(--station) >= 4 ) return;
-   c = '1'+station;
-   psp  = &mConf.perstation[station];
-   if ( (psp->rec & ((1<<Pos)|(1<<Ang))) == 0 ) return;
-   getTrackerInfo(psp, c);
-   if ( psp->rec & (1<<Pos) )
-   {
-      cp = (unsigned char *)mTrackerBuf + psp->posoff;
-      for ( i = 0; i < 3; ++i )
-      {
-         *(vecXYZ+i) = littlendian(cp);
-         cp += 4;
-      }
-   }
-   if ( psp->rec & (1<<Ang) )
-   {
-      cp = (unsigned char *)mTrackerBuf + psp->angoff;
-      for ( i = 0; i < 3; ++i )
-      {
-         *(vecAER+i) = littlendian(cp);
-         cp += 4;
-      }
-   }
-}
-
-int FastrakStandalone::getNewButtonStatus(unsigned int station)
-{
-   struct perstation *psp;
-   char c;
-
-   if ( (unsigned)(--station) >= 4 ) return 0;
-   c = '1'+station;
-   psp = &mConf.perstation[station];
-   if ( (psp->rec & (1 << But)) == 0 ) return 0;
-   getTrackerInfo(psp, c);
-   return mTrackerBuf[psp->butoff] - '0';
-}
-
-#ifdef TEST
-main(int argc, char **argv)
-{
-   float xyz[XYZ*4], aer[XYZ*4];
-   //    int station = 1;
-   int but;
-
-   trackerInit(argv[1]);
-   //    if (argc > 2) station = argv[2][0] - '0';
-
-   for ( ;; )
-   {
-      but = getCoords(1, xyz, aer);
-      printf("%7.2f %7.2f %7.2f %7.2f %7.2f %7.2f %d\n",
-             xyz[0], xyz[1], xyz[2], aer[0], aer[1], aer[2], but);
-      but = getCoords(2, xyz, aer);
-      printf("%7.2f %7.2f %7.2f %7.2f %7.2f %7.2f %d\n",
-             xyz[0], xyz[1], xyz[2], aer[0], aer[1], aer[2], but);
-      but = getCoords(4, xyz, aer);
-      printf("%7.2f %7.2f %7.2f %7.2f %7.2f %7.2f %d\n",
-             xyz[0], xyz[1], xyz[2], aer[0], aer[1], aer[2], but);
-      but = getCoords(8, xyz, aer);
-      printf("%7.2f %7.2f %7.2f %7.2f %7.2f %7.2f %d\n",
-             xyz[0], xyz[1], xyz[2], aer[0], aer[1], aer[2], but);
-      fflush(stdout);
-   }
-}
-#endif

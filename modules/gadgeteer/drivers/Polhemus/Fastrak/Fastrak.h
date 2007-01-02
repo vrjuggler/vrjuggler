@@ -24,14 +24,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// ----------------------------------------------------------------------------
-// Author:
-//     Nicolas Tarrin <nicolas.tarrin@inria.fr>
-//     February 2001
-// ----------------------------------------------------------------------------
-
-// 4 stations: from 0 to 3
-
 #ifndef _GADGET_FASTRAK_
 #define _GADGET_FASTRAK_
 
@@ -88,11 +80,6 @@ public:
    }
 
 public:
-   /** gadget::Digital pure virtual function. */
-   virtual int getDigitalData(int station = 0);
-   /** gadget::Position pure virtual function. */
-   virtual gmtl::Matrix44f getPosData(int station = 0);
-
    /**
     * Invokes the global scope delete operator.  This is required for proper
     * releasing of memory in DLLs on Win32.
@@ -116,14 +103,12 @@ private:
    void controlLoop();
 
    int mButtonState;                   /**< only one button on station 0 */
-   float mTrackersPosition[4][3];      /**< 4 stations, 3 coordinates */
-   float mTrackersOrientation[4][3];   /**< 4 stations, 3 orientations */
    vpr::Thread* mSampleThread;
    bool mExitFlag;
 
    char* mConfigFile;
 
-   FastrakStandalone mFastrakDev;
+   FastrakStandalone* mFastrak;
 };
 
 } // End of gadget namespace
