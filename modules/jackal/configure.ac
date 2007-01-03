@@ -353,11 +353,18 @@ else
    _prefix_exp="s|^$prefix/||"
 fi
 
+# In Autoconf 2.60, datadir has been renamed to datarootdir.
+if test "x$datarootdir" != "x" ; then
+   data_var="$datarootdir"
+else
+   data_var="$datadir"
+fi
+
 # Make a best-effort attempt to extract the actual share directory from the
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-data_subdir=`echo "$datadir" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
+data_subdir=`echo "$data_var" | sed -e 's|^${prefix}/||' -e "${_prefix_exp}"`
 JCCL_SHARE_DIR="$data_subdir/$DATA_VERSION"
 
 # Information needed to generate jccl.fpc.
