@@ -24,12 +24,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// ----------------------------------------------------------------------------
-// Author:
-//     Nicolas Tarrin <nicolas.tarrin@inria.fr>
-//     February 2001
-// ----------------------------------------------------------------------------
-
 #include <gadget/Devices/DriverConfig.h>
 
 #include <vector>

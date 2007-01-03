@@ -127,7 +127,7 @@ bool FastrakStandalone::open()
       mSerialPort = NULL;
 
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-         << "FlockStandalone::open: Failed to open successfully."
+         << "FastrakStandalone::open: Failed to open successfully."
          << std::endl << vprDEBUG_FLUSH;
 
       return false;
@@ -197,12 +197,7 @@ void FastrakStandalone::readData()
       // If timeout or fail
       catch (vpr::IOException&)
       {
-         //num_stream_read_failures++;
          throw vpr::Exception("Did not read full data record in point mode.", VPR_LOCATION);
-         //throw Flock::CommandFailureException(
-         //   "Did not read full data record in point mode.",
-         //   VPR_LOCATION
-         //);
       }
    }
    vprASSERT(data_record.size() == data_record_size);            // Assert: We actually read the number of bytes we set out too
