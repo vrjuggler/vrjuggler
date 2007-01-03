@@ -10,11 +10,18 @@ int main()
 {
    FastrakStandalone fastrak("/dev/ttyS0", 115200);
    fastrak.open();
+   fastrak.setUnits(Fastrak::CENTIMETERS);
+   fastrak.setHemisphere(1, Fastrak::FORWARD_HEM);
+   fastrak.setHemisphere(2, Fastrak::FORWARD_HEM);
+   fastrak.setHemisphere(3, Fastrak::FORWARD_HEM);
+   fastrak.setHemisphere(4, Fastrak::FORWARD_HEM);
+   fastrak.setStylusButtonEnabled(1, false);
+   fastrak.setStylusButtonEnabled(2, false);
+   fastrak.setStylusButtonEnabled(3, false);
+   fastrak.setStylusButtonEnabled(4, false);
+
    fastrak.init();
    fastrak.getStationStatus(1);
-   fastrak.getStationStatus(2);
-   fastrak.getStationStatus(3);
-   fastrak.getStationStatus(4);
    while(true)
    {
       fastrak.readData();
@@ -26,5 +33,5 @@ int main()
       }
       std::cout << std::endl;
    }
-   //fastrak.close();
+   fastrak.close();
 }
