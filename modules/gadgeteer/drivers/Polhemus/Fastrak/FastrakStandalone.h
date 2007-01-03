@@ -133,6 +133,11 @@ public:
    bool open();
 
    /**
+    * Close the serial port.
+    */
+   void close();
+
+   /**
     * Initialize the tracker with default settings.
     *
     * This sets the output mode to binary and asks the tracker to return position

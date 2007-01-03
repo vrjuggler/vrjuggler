@@ -140,6 +140,16 @@ bool FastrakStandalone::open()
    return true;
 }
 
+void FastrakStandalone::close()
+{
+   if (NULL != mSerialPort)
+   {
+      mSerialPort->close();
+      delete mSerialPort;
+      mSerialPort = NULL;
+   }
+}
+
 void FastrakStandalone::init()
 {
    sendCommand(Fastrak::Command::DisableContinuous);

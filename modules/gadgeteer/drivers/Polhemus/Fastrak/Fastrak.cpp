@@ -160,6 +160,7 @@ bool Fastrak::startSampling()
          << ex.what() << std::endl << vprDEBUG_FLUSH;
    }
 
+   mFastrak.close();
    return false;
 }
 
@@ -231,6 +232,7 @@ void Fastrak::controlLoop()
       sample();
       vpr::System::msleep(10);
    }
+   mFastrak.close();
 }
 
 } // End of gadget namespace
