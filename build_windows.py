@@ -1467,7 +1467,7 @@ def installVRJuggler(prefix, buildDir):
    srcroot = os.path.join(buildDir, 'VRJuggler', 'Performer_Draw_Manager')
    installLibs(srcroot, destdir)
 
-   srcroot = os.path.join(buildDir, 'VRJuggler', 'DirectX_Draw_Manager')
+   srcroot = os.path.join(buildDir, 'VRJuggler', 'Direct3D_Draw_Manager')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
