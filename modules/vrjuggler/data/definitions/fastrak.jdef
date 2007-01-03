@@ -184,4 +184,33 @@
       </property>
       <upgrade_transform/>
    </definition_version>
+   <definition_version version="2" label="Fastrak">
+      <abstract>false</abstract>
+      <help>Polhemus Fastrak 3D tracker. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas04.html"&gt;more on Fastrak&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <category>/Devices/Positional</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>Serial port the fastrack is associated to.</help>
+         <value label="Port number" defaultvalue="/dev/ttyS0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed.</help>
+         <value label="Baud rate" defaultvalue="115200"/>
+      </property>
+      <property valuetype="integer" variable="false" name="hemisphere">
+         <help>Station Hemisphere: Fastrak Manual p. 88</help>
+         <value label="Hemisphere" defaultvalue="3"/>
+         <enumeration editable="false">
+            <enum label="FORWARD_HEM" value="0"/>
+            <enum label="BACK_HEM" value="1"/>
+            <enum label="RIGHT_HEM" value="2"/>
+            <enum label="LEFT_HEM" value="3"/>
+            <enum label="LOWER_HEM" value="4"/>
+            <enum label="UPPER_HEM" value="5"/>
+            <enum label="AUTO_HEM" value="6"/>
+         </enumeration>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
 </definition>
