@@ -202,15 +202,71 @@
          <help>Station Hemisphere: Fastrak Manual p. 88</help>
          <value label="Hemisphere" defaultvalue="3"/>
          <enumeration editable="false">
-            <enum label="FORWARD_HEM" value="0"/>
-            <enum label="BACK_HEM" value="1"/>
-            <enum label="RIGHT_HEM" value="2"/>
-            <enum label="LEFT_HEM" value="3"/>
-            <enum label="LOWER_HEM" value="4"/>
-            <enum label="UPPER_HEM" value="5"/>
-            <enum label="AUTO_HEM" value="6"/>
+            <enum label="Forward" value="0"/>
+            <enum label="Back" value="1"/>
+            <enum label="Right" value="2"/>
+            <enum label="Left" value="3"/>
+            <enum label="Lower" value="4"/>
+            <enum label="Upper" value="5"/>
+            <enum label="Auto" value="6"/>
          </enumeration>
       </property>
-      <upgrade_transform/>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+           
+            <xsl:template match="jconf:fastrak">
+               <xsl:variable name="hemi_x">
+                  <xsl:value-of select="./jconf:hem1[position()=1]"/>
+               </xsl:variable>
+               <xsl:variable name="hemi_y">
+                  <xsl:value-of select="./jconf:hem1[position()=2]"/>
+               </xsl:variable>
+               <xsl:variable name="hemi_z">
+                  <xsl:value-of select="./jconf:hem1[position()=3]"/>
+               </xsl:variable>
+
+               <xsl:element namespace="{$jconf}" name="fastrak">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./jconf:port"/>
+                  <xsl:copy-of select="./jconf:baud"/>
+                  <xsl:element namespace="{$jconf}" name="hemisphere">
+                     <xsl:choose>
+                        <xsl:when test="$hemi_x = '1.0' and $hemi_y = '0.0' and $hemi_z = '0.0'">
+                           <xsl:text>Forward</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi_x = '-1.0' and $hemi_y = '0.0' and $hemi_z = '0.0'">
+                           <xsl:text>Back</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi_x = '0.0' and $hemi_y = '1.0' and $hemi_z = '0.0'">
+                           <xsl:text>Right</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi_x = '0.0' and $hemi_y = '-1.0' and $hemi_z = '0.0'">
+                           <xsl:text>Left</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi_x = '0.0' and $hemi_y = '0.0' and $hemi_z = '1.0'">
+                           <xsl:text>Lower</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi_x = '0.0' and $hemi_y = '0.0' and $hemi_z = '-1.0'">
+                           <xsl:text>Upper</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                           <xsl:text>Auto</xsl:text>
+                        </xsl:otherwise>
+                     </xsl:choose>
+                  </xsl:element>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
    </definition_version>
 </definition>
