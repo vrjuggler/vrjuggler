@@ -519,11 +519,18 @@ if test "x$OS_TYPE" != "xWin32" ; then
    VJ_CLEAN_LINKER_ARGS(DYLIB_DEPS_PF, [$DYLIB_DEPS_PF])
 fi
 
+# In Autoconf 2.60, datadir has been renamed to datarootdir.
+if test "x$datarootdir" != "x" ; then
+   data_var="$datarootdir"
+else
+   data_var="$datadir"
+fi
+
 # Make a best-effort attempt to extract the actual share directory from the
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-VJ_SHARE_DIR=`echo "$datadir/vrjuggler" | sed -e 's|^${prefix}/||'`
+VJ_SHARE_DIR=`echo "$data_var/vrjuggler" | sed -e 's|^${prefix}/||'`
 VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
 # Information needed to generate vrjuggler-config.
