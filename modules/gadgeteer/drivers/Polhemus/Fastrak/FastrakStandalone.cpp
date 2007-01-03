@@ -242,10 +242,12 @@ void FastrakStandalone::processDataRecord(std::vector<vpr::Uint8>& dataRecord)
       }
 
       // Get quaternion for orientation.
-      ori[0] = getFloatValue(&dataRecord[ori_offset]);
-      ori[1] = getFloatValue(&dataRecord[ori_offset+4]);
-      ori[2] = getFloatValue(&dataRecord[ori_offset+8]);
-      ori[3] = getFloatValue(&dataRecord[ori_offset+12]);
+      // NOTE: Fastrak returns quaternions as (W,X,Y,Z) and gmtl
+      //       stores them as (X,Y,Z,W)
+      ori[3] = getFloatValue(&dataRecord[ori_offset]);
+      ori[0] = getFloatValue(&dataRecord[ori_offset+4]);
+      ori[1] = getFloatValue(&dataRecord[ori_offset+8]);
+      ori[2] = getFloatValue(&dataRecord[ori_offset+12]);
 
       // Create a gmtl::Matrix for easy storage.
       gmtl::Matrix44f position;
@@ -259,6 +261,21 @@ void FastrakStandalone::processDataRecord(std::vector<vpr::Uint8>& dataRecord)
 
 float FastrakStandalone::getFloatValue(vpr::Uint8* buff)
 {
+   // Fastrak returns data in little endian format. This
+   // does not follow the standard of sending serial data
+   // in network order. This means that we can not simply
+   // call vpr::System::ntohl on each value. Instead we
+   // manually test for big-endian, and only change it
+   // if we need to.
+   static bool big_endian = vpr::System::isBigEndian();
+
+   if (big_endian)
+   {
+      char c;
+      c = buff[0]; buff[0] = buff[3]; buff[3] = c;
+      c = buff[1]; buff[1] = buff[2]; buff[2] = c;
+   }
+
    vpr::Uint32 value = ((vpr::Uint32*)buff)[0];
    float fvalue = *((float*)&value);
    return fvalue;
