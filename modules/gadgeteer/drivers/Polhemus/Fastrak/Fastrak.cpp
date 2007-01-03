@@ -66,7 +66,9 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-Fastrak::Fastrak() : mSampleThread(NULL)
+Fastrak::Fastrak(const char* port, const int baud)
+   : mSampleThread(NULL)
+   , mFastrak(port, baud)
 {
    ;
 }
@@ -74,8 +76,6 @@ Fastrak::Fastrak() : mSampleThread(NULL)
 Fastrak::~Fastrak()
 {
    this->stopSampling();
-   delete mFastrak;
-   mFastrak = NULL;
 }
 
 std::string Fastrak::getElementType()
@@ -83,30 +83,54 @@ std::string Fastrak::getElementType()
    return "fastrak";
 }
 
-bool Fastrak::config(jccl::ConfigElementPtr element)
+bool Fastrak::config(jccl::ConfigElementPtr elm)
 {
-   if ( !gadget::Input::config(element) )
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "Fastrak::Fastrak(jccl::ConfigElementPtr)\n" << vprDEBUG_FLUSH;
+
+   // read in Position's config stuff,
+   // --> this will be the port and baud fields
+   if(!Input::config(elm) || !Position::config(elm))
    {
       return false;
    }
 
-   if ( !gadget::Digital::config(element) )
+   // Keep this up to date with the version of the element definition we're
+   // expecting to handle.
+   const unsigned int cur_version(2);
+   bool status(true);
+
+   // If the element version is less than cur_version, we will not try to
+   // proceed.  Instead, we'll print an error message and return false so
+   // that the Config Manager knows this element wasn't consumed.
+   if ( elm->getVersion() < cur_version )
    {
-      return false;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR") << " [Fastrak] Element named '"
+         << elm->getName() << "'" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "is version " << elm->getVersion()
+         << ", but we require at least version " << cur_version << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "Ignoring this element and moving on." << std::endl
+         << vprDEBUG_FLUSH;
+      status = false;
    }
-
-   if ( !gadget::Position::config(element) )
+   else
    {
-      return false;
+      // Configure FastrakStandalone.
+      mFastrak.setPort( elm->getProperty<std::string>("port") );
+      mFastrak.setBaudRate( elm->getProperty<int>("baud") );
+      mFastrak.setUnits(::Fastrak::CENTIMETERS);
+      mFastrak.init();
+
+      for (unsigned int i = 1; i < 5; i++)
+      {
+         mFastrak.setHemisphere(i, (::Fastrak::HEMISPHERE) elm->getProperty<int>("hemisphere") );
+         mFastrak.setStylusButtonEnabled(1, false);
+      }
    }
-
-   mFastrak = new FastrakStandalone("/dev/ttyS0", 115200);
-
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-      << clrOutBOLD(clrRED, "FASTRAK")
-      << "::config()!\n"
-      << vprDEBUG_FLUSH;
-
 
    return true;
 }
@@ -117,8 +141,7 @@ bool Fastrak::startSampling()
       << clrOutBOLD(clrRED, "FASTRAK")
       << "::startSampling()!\n"
       << vprDEBUG_FLUSH;
-   mFastrak->open();
-   mFastrak->init();
+   mFastrak.open();
    
    mExitFlag = false;
    try
@@ -146,26 +169,23 @@ bool Fastrak::sample()
 {
    bool status(true);
 
-   // XXX: This should not be hard-coded to four.
+   // NOTE: Currently we are returning data for all stations, including
+   //       disabled stations.
    std::vector<gadget::PositionData> cur_pos_samples(4);
-   std::vector<gadget::DigitalData>  cur_dig_samples(1);
 
    // get an initial timestamp for this entire sample. we'll copy it into
    // each PositionData for this sample.
    cur_pos_samples[0].setTime();
    try
    {
-      mFastrak->readData();
-      //mButtonState = mFastrakDev.getCoords(15, &mTrackersPosition[0][0],
-      //                                      &mTrackersOrientation[0][0]);
-      //cur_dig_samples[0].setTime(cur_pos_samples[0].getTime());
-      //cur_dig_samples[0].setDigital(mButtonState);
-      //addDigitalSample(cur_dig_samples);
+      mFastrak.readData();
 
       for (unsigned int i = 0; i < 4; ++i)
       {
+         // Transforms between the cord frames
+         gmtl::Matrix44f transmitter_T_reciever = mFastrak.getStationPosition(i+1);
          cur_pos_samples[i].setTime(cur_pos_samples[0].getTime());
-         cur_pos_samples[i].mPosData = mFastrak->getStationPosition(i+1);
+         cur_pos_samples[i].mPosData = transmitter_T_reciever;
       }
 
       addPositionSample(cur_pos_samples);
@@ -188,7 +208,6 @@ void Fastrak::updateData()
 {
    // swap the buffered sample data
    swapPositionBuffers();
-   swapDigitalBuffers();
 }
 
 // kill sample thread

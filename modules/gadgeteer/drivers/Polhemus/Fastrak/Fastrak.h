@@ -38,7 +38,6 @@
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
 
@@ -48,10 +47,17 @@
 namespace gadget
 {
 
-class Fastrak : public InputMixer<InputMixer<Input,Digital>, Position>
+class Fastrak : public InputMixer<Input,Position>
 {
 public:
-   Fastrak();           // must call gadget::Analog()? see gadget/Type/Analog.h
+   /**
+    * Constructor.
+    *
+    * @param port Serial port to connect to Fastrak on.
+    * @param baud Speed to communicate with Fastrak at. (38400, 19200, 9600, 14400, etc.)
+    */
+   Fastrak(const char* port = "/dev/ttyS0", const int baud = 115200);
+
    virtual ~Fastrak();
 
    // return what element type is associated with this class.
@@ -108,7 +114,7 @@ private:
 
    char* mConfigFile;
 
-   FastrakStandalone* mFastrak;
+   FastrakStandalone mFastrak;
 };
 
 } // End of gadget namespace

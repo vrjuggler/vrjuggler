@@ -44,7 +44,28 @@
 
 #include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
 
-void printBinary(const vpr::Uint32 val);
+namespace Fastrak
+{
+void printBinary(const vpr::Uint32 val)
+{
+   for (int i = 31; i >= 0; i--)
+   {
+      if (val & 1<<i)
+      {
+         std::cout << 1;
+      }
+      else
+      {
+         std::cout << 0;
+      }
+      if (0 == i % 8)
+      {
+         std::cout << " ";
+      }
+   }
+   std::cout << std::endl;
+}
+}
 
 bool FastrakStandalone::open()
 {
@@ -71,9 +92,6 @@ bool FastrakStandalone::open()
       << "Port opened successfully\n" << vprDEBUG_FLUSH ;
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
       << "Configuring port attributes\n" << vprDEBUG_FLUSH;
-
-
-   vpr::Uint32 baud;
 
    mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);      // Changed apply immediately
 
@@ -137,30 +155,12 @@ void FastrakStandalone::init()
 
 void FastrakStandalone::readData()
 {
-   /*
-   vpr::Uint32 bytes_read;
-   std::string respData;
-   unsigned int respSize = 10;
-   
-   std::cout << "Before READ: " << std::endl;
-   mSerialPort->read(respData, respSize, bytes_read, mReadTimeout);
-   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-   std::cout << "READ: " << respData << std::endl;
-   */
-
-   // can't sample when not streaming
-   //vprASSERT( (STREAMING == mStatus) || (RUNNING == mStatus) );
-
    std::vector<vpr::Uint8> data_record;
    std::vector<vpr::Uint8> temp_data_record;    // Temp buffer for reading data
-   vpr::Uint8 buffer;                           // Temporary single byte buffer
 
    vpr::Uint32 bytes_read;
    vpr::Uint32 bytes_remaining;
-   //const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
 
-   //unsigned int single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
-   //unsigned int single_bird_data_size = 28 + 3;
    unsigned int single_bird_data_size = 28 + 5;
    const unsigned int data_record_size(mNumActiveStations*single_bird_data_size);    // Size of the data record to read
 
@@ -201,16 +201,10 @@ void FastrakStandalone::readData()
 
 void FastrakStandalone::processDataRecord(std::vector<vpr::Uint8>& dataRecord)
 {
-   vpr::Uint8 record_type = dataRecord[0];
-   vpr::Uint8 station_number = dataRecord[0];
-   vpr::Uint8 system_error_code = dataRecord[0];
-
-   //unsigned int single_bird_data_size = 28 + 3;
    unsigned int single_bird_data_size = 28 + 5;
 
    // For each station
    // - Get matrix from data format
-   vpr::Uint8 station = 0;
    for(unsigned int i=0; i < mNumActiveStations; ++i)
    {
       unsigned int data_offset = (single_bird_data_size*i);
@@ -231,6 +225,16 @@ void FastrakStandalone::processDataRecord(std::vector<vpr::Uint8>& dataRecord)
       pos[0] = getFloatValue(&dataRecord[pos_offset]);
       pos[1] = getFloatValue(&dataRecord[pos_offset+4]);
       pos[2] = getFloatValue(&dataRecord[pos_offset+8]);
+
+      // Convert translation into meters.
+      if (Fastrak::INCHES == mUnits)
+      {
+         pos *= 0.0254f;
+      }
+      else
+      {
+         pos *= 0.01f;
+      }
 
       // Get quaternion for orientation.
       ori[0] = getFloatValue(&dataRecord[ori_offset]);
@@ -320,29 +324,8 @@ bool FastrakStandalone::getStationStatus(const vpr::Uint16 station)
    return mStationStatus[station-1];
 }
 
-void printBinary(const vpr::Uint32 val)
-{
-   for (int i = 31; i >= 0; i--)
-   {
-      if (val & 1<<i)
-      {
-         std::cout << 1;
-      }
-      else
-      {
-         std::cout << 0;
-      }
-      if (0 == i % 8)
-      {
-         std::cout << " ";
-      }
-   }
-   std::cout << std::endl;
-}
-
 void FastrakStandalone::printStatus()
 {
-   vpr::Uint32 bytes_written;
    vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> respData;
    unsigned int respSize = 55;
@@ -352,25 +335,8 @@ void FastrakStandalone::printStatus()
       throw vpr::Exception("NULL port.", VPR_LOCATION);
    }
 
-   vpr::System::msleep(50);
-   try
-   {
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
-   }
-   catch (vpr::IOException&)
-   {
-      throw vpr::Exception("Failed to flush queue before command.", VPR_LOCATION);
-   }
-
-   // Send command
-   mSerialPort->write("S", 1, bytes_written);
-   vprASSERT(1 == bytes_written);
-   mSerialPort->drainOutput();
-
-   if(bytes_written != 1)
-   {
-      throw vpr::Exception("Full command not written.", VPR_LOCATION);
-   }
+   // Send status update command.
+   sendCommand(Fastrak::Command::SystemStatus);
 
    // Read response and then flush the port to make sure we don't leave
    // anything extra.
@@ -381,10 +347,7 @@ void FastrakStandalone::printStatus()
    if(bytes_read != respSize)
    {
       throw vpr::Exception("Incomplete command response.", VPR_LOCATION);
-      //throw Flock::CommandFailureException("Incomplete command response",
-      //                                     VPR_LOCATION);
    }
-
 
    std::string blank;
    std::string software_version_id;
@@ -392,25 +355,35 @@ void FastrakStandalone::printStatus()
    std::string system_flags_string;
    vpr::Uint32 system_flags;
 
+   // Ensure that we are getting the correct response.
    vprASSERT('2' == respData[0]);
    vprASSERT('S' == respData[2]);
 
+   // Get error bits.
    vpr::Uint32 bit_error = (respData[8] << 16) + (respData[7] << 8) + respData[6];
+
+   // Get a string that is a hex value representing tghe current system status.
    for (unsigned int i = 3; i < 6; i++)
    {
       system_flags_string += respData[i];
    }
+   // Convert hex string to an integer.
    system_flags = strtol(system_flags_string.c_str(), NULL, 16);
 
+   // Ensure that data is always blank like specified.
    for (unsigned int i = 9; i < 15; i++)
    {
       blank += respData[i];
    }
    vprASSERT(std::string::npos == blank.find_first_not_of(' '));
+
+   // Get software version id.
    for (unsigned int i = 15; i < 21; i++)
    {
       software_version_id += respData[i];
    }
+
+   // Get system id that can be set using the Configuration Control Data ('X') command.
    for (unsigned int i = 21; i < 53; i++)
    {
       system_id += respData[i];
@@ -424,6 +397,8 @@ void FastrakStandalone::printStatus()
       << "System ID: " << system_id << std::endl << vprDEBUG_FLUSH;
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "Error Bits: " << bit_error << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
       << "Output Format: " << (system_flags & 0x01 ? "Binary" : "ASCII") << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
       << "Units: " << (system_flags & 0x02 ? "Centimeters" : "Inches") << std::endl << vprDEBUG_FLUSH;
@@ -436,17 +411,13 @@ void FastrakStandalone::printStatus()
 
    vprASSERT(system_flags & 0x11 && "Bit 5 should always by 1");
 
+   // Check to see what units we are using.
+   // NOTE: This can be used to check the value after calling setUnits().
+   if (system_flags & 0x02)
+   { mUnits = Fastrak::CENTIMETERS; }
+   else
+   { mUnits = Fastrak::INCHES; }
 
-
-   std::stringstream ss;
-
-   for (std::vector<vpr::Uint8>::iterator itr = respData.begin(); itr != respData.end(); itr++)
-   {
-      ss << (*itr);
-   }
-
-   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-      << "STATUS: " << ss.str() << vprDEBUG_FLUSH;
    vprDEBUG_END(vprDBG_ALL,vprDBG_CONFIG_LVL)
       << "========================" << std::endl << vprDEBUG_FLUSH;
 }
@@ -460,5 +431,30 @@ void FastrakStandalone::setBinaryMode(const bool binary)
    else
    {
       sendCommand(Fastrak::Command::AsciiMode);
+   }
+}
+
+void FastrakStandalone::setStylusButtonEnabled(const vpr::Uint16 station, bool enabled)
+{
+   std::string data = boost::lexical_cast<std::string>(station) + "," + (enabled ? "1":"0") + "\r";
+   sendCommand(Fastrak::Command::SetStylusButton, data);
+}
+
+void FastrakStandalone::setHemisphere(const vpr::Uint16 station, Fastrak::HEMISPHERE hemi)
+{
+   std::string data = getHemiData(station, hemi);
+
+   sendCommand(Fastrak::Command::SetHemisphere, data);
+}
+
+void FastrakStandalone::setUnits(Fastrak::UNITS units)
+{
+   if (Fastrak::INCHES == units)
+   {
+      sendCommand(Fastrak::Command::SetInches);
+   }
+   else
+   {
+      sendCommand(Fastrak::Command::SetCentimeters);
    }
 }
