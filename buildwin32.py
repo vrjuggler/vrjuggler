@@ -1502,7 +1502,6 @@ def installCppDOM(prefix):
 
 def installBoost(prefix):
    printStatus("Installing Boost headers and libraries")
-   print "Installing Boost headers and libraries"
 
    srcroot = os.environ['BOOST_ROOT']
 
