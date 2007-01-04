@@ -50,7 +50,7 @@ Name: vrjuggler
 Summary: VR Juggler is the virtual platform for VR application development
 Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
-Source: %{name}-%{global_version}-%{global_release}.src.tar.bz2
+Source: %{name}-%{global_version}-%{global_release}-src.tar.bz2
 URL: http://www.vrjuggler.org/
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{global_version}-%{global_release}-buildroot
@@ -518,8 +518,8 @@ The Java software from the Juggler Suite including VRJConfig.
 %prep
 rm -rf %{buildroot}
 # For now don't keep unpacking
-%setup -q -n %{name}-%{global_version}-%{global_release}.src
-#%setup -DT -q -n %{name}-%{global_version}-%{global_release}.src
+%setup -q -n %{name}-%{global_version}-%{global_release}-src
+#%setup -DT -q -n %{name}-%{global_version}-%{global_release}-src
 ./configure.pl --with-boost=/usr --with-boost-includes=/usr/include     \
                --with-gmtl=/usr --with-openal=/usr --with-audiere=/usr  \
                --prefix=%{_prefix} %{abi_option}
