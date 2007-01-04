@@ -11,14 +11,54 @@ For all versions:
 ===============================================================================
 
  Version: 2.0.2
-Released: MMM DD, 2006
+Released: January 4, 2007
 
-    Required application and configuration changes for upgrading from
-    all prior releases:
+    Required application changes for upgrading from all prior releases:
 
         * Subclasses of vrj::OsgApp that override latePreFrame() must call
           up to vrj::OsgApp::latePreFrame() as the last step of the override
           implementation.
+
+        * Change Windows application builds so that the Juggler libraries
+          (vpr.lib,jccl.lib, gadget.lib, sonix.lib, tweek.lib, vrj.lib,
+          vrj_ogl.lib, and vrj_pf.lib) and the CppDOM library (cppdom.lib)
+          are not explicitly referenced. These are now linked automatically.
+
+    Recommended configuration changes for upgrading from all prior releases:
+
+        * Load config elements of type display_system and vrpn into
+          VRJConfig to update them to the latest version automatically.
+          The easiest way to do this is to load all configurations into
+          VRJConfig. If a notification about an autoamtic upgrade is
+          displayed, press the "Save All" button once the configuration
+          finishes loading.
+
+    Bugs fixed in this release:
+
+        * Windows are not opened simultaneously on multiple pipes (which
+          fixes a race condition on Windows).
+
+        * Improved error handling in viewport configurations.
+
+    New in this release:
+
+        * Added support for NVIDIA swap groups. To use this feature, load
+          display_system config elements into VRJConfig to get them updated
+          to the latest version and then set the use_swap_group property to
+          true.
+
+        * Refactored vrj::OsgApp so that the scene view is updated only once
+          per frame.
+
+        * Signal handlers for SIGINT, SIGTERM, and (on Windows only) SIGBREAK
+          are registered when the kernel is started. This helps ensure clean
+          shutdown, especially when software such as Maestro is used for
+          terminating execution of an application on a cluster.
+
+        * Automatic linking of the VR Juggler libraries on Windows when
+          building applications.
+
+        * Universal binary support on Mac OS X.
 
  Version: 2.0.1
 Released: August 29, 2005

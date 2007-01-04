@@ -10,6 +10,34 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.0.2
+Released: January 4, 2007
+    Bugs fixed in this release:
+       * Devices that are relative to other proxied devices no longer
+         experience frame delay issues.
+
+       * gadget::MouseEvent objects on Windows now have the correct key
+         press state information.
+
+    New in this release:
+       * Driver for the Ascension Wanda.
+
+       * Driver for the Elexol Ether24 I/O board.
+
+       * Driver for the ART DTrack tracking hardware.
+
+       * Automatic linking of the Gadgeteer library on Windows when building
+         applications.
+
+       * Analog support for the VRPN driver.
+
+       * Universal binary support on Mac OS X.
+
+    Chagned in this release:
+       * The method gadget::BaseDeviceInterface::refreshAllDevices() is
+         deprecated in favor of the new (forward compatible) name
+         gadget::BaseDeviceInterface::refreshAllInterfaces().
+
  Version: 1.0.1
 Released: August 29, 2005
     Bugs fixed in this release:

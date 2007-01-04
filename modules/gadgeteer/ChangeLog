@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.0.2 released - 1.4.2007]====================================================
 Dec-17-2006 patrick     Deprecated the method
                         gadget::BaseDeviceInterface::refreshAllDevices() in
                         favor of the new name

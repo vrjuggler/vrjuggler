@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0.2 released - 1.4.2007]====================================================
 Oct-30-2006 patrick     Register signal handlers for SIGINT, SIGTERM, and (on
                         Windows only) SIGBREAK when the kernel is started.
 Oct-09-2006 patrick     Ensure that windows are not opened simultaneously on

@@ -1,5 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+[1.0.2 released - 1.4.2007]====================================================
 2006-07-13 patrick     Implemented automatic linking of the Tweek library.
 2006-07-08 patrick     Added support for building universal binaries on Mac
                        OS X.
