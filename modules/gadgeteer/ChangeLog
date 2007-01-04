@@ -1,6 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
 Jan-03-2007 aronb       Rewrote the Polhemus Fastrak driver.
+                        NEW VERSION: 1.1.22
 Dec-14-2006 aronb       Allow programmatic creation of usable device proxy
                         objects.
                         NEW VERSION: 1.1.21
