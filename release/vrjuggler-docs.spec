@@ -8,7 +8,7 @@
 %define name vrjuggler-docs
 %define global_version 2.0.2
 %define global_release 1
-%define srcdir vrjuggler-%{global_version}-%{global_release}.src
+%define srcdir vrjuggler-%{global_version}-%{global_release}-src
 %define file_name %{srcdir}.tar.bz2
 
 %define vpr_version 1.0.2
