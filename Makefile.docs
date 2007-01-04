@@ -80,6 +80,12 @@ JAVADOC_SUBDIR=	modules/tweek/java		\
 		modules/vrjuggler/vrjconfig
 
 all:
+ifndef TWEEK_BASE_DIR
+	$(warning TWEEK_BASE_DIR is not set)
+endif
+ifndef JCCL_BASE_DIR
+	$(warning JCCL_BASE_DIR is not set)
+endif
 	@for dir in $(SUBDIR) ; do				\
             echo "===> $$dir" ;					\
             $(MAKE) -C $$dir docs || exit 1;			\
