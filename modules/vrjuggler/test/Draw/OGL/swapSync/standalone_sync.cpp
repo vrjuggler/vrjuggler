@@ -16,6 +16,7 @@
 #include <unistd.h>
 
 bool master = true;
+bool stereo = false;
 
 typedef void (*VoidExtFunc)(void);
 
@@ -97,6 +98,7 @@ void display(void)
    //std::cout << "App Frame Count [" << mFrameNum << "] [" << frame_num << "]" << std::endl;
    std::cout << "App Frame Count [" << mFrameNum << "]" << std::endl;
 
+   glDrawBuffer(GL_BACK);
    unsigned clr_choice = (mFrameNum % 5);
 
    if(0 == clr_choice)
@@ -111,6 +113,27 @@ void display(void)
    { glClearColor(0.0, 0.0, 1.0, 0.0); }     // Blue
 
    glClear(GL_COLOR_BUFFER_BIT);
+
+   if(stereo)
+   {
+      glDrawBuffer(GL_BACK_LEFT);
+
+      unsigned clr_choice = ((mFrameNum + 2) % 5);
+
+      if(0 == clr_choice)
+      { glClearColor(0.0, 0.0, 0.0, 0.0); }     // Black
+      else if(1==clr_choice)
+      { glClearColor(1.0, 1.0, 1.0, 0.0); }     // White
+      else if(2==clr_choice)
+      { glClearColor(1.0, 0.0, 0.0, 0.0); }     // Red
+      else if(3==clr_choice)
+      { glClearColor(0.0, 1.0, 0.0, 0.0); }     // Green
+      else if(4==clr_choice)
+      { glClearColor(0.0, 0.0, 1.0, 0.0); }     // Blue
+
+      glClear(GL_COLOR_BUFFER_BIT);
+   }
+
 
    // Sleep for one of a predetermined times.
    // - Use this instead of random because we want to generate worst case
@@ -186,7 +209,14 @@ void keyboard(unsigned char k, int x, int y)
 int main(int argc, char* argv[])
 {
    glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
+   if( stereo )
+   {
+      glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE | GLUT_STEREO);
+   }
+   else
+   {
+      glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
+   }
 
    int winid = glutCreateWindow("Test");
    mFrameNum = 0;
