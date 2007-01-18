@@ -3,39 +3,39 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="intersense_station" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="InterSense Station">
       <abstract>false</abstract>
-      <help>Settings for an InterSense tracker station. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+      <help>Settings for an InterSense tracker station. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
       <parent/>
       <category>/Devices/Positional</category>
       <property valuetype="boolean" variable="false" name="enabled">
-         <help>Used to enable or disable the InterSense station that this config element configures. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>Used to enable or disable the InterSense station that this config element configures. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Enabled" defaultvalue="false"/>
       </property>
       <property valuetype="integer" variable="false" name="station_index">
-         <help>The index of the physical tracker station that is associated with this config element. The value is the address of the station as determined by the hardware configuration. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>The index of the physical tracker station that is associated with this config element. The value is the address of the station as determined by the hardware configuration. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Station Number" defaultvalue="1"/>
       </property>
       <property valuetype="boolean" variable="false" name="use_digital">
-         <help>Indicates whether any digital buttons associated with this station should be sampled. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>Indicates whether any digital buttons associated with this station should be sampled. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Use Digital" defaultvalue="true"/>
       </property>
       <property valuetype="boolean" variable="false" name="use_analog">
-         <help>Indicates whether any analog inputs (such as joysticks) associated with this station should be sampled. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>Indicates whether any analog inputs (such as joysticks) associated with this station should be sampled. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Use Analog" defaultvalue="true"/>
       </property>
       <property valuetype="integer" variable="false" name="digital_first">
-         <help>In the case of the InterSense IS-900 driver, this defines the starting point in the array of stored digital data samples received from this station.  With the InterSense API driver, the value of this property is ignored and should be set to 0. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>In the case of the InterSense IS-900 driver, this defines the starting point in the array of stored digital data samples received from this station.  With the InterSense API driver, the value of this property is ignored and should be set to 0. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Digital First" defaultvalue="0"/>
       </property>
       <property valuetype="integer" variable="false" name="digital_count">
-         <help>The number of digital input sources associated with this station. The value of this property must be used in conjunction with &lt;tt&gt;digital_first&lt;/tt&gt; for correct handling of multiple conifgured stations. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>The number of digital input sources associated with this station. The value of this property must be used in conjunction with &lt;tt&gt;digital_first&lt;/tt&gt; for correct handling of multiple conifgured stations. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Digital Count" defaultvalue="0"/>
       </property>
       <property valuetype="integer" variable="false" name="analog_first">
-         <help>In the case of the InterSense IS-900 driver, this defines the starting point in the array of stored analog data samples received from this station.  With the InterSense API driver, the value of this property is ignored and should be set to 0. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>In the case of the InterSense IS-900 driver, this defines the starting point in the array of stored analog data samples received from this station.  With the InterSense API driver, the value of this property is ignored and should be set to 0. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Analog First" defaultvalue="0"/>
       </property>
       <property valuetype="integer" variable="false" name="analog_count">
-         <help>The number of analog input sources associated with this station. The value of this property must be used in conjunction with &lt;tt&gt;analog_first&lt;/tt&gt; for correct handling of multiple conifgured stations. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
+         <help>The number of analog input sources associated with this station. The value of this property must be used in conjunction with &lt;tt&gt;analog_first&lt;/tt&gt; for correct handling of multiple conifgured stations. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5377"&gt;more on Intersense stations&lt;/a&gt;)</help>
          <value label="Analog Count" defaultvalue="0"/>
       </property>
       <upgrade_transform/>

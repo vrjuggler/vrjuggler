@@ -45,34 +45,34 @@
    </definition_version>
    <definition_version version="2" label="InterSense API">
       <abstract>false</abstract>
-      <help>Configuration for all InterSense tracking devices. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configuration for all InterSense tracking devices. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <parent>digital_device</parent>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="driver">
-         <help>The full path to the InterSense driver DLL (from InterSense Corp.) that will be used for communicating with the hardware. The DLL name must not include the platform-specific file extension (such as .so, .dll, .dylib, etc.). (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
+         <help>The full path to the InterSense driver DLL (from InterSense Corp.) that will be used for communicating with the hardware. The DLL name must not include the platform-specific file extension (such as .so, .dll, .dylib, etc.). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
          <value label="InterSense DLL Path" defaultvalue=""/>
       </property>
       <property valuetype="string" variable="false" name="port">
-         <help>The name of the serial port (/dev/ttyS0, COM1, etc.) to which the InterSense tracker is attached. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
+         <help>The name of the serial port (/dev/ttyS0, COM1, etc.) to which the InterSense tracker is attached. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
          <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="configelement" variable="true" name="stations">
-         <help>Settings for each Station. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
+         <help>Settings for each Station. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
          <value label="Stations"/>
          <allowed_type>intersense_station</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="verbose">
-         <help>Enable output from the InterSense driver. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
+         <help>Enable output from the InterSense driver. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
          <value label="Verbose Enabled" defaultvalue="false"/>
       </property>
       <property valuetype="float" variable="false" name="min">
-         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
+         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
          <value label="Range Minimum" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="max">
-         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
+         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5080"&gt;more on the InterSense API driver&lt;/a&gt;)</help>
          <value label="Range Maximum" defaultvalue="1.0"/>
       </property>
       <upgrade_transform>

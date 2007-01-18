@@ -3,11 +3,11 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="gesture_proxy" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/hand1642.png" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Gesture Proxy">
       <abstract>false</abstract>
-      <help>A Gesture Proxy points to a gesture device. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s03.html"&gt;more on device proxies&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>A Gesture Proxy points to a gesture device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s03.html"&gt;more on device proxies&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>proxy</parent>
       <category>/Proxies</category>
       <property valuetype="configelementpointer" variable="false" name="device">
-         <help>The gesture device to hook the proxy to. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s03.html"&gt;more ...&lt;/&gt;)</help>
+         <help>The gesture device to hook the proxy to. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s03.html"&gt;more ...&lt;/&gt;)</help>
          <value label="Device"/>
          <allowed_type>simulated_glove_gesture</allowed_type>
       </property>

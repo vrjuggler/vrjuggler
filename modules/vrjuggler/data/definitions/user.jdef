@@ -3,17 +3,17 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="user" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="VR Juggler User">
       <abstract>false</abstract>
-      <help>This is a user in VR Juggler. This is used for multi-user applications (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s02.html"&gt;more ...&lt;/a&gt;)</help>
+      <help>This is a user in VR Juggler. This is used for multi-user applications (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s02.html"&gt;more ...&lt;/a&gt;)</help>
       <parent/>
       <category>/User</category>
       <property valuetype="configelementpointer" variable="false" name="head_position">
-         <help>This is the source of head position information. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>This is the source of head position information. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Head Position"/>
          <allowed_type>alias</allowed_type>
          <allowed_type>position_proxy</allowed_type>
       </property>
       <property valuetype="float" variable="false" name="interocular_distance">
-         <help>Interocular distance; the distance between your eyes. This value must be in meters. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Interocular distance; the distance between your eyes. This value must be in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="User's eye separation" defaultvalue="0.069"/>
       </property>
       <upgrade_transform/>

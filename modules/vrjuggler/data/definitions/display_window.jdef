@@ -143,30 +143,30 @@
    </definition_version>
    <definition_version version="4" label="Display Window">
       <abstract>false</abstract>
-      <help>This is display window. It contains viewports. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more on display windows&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s05.html"&gt;more on configuring keyboard/mouse input and displays&lt;/a&gt;)</help>
+      <help>This is display window. It contains viewports. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more on display windows&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s05.html"&gt;more on configuring keyboard/mouse input and displays&lt;/a&gt;)</help>
       <parent>input_area</parent>
       <category>/Display</category>
       <property valuetype="integer" variable="false" name="origin">
-         <help>Window origin (lower left screen is 0,0). (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Window origin (lower left screen is 0,0). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="X" defaultvalue="0"/>
          <value label="Y" defaultvalue="0"/>
       </property>
       <property valuetype="integer" variable="false" name="size">
-         <help>Window dimensions. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Window dimensions. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Width" defaultvalue="200"/>
          <value label="Height" defaultvalue="200"/>
       </property>
       <property valuetype="integer" variable="false" name="pipe">
-         <help>Graphics pipe. Zero-based reference to the display system configuration element. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Graphics pipe. Zero-based reference to the display system configuration element. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Pipe" defaultvalue="0"/>
       </property>
       <property valuetype="configelement" variable="false" name="frame_buffer_config">
-         <help>Configuration of this display's frame buffer. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Configuration of this display's frame buffer. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Frame Buffer Configuration"/>
          <allowed_type>opengl_frame_buffer_config</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="stereo">
-         <help>Should this window render in stereo? (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Should this window render in stereo? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="In Stereo" defaultvalue="false"/>
       </property>
       <property valuetype="boolean" variable="false" name="border">
@@ -178,16 +178,16 @@
          <value label="Hide Mouse Pointer" defaultvalue="false"/>
       </property>
       <property valuetype="boolean" variable="false" name="active">
-         <help>Is the window supposed to be active? (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Is the window supposed to be active? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Use this window?" defaultvalue="true"/>
       </property>
       <property valuetype="configelement" variable="true" name="simulator_viewports">
-         <help>The simulator viewports to put in this window. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The simulator viewports to put in this window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Contained Sim Viewport"/>
          <allowed_type>simulator_viewport</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="surface_viewports">
-         <help>The surface viewports to put in this window. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The surface viewports to put in this window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Contained Surface Viewport"/>
          <allowed_type>surface_viewport</allowed_type>
       </property>      

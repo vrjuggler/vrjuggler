@@ -3,16 +3,16 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="swap_lock_tcp_plugin" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Swap Lock Plugin (TCP)">
       <abstract>false</abstract>
-      <help>Configuration for the TCP-based swap lock plug-in to the Cluster Manager. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.tcp"&gt;more on start barrier plug-in&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
+      <help>Configuration for the TCP-based swap lock plug-in to the Cluster Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.tcp"&gt;more on start barrier plug-in&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
       <parent/>
       <category>/Cluster</category>
       <property valuetype="configelementpointer" variable="false" name="sync_server">
-         <help>Cluster Node that is responsible for syncronizing all other nodes. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.tcp"&gt;more ...&lt;/a&gt;)</help>
+         <help>Cluster Node that is responsible for syncronizing all other nodes. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.tcp"&gt;more ...&lt;/a&gt;)</help>
          <value label="Sync Server Machine" defaultvalue=""/>
          <allowed_type>cluster_node</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="listen_port">
-         <help>Port on which the Remote Input Manager listens for incoming cluster connections. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.tcp"&gt;more ...&lt;/a&gt;)</help>
+         <help>Port on which the Remote Input Manager listens for incoming cluster connections. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.tcp"&gt;more ...&lt;/a&gt;)</help>
          <value label="Listen Port" defaultvalue="0"/>
       </property>
       <upgrade_transform/>
