@@ -37,5 +37,5 @@ package org.vrjuggler.vrjconfig;
  */
 public interface VrjConfigConstants
 {
-   public final static String HELP_URL_STR = "http://www.infiscape.com/~patrick/vrjuggler-config/";
+   public final static String HELP_URL_STR = "http://www.infiscape.com/documentation/vrjuggler-config/";
 }
