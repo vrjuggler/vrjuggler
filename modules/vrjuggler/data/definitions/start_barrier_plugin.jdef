@@ -2,11 +2,11 @@
 <?org-vrjuggler-jccl-settings definition.version="3.1"?>
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="start_barrier_plugin" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Start Barrier Plugin">
-      <help>Configuration for the start barrier plug-in to the Cluster Manager. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.start.barrier.plugin"&gt;more on start barrier plug-in&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
+      <help>Configuration for the start barrier plug-in to the Cluster Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.start.barrier.plugin"&gt;more on start barrier plug-in&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
       <parent/>
       <category>/Cluster</category>
       <property valuetype="configelementpointer" variable="false" name="start_master">
-         <help>Cluster Node that is responsible for starting the cluster at the right time. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.start.barrier.plugin"&gt;more ...&lt;/a&gt;)</help>
+         <help>Cluster Node that is responsible for starting the cluster at the right time. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.start.barrier.plugin"&gt;more ...&lt;/a&gt;)</help>
          <value label="Start Master Machine"/>
          <allowed_type>cluster_node</allowed_type>
       </property>

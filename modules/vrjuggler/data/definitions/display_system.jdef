@@ -3,30 +3,30 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="display_system" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Display System">
       <abstract>false</abstract>
-      <help>Graphics pipe configuration for display windows. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
+      <help>Graphics pipe configuration for display windows. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
       <parent/>
       <category>/Display</category>
       <property valuetype="integer" variable="false" name="number_of_pipes">
-         <help>The number of pipes on the system. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The number of pipes on the system. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="Number of Pipes" defaultvalue="0"/>
       </property>
       <property valuetype="string" variable="true" name="x11_pipes">
-         <help>The X11 display strings for the pipes. The string "-1" is treated as being equal to the &lt;tt&gt;$DISPLAY&lt;/tt&gt; environment variable. NOTE: This is a zero-based list. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The X11 display strings for the pipes. The string "-1" is treated as being equal to the &lt;tt&gt;$DISPLAY&lt;/tt&gt; environment variable. NOTE: This is a zero-based list. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="X11 Display" defaultvalue=":0.0"/>
       </property>
       <upgrade_transform/>
    </definition_version>
    <definition_version version="2" label="Display System">
       <abstract>false</abstract>
-      <help>Graphics pipe configuration for display windows. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
+      <help>Graphics pipe configuration for display windows. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
       <parent/>
       <category>/Display</category>
       <property valuetype="integer" variable="false" name="number_of_pipes">
-         <help>The number of pipes on the system. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The number of pipes on the system. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="Number of Pipes" defaultvalue="0"/>
       </property>
       <property valuetype="string" variable="true" name="x11_pipes">
-         <help>The X11 display strings for the pipes. The string "-1" is treated as being equal to the &lt;tt&gt;$DISPLAY&lt;/tt&gt; environment variable. NOTE: This is a zero-based list. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The X11 display strings for the pipes. The string "-1" is treated as being equal to the &lt;tt&gt;$DISPLAY&lt;/tt&gt; environment variable. NOTE: This is a zero-based list. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="X11 Display" defaultvalue=":0.0"/>
       </property>
         <property valuetype="boolean" variable="false" name="use_swap_group">

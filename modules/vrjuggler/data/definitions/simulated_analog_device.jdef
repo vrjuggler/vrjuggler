@@ -41,38 +41,38 @@
    </definition_version>
    <definition_version version="2" label="Simulated Analog Device">
       <abstract>false</abstract>
-      <help>A simulated analog device that gets its input from a keyboard/mouse input handler (through a proxy). (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>A simulated analog device that gets its input from a keyboard/mouse input handler (through a proxy). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>analog_device</parent>
       <category>/Devices/Analog</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
-         <help>The proxy to keyboard/mouse input handler to use for user input. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The proxy to keyboard/mouse input handler to use for user input. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Keyboard/Mouse Proxy"/>
          <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="increment_keypress">
-         <help>The keys used for incrementing the input value. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The keys used for incrementing the input value. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Increment Key"/>
          <allowed_type>key_modifier_pair</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="decrement_keypress">
-         <help>The keys used for decrementing the input value. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The keys used for decrementing the input value. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Decrement Key"/>
          <allowed_type>key_modifier_pair</allowed_type>
       </property>
       <property valuetype="float" variable="false" name="delta">
-         <help>The amount that the analog data changes per increment or decrement keypress. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The amount that the analog data changes per increment or decrement keypress. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Delta" defaultvalue="1.0"/>
       </property>
       <property valuetype="float" variable="false" name="min">
-         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Range Minimum" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="max">
-         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Range Maximum" defaultvalue="255.0"/>
       </property>
       <property valuetype="float" variable="false" name="initial_value">
-         <help>The initial value of all the analog inputs on this device. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The initial value of all the analog inputs on this device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Initial Value" defaultvalue="0.0"/>
       </property>
       <upgrade_transform>

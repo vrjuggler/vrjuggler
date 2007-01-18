@@ -22,15 +22,15 @@
    </definition_version>
    <definition_version version="2" label="Input Manager">
       <abstract>false</abstract>
-      <help>Configuration of the Gadgeteer Input Manager. This is used to identify which device driver plug-ins must be loaded to communicate with input device hardare. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more on the Input Manager&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input&lt;/a&gt;)</help>
+      <help>Configuration of the Gadgeteer Input Manager. This is used to identify which device driver plug-ins must be loaded to communicate with input device hardare. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more on the Input Manager&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input&lt;/a&gt;)</help>
       <parent/>
       <category>/Input</category>
       <property valuetype="string" variable="true" name="driver_path">
-         <help>Each value adds to the path where dynamically loadable driver objects can be found.  The path may make use of environment variables.  For example: &lt;tt&gt;${VJ_BASE_DIR}/lib/gadgeteer/drivers&lt;/tt&gt;.  If no values are set for this property, the default search path will be &lt;tt&gt;${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/drivers&lt;/tt&gt; depending on the compile-time application binary interface (ABI). (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>Each value adds to the path where dynamically loadable driver objects can be found.  The path may make use of environment variables.  For example: &lt;tt&gt;${VJ_BASE_DIR}/lib/gadgeteer/drivers&lt;/tt&gt;.  If no values are set for this property, the default search path will be &lt;tt&gt;${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/drivers&lt;/tt&gt; depending on the compile-time application binary interface (ABI). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="DSO Path" defaultvalue=""/>
       </property>
       <property valuetype="string" variable="true" name="driver">
-         <help>The base name of a dynamically loadable driver object.  For example: &lt;tt&gt;PinchGlove_drv&lt;/tt&gt; (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The base name of a dynamically loadable driver object.  For example: &lt;tt&gt;PinchGlove_drv&lt;/tt&gt; (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="Driver module" defaultvalue=""/>
          <enumeration editable="true">
             <enum label="DTrack_drv" value="DTrack_drv"/>
@@ -56,7 +56,7 @@
          </enumeration>
       </property>
       <property valuetype="string" variable="true" name="driver_scan_path">
-         <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="DSO directory" defaultvalue=""/>
       </property>
       <upgrade_transform>

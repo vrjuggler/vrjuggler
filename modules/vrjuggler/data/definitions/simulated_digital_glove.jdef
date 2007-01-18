@@ -31,17 +31,17 @@
    </definition_version>
    <definition_version version="3" label="Simulated Digital Glove Device">
       <abstract>false</abstract>
-      <help>A digital glove simulator that uses the specified keyboard/mouse input handler to get input events. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>A digital glove simulator that uses the specified keyboard/mouse input handler to get input events. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>glove_device</parent>
       <parent>digital_device</parent>
       <category>/Devices/Simulator</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
-         <help>The proxy to the keyboard/mouse input handler to use for user input. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The proxy to the keyboard/mouse input handler to use for user input. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Keyboard/Mouse Proxy"/>
          <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="key_pair">
-         <help>Keypresses to trigger multiple digital inputs. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>Keypresses to trigger multiple digital inputs. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Key Presses"/>
          <allowed_type>key_modifier_pair</allowed_type>
       </property>
