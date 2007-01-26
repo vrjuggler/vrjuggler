@@ -464,7 +464,7 @@ void FastrakStandalone::setStylusButtonEnabled(const vpr::Uint16 station, bool e
 
 void FastrakStandalone::setHemisphere(const vpr::Uint16 station, Fastrak::HEMISPHERE hemi)
 {
-   std::string data = getHemiData(station, hemi);
+   std::string data = Fastrak::getHemiData(station, hemi);
 
    sendCommand(Fastrak::Command::SetHemisphere, data);
 }
