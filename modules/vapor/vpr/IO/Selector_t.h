@@ -85,7 +85,7 @@ public:
     * @return \c true is returned if \p handle is added successfully;
     *         \c false otherwise.
     */
-   bool addHandle(vpr::IOSys::Handle handle, vpr::Uint16 mask = 0)
+   bool addHandle(const vpr::IOSys::Handle handle, const vpr::Uint16 mask = 0)
    {
       return mSelectorImp.addHandle(handle, mask);
    }
@@ -101,7 +101,7 @@ public:
     * @return \c true is returned if \p handle is removed successfully;
     *         \c false otherwise.
     */
-   bool removeHandle(vpr::IOSys::Handle handle)
+   bool removeHandle(const vpr::IOSys::Handle handle)
    {
       return mSelectorImp.removeHandle(handle);
    }
@@ -119,7 +119,7 @@ public:
     * @return \c true is returned if \p handle's event flags are set
     *         successfully; \c false otherwise.
     */
-   bool setIn(vpr::IOSys::Handle handle, vpr::Uint16 mask)
+   bool setIn(const vpr::IOSys::Handle handle, const vpr::Uint16 mask)
    {
       return mSelectorImp.setIn(handle, mask);
    }
@@ -133,7 +133,7 @@ public:
     *
     * @return A bitmask value representing the "in flags" of \p handle.
     */
-   vpr::Uint16 getIn(vpr::IOSys::Handle handle)
+   vpr::Uint16 getIn(const vpr::IOSys::Handle handle) const
    {
       return mSelectorImp.getIn(handle);
    }
@@ -151,7 +151,7 @@ public:
     *         These flags state which requested events were detected for
     *         \p handle.
     */
-   vpr::Uint16 getOut(vpr::IOSys::Handle handle)
+   vpr::Uint16 getOut(const vpr::IOSys::Handle handle) const
    {
       return mSelectorImp.getOut(handle);
    }
@@ -190,7 +190,7 @@ public:
     *
     * @return An unsigned value stating how many handles have been registered.
     */
-   vpr::Uint16 getNumHandles()
+   vpr::Uint16 getNumHandles() const
    {
       return mSelectorImp.getNumHandles();
    }
@@ -205,7 +205,7 @@ public:
     * @return A vpr::IOSys::Handle object representing the registered handle
     *         at the given index.
     */
-   vpr::IOSys::Handle getHandle(vpr::Uint16 index)
+   vpr::IOSys::Handle getHandle(const vpr::Uint16 index) const
    {
       return mSelectorImp.getHandle(index);
    }
@@ -219,7 +219,7 @@ public:
     *         this selector.
     * @return \c false is returned if the handle has not been registered.
     */
-   bool containsHandle(vpr::IOSys::Handle handle)
+   bool containsHandle(const vpr::IOSys::Handle handle) const
    {
       return mSelectorImp.containsHandle(handle);
    }
