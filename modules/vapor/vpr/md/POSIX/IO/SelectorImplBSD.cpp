@@ -37,6 +37,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 #include <unistd.h>
 #include <sys/types.h>
 
@@ -58,7 +59,8 @@ namespace vpr
 /**
  * Adds the given handle to the selector.
  */
-bool SelectorImplBSD::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
+bool SelectorImplBSD::addHandle(const vpr::IOSys::Handle handle,
+                                const vpr::Uint16 mask)
 {
    if ( getHandle(handle) != mPollDescs.end() )
    {
@@ -78,7 +80,7 @@ bool SelectorImplBSD::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
 /**
  * Removes a handle from the selector.
  */
-bool SelectorImplBSD::removeHandle (vpr::IOSys::Handle handle)
+bool SelectorImplBSD::removeHandle(const vpr::IOSys::Handle handle)
 {
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
@@ -92,7 +94,8 @@ bool SelectorImplBSD::removeHandle (vpr::IOSys::Handle handle)
 }
 
 /**< Sets the event flags going in to the select to mask. */
-bool SelectorImplBSD::setIn (vpr::IOSys::Handle handle, vpr::Uint16 mask)
+bool SelectorImplBSD::setIn(const vpr::IOSys::Handle handle,
+                            const vpr::Uint16 mask)
 {
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
@@ -107,9 +110,9 @@ bool SelectorImplBSD::setIn (vpr::IOSys::Handle handle, vpr::Uint16 mask)
 }
 
 /**< Gets the current in flag mask. */
-vpr::Uint16 SelectorImplBSD::getIn (vpr::IOSys::Handle handle)
+vpr::Uint16 SelectorImplBSD::getIn(const vpr::IOSys::Handle handle) const
 {
-   std::vector<BSDPollDesc>::iterator i = getHandle(handle);
+   std::vector<BSDPollDesc>::const_iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
@@ -120,9 +123,9 @@ vpr::Uint16 SelectorImplBSD::getIn (vpr::IOSys::Handle handle)
 }
 
 /**< Gets the current out flag mask. */
-vpr::Uint16 SelectorImplBSD::getOut (vpr::IOSys::Handle handle)
+vpr::Uint16 SelectorImplBSD::getOut(const vpr::IOSys::Handle handle) const
 {
-   std::vector<BSDPollDesc>::iterator i = getHandle(handle);
+   std::vector<BSDPollDesc>::const_iterator i = getHandle(handle);
 
    if ( mPollDescs.end() == i )
    {
@@ -137,7 +140,7 @@ vpr::Uint16 SelectorImplBSD::getOut (vpr::IOSys::Handle handle)
  * Select.
  */
 void SelectorImplBSD::select (vpr::Uint16& numWithEvents,
-                              const vpr::Interval timeout)
+                              const vpr::Interval& timeout)
 {
    int num_events, last_fd;
    fd_set read_set, write_set, exception_set;
@@ -251,23 +254,39 @@ void SelectorImplBSD::select (vpr::Uint16& numWithEvents,
    }
 }
 
-/**
- * Gets the index of the handle given.
- */
-std::vector<SelectorImplBSD::BSDPollDesc>::iterator SelectorImplBSD::getHandle (int handle)
+struct HandlePred
+{
+   HandlePred(const int handle)
+      : mHandle(handle)
+   {
+   }
+
+   bool operator()(const SelectorImplBSD::BSDPollDesc& d)
+   {
+      return d.fd == mHandle;
+   }
+
+   const int mHandle;
+};
+
+// Gets the index of the handle given.
+std::vector<SelectorImplBSD::BSDPollDesc>::iterator
+SelectorImplBSD::getHandle(const int handle)
 {
    // XXX: Should probably be replaced by a map in the future for speed
 
-   for ( std::vector<BSDPollDesc>::iterator i=mPollDescs.begin();
-       i != mPollDescs.end();++i )
-   {
-      if ( (*i).fd == handle )
-      {
-         return i;
-      }
-   }
+   HandlePred pred(handle);
+   return std::find_if(mPollDescs.begin(), mPollDescs.end(), pred);
+}
 
-   return mPollDescs.end();
+// Gets the index of the handle given (const version).
+std::vector<SelectorImplBSD::BSDPollDesc>::const_iterator
+SelectorImplBSD::getHandle(const int handle) const
+{
+   // XXX: Should probably be replaced by a map in the future for speed
+
+   HandlePred pred(handle);
+   return std::find_if(mPollDescs.begin(), mPollDescs.end(), pred);
 }
 
 }  // namespace vpr

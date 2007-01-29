@@ -74,7 +74,7 @@ public:
     * @post \p handle is added to the handle set and initialized to a mask of
     *       no-events.
     */
-   bool addHandle(IOSys::Handle handle, vpr::Uint16 mask = 0);
+   bool addHandle(const IOSys::Handle handle, const vpr::Uint16 mask = 0);
 
    /**
     * Removes a handle from the selector.
@@ -82,22 +82,22 @@ public:
     * @pre \p handle is in the selector.
     * @post \p handle is removed from the set of valid handles.
     */
-   bool removeHandle(IOSys::Handle handle);
+   bool removeHandle(const IOSys::Handle handle);
 
    /**
     * Sets the event flags going in to the select to mask.
     */
-   bool setIn(IOSys::Handle handle, vpr::Uint16 mask);
+   bool setIn(const IOSys::Handle handle, const vpr::Uint16 mask);
 
    /**
     * Gets the current in flag mask.
     */
-   vpr::Uint16 getIn(IOSys::Handle handle);
+   vpr::Uint16 getIn(const IOSys::Handle handle) const;
 
    /**
     * Gets the current out flag mask.
     */
-   vpr::Uint16 getOut(IOSys::Handle handle);
+   vpr::Uint16 getOut(const IOSys::Handle handle) const;
 
    /**
     * Select.
@@ -116,22 +116,22 @@ public:
     * @throws vpr::IOException      If the select failed.
     */
    void select(vpr::Uint16& numWithEvents,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout);
+               const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the number of handles.
     */
-   vpr::Uint16 getNumHandles()
+   vpr::Uint16 getNumHandles() const
    {
       return mPollDescs.size();
    }
 
-   IOSys::Handle getHandle(vpr::Uint16 index)
+   IOSys::Handle getHandle(const vpr::Uint16 index) const
    {
       return mPollDescs[index].fd;
    }
 
-   bool containsHandle(IOSys::Handle handle)
+   bool containsHandle(const IOSys::Handle handle) const
    {
       return (getHandle(handle) != mPollDescs.end());
    }
@@ -145,8 +145,16 @@ protected:
     */
    std::vector<PRPollDesc>::iterator getHandle(PRFileDesc const* handle);
 
-   PRUint16 convertMaskVprToNspr(vpr::Uint16 mask);
-   vpr::Uint16 convertMaskNsprToVpr(PRUint16 mask);
+   /**
+    * Gets the index of the handle given (const version).
+    *
+    * @return .end() if not found, else the index to the handle in mPollDescs.
+    */
+   std::vector<PRPollDesc>::const_iterator getHandle(PRFileDesc const* handle)
+      const;
+
+   PRUint16 convertMaskVprToNspr(const vpr::Uint16 mask) const;
+   vpr::Uint16 convertMaskNsprToVpr(const PRUint16 mask) const;
 
 protected:
 
