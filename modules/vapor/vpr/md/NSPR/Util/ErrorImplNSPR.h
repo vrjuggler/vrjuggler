@@ -89,12 +89,12 @@ public:
    }
 
 protected:
-   static PRErrorCode convertErrorVprToNspr(ErrorType mask)
+   static PRErrorCode convertErrorVprToNspr(ErrorType)
    {
       return PR_MAX_ERROR;
    }
 
-   static ErrorType convertErrorNsprToVpr(PRErrorCode mask)
+   static ErrorType convertErrorNsprToVpr(PRErrorCode)
    {
       return NoError;
    }
