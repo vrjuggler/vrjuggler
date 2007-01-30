@@ -41,6 +41,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <algorithm>
+
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Error.h>
