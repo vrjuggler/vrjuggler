@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-30-2007 patrick     Eliminated the need to set SNX_BASE_DIR on Windows to
+                        run applications.
+                        NEW VERSION: 1.1.8
 Oct-01-2006 patrick     Updated for VPR 1.1.35.
                         NEW VERSION: 1.1.7
 Aug-04-2006 dshipton    Use flagpoll for building against sonix instead of

@@ -134,6 +134,9 @@
 				RelativePath="..\..\modules\sonix\snx\Util\Version.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\sonix\snx\snxmain.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\sonix\snx\sonix.cpp">
 			</File>
 		</Filter>

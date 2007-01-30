@@ -379,6 +379,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath="..\..\modules\sonix\snx\snxmain.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\sonix\snx\sonix.cpp"
 				>
 			</File>
