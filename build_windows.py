@@ -2279,12 +2279,14 @@ def main():
    disable_tk = False
 
    try:
-      cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cao:h",
-                                         ["nogui", "auto", "options-file=",
-                                          "help"])
+      cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cano:h",
+                                         ["nogui", "nobuild", "auto",
+                                          "options-file=", "help"])
    except getopt.GetoptError:
       usage()
       sys.exit(4)
+
+   skip_vs = False
 
    global gOptionsFileName
    for o, a in cmd_opts:
@@ -2297,6 +2299,8 @@ def main():
          if not os.path.isfile(gOptionsFileName):
             print "No file %s exists.  Will use default options." % \
                   gOptionsFileName
+      elif o in ("-n", "--nobuild"):
+         skip_vs = True
       elif o in ("-h", "--help"):
          usage()
          sys.exit(0)
@@ -2309,11 +2313,15 @@ def main():
       updateVersions(vc_dir, options)
       generateAntBuildFiles(vc_dir)
 
-      devenv_cmd    = getVSCmd()
-      solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir, 'Juggler.sln')
-
       try:
-         status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
+         status = 0
+
+         if not skip_vs:
+            devenv_cmd    = getVSCmd()
+            solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir,
+                                                 'Juggler.sln')
+
+            status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
 
          if status == 0:
             print "Proceed with VR Juggler installation [y]: ",
