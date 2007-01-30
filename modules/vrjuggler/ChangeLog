@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-30-2007 patrick     Eliminated the need to set VJ_BASE_DIR on Windwos to
+                        run applications.
+                        NEW VERSION: 2.1.17
 Dec-18-2006 aronb       Added initial support for Direct3D.
                         NEW VERSION: 2.1.16
 Nov-14-2006 patrick     Replaced vpr::ReturnStatus usage with bool in the

@@ -462,6 +462,10 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Viewport.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\vrjmain.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
