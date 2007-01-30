@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2007-01-30 patrick     Eliminated the need to set TWEEK_BASE_DIR on Windows to
+                       run applications.
+                       NEW VERSION: 1.1.11
 2006-11-15 patrick     Replaced the use of vpr::ReturnStatus with bool in
                        tweek::CorbaManager, tweek::SubjectManagerImpl, and
                        tweek::CorbaService.

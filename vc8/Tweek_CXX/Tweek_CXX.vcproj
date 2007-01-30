@@ -71,7 +71,7 @@
 				OutputFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).pdb"
@@ -158,7 +158,7 @@
 				OutputFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports64.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).pdb"
@@ -247,7 +247,7 @@
 				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="false"
 				SubSystem="1"
@@ -338,7 +338,7 @@
 				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports64.def"
 				GenerateDebugInformation="false"
 				SubSystem="1"
@@ -418,6 +418,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectManagerImpl.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\tweekmain.cpp"
 				>
 			</File>
 			<File

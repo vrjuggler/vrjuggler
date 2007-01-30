@@ -38,7 +38,7 @@
 				OutputFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).pdb"
@@ -91,7 +91,7 @@
 				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
@@ -151,6 +151,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\tweekmain.cpp">
 			</File>
 		</Filter>
 		<Filter
