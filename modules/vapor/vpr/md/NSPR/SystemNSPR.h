@@ -208,21 +208,7 @@ public:
     *         succeeded. \c false is returned if the named environment
     *         variable could not be found in the run-time environment.
     */
-   static bool getenv(const std::string& name, std::string& result)
-   {
-      char* val;
-      bool status(false);
-
-      val = PR_GetEnv(name.c_str());
-
-      if ( val != NULL )
-      {
-         result = val;
-         status = true;
-      }
-
-      return status;
-   }
+   static bool getenv(const std::string& name, std::string& result);
 
    /**
     * Sets the value of the named environment variable in the run-time
@@ -241,18 +227,7 @@ public:
     *         value successfully. \c false is returned if the environment
     *         variable set operation failed.
     */
-   static bool setenv(const std::string& name, const std::string& value)
-   {
-      // NSPR requires form of "name=value"
-      // NSPR takes possesion of the string memory, so we just leak here
-      std::string* set_value = new std::string(name);
-      (*set_value) += "=";
-      (*set_value) += value;
-
-      const PRStatus ret_val = PR_SetEnv(set_value->c_str());
-
-      return ret_val == PR_SUCCESS;
-   }
+   static bool setenv(const std::string& name, const std::string& value);
 
    /**
     * Returns the name of the local host.

@@ -37,8 +37,12 @@
 
 #ifdef VPR_OS_Windows
 #  include <winsock2.h> /* For struct tiemval */
+#  include <cstdlib>    /* For std::getenv() and _putenv() */
+#else
+#  include <cstring>    /* For strdup() */
 #endif
 
+#include <sstream>
 #include <boost/concept_check.hpp>
 
 #include <vpr/md/NSPR/SystemNSPR.h>
@@ -56,6 +60,55 @@ int SystemNSPR::gettimeofday(vpr::TimeVal* tp, vpr::TimeZone* tzp)
    tp->tv_usec = now % 1000000;
 
    return 0;
+}
+
+bool SystemNSPR::getenv(const std::string& name, std::string& result)
+{
+   bool status(false);
+
+#if defined(VPR_OS_Windows)
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+   char* val(NULL);
+   size_t num;
+   _dupenv_s(&val, &num, name.c_str());
+#else
+   const char* val = std::getenv(name.c_str());
+#endif
+#else
+   const char* val = PR_GetEnv(name.c_str());
+#endif
+
+   if ( val != NULL )
+   {
+      result = val;
+      status = true;
+
+#if defined(VPR_OS_Windows) && defined(_MSC_VER) && _MSC_VER >= 1400
+      std::free(val);
+      val = NULL;
+#endif
+   }
+
+   return status;
+}
+
+bool SystemNSPR::setenv(const std::string& name, const std::string& value)
+{
+   bool status(false);
+   // NSPR and _putenv() require the form "name=value".
+   std::ostringstream env_stream;
+   env_stream << name << "=" << value;
+
+#if defined(VPR_OS_Windows)
+   const int ret_val = _putenv(env_stream.str().c_str());
+   status = ret_val == 0;
+#else
+   // NSPR takes possesion of the string memory.
+   const PRStatus ret_val = PR_SetEnv(strdup(env_stream.str().c_str()));
+   status = ret_val == PR_SUCCESS;
+#endif
+
+   return status;
 }
 
 }
