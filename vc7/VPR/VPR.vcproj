@@ -330,6 +330,9 @@
 			<File
 				RelativePath="..\..\external\md5-c\md5c.c">
 			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\vprmain.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
