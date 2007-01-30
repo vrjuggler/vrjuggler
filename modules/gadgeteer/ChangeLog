@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-30-2007 patrick     Eliminated the need to set GADGET_BASE_DIR on Windows
+                        to run applications.
+                        NEW VERSION: 1.1.23
 Jan-03-2007 aronb       Rewrote the Polhemus Fastrak driver.
                         NEW VERSION: 1.1.22
 Dec-14-2006 aronb       Allow programmatic creation of usable device proxy

@@ -339,6 +339,9 @@
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\VirtualDevice.cpp">
 			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\gadgetmain.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
