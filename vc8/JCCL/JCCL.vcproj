@@ -419,6 +419,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\jackal\common\jccl\jcclmain.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ParseUtil.cpp"
 				>
 			</File>
