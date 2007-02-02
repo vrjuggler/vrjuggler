@@ -1738,12 +1738,14 @@ def installOpenAL(prefix):
 
       # OpenAL 1.0 and 1.1 put the redistributable DLL in different places.
       dll_dirs = [os.path.join(srcdir, 'dll'),
+                  os.path.join(r'C:\windows', 'SysWOW64'),
                   os.path.join(r'C:\windows', 'system32')]
 
       for d in dll_dirs:
          dll = os.path.join(d, 'OpenAL32.dll')
          if os.path.exists(dll):
             smartCopy(dll, destdir)
+            break
 
    srcdir = os.environ['ALUT_ROOT']
    if srcdir != "":
@@ -1752,7 +1754,7 @@ def installOpenAL(prefix):
 
       alut_dll = os.path.join(srcdir, 'lib', 'alut.dll')
       if os.path.exists(alut_dll):
-         smartCopy(dll, destdir)
+         smartCopy(alut_dll, destdir)
 
 def installOmniORB(prefix):
    root = os.getenv('OMNIORB_ROOT', '')
