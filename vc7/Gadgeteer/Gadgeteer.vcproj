@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="Gadgeteer"
 	ProjectGUID="{1AAD8712-09DC-4957-8594-AF5A49BAB4E1}"
 	Keyword="Win32Proj">
@@ -55,11 +55,18 @@
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL|Win32"
@@ -109,13 +116,22 @@
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -241,9 +257,6 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputWindowWin32.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse.cpp">
 			</File>
 			<File
@@ -251,6 +264,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.cpp">
@@ -473,6 +489,15 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\gadgetConfig.h">
+			</File>
+			<File
+				RelativePath="gadget\gadgetDefines.h">
+			</File>
+			<File
+				RelativePath="gadget\gadgetParam.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Gesture.h">
 			</File>
 			<File
@@ -527,12 +552,6 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputWindowWin32.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEventPtr.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse.h">
 			</File>
 			<File
@@ -543,6 +562,12 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEventPtr.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Keys.h">
@@ -670,19 +695,16 @@
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\VirtualDevice.h">
 			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\gadgetConfig.h">
-			</File>
-			<File
-				RelativePath="gadget\gadgetDefines.h">
-			</File>
-			<File
-				RelativePath="gadget\gadgetParam.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget.rc">
+			</File>
+			<File
+				RelativePath=".\gadgeteer.ico">
+			</File>
 			<File
 				RelativePath=".\Gadgeteer.rc">
 				<FileConfiguration
@@ -697,12 +719,6 @@
 						Name="VCResourceCompilerTool"
 						AdditionalIncludeDirectories=""/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget.rc">
-			</File>
-			<File
-				RelativePath=".\gadgeteer.ico">
 			</File>
 		</Filter>
 	</Files>

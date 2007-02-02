@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="JCCL CORBA Run-Time Reconfig Plug-in IDL to C++"
 	ProjectGUID="{B0D8E82A-EAF5-4162-8136-C12B84DC5089}"
 	Keyword="MakeFileProj">
@@ -22,6 +22,8 @@
 				CleanCommandLine="nmake clean"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"

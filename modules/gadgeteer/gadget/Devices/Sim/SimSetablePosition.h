@@ -51,11 +51,7 @@ namespace gadget
  */
 //class SimSetablePosition : public Input, public Position
 class GADGET_CLASS_API SimSetablePosition
-#if _MSC_VER < 1310  // 1310 == VC++ 7.1
-   : public Input, public Position
-#else
    : public InputMixer<Input, Position>
-#endif
 {
 public:
    SimSetablePosition()

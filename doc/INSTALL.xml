@@ -135,8 +135,8 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
          url="http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q243/4/51.asp&amp;NoWebContent=1">acknowledges</ulink>
          the issues concerning noncompliance to the C++ Standard with Visual
          Studio 6.0, and it appears that they have no plans to fix these
-         problems. Therefore, we require the use of Visual Studio 7.x (.NET
-         2002 or 2003) or newer to compile the source code.</para>
+         problems. Therefore, we require the use of Visual Studio 7.1 (.NET
+         2003) or newer to compile the source code.</para>
       </section>
    </section>
 
