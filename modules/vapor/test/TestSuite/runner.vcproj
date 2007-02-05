@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="runner"
 	ProjectGUID="{5660D1A6-A8FA-48D0-B881-567A1F57DF39}"
 	Keyword="Win32Proj">
@@ -57,7 +57,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -108,9 +114,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -149,6 +163,9 @@
 				RelativePath="TestCases\DynLoad\LibraryTest.cpp">
 			</File>
 			<File
+				RelativePath="main.cpp">
+			</File>
+			<File
 				RelativePath="TestCases\Socket\NonBlockingSocketsTest.cpp">
 			</File>
 			<File
@@ -161,10 +178,10 @@
 				RelativePath="TestCases\IO\SelectorTest.cpp">
 			</File>
 			<File
-				RelativePath="TestCases\IO\Port\SerialPortTest.cpp">
+				RelativePath="TestCases\IO\SerializableTest.cpp">
 			</File>
 			<File
-				RelativePath="TestCases\IO\SerializableTest.cpp">
+				RelativePath="TestCases\IO\Port\SerialPortTest.cpp">
 			</File>
 			<File
 				RelativePath="TestCases\Thread\SignalTest.cpp">
@@ -189,9 +206,6 @@
 			</File>
 			<File
 				RelativePath="TestCases\IO\XMLReaderWriterTest.cpp">
-			</File>
-			<File
-				RelativePath="main.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -246,10 +260,10 @@
 				RelativePath="TestCases\IO\SelectorTest.h">
 			</File>
 			<File
-				RelativePath="TestCases\IO\Port\SerialPortTest.h">
+				RelativePath="TestCases\IO\SerializableTest.h">
 			</File>
 			<File
-				RelativePath="TestCases\IO\SerializableTest.h">
+				RelativePath="TestCases\IO\Port\SerialPortTest.h">
 			</File>
 			<File
 				RelativePath="TestCases\Thread\SignalTest.h">

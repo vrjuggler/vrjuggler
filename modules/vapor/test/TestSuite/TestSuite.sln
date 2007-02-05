@@ -1,24 +1,40 @@
-Microsoft Visual Studio Solution File, Format Version 7.00
+Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "runner", "runner.vcproj", "{5660D1A6-A8FA-48D0-B881-567A1F57DF39}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dsomod1", "vc7\dsomod1.vcproj", "{90A4206A-9A02-4F78-9957-8704F1A80799}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dsomod2", "vc7\dsomod2.vcproj", "{17842811-54D3-4779-BE4D-0F0674193F8D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cmod", "vc7\cmod.vcproj", "{375DCDC8-506A-4CFB-83AA-FD761C666393}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cxxmod", "vc7\cxxmod.vcproj", "{92043CD8-566E-44D9-A8D6-A0CD0F4E472A}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loadermod1", "vc7\loadermod1.vcproj", "{8323533D-7454-47AF-9CEF-8B553B2340E5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loadermod1_d", "vc7\loadermod1_d.vcproj", "{B781C070-FF92-4216-9A03-DFCD4D4C2AA4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loadermod2", "vc7\loadermod2.vcproj", "{BAB63CB8-AF6D-421C-8CDA-C0AB2A85739B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
-		ConfigName.0 = Debug
-		ConfigName.1 = Release
+		Debug = Debug
+		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
