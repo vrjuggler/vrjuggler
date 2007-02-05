@@ -28,8 +28,7 @@
 #define _VJ_OPENSG_APP_H_
 
 #include <vrj/vrjConfig.h>
-#include <iostream>
-#include <iomanip>
+#include <sstream>
 
 #include <vpr/Util/Debug.h>
 #include <vrj/Draw/OGL/GlContextData.h>
@@ -211,10 +210,10 @@ inline void OpenSGApp::contextInit()
    {
       c_data->mContextThreadInitialized = true;
 
-      char thread_name_buffer[255];
-      sprintf(thread_name_buffer, "vprThread:%d",
-              vpr::Thread::self()->getTID());
-      c_data->mOsgThread = OSG::ExternalThread::get(thread_name_buffer);
+      std::ostringstream thread_name;
+      thread_name << "vprThread:" << vpr::Thread::self()->getTID();
+      c_data->mOsgThread = OSG::ExternalThread::get(thread_name.str().c_str());
+
       if(!(c_data->mOsgThread->isInitialized()))
       {
          c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this might need to be different thread
