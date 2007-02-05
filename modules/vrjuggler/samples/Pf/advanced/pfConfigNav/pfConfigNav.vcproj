@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="pfConfigNav"
 	ProjectGUID="{59551722-A1F0-4B4C-B844-567D6CEEDFEC}"
 	SccProjectName=""
@@ -67,7 +67,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -126,18 +132,26 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="pfBasicConfigNav.cpp">
+				RelativePath="..\pfTools\FileIO.cpp">
 			</File>
 			<File
-				RelativePath="..\pfTools\FileIO.cpp">
+				RelativePath="pfBasicConfigNav.cpp">
 			</File>
 			<File
 				RelativePath="..\pfTools\pfFileIO.cpp">
@@ -183,6 +197,12 @@
 				RelativePath="..\nav\CaveNavigator.h">
 			</File>
 			<File
+				RelativePath="..\nav\collider.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\FileIO.h">
+			</File>
+			<File
 				RelativePath="KeyFramer.h">
 			</File>
 			<File
@@ -192,22 +212,10 @@
 				RelativePath="KeyFramerImporter.h">
 			</File>
 			<File
-				RelativePath="..\pfTools\PfAppStats.h">
-			</File>
-			<File
-				RelativePath="..\pfTools\FileIO.h">
-			</File>
-			<File
-				RelativePath="StopWatch.h">
-			</File>
-			<File
-				RelativePath="..\nav\StopWatch.h">
-			</File>
-			<File
-				RelativePath="..\nav\collider.h">
-			</File>
-			<File
 				RelativePath="..\nav\navigator.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\PfAppStats.h">
 			</File>
 			<File
 				RelativePath="pfBasicConfigNavApp.h">
@@ -225,16 +233,16 @@
 				RelativePath="..\pfTools\pfNavDCS.h">
 			</File>
 			<File
-				RelativePath="..\pfTools\pfSoundNode.h">
-			</File>
-			<File
-				RelativePath="..\pfTools\pfSoundTraverser.h">
-			</File>
-			<File
 				RelativePath="..\nav\pfPogoCollider.h">
 			</File>
 			<File
 				RelativePath="..\nav\pfRayCollider.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\pfSoundNode.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\pfSoundTraverser.h">
 			</File>
 			<File
 				RelativePath="..\nav\pfTerryBoxCollide.h">
@@ -250,6 +258,12 @@
 			</File>
 			<File
 				RelativePath="..\pfNav\simplePfNavApp.h">
+			</File>
+			<File
+				RelativePath="StopWatch.h">
+			</File>
+			<File
+				RelativePath="..\nav\StopWatch.h">
 			</File>
 			<File
 				RelativePath="..\nav\velocityNav.h">

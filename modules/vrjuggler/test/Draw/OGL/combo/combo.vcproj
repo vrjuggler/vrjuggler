@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="combo"
 	ProjectGUID="{2F846F64-C67D-43BD-A031-45B4E369CAF2}"
 	SccProjectName=""
@@ -67,7 +67,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -126,24 +132,32 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\perfAddon\PerfProbe.cpp">
-			</File>
-			<File
-				RelativePath="..\perfAddon\Text.cpp">
-			</File>
-			<File
 				RelativePath=".\combo.cpp">
 			</File>
 			<File
 				RelativePath="..\cubes\cubesApp.cpp">
+			</File>
+			<File
+				RelativePath="..\perfAddon\PerfProbe.cpp">
+			</File>
+			<File
+				RelativePath="..\perfAddon\Text.cpp">
 			</File>
 			<File
 				RelativePath="..\torus\torusApp.cpp">
@@ -156,13 +170,13 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath="..\cubes\cubesApp.h">
+			</File>
+			<File
 				RelativePath="..\perfAddon\PerfProbe.h">
 			</File>
 			<File
 				RelativePath="..\perfAddon\Text.h">
-			</File>
-			<File
-				RelativePath="..\cubes\cubesApp.h">
 			</File>
 			<File
 				RelativePath="..\torus\torusApp.h">

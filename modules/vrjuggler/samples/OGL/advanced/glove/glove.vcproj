@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="glove"
 	ProjectGUID="{FE66E460-FF2C-4917-93BC-5C47620A2E9B}"
 	SccProjectName=""
@@ -67,7 +67,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -125,16 +131,21 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File
-				RelativePath="Scene.cpp">
-			</File>
 			<File
 				RelativePath="gloveApp.cpp">
 			</File>
@@ -144,13 +155,13 @@
 			<File
 				RelativePath="navigation.cxx">
 			</File>
+			<File
+				RelativePath="Scene.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
-			<File
-				RelativePath="Scene.h">
-			</File>
 			<File
 				RelativePath="defines.h">
 			</File>
@@ -159,6 +170,9 @@
 			</File>
 			<File
 				RelativePath="navigation.h">
+			</File>
+			<File
+				RelativePath="Scene.h">
 			</File>
 		</Filter>
 		<Filter

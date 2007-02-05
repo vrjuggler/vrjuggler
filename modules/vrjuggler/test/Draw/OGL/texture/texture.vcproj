@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="texture"
 	ProjectGUID="{9DD14559-4788-4936-B7AB-FF18952323D9}"
 	SccProjectName=""
@@ -67,7 +67,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -125,19 +131,21 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File
-				RelativePath=".\Image.cpp">
-			</File>
-			<File
-				RelativePath=".\Texture.cpp">
-			</File>
 			<File
 				RelativePath=".\application.cpp">
 			</File>
@@ -148,6 +156,9 @@
 				RelativePath=".\hexImage.cpp">
 			</File>
 			<File
+				RelativePath=".\Image.cpp">
+			</File>
+			<File
 				RelativePath=".\main.cpp">
 			</File>
 			<File
@@ -156,16 +167,13 @@
 			<File
 				RelativePath=".\squareImage.cpp">
 			</File>
+			<File
+				RelativePath=".\Texture.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
-			<File
-				RelativePath=".\Image.h">
-			</File>
-			<File
-				RelativePath=".\Texture.h">
-			</File>
 			<File
 				RelativePath=".\application.h">
 			</File>
@@ -179,6 +187,9 @@
 				RelativePath=".\hexImage.h">
 			</File>
 			<File
+				RelativePath=".\Image.h">
+			</File>
+			<File
 				RelativePath=".\renderGeometry.h">
 			</File>
 			<File
@@ -186,6 +197,9 @@
 			</File>
 			<File
 				RelativePath=".\squareImage.h">
+			</File>
+			<File
+				RelativePath=".\Texture.h">
 			</File>
 		</Filter>
 		<Filter

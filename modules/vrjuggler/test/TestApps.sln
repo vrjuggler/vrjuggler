@@ -1,32 +1,56 @@
-Microsoft Visual Studio Solution File, Format Version 7.00
+Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "analog", "Draw\OGL\analog\analog.vcproj", "{119E9321-722B-4BBF-A14E-AF3CB3D5FEC1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "combo", "Draw\OGL\combo\combo.vcproj", "{2F846F64-C67D-43BD-A031-45B4E369CAF2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cubes", "Draw\OGL\cubes\cubes.vcproj", "{C70EB244-1D10-4E64-9B7B-304AF77C7256}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "digitalGlove", "Draw\OGL\digitalGlove\digitalGlove.vcproj", "{1BADFE05-E68F-413D-8615-119BFC36CA56}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "logger", "Draw\OGL\logger\logger.vcproj", "{E7504EE7-E6B3-426C-A183-9848554BC5B0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simpleGlove", "Draw\OGL\simpleGlove\simpleGlove.vcproj", "{3E983F7F-1D88-4587-8AE4-88A4CFE4BC3E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "texture", "Draw\OGL\texture\texture.vcproj", "{9DD14559-4788-4936-B7AB-FF18952323D9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "torus", "Draw\OGL\torus\torus.vcproj", "{87BF57A8-D44A-4FB5-A249-341FE459AC55}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wand", "Draw\OGL\wand\wand.vcproj", "{3C2D6BE2-BF10-451A-B182-156D9AF6B944}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "applicationData", "Cluster\applicationData\applicationData.vcproj", "{23B853C7-A14E-472E-86F0-9DA205C2A1BA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WallTest", "Draw\OGL\WallTest\WallTest.vcproj", "{D0E43625-21FA-4FD1-9B9C-256E9C451E68}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "collideApp", "PerfMon\collideApp\collideApp.vcproj", "{C3331FBE-8035-4B0D-A41F-713E8FF40C7B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
-		ConfigName.0 = Debug
-		ConfigName.1 = Release
+		Debug = Debug
+		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection

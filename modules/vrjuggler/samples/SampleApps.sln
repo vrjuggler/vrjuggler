@@ -1,42 +1,76 @@
-Microsoft Visual Studio Solution File, Format Version 7.00
+Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glove", "OGL\advanced\glove\glove.vcproj", "{FE66E460-FF2C-4917-93BC-5C47620A2E9B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "navgrab", "OGL\advanced\navgrab\navgrab.vcproj", "{CCC5AD55-60CF-47DD-861A-663F52C2CBD0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "proceduralApp", "OGL\ext\proceduralApp\proceduralApp.vcproj", "{FD2862DB-E025-4BD1-A2AB-73AC6B418ADD}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConfigApp", "OGL\simple\ConfigApp\ConfigApp.vcproj", "{F7A281D0-0C41-42FD-8A26-ACD91C6EC4A3}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "contextApp", "OGL\simple\contextApp\contextApp.vcproj", "{821044C4-8E85-41A0-A87F-3EAE45607CF4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MPApp", "OGL\simple\MPApp\MPApp.vcproj", "{83D7A1FC-60AF-4F0C-BD24-276A7D813C11}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simpleApp", "OGL\simple\SimpleApp\simpleApp.vcproj", "{58B794FF-3A46-4793-8719-08C1B999BDF5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simpleInput", "OGL\simple\simpleInput\simpleInput.vcproj", "{F49949BF-AFA1-4F66-9E57-70FFD10D19DF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pfConfigNav", "Pf\advanced\pfConfigNav\pfConfigNav.vcproj", "{59551722-A1F0-4B4C-B844-567D6CEEDFEC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pfNav", "Pf\advanced\pfNav\pfNav.vcproj", "{4A2D7299-40F2-45DB-851B-D23A9E6E0A64}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simplePf", "Pf\simple\simplePf\simplePf.vcproj", "{AE205DB7-5729-4A87-B906-53889787CE0C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSGNav", "OpenSG\simple\OpenSGNav\OpenSGNav.vcproj", "{04FF04CD-6A8C-401E-91A3-0E9BE5463A0C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osgNav", "OSG\simple\osgNav\osgNav.vcproj", "{8346115D-65A0-42F9-859F-77C649F8FD1C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSGNavGrab", "OpenSG\advanced\OpenSGNavGrab\OpenSGNavGrab.vcproj", "{524E339E-EAB2-4745-A778-065F7B35D612}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sonixApp", "sound\simple\sonix\sonixApp.vcproj", "{09E884F7-5F86-4AAC-A545-EB88D2F5AF2E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soundManager", "sound\simple\soundManager\soundManager.vcproj", "{F050E588-7326-496A-9D60-50C7C3FEEE0C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OsgNavGrab", "OSG\advanced\OSGNavGrab\OsgNavGrab.vcproj", "{F92580AC-6925-464A-90D1-C1BA12A3784C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
-		ConfigName.0 = Debug
-		ConfigName.1 = Release
+		Debug = Debug
+		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
