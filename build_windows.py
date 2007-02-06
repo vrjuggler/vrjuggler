@@ -500,7 +500,7 @@ def updateVersions(vcDir, options):
                   print "Failed to remove", f
 
       version_re      = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
-      branch_re       = re.compile(r'BRANCH\s*=\s*([\w\d-]+)')
+      branch_re       = re.compile(r'BRANCH\s*=\s*(.+)')
       canon_name_re   = re.compile(r'CANON_NAME\s*=\s*(\S.+)')
       subst_re        = re.compile(r'@(\w+)@')
       zero_strip_re   = re.compile(r'^0*([^0]\d+)')
