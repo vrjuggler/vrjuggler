@@ -206,17 +206,16 @@ bool Configuration::load(const std::string& filename,
 
       // Go through the <include> XML elements.
       cppdom::NodeList inc_list = cfg_node->getChildren(tokens::INCLUDE);
-      for ( cppdom::NodeList::iterator itr = inc_list.begin();
-            itr != inc_list.end();
-            ++itr )
+      typedef cppdom::NodeList::iterator iter_type;
+      for ( iter_type itr = inc_list.begin(); itr != inc_list.end(); ++itr )
       {
-         std::string cfg_filename = (*itr)->getCdata();
+         const std::string cfg_filename = (*itr)->getCdata();
          vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
             << "Including " << cfg_filename << std::endl
             << vprDEBUG_FLUSH;
 
          // Load the file by making a recursive call to this method. We use
-         // mFileName so that the fully expanded path to the includin file is
+         // mFileName so that the fully expanded path to the including file is
          // used as the "parent" file.
          load(cfg_filename, mFileName);
       }
