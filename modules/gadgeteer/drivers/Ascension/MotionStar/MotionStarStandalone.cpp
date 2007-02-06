@@ -31,6 +31,7 @@
 #include <string.h>
 #include <math.h>
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 #include <gmtl/EulerAngle.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Math.h>
@@ -2141,8 +2142,6 @@ printSystemStatus(const BIRDNET::SYSTEM_STATUS* status)
 {
    unsigned char erc_addr, xmtr_num;
    unsigned int pad_width_full, pad_width_dot;
-   char rev_str[8];
-   float rev_num;
 
    // Set the padding for the dots that go between the description and the
    // corresponding value and for the full line width.  In this case, we are
@@ -2190,9 +2189,10 @@ printSystemStatus(const BIRDNET::SYSTEM_STATUS* status)
    std::cout << std::setw(pad_width_dot) << std::setfill('.')
              << "* Measurement rate " << " "
              << convertMeasurementRate(status->measurementRate) << "\n";
-   sprintf(rev_str, "%u.%u", (unsigned int) status->softwareRevision[0],
-           (unsigned int) status->softwareRevision[1]);
-   rev_num = atof(rev_str);
+   std::ostringstream rev_stream;
+   rev_stream << (unsigned int) status->softwareRevision[0] << "."
+              << (unsigned int) status->softwareRevision[1];
+   const float rev_num = boost::lexical_cast<float>(rev_stream.str());
    std::cout << std::setw(pad_width_dot) << std::setfill('.')
              << "* Server Software Revision " << " " << rev_num << "\n";
 
