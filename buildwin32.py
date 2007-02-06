@@ -422,7 +422,7 @@ def generateVersionHeaders(vcDir):
                self.__genParamFile(output, template)
 
       version_re      = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
-      branch_re       = re.compile(r'BRANCH\s*=\s*([\w\d-]+)')
+      branch_re       = re.compile(r'BRANCH\s*=\s*(.+)')
       canon_name_re   = re.compile(r'CANON_NAME\s*=\s*(\S.+)')
       vernum_re       = re.compile(r'@VER_NUMBER@')
       major_vernum_re = re.compile(r'@MAJOR_VER_NUMBER@')
