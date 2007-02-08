@@ -173,7 +173,11 @@ inline void OpenSGApp::init()
    }
 #endif
 
+#if OSG_MAJOR_VERSION >= 2
+   OSG_MAIN_ASPECT_ID = OSG::Thread::getCurrentAspect();   // Gets the base aspect id to use
+#else
    OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();   // Gets the base aspect id to use
+#endif
 }
 
 inline void OpenSGApp::apiInit()
