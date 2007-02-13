@@ -138,9 +138,14 @@ public:
    {
       if ( ! TlsSetValue(mKeyID, value) )
       {
+#if defined(_MSC_VER) && _MSC_VER < 1400
+         const char* msg = std::strerror(errno);
+#else
+         char msg[256];
+         strerror_s(msg, sizeof(msg), errno);
+#endif
          std::ostringstream msg_stream;
-         msg_stream << "Could not store thread local storage: "
-                    << std::strerror(errno);
+         msg_stream << "Could not set thread local storage: " << msg;
          throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
       }
    }
