@@ -62,8 +62,11 @@ namespace vpr
  *
  * @since 1.1.36
  *
- * @note This implementation is based on the condition_impl from Boost.Thread
- *       for Windows.
+ * @note This implementation is based on the "SignalObjectAndWait Solution"
+ *       from the article "Strategies for Implementing POSIX Condition
+ *       Variables on Win32" by Douglas C. Scmidt and Irfan Pyarali. The
+ *       article text can be found at
+ *       http://www.cs.wustl.edu/~schmidt/win32-cv-1.html
  */
 class VPR_CLASS_API CondVarWin32 : boost::noncopyable
 {
@@ -113,9 +116,6 @@ public:
     *         \c false is returned if the wait operation times out before
     *         acquiring the lock.
     *
-    * @throw vpr::IllegalArgumentException is thrown if \p timeToWait is not
-    *        vpr::Interval::NoTimeout and an invalid value is passed to
-    *        pthread_cond_timedwait().
     * @throw vpr::Exception is thrown if something goes wrong while trying to
     *        wait on the condition variable.
     *
@@ -232,29 +232,33 @@ public:
    void dump() const
    {
       std::cerr << "------------- vpr::CondVarWin32::Dump ---------\n"
-                << "   mGone = " << mGone << "\n"
-                << "mBlocked = " << mBlocked << "\n"
-                << "mWaiting = " << mWaiting << std::endl;
+                << "mWaitersCount = " << mWaitersCount << std::endl;
    }
 
 private:
    /** @name Condition Variable State */
    //@{
-   HANDLE mGate;
-   HANDLE mQueue;
-   HANDLE mMutex;       /**< Internal data state protection */
-
-   /** Number of threads that timed out and never made it to mQueue. */
-   unsigned int mGone;
-
-   /** Number of threads blocked on the condition. */
-   unsigned long mBlocked;
+   int mWaitersCount;                   /**< Number of waiting threads. */
+   CRITICAL_SECTION mWaitersCountLock;  /**< Lock for \c mWaitersCount. */
 
    /**
-    * Number of threads no longer waiting for the condition but still waiting
-    * to be removed from mQueue.
+    * Semaphore used to queue up threads waiting for the condition to
+    * become signaled.
     */
-   unsigned int  mWaiting;
+   HANDLE mSema;
+
+   /**
+    * An auto-reset event used by the broadcast/signal thread to wait for
+    * all the waiting thread(s) to wake up and be released from the
+    * semaphore.
+    */
+   HANDLE mWaitersDone;
+
+   /**
+    * Keeps track of whether we were broadcasting or signaling. This allows
+    * us to optimze the code when just signaling.
+    */
+   bool mWasBroadcast;
    //@}
 
    MutexWin32* mCondMutex;      /**< Mutex for the condition variable */

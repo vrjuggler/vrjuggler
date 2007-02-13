@@ -33,6 +33,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+// This must be defined to 0x0400 or higher in order to have the function
+// SignalObjectAndWait() declared.
+#define _WIN32_WINNT 0x0400
+
 #include <vpr/vprConfig.h>
 
 #include <sstream>
@@ -51,48 +55,44 @@ namespace vpr
 {
 
 CondVarWin32::CondVarWin32(MutexWin32* mutex)
-   : mGate(NULL)
-   , mQueue(NULL)
-   , mMutex(NULL)
-   , mGone(0)
-   , mBlocked(0)
-   , mWaiting(0)
+   : mWaitersCount(0)
+   , mSema(NULL)
+   , mWaitersDone(NULL)
+   , mWasBroadcast(false)
    , mCondMutex(NULL)
 {
-   // If the caller did not specify a mutex variable to use with
-   // the condition variable, use mDefaultMutex.
-   if ( mutex == NULL )
+   // If the caller did not specify a mutex variable to use with the
+   // condition variable, use mDefaultMutex.
+   if ( NULL == mutex )
    {
       mutex = &mDefaultMutex;
    }
 
-   mGate  = CreateSemaphore(NULL, 1, 1, NULL);
-   mQueue = CreateSemaphore(NULL, 0, (std::numeric_limits<long>::max)(),
-                            NULL);
-   mMutex = CreateMutex(0, 0, 0);
+   // Create an unnamed semaphore with no security initially set to 0 with a
+   // maximum count of 0x7fffffff.
+   mSema = CreateSemaphore(NULL, 0, 0x7fffffff, NULL);
 
-   if ( ! mGate || ! mQueue || ! mMutex )
+   if ( NULL == mSema )
    {
       const std::string err_msg(vpr::Error::getCurrentErrorMsg());
-      int result(0);
 
-      if ( mGate )
-      {
-         result = CloseHandle(mGate);
-         assert(result);
-      }
+      std::ostringstream msg_stream;
+      msg_stream << "Condition variable allocation failed: " << err_msg;
+      throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
+   }
 
-      if ( mQueue )
-      {
-         result = CloseHandle(mQueue);
-         assert(result);
-      }
+   InitializeCriticalSection(&mWaitersCountLock);
 
-      if ( mMutex )
-      {
-         result = CloseHandle(mMutex);
-         assert(result);
-      }
+   // Create an unnamed event with no security that resets automatically and
+   // is initially non-signaled.
+   mWaitersDone = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+   if ( NULL == mWaitersDone )
+   {
+      const std::string err_msg(vpr::Error::getCurrentErrorMsg());
+
+      int result = CloseHandle(mSema);
+      assert(result);
 
       std::ostringstream msg_stream;
       msg_stream << "Condition variable allocation failed: " << err_msg;
@@ -105,22 +105,27 @@ CondVarWin32::CondVarWin32(MutexWin32* mutex)
 CondVarWin32::~CondVarWin32()
 {
    int result(0);
-   result = CloseHandle(mGate);
+   result = CloseHandle(mSema);
    assert(result);
-   result = CloseHandle(mQueue);
-   assert(result);
-   result = CloseHandle(mMutex);
+   result = CloseHandle(mWaitersDone);
    assert(result);
 
-   mGate  = NULL;
-   mQueue = NULL;
-   mMutex = NULL;
+   mSema        = NULL;
+   mWaitersDone = NULL;
 }
 
+// From the article:
+//
+//    "This implementation [...] ensures that the external mutex is held until
+//    all threads waiting on [this condition variable] have a chance to wait
+//    again on the external mutex before returning to their callers. This
+//    solution relies on the fact that Windows NT mutex requests are queued in
+//    FIFO order, rather than in, e.g., priority order. Because the external
+//    mutex queue is serviced in FIFO order, all waiting threads will acquire
+//    the external mutex before any of them can reacquire it a second time.
+//    This property is essential to ensure fairness."
 bool CondVarWin32::wait(const vpr::Interval& timeToWait)
 {
-   bool status(true);
-
    // If not locked ...
    if ( ! mCondMutex->test() )
    {
@@ -129,166 +134,81 @@ bool CondVarWin32::wait(const vpr::Interval& timeToWait)
                  << "wait()";
       throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
    }
-   // The mutex variable must be locked when passed to pthread_cond_wait().
-   else
+
+   bool status(true);
+
+   EnterCriticalSection(&mWaitersCountLock);
+   ++mWaitersCount;
+   LeaveCriticalSection(&mWaitersCountLock);
+
+   // Wait indefinitely on the condition variable by default.
+   DWORD timeout(INFINITE);
+
+   // If the caller specified timeout value other than NoTimeout, then this
+   // call will not block longer than that timeout.
+   if ( vpr::Interval::NoTimeout != timeToWait )
    {
-      int result(0);
-      result = WaitForSingleObject(mGate, INFINITE);
+      timeout = timeToWait.msec();
+   }
+
+   int result(0);
+
+   // SignalObjectAndWait unlocks the given mutex and waits on the semaphore
+   // until signal() or broadcast() is called by another thread. This direct
+   // manipulation of mCondMutex->mLocked is safe because this thread holds
+   // the mutex when we make the change.
+   mCondMutex->mLocked = false;
+   result = SignalObjectAndWait(mCondMutex->mMutex, mSema, timeout, FALSE);
+
+   // If we did not wait infinitely on SignalObjectAndWait(), then we need to
+   // determine if the call timed out or if we got the lock on mSema.
+   if ( INFINITE != timeout )
+   {
+      assert(result != WAIT_FAILED && result != WAIT_ABANDONED);
+      status = (result == WAIT_OBJECT_0);
+   }
+
+   // At this point, if status is true, then we had better have the lock on
+   // mSema.
+   if ( status )
+   {
       assert(result == WAIT_OBJECT_0);
-      ++mBlocked;
-      result = ReleaseSemaphore(mGate, 1, 0);
-      assert(result);
 
-      mCondMutex->release();
+      EnterCriticalSection(&mWaitersCountLock);
 
-      // Wait indefinitely on the condition variable.
-      if ( vpr::Interval::NoTimeout == timeToWait )
+      // We are not waiting now.
+      --mWaitersCount;
+
+      // Check to see if w3e are the last waiter after broadcast().
+      const bool last_waiter = mWasBroadcast && mWaitersCount == 0;
+
+      LeaveCriticalSection(&mWaitersCountLock);
+
+      // If we are the last waiter thread during this broadcast, then let all
+      // the other threads proceed.
+      if ( last_waiter )
       {
-         result = WaitForSingleObject(mQueue, INFINITE);
-         assert(result == WAIT_OBJECT_0);
-
-         unsigned int was_waiting(0);
-         unsigned int was_gone(0);
-
-         result = WaitForSingleObject(mMutex, INFINITE);
-         assert(result == WAIT_OBJECT_0);
-         was_waiting = mWaiting;
-         was_gone    = mGone;
-
-         if ( was_waiting != 0 )
-         {
-            if ( --mWaiting == 0 )
-            {
-               if ( mBlocked != 0 )
-               {
-                  // Open mGate
-                  result = ReleaseSemaphore(mGate, 1, 0);
-                  assert(result);
-                  was_waiting = 0;
-               }
-               else if ( mGone != 0 )
-               {
-                  mGone = 0;
-               }
-            }
-         }
-         else if ( ++mGone == (std::numeric_limits<unsigned int>::max)() / 2 )
-         {
-            result = WaitForSingleObject(mGate, INFINITE);
-            assert(result == WAIT_OBJECT_0);
-            mBlocked -= mGone;
-            result = ReleaseSemaphore(mGate, 1, 0);
-            assert(result);
-            mGone = 0;
-         }
-
-         result = ReleaseMutex(mMutex);
-         assert(result);
-
-         if ( was_waiting == 1 )
-         {
-            for ( ; was_gone; --was_gone )
-            {
-               result = WaitForSingleObject(mQueue, INFINITE);
-               assert(result == WAIT_OBJECT_0);
-            }
-
-            result = ReleaseSemaphore(mGate, 1, 0);
-            assert(result);
-         }
+         // This atomically signals the mWaitersDone event and waits until it
+         // can acquire the given mutex. This is required to ensure fairness.
+         SignalObjectAndWait(mWaitersDone, mCondMutex->mMutex, INFINITE,
+                             FALSE);
+         mCondMutex->mLocked = true;
       }
-      // Wait for no longer than the given timeout period to acquire the lock
-      // on the condition variable.
       else
       {
-         for ( ; ; )
-         {
-            const DWORD ms(timeToWait.msec());
-
-            result = WaitForSingleObject(mQueue, ms);
-            assert(result != WAIT_FAILED && result != WAIT_ABANDONED);
-            status = (result == WAIT_OBJECT_0);
-
-            if ( result == WAIT_TIMEOUT )
-            {
-               vpr::Interval diff(vpr::Interval::now());
-               diff = diff - timeToWait;
-
-               if ( diff.msec() > 0 )
-               {
-                  continue;
-               }
-            }
-
-            break;
-         }
-
-         unsigned int was_waiting(0);
-         unsigned int was_gone(0);
-
-         result = WaitForSingleObject(mMutex, INFINITE);
-         assert(result == WAIT_OBJECT_0);
-         was_waiting = mWaiting;
-         was_gone    = mGone;
-
-         if ( was_waiting != 0 )
-         {
-            // Timeout.
-            if ( ! status )
-            {
-               if ( mBlocked != 0 )
-               {
-                  --mBlocked;
-               }
-               else
-               {
-                  ++mGone;
-               }
-            }
-
-            if ( --mWaiting == 0 )
-            {
-               if ( mBlocked != 0 )
-               {
-                  // Open mGate
-                  result = ReleaseSemaphore(mGate, 1, 0);
-                  assert(result);
-                  was_waiting = 0;
-               }
-               else if ( mGone != 0 )
-               {
-                  mGone = 0;
-               }
-            }
-         }
-         else if ( ++mGone == (std::numeric_limits<unsigned int>::max)() / 2 )
-         {
-            result = WaitForSingleObject(mGate, INFINITE);
-            assert(result == WAIT_OBJECT_0);
-            mBlocked -= mGone;
-            result = ReleaseSemaphore(mGate, 1, 0);
-            assert(result);
-            mGone = 0;
-         }
-
-         result = ReleaseMutex(mMutex);
-         assert(result);
-
-         if ( was_waiting == 1 )
-         {
-            for ( ; was_gone; --was_gone )
-            {
-               result = WaitForSingleObject(mQueue, INFINITE);
-               assert(result == WAIT_OBJECT_0);
-            }
-
-            result = ReleaseSemaphore(mGate, 1, 0);
-            assert(result);
-         }
+         // Always regain the external mutex sing that is the guarantee that
+         // we give to our callers.
+         mCondMutex->acquire();
       }
-
+   }
+   else
+   {
+      // Always regain the external mutex sing that is the guarantee that we
+      // give to our callers.
       mCondMutex->acquire();
    }
+
+   assert(mCondMutex->test() && "External mutex is supposed to be locked");
 
    return status;
 }
@@ -301,58 +221,25 @@ void CondVarWin32::signal()
                                VPR_LOCATION);
    }
 
-   unsigned int signals(0);
+   EnterCriticalSection(&mWaitersCountLock);
+   const bool have_waiters = mWaitersCount > 0;
+   LeaveCriticalSection(&mWaitersCountLock);
 
-   int result(0);
-   result = WaitForSingleObject(mMutex, INFINITE);
-   assert(result == WAIT_OBJECT_0);
-
-   if ( mWaiting != 0 )
+   if ( have_waiters )
    {
-      if ( mBlocked == 0 )
-      {
-         result = ReleaseMutex(mMutex);
-         assert(result);
-         return;
-      }
-
-      ++mWaiting;
-      --mBlocked;
-      signals = 1;
-   }
-   else
-   {
-      result = WaitForSingleObject(mGate, INFINITE);
-      assert(result == WAIT_OBJECT_0);
-
-      if ( mBlocked > mGone )
-      {
-         if ( mGone != 0 )
-         {
-            mBlocked -= mGone;
-            mGone     = 0;
-         }
-
-         signals = mWaiting = 1;
-         --mBlocked;
-      }
-      else
-      {
-         result = ReleaseSemaphore(mGate, 1, 0);
-         assert(result);
-      }
-   }
-
-   result = ReleaseMutex(mMutex);
-   assert(result);
-
-   if ( signals )
-   {
-      result = ReleaseSemaphore(mQueue, signals, 0);
-      assert(result);
+      ReleaseSemaphore(mSema, 1, 0);
    }
 }
 
+// From the article:
+//
+//    "[This] function is more complex and requires two steps:
+//    
+//       1. It wakes up all the threads waiting on [mSema], which can be done
+//          atomically by passing [mWaitersCount] to ReleaseSemaphore().
+//       2. It then blocks on the auto-reset [mWaitersDone] event until the
+//          last thread in the group of waiting threads exits the [wait()]
+//          critical section."
 void CondVarWin32::broadcast()
 {
    // ASSERT: We have been locked
@@ -362,55 +249,33 @@ void CondVarWin32::broadcast()
                                VPR_LOCATION);
    }
 
-   unsigned int signals(0);
+   // Protect access to mWaitersCount and mWasBroadcast.
+   EnterCriticalSection(&mWaitersCountLock);
+   bool have_waiters(false);
 
-   int result(0);
-   result = WaitForSingleObject(mMutex, INFINITE);
-   assert(result == WAIT_OBJECT_0);
-
-   if ( mWaiting != 0 )
+   if ( mWaitersCount > 0 )
    {
-      if ( mBlocked == 0 )
-      {
-         result = ReleaseMutex(mMutex);
-         assert(result);
-         return;
-      }
+      // We are broadcasting even if there was just one waiter.
+      mWasBroadcast = true;
+      have_waiters = true;
+   }
 
-      signals   = mBlocked;
-      mWaiting += signals;
-      mBlocked  = 0;
+   if ( have_waiters )
+   {
+      // Wake up all the waiters atomically.
+      ReleaseSemaphore(mSema, mWaitersCount, 0);
+      LeaveCriticalSection(&mWaitersCountLock);
+
+      // Wait for all the awakened threads to acquire the semaphore.
+      WaitForSingleObject(mWaitersDone, INFINITE);
+
+      // This is safe because no other waiter threads can wake up to access
+      // it.
+      mWasBroadcast = false;
    }
    else
    {
-      result = WaitForSingleObject(mGate, INFINITE);
-      assert(result == WAIT_OBJECT_0);
-
-      if ( mBlocked > mGone )
-      {
-         if ( mGone != 0 )
-         {
-            mBlocked -= mGone;
-            mGone     = 0;
-         }
-
-         signals = mWaiting = mBlocked;
-         mBlocked = 0;
-      }
-      else
-      {
-         result = ReleaseSemaphore(mGate, 1, 0);
-         assert(result);
-      }
-   }
-
-   result = ReleaseMutex(mMutex);
-   assert(result);
-
-   if ( signals )
-   {
-      result = ReleaseSemaphore(mQueue, signals, 0);
-      assert(result);
+      LeaveCriticalSection(&mWaitersCountLock);
    }
 }
 

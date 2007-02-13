@@ -241,6 +241,8 @@ private:
     * protection.
     */
    bool mLocked;
+
+   friend class CondVarWin32;
 };
 
 } // End of vpr namespace
