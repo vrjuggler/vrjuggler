@@ -36,12 +36,13 @@ import traceback
 import getopt
 pj = os.path.join
 
-EXIT_STATUS_SUCCESS           = 0
-EXIT_STATUS_NO_MSVS           = 1
-EXIT_STATUS_MISSING_DATA_FILE = 2
-EXIT_STATUS_MSVS_START_ERROR  = 3
-EXIT_STATUS_INVALID_PATH      = 4
-EXIT_STATUS_MISSING_REQ_VALUE = 5
+EXIT_STATUS_SUCCESS              = 0
+EXIT_STATUS_NO_MSVS              = 1
+EXIT_STATUS_MISSING_DATA_FILE    = 2
+EXIT_STATUS_MSVS_START_ERROR     = 3
+EXIT_STATUS_INVALID_PATH         = 4
+EXIT_STATUS_MISSING_REQ_VALUE    = 5
+EXIT_STATUS_UNSUPPORTED_COMPILER = 6
 
 gJugglerDir      = os.path.dirname(os.path.abspath(sys.argv[0]))
 gOptionsFileName = "options.cache"
@@ -114,7 +115,8 @@ def detectVisualStudioVersion(reattempt = False):
       cl_minor = int(ver_string_match.group(3))
 
       if cl_major == 13 and cl_minor < 10:
-         vs_ver = '.NET 2002'
+         printStatus("Visual Studio .NET 2002 is not supported")
+         sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
       elif cl_major == 13 and cl_minor >= 10:
          vs_ver = '.NET 2003'
       else:
@@ -136,10 +138,9 @@ def detectVisualStudioVersion(reattempt = False):
       # installation.
       if not reattempt:
          printStatus("Visual studio not in path, attempting to find...")
-         # Common installation directories for Visual Studio 7.x.
+         # Common installation directories for Visual Studio.
          vs_dirs = [r'C:\Program Files\Microsoft Visual Studio 8',
-                    r'C:\Program Files\Microsoft Visual Studio .NET 2003',
-                    r'C:\Program Files\Microsoft Visual Studio .NET',
+                    r'C:\Program Files\Microsoft Visual Studio .NET 2003'
                    ]
 
          for d in vs_dirs:
@@ -175,8 +176,8 @@ def detectVisualStudioVersion(reattempt = False):
 def chooseVisualStudioDir():
    (cl_ver_major, cl_ver_minor) = detectVisualStudioVersion()
 
-   # For Visual Studio .NET 2002 and 2003 (versions 7.0 and 7.1 respectively),
-   # we will use the solution in the vc7 subtree.
+   # For Visual Studio .NET 2003 (version 7.1), we will use the solution in
+   # the vc7 subtree.
    if cl_ver_major == 13:
       vc_dir = 'vc7'
    # Otherwise, we use the solution in the vc8 subtree.
@@ -2370,6 +2371,8 @@ if __name__ == '__main__':
          status = 'invalid directory structure'
       elif exitEx.code == EXIT_STATUS_MISSING_REQ_VALUE:
          status = 'required value not given'
+      elif exitEx.code == EXIT_STATUS_UNSUPPORTED_COMPILER:
+         status = 'unsupported compiler'
       else:
          status = 'error encountered'
 
