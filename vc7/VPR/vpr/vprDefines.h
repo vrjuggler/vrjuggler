@@ -113,6 +113,8 @@
 #  define VPR_OS_Win64
 #endif
 
+#define VPR_USE_WINTHREADS
+
 /* Define if using the Netscape Portable Runtime. */
 #define VPR_USE_NSPR 
 

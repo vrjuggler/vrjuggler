@@ -153,7 +153,7 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\BufferObjectWriter.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\CondVarNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\CondVarWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionAbortedException.cpp">
@@ -174,7 +174,7 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\EOFException.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Util\ErrorImplNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Util\ErrorImplWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Exception.cpp">
@@ -228,7 +228,7 @@
 				RelativePath="..\..\external\md5-c\md5c.c">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\MutexNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp">
@@ -258,10 +258,10 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\ResourceException.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\RWMutexNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\SelectorImplNSPR.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\SelectorImplNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\SemaphoreWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\WIN32\IO\Port\SerialPortImplWin32.cpp">
@@ -306,19 +306,16 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Thread\ThreadKeyNSPR.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Thread\ThreadKeyNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadKeyWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Thread\ThreadNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadPool.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadPool.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\TimeoutException.cpp">
@@ -339,6 +336,9 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\Version.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\vprmain.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\WouldBlockException.cpp">
 			</File>
 			<File
@@ -346,9 +346,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectWriter.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\vprmain.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -388,7 +385,7 @@
 				RelativePath="..\..\modules\vapor\vpr\Sync\CondVar.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\CondVarNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\CondVarWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\ConnectionAbortedException.h">
@@ -421,7 +418,7 @@
 				RelativePath="..\..\modules\vapor\vpr\Util\ErrorBase.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Util\ErrorImplNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Util\ErrorImplWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Exception.h">
@@ -511,7 +508,7 @@
 				RelativePath="..\..\modules\vapor\vpr\Sync\Mutex.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\MutexNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.h">
@@ -556,9 +553,6 @@
 				RelativePath="..\..\modules\vapor\vpr\Sync\RWMutex.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\RWMutexNSPR.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\SampleLimitedStatCollector.h">
 			</File>
 			<File
@@ -577,7 +571,7 @@
 				RelativePath="..\..\modules\vapor\vpr\Sync\Semaphore.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\SemaphoreNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\SemaphoreWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\SerializableObject.h">
@@ -676,16 +670,16 @@
 				RelativePath="..\..\modules\vapor\vpr\Thread\Thread.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Thread\ThreadKeyNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadKeyWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadManager.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Thread\ThreadNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadPool.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\Thread\ThreadPool.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\TimeoutException.h">

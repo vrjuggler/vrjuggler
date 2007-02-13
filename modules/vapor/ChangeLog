@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-02-13 patrick  Use the Win32 thread and sychronization APIs directly
+                    instead of using NSPR.
+                    NEW VERSION: 1.1.41
 2007-02-13 patrick  Reimplemented vpr::CondVarWin32 using a simpler approach.
                     NEW VERSION: 1.1.40
 2007-01-30 patrick  Eliminated the need to set VPR_BASE_DIR on Windows to run
