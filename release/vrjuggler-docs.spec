@@ -6,22 +6,22 @@
 #    http://www.vrjuggler.org/view/Juggler/WritingDocumentationUsingDocBook
 
 %define name vrjuggler-docs
-%define global_version 2.0.2
+%define global_version 2.0.3
 %define global_release 1
 %define srcdir vrjuggler-%{global_version}-%{global_release}-src
 %define file_name %{srcdir}.tar.bz2
 
-%define vpr_version 1.0.2
+%define vpr_version 1.0.3
 %define vpr_release %{global_release}
-%define tweek_version 1.0.2
+%define tweek_version 1.0.3
 %define tweek_release %{global_release}
-%define jccl_version 1.0.2
+%define jccl_version 1.0.3
 %define jccl_release %{global_release}
-%define sonix_version 1.0.2
+%define sonix_version 1.0.3
 %define sonix_release %{global_release}
-%define gadgeteer_version 1.0.2
+%define gadgeteer_version 1.0.3
 %define gadgeteer_release %{global_release}
-%define vrjuggler_version 2.0.2
+%define vrjuggler_version 2.0.3
 %define vrjuggler_release %{global_release}
 
 %define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
