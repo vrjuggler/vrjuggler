@@ -48,6 +48,7 @@ EXIT_STATUS_MISSING_DATA_FILE = 2
 EXIT_STATUS_MSVS_START_ERROR  = 3
 EXIT_STATUS_INVALID_PATH      = 4
 EXIT_STATUS_MISSING_REQ_VALUE = 5
+EXIT_STATUS_INVALID_ARGUMENT  = 6
 
 gJugglerDir      = os.path.dirname(os.path.abspath(sys.argv[0]))
 gOptionsFileName = "options.cache"
@@ -2038,7 +2039,7 @@ class GuiFrontEnd:
                self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
          except OSError, osEx:
             print "Could not execute %s: %s" % (cmd, osEx)
-            sys.exit(3)
+            sys.exit(EXIT_STATUS_MSVS_START_ERROR)
       else:
          cmd = devenv_cmd_no_exe + ' ' + solution_file
          try:
@@ -2083,7 +2084,7 @@ def main():
                                           "help"])
    except getopt.GetoptError:
       usage()
-      sys.exit(4)
+      sys.exit(EXIT_STATUS_INVALID_ARGUMENT)
 
    global gOptionsFileName
    for o, a in cmd_opts:
@@ -2159,6 +2160,8 @@ if __name__ == '__main__':
          status = 'invalid directory structure'
       elif exitEx.code == EXIT_STATUS_MISSING_REQ_VALUE:
          status = 'required value not given'
+      elif exitEx.code == EXIT_STATUS_INVALID_ARGUMENT:
+         status = 'invalid command line argument'
       else:
          status = 'error encountered'
 
