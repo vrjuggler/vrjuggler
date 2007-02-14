@@ -181,12 +181,12 @@ bool Configuration::load(const std::string& filename,
       << "[jccl::Configuration::load()] Loading file '" << filename
       << "' with parent file '" << parentfile << "'\n" << vprDEBUG_FLUSH;
 
-   mFileName = ParseUtil::expandFileName(filename, parentfile);
+   const std::string expanded_filename = ParseUtil::expandFileName(filename,
+                                                                   parentfile);
 
-   vprDEBUG_OutputGuard(jcclDBG_CONFIG, vprDBG_CONFIG_LVL,
-                        std::string("Loading config file ") + mFileName +
-                           std::string("\n"),
-                        std::string(""));
+   std::ostringstream msg;
+   msg << "Loading config file '" << expanded_filename << "'\n";
+   vprDEBUG_OutputGuard(jcclDBG_CONFIG, vprDBG_CONFIG_LVL, msg.str(), "");
 
    // XXX: Previously, this used ElementFactory::createXMLDocument(), but for
    // some reason, that caused error reporting to be totally useless.
@@ -195,7 +195,7 @@ bool Configuration::load(const std::string& filename,
 
    try
    {
-      cfg_doc.loadFile(mFileName);
+      cfg_doc.loadFile(expanded_filename);
 
       cppdom::NodePtr cfg_node(cfg_doc.getChild(tokens::CONFIGURATION));
       vprASSERT(cfg_node.get() != NULL);
@@ -221,13 +221,22 @@ bool Configuration::load(const std::string& filename,
             << vprDEBUG_FLUSH;
 
          // Load the file by making a recursive call to this method. We use
-         // mFileName so that the fully expanded path to the including file is
-         // used as the "parent" file.
-         load(cfg_filename, mFileName);
+         // expanded_filename so that the fully expanded path to the including
+         // file is used as the "parent" file.
+         load(cfg_filename, expanded_filename);
       }
 
       // Load in the elements in the original file.
-      loadFromElementNode(cfg_node->getChild(tokens::ELEMENTS), mFileName);
+      loadFromElementNode(cfg_node->getChild(tokens::ELEMENTS),
+                          expanded_filename);
+
+      // This is a recursive method, and we want to set mFileName as the last
+      // step of the loading process since that will end up using the
+      // original file name as the configuration file.
+      mFileName = expanded_filename;
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+         << "Configuration file name: '" << mFileName << "'" << std::endl
+         << vprDEBUG_FLUSH;
 
       status = true;
    }
@@ -242,13 +251,13 @@ bool Configuration::load(const std::string& filename,
       // print out where the error occured
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "Configuration XML Error:") << " "
-         << mFileName << ": line " << line_num << " at position " << pos
-         << std::endl << vprDEBUG_FLUSH;
+         << expanded_filename << ": line " << line_num << " at position "
+         << pos << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << "Error: " << errmsg << std::endl << vprDEBUG_FLUSH;
 
       // Print out the actual failed XML.
-      std::ifstream errfile(mFileName.c_str());
+      std::ifstream errfile(expanded_filename.c_str());
       if ( errfile )
       {
          char linebuffer[1024];
