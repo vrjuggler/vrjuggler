@@ -10,6 +10,10 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.0.3
+Released: February 14, 2007
+    No changes.
+
  Version: 1.0.2
 Released: January 4, 2007
     Bugs fixed in this release:

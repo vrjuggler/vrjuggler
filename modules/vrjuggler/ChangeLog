@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0.3 released - 2.14.2007]===================================================
+
 [2.0.2 released - 1.4.2007]====================================================
 Oct-30-2006 patrick     Register signal handlers for SIGINT, SIGTERM, and (on
                         Windows only) SIGBREAK when the kernel is started.

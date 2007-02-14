@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+[1.0.3 released - 2.14.2007]===================================================
+
 [1.0.2 released - 1.4.2007]====================================================
 2006-08-23 patrick  Fixed bugs in the NSPR socket classes related to timeouts
                     on blocking sockets when using the WINNT configuration of
