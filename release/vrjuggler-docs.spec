@@ -5,30 +5,38 @@
 #
 #    http://www.vrjuggler.org/view/Juggler/WritingDocumentationUsingDocBook
 
+%define patch_version 3
+
 %define name vrjuggler-docs
-%define global_version 2.0.3
+%define global_version 2.0.%{patch_version}
 %define global_release 1
 %define srcdir vrjuggler-%{global_version}-%{global_release}-src
 %define file_name %{srcdir}.tar.bz2
 
-%define vpr_version 1.0.3
+%define vpr_version 1.0
+%define full_vpr_version %{vpr_version}.%{patch_version}
 %define vpr_release %{global_release}
-%define tweek_version 1.0.3
+%define tweek_version 1.0
+%define full_tweek_version %{tweek_version}.%{patch_version}
 %define tweek_release %{global_release}
-%define jccl_version 1.0.3
+%define jccl_version 1.0
+%define full_jccl_version %{jccl_version}.%{patch_version}
 %define jccl_release %{global_release}
-%define sonix_version 1.0.3
+%define sonix_version 1.0
+%define full_sonix_version %{sonix_version}.%{patch_version}
 %define sonix_release %{global_release}
-%define gadgeteer_version 1.0.3
+%define gadgeteer_version 1.0
+%define full_gadgeteer_version %{gadgeteer_version}.%{patch_version}
 %define gadgeteer_release %{global_release}
-%define vrjuggler_version 2.0.3
+%define vrjuggler_version 2.0
+%define full_vrjuggler_version %{vrjuggler_version}.%{patch_version}
 %define vrjuggler_release %{global_release}
 
 %define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
 
 Name: vrjuggler-docs
 Summary: Documentation for VR Juggler, the virtual platform for VR application development
-Version: %{vrjuggler_version}
+Version: %{full_vrjuggler_version}
 Release: %{vrjuggler_release}
 Source: %{file_name}
 URL: http://www.vrjuggler.org/
@@ -50,7 +58,7 @@ with any combination of immersive technologies and computational hardware.
 
 %package -n vpr-docs
 Summary: Documentation for VPR, the VR Juggler Portable Runtime
-Version: %{vpr_version}
+Version: %{full_vpr_version}
 Release: %{vpr_release}
 URL: http://www.vrjuggler.org/vapor/
 Group: Development/C++
@@ -65,7 +73,7 @@ cross-platform C++ applications.
 
 %package -n tweek-c++-docs
 Summary: Documentation for the Tweek C++ API
-Version: %{tweek_version}
+Version: %{full_tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/C++
@@ -82,7 +90,7 @@ connection.
 
 %package -n tweek-java-docs
 Summary: Documentation for the Tweek Java API and GUI
-Version: %{tweek_version}
+Version: %{full_tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
@@ -100,7 +108,7 @@ Java GUI.
 
 %package -n jccl-c++-docs
 Summary: Documentation for the JCCL C++ API
-Version: %{jccl_version}
+Version: %{full_jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
@@ -113,7 +121,7 @@ The JCCL C++ API provides a dynamic configuration system based on XML.
 
 %package -n jccl-java-docs
 Summary: The JCCL Java API
-Version: %{jccl_version}
+Version: %{full_jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/Java
@@ -128,7 +136,7 @@ depend on the Tweek Java GUI.
 
 %package -n sonix-docs
 Summary: Documentation for Sonix
-Version: %{sonix_version}
+Version: %{full_sonix_version}
 Release: %{sonix_release}
 URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
@@ -141,7 +149,7 @@ Sonix is a dynamically reconfigurable wrapper around audio APIs.
 
 %package -n gadgeteer-docs
 Summary: Documentation for Gadgeteer
-Version: %{gadgeteer_version}
+Version: %{full_gadgeteer_version}
 Release: %{gadgeteer_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
@@ -156,7 +164,7 @@ write Device drivers that are loaded dynamically.
 
 %package -n vrjconfig-docs
 Summary: Documentation for VRJConfig, the VR Juggler configuration editor
-Version: %{vrjuggler_version}
+Version: %{full_vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
@@ -247,5 +255,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Feb 15 2007 Patrick Hartlingg <patrick at infiscape dot com>
+- 2.0.3-1
+- Fixed packaging errors
+
 * Sat Apr 22 2006 Patrick Hartling
 - Initial version.
