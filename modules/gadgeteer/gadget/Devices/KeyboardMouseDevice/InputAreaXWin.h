@@ -95,16 +95,6 @@ private:
                             XKeyEvent* event);
 
    /**
-    * Adds a new mouse motion event to the event queue for this window.
-    *
-    * @post A new event (gadget::MouseEvent) is added to the event queue.
-    *
-    * @param event The X11 motion event object.
-    */
-   virtual void addMouseButtonEvent(const gadget::Keys& button,
-                                    const gadget::EventType& type,
-                                    const XButtonEvent& event);
-   /**
     * Adds a new mouse button press/release event to the event queue for this
     * window.
     *
@@ -114,6 +104,16 @@ private:
     * @param event  The X11 button event object.
     * @param type   The type of mouse button event (MouseButtonPress or
     *               MouseButtonRelease).
+    */
+   virtual void addMouseButtonEvent(const gadget::Keys& button,
+                                    const gadget::EventType& type,
+                                    const XButtonEvent& event);
+   /**
+    * Adds a new mouse motion event to the event queue for this window.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param event The X11 motion event object.
     */
    virtual void addMouseMoveEvent(const XMotionEvent& event);
 
