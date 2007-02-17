@@ -464,8 +464,8 @@ void InputAreaXWin::updateOriginAndSize(unsigned int width, unsigned int height)
    mHeight = height;
 }
 
-void InputAreaXWin::addKeyEvent(const gadget::Keys& key,
-                                const gadget::EventType& type,
+void InputAreaXWin::addKeyEvent(const gadget::Keys key,
+                                const gadget::EventType type,
                                 XKeyEvent* event)
 {
    const int buffer_size(20);
@@ -501,8 +501,8 @@ void InputAreaXWin::addMouseMoveEvent(const XMotionEvent& event)
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
-void InputAreaXWin::addMouseButtonEvent(const gadget::Keys& button,
-                                        const gadget::EventType& type,
+void InputAreaXWin::addMouseButtonEvent(const gadget::Keys button,
+                                        const gadget::EventType type,
                                         const XButtonEvent& event)
 {
    gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button, event.x,
@@ -513,7 +513,7 @@ void InputAreaXWin::addMouseButtonEvent(const gadget::Keys& button,
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
-int InputAreaXWin::getMask(const int& state)
+int InputAreaXWin::getMask(const int state)
 {
    int mask(0);
 

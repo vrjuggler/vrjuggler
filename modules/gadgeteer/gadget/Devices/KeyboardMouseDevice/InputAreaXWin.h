@@ -90,9 +90,8 @@ private:
     * @param event A pointer to the X Window System key event structure
     *              associated with the event.
     */
-   virtual void addKeyEvent(const gadget::Keys& key,
-                            const gadget::EventType& type,
-                            XKeyEvent* event);
+   void addKeyEvent(const gadget::Keys key, const gadget::EventType type,
+                    XKeyEvent* event);
 
    /**
     * Adds a new mouse button press/release event to the event queue for this
@@ -105,9 +104,10 @@ private:
     * @param type   The type of mouse button event (MouseButtonPress or
     *               MouseButtonRelease).
     */
-   virtual void addMouseButtonEvent(const gadget::Keys& button,
-                                    const gadget::EventType& type,
-                                    const XButtonEvent& event);
+   void addMouseButtonEvent(const gadget::Keys button,
+                            const gadget::EventType type,
+                            const XButtonEvent& event);
+
    /**
     * Adds a new mouse motion event to the event queue for this window.
     *
@@ -115,7 +115,7 @@ private:
     *
     * @param event The X11 motion event object.
     */
-   virtual void addMouseMoveEvent(const XMotionEvent& event);
+   void addMouseMoveEvent(const XMotionEvent& event);
 
    /**
     * Constructs a windowing system-independent mask of modifier keys and
@@ -125,10 +125,10 @@ private:
     *              current state of depressed keyboard modifiers and mouse
     *              buttons.
     */
-   int getMask(const int& state);
+   int getMask(const int state);
 
    /**
-    * Converts X Window key to Key.
+    * Converts X Window key to gadget::Keys value.
     * @note Keypad keys are transformed ONLY to number keys.
     */
    gadget::Keys xKeyToKey(KeySym xKey);
