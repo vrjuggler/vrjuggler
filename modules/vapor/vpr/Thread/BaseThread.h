@@ -50,11 +50,7 @@ namespace vpr
  * function pointer type for all functions initially passed as code to
  * execute within a separate thread of control.
  */
-#if defined(_MSC_VER) && _MSC_VER <= 1300
-typedef boost::function0<void> thread_func_t;
-#else
 typedef boost::function<void()> thread_func_t;
-#endif
 
 /** \class BaseThread BaseThread.h vpr/Thread/BaseThread.h
  *
