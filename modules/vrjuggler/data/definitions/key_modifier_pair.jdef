@@ -26,8 +26,8 @@
             <enum label="KEY_DOWN" value="2"/>
             <enum label="KEY_LEFT" value="3"/>
             <enum label="KEY_RIGHT" value="4"/>
-            <enum label="KEY_CTRL" value="5"/>
-            <enum label="KEY_SHIFT" value="6"/>
+            <enum label="KEY_SHIFT" value="5"/>
+            <enum label="KEY_CTRL" value="6"/>
             <enum label="KEY_ALT" value="7"/>
             <enum label="KEY_1" value="8"/>
             <enum label="KEY_2" value="9"/>
