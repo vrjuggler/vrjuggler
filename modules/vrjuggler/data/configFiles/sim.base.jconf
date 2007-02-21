@@ -322,74 +322,74 @@
          <keyboard_mouse_proxy>Camera Keyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
-               <modifier_key>5</modifier_key>
-               <key>15</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_8</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Back" version="1">
-               <modifier_key>5</modifier_key>
-               <key>9</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_2</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Left" version="1">
-               <modifier_key>5</modifier_key>
-               <key>11</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_4</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Right" version="1">
-               <modifier_key>5</modifier_key>
-               <key>13</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_6</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Up" version="1">
-               <modifier_key>5</modifier_key>
-               <key>16</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_9</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Down" version="1">
-               <modifier_key>5</modifier_key>
-               <key>14</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_7</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Right" version="1">
-               <modifier_key>7</modifier_key>
-               <key>13</key>
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_6</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Left" version="1">
-               <modifier_key>7</modifier_key>
-               <key>11</key>
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_4</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Up" version="1">
-               <modifier_key>7</modifier_key>
-               <key>9</key>
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_2</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Down" version="1">
-               <modifier_key>7</modifier_key>
-               <key>15</key>
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_8</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot CCW" version="1">
-               <modifier_key>5</modifier_key>
-               <key>8</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_1</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot CW" version="1">
-               <modifier_key>5</modifier_key>
-               <key>10</key>
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_3</key>
             </key_modifier_pair>
          </key_pair>
          <initial_position>1.524</initial_position>
