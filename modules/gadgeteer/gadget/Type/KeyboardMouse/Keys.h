@@ -38,9 +38,10 @@ enum Keys
    KEY_DOWN,
    KEY_LEFT,
    KEY_RIGHT,
-   KEY_SHIFT,
-   KEY_CTRL,
-   KEY_ALT,
+   KEY_SHIFT,   /**< Shift key (either left or right) */
+   KEY_CTRL,    /**< Control key */
+   KEY_ALT,     /**< Alt or Option key */
+   KEY_COMMAND, /**< Apple Command key */
    KEY_1,
    KEY_2,
    KEY_3,
@@ -89,6 +90,8 @@ enum Keys
    MBUTTON3,   /**< Mouse button 3. */
    MBUTTON4,   /**< Mouse button 4. */
    MBUTTON5,   /**< Mouse button 5. */
+   MBUTTON6,   /**< Mouse button 6. */
+   MBUTTON7,   /**< Mouse button 7. */
    NO_MBUTTON, /**< No mouse button. */
 
    KEY_TAB,
@@ -176,7 +179,7 @@ enum Keys
    KEY_BRACKET_LEFT,    /**< [ */
    KEY_BACKSLASH,       /**< \ */
    KEY_BRACKET_RIGHT,   /**< ] */
-   KEY_ASCII_CIRCUM,
+   KEY_ASCII_CIRCUM,    /**< ^ */
    KEY_UNDERSCORE,      /**< _ */
    KEY_QUOTE_LEFT,
    KEY_BRACE_LEFT,      /**< { */
@@ -290,19 +293,22 @@ enum Keys
 /// Mask values for keyboard modifier keys.
 enum ModiferMask
 {
-   SHIFT_MASK = (1 << 0),  /**< Shift key mask */
-   ALT_MASK   = (1 << 1),  /**< Control (CTRL) key mask */
-   CTRL_MASK  = (1 << 2)   /**< Alt key mask */
+   SHIFT_MASK   = (1 << 0),     /**< Shift key mask */
+   ALT_MASK     = (1 << 1),     /**< Alt/Option key mask */
+   CTRL_MASK    = (1 << 2),     /**< Control (CTRL) key mask */
+   COMMAND_MASK = (1 << 3)      /**< Command key mask */
 };
 
-/// Mask values for up to five mouse buttons.
+/// Mask values for up to seven mouse buttons.
 enum ButtonMask
 {
-   BUTTON1_MASK = (1 << 3),  /**< Value for mouse button 1 */
-   BUTTON2_MASK = (1 << 4),  /**< Value for mouse button 2 */
-   BUTTON3_MASK = (1 << 5),  /**< Value for mouse button 3 */
-   BUTTON4_MASK = (1 << 6),  /**< Value for mouse button 4 */
-   BUTTON5_MASK = (1 << 7)   /**< Value for mouse button 5 */
+   BUTTON1_MASK = (1 << 4),     /**< Value for mouse button 1 */
+   BUTTON2_MASK = (1 << 5),     /**< Value for mouse button 2 */
+   BUTTON3_MASK = (1 << 6),     /**< Value for mouse button 3 */
+   BUTTON4_MASK = (1 << 7),     /**< Value for mouse button 4 */
+   BUTTON5_MASK = (1 << 8),     /**< Value for mouse button 5 */
+   BUTTON6_MASK = (1 << 9),     /**< Value for mouse button 6 */
+   BUTTON7_MASK = (1 << 10)     /**< Value for mouse button 7 */
 };
 
 } // End of gadget namespace
