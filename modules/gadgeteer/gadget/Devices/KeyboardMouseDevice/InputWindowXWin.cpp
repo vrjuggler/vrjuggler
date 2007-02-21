@@ -97,10 +97,10 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
    jccl::ConfigElementPtr disp_sys_elt =
       gadget::InputManager::instance()->getDisplaySystemElement();
 
-   vprDEBUG(vprDBG_ERROR,vprDBG_CONFIG_LVL)
-         << "gadget::InputWindowXWin: display_number: " << x_disp_num << std::endl
-         << vprDEBUG_FLUSH;
-   
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+      << "gadget::InputWindowXWin: display_number: " << x_disp_num
+      << std::endl << vprDEBUG_FLUSH;
+
    if (NULL == disp_sys_elt.get())
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CONFIG_LVL)
@@ -116,9 +116,9 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
       mXDisplayString = disp_sys_elt->getProperty<std::string>("x11_pipes",
                                                                x_disp_num);
       
-      vprDEBUG(vprDBG_ERROR,vprDBG_CONFIG_LVL)
-            << "gadget::InputWindowXWin: display: " << mXDisplayString << std::endl
-            << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "gadget::InputWindowXWin: display: " << mXDisplayString
+         << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
