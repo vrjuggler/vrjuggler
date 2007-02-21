@@ -485,7 +485,8 @@ void InputAreaXWin::addKeyEvent(const gadget::Keys key,
 
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key,
                                                    getMask(event->state),
-                                                   event->time, buffer[0]));
+                                                   event->time, buffer[0],
+                                                   buffer[0]));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 

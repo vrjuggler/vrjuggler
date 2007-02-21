@@ -777,8 +777,9 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
       << ascii_rep << "' with modifier mask " << mask << std::endl
       << vprDEBUG_FLUSH;
 
+   // TODO: Deal with Unicode.
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, mask, msg.time,
-                                                   ascii_rep));
+                                                   ascii_rep, ascii_rep));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 

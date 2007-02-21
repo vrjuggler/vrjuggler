@@ -35,12 +35,15 @@ namespace gadget
 {
 
 KeyEvent::KeyEvent(const gadget::EventType type, const gadget::Keys key,
-                   int mask, unsigned long time, char asciiKey)
+                   int mask, unsigned long time, char asciiKey,
+                   wchar_t unicodeKey)
    : gadget::Event(type, time)
    , mKey(key)
    , mModifierMask(mask)
    , mAsciiKey(asciiKey)
+   , mUnicodeKey(unicodeKey)
 {
+   /* Do nothing. */ ;
 }
 
 KeyEvent::KeyEvent() 
@@ -48,7 +51,9 @@ KeyEvent::KeyEvent()
    , mKey(gadget::KEY_SPACE)
    , mModifierMask(0)
    , mAsciiKey(' ')
+   , mUnicodeKey(' ')
 {
+   /* Do nothing. */ ;
 }
 
 // Serializes this event using the given ObjectWriter.

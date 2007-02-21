@@ -66,11 +66,16 @@ public:
     * @param asciiKey   The ASCII value of the key associated with this event.
     *                   This parameter is optional, and it defaults to 0 if not
     *                   specified.
+    * @param unicodeKey The Unicode value of the key associated with this
+    *                   event. This parameter is optional, and it defaults to
+    *                   0 if not specified. This parameter was added in version
+    *                   1.1.24.
     *
     * @see gadget::ModifierMask
     */
    KeyEvent(const gadget::EventType type, const gadget::Keys key,
-            int mask, unsigned long time, char asciiKey = 0);
+            int mask, unsigned long time, char asciiKey = 0,
+            wchar_t unicodeKey = 0);
 
    /**
     * Default constructor needed in order to use the templated EventFactory 
@@ -115,6 +120,16 @@ public:
    }
 
    /**
+    * Returns the Unicode character corresponding to the key that was pressed.
+    *
+    * @since 1.1.24
+    */
+   wchar_t getKeyUnicode() const
+   {
+      return mUnicodeKey;
+   }
+
+   /**
     * Serializes this object into the given object writer.
     *
     * @param writer The object writer to which this object will be serialized.
@@ -136,7 +151,8 @@ public:
 protected:
    gadget::Keys mKey;          /**< The actual key pressed. */
    int          mModifierMask; /**< The mask of any modifiers in addition to mKey. */
-   char         mAsciiKey;     /**< ASCCI representation of key pressed. */
+   char         mAsciiKey;     /**< ASCII representation of key pressed. */
+   wchar_t      mUnicodeKey;   /**< Unicode represencation of key pressed. */
 };
 
 } // End of gadget namespace
