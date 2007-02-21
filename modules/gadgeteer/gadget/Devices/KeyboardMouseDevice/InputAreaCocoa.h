@@ -1,0 +1,215 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2006 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef _GADGET_INPUT_AREA_COCOA_H_
+#define _GADGET_INPUT_AREA_COCOA_H_
+
+#include <gadget/gadgetConfig.h>
+
+#include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
+
+// Allow this header to be included by C++ and Objective-C++ code.
+#if defined(__OBJC__)
+@class NSConditionLock;
+@class NSWindow;
+@class NSEvent;
+@class NSView;
+#else
+class NSConditionLock;
+class NSWindow;
+class NSEvent;
+class NSView;
+#endif
+
+namespace gadget
+{
+
+/** \class InputAreaCocoa InputAreaCocoa.h gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h
+ *
+ * Base class for Cocoa windows that accept keyboard and mouse input. This
+ * is implemented using Objective-C++ to make the connection between Cocoa
+ * (an Objective-C API) and Gadgeteer. This class can (and is) used by plain
+ * C++ code.
+ *
+ * @see InputViewCocoa
+ */
+class InputAreaCocoa : public gadget::InputArea
+{
+public:
+   InputAreaCocoa();
+
+   ~InputAreaCocoa();
+
+   /**
+    * Returns the global lock used to ensure that windows are not opened
+    * before the primordial thread enters its run loop. It is up to the
+    * calling code to acquire this lock prior to spawning the thread(s) that
+    * will open windows and then to release it once the run loop starts. The
+    * NSApp main controller should unlock this lock in its
+    * \c -applicationDidFinishLaunching: method.
+    */
+   static NSConditionLock* getWindowLock()
+   {
+      return sWinOpenLock;
+   }
+
+   /**
+    * @name Event Queue Manipulators
+    *
+    * These methods are public (regrettably) so that they can be invoked by
+    * methods of InputViewCocoa. Objective-C has no concept of friends.
+    *
+    * @note These methdos are invoked by InputViewCocoa from the event loop.
+    *       This will be in the primordial thread, meaning that it will happen
+    *       in parallel to the Input Manager's update loop.
+    */
+   //@{
+
+   /**
+    * Adds a new key press/release event to the event queue for this input
+    * area. The key that was modified is extracted from the given event
+    * object.
+    *
+    * @post A new event (gadget::KeyEvent) is added to the event queue.
+    *
+    * @param type  The type of key event (KeyPress or KeyRelease).
+    * @param event A pointer to the Cocoa event structure associated with the
+    *              key event.
+    */
+   void addKeyEvent(const gadget::EventType type, NSEvent* event);
+
+   /**
+    * Adds a new modifier key press/release event to the event queue for this
+    * input area. This overload does not perform any translation on the
+    * characters associated with the NSEvent object and expects that there are
+    * zero or one such characters.
+    *
+    * @post A new event (gadget::KeyEvent) is added to the event queue.
+    *
+    * @param key   The modifier key whose state changed.
+    * @param type  The type of key event (KeyPress or KeyRelease).
+    * @param event A pointer to the Cocoa event structure associated with the
+    *              key event.
+    */
+   void addModifierEvent(const gadget::Keys key, const gadget::EventType type,
+                         NSEvent* event);
+
+   /**
+    * Adds a new mouse motion event to the event queue for this input area.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param button The mouse button whose state changed.
+    * @param type   The type of button event (MouseButtonPressEvent or
+    *               MouseButtonReleaseEvent).
+    * @param event  A pointer to the Cocoa event structure associated with the
+    *               button event.
+    */
+   void addMouseButtonEvent(const gadget::Keys button,
+                            const gadget::EventType type, NSEvent* event);
+
+   /**
+    * Adds a new mouse button press/release event to the event queue for this
+    * input area.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param event A pointer to the Cocoa event structure associated with the
+    *              mouse movement event.
+    */
+   void addMouseMoveEvent(NSEvent* event);
+   //@}
+
+   void updateOriginAndSize(const float x, const float y, const float width,
+                            const float height);
+
+protected:
+   void warpCursorToCenter();
+
+   void lockMouse();
+
+   void unlockMouse();
+
+   /**
+    * Constructs a windowing system-independent mask of modifier keys from the
+    * given Cocoa modifiers.
+    *
+    * @param modifiers An integer value from Cocoa that gives the current
+    *                  state of depressed keyboard modifiers.
+    */
+   int getMask(const unsigned int modifiers) const;
+
+   bool isModifier(const gadget::Keys key) const;
+
+   /**
+    * Converts Cocoa virtual key to gadget::Keys value.
+    *
+    * @param event
+    *
+    * @note Keypad keys are transformed ONLY to number keys.
+    */
+   gadget::Keys vKeyToKey(const unsigned short keyChar,
+                          const unsigned short keyCode,
+                          const unsigned int modifiers);
+
+   /**
+    * Adds the given event to the keyboard/mouse event queue. Press and
+    * release state changes for keys and mouse buttons are recorded in
+    * \c mKeyboardMouseDevice->mRealkeys and \c mKeyboardMouseDevice->mKeys.
+    *
+    * @post If the event type is gadget::KeyPressEvent,
+    *       gadget::KeyReleaseEvent, gadget::MouseButtonPressEvent, or
+    *       gadget::MouseButtonReleaseEvent, then the identified key has its
+    *       state in \c mKeyboardMouseDevice updated accordingly.
+    */
+   void doAddEvent(gadget::EventPtr event, const gadget::Keys key);
+
+   /**
+    * A global lock used to ensure that no windows are opened until the
+    * application has entered its run loop in the primordial thread. This
+    * allows windows to be opened from a thread other than the non-primoardial
+    * thread prior to the primordial thread entering its run loop. (Trying to
+    * open windows before the primordial thread enters its run loop will cause
+    * the application to crash.)
+    */
+   static NSConditionLock* sWinOpenLock;
+
+   /** @name Input Area Data */
+   //@{
+   float mX;            /**< Input area origin X-coordinate */
+   float mY;            /**< Input area origin Y-coordinate */
+   float mWidth;        /**< Input area width */
+   float mHeight;       /**< Input area height */
+
+   NSWindow* mCocoaWindow;      /**< The window for this input area. */
+   NSView*   mMainView;         /**< The window's view. */
+   //@}
+};
+
+}
+
+
+#endif /* _GADGET_INPUT_AREA_COCOA_H_ */
