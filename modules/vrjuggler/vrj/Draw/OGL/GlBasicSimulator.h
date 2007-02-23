@@ -34,10 +34,8 @@
 
 #ifdef VPR_OS_Darwin
 #   include <OpenGL/gl.h>
-#   include <OpenGL/glu.h>
 #else
 #   include <GL/gl.h>
-#   include <GL/glu.h>
 #endif
 
 #include <gadget/Type/PositionInterface.h>
@@ -172,7 +170,6 @@ protected: // Drawing functions used by library
 protected:     // --- Geom helpers --- //
    void initQuadObj();
    void drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end);
-   void drawCone(float base, float height, int slices, int stacks);
    void drawBox(float size, GLenum type);
    void drawWireCube(float size);
    void drawSolidCube(float size);
@@ -181,7 +178,6 @@ protected:     // --- Geom helpers --- //
 protected:
    GlDrawObjectFunctor* mDrawWandFunctor;  /**< The functor to draw the wand */
    GlDrawObjectFunctor* mDrawHeadFunctor;  /**< The functor to draw the head */
-   GLUquadricObj* mQuadObj;                /**< Quadric for drawing stuff */
 
 protected:
    SimViewport*   mSimViewport;
