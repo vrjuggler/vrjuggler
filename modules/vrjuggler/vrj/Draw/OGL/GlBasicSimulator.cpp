@@ -118,6 +118,11 @@ bool GlBasicSimulator::config(jccl::ConfigElementPtr element)
    return true;
 }
 
+void GlBasicSimulator::contextInit()
+{
+   initSimulator();
+}
+
 /**
  * Draws this sim device using the given information about the Window it
  * will be drawing into.
@@ -126,7 +131,6 @@ void GlBasicSimulator::draw(const float scaleFactor)
 {
    drawSimulator(scaleFactor);
 }
-
 
 /**
  * Sets the keyboard/mouse device the simulator can use to get input from the
@@ -318,6 +322,12 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
          }  // if surface
       }  // for viewports
    }  // for disps
+}
+
+void GlBasicSimulator::initSimulator()
+{
+   mDrawHeadFunctor->contextInit();
+   mDrawWandFunctor->contextInit();
 }
 
 /**

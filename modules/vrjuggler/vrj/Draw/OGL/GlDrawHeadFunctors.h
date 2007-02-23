@@ -55,9 +55,8 @@ public:
    virtual ~GlDrawEllipsoidHeadFunctor();
 
    /** Called to initialize any context-specific information. */
-   virtual void contextInit()
-   {;}
-   
+   virtual void contextInit();
+
    /**
     * Callback function for drawing.  Called when the object should be drawn.
     * @pre GL context is set and ready to go.

@@ -36,13 +36,24 @@ namespace vrj
 {
 
 GlDrawEllipsoidHeadFunctor::GlDrawEllipsoidHeadFunctor()
-   : mQuadObj(gluNewQuadric())
+   : mQuadObj(NULL)
 {
 }
 
 GlDrawEllipsoidHeadFunctor::~GlDrawEllipsoidHeadFunctor()
 {
-   gluDeleteQuadric(mQuadObj);
+   if ( NULL != mQuadObj )
+   {
+      gluDeleteQuadric(mQuadObj);
+   }
+}
+
+void GlDrawEllipsoidHeadFunctor::contextInit()
+{
+   if ( NULL == mQuadObj )
+   {
+      mQuadObj = gluNewQuadric();
+   }
 }
 
 void GlDrawEllipsoidHeadFunctor::draw(vrj::User* user)

@@ -75,6 +75,14 @@ public:
    }
 
    /**
+    * Tells the simulator draw functors to perform context-specific
+    * negotiation.
+    *
+    * @since 2.1.18
+    */
+   virtual void contextInit();
+
+   /**
     * Draws this sim device using the given information about the Window it
     * will be drawing into.
     */
@@ -135,6 +143,12 @@ protected: // Drawing functions used by library
    /** Draws projections in OpenGL. */
    void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor,
                         const float scaleFactor);
+
+   /**
+    * Tells the simulator draw functors to perform context-specific
+    * negotiation.
+    */
+   void initSimulator();
 
    /**
     * Draws a simulator using OpenGL commands.

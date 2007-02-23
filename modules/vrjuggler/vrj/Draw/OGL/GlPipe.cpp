@@ -361,7 +361,7 @@ void GlPipe::renderWindow(GlWindow* win)
 
    // Update the projections for the display using the current app's scale factor
    // NOTE: This relies upon no other thread trying to update this display at the same time
-   float scale_factor = the_app->getDrawScaleFactor();
+   const float scale_factor = the_app->getDrawScaleFactor();
    the_display->updateProjections(scale_factor);
 
    mGlDrawManager->setCurrentContext(win->getId());     // Set TSS data of context id
@@ -382,6 +382,8 @@ void GlPipe::renderWindow(GlWindow* win)
       win->updateViewport();
    }
 
+   const size_t num_vps = the_display->getNumViewports();
+
    // CONTEXT INIT(): Check if we need to call contextInit()
    // - Must call when context is new OR application is new
    if (win->hasDirtyContext())
@@ -393,6 +395,28 @@ void GlPipe::renderWindow(GlWindow* win)
       mGlDrawManager->currentUserData()->setGlWindow(win);      // Set the gl window
 
       the_app->contextInit();              // Call context init function
+
+      // Invoke vrj::GlSimInterface::contextInit() for all simulator
+      // viewports.
+      for ( size_t vp_num = 0; vp_num < num_vps; ++vp_num )
+      {
+         Viewport* viewport = the_display->getViewport(vp_num);
+
+         if ( viewport->isActive() && viewport->isSimulator() )
+         {
+            SimViewport* sim_vp = dynamic_cast<SimViewport*>(viewport);
+            vprASSERT(NULL != sim_vp);
+
+            GlSimInterface* draw_sim_i =
+               dynamic_cast<GlSimInterface*>(sim_vp->getDrawSimInterface());
+
+            if ( NULL != draw_sim_i )
+            {
+               draw_sim_i->contextInit();
+            }
+         }
+      }
+
       win->setDirtyContext(false);        // All clean now
    }
 
@@ -412,11 +436,9 @@ void GlPipe::renderWindow(GlWindow* win)
    the_app->contextPreDraw();                 // Do any context pre-drawing
 
    // --- FOR EACH VIEWPORT -- //
-   Viewport* viewport = NULL;
-   size_t num_vps = the_display->getNumViewports();
    for ( size_t vp_num = 0; vp_num < num_vps; ++vp_num )
    {
-      viewport = the_display->getViewport(vp_num);
+      Viewport* viewport = the_display->getViewport(vp_num);
 
       // Should viewport be rendered???
       if (viewport->isActive())

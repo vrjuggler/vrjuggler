@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-22-2007 patrick     Added vrj::GlSimInterface::contextInit() so that the
+                        contextInit() method in vrj::GlDrawObjectFunctor can
+                        be invoked.
+                        NEW VERSION: 2.1.18
 Feb-21-2007 patrick     Updated for new keys in Gadgeteer 1.1.24.
 Jan-30-2007 patrick     Eliminated the need to set VJ_BASE_DIR on Windwos to
                         run applications.

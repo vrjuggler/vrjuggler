@@ -50,6 +50,17 @@ namespace vrj
       }
 
       /**
+       * Provides this simulator interface with an opportunity to perform
+       * context-specific initialization.
+       *
+       * @since 2.1.18
+       */
+      virtual void contextInit()
+      {
+         /* Do nothing. */ ;
+      }
+
+      /**
        * Draws this sim device using the given information about the Window it
        * will be drawing into.
        */
