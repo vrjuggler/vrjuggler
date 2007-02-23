@@ -182,7 +182,6 @@
     */
    -(void) rightMouseDown:(NSEvent*) theEvent
    {
-      NSLog(@"buttonNumber: %d\n", [theEvent buttonNumber]);
       mInputArea->addMouseButtonEvent(gadget::MBUTTON2,
                                       gadget::MouseButtonPressEvent,
                                       theEvent);
@@ -193,7 +192,6 @@
     */
    -(void) rightMouseUp:(NSEvent*) theEvent
    {
-      NSLog(@"buttonNumber: %d\n", [theEvent buttonNumber]);
       mInputArea->addMouseButtonEvent(gadget::MBUTTON2,
                                       gadget::MouseButtonReleaseEvent,
                                       theEvent);
@@ -213,7 +211,6 @@
     */
    -(void) otherMouseDown:(NSEvent*) theEvent
    {
-      NSLog(@"buttonNumber: %d\n", [theEvent buttonNumber]);
       mInputArea->addMouseButtonEvent(
          [self getButtonFromNum:[theEvent buttonNumber]],
          gadget::MouseButtonPressEvent, theEvent
@@ -225,7 +222,6 @@
     */
    -(void) otherMouseUp:(NSEvent*) theEvent
    {
-      NSLog(@"buttonNumber: %d\n", [theEvent buttonNumber]);
       mInputArea->addMouseButtonEvent(
          [self getButtonFromNum:[theEvent buttonNumber]],
          gadget::MouseButtonReleaseEvent, theEvent
