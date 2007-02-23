@@ -51,7 +51,7 @@
 
 @implementation InputViewCocoa
    -(id) initWithFrame:(NSRect) frameRect
-          andInputArea:(gadget::InputAreaCocoa*) inputArea
+             inputArea:(gadget::InputAreaCocoa*) inputArea
    {
       mLastModifiers = 0;
       mInputArea = inputArea;

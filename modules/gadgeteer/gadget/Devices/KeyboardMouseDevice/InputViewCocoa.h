@@ -64,5 +64,5 @@ class InputAreaCocoa;
     * @return self
     */
    -(id) initWithFrame:(NSRect) frameRect
-          andInputArea:(gadget::InputAreaCocoa*) inputArea;
+             inputArea:(gadget::InputAreaCocoa*) inputArea;
 @end

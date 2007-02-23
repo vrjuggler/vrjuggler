@@ -269,7 +269,7 @@ bool InputWindowCocoa::startSampling()
       NSString* title = [NSString stringWithUTF8String:mInstName.c_str()];
       [mCocoaWindow setTitle:title];
       mMainView = [[InputViewCocoa alloc] initWithFrame:content_rect
-                                           andInputArea:this];
+                                              inputArea:this];
 
       // Ownership of mMainView gets transferred to mCocoaWindow.
       [mCocoaWindow setContentView:mMainView];
