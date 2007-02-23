@@ -94,7 +94,7 @@ public:
    /**
     * Get the mouse button that was pressed while generating this event.
     */
-   const gadget::Keys& getButton() const
+   const gadget::Keys getButton() const
    {
       return mButton;
    }
@@ -102,7 +102,7 @@ public:
    /**
     * Returns the X coordinate of the mouse pointer relative to the window.
     */
-   const int& getX() const
+   const int getX() const
    {
       return mRelativeX;
    }
@@ -110,7 +110,7 @@ public:
    /**
     * Returns the Y coordinate of the mouse pointer relative to the window.
     */
-   const int& getY() const
+   const int getY() const
    {
       return mRelativeY;
    }
@@ -119,7 +119,7 @@ public:
     * Returns the X coordinate of the mouse pointer relative to the root
     * window (i.e., the desktop).
     */
-   const int& getGlobalX() const
+   const int getGlobalX() const
    {
       return mGlobalX;
    }
@@ -128,7 +128,7 @@ public:
     * Returns the Y coordinate of the mouse pointer relative to the root
     * window (i.e., the desktop).
     */
-   const int& getGlobalY() const
+   const int getGlobalY() const
    {
       return mGlobalY;
    }
@@ -139,7 +139,7 @@ public:
     *
     * @see gadget::ModifierMask, gadget::ButtonMask
     */
-   const int& getState() const
+   const int getState() const
    {
       return mState;
    }

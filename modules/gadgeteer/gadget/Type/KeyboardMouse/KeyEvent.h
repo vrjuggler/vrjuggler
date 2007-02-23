@@ -93,7 +93,7 @@ public:
    /**
     * Get the key that was pressed while generating this event.
     */
-   const gadget::Keys& getKey() const
+   const gadget::Keys getKey() const
    {
       return mKey;
    }
@@ -106,7 +106,7 @@ public:
     *
     * @see gadget::ModifierMask
     */
-   const int& getModifierMask() const
+   const int getModifierMask() const
    {
       return mModifierMask;
    }
@@ -114,7 +114,7 @@ public:
    /**
     * Returns the ASCII character corresponding to the key that was pressed.
     */
-   const char& getKeyChar() const
+   const char getKeyChar() const
    {
       return mAsciiKey;
    }

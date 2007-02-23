@@ -58,7 +58,7 @@ public:
     * Returns the type of this event.  This can be used for dynamic casting
     * to more specific event types.
     */
-   const EventType& type() const
+   const EventType type() const
    {
       return mType;
    }
@@ -70,7 +70,7 @@ public:
     * this event using the EventFactory. This could later be removed if
     * the EventFactory is chaged to take care of this.
     */
-   void setType(const EventType& type)
+   void setType(const EventType type)
    {
       mType = type;
    }
@@ -78,7 +78,7 @@ public:
    /**
     * Returns the time at which the event occurred.
     */
-   const unsigned long& time() const
+   const unsigned long time() const
    {
       return mTime;
    }
@@ -117,7 +117,7 @@ protected:
     *             The time at which the event was processed is not an
     *             acceptable value.
     */
-   Event(const EventType& type, const unsigned long& time)
+   Event(const EventType type, const unsigned long time)
       : mType(type), mTime(time)
    {
    }
