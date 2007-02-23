@@ -35,8 +35,8 @@ namespace gadget
 {
 
 KeyEvent::KeyEvent(const gadget::EventType type, const gadget::Keys key,
-                   int mask, unsigned long time, char asciiKey,
-                   wchar_t unicodeKey)
+                   const int mask, const unsigned long time,
+                   const char asciiKey, const wchar_t unicodeKey)
    : gadget::Event(type, time)
    , mKey(key)
    , mModifierMask(mask)

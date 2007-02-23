@@ -74,8 +74,8 @@ public:
     * @see gadget::ModifierMask
     */
    KeyEvent(const gadget::EventType type, const gadget::Keys key,
-            int mask, unsigned long time, char asciiKey = 0,
-            wchar_t unicodeKey = 0);
+            const int mask, const unsigned long time, const char asciiKey = 0,
+            const wchar_t unicodeKey = 0);
 
    /**
     * Default constructor needed in order to use the templated EventFactory 

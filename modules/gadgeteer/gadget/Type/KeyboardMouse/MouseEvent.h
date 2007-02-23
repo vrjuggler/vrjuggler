@@ -75,8 +75,8 @@ public:
     * @see gadget::ModifierMask, gadget::ButtonMask
     */
    MouseEvent(const gadget::EventType type, const gadget::Keys button,
-              int x, int y, int globalX, int globalY, int state,
-              unsigned long time);
+              const int x, const int y, const int globalX, const int globalY,
+              const int state, const unsigned long time);
 
    /**
     * Default constructor needed in order to use the templated EventFactory 

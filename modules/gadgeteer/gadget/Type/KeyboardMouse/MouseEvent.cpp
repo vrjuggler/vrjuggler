@@ -33,8 +33,9 @@ namespace gadget
 {
 
 MouseEvent::MouseEvent(const gadget::EventType type, const gadget::Keys button,
-                       int x, int y, int globalX, int globalY, int state,
-                       unsigned long time)
+                       const int x, const int y, const int globalX,
+                       const int globalY, const int state,
+                       const unsigned long time)
    : gadget::Event(type, time)
    , mButton(button)
    , mRelativeX(x)
