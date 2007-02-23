@@ -718,7 +718,6 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
    // Hold the keys lock for only as long as we need it.
    {
       vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);
-      std::cout << "key = " << key << std::endl;
 
       switch ( event->type() )
       {
