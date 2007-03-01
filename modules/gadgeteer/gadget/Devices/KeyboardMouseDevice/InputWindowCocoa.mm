@@ -54,7 +54,7 @@
  * informed about changes made to the state of the window by external
  * entities (such as the user).
  */
-@interface WindowObserver : NSObject
+@interface InputWindowObserver : NSObject
 {
    gadget::InputWindowCocoa* mWindow;
 }
@@ -65,7 +65,7 @@
    -(void) windowDidResize:(NSNotification*) aNotification;
 @end
 
-@implementation WindowObserver
+@implementation InputWindowObserver
    -(id) initWithWindow:(gadget::InputWindowCocoa*) window
    {
       mWindow = window;
@@ -248,7 +248,8 @@ bool InputWindowCocoa::startSampling()
       // Register an observer for NSWindowWillCloseNotification events coming
       // from mCocoaWindow. We do this so that we can be told if the window
       // gets closed by some external entity.
-      WindowObserver* observer = [[WindowObserver alloc] initWithWindow:this];
+      InputWindowObserver* observer =
+         [[InputWindowObserver alloc] initWithWindow:this];
       NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
       [nc addObserver:observer
              selector:@selector(windowWillClose:)
