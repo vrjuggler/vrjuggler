@@ -53,6 +53,7 @@ InputAreaCocoa::InputAreaCocoa()
    : gadget::InputArea()
    , mWidth(0)
    , mHeight(0)
+   , mLastModifiers(0)
    , mCocoaWindow(nil)
    , mMainView(nil)
 {
@@ -117,6 +118,12 @@ void InputAreaCocoa::addModifierEvent(const gadget::Keys key,
    doAddEvent(key_event, key);
 }
 
+void InputAreaCocoa::addMouseButtonEvent(const gadget::EventType type,
+                                         NSEvent* event)
+{
+   addMouseButtonEvent(getButtonFromNum([event buttonNumber]), type, event);
+}
+
 void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
                                          const gadget::EventType type,
                                          NSEvent* event)
@@ -131,6 +138,7 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
                                                        [event timestamp]));
    doAddEvent(mouse_event, button);
 }
+
 
 void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
 {
@@ -178,6 +186,29 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
    mKeyboardMouseDevice->addEvent(move_event);
 }
 
+void InputAreaCocoa::flagsChanged(NSEvent* event)
+{
+   const unsigned int cur_modifiers = [event modifierFlags];
+
+   // Compare the new modifier set with the old to find out what modifier
+   // key has been pressed or released.
+   const unsigned int new_modifiers = ~mLastModifiers & cur_modifiers;
+   const unsigned int old_modifiers = mLastModifiers & ~cur_modifiers;
+
+   if ( new_modifiers != 0 )
+   {
+      addModifierEvent(getKeyFromModifierMask(new_modifiers),
+                       gadget::KeyPressEvent, event);
+   }
+   else if ( old_modifiers != 0 )
+   {
+      addModifierEvent(getKeyFromModifierMask(old_modifiers),
+                       gadget::KeyReleaseEvent, event);
+   }
+
+   mLastModifiers = cur_modifiers;
+}
+
 void InputAreaCocoa::updateOriginAndSize(const float x, const float y,
                                          const float width,
                                          const float height)
@@ -186,6 +217,63 @@ void InputAreaCocoa::updateOriginAndSize(const float x, const float y,
    mY      = y;
    mWidth  = width;
    mHeight = height;
+}
+
+gadget::Keys InputAreaCocoa::getButtonFromNum(const int buttonNum) const
+{
+   gadget::Keys button(gadget::NO_MBUTTON);
+
+   switch ( buttonNum )
+   {
+      case 0:
+         button = gadget::MBUTTON1;
+         break;
+      case 1:
+         button = gadget::MBUTTON2;
+         break;
+      case 2:
+         button = gadget::MBUTTON3;
+         break;
+      case 3:
+         button = gadget::MBUTTON4;
+         break;
+      case 4:
+         button = gadget::MBUTTON5;
+         break;
+      case 5:
+         button = gadget::MBUTTON6;
+         break;
+      case 6:
+         button = gadget::MBUTTON7;
+         break;
+   }
+
+   return button;
+}
+
+gadget::Keys InputAreaCocoa::getKeyFromModifierMask(const unsigned int mask)
+   const
+{
+   gadget::Keys key(gadget::KEY_NONE);
+
+   if ( mask & NSCommandKeyMask )
+   {
+      key = gadget::KEY_COMMAND;
+   }
+   else if ( mask & NSAlternateKeyMask )
+   {
+      key = gadget::KEY_ALT;
+   }
+   else if ( mask & NSControlKeyMask )
+   {
+      key = gadget::KEY_CTRL;
+   }
+   else if ( mask & NSShiftKeyMask )
+   {
+      key = gadget::KEY_SHIFT;
+   }
+
+   return key;
 }
 
 void InputAreaCocoa::warpCursorToCenter()

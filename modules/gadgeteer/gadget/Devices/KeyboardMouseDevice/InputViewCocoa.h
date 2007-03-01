@@ -48,7 +48,6 @@ class InputAreaCocoa;
 @interface InputViewCocoa : NSView
 {
    gadget::InputAreaCocoa* mInputArea;  /**< The Gadgeteer input area */
-   unsigned int mLastModifiers;         /**< The current keyboard modifiers */
    NSTrackingRectTag mTrackingRect;
 }
 

@@ -26,7 +26,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#import <Foundation/NSString.h>
 #import <AppKit/NSWindow.h>
 #import <AppKit/NSEvent.h>
 
@@ -42,19 +41,16 @@
  * private.
  */
 @interface InputViewCocoa (PrivateMethods)
-   -(gadget::Keys) getButtonFromNum:(int) buttonNum;
-   -(void) flagsChanged:(NSEvent*) theEvent;
    -(void) clearTrackingRect;
    -(void) resetTrackingRect;
-   -(gadget::Keys) getKeyFromModifierMask:(unsigned int) mask;
 @end
 
 @implementation InputViewCocoa
    -(id) initWithFrame:(NSRect) frameRect
              inputArea:(gadget::InputAreaCocoa*) inputArea
    {
-      mLastModifiers = 0;
       mInputArea = inputArea;
+      mTrackingRect = 0;
       return [self initWithFrame:frameRect];
    }
 
@@ -211,10 +207,8 @@
     */
    -(void) otherMouseDown:(NSEvent*) theEvent
    {
-      mInputArea->addMouseButtonEvent(
-         [self getButtonFromNum:[theEvent buttonNumber]],
-         gadget::MouseButtonPressEvent, theEvent
-      );
+      mInputArea->addMouseButtonEvent(gadget::MouseButtonPressEvent,
+                                      theEvent);
    }
 
    /**
@@ -222,10 +216,8 @@
     */
    -(void) otherMouseUp:(NSEvent*) theEvent
    {
-      mInputArea->addMouseButtonEvent(
-         [self getButtonFromNum:[theEvent buttonNumber]],
-         gadget::MouseButtonReleaseEvent, theEvent
-      );
+      mInputArea->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
+                                      theEvent);
    }
 
    /**
@@ -251,77 +243,15 @@
    {
       mInputArea->addKeyEvent(gadget::KeyReleaseEvent, theEvent);
    }
-   //@}
-
-   /** @name Private Methods */
-   //@{
-   /**
-    * Translates the mouse button number into a gadget::Keys value.
-    */
-   -(gadget::Keys) getButtonFromNum:(int) buttonNum
-   {
-      gadget::Keys button(gadget::NO_MBUTTON);
-
-      switch ( buttonNum )
-      {
-         case 0:
-            button = gadget::MBUTTON1;
-            break;
-         case 1:
-            button = gadget::MBUTTON2;
-            break;
-         case 2:
-            button = gadget::MBUTTON3;
-            break;
-         case 3:
-            button = gadget::MBUTTON4;
-            break;
-         case 4:
-            button = gadget::MBUTTON5;
-            break;
-         case 5:
-            button = gadget::MBUTTON6;
-            break;
-         case 6:
-            button = gadget::MBUTTON7;
-            break;
-      }
-
-      return button;
-   }
 
    /**
-    * Transforms a change in the modifier flags into a key press or key
-    * release event.
-    *
-    * @post \c mLastModifiers holds the new set of pressed modifier keys.
+    * Responds to a change in the keyboard modifier flags.
     */
    -(void) flagsChanged:(NSEvent*) theEvent
    {
-      const unsigned int cur_modifiers = [theEvent modifierFlags];
-
-      // Compare the new modifier set with the old to find out what modifier
-      // key has been pressed or released.
-      const unsigned int new_modifiers = ~mLastModifiers & cur_modifiers;
-      const unsigned int old_modifiers = mLastModifiers & ~cur_modifiers;
-
-      if ( new_modifiers != 0 )
-      {
-         mInputArea->addModifierEvent(
-            [self getKeyFromModifierMask:new_modifiers],
-            gadget::KeyPressEvent, theEvent
-         );
-      }
-      else if ( old_modifiers != 0 )
-      {
-         mInputArea->addModifierEvent(
-            [self getKeyFromModifierMask:old_modifiers],
-            gadget::KeyReleaseEvent, theEvent
-         );
-      }
-
-      mLastModifiers = cur_modifiers;
+      mInputArea->flagsChanged(theEvent);
    }
+   //@}
 
    /**
     * Invoked whenever the window containing this view is moved or resized.
@@ -337,6 +267,8 @@
       [self resetTrackingRect];
    }
 
+   /** @name Private Methods */
+   //@{
    /**
     * Removes the current tracking rectangle for this view (if it has one).
     *
@@ -367,34 +299,6 @@
                                       owner:self
                                    userData:NULL
                                assumeInside:NO];
-   }
-
-   /**
-    * Converts \p modifiers into the gadget::Keys corresponding value. The
-    * value of modifiers must be a mask value.
-    */
-   -(gadget::Keys) getKeyFromModifierMask:(unsigned int) mask
-   {
-      gadget::Keys key(gadget::KEY_NONE);
-
-      if ( mask & NSCommandKeyMask )
-      {
-         key = gadget::KEY_COMMAND;
-      }
-      else if ( mask & NSAlternateKeyMask )
-      {
-         key = gadget::KEY_ALT;
-      }
-      else if ( mask & NSControlKeyMask )
-      {
-         key = gadget::KEY_CTRL;
-      }
-      else if ( mask & NSShiftKeyMask )
-      {
-         key = gadget::KEY_SHIFT;
-      }
-
-      return key;
    }
    //@}
 @end

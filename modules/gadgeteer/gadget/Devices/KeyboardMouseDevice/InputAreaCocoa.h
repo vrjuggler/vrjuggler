@@ -119,6 +119,20 @@ public:
 
    /**
     * Adds a new mouse motion event to the event queue for this input area.
+    * The mouse button is determined by converting the value returned from
+    * the NSEvent method -buttonNumber.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param type  The type of button event (MouseButtonPressEvent or
+    *              MouseButtonReleaseEvent).
+    * @param event A pointer to the Cocoa event structure associated with the
+    *              button event.
+    */
+   void addMouseButtonEvent(const gadget::EventType type, NSEvent* event);
+
+   /**
+    * Adds a new mouse motion event to the event queue for this input area.
     *
     * @post A new event (gadget::MouseEvent) is added to the event queue.
     *
@@ -141,12 +155,31 @@ public:
     *              mouse movement event.
     */
    void addMouseMoveEvent(NSEvent* event);
+
+   /**
+    * Transforms a change in the modifier flags into a key press or key
+    * release event.
+    *
+    * @post \c mLastModifiers holds the new set of pressed modifier keys.
+    */
+   void flagsChanged(NSEvent* event);
    //@}
 
    void updateOriginAndSize(const float x, const float y, const float width,
                             const float height);
 
 protected:
+   /**
+    * Translates the mouse button number into a gadget::Keys value.
+    */
+   gadget::Keys getButtonFromNum(const int buttonNum) const;
+
+   /**
+    * Converts \p mask into the gadget::Keys corresponding value. The value of
+    * \p mask must be a mask value.
+    */
+   gadget::Keys getKeyFromModifierMask(const unsigned int mask) const;
+
    void warpCursorToCenter();
 
    void lockMouse();
@@ -203,6 +236,8 @@ protected:
    float mY;            /**< Input area origin Y-coordinate */
    float mWidth;        /**< Input area width */
    float mHeight;       /**< Input area height */
+
+   unsigned int mLastModifiers; /**< The current keyboard modifiers */
 
    NSWindow* mCocoaWindow;      /**< The window for this input area. */
    NSView*   mMainView;         /**< The window's view. */
