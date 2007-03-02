@@ -253,8 +253,8 @@ bool DTrackStandalone::receive(void)
 	do{
 		try
 		{
-			d_udpsock->recvfrom((void *)d_udpbuf, d_udpbufsize - 1,
-					    addr, len, d_udptimeout);
+			len = d_udpsock->recvfrom((void *)d_udpbuf, d_udpbufsize - 1,
+						  addr, d_udptimeout);
 		}
 		catch (vpr::TimeoutException&)
 		{
@@ -626,8 +626,6 @@ dtracklib_glove_type DTrackStandalone::get_glove(int ind)        // gl data (ind
 bool DTrackStandalone::send(unsigned short cmd, int val)
 {
    std::ostringstream cmd_stream;
-	vpr::Uint32 bytes;
-
 	if(!valid()){
 		return false;
 	}
@@ -672,7 +670,7 @@ bool DTrackStandalone::send(unsigned short cmd, int val)
 	try
 	{
 		d_udpsock->sendto(cmd_stream.str(), cmd_stream.str().length(),
-				  d_remote, bytes, d_udptimeout);
+				  d_remote, d_udptimeout);
 	}
 	catch (vpr::IOException&)
 	{

@@ -143,8 +143,7 @@ void WandaStandalone::start()
    // The first two bytes from the device should be the characters 'M' and
    // '3'. If that is not the case, then we have a problem.
    std::vector<vpr::Uint8> buffer(2);
-   vpr::Uint32 bytes_read(0);
-   mPort->readn(buffer, 2, bytes_read);
+   const vpr::Uint32 bytes_read = mPort->readn(buffer, 2);
 
    if ( bytes_read == 2 )
    {
@@ -200,8 +199,7 @@ void WandaStandalone::sample()
       // Using a std::deque is vital to getting the behavior that we want in
       // that case.
       vpr::Uint8 byte;
-      vpr::Uint32 bytes_read;
-      mPort->read(&byte, 1, bytes_read, mTimeout);
+      mPort->read(&byte, 1, mTimeout);
       mDataBuffer.push_back(byte);
    }
    catch (vpr::TimeoutException&)
@@ -323,8 +321,7 @@ vpr::Uint32 WandaStandalone::readBytes(const vpr::Uint32 length,
                                        const vpr::Interval& timeout)
 {
    std::vector<vpr::Uint8> buffer(length);
-   vpr::Uint32 bytes_read;
-   mPort->read(buffer, length, bytes_read, timeout);
+   const vpr::Uint32 bytes_read = mPort->read(buffer, length, timeout);
 
    for ( vpr::Uint32 i = 0; i < bytes_read; ++i )
    {

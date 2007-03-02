@@ -341,8 +341,6 @@ bool Node::send(cluster::Packet* out_packet)
       throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
    }
 
-   vpr::Uint32 bytes_written;
-
    if(mHeader->getPacketLength() == cluster::Header::RIM_PACKET_HEAD_SIZE)
    {
       return true;
@@ -356,8 +354,7 @@ bool Node::send(cluster::Packet* out_packet)
       try
       {
          mSockStream->send(*packet_data,
-            mHeader->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE,
-            bytes_written);
+            mHeader->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE);
       }
       catch (vpr::IOException&)
       {
@@ -374,7 +371,7 @@ bool Node::send(cluster::Packet* out_packet)
 
       try
       {
-         mSockStream->send(*packet_data, size, bytes_written);
+         mSockStream->send(*packet_data, size);
       }
       catch (vpr::IOException&)
       {
@@ -406,7 +403,8 @@ bool Node::send(cluster::Packet* out_packet)
 
       try
       {
-         mSockStream->send(*(temp_data_packet->getDeviceData()),temp_data_packet->getDeviceData()->size(),bytes_written);
+         mSockStream->send(*(temp_data_packet->getDeviceData()),
+                           temp_data_packet->getDeviceData()->size());
       }
       catch (vpr::IOException&)
       {
@@ -485,15 +483,13 @@ cluster::Packet* Node::recvPacket()
    //}
    else
    {
-      vpr::Uint32 bytes_read;
-
       try
       {
          // Get packet data.
-         mSockStream->recvn( incoming_data,
-                             packet_head->getPacketLength() -
-                             cluster::Header::RIM_PACKET_HEAD_SIZE,
-                             bytes_read );
+         mSockStream->recvn(
+            incoming_data,
+            packet_head->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE
+         );
       }
       catch (vpr::IOException&)
       {
@@ -501,7 +497,7 @@ cluster::Packet* Node::recvPacket()
             << clrOutBOLD( clrRED, "ERROR:" )
             << " Reading packet data failed. Expecting: "
             << packet_head->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE
-            << " But got: " << bytes_read << std::endl << vprDEBUG_FLUSH;
+            << " bytes" << std::endl << vprDEBUG_FLUSH;
 
          // TODO: setCause(ex)
          throw cluster::ClusterException( "Node::recvPacket() - Reading packet data failed!" );

@@ -2039,7 +2039,7 @@ void MotionStarStandalone::sendMsg(const void* packet,
    // Send the packet to the server.
    try
    {
-      m_socket->send(packet, packetSize, bytes);
+      bytes = m_socket->send(packet, packetSize);
    }
    // An error occurred while trying to send the packet.
    catch (vpr::IOException&)
@@ -2087,7 +2087,7 @@ void MotionStarStandalone::getRsp(void* packet, const size_t packetSize)
    // Get the packet from the server.
    try
    {
-      m_socket->recvn(packet, packetSize, bytes);
+      bytes = m_socket->recvn(packet, packetSize);
    }
    // An error occurred while trying to receive the packet.
    catch (vpr::IOException&)

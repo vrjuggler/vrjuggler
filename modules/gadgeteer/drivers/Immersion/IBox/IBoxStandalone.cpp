@@ -208,7 +208,6 @@ void IBoxStandalone::clearUpdateFieldss()
 
 bool IBoxStandalone::autoSync()
 {
-   vpr::Uint32 written;
    char temp[4];
    vpr::Interval timeout(100, vpr::Interval::Msec);
    int trys = 0;
@@ -224,12 +223,12 @@ bool IBoxStandalone::autoSync()
    {
       try
       {
-         mSerialPort->write(SIGNON_STR, sizeof(SIGNON_STR) - 1, written);
-         mSerialPort->read(&temp, 1, written, timeout);
+         mSerialPort->write(SIGNON_STR, sizeof(SIGNON_STR) - 1);
+         mSerialPort->read(&temp, 1, timeout);
 
          if ( temp[0] == 'I' )
          {
-            mSerialPort->read(&temp, 3, written, timeout);
+            mSerialPort->read(&temp, 3, timeout);
             
             if ( temp[0] == 'M' && temp[1] == 'M' && temp[2] == 'C' )
             {
@@ -249,9 +248,8 @@ bool IBoxStandalone::autoSync()
 
 bool IBoxStandalone::beginCommunication()
 {
-   vpr::Uint32 written;
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-   mSerialPort->write(BEGIN_STR, sizeof(BEGIN_STR) - 1, written);
+   mSerialPort->write(BEGIN_STR, sizeof(BEGIN_STR) - 1);
    
    try
    {
@@ -265,10 +263,9 @@ bool IBoxStandalone::beginCommunication()
 
 void IBoxStandalone::sendEndCommand()
 {
-   vpr::Uint32 written;
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-   mSerialPort->write(END_STR, sizeof(END_STR) - 1, written);
+   mSerialPort->write(END_STR, sizeof(END_STR) - 1);
 }
 
 void IBoxStandalone::disconnect()
@@ -280,22 +277,21 @@ void IBoxStandalone::disconnect()
 
 bool IBoxStandalone::sendStringCommand(const vpr::Uint8 command) const
 {
-   vpr::Uint32 written;
    vpr::Uint8 response;
    vpr::Interval timeout(100, vpr::Interval::Msec);
 
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-   mSerialPort->write(&command, 1, written);
-   mSerialPort->read(&response, 1, written, timeout);
+   mSerialPort->write(&command, 1);
+   mSerialPort->read(&response, 1, timeout);
    
    // If the returned command does not match the sent command
    if ( response != command )
    {
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      mSerialPort->write(&command, 1, written);
+      mSerialPort->write(&command, 1);
       try
       {
-         mSerialPort->read(&response, 1, written, timeout);
+         mSerialPort->read(&response, 1, timeout);
       }
       catch (vpr::IOException&)
       {
@@ -314,16 +310,15 @@ std::string IBoxStandalone::readString()
 {
    char buffer[MAX_STRING_SIZE];
    char* buffer_ptr = buffer;
-   vpr::Uint32 written;
    char ch;
    vpr::Interval timeout(100, vpr::Interval::Msec);
 
-   mSerialPort->read(&ch,1,written, timeout);
+   mSerialPort->read(&ch, 1, timeout);
 
    while ( 0 != ch )
    {
       *(buffer_ptr++) = (char) ch;
-      mSerialPort->read(&ch,1,written, timeout);
+      mSerialPort->read(&ch, 1, timeout);
    }
    return (std::string(buffer));
 }
@@ -361,50 +356,45 @@ void IBoxStandalone::waitForPacket()
 void IBoxStandalone::sendCommand(const int timerFlag, const int numAnalogs,
                                  const int numEncoders) const
 {
-   vpr::Uint32 written;
    vpr::Uint8 command = getCommandByte(timerFlag, numAnalogs, numEncoders);
-   mSerialPort->write(&command, 1, written);
+   mSerialPort->write(&command, 1);
 }
 
 void IBoxStandalone::sendSimpleConfigCommand(const vpr::Uint8 command) const
 {
-   vpr::Uint32 written;
-   mSerialPort->write(&command, 1, written);
+   mSerialPort->write(&command, 1);
 }
 
 void IBoxStandalone::sendPasswordCommand(const vpr::Uint8 command,
                                          const std::vector<vpr::Uint8> args)
 {
    vpr::Uint8 response;
-   vpr::Uint32 bytes_written;
-   vpr::Uint32 bytes_read;
    vpr::Interval timeout(100, vpr::Interval::Msec);
 
    // Write command
-   mSerialPort->write(&command, 1, bytes_written);
-   mSerialPort->read(&response, 1, bytes_read, timeout);
+   mSerialPort->write(&command, 1);
+   mSerialPort->read(&response, 1, timeout);
 
    while ( response != command )
    {
-      mSerialPort->read(&response, 1, bytes_read, timeout);
+      mSerialPort->read(&response, 1, timeout);
    }
 
-   mSerialPort->write(mSerialNumber.c_str(), strlen(mSerialNumber.c_str()), bytes_written);
+   mSerialPort->write(mSerialNumber.c_str(), strlen(mSerialNumber.c_str()));
    // Send NULL to terminate.
-   mSerialPort->write(NULL, 1, bytes_written);
-   mSerialPort->read(&response, 1, bytes_read, timeout);
+   mSerialPort->write(NULL, 1);
+   mSerialPort->read(&response, 1, timeout);
    if ( response != PASSWD_OK )
    {
       throw IBoxException("Password not accepted.", VPR_LOCATION);
    }
-   mSerialPort->write(args, args.size(), bytes_written);
+   mSerialPort->write(args, args.size());
 }
 
 void IBoxStandalone::insertMarker(const vpr::Uint8 marker) const
 {
    sendSimpleConfigCommand(INSERT_MARKER);
-   vpr::Uint32 bytes_written;
-   mSerialPort->write( &marker, 1, bytes_written);
+   mSerialPort->write(&marker, 1);
 }
 
 void IBoxStandalone::getHomeRef()
@@ -477,38 +467,36 @@ void IBoxStandalone::startMotionMode(int timer_flag, int analog_reports,
                                      std::vector<vpr::Uint8>& encoder_deltas)
 {
    boost::ignore_unused_variable_warning(active_btns);
-   vpr::Uint32 written;
    vpr::Uint8 temp;
    vpr::Uint8 command = getCommandByte(timer_flag, analog_reports, encoder_reports);
 
    // Command Byte 4F or CF
    temp = REPORT_MOTION;
-   mSerialPort->write(&temp, 1, written);
+   mSerialPort->write(&temp, 1);
 
    // Minimum delay between packets, 16 bit integer, ticks are ~1 ms
    temp = (vpr::Uint16)delay;
-   mSerialPort->write(&temp, 1, written);
+   mSerialPort->write(&temp, 1);
 
    // Send the command that we are to act like we are responding to	(Byte 3)
-   mSerialPort->write(&command, 1, written);
+   mSerialPort->write(&command, 1);
 
    // Does each button click generate a packet
    temp = 0xFF;
-   mSerialPort->write(&temp, 1, written);
+   mSerialPort->write(&temp, 1);
 
    // Send the minimum analog changes to generate a packet.
    analog_deltas.resize(NUM_ENCODERS);
-   mSerialPort->write(analog_deltas, analog_deltas.size(), written);
+   mSerialPort->write(analog_deltas, analog_deltas.size());
 
    // Send the minimum encoder change to generate a packet.
    encoder_deltas.resize(NUM_ENCODERS);
-   mSerialPort->write(encoder_deltas, encoder_deltas.size(), written);
+   mSerialPort->write(encoder_deltas, encoder_deltas.size());
 }
 
 void IBoxStandalone::stopMotionMode()
 {
-   vpr::Uint32 written;
-   mSerialPort->write(0, 1, written);
+   mSerialPort->write(0, 1);
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 }
 
@@ -527,12 +515,11 @@ void IBoxStandalone::checkForMotion()
 void IBoxStandalone::getDataPacket()
 {
    vpr::Uint8 packet_type;
-   vpr::Uint32 written;
    vpr::Interval timeout(100, vpr::Interval::Msec);
 
    try
    {
-      mSerialPort->read(&packet_type, 1, written, timeout);
+      mSerialPort->read(&packet_type, 1, timeout);
    }
    catch (vpr::IOException&)
    {
@@ -557,7 +544,7 @@ void IBoxStandalone::getDataPacket()
       mPacket.data_ptr = mPacket.data;
       mPacket.num_bytes_needed = getPacketSize(packet_type);
 
-      mSerialPort->read(mPacket.data_ptr, mPacket.num_bytes_needed, written, timeout);
+      mSerialPort->read(mPacket.data_ptr, mPacket.num_bytes_needed, timeout);
    }
 }
 

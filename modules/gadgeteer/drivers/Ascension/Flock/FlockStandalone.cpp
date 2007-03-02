@@ -457,8 +457,9 @@ void FlockStandalone::sample()
             {
                try
                {
-                  mSerialPort->read(temp_data_record, bytes_remaining,
-                                    bytes_read, mReadTimeout);
+                  bytes_read = mSerialPort->read(temp_data_record,
+                                                 bytes_remaining,
+                                                 mReadTimeout);
                   // Append the temp data onto the end of the data record
                   data_record.insert(data_record.end(), temp_data_record.begin(),
                                      temp_data_record.end());
@@ -510,8 +511,8 @@ void FlockStandalone::sample()
             // Read one byte at a time looking for phasing bit
             do
             {
-               mSerialPort->read(&buffer, 1, bytes_read, mReadTimeout);
-               if(1 != bytes_read)
+               bytes_read = mSerialPort->read(&buffer, 1, mReadTimeout);
+               if ( 1 != bytes_read )
                {
                   throw Flock::CommandFailureException(
                      "No response looking for first byte of streaming data",
@@ -528,8 +529,9 @@ void FlockStandalone::sample()
             {
                try
                {
-                  mSerialPort->read(temp_data_record, bytes_remaining,
-                                    bytes_read, mReadTimeout);
+                  bytes_read = mSerialPort->read(temp_data_record,
+                                                 bytes_remaining,
+                                                 mReadTimeout);
                   // Append the temp data onto the end of the data record
                   data_record.insert(data_record.end(), temp_data_record.begin(),
                                      temp_data_record.end());
@@ -1340,11 +1342,9 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
       throw Flock::ConnectionException("NULL port", VPR_LOCATION);
    }
 
-   unsigned int bytes_written;
-   
    try
    {
-      mSerialPort->write(&cmd, 1, bytes_written);
+      mSerialPort->write(&cmd, 1);
    }
    catch (vpr::IOException&)
    {
@@ -1357,7 +1357,7 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
    {
       try
       {
-         mSerialPort->write(&(data[0]), data.size(), bytes_written);
+         mSerialPort->write(&(data[0]), data.size());
       }
       catch (vpr::IOException&)
       {
@@ -1436,7 +1436,6 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
    exam_cmd[0] = Flock::Command::ExamineValue;
    exam_cmd[1] = attrib;
    vpr::Uint32 bytes_written;
-   vpr::Uint32 bytes_read;
 
    if ( NULL == mSerialPort )
    {
@@ -1459,7 +1458,7 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
    //vpr::System::msleep(50);         // Let the buffers clear.  Don't know if this is needed
 
    // Send command
-   mSerialPort->write(exam_cmd, 2, bytes_written);
+   bytes_written = mSerialPort->write(exam_cmd, 2);
    vprASSERT(2 == bytes_written);
    mSerialPort->drainOutput();
 
@@ -1473,7 +1472,7 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
 
    // Read response and then flush the port to make sure we don't leave
    // anything extra.
-   mSerialPort->readn(respData, respSize, bytes_read);
+   vpr::Uint32 bytes_read = mSerialPort->readn(respData, respSize);
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
    // Check response size
@@ -1508,7 +1507,7 @@ void FlockStandalone::setAttribute(vpr::Uint8 attrib,
    //vpr::System::msleep(300);                                   // Let the buffers clear
 
    // Send command
-   mSerialPort->write(change_cmd, 2, bytes_written);
+   bytes_written = mSerialPort->write(change_cmd, 2);
    if(bytes_written != sizeof(change_cmd))
    {
       throw Flock::CommandFailureException("Full command not written",
@@ -1518,7 +1517,7 @@ void FlockStandalone::setAttribute(vpr::Uint8 attrib,
    // Send args
    if(!attribData.empty())
    {
-      mSerialPort->write(attribData, attribData.size(), bytes_written);
+      bytes_written = mSerialPort->write(attribData, attribData.size());
       if(bytes_written != attribData.size())
       {
          throw Flock::CommandFailureException(

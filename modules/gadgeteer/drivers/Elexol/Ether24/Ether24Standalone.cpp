@@ -139,13 +139,11 @@ Elexol::device_map_t Ether24Standalone::getDevicesByMacAddress()
 
    // Broadcast command.
    std::string msg("IO24");
-   vpr::Uint32 bytes_sent;
-   socket->sendto(msg, 4, broadcast_addr, bytes_sent);
+   socket->sendto(msg, 4, broadcast_addr);
 
    std::vector<vpr::Uint8> response(12);
 
    vpr::InetAddr from;
-   vpr::Uint32 bytes_read;
 
    Elexol::device_map_t mac_to_addr_map;
 
@@ -157,7 +155,7 @@ Elexol::device_map_t Ether24Standalone::getDevicesByMacAddress()
       while (true)
       {
          vpr::Interval read_timeout(1, vpr::Interval::Sec);
-         socket->recvfrom(response, 12, from, bytes_read, read_timeout);
+         socket->recvfrom(response, 12, from, read_timeout);
          vpr::BufferObjectReader reader(&response);
          std::string cmd_string((char*)reader.readRaw(4));
 
@@ -231,14 +229,12 @@ vpr::Uint8 Ether24Standalone::getState(const Elexol::Port port, const Elexol::Co
       << "Ether24StandalonegetState(): Sending command [" << cmd << "]"
       << std::endl << vprDEBUG_FLUSH;
 
-   vpr::Uint32 bytes_sent;
-   mSocket->sendto(cmd, cmd.size(), mAddress, bytes_sent);
+   mSocket->sendto(cmd, cmd.size(), mAddress);
 
    vpr::InetAddr from;
-   vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
    vpr::Interval read_timeout(100, vpr::Interval::Msec);
-   mSocket->recvfrom(response, cmd.size() + 1, from, bytes_read, read_timeout);
+   mSocket->recvfrom(response, cmd.size() + 1, from, read_timeout);
 
    if (Elexol::Command::Value == command)
    {
@@ -286,8 +282,7 @@ void Ether24Standalone::setState(const Elexol::Port port, const Elexol::CommandT
       << "Ether24Standalone::setState() Sending command [" << cmd << "]"
       << std::endl << vprDEBUG_FLUSH;
 
-   vpr::Uint32 bytes_sent;
-   mSocket->sendto(cmd, cmd.size(), mAddress, bytes_sent);
+   mSocket->sendto(cmd, cmd.size(), mAddress);
 }
 
 vpr::InetAddr Ether24Standalone::getFixedIpAddress()
@@ -492,15 +487,13 @@ std::pair<vpr::Uint8, vpr::Uint8>
    //   << "Ether24Standalone::getWordValue(): Sending command [" << read_cmd << "]"
    //   << std::endl << vprDEBUG_FLUSH;
 
-   vpr::Uint32 bytes_sent;
-   mSocket->sendto(read_cmd, 5, mAddress, bytes_sent);
+   mSocket->sendto(read_cmd, 5, mAddress);
 
    vpr::InetAddr from;
-   vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> response(0);
 
    vpr::Interval read_timeout(50, vpr::Interval::Msec);
-   mSocket->recvfrom(response, 4, from, bytes_read, read_timeout);
+   mSocket->recvfrom(response, 4, from, read_timeout);
 
    if (Elexol::Command::ReadWord != response[0])
    {
@@ -530,8 +523,7 @@ void Ether24Standalone::enableWriting()
       << "Ether24StandalonegetState(): Sending enable writing command ["
       << write_enable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
 
-   vpr::Uint32 bytes_sent;
-   mSocket->sendto(write_enable_cmd, 5, mAddress, bytes_sent);
+   mSocket->sendto(write_enable_cmd, 5, mAddress);
 }
 
 void Ether24Standalone::reset()
@@ -548,8 +540,7 @@ void Ether24Standalone::reset()
       << "Ether24StandalonegetState(): Sending reset command ["
       << write_enable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
 
-   vpr::Uint32 bytes_sent;
-   mSocket->sendto(write_enable_cmd, 5, mAddress, bytes_sent);
+   mSocket->sendto(write_enable_cmd, 5, mAddress);
 }
 
 void Ether24Standalone::disableWriting()
@@ -566,8 +557,7 @@ void Ether24Standalone::disableWriting()
       << "Ether24Standalone::disableWriting(): Sending disable writing command ["
       << write_disable_cmd << "]" << std::endl << vprDEBUG_FLUSH;
 
-   vpr::Uint32 bytes_sent;
-   mSocket->sendto(write_disable_cmd, 5, mAddress, bytes_sent);
+   mSocket->sendto(write_disable_cmd, 5, mAddress);
 }
 
 void Ether24Standalone::setWordValue(const Elexol::AddressType address,
@@ -583,13 +573,11 @@ void Ether24Standalone::setWordValue(const Elexol::AddressType address,
 
    vprASSERT(5 == write_cmd.size());
 
-   vpr::Uint32 bytes_sent;
-   
    //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Ether24Standalone::setWordValue(): Sending command [" << write_cmd << "]"
    //   << std::endl << vprDEBUG_FLUSH;
-   mSocket->sendto(write_cmd, 5, mAddress, bytes_sent);
+   mSocket->sendto(write_cmd, 5, mAddress);
 }
 
 /*

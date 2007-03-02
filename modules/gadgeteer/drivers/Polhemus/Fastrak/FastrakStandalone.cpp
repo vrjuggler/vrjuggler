@@ -168,7 +168,6 @@ void FastrakStandalone::readData()
    std::vector<vpr::Uint8> data_record;
    std::vector<vpr::Uint8> temp_data_record;    // Temp buffer for reading data
 
-   vpr::Uint32 bytes_read;
    vpr::Uint32 bytes_remaining;
 
    unsigned int single_bird_data_size = 28 + 5;
@@ -183,8 +182,8 @@ void FastrakStandalone::readData()
    {
       try
       {
-         mSerialPort->read(temp_data_record, bytes_remaining,
-                           bytes_read, mReadTimeout);
+         const vpr::Uint32 bytes_read =
+            mSerialPort->read(temp_data_record, bytes_remaining, mReadTimeout);
          // Append the temp data onto the end of the data record
          data_record.insert(data_record.end(), temp_data_record.begin(),
                             temp_data_record.end());
@@ -291,11 +290,10 @@ void FastrakStandalone::sendCommand(vpr::Uint8 cmd, std::string data)
    {
       throw vpr::Exception("Failed to flush queue before command.", VPR_LOCATION);
    }
-   vpr::Uint32 bytes_written;
-   mSerialPort->write(&cmd, 1, bytes_written);
+   mSerialPort->write(&cmd, 1);
    if(!data.empty())
    {
-      mSerialPort->write(data, data.size(), bytes_written);
+      const vpr::Uint32 bytes_written = mSerialPort->write(data, data.size());
       vprASSERT(data.size() == bytes_written);
    }
    mSerialPort->drainOutput();
@@ -318,12 +316,10 @@ bool FastrakStandalone::getStationStatus(const vpr::Uint16 station)
    std::string data = boost::lexical_cast<std::string>(station) + "\r";
    sendCommand(Fastrak::Command::StationStatus, data);
    std::vector<vpr::Uint8> data_record;
-   vpr::Uint32 bytes_read;
 
    try
    {
-      mSerialPort->read(data_record, 9,
-                        bytes_read, mReadTimeout);
+      mSerialPort->read(data_record, 9, mReadTimeout);
    }
    catch (vpr::IOException&)
    {
@@ -348,7 +344,6 @@ bool FastrakStandalone::getStationStatus(const vpr::Uint16 station)
 
 void FastrakStandalone::printStatus()
 {
-   vpr::Uint32 bytes_read;
    std::vector<vpr::Uint8> respData;
    unsigned int respSize = 55;
 
@@ -362,7 +357,7 @@ void FastrakStandalone::printStatus()
 
    // Read response and then flush the port to make sure we don't leave
    // anything extra.
-   mSerialPort->readn(respData, respSize, bytes_read);
+   const vpr::Uint32 bytes_read = mSerialPort->readn(respData, respSize);
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
    // Check response size

@@ -174,21 +174,19 @@ namespace cluster
 
    void ClusterDelta::sendAndClear()
    {
-      vpr::Uint32 bytes_just_sent = 0;
       if ( !mWriter.getData()->empty() )
       {
-         mSocketStream->send(*(mWriter.getData()),mWriter.getData()->size(),bytes_just_sent);
+         mSocketStream->send(*(mWriter.getData()), mWriter.getData()->size());
       }
       mWriter.mData->clear();
       mWriter.mCurHeadPos = 0;
    }
    void ClusterDelta::getPacket(unsigned num)
    {                                      // Need to delete the old Object Readers
-      vpr::Uint32 bytes_read;
       syncPacket.clear();
       mReader->setCurPos(0);
       //mSocketStream->readn(syncPacket,SYNC_PACKET_LENGTH,bytes_read);
-      mSocketStream->readn(syncPacket,num ,bytes_read);
+      mSocketStream->readn(syncPacket,num);
    }
    void ClusterDelta::clearIntervals()
    {

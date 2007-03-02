@@ -109,15 +109,14 @@ int DataGloveStandalone::ReadRecordsFromHardware( float *ch0, float *ch1, float 
 {
    unsigned char buf[10];   // Define buffer
    unsigned char packet[10];   // Define packet
-   vpr::Uint32 written;
 
-   mPort->read(buf, 1, written);
+   mPort->read(buf, 1);
    while(buf[0]!=0x80) // Read data untill read the header.
    {
-      mPort->read(buf, 1, written);
+      mPort->read(buf, 1);
    }
    // If read the start buffer, read the rest 9 data.
-   mPort->read(&packet, 9, written);
+   mPort->read(&packet, 9);
    
    ///////////////////////////////////////////////////// 
    // Longitudinal Checksum
@@ -170,7 +169,6 @@ int DataGloveStandalone::mConnectToHardware(const std::string& tty_port, int bau
    //const int BUFFER_LEN = 100;
    //char buf[BUFFER_LEN];
    //int cnt;
-   //vpr::Uint32 written;
 
    // Create new serial port
    mPort = new vpr::SerialPort(tty_port);

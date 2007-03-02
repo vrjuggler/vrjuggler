@@ -306,7 +306,6 @@ namespace cluster
       //vprASSERT(mSyncClients!=NULL && "Sync Clients Vector is NULL!");
       vprASSERT(mActive==true && "Barrier is not active!");
 
-      vpr::Uint32 bytes_read;
       vpr::Guard<vpr::Mutex> guard(mSyncClientsLock);
 
       vpr::Uint8 temp;
@@ -321,12 +320,12 @@ namespace cluster
                << " Buffer overrun: " << (*i)->availableBytes() << " bytes"
                << std::endl << vprDEBUG_FLUSH;
 
-            (*i)->recvn(&temp , 1, bytes_read);
+            (*i)->recvn(&temp , 1);
          }
 
          try
          {
-            (*i)->send(&SYNC_SIGNAL, 1, bytes_read, vpr::Interval::NoWait);
+            (*i)->send(&SYNC_SIGNAL, 1, vpr::Interval::NoWait);
          }
          // Ignore timeout exceptions. These will be thrown on Windows due to
          // the behavior of NSPR sockets.
@@ -341,7 +340,6 @@ namespace cluster
    {
       vprASSERT(mActive==true && "Barrier is not active!");
 
-      vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
       
       vpr::Guard<vpr::Mutex> guard(mSyncClientsLock);
@@ -351,7 +349,7 @@ namespace cluster
       {
          try
          {
-            (*i)->recv(&temp , 1, bytes_read,read_timeout);
+            (*i)->recv(&temp , 1, read_timeout);
          }
          // If we time out while trying to receive a synchronization packet,
          // print a warning about the barrier slipping and move on to the next
@@ -382,7 +380,6 @@ namespace cluster
             }
 */            
          }
-         //vprASSERT(1==bytes_read && "SwapLockTCPPlugin: Master Barrier received timeout");
       } 
    }
    void SwapLockTCPPlugin::slaveSend()
@@ -392,21 +389,18 @@ namespace cluster
 
       vpr::Uint8 temp;
 
-      vpr::Uint32 bytes_read;
-      
       while (mSyncServerSocket->availableBytes() > 0)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrMAGENTA, "[SwapLockTCPPlugin::slaveSend()]")
             << " Buffer overrun: " << mSyncServerSocket->availableBytes()
             << " bytes" << std::endl << vprDEBUG_FLUSH;
-         mSyncServerSocket->recvn(&temp , 1, bytes_read);
+         mSyncServerSocket->recvn(&temp , 1);
       }
 
       try
       {
-         mSyncServerSocket->send(&SYNC_SIGNAL, 1, bytes_read,
-                                 vpr::Interval::NoWait);
+         mSyncServerSocket->send(&SYNC_SIGNAL, 1, vpr::Interval::NoWait);
       }
       // Ignore timeout exceptions. These will be thrown on Windows due to the
       // the behavior of NSPR sockets.
@@ -421,11 +415,10 @@ namespace cluster
       vprASSERT(mSyncServerSocket!=NULL && "mSyncServerSocket is NULL!");
       vprASSERT(mActive==true && "Barrier is not active!");
       
-      vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
       try
       {   
-         mSyncServerSocket->recv(&temp , 1, bytes_read,read_timeout);
+         mSyncServerSocket->recv(&temp, 1, read_timeout);
       }
       catch (vpr::IOException&)
       {
@@ -434,9 +427,7 @@ namespace cluster
             << " SwapBarrier slip.\n" << vprDEBUG_FLUSH;
          //vpr::System::sleep(read_timeout);
       }
-      //vprASSERT(1==bytes_read && "SwapLockTCPPlugin: Slave Barrier received timeout");
    }
-
 
    bool SwapLockTCPPlugin::startListening()
    {

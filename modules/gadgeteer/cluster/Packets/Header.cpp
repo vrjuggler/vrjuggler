@@ -63,7 +63,7 @@ namespace cluster
          
          try
          {
-            stream->readn( mData, Header::RIM_PACKET_HEAD_SIZE, bytes_read );
+            bytes_read = stream->readn(mData, Header::RIM_PACKET_HEAD_SIZE);
          }
          catch (vpr::IOException& ex)
          {
@@ -172,11 +172,9 @@ namespace cluster
       vprASSERT( NULL != socket && "Socket is NULL" );
 
       // -Send the data in this packet
-      vpr::Uint32 bytes_written;
-      
       try
       {
-         socket->send( mData, RIM_PACKET_HEAD_SIZE, bytes_written );
+         socket->send(mData, RIM_PACKET_HEAD_SIZE);
       }
       catch (vpr::IOException&)
       {

@@ -282,7 +282,6 @@ namespace gadget
    void PinchGloveStandalone::sendCommand(const vpr::Uint8& first,
                                           const vpr::Uint8& second)
    {
-      vpr::Uint32 written;
       unsigned char buf[10];
 
       vpr::Interval read_timeout(100,vpr::Interval::Msec);
@@ -294,12 +293,12 @@ namespace gadget
       // it is confused. If we can read this, we need to fix it. In a
       // way we are clearing the PinchGloves input buffer.
 
-      mPort->write(&first, 1, written);
+      mPort->write(&first, 1);
       try
       {
-         mPort->read(&buf[0], 10, written, read_timeout);
+         mPort->read(&buf[0], 10, read_timeout);
          // If read without an error.
-         mPort->write(&first, 1, written);
+         mPort->write(&first, 1);
       }
       catch (vpr::IOException&)
       {
@@ -307,7 +306,7 @@ namespace gadget
       }
       vpr::System::msleep(100);
       // Wait between sending bytes.
-      mPort->write(&second, 1, written);
+      mPort->write(&second, 1);
    }
 
    void PinchGloveStandalone::readData(std::vector<vpr::Uint8>& result,
@@ -320,7 +319,7 @@ namespace gadget
 
       try
       {
-         mPort->read(&temp_byte, 1, read, read_timeout);
+         read = mPort->read(&temp_byte, 1, read_timeout);
       }
       catch (vpr::IOException&)
       {
@@ -333,7 +332,7 @@ namespace gadget
       {
          try
          {
-            mPort->read(&temp_byte, 1, read, read_timeout);
+            read = mPort->read(&temp_byte, 1, read_timeout);
          }
          catch (vpr::IOException&)
          {
@@ -348,7 +347,7 @@ namespace gadget
       
       try
       {
-         mPort->read(&temp_byte, 1, read, read_timeout);
+         read = mPort->read(&temp_byte, 1, read_timeout);
       }
       catch (vpr::IOException&)
       {
@@ -365,7 +364,7 @@ namespace gadget
          
          try
          {
-            mPort->read(&temp_byte, 1, read, read_timeout);
+            read = mPort->read(&temp_byte, 1, read_timeout);
          }
          catch (vpr::IOException&)
          {

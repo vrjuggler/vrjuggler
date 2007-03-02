@@ -353,8 +353,7 @@ private:
 
    int write(char *data,int size)
    {
-      vpr::Uint32 amount;
-      port->write(data,size,amount);
+      const vpr::Uint32 amount = port->write(data, size);
 
       if ( amount==0 )
       {
@@ -366,9 +365,9 @@ private:
 
    int read(char *data,int size,int timeout)
    {
-      vpr::Uint32 amount;
       port->setTimeout(timeout/100);
-      port->read(data,size,amount,vpr::Interval(timeout,vpr::Interval::Msec));
+      const vpr::Uint32 amount =
+         port->read(data, size, vpr::Interval(timeout,vpr::Interval::Msec));
 
       if ( amount==0 )
       {
