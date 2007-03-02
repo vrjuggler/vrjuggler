@@ -64,16 +64,14 @@ int main (int argc, char* argv[])
          sock.connect();
 
          char buffer[40];
-         vpr::Uint32 bytes;
-
          memset(buffer, '\0', sizeof(buffer));
          strcpy(buffer, "Hi, I'm a client");
 
          // Write to the server.
-         sock.write(buffer, 40, bytes);
+         sock.write(buffer, 40);
 
          // Read from the server.
-         sock.read(buffer, 40, bytes);
+         const vpr::Uint32 bytes = sock.read(buffer, 40);
 
          // If the server reasponded, print the result.
          std::cout << "Read " << bytes << " from server\n"

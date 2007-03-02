@@ -141,7 +141,7 @@ void SelectorTest::testAcceptorPoolSelection_acceptor()
 
        // use the sock to write (send)... then close it...
        // Send a message
-       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem writing in acceptor", sock.write(mMessageValue, mMessageLen, bytes_written));
+       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem writing in acceptor", bytes_written = sock.write(mMessageValue, mMessageLen));
        // Close the socket
        CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem closing accepted socket", sock.close());
     }
@@ -188,7 +188,7 @@ void SelectorTest::testAcceptorPoolSelection_connector()
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Connector can't connect", connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec) ));
 
       // Recieve data
-      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failure reading data", con_sock.read(data, mMessageLen, bytes_read));
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failure reading data", bytes_read = con_sock.read(data, mMessageLen));
       CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
 
       con_sock.close();                                   // Close socket
@@ -321,7 +321,7 @@ void SelectorTest::testSendThenPoll_acceptor()
             std::string data;
             vpr::Uint32 bytes_read;
             
-            CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problems reading data", socks[s_idx].read(data, mMessageLen, bytes_read)); 
+            CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problems reading data", bytes_read = socks[s_idx].read(data, mMessageLen)); 
             CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Data recieved is of wrong length");
          }
        }
@@ -464,7 +464,7 @@ void SelectorTest::testSendThenPoll_connector()
          //std::cout << mSelectedPorts[j] << ", ";
          CPPUNIT_ASSERT((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
          // Write the data
-         CPPUNIT_ASSERT_NO_THROW_MESSAGE("Error writing data on socket", sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen, bytes_written));
+         CPPUNIT_ASSERT_NO_THROW_MESSAGE("Error writing data on socket", bytes_written = sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen));
          CPPUNIT_ASSERT((mMessageLen == bytes_written) && "Wrong num bytes written");
       }
 

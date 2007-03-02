@@ -155,7 +155,6 @@ void NonBlockingSocketTest::testNonBlockingTransfer ()
 
 void NonBlockingSocketTest::testNonBlockingTransfer_acceptor()
 {
-   vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
    vpr::InetAddr acceptor_addr;
@@ -205,7 +204,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor()
    client_sock.setNoDelay(true);
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to send message to client",
-      client_sock.send(mMessage, mMessageLen, bytes_written));
+      client_sock.send(mMessage, mMessageLen));
 
    mCondVar.acquire();
    {
@@ -264,7 +263,7 @@ void NonBlockingSocketTest::testNonBlockingTransfer_connector()
 
    try
    {
-      con_sock.recv(data, mMessageLen, bytes_read);
+      bytes_read = con_sock.recv(data, mMessageLen);
    }
    catch (vpr::WouldBlockException& ex)
    {
@@ -369,17 +368,16 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
 
    // s:    write...
    std::string message = "Hi Maynard, My leg hurts";
-   vpr::Uint32 bytes_written;
    CPPUNIT_ASSERT_NO_THROW_MESSAGE( "Problem writing in acceptor",
-      spawned_socket.write( message, message.size(), bytes_written ));
+      spawned_socket.write( message, message.size() ));
 
    // s:    write the max size...
    size_t size;
    CPPUNIT_ASSERT_NO_THROW_MESSAGE( "couldn't get the max size for sending data with socket",
-      spawned_socket.getSendBufferSize( size ));
+      size = spawned_socket.getSendBufferSize());
    message.resize( size );
    CPPUNIT_ASSERT_NO_THROW_MESSAGE( "maxsize test failed",
-      spawned_socket.write( message, message.size(), bytes_written ));
+      spawned_socket.write( message, message.size() ));
 
    // block until data is sent
 /*
@@ -395,7 +393,7 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    CPPUNIT_ASSERT( num_events > 0 && "no events" );
 
    // c:     read
-   connector_socket.read( message, message.size(), bytes_written );
+   connector_socket.read( message, message.size() );
    CPPUNIT_ASSERT( status.success() && "read test failed" );
 */
 
@@ -456,7 +454,7 @@ void NonBlockingSocketTest::testSendUDP_receiver()
    {
       try
       {
-         recv_sock.recvfrom(data, mMessageLen, from_addr, bytes_read);
+         bytes_read = recv_sock.recvfrom(data, mMessageLen, from_addr);
          running = false;
       }
       catch (vpr::WouldBlockException& ex)
@@ -486,7 +484,6 @@ void NonBlockingSocketTest::testSendUDP_sender()
 {
    vpr::InetAddr remote_addr = vpr::InetAddr::getLocalHost();
    vpr::SocketDatagram send_sock;
-   vpr::Uint32 bytes;
 
    remote_addr.setPort(mReceiverPort);
 
@@ -504,7 +501,7 @@ void NonBlockingSocketTest::testSendUDP_sender()
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to enable non-blocking for sender", send_sock.setBlocking(false));
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to send to receiver",
-      send_sock.sendto(mMessage, mMessageLen, remote_addr, bytes));
+      send_sock.sendto(mMessage, mMessageLen, remote_addr));
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Could not close sender socket",
       send_sock.close());

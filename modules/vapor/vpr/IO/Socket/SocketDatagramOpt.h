@@ -70,12 +70,12 @@ public:
     * Gets the multicast interface for this datagram socket.
     * @throws vpr::IOException if the operation failed.
     */
-   void getMcastInterface(vpr::InetAddr& mcastIf)
+   const vpr::InetAddr getMcastInterface() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(SocketOptions::McastInterface, option);
-      mcastIf = option.mcast_if;
+      return option.mcast_if;
    }
 
    /**
@@ -94,12 +94,12 @@ public:
     * socket.
     * @throws vpr::IOException if the operation failed.
     */
-   void getMcastTimeToLive(vpr::Uint8& ttl)
+   vpr::Uint8 getMcastTimeToLive() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(SocketOptions::McastTimeToLive, option);
-      ttl = option.mcast_ttl;
+      return option.mcast_ttl;
    }
 
    /**
@@ -117,12 +117,12 @@ public:
    /**
     *@throws vpr::IOException if the operation failed.
     */
-   void getMcastLoopback(vpr::Uint8& loop)
+   vpr::Uint8 getMcastLoopback() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(SocketOptions::McastLoopback, option);
-      loop = option.mcast_loopback;
+      return option.mcast_loopback;
    }
 
    /**

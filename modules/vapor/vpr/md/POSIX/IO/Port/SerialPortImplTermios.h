@@ -300,17 +300,15 @@ public:
     * can return.
     *
     * @pre The serial port is open.
-    * @post The minimum buffer size is returned to the caller through the
-    *       by-reference argument.
+    * @post The minimum buffer size is returned to the caller.
     *
-    * @param size A reference to a vpr::Uint16 where the buffer size is
-    *             stored for return to the caller.
+    * @return The minimum buffer size is returned.
     *
     * @throws vpr::IOException if the buffer size could not be retrieved.
     *
     * @see getTimeout
     */
-    void getMinInputSize(vpr::Uint16& size) const;
+    vpr::Uint16 getMinInputSize() const;
 
    /**
     * Attempts to change the minimum buffer size to the given argument.  This
@@ -334,18 +332,16 @@ public:
     * to arrive.  This is only applicable in non-canonical mode.
     *
     * @pre This serial port is open.
-    * @post The current timeout setting is returned to the caller in the
-    *       by-reference argument.
+    * @post The current timeout setting is returned to the caller.
     *
-    * @param timeout A reference to a vpr::Uint8 to be used as storage for
-    *                the timeout value.
+    * @return The timout value is returned.
     *
     * @throws vpr::IOException if the timeout could not be retrieved.
     *
     * @see Refer to page 353 of <I>Advanced Programming in the UNIX
     *      Environment</I> for more details.
     */
-   void getTimeout(Uint8& timeout) const;
+   vpr::Uint8 getTimeout() const;
 
    /**
     * Sets the value of the timeout to wait for data to arrive.  The value
@@ -368,16 +364,14 @@ public:
     * Gets the character size (the bits per byte).
     *
     * @pre This serial port is open.
-    * @post The current character size is returned to the caller in the
-    *       by-reference argument.
+    * @post The current character size is returned to the caller.
     *
-    * @param size A reference to a vpr::SerialTypes::CharacterSizeOption
-    *             object to be used as storage for the character size
-    *             value.
+    * @return A vpr::SerialTypes::CharacterSizeOption value is returned to
+    *         indicate the character size.
     *
     * @throws vpr::IOException if the character size could be retrieved.
     */
-   void getCharacterSize(SerialTypes::CharacterSizeOption& size) const;
+   vpr::SerialTypes::CharacterSizeOption getCharacterSize() const;
 
    /**
     * Sets the current character size (the bits per byte) to the size in the
@@ -450,15 +444,13 @@ public:
     * Gets the number of stop bits in use.  This will be either 1 or 2.
     *
     * @pre This serial port is open.
-    * @post The number of stop bits currently in use is returned via the
-    *       by-reference argument.
+    * @post The number of stop bits currently in use is returned.
     *
-    * @param num_bits A reference to a vpr::Uint8 that will be used to
-    *                 store the number of stop bits.
+    * @return The number of stop bits currently in use is returned.
     *
     * @throws vpr::IOException if stop bits could not be retrieved.
     */
-   void getStopBits(Uint8& num_bits) const;
+   vpr::Uint8 getStopBits() const;
 
    /**
     * Sets the number of stop bits to use.  The value must be either 1 or 2.
@@ -770,54 +762,50 @@ public:
    void setParity(const vpr::SerialTypes::ParityType& type);
 
    /**
-    * Gets the current input baud rate.
+    * Gets the current input baud setting.
     *
     * @pre This serial port is open.
-    * @post The current input baud rate is returned to the caller via the
-    *       by-reference parameter.
+    * @post The current input baud setting is returned to the caller.
     *
-    * @param rate A reference to a vpr::Uint32 to be used as storage for
-    *             the current input baud rate.
+    * @return The current input baud setting is returned.
     *
-    * @throws vpr::IOException if input baud rate could not be retrieved.
+    * @throws vpr::IOException if input baud setting could not be retrieved.
     */
-   void getInputBaudRate(vpr::Uint32& rate) const;
+   vpr::Uint32 getInputBaudRate() const;
 
    /**
-    * Sets the current input baud rate.
+    * Sets the current input baud setting.
     *
-    * @pre This serial port is open, and the rate is a valid baud rate.
-    * @post The input baud rate is updated to use the given value.
+    * @pre This serial port is open, and the rate is a valid baud setting.
+    * @post The input baud setting is updated to use the given value.
     *
-    * @param rate The new input baud rate.
+    * @param rate The new input baud setting.
     *
-    * @throws vpr::IOException if input baud rate could not be set.
+    * @throws vpr::IOException if input baud setting could not be set.
     */
    void setInputBaudRate(const vpr::Uint32& rate);
 
    /**
-    * Gets the current output baud rate.
+    * Gets the current output baud setting.
     *
     * @pre This serial port is open.
-    * @post The current output baud rate is returned to the caller via the
-    *       by-reference parameter.
+    * @post The current output baud setting is returned to the caller.
     *
-    * @param rate A reference to a vpr::Uint32 to be used as storage for
-    *              the current output baud rate.
+    * @return The current output baud setting is returned.
     *
-    * @throws vpr::IOException if ouput baud rate could not be retrieved.
+    * @throws vpr::IOException if ouput baud setting could not be retrieved.
     */
-   void getOutputBaudRate(vpr::Uint32& rate) const;
+   vpr::Uint32 getOutputBaudRate() const;
 
    /**
-    * Sets the current output baud rate.
+    * Sets the current output baud setting.
     *
-    * @pre This serial port is open, and the rate is a valid baud rate.
-    * @post The output baud rate is updated to use the given value.
+    * @pre This serial port is open, and the rate is a valid baud setting.
+    * @post The output baud setting is updated to use the given value.
     *
-    * @param rate The new output baud rate.
+    * @param rate The new output baud setting.
     *
-    * @throws vpr::IOException if ouput baud rate could not be set.
+    * @throws vpr::IOException if ouput baud setting could not be set.
     */
    void setOutputBaudRate(const vpr::Uint32& rate);
 
@@ -978,15 +966,16 @@ public:
     *      \p length bytes long.
     * @post The given buffer has length bytes copied into it from the port,
     *       and the number of bytes read successfully is returned to the
-    *       caller via the \p bytesRead parameter.
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the port's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the port's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::WouldBlockException if the port is in non-blocking mode,
     *         and there is no data to read.
@@ -996,12 +985,11 @@ public:
     *
     * @see vpr::FileHandleImplUNIX::read_i()
     */
-   void read_i(void* buffer, const vpr::Uint32 length,
-               vpr::Uint32& bytesRead,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
-      mHandle->read_i(buffer, length, bytesRead, timeout);
+      return mHandle->read_i(buffer, length, timeout);
    }
 
    /**
@@ -1011,16 +999,17 @@ public:
     * @pre The port is open for reading, and the buffer is at least
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the port,
-    *       and the number of bytes read successfully is returned to the caller
-    *       via the \p bytesRead parameter.
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the ports's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the ports's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::EOFException if end of port or end of stream has been
     *         reached unexpectedly during input.
@@ -1028,12 +1017,11 @@ public:
     *
     * @see vpr::FileHandleImplUNIX::readn_i()
     */
-   void readn_i(void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesRead,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
-      mHandle->readn_i(buffer, length, bytesRead, timeout);
+      return mHandle->readn_i(buffer, length, timeout);
    }
 
    /**
@@ -1042,15 +1030,15 @@ public:
     *
     * @pre The port is open for writing.
     * @post The given buffer is written to the I/O port, and the number
-    *       of bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       of bytes written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the port.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the device is returned.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -1060,12 +1048,11 @@ public:
     *
     * @see vpr::FileHandleImplUNIX::write_i()
     */
-   void write_i(const void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesWritten,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
-      mHandle->write_i(buffer, length, bytesWritten, timeout);
+      return mHandle->write_i(buffer, length, timeout);
    }
 
 protected:
@@ -1153,12 +1140,12 @@ protected:
    bool getLineFlag(Uint16 flag) const;
 
    /**
-    * Converts a termios baud rate to its corresponding integer value.
+    * Converts a termios baud setting to its corresponding integer value.
     */
    vpr::Uint32 baudToInt(const speed_t baud_rate) const;
 
    /**
-    * Converts an integer baud rate to the corresponding termios rate
+    * Converts an integer baud setting to the corresponding termios rate
     * constant.
     */
    speed_t intToBaud(const vpr::Uint32 speed_int) const;

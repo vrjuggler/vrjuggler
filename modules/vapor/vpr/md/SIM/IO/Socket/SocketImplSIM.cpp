@@ -38,7 +38,6 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <string.h>
-#include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
@@ -206,14 +205,10 @@ vpr::Uint32 SocketImplSIM::availableBytes() const
    return bytes;
 }
 
-vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
-                                        const vpr::Uint32 length,
-                                        vpr::Uint32& bytesRead,
-                                        vpr::Interval timeout )
+vpr::Uint32 SocketImplSIM::read_i(void* buffer, const vpr::Uint32 length,
+                                  const vpr::Interval)
 {
-   boost::ignore_unused_variable_warning(timeout);
-
-   vpr:: ReturnStatus status;
+   vpr:: Uint32 bytes_read(0);
    vprASSERT(mOpen && "Cannot read on an unopened socket");
 
    // This is a rather long critical sectino, but we need to be sure that the
@@ -236,7 +231,7 @@ vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
 
          // Complete the read operation.
          memcpy(buffer, message->getBody(), copy_len);
-         bytesRead = copy_len;
+         bytes_read = copy_len;
 
          // If there was no resizing performed on the message (the resize value
          // is 0), then we have read the entire message into our buffer.
@@ -249,24 +244,20 @@ vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
       // in progress.
       else
       {
-         status.setCode(vpr::ReturnStatus::WouldBlock);
-         bytesRead = 0;
+         // XXX: Throw an exception
       }
    }
    mArrivedQueueMutex.release();
 
-   return status;
+   return bytes_read;
 }
 
 // Exactly like read_i except takes MessageDataPtr directly for zero copy
 // networking.  Updates msgData to point at the new message data.
-vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgData,
-                                        vpr::Uint32& bytesRead,
-                                        vpr::Interval timeout)
+vpr::Uint32 SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgData,
+                                  const vpr::Interval)
 {
-   boost::ignore_unused_variable_warning(timeout);
-
-   vpr:: ReturnStatus status;
+   vpr::Uint32 bytes_read(0);
    vprASSERT(mOpen && "Cannot read on an unopened socket");
 
    // This is a rather long critical sectino, but we need to be sure that the
@@ -278,42 +269,37 @@ vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgDa
          // Get copy of message data, then
          // Remove the message from the arrival queue.
          msgData = mArrivedQueue.front()->getMessageData();
-         bytesRead = msgData->size();
+         bytes_read = msgData->size();
          mArrivedQueue.pop_front();
       }
       // Nothing is in the queue, so we tell the caller that the operation is
       // in progress.
       else
       {
-         status.setCode(vpr::ReturnStatus::WouldBlock);
-         bytesRead = 0;
+         // XXX: Throw an exception
       }
    }
    mArrivedQueueMutex.release();
 
-   return status;
+   return bytes_read;
 }
 
-vpr::ReturnStatus SocketImplSIM::write_i(const void* buffer,
-                                         const vpr::Uint32 length,
-                                         vpr::Uint32& bytesWritten,
-                                         vpr::Interval timeout)
+vpr::Uint32 SocketImplSIM::write_i(const void* buffer,
+                                   const vpr::Uint32 length,
+                                   const vpr::Interval)
 {
-   boost::ignore_unused_variable_warning(timeout);
-
-   vpr::ReturnStatus status;
+   vpr::Uint32 bytes_written(0);
    vprASSERT(mBound && "We must be bound first");
    vprASSERT(mOpen && "We must be open first");
 
    if ( mPeer == NULL )
    {
       vprASSERT(false && "Trying to write to NULL peer");      // XXX: This may not be a good way to do this
-      status.setCode(vpr::ReturnStatus::Fail);
-      bytesWritten = 0;
+      // XXX: Throw an exception.
    }
    else
    {
-      bytesWritten = length;
+      bytes_written = length;
 
 #ifdef VPR_DEBUG
       vpr::Uint32 remainder;
@@ -355,38 +341,34 @@ vpr::ReturnStatus SocketImplSIM::write_i(const void* buffer,
       vpr::sim::Controller::instance()->getSocketManager().sendMessage(msg);
    }
 
-   return status;
+   return bytes_written;
 }
 
 // Exactly like write_i except takes MessageDataPtr directly for zero copy
 // etworking.
-vpr::ReturnStatus SocketImplSIM::write_i(vpr::sim::Message::MessageDataPtr msgData,
-                                         vpr::Uint32& bytesWritten,
-                                         vpr::Interval timeout)
+vpr::Uint32 SocketImplSIM::write_i(vpr::sim::Message::MessageDataPtr msgData,
+                                   const vpr::Interval)
 {
-   boost::ignore_unused_variable_warning(timeout);
-
    vprASSERT(mBound && "We must be bound first");
    vprASSERT(mOpen && "We must be open first");
 
-   vpr::ReturnStatus status;
+   vpr::Uint32 bytes_written(0);
 
    if ( mPeer == NULL )
    {
       vprASSERT(false && "Trying to write to NULL peer");      // XXX: This may not be a good way to do this
-      status.setCode(vpr::ReturnStatus::Fail);
-      bytesWritten = 0;
+      // XXX: Throw an exception
    }
    else
    {
       vprASSERT(!mPathToPeer->empty() && "Path not set");
-      bytesWritten = msgData->size();
+      bytes_written = msgData->size();
       vpr::sim::MessagePtr msg(new vpr::sim::Message(msgData));
       msg->setPath(mPathToPeer, this, mPeer);
       vpr::sim::Controller::instance()->getSocketManager().sendMessage(msg);
    }
 
-   return status;
+   return bytes_written;
 }
 
 

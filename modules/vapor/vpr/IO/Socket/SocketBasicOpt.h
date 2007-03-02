@@ -55,17 +55,17 @@ public:
    /**
     * @throws vpr::IOException if the operation failed.
     */
-   void getKeepAlive(bool& enabled)
+   bool getKeepAlive() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(vpr::SocketOptions::KeepAlive, option);
 
-      enabled = option.keep_alive;
+      return option.keep_alive;
    }
 
    /**
-    *@throws vpr::IOException if the operation failed.
+    * @throws vpr::IOException if the operation failed.
     */
    void setKeepAlive(const bool enableVal)
    {
@@ -75,9 +75,9 @@ public:
    }
 
    /**
-    *@throws vpr::IOException if the operation failed.
+    * @throws vpr::IOException if the operation failed.
     */
-   void getLingerOnClose(bool& enabled, int& lingerSec)
+   void getLingerOnClose(bool& enabled, int& lingerSec) const
    {
       vpr::SocketOptions::Data opt;
 
@@ -88,7 +88,7 @@ public:
    }
 
    /**
-    *@throws vpr::IOException if the operation failed.
+    * @throws vpr::IOException if the operation failed.
     */
    void setLingerOnClose(const bool enableVal,
                          const int lingerSec)
@@ -102,22 +102,15 @@ public:
    }
 
    /**
-    *@throws vpr::IOException if the operation failed.
+    * @throws vpr::IOException if the operation failed.
     */
-   void getRecvBufferSize(size_t& size)
+   size_t getRecvBufferSize() const
    {
       vpr::SocketOptions::Data opt;
 
-      try
-      {
-         getOption(vpr::SocketOptions::RecvBufferSize, opt);
-      }
-      catch (IOException ex)
-      {
-         size = 0;
-         throw;
-      }
-      size = opt.recv_buffer_size;
+      getOption(vpr::SocketOptions::RecvBufferSize, opt);
+
+      return opt.recv_buffer_size;
    }
 
    /**
@@ -135,20 +128,13 @@ public:
    /**
     *@throws vpr::IOException if the operation failed.
     */
-   void getSendBufferSize(size_t& size)
+   size_t getSendBufferSize() const
    {
       vpr::SocketOptions::Data opt;
 
-      try
-      {
-         getOption(vpr::SocketOptions::SendBufferSize, opt);
-      }
-      catch (IOException ex)
-      {
-         size = 0;
-         throw;
-      }
-      size = opt.send_buffer_size;
+      getOption(vpr::SocketOptions::SendBufferSize, opt);
+
+      return opt.send_buffer_size;
    }
 
    /**
@@ -166,13 +152,13 @@ public:
    /**
     *@throws vpr::IOException if the operation failed.
     */
-   void getReuseAddr(bool& enabled)
+   bool getReuseAddr() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(vpr::SocketOptions::ReuseAddr, option);
 
-      enabled = option.reuse_addr;
+      return option.reuse_addr;
    }
 
    /**

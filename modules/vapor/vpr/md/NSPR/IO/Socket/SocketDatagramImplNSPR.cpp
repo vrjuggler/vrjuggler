@@ -56,25 +56,23 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-void SocketDatagramImplNSPR::recvfrom(void* msg, const vpr::Uint32 length,
-                                      vpr::InetAddr& from,
-                                      vpr::Uint32& bytesRead,
-                                      const vpr::Interval timeout)
+vpr::Uint32 SocketDatagramImplNSPR::recvfrom(void* msg,
+                                             const vpr::Uint32 length,
+                                             vpr::InetAddr& from,
+                                             const vpr::Interval timeout)
 {
-   PRInt32 bytes;
+   vpr::Uint32 bytes_read(0);
 
-   bytes = PR_RecvFrom(mHandle, msg, length, 0, from.getPRNetAddr(),
-                       NSPR_getInterval(timeout));
+   PRInt32 bytes = PR_RecvFrom(mHandle, msg, length, 0, from.getPRNetAddr(),
+                               NSPR_getInterval(timeout));
 
    if ( bytes > 0 )
    {
-      bytesRead = bytes;
+      bytes_read = bytes;
    }
    else if ( bytes == -1 )
    {
       const PRErrorCode err_code = PR_GetError();
-
-      bytesRead = 0;
 
       const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
       std::stringstream msg_stream;
@@ -135,8 +133,6 @@ void SocketDatagramImplNSPR::recvfrom(void* msg, const vpr::Uint32 length,
    }
    else if ( bytes == 0 )      // Not connected
    {
-      bytesRead = bytes;
-
       std::stringstream msg_stream;
       msg_stream << "Connection closed";
       const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
@@ -149,27 +145,27 @@ void SocketDatagramImplNSPR::recvfrom(void* msg, const vpr::Uint32 length,
       // XXX: Do we need a NotConnectedException?
       throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
    }
+
+   return bytes_read;
 }
 
-void SocketDatagramImplNSPR::sendto(const void* msg, const vpr::Uint32 length,
-                                    const vpr::InetAddr& to,
-                                    vpr::Uint32& bytesSent,
-                                    const vpr::Interval timeout)
+vpr::Uint32 SocketDatagramImplNSPR::sendto(const void* msg,
+                                           const vpr::Uint32 length,
+                                           const vpr::InetAddr& to,
+                                           const vpr::Interval timeout)
 {
-   PRInt32 bytes;
+   vpr::Uint32 bytes_sent(0);
 
 #ifdef VPR_OS_Win32
    vprASSERT(vpr::InetAddr::AnyAddr != to && "INADDR_ANY is not a valid desination on win32.");
 #endif
 
-   bytes = PR_SendTo(mHandle, msg, length, 0, to.getPRNetAddr(),
-                     NSPR_getInterval(timeout));
+   PRInt32 bytes = PR_SendTo(mHandle, msg, length, 0, to.getPRNetAddr(),
+                             NSPR_getInterval(timeout));
 
    if ( bytes == -1 )
    {
       const PRErrorCode err_code = PR_GetError();
-
-      bytesSent = 0;
 
       const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
       std::stringstream msg_stream;
@@ -242,8 +238,10 @@ void SocketDatagramImplNSPR::sendto(const void* msg, const vpr::Uint32 length,
    }
    else
    {
-      bytesSent = bytes;
+      bytes_sent = bytes;
    }
+
+   return bytes_sent;
 }
 
 } // End of vpr namespace

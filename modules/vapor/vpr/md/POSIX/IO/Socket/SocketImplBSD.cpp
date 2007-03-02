@@ -84,43 +84,43 @@ void buildAndThrowException(const std::string& prefix,
    {
       err_string = std::string(err_str);
    }
-   else
-   {
-      err_string = std::string("");
-   }
 
    // Build and throw exception
    if ( ECONNREFUSED == error_number )
    {
-      throw vpr::ConnectionRefusedException(
-         prefix + "Connection refused: " + err_string, location
-      );
+      std::ostringstream msg_stream;
+      msg_stream << prefix << "Connection refused: " << err_string;
+      throw vpr::ConnectionRefusedException(msg_stream.str(), location);
    }
    else if ( ECONNRESET == error_number )
    {
-      throw vpr::ConnectionResetException(
-         prefix + "Connection reset: " + err_string, location
-      );
+      std::ostringstream msg_stream;
+      msg_stream << prefix << "Connection reset: " << err_string;
+      throw vpr::ConnectionResetException(msg_stream.str(), location);
    }
    else if ( EHOSTUNREACH == error_number )
    {
-      throw vpr::NoRouteToHostException(
-         prefix + "No route to host: " + err_string, location
-      );
+      std::ostringstream msg_stream;
+      msg_stream << prefix << "No route to hose: " << err_string;
+      throw vpr::NoRouteToHostException(msg_stream.str(), location);
    }
    else if ( EHOSTDOWN == error_number )
    {
-      throw vpr::SocketException(prefix + "Host down: " + err_string,
-                                 location);
+      std::ostringstream msg_stream;
+      msg_stream << prefix << "Host down: " << err_string;
+      throw vpr::SocketException(msg_stream.str(), location);
    }
    else if ( ENETDOWN == error_number )
    {
-      throw vpr::SocketException(prefix + "Network is down: " + err_string,
-                                 location);
+      std::ostringstream msg_stream;
+      msg_stream << prefix << "Network is down: " << err_string;
+      throw vpr::SocketException(msg_stream.str(), location);
    }
    else
    {
-      throw vpr::SocketException(prefix + "Error: " + err_string, location);
+      std::ostringstream msg_stream;
+      msg_stream << prefix << "Error: " << err_string;
+      throw vpr::SocketException(msg_stream.str(), location);
    }
 }
 
@@ -499,51 +499,54 @@ void SocketImplBSD::setRemoteAddr(const InetAddr& addr)
    }
 }
 
-void SocketImplBSD::read_i(void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytesRead, const vpr::Interval timeout)
+vpr::Uint32 SocketImplBSD::read_i(void* buffer, const vpr::Uint32 length,
+                                  const vpr::Interval timeout)
 {
    vprASSERT(NULL != mHandle &&
              "Can not read from a socket with a NULL handle.");
 
    mBlockingFixed = true;
-   mHandle->read_i(buffer, length, bytesRead, timeout);
+   const vpr::Uint32 bytes = mHandle->read_i(buffer, length, timeout);
 
-   // If read returns 0, then other side shut down cleanly
-   // note: bytesRead is also 0 when non-blocking and can't get data
-   //       but in that case we throw WouldBlockException
-   if ( 0 == bytesRead )
+   // If read returns 0, then other side shut down cleanly.
+   // Note: bytes is also 0 when non-blocking and can't get data but in that
+   //       case we throw WouldBlockException.
+   if ( 0 == bytes )
    {
       throw ConnectionResetException("Socket disconnected cleanly.",
                                      VPR_LOCATION);
    }
+
+   return bytes;
 }
 
-void SocketImplBSD::readn_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesRead,
-                            const vpr::Interval timeout)
+vpr::Uint32 SocketImplBSD::readn_i(void* buffer, const vpr::Uint32 length,
+                                   const vpr::Interval timeout)
 {
    vprASSERT(NULL != mHandle &&
              "Can not read from a socket with a NULL handle.");
 
    mBlockingFixed = true;
-   mHandle->readn_i(buffer, length, bytesRead, timeout);
+   const vpr::Uint32 bytes = mHandle->readn_i(buffer, length, timeout);
 
    // XXX: Should never happen.
-   if ( 0 == bytesRead )
+   if ( 0 == bytes )
    {
       throw ConnectionResetException("Socket closed.", VPR_LOCATION);
    }
+
+   return bytes;
 }
 
-void SocketImplBSD::write_i(const void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesWritten,
-                            const vpr::Interval timeout)
+vpr::Uint32 SocketImplBSD::write_i(const void* buffer,
+                                   const vpr::Uint32 length,
+                                   const vpr::Interval timeout)
 {
    mBlockingFixed = true;
 
    //try
    //{
-      mHandle->write_i(buffer, length, bytesWritten, timeout);
+      return mHandle->write_i(buffer, length, timeout);
    //}
    //catch (IOException& ex)
    //{

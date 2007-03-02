@@ -82,12 +82,13 @@ SocketDatagramImplBSD::SocketDatagramImplBSD(const SocketDatagramImplBSD& sock)
    mHandle->mBlocking = sock.mHandle->mBlocking;
 }
 
-void SocketDatagramImplBSD::recvfrom(void* msg,
-                                     const vpr::Uint32 length,
-                                     vpr::InetAddr& from,
-                                     vpr::Uint32& bytesRead,
-                                     const vpr::Interval timeout)
+vpr::Uint32 SocketDatagramImplBSD::recvfrom(void* msg,
+                                            const vpr::Uint32 length,
+                                            vpr::InetAddr& from,
+                                            const vpr::Interval timeout)
 {
+   vpr::Uint32 bytes_read(0);
+
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int fromlen;
 #else
@@ -95,11 +96,12 @@ void SocketDatagramImplBSD::recvfrom(void* msg,
 #endif
 
    // If not readable within timeout interval throw exception.
-   if (!mHandle->isReadable(timeout))
+   if ( ! mHandle->isReadable(timeout) )
    {
-      bytesRead = 0;
-      throw TimeoutException("Timeout occured while trying to read from: "
-         + mHandle->getName(), VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "Timeout occured while trying to read from "
+                 << mHandle->getName();
+      throw TimeoutException(msg_stream.str(), VPR_LOCATION);
    }
 
    ssize_t bytes;
@@ -112,8 +114,6 @@ void SocketDatagramImplBSD::recvfrom(void* msg,
 
    if ( bytes == -1 )
    {
-      bytesRead = 0;
-
       if ( errno == EAGAIN && ! isBlocking() )
       {
          throw WouldBlockException("Would block while reading.", VPR_LOCATION);
@@ -133,22 +133,26 @@ void SocketDatagramImplBSD::recvfrom(void* msg,
    }
    else
    {
-      bytesRead = bytes;
+      bytes_read = bytes;
    }
+
+   return bytes_read;
 }
 
-void SocketDatagramImplBSD::sendto(const void* msg,
-                                   const vpr::Uint32 length,
-                                   const vpr::InetAddr& to,
-                                   vpr::Uint32& bytesSent,
-                                   const vpr::Interval timeout)
+vpr::Uint32 SocketDatagramImplBSD::sendto(const void* msg,
+                                          const vpr::Uint32 length,
+                                          const vpr::InetAddr& to,
+                                          const vpr::Interval timeout)
 {
+   vpr::Uint32 bytes_sent(0);
+
    // If not writable within timeout interval throw exception.
-   if (!mHandle->isWriteable(timeout))
+   if ( ! mHandle->isWriteable(timeout) )
    {
-      bytesSent = 0;
-      throw TimeoutException("Timeout occured while trying to write to: "
-         + mHandle->getName(), VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "Timeout occured while trying to write to "
+                 << mHandle->getName();
+      throw TimeoutException(msg_stream.str(), VPR_LOCATION);
    }
 
    ssize_t bytes;
@@ -160,8 +164,6 @@ void SocketDatagramImplBSD::sendto(const void* msg,
 
    if ( bytes == -1 )
    {
-      bytesSent = 0;
-
       if ( errno == EAGAIN && ! isBlocking() )
       {
          throw WouldBlockException("Would block while reading.", VPR_LOCATION);
@@ -176,6 +178,7 @@ void SocketDatagramImplBSD::sendto(const void* msg,
          throw SocketException(ss.str(), VPR_LOCATION);
       }
    }
+
    if ( ECONNRESET == errno)
    {
       throw ConnectionResetException("Connection reset.", VPR_LOCATION);
@@ -194,8 +197,10 @@ void SocketDatagramImplBSD::sendto(const void* msg,
    }
    else
    {
-      bytesSent = bytes;
+      bytes_sent = bytes;
    }
+
+   return bytes_sent;
 }
 
 } // End of vpr namespace

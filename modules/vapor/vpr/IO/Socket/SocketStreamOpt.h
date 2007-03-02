@@ -68,12 +68,12 @@ public:
    /**
     *
     */
-   void getMaxSegmentSize(size_t& size)
+   size_t getMaxSegmentSize() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(vpr::SocketOptions::MaxSegment, option);
-      size = option.max_segment;
+      return option.max_segment;
    }
 
    /**
@@ -90,19 +90,16 @@ public:
     * Gets the current no-delay status for this socket.  If no-delay is true,
     * then the Nagel algorithm has been disabled.
     *
-    * @param enabled A reference to a <code>bool</code> variable to be used as
-    *                storage for the current no-delay enable state.  If the
-    *                value is <code>true</code>, the Nagel algorithm is
-    *                <i>not</i> being used to delay the transmission of TCP
-    *                segements.  Otherwise, the Nagel alorithm is delaying
-    *                the transmission.
+    * @return \c true is returned if the Nabel algorithm is \em not being used
+    *         to delay the transmission of TCP segments. Otherwise, the Nagel
+    *         algorithm is delaying the transmission.
     */
-   void getNoDelay(bool& enabled)
+   bool getNoDelay() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(vpr::SocketOptions::NoDelay, option);
-      enabled = option.no_delay;
+      return option.no_delay;
    }
 
    /**

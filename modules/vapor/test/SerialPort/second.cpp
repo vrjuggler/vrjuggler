@@ -56,7 +56,6 @@ int main (int argc, char* argv[])
       port->open();
       char read_buffer[10], write_buffer[10];
       int val;
-      vpr::Uint32 bytes;
 
       std::cerr << "Port opened\n";
       val = 1;
@@ -70,12 +69,13 @@ int main (int argc, char* argv[])
       {
          memset((void*) &write_buffer, '\0', sizeof(write_buffer));
          sprintf(write_buffer, "%d", val);
-         port->write(write_buffer, strlen(write_buffer) + 1, bytes);
+         const vpr::Uint32 bytes = port->write(write_buffer,
+                                               strlen(write_buffer) + 1);
          std::cerr << "Wrote '" << write_buffer << "' (" << bytes
                    << " bytes)\n";
 
          memset((void*) &read_buffer, '\0', sizeof(read_buffer));
-         port->read(read_buffer, sizeof(read_buffer), bytes);
+         port->read(read_buffer, sizeof(read_buffer));
          std::cerr << "Read '" << read_buffer << "'\n";
 
          val = atoi(read_buffer);

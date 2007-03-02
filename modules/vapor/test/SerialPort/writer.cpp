@@ -58,7 +58,6 @@ int main (int argc, char* argv[])
       {
          write_port->open();
          char buffer[] = "This is a test...";
-         vpr::Uint32 bytes;
          vpr::Uint16 size;
 
          std::cout << "Port opened\n";
@@ -71,7 +70,8 @@ int main (int argc, char* argv[])
          write_port->setUpdateAction(vpr::SerialTypes::NOW);
          write_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
          std::cout << "Pre Write memleak :" << memleak << std::endl;
-         write_port->write(buffer, sizeof(char) * (strlen(buffer) + 1), bytes);
+         const vpr::Uint32 bytes =
+            write_port->write(buffer, sizeof(char) * (strlen(buffer) + 1));
          std::cout << std::flush;
          std::cout << "Post Write memleak :" << memleak << std::endl;
          write_port->flushQueue(vpr::SerialTypes::IO_QUEUES);

@@ -276,10 +276,13 @@ public:
     * Queries the amount of data currently in the read buffer.
     *
     * @pre The file descriptor is valid.
-    * @post The buffer size is returned via the by-reference parameter.
+    * @post The buffer size is returned to the caller.
+    *
+    * @return The read bufer size is returned to the caller.
+    *
     * @throws vpr::IOException if read buffer size could not be found.
     */
-   void getReadBufferSize(vpr::Int32& buffer) const;
+   vpr::Int32 getReadBufferSize() const;
 
    /**
     * Implementation of the read template method.  This reads at most the
@@ -289,15 +292,16 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the
     *       device, and the number of bytes read successfully is returned to
-    *       the caller via the \p bytesRead parameter.
+    *       the caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
     *         and there is no data to read.
@@ -305,8 +309,8 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   void read_i(void* buffer, const vpr::Uint32 length, vpr::Uint32& bytesRead,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn template method.  This reads exactly the
@@ -316,23 +320,23 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the
     *       device, and the number of bytes read successfully is returned to
-    *       the caller via the \p bytesRead parameter.
+    *       the caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   void readn_i(void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesRead,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write template method.  This writes the buffer to
@@ -340,15 +344,15 @@ public:
     *
     * @pre The device is open for writing.
     * @post The given buffer is written to the I/O device, and the number
-    *       of bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       of bytes written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the device is returned.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -356,9 +360,8 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the write operation failed.
     */
-   void write_i(const void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesWritten,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Returns the number of bytes available for reading in the receive

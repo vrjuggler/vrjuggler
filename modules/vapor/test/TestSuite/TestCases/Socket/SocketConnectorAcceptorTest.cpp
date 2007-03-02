@@ -135,7 +135,7 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor()
 
       // Send a message
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem writing in acceptor",
-         sock->write(mMessageValue, mMessageLen, bytes_written));
+         bytes_written = sock->write(mMessageValue, mMessageLen));
       CPPUNIT_ASSERT((bytes_written == mMessageLen) && "Didn't send entire messag");
 
       // WAIT for close
@@ -174,7 +174,7 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_connector()
          connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout ));
 
       // Recieve data
-      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Read failed", con_sock.read(data, mMessageLen, bytes_read));
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Read failed", bytes_read = con_sock.read(data, mMessageLen));
       CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
 
       CPPUNIT_ASSERT(con_sock.isConnected() && "Socket should still be connected");

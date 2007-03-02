@@ -124,47 +124,55 @@ BlockIO::~BlockIO()
    /* Do nothing. */ ;
 }
 
-void BlockIO::read_s(void* buffer, const vpr::Uint32 length,
-                     vpr::Uint32& bytesRead,
-                     const vpr::Interval timeout)
+vpr::Uint32 BlockIO::read_s(void* buffer, const vpr::Uint32 length,
+                            const vpr::Interval timeout)
 {
-   if(mStatsStrategy != NULL)
+   vpr::Uint32 bytes(0);
+
+   if ( mStatsStrategy != NULL )
    {
-      mStatsStrategy->read_s(buffer, length, bytesRead, timeout);
+      mStatsStrategy->read_s(buffer, length, bytes, timeout);
    }
    else
    {
-      read_i(buffer, length, bytesRead, timeout);
+      bytes = read_i(buffer, length, timeout);
    }
+
+   return bytes;
 }
 
-void BlockIO::readn_s(void* buffer, const vpr::Uint32 length,
-                      vpr::Uint32& bytesRead,
-                      const vpr::Interval timeout)
+vpr::Uint32 BlockIO::readn_s(void* buffer, const vpr::Uint32 length,
+                             const vpr::Interval timeout)
 {
-   if(mStatsStrategy != NULL)
+   vpr::Uint32 bytes(0);
+
+   if ( mStatsStrategy != NULL )
    {
-      mStatsStrategy->readn_s(buffer, length, bytesRead, timeout);
+      mStatsStrategy->readn_s(buffer, length, bytes, timeout);
    }
    else
    {
-      readn_i(buffer, length, bytesRead, timeout);
+      bytes = readn_i(buffer, length, timeout);
    }
+
+   return bytes;
 }
 
-void BlockIO::write_s(const void* buffer,
-                      const vpr::Uint32 length,
-                      vpr::Uint32& bytesWritten,
-                      const vpr::Interval timeout)
+vpr::Uint32 BlockIO::write_s(const void* buffer, const vpr::Uint32 length,
+                             const vpr::Interval timeout)
 {
-   if(mStatsStrategy != NULL)
+   vpr::Uint32 bytes(0);
+
+   if ( mStatsStrategy != NULL )
    {
-      mStatsStrategy->write_s(buffer, length, bytesWritten, timeout);
+      mStatsStrategy->write_s(buffer, length, bytes, timeout);
    }
    else
    {
-       write_i(buffer, length, bytesWritten, timeout);
+       bytes = write_i(buffer, length, timeout);
    }
+
+   return bytes;
 }
 
 }

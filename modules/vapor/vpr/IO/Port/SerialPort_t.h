@@ -272,19 +272,17 @@ public:
     * how many bytes must be read before a read can return.
     *
     * @pre The serial port is open.
-    * @post The minimum buffer size is returned to the caller through the
-    *       by-reference argument.
+    * @post The minimum buffer size is returned to the caller.
     *
-    * @param size A reference to a vpr::Uint16 where the buffer size is
-    *             stored for return to the caller.
+    * @return The size of the minimum buffer.
     *
     * @throws vpr::IOException if the buffer size could not be retrieved.
     *
     * @see getTimeout
     */
-   void getMinInputSize(vpr::Uint16& size) const
+   vpr::Uint16 getMinInputSize() const
    {
-      mSioImpl.getMinInputSize(size);
+      return mSioImpl.getMinInputSize();
    }
 
    /**
@@ -312,17 +310,15 @@ public:
     * to arrive.  This is only applicable in non-canonical mode.
     *
     * @pre The serial port is open.
-    * @post The current timeout setting is returned to the caller in the
-    *       by-reference argument.
+    * @post The current timeout setting is returned to the caller.
     *
-    * @param timeout A reference to a vpr::Uint8 to be used as storage for
-    *                the timeout value.
+    * @return The timeout value is returned.
     *
     * @throws vpr::IOException if the timeout could not be retrieved.
     */
-   void getTimeout(vpr::Uint8& timeout) const
+   vpr::Uint8 getTimeout() const
    {
-      mSioImpl.getTimeout(timeout);
+      return mSioImpl.getTimeout();
    }
 
    /**
@@ -347,19 +343,18 @@ public:
     * Gets the character size (the bits per byte).
     *
     * @pre The serial port is open.
-    * @post The current character size is returned to the caller in the
-    *       by-reference argument.
+    * @post The current character size is returned to the caller.
     *
-    * @param size A reference to a vpr::SerialTypes::CharacterSizeOption
-    *             object to be used as storage for the character size value.
+    * @return A vpr::SerialTypes::CharacterSizeOption value is returned to
+    *         indicate the character size.
     *
     * @throws vpr::IOException if the character size could be retrieved.
     *
     * @see vpr::SerialTypes::CharacterSizeOption
     */
-   void getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
+   vpr::SerialTypes::CharacterSizeOption getCharacterSize() const
    {
-      mSioImpl.getCharacterSize(size);
+      return mSioImpl.getCharacterSize();
    }
 
    /**
@@ -449,17 +444,15 @@ public:
     * Gets the number of stop bits in use.  This will be either 1 or 2.
     *
     * @pre The serial port is open.
-    * @post The number of stop bits currently in use is returned via the
-    *       by-reference argument.
+    * @post The number of stop bits currently in use is returned.
     *
-    * @param num_bits A reference to a vpr::Uint8 that will be
-    *                 used to store the number of stop bits.
+    * @return The number of stop bits is returned.
     *
     * @throws vpr::IOException if stop bits could not be retrieved.
     */
-   void getStopBits(vpr::Uint8& num_bits) const
+   vpr::Uint8 getStopBits() const
    {
-      mSioImpl.getStopBits(num_bits);
+      return mSioImpl.getStopBits();
    }
 
    /**
@@ -830,17 +823,15 @@ public:
     * Gets the current input baud setting.
     *
     * @pre The serial port is open.
-    * @post The current input baud setting is returned to the caller via the
-    *       by-reference parameter.
+    * @post The current input baud setting is returned to the caller.
     *
-    * @param rate A reference to a vpr::Uint32 to be used as storage for the
-    *             current input baud setting.
+    * @return The current input baud setting is returned.
     *
     * @throws vpr::IOException if input baud rate could not be retrieved.
     */
-   void getInputBaudRate(vpr::Uint32& rate) const
+   vpr::Uint32 getInputBaudRate() const
    {
-      mSioImpl.getInputBaudRate(rate);
+      return mSioImpl.getInputBaudRate();
    }
 
    /**
@@ -862,17 +853,15 @@ public:
     * Gets the current output baud setting.
     *
     * @pre The serial port is open.
-    * @post The current output baud setting is returned to the caller via the
-    *       by-reference parameter.
+    * @post The current output baud setting is returned to the caller.
     *
-    * @param rate A reference to a vpr::Uint32 to be used as storage for the
-    *             current output baud setting.
+    * @return The current output baud setting is returned.
     *
     * @throws vpr::IOException if ouput baud rate could not be retrieved.
     */
-   void getOutputBaudRate(vpr::Uint32& rate) const
+   vpr::Uint32 getOutputBaudRate() const
    {
-      mSioImpl.getOutputBaudRate(rate);
+      return mSioImpl.getOutputBaudRate();
    }
 
    /**
@@ -1067,15 +1056,16 @@ protected:
     *      \p length bytes long.
     * @post The given buffer has length bytes copied into it from the port,
     *       and the number of bytes read successfully is returned to the
-    *       caller via the \p bytesRead parameter.
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the port's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the port's buffer contents
+    *                are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::WouldBlockException if the port is in non-blocking mode,
     *         and there is no data to read.
@@ -1083,11 +1073,12 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual void read_i(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytesRead,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::Uint32 read_i(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   )
    {
-      mSioImpl.read_i(buffer, length, bytesRead, timeout);
+      return mSioImpl.read_i(buffer, length, timeout);
    }
 
    /**
@@ -1097,26 +1088,28 @@ protected:
     * @pre The port is open for reading, and the buffer is at least
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the port,
-    *       and the number of bytes read successfully is returned to the caller
-    *       via the \p bytesRead parameter.
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the ports's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the ports's buffer contents
+    *                are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::EOFException if end of port or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   virtual void readn_i(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytesRead,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::Uint32 readn_i(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   )
    {
-      mSioImpl.readn_i(buffer, length, bytesRead, timeout);
+      return mSioImpl.readn_i(buffer, length, timeout);
    }
 
    /**
@@ -1124,16 +1117,16 @@ protected:
     * buffer to the serial port.
     *
     * @pre The port is open for writing.
-    * @post The given buffer is written to the I/O port, and the number
-    *       of bytes written successfully is returned to the caller via the
-    *       \c bytesWritten parameter.
+    * @post The given buffer is written to the I/O port, and the number of
+    *       bytes written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the port.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the device is returned.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -1141,12 +1134,12 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the write operation failed.
     */
-   virtual void write_i(const void* buffer,
-                        const vpr::Uint32 length,
-                        vpr::Uint32& bytesWritten,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::Uint32 write_i(
+      const void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   )
    {
-      mSioImpl.write_i(buffer, length, bytesWritten, timeout);
+      return mSioImpl.write_i(buffer, length, timeout);
    }
 
    /// Platform-specific serial port implementation object

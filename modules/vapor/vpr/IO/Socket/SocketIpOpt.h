@@ -52,12 +52,12 @@ public:
    /**
     *@throws vpr::IOException if the operation failed.
     */
-   void getTypeOfService(vpr::SocketOptions::TypeOfService& tos)
+   vpr::SocketOptions::TypeOfService getTypeOfService() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(vpr::SocketOptions::IpTypeOfService, option);
-      tos = option.type_of_service;
+      return option.type_of_service;
    }
 
    /**
@@ -73,12 +73,12 @@ public:
    /**
     *@throws vpr::IOException if the operation failed.
     */
-   void getTimeToLive(vpr::Int32& ttl)
+   vpr::Int32 getTimeToLive() const
    {
       vpr::SocketOptions::Data option;
 
       getOption(vpr::SocketOptions::IpTimeToLive, option);
-      ttl = option.ip_ttl;
+      return option.ip_ttl;
    }
 
    /**

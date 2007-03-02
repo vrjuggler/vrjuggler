@@ -357,13 +357,17 @@ bool FileHandleImplUNIX::isReadWrite() const
    return (mOpenMode == O_RDWR);
 }
 
-void FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) const
+vpr::Int32 FileHandleImplUNIX::getReadBufferSize() const
 {
+   vpr::Int32 buffer(0);
+
    if ( ioctl(mFdesc, FIONREAD, &buffer) == -1 )
    {
       throw IOException("vpr::FileHandleImplUNIX::getReadBufferSize() Cannot get buffer size.",
          VPR_LOCATION);
    }
+
+   return buffer;
 }
 
 // ============================================================================
@@ -372,43 +376,41 @@ void FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) const
 
 // Read the specified number of bytes from the file handle into the given
 // bufer.
-void FileHandleImplUNIX::read_i(void* buffer,
-                                const vpr::Uint32 length,
-                                vpr::Uint32& bytesRead,
-                                const vpr::Interval timeout)
+vpr::Uint32 FileHandleImplUNIX::read_i(void* buffer, const vpr::Uint32 length,
+                                       const vpr::Interval timeout)
 {
+   vpr::Uint32 bytes_read(0);
+
    // If not readable within timeout interval throw exception.
-   if (!isReadable(timeout))
+   if ( ! isReadable(timeout) )
    {
-      bytesRead = 0;
-      throw TimeoutException("Timeout occured while trying to read from: " + mName,
-         VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "Timeout occured while trying to read from " << mName;
+      throw TimeoutException(msg_stream.str(), VPR_LOCATION);
    }
 
-   ssize_t bytes;
-
-   bytes = ::read(mFdesc, buffer, length);
+   const ssize_t bytes = ::read(mFdesc, buffer, length);
 
    // Error: Something went wrong while attempting to read from the file.
    if ( bytes < 0 )
    {
-      bytesRead = 0;
-
       if ( errno == EAGAIN && ! mBlocking )
       {
          throw WouldBlockException("Would block while reading.", VPR_LOCATION);
       }
       else  // "real" error, so throw IO Exception
       {
-         throw IOException("[vpr::FileHandleImplUNIX::read_i()] Error reading from "
-            + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
+         std::ostringstream msg_stream;
+         msg_stream << "[vpr::FileHandleImplUNIX::read_i()] Error reading from "
+                    << mName << ":" << strerror(errno);
+         throw IOException(msg_stream.str(), VPR_LOCATION);
       }
    }
-   // If 0 bytes were read and an error was returned, we throw
-   // note: If bytes == 0 and no error (and socket) then that means the other side shut down cleanly
-   else if ( (0 == bytes) && (0 != errno) )
+   // If 0 bytes were read and an error was returned, we throw.
+   // Note: If bytes == 0 and no error (and socket) then that means the other
+   //       side shut down cleanly.
+   else if ( 0 == bytes && 0 != errno )
    {
-      bytesRead = 0;
       vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
          << "[vpr::FileHandleImplUNIX::read_i()] Nothing read from "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
@@ -419,21 +421,19 @@ void FileHandleImplUNIX::read_i(void* buffer,
    }
    else
    {
-      bytesRead = bytes;
+      bytes_read = bytes;
    }
+
+   return bytes_read;
 }
 
 // Read exactly the specified number of bytes from the file handle into the
 // given buffer.  This is based on the readn() function given on pages 51-2 of
 // _Effective TCP/IP Programming_ by Jon D. Snader.
-void FileHandleImplUNIX::readn_i(void* buffer,
-                                 const vpr::Uint32 buffer_size,
-                                 vpr::Uint32& bytesRead,
-                                 const vpr::Interval timeout)
+vpr::Uint32 FileHandleImplUNIX::readn_i(void* buffer,
+                                        const vpr::Uint32 buffer_size,
+                                        const vpr::Interval timeout)
 {
-   size_t bytes_left;
-   ssize_t bytes;
-
    if ( vpr::Interval::NoTimeout != timeout )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n"
@@ -443,8 +443,8 @@ void FileHandleImplUNIX::readn_i(void* buffer,
       throw IOException("Timeout not supported by readn.", VPR_LOCATION);
    }
 
-   bytesRead = 0;
-   bytes_left = buffer_size;
+   vpr::Uint32 bytes_read(0);
+   size_t bytes_left = buffer_size;
 
    while ( bytes_left > 0 )
    {
@@ -453,7 +453,7 @@ void FileHandleImplUNIX::readn_i(void* buffer,
          << " bytes from file handle " << mFdesc << std::endl
          << vprDEBUG_FLUSH;
 
-      bytes = ::read(mFdesc, buffer, bytes_left);
+      const ssize_t bytes = ::read(mFdesc, buffer, bytes_left);
 
       vprDEBUG_NEXT(vprDBG_ALL, vprDBG_HVERB_LVL)
          << "Read " << bytes << " bytes from file handle " << mFdesc
@@ -476,58 +476,56 @@ void FileHandleImplUNIX::readn_i(void* buffer,
          // Otherwise, we have an error situation, so return failure status.
          else
          {
-            bytesRead = 0;
             throw IOException("Error reading from: " + mName, VPR_LOCATION);
          }
       }
       // We have read EOF, so there is nothing more to read.  At this point,
-      // bytesRead contains an accurate count of the bytes read so far
+      // bytes_read contains an accurate count of the bytes read so far
       // (posisbly less than buffer_size).
       else if ( bytes == 0 )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
             << "[vpr::FileHandleImplUNIX::readn_i()] Read EOF with "
             << bytes_left << " bytes left to read from file handle "
-            << mFdesc << " and " << bytesRead << " bytes read in total."
+            << mFdesc << " and " << bytes_read << " bytes read in total."
             << std::endl << vprDEBUG_FLUSH;
 
          std::stringstream ss;
          ss << "[vpr::FileHandleImplUNIX::readn_i()] Read EOF with "
             << bytes_left << " bytes left to read from file handle "
-            << mFdesc << " and " << bytesRead << " bytes read in total.";
+            << mFdesc << " and " << bytes_read << " bytes read in total.";
          throw EOFException(ss.str(), VPR_LOCATION);
       }
       else
       {
          buffer = (void*) ((char*) buffer + bytes);
          bytes_left -= bytes;
-         bytesRead  += bytes;
+         bytes_read += bytes;
       }
    }
+
+   return bytes_read;
 }
 
 // Write the buffer to the file handle.
-void FileHandleImplUNIX::write_i(const void* buffer,
-                                 const vpr::Uint32 length,
-                                 vpr::Uint32& bytesWritten,
-                                 const vpr::Interval timeout)
+vpr::Uint32 FileHandleImplUNIX::write_i(const void* buffer,
+                                        const vpr::Uint32 length,
+                                        const vpr::Interval timeout)
 {
+   vpr::Uint32 bytes_written(0);
+
    // If not writable within timeout interval throw exception.
-   if (!isWriteable(timeout))
+   if ( ! isWriteable(timeout) )
    {
-      bytesWritten = 0;
-      throw TimeoutException("Timeout occured while trying to write to: " + mName,
-         VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "Timeout occured while trying to write to: " << mName;
+      throw TimeoutException(msg_stream.str(), VPR_LOCATION);
    }
 
-   ssize_t bytes;
-
-   bytes = ::write(mFdesc, buffer, length);
+   const ssize_t bytes = ::write(mFdesc, buffer, length);
 
    if ( bytes <= 0 )
    {
-      bytesWritten = 0;
-
       if ( errno == EAGAIN && ! mBlocking )
       {
          throw WouldBlockException("Would block writing.", VPR_LOCATION);
@@ -545,8 +543,10 @@ void FileHandleImplUNIX::write_i(const void* buffer,
    }
    else
    {
-      bytesWritten = bytes;
+      bytes_written = bytes;
    }
+
+   return bytes_written;
 }
 
 vpr::Uint32 FileHandleImplUNIX::availableBytes() const

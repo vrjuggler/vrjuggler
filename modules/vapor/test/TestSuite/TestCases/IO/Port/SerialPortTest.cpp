@@ -192,12 +192,14 @@ void SerialPortTest::testChangeMinInputSize()
    vpr::Uint16 buf_size, buf_size_new;
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port opening failed", port.open());
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Buffer size query failed", port.getMinInputSize(buf_size));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Buffer size query failed",
+                                   buf_size = port.getMinInputSize());
 
    buf_size++;
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Buffer size update failed", port.setMinInputSize(buf_size));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Buffer size update failed",
+                                   port.setMinInputSize(buf_size));
 
-   port.getMinInputSize(buf_size_new);
+   buf_size_new = port.getMinInputSize();
    CPPUNIT_ASSERT(buf_size == buf_size_new && "Buffer size update failed");
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port closing failed", port.close());
@@ -206,15 +208,17 @@ void SerialPortTest::testChangeMinInputSize()
 void SerialPortTest::testChangeTimeout()
 {
    vpr::SerialPort port(mSendPortName);
-   vpr::Uint8 timeout, timeout_new;
+   vpr::Uint8 timeout;
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port opening failed", port.open());
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Timeout query failed", port.getTimeout(timeout));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Timeout query failed",
+                                   timeout = port.getTimeout());
 
    timeout++;
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Timeout update failed", port.setTimeout(timeout));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Timeout update failed",
+                                   port.setTimeout(timeout));
 
-   port.getTimeout(timeout_new);
+   const vpr::Uint8 timeout_new = port.getTimeout();
    CPPUNIT_ASSERT(timeout == timeout_new && "Timeout update failed");
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port closing failed", port.close());
@@ -226,17 +230,20 @@ void SerialPortTest::testChangeCharacterSize()
    vpr::SerialTypes::CharacterSizeOption orig_size, new_size, mod_size;
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port opening failed", port.open());
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Character size query failed", port.getCharacterSize(orig_size));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Character size query failed",
+                                   orig_size = port.getCharacterSize());
 
    new_size = (orig_size == vpr::SerialTypes::CS_BITS_8) ? vpr::SerialTypes::CS_BITS_7
                                                          : vpr::SerialTypes::CS_BITS_8;
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Character size update failed", port.setCharacterSize(new_size));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Character size update failed",
+                                   port.setCharacterSize(new_size));
 
-   port.getCharacterSize(mod_size);
+   mod_size = port.getCharacterSize();
    CPPUNIT_ASSERT(new_size == mod_size && "Character size update failed");
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Character size reset failed", port.setCharacterSize(orig_size));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Character size reset failed",
+                                   port.setCharacterSize(orig_size));
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port closing failed", port.close());
 }
@@ -267,18 +274,21 @@ void SerialPortTest::testChangeStopBits()
    vpr::Uint8 orig_bits, new_bits, mod_bits;
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port opening failed", port.open());
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Stop bits query failed", port.getStopBits(orig_bits));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Stop bits query failed",
+                                   orig_bits = port.getStopBits());
 
    CPPUNIT_ASSERT((orig_bits == 1 || orig_bits == 2) && "Invalid stop bit setting read");
 
    new_bits = (orig_bits == 1) ? 2 : 1;
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Stop bits update failed", port.setStopBits(new_bits));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Stop bits update failed",
+                                   port.setStopBits(new_bits));
 
-   port.getStopBits(mod_bits);
+   mod_bits = port.getStopBits();
    CPPUNIT_ASSERT(new_bits == mod_bits && "Stop bits update failed");
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Stop bits reset failed", port.setStopBits(orig_bits));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Stop bits reset failed",
+                                   port.setStopBits(orig_bits));
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port closing failed", port.close());
 }
@@ -466,22 +476,25 @@ void SerialPortTest::testChangeParity()
 void SerialPortTest::testChangeInputBaudRate()
 {
    vpr::SerialPort port(mSendPortName);
-   vpr::Uint32 orig_baud, mod_baud;
+   vpr::Uint32 orig_baud;
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port opening failed", port.open());
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to query input baud rate", port.getInputBaudRate(orig_baud));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to query input baud rate",
+                                   orig_baud = port.getInputBaudRate());
 
    for ( std::vector<vpr::Uint32>::iterator i = mBaudRates.begin();
          i != mBaudRates.end();
          ++i )
    {
-      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to set new baud rate", port.setInputBaudRate(*i));
-      port.getInputBaudRate(mod_baud);
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to set new baud rate",
+                                      port.setInputBaudRate(*i));
+      const vpr::Uint32 mod_baud = port.getInputBaudRate();
       CPPUNIT_ASSERT(mod_baud == *i && "Failed to set new baud rate");
    }
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to reset input baud rate", port.setInputBaudRate(orig_baud));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to reset input baud rate",
+                                   port.setInputBaudRate(orig_baud));
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port closing failed", port.close());
 }
@@ -489,18 +502,19 @@ void SerialPortTest::testChangeInputBaudRate()
 void SerialPortTest::testChangeOutputBaudRate()
 {
    vpr::SerialPort port(mSendPortName);
-   vpr::Uint32 orig_baud, mod_baud;
+   vpr::Uint32 orig_baud;
 
    CPPUNIT_ASSERT_NO_THROW_MESSAGE("Port opening failed", port.open());
 
-   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to query output baud rate", port.getOutputBaudRate(orig_baud));
+   CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to query output baud rate",
+                                   orig_baud = port.getOutputBaudRate());
 
    for ( std::vector<vpr::Uint32>::iterator i = mBaudRates.begin();
          i != mBaudRates.end();
          ++i )
    {
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to set new baud rate", port.setOutputBaudRate(*i));
-      port.getOutputBaudRate(mod_baud);
+      const vpr::Uint32 mod_baud = port.getOutputBaudRate();
       CPPUNIT_ASSERT(mod_baud == *i && "Failed to set new baud rate");
    }
 
@@ -571,8 +585,6 @@ void SerialPortTest::testSendRecv_receiver()
    //if ( status )
    {
       std::string buffer;
-      vpr::Uint32 bytes_read = 0;
-
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to change character size", recv_port.setCharacterSize(vpr::SerialTypes::CS_BITS_8));
 
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to enable reading", recv_port.setRead(true));
@@ -589,7 +601,7 @@ void SerialPortTest::testSendRecv_receiver()
       mCondVar.release();
 
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to read from serial port", 
-         recv_port.read(buffer, mDataBuffer.size(), bytes_read, vpr::Interval(2, vpr::Interval::Sec)));
+         recv_port.read(buffer, mDataBuffer.size(), vpr::Interval(2, vpr::Interval::Sec)));
       CPPUNIT_ASSERT(mDataBuffer == buffer && "Read wrong string");
 
       if ( mDataBuffer != buffer )
@@ -637,7 +649,7 @@ void SerialPortTest::testSendRecv_sender()
       }
       mCondVar.release();
 
-      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to write", send_port.write(mDataBuffer, mDataBuffer.size(), bytes_written));
+      CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to write", bytes_written = send_port.write(mDataBuffer, mDataBuffer.size()));
       CPPUNIT_ASSERT(mDataBuffer.size() == bytes_written && "Failed to write all bytes");
 
       CPPUNIT_ASSERT_NO_THROW_MESSAGE("Failed to flush I/O queues", send_port.flushQueue(vpr::SerialTypes::IO_QUEUES));

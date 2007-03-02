@@ -81,19 +81,14 @@ int main (int argc, char* argv[])
          try
          {
             char buffer[40]; 
-            vpr::Uint32 bytes;
-            sock.read(buffer, 40, bytes,
-                      vpr::Interval(5, vpr::Interval::Sec));
+            const vpr::Uint32 bytes =
+               sock.read(buffer, 40, vpr::Interval(5, vpr::Interval::Sec));
 
             // If we read anything, print it.
             if ( bytes > 0 )
             {
                std::cout << "Read " << bytes << " bytes from server\n"
                          << "     Got '" << buffer << "'" << std::endl;
-            }
-            else if ( bytes == -1 )
-            {
-               std::cout << "Error reading!" << std::endl;
             }
             else
             {

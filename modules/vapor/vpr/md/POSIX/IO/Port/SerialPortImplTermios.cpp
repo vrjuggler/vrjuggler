@@ -143,13 +143,13 @@ void SerialPortImplTermios::setUpdateAction(vpr::SerialTypes::UpdateActionOption
 }
 
 // Query the serial port for the maximum buffer size.
-void SerialPortImplTermios::getMinInputSize(vpr::Uint16& size) const
+vpr::Uint16 SerialPortImplTermios::getMinInputSize() const
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    struct termios term;
 
    getAttrs(&term);
-   size = (vpr::Uint16) term.c_cc[VMIN];
+   return static_cast<vpr::Uint16>(term.c_cc[VMIN]);
 }
 
 // Attempt to change the buffer size to the given argument.
@@ -164,12 +164,12 @@ void SerialPortImplTermios::setMinInputSize(const vpr::Uint8 size)
 
 // Get the value of the timeout (in tenths of a second) to wait for data to
 // arrive.  This is only applicable in non-canonical mode.
-void SerialPortImplTermios::getTimeout(vpr::Uint8& timeout) const
+vpr::Uint8 SerialPortImplTermios::getTimeout() const
 {
    struct termios term;
 
    getAttrs(&term);
-   timeout = term.c_cc[VTIME];
+   return term.c_cc[VTIME];
 }
 
 // Set the value of the timeout to wait for data to arrive.  The value given
@@ -185,9 +185,11 @@ void SerialPortImplTermios::setTimeout(const vpr::Uint8 timeout)
 }
 
 // Get the character size (the bits per byte).
-void SerialPortImplTermios::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size) const
+vpr::SerialTypes::CharacterSizeOption SerialPortImplTermios::getCharacterSize()
+   const
 {
    struct termios term;
+   vpr::SerialTypes::CharacterSizeOption size;
 
    getAttrs(&term);
    switch ( term.c_cflag & CSIZE )
@@ -205,6 +207,8 @@ void SerialPortImplTermios::getCharacterSize(vpr::SerialTypes::CharacterSizeOpti
          size = SerialTypes::CS_BITS_8;
          break;
    }
+
+   return size;
 }
 
 // Set the current character size (the bits per byte) to the size in the given
@@ -268,12 +272,12 @@ void SerialPortImplTermios::setLocalAttach(bool flag)
 }
 
 // Get the number of stop bits in use.  This will be either 1 or 2.
-void SerialPortImplTermios::getStopBits(Uint8& num_bits) const
+vpr::Uint8 SerialPortImplTermios::getStopBits() const
 {
    struct termios term;
 
    getAttrs(&term);
-   num_bits = (term.c_cflag & CSTOPB) ? 2 : 1;
+   return (term.c_cflag & CSTOPB) ? 2 : 1;
 }
 
 // Set the number of stop bits to use.  The value must be either 1 or 2.
@@ -465,15 +469,12 @@ void SerialPortImplTermios::setParity(const vpr::SerialTypes::ParityType& type)
 }
 
 // Get the current input baud rate.
-void SerialPortImplTermios::getInputBaudRate(vpr::Uint32& rate) const
+vpr::Uint32 SerialPortImplTermios::getInputBaudRate() const
 {
    struct termios term;
-
    getAttrs(&term);
-   speed_t baud_rate;
 
-   baud_rate = cfgetispeed(&term);
-   rate      = baudToInt(baud_rate);
+   return baudToInt(cfgetispeed(&term));
 }
 
 // Set the current input baud rate.
@@ -520,16 +521,12 @@ void SerialPortImplTermios::setInputBaudRate(const vpr::Uint32& baud)
 }
 
 // Get the current output baud rate.
-void SerialPortImplTermios::getOutputBaudRate(vpr::Uint32& rate) const
+vpr::Uint32 SerialPortImplTermios::getOutputBaudRate() const
 {
    struct termios term;
-
    getAttrs(&term);
 
-   speed_t baud_rate;
-
-   baud_rate = cfgetospeed(&term);
-   rate      = baudToInt(baud_rate);
+   return  baudToInt(cfgetospeed(&term));
 }
 
 // Set the current output baud rate.

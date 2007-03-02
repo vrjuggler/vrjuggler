@@ -293,37 +293,30 @@ public:
     *      \p length bytes long.
     * @post The given buffer has length bytes copied into it from the device,
     *       and the number of bytes read successfully is returned to the
-    *       caller via the \p bytesRead parameter.
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @return The number of bytes read into the buffer is returned.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
     */
-   vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesRead,
-                            vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * This is xactly like read_i() except that it takes MessageDataPtr directly
     * for zero-copy networking.  Updates \p msgData to point at the new message
     * data.
+    *
+    * @return The number of bytes read into the buffer is returned.
     */
-   vpr::ReturnStatus read_i(vpr::sim::Message::MessageDataPtr& msgData,
-                            vpr::Uint32& bytesRead,
-                            vpr::Interval timeout = vpr::Interval::NoTimeout);
-
+   vpr::Uint32 read_i(vpr::sim::Message::MessageDataPtr& msgData,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -333,41 +326,34 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the
     *       device, and the number of bytes read successfully is returned to
-    *       the caller via the \p bytesRead parameter.
+    *       the caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.
-    * @return vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
+    * @return The number of bytes read into the buffer is returned.
     */
-   vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesRead,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return read_i(buffer, length, bytesRead, timeout);
+      return read_i(buffer, length, timeout);
    }
 
    /**
     * This is exactly like read_i() except that it takes MessageDataPtr
     * directly for zero-copy networking.  Updates \p msgData to point at the
     * new message data.
+    *
+    * @return The number of bytes read into the buffer is returned.
     */
-   vpr::ReturnStatus readn_i(boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
-                             vpr::Uint32& bytesRead,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 readn_i(boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return read_i(msgData, bytesRead, timeout);
+      return read_i(msgData, timeout);
    }
 
    /**
@@ -376,38 +362,28 @@ public:
     *
     * @pre The device is open for writing.
     * @post The given buffer is written to the I/O device, and the number
-    *       of bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       of bytes written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.
-    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
-    *         non-blocking mode, and the write operation could not be
-    *         completed.
-    * @return vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.
-    * @return vpr::ReturnStatus::Fail is returned if the write operation
-    *         failed.
+    * @return The number of bytes written to the socket is returned.
     */
-   vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesWritten,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * This is exactly like write_i() except that it takes MessageDataPtr
     * directly for zero-copy networking.  Starts passing a shared copy of
     * \p msgData across the network.
+    *
+    * @return The number of bytes written to the socket is returned.
     */
-   vpr::ReturnStatus write_i(vpr::sim::Message::MessageDataPtr msgData,
-                             vpr::Uint32& bytesWritten,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 write_i(vpr::sim::Message::MessageDataPtr msgData,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Retrieves the value for the given option as set on the socket.

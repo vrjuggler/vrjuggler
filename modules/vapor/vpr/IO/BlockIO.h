@@ -161,15 +161,16 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the
     *       device, and the number of bytes read successfully is returned to
-    *       the caller via the \p bytesRead argument.
+    *       the caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
     *         and there is no data to read.
@@ -177,11 +178,10 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   void read(void* buffer, const vpr::Uint32 length,
-             vpr::Uint32& bytesRead,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 read(void* buffer, const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      this->read_s(buffer, length, bytesRead, timeout);
+      return this->read_s(buffer, length, timeout);
    }
 
    /**
@@ -192,15 +192,16 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the
     *       device, and the number of bytes read successfully is returned to
-    *       the caller via the \p bytesRead argument.
+    *       the caller.
     *
-    * @param buffer    A reference to the buffer (a \p std::string object)
-    *                  where the device's buffer contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A reference to the buffer (a \p std::string object)
+    *                where the device's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
     *         and there is no data to read.
@@ -208,15 +209,14 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   void read(std::string& buffer, const vpr::Uint32 length,
-             vpr::Uint32& bytesRead,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 read(std::string& buffer, const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
       buffer.resize(length);
       memset(&buffer[0], '\0', buffer.size());
-      this->read(&buffer[0], buffer.size(), bytesRead, timeout);
+      return this->read(&buffer[0], buffer.size(), timeout);
    }
 
    /**
@@ -227,16 +227,16 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it
     *       from the device, and the number of bytes read successfully is
-    *       returned to the caller via the \p bytesRead argument.
+    *       returned to the caller.
     *
-    * @param buffer    A pointer to the buffer (a vector of vpr::Uint8
-    *                  values) where the device's buffer contents are to be
-    *                  stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer (a vector of vpr::Uint8 vlaues)
+    *                where the device's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
     *         and there is no data to read.
@@ -244,9 +244,9 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   void read(std::vector<vpr::Uint8>& buffer,
-             const vpr::Uint32 length, vpr::Uint32& bytesRead,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 read(std::vector<vpr::Uint8>& buffer,
+                    const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       buffer.resize(length);
 
@@ -254,11 +254,13 @@ public:
       // buffer from the device.
       memset(&buffer[0], '\0', buffer.size());
 
-      this->read(&buffer[0], buffer.size(), bytesRead, timeout);
+      const vpr::Uint32 bytes = this->read(&buffer[0], buffer.size(), timeout);
 
-      // size it down if needed, if (bytesRead == length), then resize does
-      // nothing...
-      buffer.resize(bytesRead);
+      // Size it down if needed, if (bytes == length), then resize() does
+      // nothing.
+      buffer.resize(bytes);
+
+      return bytes;
    }
 
    /**
@@ -269,25 +271,25 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from
     *       the device, and the number of bytes read successfully is returned
-    *       to the caller via the \p bytesRead parameter.
+    *       to the caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   void readn(void* buffer, const vpr::Uint32 length,
-              vpr::Uint32& bytesRead,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 readn(void* buffer, const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      this->readn_s(buffer, length, bytesRead, timeout);
+      return this->readn_s(buffer, length, timeout);
    }
 
    /**
@@ -298,31 +300,34 @@ public:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from
     *       the device, and the number of bytes read successfully is returned
-    *       to the caller via the \p bytesRead parameter.
+    *       to the caller.
     *
-    * @param buffer    A reference to the buffer (a \c std::string object)
-    *                  where the device's buffer contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A reference to the buffer (a \c std::string object)
+    *                where the device's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   void readn(std::string& buffer, const vpr::Uint32 length,
-              vpr::Uint32& bytesRead,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 readn(std::string& buffer, const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
       buffer.resize(length);
       memset(&buffer[0], '\0', buffer.size());
-      this->readn(&buffer[0], buffer.size(), bytesRead, timeout);
+      const vpr::Uint32 bytes = this->readn(&buffer[0], buffer.size(),
+                                            timeout);
 
-      buffer.resize(bytesRead);
+      buffer.resize(bytes);
+
+      return bytes;
    }
 
    /**
@@ -335,31 +340,34 @@ public:
     *       device, and the number of bytes read successfully is returned to
     *       the caller.
     *
-    * @param buffer    A pointer to the buffer (a vector of vpr::Uint8
-    *                  values) where the device's buffer contents are to be
-    *                  stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer (a vector of vpr::Uint8 values)
+    *                where the device's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   void readn(std::vector<vpr::Uint8>& buffer,
-              const vpr::Uint32 length, vpr::Uint32& bytesRead,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 readn(std::vector<vpr::Uint8>& buffer,
+                     const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
 
       buffer.resize(length);
       memset(&buffer[0], '\0', buffer.size());
-      this->readn(&buffer[0], buffer.size(), bytesRead, timeout);
+      const vpr::Uint32 bytes = this->readn(&buffer[0], buffer.size(),
+                                            timeout);
 
-      buffer.resize(bytesRead);
+      buffer.resize(bytes);
+
+      return bytes;
    }
 
    /** Return the number of avaiable bytes for reading. */
@@ -373,15 +381,15 @@ public:
     *
     * @pre The device is open for writing.
     * @post The given buffer is written to the I/O device, and the number of
-    *       bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       bytes written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the device is returned.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -389,11 +397,10 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   void write(const void* buffer, const vpr::Uint32 length,
-              vpr::Uint32& bytesWritten,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 write(const void* buffer, const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      this->write_s(buffer, length, bytesWritten,timeout);
+      return this->write_s(buffer, length, timeout);
    }
 
    /**
@@ -401,16 +408,16 @@ public:
     *
     * @pre The device is open for writing.
     * @post The given buffer is written to the I/O device, and the number of
-    *       bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       bytes written successfully is returned to the caller.
     *
-    * @param buffer       A reference to the buffer (a \c std::string object)
-    *                     to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A reference to the buffer (a \c std::string object) to be
+    *                written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the device is returned.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -418,12 +425,11 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   void write(const std::string& buffer, const vpr::Uint32 length,
-              vpr::Uint32& bytesWritten,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 write(const std::string& buffer, const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
-      this->write(buffer.c_str(), length, bytesWritten,timeout);
+      return this->write(buffer.c_str(), length, timeout);
    }
 
    /**
@@ -431,16 +437,16 @@ public:
     *
     * @pre The device is open for writing.
     * @post The given buffer is written to the I/O device, and the number of
-    *       bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       bytes written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer (a vector of vpr::Uint8
-    *                     values) to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer (a vector of vpr::Uint8 values) to
+    *                be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the device is returned.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -448,13 +454,12 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   void write(const std::vector<vpr::Uint8>& buffer,
-              const vpr::Uint32 length,
-              vpr::Uint32& bytesWritten,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 write(const std::vector<vpr::Uint8>& buffer,
+                     const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
-      this->write(&buffer[0], length, bytesWritten,timeout);
+      return this->write(&buffer[0], length, timeout);
    }
 
    /**
@@ -552,26 +557,28 @@ protected:
     * Read strategy.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual void read_s(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytesRead,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   virtual vpr::Uint32 read_s(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   );
 
    /**
     * Read strategy.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual void readn_s(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytesRead,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   virtual vpr::Uint32 readn_s(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   );
 
    /**
     * Write strategy.
     * @throws vpr::IOException if the operation failed.
     */
-   virtual void write_s(const void* buffer,
-                        const vpr::Uint32 length,
-                        vpr::Uint32& bytesWritten,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   virtual vpr::Uint32 write_s(
+      const void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   );
 
    /**
     * Implementation of the read() template method.  This reads at most the
@@ -581,15 +588,16 @@ protected:
     *      \p length bytes long.
     * @post The given buffer has length bytes copied into it from the device,
     *       and the number of bytes read successfully is returned to the
-    *       caller via the \p bytesRead parameter.
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
     *         and there is no data to read.
@@ -597,9 +605,10 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual void read_i(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytesRead,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
+   virtual vpr::Uint32 read_i(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   ) = 0;
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -609,23 +618,25 @@ protected:
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the
     *       device, and the number of bytes read successfully is returned to
-    *       the caller via the \p bytesRead parameter.
+    *       the caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the device's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   virtual void readn_i(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytesRead,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
+   virtual vpr::Uint32 readn_i(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   ) = 0;
 
    /**
     * Implementation of the write() template method.  This writes the given
@@ -633,15 +644,15 @@ protected:
     *
     * @pre The device is open for writing.
     * @post The given buffer is written to the I/O device, and the number
-    *       of bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       of bytes written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the device is returned.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -649,10 +660,10 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   virtual void write_i(const void* buffer,
-                        const vpr::Uint32 length,
-                        vpr::Uint32& bytesWritten,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
+   virtual vpr::Uint32 write_i(
+      const void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   ) = 0;
 
    // Friends
    friend class vpr::BaseIOStatsStrategy;    // Need it to be able to call the protected read_i, readn_i, and write_i memebers

@@ -277,186 +277,182 @@ public:
     *      length bytes long.
     * @post The given buffer has length bytes copied into it from
     *       the socket, and the number of bytes read successfully is returned
-    *       to the caller via the bytesRead argument.
-    *
-    * @param buffer    A pointer to the buffer where the socket's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
-    *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
-    */
-   void recv(void* buffer, const vpr::Uint32 length,
-             vpr::Uint32& bytesRead,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      read(buffer, length, bytesRead, timeout);
-   }
-
-   /**
-    * Receives at most the specified number of bytes from the socket into the
-    * given buffer.
-    *
-    * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into it
-    *       from the device, and the number of bytes read successfully is
-    *       returned to the caller via the bytesRead argument.
-    *
-    * @param buffer    A reference to the buffer (a std::string
-    *                  object) where the device's buffer contents are to be
-    *                  stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
-    *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
-    */
-   void recv(std::string& buffer, const vpr::Uint32 length,
-             vpr::Uint32& bytesRead,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      read(buffer, length, bytesRead, timeout);
-   }
-
-   /**
-    * Receives at most the specified number of bytes from the socket into the
-    * given buffer.
-    *
-    * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into it
-    *       from the device, and the number of bytes read successfully is
-    *       returned to the caller via the bytesRead argument.
-    *
-    * @param buffer    A pointer to the buffer (a vector of
-    *                  chars) where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
-    *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
-    */
-   void recv(std::vector<vpr::Uint8>& buffer,
-             const vpr::Uint32 length, vpr::Uint32& bytesRead,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      read(buffer, length, bytesRead, timeout);
-   }
-
-   /**
-    * Receives exactly the specified number of bytes from the socket into the
-    * given buffer.
-    *
-    * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into it from
-    *       the device, and the number of bytes read successfully is returned
-    *       to the caller via the bytesRead parameter.
-    *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
-    *
-    * @throws vpr::SocketException if socket is not connected.
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
-    */
-   void recvn(void* buffer, const vpr::Uint32 length,
-              vpr::Uint32& bytesRead,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      readn(buffer, length, bytesRead, timeout);
-   }
-
-   /**
-    * Receives exactly the specified number of bytes from the socket into the
-    * given buffer.
-    *
-    * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into it from
-    *       the device, and the number of bytes read successfully is returned
-    *       to the caller via the bytesRead parameter.
-    *
-    * @param buffer    A reference to the buffer (a std::string
-    *                  object) where the device's buffer contents are to be
-    *                  stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
-    *
-    * @throws vpr::SocketException if socket is not connected.
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
-    */
-   void recvn(std::string& buffer, const vpr::Uint32 length,
-              vpr::Uint32& bytesRead,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      readn(buffer, length, bytesRead, timeout);
-   }
-
-   /**
-    * Receives exactly the specified number of bytes from the socket into the
-    * given buffer.
-    *
-    * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into it from
-    *       the device, and the number of bytes read successfully is returned
     *       to the caller.
     *
-    * @param buffer    A pointer to the buffer (a vector of
-    *                  chars) where the device's buffer contents
-    *                  are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional
-    *                  and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the socket's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
+    *
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
+    */
+   vpr::Uint32 recv(void* buffer, const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      return read(buffer, length, timeout);
+   }
+
+   /**
+    * Receives at most the specified number of bytes from the socket into the
+    * given buffer.
+    *
+    * @pre The socket is open for reading, and the buffer is at least
+    *      \p length bytes long.
+    * @post The given buffer has length bytes copied into it from the socket,
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
+    *
+    * @param buffer  A reference to the buffer (a std::string object) where
+    *                the socket's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
+    *
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
+    */
+   vpr::Uint32 recv(std::string& buffer, const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      return read(buffer, length, timeout);
+   }
+
+   /**
+    * Receives at most the specified number of bytes from the socket into the
+    * given buffer.
+    *
+    * @pre The socket is open for reading, and the buffer is at least
+    *      \p length bytes long.
+    * @post The given buffer has length bytes copied into it from the socket,
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
+    *
+    * @param buffer  A pointer to the buffer (a vector of bytes) where the
+    *                socket's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
+    *
+    * @throws vpr::SocketException if the socket is not connected.
+    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
+    *         and there is no data to read.
+    * @throws vpr::TimeoutException if the read could not begin within the
+    *         timeout interval.
+    * @throws vpr::IOException if the read operation failed.
+    */
+   vpr::Uint32 recv(std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      return read(buffer, length, timeout);
+   }
+
+   /**
+    * Receives exactly the specified number of bytes from the socket into the
+    * given buffer.
+    *
+    * @pre The socket is open for reading, and the buffer is at least
+    *      \p length bytes long.
+    * @post The given buffer has length bytes copied into it from the socket,
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
+    *
+    * @param buffer  A pointer to the buffer where the socket's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::SocketException if socket is not connected.
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   void recvn(std::vector<vpr::Uint8>& buffer,
-              const vpr::Uint32 length, vpr::Uint32& bytesRead,
-              const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 recvn(void* buffer, const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      readn(buffer, length, bytesRead, timeout);
+      return readn(buffer, length, timeout);
+   }
+
+   /**
+    * Receives exactly the specified number of bytes from the socket into the
+    * given buffer.
+    *
+    * @pre The socket is open for reading, and the buffer is at least
+    *      \p length bytes long.
+    * @post The given buffer has length bytes copied into it from the socket,
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
+    *
+    * @param buffer  A reference to the buffer (a std::string object) where
+    *                the socket's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
+    *
+    * @throws vpr::SocketException if socket is not connected.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
+    */
+   vpr::Uint32 recvn(std::string& buffer, const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      return readn(buffer, length, timeout);
+   }
+
+   /**
+    * Receives exactly the specified number of bytes from the socket into the
+    * given buffer.
+    *
+    * @pre The socket is open for reading, and the buffer is at least
+    *      \p length bytes long.
+    * @post The given buffer has length bytes copied into it from the socket,
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
+    *
+    * @param buffer  A pointer to the buffer (a vector of bytes) where the
+    *                socket's buffer contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
+    *
+    * @throws vpr::SocketException if socket is not connected.
+    * @throws vpr::EOFException if end of file or end of stream has been
+    *         reached unexpectedly during input.
+    * @throws vpr::IOException if an error ocured while reading.
+    */
+   vpr::Uint32 recvn(std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      return readn(buffer, length, timeout);
    }
 
    /** Returns the number of avaiable bytes for reading. */
@@ -468,17 +464,17 @@ public:
    /**
     * Sends the buffer to the remote side of the socket.
     *
-    * @pre The device is open for writing.
-    * @post The given buffer is written to the I/O device, and the number of
-    *       bytes written successfully is returned to the caller via the
-    *       bytesWritten parameter.
+    * @pre The socket is open for writing.
+    * @post The given buffer is written to the socket, and the number of bytes
+    *       written successfully is returned to the caller.
     *
     * @param buffer       A pointer to the buffer to be written.
     * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
     * @param timeout      The maximum amount of time to wait for data to be
     *                     available for writing.  This argument is optional
     *                     and defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the socket is returned.
     *
     * @throws ConnectionResetException if connection is reset.
     * @throws NoRouteToHostException if a route to host does not exist.
@@ -491,28 +487,27 @@ public:
     * @throws vpr::SocketException if the write operation failed.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   void send(const void* buffer, const vpr::Uint32 length,
-             vpr::Uint32& bytesWritten,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 send(const void* buffer, const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      write(buffer, length, bytesWritten, timeout);
+      return write(buffer, length, timeout);
    }
 
    /**
     * Sends the buffer to the remote side of the socket.
     *
-    * @pre The device is open for writing.
-    * @post The given buffer is written to the I/O device, and the number of
-    *       bytes written successfully is returned to the caller via the
-    *       bytesWritten parameter.
+    * @pre The socket is open for writing.
+    * @post The given buffer is written to the socket, and the number of bytes
+    *       written successfully is returned to the caller.
     *
-    * @param buffer       A reference to the buffer (a std::string object)
-    *                     to be written.
-    * @param length      The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A reference to the buffer (a std::string object) to be
+    *                written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the socket is returned.
     *
     * @throws ConnectionResetException if connection is reset.
     * @throws NoRouteToHostException if a route to host does not exist.
@@ -525,29 +520,28 @@ public:
     * @throws vpr::SocketException if the write operation failed.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   void send(const std::string& buffer, const vpr::Uint32 length,
-             vpr::Uint32& bytesWritten,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 send(const std::string& buffer, const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
-      write(buffer, length, bytesWritten, timeout);
+      return write(buffer, length, timeout);
    }
 
    /**
     * Sends the buffer to the remote side of the socket.
     *
-    * @pre The device is open for writing.
-    * @post The given buffer is written to the I/O device, and the number of
-    *       bytes written successfully is returned to the caller via the
-    *       bytesWritten parameter.
+    * @pre The socket is open for writing.
+    * @post The given buffer is written to the socket, and the number of bytes
+    *       written successfully is returned to the caller.
     *
-    * @param buffer       A reference to the buffer (a std::string object)
-    *                     to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A reference to the buffer (a std::string object) to be
+    *                written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                and defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the socket is returned.
     *
     * @throws ConnectionResetException if connection is reset.
     * @throws NoRouteToHostException if a route to host does not exist.
@@ -560,13 +554,12 @@ public:
     * @throws vpr::SocketException if the write operation failed.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   void send(const std::vector<vpr::Uint8>& buffer,
-             const vpr::Uint32 length,
-             vpr::Uint32& bytesWritten,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 send(const std::vector<vpr::Uint8>& buffer,
+                    const vpr::Uint32 length,
+                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
-      write(buffer, length, bytesWritten,timeout);
+      return write(buffer, length, timeout);
    }
 
    /**
@@ -675,19 +668,20 @@ protected:
     * most the specified number of bytes from the socket into the given
     * buffer.
     *
-    * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into it from the device,
+    * @pre The socket is open for reading, and the buffer is at least
+    *      \p length bytes long.
+    * @post The given buffer has length bytes copied into it from the socket,
     *       and the number of bytes read successfully is returned to the
-    *       caller via the bytesRead parameter.
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the socket's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::SocketException if the socket is not connected.
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
@@ -696,11 +690,12 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual void read_i(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytesRead,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::Uint32 read_i(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   )
    {
-      mSocketImpl->read_i(buffer, length, bytesRead, timeout);
+      return mSocketImpl->read_i(buffer, length, timeout);
    }
 
    /**
@@ -708,47 +703,47 @@ protected:
     * exactly the specified number of bytes from the socket into the given
     * buffer.
     *
-    * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into
-    *       it from the device, and the number of bytes read successfully
-    *       is returned to the caller via the bytesRead parameter.
+    * @pre The socket is open for reading, and the buffer is at least
+    *      \p length bytes long.
+    * @post The given buffer has length bytes copied into it from the socket,
+    *       and the number of bytes read successfully is returned to the
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
+    * @param buffer    A pointer to the buffer where the socket's buffer
     *                  contents are to be stored.
     * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
     * @param timeout   The maximum amount of time to wait for data to be
     *                  available for reading.  This argument is optional and
     *                  defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::SocketException if socket is not connected.
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   virtual void readn_i(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytesRead,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::Uint32 readn_i(
+      void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   )
    {
-      mSocketImpl->readn_i(buffer, length, bytesRead, timeout);
+      return mSocketImpl->readn_i(buffer, length, timeout);
    }
 
    /**
     * Implementation of the write() template method.  This writes
     * the buffer to the socket.
     *
-    * @pre The device is open for writing.
-    * @post The given buffer is written to the I/O device, and the number
-    *       of bytes written successfully is returned to the caller via the
-    *       bytesWritten parameter.
+    * @pre The socket is open for writing.
+    * @post The given buffer is written to the socket, and the number of bytes
+    *       written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
     *
     * @throws ConnectionResetException if connection is reset.
     * @throws NoRouteToHostException if a route to host does not exist.
@@ -761,12 +756,12 @@ protected:
     * @throws vpr::SocketException if the write operation failed.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   virtual void write_i(const void* buffer,
-                        const vpr::Uint32 length,
-                        vpr::Uint32& bytesWritten,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::Uint32 write_i(
+      const void* buffer, const vpr::Uint32 length,
+      const vpr::Interval timeout = vpr::Interval::NoTimeout
+   )
    {
-      mSocketImpl->write_i(buffer, length, bytesWritten, timeout);
+      return mSocketImpl->write_i(buffer, length, timeout);
    }
 
    virtual void getOption(const vpr::SocketOptions::Types option,

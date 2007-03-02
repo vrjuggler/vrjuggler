@@ -1,5 +1,11 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-03-02 patrick  Changed the signature of the read, write, and query methods
+                    on I/O classes (vpr::BlockIO, vpr::Socket,
+                    vpr::SocketStream, vpr::SocketDatagram, and
+                    vpr::SerialPort) to return the result "out the back"
+                    instead of through a by-reference parameter.
+                    NEW VERSION: 1.1.42
 2007-02-13 patrick  Use the Win32 thread and sychronization APIs directly
                     instead of using NSPR.
                     NEW VERSION: 1.1.41

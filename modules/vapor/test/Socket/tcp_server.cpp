@@ -77,9 +77,8 @@ int main (int argc, char* argv[])
 
             // Using the new socket, send the buffer to the client and close
             // the socket.
-            vpr::Uint32 bytes;
-            client_sock.write(buffer, sizeof(buffer), bytes);
-//            client_sock.write(buffer, buffer.length(), bytes);
+            client_sock.write(buffer, sizeof(buffer));
+//            client_sock.write(buffer, buffer.length());
             client_sock.close();
          }
          catch (vpr::TimeoutException&)

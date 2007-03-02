@@ -94,8 +94,7 @@ void SocketCopyConstructorTest::testCopyConstructor_connector()
 
    copy_connector = new vpr::SocketStream (connector_socket);
 
-   vpr::Uint32 bytes_read;
-   CPPUNIT_ASSERT_NO_THROW(copy_connector->read (buffer, 40, bytes_read));
+   CPPUNIT_ASSERT_NO_THROW(copy_connector->read (buffer, 40));
    copy_connector->close();
 
    CPPUNIT_ASSERT(copy_connector->getType() == connector_socket.getType());
@@ -151,8 +150,7 @@ void SocketCopyConstructorTest::testCopyConstructor_acceptor()
 
    if (copy_child != NULL)
    {
-      vpr::Uint32 bytes_written;
-      copy_child->write(buffer, sizeof(buffer), bytes_written);
+      copy_child->write(buffer, sizeof(buffer));
       CPPUNIT_ASSERT(copy_child->getType() == child_socket.getType());
       CPPUNIT_ASSERT(copy_child->getRemoteAddr() == child_socket.getRemoteAddr());
       CPPUNIT_ASSERT(copy_child->getLocalAddr() == child_socket.getLocalAddr());

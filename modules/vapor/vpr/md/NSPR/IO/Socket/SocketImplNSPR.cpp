@@ -457,21 +457,21 @@ bool SocketImplNSPR::isConnected() const
 }
 
 
-void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytesRead,
-                            const vpr::Interval timeout)
+vpr::Uint32 SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
+                                   const vpr::Interval timeout)
 {
    vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
 
-   PRInt32 bytes;
+   vpr::Uint32 bytes_read(0);
    mBlockingFixed = true;
 
-   bytes = PR_Recv(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
+   const PRInt32 bytes = PR_Recv(mHandle, buffer, length, 0,
+                                 NSPR_getInterval(timeout));
 
    // Successful read.
    if ( bytes > 0 )
    {
-      bytesRead = bytes;
+      bytes_read = bytes;
    }
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    else if ( bytes == -1 )
@@ -482,8 +482,6 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
    // Indicates that the network connection is closed.
    else if ( bytes == 0 )
    {
-      bytesRead = bytes;
-
       std::stringstream msg_stream;
       msg_stream << "Socket disconnected cleanly. ";
       const std::string nspr_err_msg(vpr::Error::getCurrentErrorMsg());
@@ -495,31 +493,31 @@ void SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
 
       throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
    }
+
+   return bytes_read;
 }
 
-void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesRead,
-                             const vpr::Interval timeout)
+vpr::Uint32 SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
+                                    const vpr::Interval timeout)
 {
    vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
 
-   PRInt32 bytes;            // Number of bytes read each time
    vpr::Uint32 bytes_left(length);
 
-   bytesRead = 0;
+   vpr::Uint32 bytes_read(0);
    mBlockingFixed = true;
 
    while ( bytes_left > 0 )
    {
-      bytes = PR_Recv(mHandle, buffer, bytes_left, 0,
-                      NSPR_getInterval(timeout));
+      const PRInt32 bytes = PR_Recv(mHandle, buffer, bytes_left, 0,
+                                    NSPR_getInterval(timeout));
 
       // We are in an error state.
       if ( bytes > 0 )
       {
          buffer = (void*) ((char*) buffer + bytes);
          bytes_left -= bytes;
-         bytesRead  += bytes;
+         bytes_read += bytes;
       }
       else if ( bytes < 0 )
       {
@@ -550,18 +548,21 @@ void SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
          throw ConnectionResetException(msg_stream.str(), VPR_LOCATION);
       }
    }
+
+   return bytes_read;
 }
 
-void SocketImplNSPR::write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytesWritten,
-                             const vpr::Interval timeout)
+vpr::Uint32 SocketImplNSPR::write_i(const void* buffer,
+                                    const vpr::Uint32 length,
+                                    const vpr::Interval timeout)
 {
    vprASSERT(NULL != mHandle && "Can not write to a socket with a NULL handle.");
 
-   PRInt32 bytes;
+   vpr::Uint32 bytes_written(0);
    mBlockingFixed = true;
 
-   bytes = PR_Send(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
+   const PRInt32 bytes = PR_Send(mHandle, buffer, length, 0,
+                                 NSPR_getInterval(timeout));
 
    if ( bytes == -1 )
    {
@@ -569,13 +570,13 @@ void SocketImplNSPR::write_i(const void* buffer, const vpr::Uint32 length,
          mHandle, "[vpr::SocketImplNSPR::write_i()] (" + getName() + ") ",
          VPR_LOCATION
       );
-
-      bytesWritten = 0;
    }
    else
    {
-      bytesWritten = bytes;
+      bytes_written = bytes;
    }
+
+   return bytes_written;
 }
 
 void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,

@@ -129,11 +129,11 @@ public:
     * into the by-reference parameter \p from.
     * @throws vpr::IOException if the operation failed.
     */
-   void recvfrom(void* msg, const vpr::Uint32 len,
-                 vpr::InetAddr& from, vpr::Uint32& bytesRead,
-                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 recvfrom(void* msg, const vpr::Uint32 len,
+                        vpr::InetAddr& from,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      mSocketDgramImpl->recvfrom(msg, len, from, bytesRead, timeout);
+      return mSocketDgramImpl->recvfrom(msg, len, from, timeout);
    }
 
    /**
@@ -141,14 +141,14 @@ public:
     * into the by-reference parameter \p from.
     * @throws vpr::IOException if the operation failed.
     */
-   void recvfrom(std::string& msg, const vpr::Uint32 len,
-                 vpr::InetAddr& from, vpr::Uint32& bytesRead,
-                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 recvfrom(std::string& msg, const vpr::Uint32 len,
+                        vpr::InetAddr& from,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       msg.resize(len);
       memset(&msg[0], '\0', msg.size());
 
-      recvfrom((void*) &msg[0], msg.size(), from, bytesRead, timeout);
+      return recvfrom((void*) &msg[0], msg.size(), from, timeout);
    }
 
    /**
@@ -156,55 +156,55 @@ public:
     * into the by-reference parameter \p from.
     * @throws vpr::IOException if the operation failed.
     */
-   void recvfrom(std::vector<vpr::Uint8>& msg,
-                 const vpr::Uint32 len, vpr::InetAddr& from,
-                 vpr::Uint32& bytesRead,
-                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 recvfrom(std::vector<vpr::Uint8>& msg,
+                        const vpr::Uint32 len, vpr::InetAddr& from,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       msg.resize(len);
 
       memset(&msg[0], '\0', msg.size());
-      recvfrom((void*) &msg[0], msg.size(), from, bytesRead, timeout);
+      const vpr::Uint32 bytes = recvfrom((void*) &msg[0], msg.size(), from,
+                                         timeout);
 
-      // Size it down if needed, if (bytesRead==len), then resize does
-      // nothing.
-      msg.resize(bytesRead);
+      // Size it down if needed, if (bytes == len), then resize does nothing.
+      msg.resize(bytes);
+
+      return bytes;
    }
 
    /**
     * Sends a message to the designated recipient.
     * @throws vpr::IOException if the operation failed.
     */
-   void sendto(const void* msg, const vpr::Uint32 len,
-               const vpr::InetAddr& to, vpr::Uint32& bytesSent,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 sendto(const void* msg, const vpr::Uint32 len,
+                      const vpr::InetAddr& to,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      mSocketDgramImpl->sendto(msg, len, to, bytesSent, timeout);
+      return mSocketDgramImpl->sendto(msg, len, to, timeout);
    }
 
    /**
     * Sends a message to the designated recipient.
     * @throws vpr::IOException if the operation failed.
     */
-   void sendto(const std::string& msg, const vpr::Uint32 len,
-               const vpr::InetAddr& to, vpr::Uint32& bytesSent,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      vprASSERT(len <= msg.size() && "Length is bigger than data given");
-      sendto(msg.c_str(), len, to, bytesSent, timeout);
-   }
-
-   /**
-    * Sends a message to the designated recipient.
-    * @throws vpr::IOException if the operation failed.
-    */
-   void sendto(const std::vector<vpr::Uint8>& msg,
-               const vpr::Uint32 len, const vpr::InetAddr& to,
-               vpr::Uint32& bytesSent,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::Uint32 sendto(const std::string& msg, const vpr::Uint32 len,
+                      const vpr::InetAddr& to,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
-      sendto((const void*) &msg[0], len, to, bytesSent, timeout);
+      return sendto(msg.c_str(), len, to, timeout);
+   }
+
+   /**
+    * Sends a message to the designated recipient.
+    * @throws vpr::IOException if the operation failed.
+    */
+   vpr::Uint32 sendto(const std::vector<vpr::Uint8>& msg,
+                      const vpr::Uint32 len, const vpr::InetAddr& to,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      vprASSERT(len <= msg.size() && "Length is bigger than data given");
+      return sendto((const void*) &msg[0], len, to, timeout);
    }
 
 protected:

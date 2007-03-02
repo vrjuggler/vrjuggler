@@ -98,6 +98,8 @@ public:
    /**
     * Receives a message from the specified address.
     *
+    * @return The number of bytes read into the buffer is returned.
+    *
     * @throws vpr::SocketException     If the socket is not connected.
     * @throws vpr::WouldBlockException If the file is in non-blocking mode,
     *                                  and there is no data to read.
@@ -105,16 +107,18 @@ public:
     *                                  timeout interval.
     * @throws vpr::IOException         If the read operation failed.
     */
-   void recvfrom(void* msg, const vpr::Uint32 length,
-                 vpr::InetAddr& from, vpr::Uint32& bytesRead,
-                 const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 recvfrom(void* msg, const vpr::Uint32 length,
+                        vpr::InetAddr& from,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Sends a message to the specified address.
+    *
+    * @return The number of bytes written to the socket is returned.
     */
-   void sendto(const void* msg, const vpr::Uint32 length,
-               const vpr::InetAddr& to, vpr::Uint32& bytesSent,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 sendto(const void* msg, const vpr::Uint32 length,
+                      const vpr::InetAddr& to,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 } // End of namespace

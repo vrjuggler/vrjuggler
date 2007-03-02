@@ -46,13 +46,12 @@
 namespace vpr
 {
 
-vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
-                                                   const vpr::Uint32 length,
-                                                   vpr::InetAddr& from,
-                                                   vpr::Uint32& bytes_read,
-                                                   const vpr::Interval timeout)
+vpr::Uint32 SocketDatagramImplSIM::recvfrom(void* msg,
+                                            const vpr::Uint32 length,
+                                            vpr::InetAddr& from,
+                                            const vpr::Interval)
 {
-   vpr::ReturnStatus status;
+   vpr::Uint32 bytes_read(0);
    vprASSERT(mBound && "Can recvfrom if we are not bound so they can send to us");
 
    vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
@@ -81,18 +80,16 @@ vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
    }
    else
    {
-      status.setCode(vpr::ReturnStatus::WouldBlock);
-      bytes_read = 0;
+      // XXX: Throw an exception
    }
 
-   return status;
+   return bytes_read;
 }
 
-vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
-                                                 const vpr::Uint32 length,
-                                                 const vpr::InetAddr& to,
-                                                 vpr::Uint32& bytes_sent,
-                                                 const vpr::Interval timeout)
+vpr::Uint32 SocketDatagramImplSIM::sendto(const void* msg,
+                                          const vpr::Uint32 length,
+                                          const vpr::InetAddr& to,
+                                          const vpr::Interval)
 {
    vpr::ReturnStatus status;
    vpr::sim::SocketManager& sock_mgr =
@@ -105,11 +102,10 @@ vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
 
    vprASSERT( mBound && "Must be bound before sending");
 
-   bytes_sent = length;
    vpr::sim::MessagePtr net_msg(new vpr::sim::Message(msg, length));
    sock_mgr.sendMessageTo(net_msg, this, to);
 
-   return status;
+   return length;
 }
 
 vpr::ReturnStatus SocketDatagramImplSIM::isReadReady () const

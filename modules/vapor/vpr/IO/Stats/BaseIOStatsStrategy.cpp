@@ -44,19 +44,19 @@ void vpr::BaseIOStatsStrategy::read_s(void* buffer, const vpr::Uint32 length,
                                       vpr::Uint32& bytes_read,
                                       const vpr::Interval timeout)
 {
-   mRealObject->read_i(buffer, length, bytes_read, timeout);
+   bytes_read = mRealObject->read_i(buffer, length, timeout);
 }
 
 void vpr::BaseIOStatsStrategy::readn_s(void* buffer, const vpr::Uint32 length,
                                        vpr::Uint32& bytes_read,
                                        const vpr::Interval timeout)
 {
-   mRealObject->readn_i(buffer, length, bytes_read, timeout);
+   bytes_read = mRealObject->readn_i(buffer, length, timeout);
 }
 
 void vpr::BaseIOStatsStrategy::write_s(const void* buffer, const vpr::Uint32 length,
                                        vpr::Uint32& bytes_written,
                                        const vpr::Interval timeout)
 {
-   mRealObject->write_i(buffer, length, bytes_written, timeout);
+   bytes_written = mRealObject->write_i(buffer, length, timeout);
 }

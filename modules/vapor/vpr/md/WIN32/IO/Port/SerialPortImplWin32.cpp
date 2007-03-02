@@ -222,7 +222,7 @@ void SerialPortImplWin32::setUpdateAction(SerialTypes::UpdateActionOption action
 }
 
 // Query the serial port for the maximum buffer size.
-void SerialPortImplWin32::getMinInputSize(vpr::Uint16& size) const
+vpr::Uint16 SerialPortImplWin32::getMinInputSize() const
 {
    COMMPROP lpCommProp;
    if ( ! GetCommProperties(mHandle, &lpCommProp) ||
@@ -230,10 +230,8 @@ void SerialPortImplWin32::getMinInputSize(vpr::Uint16& size) const
    {
       throw IOException("Maximum buffer size is unavailable.", VPR_LOCATION);
    }
-   else
-   {
-      size = lpCommProp.dwCurrentTxQueue;
-   }
+
+   return lpCommProp.dwCurrentTxQueue;
 }
 
 // Attempt to change the buffer size to the given argument.
@@ -253,7 +251,7 @@ void SerialPortImplWin32::setMinInputSize(const vpr::Uint8 size)
 
 // Get the value of the timeout (in tenths of a second) to wait for data to
 // arrive.  This is only applicable in non-canonical mode.
-void SerialPortImplWin32::getTimeout(vpr::Uint8& timeout) const
+vpr::Uint8 SerialPortImplWin32::getTimeout() const
 {
    COMMTIMEOUTS t;
    if ( ! GetCommTimeouts(mHandle, &t) )
@@ -267,7 +265,7 @@ void SerialPortImplWin32::getTimeout(vpr::Uint8& timeout) const
       throw IOException(msg_stream.str(), VPR_LOCATION);
    }
 
-   timeout = (int) t.ReadTotalTimeoutConstant / 100;
+   return (int) t.ReadTotalTimeoutConstant / 100;
 }
 
 // Set the value of the timeout to wait for data to arrive.  The value given
@@ -294,9 +292,11 @@ void SerialPortImplWin32::setTimeout(const vpr::Uint8 timeout)
 }
 
 // Get the character size (the bits per byte).
-void SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption& size)
+vpr::SerialTypes::CharacterSizeOption SerialPortImplWin32::getCharacterSize()
    const
 {
+   vpr::SerialTypes::CharacterSizeOption size;
+
    DCB dcb;
    if ( GetCommState(mHandle, &dcb) )
    {
@@ -326,6 +326,8 @@ void SerialPortImplWin32::getCharacterSize(vpr::SerialTypes::CharacterSizeOption
          << std::endl << vprDEBUG_FLUSH;
       throw IOException(msg_stream.str(), VPR_LOCATION);
    }
+
+   return size;
 }
 
 // Set the current character size (the bits per byte) to the size in the given
@@ -363,8 +365,9 @@ void SerialPortImplWin32::setCharacterSize(const vpr::SerialTypes::CharacterSize
    }
 }
 
-void SerialPortImplWin32::getStopBits(vpr::Uint8& numBits) const
+vpr::Uint8 SerialPortImplWin32::getStopBits() const
 {
+   vpr::Uint8 num_bits;
    DCB dcb;
 
    if ( GetCommState(mHandle, &dcb) )
@@ -372,10 +375,10 @@ void SerialPortImplWin32::getStopBits(vpr::Uint8& numBits) const
       switch ( dcb.StopBits )
       {
          case ONESTOPBIT:
-            numBits = 1;
+            num_bits = 1;
             break;
          case TWOSTOPBITS:
-            numBits = 2;
+            num_bits = 2;
             break;
       }
    }
@@ -389,6 +392,8 @@ void SerialPortImplWin32::getStopBits(vpr::Uint8& numBits) const
          << std::endl << vprDEBUG_FLUSH;
       throw IOException(msg_stream.str(), VPR_LOCATION);
    }
+
+   return num_bits;
 }
 
 // Set the number of stop bits to use.  The value must be either 1 or 2.
@@ -534,10 +539,9 @@ void SerialPortImplWin32::setParity(const vpr::SerialTypes::ParityType& type)
    SetCommState(mHandle, &dcb);
 }
 
-void SerialPortImplWin32::write_i(const void* buffer,
-                                  const vpr::Uint32 length,
-                                  vpr::Uint32& bytesWritten,
-                                  const vpr::Interval timeout)
+vpr::Uint32 SerialPortImplWin32::write_i(const void* buffer,
+                                         const vpr::Uint32 length,
+                                         const vpr::Interval timeout)
 {
    unsigned long bytes;
 
@@ -550,17 +554,13 @@ void SerialPortImplWin32::write_i(const void* buffer,
 
    if ( ! WriteFile(mHandle, buffer, length, &bytes, NULL) )
    {
-      bytesWritten = 0;
-
       std::stringstream msg_stream;
       msg_stream << "Failed to write to serial port " << mName << ": "
                  << getErrorMessageWithCode(GetLastError());
       throw IOException(msg_stream.str(), VPR_LOCATION);
    }
-   else
-   {
-      bytesWritten = bytes;
-   }
+
+   return bytes;
 }
 
 void SerialPortImplWin32::setDataTerminalReady(bool val)
@@ -591,9 +591,8 @@ void SerialPortImplWin32::setRequestToSend(bool val)
    }
 }
 
-void SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
-                                 vpr::Uint32& bytesRead,
-                                 const vpr::Interval timeout)
+vpr::Uint32 SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
+                                        const vpr::Interval timeout)
 {
    unsigned long bytes;
 
@@ -615,8 +614,6 @@ void SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
       throw IOException(msg_stream.str(), VPR_LOCATION);
    }
 
-   bytesRead = bytes;
-
    //Now set the timeout back
    if ( vpr::Interval::NoTimeout != timeout )
    {
@@ -634,14 +631,16 @@ void SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
                  << mName;
       throw TimeoutException(msg_stream.str(), VPR_LOCATION);
    }
+
+   return bytes;
 }
 
-void SerialPortImplWin32::readn_i(void* buffer, const vpr::Uint32 length,
-                                  vpr::Uint32& bytesRead,
-                                  const vpr::Interval timeout)
+vpr::Uint32 SerialPortImplWin32::readn_i(void* buffer,
+                                         const vpr::Uint32 length,
+                                         const vpr::Interval timeout)
 {
    //Call read_i for now
-   return read_i(buffer, length, bytesRead, timeout);
+   return read_i(buffer, length, timeout);
 }
 
 // Get the current state of ignoring bytes with framing errors (other than a
@@ -759,11 +758,11 @@ void SerialPortImplWin32::setParityErrorMarking(bool flag)
 }
 
 // Get the current input baud rate.
-void SerialPortImplWin32::getInputBaudRate(vpr::Uint32& rate) const
+vpr::Uint32 SerialPortImplWin32::getInputBaudRate() const
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
-   rate = dcb.BaudRate;
+   return dcb.BaudRate;
 }
 
 // Set the current input baud rate.
@@ -783,11 +782,11 @@ void SerialPortImplWin32::setInputBaudRate(const vpr::Uint32& baud)
 }
 
 // Get the current output baud rate.
-void SerialPortImplWin32::getOutputBaudRate(vpr::Uint32& rate) const
+vpr::Uint32 SerialPortImplWin32::getOutputBaudRate() const
 {
    DCB dcb;
    GetCommState(mHandle, &dcb);
-   rate = dcb.BaudRate;
+   return dcb.BaudRate;
 }
 
 // Set the current output baud rate.

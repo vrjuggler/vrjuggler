@@ -287,19 +287,20 @@ public:
     * Implementation of the read() template method.  This reads at most the
     * specified number of bytes from the socket into the given buffer.
     *
-    * @pre The device is open for reading, and the buffer is at least
+    * @pre The socket is open for reading, and the buffer is at least
     *      \p length bytes long.
-    * @post The given buffer has length bytes copied into it from the device,
+    * @post The given buffer has length bytes copied into it from the socket,
     *       and the number of bytes read successfully is returned to the
-    *       caller via the \p bytesRead parameter.
+    *       caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the socket's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::SocketException if the socket is not connected.
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
@@ -308,52 +309,52 @@ public:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   void read_i(void* buffer, const vpr::Uint32 length,
-               vpr::Uint32& bytesRead,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
+                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
     * specified number of bytes from the socket into the given buffer.
     *
-    * @pre The device is open for reading, and the buffer is at least
+    * @pre The socket is open for reading, and the buffer is at least
     *      \p length bytes long.
     * @post The given buffer has \p length bytes copied into it from the
-    *       device, and the number of bytes read successfully is returned to
-    *       the caller via the \p bytesRead parameter.
+    *       socket, and the number of bytes read successfully is returned to
+    *       the caller.
     *
-    * @param buffer    A pointer to the buffer where the device's buffer
-    *                  contents are to be stored.
-    * @param length    The number of bytes to be read.
-    * @param bytesRead The number of bytes read into the buffer.
-    * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer where the socket's buffer
+    *                contents are to be stored.
+    * @param length  The number of bytes to be read.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for reading.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes read into the buffer is returned.
     *
     * @throws vpr::SocketException if socket is not connected.
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   void readn_i(void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesRead,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write() template method.  This writes the buffer
     * to the socket.
     *
-    * @pre The device is open for writing.
-    * @post The given buffer is written to the I/O device, and the number
+    * @pre The socket is open for writing.
+    * @post The given buffer is written to the I/O socket, and the number
     *       of bytes written successfully is returned to the caller via the
     *       \p bytesWritten parameter.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param bytesWritten The number of bytes written to the device.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
+    *
+    * @return The number of bytes written to the socket is returned.
     *
     * @throws ConnectionResetException if connection is reset.
     * @throws NoRouteToHostException if a route to host does not exist.
@@ -366,9 +367,8 @@ public:
     * @throws vpr::SocketException if the write operation failed.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   void write_i(const void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesWritten,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::Uint32 availableBytes() const
    {
