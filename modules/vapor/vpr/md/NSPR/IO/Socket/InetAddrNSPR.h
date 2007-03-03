@@ -121,6 +121,9 @@ public:
     * @param withLoopback A flag indicating whether to include the loopback
     *                     address (127.0.0.1) in \p hostAddrs. This parameter
     *                     is optional and defaults to false.
+    * @param withDown     A flag indicating whether the address for interfaces
+    *                     in the down state should be included. This parameter
+    *                     is optional and defaults to false.
     *
     * @note This method currently supports only IPv4.
     *
@@ -132,7 +135,8 @@ public:
     */
    static vpr::ReturnStatus
       getAllLocalAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
-                       const bool withLoopback = false);
+                       const bool withLoopback = false,
+                       const bool withDown = false);
 
    /**
     * Sets the address for this object using the given address.  It must be

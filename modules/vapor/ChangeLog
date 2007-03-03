@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-03-03 patrick  Allow callers of vpr::InetAddr::getAllLocalAddrs() to
+                    indicate whether interfaces in the down state should be
+                    considered.
+
 [1.0.3 released - 2.14.2007]===================================================
 
 [1.0.2 released - 1.4.2007]====================================================

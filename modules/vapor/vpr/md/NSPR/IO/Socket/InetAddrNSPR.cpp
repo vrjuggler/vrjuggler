@@ -52,7 +52,8 @@ namespace vpr
 {
 
 vpr::ReturnStatus getIfAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
-                             const bool withLoopback);
+                             const bool withLoopback,
+                             const bool withDisabledNICs);
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
@@ -73,9 +74,9 @@ vpr::ReturnStatus InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& hostAddr)
 
 vpr::ReturnStatus
 InetAddrNSPR::getAllLocalAddrs(std::vector<vpr::InetAddrNSPR>& hostAddrs,
-                               const bool withLoopback)
+                               const bool withLoopback, const bool withDown)
 {
-   return vpr::getIfAddrs(hostAddrs, withLoopback);
+   return vpr::getIfAddrs(hostAddrs, withLoopback, withDown);
 }
 
 // Set the address for this object using the given address.  It must be of the
