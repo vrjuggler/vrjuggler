@@ -50,9 +50,9 @@
 #     include <ifaddrs.h>
 #  else
 #     include <sys/ioctl.h>
-#     include <net/if.h>
 #  endif
 
+#  include <net/if.h>
 #  include <netinet/in.h>
 #  include <arpa/inet.h>
 #  include <errno.h>
@@ -79,6 +79,8 @@ namespace vpr
  *
  * @param withLoopback A flag indicating whether to include the loopback
  *                     address (127.0.0.1) in the returned collection.
+ * @param withDown     A flag indicating whether the address for interfaces in
+ *                     the down state should be included.
  *
  * @note This method currently supports only IPv4.
  *
@@ -88,7 +90,8 @@ namespace vpr
  * @return A vector containing vpr::InetAddr objects holding all the local
  *         IPv4 addresses for the local machine.
  */
-std::vector<vpr::InetAddr> getIfAddrs(const bool withLoopback)
+std::vector<vpr::InetAddr> getIfAddrs(const bool withLoopback,
+                                      const bool withDown)
 {
 #if defined(VPR_OS_Windows)
    const unsigned long loop = ntohl(INADDR_LOOPBACK);
@@ -117,6 +120,13 @@ std::vector<vpr::InetAddr> getIfAddrs(const bool withLoopback)
 
          // We only handle IPv4 addresses.
          if ( addr_in->sin_family != AF_INET )
+         {
+            continue;
+         }
+
+         // If the inerface is down and the caller asked to exclude down
+         // interfaces, skip this one.
+         if ( a->ifa_flags & IFF_UP == 0 && ! withDown )
          {
             continue;
          }
@@ -306,6 +316,20 @@ std::vector<vpr::InetAddr> getIfAddrs(const bool withLoopback)
       // Skip addresses that are not IPv4.
       // XXX: We should support IPv6 at some point.
       if ( addr->sin_family != AF_INET )
+      {
+         continue;
+      }
+
+#if defined(VPR_OS_Windows)
+      const bool down = if_list[i].iiFlags & IFF_UP == 0;
+#else
+      // XXX: This call may cause problems. It may not work on Linux.
+      const bool down ifc.ifc_req[i].ifr_flags & IFF_UP == 0;
+#endif
+
+      // If the inerface is down and the caller asked to exclude down
+      // interfaces, skip this one.
+      if ( down && ! withDown )
       {
          continue;
       }

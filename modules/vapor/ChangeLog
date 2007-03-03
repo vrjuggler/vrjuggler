@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-03-03 patrick  Allow callers of vpr::InetAddr::getAllLocalAddrs() to
+                    indicate whether interfaces in the down state should be
+                    considered.
+                    NEW VERSION: 1.1.43
 2007-03-02 patrick  Changed the signature of the read, write, and query methods
                     on I/O classes (vpr::BlockIO, vpr::Socket,
                     vpr::SocketStream, vpr::SocketDatagram, and

@@ -109,8 +109,12 @@ public:
     * @param withLoopback A flag indicating whether to include the loopback
     *                     address (127.0.0.1) in the returned collection. This
     *                     parameter is optional and defaults to false.
+    * @param withDown     A flag indicating whether the address for interfaces
+    *                     in the down state should be included. This parameter
+    *                     is optional and defaults to false.
     *
     * @note This method currently supports only IPv4.
+    * @note The \p withDown parameter was added in version 1.1.43.
     *
     * @throw vpr::Exception is thrown if a fatal error occurs that prevents
     *        discovery of the local machine's addresses.
@@ -121,7 +125,8 @@ public:
     * @since 1.1.12
     */
    static std::vector<vpr::InetAddrBSD>
-      getAllLocalAddrs(const bool withLoopback = false);
+      getAllLocalAddrs(const bool withLoopback = false,
+                       const bool withDown = false);
 
    /**
     * Sets the address for this object using the given address.  It must be
