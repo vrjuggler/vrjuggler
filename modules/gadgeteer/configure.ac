@@ -55,7 +55,7 @@ DPP_GEN_RECONFIG
 
 AC_ARG_ENABLE([xwindows],
               [  --enable-xwindows       Use X11 for windowing code ],
-              [XWIN_UI="$enableval"], [XWIN_UI='no'])
+              [XWIN_UI="$enableval"], [XWIN_UI='yes'])
 
 DPP_STD_CPP(yes)
 
@@ -88,13 +88,6 @@ AH_TEMPLATE([_CMA_NOWRAPPERS_], [Define if building on HP-UX.])
 # Depending on the target operating system, set various command options and
 # such.
 case $target_os in
-   # Darwin, aka Mac OS X.
-   darwin*)
-      if test "x$XWIN_UI" != "xyes" ; then
-         AC_MSG_WARN([WARNING: Forcing the use of the X Window System. The Carbon support is currently unusable.])
-         XWIN_UI='yes'
-      fi
-      ;;
    # SGI running IRIX 6.*.
    irix6*)
       if test "x$USE_GCC" != "xyes" ; then
@@ -135,6 +128,14 @@ fi
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
+
+# If we are not using X11 on Mac OS X, then we need to make sure that we can
+# build Objective-C and Objective-C++ code.
+if test "x$PLATFORM" = "xDarwin" -a "x$XWIN_UI" != "xyes" ; then
+   DPP_PROG_OBJC
+   DPP_PROG_OBJCXX
+fi
+
 VJ_PROG_CC_PROF_FLAG(yes)
 VJ_PROG_CXX_PROF_FLAG(yes)
 
@@ -174,6 +175,7 @@ GMTL_PATH([$MIN_GMTL_VERSION], ,
 AC_PATH_XTRA
 
 gadget_use_x11='no'
+gadget_use_cocoa='no'
 
 if test "x$have_x" = "xyes" ; then
    AH_TEMPLATE([GADGET_USE_X11], [Define if the X Window System will be used])
@@ -181,11 +183,14 @@ if test "x$have_x" = "xyes" ; then
    if test "x$PLATFORM" = "xDarwin" ; then
       if test "x$XWIN_UI" = "xyes" ; then
          gadget_use_x11='yes'
-         AC_DEFINE(GADGET_USE_X11,)
+         AC_DEFINE([GADGET_USE_X11],)
+      else
+         gadget_use_cocoa='yes'
+         AC_DEFINE([GADGET_USE_COCOA], , [Define if Cocoa will be used])
       fi
    elif test "x$OS_TYPE" = "xUNIX" ; then
       gadget_use_x11='yes'
-      AC_DEFINE(GADGET_USE_X11,)
+      AC_DEFINE([GADGET_USE_X11],)
    fi
 # If --enable-xwindows was passed on the command line but X11 was not found,
 # then we have a problem.
@@ -249,6 +254,7 @@ fi
 #fi
 
 CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES"
+OBJCXXFLAGS="$CXXFLAGS -fobjc-exceptions"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES"
 gadget_cxxflags="$STDFLAGS"
@@ -265,6 +271,7 @@ elif test "x$PLATFORM" = "xDarwin" ; then
     # GCC 4.0 in Darwin removed -fexport-coalesced.
     if test $vpr_gcc_major -lt 4 ; then
        CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+       OBJCXXFLAGS_DYNLIB="$OBJCXXFLAGS_DYNLIB -fexport-coalesced"
     fi
 
     BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -Wl,-bind_at_load"
@@ -305,8 +312,8 @@ else
        APP_EXTRA_LIBS="$APP_EXTRA_LIBS $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
        APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
     elif test "x$PLATFORM" = "xDarwin" ; then
-       APP_EXTRA_LIBS="$APP_EXTRA_LIBS -framework Carbon"
-       APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS -framework Carbon"
+       APP_EXTRA_LIBS="$APP_EXTRA_LIBS -framework Cocoa"
+       APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS -framework Cocoa"
     fi
 fi
 
@@ -327,6 +334,7 @@ gadget_prof_lib_name="gadget_p$LIBRARY_VERSION"
 # of these variables after this point.
 VJ_STRIP_DUPLICATE_ARGS(CFLAGS, [$CFLAGS])
 VJ_STRIP_DUPLICATE_ARGS(CXXFLAGS, [$CXXFLAGS])
+VJ_STRIP_DUPLICATE_ARGS(OBJCXXFLAGS, [$OBJCXXFLAGS])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_FLAGS, [$DEPEND_FLAGS])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_EXTRAS, [$DEPEND_EXTRAS])
 VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
@@ -466,6 +474,7 @@ AC_SUBST(gadget_extra_libs)
 AC_SUBST(gadget32_flags)
 AC_SUBST(gadget64_flags)
 AC_SUBST(gadget_use_x11)
+AC_SUBST(gadget_use_cocoa)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

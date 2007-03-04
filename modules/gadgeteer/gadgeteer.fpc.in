@@ -42,6 +42,7 @@ gadget_extra_libs = @gadget_extra_libs@
 extra_libs = ${gadget_extra_libs}
 
 gadget_use_x11= @gadget_use_x11@
+gadget_use_cocoa= @gadget_use_cocoa@
 
 ########################### Public Variables ############################
 
@@ -60,6 +61,7 @@ Libs.private:
 
 ######################### Gadget Specific Flagpoll Variables ###################
 use_x11 : ${gadget_use_x11}
+use_cocoa : ${gadget_use_cocoa}
 libs: ${gadget_libs}
 extra_libs : ${extra_libs}
 static_libs: ${static_begin} ${gadget_libs} ${static_end}

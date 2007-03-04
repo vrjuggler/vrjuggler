@@ -138,6 +138,8 @@
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
+# OBJC_COMPILE    - Command for compiling Objective-C code.
+# OBJCXX_COMPILE  - Command for compiling Objective-C++ code.
 #
 # ABI             - Application Binary Interface type.  This may be used for
 #                   other binary types when supported by the operating system
@@ -213,6 +215,10 @@ LIBS=			@LIBS@ $(EXTRA_LIBS)
 LN_S=			@LN_S@
 MAKEDEPEND=		@MAKEDEPEND@
 MKPATH?=		
+OBJC=			@OBJC@
+OBJCFLAGS=		@OBJCFLAGS@ $(OPTIMIZER) $(EXTRA_OBJCFLAGS)
+OBJCXX=			@OBJCXX@
+OBJCXXFLAGS=		@OBJCXXFLAGS@ $(OPTIMIZER) $(EXTRA_OBJCXXFLAGS)
 OBJEXT=			@OBJEXT@
 OBJ_BUILD_FLAG=		@OBJ_BUILD_FLAG@
 OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
@@ -267,6 +273,10 @@ C_COMPILE=		$(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
 			$(CFLAGS) $(C_WARN_FLAGS)
 CXX_COMPILE=		$(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
 			$(CXXFLAGS) $(CXX_WARN_FLAGS)
+OBJC_COMPILE=		$(OBJC) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
+			$(OBJCFLAGS) $(OBJC_WARN_FLAGS)
+OBJCXX_COMPILE=		$(OBJCXX) $(DEFS) $(INCLUDES) $(CPPFLAGS)	\
+			$(OBJCXXFLAGS) $(OBJCXX_WARN_FLAGS)
 
 # -----------------------------------------------------------------------------
 # Platform- and binary-specific options.  The assignments preceding the

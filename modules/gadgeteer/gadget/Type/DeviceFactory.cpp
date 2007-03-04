@@ -48,7 +48,7 @@
 #if defined(VPR_OS_Windows)
 #  include <gadget/Devices/KeyboardMouseDevice/InputWindowWin32.h>
 #elif defined(VPR_OS_Darwin) && ! defined(GADGET_USE_X11)
-#  include <gadget/Devices/KeyboardMouseDevice/InputWindowOSX.h>
+#  include <gadget/Devices/KeyboardMouseDevice/InputWindowCocoa.h>
 #else
 //#  include <jccl/RTRC/DependencyManager.h>
 #  include <gadget/Devices/KeyboardMouseDevice/InputWindowXWin.h>
@@ -131,8 +131,8 @@ void DeviceFactory::loadKnownDevices()
          << vprDEBUG_FLUSH;
    }
 #elif defined(VPR_OS_Darwin) && ! defined(GADGET_USE_X11)
-   DeviceConstructor<InputWindowOSX>* osx_keyboard =
-      new DeviceConstructor<InputWindowOSX>(input_mgr);
+   DeviceConstructor<InputWindowCocoa>* osx_keyboard =
+      new DeviceConstructor<InputWindowCocoa>(input_mgr);
    if( (NULL == osx_keyboard) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)

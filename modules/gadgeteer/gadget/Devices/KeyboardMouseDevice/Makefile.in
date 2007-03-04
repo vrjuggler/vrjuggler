@@ -56,8 +56,9 @@ else
       ifeq (@gadget_use_x11@, yes)
          SRCS+=	$(xwin_srcs)
       else
-         SRCS+=	InputAreaOSX.cpp	\
-	 	InputWindowOSX.cpp
+         SRCS+=	InputAreaCocoa.mm	\
+	 	InputViewCocoa.mm	\
+	 	InputWindowCocoa.mm
       endif
    else
       SRCS+=	$(xwin_srcs)
