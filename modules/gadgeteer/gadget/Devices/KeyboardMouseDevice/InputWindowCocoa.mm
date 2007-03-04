@@ -29,6 +29,7 @@
 #include <boost/bind.hpp>
 
 #import <Foundation/NSString.h>
+#import <Foundation/NSArray.h>
 #import <Foundation/NSException.h>
 #import <Foundation/NSLock.h>
 #import <Foundation/NSNotification.h>
