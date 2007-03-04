@@ -132,6 +132,7 @@ private:
     */
    void finishOpen();
 
+   unsigned int mScreen;
    bool mWindowOpen;    /**< Keeps track of NSWindow open/closed state */
 };
 

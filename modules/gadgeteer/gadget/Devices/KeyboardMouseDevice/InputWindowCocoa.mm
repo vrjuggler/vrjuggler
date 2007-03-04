@@ -34,6 +34,7 @@
 #import <Foundation/NSNotification.h>
 #import <AppKit/NSWindow.h>
 #import <AppKit/NSApplication.h>
+#import <AppKit/NSScreen.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
@@ -115,6 +116,7 @@ namespace gadget
 InputWindowCocoa::InputWindowCocoa()
    : gadget::InputAreaCocoa()
    , gadget::Input()
+   , mScreen(0)
    , mWindowOpen(false)
 {
    /* Do nothing. */ ;
@@ -197,6 +199,12 @@ bool InputWindowCocoa::config(jccl::ConfigElementPtr e)
    {
       mScreen = disp_sys_elt->getProperty<unsigned int>("pipes", screen_num);
 
+      NSArray* screens = [NSArray screens];
+      if ( mScreen >= [screens count] )
+      {
+         mScreen = 0;
+      }
+
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "[gadget::InputWindowCocoa] Screen: " << mXDisplayString
          << std::endl << vprDEBUG_FLUSH;
@@ -236,14 +244,19 @@ bool InputWindowCocoa::startSampling()
                                    NSMiniaturizableWindowMask;
 
       NSRect content_rect = { {mX, mY}, {mWidth, mHeight} };
+
+      // mScreen is already known to be a valid index.
+      NSScreen* screen = [[NSScreen screens] objectAtIndex:mScreen];
+
       // Creating the window and its view does not open the window. That
       // happens when the -setContentView: message is delivered to
-      // mCocoaWindow in waitAndOpen().
+      // mCocoaWindow in finishOpen().
       mCocoaWindow =
          [[NSWindow alloc] initWithContentRect:content_rect
                                      styleMask:style_mask
                                        backing:NSBackingStoreBuffered
-                                         defer:NO];
+                                         defer:NO
+                                        screen:screen];
 
       // Register an observer for NSWindowWillCloseNotification events coming
       // from mCocoaWindow. We do this so that we can be told if the window
