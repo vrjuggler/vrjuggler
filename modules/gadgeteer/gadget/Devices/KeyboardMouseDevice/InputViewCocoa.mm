@@ -26,6 +26,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#import <Foundation/NSString.h>
 #import <AppKit/NSWindow.h>
 #import <AppKit/NSEvent.h>
 
@@ -107,6 +108,24 @@
    {
       [super viewDidMoveToWindow];
       [self resetTrackingRect];
+
+      // If this view was moved to a new window, determine if the mouse is
+      // currently within the bounds of this view. If it is, then we post a
+      // fake mouseEntered event to inform this view that the mouse is within
+      // it. Without this, the user would have to move the mouse out of the
+      // window and back in to get the mouseEntered event to be posted.
+      if ( [self window] )
+      {
+         const NSPoint mouse_loc =
+            [[self window] mouseLocationOutsideOfEventStream];
+         const NSRect bounds = [self bounds];
+
+         if ( [self mouse:mouse_loc inRect:bounds] )
+         {
+            // XXX: Would it work better to use CGPostMouseEvent() here?
+            [self mouseEntered:nil];
+         }
+      }
    }
 
    /**
