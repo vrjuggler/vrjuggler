@@ -26,7 +26,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#import <Foundation/NSString.h>
 #import <AppKit/NSWindow.h>
 #import <AppKit/NSEvent.h>
 
