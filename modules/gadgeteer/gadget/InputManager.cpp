@@ -83,7 +83,10 @@ InputManager::~InputManager()
 
 void InputManager::shutdown()
 {
-   for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); ++a)    // Stop all devices
+   typedef tDevTableType::iterator dev_iter_t;
+
+   // Stop and delete all devices.
+   for ( dev_iter_t a = mDevTable.begin(); a != mDevTable.end(); ++a )
    {
       if ((*a).second != NULL)
       {
@@ -92,13 +95,16 @@ void InputManager::shutdown()
       }
    }
 
+   mDevTable.clear();
+
    // Delete all the proxies
-   for ( std::map<std::string, Proxy*>::iterator j = mProxyTable.begin();
-         j != mProxyTable.end();
-         ++j )
+   typedef std::map<std::string, Proxy*>::iterator proxy_iter_t;
+   for ( proxy_iter_t j = mProxyTable.begin(); j != mProxyTable.end(); ++j )
    {
       delete (*j).second;
    }
+
+   mProxyTable.clear();
 }
 
 /**

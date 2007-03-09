@@ -71,6 +71,12 @@ protected:
    /** Constructor is hidden, so no direct instantiation is allowed. */
    InputManager();
 
+   /**
+    * Shuts down this Input Manager instance (if it has not already been
+    * shut down).
+    *
+    * @see shutdown()
+    */
    virtual ~InputManager();
 
    /** Constructor is hidden, so no copying is allowed. */
@@ -126,11 +132,14 @@ public:
    bool configureDevice(jccl::ConfigElementPtr element);
 
    /**
-    * Shutdown all devices and proxies.
+    * Shuts down all devices and proxies.
+    *
+    * @post \c mDevTable is empty. \c mProxyTable is empty.
     *
     * @since 1.1.20
     */
    void shutdown();
+
 private:
    /**
     * Loads the Proxy for the given element.
