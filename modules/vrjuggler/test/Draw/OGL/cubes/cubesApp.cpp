@@ -218,6 +218,9 @@ void cubesApp::init()
 // here.
 void cubesApp::contextInit()
 {
+   *mConeQuad = gluNewQuadric();
+   *mBaseQuad = gluNewQuadric();
+
    VPR_PROFILE_GUARD("cubesApp::contextInit");
    // Generate some random lists.  NOTE: Needed for testing/debugging only!
    mDlDebugData->maxIndex = rand()%50;
@@ -263,6 +266,9 @@ void cubesApp::contextInit()
 // put your opengl deallocation here...
 void cubesApp::contextClose()
 {
+   gluDeleteQuadric(*mConeQuad);
+   gluDeleteQuadric(*mBaseQuad);
+
    VPR_PROFILE_GUARD("cubesApp::contextClose");
    // Deallocate the random display lists used for debugging.
    if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE )

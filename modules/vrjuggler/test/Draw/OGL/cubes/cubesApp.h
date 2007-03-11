@@ -154,18 +154,14 @@ class cubesApp : public vrj::GlApp
 public:
    cubesApp(vrj::Kernel* kern)
       : vrj::GlApp(kern)
-      , mConeQuad(NULL)
-      , mBaseQuad(NULL)
       , mCurFrameNum(0)
    {
-      mConeQuad = gluNewQuadric();
-      mBaseQuad = gluNewQuadric();
+      /* Do nothing. */ ;
    }
 
    virtual ~cubesApp()
    {
-      gluDeleteQuadric(mConeQuad);
-      gluDeleteQuadric(mBaseQuad);
+      /* Do nothing. */ ;
    }
 
    // Execute any initialization needed before the API is started.  Put device
@@ -309,19 +305,21 @@ private:
 //      drawCone(1.5f, 2.0f, 20, 10);
    }
 
+   /**
+    * @pre This is invoked while an OpenGL context is active.
+    */
    void drawCone(GLdouble base, GLdouble height, GLint slices, GLint stacks)
    {
-      gluCylinder(mConeQuad, base, 0.0f, height, slices, stacks);
-      gluDisk(mBaseQuad, 0.0f, base, slices, 1);
+      gluCylinder(*mConeQuad, base, 0.0f, height, slices, stacks);
+      gluDisk(*mBaseQuad, 0.0f, base, slices, 1);
    }
-
-   GLUquadric* mConeQuad;      // GLU quadric for the cone
-   GLUquadric* mBaseQuad;      // GLU quadric for the cone's base
 
 public:
    vrj::GlContextData<ContextData>  mDlCubeData;  // Data for cube display lists
    vrj::GlContextData<ContextData>  mDlConeData;  // Data for cone display lists
    vrj::GlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
+   vrj::GlContextData<GLUquadric*>  mConeQuad;
+   vrj::GlContextData<GLUquadric*>  mBaseQuad;
    std::vector<UserData*>           mUserData;    // All the users in the program
    vpr::TSObjectProxy<ContextTimingData>  mContextTiming;
 
