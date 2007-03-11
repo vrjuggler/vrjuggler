@@ -51,23 +51,18 @@
 
 
 /**
- * An instance of this class is registered with the default
- * NSNotificationCenter for each gadget::InputWindowCocoa instance to be
- * informed about changes made to the state of the window by external
- * entities (such as the user).
+ * An instance of this class is set as the delegate for the NSWindow object
+ * assocated with each gadget::InputWindowCocoa instance.
  */
-@interface InputWindowObserver : NSObject
+@interface InputWindowDelegate : NSObject
 {
    gadget::InputWindowCocoa* mWindow;
 }
 
    -(id) initWithWindow:(gadget::InputWindowCocoa*) window;
-   -(void) windowWillClose:(NSNotification*) aNotification;
-   -(void) windowDidMove:(NSNotification*) aNotification;
-   -(void) windowDidResize:(NSNotification*) aNotification;
 @end
 
-@implementation InputWindowObserver
+@implementation InputWindowDelegate
    -(id) initWithWindow:(gadget::InputWindowCocoa*) window
    {
       mWindow = window;
@@ -259,27 +254,11 @@ bool InputWindowCocoa::startSampling()
                                          defer:NO
                                         screen:screen];
 
-      // Register an observer for NSWindowWillCloseNotification events coming
-      // from mCocoaWindow. We do this so that we can be told if the window
-      // gets closed by some external entity.
-      InputWindowObserver* observer =
-         [[InputWindowObserver alloc] initWithWindow:this];
-      NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-      [nc addObserver:observer
-             selector:@selector(windowWillClose:)
-                 name:NSWindowWillCloseNotification
-               object:mCocoaWindow];
-
-      // Register our observer as an interested party for move and resize
-      // notifications.
-      [nc addObserver:observer
-             selector:@selector(windowDidMove:)
-                 name:NSWindowDidMoveNotification
-               object:mCocoaWindow];
-      [nc addObserver:observer
-             selector:@selector(windowDidResize:)
-                 name:NSWindowDidResizeNotification
-               object:mCocoaWindow];
+      // Set the delegate for mCocoaWindow. In particular, we do this so that
+      // we can be told if the window gets closed by some external entity.
+      InputWindowDelegate* delegate =
+         [[InputWindowDelegate alloc] initWithWindow:this];
+      [mCocoaWindow setDelegate:delegate];
 
       NSString* title = [NSString stringWithUTF8String:mInstName.c_str()];
       [mCocoaWindow setTitle:title];
