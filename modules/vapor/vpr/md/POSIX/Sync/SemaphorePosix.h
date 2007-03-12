@@ -68,8 +68,6 @@
 #include <string.h>
 #endif
 
-extern int errno;
-
 namespace vpr
 {
 
