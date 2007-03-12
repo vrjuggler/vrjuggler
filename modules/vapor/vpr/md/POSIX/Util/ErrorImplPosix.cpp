@@ -39,8 +39,6 @@
 #include <vpr/md/POSIX/Util/ErrorImplPosix.h>
 
 
-extern int errno;
-
 namespace vpr
 {
 

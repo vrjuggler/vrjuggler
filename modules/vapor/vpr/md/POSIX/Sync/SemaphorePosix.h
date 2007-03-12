@@ -59,8 +59,6 @@
 #endif
 
 
-extern int errno;
-
 namespace vpr
 {
 
