@@ -95,7 +95,7 @@ Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
 BuildArch: noarch
-BuildRequires: j2sdk
+BuildRequires: jdk
 
 %description -n tweek-java-docs
 The Tweek Java API provides a wrapper around CORBA for writing applications
@@ -126,7 +126,7 @@ Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/Java
 BuildArch: noarch
-BuildRequires: j2sdk
+BuildRequires: jdk
 
 %description -n jccl-java-docs
 The JCCL Java API provides a collection of JavaBeans that are used for
@@ -169,7 +169,7 @@ Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
 BuildArch: noarch
-BuildRequires: j2sdk
+BuildRequires: jdk
 
 %description -n vrjconfig-docs
 VRJConfig is a Java-based GUI for editing VR Juggler configurations. It
@@ -255,7 +255,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
-* Thu Feb 15 2007 Patrick Hartlingg <patrick at infiscape dot com>
+* Thu Mar 15 2007 Patrick Hartling <patrick at infiscape dot com>
+- Depend on jdk instead of j2sdk.
+
+* Thu Feb 15 2007 Patrick Hartling <patrick at infiscape dot com>
 - 2.0.3-1
 - Fixed packaging errors
 
