@@ -143,7 +143,7 @@ Version: %{tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
-Requires: j2sdk >= %{min_jdk}
+Requires: jdk >= %{min_jdk}
 Provides: tweek-java-jni = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
 
@@ -157,7 +157,7 @@ Version: %{tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
-Requires: j2sdk >= %{min_jdk}
+Requires: jdk >= %{min_jdk}
 Requires: tweek-java-jni = %{tweek_version}-%{tweek_release}
 Provides: tweek-java = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
@@ -217,7 +217,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/Java
-Requires: j2sdk >= %{min_jdk}
+Requires: jdk >= %{min_jdk}
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: jccl-java = %{jccl_version}-%{jccl_release}
 
@@ -233,7 +233,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
-Requires: j2sdk >= %{min_jdk}
+Requires: jdk >= %{min_jdk}
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
 
@@ -417,7 +417,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
-Requires: j2sdk >= %{min_jdk}
+Requires: jdk >= %{min_jdk}
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Requires: jccl-java = %{jccl_version}-%{jccl_release}
 Provides: vrjconfig = %{vrjuggler_version}-%{vrjuggler_release}
@@ -447,7 +447,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
-Requires: j2sdk >= %{min_jdk}
+Requires: jdk >= %{min_jdk}
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
 
@@ -878,6 +878,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Mar 15 2007 Patrick Hartling
+- Depend on jdk instead of j2sdk.
+
 * Fri Aug 25 2006 Patrick Hartling
 - Removed the creation of an RPM for Doozer. Doozer 2.1.1 is the minimum
   required version now, and it has its own RPM.
