@@ -256,8 +256,8 @@ bool InputWindowCocoa::startSampling()
 
       // Set the delegate for mCocoaWindow. In particular, we do this so that
       // we can be told if the window gets closed by some external entity.
-      InputWindowDelegate* delegate =
-         [[InputWindowDelegate alloc] initWithWindow:this];
+      id delegate =
+         [[[InputWindowDelegate alloc] initWithWindow:this] autorelease];
       [mCocoaWindow setDelegate:delegate];
 
       NSString* title = [NSString stringWithUTF8String:mInstName.c_str()];
@@ -265,7 +265,9 @@ bool InputWindowCocoa::startSampling()
       mMainView = [[InputViewCocoa alloc] initWithFrame:content_rect
                                               inputArea:this];
 
-      // Ownership of mMainView gets transferred to mCocoaWindow.
+      // mCocoaWindow retains a refernece to mMainView, meaning that the
+      // reference count on it is now two. We release our reference to
+      // mMainView later when we are done with it.
       [mCocoaWindow setContentView:mMainView];
       [mCocoaWindow setInitialFirstResponder:mMainView];
 
@@ -345,6 +347,9 @@ bool InputWindowCocoa::stopSampling()
       // closed.
       [mCocoaWindow close];
    }
+
+   // We are done with mMainView.
+   [mMainView release];
 
    mMainView    = nil;
    mCocoaWindow = nil;
