@@ -449,7 +449,7 @@ void GlDrawManager::setCurrentContext(int val)
 void GlDrawManager::dirtyAllWindows()
 {
     // Create Pipes & Add all windows to the correct pipe
-   for (unsigned int winId=0;winId<mWins.size();winId++)   // For each window we created
+   for ( unsigned int winId = 0; winId < mWins.size(); ++winId )   // For each window we created
    {
       mWins[winId]->setDirtyContext(true);
    }
@@ -458,7 +458,7 @@ void GlDrawManager::dirtyAllWindows()
 bool GlDrawManager::isValidWindow(GlWindowPtr win)
 {
    bool ret_val = false;
-   for (unsigned int i=0;i<mWins.size();i++)
+   for ( unsigned int i = 0; i < mWins.size(); ++i )
    {
       if (mWins[i] == win)
       {
@@ -479,7 +479,7 @@ void GlDrawManager::outStream(std::ostream& out)
             << clrOutNORM(clrCYAN,"\tWindow count: ") << mWins.size()
             << std::endl << std::flush;
 
-    for (unsigned int i = 0; i < mWins.size(); i++)
+    for ( unsigned int i = 0; i < mWins.size(); ++i )
     {
        vprASSERT(mWins[i] != NULL);
        out << clrOutNORM(clrCYAN,"\tGlWindow:\n") << *(mWins[i]) << std::endl;
