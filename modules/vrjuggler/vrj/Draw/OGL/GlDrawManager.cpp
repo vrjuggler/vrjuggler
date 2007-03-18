@@ -76,8 +76,8 @@ GlDrawManager::~GlDrawManager()
 {
    if ( mRunning )
    {
+      // This will wait on mControlThread to exit.
       closeAPI();
-      mControlThread->join();
    }
 
    if ( NULL != mControlThread )
