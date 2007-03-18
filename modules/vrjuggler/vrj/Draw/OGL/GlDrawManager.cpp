@@ -507,14 +507,14 @@ void GlDrawManager::outStream(std::ostream& out)
 namespace vrj
 {
 
-vrj::GlWindow* GlDrawManager::getGLWindow()
+vrj::GlWindowPtr GlDrawManager::getGLWindow()
 {
 #if  defined(VPR_OS_Windows)
-   return new vrj::GlWindowWin32;
+   return GlWindowPtr(new vrj::GlWindowWin32);
 #elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
-   return new vrj::GlWindowOSX;
+   return GlWindowPtr(new vrj::GlWindowOSX);
 #else
-   return new vrj::GlWindowXWin;
+   return GlWindowPtr(new vrj::GlWindowXWin);
 #endif
 }
 
