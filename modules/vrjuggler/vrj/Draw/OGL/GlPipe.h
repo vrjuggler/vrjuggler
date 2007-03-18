@@ -29,11 +29,12 @@
 
 #include <vrj/Draw/OGL/Config.h>
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
+#include <vpr/Sync/Semaphore.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
-#include <vpr/Sync/CondVar.h>
-#include <vpr/Sync/Semaphore.h>
+
 
 namespace vrj
 {
@@ -138,13 +139,13 @@ public: // --- Window Management ----- //
     * Adds the given GLWindow to the new window list.
     * Control loop must now open the window on the next frame.
     */
-   void addWindow(GlWindow* win);
+   void addWindow(GlWindowPtr win);
 
    /**
     * Removes the given GLWindow from the window list.
     * @note The window is not actually removed until the next draw trigger.
     */
-   void removeWindow(GlWindow* win);
+   void removeWindow(GlWindowPtr win);
 
    /** Returns true if pipe has any windows. */
    int hasWindows()
@@ -153,7 +154,7 @@ public: // --- Window Management ----- //
    }
 
    /** Return a list of open windows. */
-   const std::vector<GlWindow*>& getOpenWindows()
+   const std::vector<GlWindowPtr>& getOpenWindows()
    {
       return mOpenWins;
    }
@@ -177,16 +178,16 @@ private:
     * Renders the window using OpenGL.
     * @post win is rendered (In stereo if it is a stereo window).
     */
-   void renderWindow(GlWindow* win);
+   void renderWindow(GlWindowPtr win);
 
    /** Swaps the buffers of the given window. */
-   void swapWindowBuffers(GlWindow* win);
+   void swapWindowBuffers(GlWindowPtr win);
 
    /**
     * Do any other window setup stuff that is needed after the window is open.
     * @pre Window is open and is current.
     */
-   void finishWindowSetup(GlWindow* win);
+   void finishWindowSetup(GlWindowPtr win);
 
    GlPipe(const GlPipe&) {;}
    void operator=(const GlPipe&) {;}
@@ -197,13 +198,13 @@ private:
 
    size_t         mPipeNum;         /**< The id of the pipe */
 
-   std::vector<GlWindow*>  mNewWins;         /**< List of windows still to be opened on current pipe */
+   std::vector<GlWindowPtr> mNewWins;        /**< List of windows still to be opened on current pipe */
    vpr::Mutex              mNewWinLock;      /**< Lock for accessing the newWin list */
 
-   std::vector<GlWindow*>  mOpenWins;        /**< List of current open windows to render */
+   std::vector<GlWindowPtr> mOpenWins;       /**< List of current open windows to render */
    vpr::Mutex              mOpenWinLock;     /**< Lock for accessing the openWinList */
 
-   std::vector<GlWindow*>  mClosingWins;     /**< List of windows to close */
+   std::vector<GlWindowPtr> mClosingWins;    /**< List of windows to close */
    vpr::Mutex              mClosingWinLock;  /**< Lock for access the windows to close */
 
    int                     mControlExit;     /**< Flag for when to exit the control loop */

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-18-2007 patrick     The OpenGL Draw Manager now uses vrj::GlWindowPtr (a
+                        boost::shared_ptr typedef) instead of vrj::GlWindow*.
+                        NEW VERSION: 2.1.19
 Feb-22-2007 patrick     Added vrj::GlSimInterface::contextInit() so that the
                         contextInit() method in vrj::GlDrawObjectFunctor can
                         be invoked.

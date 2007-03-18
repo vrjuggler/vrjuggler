@@ -138,7 +138,7 @@ void GlPipe::completeSwap()
  * Adds a GLWindow to the window list.
  * Control loop must now open the window on the next frame.
  */
-void GlPipe::addWindow(GlWindow* win)
+void GlPipe::addWindow(GlWindowPtr win)
 {
    vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);       // Protect the data
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
@@ -152,7 +152,7 @@ void GlPipe::addWindow(GlWindow* win)
  * Removes a GLWindow from the window list.
  * @note The window is not actually removed until the next draw trigger.
  */
-void GlPipe::removeWindow(GlWindow* win)
+void GlPipe::removeWindow(GlWindowPtr win)
 {
    vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
@@ -228,10 +228,9 @@ void GlPipe::controlLoop()
 void GlPipe::stop()
 {
    // Close all open windows/contexts.
-   std::vector<GlWindow*> windows = getOpenWindows();
-   for ( std::vector<GlWindow*>::iterator itr = windows.begin();
-         itr != windows.end();
-         ++itr )
+   std::vector<GlWindowPtr> windows = getOpenWindows();
+   typedef std::vector<GlWindowPtr>::iterator iter_t;
+   for ( iter_t itr = windows.begin(); itr != windows.end(); ++itr )
    {
       removeWindow(*itr);
    }
@@ -265,7 +264,7 @@ void GlPipe::checkForWindowsToClose()
 
       for (unsigned int i=0;i<mClosingWins.size();i++)
       {
-         GlWindow* win = mClosingWins[i];
+         GlWindowPtr win = mClosingWins[i];
         
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
             << "[vrj::GlPipe::checkForNewWindows()] Just closed window: "
@@ -290,13 +289,9 @@ void GlPipe::checkForWindowsToClose()
          // Remove it from the lists
          mNewWins.erase(std::remove(mNewWins.begin(), mNewWins.end(), win), mNewWins.end());
          mOpenWins.erase(std::remove(mOpenWins.begin(), mOpenWins.end(), win), mOpenWins.end());
-
-         // Delete the window
-         delete win;
-         mClosingWins[i] = NULL;
       }
 
-      mClosingWins.erase(mClosingWins.begin(), mClosingWins.end());
+      mClosingWins.clear();
       vprASSERT(mClosingWins.size() == 0);;
    }
 }
@@ -351,7 +346,7 @@ void GlPipe::checkForNewWindows()
  * Renders the window using OpenGL.
  * @post win is rendered (In stereo if it is a stereo window).
  */
-void GlPipe::renderWindow(GlWindow* win)
+void GlPipe::renderWindow(GlWindowPtr win)
 {
    float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
    Viewport::View  view;                      // The view for the active viewport
@@ -507,7 +502,7 @@ void GlPipe::renderWindow(GlWindow* win)
  * Swaps the buffers of the given window.
  * Make the context current, and swap the window.
  */
-void GlPipe::swapWindowBuffers(GlWindow* win)
+void GlPipe::swapWindowBuffers(GlWindowPtr win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush

@@ -49,13 +49,13 @@
 
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Draw/OGL/GlUserData.h>
+#include <vrj/Draw/OGL/GlWindowPtr.h>
+
 
 namespace vrj
 {
    class GlApp;
-   class SimViewport;
    class GlPipe;
-   class GlWindow;
 
 /** \class GlDrawManager GlDrawManager.h vrj/Draw/OGL/GlDrawManager.h
  *
@@ -178,7 +178,7 @@ protected:
     *
     * @post Returns an OpenGL window for the current system.
     */
-   GlWindow* getGLWindow();
+   GlWindowPtr getGLWindow();
 
    void setCurrentContext(int val);
 
@@ -186,7 +186,7 @@ protected:
    void dirtyAllWindows();
 
    /** Is the window a valid window for the draw manager? */
-   bool isValidWindow(GlWindow* win);
+   bool isValidWindow(GlWindowPtr win);
 
 
 protected:
@@ -197,9 +197,9 @@ protected:
 
    /** @name API data */
    //@{
-   GlApp*                 mApp;   /**< The OpenGL application */
-   std::vector<GlWindow*> mWins;  /**< A list of the windows in the system */
-   std::vector<GlPipe*>   pipes;  /**< A list of the pipes in the system */
+   GlApp*                   mApp;   /**< The OpenGL application */
+   std::vector<GlWindowPtr> mWins;  /**< A list of the windows in the system */
+   std::vector<GlPipe*>     pipes;  /**< A list of the pipes in the system */
    //@}
 
    /** @name Helper field data */

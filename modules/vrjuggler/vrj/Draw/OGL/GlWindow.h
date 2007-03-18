@@ -39,10 +39,12 @@
 #   include <GL/gl.h>
 #endif
 
+#include <vpr/Util/Debug.h>
+
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
 
-#include <vpr/Util/Debug.h>
+#include <vrj/Draw/OGL/GlWindowPtr.h>
 
 
 namespace vrj

@@ -26,16 +26,11 @@
 
 #ifndef _VRJ_GL_USER_DATA_H_
 #define _VRJ_GL_USER_DATA_H_
-//#pragma once
 
 #include <vrj/Draw/OGL/Config.h>
 
-/*
-#include <vrj/Kernel/User.h>
-#include <vrj/Display/Projection.h>
-#include <vrj/Display/Viewport.h>
-#include <vrj/Draw/OGL/GlWindow.h>
-*/
+#include <vrj/Draw/OGL/GlWindowPtr.h>
+
 
 namespace vrj
 {
@@ -44,7 +39,6 @@ namespace vrj
 class User;
 class Projection;
 class Viewport;
-class GlWindow;
 
 
 /** \class GlUserData GlUserData.h vrj/Draw/OGL/GlUserData.h
@@ -65,7 +59,7 @@ public:
       : mUser(NULL)
       , mProj(NULL)
       , mViewport(NULL)
-      , mGlWindow(NULL)
+      , mGlWindow()
    {
       /* Do nothing. */ ;
    }
@@ -100,12 +94,12 @@ public:
       mViewport = vp;
    }
 
-   GlWindow* getGlWindow()
+   GlWindowPtr getGlWindow()
    {
       return mGlWindow;
    }
 
-   void setGlWindow(GlWindow* win)
+   void setGlWindow(GlWindowPtr win)
    {
       mGlWindow = win;
    }
@@ -114,7 +108,7 @@ protected:
    User*        mUser;        /**< The current user we are rendering */
    Projection*  mProj;        /**< The current projection being used */
    Viewport*    mViewport;    /**< The current vrj viewport being used */
-   GlWindow*    mGlWindow;    /**< The current GL window that we are rendering in. (basically the gl context) */
+   GlWindowPtr  mGlWindow;    /**< The current GL window that we are rendering in. (basically the gl context) */
 };
 
 }

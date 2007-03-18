@@ -303,7 +303,7 @@ void GlDrawManager::addDisplay(Display* disp)
    // -- Create a window for new display
    // -- Store the window in the wins vector
    // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
-   GlWindow* new_win = getGLWindow();
+   GlWindowPtr new_win = getGLWindow();
    new_win->configWindow(disp);                                            // Configure it
    mWins.push_back(new_win);                                         // Add to our local window list
 
@@ -338,8 +338,8 @@ void GlDrawManager::addDisplay(Display* disp)
  */
 void GlDrawManager::removeDisplay(Display* disp)
 {
-   GlPipe* pipe;  pipe = NULL;
-   GlWindow* win; win = NULL;     // Window to remove
+   GlPipe* pipe(NULL);
+   GlWindowPtr win;     // Window to remove
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
       << "vrj::GlDrawManager::removeDisplay: " << disp
@@ -355,7 +355,7 @@ void GlDrawManager::removeDisplay(Display* disp)
    }
 
    // Remove the window from the pipe and our local list
-   if (win != NULL)
+   if ( win.get() != NULL )
    {
       vprASSERT(pipe != NULL);
       vprASSERT(isValidWindow(win));
@@ -386,21 +386,17 @@ void GlDrawManager::closeAPI()
    drawDoneSema.acquire();
    mControlThread->join();
 
-   // Stop and delete all pipes
-   unsigned int pipe_num;
-   
-   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   // Stop and delete all pipes. This causes the GL windows to be closed and
+   // deleted.
+   typedef std::vector<GlPipe*>::iterator iter_t;
+   for ( iter_t p = pipes.begin(); p != pipes.end(); ++p )
    {
-      pipes[pipe_num]->stop();
-      
-      vrj::GlPipe* old_pipe = pipes[pipe_num];
-      
-      pipes.erase(std::remove(pipes.begin(), pipes.end(), old_pipe));
-      delete old_pipe;
+      (*p)->stop();
+      delete *p;
    }
 
-   // TODO: We must fix the closing of EventWindows and GlWindows before we can do this.
-   // Close and delete all glWindows
+   pipes.clear();
+   mWins.clear();
 }
 
 /**
@@ -464,7 +460,7 @@ void GlDrawManager::dirtyAllWindows()
 }
 
 
-bool GlDrawManager::isValidWindow(GlWindow* win)
+bool GlDrawManager::isValidWindow(GlWindowPtr win)
 {
    bool ret_val = false;
    for (unsigned int i=0;i<mWins.size();i++)
