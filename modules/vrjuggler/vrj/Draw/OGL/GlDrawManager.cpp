@@ -195,17 +195,16 @@ void GlDrawManager::drawAllPipes()
    vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL,
                         "vrj::GLDrawManager::drawAllPipes()\n",
                         "vrj::GLDrawManager::drawAllPipes() done.\n");
-   unsigned int pipe_num;
 
    // RENDER
    // Start rendering all the pipes
-   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
    {
       pipes[pipe_num]->triggerRender();
    }
 
       // Wait for rendering to finish on all the pipes
-   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
    {
       pipes[pipe_num]->completeRender();
    }
@@ -218,13 +217,13 @@ void GlDrawManager::drawAllPipes()
 
    // SWAP
    // Start swapping all the pipes
-   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
    {
       pipes[pipe_num]->triggerSwap();
    }
 
    // Wait for swapping to finish on all the pipes
-   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
    {
       pipes[pipe_num]->completeSwap();
    }
@@ -254,15 +253,13 @@ void GlDrawManager::addDisplay(Display* disp)
    vprASSERT(disp != NULL);    // Can't add a null display
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
-      << "vrj::GlDrawManager::addDisplay: " << disp
+      << "[vrj::GlDrawManager::addDisplay()] " << disp
       << std::endl << vprDEBUG_FLUSH;
-
 
    // -- Finish Simulator setup
    std::vector<vrj::Viewport*>::size_type num_vp(disp->getNumViewports());
-   std::vector<vrj::Viewport*>::size_type i;
 
-   for ( i = 0 ; i < num_vp ; ++i )
+   for ( std::vector<vrj::Viewport*>::size_type i = 0 ; i < num_vp ; ++i )
    {
       Viewport* vp = disp->getViewport(i);
 
@@ -277,14 +274,15 @@ void GlDrawManager::addDisplay(Display* disp)
          sim_vp->setDrawSimInterface(NULL);
 
          // Create the simulator stuff
-         vprASSERT(1 == vp_element->getNum("simulator_plugin") && "You must supply a simulator plugin.");
+         vprASSERT(1 == vp_element->getNum("simulator_plugin") &&
+                   "You must supply a simulator plugin.");
 
          // Create the simulator stuff
          jccl::ConfigElementPtr sim_element =
             vp_element->getProperty<jccl::ConfigElementPtr>("simulator_plugin");
 
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-            << "GlDrawManager::addDisplay() creating simulator of type '"
+            << "[vrj::GlDrawManager::addDisplay()] Creating simulator of type '"
             << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
 
          DrawSimInterface* new_sim_i =
@@ -298,7 +296,6 @@ void GlDrawManager::addDisplay(Display* disp)
          new_sim_i->config(sim_element);
       }
    }
-
 
    // -- Create a window for new display
    // -- Store the window in the wins vector
@@ -330,7 +327,6 @@ void GlDrawManager::addDisplay(Display* disp)
    vprASSERT(isValidWindow(new_win));      // Make sure it was added to draw manager
 }
 
-
 /**
  * Callback when display is removed to display manager.
  * @pre disp must be a valid display that we have.
@@ -342,10 +338,10 @@ void GlDrawManager::removeDisplay(Display* disp)
    GlWindowPtr win;     // Window to remove
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
-      << "vrj::GlDrawManager::removeDisplay: " << disp
+      << "[vrj::GlDrawManager::removeDisplay()] " << disp
       << std::endl << vprDEBUG_FLUSH;
 
-   for (unsigned int i=0;i<mWins.size();i++)
+   for ( unsigned int i = 0; i < mWins.size(); ++i )
    {
       if (mWins[i]->getDisplay() == disp)      // FOUND it
       {
@@ -365,19 +361,19 @@ void GlDrawManager::removeDisplay(Display* disp)
    }
    else
    {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-         << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n"
-         << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR")
+         << ": [vrj::GlDrawManager::removeDisplay()] Attempted to remove a "
+         << "display that was not found.\n" << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
-
 }
-
 
 /** Shutdown the drawing API */
 void GlDrawManager::closeAPI()
 {
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "vrj::GlDrawManager::closeAPI\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+      << "[vrj::GlDrawManager::closeAPI()]\n" << vprDEBUG_FLUSH;
 
    mRunning = false;
    
@@ -459,7 +455,6 @@ void GlDrawManager::dirtyAllWindows()
    }
 }
 
-
 bool GlDrawManager::isValidWindow(GlWindowPtr win)
 {
    bool ret_val = false;
@@ -473,7 +468,6 @@ bool GlDrawManager::isValidWindow(GlWindowPtr win)
 
    return ret_val;
 }
-
 
 /// dumps the object's internal state
 void GlDrawManager::outStream(std::ostream& out)
