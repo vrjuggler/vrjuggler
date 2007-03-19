@@ -175,6 +175,7 @@ std::string KeyboardMouse::getKeyName(gadget::Keys keyId)
       case gadget::KEY_SHIFT: return std::string("KEY_SHIFT");
       case gadget::KEY_CTRL: return std::string("KEY_CTRL");
       case gadget::KEY_ALT: return std::string("KEY_ALT");
+      case gadget::KEY_COMMAND: return std::string("KEY_COMMAND");
       case gadget::KEY_1: return std::string("KEY_1");
       case gadget::KEY_2: return std::string("KEY_2");
       case gadget::KEY_3: return std::string("KEY_3");
@@ -222,6 +223,8 @@ std::string KeyboardMouse::getKeyName(gadget::Keys keyId)
       case gadget::MBUTTON3: return std::string("MBUTTON3");
       case gadget::MBUTTON4: return std::string("MBUTTON4");
       case gadget::MBUTTON5: return std::string("MBUTTON5");
+      case gadget::MBUTTON6: return std::string("MBUTTON5");
+      case gadget::MBUTTON7: return std::string("MBUTTON7");
       case gadget::NO_MBUTTON: return std::string("NO_MBUTTON");
 
       case gadget::KEY_TAB          : return std::string("KEY_TAB");
