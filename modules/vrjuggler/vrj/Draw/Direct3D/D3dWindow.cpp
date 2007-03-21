@@ -323,12 +323,11 @@ void D3dWindow::checkEvents()
    handleEvents();
 }
 
-void D3dWindow::configWindow(vrj::Display* disp)
+void D3dWindow::configWindow(vrj::DisplayPtr disp)
 {
    const char neg_one_STRING[] = "-1";
-   vprASSERT( disp != NULL );
+   vprASSERT(disp.ptr() != NULL);
 
-   vprASSERT(disp!= NULL);      // We can't config to a NULL display
    mVrjDisplay = disp;
    mVrjDisplay->getOriginAndSize(mOriginX, mOriginY, mWindowWidth,
                                  mWindowHeight);

@@ -41,9 +41,9 @@ namespace vrj
 
 vprSingletonImp(DisplayManager);
 
-std::vector<Display*> DisplayManager::getAllDisplays()
+std::vector<DisplayPtr> DisplayManager::getAllDisplays()
 {
-   std::vector<Display*> ret_val;
+   std::vector<DisplayPtr> ret_val;
    ret_val.insert(ret_val.end(), mActiveDisplays.begin(), mActiveDisplays.end());
    ret_val.insert(ret_val.end(), mInactiveDisplays.begin(), mInactiveDisplays.end());
    return ret_val;
@@ -222,7 +222,7 @@ bool DisplayManager::configAddDisplay(jccl::ConfigElementPtr element)
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
    // This basically allows re-configuration of a window
-   Display* cur_disp = findDisplayNamed(element->getName());
+   DisplayPtr cur_disp = findDisplayNamed(element->getName());
    if (cur_disp != NULL)                         // We have an old display
    {
       vprDEBUG(vrjDBG_DISP_MGR,vprDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vprDEBUG_FLUSH;
@@ -232,7 +232,7 @@ bool DisplayManager::configAddDisplay(jccl::ConfigElementPtr element)
    // --- Add a display (of the correct type) ---- //
    if (element->getID() == std::string("display_window"))       // Display window
    {
-      Display* newDisp = new Display();        // Create the display
+      DisplayPtr newDisp = Display::create();      // Create the display
       newDisp->config(element);
       addDisplay(newDisp,true);                    // Add it
       vprDEBUG(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "Adding display: " << newDisp->getName().c_str() << std::endl << vprDEBUG_FLUSH;
@@ -259,7 +259,7 @@ bool DisplayManager::configRemoveDisplay(jccl::ConfigElementPtr element)
 
    if (element->getID() == std::string("display_window"))      // It is a display
    {
-      Display* remove_disp = findDisplayNamed(element->getName());
+      DisplayPtr remove_disp = findDisplayNamed(element->getName());
       if (remove_disp != NULL)
       {
          closeDisplay(remove_disp, true);                            // Remove it
@@ -275,7 +275,7 @@ bool DisplayManager::configRemoveDisplay(jccl::ConfigElementPtr element)
 
 
 // notifyDrawMgr = 0; Defaults to 0
-int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
+int DisplayManager::addDisplay(DisplayPtr disp, bool notifyDrawMgr)
 {
    vprDEBUG(vrjDBG_DISP_MGR, vprDBG_VERB_LVL)
       << "vrj::DisplayManager::addDisplay()\n" << vprDEBUG_FLUSH;
@@ -309,11 +309,13 @@ int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
  *    (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
  *    ==> Draw manager has been told to clode the window for the display
  */
-int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
+int DisplayManager::closeDisplay(DisplayPtr disp, bool notifyDrawMgr)
 {
    vprASSERT(isMemberDisplay(disp));       // Make sure that display actually exists
 
-   vprDEBUG(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "closeDisplay: Closing display named: " << disp->getName() << std::endl<< vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_STATE_LVL)
+      << "[vrj::DisplayManager::closeDisplay()] Closing display named '"
+      << disp->getName() << "'" << std::endl << vprDEBUG_FLUSH;
 
    // Notify the draw manager to get rid of it
    // Note: if it is not active, then the draw manager doesn't know about it
@@ -331,20 +333,13 @@ int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
    vprASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
    boost::ignore_unused_variable_warning(num_before_close);
 
-   // Delete the object
-   // XXX: Memory leak.  Can't delete display here because the draw manager
-   //      may need access to it when the draw manager closes the window up.
-   // ex: the glDrawManager window has ref to the display to get current user, etc.
-   //XXX//delete disp;
-
    return 1;
 }
 
-
 // Is the display a member of the display manager
-bool DisplayManager::isMemberDisplay(Display* disp)
+bool DisplayManager::isMemberDisplay(DisplayPtr disp)
 {
-   std::vector<Display*>::iterator i;
+   std::vector<DisplayPtr>::iterator i;
 
    i = std::find(mActiveDisplays.begin(),mActiveDisplays.end(),disp);
    if (i != mActiveDisplays.end())
@@ -365,9 +360,9 @@ bool DisplayManager::isMemberDisplay(Display* disp)
  * Finds a display given the display name.
  * @return NULL if nothing found
  */
-Display* DisplayManager::findDisplayNamed(std::string name)
+DisplayPtr DisplayManager::findDisplayNamed(const std::string& name)
 {
-   std::vector<Display*>::iterator i;
+   std::vector<DisplayPtr>::iterator i;
 
    for (i = mActiveDisplays.begin();i!=mActiveDisplays.end();i++)
    {
@@ -385,20 +380,20 @@ Display* DisplayManager::findDisplayNamed(std::string name)
       }
    }
 
-   return NULL;  // Didn't find any
+   return vrj::DisplayPtr();  // Didn't find any
 }
 
 
 void DisplayManager::updateProjections(const float scaleFactor)
 {
    // for (all displays) update the projections
-   for (std::vector<Display*>::iterator i = mActiveDisplays.begin();
+   for (std::vector<DisplayPtr>::iterator i = mActiveDisplays.begin();
         i != mActiveDisplays.end(); i++)
    {
       (*i)->updateProjections(scaleFactor);
    }
 
-   for (std::vector<Display*>::iterator j = mInactiveDisplays.begin();
+   for (std::vector<DisplayPtr>::iterator j = mInactiveDisplays.begin();
         j != mInactiveDisplays.end(); j++)
    {
       (*j)->updateProjections(scaleFactor);

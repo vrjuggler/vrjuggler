@@ -24,18 +24,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DRAW_MANAGER_
-#define _VRJ_DRAW_MANAGER_
+#ifndef _VRJ_DRAW_MANAGER_H_
+#define _VRJ_DRAW_MANAGER_H_
 
 #include <vrj/vrjConfig.h>
 #include <iostream>
 #include <jccl/RTRC/ConfigElementHandler.h>
+#include <vrj/Display/DisplayPtr.h>
+
+
 namespace vrj
 {
 
 class DisplayManager;
 class App;
-class Display;
 
 /** \class DrawManager DrawManager.h vrj/Draw/DrawManager.h
  *
@@ -91,10 +93,10 @@ public:
    virtual void initAPI() = 0;
 
    /** Callback when display is added to Display Manager. */
-   virtual void addDisplay(Display* disp) = 0;
+   virtual void addDisplay(DisplayPtr disp) = 0;
 
    /** Callback when display is removed to Display Manager. */
-   virtual void removeDisplay(Display* disp) = 0;
+   virtual void removeDisplay(DisplayPtr disp) = 0;
 
    /**
     * Shuts down the drawing API.

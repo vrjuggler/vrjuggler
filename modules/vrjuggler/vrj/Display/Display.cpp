@@ -158,7 +158,7 @@ void Display::configViewports(jccl::ConfigElementPtr element)
    {
       vp_elt = element->getProperty<jccl::ConfigElementPtr>("simulator_viewports",i);
       sim_vp = new SimViewport;
-      sim_vp->setDisplay(this);
+      sim_vp->setDisplay(shared_from_this());
       if ( sim_vp->config(vp_elt) )
       {
          mViewports.push_back(sim_vp);
@@ -182,7 +182,7 @@ void Display::configViewports(jccl::ConfigElementPtr element)
    {
       vp_elt = element->getProperty<jccl::ConfigElementPtr>("surface_viewports",i);
       surf_vp = new SurfaceViewport;
-      surf_vp->setDisplay(this);
+      surf_vp->setDisplay(shared_from_this());
 
       if ( surf_vp->config(vp_elt) )
       {

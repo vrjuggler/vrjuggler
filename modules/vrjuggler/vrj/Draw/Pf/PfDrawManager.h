@@ -99,14 +99,14 @@ protected:
          pWin = NULL;
       }
 
-      Display*              disp;
+      DisplayPtr              disp;
       pfPipeWindow*           pWin;
       std::vector<pfViewport> viewports;
    };
 
-   struct pfDisplay_disp : public std::unary_function<pfDisplay,Display*>
+   struct pfDisplay_disp : public std::unary_function<pfDisplay, DisplayPtr>
    {
-      Display* operator()(const pfDisplay disp) const
+      DisplayPtr operator()(const pfDisplay disp) const
       {
          return disp.disp;
       }
@@ -173,10 +173,10 @@ public:
    void initChanGroupAttribs(pfChannel* masterChan);
 
    /** Callback invoked when display is added to display manager. */
-   virtual void addDisplay(Display* disp);
+   virtual void addDisplay(DisplayPtr disp);
 
    /** Callback invoked when display is removed to display manager. */
-   virtual void removeDisplay(Display* disp);
+   virtual void removeDisplay(DisplayPtr disp);
 
    /** Shuts down the drawing API. */
    virtual void closeAPI();
@@ -290,15 +290,15 @@ protected:
    //@}
 
    /** Returns the needed mono frame buffer config. */
-   std::vector<int> getMonoFBConfig(vrj::Display* disp);
+   std::vector<int> getMonoFBConfig(vrj::DisplayPtr disp);
    /** Returns the needed stereo frame buffer config. */
-   std::vector<int> getStereoFBConfig(vrj::Display* disp);
+   std::vector<int> getStereoFBConfig(vrj::DisplayPtr disp);
 
    /**
     * Adds frame buffer configuration options to the given vector based on
     * the given vrj::Display object's OpenGL frame buffer configuration.
     */
-   void configFrameBuffer(vrj::Display* disp, std::vector<int>& attrs);
+   void configFrameBuffer(vrj::DisplayPtr disp, std::vector<int>& attrs);
 
 protected:
    // NOTE:  ---- REMEMBER THAT PF HAS SHARED MEM Model ---

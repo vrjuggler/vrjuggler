@@ -516,7 +516,7 @@ bool GlWindowXWin::makeCurrent()
    return glXMakeCurrent(mXDisplay, mXWindow, mGlxContext);
 }
 
-void GlWindowXWin::configWindow(vrj::Display* disp)
+void GlWindowXWin::configWindow(vrj::DisplayPtr disp)
 {
    const char neg_one_string[] = "-1";
    vrj::GlWindow::configWindow(disp);

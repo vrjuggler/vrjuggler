@@ -277,10 +277,10 @@ void GlWindowWin32::checkEvents()
    handleEvents();
 }
 
-void GlWindowWin32::configWindow(vrj::Display* disp)
+void GlWindowWin32::configWindow(vrj::DisplayPtr disp)
 {
    const char neg_one_STRING[] = "-1";
-   vprASSERT( disp != NULL );
+   vprASSERT(disp.get() != NULL);
    vrj::GlWindow::configWindow(disp);
 
    // Get the vector of display chunks

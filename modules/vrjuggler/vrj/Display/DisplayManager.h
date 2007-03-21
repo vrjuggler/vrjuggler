@@ -36,6 +36,8 @@
 #include <vrj/Util/Debug.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Config/ConfigElementPtr.h>
+#include <vrj/Display/DisplayPtr.h>
+
 
 namespace vrj
 {
@@ -98,7 +100,7 @@ public:
     * Returns a list of the current displays.
     * @note DO NOT EDIT THE DISPLAYS
     */
-   const std::vector<vrj::Display*>& getActiveDisplays()
+   const std::vector<vrj::DisplayPtr>& getActiveDisplays()
    {
       return mActiveDisplays;
    }
@@ -107,7 +109,7 @@ public:
     * Returns list of inactive displays.
     * @note DO NOT EDIT THE DISPLAYS
     */
-   const std::vector<vrj::Display*>& getInActiveDisplays()
+   const std::vector<vrj::DisplayPtr>& getInActiveDisplays()
    {
       return mInactiveDisplays;
    }
@@ -116,7 +118,7 @@ public:
     * Returns list of all displays (inactive and active).
     * @note DO NOT EDIT THE DISPLAYS
     */
-   std::vector<vrj::Display*> getAllDisplays();
+   std::vector<vrj::DisplayPtr> getAllDisplays();
 
    jccl::ConfigElementPtr getDisplaySystemElement();
 
@@ -149,7 +151,7 @@ private:
     *   (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
     *   ==> Draw manager now has been given new window to display
     */
-   int addDisplay(vrj::Display* disp, bool notifyDrawMgr = true);
+   int addDisplay(vrj::DisplayPtr disp, bool notifyDrawMgr = true);
 
    /**
     * Closes the given display.
@@ -158,20 +160,20 @@ private:
     *    (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
     *    ==> Draw manager has been told to clode the window for the display
     */
-   int closeDisplay(vrj::Display* disp, bool notifyDrawMgr = true);
+   int closeDisplay(vrj::DisplayPtr disp, bool notifyDrawMgr = true);
 
    /// Is the display a member of the display manager
-   bool isMemberDisplay(vrj::Display* disp);
+   bool isMemberDisplay(vrj::DisplayPtr disp);
 
    /**
     * Finds a display given the display name.
     * @return NULL if nothing found
     */
-   vrj::Display* findDisplayNamed(std::string name);
+   vrj::DisplayPtr findDisplayNamed(const std::string& name);
 
-public:
-   std::vector<vrj::Display*> mActiveDisplays; /**< List of currently active displays */
-   std::vector<vrj::Display*> mInactiveDisplays; /**< List of currently inactive displays */
+private:
+   std::vector<vrj::DisplayPtr> mActiveDisplays; /**< List of currently active displays */
+   std::vector<vrj::DisplayPtr> mInactiveDisplays; /**< List of currently inactive displays */
 
 protected:
    DrawManager*    mDrawManager;           /**< The current Draw Manager to communicate with */

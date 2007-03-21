@@ -97,7 +97,7 @@ public:
     *             information to configure an InputArea.
     * @param disp VR Juggler display which contains size info.
     */
-   void config(jccl::ConfigElementPtr e, vrj::Display* disp)
+   void config(jccl::ConfigElementPtr e, vrj::DisplayPtr disp)
    {
       gadget::InputArea::config(e);
       int originX, originY, width, height;

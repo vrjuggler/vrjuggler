@@ -352,7 +352,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
    Viewport::View  view;                      // The view for the active viewport
 
    GlApp* the_app = mGlDrawManager->getApp();       // Get application for easy access
-   Display* the_display = win->getDisplay();   // Get the display for easy access
+   DisplayPtr the_display = win->getDisplay();   // Get the display for easy access
 
    // Update the projections for the display using the current app's scale factor
    // NOTE: This relies upon no other thread trying to update this display at the same time

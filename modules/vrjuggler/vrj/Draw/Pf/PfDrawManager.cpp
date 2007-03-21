@@ -359,9 +359,9 @@ void PfDrawManager::initPipes()
  * @pre Must be in kernel controlling thread.
  *      Must have already initialized Performer.
  */
-void PfDrawManager::addDisplay(Display* disp)
+void PfDrawManager::addDisplay(DisplayPtr disp)
 {
-   vprASSERT(disp != NULL);    // Can't add a null display
+   vprASSERT(disp.ptr() != NULL);    // Can't add a null display
    vprASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
 
    //  For the display
@@ -680,7 +680,7 @@ void PfDrawManager::createEmptyCursor(::Display* display, ::Window root)
  * @pre disp must be a valid display that we have.
  * @post Window for disp is removed from the draw manager and child pipes.
  */
-void PfDrawManager::removeDisplay(Display* disp)
+void PfDrawManager::removeDisplay(DisplayPtr disp)
 {
    // Find the pfDisplay
 #ifdef VPR_OS_Windows
@@ -696,7 +696,7 @@ void PfDrawManager::removeDisplay(Display* disp)
    }
 #else
    std::vector<pfDisplay>::iterator disp_i = std::find_if(mDisplays.begin(), mDisplays.end(),
-                         std::compose1( std::bind2nd( std::equal_to<Display*>(),disp),
+                         std::compose1( std::bind2nd( std::equal_to<DisplayPtr>(),disp),
                                         pfDisplay_disp()) );
 #endif
 
@@ -864,7 +864,7 @@ void PfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
 
 
 /** Returns the needed mono frame buffer config. */
-std::vector<int> PfDrawManager::getMonoFBConfig(vrj::Display* disp)
+std::vector<int> PfDrawManager::getMonoFBConfig(vrj::DisplayPtr disp)
 {
    std::vector<int> mono_fb;
    mono_fb.push_back(PFFB_DOUBLEBUFFER);
@@ -885,7 +885,7 @@ std::vector<int> PfDrawManager::getMonoFBConfig(vrj::Display* disp)
 }
 
 /** Returns the needed stereo frame buffer config. */
-std::vector<int> PfDrawManager::getStereoFBConfig(vrj::Display* disp)
+std::vector<int> PfDrawManager::getStereoFBConfig(vrj::DisplayPtr disp)
 {
    std::vector<int> stereo_fb;
    stereo_fb.push_back(PFFB_DOUBLEBUFFER);
@@ -910,7 +910,7 @@ std::vector<int> PfDrawManager::getStereoFBConfig(vrj::Display* disp)
 // getMonoFBConfig() and getStereoFBConfig().  That vector could then be
 // merged with the stereo and mono vectors.  I didn't do this because I
 // did not want to mess with the order of the options.
-void PfDrawManager::configFrameBuffer(vrj::Display* disp,
+void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
                                       std::vector<int>& attrs)
 {
    int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(16),

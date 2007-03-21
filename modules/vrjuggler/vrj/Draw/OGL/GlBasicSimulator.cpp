@@ -223,10 +223,10 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
    DisplayManager* display_man = vrj::GlDrawManager::instance()->getDisplayManager();
    display_man->updateProjections(scaleFactor);                     // Update all projections for drawing
 
-   std::vector<Display*> disps = display_man->getAllDisplays();
+   std::vector<vrj::DisplayPtr> disps = display_man->getAllDisplays();
 
    gmtl::Vec3f apex, ur, lr, ul, ll;
-   Projection* proj; proj = NULL;
+   Projection* proj(NULL);
 
    for (unsigned int i=0;i<disps.size();i++)
    {

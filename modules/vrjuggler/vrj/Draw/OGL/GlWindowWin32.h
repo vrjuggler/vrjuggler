@@ -111,7 +111,7 @@ public:
 	/**
     * Configure the GlWindow using information from the Display.
 	 */
-   void configWindow( vrj::Display* disp );
+   void configWindow(vrj::DisplayPtr disp);
 
 protected:
    // WindowProcedure to deal with the events generated.

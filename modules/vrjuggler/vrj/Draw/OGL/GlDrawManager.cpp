@@ -248,9 +248,9 @@ void GlDrawManager::initAPI()
  *       This guarantees that we are not rendering currently.
  *       We will most likely be waiting for a render trigger.
  */
-void GlDrawManager::addDisplay(Display* disp)
+void GlDrawManager::addDisplay(DisplayPtr disp)
 {
-   vprASSERT(disp != NULL);    // Can't add a null display
+   vprASSERT(disp.get() != NULL);    // Can't add a null display
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
       << "[vrj::GlDrawManager::addDisplay()] " << disp
@@ -332,7 +332,7 @@ void GlDrawManager::addDisplay(Display* disp)
  * @pre disp must be a valid display that we have.
  * @post window for disp is removed from the draw manager and child pipes.
  */
-void GlDrawManager::removeDisplay(Display* disp)
+void GlDrawManager::removeDisplay(DisplayPtr disp)
 {
    GlPipe* pipe(NULL);
    GlWindowPtr win;     // Window to remove

@@ -73,9 +73,10 @@ namespace vrj
 int GlWindow::mCurMaxWinId = 0;
 vpr::Mutex GlWindow::mWinIdMutex;
 
-void GlWindow::configWindow(vrj::Display* displayWindow)
+void GlWindow::configWindow(vrj::DisplayPtr displayWindow)
 {
-   vprASSERT(displayWindow != NULL);      // We can't config to a NULL display
+   // We can't config to a NULL display
+   vprASSERT(displayWindow.get() != NULL);
    mVrjDisplay = displayWindow;
    mVrjDisplay->getOriginAndSize(mOriginX, mOriginY, mWindowWidth,
                                  mWindowHeight);

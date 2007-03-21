@@ -32,11 +32,12 @@
 #include <string>
 #include <gmtl/Vec.h>
 #include <jccl/Config/ConfigElementPtr.h>
+#include <vrj/Display/DisplayPtr.h>
+
 
 namespace vrj
 {
 
-class Display;
 class Projection;
 class User;
 
@@ -54,7 +55,6 @@ public:
       : mUser(NULL)
       , mType(Viewport::UNDEFINED)
       , mActive(false)
-      , mDisplay(NULL)
       , mXorigin(-1.0f)
       , mYorigin(-1.0f)
       , mXsize(-1.0f)
@@ -215,15 +215,15 @@ public:
    }
 
    /** Sets the display containing this viewport. */
-   void setDisplay(Display* disp)
+   void setDisplay(DisplayPtr disp)
    {
       mDisplay = disp;
    }
 
    /** Gets the display containing this viewport. */
-   Display* getDisplay()
+   DisplayPtr getDisplay()
    {
-      return mDisplay;
+      return mDisplay.lock();
    }
 
    /** Gets the left projection. */
@@ -250,7 +250,7 @@ protected:
    Viewport::View    mView;               /**< Which buffer(s) to display (left, right, stereo) */
    bool              mActive;             /**< Is this viewport active */
 
-   Display*          mDisplay;            /**< The parent display */
+   DisplayWeakPtr    mDisplay;            /**< The parent display */
 
    jccl::ConfigElementPtr mViewportElement; /**< The config data for this display */
 

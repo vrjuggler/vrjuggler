@@ -83,7 +83,7 @@ public:
    virtual void checkEvents();
    
    /** Configure the window settings based on the display information. */
-   void configWindow(vrj::Display* disp);   
+   void configWindow(vrj::DisplayPtr disp);   
 
 protected:
    /** Do any extra event processing needed. */

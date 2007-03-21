@@ -28,9 +28,13 @@
 #define _VJ_DISPLAY_WINDOW_H_
 
 #include <vrj/vrjConfig.h>
+
+#include <boost/enable_shared_from_this.hpp>
 #include <vector>
+
 #include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Assert.h>
+#include <vrj/Display/DisplayPtr.h>
 
 
 namespace vrj
@@ -44,9 +48,9 @@ namespace vrj
  *
  * @date 3-5-2001
  */
-class VJ_CLASS_API Display
+class VJ_CLASS_API Display : public boost::enable_shared_from_this<Display>
 {
-public:
+protected:
    Display()
       : mOriginX(-1)
       , mOriginY(-1)
@@ -63,9 +67,19 @@ public:
       ;
    }
 
+public:
+   /**
+    * Creates a new vrj::Display object and wraps in a vrj::DisplayPtr.
+    *
+    * @since 2.1.20
+    */
+   static DisplayPtr create()
+   {
+      return DisplayPtr(new Display());
+   }
+
    virtual ~Display();
 
-public:
    /**
     * Takes a display config element and configures the display based one it.
     *

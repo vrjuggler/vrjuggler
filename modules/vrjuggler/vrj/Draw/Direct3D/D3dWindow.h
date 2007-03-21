@@ -149,7 +149,7 @@ public:
     * Configures the window.
     * @post this is configured based on the data in display.
     */
-   virtual void configWindow(vrj::Display* displayWindow);
+   virtual void configWindow(vrj::DisplayPtr displayWindow);
 
    /**
     * Performs an Direct3D swap buffers command.
@@ -246,7 +246,7 @@ public:
       return mIsEventSource;
    }
 
-   vrj::Display* getDisplay()
+   vrj::DisplayPtr getDisplay()
    {
       return mVrjDisplay;
    }
@@ -336,7 +336,7 @@ protected:
     * We store a pointer to the display that we're created from in order to
     * config and to get the viewing transforms from.
     */
-   vrj::Display* mVrjDisplay;
+   vrj::DisplayPtr mVrjDisplay;
 
    vpr::Uint64 mSwapCount; /**< The number of times that swapBuffers() has been called. */
 
