@@ -46,6 +46,7 @@ SRCS=		PfApp.cpp			\
 		PfDrawManager.cpp		\
 		PfInputHandler.cpp		\
 		PfUtil.cpp			\
+		PfSimInterface.cpp		\
 		PfSimInterfaceFactory.cpp
 
 include $(MKPATH)/dpp.obj.mk
