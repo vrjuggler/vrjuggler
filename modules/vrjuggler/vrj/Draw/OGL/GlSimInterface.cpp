@@ -24,52 +24,27 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GL_SIM_INTERFACE_H_
-#define _VRJ_GL_SIM_INTERFACE_H_
-
 #include <vrj/Draw/OGL/Config.h>
 
-#include <gadget/Type/KeyboardMouseProxy.h>
-#include <gadget/Type/DeviceInterface.h>
-
-#include <vrj/Draw/DrawSimInterface.h>
+#include <vrj/Draw/OGL/GlSimInterface.h>
 
 
 namespace vrj
 {
-   /** \class GlSimInterface GlSimInterface.h vrj/Draw/OGL/GlSimInterface.h
-    *
-    * Interface for objects that wish to perform simulator function with an
-    * OpenGL application.
-    */
-   class GlSimInterface : public DrawSimInterface
-   {
-   protected:
-      GlSimInterface();
 
-   public:
-      virtual ~GlSimInterface();
-
-      /**
-       * Provides this simulator interface with an opportunity to perform
-       * context-specific initialization.
-       *
-       * @since 2.1.18
-       */
-      virtual void contextInit();
-
-      /**
-       * Draws this sim device using the given information about the Window it
-       * will be drawing into.
-       */
-      virtual void draw(const float scaleFactor) = 0;
-
-      /**
-       * Sets the keyboard/mouse device the simulator can use to get input from
-       * the user.
-       */
-      virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface) = 0;
-   };
+GlSimInterface::GlSimInterface()
+{
+   /* Do nothing. */ ;
 }
 
-#endif
+GlSimInterface::~GlSimInterface()
+{
+   /* Do nothing. */ ;
+}
+
+void GlSimInterface::contextInit()
+{
+   /* Do nothing. */ ;
+}
+
+}

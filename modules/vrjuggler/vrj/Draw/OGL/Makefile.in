@@ -49,6 +49,7 @@ SRCS=		GlApp.cpp			\
 		GlExtensionLoader.cpp		\
 		GlPipe.cpp			\
 		GlProcApp.cpp			\
+		GlSimInterface.cpp		\
 		GlSimInterfaceFactory.cpp	\
 		GlWindow.cpp
 
