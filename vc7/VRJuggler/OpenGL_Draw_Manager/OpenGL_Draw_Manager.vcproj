@@ -165,6 +165,9 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlProcApp.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlSimInterface.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlSimInterfaceFactory.cpp">
 			</File>
 			<File
@@ -220,10 +223,16 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlSimInterfaceFactory.h">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlSimInterfacePtr.h">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlUserData.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindow.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlWindowPtr.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowWin32.h">

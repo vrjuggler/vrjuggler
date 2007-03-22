@@ -153,6 +153,9 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Draw\DrawManager.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterface.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Frustum.cpp">
 			</File>
 			<File
@@ -226,10 +229,16 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\DisplayManager.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\DisplayPtr.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Draw\DrawManager.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterfacePtr.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Frustum.h">

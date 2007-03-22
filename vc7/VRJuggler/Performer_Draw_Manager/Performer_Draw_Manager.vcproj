@@ -150,6 +150,9 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfInputHandler.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterface.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterfaceFactory.cpp">
 			</File>
 			<File
@@ -179,6 +182,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterfaceFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterfacePtr.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfUtil.h">
