@@ -271,7 +271,7 @@ void GlDrawManager::addDisplay(DisplayPtr disp)
          sim_vp = dynamic_cast<SimViewport*>(vp);
          vprASSERT(NULL != sim_vp);
 
-         sim_vp->setDrawSimInterface(NULL);
+         sim_vp->setDrawSimInterface(DrawSimInterfacePtr());
 
          // Create the simulator stuff
          vprASSERT(1 == vp_element->getNum("simulator_plugin") &&
@@ -285,12 +285,14 @@ void GlDrawManager::addDisplay(DisplayPtr disp)
             << "[vrj::GlDrawManager::addDisplay()] Creating simulator of type '"
             << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
 
-         DrawSimInterface* new_sim_i =
-            GlSimInterfaceFactory::instance()->createObject(sim_element->getID());
+         DrawSimInterfacePtr new_sim_i(
+            GlSimInterfaceFactory::instance()->createObject(sim_element->getID())
+         );
 
          // XXX: Change this to an error once the new simulator loading code is
          // more robust.  -PH (4/13/2003)
-         vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
+         vprASSERT(NULL != new_sim_i.get() &&
+                   "Failed to create draw simulator");
          sim_vp->setDrawSimInterface(new_sim_i);
          new_sim_i->initialize(sim_vp);
          new_sim_i->config(sim_element);

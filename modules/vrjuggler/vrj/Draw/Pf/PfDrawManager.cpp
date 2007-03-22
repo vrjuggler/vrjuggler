@@ -555,7 +555,7 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
             sim_vp = dynamic_cast<SimViewport*>(viewport);
             vprASSERT(NULL != sim_vp);
 
-            sim_vp->setDrawSimInterface(NULL);
+            sim_vp->setDrawSimInterface(DrawSimInterfacePtr());
 
             // Create the simulator stuff
             vprASSERT(1 == vp_element->getNum("simulator_plugin") && "You must supply a simulator plugin.");
@@ -567,16 +567,17 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
                << "PfDrawManager::addDisplay() creating simulator of type '"
                << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
 
-            DrawSimInterface* new_sim_i =
-               PfSimInterfaceFactory::instance()->createObject(sim_element->getID());
+            DrawSimInterfacePtr new_sim_i(
+               PfSimInterfaceFactory::instance()->createObject(sim_element->getID())
+            );
 
             // XXX: Change this to an error once the new simulator loading code is
             // more robust.  -PH (4/13/2003)
-            vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
+            vprASSERT(NULL != new_sim_i.get() &&
+                      "Failed to create draw simulator");
             sim_vp->setDrawSimInterface(new_sim_i);
             new_sim_i->initialize(sim_vp);
             new_sim_i->config(sim_element);
-
 
             vprASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
 
@@ -1227,13 +1228,17 @@ void PfDrawManager::updatePfProjections()
          if(cur_vp->isSimulator())
          {
             SimViewport*      sim_vp(NULL);
-            PfSimInterface*   draw_sim_i(NULL);
+            PfSimInterfacePtr draw_sim_i;
 
             sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
             vprASSERT(sim_vp != NULL && "Could not cast supposed simulator display to SimDisplay.");
 
-            draw_sim_i = dynamic_cast<PfSimInterface*>(sim_vp->getDrawSimInterface());
-            vprASSERT(draw_sim_i != NULL && "Could not cast supposed simulator interface to PfSimInterface.");
+            draw_sim_i =
+               boost::dynamic_pointer_cast<PfSimInterface>(
+                  sim_vp->getDrawSimInterface()
+               );
+            vprASSERT(draw_sim_i.get() != NULL &&
+                      "Could not cast supposed simulator interface to PfSimInterface.");
 
             draw_sim_i->updateSimulatorSceneGraph();
          }

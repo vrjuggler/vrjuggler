@@ -30,10 +30,11 @@
 #include <vpr/Util/Debug.h>
 
 #include <jccl/Config/ConfigElement.h>
+#include <gadget/Type/Position/PositionUnitConversion.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/CameraProjection.h>
 #include <vrj/Display/Projection.h>
-#include <gadget/Type/Position/PositionUnitConversion.h>
+#include <vrj/Draw/DrawSimInterface.h>
 
 #include <vrj/Display/SimViewport.h>
 
@@ -97,7 +98,7 @@ bool SimViewport::config(jccl::ConfigElementPtr element)
 
    //bool has_simulator(false);
    //has_simulator = element->getProperty<bool>("has_simulator_plugin");
-   mSimulator = NULL;
+   mSimulator = DrawSimInterfacePtr();
 
    // Create the simulator stuff
    /*if(has_simulator)
@@ -123,7 +124,7 @@ bool SimViewport::config(jccl::ConfigElementPtr element)
 
 void SimViewport::updateProjections(const float positionScale)
 {
-   if(mSimulator != NULL)
+   if ( mSimulator.get() != NULL )
    {
       mSimulator->updateProjectionData(positionScale, mLeftProj, mRightProj);
    }

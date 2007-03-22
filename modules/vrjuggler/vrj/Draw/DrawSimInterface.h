@@ -31,6 +31,8 @@
 
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <vrj/Draw/DrawSimInterface.h>
+
 
 namespace vrj
 {

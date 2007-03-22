@@ -402,10 +402,12 @@ void GlPipe::renderWindow(GlWindowPtr win)
             SimViewport* sim_vp = dynamic_cast<SimViewport*>(viewport);
             vprASSERT(NULL != sim_vp);
 
-            GlSimInterface* draw_sim_i =
-               dynamic_cast<GlSimInterface*>(sim_vp->getDrawSimInterface());
+            GlSimInterfacePtr draw_sim_i =
+               boost::dynamic_pointer_cast<GlSimInterface>(
+                  sim_vp->getDrawSimInterface()
+               );
 
-            if ( NULL != draw_sim_i )
+            if ( NULL != draw_sim_i.get() )
             {
                draw_sim_i->contextInit();
             }
@@ -452,7 +454,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
          // if (viewport->isSurface())
          {
             SimViewport*      sim_vp(NULL);
-            GlSimInterface*   draw_sim_i(NULL);
+            GlSimInterfacePtr draw_sim_i;
 
             if (viewport->isSimulator())
             {
@@ -460,7 +462,10 @@ void GlPipe::renderWindow(GlWindowPtr win)
                vprASSERT(NULL != sim_vp);
                if (NULL != sim_vp)
                {
-                  draw_sim_i = dynamic_cast<GlSimInterface*>(sim_vp->getDrawSimInterface());
+                  draw_sim_i =
+                     boost::dynamic_pointer_cast<GlSimInterface>(
+                        sim_vp->getDrawSimInterface()
+                     );
                }
             }
 
@@ -472,7 +477,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
 
                the_app->draw();
 
-               if (NULL != draw_sim_i)
+               if ( NULL != draw_sim_i.get() )
                {
                   draw_sim_i->draw(scale_factor);
                }
@@ -485,7 +490,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
 
                the_app->draw();
 
-               if (NULL != draw_sim_i)
+               if ( NULL != draw_sim_i.get() )
                {
                   draw_sim_i->draw(scale_factor);
                }

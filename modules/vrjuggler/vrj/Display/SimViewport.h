@@ -24,8 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_DISPLAY_H_
-#define _VRJ_SIM_DISPLAY_H_
+#ifndef _VRJ_SIM_VIEWPORT_H_
+#define _VRJ_SIM_VIEWPORT_H_
 //#pragma once
 
 #include <vrj/vrjConfig.h>
@@ -33,7 +33,7 @@
 #include <vrj/Display/Viewport.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
-#include <vrj/Draw/DrawSimInterface.h>
+#include <vrj/Draw/DrawSimInterfacePtr.h>
 
 
 namespace vrj
@@ -73,18 +73,18 @@ public:
     */
    virtual void updateProjections(const float positionScale);
 
-   DrawSimInterface* getDrawSimInterface()
+   DrawSimInterfacePtr getDrawSimInterface()
    {
       return mSimulator;
    }
 
-   void setDrawSimInterface(DrawSimInterface* draw_sim_i)
+   void setDrawSimInterface(DrawSimInterfacePtr drawSim)
    {
-      mSimulator = draw_sim_i;
+      mSimulator = drawSim;
    }
 
-protected:
-   DrawSimInterface*    mSimulator;    /**< The simulator that we are using here */
+private:
+   DrawSimInterfacePtr mSimulator; /**< The simulator that we are using here */
 };
 
 }

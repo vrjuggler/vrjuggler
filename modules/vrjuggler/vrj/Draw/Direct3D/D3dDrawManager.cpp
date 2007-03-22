@@ -266,8 +266,8 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())
          {
-            SimViewport*      sim_vp(NULL);
-            D3dSimInterface*  draw_sim_i(NULL);
+            SimViewport*       sim_vp(NULL);
+            D3dSimInterfacePtr draw_sim_i;
 
             if (viewport->isSimulator())
             {
@@ -275,7 +275,10 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
                vprASSERT(NULL != sim_vp);
                if (NULL != sim_vp)
                {
-                  draw_sim_i = dynamic_cast<D3dSimInterface*>(sim_vp->getDrawSimInterface());
+                  draw_sim_i =
+                     boost::dynamic_pointer_cast<D3dSimInterface>(
+                        sim_vp->getDrawSimInterface()
+                     );
                }
             }
 
@@ -287,7 +290,7 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
 
                mApp->draw(win->mRenderDevice);
 
-               if (NULL != draw_sim_i)
+               if ( NULL != draw_sim_i.get() )
                {
                   draw_sim_i->draw(scale_factor);
                }
@@ -300,7 +303,7 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
 
                mApp->draw(win->mRenderDevice);
 
-               if (NULL != draw_sim_i)
+               if ( NULL != draw_sim_i.get() )
                {
                   draw_sim_i->draw(scale_factor);
                }
@@ -383,7 +386,7 @@ void D3dDrawManager::addDisplay(Display* disp)
          sim_vp = dynamic_cast<SimViewport*>(vp);
          vprASSERT(NULL != sim_vp);
 
-         sim_vp->setDrawSimInterface(NULL);
+         sim_vp->setDrawSimInterface(DrawSimInterfacePtr());
 
          // Create the simulator stuff
          vprASSERT(1 == vp_element->getNum("simulator_plugin") && "You must supply a simulator plugin.");
@@ -396,12 +399,14 @@ void D3dDrawManager::addDisplay(Display* disp)
             << "D3dDrawManager::addDisplay() creating simulator of type '"
             << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
 
-         DrawSimInterface* new_sim_i =
-            D3dSimInterfaceFactory::instance()->createObject(sim_element->getID());
+         DrawSimInterfacePtr new_sim_i(
+            D3dSimInterfaceFactory::instance()->createObject(sim_element->getID())
+         );
 
          // XXX: Change this to an error once the new simulator loading code is
          // more robust.  -PH (4/13/2003)
-         vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
+         vprASSERT(NULL != new_sim_i.get() &&
+                   "Failed to create draw simulator");
          sim_vp->setDrawSimInterface(new_sim_i);
          new_sim_i->initialize(sim_vp);
          new_sim_i->config(sim_element);

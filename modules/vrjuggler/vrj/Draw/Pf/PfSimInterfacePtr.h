@@ -24,47 +24,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_D3D_SIM_INTERFACE_H_
-#define _VRJ_D3D_SIM_INTERFACE_H_
+#ifndef _VRJ_DRAW_PF_INTERFACE_PTR_H_
+#define _VRJ_DRAW_PF_INTERFACE_PTR_H_
 
-#include <vrj/Draw/Direct3D/Config.h>
-
-#include <gadget/Type/KeyboardMouseProxy.h>
-#include <gadget/Type/DeviceInterface.h>
-
-#include <vrj/Draw/DrawSimInterface.h>
-#include <vrj/Draw/Direct3D/D3dSimInterfacePtr.h>
+#include <boost/shared_ptr.hpp>
 
 
 namespace vrj
 {
-   /** \class D3dSimInterface D3dSimInterface.h vrj/Draw/Direct3D/D3dSimInterface.h
-    *
-    * Interface for objects that wish to perform simulator function with a
-    * Direct3D application.
-    *
-    * @since 2.1.16
-    */
-   class D3dSimInterface : public DrawSimInterface
-   {
-   protected:
-      D3dSimInterface();
 
-   public:
-      virtual ~D3dSimInterface();
+class PfSimInterface;
+typedef boost::shared_ptr<PfSimInterface> PfSimInterfacePtr;
+typedef boost::weak_ptr<PfSimInterface> PfSimInterfaceWeakPtr;
 
-      /**
-       * Draws this sim device using the given information about the Window it
-       * will be drawing into.
-       */
-      virtual void draw(const float scaleFactor) = 0;
-
-      /**
-       * Sets the keyboard/mouse device the simulator can use to get input from
-       * the user.
-       */
-      virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface) = 0;
-   };
 }
 
-#endif
+
+#endif /* _VRJ_DRAW_PF_INTERFACE_PTR_H_ */

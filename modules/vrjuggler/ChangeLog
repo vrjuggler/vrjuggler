@@ -1,6 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Mar-18-2007 patrick     The Display Manager now uses vrj::DisplayPtr (a
+Mar-21-2007 patrick     Instances of vrj::DrawSimInterfaces are now handled
+                        internally using boost::shared_ptr<T>.
+Mar-21-2007 patrick     The Display Manager now uses vrj::DisplayPtr (a
                         boost::shared_ptr typedef) instead of vrj::Display*.
                         NEW VERSION: 2.1.20
 Mar-18-2007 patrick     The OpenGL Draw Manager now uses vrj::GlWindowPtr (a

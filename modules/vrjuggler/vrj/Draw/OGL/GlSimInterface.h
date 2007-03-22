@@ -33,6 +33,7 @@
 #include <gadget/Type/DeviceInterface.h>
 
 #include <vrj/Draw/DrawSimInterface.h>
+#include <vrj/Draw/OGL/GlSimInterfacePtr.h>
 
 
 namespace vrj
