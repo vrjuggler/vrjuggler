@@ -82,8 +82,7 @@ class VJ_D3D_CLASS_API D3dWindow
 {
 public:
    D3dWindow()
-      : mVrjDisplay(NULL)
-      , mSwapCount(0)
+      : mSwapCount(0)
       // The context is always dirty when the window is first created
       , mDirtyContext(true)
       , mDirtyViewport(true)

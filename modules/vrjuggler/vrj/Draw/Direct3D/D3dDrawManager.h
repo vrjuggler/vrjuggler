@@ -39,7 +39,9 @@
 
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <vrj/Display/DisplayPtr.h>
 #include <vrj/Draw/DrawManager.h>
+
 
 namespace vrj
 {
@@ -95,10 +97,10 @@ public:
     *       This guarantees that we are not rendering currently.
     *       We will most likely be waiting for a render trigger.
     */
-   virtual void addDisplay(Display* disp);
+   virtual void addDisplay(DisplayPtr disp);
 
    /** Callback when display is removed from the Display Manager. */
-   virtual void removeDisplay(Display* disp);
+   virtual void removeDisplay(DisplayPtr disp);
 
    /** Shutdown the drawing API. */
    virtual void closeAPI();

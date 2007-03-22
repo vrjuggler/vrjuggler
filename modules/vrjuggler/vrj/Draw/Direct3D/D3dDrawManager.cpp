@@ -194,7 +194,7 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
    float vp_ox, vp_oy, vp_sx, vp_sy;    // Viewport origin and size
    Viewport::View view;                 // The view for the active viewport
 
-   Display* the_display = win->getDisplay();   // Get the display for easy access
+   DisplayPtr the_display = win->getDisplay();   // Get the display for easy access
 
    // Update the projections for the display using the current app's scale factor
    // NOTE: This relies upon no other thread trying to update this display at the same time
@@ -362,7 +362,7 @@ void D3dDrawManager::initAPI()
  *       This guarantees that we are not rendering currently.
  *       We will most likely be waiting for a render trigger.
  */
-void D3dDrawManager::addDisplay(Display* disp)
+void D3dDrawManager::addDisplay(DisplayPtr disp)
 {
    vprASSERT(disp != NULL);    // Can't add a null display
 
@@ -429,7 +429,7 @@ void D3dDrawManager::addDisplay(Display* disp)
  * @pre disp must be a valid display that we have.
  * @post window for disp is removed from the draw manager and child pipes.
  */
-void D3dDrawManager::removeDisplay(Display* disp)
+void D3dDrawManager::removeDisplay(DisplayPtr disp)
 {
    /*
    GlPipe* pipe;  pipe = NULL;
