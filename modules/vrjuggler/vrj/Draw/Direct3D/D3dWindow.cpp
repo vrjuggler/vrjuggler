@@ -326,7 +326,7 @@ void D3dWindow::checkEvents()
 void D3dWindow::configWindow(vrj::DisplayPtr disp)
 {
    const char neg_one_STRING[] = "-1";
-   vprASSERT(disp.ptr() != NULL);
+   vprASSERT(disp.get() != NULL);
 
    mVrjDisplay = disp;
    mVrjDisplay->getOriginAndSize(mOriginX, mOriginY, mWindowWidth,
