@@ -33,6 +33,8 @@
 #include <gadget/Type/DeviceInterface.h>
 
 #include <vrj/Draw/DrawSimInterface.h>
+#include <vrj/Draw/Pf/PfSimInterfacePtr.h>
+
 
 namespace vrj
 {

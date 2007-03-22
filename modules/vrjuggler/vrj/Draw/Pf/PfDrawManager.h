@@ -94,9 +94,8 @@ protected:
    struct pfDisplay
    {
       pfDisplay()
+         : pWin(NULL)
       {
-         disp = NULL;
-         pWin = NULL;
       }
 
       DisplayPtr              disp;

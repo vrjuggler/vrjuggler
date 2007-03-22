@@ -361,7 +361,7 @@ void PfDrawManager::initPipes()
  */
 void PfDrawManager::addDisplay(DisplayPtr disp)
 {
-   vprASSERT(disp.ptr() != NULL);    // Can't add a null display
+   vprASSERT(disp.get() != NULL);    // Can't add a null display
    vprASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
 
    //  For the display
@@ -378,7 +378,8 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
    pfDisplay pf_disp;            // The pfDisplay to use
    pf_disp.disp = disp;
 
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(disp) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "\tDisplay is:" << (void*) disp.get() << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "\tPfDrawManager::add Display: Got Display:\n" << (*disp) << vprDEBUG_FLUSH;
 
    int xo, yo, xs, ys;
@@ -1373,7 +1374,8 @@ void PfDrawManager::debugDump(int debugLevel)
 void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
 {
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel)
-      << "Display: " << (void*)(pf_disp->disp) << std::endl << vprDEBUG_FLUSH;
+      << "Display: " << (void*) pf_disp->disp.get() << std::endl
+      << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
       << "pWin: " << (void*)(pf_disp->pWin) << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
