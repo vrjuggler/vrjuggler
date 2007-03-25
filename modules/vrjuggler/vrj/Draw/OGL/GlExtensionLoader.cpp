@@ -25,10 +25,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/Draw/OGL/GlExtensionLoader.h>
-#include <vpr/vprConfig.h>
+
+#include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
 
-#include <GL/gl.h>
+#if defined(VPR_OS_Darwin) && defined(VPR_USE_COCOA)
+#  include <OpenGL/gl.h>
+#else
+#  include <GL/gl.h>
+#endif
 
 #if !defined(WIN32) && !defined(VPR_OS_Darwin)
 #include <GL/glx.h>

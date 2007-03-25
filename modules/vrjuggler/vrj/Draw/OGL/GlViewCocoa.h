@@ -35,18 +35,45 @@ class GlWindowCocoa;
 }
 
 /**
- * A custom Cocoa view class used for managing an OpenGL context. It is
- * designed to be used as a subview for InputViewCocoa from Gadgeteer. This
- * holds a pointer back to the vrj::GlWindowCocoa object that keeps track of
- * an NSWindow instance for which this object is a view. This view will update
- * the state of the vrj:GlWindowCocoa object as appropriate, usually as a
- * result of resize events.
+ * A custom Cocoa view class used for managing an OpenGL context. It must be
+ * the content view for an NSWindow instance. This holds a pointer back to the
+ * vrj::GlWindowCocoa object that keeps track of an NSWindow instance for
+ * which this object is a view. This view will update the state of the
+ * vrj:GlWindowCocoa object as appropriate, usually as a result of resize
+ * events.
  *
- * @since 2.1.18
+ * @since 2.1.21
  */
 @interface GlViewCocoa : NSOpenGLView
 {
    vrj::GlWindowCocoa* mVrjWindow;      /**< The window using this view. */
+
+   /** @name Full Screen State */
+   //@{
+   /** Indicates whether this view is in a full screen window. */
+   BOOL mFullScreen;
+
+   /**
+    * The Core Graphics display ID for the screen on which this view is
+    * rendered.
+    */
+   CGDirectDisplayID mDisplayID;
+
+   NSDictionary* mOrigDisplayMode;
+   //@}
+
+   /**
+    * Indicates whether this view should handle keyboard and mouse events.
+    * If so, they are handed off to \c mVrjWindow (as subclass of
+    * gadget::InputAreaCocoa).
+    */
+   BOOL mHandleInput;
+
+   /**
+    * Indicates whether the mouse cursor should be hidden whenever the mouse
+    * is within the tracking rectnagle of this view.
+    */
+   BOOL mShouldHideCursor;
 
    /**
     * Tracking rectangle for mouse cursor hidding. If there is no need for
@@ -63,12 +90,14 @@ class GlWindowCocoa;
     * also test for a nil return value in case initialization through the
     * use of the NSOpenGLView initWithFrame:pixelFormat: initializer.
     *
-    * @param frameFrect The frame rectangle for this view. In general, this
-    *                   should be identifical to the frame rectangle used for
-    *                   the containing NSWindow.
-    * @param window     The vrj::GlWindowCocoa instance to be associated with
-    *                   this view.
-    * @param screen     The screen on which this view will be used.
+    * @param frameFrect  The frame rectangle for this view. In general, this
+    *                    should be identifical to the frame rectangle used for
+    *                    the containing NSWindow.
+    * @param window      The vrj::GlWindowCocoa instance to be associated with
+    *                    this view.
+    * @param screen      The screen on which this view will be used.
+    * @param handleInput A Boolean flag indicating whether this view should
+    *                    handle keyboard and mouse input events.
     *
     * @return self on successful initialization or nil on failure.
     *
@@ -77,5 +106,6 @@ class GlWindowCocoa;
     */
    -(id) initWithFrame:(NSRect) frameRect
               glWindow:(vrj::GlWindowCocoa*) window
-                screen:(NSScreen*) screen;
+                screen:(NSScreen*) screen
+         inputHandling:(BOOL) handleInput;
 @end

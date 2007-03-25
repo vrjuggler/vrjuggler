@@ -495,7 +495,7 @@ void GlDrawManager::outStream(std::ostream& out)
 #if  defined(VPR_OS_Windows)
 #  include <vrj/Draw/OGL/GlWindowWin32.h>
 #elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
-#  include <vrj/Draw/OGL/GlWindowOSX.h>
+#  include <vrj/Draw/OGL/GlWindowCocoa.h>
 #else
 #  include <vrj/Draw/OGL/GlWindowXWin.h>
 #endif
@@ -508,7 +508,7 @@ vrj::GlWindowPtr GlDrawManager::getGLWindow()
 #if  defined(VPR_OS_Windows)
    return GlWindowPtr(new vrj::GlWindowWin32);
 #elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
-   return GlWindowPtr(new vrj::GlWindowOSX);
+   return GlWindowPtr(new vrj::GlWindowCocoa);
 #else
    return GlWindowPtr(new vrj::GlWindowXWin);
 #endif
