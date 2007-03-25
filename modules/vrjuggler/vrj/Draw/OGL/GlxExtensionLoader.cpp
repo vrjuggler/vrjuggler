@@ -24,49 +24,47 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Draw/OGL/GlxExtensionLoader.h>
-#include <vpr/Util/Debug.h>
-#include <vpr/Util/Assert.h>
+#include <vrj/Draw/OGL/Config.h>
+
 #include <GL/glx.h>
 #include <GL/glxext.h>
 
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+
+#include <vrj/Draw/OGL/GlxExtensionLoader.h>
+
+
 namespace vrj
 {
-   // NVIDIA swap control
-   typedef Bool ( * PFNGLXJOINSWAPGROUPNVPROC) (::Display *dpy,
-                                                GLXDrawable drawable,
-                                                GLuint group);
-   
-   typedef Bool ( * PFNGLXBINDSWAPBARRIERNVPROC) (::Display *dpy,
-                                                  GLuint group,
-                                                  GLuint barrier);
-   
-   typedef Bool ( * PFNGLXQUERYSWAPGROUPNVPROC) (::Display *dpy,
-                                                 GLXDrawable drawable,
-                                                 GLuint *group,
-                                                 GLuint *barrier);
-   
-   typedef Bool ( * PFNGLXQUERYMAXSWAPGROUPSNVPROC) (::Display *dpy,
-                                                     int screen,
-                                                     GLuint *maxGroups,
-                                                     GLuint *maxBarriers);
-   
-   typedef Bool ( * PFNGLXQUERYFRAMECOUNTNVPROC) (::Display *dpy,
-                                                  int screen,
-                                                  GLuint *count);
-   
-   typedef Bool ( * PFNGLXRESETFRAMECOUNTNVPROC) (::Display *dpy, int screen);
+
+// NVIDIA swap control
+typedef Bool (* PFNGLXJOINSWAPGROUPNVPROC) (::Display*, GLXDrawable,
+                                           GLuint);
+
+typedef Bool (* PFNGLXBINDSWAPBARRIERNVPROC) (::Display*, GLuint, GLuint);
+
+typedef Bool (* PFNGLXQUERYSWAPGROUPNVPROC) (::Display*, GLXDrawable,
+                                             GLuint*, GLuint*);
+
+typedef Bool (* PFNGLXQUERYMAXSWAPGROUPSNVPROC) (::Display*, int, GLuint*,
+                                                 GLuint*);
+
+typedef Bool (* PFNGLXQUERYFRAMECOUNTNVPROC) (::Display*, int, GLuint*);
+
+typedef Bool (* PFNGLXRESETFRAMECOUNTNVPROC) (::Display*, int);
 
 struct GlxExtensionLoader::GlxFuncs
 {
    GlxFuncs()
+      : glXJoinSwapGroupNV(NULL)
+      , glXBindSwapBarrierNV(NULL)
+      , glXQuerySwapGroupNV(NULL)
+      , glXQueryMaxSwapGroupsNV(NULL)
+      , glXQueryFrameCountNV(NULL)
+      , glXResetFrameCountNV(NULL)
    {
-      glXJoinSwapGroupNV = NULL;
-      glXBindSwapBarrierNV = NULL;
-      glXQuerySwapGroupNV = NULL;
-      glXQueryMaxSwapGroupsNV = NULL;
-      glXQueryFrameCountNV = NULL;
-      glXResetFrameCountNV = NULL;
+      /* Do nothing. */ ;
    }
 
    PFNGLXJOINSWAPGROUPNVPROC        glXJoinSwapGroupNV;
@@ -100,45 +98,56 @@ bool GlxExtensionLoader::hasSwapGroupNV()
    return (mGlxFuncs->glXJoinSwapGroupNV != NULL);
 }
 
-Bool GlxExtensionLoader::glXJoinSwapGroupNV(::Display *dpy, GLXDrawable drawable,
-                             GLuint group)
+Bool GlxExtensionLoader::glXJoinSwapGroupNV(::Display* dpy,
+                                            GLXDrawable drawable,
+                                            GLuint group)
 {
-   vprASSERT(mGlxFuncs->glXJoinSwapGroupNV != NULL && "Attemped to call unsupported extension.");
-   return mGlxFuncs->glXJoinSwapGroupNV(dpy,drawable,group);
+   vprASSERT(mGlxFuncs->glXJoinSwapGroupNV != NULL &&
+             "Attemped to call unsupported extension.");
+   return mGlxFuncs->glXJoinSwapGroupNV(dpy, drawable, group);
 }
 
-Bool GlxExtensionLoader::glXBindSwapBarrierNV(::Display *dpy, GLuint group, GLuint barrier)
+Bool GlxExtensionLoader::glXBindSwapBarrierNV(::Display* dpy, GLuint group,
+                                              GLuint barrier)
 {
-   vprASSERT(mGlxFuncs->glXBindSwapBarrierNV != NULL && "Attemped to call unsupported extension.");
-   return mGlxFuncs->glXBindSwapBarrierNV(dpy,group,barrier);
+   vprASSERT(mGlxFuncs->glXBindSwapBarrierNV != NULL &&
+             "Attemped to call unsupported extension.");
+   return mGlxFuncs->glXBindSwapBarrierNV(dpy, group, barrier);
 }
 
-Bool GlxExtensionLoader::glXQuerySwapGroupNV(::Display *dpy, GLXDrawable drawable,
-                           GLuint *group, GLuint *barrier)
+Bool GlxExtensionLoader::glXQuerySwapGroupNV(::Display* dpy,
+                                             GLXDrawable drawable,
+                                             GLuint* group,
+                                             GLuint* barrier)
 {
-   vprASSERT(mGlxFuncs->glXQuerySwapGroupNV != NULL && "Attemped to call unsupported extension.");
-   return mGlxFuncs->glXQuerySwapGroupNV(dpy,drawable,group,barrier);
+   vprASSERT(mGlxFuncs->glXQuerySwapGroupNV != NULL &&
+             "Attemped to call unsupported extension.");
+   return mGlxFuncs->glXQuerySwapGroupNV(dpy, drawable, group, barrier);
 }
 
-Bool GlxExtensionLoader::glXQueryMaxSwapGroupsNV(::Display *dpy, int screen,
-                               GLuint *maxGroups, GLuint *maxBarriers)
+Bool GlxExtensionLoader::glXQueryMaxSwapGroupsNV(::Display* dpy, int screen,
+                                                 GLuint* maxGroups,
+                                                 GLuint* maxBarriers)
 {
-   vprASSERT(mGlxFuncs->glXQueryMaxSwapGroupsNV != NULL && "Attemped to call unsupported extension.");
-   return mGlxFuncs->glXQueryMaxSwapGroupsNV(dpy,screen,maxGroups,maxBarriers);
+   vprASSERT(mGlxFuncs->glXQueryMaxSwapGroupsNV != NULL &&
+             "Attemped to call unsupported extension.");
+   return mGlxFuncs->glXQueryMaxSwapGroupsNV(dpy, screen, maxGroups,
+                                             maxBarriers);
 }
 
-Bool GlxExtensionLoader::glXQueryFrameCountNV(::Display *dpy, int screen, GLuint *count)
+Bool GlxExtensionLoader::glXQueryFrameCountNV(::Display* dpy, int screen,
+                                              GLuint* count)
 {
-   vprASSERT(mGlxFuncs->glXQueryFrameCountNV != NULL && "Attemped to call unsupported extension.");
-   return mGlxFuncs->glXQueryFrameCountNV(dpy,screen,count);
+   vprASSERT(mGlxFuncs->glXQueryFrameCountNV != NULL &&
+             "Attemped to call unsupported extension.");
+   return mGlxFuncs->glXQueryFrameCountNV(dpy, screen, count);
 }
 
-Bool GlxExtensionLoader::glXResetFrameCountNV(::Display *dpy, int screen)
+Bool GlxExtensionLoader::glXResetFrameCountNV(::Display* dpy, int screen)
 {
-   vprASSERT(mGlxFuncs->glXResetFrameCountNV != NULL && "Attemped to call unsupported extension.");
-   return mGlxFuncs->glXResetFrameCountNV(dpy,screen);
+   vprASSERT(mGlxFuncs->glXResetFrameCountNV != NULL &&
+             "Attemped to call unsupported extension.");
+   return mGlxFuncs->glXResetFrameCountNV(dpy, screen);
 }
 
 }  // namespace vrj
-
-

@@ -27,11 +27,14 @@
 #ifndef VRJ_WGL_EXTENSION_LOADER_H_
 #define VRJ_WGL_EXTENSION_LOADER_H_
 
-#include <vrj/Draw/OGL/GlExtensionLoader.h>
+#include <vrj/Draw/OGL/Config.h>
+
 #include <boost/shared_ptr.hpp>
 
-#include <windows.h>
 #include <GL/gl.h>
+
+#include <vrj/Draw/OGL/GlExtensionLoader.h>
+
 
 namespace vrj
 {
@@ -57,13 +60,14 @@ public:
 
    BOOL wglBindSwapBarrierNV(GLuint group, GLuint barrier);
 
-   BOOL wglQuerySwapGroupNV(HDC hdc, GLuint *group, GLuint *barrier);
+   BOOL wglQuerySwapGroupNV(HDC hdc, GLuint* group, GLuint* barrier);
 
-   BOOL wglQueryMaxSwapGroupsNV(HDC hdc, GLuint *maxGroups, GLuint *maxBarriers);
+   BOOL wglQueryMaxSwapGroupsNV(HDC hdc, GLuint* maxGroups,
+                                GLuint* maxBarriers);
 
-   BOOL wglQueryFrameCountNV(HDC hdc, /*int screen,*/ GLuint *count);
+   BOOL wglQueryFrameCountNV(HDC hdc, /*int screen,*/ GLuint* count);
 
-   BOOL wglResetFrameCountNV(HDC hdc/*, int screen*/);
+   BOOL wglResetFrameCountNV(HDC hdc /*, int screen*/);
    //@}
 
 protected:
@@ -74,5 +78,5 @@ protected:
 
 }  // namespace vrj
 
-#endif
 
+#endif

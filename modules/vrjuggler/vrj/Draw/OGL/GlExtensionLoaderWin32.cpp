@@ -35,39 +35,38 @@
 
 namespace vrj
 {
-   // NVIDIA swap control
-   typedef BOOL (GLAPI * PFNWGLJOINSWAPGROUPNVPROC) (HDC hdc,
-                                                GLuint group);
-   
-   typedef BOOL (GLAPI * PFNWGLBINDSWAPBARRIERNVPROC) (GLuint group,
-                                                  GLuint barrier);
-   
-   typedef BOOL (GLAPI * PFNWGLQUERYSWAPGROUPNVPROC) (HDC hdc,
-                                                 GLuint *group,
-                                                 GLuint *barrier);
-   
-   typedef BOOL (GLAPI * PFNWGLQUERYMAXSWAPGROUPSNVPROC) (HDC hdc,
-                                                     /*int screen,*/
-                                                     GLuint *maxGroups,
-                                                     GLuint *maxBarriers);
-   
-   typedef BOOL (GLAPI * PFNWGLQUERYFRAMECOUNTNVPROC) (HDC hdc,
-                                                  /*int screen,*/
-                                                  GLuint *count);
-   
-   typedef BOOL (GLAPI * PFNWGLRESETFRAMECOUNTNVPROC) (HDC hdc/*, int screen*/);
+// NVIDIA swap control
+typedef BOOL (GLAPI * PFNWGLJOINSWAPGROUPNVPROC) (HDC hdc, GLuint group);
+
+typedef BOOL (GLAPI * PFNWGLBINDSWAPBARRIERNVPROC) (GLuint group,
+                                                    GLuint barrier);
+
+typedef BOOL (GLAPI * PFNWGLQUERYSWAPGROUPNVPROC) (HDC hdc, GLuint* group,
+                                                   GLuint* barrier);
+
+typedef BOOL (GLAPI * PFNWGLQUERYMAXSWAPGROUPSNVPROC) (HDC hdc,
+                                                       /*int screen,*/
+                                                       GLuint* maxGroups,
+                                                       GLuint* maxBarriers);
+
+typedef BOOL (GLAPI * PFNWGLQUERYFRAMECOUNTNVPROC) (HDC hdc,
+                                                    /*int screen,*/
+                                                    GLuint* count);
+
+typedef BOOL (GLAPI * PFNWGLRESETFRAMECOUNTNVPROC) (HDC hdc /*, int screen*/);
 
 
 struct GlExtensionLoaderWin32::WglFuncs
 {
    WglFuncs()
+      : wglJoinSwapGroupNV(NULL)
+      , wglBindSwapBarrierNV(NULL)
+      , wglQuerySwapGroupNV(NULL)
+      , wglQueryMaxSwapGroupsNV(NULL)
+      , wglQueryFrameCountNV(NULL)
+      , wglResetFrameCountNV(NULL)
    {
-      wglJoinSwapGroupNV = NULL;
-      wglBindSwapBarrierNV = NULL;
-      wglQuerySwapGroupNV = NULL;
-      wglQueryMaxSwapGroupsNV = NULL;
-      wglQueryFrameCountNV = NULL;
-      wglResetFrameCountNV = NULL;
+      /* Do nothing. */ ;
    }
 
    PFNWGLJOINSWAPGROUPNVPROC        wglJoinSwapGroupNV;
@@ -103,38 +102,48 @@ bool GlExtensionLoaderWin32::hasSwapGroupNV()
 
 BOOL GlExtensionLoaderWin32::wglJoinSwapGroupNV(HDC hdc, GLuint group)
 {
-   vprASSERT(mWglFuncs->wglJoinSwapGroupNV != NULL && "Attemped to call unsupported extension.");
+   vprASSERT(mWglFuncs->wglJoinSwapGroupNV != NULL &&
+             "Attemped to call unsupported extension.");
    return mWglFuncs->wglJoinSwapGroupNV(hdc, group);
 }
 
 BOOL GlExtensionLoaderWin32::wglBindSwapBarrierNV(GLuint group, GLuint barrier)
 {
-   vprASSERT(mWglFuncs->wglBindSwapBarrierNV != NULL && "Attemped to call unsupported extension.");
+   vprASSERT(mWglFuncs->wglBindSwapBarrierNV != NULL &&
+             "Attemped to call unsupported extension.");
    return mWglFuncs->wglBindSwapBarrierNV(group, barrier);
 }
 
-BOOL GlExtensionLoaderWin32::wglQuerySwapGroupNV(HDC hdc, GLuint *group, GLuint *barrier)
+BOOL GlExtensionLoaderWin32::wglQuerySwapGroupNV(HDC hdc, GLuint* group,
+                                                 GLuint* barrier)
 {
-   vprASSERT(mWglFuncs->wglQuerySwapGroupNV != NULL && "Attemped to call unsupported extension.");
+   vprASSERT(mWglFuncs->wglQuerySwapGroupNV != NULL &&
+             "Attemped to call unsupported extension.");
    return mWglFuncs->wglQuerySwapGroupNV(hdc, group, barrier);
 }
 
-BOOL GlExtensionLoaderWin32::wglQueryMaxSwapGroupsNV(HDC hdc, GLuint *maxGroups, GLuint *maxBarriers)
+BOOL GlExtensionLoaderWin32::wglQueryMaxSwapGroupsNV(HDC hdc,
+                                                     GLuint* maxGroups,
+                                                     GLuint* maxBarriers)
 {
-   vprASSERT(mWglFuncs->wglQueryMaxSwapGroupsNV != NULL && "Attemped to call unsupported extension.");
+   vprASSERT(mWglFuncs->wglQueryMaxSwapGroupsNV != NULL &&
+             "Attemped to call unsupported extension.");
    return mWglFuncs->wglQueryMaxSwapGroupsNV(hdc, maxGroups, maxBarriers);
 }
 
-BOOL GlExtensionLoaderWin32::wglQueryFrameCountNV(HDC hdc, /*int screen,*/ GLuint *count)
+BOOL GlExtensionLoaderWin32::wglQueryFrameCountNV(HDC hdc, /*int screen,*/
+                                                  GLuint* count)
 {
-   vprASSERT(mWglFuncs->wglQueryFrameCountNV != NULL && "Attemped to call unsupported extension.");
+   vprASSERT(mWglFuncs->wglQueryFrameCountNV != NULL &&
+             "Attemped to call unsupported extension.");
    return mWglFuncs->wglQueryFrameCountNV(hdc, /*screen,*/ count);
 }
 
-BOOL GlExtensionLoaderWin32::wglResetFrameCountNV(HDC hdc/*, int screen*/)
+BOOL GlExtensionLoaderWin32::wglResetFrameCountNV(HDC hdc /*, int screen*/)
 {
-   vprASSERT(mWglFuncs->wglResetFrameCountNV != NULL && "Attemped to call unsupported extension.");
-   return mWglFuncs->wglResetFrameCountNV(hdc/*, screen*/);
+   vprASSERT(mWglFuncs->wglResetFrameCountNV != NULL &&
+             "Attemped to call unsupported extension.");
+   return mWglFuncs->wglResetFrameCountNV(hdc /*, screen*/);
 }
 
 }  // namespace vrj
