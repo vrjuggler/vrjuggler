@@ -493,7 +493,7 @@ void CocoaWrapper::run()
 void CocoaWrapper::stop()
 {
 //   mRunning = false;
-   [[NSApplication sharedApplication] stop:nil];
+   [[NSApplication sharedApplication] terminate:nil];
 }
 
 void CocoaWrapper::threadStarted()
