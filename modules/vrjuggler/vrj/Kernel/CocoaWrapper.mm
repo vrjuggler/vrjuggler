@@ -126,7 +126,11 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
 
    -(BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication*) sencedr
    {
-      return YES;
+      // We return NO here because we have a different way of shutting down
+      // the application. When vrj::Kernel::stop() is invoked, it will cause
+      // the application run loop to stop by invoking
+      // vrj::CocoaWrapper::stop().
+      return NO;
    }
 
    -(void) applicationWillFinishLaunching:(NSNotification*) aNotification
