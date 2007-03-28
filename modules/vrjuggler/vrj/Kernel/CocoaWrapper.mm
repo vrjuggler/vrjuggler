@@ -466,7 +466,11 @@ void CocoaWrapper::run()
                                      untilDate:[NSDate distantFuture]
                                         inMode:NSDefaultRunLoopMode
                                        dequeue:YES];
+
+   // Ensure that the VR Juggler application becomes focused even if it is
+   // executed directly from within its bundle.
    [app activateIgnoringOtherApps:YES];
+
    NSDate* date = [NSDate date];
 
    while ( mRunning )
@@ -485,8 +489,11 @@ void CocoaWrapper::run()
 
    NSLog(@"CocoaWrapper::run returning\n");
 */
-   // This never returns.
+   // Ensure that the VR Juggler application becomes focused even if it is
+   // executed directly from within its bundle.
    [app activateIgnoringOtherApps:YES];
+
+   // This never returns.
    [app run];
 }
 
