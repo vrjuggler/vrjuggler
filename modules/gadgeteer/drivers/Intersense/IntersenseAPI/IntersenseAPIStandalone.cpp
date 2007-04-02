@@ -39,9 +39,8 @@ bool IntersenseAPIStandalone::open(const std::string& dsoLocation)
       if (-1 != mHandle) 
       {
          mActive = true;
+         ISD_GetTrackerConfig(mHandle, &mInfo, true);
       }
-
-      ISD_GetTrackerConfig(mHandle, &mInfo, true);
    }
    return mActive;
 }
