@@ -27,7 +27,93 @@
 #include <iostream>
 #include <stdlib.h>
 #include <ctype.h>
+
+#include <vpr/Util/Debug.h>
+
 #include <drivers/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
+
+
+static std::string getTrackerTypeString(DWORD type)
+{
+   std::string type_str;
+
+   switch (type)
+   {
+      case ISD_PRECISION_SERIES:
+         type_str = "Precision Series";
+         break;
+      case ISD_INTERTRAX_SERIES:
+         type_str = "InterTrax Series";
+         break;
+      default:
+         type_str = "None";
+         break;
+   }
+
+   return type_str;
+}
+
+static std::string getTrackerModelString(DWORD model)
+{
+   std::string model_str;
+
+   switch (model)
+   {
+      case ISD_IS300:
+         model_str = "IS-300";
+         break;
+      case ISD_IS600:
+         model_str = "IS-600";
+         break;
+      case ISD_IS900:
+         model_str = "IS-900";
+         break;
+      case ISD_INTERTRAX:
+         model_str = "InterTrax";
+         break;
+      default:
+         model_str = "Unknown";
+         break;
+   }
+
+   return model_str;
+}
+
+static void printTrackerInfo(const ISD_TRACKER_INFO_TYPE& info)
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "InterSense tracker information:" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "* InterSense Library version: " << info.LibVersion << std::endl
+      << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "* Tracker type: " << getTrackerTypeString(info.TrackerType)
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "* Tracker model: " << getTrackerModelString(info.TrackerModel)
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "* Port number: " << info.Port << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "* Sync frequency: " << info.SyncRate << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "* Sync phase: " << info.SyncPhase << "%" << std::endl
+      << vprDEBUG_FLUSH;
+
+   if ( info.TrackerModel == ISD_IS900 )
+   {
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "* Ultrasonic timeout: " << info.UltTimeout << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "* Ultrasonic speaker volume: " << info.UltVolume << std::endl
+         << vprDEBUG_FLUSH;
+   }
+
+   vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "* Firmware revision: " << info.FirmwareRev << std::endl
+      << vprDEBUG_FLUSH;
+}
 
 bool IntersenseAPIStandalone::open(const std::string& dsoLocation)
 {
@@ -39,9 +125,28 @@ bool IntersenseAPIStandalone::open(const std::string& dsoLocation)
       if (-1 != mHandle) 
       {
          mActive = true;
-         ISD_GetTrackerConfig(mHandle, &mInfo, true);
+         const Bool got_config = ISD_GetTrackerConfig(mHandle, &mInfo, true);
+
+         if ( got_config )
+         {
+/*
+            if ( tracker_info.LibVersion < 3.58 )
+            {
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                  << clrOutBOLD(clrYELLOW, "WARNING")
+                  << ": This driver only works with version 3.58 or newer of "
+                  << "the InterSense Library." << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                  << "Version " << tracker_info.LibVersion << " was loaded.\n"
+                  << vprDEBUG_FLUSH;
+            }
+*/
+
+            printTrackerInfo(mInfo);
+         }
       }
    }
+
    return mActive;
 }
 
