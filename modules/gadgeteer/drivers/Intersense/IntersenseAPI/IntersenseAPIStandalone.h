@@ -215,6 +215,10 @@ public:
 
    /**
     * Returns an identifier (ISD_SYSTEM_MODEL) describing the type of system.
+    *
+    * @pre This driver is active.
+    *
+    * @see isActive()
     */
    int getSystemModel() const
    {
@@ -223,6 +227,10 @@ public:
 
    /**
     * Returns an identifier (ISD_SYSTEM_TYPE) describing 3DOF or 6DOF.
+    *
+    * @pre This driver is active.
+    *
+    * @see isActive()
     */
    int getSystemType() const
    {
@@ -232,6 +240,10 @@ public:
    /**
     * Returns an identifier (ISD_INTERFACE_TYPE) describing the communication
     * interface.
+    *
+    * @pre This driver is active.
+    *
+    * @see isActive()
     */
    int getInterfaceType() const
    {
