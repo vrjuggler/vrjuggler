@@ -213,6 +213,31 @@ public:
       mConfigData[currentStation].GetInputs = hasInputs;
    }
 
+   /**
+    * Returns an identifier (ISD_SYSTEM_MODEL) describing the type of system.
+    */
+   int getSystemModel() const
+   {
+      return mInfo.TrackerModel;
+   }
+
+   /**
+    * Returns an identifier (ISD_SYSTEM_TYPE) describing 3DOF or 6DOF.
+    */
+   int getSystemType() const
+   {
+      return mInfo.TrackerType;
+   }
+
+   /**
+    * Returns an identifier (ISD_INTERFACE_TYPE) describing the communication
+    * interface.
+    */
+   int getInterfaceType() const
+   {
+      return mInfo.Interface;
+   }
+
    //
    ////////////
 
@@ -317,6 +342,14 @@ public:
       return mData.Station[i].Orientation[3];
    }
 
+   /**
+    * Gets the time stamp of the i'th receiver. 
+    */
+   float timeStamp(const unsigned int i) const
+   {
+      return mData.Station[i].TimeStamp;
+   }
+
    int buttonState(const unsigned int i, const unsigned int f);
 
    int analogData(const unsigned int i, const unsigned int j);
@@ -338,6 +371,7 @@ private:
    
    ISD_STATION_INFO_TYPE   mConfigData[ISD_MAX_STATIONS];
    ISD_TRACKER_DATA_TYPE   mData;
+   ISD_TRACKER_INFO_TYPE   mInfo;
 };
 
 #endif //GADGET_INTERSENSE_API_STANDALONE_H
