@@ -89,8 +89,6 @@ TSObjectProxy<ProfileManager::ThreadProfileData> ProfileManager::mThreadData;
          for(std::vector<Thread*>::size_type t = 0; t < num_threads; ++t)
          {
             vpr::Thread* thread = vpr::ThreadManager::instance()->getThread(t);
-            std::cout << "Print thread: " << (void*)thread << std::endl;
-            std::cout << "Thread: " << thread << std::endl;
             ProfileNode* root_node = getRootNode(thread);
             root_node->printTree();
          }
