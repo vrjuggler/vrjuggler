@@ -27,10 +27,16 @@
 #ifndef _PERF_PROBE_H_
 #define _PERF_PROBE_H_
 
-#include <GL/gl.h>
 #include <deque>
-#include <vpr/Util/Interval.h>
 #include <sstream>
+
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#else
+#  include <GL/gl.h>
+#endif
+
+#include <vpr/Util/Interval.h>
 #include <vrj/Draw/OGL/GlContextData.h>
 #include <Text.h>
 

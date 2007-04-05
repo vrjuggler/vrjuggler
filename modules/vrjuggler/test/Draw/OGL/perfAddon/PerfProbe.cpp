@@ -26,10 +26,16 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <GL/gl.h>
-#if ! defined(WIN32) && ! defined(WIN64) && ! defined(__sgi)
-#include <GL/glext.h>
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glext.h>
+#else
+#  include <GL/gl.h>
+#  if ! defined(WIN32) && ! defined(WIN64) && ! defined(__sgi)
+#     include <GL/glext.h>
+#  endif
 #endif
+
 #include <PerfProbe.h>
 #include <gmtl/Output.h>
 #include <Text.h>
