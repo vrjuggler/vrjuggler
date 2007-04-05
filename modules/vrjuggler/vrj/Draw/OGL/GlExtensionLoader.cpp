@@ -24,12 +24,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Draw/OGL/GlExtensionLoader.h>
+#include <vrj/Draw/OGL/Config.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
 
-#if defined(VPR_OS_Darwin) && defined(VPR_USE_COCOA)
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
 #  include <OpenGL/gl.h>
 #else
 #  include <GL/gl.h>
@@ -44,6 +44,8 @@
 #elif !defined(WIN32)
 #include <dlfcn.h>
 #endif
+
+#include <vrj/Draw/OGL/GlExtensionLoader.h>
 
 
 namespace vrj
