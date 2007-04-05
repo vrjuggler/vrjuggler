@@ -35,6 +35,7 @@ int main(int argc, char** argv)
    // Instantiate an instance of the app
    vrjTest::wandApp* application = new vrjTest::wandApp(kernel);
 
+#if ! defined(VRJ_USE_COCOA)
    // Check if the user specified at least one config file to use
    if (argc <= 1)
    {
@@ -48,6 +49,7 @@ int main(int argc, char** argv)
       std::cout << "\n\n" << std::flush;
       exit(1);
    }
+#endif
 
    // Load any config files specified on the command line
    for (int i = 1; i < argc; ++i)

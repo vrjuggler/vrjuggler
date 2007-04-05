@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
    vrj::Kernel* kernel = vrj::Kernel::instance();  // Get the kernel
    cubesApp* application = new cubesApp(kernel);   // Declare an instance of the app
 
+#if ! defined(VRJ_USE_COCOA)
    if (argc <= 1)
    {
       // display some usage info (holding the user by the hand stuff)
@@ -74,6 +75,7 @@ int main(int argc, char* argv[])
 #endif
       exit(1);
    }
+#endif
    
    // Load any config files specified on the command line
    for( int i = 1; i < argc; ++i )

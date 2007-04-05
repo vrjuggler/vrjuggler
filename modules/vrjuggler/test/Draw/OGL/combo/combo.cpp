@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
    vrjTest::wandApp*  wand_app  = new vrjTest::wandApp(kernel);
    cubesApp* cubes_app          = new cubesApp(kernel);
 
+#if ! defined(VRJ_USE_COCOA)
    if (argc <= 1)
    {
       // display some usage info (holding the user by the hand stuff)
@@ -63,6 +64,7 @@ int main(int argc, char* argv[])
       std::cout<<"\n"<<std::flush;
       exit(1);
    }
+#endif
 
    // Load any config files specified on the command line
    for ( int i = 1; i < argc; ++i )

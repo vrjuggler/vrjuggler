@@ -34,6 +34,8 @@
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
+#include <gadget/Type/KeyboardMouseInterface.h>
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
 
 
 namespace vrjTest
@@ -63,6 +65,7 @@ public:
    {
       mWand.init("VJWand");            // Handle to the wand device
       mAppExit.init("VJAppExit");      // App exit key
+      mKeyboard.init("VJKeyboard");
    }
 
    // Execute any initialization needed <b>after</b> API is started
@@ -118,6 +121,21 @@ public:
       //          << "  Last: " << last_time.getBaseVal() << "\n" << std::endl;
 
       //last_time = cur_time;
+      gadget::KeyboardMouse::EventQueue q = mKeyboard->getEventQueue();
+
+      gadget::KeyboardMouse::EventQueue::iterator i;
+      for ( i = q.begin(); i != q.end(); ++i )
+      {
+         if ( (*i)->type() == gadget::KeyPressEvent ||
+               (*i)->type() == gadget::KeyReleaseEvent )
+         {
+            gadget::KeyEventPtr key_evt =
+               boost::dynamic_pointer_cast<gadget::KeyEvent>(*i);
+            std::cout << "key_evt: key=" << key_evt->getKey()
+                      << ", char=" << key_evt->getKeyChar()
+                      << ", mask=" << key_evt->getModifierMask() << std::endl;
+         }
+      }
    }
 
    virtual void bufferPreDraw();
@@ -152,6 +170,7 @@ private:
    gadget::PositionInterface    mWand;
    float                        mTorusRotation;
    gadget::DigitalInterface     mAppExit;
+   gadget::KeyboardMouseInterface mKeyboard;
 };
 
 } // namespace vrjTest

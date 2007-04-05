@@ -32,11 +32,13 @@ int main(int argc, char** argv)
    vrj::Kernel* kernel = vrj::Kernel::instance();
    vrjTest::SwapSyncApp* application = new vrjTest::SwapSyncApp(kernel);
 
+#if ! defined(VRJ_USE_COCOA)
    if (argc <= 1)
    {
       std::cout << "Usage: " << argv[0] << " [conf files]..." << std::endl;
       exit(1);
    }
+#endif
 
    // Load any config files specified on the command line
    for (int i = 1; i < argc; ++i)

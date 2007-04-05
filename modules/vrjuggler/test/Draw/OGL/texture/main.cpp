@@ -42,8 +42,9 @@ int main( int argc, char* argv[] )
    vrj::Kernel* kernel = vrj::Kernel::instance();        
    
    // Create an instance of the application
-   TextureDemoApplication* application = new TextureDemoApplication( kernel );   
+   TextureDemoApplication* application = new TextureDemoApplication( kernel );
 
+#if ! defined(VRJ_USE_COCOA)
    // display usage if needed...
    if (argc <= 1)
    {
@@ -59,7 +60,8 @@ int main( int argc, char* argv[] )
       std::cout << "\n" << std::flush;
       exit( 1 );
    }
-   
+#endif
+
    // Load any config files specified on the command line
    for (int i = 1; i < argc; ++i )
    {
