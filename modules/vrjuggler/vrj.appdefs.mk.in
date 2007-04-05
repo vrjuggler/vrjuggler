@@ -76,6 +76,12 @@ EXTRA_LIBS+=		@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
 			@APP_BASIC_LIBS_END@ @APP_EXTRA_LIBS@		\
 			$(NULL)
 
+APP_ICNS=		$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-icons)
+APP_RESOURCES=		$(APP_ICNS)
+APP_INFO_PLIST=		$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-info-plist)
+APP_NIBS=		$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-nib)
+APP_INFO_STRINGS=	$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-info-strings)
+
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 ifeq ($(HOSTTYPE), Win32)

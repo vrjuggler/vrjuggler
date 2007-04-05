@@ -47,6 +47,12 @@ SRCS=		App.cpp			\
 		KernelExceptions.cpp	\
 		User.cpp
 
+ifeq (@PLATFORM@, Darwin)
+   ifeq (@GADGET_USE_COCOA@, yes)
+      SRCS+=	CocoaWrapper.mm
+   endif
+endif
+
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------

@@ -150,11 +150,11 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([1.1.35], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
+VPR_PATH([1.1.44], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 
 JCCL_PATH_CXX([1.1.5], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
-GADGETEER_PATH([1.1.24], ,
+GADGETEER_PATH([1.1.25], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 SNX_PATH([1.1.4], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
@@ -176,6 +176,12 @@ if test "x$VRJ_USE_X11" = "xyes" ; then
    CPPFLAGS="$vjsave_CPPFLAGS"
 
    AC_DEFINE([VRJ_USE_X11], , [Define if the X Window System will be used.])
+# IF we are not using X11 on Mac OS X, then we need to make sure that we can
+# build Objective-C and Objective-C++ code.
+elif test "x$PLATFORM" = "xDarwin" ; then
+   DPP_PROG_OBJC
+   DPP_PROG_OBJCXX
+   AC_DEFINE([VRJ_USE_COCOA], , [Define if Cocoa will be used.])
 fi
 
 GMTL_PATH([0.4.11], , [AC_MSG_ERROR([*** GMTL required for VR Juggler ***])])
@@ -314,6 +320,7 @@ fi
 #fi
 
 CXXFLAGS="$CXXFLAGS $CXX_VISIBILITY_FLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
+OBJCXXFLAGS="$CXXFLAGS -fobjc-exceptions"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$GADGET_CXXFLAGS $SNX_CXXFLAGS"
 vrj_cxxflags="$STDFLAGS"
@@ -345,6 +352,7 @@ if test "x$PLATFORM" = "xDarwin" ; then
    if test $vpr_gcc_major -lt 4 ; then
       CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
       CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+      OBJCXXFLAGS_DYNLIB="$OBJCXXFLAGS_DYNLIB -fexport-coalesced"
    fi
 
    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -Wl,-bind_at_load"
@@ -384,6 +392,7 @@ fi
 # of these variables after this point.
 VJ_STRIP_DUPLICATE_ARGS(CFLAGS, [$CFLAGS])
 VJ_STRIP_DUPLICATE_ARGS(CXXFLAGS, [$CXXFLAGS])
+VJ_STRIP_DUPLICATE_ARGS(OBJCXXFLAGS, [$OBJCXXFLAGS])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_FLAGS, [$DEPEND_FLAGS])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_EXTRAS, [$DEPEND_EXTRAS])
 VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
@@ -434,10 +443,12 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS_GL="$REQ_EXTRA_LIBS"
     DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
 
-    osx_frameworks=''
+    osx_core_frameworks=''
+    osx_gl_frameworks=''
 
     if test "x$VRJ_USE_X11" != "xyes" ; then
-        osx_frameworks="-framework AGL -framework ApplicationServices -framework Carbon"
+        osx_core_frameworks="-framework Cocoa"
+        osx_gl_frameworks="$osx_core_frameworks"
     fi
 
     REQ_EXTRA_PROF_LIBS="$LDFLAGS $SNX_PROF_LIBS $GADGET_PROF_LIBS $LIBS -lm"
@@ -446,14 +457,16 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -l$vrj_prof_lib_name $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
 
     if test "x$PLATFORM" = "xDarwin" ; then
+        DYLIB_DEPS_VJ="$DYLIB_DEPS_VJ $osx_core_frameworks"
+
         if test "x$VRJ_USE_X11" = "xyes" ; then
             CFLAGS="$CFLAGS $X_CFLAGS"
             CXXFLAGS="$CXXFLAGS $X_CFLAGS"
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
-            DYLIB_PROF_DEPS_GL="$DYLIB_PROF_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_gl_frameworks"
+            DYLIB_PROF_DEPS_GL="$DYLIB_PROF_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_gl_frameworks"
         else
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
-            DYLIB_PROF_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_gl_frameworks"
+            DYLIB_PROF_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_gl_frameworks"
         fi
     else
         DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL"

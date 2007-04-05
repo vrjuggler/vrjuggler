@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-05-2007 patrick     Added support for Cocoa windows on Mac OS X.
+                        NEW VERSION: 2.1.21
 Mar-21-2007 patrick     Instances of vrj::DrawSimInterfaces are now handled
                         internally using boost::shared_ptr<T>.
 Mar-21-2007 patrick     The Display Manager now uses vrj::DisplayPtr (a

@@ -61,7 +61,8 @@ else
          SRCS+=	GlWindowXWin.cpp	\
 		GlxExtensionLoader.cpp
       else
-         SRCS+=	GlWindowOSX.cpp
+         SRCS+=	GlViewCocoa.mm		\
+		GlWindowCocoa.mm
       endif
    else
       SRCS+=	GlWindowXWin.cpp	\
