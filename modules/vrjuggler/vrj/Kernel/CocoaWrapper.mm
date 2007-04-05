@@ -388,12 +388,14 @@ CocoaWrapper::CocoaWrapper()
 {
    mMainPool = [[NSAutoreleasePool alloc] init];
 
-   vpr::Thread::addThreadStartCallback(
-      boost::bind(&CocoaWrapper::threadStarted, this)
-   );
-   vpr::Thread::addThreadExitCallback(
-      boost::bind(&CocoaWrapper::threadEnded, this)
-   );
+   mThreadStartConn =
+      vpr::Thread::addThreadStartCallback(
+         boost::bind(&CocoaWrapper::threadStarted, this)
+      );
+   mThreadExitConn =
+      vpr::Thread::addThreadExitCallback(
+         boost::bind(&CocoaWrapper::threadEnded, this)
+      );
 
    NSConditionLock* lock = gadget::InputAreaCocoa::getWindowLock();
    [lock lock];
@@ -444,9 +446,8 @@ CocoaWrapper::CocoaWrapper()
 
 CocoaWrapper::~CocoaWrapper()
 {
-   vpr::Thread::removeThreadStartCallback(
-      boost::bind(&CocoaWrapper::threadStarted, this)
-   );
+   mThreadStartConn.disconnect();
+   mThreadExitConn.disconnect();
 
    [mMainPool release];
    mMainPool = nil;

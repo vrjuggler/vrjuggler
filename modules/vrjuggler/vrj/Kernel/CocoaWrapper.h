@@ -69,6 +69,9 @@ private:
 
    void threadEnded();
 
+   boost::signals::connection mThreadStartConn;
+   boost::signals::connection mThreadExitConn;
+
    /** @name Auto-Release Pools */
    //@{
    NSAutoreleasePool* mMainPool;        /**< Main auto-release pool */
