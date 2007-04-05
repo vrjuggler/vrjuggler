@@ -39,8 +39,10 @@
 #include <vpr/vprConfig.h>
 
 #include <boost/function.hpp>
+#include <boost/signal.hpp>
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
+
 
 namespace vpr
 {
@@ -63,6 +65,76 @@ typedef boost::function<void()> thread_func_t;
  */
 class VPR_CLASS_API BaseThread
 {
+public:
+   /** @name Thread State Callback Handling */
+   //@{
+   /**
+    * The type for the thread start and exit signals.
+    *
+    * @since 1.1.44
+    */
+   typedef boost::signal<void (vpr::Thread*)> state_signal_t;
+
+   /**
+    * Connects the given slot to the signal emitted whenever a new thread
+    * begins its execution. The slot is invoked immediately before the thread
+    * functor is invoked.
+    *
+    * @post \p slot is connected to \c sStartSignal.
+    *
+    * @param slot The slot object to be connected to the thread start signal.
+    *
+    * @return The connection object that holds the association between the
+    *         start signal and the given slot.
+    *
+    * @since 1.1.44
+    */
+   static boost::signals::connection
+      addThreadStartCallback(state_signal_t::slot_function_type slot);
+
+   /**
+    * Connects the given slot to the signal emitted whenever a running thread
+    * completes its execution. The slot is invoked immediately after the
+    * thread functor returns.
+    *
+    * @post \p slot is connected to \c sExitSignal.
+    *
+    * @param slot The slot object to be connected to the thread exit signal.
+    *
+    * @return The connection object that holds the association between the
+    *         exit signal and the given slot.
+    *
+    * @since 1.1.44
+    */
+   static boost::signals::connection
+      addThreadExitCallback(state_signal_t::slot_function_type slot);
+   //@}
+
+protected:
+   /**
+    * Emits the thread start signal.
+    *
+    * @since 1.1.44
+    */
+   static void emitThreadStart(vpr::Thread* thread)
+   {
+      sStartSignal(thread);
+   }
+
+   /**
+    * Emits the thread exit signal.
+    *
+    * @since 1.1.44
+    */
+   static void emitThreadExit(vpr::Thread* thread)
+   {
+      sExitSignal(thread);
+   }
+
+private:
+   static state_signal_t sStartSignal;
+   static state_signal_t sExitSignal;
+
 public:
    enum VPRThreadPriority
    {

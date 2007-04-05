@@ -1,0 +1,13 @@
+# Private Variables
+prefix = @BOOST_ROOT@
+
+# Standard Flagpoll Variables
+Name: Boost.Signals
+Description: The Boost.Signals library is an implementation of a managed signals and slots system.
+URL: http://www.boost.org/doc/html/signals.html
+Version: @BOOST_VERSION_DOT@
+Provides: Boost.Signals boost.signals
+Requires: boost = @BOOST_VERSION_DOT@
+Arch: @ISA@
+Cflags: @BOOST_INCLUDES@
+Libs: -L@BOOST_LIBDIR@ -l@boost_signals_name@

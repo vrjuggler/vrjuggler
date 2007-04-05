@@ -373,6 +373,9 @@ install-flagpoll:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/boost_filesystem.fpc				\
           $(libdir)$(LIBBITSUF)/flagpoll/boost_filesystem-$(BOOST_VERSION).$(ISA).fpc
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/boost_signals.fpc					\
+          $(libdir)$(LIBBITSUF)/flagpoll/boost_signals-$(BOOST_VERSION).$(ISA).fpc
 ifeq ($(USE_NSPR), Y)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/nspr.fpc						\

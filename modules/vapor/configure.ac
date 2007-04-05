@@ -144,6 +144,13 @@ AC_ARG_WITH([boost-fs-lib],
                           compiler option                 [default=Auto-detect]],
             [given_boost_fs_libname="$withval"], [given_boost_fs_libname=''])
 
+AC_ARG_WITH([boost-signals-lib],
+            [  --with-boost-signals-lib=<LIB NAME>
+                          The name of the Boost.Signals
+                          library suitable for the -l
+                          compiler option                 [default=Auto-detect]],
+            [given_boost_signals_libname="$withval"], [given_boost_signals_libname=''])
+
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
@@ -617,55 +624,59 @@ if test "x$ac_cv_has_backtrace" = "xyes" ; then
              [Define if the GLIBC backtrace() function is available.])
 fi
 
-# Construct the Boost.Filesystem library name automatically based on Boost
-# naming conventions if the user did not provide a library name.
-if test "x$given_boost_fs_libname" = "x" ; then
-   case $CC in
-      gcc*|*/gcc*)
-         toolset='-gcc'
-         ;;
-      icc*|*/icc*)
-         if test "x$OS_TYPE" = "xWin32" ; then
-            toolset='-iw'
-         else
-            toolset='-il'
-         fi
-         ;;
-      cygcl|msvccc|cl*|CL*)
-         toolset="-${BOOST_TOOL:=vc7}"
-         ;;
-      cc*|*/cc*)
-         if test "x$GCC" = "xyes" ; then
-            toolset='-gcc'
-         else
-            case $PLATFORM in
-               IRIX)
-                  toolset='-mp'
-                  ;;
-               Solaris)
-                  toolset='-sw'
-                  ;;
-            esac
-         fi
-         ;;
-   esac
-
-   # A correct installation of Boost on Darwin does not include the toolset name
-   # as part of the library file name.
-   if test "x$PLATFORM" = "xDarwin" ; then
-      toolset=''
-      threading=''
-   else
-      # We can only use multi-threading versions of Boost libraries if we are
-      # not using SPROC threads.  Boost does not support SPROC.
-      if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
-         threading='-mt'
+# Build up the possible Boost library suffix names. These will be stored in
+# $boost_suffixes and used later as necessary.
+case $CC in
+   gcc*|*/gcc*)
+      toolset='-gcc'
+      ;;
+   icc*|*/icc*)
+      if test "x$OS_TYPE" = "xWin32" ; then
+         toolset='-iw'
+      else
+         toolset='-il'
       fi
-   fi
+      ;;
+   cygcl|msvccc|cl*|CL*)
+      toolset="-${BOOST_TOOL:=vc7}"
+      ;;
+   cc*|*/cc*)
+      if test "x$GCC" = "xyes" ; then
+         toolset='-gcc'
+      else
+         case $PLATFORM in
+            IRIX)
+               toolset='-mp'
+               ;;
+            Solaris)
+               toolset='-sw'
+               ;;
+         esac
+      fi
+      ;;
+esac
 
-   boost_suffixes="$toolset$threading-$BOOST_LIB_VERSION $toolset$threading $threading"
+# A correct installation of Boost on Darwin does not include the toolset name
+# as part of the library file name.
+if test "x$PLATFORM" = "xDarwin" ; then
+   toolset=''
+   threading=''
 else
+   # We can only use multi-threading versions of Boost libraries if we are
+   # not using SPROC threads.  Boost does not support SPROC.
+   if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
+      threading='-mt'
+   fi
+fi
+
+boost_suffixes="$toolset$threading-$BOOST_LIB_VERSION $toolset$threading $threading"
+
+if test "x$given_boost_fs_libname" != "x" ; then
    boost_fs_name="$given_boost_fs_libname"
+fi
+
+if test "x$given_boost_signals_libname" != "x" ; then
+   boost_signals_name="$given_boost_signals_libname"
 fi
 
 # Ensure that a compiled version of the Boost.Filesystem library is available.
@@ -732,11 +743,53 @@ for l in $libdirs ; do
    fi
 done
 
-DPP_LANG_RESTORE
-
 if test "x$vpr_have_boost_fs" != "xyes" ; then
    AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
 fi
+
+testBoostSignals ( )
+{
+   libname="$1"
+   orig_LIBS="$2"
+
+   # NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
+   # are used together by AC_TRY_LINK().
+   LIBS="-l$libname $orig_LIBS"
+
+   AC_MSG_CHECKING([for boost::signal::operator()() in $libname])
+   AC_TRY_LINK([#include <boost/signal.hpp>],
+               [boost::signal<void ()> s; s();],
+               [vpr_have_boost_signals='yes'], [vpr_have_boost_signals='no'])
+   rm -rf ./ii_files
+   AC_MSG_RESULT([$vpr_have_boost_signals])
+
+   LIBS="$orig_LIBS"
+}
+
+LDFLAGS="-L$BOOST_LIBDIR $vprsave_LDFLAGS"
+
+if test "x$boost_signals_name" != "x" ; then
+   testBoostSignals $boost_signals_name $vprsave_LIBS
+else
+   # The extra empty string is to allow for no suffix to be used on the
+   # boost_signals library name.
+   for s in $boost_suffixes "" ; do
+      cur_boost_signals_name="boost_signals$s"
+
+      testBoostSignals $cur_boost_signals_name $vprsave_LIBS
+
+      if test "$vpr_have_boost_signals" = "yes" ; then
+         boost_signals_name="$cur_boost_signals_name"
+         break
+      fi
+   done
+fi
+
+if test "x$vpr_have_boost_signals" != "xyes" ; then
+   AC_MSG_ERROR([*** Boost.Signals required by VPR ***])
+fi
+
+DPP_LANG_RESTORE
 
 CXXFLAGS="$vprsave_CXXFLAGS"
 CPPFLAGS="$vprsave_CPPFLAGS"
@@ -908,9 +961,9 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_signals_name.lib $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_signals_name -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
 
 vpr_lib_name="vpr$LIBRARY_VERSION"
@@ -952,7 +1005,7 @@ fi
 
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
-    DYLIB_DEPS="$CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    DYLIB_DEPS="$CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_signals_name.lib $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
     DYLIB_DEPS="$APP_EXTRA_LIBS"
     VJ_BUILD_LIB_FILE_LIST([$DYLIB_DEPS], [DYLIB_DEP_FILES])
@@ -1077,6 +1130,7 @@ AC_SUBST(ABI_LIST)
 AC_SUBST(BOOST_VERSION_DOT)
 AC_SUBST(BOOST_LIBDIR)
 AC_SUBST(boost_fs_name)
+AC_SUBST(boost_signals_name)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
@@ -1099,6 +1153,7 @@ VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 AC_CONFIG_FILES([
    boost.fpc
    boost_filesystem.fpc
+   boost_signals.fpc
    nspr.fpc
    vpr.fpc
    Makefile

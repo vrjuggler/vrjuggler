@@ -35,16 +35,38 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/Thread/BaseThread.h>
+#include <iomanip>
+
+#include <vpr/Sync/Guard.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadManager.h>
-#include <iomanip>
+#include <vpr/Thread/BaseThread.h>
+
 
 namespace vpr
 {
 
+BaseThread::state_signal_t BaseThread::sStartSignal;
+BaseThread::state_signal_t BaseThread::sExitSignal;
+vpr::Mutex sStartSignalLock;
+vpr::Mutex sExitSignalLock;
+
 vpr::Int32 BaseThread::mNextThreadId = 0;
 vpr::TSTable BaseThread::gTSTable;
+
+boost::signals::connection BaseThread::
+addThreadStartCallback(BaseThread::state_signal_t::slot_function_type slot)
+{
+   vpr::Guard<vpr::Mutex> g(sStartSignalLock);
+   return sStartSignal.connect(slot);
+}
+
+boost::signals::connection BaseThread::
+addThreadExitCallback(BaseThread::state_signal_t::slot_function_type slot)
+{
+   vpr::Guard<vpr::Mutex> g(sExitSignalLock);
+   return sExitSignal.connect(slot);
+}
 
 /**
  * Ouputs the state of the object.

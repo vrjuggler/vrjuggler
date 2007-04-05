@@ -275,8 +275,12 @@ void ThreadPosix::startThread()
 
    try
    {
+      emitThreadStart(this);
+
       // --- CALL USER FUNCTOR --- //
       mUserThreadFunctor();
+
+      emitThreadExit(this);
    }
    catch (std::exception& ex)
    {

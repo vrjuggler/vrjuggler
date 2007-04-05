@@ -64,7 +64,7 @@ Description: The VR Juggler Portable Runtime (VPR) provides an object-oriented o
 URL: http://www.vrjuggler.org/vapor/
 Version: ${vpr_version}
 Provides: vpr VPR
-Requires: Boost.Filesystem = @BOOST_VERSION_DOT@ boost >= @BOOST_VERSION_DOT@ cppdom = @CPPDOM_VERSION@ ${extra_deps}
+Requires: Boost.Signals = @BOOST_VERSION_DOT@ Boost.Filesystem = @BOOST_VERSION_DOT@ boost >= @BOOST_VERSION_DOT@ cppdom = @CPPDOM_VERSION@ ${extra_deps}
 Arch: ${ISA}
 Cflags: ${vpr_cxxflags} ${vpr_extra_cxxflags} ${subsystem_cxxflags} -I${includedir} ${ABI_FLAGS}
 Libs: ${vpr_ldflags} ${vpr_libs} ${extra_libs}

@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-04-05 patrick  Added thread start/exit notification signals. Boost.Signals
+                    is now a required dependency.
+                    NEW VERSION: 1.1.44
 2007-03-03 patrick  Allow callers of vpr::InetAddr::getAllLocalAddrs() to
                     indicate whether interfaces in the down state should be
                     considered.

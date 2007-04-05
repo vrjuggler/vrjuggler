@@ -62,6 +62,7 @@ make.defs.mk.in: ;
 vpr.fpc.in: ;
 boost.fpc.in: ;
 boost_filesystem.fpc.in: ;
+boost_signals.fpc.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 
@@ -72,7 +73,7 @@ config.status: configure ;
 
 Makefile: $(srcdir)/VERSION configure config.status Makefile.in		\
           Makefile.inc.in make.defs.mk.in vpr.fpc.in boost.fpc.in	\
-          boost_filesystem.fpc.in
+          boost_filesystem.fpc.in boost_signals.fpc.in
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 	@$(MAKE) -f Makefile cleandepend
 
