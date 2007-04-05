@@ -28,7 +28,6 @@
 #include <string.h>
 #include <algorithm>
 #include <boost/bind.hpp>
-#include <boost/bind/apply.hpp>
 
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
@@ -61,6 +60,10 @@
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Util/Version.h>
+
+// This is included here to avoid conflicts with boost/signal.hpp (included as
+// a result of including vpr/Thread/Thread.h).
+#include <boost/bind/apply.hpp>
 
 
 namespace
