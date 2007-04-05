@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-05-2007 patrick     Made Cocoa the default windowing system on Mac OS X.
 Mar-03-2007 patrick     Added support for Cocoa input windows on Mac OS X.
                         NEW VERSION: 1.1.25
 Mar-02-2007 patrick     Updated for VPR 1.1.42.

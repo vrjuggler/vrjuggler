@@ -54,8 +54,9 @@ DPP_GEN_RECONFIG
 # ------------------------------------------------------ #
 
 AC_ARG_ENABLE([xwindows],
-              [  --enable-xwindows       Use X11 for windowing code ],
-              [XWIN_UI="$enableval"], [XWIN_UI='yes'])
+              [  --enable-xwindows       Use X11 for windowing code on
+                          Mac OS X instead of Cocoa       default=no],
+              [XWIN_UI="$enableval"], [XWIN_UI='no'])
 
 DPP_STD_CPP(yes)
 
