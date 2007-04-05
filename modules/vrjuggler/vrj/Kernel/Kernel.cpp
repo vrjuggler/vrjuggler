@@ -61,6 +61,10 @@
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Util/Version.h>
 
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+#  include <vrj/Kernel/CocoaWrapper.h>
+#endif
+
 // This is included here to avoid conflicts with boost/signal.hpp (included as
 // a result of including vpr/Thread/Thread.h).
 #include <boost/bind/apply.hpp>
@@ -80,6 +84,8 @@ void signalHandler(int signum)
 
 namespace vrj
 {
+
+bool Kernel::sUseCocoaWrapper(true);
 
 vprSingletonImp(Kernel);
 
@@ -148,6 +154,13 @@ void Kernel::stop()
    mExitWaitCondVar.release();
 
    setApplication(NULL);    // Set NULL application so that the app gets closed
+
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+   if ( NULL != mCocoaWrapper )
+   {
+      mCocoaWrapper->stop();
+   }
+#endif
 }
 
 /**
@@ -159,6 +172,18 @@ void Kernel::stop()
  * setting mIsRunning to false.
  */
 void Kernel::waitForKernelStop()
+{
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+   if ( NULL != mCocoaWrapper )
+   {
+      mCocoaWrapper->run();
+   }
+#endif
+
+   doWaitForKernelStop();
+}
+
+void Kernel::doWaitForKernelStop()
 {
    mExitWaitCondVar.acquire();
    {
@@ -302,6 +327,9 @@ void Kernel::controlLoop()
          vpr::prof::stop();
    }
 
+   // Shut down managers now that the kernel is done.
+   getInputManager()->shutdown();
+
    vpr::prof::stop();
 
    vprDEBUG(vrjDBG_KERNEL, vprDBG_WARNING_LVL)
@@ -354,9 +382,13 @@ void Kernel::checkForReconfig()
       }
       else
       {
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+         sched_yield();
+#else
          vprDEBUG(vrjDBG_KERNEL,vprDBG_WARNING_LVL)
             << "New application set; dependencies not satisfied yet.\n"
             << vprDEBUG_FLUSH;
+#endif
       }
    }
 }
@@ -721,7 +753,17 @@ Kernel::Kernel()
    , mDisplayManager(NULL)
    , mClusterManager(NULL)
    , mPerformanceMediator(NULL)
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+   , mCocoaWrapper(NULL)
+#endif
 {
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+   if ( sUseCocoaWrapper )
+   {
+      mCocoaWrapper = new CocoaWrapper();
+   }
+#endif
+
    // Print out the Juggler version number when the kernel is created.
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
       << std::string(strlen(VJ_VERSION) + 12, '=')
@@ -811,6 +853,14 @@ Kernel::Kernel()
 
 Kernel::~Kernel()
 {
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+   if ( NULL != mCocoaWrapper )
+   {
+//      delete mCocoaWrapper;
+      mCocoaWrapper = NULL;
+   }
+#endif
+
    if ( NULL != mPerformanceMediator )
    {
       delete mPerformanceMediator;

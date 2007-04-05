@@ -32,10 +32,12 @@
 #include <vector>
 #include <boost/function.hpp>
 
+#include <vpr/vpr.h>
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/CondVar.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <gadget/Type/DigitalInterface.h>
+
 
 namespace gadget
 {
@@ -61,7 +63,7 @@ class DrawManager;
 class SoundManager;
 class User;
 class App;
-
+class CocoaWrapper;
 
 /** \class Kernel Kernel.h vrj/Kernel/Kernel.h
  *
@@ -74,6 +76,32 @@ class App;
 class VJ_CLASS_API Kernel : public jccl::ConfigElementHandler
 {
 public:
+   /**
+    * Determines whether the kernel singleton will use the vrj::CocoaWrapper
+    * internally. The idea is to allow a user to provide an alternative to
+    * vrj::CocoaWrapper and its NSApplication delegate for better and more
+    * flexible integration with other Cocoa application environments. If this
+    * is called with a value of \c false, then the internal instance of
+    * vrj::CocoaWrapper will not be created, and the kernel will not attempt
+    * to communicate with the Cocoa system at all. The default behavior (i.e.,
+    * what is done if this function is not used at all) is to create the
+    * vrj::CocoaWrapper class and to have the kernel interacting with Cocoa
+    * (to the limited extent that is necessary) through it.
+    *
+    * @pre The vrj::Kernel singleton instance has not yet been constructed.
+    * @post \c sUseCocoaWrapper has the value of \p useWrapper.
+    *
+    * @param useWrapper A boolean flag that indicates whether 
+    *
+    * @note This is, of course, for Mac OS X only.
+    *
+    * @since 2.1.21
+    */
+   static void setUseCocoaWrapper(const bool useWrapper)
+   {
+      sUseCocoaWrapper = useWrapper;
+   }
+
    /** @name Kernel Control Loop Functions */
    //@{
    /**
@@ -119,6 +147,16 @@ public:
     * @see stop()
     */
    void waitForKernelStop();
+
+   /**
+    * This method is for internal use only. Do not call it directly. Instead,
+    * call waitForKernelStop().
+    *
+    * @see waitForKernelStop()
+    *
+    * @since 2.1.21
+    */
+   void doWaitForKernelStop();
    //@}
 
    /**
@@ -421,6 +459,11 @@ protected:
    /** Callbacks invoked by handleSignal() after stopping the kernel. */
    std::vector<signal_callback_t> mPostStopCallbacks;
    //@}
+
+   static bool sUseCocoaWrapper;
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+   CocoaWrapper* mCocoaWrapper;
+#endif
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
