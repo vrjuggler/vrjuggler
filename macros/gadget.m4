@@ -35,6 +35,7 @@ dnl     GADGET_LIBS_STATIC
 dnl     GADGET_PROF_LIBS_STATIC
 dnl     GADGET_EXTRA_LIBS
 dnl     GADGET_USE_X11
+dnl     GADGET_USE_COCOA
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([GADGETEER_PATH],
 [
@@ -85,6 +86,7 @@ AC_DEFUN([GADGETEER_PATH],
             GADGET_VERSION=`$FLAGPOLL $gadget_flagpoll_args --modversion`
 
             GADGET_USE_X11=`$FLAGPOLL $gadget_flagpoll_args --get-use-x11`
+            GADGET_USE_COCOA=`$FLAGPOLL $gadget_flagpoll_args --get-use-cocoa`
 
             DPP_VERSION_CHECK_MSG_NO_CACHE([Gadgeteer], [$GADGET_VERSION],
                                            [$min_gadget_version], [$2], [$3])
@@ -107,6 +109,7 @@ AC_DEFUN([GADGETEER_PATH],
         GADGET_VERSION="-1"
 
         GADGET_USE_X11=''
+        GADGET_USE_COCOA=''
 
         ifelse([$3], , :, [$3])
     fi
@@ -120,4 +123,5 @@ AC_DEFUN([GADGETEER_PATH],
     AC_SUBST(GADGET_VERSION)
 
     AC_SUBST(GADGET_USE_X11)
+    AC_SUBST(GADGET_USE_COCOA)
 ])
