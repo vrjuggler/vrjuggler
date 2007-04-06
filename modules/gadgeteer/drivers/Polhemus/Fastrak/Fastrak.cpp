@@ -162,8 +162,6 @@ bool Fastrak::startSampling()
 // this is called repeatedly by the sample thread created by startSampling()
 bool Fastrak::sample()
 {
-   bool status(true);
-
    // NOTE: Currently we are returning data for all stations, including
    //       disabled stations.
    std::vector<gadget::PositionData> cur_pos_samples(4);
