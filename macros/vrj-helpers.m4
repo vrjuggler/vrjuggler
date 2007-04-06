@@ -131,6 +131,18 @@ AC_DEFUN([VJ_COMPILER_SETUP],
     AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
                 _alt_cxx="$withval", _alt_cxx='none')
 
+    # Override the Object-C compiler that configure would otherwise find
+    # itself.
+    AC_ARG_WITH(objc,
+                [  --with-objc=<PATH>       Alternate Objective-C compiler],
+                _alt_objc="$withval", _alt_objc='none')
+
+    # Override the Objective-C++ compiler that configure would otherwise find
+    # itself.
+    AC_ARG_WITH(objcxx,
+                [  --with-objcxx=<PATH>     Alternate Objective-C++ compiler ],
+                _alt_objcxx="$withval", _alt_objcxx='none')
+
     # -------------------------------------------------------------------------
     # Checks for programs.
     # -------------------------------------------------------------------------
@@ -174,6 +186,22 @@ AC_DEFUN([VJ_COMPILER_SETUP],
     # Otherwise, force the use of the alternate C++ compiler.
     else
         CXX="${_alt_cxx}"
+    fi
+
+    # If no alternate Objective-C compiler was specified, check to see if it is
+    # necessary to force the use of a specific compiler on a given platform.
+    if test "x${_alt_objc}" = "xnone" ; then
+        OBJC='cc'
+    else
+        OBJC="${_alt_objc}"
+    fi
+
+    # If no alternate Objective-C++ compiler was specified, check to see if it
+    # is necessary to force the use of a specific compiler on a given platform.
+    if test "x${_alt_objcxx}" = "xnone" ; then
+        OBJCXX='cc'
+    else
+        OBJCXX="${_alt_objcxx}"
     fi
 
     DPP_PROG_CC([$CC], , [AC_MSG_ERROR($CC_ERR)])
