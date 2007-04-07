@@ -581,6 +581,22 @@ void GlWindowXWin::checkEvents()
    }
 }
 
+#if defined(GLX_SAMPLES_SGIS) && defined(GLX_SAMPLE_BUFFERS_SGIS)
+#define HAVE_MULTISAMPLING 1
+const unsigned int VRJ_SAMPLE_BUFFERS(GLX_SAMPLE_BUFFERS_SGIS);
+const unsigned int VRJ_SAMPLES(GLX_SAMPLES_SGIS);
+#elif defined(GLX_SAMPLES) && defined(GLX_SAMPLE_BUFFERS)
+#define HAVE_MULTISAMPLING 1
+const unsigned int VRJ_SAMPLE_BUFFERS(GLX_SAMPLE_BUFFERS);
+const unsigned int VRJ_SAMPLES(GLX_SAMPLES);
+#elif defined(GLX_SAMPLES_ARB) && defined(GLX_SAMPLE_BUFFERS_ARB)
+#define HAVE_MULTISAMPLING 1
+const unsigned int VRJ_SAMPLE_BUFFERS(GLX_SAMPLE_BUFFERS_ARB);
+const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
+#else
+#define HAVE_MULTISAMPLING 0
+#endif
+
 /***********************************************************/
 /* private member functions.  these get profoundly painful */
 /***********************************************************/
@@ -614,25 +630,26 @@ void GlWindowXWin::checkEvents()
    // glXChooseVisual() will return the visual with the smallest number of
    // auxiliary buffers that meets or exceeds the requested count.
    int num_aux_bufs(0);
-   bool want_fsaa(false);
+   bool enable_multisamp(false);
+   int num_sample_bufs(1);
+   int num_samples(2);
 
    jccl::ConfigElementPtr gl_fb_elt = mVrjDisplay->getGlFrameBufferConfig();
 
    if ( gl_fb_elt.get() != NULL )
    {
-      if ( gl_fb_elt->getVersion() < 2 )
+      if ( gl_fb_elt->getVersion() < 3 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
             << mVrjDisplay->getName() << "'" << std::endl;
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "has an out of date OpenGL frame buffer configuration."
-            << std::endl;
+            << "has an out of date OpenGL frame buffer configuration.\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "Expected version 2 but found version "
-            << gl_fb_elt->getVersion() << ".\n";
+            << "Expected version 3 but found version "
+            << gl_fb_elt->getVersion() << ".  Default values\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "Default values will be used for some frame buffer settings.\n"
+            << "will be used for some frame buffer settings.\n"
             << vprDEBUG_FLUSH;
       }
 
@@ -648,7 +665,10 @@ void GlWindowXWin::checkEvents()
       accum_green_size = gl_fb_elt->getProperty<int>("accum_green_size");
       accum_blue_size  = gl_fb_elt->getProperty<int>("accum_blue_size");
       accum_alpha_size = gl_fb_elt->getProperty<int>("accum_alpha_size");
-      want_fsaa        = gl_fb_elt->getProperty<bool>("fsaa_enable");
+      num_sample_bufs  = gl_fb_elt->getProperty<int>("num_sample_buffers");
+      num_samples      = gl_fb_elt->getProperty<int>("num_samples");
+
+      enable_multisamp = num_sample_bufs > 0;
    }
 
    if ( visual_id != -1 )
@@ -849,6 +869,16 @@ void GlWindowXWin::checkEvents()
          << indent_text << std::setw(pad_width_dot)
          << "Accumulation buffer alpha size " << " " << accum_alpha_size
          << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Number of multisample buffers " << " " << num_sample_bufs
+         << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Number of samples per buffer " << " " << num_samples
+         << std::endl;
       vprDEBUG_CONTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
          << vprDEBUG_FLUSH;
 
@@ -888,24 +918,47 @@ void GlWindowXWin::checkEvents()
       viattrib.push_back(GLX_ACCUM_ALPHA_SIZE);
       viattrib.push_back(accum_alpha_size);
 
-      // Enable full-screen anti-aliasing if it is available and it was
-      // requested.
-#ifdef GLX_SAMPLES_SGIS
-      // Save the current attribute vector size so we can try disabling FSAA if
-      // necessary.
-      const unsigned int fsaa_attrib_index = viattrib.size();
+      // Enable multisampling if it is available and it was requested.
+#if HAVE_MULTISAMPLING
+      // Save the current attribute vector size so we can try disabling
+      // multisampling if necessary.
+      const unsigned int multisamp_attrib_index = viattrib.size();
+      const unsigned int multisamp_buffers_attrib_index =
+         multisamp_attrib_index + 1;
+      const unsigned int multisamp_samples_attrib_index =
+         multisamp_attrib_index + 3;
 
-      if ( want_fsaa )
+      if ( enable_multisamp )
       {
-         viattrib.push_back(GLX_SAMPLES_SGIS); viattrib.push_back(1);
-         viattrib.push_back(GLX_SAMPLE_BUFFERS_SGIS); viattrib.push_back(1);
+         if ( num_sample_bufs < 0 )
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": Number of multisampling buffers was negative ("
+               << num_sample_bufs << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+            num_sample_bufs = 1;
+         }
+
+         if ( num_samples < 0 )
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": Number of samples for multisampling was negative ("
+               << num_samples << ").  Setting to 2.\n" << vprDEBUG_FLUSH;
+            num_samples = 2;
+         }
+
+         viattrib.push_back(VRJ_SAMPLE_BUFFERS);
+         viattrib.push_back(num_sample_bufs);
+         viattrib.push_back(VRJ_SAMPLES);
+         viattrib.push_back(num_samples);
       }
 #else
-      if ( want_fsaa )
+      if ( enable_multisamp )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-            << "WARNING: Full-screen anti-aliasing is not available\n"
-            << vprDEBUG_FLUSH;
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Multi-sampling is not available.\n" << vprDEBUG_FLUSH;
       }
 #endif
 
@@ -934,6 +987,117 @@ void GlWindowXWin::checkEvents()
       {
          return vi;
       }
+
+#if HAVE_MULTISAMPLING
+      // Try reducing or disabling multisampling if it was enabled.
+      if ( enable_multisamp )
+      {
+         const int orig_num_samples(num_samples);
+
+         // This process reduces the number of sample buffers and samples per
+         // buffer until we get something that works or we conclude that
+         // multisampling simply isn't available. It begins by reducing the
+         // number of samples per buffer for the current number of sample
+         // buffers. If that fails, then we reduce the number of sample
+         // buffers by one and start over with the original number of samples
+         // per buffer. If we do not find a working visual once we get to one
+         // sample buffer and one sample per buffer, then we disable
+         // multisampling altogether.
+         // TODO: The logic employed in this loop seems far messier than it
+         // ought to be. It would be nice if someone came up with a way to
+         // clean it up and/or simplify it.
+         do
+         {
+            // We do not want to have zero samples per buffer.
+            while ( num_samples > 1 )
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                  << clrOutBOLD(clrYELLOW, "WARNING")
+                  << ": Display process for '" << mXDisplayName
+                  << "' couldn't get\n";
+               vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                  << "         multisampling with " << num_sample_bufs
+                  << " sample buffer" << (num_sample_bufs > 1 ? "s" : "")
+                  << " and\n";
+               vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                  << "         " << num_samples << " sample"
+                  << (num_samples > 1 ? "s" : "")
+                  << " per buffer.  Trying with " << num_samples - 1
+                  << " sample" << (num_samples - 1 > 1 ? "s" : "") << ".\n"
+                  << vprDEBUG_FLUSH;
+
+               // Reduce the numbmer of samples per buffer by one and try to
+               // get a visual.
+               --num_samples;
+               viattrib[multisamp_samples_attrib_index] = num_samples;
+
+               vi = glXChooseVisual(display, screen, &viattrib[0]);
+
+               if ( NULL != vi )
+               {
+                  return vi;
+               }
+            }
+
+            // If we are currently trying only one sample buffer, then we are
+            // done trying to back off the multisampling requirements.
+            if ( num_sample_bufs == 1 )
+            {
+               break;
+            }
+
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": Display process for '" << mXDisplayName
+               << "' couldn't get\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << "         multisampling with " << num_sample_bufs
+               << " sample buffer" << (num_sample_bufs > 1 ? "s" : "")
+               << ".  Trying\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << "         with " << num_sample_bufs - 1 << " sample buffer"
+               << (num_sample_bufs - 1 > 1 ? "s" : "") << " and "
+               << orig_num_samples << " sample"
+               << (orig_num_samples > 1 ? "s" : "") << " per buffer.\n"
+               << vprDEBUG_FLUSH;
+
+            // Restore the number of samples per buffer originally requested
+            // and try reducing the number of sample buffers.
+            num_samples = orig_num_samples;
+            viattrib[multisamp_samples_attrib_index] = num_samples;
+            --num_sample_bufs;
+            viattrib[multisamp_buffers_attrib_index] = num_sample_bufs;
+
+            vi = glXChooseVisual(display, screen, &viattrib[0]);
+
+            if ( NULL != vi )
+            {
+               return vi;
+            }
+         }
+         while ( num_sample_bufs >= 1 );
+
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Display process for '"
+            << mXDisplayName << "' couldn't get\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "         multisampling.  Trying without it.\n"
+            << vprDEBUG_FLUSH;
+
+         // There are four values in viattrib related to multisampling.
+         viattrib[multisamp_attrib_index    ] = GLX_USE_GL;
+         viattrib[multisamp_attrib_index + 1] = GLX_USE_GL;
+         viattrib[multisamp_attrib_index + 2] = GLX_USE_GL;
+         viattrib[multisamp_attrib_index + 3] = GLX_USE_GL;
+
+         vi = glXChooseVisual(display, screen, &viattrib[0]);
+
+         if ( NULL != vi )
+         {
+            return vi;
+         }
+      }
+#endif
 
       // If we have reached this point, our first attempt to get a visual
       // failed.  If stereo is enabled, we try disabling it and requesting
@@ -1003,28 +1167,6 @@ void GlWindowXWin::checkEvents()
       {
          return vi;
       }
-
-#ifdef GLX_SAMPLES_SGIS
-      // Last-ditch effort: try disabling FSAA if it was enabled.
-      // XXX: It might be better to try disabling FSAA *first* instead of last.
-      if ( want_fsaa )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << "WARNING: Display process for '" << mXDisplayName
-            << "' couldn't get FSAA - trying without it.\n" << vprDEBUG_FLUSH;
-
-         // There are four values in viattrib related to FSAA.
-         viattrib[fsaa_attrib_index    ] = GLX_USE_GL;
-         viattrib[fsaa_attrib_index + 1] = GLX_USE_GL;
-         viattrib[fsaa_attrib_index + 2] = GLX_USE_GL;
-         viattrib[fsaa_attrib_index + 3] = GLX_USE_GL;
-
-         if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
-         {
-            return vi;
-         }
-      }
-#endif
    }
 
    // Failed, so return NULL

@@ -564,10 +564,27 @@
           accum_red_size(1), accum_green_size(1), accum_blue_size(1),
           accum_alpha_size(1), stencil_size(1);
       int num_aux_bufs(0);
-      BOOL want_fsaa(NO);
+      bool enable_multisamp(false);
+      int num_sample_bufs(1);
+      int num_samples(2);
 
       if ( gl_fb_elt.get() != NULL )
       {
+         if ( gl_fb_elt->getVersion() < 3 )
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
+               << display->getName() << "'" << std::endl;
+            vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << "has an out of date OpenGL frame buffer configuration.\n";
+            vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << "Expected version 3 but found version "
+               << gl_fb_elt->getVersion() << ".  Default values\n";
+            vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << "will be used for some frame buffer settings.\n"
+               << vprDEBUG_FLUSH;
+         }
+
          visual_id        = gl_fb_elt->getProperty<int>("visual_id");
          red_size         = gl_fb_elt->getProperty<int>("red_size");
          green_size       = gl_fb_elt->getProperty<int>("green_size");
@@ -580,7 +597,10 @@
          accum_green_size = gl_fb_elt->getProperty<int>("accum_green_size");
          accum_blue_size  = gl_fb_elt->getProperty<int>("accum_blue_size");
          accum_alpha_size = gl_fb_elt->getProperty<int>("accum_alpha_size");
-         want_fsaa        = gl_fb_elt->getProperty<bool>("fsaa_enable");
+         num_sample_bufs  = gl_fb_elt->getProperty<int>("num_sample_buffers");
+         num_samples      = gl_fb_elt->getProperty<int>("num_samples");
+
+         enable_multisamp = num_sample_bufs > 0;
       }
 
       if ( red_size < 0 )
@@ -743,6 +763,48 @@
          mVrjWindow->setInStereo(false);
       }
 
+      const unsigned int multisamp_attrib_index = attr_vec.size();
+      const unsigned int multisamp_buffers_attrib_index =
+         multisamp_attrib_index + 1;
+      const unsigned int multisamp_samples_attrib_index =
+         multisamp_attrib_index + 3;
+
+      if ( enable_multisamp )
+      {
+         if ( num_sample_bufs < 0 )
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": Number of multisampling buffers was negative ("
+               << num_sample_bufs << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+            num_sample_bufs = 1;
+         }
+
+         if ( num_samples < 0 )
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": Number of samples for multisampling was negative ("
+               << num_samples << ").  Setting to 2.\n" << vprDEBUG_FLUSH;
+            num_samples = 2;
+         }
+
+         attr_vec.push_back(NSOpenGLPFASampleBuffers);
+         attr_vec.push_back(
+            static_cast<NSOpenGLPixelFormatAttribute>(num_sample_bufs)
+         );
+         attr_vec.push_back(NSOpenGLPFASamples);
+         attr_vec.push_back(
+            static_cast<NSOpenGLPixelFormatAttribute>(num_samples)
+         );
+
+         // Mac OS X 10.4 and newer have the NSOpenGLPFAMultisample hint.
+#if VPR_OS_RELEASE_MAJOR >= 8
+         attr_vec.push_back(NSOpenGLPFAMultisample);
+         attr_vec.push_back(static_cast<NSOpenGLPixelFormatAttribute>(YES));
+#endif
+      }
+
       attr_vec.push_back(static_cast<NSOpenGLPixelFormatAttribute>(0));
       NSOpenGLPixelFormatAttribute* attrs = &attr_vec[0];
 
@@ -751,6 +813,127 @@
 
       if ( pixel_format == nil )
       {
+         // Try reducing or disabling multisampling if it was enabled.
+         if ( enable_multisamp )
+         {
+            const int orig_num_samples(num_samples);
+
+            // This process reduces the number of sample buffers and samples
+            // per buffer until we get something that works or we conclude
+            // that multisampling simply isn't available. It begins by
+            // reducing the number of samples per buffer for the current
+            // number of sample buffers. If that fails, then we reduce the
+            // number of sample buffers by one and start over with the
+            // original number of samples per buffer. If we do not find a
+            // working visual once we get to one sample buffer and one sample
+            // per buffer, then we disable multisampling altogether.
+            // TODO: The logic employed in this loop seems far messier than it
+            // ought to be. It would be nice if someone came up with a way to
+            // clean it up and/or simplify it.
+            do
+            {
+               // We do not want to have zero samples per buffer.
+               while ( num_samples > 1 )
+               {
+                  vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                     << clrOutBOLD(clrYELLOW, "WARNING")
+                     << ": Could not get a valid pixel format with\n";
+                  vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                     << "         " << num_sample_bufs
+                     << " sample buffer" << (num_sample_bufs > 1 ? "s" : "")
+                     << " and " << num_samples << " sample"
+                     << (num_samples > 1 ? "s" : "") << "per buffer.\n";
+                  vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                     << "         Trying with " << num_samples - 1
+                     << " sample" << (num_samples - 1 > 1 ? "s" : "" )
+                     << ".\n" << vprDEBUG_FLUSH;
+
+                  // Reduce the numbmer of samples per buffer by one and try
+                  // to get a visual.
+                  --num_samples;
+                  attr_vec[multisamp_samples_attrib_index] =
+                     static_cast<NSOpenGLPixelFormatAttribute>(num_samples);
+
+                  NSOpenGLPixelFormat* pixel_format =
+                     [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+
+                  if ( pixel_format != nil )
+                  {
+                     return pixel_format;
+                  }
+               }
+
+               // If we are currently trying only one sample buffer, then we
+               // are done trying to back off the multisampling requirements.
+               if ( num_sample_bufs == 1 )
+               {
+                  break;
+               }
+
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                  << clrOutBOLD(clrYELLOW, "WARNING")
+                  << ": Could not get a valid pixel format with\n";
+               vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                  << "         " << num_sample_bufs << " sample buffer"
+                  << (num_sample_bufs > 1 ? "s" : "") << " and "
+                  << num_samples << " sample" << (num_samples > 1 ? "s" : "")
+                  << "per buffer.\n";
+               vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                  << "         Trying with " << num_sample_bufs - 1
+                  << " sample buffer" << (num_sample_bufs - 1 > 1 ? "s" : "")
+                  << " and " << orig_num_samples << " sample"
+                  << (orig_num_samples > 1 ? "s" : "") << ".\n"
+                  << vprDEBUG_FLUSH;
+
+               // Restore the number of samples per buffer originally requested
+               // and try reducing the number of sample buffers.
+               num_samples = orig_num_samples;
+               attrs[multisamp_samples_attrib_index] =
+                  static_cast<NSOpenGLPixelFormatAttribute>(num_samples);
+               --num_sample_bufs;
+               attrs[multisamp_buffers_attrib_index] =
+                  static_cast<NSOpenGLPixelFormatAttribute>(num_sample_bufs);
+
+               NSOpenGLPixelFormat* pixel_format =
+                  [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+
+               if ( pixel_format != nil )
+               {
+                  return pixel_format;
+               }
+            }
+            while ( num_sample_bufs >= 1 );
+
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": Could not get a valid pixel format with\n"
+               << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+               << "         multisampling.  Trying without it.\n"
+               << vprDEBUG_FLUSH;
+
+            // Set the number sample buffers and samples per buffer to 0.
+            attr_vec[multisamp_buffers_attrib_index] =
+               static_cast<NSOpenGLPixelFormatAttribute>(0);
+            attr_vec[multisamp_samples_attrib_index] =
+               static_cast<NSOpenGLPixelFormatAttribute>(0);
+
+            // Mac OS X 10.4 and newer have the NSOpenGLPFAMultisample hint,
+            // and we need to disable it.
+#if VPR_OS_RELEASE_MAJOR >= 8
+            attr_vec[multisamp_attrib_index + 5] =
+               static_cast<NSOpenGLPixelFormatAttribute>(NO);
+#endif
+
+            NSOpenGLPixelFormat* pixel_format =
+               [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+
+            if ( pixel_format != nil )
+            {
+               return pixel_format;
+            }
+         }
+
          if ( want_stereo )
          {
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)

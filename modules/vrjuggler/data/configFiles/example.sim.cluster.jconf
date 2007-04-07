@@ -766,7 +766,7 @@
                <size>600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
@@ -779,7 +779,8 @@
                      <accum_green_size>1</accum_green_size>
                      <accum_blue_size>1</accum_blue_size>
                      <accum_alpha_size>1</accum_alpha_size>
-                     <fsaa_enable>false</fsaa_enable>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>0</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -826,7 +827,7 @@
                <size>600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="frame_buffer_config 0" version="2">
+                  <opengl_frame_buffer_config name="frame_buffer_config 0" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
@@ -839,7 +840,8 @@
                      <accum_green_size>1</accum_green_size>
                      <accum_blue_size>1</accum_blue_size>
                      <accum_alpha_size>1</accum_alpha_size>
-                     <fsaa_enable>false</fsaa_enable>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>0</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -898,7 +900,7 @@
                <size>600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="frame_buffer_config 0" version="2">
+                  <opengl_frame_buffer_config name="frame_buffer_config 0" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
@@ -911,7 +913,8 @@
                      <accum_green_size>1</accum_green_size>
                      <accum_blue_size>1</accum_blue_size>
                      <accum_alpha_size>1</accum_alpha_size>
-                     <fsaa_enable>false</fsaa_enable>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>0</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>

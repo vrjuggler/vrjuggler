@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-07-2007 patrick     Made the number of sample buffers and samples per
+                        buffer configurable when using multisampling.
+                        NEW VERSION: 2.1.22
 Apr-05-2007 patrick     Added support for Cocoa windows on Mac OS X.
                         NEW VERSION: 2.1.21
 Mar-21-2007 patrick     Instances of vrj::DrawSimInterfaces are now handled
