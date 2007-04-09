@@ -30,21 +30,28 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+SUBDIRS=	OGL
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: OGL # OpenSG OSG Pf
+# The 'bundle' target only is for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(SUBDIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done
 
-OGL OpenSG OSG Pf::
-	cd $@ && $(MAKE) all
+$(SUBDIRS):
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:	
-	-cd OGL && $(MAKE) clean
-#	-cd OpenSG && $(MAKE) clean
-#	-cd OSG && $(MAKE) clean
-#	-cd Pf  && $(MAKE) clean	
+	@for dir in $(SUBDIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done

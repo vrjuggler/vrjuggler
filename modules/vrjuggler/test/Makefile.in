@@ -30,18 +30,26 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+SUBDIRS=	Cluster		\
+		Draw		\
+		PerfMon		\
+		RTRC		\
+		TestSuite
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: TestSuite
 
-SUBDIRS	= TestSuite	\
-          Input
+# The 'bundle' target only is for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(SUBDIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done
 
-all: $(SUBDIRS)
-
-$(SUBDIRS)::
-	cd $@ && $(MAKE) all
+$(SUBDIRS):
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.

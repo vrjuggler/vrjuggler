@@ -30,16 +30,21 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-APPS	= applicationData
+APPS=	applicationData
 
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(APPS)
+# The 'bundle' target only is for use on Mac OS X with Cocoa.
+all bundle:
+	@for app in $(APPS) ; do		\
+            cd $$app && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done
 
-$(APPS)::
+$(APPS):
 	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
