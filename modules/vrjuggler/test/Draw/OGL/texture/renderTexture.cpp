@@ -11,8 +11,14 @@
 #  include <windows.h>
 #endif
 
-#include <GL/gl.h>
-#include <GL/glu.h>
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#endif
+
 #include "renderTexture.h"
 
 
@@ -31,7 +37,7 @@ void tex::bind( Texture& texture, int& texObjectID, int mipmapLevelOfDetail, int
       texDimension = GL_TEXTURE_2D;
 
    // create the texture object, setting the texObjectID
-   unsigned int id;
+   GLuint id;
 #ifdef GL_VERSION_1_1
       ::glGenTextures( 1, &id );
       ::glBindTexture( texDimension, id );
@@ -51,7 +57,7 @@ void tex::unbind( Texture& texture, int& texObjectID )
 {
    assert( texObjectID != -1 && "texture object already deleted" );
 
-   unsigned int id( texObjectID );
+   GLuint id( texObjectID );
 #ifdef GL_VERSION_1_1
       ::glDeleteTextures( 1, &id );
 #else
@@ -226,7 +232,7 @@ void tex::render( const Texture& texture, const int& texObjectID )
       ::glEnable( texDimension );
 
    // if we're rendering the same texture as what is current, then quit
-   int currentTexId;
+   GLint currentTexId;
    ::glGetIntegerv( texBindDimension, &currentTexId );
    if (currentTexId == texObjectID)
       return;
@@ -240,7 +246,7 @@ void tex::render( const Texture& texture, const int& texObjectID )
 
 
    // figure out which GL model the texture uses
-   int tex_env_mode  = -1;
+   GLint tex_env_mode(-1);
    glGetTexEnviv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &tex_env_mode );
    switch (texture.model)
    {
@@ -259,7 +265,7 @@ void tex::render( const Texture& texture, const int& texObjectID )
    }
 
    // set the wrap mode the texture uses for 'S' if not set already
-   int tex_parameter = -1;
+   GLint tex_parameter(-1);
    ::glGetTexParameteriv( texDimension, GL_TEXTURE_WRAP_S, &tex_parameter );
    switch (texture.wrapS)
    {

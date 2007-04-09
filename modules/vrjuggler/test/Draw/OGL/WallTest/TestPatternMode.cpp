@@ -28,7 +28,7 @@
 #  include <windows.h>
 #endif
 
-#ifdef VPR_OS_Darwin
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
 #else
 #include <GL/gl.h>

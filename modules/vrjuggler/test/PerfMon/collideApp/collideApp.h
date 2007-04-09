@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#ifdef VPR_OS_Darwin
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else

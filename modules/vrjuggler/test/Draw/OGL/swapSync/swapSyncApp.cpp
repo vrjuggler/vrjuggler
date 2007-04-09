@@ -23,13 +23,22 @@
  * Boston, MA 02111-1307, USA.
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "swapSyncApp.h"
+
 #include <iostream>
-#include <GL/gl.h>
-#include <GL/glu.h>
+
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#endif
+
 #include <gmtl/Generate.h>
 #include <stdlib.h>
 #include <vpr/System.h>
+#include "swapSyncApp.h"
+
 
 namespace vrjTest
 {

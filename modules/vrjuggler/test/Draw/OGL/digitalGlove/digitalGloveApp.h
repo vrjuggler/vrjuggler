@@ -30,8 +30,14 @@
 #include <vrj/vrjConfig.h>
 
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#endif
 
 #include <gmtl/Point.h>
 #include <vrj/Draw/OGL/GlApp.h>

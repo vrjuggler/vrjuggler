@@ -37,8 +37,13 @@
 #include <math.h>
 
 // OpenGL
-#include <GL/gl.h>  // OpenGL API
-#include <GL/glu.h> // GLU functions (extended opengl stuff)
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>  // OpenGL API
+#  include <OpenGL/glu.h> // GLU functions (extended opengl stuff)
+#else
+#  include <GL/gl.h>  // OpenGL API
+#  include <GL/glu.h> // GLU functions (extended opengl stuff)
+#endif
 
 // VR juggler
 #include <vpr/Util/Interval.h>
