@@ -113,8 +113,8 @@ bool GlWindowXWin::open()
    if ( mWindowWidth == -1 )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << " [vrj::GlWindowXWin::open()] Window has not been configured\n"
+         << clrOutNORM(clrRED, "ERROR")
+         << ": [vrj::GlWindowXWin::open()] Window has not been configured\n"
          << vprDEBUG_FLUSH;
       return false;
    }
@@ -122,8 +122,8 @@ bool GlWindowXWin::open()
    if ( ! (mXDisplay = ::XOpenDisplay(mXDisplayName.c_str())) )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << " [vrj::GlWindowXWin::open()] Unable to open display '"
+         << clrOutNORM(clrRED, "ERROR")
+         << ": [vrj::GlWindowXWin::open()] Unable to open display '"
          << mXDisplayName << "'.\n" << vprDEBUG_FLUSH;
       return false;
    }
@@ -136,8 +136,8 @@ bool GlWindowXWin::open()
       if ( (mVisualInfo = getGlxVisInfo(mXDisplay, screen)) == NULL )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:") << " Failed to get a GLX visual\n"
-            << vprDEBUG_FLUSH;
+            << clrOutNORM(clrRED, "ERROR")
+            << ": Failed to get a GLX visual!\n" << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
 
@@ -154,8 +154,8 @@ bool GlWindowXWin::open()
       if ( w_attrib.colormap == 0 )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:")
-            << " vrj::GlWindowXWin: XCreateColorMap failed on '"
+            << clrOutNORM(clrRED, "ERROR")
+            << ": [vrj::GlWindowXWin::open()] XCreateColorMap failed on '"
             << mXDisplayName << "'.\n" << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
@@ -185,17 +185,17 @@ bool GlWindowXWin::open()
       if ( 0 == mXWindow )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:")
-            << "vrj::GlWindowXWin: Couldn't create window for " << mXDisplayName
-            << std::endl << vprDEBUG_FLUSH;
+            << clrOutNORM(clrRED, "ERROR")
+            << ": [vrj::GlWindowXWin::open()] Couldn't create window for "
+            << mXDisplayName << std::endl << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
 
       createEmptyCursor(mXDisplay, mXWindow);
       /***************** Set Window Name/Class/Size/Pos *********************/
 
-      /* Before we map the window, we need a name for it (this is also useful for
-       * the resource cruft that'll get rid of the borders).
+      /* Before we map the window, we need a name for it (this is also useful
+       * for the resource cruft that'll get rid of the borders).
        */
       classhint = ::XAllocClassHint();
       classhint->res_name = (char*)mWindowName.c_str();
@@ -221,24 +221,25 @@ bool GlWindowXWin::open()
       /***************** Border Stuff ***************************/
 
       /* Get rid of window border, if configured to do so.
-       * This technique doesn't require any modifications to the .XDefaults file
-       * or anything, but it will only work with window managers based on MWM
-       * (the Motif window manager).  That covers most cases.
+       * This technique doesn't require any modifications to the .XDefaults
+       * file or anything, but it will only work with window managers based on
+       * MWM (the Motif window manager).  That covers most cases.
        * Unfortunately, the generic X resources for communicating with a window
        * manager don't support this feature.
        */
       if ( ! mHasBorder )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
-            << "[vrj::GlWindowXWin::open()] Attempting to make window borderless"
-            << std::endl << vprDEBUG_FLUSH;
+            << "[vrj::GlWindowXWin::open()] Attempting to make window "
+            << "borderless." << std::endl << vprDEBUG_FLUSH;
+
          Atom MotifHints = XInternAtom(mXDisplay, "_MOTIF_WM_HINTS", 0);
          if ( MotifHints == None )
          {
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-               << clrOutNORM(clrRED,"ERROR:")
-               << "vrj::GlWindowXWin: Could not get X atom for _MOTIF_WM_HINTS."
-               << std::endl << vprDEBUG_FLUSH;
+               << clrOutNORM(clrRED, "ERROR")
+               << ": [vrj::GlWindowXWin::open()] Could not get X atom for "
+               << "_MOTIF_WM_HINTS." << std::endl << vprDEBUG_FLUSH;
          }
          else
          {
@@ -254,9 +255,9 @@ bool GlWindowXWin::open()
       if (None == net_wm_state)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:")
-            << "vrj::GlWindowXWin: Could not get X atom for _NET_WM_STATE."
-            << std::endl << vprDEBUG_FLUSH;
+            << clrOutNORM(clrRED, "ERROR")
+            << ": [vrj::GlWindowXWin::open()] Could not get X atom for "
+            << "_NET_WM_STATE." << std::endl << vprDEBUG_FLUSH;
       }
       else
       {
@@ -276,9 +277,10 @@ bool GlWindowXWin::open()
             if (None == fullscreen_hint)
             {
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-                  << clrOutNORM(clrRED,"ERROR:")
-                  << "vrj::GlWindowXWin: Could not get X atom for _NET_WM_STATE_FULLSCREEN."
-                  << std::endl << vprDEBUG_FLUSH;
+                  << clrOutNORM(clrRED, "ERROR")
+                  << ": [vrj::GlWindowXWin::open()] Could not get X atom for "
+                  << "_NET_WM_STATE_FULLSCREEN." << std::endl
+                  << vprDEBUG_FLUSH;
             }
             else
             {
@@ -292,8 +294,9 @@ bool GlWindowXWin::open()
             if (None == above_hint || None == always_hint)
             {
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-                  << clrOutNORM(clrRED,"ERROR:")
-                  << "vrj::GlWindowXWin: Could not get X atoms for _NET_WM_STATE_ABOVE and _NET_WM_STATE_STAYS_ON_TOP."
+                  << clrOutNORM(clrRED, "ERROR")
+                  << ": [vrj::GlWindowXWin::open()] Could not get X atoms "
+                  << "for _NET_WM_STATE_ABOVE and _NET_WM_STATE_STAYS_ON_TOP."
                   << std::endl << vprDEBUG_FLUSH;
             }
             else
@@ -309,9 +312,10 @@ bool GlWindowXWin::open()
             if (None == maxh_hint || None == maxv_hint)
             {
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-                  << clrOutNORM(clrRED,"ERROR:")
-                  << "vrj::GlWindowXWin: Could not get X atoms for _NET_WM_STATE_MAXIMIZED_(HORZ/VERT)."
-                  << std::endl << vprDEBUG_FLUSH;
+                  << clrOutNORM(clrRED, "ERROR")
+                  << ": [vrj::GlWindowXWin::open()] Could not get X atoms "
+                  << "for _NET_WM_STATE_MAXIMIZED_(HORZ/VERT)." << std::endl
+                  << vprDEBUG_FLUSH;
             }
             else
             {
@@ -325,9 +329,9 @@ bool GlWindowXWin::open()
             if (None == model_hint)
             {
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-                  << clrOutNORM(clrRED,"ERROR:")
-                  << "vrj::GlWindowXWin: Could not get X atom for _NET_WM_STATE_MODAL."
-                  << std::endl << vprDEBUG_FLUSH;
+                  << clrOutNORM(clrRED, "ERROR")
+                  << ": [vrj::GlWindowXWin::open()] Could not get X atom for "
+                  << "_NET_WM_STATE_MODAL." << std::endl << vprDEBUG_FLUSH;
             }
             else
             {
@@ -337,7 +341,8 @@ bool GlWindowXWin::open()
          */
 
          XChangeProperty(mXDisplay, mXWindow, net_wm_state, XA_ATOM,
-                         32, PropModeReplace, (unsigned char *) net_winstates, curr_winstate);
+                         32, PropModeReplace, (unsigned char*) net_winstates,
+                         curr_winstate);
       }
          
       /********************* Mapping Window **************************/
@@ -348,8 +353,9 @@ bool GlWindowXWin::open()
       ::XIfEvent(mXDisplay, &map_event, eventIsMapNotify, (XPointer)mXWindow);
       ::XSync(mXDisplay, 0);
 
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vrj::GlWindowXWin: done mapping window\n"
-                                  << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+         << "[vrj::GlWindowXWin::open()] Done mapping window.\n"
+         << vprDEBUG_FLUSH;
 
       /********************* OpenGL Context Stuff *********************/
 
@@ -357,7 +363,8 @@ bool GlWindowXWin::open()
       if ( NULL == mGlxContext )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '"
+            << clrOutNORM(clrRED, "ERROR")
+            << ": Couldn't create GlxContext for '"
             << mXDisplayName << "'\n" << vprDEBUG_FLUSH;
          throw glwinx_OpenFailureException();
       }
@@ -616,7 +623,7 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
    if ( !glXQueryExtension(display, NULL, NULL) )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR:") << " X Display '" << mXDisplayName
+         << clrOutNORM(clrRED, "ERROR") << ": X Display '" << mXDisplayName
          << "' doesn't support GLX.\n" << vprDEBUG_FLUSH;
       return NULL;
    }
@@ -641,15 +648,16 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( gl_fb_elt->getVersion() < 3 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Display window '"
             << mVrjDisplay->getName() << "'" << std::endl;
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "has an out of date OpenGL frame buffer configuration.\n";
+            << "         has an out of date OpenGL frame buffer "
+            << "configuration.\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "Expected version 3 but found version "
+            << "         Expected version 3 but found version "
             << gl_fb_elt->getVersion() << ".  Default values\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "will be used for some frame buffer settings.\n"
+            << "         will be used for some frame buffer settings.\n"
             << vprDEBUG_FLUSH;
       }
 
@@ -703,13 +711,13 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       else
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutBOLD(clrRED, "ERROR:")
-            << " Failed to get X11 visual info for visual ID "
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to get X11 visual info for visual ID "
             << std::hex << visual_id << std::dec << std::endl
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "Window '" << mVrjDisplay->getName() << "' cannot be opened"
-            << std::endl << vprDEBUG_FLUSH;
+            << "       Window '" << mVrjDisplay->getName()
+            << "' cannot be opened" << std::endl << vprDEBUG_FLUSH;
       }
 
       return vi;
@@ -719,8 +727,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( red_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer red channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer red channel size was negative ("
             << red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          red_size = 1;
       }
@@ -728,8 +736,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( green_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer green channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer green channel size was negative ("
             << green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          green_size = 1;
       }
@@ -737,8 +745,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( blue_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer blue channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer blue channel size was negative ("
             << blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          blue_size = 1;
       }
@@ -746,8 +754,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( alpha_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer alpha channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer alpha channel size was negative ("
             << alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          alpha_size = 1;
       }
@@ -755,8 +763,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( num_aux_bufs < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Auxiliary buffer count was negative (" << num_aux_bufs
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Auxiliary buffer count was negative (" << num_aux_bufs
             << ").  Setting to 0.\n" << vprDEBUG_FLUSH;
          num_aux_bufs = 0;
       }
@@ -764,8 +772,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( db_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Depth buffer size was negative (" << db_size
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Depth buffer size was negative (" << db_size
             << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          db_size = 1;
       }
@@ -773,8 +781,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( stencil_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Stencil buffer size was negative (" << stencil_size
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Stencil buffer size was negative (" << stencil_size
             << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          stencil_size = 1;
       }
@@ -782,8 +790,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( accum_red_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer red channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer red channel size was negative ("
             << accum_red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_red_size = 1;
       }
@@ -791,8 +799,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( accum_green_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer green channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer green channel size was negative ("
             << accum_green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_green_size = 1;
       }
@@ -800,8 +808,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( accum_blue_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer blue channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer blue channel size was negative ("
             << accum_blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_blue_size = 1;
       }
@@ -809,8 +817,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( accum_alpha_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer alpha channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer alpha channel size was negative ("
             << accum_alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_alpha_size = 1;
       }
@@ -1105,10 +1113,10 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       if ( mVrjDisplay->isStereoRequested() )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << "WARNING: Could not get an OpenGL visual for '" << mXDisplayName
-            << "'\n";
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Could not get an "
+            << "OpenGL visual for '" << mXDisplayName << "'\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << "with stereo rendering enabled; trying without.\n"
+            << "         with stereo rendering enabled; trying without.\n"
             << vprDEBUG_FLUSH;
          mInStereo = false;
 
@@ -1131,10 +1139,10 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
            accum_blue_size > 0 || accum_alpha_size > 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << "WARNING: Could not get an OpenGL visual for '" << mXDisplayName
-            << "'\n";
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Could not get an "
+            << "OpenGL visual for '" << mXDisplayName << "'\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << "with accumulation buffer settings; trying without.\n"
+            << "         with accumulation buffer settings; trying without.\n"
             << vprDEBUG_FLUSH;
 
          viattrib[accum_red_attrib_index + 1]   = 0;
@@ -1153,8 +1161,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       // If we reached this point, we still do not have a usable GLX visual.
       // Disabling the alpha channel may give us something usable.
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-         << "WARNING: Could not get an OpenGL visual for '" << mXDisplayName
-         << "'\n";
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": Could not get an OpenGL "
+         << "visual for '" << mXDisplayName << "'\n";
       vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "with a color buffer alpha channel; trying without.\n"
          << vprDEBUG_FLUSH;
@@ -1207,6 +1215,5 @@ void GlWindowXWin::createEmptyCursor(::Display* display, ::Window root)
 
    mEmptyCursorSet = true;
 }
-
 
 } // namespace vrj
