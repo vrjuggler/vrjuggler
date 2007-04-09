@@ -390,16 +390,16 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( gl_fb_elt->getVersion() < 2 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Display window '"
             << mVrjDisplay->getName() << "'" << std::endl;
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "has an out of date OpenGL frame buffer configuration."
-            << std::endl;
+            << "         has an out of date OpenGL frame buffer "
+            << "configuration.\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "Expected version 2 but found version "
-            << gl_fb_elt->getVersion() << ".\n";
+            << "         Expected version 3 but found version "
+            << gl_fb_elt->getVersion() << ".  Default values\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "Default values will be used for some frame buffer settings.\n"
+            << "         will be used for some frame buffer settings.\n"
             << vprDEBUG_FLUSH;
       }
 
@@ -447,8 +447,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( red_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer red channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer red channel size was negative ("
             << red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          red_size = 1;
       }
@@ -456,8 +456,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( green_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer green channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer green channel size was negative ("
             << green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          green_size = 1;
       }
@@ -465,8 +465,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( blue_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer blue channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer blue channel size was negative ("
             << blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          blue_size = 1;
       }
@@ -474,8 +474,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( alpha_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer alpha channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer alpha channel size was negative ("
             << alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          alpha_size = 1;
       }
@@ -483,8 +483,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( num_aux_bufs < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Auxiliary buffer count was negative (" << num_aux_bufs
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Auxiliary buffer count was negative (" << num_aux_bufs
             << ").  Setting to 0.\n" << vprDEBUG_FLUSH;
          num_aux_bufs = 0;
       }
@@ -492,8 +492,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( db_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Depth buffer size was negative (" << db_size
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Depth buffer size was negative (" << db_size
             << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          db_size = 1;
       }
@@ -501,8 +501,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( stencil_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Stencil buffer size was negative (" << stencil_size
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Stencil buffer size was negative (" << stencil_size
             << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          stencil_size = 1;
       }
@@ -510,8 +510,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( accum_red_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer red channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer red channel size was negative ("
             << accum_red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_red_size = 1;
       }
@@ -519,8 +519,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( accum_green_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer green channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer green channel size was negative ("
             << accum_green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_green_size = 1;
       }
@@ -528,8 +528,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( accum_blue_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer blue channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer blue channel size was negative ("
             << accum_blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_blue_size = 1;
       }
@@ -537,8 +537,8 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       if ( accum_alpha_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer alpha channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer alpha channel size was negative ("
             << accum_alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_alpha_size = 1;
       }
