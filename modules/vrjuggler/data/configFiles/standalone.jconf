@@ -362,7 +362,7 @@
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
-         <use_swap_group>true</use_swap_group>
+         <use_swap_group>false</use_swap_group>
       </display_system>
       <user name="User1" version="1">
          <head_position>VJHead</head_position>
