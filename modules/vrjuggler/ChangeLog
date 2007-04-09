@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-09-2007 patrick     Made the number of sample buffers and samples per
+                        buffer configurable when using multisampling.
+
 [2.0.3 released - 2.14.2007]===================================================
 
 [2.0.2 released - 1.4.2007]====================================================
