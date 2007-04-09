@@ -76,8 +76,9 @@ EXTRA_LIBS+=		@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
 			@APP_BASIC_LIBS_END@ @APP_EXTRA_LIBS@		\
 			$(NULL)
 
+# Mac OS X bundle information used by Doozer.
 APP_ICNS=		$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-icons)
-APP_RESOURCES=		$(APP_ICNS)
+APP_RESOURCES=		$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-all-resources)
 APP_INFO_PLIST=		$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-info-plist)
 APP_NIBS=		$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-nib)
 APP_INFO_STRINGS=	$(shell $(FLAGPOLL) vrjuggler --exact-version=$(VRJ_VERSION) --get-vrj-app-info-strings)

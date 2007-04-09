@@ -79,9 +79,10 @@ vrj_ogl_prof_libs: ${vrj_ogl_prof_lib} ${vrj_ogl_extra_libs}
 vrj_pf_libs: ${vrj_pf_lib} ${vrj_pf_extra_libs}
 vrj_pf_prof_libs: ${vrj_pf_prof_lib} ${vrj_pf_extra_libs}
 
-# Build bits
+# Application build bits
 vrj_app_defs_file: ${vrj_share_dir}/vrj.appdefs.mk
 vrj_app_info_plist: ${vrj_share_dir}/data/bundle/Info.plist
 vrj_app_nib: ${vrj_share_dir}/data/bundle/MainMenu.nib
 vrj_app_info_strings: ${vrj_share_dir}/data/bundle/InfoPlist.strings
 vrj_app_icons: ${vrj_share_dir}/data/bundle/vrjuggler.icns
+vrj_app_all_resources: ${vrj_share_dir}/data/bundle/vrjuggler.icns ${vrj_share_dir}/data/bundle/vrjuggler.plist
