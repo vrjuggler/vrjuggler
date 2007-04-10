@@ -925,16 +925,18 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
    // glXChooseVisual() will return the visual with the smallest number of
    // auxiliary buffers that meets or exceeds the requested count.
    int num_aux_bufs(0);
-   bool want_fsaa(false);
+   bool enable_multisamp(false);
+   int num_sample_bufs(1);
+   int num_samples(2);
 
    jccl::ConfigElementPtr fb_element = disp->getGlFrameBufferConfig();
 
    if ( fb_element.get() != NULL )
    {
-      if ( fb_element->getVersion() < 2 )
+      if ( fb_element->getVersion() < 3 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Display window '"
             << disp->getName() << "'" << std::endl;
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << "has an out of date OpenGL frame buffer configuration."
@@ -958,7 +960,10 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
       accum_green_size = fb_element->getProperty<int>("accum_green_size");
       accum_blue_size  = fb_element->getProperty<int>("accum_blue_size");
       accum_alpha_size = fb_element->getProperty<int>("accum_alpha_size");
-      want_fsaa        = fb_element->getProperty<bool>("fsaa_enable");
+      num_sample_bufs  = fb_element->getProperty<int>("num_sample_buffers");
+      num_samples      = fb_element->getProperty<int>("num_samples");
+
+      enable_multisamp = num_sample_bufs > 0;
 
       if ( red_size < 0 )
       {
@@ -1058,6 +1063,24 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
             << accum_alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_alpha_size = 1;
       }
+
+      if ( num_sample_bufs < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Number of multisampling buffers was negative ("
+            << num_sample_bufs << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         num_sample_bufs = 1;
+      }
+
+      if ( num_samples < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Number of samples for multisampling was negative ("
+            << num_samples << ").  Setting to 2.\n" << vprDEBUG_FLUSH;
+         num_samples = 2;
+      }
    }
 
    const unsigned int indent_level(2);
@@ -1117,7 +1140,12 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
    vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << std::setiosflags(std::ios::left) << std::setfill('.')
       << indent_text << std::setw(pad_width_dot)
-      << "Full-screen anti-aliasing " << " " << std::boolalpha << want_fsaa
+      << "Number of multisample buffers " << " " << num_sample_bufs
+      << std::endl;
+   vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << std::setiosflags(std::ios::left) << std::setfill('.')
+      << indent_text << std::setw(pad_width_dot)
+      << "Number of samples per buffer " << " " << num_samples
       << std::endl;
    vprDEBUG_CONTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << vprDEBUG_FLUSH;
@@ -1133,10 +1161,11 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
    attrs.push_back(PFFB_ACCUM_GREEN_SIZE); attrs.push_back(accum_green_size);
    attrs.push_back(PFFB_ACCUM_BLUE_SIZE);  attrs.push_back(accum_blue_size);
    attrs.push_back(PFFB_ACCUM_ALPHA_SIZE); attrs.push_back(accum_alpha_size);
-   if (want_fsaa)
+
+   if ( enable_multisamp )
    {
-      attrs.push_back(PFFB_SAMPLE_BUFFER); attrs.push_back(1);
-      attrs.push_back(PFFB_SAMPLES); attrs.push_back(1);
+      attrs.push_back(PFFB_SAMPLE_BUFFER); attrs.push_back(num_sample_bufs);
+      attrs.push_back(PFFB_SAMPLES);       attrs.push_back(num_samples);
    }
 }
 
