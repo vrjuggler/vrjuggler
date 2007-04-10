@@ -490,11 +490,11 @@ bool reconfigApp::verifyProxy( std::string proxyName, std::string deviceName )
 
 }
 
-vrj::Display* reconfigApp::getDisplay( std::string name )
+vrj::DisplayPtr reconfigApp::getDisplay( std::string name )
 {
    //Search the display manager for the display by name
-   std::vector<vrj::Display*>::iterator iter;
-   std::vector<vrj::Display*> allDisplays = vrj::DisplayManager::instance()->getAllDisplays();
+   std::vector<vrj::DisplayPtr>::iterator iter;
+   std::vector<vrj::DisplayPtr> allDisplays = vrj::DisplayManager::instance()->getAllDisplays();
 
    for (iter = allDisplays.begin(); iter != allDisplays.end(); iter++)
    {
@@ -504,10 +504,10 @@ vrj::Display* reconfigApp::getDisplay( std::string name )
       }
    }
 
-   return NULL;
+   return vrj::DisplayPtr();
 }
 
-bool reconfigApp::verifyDisplayProps(  vrj::Display* disp,
+bool reconfigApp::verifyDisplayProps(  vrj::DisplayPtr disp,
                                        std::string name,
                                        int x_origin,
                                        int y_origin,
@@ -572,7 +572,7 @@ bool reconfigApp::verifyDisplayProps(  vrj::Display* disp,
 }
 
 
-bool reconfigApp::verifyAllViewports( vrj::Display* display, jccl::ConfigElementPtr viewportElement )
+bool reconfigApp::verifyAllViewports( vrj::DisplayPtr display, jccl::ConfigElementPtr viewportElement )
 {
    //Check to see if this viewport element matches with ANY of the display's
    //viewports
@@ -772,7 +772,7 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
 
       //Get the display with the same name from the DisplayManager
       //and make sure it exists first
-      vrj::Display* display = getDisplay( displayName );
+      vrj::DisplayPtr display = getDisplay( displayName );
       if (display == NULL)
       {
          std::cout << "\tError: display element named " << displayName
@@ -913,7 +913,7 @@ bool reconfigApp::removeMachineSpecific_check()
       return false;
    }
 
-   vrj::Display* display = getDisplay(windowElements[0]->getName());
+   vrj::DisplayPtr display = getDisplay(windowElements[0]->getName());
    if (display != NULL)
    {
       std::cout << "\tError: there is still a display in the system named " << windowElements[0]->getName() << "\n" << std::flush;
@@ -961,7 +961,7 @@ bool reconfigApp::removeGFXWindow_check()
       return false;
    }
 
-   vrj::Display* display = getDisplay(windowElements[0]->getName());
+   vrj::DisplayPtr display = getDisplay(windowElements[0]->getName());
    if (display != NULL)
    {
       std::cout << "\tError: there is still a display in the system named " << windowElements[0]->getName() << "\n" << std::flush;
@@ -1090,7 +1090,7 @@ bool reconfigApp::enableStereoSurface_check()
    }
 
    //Get the SimSurfaceX01
-   vrj::Display* surfaceDisplay = getDisplay( windowElements[0]->getName() );
+   vrj::DisplayPtr surfaceDisplay = getDisplay( windowElements[0]->getName() );
 
    //If we could not find the window...we have a problem to start with
    if (surfaceDisplay == NULL)
@@ -1141,7 +1141,7 @@ bool reconfigApp::disableStereoSurface_check()
    }
 
    //Get the SimSurfaceX01
-   vrj::Display* surfaceDisplay = getDisplay( windowElements[0]->getName() );
+   vrj::DisplayPtr surfaceDisplay = getDisplay( windowElements[0]->getName() );
 
    //If we could not find the window...we have a problem to start with
    if (surfaceDisplay == NULL)

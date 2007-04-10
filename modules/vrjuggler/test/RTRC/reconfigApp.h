@@ -105,11 +105,11 @@ public:
 
    bool verifyProxy( std::string proxyName, std::string deviceName );
    bool verifyViewport( vrj::Viewport* viewport, jccl::ConfigElementPtr viewportElement);
-   bool verifyAllViewports( vrj::Display* display, jccl::ConfigElementPtr viewportElement);
+   bool verifyAllViewports( vrj::DisplayPtr display, jccl::ConfigElementPtr viewportElement);
 
-   vrj::Display* getDisplay( std::string name );
+   vrj::DisplayPtr getDisplay( std::string name );
    bool verifyDisplayFile( std::string filename );
-   bool verifyDisplayProps( vrj::Display* disp,
+   bool verifyDisplayProps( vrj::DisplayPtr disp,
                             std::string name,
                             int x_origin,
                             int y_origin,
