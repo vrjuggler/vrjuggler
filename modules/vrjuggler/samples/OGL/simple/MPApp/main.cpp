@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
    Kernel* kernel = Kernel::instance();           // Get the kernel
    MPApp* application = new MPApp();          // Instantiate an instance of the app
 
+#if ! defined(VRJ_USE_COCOA)
    // IF not args passed to the program
    //    Display usage information and exit
    if (argc <= 1)
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
                 << std::endl;
       exit(1);
    }
+#endif
 
    // Load any config files specified on the command line
    for( int i = 1; i < argc; ++i )
