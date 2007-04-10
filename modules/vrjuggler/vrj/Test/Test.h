@@ -53,7 +53,11 @@ class Test
 {
 public:
    Test()
-    {;}
+   {;}
+
+   virtual ~Test()
+   {
+   }
 
    /**
     * Sets the application that we are testing.
