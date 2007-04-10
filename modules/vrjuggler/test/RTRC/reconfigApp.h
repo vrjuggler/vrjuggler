@@ -51,31 +51,30 @@
 class reconfigApp : public vrj::GlApp
 {
 public:
-   reconfigApp(vrj::Kernel* kern) : vrj::GlApp(kern)
+   reconfigApp(vrj::Kernel* kern)
+      : vrj::GlApp(kern)
+      , mNewCfg(NULL)
    {
+      /* Do nothing. */ ;
    }
 
-   virtual ~reconfigApp (void) {
+   virtual ~reconfigApp()
+   {
       /* Do nothing. */ ;
    }
 
    // Execute any initialization needed before the API is started.  Put device
    // initialization here.
-   virtual void init() ;
-
-   // Execute any initialization needed <b>after</b> API is started
-   //  but before the drawManager starts the drawing loops.
-   virtual void apiInit()
-   {;}
+   virtual void init();
 
    // Called immediately upon opening a new OpenGL context.  This is called
    // once for every display window that is opened.  Put OpenGL resource
    // allocation here.
-   virtual void contextInit() ;
+   virtual void contextInit();
 
    // Function called after tracker update but before start of drawing.  Do
    // calculations and state modifications here.
-   virtual void preFrame() ;
+   virtual void preFrame();
 
    virtual void bufferPreDraw();
 
@@ -85,42 +84,39 @@ public:
    // POST: The current scene has been drawn
    virtual void draw();
 
-   // Function called after drawing has been triggered but BEFORE it completes
-   virtual void intraFrame()
-   {;}
-
-   // Function called before updating trackers but after the frame is drawn.
-   // Do calculations here.
-   virtual void postFrame() ;
-
 //UTILITIES
 
    void setPath(const std::string& path);
+
+private:
    bool addElementFile(const std::string& filename);
    bool removeElementFile(const std::string& filename);
-   bool swapElementFiles(const std::string& remove_file,
-                         const std::string& add_file);
+   bool swapElementFiles(const std::string& removeFile,
+                         const std::string& addFile);
    bool removeRecentConfiguration();
 
    bool checkTime();
 
    bool verifyProxy(const std::string& proxyName,
                     const std::string& deviceName);
-   bool verifyViewport( vrj::Viewport* viewport, jccl::ConfigElementPtr viewportElement);
-   bool verifyAllViewports( vrj::DisplayPtr display, jccl::ConfigElementPtr viewportElement);
+   bool verifyViewport(vrj::Viewport* viewport,
+                       jccl::ConfigElementPtr viewportElement);
+   bool verifyAllViewports(vrj::DisplayPtr display,
+                           jccl::ConfigElementPtr viewportElement);
 
    vrj::DisplayPtr getDisplay(const std::string& name);
    bool verifyDisplayFile(const std::string& filename);
    bool verifyDisplayProps(vrj::DisplayPtr disp, const std::string& name,
-                           const int x_origin, const int y_origin,
-                           const int x_size, const int y_size,
-                           const int pipe_num, const bool stereo,
+                           const int xOrigin, const int yOrigin,
+                           const int xSize, const int ySize,
+                           const int pipeNum, const bool stereo,
                            const bool border, const bool active);
 
 //TEST SUITE FUNCS
+private:
    bool addMachineSpecific_exec();
    bool addMachineSpecific_check();
-   
+
    bool removeMachineSpecific_exec();
    bool removeMachineSpecific_check();
 
@@ -237,10 +233,10 @@ public:
 
    bool removeKeyboardProxy_exec();
    bool removeKeyboardProxy_check();
-   
+
    bool addStupefiedAnalogProxy_exec();
    bool addStupefiedAnalogProxy_check();
-   
+
    bool removeStupefiedAnalogProxy_exec();
    bool removeStupefiedAnalogProxy_check();
 
@@ -260,15 +256,16 @@ private:
 
    void initGLState();
 
-   gadget::PositionInterface     mWand ;
-   gadget::PositionInterface     mHead ;
-   gadget::DigitalInterface   mButton0 ;
-   gadget::DigitalInterface   mButton1 ;
-   gadget::DigitalInterface   mButton2 ;
-   gadget::DigitalInterface   mButton3 ;
-   gadget::DigitalInterface   mButton4 ;
-   gadget::DigitalInterface   mButton5 ;
+   gadget::PositionInterface     mWand;
+   gadget::PositionInterface     mHead;
+   gadget::DigitalInterface   mButton0;
+   gadget::DigitalInterface   mButton1;
+   gadget::DigitalInterface   mButton2;
+   gadget::DigitalInterface   mButton3;
+   gadget::DigitalInterface   mButton4;
+   gadget::DigitalInterface   mButton5;
 
 };
+
 
 #endif
