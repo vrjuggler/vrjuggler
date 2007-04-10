@@ -73,22 +73,22 @@ namespace vrj
 {
 
 // Draw Callbacks
-void PfDrawFuncStereoLeft(pfChannel *chan, void* chandata);
-void PfDrawFuncStereoRight(pfChannel *chan, void* chandata);
-void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata);
+void PfDrawFuncStereoLeft(pfChannel* chan, void* chandata);
+void PfDrawFuncStereoRight(pfChannel* chan, void* chandata);
+void PfDrawFuncMonoBackbuffer(pfChannel* chan, void* chandata);
 //void PfDrawFuncSimulator(pfChannel* chan, void* chandata);
-//void PfAppFunc(pfChannel *chan, void* chandata);
+//void PfAppFunc(pfChannel* chan, void* chandata);
 
 
-void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw);
+void PfPipeSwapFunc(pfPipe* p, pfPipeWindow* pw);
 
 vprSingletonImp(PfDrawManager);
 
 PfDrawManager::~PfDrawManager()
 {
    //TODO: Add thread safety.
-   for ( std::vector<PfInputHandler*>::iterator itr = mPfInputHandlers.begin();
-         itr != mPfInputHandlers.end() ; itr++)
+   typedef std::vector<PfInputHandler*>::iterator iter_type;
+   for ( iter_type itr = mPfInputHandlers.begin(); itr != mPfInputHandlers.end(); ++itr )
    {
       delete *itr;
    }
@@ -116,21 +116,21 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
    // configuration. This becomes an issue normally since the default number of
    // pipes when creating a new display_system element is 0. It needs to be this
    // because we can not fill in the list of pipes with default values.
-   if(mNumPipes < 1)
+   if ( mNumPipes < 1 )
    {
       mNumPipes = 1;
    }
 
-   for (unsigned int i=0;i<mNumPipes;i++)
+   for ( unsigned int i = 0; i < mNumPipes; ++i )
    {
       std::string cur_disp_name = "-1";
 
-      // NOTE: ConfigElements return the default value for a property if a value is
-      //       not present. So if a pipe string is not specified for this pipe then
-      //       it gets the default value of "-1".
+      // NOTE: ConfigElements return the default value for a property if a
+      //       value is not present. So if a pipe string is not specified for
+      //       this pipe then it gets the default value of "-1".
       mPipeStrs.push_back(element->getProperty<std::string>("x11_pipes", i));
 
-      if(mPipeStrs[i] == cur_disp_name)    // Use display env
+      if ( mPipeStrs[i] == cur_disp_name )    // Use display env
       {
          std::string display_env;
          vpr::System::getenv("DISPLAY", display_env);
@@ -145,6 +145,7 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
          << "Pipe " << i << ": " << mPipeStrs[i] << std::endl
          << vprDEBUG_FLUSH;
    }
+
    return true;
 }
 
@@ -172,13 +173,12 @@ void PfDrawManager::draw()
 
    pfFrame();
 
-   for (std::vector<PfInputHandler*>::iterator itr = mPfInputHandlers.begin() ;
-        itr != mPfInputHandlers.end() ; itr++)
+   typedef std::vector<PfInputHandler*>::iterator iter_type;
+   for ( iter_type itr = mPfInputHandlers.begin(); itr != mPfInputHandlers.end(); ++itr )
    {
       (*itr)->checkEvents();
    }
 }
-
 
 // XXX: Hack for now
 void PfDrawManager::callAppChanFuncs()
@@ -186,32 +186,36 @@ void PfDrawManager::callAppChanFuncs()
    // for(each display)
    //    for(each viewport)
    //       for(each channel)
-   for(unsigned int dispIndex=0;dispIndex<mDisplays.size();dispIndex++)
+   for ( unsigned int dispIndex = 0; dispIndex < mDisplays.size(); ++dispIndex )
    {
-      for(unsigned vp=0;vp<mDisplays[dispIndex].viewports.size();vp++)
+      for ( unsigned int vp = 0; vp < mDisplays[dispIndex].viewports.size(); ++vp )
       {
-         for(unsigned ch=0;ch<2;ch++)
+         for ( unsigned int ch = 0; ch < 2; ++ch )
          {
-            if(mDisplays[dispIndex].viewports[vp].chans[ch] != NULL)
+            if ( mDisplays[dispIndex].viewports[vp].chans[ch] != NULL )
+            {
                mApp->appChanFunc(mDisplays[dispIndex].viewports[vp].chans[ch]);
+            }
          }
       }
    }
 }
-
 
 /**
  * Sets the app the draw whould interact with.
  * @pre None.
  * @post dynamic_cast<> of the app to a Pf app.
  */
-void PfDrawManager::setApp(App* _app)
+void PfDrawManager::setApp(App* app)
 {
    //vprASSERT(app != NULL);
-   mApp = dynamic_cast<PfApp*>(_app);
-   if(mPfHasForked)
-      initAppGraph();         // If pf is already started, then intialize the app scene graph
+   mApp = dynamic_cast<PfApp*>(app);
 
+   // If pf is already started, then intialize the app scene graph.
+   if ( mPfHasForked )
+   {
+      initAppGraph();
+   }
 }
 
 /**
@@ -225,9 +229,12 @@ void PfDrawManager::initAPI()
    pfInit();
    pfuInitUtil();
    
-   // XXX: This call should really be triggered by a change in draw manager or something
+   // XXX: This call should really be triggered by a change in draw manager or
+   // something.
    vprASSERT(mDisplayManager != NULL);
-   configDisplaySystem(mDisplayManager->getDisplaySystemElement());    // Configure all the display system stuff
+
+   // Configure all the display system stuff.
+   configDisplaySystem(mDisplayManager->getDisplaySystemElement());
 
    mApp->preForkInit();
 
@@ -245,8 +252,8 @@ void PfDrawManager::initAPI()
    pfMultiprocess(PFMP_APPCULLDRAW);
 #else
    // If we are running in a cluster then we must run in single process mode.
-   if(jccl::ConfigManager::instance()->isElementTypeInPendingList("cluster_manager") ||
-      jccl::ConfigManager::instance()->isElementTypeInActiveList("cluster_manager"))
+   if ( jccl::ConfigManager::instance()->isElementTypeInPendingList("cluster_manager") ||
+       jccl::ConfigManager::instance()->isElementTypeInActiveList("cluster_manager") )
    {
       vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
          << "[vrj::PfDrawManager::initAPI()] Running Performer in single "
@@ -262,7 +269,8 @@ void PfDrawManager::initAPI()
    }
 #endif
 
-// We can not init head and wand model loaders since they are loaded in PfBasicSimInterface
+   // We can not init head and wand model loaders since they are loaded in
+   // PfBasicSimInterface.
 //   initLoaders();          // Must call before pfConfig
 
    // --- FORKS HERE --- //
@@ -274,17 +282,21 @@ void PfDrawManager::initAPI()
    mPfHasForked = true;
 
    // Initialize the pipes that the system may need
-   // If we don't do this, then pf automatically give each pipe a big black channel
+   // If we don't do this, then pf automatically give each pipe a big black
+   // channel.
    initPipes();
 
    initPerformerGraph();        // Create the other scene graph nodes
-   if(mApp != NULL)
+   if ( NULL != mApp )
+   {
       initAppGraph();           // App was already set, but pf was not loaded.  So load graph now
-
+   }
 
    vprASSERT(mRoot != NULL && "We have a NULL root in PfDrawManager");
-   vprASSERT(mRootWithSim != NULL && "We have a NULL sim root scene in PfDrawManager");
-   vprASSERT(mSceneRoot != NULL && "We have a NULL root scene in PfDrawManager");
+   vprASSERT(mRootWithSim != NULL &&
+             "We have a NULL sim root scene in PfDrawManager");
+   vprASSERT(mSceneRoot != NULL &&
+             "We have a NULL root scene in PfDrawManager");
 
    //pfFrame();
 
@@ -299,31 +311,31 @@ void PfDrawManager::initAPI()
 /**
  * Gets a Performer pipe.
  *
- * @pre pipe_num < mNumPipes
+ * @pre pipeNum < mNumPipes
  *       Fork must have happened.
  */
-pfPipe* PfDrawManager::getPfPipe(unsigned pipe_num)
+pfPipe* PfDrawManager::getPfPipe(unsigned int pipeNum)
 {
    vprASSERT((mPfHasForked) && "Tried to get pipe before forking happened");
-   vprASSERT((pipe_num < mNumPipes) && "Tried to request out of bounds pipe");
-   vprASSERT((pipe_num < mPipes.size()) && "Tried to get out of range pipe");
-   vprASSERT((NULL != mPipes[pipe_num]) && "Have NULL pipe");
+   vprASSERT((pipeNum < mNumPipes) && "Tried to request out of bounds pipe");
+   vprASSERT((pipeNum < mPipes.size()) && "Tried to get out of range pipe");
+   vprASSERT((NULL != mPipes[pipeNum]) && "Have NULL pipe");
 
    // Print an error message if an invalid pipe was requested.  This will
    // probably only happen when a configuration is broken.
-   if ( pipe_num >= mNumPipes || pipe_num >= mPipes.size() ||
-        NULL == mPipes[pipe_num] )
+   if ( pipeNum >= mNumPipes || pipeNum >= mPipes.size() ||
+        NULL == mPipes[pipeNum] )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR")
-         << ": Invalid pipe number (" << pipe_num << ") requested.  "
+         << ": Invalid pipe number (" << pipeNum << ") requested.  "
          << "Check display system configuration.\n" << vprDEBUG_FLUSH;
       return NULL;
    }
    else
    {
       // Return the actual pipe
-      return mPipes[pipe_num];
+      return mPipes[pipeNum];
    }
 }
 
@@ -334,7 +346,7 @@ void PfDrawManager::initPipes()
 {
    mPipes.resize(mNumPipes, NULL);     // Resize the vector
 
-   for(unsigned pipe_num=0; pipe_num<mNumPipes; pipe_num++)
+   for ( unsigned int pipe_num = 0; pipe_num < mNumPipes; ++pipe_num )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
          << "[vrj::PfDrawManager::initPipes()] Opening Pipe." << std::endl
@@ -348,10 +360,10 @@ void PfDrawManager::initPipes()
       mPipes[pipe_num]->setScreen(pipe_num);
 
       pfPipeWindow* pw = allocatePipeWin(pipe_num);   // new pfPipeWindow(mPipes[pipe_num]);
-      pw->setOriginSize(0,0,1,1);
+      pw->setOriginSize(0, 0, 1, 1);
 
       // XXX: Set the swap func
-      mPipes[pipe_num]->setSwapFunc( PfPipeSwapFunc );      // Set to the given swap func
+      mPipes[pipe_num]->setSwapFunc(PfPipeSwapFunc);  // Set to the given swap func
    }
 }
 
@@ -364,7 +376,8 @@ void PfDrawManager::initPipes()
 void PfDrawManager::addDisplay(DisplayPtr disp)
 {
    vprASSERT(disp.get() != NULL);    // Can't add a null display
-   vprASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
+   vprASSERT(mPfHasForked &&
+             "Trying to add display when performer has not been initialized");
 
    //  For the display
    //     -Create a pWin for it
@@ -407,9 +420,13 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
 
    // Setup window border
    if (disp->shouldDrawBorder())
+   {
       pf_disp.pWin->setName(disp->getName().c_str()); // Give the window a name
+   }
    else
-      pf_disp.pWin->setMode(PFWIN_NOBORDER, 1);          // Get rid of that border
+   {
+      pf_disp.pWin->setMode(PFWIN_NOBORDER, 1);       // Get rid of that border
+   }
 
    jccl::ConfigElementPtr fb_elt = disp->getGlFrameBufferConfig();
    const int visual_id = fb_elt->getProperty<int>("visual_id");
@@ -483,19 +500,19 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
    //   - Set draw functions
    //   - Setup master chans
    Viewport* viewport = NULL;
-   unsigned num_vps = disp->getNumViewports();
+   const unsigned int num_vps = disp->getNumViewports();
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "   Num viewports: " << num_vps << std::endl << vprDEBUG_FLUSH;
 
-   for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
+   for ( unsigned int vp_num = 0; vp_num < num_vps; ++vp_num )
    {
       viewport = disp->getViewport(vp_num);
 
-      if(viewport->isActive())      // is viewport active
+      if ( viewport->isActive() )      // is viewport active
       {
          //Viewport::View view = viewport->getView();
-         pfViewport pf_viewport;                         // The viewport to build up
+         pfViewport pf_viewport;                  // The viewport to build up
          pf_viewport.viewport = viewport;
          float vp_ox, vp_oy, vp_sx, vp_sy;
 
@@ -503,35 +520,44 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
          // Primary channel - (Left in stereo)
          viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
          pf_viewport.chans[pfViewport::PRIMARY] = new pfChannel(pipe);
-         pf_viewport.chans[pfViewport::PRIMARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
+         pf_viewport.chans[pfViewport::PRIMARY]->setViewport(vp_ox,
+                                                             vp_ox + vp_sx,
+                                                             vp_oy,
+                                                             vp_oy + vp_sy);
          pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::PRIMARY]);
 
          // Secondary channel - (Right in stereo)
-         if(disp->isStereoRequested())
+         if ( disp->isStereoRequested() )
          {
             pf_viewport.chans[pfViewport::SECONDARY] = new pfChannel(pipe);
-            pf_viewport.chans[pfViewport::SECONDARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
+            pf_viewport.chans[pfViewport::SECONDARY]->setViewport(vp_ox,
+                                                                  vp_ox + vp_sx,
+                                                                  vp_oy,
+                                                                  vp_oy + vp_sy);
             pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::SECONDARY]);
          }
 
          // Set draw function
-         if(disp->isStereoRequested())
+         if ( disp->isStereoRequested() )
          {
-            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncStereoLeft);
-            pf_viewport.chans[pfViewport::SECONDARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncStereoRight);
+            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW,
+                                                                PfDrawFuncStereoLeft);
+            pf_viewport.chans[pfViewport::SECONDARY]->setTravFunc(PFTRAV_DRAW,
+                                                                  PfDrawFuncStereoRight);
          }
          else
          {
-            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncMonoBackbuffer);
+            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW,
+                                                                PfDrawFuncMonoBackbuffer);
          }
 
          // if surface ==> Setup surface channels
-         if (viewport->isSurface())
+         if ( viewport->isSurface() )
          {
             vprASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
 
             // Primary
-            if(NULL == mSurfMasterChan)      // If NULL, then add us as the new one
+            if ( NULL == mSurfMasterChan )      // If NULL, then add us as the new one
             {
                mSurfMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
                mSurfMasterChan->setScene(mRoot);
@@ -545,15 +571,14 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
             }
 
             // Secondary
-            if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
+            if ( NULL != pf_viewport.chans[pfViewport::SECONDARY] )
             {
                mSurfChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
                mSurfMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
             }
-
          }
          // if sim ==> setup sim channels
-         else if(viewport->isSimulator())
+         else if ( viewport->isSimulator() )
          {
             // -- Finish Simulator setup
             jccl::ConfigElementPtr vp_element = viewport->getConfigElement();
@@ -565,7 +590,8 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
             sim_vp->setDrawSimInterface(DrawSimInterfacePtr());
 
             // Create the simulator stuff
-            vprASSERT(1 == vp_element->getNum("simulator_plugin") && "You must supply a simulator plugin.");
+            vprASSERT(1 == vp_element->getNum("simulator_plugin") &&
+                      "You must supply a simulator plugin.");
 
             jccl::ConfigElementPtr sim_element =
                vp_element->getProperty<jccl::ConfigElementPtr>("simulator_plugin");
@@ -589,7 +615,7 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
             vprASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
 
             // Primary
-            if(NULL == mSimMasterChan)        // If NULL, then make us the master
+            if ( NULL == mSimMasterChan )        // If NULL, then make us the master
             {
                mSimMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
                mSimMasterChan->setScene(mRootWithSim);       // Set the shared "normal" scene
@@ -603,7 +629,7 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
             }
 
             // Secondary
-            if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
+            if ( NULL != pf_viewport.chans[pfViewport::SECONDARY] )
             {
                mSimChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
                mSimMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
@@ -612,7 +638,6 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
 
          // Add viewport to the display list
          pf_disp.viewports.push_back(pf_viewport);
-
       }  // is viewport active
    }     // for each viewport
 
@@ -628,22 +653,22 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
 
    // Performer says that if you trigger a window from the applciation proccess
    // you must wait for the window to open during the draw process.
-   while( !pfIsPWinOpen( pf_disp.pWin ) )
+   while ( ! pfIsPWinOpen(pf_disp.pWin) )
    {
       pfFrame();
-      vpr::System::usleep( 500 ); 
+      vpr::System::usleep(500); 
    }
 
-   PfInputHandler* new_input_handler = new PfInputHandler(pf_disp.pWin, disp->getName());
+   PfInputHandler* new_input_handler =
+      new PfInputHandler(pf_disp.pWin, disp->getName());
    
    // Configure the Performer window to accept events.
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
    new_input_handler->config(display_elt, disp);
 
-   
    mPfInputHandlers.push_back(new_input_handler);
 
-   if(pf_disp.disp->shouldHideMouse())
+   if ( pf_disp.disp->shouldHideMouse() )
    {
       pfuLoadPWinCursor(pf_disp.pWin, PFU_CURSOR_OFF);
    }
@@ -679,9 +704,6 @@ void PfDrawManager::createEmptyCursor(::Display* display, ::Window root)
 #endif
 */
 
-
-
-
 /**
  * Callback when display is removed to display manager.
  *
@@ -703,20 +725,19 @@ void PfDrawManager::removeDisplay(DisplayPtr disp)
       }
    }
 #else
-   std::vector<pfDisplay>::iterator disp_i = std::find_if(mDisplays.begin(), mDisplays.end(),
-                         std::compose1( std::bind2nd( std::equal_to<DisplayPtr>(),disp),
-                                        pfDisplay_disp()) );
+   std::vector<pfDisplay>::iterator disp_i =
+      std::find_if(mDisplays.begin(), mDisplays.end(),
+                   std::compose1(std::bind2nd(std::equal_to<DisplayPtr>(), disp),
+                                 pfDisplay_disp()));
 #endif
 
-
-   if(mDisplays.end() == disp_i)
+   if ( mDisplays.end() == disp_i )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "ERROR: [vrj::PfDrawManager::removeDisplay()] Tried to remove a "
          << "non-existant display!\n" << vprDEBUG_FLUSH;
       return;
    }
-
 
    // Release the pfDisplay
    releaseDisplay(*disp_i);
@@ -728,7 +749,8 @@ void PfDrawManager::removeDisplay(DisplayPtr disp)
 void PfDrawManager::releaseDisplay(pfDisplay& disp)
 {
    // Release all viewports
-   for(std::vector<pfViewport>::iterator i=disp.viewports.begin(); i != disp.viewports.end(); i++)
+   typedef std::vector<pfViewport>::iterator iter_type;
+   for ( iter_type i = disp.viewports.begin(); i != disp.viewports.end(); ++i )
    {
       releaseViewport(disp, *i);
    }
@@ -737,24 +759,25 @@ void PfDrawManager::releaseDisplay(pfDisplay& disp)
    releasePipeWin(disp.pWin, disp.disp->getPipe());
 }
 
-
 void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
 {
    std::vector<pfChannel*>::iterator chan_i;
 
    // Release the channel stuff
-   for(int i=0;i<2;i++)
+   for ( int i = 0; i < 2; ++i )
    {
       pfChannel* chan = vp.chans[i];
 
       // if we have a channel to delete
-      if(chan != NULL)
+      if ( chan != NULL )
       {
-         if(vp.viewport->isSurface())         // SURFACE display
+         if ( vp.viewport->isSurface() )         // SURFACE display
          {
             // Remove the channel from the list of channels
-            chan_i = std::find(mSurfChannels.begin(), mSurfChannels.end(), chan);
-            if(chan_i == mSurfChannels.end())
+            chan_i = std::find(mSurfChannels.begin(), mSurfChannels.end(),
+                               chan);
+
+            if ( chan_i == mSurfChannels.end() )
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
@@ -763,21 +786,25 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             }
 
             // Check if we were the master
-            if(chan == mSurfMasterChan)
+            if ( chan == mSurfMasterChan )
             {
-               mSurfMasterChan = NULL;                      // Get new master channel
-               if(mSurfChannels.size() > 0)
+               mSurfMasterChan = NULL;              // Get new master channel
+               if ( mSurfChannels.size() > 0 )
+               {
                   mSurfMasterChan = mSurfChannels[0];
+               }
             }
 
-            if(mSurfMasterChan != NULL)                  // Dettach from the channel
+            if ( mSurfMasterChan != NULL )          // Dettach from the channel
+            {
                chan->detach(mSurfMasterChan);
+            }
          }
-         else if(vp.viewport->isSimulator())    // SIMULATOR display
+         else if ( vp.viewport->isSimulator() )    // SIMULATOR display
          {
             // Remove the channel from the list of channels
             chan_i = std::find(mSimChannels.begin(), mSimChannels.end(), chan);
-            if(chan_i == mSimChannels.end())
+            if ( chan_i == mSimChannels.end() )
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
@@ -786,29 +813,32 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             }
 
             // Check if we were the master
-            if(chan == mSimMasterChan)
+            if ( chan == mSimMasterChan )
             {
-               mSimMasterChan = NULL;                      // Get new master channel
-               if(mSimChannels.size() > 0)
+               mSimMasterChan = NULL;             // Get new master channel
+               if ( mSimChannels.size() > 0 )
+               {
                   mSimMasterChan = mSimChannels[0];
+               }
             }
 
-            if(mSimMasterChan != NULL)                  // Dettach from the channel
+            if ( mSimMasterChan != NULL )         // Dettach from the channel
+            {
                chan->detach(mSimMasterChan);
+            }
          }
 
          chan->setScene(NULL);
          disp.pWin->removeChan(chan);     // Remove channel from pwin
-         pfDelete( chan);                     // Delete the channel
+         pfDelete(chan);                  // Delete the channel
       }
    }
 }
 
-
-
 // Get a pipe window to use
-// This either allocates a new pipe window or grabs an unused one that was previously released
-pfPipeWindow* PfDrawManager::allocatePipeWin(unsigned pipeNum)
+// This either allocates a new pipe window or grabs an unused one that was
+// previously released
+pfPipeWindow* PfDrawManager::allocatePipeWin(const unsigned int pipeNum)
 {
    pfPipeWindow* ret_val;
 
@@ -818,14 +848,14 @@ pfPipeWindow* PfDrawManager::allocatePipeWin(unsigned pipeNum)
       mPipeWindows.resize(pipeNum + 1);
    }
 
-   if(mPipeWindows[pipeNum].size() > 0)   // Is one available
+   if ( mPipeWindows[pipeNum].size() > 0 )   // Is one available
    {
       ret_val = mPipeWindows[pipeNum].back();
       mPipeWindows[pipeNum].pop_back();
    }
    else
    {
-      ret_val = new pfPipeWindow(getPfPipe(pipeNum));         // Allocate a new one
+      ret_val = new pfPipeWindow(getPfPipe(pipeNum));    // Allocate a new one
    }
 
    vprASSERT((ret_val != NULL) && "We have a null pfPipeWindow*");
@@ -834,12 +864,11 @@ pfPipeWindow* PfDrawManager::allocatePipeWin(unsigned pipeNum)
 }
 
 // Just store the old pipe window in the list
-void PfDrawManager::releasePipeWin(pfPipeWindow* pipeWin, unsigned pipeNum)
+void PfDrawManager::releasePipeWin(pfPipeWindow* pipeWin,
+                                   const unsigned int pipeNum)
 {
    mPipeWindows[pipeNum].push_back(pipeWin);
 }
-
-
 
 // Initialize the parameters of the master channel
 // Sets the attribs to share
@@ -858,24 +887,24 @@ void PfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
    //
    // Set the Channel attribs based on cur settings
    //
-   unsigned cur_share = masterChan->getShare();          // Get current setting, and OR the new stuff on
-   unsigned turn_on = ( PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_SCENE | PFCHAN_CULLFUNC |
-                        PFCHAN_STATS_DRAWMODE);
-   unsigned turn_off = (   PFCHAN_FOV |
-                           PFCHAN_VIEW |
-                           PFCHAN_VIEW_OFFSETS |
-                           PFCHAN_DRAWFUNC );
+   const unsigned int cur_share = masterChan->getShare();  // Get current setting, and OR the new stuff on
+   const unsigned int turn_on = PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+                                PFCHAN_STRESS | PFCHAN_LOD |
+                                PFCHAN_SWAPBUFFERS | PFCHAN_APPFUNC |
+                                PFCHAN_SCENE | PFCHAN_CULLFUNC |
+                                PFCHAN_STATS_DRAWMODE;
+   const unsigned int turn_off = PFCHAN_FOV |
+                                 PFCHAN_VIEW |
+                                 PFCHAN_VIEW_OFFSETS |
+                                 PFCHAN_DRAWFUNC;
 
-   masterChan->setShare((cur_share | turn_on) &(~turn_off));
+   masterChan->setShare((cur_share | turn_on) & ~turn_off);
 
    //masterChan->setTravFunc(PFTRAV_APP, PfAppFunc);
    //masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
    //                     PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
    //                     PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
 }
-
 
 /** Returns the needed mono frame buffer config. */
 std::vector<int> PfDrawManager::getMonoFBConfig(vrj::DisplayPtr disp)
@@ -1183,9 +1212,9 @@ void PfDrawManager::initPerformerGraph()
    mRoot = new pfScene;
    mRootWithSim = new pfScene;
 
-   mSceneGroup = new pfGroup;                // (Placeholder until app loads theirs)
+   mSceneGroup = new pfGroup;           // (Placeholder until app loads theirs)
    mRoot->addChild(mSceneGroup);        // Create the base scene without sim
-   mRootWithSim->addChild(mSceneGroup);      // Create base scene with sim
+   mRootWithSim->addChild(mSceneGroup); // Create base scene with sim
 }
 
 // Initialize the application graph
@@ -1195,8 +1224,10 @@ void PfDrawManager::initPerformerGraph()
 void PfDrawManager::initAppGraph()
 {
    mApp->initScene();
-   if(mSceneRoot != NULL)
+   if ( NULL != mSceneRoot )
+   {
       mSceneGroup->removeChild(mSceneRoot);
+   }
 
    mSceneRoot = mApp->getScene();
    mSceneGroup->addChild(mSceneRoot);
@@ -1224,12 +1255,12 @@ void PfDrawManager::updatePfProjections()
    //for(each pfDisp)
    //   for(each viewport)
    //       update Performer specific stuff.
-   for (unsigned disp_id=0;disp_id<mDisplays.size();disp_id++)    // each display
+   for ( unsigned int disp_id = 0; disp_id < mDisplays.size(); ++disp_id )    // each display
    {
       pfDisplay* cur_disp = &(mDisplays[disp_id]);
 
       vprASSERT(cur_disp->disp != NULL);
-      for(unsigned vp=0;vp<cur_disp->viewports.size();vp++)       // each viewport
+      for ( unsigned int vp = 0; vp < cur_disp->viewports.size(); ++vp )      // each viewport
       {
          pfViewport* pf_vp = &(cur_disp->viewports[vp]);
          vprASSERT(pf_vp != NULL);
@@ -1244,21 +1275,26 @@ void PfDrawManager::updatePfProjections()
 
          // --- All viewports --- //
          //surf_vp = dynamic_cast<SurfaceViewport*>(pf_vp->viewport);
-         //vprASSERT(surf_vp != NULL && "Could not cast supposedly surface display to SurfaceDisplay.");
+         //vprASSERT(surf_vp != NULL &&
+         //          "Could not cast supposedly surface display to SurfaceDisplay.");
          view = cur_vp->getView();
 
-         if(Viewport::LEFT_EYE == view)
+         if ( Viewport::LEFT_EYE == view )
          {
-            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], cur_vp->getLeftProj());
+            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY],
+                               cur_vp->getLeftProj());
          }
-         else if(Viewport::RIGHT_EYE == view)
+         else if ( Viewport::RIGHT_EYE == view )
          {
-            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], cur_vp->getRightProj());
+            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY],
+                               cur_vp->getRightProj());
          }
-         else if(Viewport::STEREO == view)
+         else if ( Viewport::STEREO == view )
          {
-            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], cur_vp->getLeftProj());
-            updatePfProjection(pf_vp->chans[pfViewport::SECONDARY], cur_vp->getRightProj());
+            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY],
+                               cur_vp->getLeftProj());
+            updatePfProjection(pf_vp->chans[pfViewport::SECONDARY],
+                               cur_vp->getRightProj());
          }
          else
          {
@@ -1266,13 +1302,14 @@ void PfDrawManager::updatePfProjections()
          }
 
          // Sim viewport
-         if(cur_vp->isSimulator())
+         if ( cur_vp->isSimulator() )
          {
             SimViewport*      sim_vp(NULL);
             PfSimInterfacePtr draw_sim_i;
 
             sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
-            vprASSERT(sim_vp != NULL && "Could not cast supposed simulator display to SimDisplay.");
+            vprASSERT(sim_vp != NULL &&
+                      "Could not cast supposed simulator display to SimDisplay.");
 
             draw_sim_i =
                boost::dynamic_pointer_cast<PfSimInterface>(
@@ -1283,7 +1320,6 @@ void PfDrawManager::updatePfProjections()
 
             draw_sim_i->updateSimulatorSceneGraph();
          }
-
       }
    }
 }
@@ -1360,28 +1396,32 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, b
 PfDrawManager::pfDisp* PfDrawManager::getPfDisp(pfChannel* chan)
 {
    // Search surface displays
-   for(unsigned int i=0;i<mSurfDisps.size();i++)
+   for ( unsigned int i = 0; i < mSurfDisps.size(); ++i )
    {
       pfChannel* primary_chan = mSurfDisps[i].chans[pfDisp::PRIMARY];
       pfChannel* secondary_chan = mSurfDisps[i].chans[pfDisp::SECONDARY];
-      if((chan == primary_chan) || (chan == secondary_chan))
-         return &(mSurfDisps[i]);
+      if ( chan == primary_chan || chan == secondary_chan )
+      {
+         return &mSurfDisps[i];
+      }
    }
 
    // Search simulator displays
-   for(unsigned int i=0;i<mSimDisps.size();i++)
+   for ( unsigned int i = 0; i < mSimDisps.size(); ++i )
    {
       pfChannel* primary_chan = mSimDisps[i].chans[pfDisp::PRIMARY];
       pfChannel* secondary_chan = mSimDisps[i].chans[pfDisp::SECONDARY];
-      if((chan == primary_chan) || (chan == secondary_chan))
-         return &(mSimDisps[i]);
+      if ( chan == primary_chan || chan == secondary_chan )
+      {
+         return &mSimDisps[i];
+      }
    }
 
    return NULL;
 }
 */
 
-void PfDrawManager::debugDump(int debugLevel)
+void PfDrawManager::debugDump(const int debugLevel)
 {
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, debugLevel)
       << "-- DEBUG DUMP --------- "
@@ -1389,19 +1429,20 @@ void PfDrawManager::debugDump(int debugLevel)
       << std::hex << (void*) this << " ------------" << std::dec << std::endl
       << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
-      << "App: 0x" << std::hex << (void*)mApp << std::dec << std::endl
+      << "App: 0x" << std::hex << (void*) mApp << std::dec << std::endl
       << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
-      << "Scene: 0x" << std::hex << (void*)mRoot << std::dec << std::endl
+      << "Scene: 0x" << std::hex << (void*) mRoot << std::dec << std::endl
       << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
-      << "Sim scene: 0x" << std::hex << (void*)mRootWithSim << std::dec
+      << "Sim scene: 0x" << std::hex << (void*) mRootWithSim << std::dec
       << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
       << "Number of displays: " << mDisplays.size() << std::endl
       << vprDEBUG_FLUSH;
 
-   for (std::vector<pfDisplay>::iterator i = mDisplays.begin(); i != mDisplays.end(); i++)
+   typedef std::vector<pfDisplay>::iterator iter_type;
+   for ( iter_type i = mDisplays.begin(); i != mDisplays.end(); ++i )
    {
       debugDumpPfDisp(&(*i),debugLevel);
    }
@@ -1410,50 +1451,50 @@ void PfDrawManager::debugDump(int debugLevel)
       << "-------- Dump end ----\n" << vprDEBUG_FLUSH;
 }
 
-
-void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
+void PfDrawManager::debugDumpPfDisp(pfDisplay* pfDisp, const int debugLevel)
 {
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, debugLevel)
-      << "Display: 0x" << std::hex << (void*) pf_disp->disp.get() << std::dec
+      << "Display: 0x" << std::hex << (void*) pfDisp->disp.get() << std::dec
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
-      << "pWin: 0x" << std::hex << (void*) pf_disp->pWin << std::dec
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
+      << "pWin: 0x" << std::hex << (void*) pfDisp->pWin << std::dec
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
-      << "visual ID: 0x" << std::hex << pf_disp->pWin->getFBConfigId()
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
+      << "visual ID: 0x" << std::hex << pfDisp->pWin->getFBConfigId()
       << std::dec << std::endl << vprDEBUG_FLUSH;
 
-   for(unsigned vp=0; vp<pf_disp->viewports.size(); ++vp)
+   for ( unsigned int vp = 0; vp < pfDisp->viewports.size(); ++vp )
    {
-      vprASSERT((pf_disp->viewports[vp].viewport != NULL) && "NULL viewport in pf_disp. Check if it was ever set.");
+      vprASSERT(pfDisp->viewports[vp].viewport != NULL &&
+                "NULL viewport in pfDisp. Check if it was ever set.");
 
       vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
          << "Viewport " << vp << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
-         << "      vp: " << *pf_disp->viewports[vp].viewport
+         << "      vp: " << *pfDisp->viewports[vp].viewport
          << vprDEBUG_FLUSH;
 
-      for(int ch=0;ch<2;ch++)
+      for ( int ch = 0; ch < 2; ++ch )
       {
-         pfChannel* cur_chan = pf_disp->viewports[vp].chans[ch];
-         unsigned chan_mask(0);
-         if(cur_chan != NULL)
+         pfChannel* cur_chan = pfDisp->viewports[vp].chans[ch];
+         unsigned int chan_mask(0);
+         if ( cur_chan != NULL )
+         {
             chan_mask = cur_chan->getShare();
+         }
          vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
-              << "chan " << ch << " -- " << std::hex << (void*) cur_chan
-              << std::dec << "  shared: FOV:" << (chan_mask & PFCHAN_FOV)
-              << " Scene:" << (chan_mask & PFCHAN_SCENE)
-              << " AppFunc:" << (chan_mask & PFCHAN_APPFUNC)
-              << " SwapBuff:" << (chan_mask & PFCHAN_SWAPBUFFERS)
-              << " SwapBuff-HW:" << (chan_mask & PFCHAN_SWAPBUFFERS_HW)
-              << std::endl << vprDEBUG_FLUSH;
+            << "chan " << ch << " -- " << std::hex << (void*) cur_chan
+            << std::dec << "  shared: FOV:" << (chan_mask & PFCHAN_FOV)
+            << " Scene:" << (chan_mask & PFCHAN_SCENE)
+            << " AppFunc:" << (chan_mask & PFCHAN_APPFUNC)
+            << " SwapBuff:" << (chan_mask & PFCHAN_SWAPBUFFERS)
+            << " SwapBuff-HW:" << (chan_mask & PFCHAN_SWAPBUFFERS_HW)
+            << std::endl << vprDEBUG_FLUSH;
       }
    }
 
-   vprDEBUG_CONT_END(vrjDBG_DRAW_MGR,debugLevel) << vprDEBUG_FLUSH;
+   vprDEBUG_CONT_END(vrjDBG_DRAW_MGR, debugLevel) << vprDEBUG_FLUSH;
 }
-
-
 
 // Config function called in draw proc after window is set up
 void PFconfigPWin(pfPipeWindow* pWin)
@@ -1480,9 +1521,8 @@ void PFconfigPWin(pfPipeWindow* pWin)
    */
 }
 
-
 /*
-void PfAppFunc(pfChannel *chan, void* chandata)
+void PfAppFunc(pfChannel* chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
       << "--- PfAppFunc: Enter ---.\n" << vprDEBUG_FLUSH;
@@ -1491,11 +1531,11 @@ void PfAppFunc(pfChannel *chan, void* chandata)
       << vprDEBUG_FLUSH;
 
    pfChannel* master_chan = PfDrawManager::instance()->mMasterChan;
-   if(master_chan == chan)
+   if ( master_chan == chan )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "I am the master of the house:\n" << vprDEBUG_FLUSH;
-      if(PfDrawManager::instance()->mPfAppCalled == false)      // Haven't called it yet
+      if ( PfDrawManager::instance()->mPfAppCalled == false )      // Haven't called it yet
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
             << "pfApp has not been called yet.  Let me do it...\n"
@@ -1506,18 +1546,19 @@ void PfAppFunc(pfChannel *chan, void* chandata)
    }
    else
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "I am not master. I can't do anything.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "I am not master. I can't do anything.\n" << vprDEBUG_FLUSH;
    }
 }
 */
-
 
 // --- Traversal functions --- //
 // This function is the performer draw callback function
 // - Sets up the correct OGL drawing buffer
 // - Calls the app draw chan function
 //template <bool left_eye, bool right_eye, bool stereo, bool simulator>
-void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo)  // , bool simulator)
+void PfDrawFunc(pfChannel* chan, void* chandata, const bool leftEye,
+                const bool rightEye, const bool stereo)  // , bool simulator)
 {
    vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL,
                         std::string("--- vrj::PfDrawFunc: Enter ---.\n"),
@@ -1529,26 +1570,28 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
 
       // Select correct buffer to draw to
       // If we are in stereo and not a simulator
-   if(stereo)
+   if ( stereo )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
          << "[vrj::PfDrawFunc()] Drawing stereo win\n" << vprDEBUG_FLUSH;
-      if(left_eye)
+      if ( leftEye )
       {
          glDrawBuffer(GL_BACK_LEFT);
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
             << "[vrj::PfDrawFunc()] Set to BACK_LEFT\n" << vprDEBUG_FLUSH;
       }
-      else if(right_eye)
+      else if ( rightEye )
       {
          glDrawBuffer(GL_BACK_RIGHT);
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
             << "[vrj::PfDrawFunc()] Set to BACK_RIGHT\n" << vprDEBUG_FLUSH;
       }
       else
+      {
          vprASSERT(false);
+      }
    }
-   else                                // No Stereo or have sim, so just go to back buffer
+   else                   // No Stereo or have sim, so just go to back buffer
    {
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
          << "[vrj::PfDrawFunc()] Drawing mono window\n" << vprDEBUG_FLUSH;
@@ -1561,7 +1604,7 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
 
    // How should we draw the simulator
    /*
-   if(cur_pf_disp->disp->isSimulator())
+   if ( cur_pf_disp->disp->isSimulator() )
    {
 
    }
@@ -1574,61 +1617,64 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
 *  These functions are just place holders for the drawing function
 *  They call the drawing function with specific parameters
 ***********************************************************************/
-void PfDrawFuncStereoLeft(pfChannel *chan, void* chandata)
+void PfDrawFuncStereoLeft(pfChannel* chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "--- PfDrawFuncStereoLeft: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "chan: " << std::hex << chan << std::dec << std::endl
       << vprDEBUG_FLUSH;
-   PfDrawFunc(chan,chandata,true,false,true);
+   PfDrawFunc(chan, chandata, true, false, true);
 }
 
-void PfDrawFuncStereoRight(pfChannel *chan, void* chandata)
+void PfDrawFuncStereoRight(pfChannel* chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "--- PfDrawFuncStereoRight: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "chan: " << std::hex << chan << std::dec << std::endl
       << vprDEBUG_FLUSH;
-   PfDrawFunc(chan,chandata,false,true,true);
+   PfDrawFunc(chan, chandata, false, true, true);
 }
 
-void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
+void PfDrawFuncMonoBackbuffer(pfChannel* chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "--- PfDrawFuncMonoBackbuffer: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "chan: " << std::hex << chan << std::dec << std::endl
       << vprDEBUG_FLUSH;
-   PfDrawFunc(chan,chandata,false,false,false);
+   PfDrawFunc(chan, chandata, false, false, false);
 }
 
 /*******************************
 * Callback for swapping buffers
 ********************************/
-void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
+void PfPipeSwapFunc(pfPipe* p, pfPipeWindow *pw)
 {
    boost::ignore_unused_variable_warning(p);
 
-    // If "first pw", then sync
-    // What is the "first" pw and how do I know?
+   // If "first pw", then sync
+   // What is the "first" pw and how do I know?
 
-    // For each pfDisplay
-    //    if(pw == display->pipeWindow)
-    //
+   // For each pfDisplay
+   //    if(pw == display->pipeWindow)
+   //
 
-    // Swap the buffer
-    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+   // Swap the buffer
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "--- [vrj::PfPipeSwapFunc] pipe: " << std::hex << p
       << " -- pw:" << pw << std::dec << "\n" << vprDEBUG_FLUSH;
 
-    // Barrier for Cluster
-    //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
+   // Barrier for Cluster
+   //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   //   <<  "BARRIER: Going to sleep for: " << num << std::endl
+   //   << vprDEBUG_FLUSH;
    cluster::ClusterManager::instance()->createBarrier();
-    //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   //   <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
-    pw->swapBuffers();
+   pw->swapBuffers();
 }
 
 }
