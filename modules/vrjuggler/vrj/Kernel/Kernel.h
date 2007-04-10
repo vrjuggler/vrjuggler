@@ -169,11 +169,7 @@ public:
     *
     * @since 2.1.14
     */
-#if defined(_MSC_VER) && _MSC_VER <= 1300
-   typedef boost::function1<void, const int> signal_callback_t;
-#else
    typedef boost::function<void(const int)> signal_callback_t;
-#endif
 
    /** @name Signal Handler Callbacks */
    //@{
