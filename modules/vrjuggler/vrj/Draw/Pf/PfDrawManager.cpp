@@ -945,13 +945,13 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING") << ": Display window '"
-            << mVrjDisplay->getName() << "'" << std::endl;
+            << disp->getName() << "'" << std::endl;
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << "         has an out of date OpenGL frame buffer "
             << "configuration.\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << "         Expected version 3 but found version "
-            << gl_fb_elt->getVersion() << ".  Default values\n";
+            << fb_element->getVersion() << ".  Default values\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << "         will be used for some frame buffer settings.\n"
             << vprDEBUG_FLUSH;
