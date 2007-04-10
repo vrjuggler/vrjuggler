@@ -361,13 +361,13 @@ void reconfigApp::initGLState()
 UTILITY FUNCTIONS
 ********************************************************************/
 
-void reconfigApp::setPath( std::string path )
+void reconfigApp::setPath(const std::string& path)
 {
    mPath = path;
 }
 
 
-bool reconfigApp::addElementFile( std::string filename )
+bool reconfigApp::addElementFile(const std::string& filename)
 {
    //Attempt to load a new config element
    if (mNewCfg != NULL) delete mNewCfg;
@@ -388,7 +388,7 @@ bool reconfigApp::addElementFile( std::string filename )
    }
 }
 
-bool reconfigApp::removeElementFile( std::string filename )
+bool reconfigApp::removeElementFile(const std::string& filename)
 {
    //Attempt to load a new config element
    if (mNewCfg != NULL) delete mNewCfg;
@@ -409,7 +409,8 @@ bool reconfigApp::removeElementFile( std::string filename )
    }
 }
 
-bool reconfigApp::swapElementFiles( std::string remove_file, std::string add_file )
+bool reconfigApp::swapElementFiles(const std::string& remove_file,
+                                   const std::string& add_file)
 {
    if (!removeElementFile( remove_file ))
    {
@@ -455,7 +456,8 @@ bool reconfigApp::checkTime()
    }
 }
 
-bool reconfigApp::verifyProxy( std::string proxyName, std::string deviceName )
+bool reconfigApp::verifyProxy(const std::string& proxyName,
+                              const std::string& deviceName)
 {
    //Try to get the new proxy and check its values
    gadget::Proxy* proxy = gadget::InputManager::instance()->getProxy( proxyName );
@@ -490,7 +492,7 @@ bool reconfigApp::verifyProxy( std::string proxyName, std::string deviceName )
 
 }
 
-vrj::DisplayPtr reconfigApp::getDisplay( std::string name )
+vrj::DisplayPtr reconfigApp::getDisplay(const std::string& name)
 {
    //Search the display manager for the display by name
    std::vector<vrj::DisplayPtr>::iterator iter;
@@ -507,16 +509,12 @@ vrj::DisplayPtr reconfigApp::getDisplay( std::string name )
    return vrj::DisplayPtr();
 }
 
-bool reconfigApp::verifyDisplayProps(  vrj::DisplayPtr disp,
-                                       std::string name,
-                                       int x_origin,
-                                       int y_origin,
-                                       int x_size,
-                                       int y_size,
-                                       int pipe_num,
-                                       bool stereo,
-                                       bool border,
-                                       bool active  )
+bool reconfigApp::verifyDisplayProps(vrj::DisplayPtr disp,
+                                     const std::string& name,
+                                     const int x_origin, const int y_origin,
+                                     const int x_size, const int y_size,
+                                     const int pipe_num, const bool stereo,
+                                     const bool border, const bool active)
 {
    bool ok = true;
 
@@ -740,7 +738,7 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport,
 
 }
 
-bool reconfigApp::verifyDisplayFile( std::string filename )
+bool reconfigApp::verifyDisplayFile(const std::string& filename)
 {
    //Assume that the file given has the displayWindow element in it
    //Load up the given file

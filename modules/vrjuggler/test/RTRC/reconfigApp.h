@@ -95,30 +95,27 @@ public:
 
 //UTILITIES
 
-   void setPath( std::string path );
-   bool addElementFile( std::string filename );
-   bool removeElementFile( std::string filename );
-   bool swapElementFiles( std::string remove_file, std::string add_file );
+   void setPath(const std::string& path);
+   bool addElementFile(const std::string& filename);
+   bool removeElementFile(const std::string& filename);
+   bool swapElementFiles(const std::string& remove_file,
+                         const std::string& add_file);
    bool removeRecentConfiguration();
 
    bool checkTime();
 
-   bool verifyProxy( std::string proxyName, std::string deviceName );
+   bool verifyProxy(const std::string& proxyName,
+                    const std::string& deviceName);
    bool verifyViewport( vrj::Viewport* viewport, jccl::ConfigElementPtr viewportElement);
    bool verifyAllViewports( vrj::DisplayPtr display, jccl::ConfigElementPtr viewportElement);
 
-   vrj::DisplayPtr getDisplay( std::string name );
-   bool verifyDisplayFile( std::string filename );
-   bool verifyDisplayProps( vrj::DisplayPtr disp,
-                            std::string name,
-                            int x_origin,
-                            int y_origin,
-                            int x_size,
-                            int y_size,
-                            int pipe_num,
-                            bool stereo,
-                            bool border,
-                            bool active  );
+   vrj::DisplayPtr getDisplay(const std::string& name);
+   bool verifyDisplayFile(const std::string& filename);
+   bool verifyDisplayProps(vrj::DisplayPtr disp, const std::string& name,
+                           const int x_origin, const int y_origin,
+                           const int x_size, const int y_size,
+                           const int pipe_num, const bool stereo,
+                           const bool border, const bool active);
 
 //TEST SUITE FUNCS
    bool addMachineSpecific_exec();
