@@ -30,22 +30,32 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+APPS=	ConfigApp	\
+	MPApp		\
+	SimpleApp	\
+	contextApp	\
+	simpleInput
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: ConfigApp MPApp SimpleApp contextApp simpleInput
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done
 
-ConfigApp MPApp SimpleApp contextApp simpleInput::
+$(APPS):
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:	
-	-cd ConfigApp && $(MAKE) clean
-	-cd MPApp && $(MAKE) clean
-	-cd SimpleApp && $(MAKE) clean
-	-cd contextApp && $(MAKE) clean
-	-cd simpleInput && $(MAKE) clean
+clean clobber:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done

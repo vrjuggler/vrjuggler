@@ -30,19 +30,29 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+APPS=	pfConfigNav	\
+	pfCNav
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: pfConfigNav pfNav
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) all ;		\
+            cd .. ;				\
+        done
 
-pfConfigNav pfNav::
-	cd $@ && $(MAKE) all
+$(APPS):
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	-cd pfConfigNav && $(MAKE) clean
-	-cd pfNav       && $(MAKE) clean
+clean clobber:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+        done

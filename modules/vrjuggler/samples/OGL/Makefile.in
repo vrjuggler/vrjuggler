@@ -30,23 +30,30 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-DIRS=	simple advanced ext
+SUBDIRS=	simple		\
+		advanced	\
+		ext
 
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(DIRS)
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(SUBDIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done
 
-$(DIRS)::
+$(SUBDIRS):
 	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	@for dir in $(DIRS) ; do		\
-            cd $$dir && $(MAKE) clean ;		\
+clean clobber:
+	@for dir in $(SUBDIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
             cd .. ;				\
-        done
+         done

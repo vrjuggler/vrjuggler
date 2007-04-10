@@ -30,18 +30,28 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+APPS=	simplePf
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: simplePf
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) all ;		\
+            cd .. ;				\
+        done
 
-simplePf::
-	cd $@ && $(MAKE) all
+$(APPS):
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	-cd simplePf && $(MAKE) clean
+clean clobber:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+        done

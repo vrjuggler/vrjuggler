@@ -38,16 +38,21 @@ APPS=	OpenSGNavGrab	\
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(APPS)
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+        done
 
-$(APPS)::
+$(APPS):
 	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	@for app in $(APPS) ; do		\
-            cd $$app && $(MAKE) clean ;		\
+clean clobber:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
             cd .. ;				\
         done

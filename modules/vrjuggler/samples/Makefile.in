@@ -30,22 +30,32 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+SUBDIRS=	sound	\
+		OGL	\
+		OSG	\
+		OpenSG	\
+		Pf
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: sound OGL OSG OpenSG Pf
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(SUBDIRS) ; do			\
+            cd $$dir && $(MAKE) $@ ;			\
+            cd .. ;					\
+         done
 
-sound OGL OSG OpenSG Pf::
-	cd $@ && $(MAKE) all
+$(SUBDIRS):
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	-cd sound && $(MAKE) clean
-	-cd OGL && $(MAKE) clean
-	-cd OSG && $(MAKE) clean
-	-cd OpenSG && $(MAKE) clean
-	-cd Pf  && $(MAKE) clean	
+clean clobber:
+	@for dir in $(DIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+        done

@@ -30,19 +30,29 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+APPS=	glove	\
+	navgrab
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: glove navgrab
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done
 
-glove navgrab::
-	cd $@ && $(MAKE) all
+$(APPS):
+	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd glove && $(MAKE) clean
-	-cd navgrab && $(MAKE) clean
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+         done

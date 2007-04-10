@@ -25,29 +25,34 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/OSG
+# Makefile.in for vrjuggler/samples/OSG
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-DIRS= simple   \
-      advanced
+SUBDIRS=	simple		\
+		advanced
 
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(DIRS)
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(SUBDIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+        done
 
-$(DIRS)::
+$(SUBDIRS):
 	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	@for dir in $(DIRS) ; do		\
-            cd $$dir && $(MAKE) clean ;		\
+clean clobber:
+	@for dir in $(SUBDIRS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
             cd .. ;				\
         done

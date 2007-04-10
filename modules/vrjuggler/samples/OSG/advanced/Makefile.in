@@ -25,7 +25,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/OpenSG/advanced
+# Makefile.in for vrjuggler/samples/OSG/advanced
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -37,16 +37,21 @@ APPS=	OSGNavGrab
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(APPS)
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
+            cd .. ;				\
+        done
 
-$(APPS)::
+$(APPS):
 	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	@for app in $(APPS) ; do		\
-            cd $$app && $(MAKE) clean ;		\
+clean clobber:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ ;		\
             cd .. ;				\
         done
