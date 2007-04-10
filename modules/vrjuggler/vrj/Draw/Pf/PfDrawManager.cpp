@@ -1610,7 +1610,6 @@ void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
 void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
 {
    boost::ignore_unused_variable_warning(p);
-    PfDrawManager* pf_draw_mgr = PfDrawManager::instance();     // get the draw manager
 
     // If "first pw", then sync
     // What is the "first" pw and how do I know?
