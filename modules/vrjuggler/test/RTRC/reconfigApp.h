@@ -27,11 +27,15 @@
 #ifndef _RECONFIG_APP
 #define _RECONFIG_APP
 
-
 #include <vrj/vrjConfig.h>
 
-#include <GL/gl.h>
-#include <GL/glu.h>
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#endif
 
 #include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/Config/Configuration.h>
