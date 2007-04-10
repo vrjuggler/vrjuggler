@@ -109,8 +109,8 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
       << vprDEBUG_FLUSH;
    mNumPipes = element->getProperty<unsigned int>("number_of_pipes");
 
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes
-                                            << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "NumPipes: " << mNumPipes << std::endl << vprDEBUG_FLUSH;
 
    // Make sure that the user has specified a valid number of pipes in the
    // configuration. This becomes an issue normally since the default number of
@@ -140,17 +140,18 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
             mPipeStrs[i] = display_env;
          }
       }
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "Pipe:" << i << ": "
-                                               << mPipeStrs[i] << std::endl
-                                               << vprDEBUG_FLUSH;
+
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "Pipe " << i << ": " << mPipeStrs[i] << std::endl
+         << vprDEBUG_FLUSH;
    }
    return true;
 }
 
 void PfDrawManager::sync()
 {
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
-      << "vrj::PfDrawManager::sync\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "vrj::PfDrawManager::sync()\n" << vprDEBUG_FLUSH;
    pfSync();
 }
 
@@ -159,15 +160,15 @@ void PfDrawManager::sync()
  */
 void PfDrawManager::draw()
 {
-   vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL)
-      << "[vrj::PfDrawManager::draw()] calling appChanFuncs\n"
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "[vrj::PfDrawManager::draw()] Calling app channel functions\n"
       << vprDEBUG_FLUSH;
    callAppChanFuncs();
 
    updatePfProjections();
 
-   vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL)
-      << "[vrj::PfDrawManager::draw] calling pfFrame()\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "[vrj::PfDrawManager::draw] Calling pfFrame()\n" << vprDEBUG_FLUSH;
 
    pfFrame();
 
@@ -230,7 +231,7 @@ void PfDrawManager::initAPI()
 
    mApp->preForkInit();
 
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL)
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
       << "[vrj::PfDrawManager::initAPI()] Entering." << std::endl
       << vprDEBUG_FLUSH;
 
@@ -248,7 +249,8 @@ void PfDrawManager::initAPI()
       jccl::ConfigManager::instance()->isElementTypeInActiveList("cluster_manager"))
    {
       vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
-         << "PfDrawManager::initAPI() Running Performer in single process to ensure cluster synchronization."
+         << "[vrj::PfDrawManager::initAPI()] Running Performer in single "
+         << "process to ensure cluster synchronization."
          << std::endl << vprDEBUG_FLUSH;
       // Single process mode.
       pfMultiprocess(PFMP_APPCULLDRAW);
@@ -289,7 +291,7 @@ void PfDrawManager::initAPI()
    // Dump the state
    // debugDump(vprDBG_CONFIG_LVL);
 
-   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL)
+   vprDEBUG_END(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
       << "[vrj::PfDrawManager::initAPI()] Exiting." << std::endl
       << vprDEBUG_FLUSH;
 }
@@ -313,9 +315,9 @@ pfPipe* PfDrawManager::getPfPipe(unsigned pipe_num)
         NULL == mPipes[pipe_num] )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR:")
-         << " Invalid pipe number (" << pipe_num << ") requested.  "
-         << "Check display system configuration\n" << vprDEBUG_FLUSH;
+         << clrOutNORM(clrRED, "ERROR")
+         << ": Invalid pipe number (" << pipe_num << ") requested.  "
+         << "Check display system configuration.\n" << vprDEBUG_FLUSH;
       return NULL;
    }
    else
@@ -334,11 +336,11 @@ void PfDrawManager::initPipes()
 
    for(unsigned pipe_num=0; pipe_num<mNumPipes; pipe_num++)
    {
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
          << "[vrj::PfDrawManager::initPipes()] Opening Pipe." << std::endl
          << vprDEBUG_FLUSH;
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-         << "\tpipe:" << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl
+      vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "\tpipe " << pipe_num << ": " << mPipeStrs[pipe_num] << std::endl
          << vprDEBUG_FLUSH;
 
       mPipes[pipe_num] = pfGetPipe(pipe_num);
@@ -369,18 +371,20 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
    //     - For each viewport
    //        - Create viewport
    //        - Create channels for the viewports
-   vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL,
-                        std::string("vrj::PfDrawManager: ---- Opening new Display --------\n"),
-                        std::string("vrj::PfDrawManager: ---- Display Open (done) --------\n"));
-
-
+   vprDEBUG_OutputGuard(
+      vrjDBG_DRAW_MGR, vprDBG_STATE_LVL,
+      "[vrj::PfDrawManager::addDisplay()] ---- Opening new Display --------\n",
+      "[vrj::PfDrawManager::addDisplay()] ---- Display Open (done) --------\n"
+   );
 
    pfDisplay pf_disp;            // The pfDisplay to use
    pf_disp.disp = disp;
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "\tDisplay is:" << (void*) disp.get() << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "\tPfDrawManager::add Display: Got Display:\n" << (*disp) << vprDEBUG_FLUSH;
+      << "Display is " << std::hex << (void*) disp.get() << std::dec
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "Got Display:\n" << *disp << vprDEBUG_FLUSH;
 
    int xo, yo, xs, ys;
    pfPipe* pipe = getPfPipe(disp->getPipe());      // Get the pipe
@@ -450,19 +454,19 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
 
 #ifdef VJ_DEBUG
          // ouput debug info about the frame buffer config recieved
-         vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
             << "[vrj::PfDrawManager::addDisplay()] Got Mono FB config\n"
             << vprDEBUG_FLUSH;
          for ( unsigned int j = 0 ; j < fb_config.size(); ++j )
          {
-            vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+            vprDEBUG_CONT(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
                << "  " << fb_config[j] << std::endl << vprDEBUG_FLUSH;
          }
-         vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+         vprDEBUG_CONT(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
             << std::endl << vprDEBUG_FLUSH;
 #endif
 
-         vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
             << "[vrj::PfDrawManager::addDisplay()] "
             << "Configuring mono window attribs.\n" << vprDEBUG_FLUSH;
          pf_disp.pWin->setFBConfigAttrs(&(fb_config[0]));       // Configure a "norm" window
@@ -481,7 +485,9 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
    Viewport* viewport = NULL;
    unsigned num_vps = disp->getNumViewports();
 
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << "   Num viewports: " << num_vps << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "   Num viewports: " << num_vps << std::endl << vprDEBUG_FLUSH;
+
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = disp->getViewport(vp_num);
@@ -565,7 +571,7 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
                vp_element->getProperty<jccl::ConfigElementPtr>("simulator_plugin");
 
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-               << "PfDrawManager::addDisplay() creating simulator of type '"
+               << "[vrj:;PfDrawManager::addDisplay()] Creating simulator of type '"
                << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
 
             DrawSimInterfacePtr new_sim_i(
@@ -644,7 +650,7 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
    
    // Dump the state
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
+      << "Reconfiged the Performer Draw Manager.\n" << vprDEBUG_FLUSH;
    //vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << (*this) << vprDEBUG_FLUSH;
    debugDump(vprDBG_CONFIG_LVL);
 }
@@ -705,7 +711,9 @@ void PfDrawManager::removeDisplay(DisplayPtr disp)
 
    if(mDisplays.end() == disp_i)
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "ERROR: PfDrawManager::removeDisplay: Tried to remove a non-existant display\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "ERROR: [vrj::PfDrawManager::removeDisplay()] Tried to remove a "
+         << "non-existant display!\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -749,7 +757,9 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSurfChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "Trying to remove a non-existant pfChannel\n" << vprDEBUG_FLUSH;
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+                  << "Trying to remove a non-existant pfChannel\n"
+                  << vprDEBUG_FLUSH;
             }
 
             // Check if we were the master
@@ -770,7 +780,9 @@ void PfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
             if(chan_i == mSimChannels.end())
             {
                vprASSERT(false && "Trying to remove a non-existant channel");
-               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "Trying to remove a non-existant pfChannel";
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+                  << "Trying to remove a non-existant pfChannel\n"
+                  << vprDEBUG_FLUSH;
             }
 
             // Check if we were the master
@@ -933,15 +945,15 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING") << ": Display window '"
-            << disp->getName() << "'" << std::endl;
+            << mVrjDisplay->getName() << "'" << std::endl;
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "has an out of date OpenGL frame buffer configuration."
-            << std::endl;
+            << "         has an out of date OpenGL frame buffer "
+            << "configuration.\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "Expected version 2 but found version "
-            << fb_element->getVersion() << ".\n";
+            << "         Expected version 3 but found version "
+            << gl_fb_elt->getVersion() << ".  Default values\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "Default values will be used for some frame buffer settings.\n"
+            << "         will be used for some frame buffer settings.\n"
             << vprDEBUG_FLUSH;
       }
 
@@ -964,8 +976,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( red_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer red channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer red channel size was negative ("
             << red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          red_size = 1;
       }
@@ -973,8 +985,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( green_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer green channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer green channel size was negative ("
             << green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          green_size = 1;
       }
@@ -982,8 +994,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( blue_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer blue channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer blue channel size was negative ("
             << blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          blue_size = 1;
       }
@@ -991,8 +1003,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( alpha_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Color buffer alpha channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Color buffer alpha channel size was negative ("
             << alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          alpha_size = 1;
       }
@@ -1000,8 +1012,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( num_aux_bufs < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Auxiliary buffer count was negative (" << num_aux_bufs
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Auxiliary buffer count was negative (" << num_aux_bufs
             << ").  Setting to 0.\n" << vprDEBUG_FLUSH;
          num_aux_bufs = 0;
       }
@@ -1009,8 +1021,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( db_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Depth buffer size was negative (" << db_size
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Depth buffer size was negative (" << db_size
             << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          db_size = 1;
       }
@@ -1018,8 +1030,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( stencil_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Stencil buffer size was negative (" << stencil_size
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Stencil buffer size was negative (" << stencil_size
             << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          stencil_size = 1;
       }
@@ -1027,8 +1039,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( accum_red_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer red channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer red channel size was negative ("
             << accum_red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_red_size = 1;
       }
@@ -1036,8 +1048,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( accum_green_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer green channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer green channel size was negative ("
             << accum_green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_green_size = 1;
       }
@@ -1045,8 +1057,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( accum_blue_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer blue channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer blue channel size was negative ("
             << accum_blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_blue_size = 1;
       }
@@ -1054,8 +1066,8 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
       if ( accum_alpha_size < 0 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << clrOutBOLD(clrYELLOW, "WARNING:")
-            << " Accumulation buffer alpha channel size was negative ("
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Accumulation buffer alpha channel size was negative ("
             << accum_alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
          accum_alpha_size = 1;
       }
@@ -1083,8 +1095,7 @@ void PfDrawManager::configFrameBuffer(vrj::DisplayPtr disp,
    const std::string indent_text(indent_level, ' ');
    const int pad_width_dot(40 - indent_level);
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "OpenGL visual request settings for " << disp->getName()
-      << ":\n";
+      << "OpenGL visual request settings for " << disp->getName() << ":\n";
    vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << std::setiosflags(std::ios::left) << std::setfill('.')
       << indent_text << std::setw(pad_width_dot)
@@ -1201,7 +1212,7 @@ void PfDrawManager::closeAPI()
 
 void PfDrawManager::updatePfProjections()
 {
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "[vrj::PfDrawManager::updatePfProjections()] Entering." << std::endl
       << vprDEBUG_FLUSH;
 
@@ -1283,8 +1294,7 @@ void PfDrawManager::updatePfProjections()
  */
 void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, bool simulator)
 {
-
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
       << "[vrj::PfDrawManager::updatePfProjection()] Entering. viewMat:\n"
       << proj->getViewMatrix() << std::endl << vprDEBUG_FLUSH;
 
@@ -1325,14 +1335,14 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, b
    }
    */
 
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_HEX_LVL)
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)
       << "Frustum: l:" << proj->getFrustum()[Frustum::VJ_LEFT]
       << "   r: " << proj->getFrustum()[Frustum::VJ_RIGHT]
       << "   b: " << proj->getFrustum()[Frustum::VJ_BOTTOM]
       << "   t: " << proj->getFrustum()[Frustum::VJ_TOP] << std::endl
       << vprDEBUG_FLUSH;
 
-   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
+   vprDEBUG_END(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
       << "[vrj::PfDrawManager::updatePfProjection()] Exiting.\n"
       << vprDEBUG_FLUSH;
 }
@@ -1373,21 +1383,21 @@ PfDrawManager::pfDisp* PfDrawManager::getPfDisp(pfChannel* chan)
 
 void PfDrawManager::debugDump(int debugLevel)
 {
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel)
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, debugLevel)
       << "-- DEBUG DUMP --------- "
       << clrOutNORM(clrCYAN,"vrj::PfDrawManager: 0x")
-      << std::hex << (void*)this << " ------------" << std::dec << std::endl
+      << std::hex << (void*) this << " ------------" << std::dec << std::endl
       << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
       << "App: 0x" << std::hex << (void*)mApp << std::dec << std::endl
       << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
       << "Scene: 0x" << std::hex << (void*)mRoot << std::dec << std::endl
       << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
       << "Sim scene: 0x" << std::hex << (void*)mRootWithSim << std::dec
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
       << "Number of displays: " << mDisplays.size() << std::endl
       << vprDEBUG_FLUSH;
 
@@ -1396,17 +1406,19 @@ void PfDrawManager::debugDump(int debugLevel)
       debugDumpPfDisp(&(*i),debugLevel);
    }
 
-   vprDEBUG_END(vrjDBG_DRAW_MGR,debugLevel) << "-------- Dump end ----\n" << vprDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR, debugLevel)
+      << "-------- Dump end ----\n" << vprDEBUG_FLUSH;
 }
 
 
 void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
 {
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel)
-      << "Display: " << (void*) pf_disp->disp.get() << std::endl
-      << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, debugLevel)
+      << "Display: 0x" << std::hex << (void*) pf_disp->disp.get() << std::dec
+      << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
-      << "pWin: " << (void*)(pf_disp->pWin) << std::endl << vprDEBUG_FLUSH;
+      << "pWin: 0x" << std::hex << (void*) pf_disp->pWin << std::dec
+      << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
       << "visual ID: 0x" << std::hex << pf_disp->pWin->getFBConfigId()
       << std::dec << std::endl << vprDEBUG_FLUSH;
@@ -1415,8 +1427,11 @@ void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
    {
       vprASSERT((pf_disp->viewports[vp].viewport != NULL) && "NULL viewport in pf_disp. Check if it was ever set.");
 
-      vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel) << "Viewport: " << vp << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel) << "      vp: " << *(pf_disp->viewports[vp].viewport) << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
+         << "Viewport " << vp << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
+         << "      vp: " << *pf_disp->viewports[vp].viewport
+         << vprDEBUG_FLUSH;
 
       for(int ch=0;ch<2;ch++)
       {
@@ -1424,9 +1439,9 @@ void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
          unsigned chan_mask(0);
          if(cur_chan != NULL)
             chan_mask = cur_chan->getShare();
-         vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
-              << "chan:" << ch << " -- " << (void*)cur_chan
-              << "  shared: FOV:" << (chan_mask & PFCHAN_FOV)
+         vprDEBUG_NEXT(vrjDBG_DRAW_MGR, debugLevel)
+              << "chan " << ch << " -- " << std::hex << (void*) cur_chan
+              << std::dec << "  shared: FOV:" << (chan_mask & PFCHAN_FOV)
               << " Scene:" << (chan_mask & PFCHAN_SCENE)
               << " AppFunc:" << (chan_mask & PFCHAN_APPFUNC)
               << " SwapBuff:" << (chan_mask & PFCHAN_SWAPBUFFERS)
@@ -1453,13 +1468,13 @@ void PFconfigPWin(pfPipeWindow* pWin)
    dm->mApp->configPWin(pWin);
 
    // Ouput the visual id
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "[vrj::PFconfigPWin()] framebuffer id: 0x"
       << std::hex << pWin->getFBConfigId() << std::dec << std::endl
       << vprDEBUG_FLUSH;
    /*
    int disp_num = int(pWin->getWSWindow());
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "[vrj::PFConfigPWin()] Window id: 0x" << std::hex << disp_num
       << std::dec << std::endl << vprDEBUG_FLUSH;
    */
@@ -1469,16 +1484,22 @@ void PFconfigPWin(pfPipeWindow* pWin)
 /*
 void PfAppFunc(pfChannel *chan, void* chandata)
 {
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "--- PfAppFunc: Enter ---.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+      << "--- PfAppFunc: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+      << "chan: " << std::hex << chan << std::dec << std::endl
+      << vprDEBUG_FLUSH;
 
    pfChannel* master_chan = PfDrawManager::instance()->mMasterChan;
    if(master_chan == chan)
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "I am the master of the house:\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "I am the master of the house:\n" << vprDEBUG_FLUSH;
       if(PfDrawManager::instance()->mPfAppCalled == false)      // Haven't called it yet
       {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "pfApp has not been called yet.  Let me do it...\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "pfApp has not been called yet.  Let me do it...\n"
+            << vprDEBUG_FLUSH;
          PfDrawManager::instance()->mPfAppCalled = true;
          pfApp();
       }
@@ -1499,17 +1520,19 @@ void PfAppFunc(pfChannel *chan, void* chandata)
 void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo)  // , bool simulator)
 {
    vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL,
-                        std::string("--- PfDrawFunc: Enter ---.\n"),
-                        std::string("--- PfDrawFunc: Exit ---.\n"));
+                        std::string("--- vrj::PfDrawFunc: Enter ---.\n"),
+                        std::string("--- vrj::PfDrawFunc: Exit ---.\n"));
 
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "chan: " << std::hex << chan << std::dec << std::endl
+      << vprDEBUG_FLUSH;
 
       // Select correct buffer to draw to
       // If we are in stereo and not a simulator
    if(stereo)
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
-         << "vrj::PfDrawFunc()] Drawing stereo win\n" << vprDEBUG_FLUSH;
+         << "[vrj::PfDrawFunc()] Drawing stereo win\n" << vprDEBUG_FLUSH;
       if(left_eye)
       {
          glDrawBuffer(GL_BACK_LEFT);
@@ -1553,22 +1576,31 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, b
 ***********************************************************************/
 void PfDrawFuncStereoLeft(pfChannel *chan, void* chandata)
 {
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncStereoLeft: Enter ---.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "--- PfDrawFuncStereoLeft: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "chan: " << std::hex << chan << std::dec << std::endl
+      << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,true,false,true);
 }
 
 void PfDrawFuncStereoRight(pfChannel *chan, void* chandata)
 {
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncStereoRight: Enter ---.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "--- PfDrawFuncStereoRight: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "chan: " << std::hex << chan << std::dec << std::endl
+      << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,false,true,true);
 }
 
 void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
 {
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncMonoBackbuffer: Enter ---.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "--- PfDrawFuncMonoBackbuffer: Enter ---.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "chan: " << std::hex << chan << std::dec << std::endl
+      << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,false,false,false);
 }
 
@@ -1588,7 +1620,9 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
     //
 
     // Swap the buffer
-    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfPipeSwapFunc: pipe:" << pf_draw_mgr << " -- pw:" << pw << "\n" << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+      << "--- [vrj::PfPipeSwapFunc] pipe: " << std::hex << p
+      << " -- pw:" << pw << std::dec << "\n" << vprDEBUG_FLUSH;
 
     // Barrier for Cluster
     //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
