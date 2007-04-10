@@ -76,8 +76,8 @@ private:
    int mSphereList;
    int mSphereHlList;
 
-   unsigned int mWoodBitmapBindId;
-   unsigned int mRainbowBitmapBindId;
+   GLuint mWoodBitmapBindId;
+   GLuint mRainbowBitmapBindId;
 
    char mWoodBitmap[16 * 3];
    char mRainbowBitmap[16 * 3];

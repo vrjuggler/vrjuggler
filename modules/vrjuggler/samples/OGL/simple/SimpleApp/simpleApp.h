@@ -31,7 +31,12 @@
 
 #include <iostream>
 #include <iomanip>
-#include <GL/gl.h>
+
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#else
+#  include <GL/gl.h>
+#endif
 
 #include <vrj/Draw/OGL/GlApp.h>
 

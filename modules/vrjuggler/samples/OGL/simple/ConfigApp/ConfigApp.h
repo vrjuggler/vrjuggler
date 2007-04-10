@@ -27,7 +27,11 @@
 #ifndef _CONFIG_APP_H_
 #define _CONFIG_APP_H_
 
-#include <GL/gl.h>
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#else
+#  include <GL/gl.h>
+#endif
 
 #include <gmtl/Matrix.h>
 #include <jccl/Config/ConfigElementPtr.h>

@@ -27,8 +27,15 @@
 #include <vrj/vrjConfig.h>
 
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+
+#if defined(__APPLE__)
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#endif
+
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
