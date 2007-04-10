@@ -47,7 +47,7 @@ APPS	= analog	\
 # -----------------------------------------------------------------------------
 default: all
 
-# The 'bundle' target only is for use on Mac OS X with Cocoa.
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
 all bundle:
 	@for app in $(APPS) ; do		\
             cd $$app && $(MAKE) $@ ;		\
