@@ -37,6 +37,7 @@ APPS=	collideApp
 # -----------------------------------------------------------------------------
 default: all
 
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
 all bundle:
 	@for app in $(APPS) ; do		\
             cd $$app && $(MAKE) $@ ;		\
@@ -49,7 +50,7 @@ $(APPS):
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:	
+clean clobber:	
 	@for app in $(APPS) ; do		\
             cd $$app && $(MAKE) $@ ;		\
             cd .. ;				\

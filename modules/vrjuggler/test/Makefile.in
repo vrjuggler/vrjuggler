@@ -41,7 +41,7 @@ SUBDIRS=	Cluster		\
 # -----------------------------------------------------------------------------
 default: TestSuite
 
-# The 'bundle' target only is for use on Mac OS X with Cocoa.
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
 all bundle:
 	@for dir in $(SUBDIRS) ; do		\
             cd $$dir && $(MAKE) $@ ;		\
@@ -54,8 +54,8 @@ $(SUBDIRS):
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
+clean clobber:
 	@for dir in $(SUBDIRS) ; do			\
-            echo "==> Cleaning in $$dir"       ;	\
-            cd $$dir && $(MAKE) clean && cd .. ;	\
+            echo "==> Cleaning in $$dir" ;		\
+            cd $$dir && $(MAKE) $@ && cd .. ;		\
         done
