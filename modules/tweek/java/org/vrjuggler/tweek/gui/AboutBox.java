@@ -55,7 +55,7 @@ public class AboutBox extends JDialog implements ActionListener
    BorderLayout borderLayout2 = new BorderLayout();
    FlowLayout flowLayout1 = new FlowLayout();
    GridLayout gridLayout1 = new GridLayout();
-   String version = "1.0";
+   String version = "1.3";
 
    public AboutBox(Frame parent) {
       super(parent);
