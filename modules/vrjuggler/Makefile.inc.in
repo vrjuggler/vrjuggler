@@ -41,6 +41,8 @@ instlinks=	$(topdir)/instlinks
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 
+BOOST_VERSION=	@BOOST_VERSION_DOT@
+
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
 OPT_FLAGS=	-D_OPT -DNDEBUG @OPT_FLAGS@
@@ -563,6 +565,9 @@ install-flagpoll:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/vrjuggler.fpc 					\
           $(libdir)$(LIBBITSUF)/flagpoll/vrjuggler-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/boost_program_options.fpc				\
+          $(libdir)$(LIBBITSUF)/flagpoll/boost_program_options-$(BOOST_VERSION).$(ISA).fpc
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  

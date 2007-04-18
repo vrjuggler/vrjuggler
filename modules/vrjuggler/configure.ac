@@ -76,6 +76,12 @@ AC_ARG_ENABLE([versioning],
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
+AC_ARG_WITH([boost-po-lib],
+            [  --with-boost-po-lib=<LIB NAME>
+                          The name of the Boost.program_options
+                          library suitable for the -l
+                          compiler option                 [default=Auto-detect]],
+            [given_boost_po_libname="$withval"], [given_boost_po_libname=''])
 
 # Force the use of GCC as the compiler.
 # NOTE: This is not fully implemented yet for any platform, but it is partially
@@ -157,6 +163,133 @@ JCCL_PATH_CXX([1.1.5], ,
 GADGETEER_PATH([1.1.25], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 SNX_PATH([1.1.4], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
+
+# Build up the possible Boost library suffix names. These will be stored in
+# $boost_suffixes and used later as necessary.
+case $CC in
+   gcc*|*/gcc*)
+      toolset='-gcc'
+      ;;
+   icc*|*/icc*)
+      if test "x$OS_TYPE" = "xWin32" ; then
+         toolset='-iw'
+      else
+         toolset='-il'
+      fi
+      ;;
+   cygcl|msvccc|cl*|CL*)
+      toolset="-${BOOST_TOOL:=vc7}"
+      ;;
+   cc*|*/cc*)
+      if test "x$GCC" = "xyes" ; then
+         toolset='-gcc'
+      else
+         case $PLATFORM in
+            IRIX)
+               toolset='-mp'
+               ;;
+            Solaris)
+               toolset='-sw'
+               ;;
+         esac
+      fi
+      ;;
+esac
+
+# A correct installation of Boost on Darwin does not include the toolset name
+# as part of the library file name.
+if test "x$PLATFORM" = "xDarwin" ; then
+   toolset=''
+   threading=''
+else
+   # We can only use multi-threading versions of Boost libraries if we are
+   # not using SPROC threads.  Boost does not support SPROC.
+   if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
+      threading='-mt'
+   fi
+fi
+
+boost_suffixes="$toolset$threading-$BOOST_LIB_VERSION $toolset$threading $threading"
+
+if test "x$given_boost_po_libname" != "x" ; then
+   boost_po_name="$given_boost_po_libname"
+fi
+
+# Ensure that a compiled version of the Boost.program_options library is available.
+vrjsave_CXXFLAGS="$CXXFLAGS"
+vrjsave_CPPFLAGS="$CPPFLAGS"
+vrjsave_LIBS="$LIBS"
+vrjsave_LDFLAGS="$LDFLAGS"
+
+CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
+CPPFLAGS="$CPPFLAGS $BOOST_INCLUDES"
+
+if test "lib$LIBBITSUF" != "lib" ; then
+   libdirs="lib$LIBBITSUF lib"
+else
+   libdirs="lib"
+fi
+
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+
+testBoostProgramOptions ( )
+{
+   libname="$1"
+   orig_LIBS="$2"
+
+   # NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
+   # are used together by AC_TRY_LINK().
+   LIBS="-l$libname $orig_LIBS"
+
+   AC_MSG_CHECKING([for boost::program_options::options_description() in $libname in $cur_boost_libdir])
+   AC_TRY_LINK([#include <boost/program_options.hpp>],
+               [boost::program_options::options_description desc("Allowed options");desc.add_options()("help", "help");],
+               [vrj_have_boost_po='yes'], [vrj_have_boost_po='no'])
+   rm -rf ./ii_files
+   AC_MSG_RESULT([$vrj_have_boost_po])
+
+   LIBS="$orig_LIBS"
+}
+
+for l in $libdirs ; do
+   cur_boost_libdir="$BOOST_ROOT/$l"
+   LDFLAGS="-L$cur_boost_libdir $vrjsave_LDFLAGS"
+
+   if test "x$boost_po_name" != "x" ; then
+      testBoostProgramOptions $boost_po_name $vrjsave_LIBS
+   else
+      # The extra empty string is to allow for no suffix to be used on the
+      # boost_program_options library name.
+      for s in $boost_suffixes "" ; do
+         cur_boost_po_name="boost_program_options$s"
+
+         testBoostProgramOptions $cur_boost_po_name $vrjsave_LIBS
+
+         if test "$vrj_have_boost_po" = "yes" ; then
+            boost_po_name="$cur_boost_po_name"
+            break
+         fi
+      done
+   fi
+
+   if test "$vrj_have_boost_po" = "yes" ; then
+      BOOST_LIBDIR="$cur_boost_libdir"
+      break
+   fi
+done
+
+if test "x$vrj_have_boost_po" != "xyes" ; then
+   AC_MSG_ERROR([*** Boost.program_options required by VR Juggler ***])
+fi
+
+DPP_LANG_RESTORE
+
+CXXFLAGS="$vrjsave_CXXFLAGS"
+CPPFLAGS="$vrjsave_CPPFLAGS"
+LIBS="$vrjsave_LIBS"
+LDFLAGS="$vrjsave_LDFLAGS"
+
 
 VRJ_USE_X11="$GADGET_USE_X11"
 if test "x$VRJ_USE_X11" = "xyes" ; then
@@ -271,6 +404,10 @@ DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 AC_CHECK_HEADERS([ext/functional])
 DPP_LANG_RESTORE
+
+DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
+               [AC_MSG_ERROR([*** Boost is required for VR Juggler ***])])
+BOOST_VERSION_DOT="$dpp_boost_version"
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
@@ -438,7 +575,7 @@ vrjpf_lib_name="vrj_pf$LIBRARY_VERSION"
 vrjpf_prof_lib_name="vrj_pf_p$LIBRARY_VERSION"
 
 if test "$OS_TYPE" = "UNIX" ; then
-    REQ_EXTRA_LIBS="$LDFLAGS $SNX_LIBS $GADGET_LIBS -lm"
+    REQ_EXTRA_LIBS="$LDFLAGS $SNX_LIBS $GADGET_LIBS -lm -l$boost_po_name"
     DYLIB_DEPS_VJ="$REQ_EXTRA_LIBS"
     DYLIB_DEPS_GL="$REQ_EXTRA_LIBS"
     DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
@@ -451,7 +588,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         osx_gl_frameworks="$osx_core_frameworks"
     fi
 
-    REQ_EXTRA_PROF_LIBS="$LDFLAGS $SNX_PROF_LIBS $GADGET_PROF_LIBS $LIBS -lm"
+    REQ_EXTRA_PROF_LIBS="$LDFLAGS $SNX_PROF_LIBS $GADGET_PROF_LIBS $LIBS -lm -l$boost_po_name"
     DYLIB_PROF_DEPS_VJ="$REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -l$vrj_prof_lib_name $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -l$vrj_prof_lib_name $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
@@ -692,6 +829,9 @@ AC_SUBST(vrj_extra_libs)
 AC_SUBST(vrj_ogl_extra_libs)
 AC_SUBST(vrj_pf_extra_libs)
 
+AC_SUBST(BOOST_VERSION_DOT)
+AC_SUBST(boost_po_name)
+
 AC_SUBST(tweek_java_api_jars_bundle)
 AC_SUBST(tweek_ext_java_api_jars_bundle)
 
@@ -703,6 +843,7 @@ VJ_MTREE_LIB_GEN(VJ, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    vrjuggler.fpc
+   boost_program_options.fpc
    Makefile
    Makefile.inc
    common.defs.mk
