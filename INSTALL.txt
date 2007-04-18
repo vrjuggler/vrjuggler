@@ -1,6 +1,6 @@
 
 
-Building and Installing the Juggler Project (Version 2.1/2.2)
+Building and Installing the Juggler Project (Version 2.3)
 
 
 The Juggler Team
@@ -43,9 +43,9 @@ The Juggler Team
 
 Introduction
 
- You have downloaded the source code for Version 2.1 of the Juggler Project.
- This is the code that will become VR Juggler 2.2, and it is the code that
- is used to create the VR juggler 2.2 pre-releases. Please be aware that
+ You have downloaded the source code for Version 2.3 of the Juggler Project.
+ This is the code that will become VR Juggler 2.4, and it is the code that
+ is used to create the VR juggler 2.4 pre-releases. Please be aware that
  this code represents a work in progress, and if you acquired it directly
  from Subversion rather than using a pre-packaged source code snapshot, the
  code may have bugs affecting compilation and execution.
@@ -173,11 +173,11 @@ Getting the Source Code and the Dependencies
  the dependencies required to build Juggler. There are two ways to get the
  source code: from a pre-packaged source release archive or from the
  Subversion repository on RealityForge. If you got the code from a pre-
- packaged source archive, that code is a complete "snapshot" of the
- Subversion repository at the time of release. It contains all dependencies
- that would otherwise have been acquired using Subversion. It does not
- contain binary dependencies that must be downloaded separately (such as
- NSPR, the Java Developer Kit, a C++ compiler, etc.).
+ packaged source archive, that code is a complete "snapshot" of the Subversion
+ repository at the time of release. It contains all dependencies that would
+ otherwise have been acquired using Subversion. It does not contain binary
+ dependencies that must be downloaded separately (such as NSPR, the Java
+ Developer Kit, a C++ compiler, etc.).
 
  The current list of required software packages is as follows:
 
@@ -213,7 +213,7 @@ Getting the Source Code and the Dependencies
 
 *  Doozer (http://sourceforge.net/projects/doozer): A collection of makefile
    stubs written for use with GNU Make and intended for simplifying the
-   creation of cross-platform VR Juggler application builds. Version 2.1.3
+   creation of cross-platform VR Juggler application builds. Version 2.1.4
    or newer is needed for building VR Juggler sample applications.
 
 
@@ -687,9 +687,8 @@ Configuring the Juggler Build
 Using configure.pl
 
  In the base juggler source directory, we have a "global" configure script
- written in Perl called configure.pl. To get the command-line options for
- this script, use one of the following (the second being much more
- detailed):
+ written in Perl called configure.pl. To get the command- line options for
+ this script, use one of the following (the second being much more detailed):
 
 
   ./configure.pl --help
@@ -717,8 +716,8 @@ Important
  source tree. The same holds for the individual autogen.sh scripts in the
  various modules, should you need to run one individually.
 
- configure.pl can run in a unique "build" directory or in the directory
- where it resides. Here is how we (the Juggler Team) have been using it:
+ configure.pl can run in a unique "build" directory or in the directory where
+ it resides. Here is how we (the Juggler Team) have been using it:
 
 
   1.  Make a directory for compiling. There are many good reasons to do this
@@ -741,7 +740,7 @@ Important
       are found.
 
 
-       ../configure.pl --prefix=$HOME/vrjuggler-2.2 --with-java-orb=JDK
+       ../configure.pl --prefix=$HOME/vrjuggler-2.4 --with-java-orb=JDK
 
 
      Important
