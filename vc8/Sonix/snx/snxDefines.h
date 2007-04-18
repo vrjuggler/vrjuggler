@@ -64,12 +64,12 @@
 #define PACKAGE_NAME "Sonix"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Sonix 1.1"
+#define PACKAGE_STRING "Sonix 1.3"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "sonix"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.1"
+#define PACKAGE_VERSION "1.3"
 
 #endif
