@@ -1,17 +1,17 @@
 # Spec file for vrjuggler.
 %define name vrjuggler
-%define global_version 2.1.7
+%define global_version 2.3.0
 %define global_release 1
 
-%define vpr_version 1.1.20
+%define vpr_version 2.1.0
 %define vpr_release %{global_release}%{?dist}
-%define tweek_version 1.1.3
+%define tweek_version 1.3.0
 %define tweek_release %{global_release}%{?dist}
-%define jccl_version 1.1.3
+%define jccl_version 1.3.0
 %define jccl_release %{global_release}%{?dist}
-%define sonix_version 1.1.2
+%define sonix_version 1.3.0
 %define sonix_release %{global_release}%{?dist}
-%define gadgeteer_version 1.1.8
+%define gadgeteer_version 1.3.0
 %define gadgeteer_release %{global_release}%{?dist}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}%{?dist}
@@ -878,6 +878,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Apr 18 2007 Patrick Hartling <patrick@infiscape.com> 2.3.0-1
+- Roll versions after VR Juggler 2.2 branch creation.
+
 * Thu Mar 15 2007 Patrick Hartling
 - Depend on jdk instead of j2sdk.
 

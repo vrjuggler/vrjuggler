@@ -31,7 +31,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([Tweek], [1.1], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Tweek], [1.3], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([tweek/tweekDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2007 by Iowa State University])

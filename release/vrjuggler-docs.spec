@@ -6,20 +6,20 @@
 #    http://www.vrjuggler.org/view/Juggler/WritingDocumentationUsingDocBook
 
 %define name vrjuggler-docs
-%define global_version 2.1.7
+%define global_version 2.3.0
 %define global_release 1
 %define srcdir vrjuggler-%{global_version}-%{global_release}-src
 %define file_name %{srcdir}.tar.bz2
 
-%define vpr_version 1.1.20
+%define vpr_version 2.1.0
 %define vpr_release %{global_release}
-%define tweek_version 1.1.3
+%define tweek_version 1.3.0
 %define tweek_release %{global_release}
-%define jccl_version 1.1.3
+%define jccl_version 1.3.0
 %define jccl_release %{global_release}
-%define sonix_version 1.1.2
+%define sonix_version 1.3.0
 %define sonix_release %{global_release}
-%define gadgeteer_version 1.1.8
+%define gadgeteer_version 1.3.0
 %define gadgeteer_release %{global_release}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}
@@ -192,12 +192,12 @@ rm -f %{buildroot}/tweek/1.1/beanlist.xsd
 # Ignore the Juggler build system documentation.
 rm -rf %{buildroot}/docs
 mkdir -p %{buildroot}%{_docdir}
-mv %{buildroot}/vapor/1.1 %{buildroot}%{_docdir}/vpr-%{vpr_version}
-mv %{buildroot}/tweek/1.1 %{buildroot}%{_docdir}/tweek-%{tweek_version}
-mv %{buildroot}/jccl/1.1 %{buildroot}%{_docdir}/jccl-%{jccl_version}
-mv %{buildroot}/sonix/1.1 %{buildroot}%{_docdir}/sonix-%{sonix_version}
-mv %{buildroot}/gadgeteer/1.1 %{buildroot}%{_docdir}/gadgeteer-%{gadgeteer_version}
-mv %{buildroot}/vrjuggler/2.1 %{buildroot}%{_docdir}/vrjuggler-%{vrjuggler_version}
+mv %{buildroot}/vapor/2.1 %{buildroot}%{_docdir}/vpr-%{vpr_version}
+mv %{buildroot}/tweek/1.3 %{buildroot}%{_docdir}/tweek-%{tweek_version}
+mv %{buildroot}/jccl/1.3 %{buildroot}%{_docdir}/jccl-%{jccl_version}
+mv %{buildroot}/sonix/1.3 %{buildroot}%{_docdir}/sonix-%{sonix_version}
+mv %{buildroot}/gadgeteer/1.3 %{buildroot}%{_docdir}/gadgeteer-%{gadgeteer_version}
+mv %{buildroot}/vrjuggler/2.3 %{buildroot}%{_docdir}/vrjuggler-%{vrjuggler_version}
 
 %clean
 rm -rf %{buildroot}
@@ -247,6 +247,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Apr 18 2007 Patrick Hartling <patrick@infiscape.com> 2.3.0-1
+- Roll versions after VR Juggler 2.2 branch creation.
+
 * Thu Mar 15 2007 Patrick Hartling
 - Depend on jdk instead of j2sdk.
 

@@ -33,7 +33,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_INIT([Sonix], [1.1], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Sonix], [1.3], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([snx/snxDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2007 by Iowa State University])

@@ -3,8 +3,7 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
    <articleinfo>
-      <title>Building and Installing the Juggler Project (Version
-      2.1/2.2)</title>
+      <title>Building and Installing the Juggler Project (Version 2.3)</title>
 
       <authorgroup>
          <author>
@@ -18,9 +17,9 @@
    <section>
       <title>Introduction</title>
 
-      <para>You have downloaded the source code for Version 2.1 of the Juggler
-      Project. This is the code that will become VR Juggler 2.2, and it is the
-      code that is used to create the VR juggler 2.2 pre-releases. Please be
+      <para>You have downloaded the source code for Version 2.3 of the Juggler
+      Project. This is the code that will become VR Juggler 2.4, and it is the
+      code that is used to create the VR juggler 2.4 pre-releases. Please be
       aware that this code represents a work in progress, and if you acquired
       it directly from Subversion rather than using a pre-packaged source code
       snapshot, the code may have bugs affecting compilation and
@@ -244,7 +243,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
             url="http://sourceforge.net/projects/doozer">http://sourceforge.net/projects/doozer</ulink>):
             A collection of makefile stubs written for use with GNU Make and
             intended for simplifying the creation of cross-platform VR Juggler
-            application builds. Version 2.1.3 or newer is needed for building
+            application builds. Version 2.1.4 or newer is needed for building
             VR Juggler sample applications.</para>
          </listitem>
       </itemizedlist>
@@ -986,7 +985,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
                      This is when you must tell the module configure scripts
                      where all the package dependencies are found.</para>
 
-                     <screen>../configure.pl --prefix=$HOME/vrjuggler-2.2 --with-java-orb=JDK</screen>
+                     <screen>../configure.pl --prefix=$HOME/vrjuggler-2.4 --with-java-orb=JDK</screen>
 
                      <important>
                         <para>You will probably have to specify the path to
