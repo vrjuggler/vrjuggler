@@ -30,6 +30,7 @@
 #include <jccl/jcclConfig.h>
 #include <vector>
 #include <list>
+#include <boost/signal.hpp>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
@@ -400,6 +401,37 @@ public:   // ----- INCOMING LIST ----- //
    //@}
 
 public:
+   /** @name Configuration Change Callbacks */
+   //@{
+   /**
+    * The type for the thread start and exit signals.
+    * Type definition for configuration signal that is invoked when
+    * configuration changes are made. These slots tak a pointer to
+    * a Configuration and the change type.
+    *
+    * @since 1.3.0
+    */
+   typedef boost::signal<void(Configuration*, PendingElement::Type)> config_signal_t;
+
+   /**
+    * Connects the given slot to the signal that is emitted when a configuration
+    * addition or removal happens.
+    *
+    * @post The given callback is appended to \c mConfigurationCallbacks.
+    *
+    * @param slot The slot object to be connected to the configuration change signal.
+    *
+    * @return The connection object that holds the association between the
+    *         configuration signal and the given slot.
+    *
+    * @since 1.3.0
+    */
+   boost::signals::connection
+      addConfigurationCallback(config_signal_t::slot_function_type slot);
+
+   //@}
+
+public:
    /** Scan the active list for items that don't have their dependencies
     *  filled.
     *  Any elements in the active list with dependencies not filled are
@@ -481,6 +513,9 @@ private:
 
    /** Network communications object for reconfiguration control. */
    RemoteReconfig* mReconfigIf;
+
+   /** Configuration signal invoked when configuration changes occur. */
+   config_signal_t mConfigurationSignal;
 
 protected:
    ConfigManager();

@@ -675,8 +675,16 @@ void ConfigManager::removeActive(const std::string& elementName)
    unlockActive();
 }
 
+boost::signals::connection
+   ConfigManager::addConfigurationCallback(config_signal_t::slot_function_type slot)
+{
+   return mConfigurationSignal.connect(slot);
+}
+
 void ConfigManager::addConfigurationAdditions(jccl::Configuration* cfg)
 {
+   mConfigurationSignal(cfg, PendingElement::ADD);
+
    vpr::Guard<vpr::Mutex> g(mIncomingLock);
 
    PendingElement pending;
@@ -693,6 +701,8 @@ void ConfigManager::addConfigurationAdditions(jccl::Configuration* cfg)
 
 void ConfigManager::addConfigurationRemovals(jccl::Configuration* cfg)
 {
+   mConfigurationSignal(cfg, PendingElement::REMOVE);
+
    vpr::Guard<vpr::Mutex> g(mIncomingLock);
 
    PendingElement pending;
