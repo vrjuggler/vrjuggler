@@ -102,6 +102,13 @@ public:
       sUseCocoaWrapper = useWrapper;
    }
 
+   /**
+    * Parse command line arguments.
+    *
+    * @since 2.3
+    */
+   bool init(int& argc, char* argv[]);
+
    /** @name Kernel Control Loop Functions */
    //@{
    /**
@@ -454,6 +461,13 @@ protected:
 
    /** Callbacks invoked by handleSignal() after stopping the kernel. */
    std::vector<signal_callback_t> mPostStopCallbacks;
+   //@}
+
+   /** @name Cluster configuration. */
+   //@{
+   bool mClusterMode;
+   bool mClusterMaster;
+   bool mClusterSlave;
    //@}
 
    static bool sUseCocoaWrapper;

@@ -52,6 +52,7 @@
 #include <gadget/Util/Version.h>
 #include <gadget/InputManager.h>
 
+#include <cluster/ClusterException.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork.h>
 
@@ -69,6 +70,9 @@
 // a result of including vpr/Thread/Thread.h).
 #include <boost/bind/apply.hpp>
 
+#include <boost/program_options.hpp>
+
+namespace po = boost::program_options;
 
 namespace
 {
@@ -89,6 +93,84 @@ bool Kernel::sUseCocoaWrapper(true);
 
 vprSingletonImp(Kernel);
 
+bool Kernel::init(int& argc, char* argv[])
+{
+   bool cluster_master(false);
+   bool cluster_slave(false);
+
+   // Declare the supported options.
+   po::options_description desc("VR Juggler Options");
+   desc.add_options()
+       ("help,h", "Produce help message")
+       ("vrjmaster", po::bool_switch(&cluster_master), "This node is the cluster master.")
+       ("vrjslave", po::bool_switch(&cluster_slave), "This node is a cluster slave.")
+   ;
+
+   // Construct a parser and do the actuall parsing.
+   po::command_line_parser parser(argc, argv);
+   po::parsed_options parsed = parser.options(desc).allow_unregistered().run();
+
+   // Keep track of the options that we actually use.
+   // XXX: This is only needed because of a bug in versions of boost.program_options < 1.34
+   //      where calling po::store(parsed_options, variable_map) throws an exception when
+   //      calling find() on a unrecognized option.
+   po::parsed_options used_options(&desc);
+
+   // Keep track of the tokens that we use so that we know to remove them from argv.
+   std::vector<std::string> used_tokens;
+   for (unsigned int i = 0; i < parsed.options.size(); i++)
+   {
+      // If the option was not recognized, and is not positional.
+      if (!parsed.options[i].unregistered &&
+           parsed.options[i].position_key == -1)
+      {
+         used_options.options.push_back(parsed.options[i]);
+         std::copy(parsed.options[i].original_tokens.begin(),
+                   parsed.options[i].original_tokens.end(),
+                   std::back_inserter(used_tokens));
+      }
+   }
+
+   // Keep track of the "new" end of the argv array.
+   char** new_end = argv+argc;
+   for (std::vector<std::string>::const_iterator itr = used_tokens.begin(); itr != used_tokens.end(); itr++)
+   {
+      // Don't remove help arguments.
+      if (0 == strcmp((*itr).c_str(), "-h") ||
+          0 == strcmp((*itr).c_str(), "--help"))
+      { continue; }
+
+      // Remove the token from argv if we used it.
+      boost::function<bool (char *)> remove_equal_aron = boost::bind(std::equal_to<int>(), 0, boost::bind(strcmp, (*itr).c_str(), _1));
+      new_end = std::remove_if(argv, argv + argc, remove_equal_aron);
+   }
+
+   // Overwrite argc to contain the new size of argv.
+   argc = std::distance(argv, new_end);
+
+   // Finally store our options and use them.
+   po::variables_map vm;
+   po::store(used_options, vm);
+
+   if(vm.count("help"))
+   {
+      std::cout << desc << std::endl;
+      return false;
+   }
+
+   cluster_master = vm["vrjmaster"].as<bool>();
+   cluster_slave = vm["vrjslave"].as<bool>();
+   if (cluster_master && cluster_slave)
+   {
+      throw vpr::Exception("Can't be a cluster master and slave.", VPR_LOCATION);
+   }
+   std::cout << "Cluster Master [" << (cluster_master ? "True":"False") << "] Slave: [" << (cluster_slave ? "True":"False") << "]" << std::endl;
+
+   mClusterManager = cluster::ClusterManager::instance();
+
+   return true;
+}
+
 // Starts the Kernel loop running.
 int Kernel::start()
 {
@@ -104,6 +186,13 @@ int Kernel::start()
 #if defined(VPR_OS_Windows)
    vpr::SigHandler::registerHandler(SIGBREAK, sig_action, false);
 #endif
+
+   /*
+   if (cluster::ClusterManager::instance()->isActive())
+   {
+      cluster::ClusterManager::instance()->connect()u;
+   }
+   */
 
    if(mControlThread != NULL) // Have already started
    {
@@ -500,9 +589,6 @@ void Kernel::initConfig()
    mDisplayManager = DisplayManager::instance();  // Get display manager
    vprASSERT(mDisplayManager != NULL);            // Did we get an object
 
-   mClusterManager = cluster::ClusterManager::instance();
-
-
    mPerformanceMediator = new PerformanceMediator();
 
    //??// processPending() // Should I do this here
@@ -612,7 +698,7 @@ void Kernel::loadConfigFile(std::string filename)
    vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL)
       << "Loading config file: " << filename << std::endl << vprDEBUG_FLUSH;
 
-   // We can allocate this on thte stack because the config elements get
+   // We can allocate this on the stack because the config elements get
    // copied into a new PendingConfigElement from the configuration.
    jccl::Configuration cfg;
 
@@ -753,6 +839,9 @@ Kernel::Kernel()
    , mDisplayManager(NULL)
    , mClusterManager(NULL)
    , mPerformanceMediator(NULL)
+   , mClusterMode(false)
+   , mClusterMaster(false)
+   , mClusterSlave(false)
 #if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
    , mCocoaWrapper(NULL)
 #endif
