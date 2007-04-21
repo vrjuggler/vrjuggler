@@ -31,6 +31,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/gadgetParam.h>
+#include <gadget/Util/Debug.h>
 
 #include <drivers/noDNA/X-IST/X-ISTStandalone.h> /* standalone X-IST driver */
 #include <drivers/noDNA/X-IST/X-IST.h> /* Gadgeteer X-IST driver */
@@ -169,7 +170,7 @@ void X_IST::controlLoop()
 bool X_IST::sample()
 {
    WORD values[24];
-   if ( mGlove->ReadRecordsFromHardware(values) )
+   if ( mGlove->readRecordsFromHardware(values) )
    {
       for ( unsigned int i = 0; i < mGlove->getNumberSensors(); ++i )
       {

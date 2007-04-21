@@ -49,7 +49,7 @@ public:
 
    unsigned int getNumberSensors() const
    {
-      return (firmwareVersion > 26 ? 24 : 20);
+      return (mFirmwareVersion > 26 ? 24 : 20);
    }
 
    /** Reads data from the X-IST hardware  */

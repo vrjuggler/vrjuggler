@@ -119,9 +119,9 @@ bool X_ISTStandalone::connectToHardware(const int gloveNumber)
    memset(buffer, 0, sizeof(buffer));
    read(buffer, 40);
    FT_W32_PurgeComm(mComm, PURGE_TXCLEAR | PURGE_RXCLEAR);
-   firmwareVersion = WORD (((buffer[0] - 48) * 100) + ((buffer[2] - 48) * 10) + (buffer[4] - 48));
+   mFirmwareVersion = WORD (((buffer[0] - 48) * 100) + ((buffer[2] - 48) * 10) + (buffer[4] - 48));
 //   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-//      << "[X-IST] firmware version : " << firmwareVersion << std::endl
+//      << "[X-IST] firmware version : " << mFirmwareVersion << std::endl
 //      << vprDEBUG_FLUSH;
 
 // Get hardware version
@@ -158,7 +158,7 @@ bool X_ISTStandalone::readRecordsFromHardware(WORD values[24])
    {
       return false;
    }
-   if ( ! read((char*) buffer, (firmwareVersion < 27 ? 31 : 38)) )
+   if ( ! read((char*) buffer, (mFirmwareVersion < 27 ? 31 : 38)) )
    {
       return false;
    }
@@ -186,7 +186,7 @@ bool X_ISTStandalone::readRecordsFromHardware(WORD values[24])
    values[18] = WORD (buffer[27] + (short (buffer[28] / 16) * 256));
    values[19] = WORD (buffer[29] + (short (buffer[28] % 16) * 256));
 
-   if ( firmwareVersion > 26 )
+   if ( mFirmwareVersion > 26 )
    {
       values[20] = WORD (buffer[30] + (short (buffer[31] / 16) * 256));
       values[21] = WORD (buffer[32] + (short (buffer[31] % 16) * 256));
