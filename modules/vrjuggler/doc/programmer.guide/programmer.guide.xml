@@ -7026,7 +7026,7 @@ public:
                <orderedlist>
                   <listitem>
                      <para><methodsynopsis>
-                           <type>vpr::ReturnStatus</type>
+                           <type>void</type>
 
                            <methodname>writeObject</methodname>
 
@@ -7040,7 +7040,7 @@ public:
 
                   <listitem>
                      <para><methodsynopsis>
-                           <type>vpr::ReturnStatus</type>
+                           <type>void</type>
 
                            <methodname>readObject</methodname>
 
@@ -7066,6 +7066,15 @@ public:
                   </indexterm> and overriding its pure virtual
                <methodname>writeObject()</methodname> and
                <methodname>readObject()</methodname> methods.</para>
+
+               <note>
+                  <para>Since the return type of these two methods is
+                  <type>void</type>, errors must be reported by throwing
+                  exceptions. User-defined exception types in this case must
+                  derive from <classname>vpr::IOException</classname>.
+                  Otherwise, throwing <classname>vpr::IOException</classname>
+                  directly will work.</para>
+               </note>
 
                <para>Deriving from
                <classname>vpr::SerializableObject</classname> is not viable in
@@ -7163,8 +7172,8 @@ public:
 class MyType : public vpr::SerializableObject
 {
 public:
-   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   void writeObject(vpr::ObjectWriter* writer);
+   void readObject(vpr::ObjectReader* reader);
    // Other public methods ...
 
 private:
@@ -7177,20 +7186,18 @@ private:
                <example id="example.implement.serialization">
                   <title>Serializing an Application-Specific Type</title>
 
-                  <programlisting>vpr::ReturnStatus MyType::writeObject(vpr::ObjectWriter* writer)
+                  <programlisting>void MyType::writeObject(vpr::ObjectWriter* writer)
 {
    writer-&gt;writeUint32(mIntData);
    writer-&gt;writeInt8(mByteData);
    writer-&gt;writeFloat(mFloatData);
-   return vpr::ReturnStatus();
 }
 
-vpr::ReturnStatus MyType::readObject(vpr::ObjectReader* reader)
+void MyType::readObject(vpr::ObjectReader* reader)
 {
    mIntData   = reader-&gt;readUint32();
    mByteData  = reader-&gt;readInt8();
    mFloatData = reader-&gt;readFloat();
-   return vpr::ReturnStatus();
 }</programlisting>
                </example>
 
@@ -7231,20 +7238,17 @@ private:
                   <programlisting>#include &lt;vpr/IO/SerializableObject.h&gt;
 
 template&lt;&gt;
-vpr::ReturnStatus
-vpr::SerializableObjectMixin&lt;SomeType&gt;::
-   writeObject(vpr::ObjectWriter* writer)
+void vpr::SerializableObjectMixin&lt;SomeType&gt;::
+writeObject(vpr::ObjectWriter* writer)
 {
    writer-&gt;writeUint32(getIntData());
    writer-&gt;writeInt8(getByteData());
    write-&gt;writeFloat(getFloatData());
-   return vpr::ReturnStatus();
 }
 
 template&lt;&gt;
-vpr::ReturnStatus
-vpr::SerializableObjectMixin&lt;SomeType&gt;::
-   readObject(vpr::ObjectReader* reader)
+void vpr::SerializableObjectMixin&lt;SomeType&gt;::
+readObject(vpr::ObjectReader* reader)
 {
    setIntData(reader-&gt;readUint32());
    setByteData(reader-&gt;readInt8());
@@ -9407,16 +9411,19 @@ void MPApp::draw()
                this is true with <classname>vpr::Thread</classname>s. Do not
                make any assumptions about when the thread will begin running.
                It may happen before or after the constructor returns the
-               <classname>vpr::Thread</classname> object.</para>
+               <classname>vpr::Thread</classname> object. If the thread fails
+               to spawn, an exception of type
+               <classname>vpr::IllegalArgumentException</classname>,
+               <classname>vpr::ResourceException</classname>, or
+               <classname>vpr::Exception</classname> is thrown from the
+               <classname>vpr::Thread</classname> constructor.</para>
 
-               <para>To pass arguments to threads, the common mechanism of
-               encapsulating them in a C++ <type>struct</type> must be used.
-               The function executed by the thread takes only a single
-               argument of type <type>void*</type>. An argument is not
-               required, of course, but to pass more than one argument to a
-               thread, the best way to do this is to create a structure and
-               pass a pointer to it to the <classname>vpr::Thread</classname>
-               constructor.</para>
+               <para>Passing arguments to threads can done through the thread
+               functor. An argument is not required, of course, but any number
+               of arguments can be passed by using
+               <function>boost::bind()</function>. We explain more about that
+               in the following section (see <xref
+               linkend="section.thread.functors" />).</para>
 
                <para>Once a <classname>vpr::Thread</classname> object is
                created, it acts as an interface into controlling the thread it
@@ -9425,15 +9432,8 @@ void MPApp::draw()
                focus of this section.</para>
             </section>
 
-            <section>
-               <title><classname>vpr::BaseThreadFunctor</classname></title>
-
-               <indexterm>
-                  <primary>vpr::BaseThreadFunctor</primary>
-
-                  <seealso>vpr::ThreadMemberFunctor,
-                  vpr::ThreadNonMemberFunctor</seealso>
-               </indexterm>
+            <section id="section.thread.functors">
+               <title>Thread Functors</title>
 
                <para>In this section, we explain the concept and use of
                functors. As with much of VR Juggler, a functor is a high-level
@@ -9445,41 +9445,383 @@ void MPApp::draw()
 
                <para>In VPR, a functor is simply another object type that
                happens to encapsulate a user-defined function. The details on
-               how this is done are not important here, but they are provided
-               later for those who are interested. What is important to know
-               is that a functor can be thought of as a normal function. When
-               using them, programmers simply implement a function and then
-               pass the function pointer (and the function's optional
-               argument) to the functor's constructor. The object does the
-               rest.</para>
+               how this is done are not important here; what is important to
+               know is that a functor can be thought of as a normal function.
+               When using them, programmers simply implement callable code (a
+               free function, a static member function, a non-static member
+               function—virtual or non-virtual, or a class that overloads
+               <function>operator()</function>) and then pass a reference to
+               the callable to the
+               <classname>boost::function&lt;T&gt;</classname> constructor.
+               Boost.Function does the rest, and it does its job very
+               well.</para>
 
-               <para>Observant readers may have noticed the parenthetical
-               phrase in the previous paragraph mentioning a function's
-               optional argument. Note that <quote>argument</quote> is
-               singular meaning that only one parameter can be passed to the
-               function that will be run by the created thread. The type of
-               that argument is the wonderfully vague <type>void*</type>, an
-               artifact of basing the threading subsystem on C libraries. As
-               discussed in the section on using
-               <classname>vpr::Thread</classname>s, if there is a need to pass
-               multiple arguments, they must be encapsulated in a struct or a
-               comparable object.</para>
+               <para>If the callable code takes parameters, they must be bound
+               to the functor instance using
+               <function>boost::bind()</function>.
+               <function>boost::bind()</function> creates a new functor with a
+               different signature than the original. For thread functors, the
+               functor signature must match the Boost.Function type
+               <classname>boost::function&lt;void()&gt;</classname> (or the
+               portable form
+               <classname>boost::function0&lt;void&gt;</classname>). The C
+               type is <type>void(*)()</type>. No matter how we say it, this
+               means a function that takes no arguments and returns nothing.
+               With <function>boost::bind()</function>, however, we can have
+               our thread functor take any number of arguments. Indeed,
+               <function>boost::bind()</function> is required to use a class
+               member function as a thread functor, and we will get back to
+               that case shortly.</para>
 
-               <para>Once a functor object exists, it is passed to the
-               <classname>vpr::Thread</classname> constructor, and the new
-               thread will execute the functor (which knows about the
-               function). The end result is the same as using a normal C/C++
-               function or a static class member function, but there is one
-               special benefit: with functors, non-static class member
-               functions can be passed. In many cases, there arises a need to
-               run a member function in a separate thread, but making it
-               static is infeasible or awkward. Thus, it would be best to pass
-               a non-static member function to the created thread. To get
-               access to the non-static data members, however, the C++
-               <varname>this</varname> pointer must be available to the
-               thread. By using a VPR functor, that is all handled behind the
-               scenes so that passing a non-static member function is
-               straightforward.</para>
+               <para>First, let us look at some examples of creating thread
+               functors. In the first example (<xref
+               linkend="example.functor.free.function" />), we have two free
+               functions and a class that creates threads to call those
+               functions. The first function,
+               <function>threadFunc()</function>, takes no arguments. The
+               creation of the <classname>vpr::Thread</classname> object
+               assigned to <varname>mThread0</varname> in
+               <function>MyClass::startThreads()</function> is therefore very
+               simple. The second function,
+               <function>threadFuncArgs()</function> takes two arguments: a
+               constant 32-bit integer and a reference to a vector of 32-bit
+               integers. In this case, we have to use
+               <function>boost::bind()</function> to bind function parameter
+               to the functor. Notice that the vector is passed by reference,
+               and we have to use <function>boost::ref()</function> (declared
+               in <filename>boost/ref.hpp</filename>) to indicate this fact.
+               Otherwise, <varname>mResults</varname> would be copied into the
+               functor object, and no results would ever be available to the
+               instance of <classname>MyClass</classname>. For objects that
+               are to be passed by constant reference, use
+               <function>boost::cref()</function>.</para>
+
+               <example id="example.functor.free.function">
+                  <title>Thread Functors from Free Functions</title>
+
+                  <programlisting>#include &lt;vector&gt;
+#include &lt;boost/bind.hpp&gt;
+#include &lt;boost/ref.hpp&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+
+bool gDoWork(true);
+
+void threadFunc()
+{
+   while ( gDoWork )
+   {
+      // Do work ...
+   }
+}
+
+void threadFuncArgs(const int val, std::vector&lt;int&gt;&amp; vecRef)
+{
+   for ( int i = 0; i &lt; val; ++i )
+   {
+      vecRef.push_back(computeResult(i));
+   }
+}
+
+int computeResult(const int input)
+{
+   // Do expensive operation on input ...
+}
+
+class MyClass
+{
+public:
+   MyClass()
+      : mThread0(NULL)
+      , mThread1(NULL)
+   {
+   }
+
+   ~MyClass()
+   {
+      // Stop threadFunc().
+      gDoWork = false;
+
+      // Wait for mThread0 to complete and delete it.
+      if ( NULL != mThread0 )
+      {
+         mThread0-&gt;join();
+         delete mThread0;
+         mThread0 = NULL;
+      }
+
+      // Wait for mThread1 to complete and delete it.
+      if ( NULL != mThread1 )
+      {
+         mThread1-&gt;join();
+         delete mThread1;
+         mThread1 = NULL;
+      }
+   }
+
+   void startThreads()
+   {
+      mThread0 = new vpr::Thread(threadFunc);
+
+      // Create a thread that adds 100 results to mthResults.
+      mThread1 = new vpr::Thread(boost::bind(threadFuncArgs, 100,
+                                             boost::ref(mResults)));
+   }
+
+   const std::vector&lt;int&gt;&amp; getResults()
+   {
+      // Wait for mThread1 to complete its work on mResults.
+      if ( NULL != mThread1 )
+      {
+         mThread1-&gt;join();
+      }
+
+      return mResults;
+   }
+
+private:
+   vpr::Thread* mThread0;
+   vpr::Thread* mThread1;
+   std::vector&lt;int&gt; mResults;
+};</programlisting>
+               </example>
+
+               <para>The next example, <xref
+               linkend="example.functor.static.member" />, demonstrates the
+               use of a static member function as the thread functor. The
+               usage of <classname>vpr::Thread</classname> is very similar to
+               what we saw above with free functions. Since static member
+               functions of a class are closely related to free functions,
+               this is to be expected.</para>
+
+               <example id="example.functor.static.member">
+                  <title>Thread Functor from a Static Member Function</title>
+
+                  <programlisting>#include &lt;vpr/Thread/Thread.h&gt;
+
+class MyClass
+{
+public:
+   MyClass()
+      : mThread(NULL)
+   {
+   }
+
+   ~MyClass()
+   {
+      // Stop threadFunc().
+      mDoWork = false;
+
+      // Wait for mThread to complete and delete it.
+      if ( NULL != mThread )
+      {
+         mThread-&gt;join();
+         delete mThread;
+         mThread = NULL;
+      }
+   }
+
+   void startThread()
+   {
+      mThread = new vpr::Thread(MyClass::threadFunc);
+   }
+
+private:
+   static void threadFunc()
+   {
+      while ( mDoWork )
+      {
+         // Do work ...
+      }
+   }
+
+   static bool mDoWork;
+   vpr::Thread* mThread;
+};
+
+bool MyClass::mDoWork(true);</programlisting>
+               </example>
+
+               <para>Now, we have what is likely to be the most common usage
+               of <classname>vpr::Thread</classname>. Namely, the use of a
+               non-static class member function as the thread functor. In
+               <xref linkend="example.functor.nonstatic.member" />, we see how
+               <function>boost::bind()</function> is used to make the functor
+               that is passed to the vpr::Thread constructor. This is example
+               of <classname>vpr::Thread</classname> usage is almost identical
+               to that shown in <xref
+               linkend="example.functor.static.member" />. The key differences
+               are the lack of the static keyword and the use of
+               <function>boost::bind()</function>. Remember that
+               <function>boost::bind()</function> can be used for passing
+               arguments into the function executed in the spawned thread, so
+               we can combine ideas from the free functions example (<xref
+               linkend="example.functor.free.function" />) with the binding of
+               the <varname>this</varname> variable to the non-static member
+               function. Simply put the arguments to be bound after the
+               <varname>this</varname> parameter in the call to
+               <function>boost::bind()</function>.</para>
+
+               <example id="example.functor.nonstatic.member">
+                  <title>Thread Functor from a Non-Static Member
+                  Function</title>
+
+                  <programlisting>#include &lt;vpr/Thread/Thread.h&gt;
+
+class MyClass
+{
+public:
+   MyClass()
+      : mThread(NULL)
+      , mDoWork(true)
+   {
+   }
+
+   ~MyClass()
+   {
+      // Stop threadFunc().
+      mDoWork = false;
+
+      // Wait for mThread to complete and delete it.
+      if ( NULL != mThread )
+      {
+         mThread-&gt;join();
+         delete mThread;
+         mThread = NULL;
+      }
+   }
+
+   void startThread()
+   {
+      mThread = new vpr::Thread(boost::bind(&amp;MyClass::threadFunc,
+                                            this));
+   }
+
+private:
+   void threadFunc()
+   {
+      while ( mDoWork )
+      {
+         // Do work ...
+      }
+   }
+
+   bool mDoWork;
+   vpr::Thread* mThread;
+};</programlisting>
+               </example>
+
+               <example id="example.functor.callable.object">
+                  <title>Thread Functor from Callable Object</title>
+
+                  <programlisting>#include &lt;vpr/Thread/Thread.h&gt;
+
+class Callable
+{
+public:
+   Callable()
+      : mDoWork(true)
+   {
+   }
+
+   void stop()
+   {
+      mDoWork = false;
+   }
+
+   void operator()()
+   {
+      while ( mDoWork )
+      {
+         // Do work ...
+      }
+   }
+
+private:
+   bool mDoWork;
+};
+
+class MyClass
+{
+public:
+   MyClass()
+      : mThread(NULL)
+   {
+   }
+
+   ~MyClass()
+   {
+      // Stop the functor().
+      stopThread();
+
+      // Wait for mThread to complete and delete it.
+      if ( NULL != mThread )
+      {
+         mThread-&gt;join();
+         delete mThread;
+         mThread = NULL;
+      }
+   }
+
+   void startThread()
+   {
+      mThread = new vpr::Thread(mFunctor);
+   }
+
+   void stopThread()
+   {
+      mFunctor.stop();
+
+      if ( NULL != mThread )
+      {
+         mThread-&gt;join();
+      }
+   }
+
+private:
+   Callable     mFunctor;
+   vpr::Thread* mThread;
+};</programlisting>
+               </example>
+
+               <para>What we have not yet seen is how to handle the case of a
+               thread failing to spawn. In this case, an exception will be
+               thrown from the <classname>vpr::Thread</classname> constructor
+               when using the auto-spawning constructor. Otherwise, if the
+               other <classname>vpr::Thread</classname> constructor is used
+               (the non-spawning form), the exception handling would have to
+               be around the invocation of
+               <function>vpr::Thread::start()</function>. The case for the
+               auto-spawning constructor is shown in <xref
+               linkend="example.handle.thread.spawn.failure" />. In general,
+               it would be sufficient to catch
+               <classname>vpr::Exception</classname> alone since the others
+               are subclasses of that type.</para>
+
+               <example id="example.handle.thread.spawn.failure">
+                  <title>Handling Thread Spawn Failure</title>
+
+                  <programlisting>try
+{
+   // Nothing will be assigned to mThread if an exception is
+   // thrown from the constructor.
+   mThread = new vpr::Thread(/* Args here... */);
+}
+// No thread functor was set.
+catch (vpr::IllegalArgumentException&amp; ex)
+{
+   // Handling code...
+}
+// The platform-specific thread object could not be allocated.
+catch (vpr::ResourceException&amp; ex)
+{
+   // Handling code...
+}
+// Something else went wrong during thread allocation.
+catch (vpr::Exception&amp; ex)
+{
+   std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;
+}</programlisting>
+               </example>
             </section>
 
             <section>
@@ -9888,12 +10230,8 @@ Unlock Working Copy Mutex</programlisting>
                      should return <constant>true</constant>. For
                      example:</para>
 
-                     <programlisting>std::string s = element-&gt;getType();
-
-if ( !jccl::strcasecmp(s, "my_custom_element_type") )
-{
-   return true;
-}</programlisting>
+                     <programlisting>const std::string s("my_custom_element_type");
+return element-&gt;getID() == s;</programlisting>
                   </listitem>
 
                   <listitem>
@@ -10061,7 +10399,8 @@ bool b = element-&gt;getProperty&lt;bool&gt;("enabled");
 std::string s3 = element-&gt;getProperty&lt;std::string&gt;("enabled");
 // s3 will be one of the strings "0" or "1"
 
-jccl::ConfigElementPtr elt = element-&gt;getProperty&lt;jccl::ConfigElementPtr&gt;("child_element", 2);</programlisting>
+jccl::ConfigElementPtr elt =
+   element-&gt;getProperty&lt;jccl::ConfigElementPtr&gt;("child_element", 2);</programlisting>
                   </listitem>
 
                   <listitem>
@@ -10349,10 +10688,8 @@ public:
                <programlisting>bool ConfigApp::configCanHandle(jccl::ConfigElementPtr element)
 {
    const std::string my_type("config_app");
-
-   return (my_type == element-&gt;getID());
-}
-</programlisting>
+   return my_type == element-&gt;getID();
+}</programlisting>
 
                <para>We define the element type that the application knows how
                to handle (named <quote>ConfigApp</quote>, as shown above), and
