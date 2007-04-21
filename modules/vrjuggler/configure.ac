@@ -154,6 +154,21 @@ DPP_PROG_INSTALL
 VJ_LINKER_SETUP
 
 # -----------------------------------------------------------------------------
+# Checks for header files.
+# -----------------------------------------------------------------------------
+AC_HEADER_STDC
+AC_CHECK_HEADERS(strings.h sys/time.h unistd.h)
+
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+AC_CHECK_HEADERS([ext/functional])
+DPP_LANG_RESTORE
+
+DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
+               [AC_MSG_ERROR([*** Boost is required for VR Juggler ***])])
+BOOST_VERSION_DOT="$dpp_boost_version"
+
+# -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH([1.1.44], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
@@ -393,21 +408,6 @@ if test "x${_enable_pf_api}" = "xyes" ; then
 fi
 
 DPP_HAVE_CPPUNIT([1.9.10])
-
-# -----------------------------------------------------------------------------
-# Checks for header files.
-# -----------------------------------------------------------------------------
-AC_HEADER_STDC
-AC_CHECK_HEADERS(strings.h sys/time.h unistd.h)
-
-DPP_LANG_SAVE
-DPP_LANG_CPLUSPLUS
-AC_CHECK_HEADERS([ext/functional])
-DPP_LANG_RESTORE
-
-DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
-               [AC_MSG_ERROR([*** Boost is required for VR Juggler ***])])
-BOOST_VERSION_DOT="$dpp_boost_version"
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
