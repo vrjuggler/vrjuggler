@@ -1,0 +1,32 @@
+libp5glove library
+	originals can be found at svn://svn.evillabs.net/ezrec/libp5glove/trunk
+	other information is available at
+	http://www.evillabs.net/wiki/index.php/Project_libp5glove,
+	http://www.simulus.org/p5glove/, and
+	http://scratchpad.wikia.com/wiki/P5_Glove
+
+Imported files:
+	All
+
+Files copied from vendor branch:
+	src/{macosx_usb_hid,p5glove,usb_hid*}.[ch]
+
+Fiels not copied from vendor branch:
+	src/Maekfile.am
+		We do not need Automake files
+
+	remainder of libp5glove source tree
+		We only need the contents of libp5glove/src to compile the
+		P5 Glove driver
+
+Imported by:
+
+	svn export svn://svn.evillabs.net/ezrec/libp5glove/trunk libp5glove
+	svn import libp5glove svn+ssh://realityforge.vrsource.org/svnroot/vrjuggler/vendor/libp5glove/current
+	svn copy svn+ssh://realityforge.vrsource.org/svnroot/vrjuggler/vendor/libp5glove/current \
+		svn+ssh://realityforge.vrsource.org/svnroot/vrjuggler/vendor/libp5glove/<version>
+	svn copy svn+ssh://realityforge.vrsource.org/svnroot/vrjuggler/vendor/libp5glove/<version> \
+		svn+ssh://realityforge.vrsource.org/svnroot/vrjuggler/juggler/trunk/modules/gadgeteer/drivers/EssentialReality/P5Glove/libp5glove
+
+Files modified relative to the vendor branch:
+	None
