@@ -44,7 +44,7 @@ INSTALL=	@INSTALL@
 INSTALL_FILES=	
 SUBOBJDIR=	$(DRIVER_NAME)
 
-EXTRA_INCLUDES+=-I$(srcdir)/libp5glove
+EXTRA_INCLUDES+=	-I$(srcdir)/libp5glove/src
 
 ifeq (@PLATFORM@, Darwin)
 BUILD_DRIVER=		Y
@@ -74,7 +74,7 @@ SRCS=		p5glove.c 		\
 		$(EXTRA_SRCS)
 endif
 
-EXTRA_SRCS_PATH=$(srcdir)/libp5glove
+EXTRA_SRCS_PATH=$(srcdir)/libp5glove/src
 
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/driver.defs.mk
