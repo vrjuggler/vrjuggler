@@ -115,10 +115,10 @@ bool P5GloveWrapper::startSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
          << "[p5glove] Begin sampling\n" << vprDEBUG_FLUSH;
    
-      int maxAttempts(0);
+      int max_attempts(0);
       bool result(false);
 
-      while ( result == false && maxAttempts < 5 )
+      while ( result == false && max_attempts < 5 )
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
             << "[p5glove] Connecting to glove number " << mGloveNumber
@@ -131,38 +131,43 @@ bool P5GloveWrapper::startSampling()
                << "[p5glove] ERROR: Can't open or it is already opened."
                << vprDEBUG_FLUSH;
             vpr::System::usleep(14500);
-            ++maxAttempts;
+            ++max_attempts;
          }
       }
 
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-         << "[p5glove] Successfully connected, Now sampling dataglove data.\n"
-         << vprDEBUG_FLUSH;
-
-      // Create a new thread to handle the control and set exit flag to false
-      mExitFlag = false;
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-         << "[p5glove] Spawning control thread.\n" << vprDEBUG_FLUSH;
-
-      try
+      if ( result )
       {
-         mThread = new vpr::Thread(boost::bind(&P5GloveWrapper::controlLoop,
-                                               this));
-         mActive = true;
-         started = true;
-
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-            << "[p5glove] P5Glove is active.\n" << vprDEBUG_FLUSH;
-      }
-      catch (vpr::Exception& ex)
-      {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << clrOutBOLD(clrRED, "ERROR")
-            << ": Failed to spawn thread for P5 Glove driver!\n"
-            << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << ex.what() << std::endl << vprDEBUG_FLUSH;
-         started = false;
+            << "[p5glove] Successfully connected, Now sampling dataglove "
+            << "data.\n" << vprDEBUG_FLUSH;
+
+         // Create a new thread to handle the control and set exit flag to
+         // false.
+         mExitFlag = false;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+            << "[p5glove] Spawning control thread.\n" << vprDEBUG_FLUSH;
+
+         try
+         {
+            mThread =
+               new vpr::Thread(boost::bind(&P5GloveWrapper::controlLoop,
+                                           this));
+            mActive = true;
+            started = true;
+
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+               << "[p5glove] P5Glove is active.\n" << vprDEBUG_FLUSH;
+         }
+         catch (vpr::Exception& ex)
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD(clrRED, "ERROR")
+               << ": Failed to spawn thread for P5 Glove driver!\n"
+               << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << ex.what() << std::endl << vprDEBUG_FLUSH;
+            started = false;
+         }
       }
    }
 
