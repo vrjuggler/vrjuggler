@@ -55,6 +55,15 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
+/** Construct */
+DataGlove::DataGlove()
+   : mGlove(NULL)
+   , mAnalogData(9, 0.0f)
+   , mExitFlag(false)
+{
+   /* Do nothing. */ ;
+}
+
 bool DataGlove::config(jccl::ConfigElementPtr e)
 {
    if(! (Input::config(e) /*&& Glove::config(e)*/ ))

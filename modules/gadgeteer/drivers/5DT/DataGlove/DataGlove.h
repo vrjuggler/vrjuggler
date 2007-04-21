@@ -58,10 +58,7 @@ class DataGlove : public InputMixer<Input,Analog>
 {
 public:
    /** Construct */
-   DataGlove() : mGlove(NULL), mAnalogData(9, 0.0f), mExitFlag(false)
-   {
-      /* Do nothing. */ ;
-   }
+   DataGlove();
 
    /** Destroy the glove */
    virtual ~DataGlove();
