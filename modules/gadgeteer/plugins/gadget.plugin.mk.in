@@ -103,7 +103,7 @@ EXTRA_CFLAGS+=		@CFLAGS@ $(OPTIMIZER) $(CFLAGS_DYNLIB) $(EXTRA_DEFS)
 EXTRA_CXXFLAGS+=	@CXXFLAGS@ $(OPTIMIZER) $(CXXFLAGS_DYNLIB) $(EXTRA_DEFS)
 EXTRA_DEFS=		@DEFS@ -D_GADGET_PLUGIN_BUILD_
 EXTRA_DEPENDFLAGS+=	@DEPEND_FLAGS@ $(EXTRA_INCLUDES)
-EXTRA_INCLUDES+=	@INCLUDES@ $(shell flagpoll gadgeteer --cflags-only-I)
+EXTRA_INCLUDES+=	@INCLUDES@ $(shell gadgeteer-config --includes)
 EXTRA_LDFLAGS+=		@LDFLAGS@ @EXTRA_LDFLAGS@
 EXTRA_LIBS+=		@LIBS@
 
@@ -131,7 +131,8 @@ else
    EXTRA_DEFS+=		-D_OPT -DNDEBUG
 endif
 
-DSO_PLUGIN_DEPS=	$(shell flagpoll gadgeteer --libs)
+DSO_PLUGIN_DEPS=	$(shell gadgeteer-config --libs)		\
+			$(shell gadgeteer-config --extra-libs)
 
 PLUGIN_DSO=	$(PLUGIN_NAME)$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
 DYLIB_DEPS=	$(PRE_DSO_PLUGIN_DEPS) $(DSO_PLUGIN_DEPS)		\
