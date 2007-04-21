@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="x_ist_glove" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="noDNA X-IST dataglove">
+      <abstract>false</abstract>
+      <help>Configuration for a noDNA X-IST device. This device makes use of 24 analog data sources (0-23).</help>
+      <parent>analog_device</parent>
+      <category>/Devices/Glove</category>
+      <property valuetype="integer" variable="false" name="number">
+         <help>This is the number of the glove connected to the computer.</help>
+         <value label="number" defaultvalue="0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
