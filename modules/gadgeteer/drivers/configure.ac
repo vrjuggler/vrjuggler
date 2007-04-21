@@ -78,6 +78,11 @@ AC_ARG_WITH(dtk,
 AC_ARG_WITH(vrpn, [  --with-vrpn=<PATH>      VRPN installation],
             _with_vrpn="$withval", _with_vrpn='no')
 
+# Build with ftd2xx path. Then, include the X-IST drivers ...
+# There is default path.
+AC_ARG_WITH(ftd2xx, [  --with-ftd2xx=<PATH>    ftd2xx installation],
+            _with_ftd2xx="$withval", _with_ftd2xx='no')
+
 # Build with libusb path. Then, include the P5Gove drivers ...
 # There is default path.
 AC_ARG_WITH(libusb, [  --with-libusb=<PATH>    libusb installation],
@@ -291,7 +296,7 @@ if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
         _vjsave_LDFLAGS="$LDFLAGS"
         _vjsave_LIBS="$LIBS"
 
-        # Based on the default ABI, tell $DTK_CONFIG 
+        # Based on the default ABI, tell $DTK_CONFIG
         if test "x$ABI" = "xN32" ; then
             bits='n32'
         elif test "x$ABI" = "x64" ; then
@@ -340,7 +345,7 @@ fi
 
 
 # -----------------------------------------------------------------------------
-# VRPN 
+# VRPN
 # -----------------------------------------------------------------------------
 
 # Test for the Vrpn library if the Vrpn API was enabled.
@@ -357,7 +362,7 @@ if test "x${_with_vrpn}" != "xno" ; then
    _vjsave_LIBS="$LIBS"
 
    VRPN_INCLUDES="-I$VRPNROOT/quat -I$VRPNROOT/vrpn"
-#   VRPN_INCLUDES="-I$VRPNROOT/vrpn"  
+#   VRPN_INCLUDES="-I$VRPNROOT/vrpn"
 
    if test "x$OS_TYPE" = "xWin32" ; then
       VRPNLIBDIR='pc_win32/Debug'
@@ -395,15 +400,15 @@ if test "x${_with_vrpn}" != "xno" ; then
    elif test "x$PLATFORM" = "xIRIX" ; then
       VRPNLIBDIR='sgi_irix'
       if test "x$ABI" = "xN32" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.n32"	
+         VRPNLIBDIR="$VRPNLIBDIR.n32"
       elif test "x$ABI" = "x64" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.64"	
+         VRPNLIBDIR="$VRPNLIBDIR.64"
       fi
 
       if test "x$ISA" = "xmips3" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.mips3"	
+         VRPNLIBDIR="$VRPNLIBDIR.mips3"
       elif test "x$ISA" = "xmips4" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.mips4"	
+         VRPNLIBDIR="$VRPNLIBDIR.mips4"
       fi
    fi
 
@@ -443,7 +448,7 @@ if test "x${_with_vrpn}" != "xno" ; then
 # include <vrpn_Shared.h>
 # include <vrpn_Button.h>
 # ],
-# [vrpn_Button_Remote * b = new vrpn_Button_Remote("");], 
+# [vrpn_Button_Remote * b = new vrpn_Button_Remote("");],
 #                        [ vj_have_vrpn='yes'
 #                          rm -rf ./ii_files ],
 #                        vj_have_vrpn='no')
@@ -467,6 +472,59 @@ if test "x${_with_vrpn}" != "xno" ; then
     CPPFLAGS="${_vjsave_CPPFLAGS}"
     LDFLAGS="${_vjsave_LDFLAGS}"
     LIBS="${_vjsave_LIBS}"
+fi
+
+# -----------------------------------------------------------------------------
+# FTD2XX
+# -----------------------------------------------------------------------------
+
+# Test for the ftd2xx library
+if test "x${_with_ftd2xx}" != "xno" ; then
+   if test "x${_with_ftd2xx}" = "xyes" ; then
+      FTD2XX_ROOT="/usr/local"
+   else
+      FTD2XX_ROOT="${_with_ftd2xx}"
+   fi
+
+   _gadget_save_CFLAGS="$CFLAGS"
+   _gadget_save_CPPFLAGS="$CPPFLAGS"
+   _gadget_save_LDFLAGS="$LDFLAGS"
+   _gadget_save_LIBS="$LIBS"
+
+   FTD2XX_LIBDIR="$FTD2XX_ROOT/lib"
+
+   FTD2XX_INCLUDES="-I$FTD2XX_ROOT/include"
+   FTD2XX_LDFLAGS="-L$FTD2XX_LIBDIR"
+   FTD2XX_LIBS="-lftd2xx"
+
+   CPPFLAGS="$FTD2XX_INCLUDES $CPPFLAGS"
+   LDFLAGS="$FTD2XX_LDFLAGS $LDFLAGS"
+
+   gadget_have_ftd2xx='no'
+
+   DPP_LANG_SAVE
+   DPP_LANG_C
+
+   CPPFLAGS="$CPPFLAGS $STDFLAGS"
+
+   AC_CHECK_LIB([ftd2xx], [FT_ListDevices],
+                [AC_CHECK_HEADER([ftd2xx.h], [gadget_have_ftd2xx='yes'],
+                                 [gadget_have_ftd2xx='no'])],
+                [gadget_have_ftd2xx='no'])
+
+   DPP_LANG_RESTORE
+
+   if test "x$gadget_have_ftd2xx" = "xyes" ; then
+      HAVE_FTD2XX='Y'
+   else
+      HAVE_FTD2XX='N'
+      AC_MSG_WARN([*** Did not find FTD2XX in $FTD2XX_ROOT ***])
+   fi
+
+   CFLAGS="${_gadget_save_CFLAGS}"
+   CPPFLAGS="${_gadget_save_CPPFLAGS}"
+   LDFLAGS="${_gadget_save_LDFLAGS}"
+   LIBS="${_gadget_save_LIBS}"
 fi
 
 # -----------------------------------------------------------------------------
@@ -666,6 +724,12 @@ AC_SUBST(HAVE_VRPN)
 AC_SUBST(VRPNROOT)
 AC_SUBST(VRPN_LDFLAGS)
 
+AC_SUBST(HAVE_FTD2XX)
+AC_SUBST(FTD2XX_ROOT)
+AC_SUBST(FTD2XX_INCLUDES)
+AC_SUBST(FTD2XX_LDFLAGS)
+AC_SUBST(FTD2XX_LIBS)
+
 AC_SUBST(HAVE_LIBUSB)
 AC_SUBST(LIBUSB_CFLAGS)
 AC_SUBST(LIBUSB_LIBS)
@@ -726,4 +790,6 @@ AC_CONFIG_FILES([
    VARS.pl
    ])
 
+#   noDNA/Makefile
+#   noDNA/X-IST/Makefile
 AC_OUTPUT

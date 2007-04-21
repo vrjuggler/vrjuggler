@@ -148,7 +148,8 @@ SUBDIR=	3Dconnexion/SpaceBall		\
 	Polhemus/Fastrak		\
 	USDigital/SerialEncoder	        \
 	VRCO/TrackdAPI			\
-	VirtualTechnologies/CyberGlove
+	VirtualTechnologies/CyberGlove	\
+	noDNA/X-IST
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
