@@ -1492,8 +1492,8 @@ value</screen>
             Window</quote>.</para>
 
             <figure id="figure.MPApp.running">
-               <title>MPApp running on a Linux desktop with multiple input
-               windows</title>
+               <title>MPApp Running on a Linux Desktop with Multiple Input
+               Windows</title>
 
                <mediaobject>
                   <imageobject>
@@ -1521,7 +1521,7 @@ value</screen>
             window.</para>
 
             <figure id="figure.MPApp.running.single">
-               <title>MPApp running on a Linux desktop with one window</title>
+               <title>MPApp Running on a Linux Desktop with One Window</title>
 
                <mediaobject>
                   <imageobject>
@@ -1738,6 +1738,25 @@ value</screen>
                <keysym>ESC</keysym> key in a graphics window or in the input
                window for the simulated positional device for the user's
                head.</para>
+
+               <para>The Cocoa version of MPApp is shown executing on a Mac OS
+               X desktop in <xref
+               linkend="figure.MPApp.running.single.OSX.cocoa" />. Note that
+               in the Dock, the VR Juggler icon is activated. Though it cannot
+               be seen, the application menu is for MPApp.</para>
+
+               <figure id="figure.MPApp.running.single.OSX.cocoa">
+                  <title>MPApp Running on Mac OS X Using Cocoa with One
+                  Window</title>
+
+                  <mediaobject>
+                     <imageobject>
+                        <imagedata align="center"
+                                   fileref="figures/MPApp-OSX-cocoa.thumbnail.single.png"
+                                   format="PNG" />
+                     </imageobject>
+                  </mediaobject>
+               </figure>
             </section>
 
             <section>
@@ -1754,6 +1773,13 @@ value</screen>
                user can skip this section since Cocoa will be used
                instead.</para>
 
+               <important>
+                  <para>The only way to get full-screen VR juggler windows on
+                  Mac OS X is to use the Cocoa windows. If nothing else, this
+                  is the biggest single reason not to use the X11 window
+                  support on Mac OS X.</para>
+               </important>
+
                <para>Running a VR Juggler application on Mac OS X is slightly
                different if VR Juggler was compiled against <ulink
                url="http://www.apple.com/macosx/x11/">X11 for OS X</ulink>.
@@ -1769,15 +1795,16 @@ value</screen>
                application can be executed from the command line just as
                described in the previous section.</para>
 
-               <para>MPApp is shown executing on a Mac OS X desktop in <xref
-               linkend="figure.MPApp.running.single.OSX" />. Note that in the
-               dock, the X11 icon is activated and that the application menu
-               is for an X11 application. This truly is an X11 application
-               running on OS X.</para>
+               <para>The X11 version of MPApp is shown executing on a Mac OS X
+               desktop in <xref
+               linkend="figure.MPApp.running.single.OSX.x11" />. Note that in
+               the Dock, the X11 icon is activated and that the application
+               menu is for an X11 application. This truly is an X11
+               application running on OS X.</para>
 
-               <figure id="figure.MPApp.running.single.OSX">
-                  <title>MPApp running on Mac OS X using X11 with one
-                  window</title>
+               <figure id="figure.MPApp.running.single.OSX.x11">
+                  <title>MPApp Running on Mac OS X Using X11 with One
+                  Window</title>
 
                   <mediaobject>
                      <imageobject>
