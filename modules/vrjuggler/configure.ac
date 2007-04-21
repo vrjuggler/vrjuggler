@@ -830,6 +830,7 @@ AC_SUBST(vrj_ogl_extra_libs)
 AC_SUBST(vrj_pf_extra_libs)
 
 AC_SUBST(BOOST_VERSION_DOT)
+AC_SUBST(BOOST_LIBDIR)
 AC_SUBST(boost_po_name)
 
 AC_SUBST(tweek_java_api_jars_bundle)
