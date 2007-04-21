@@ -92,20 +92,22 @@
          directory tree that are lumped into a single file suitable for
          writing to a tape or for downloading. The format is a standard, and
          the <command>tar</command>(1) utility is available on every
-         UNIX-based platform and on Win32. A free version can be downloaded
-         from <ulink url="http://www.gnu.org/">the GNU Project</ulink>. A
-         compressed TAR file is made for each VR Juggler distribution, and
-         some distributions come in other formats as well. You can always
-         count on the availability of a TAR file, though. The TAR files are
-         compressed using either GZIP or BZIP2, both of which are standard
-         compression formats. The <command>gzip</command>(1) utility is freely
-         available from the GNU Project, and the <command>bzip2</command>(1)
-         utility can be downloaded for free from <ulink
-         url="http://sources.redhat.com/bzip2/">RedHat, Inc.</ulink>. The GNU
-         version of TAR has the GZIP and BZIP2 algorithms built in. The
-         compression algorithm used can be determined by the file extension.
-         Files compressed with GZIP end in <filename>.gz</filename>; files
-         compressed with BZIP2 end in <filename>.bz2</filename>.</para>
+         UNIX-based platform and on <productname
+         class="registered">Windows</productname>. A free version can be
+         downloaded from <ulink url="http://www.gnu.org/">the GNU
+         Project</ulink>. A compressed TAR file is made for each VR Juggler
+         distribution, and some distributions come in other formats as well.
+         You can always count on the availability of a TAR file, though. The
+         TAR files are compressed using either GZIP or BZIP2, both of which
+         are standard compression formats. The <command>gzip</command>(1)
+         utility is freely available from the GNU Project, and the
+         <command>bzip2</command>(1) utility can be downloaded for free from
+         <ulink url="http://sources.redhat.com/bzip2/">Red Hat, Inc.</ulink>.
+         The GNU version of TAR has the GZIP and BZIP2 algorithms built in.
+         The compression algorithm used can be determined by the file
+         extension. Files compressed with GZIP end in
+         <filename>.gz</filename>; files compressed with BZIP2 end in
+         <filename>.bz2</filename>.</para>
 
          <para>Once you have downloaded a VR Juggler TAR distribution, you can
          unpack it one of two ways depending on what your platform's version
@@ -166,12 +168,14 @@
       </section>
 
       <section>
-         <title>Installing from a ZIP File (Win32 only)</title>
+         <title>Installing from a ZIP File (<productname
+         class="registered">Windows</productname> only)</title>
 
-         <para>On the Win32 family of platforms, the ZIP format rules. In the
-         old days, you would use the PKZIP utility to uncompress and extract a
-         ZIP file. Nowadays, most people use <ulink
-         url="http://www.winzip.com/">WinZip</ulink> or some other comparable
+         <para>On the <productname class="registered">Windows</productname>
+         family of platforms, the ZIP format rules. In the old days, you would
+         use the PKZIP utility to decompress and extract a ZIP file. Nowadays,
+         most people use Windows Explorer, <ulink
+         url="http://www.winzip.com/">WinZip</ulink>, or some other comparable
          graphical interface. This documentation covers only the use of WinZip
          when extracting a ZIP file.</para>
 
@@ -273,7 +277,7 @@
             <command>tweek</command> or <command>vrjconfig</command> from a
             terminal window will start those applications just as would be
             done on other operating systems. At some point, the command line
-            verrsions of these applications will probably be removed on Mac OS
+            versions of these applications will probably be removed on Mac OS
             X in favor of exclusive use of the application bundles.</para>
          </note>
       </section>
@@ -363,10 +367,11 @@
 /bin:/sbin:/usr/bin:/usr/sbin</screen>
 
             <para>For these types of shells, a <quote>permanent</quote>
-            setting for a given variable should usually be done in your .cshrc
-            file or in your <filename>.login</filename> file, both of which
-            should be in your home directory. In most cases, it is better to
-            use <filename>.cshrc</filename> because it is evaluated for every
+            setting for a given variable should usually be done in your
+            <filename>.cshrc</filename> file or in your
+            <filename>.login</filename> file, both of which should be in your
+            home directory. In most cases, it is better to use
+            <filename>.cshrc</filename> because it is evaluated for every
             shell instance.</para>
          </section>
 
@@ -422,7 +427,8 @@
             <title>DOS Shell</title>
 
             <para>The typical syntax for setting an environment variable from
-            the command line (in a DOS shell window) under Win32 is:</para>
+            the command line (in a DOS shell window) under <productname
+            class="registered">Windows</productname> is:</para>
 
             <screen>C:\&gt; set &lt;VARIABLE_NAME&gt;=&lt;value&gt;</screen>
 
@@ -449,43 +455,52 @@
             <screen>C:\&gt; set PATH
 C:\WINDOWS;C:\bin;C:\</screen>
 
-            <para>For some versions of Windows, a <quote>permanent</quote>
-            setting for a given variable should usually be done in
-            <filename>C:\AUTOEXEC.BAT</filename>. In newer versions (Windows
-            ME in particular) and in the Windows NT line of operating systems,
-            the setting is done using the Control Panel. Please refer to the
-            next section for more information on that method.</para>
+            <para>For some versions of <productname
+            class="registered">Windows</productname>, a
+            <quote>permanent</quote> setting for a given variable should
+            usually be done in <filename>C:\AUTOEXEC.BAT</filename>. In newer
+            versions (<productname class="registered">Windows</productname> ME
+            in particular) and in the <productname
+            class="registered">Windows</productname> NT line of operating
+            systems, the setting is done using the Control Panel. Please refer
+            to the next section for more information on that method.</para>
          </section>
 
          <section>
-            <title>Win 32 GUI</title>
+            <title><productname class="registered">Windows</productname>
+            GUI</title>
 
             <para>Before reading this section, please be sure to have read
             <xref linkend="section.envvar.dos" />. This is necessary because
-            the Win32 GUI for setting environment variables is simply a
-            front-end to that older method and thus uses the same conventions
-            and syntax. The versions of Windows to which this subsection
-            applies are indicated individually since each is a little
-            different. For more detailed information, please refer to the
-            Windows online help system and search for <quote>environment
+            the <productname class="registered">Windows</productname> GUI for
+            setting environment variables is simply a front-end to that older
+            method and thus uses the same conventions and syntax. The versions
+            of <productname class="registered">Windows</productname> to which
+            this subsection applies are indicated individually since each is a
+            little different. For more detailed information, please refer to
+            the <productname class="registered">Windows</productname> online
+            help system and search for <quote>environment
             variables</quote>.</para>
 
             <section>
-               <title>Windows 2000 and Windows XP</title>
+               <title><productname class="registered">Windows</productname>
+               2000 and <productname class="registered">Windows</productname>
+               XP</title>
 
                <para>In the Control Panel, open the <guiicon>System</guiicon>
                icon. Under the <guilabel>Advanced</guilabel> tab, there is a
                button labeled <guibutton>Environment Variables</guibutton>,
-               shown in <xref linkend="figure.win2k.sysprops" /> (the Windows
-               XP version is shown in <xref
-               linkend="figure.winxp.sysprops" />). Clicking this button opens
-               the dialog box shown in <xref
+               shown in <xref linkend="figure.win2k.sysprops" /> (the
+               <productname class="registered">Windows</productname> XP
+               version is shown in <xref linkend="figure.winxp.sysprops" />).
+               Clicking this button opens the dialog box shown in <xref
                linkend="figure.win2k.envvars" />. Here, you can set variables
                for yourself and, if you have the access privileges, for all
                users.</para>
 
                <figure id="figure.win2k.sysprops">
-                  <title>Windows 2000 System Properties Dialog</title>
+                  <title><productname class="registered">Windows</productname>
+                  2000 System Properties Dialog</title>
 
                   <mediaobject>
                      <imageobject>
@@ -497,7 +512,8 @@ C:\WINDOWS;C:\bin;C:\</screen>
                </figure>
 
                <figure id="figure.winxp.sysprops">
-                  <title>Windows XP System Properties Dialog</title>
+                  <title><productname class="registered">Windows</productname>
+                  XP System Properties Dialog</title>
 
                   <mediaobject>
                      <imageobject>
@@ -509,34 +525,13 @@ C:\WINDOWS;C:\bin;C:\</screen>
                </figure>
 
                <figure id="figure.win2k.envvars">
-                  <title>Windows Environment Variable Editor Dialog</title>
+                  <title><productname class="registered">Windows</productname>
+                  Environment Variable Editor Dialog</title>
 
                   <mediaobject>
                      <imageobject>
                         <imagedata align="center"
                                    fileref="figures/Window.EnvironmentVariables.png"
-                                   format="PNG" />
-                     </imageobject>
-                  </mediaobject>
-               </figure>
-
-               <para>To set up VR Juggler, the environment variable
-               <envar>VJ_BASE_DIR</envar> needs to be set, probably for all
-               users, though it depends very much on local system
-               requirements. For this example, let us say that the Win32
-               version of VR Juggler is installed in the
-               <filename>D:\</filename> directory. As such, we will set
-               <envar>VJ_BASE_DIR</envar> as shown in <xref
-               linkend="figure.win2k.envvar.set" />.
-               <envar>VJ_DEPS_DIR</envar> is set similarly.</para>
-
-               <figure id="figure.win2k.envvar.set">
-                  <title>Setting <envar>VJ_BASE_DIR</envar> on Windows</title>
-
-                  <mediaobject>
-                     <imageobject>
-                        <imagedata align="center"
-                                   fileref="figures/Window.EnvironmentVariables.VJ_BASE_DIR.png"
                                    format="PNG" />
                      </imageobject>
                   </mediaobject>
@@ -551,7 +546,8 @@ C:\WINDOWS;C:\bin;C:\</screen>
                <guilabel>Environment Variables</guilabel>. Here, you can set
                variables for yourself and, if you have the access privileges,
                for all users. The GUI is similar to that shown above for
-               Windows 2000.</para>
+               <productname class="registered">Windows</productname>
+               2000.</para>
             </section>
          </section>
 
@@ -559,7 +555,8 @@ C:\WINDOWS;C:\bin;C:\</screen>
             <title>Mac OS X</title>
 
             <para>On Mac OS X, environment variables can be set in two
-            different ways, just as on Windows. They can be set as
+            different ways, just as on <productname
+            class="registered">Windows</productname>. They can be set as
             <quote>global</quote> environment variables available to all
             applications launched from the Finder, or they can be set within a
             Terminal window for use within that shell and by all applications
@@ -633,46 +630,28 @@ value</screen>
 
          <variablelist>
             <varlistentry>
-               <term>VJ_BASE_DIR</term>
+               <term>LD_LIBRARY_PATH (UNIX/Linux only)</term>
+
+               <term>DYLD_LIBRARY_PATH (Darwin/Mac OS X only)</term>
 
                <listitem>
-                  <para>The environment variable <envar>VJ_BASE_DIR</envar>
-                  tells a VR Juggler application where to find important data
-                  files. It is required to compile and run any Juggler
-                  application. It should be set to the base directory of the
-                  installed VR Juggler library. For example, if you downloaded
-                  a UNIX version of VR Juggler 2.0 and extracted it to the
-                  directory <filename>/home/software</filename>, you would set
-                  <envar>VJ_BASE_DIR</envar> with this command:</para>
+                  <para>UNIX/Linux systems use these environment variables to
+                  find dynamically loaded libraries, such as
+                  <filename>libvrj-2_2.so</filename>. Unless you are building
+                  everything with static libraries, you will need to set these
+                  to include the VR Juggler library directory. An example of
+                  setting the library path is as follows:</para>
 
-                  <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.0</screen>
+                  <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
 
-                  <para>The last component of the path depends on the
-                  particular version of Juggler you have downloaded.</para>
-
-                  <para>If you downloaded and built VR Juggler from the source
-                  code, the compilation creates a directory called
-                  <filename>instlinks</filename> which can be used as a VR
-                  Juggler base:</para>
-
-                  <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
-               </listitem>
-            </varlistentry>
-
-            <varlistentry>
-               <term>VJ_DEPS_DIR</term>
-
-               <listitem>
-                  <para>This variable provides the path to the complete set of
-                  bundled VR Juggler dependencies (Boost, CppDOM, OpenAL,
-                  etc.). It is used by scripts such as
-                  <command>vrjuggler-config</command> and by the Visual C++
-                  project files that come with the sample applications. If you
-                  downloaded the dependencies as a separate package, set this
-                  environment variable to the path where that package was
-                  installed. If the dependencies are bundled in the same tree
-                  as VR Juggler, then this environment variable does not have
-                  to be set.</para>
+                  <para>This is only needed if the Juggler shared libraries
+                  are not found by the runtime loader by default. If the
+                  Juggler modules were installed using package management such
+                  as RPM, then it will not be necessary to set
+                  <envar>LD_LIBRARY_PATH</envar>. Setting
+                  <envar>DYLD_LIBRARY_PATH</envar> on Mac OS X will probably
+                  be necessary even when using the OS X installer
+                  package.</para>
                </listitem>
             </varlistentry>
 
@@ -680,9 +659,45 @@ value</screen>
                <term>PATH</term>
 
                <listitem>
+                  <para>On <productname
+                  class="registered">Windows</productname>, the
+                  <envar>PATH</envar> environment variable is used in the same
+                  way that <envar>LD_LIBRARY_PATH</envar> is used on platforms
+                  such as Linux. Thus, the <filename>bin</filename> and
+                  <filename>lib</filename> subdirectories of the VR Juggler
+                  installation need to be in your path in order for the
+                  Juggler DLLs and the <command>vrjconfig</command> command to
+                  be found. For non-Windows platforms, it is a good idea to
+                  have the Juggler <filename>bin</filename> directory in your
+                  path so that the <command>vrjconfig</command> command can be
+                  found from the command line.</para>
+               </listitem>
+            </varlistentry>
+
+            <varlistentry>
+               <term>FLAGPOLL_PATH</term>
+
+               <listitem>
                   <para>To compile any of the sample applications, the
-                  <envar>$VJ_BASE_DIR/bin</envar> directory must be added to
-                  your <envar>PATH</envar> as follows:</para>
+                  directory containing the Juggler <filename>.fpc</filename>
+                  files for <ulink
+                  url="https://realityforge.vrsource.org/view/FlagPoll/WebHome">Flagpoll</ulink>
+                  must be able to be found. By default, the
+                  <command>flagpoll</command> utility searches
+                  <filename>/usr/lib/flagpoll</filename>,
+                  <filename>/usr/lib64/flagpoll</filename>,
+                  <filename>/usr/share/flagpoll</filename>,
+                  <filename>/usr/lib/pkgconfig</filename>,
+                  <filename>/usr/lib64/pkgconfig</filename>, and
+                  <filename>/usr/share/pkgconfig</filename>. It also scans the
+                  directories listed in <envar>LD_LIBRARY_PATH</envar>
+                  (<envar>DYLD_LIBRARY_PATH</envar> on Mac OS X) for
+                  <filename>flagpoll</filename> and
+                  <filename>pkgconfig</filename> subdirectories. If you
+                  already have <envar>LD_LIBRARY_PATH</envar> (or
+                  <envar>DYLD_LIBRARY_PATH</envar>) set correctly or you have
+                  Juggler installed in <filename>/usr</filename>, then there
+                  is no need to set <envar>FLAGPOLL_PATH</envar>.</para>
 
                   <screen>% PATH = $PATH:$VJ_BASE_DIR/bin</screen>
 
@@ -705,50 +720,12 @@ value</screen>
 
                <listitem>
                   <para>The <envar>JDK_HOME</envar> environment variable is
-                  required by the script that starts VRJConfig, the VR Juggler
-                  configuration program. If Java is installed on your system,
-                  <envar>JDK_HOME</envar> may already be set. If not, it needs
-                  to be set to the base of the Java installation.</para>
-               </listitem>
-            </varlistentry>
-
-            <varlistentry>
-               <term>LD_LIBRARY_PATH (UNIX/Linux only)</term>
-
-               <term>DYLD_LIBRARY_PATH (Darwin/Mac OS X only)</term>
-
-               <term>LD_LIBRARYN32_PATH (IRIX only)</term>
-
-               <term>LD_LIBRARY64_PATH (IRIX only)</term>
-
-               <listitem>
-                  <para>UNIX/Linux systems use these environment variables to
-                  find dynamically loaded libraries, such as
-                  <filename>libvrj.so</filename>. Unless you are building
-                  everything with static libraries, you will need to set these
-                  to include the VR Juggler library directory (under
-                  <envar>VJ_BASE_DIR</envar>). IRIX supports several
-                  Application Binary Interfaces (ABIs). VR Juggler supports
-                  only the N32 and 64 formats, and there are different library
-                  path variables for each. The N32 ABI uses the
-                  <envar>LD_LIBRARYN32_PATH</envar> variable, and the 64 ABI
-                  uses <envar>LD_LIBRARY64_PATH</envar>. An example of setting
-                  the library path is as follows:</para>
-
-                  <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
-
-                  <para>If you have <envar>VJ_DEPS_DIR</envar> set and it is
-                  not the same as <envar>VJ_BASE_DIR</envar>, then
-                  <envar>$VJ_DEPS_DIR/lib</envar> also needs to be in
-                  <envar>LD_LIBRARY_PATH</envar>.</para>
-
-                  <note>
-                     <para>On some SGI systems running IRIX, users of the
-                     MIPSpro Compilers (version 7.3) may need to add another
-                     directory as follows:</para>
-
-                     <screen>% LD_LIBRARY_PATH = $LD_LIBRARY_PATH:/usr/lib32/cmplrs:$VJ_BASE_DIR/lib32</screen>
-                  </note>
+                  required by the script that starts
+                  <application>VRJConfig</application>, the VR Juggler
+                  configuration program. If <productname>Java</productname> is
+                  installed on your system, <envar>JDK_HOME</envar> may
+                  already be set. If not, it needs to be set to the base of
+                  the <productname>Java</productname> installation.</para>
                </listitem>
             </varlistentry>
          </variablelist>
@@ -758,6 +735,76 @@ value</screen>
          <title>Optional Related Environment Variables</title>
 
          <variablelist>
+            <varlistentry>
+               <term>VJ_BASE_DIR</term>
+
+               <listitem>
+                  <para>The environment variable <envar>VJ_BASE_DIR</envar>
+                  tells a VR Juggler application where to find important data
+                  files. As of VR Juggler 2.2, the need for
+                  <envar>VJ_BASE_DIR</envar> has been greatly diminished. When
+                  using a pre-packaged version of VR Juggler for
+                  non-<productname class="registered">Windows</productname>
+                  platforms, the installation path is known when the software
+                  was built. Therefore, there is no need for the software to
+                  be told at run time where it is installed. If VR Juggler is
+                  being used on a non-<productname
+                  class="registered">Windows</productname> platform and was
+                  <emphasis>not</emphasis> installed using packaging such as
+                  RPM or a Mac OS X package, then <envar>VJ_BASE_DIR</envar>
+                  may be necessary to execute applications
+                  successfully.</para>
+
+                  <para>On <productname
+                  class="registered">Windows</productname>, the DLLs determine
+                  on their own where they are installed when the are attached
+                  to the application process. As such, the <productname
+                  class="registered">Windows</productname> DLLs will
+                  automatically set the environment variables that they need
+                  to function properly on their own. If an environment
+                  variable is already set, then its setting will
+                  <emphasis>not</emphasis> be changed by the DLL when it is
+                  attached to the application process.</para>
+
+                  <tip>
+                     <para>If problems occur at run time with
+                     <filename>.jdef</filename> files or plug-ins failing to
+                     be found, then setting <envar>VJ_BASE_DIR</envar> will
+                     almost certainly fix the problems. If the Juggler
+                     installation is corrupted or non-standard (e.g., spread
+                     out across several directory trees), then using some of
+                     the environment variables described below will probably
+                     prove helpful.</para>
+                  </tip>
+
+                  <para>If <envar>VJ_BASE_DIR</envar> needs to be set, then it
+                  must be set to the base directory of the installed Juggler
+                  Suite. For example, if you downloaded a UNIX version of VR
+                  Juggler 2.2 and extracted it to the directory
+                  <filename>/home/software</filename>, you would set
+                  <envar>VJ_BASE_DIR</envar> with this command:</para>
+
+                  <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.2</screen>
+
+                  <para>The last component of the path depends on the
+                  particular version of Juggler you have downloaded.</para>
+
+                  <para>If you downloaded and built VR Juggler from the source
+                  code, the compilation creates a directory called
+                  <filename>instlinks</filename> which can be used as a VR
+                  Juggler base:</para>
+
+                  <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
+
+                  <important>
+                     <para>When working from withing the build tree and using
+                     <filename>instlinks</filename>,
+                     <envar>VJ_BASE_DIR</envar> is
+                     <emphasis>required</emphasis>.</para>
+                  </important>
+               </listitem>
+            </varlistentry>
+
             <varlistentry>
                <term>VJ_CFG_PATH</term>
 
@@ -822,18 +869,6 @@ value</screen>
                      handling of <envar>PYTHONPATH</envar> by the Python
                      interpreter.</para>
                   </sidebar>
-               </listitem>
-            </varlistentry>
-
-            <varlistentry>
-               <term>SNX_BASE_DIR</term>
-
-               <listitem>
-                  <para>The environment variable that defines the root
-                  directory of a Sonix installation. At run time, Sonix uses
-                  this variable to search for plug-ins. If it is not set,
-                  Sonix plug-in loading may fail. In genereal, it will be set
-                  to the same value as <envar>VJ_BASE_DIR</envar>.</para>
                </listitem>
             </varlistentry>
 
@@ -923,7 +958,7 @@ value</screen>
                   url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
                   cannot be used with SPROC threads. In that case, there will
                   not be a plug-in available to load, and setting this
-                  enviornment variable ultimately prevents the IRIX run-time
+                  environment variable ultimately prevents the IRIX run-time
                   loader from printing a nasty message saying as much. On Mac
                   OS X 10.3, static data initialization in omniORB fails when
                   the omniORB libraries are loaded into the Python interpreter
@@ -956,7 +991,7 @@ value</screen>
                   url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
                   cannot be used with SPROC threads. In that case, there will
                   not be a plug-in available to load, and setting this
-                  enviornment variable ultimately prevents the IRIX run-time
+                  environment variable ultimately prevents the IRIX run-time
                   loader from printing a nasty message saying as much. On Mac
                   OS X 10.3, static data initialization in omniORB fails when
                   the omniORB libraries are loaded into the Python interpreter
@@ -1102,8 +1137,8 @@ value</screen>
          command line or with Microsoft Visual Studio. Compiling an
          application on the command line requires the use of GNU make (often
          installed as <command>gmake</command>) so that it will work on all
-         supported platforms including Win32. Using Microsoft Visual Studio
-         will only work on Win32.</para>
+         supported platforms. Using Microsoft Visual Studio will only work on
+         <productname class="registered">Windows</productname>.</para>
 
          <section>
             <title>Compiling from the Command Line</title>
@@ -1131,14 +1166,14 @@ value</screen>
 
             <screen>% gmake</screen>
 
+            <para>On Mac OS X, enter the following:</para>
+
+            <screen>% make bundle</screen>
+
             <para>The compile process will then begin. As noted above, the use
-            of GNU make is required to use the distributed makefiles. With
-            Cygwin, GNU make is simply <command>make</command>. If you have
-            your system set up properly, it will complete with an executable
-            <filename>MPApp</filename> file (or <filename>MPApp.exe</filename>
-            on Win32) in the directory. Now that you have a program compiled,
-            it is time to learn how to run it. (Readers who are not using
-            Visual Studio can skip ahead to <xref
+            of GNU make is required to use the distributed makefiles. Now that
+            you have a program compiled, it is time to learn how to run it.
+            (Readers who are not using Visual Studio can skip ahead to <xref
             linkend="chapter.app.running" />.)</para>
          </section>
 
@@ -1390,13 +1425,6 @@ value</screen>
                <filename>sim.base.jconf</filename> and
                <filename>sim.wand.mixin.jconf</filename>. Note that it uses a
                single display window for all input.</para>
-
-               <note>
-                  <para>At the time of this writing, this configuration file
-                  only works with OpenGL, OpenSG, and Open Scene Graph
-                  applications on UNIX, Win32, and Mac OS X. It will not work
-                  with OpenGL Performer.</para>
-               </note>
             </listitem>
          </itemizedlist>
 
@@ -1414,23 +1442,29 @@ value</screen>
 
             <screen>% MPApp sim.base.jconf sim.wand.mixin.jconf</screen>
 
-            <para>You will notice that no paths are specified for finding the
+            <para>On Mac OS X, the command would be the following:</para>
+
+            <screen>% MPApp.app/Contents/MacOS/MPApp sim.base.jconf sim.wand.mixin.jconf</screen>
+
+            <para>Notice that no paths are specified for finding the
             configuration files. The full paths to the configuration files is
             not necessary because the default search path will correctly find
             these files in
-            <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.
-            Beginning users will typically want to reference the example
-            configuration files in that directory. As you get more comfortable
-            with VR Juggler and its configuration system, you may want to make
-            your own modified files and put them in the directory
-            <filename>$HOME/.vjconfig</filename>. The environment variable
-            <envar>VJ_CFG_PATH</envar> is useful in providing a search path
-            for finding your configuration files. (Refer to <xref
-            linkend="section.envvars.optional" /> for more information on
-            using <envar>VJ_CFG_PATH</envar>). To simplify running
-            applications, you may want to make a shell script (or batch file
-            as appropriate) that does all the work of passing configuration
-            files and common command-line arguments.</para>
+            <filename>$VJ_BASE_DIR\share\vrjuggler\data\configFiles</filename>
+            on Windows or
+            <filename>$VJ_BASE_DIR/share/vrjuggler-2.2/data/configFiles</filename>
+            on all other platforms. Beginning users will typically want to
+            reference the example configuration files in that directory. As
+            you get more comfortable with VR Juggler and its configuration
+            system, you may want to make your own modified files and put them
+            in the directory <filename>$HOME/.vrjconfig</filename>. The
+            environment variable <envar>VJ_CFG_PATH</envar> is useful in
+            providing a search path for finding your configuration files.
+            (Refer to <xref linkend="section.envvars.optional" /> for more
+            information on using <envar>VJ_CFG_PATH</envar>). To simplify
+            running applications, you may want to make a shell script (or
+            batch file as appropriate) that does all the work of passing
+            configuration files and common command-line arguments.</para>
 
             <para>As the application starts, you will see a status output
             printed to the console (more or less depending on how you have
@@ -1449,7 +1483,7 @@ value</screen>
             The mesh is what you have come to see; the ellipsoid is the user's
             head; and the pointer is the user's hand. In <xref
             linkend="figure.MPApp.running" />, we show what this looks on a
-            RedHat Linux 7.2 desktop for comparison with what you are seeing.
+            Red Hat Linux 7.2 desktop for comparison with what you are seeing.
             Note that the head and wand are only rendered in the simulator
             windows. They are present because head and wand input are being
             simulated, and it is typically quite helpful to see the results of
@@ -1470,11 +1504,15 @@ value</screen>
                </mediaobject>
             </figure>
 
-            <para>With VR Juggler 1.1/2.0, it is possible to use a single
-            window for graphics and for input. To use such a configuration,
-            execute MPApp as follows:</para>
+            <para>With VR Juggler 2.0 and beyond, it is possible to use a
+            single window for graphics and for input. To use such a
+            configuration, execute MPApp as follows:</para>
 
             <screen>% MPApp standalone.jconf</screen>
+
+            <para>On Mac OS X, execute it this way:</para>
+
+            <screen>% MPApp.app/Contents/MacOS/MPApp standalone.jconf</screen>
 
             <para>This time, only a single window opens, as shown in <xref
             linkend="figure.MPApp.running.single" />. It shows the same
@@ -1549,8 +1587,172 @@ value</screen>
             </section>
 
             <section>
+               <title>Running an Application on Mac OS X with Cocoa
+               Windows</title>
+
+               <para>In VR juggler 2.2, Cocoa support has been added for Mac
+               OS X usage. This gives much better results than the previous
+               reliance upon the X Window System. The interface for VR Juggler
+               applications on Mac OS X is noticeably different than other
+               platforms, however. We will explore those differences in this
+               section.</para>
+
+               <para>There are two key differences with VR Juggler on Mac OS X
+               from other platforms:</para>
+
+               <orderedlist>
+                  <listitem>
+                     <para>Applications are constructed as bundles</para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Every application has the usual Mac OS application
+                     menu</para>
+                  </listitem>
+               </orderedlist>
+
+               <para>The use of application bundles is required for software
+               based on Cocoa. The topic of application bundles is beyond the
+               scope of this document, but Apple has extensive documentation
+               available for perusal. For typical VR Juggler applications, the
+               bundle data files that come with VR Juggler 2.2 will suffice.
+               The application bundle is constructed automatically using these
+               files when the <literal>bundle</literal> target is built for
+               any VR Juggler application whose build is based on Doozer 2.1.4
+               and newer. For builds that are not using Doozer, see the files
+               in
+               <filename>$VJ_BASE_DIR/share/vrjuggler-2.2/data/bundle</filename>
+               for a starting point.</para>
+
+               <para>The use of application bundles offers several different
+               ways of launching applications. They are as follows:</para>
+
+               <itemizedlist>
+                  <listitem>
+                     <para>Double-clicking on the application bundle icon in
+                     the <application>Finder</application></para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Opening the bundle (e.g.,
+                     <filename>MPApp.app</filename>) from the command line
+                     using <command>open</command></para>
+                  </listitem>
+
+                  <listitem>
+                     <para>Executing the contained application directly from
+                     the command line</para>
+                  </listitem>
+               </itemizedlist>
+
+               <para>We have seen an example of the third option above, and in
+               this document, we will always show that approach whenever
+               describing how to launch a VR juggler application from the
+               command line.</para>
+
+               <para>Using the <command>open</command> command offers two
+               different options of its own. It can be used to open the bundle
+               in the same way as double-clicking on its icon in the
+               <application>Finder</application> would work. This usage is
+               shown below:</para>
+
+               <screen>% open MPApp.app</screen>
+
+               <para>The other usage is to open a <filename>.jconf</filename>
+               file and tell the <command>open</command> command to use a VR
+               Juggler application bundle to handle the file open operation.
+               This is done as follows:</para>
+
+               <screen>% open -a MPApp.app $VJ_BASE_DIR/share/vrjuggler-2.2/data/configFiles/standalone.jconf</screen>
+
+               <para>Note that the paths given to the application bundle and
+               to the <filename>.jconf</filename> file must resolve correctly.
+               No path searching will be performed for either in this
+               case.</para>
+
+               <para>The application menu is defined by the
+               <filename>.nib</filename> contained in the application bundle.
+               This is hooked up to classes in VR Juggler at run time. The
+               application menu is defined with the usual operations for
+               window management as well as the <menuchoice>
+                     <shortcut>
+                        <keycap>Cmd+O</keycap>
+                     </shortcut>
+
+                     <guimenu>File</guimenu>
+
+                     <guimenuitem>Open...</guimenuitem>
+                  </menuchoice> operation for loading
+               <filename>.jconf</filename> files. This feature leverages the
+               existing support for run-time reconfiguration of VR Juggler.
+               Every time a <filename>.jconf</filename> file is opened using
+               the <menuchoice>
+                     <shortcut>
+                        <keycap>Cmd+O</keycap>
+                     </shortcut>
+
+                     <guimenu>File</guimenu>
+
+                     <guimenuitem>Open...</guimenuitem>
+                  </menuchoice> operation, VR Juggler reconfigures itself.
+               This is basically the same as what can be done with
+               <application>VRJConfig</application> when adding new
+               configuration information dynamically. It is not possible to
+               remove configuration information through this interface;
+               <application>VRJConfig</application> must be used for that
+               purpose.</para>
+
+               <para>When a VR Juggler application bundle is opened by
+               double-clicking on its icon in the
+               <application>Finder</application> or by using the first usage
+               of the <command>open</command> command described above,
+               <emphasis>no configuration files are loaded</emphasis>. The
+               <menuchoice>
+                     <shortcut>
+                        <keycap>Cmd+O</keycap>
+                     </shortcut>
+
+                     <guimenu>File</guimenu>
+
+                     <guimenuitem>Open...</guimenuitem>
+                  </menuchoice> operation must be used to load configuration
+               files and configure VR Juggler. (Even remote run-time
+               reconfiguration through <application>VRJConfig</application>
+               may not be available at this point unless omniORB was
+               configured to find a CORBA Naming Service instance through the
+               <envar>OMNIORB_CONFIG</envar> environment variable.)</para>
+
+               <para>VR juggler applications on Mac OS X can be exited using
+               the <menuchoice>
+                     <shortcut>
+                        <keycap>Cmd+Q</keycap>
+                     </shortcut>
+
+                     <guimenu>App Menu</guimenu>
+
+                     <guimenuitem>Quit</guimenuitem>
+                  </menuchoice> operation or by using the application shutdown
+               sequence in the same manner as any other platform. The shutdown
+               sequence and the window(s) that accept it depend on the
+               configuration. Usually, this is done by pressing the
+               <keysym>ESC</keysym> key in a graphics window or in the input
+               window for the simulated positional device for the user's
+               head.</para>
+            </section>
+
+            <section>
                <title>Running an Application on Mac OS X with the X Window
                System</title>
+
+               <para>Prior to VR Juggler 2.2, using VR Juggler on Mac OS X
+               required the use of the X Window System. VR Juggler 2.2 and
+               beyond support native Cocoa windows, but the X Window System
+               support still exists for those who want to use it (though it is
+               not recommended). This section describes how to run VR Juggler
+               applications on Mac OS X with the X Window System for people
+               who may need to know about this usage. The average Mac OS X
+               user can skip this section since Cocoa will be used
+               instead.</para>
 
                <para>Running a VR Juggler application on Mac OS X is slightly
                different if VR Juggler was compiled against <ulink
@@ -1559,7 +1761,7 @@ value</screen>
                running. This can be accomplished by double-clicking on the X11
                icon in the Applications folder. By default, X11 will open a
                standard xterm when it starts. In this xterm, the
-               <envar>$DISPLAY</envar> environment variable will be set
+               <envar>DISPLAY</envar> environment variable will be set
                correctly, and it is recommended that VR Juggler applications
                be launched from this xterm. From this xterm, set the necessary
                environment variables as described earlier in <xref
@@ -1937,8 +2139,8 @@ value</screen>
             uses the mouse and is the same as that of the wand. The mouse
             buttons are used to select gestures. The mapping of the gesture
             numbers to actual hand positions is controlled by the
-            <quote>training file</quote> for the sim glove. The default
-            training file is
+            <quote>training file</quote> for the simulated glove device. The
+            default training file is
             <filename>$VJ_BASE_DIR/share/vrjuggler/data/gesture/simpleSimGestures.dat</filename>.</para>
          </section>
 
@@ -2076,8 +2278,7 @@ value</screen>
                display configuration file needed to run with all four walls
                active and rendering stereoscopic graphics. This defines only
                the four surface displays to be opened. The corners are
-               configured for the closed position of the moveable
-               walls.</para>
+               configured for the closed position of the movable walls.</para>
             </listitem>
 
             <listitem>
@@ -2085,8 +2286,7 @@ value</screen>
                basic display configuration file needed to run with all four
                walls active and rendering monoscopic graphics. This defines
                only the four surface displays to be opened. The corners are
-               configured for the closed position of the moveable
-               walls.</para>
+               configured for the closed position of the movable walls.</para>
             </listitem>
 
             <listitem>
@@ -2107,6 +2307,10 @@ value</screen>
          following command would be used:</para>
 
          <screen>% MPApp C4.closed.jconf</screen>
+
+         <para>On Mac OS X, the following command would be used:</para>
+
+         <screen>% MPApp.app/Contents/MacOS/MPApp C4.closed.jconf</screen>
       </section>
    </chapter>
 
