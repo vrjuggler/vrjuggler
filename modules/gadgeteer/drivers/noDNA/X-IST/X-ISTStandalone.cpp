@@ -28,6 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <vpr/vpr.h>
+
 #include <drivers/noDNA/X-IST/X-ISTStandalone.h>
 
 #ifndef GENERIC_READ
@@ -38,6 +40,11 @@
 #endif
 #ifndef OPEN_EXISTING
 #  define OPEN_EXISTING 0
+#endif
+
+#if ! defined(VPR_OS_Windows)
+#  define PURGE_TXCLEAR 0x0004
+#  define PURGE_RXCLEAR 0x0008
 #endif
 
 ///////////////////////////////////////////////////////////
@@ -85,7 +92,11 @@ bool X_ISTStandalone::connectToHardware(const int gloveNumber)
    mComm = FT_W32_CreateFile(str_serial, GENERIC_READ|GENERIC_WRITE, 0, 0,
                              OPEN_EXISTING, FT_OPEN_BY_SERIAL_NUMBER, 0);
 
+#if defined(VPR_OS_Windows)
    if ( mComm == (void*) INVALID_HANDLE_VALUE )
+#else
+   if ( mComm == (void*) NULL )
+#endif
    {
       closeGlove();
       return false;
