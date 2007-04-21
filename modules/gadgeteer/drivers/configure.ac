@@ -787,9 +787,9 @@ AC_CONFIG_FILES([
    VRCO/TrackdAPI/Makefile
    VirtualTechnologies/Makefile
    VirtualTechnologies/CyberGlove/Makefile
+   noDNA/Makefile
+   noDNA/X-IST/Makefile
    VARS.pl
    ])
 
-#   noDNA/Makefile
-#   noDNA/X-IST/Makefile
 AC_OUTPUT
