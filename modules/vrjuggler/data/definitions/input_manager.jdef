@@ -45,6 +45,7 @@
             <enum label="LinuxJoydev_drv" value="LinuxJoydev_drv"/>
             <enum label="MSFTSpeechRecog_drv" value="MSFTSpeechRecog_drv"/>
             <enum label="MotionStar_drv" value="MotionStar_drv"/>
+            <enum label="P5Glove_drv" value="P5Glove_drv"/>
             <enum label="PinchGlove_drv" value="PinchGlove_drv"/>
             <enum label="SerialEncoder_drv" value="SerialEncoder_drv"/>
             <enum label="SpaceBall_drv" value="SpaceBall_drv"/>
@@ -53,6 +54,7 @@
             <enum label="TrackdAPI_drv" value="TrackdAPI_drv"/>
             <enum label="VRPN_drv" value="VRPN_drv"/>
             <enum label="Wanda_drv" value="Wanda_drv"/>
+            <enum label="X-IST_drv" value="X-IST_drv"/>
          </enumeration>
       </property>
       <property valuetype="string" variable="true" name="driver_scan_path">
