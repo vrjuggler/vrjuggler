@@ -146,7 +146,7 @@ PF_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(PF_LIBRARY))
 # Version information.
 PARAM_HEADER=	vrj/vrjParam.h
 BRANCH=		trunk
-CANON_NAME=	Illuvatar
+CANON_NAME=	The Joker
 VER_ARGS=	-f $(VJROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -n "$(CANON_NAME)"				\
 		-d "`date '+%b %e, %Y %H:%M:%S'`"

@@ -115,7 +115,7 @@ SNX_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(SNX_LIBRARY))
 # Version information.
 PARAM_HEADER=	snx/snxParam.h
 BRANCH=		trunk
-CANON_NAME=	Ulmo
+CANON_NAME=	Hush
 VER_ARGS=	-f $(ROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -d "`date '+%b %e, %Y %H:%M:%S'`"
 
