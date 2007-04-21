@@ -495,7 +495,7 @@ if test "x${_with_ftd2xx}" != "xno" ; then
 
    FTD2XX_INCLUDES="-I$FTD2XX_ROOT/include"
    FTD2XX_LDFLAGS="-L$FTD2XX_LIBDIR"
-   FTD2XX_LIBS="-lftd2xx"
+   FTD2XX_LIBS="-lftd2xx -lusb"
 
    CPPFLAGS="$FTD2XX_INCLUDES $CPPFLAGS"
    LDFLAGS="$FTD2XX_LDFLAGS $LDFLAGS"
@@ -510,7 +510,7 @@ if test "x${_with_ftd2xx}" != "xno" ; then
    AC_CHECK_LIB([ftd2xx], [FT_ListDevices],
                 [AC_CHECK_HEADER([ftd2xx.h], [gadget_have_ftd2xx='yes'],
                                  [gadget_have_ftd2xx='no'])],
-                [gadget_have_ftd2xx='no'])
+                [gadget_have_ftd2xx='no'], [-lusb])
 
    DPP_LANG_RESTORE
 
