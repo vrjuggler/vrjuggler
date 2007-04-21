@@ -533,13 +533,13 @@ fi
 
 # Test for the libusb library
 if test "x${_with_libusb}" != "xno" ; then
-   if test "x${_with_libusb}" != "xno" ; then
-      AC_PATH_PROG([LIBUSB_CONFIG], [libusb-config], [no],
-                   [${_with_libusb}/bin])
-   else
-      AC_PATH_PROG([LIBUSB_CONFIG], [libusb-config], [no])
-   fi
+   AC_PATH_PROG([LIBUSB_CONFIG], [libusb-config], [no],
+                [${_with_libusb}/bin])
+else
+   AC_PATH_PROG([LIBUSB_CONFIG], [libusb-config], [no])
+fi
 
+if test "x$LIBUSB_CONFIG" != "no" ; then
    _gadget_save_CFLAGS="$CFLAGS"
    _gadget_save_CPPFLAGS="$CPPFLAGS"
    _gadget_save_LDFLAGS="$LDFLAGS"
