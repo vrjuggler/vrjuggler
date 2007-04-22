@@ -626,13 +626,13 @@ value</screen>
       </section>
 
       <section id="section.envvars.required">
-         <title>Required Environment Variables</title>
+         <title>Relevant Environment Variables</title>
 
          <variablelist>
             <varlistentry>
                <term>LD_LIBRARY_PATH (UNIX/Linux only)</term>
 
-               <term>DYLD_LIBRARY_PATH (Darwin/Mac OS X only)</term>
+               <term>DYLD_LIBRARY_PATH (Mac OS X only)</term>
 
                <listitem>
                   <para>UNIX/Linux systems use these environment variables to
@@ -728,27 +728,45 @@ value</screen>
                   the <productname>Java</productname> installation.</para>
                </listitem>
             </varlistentry>
-         </variablelist>
-      </section>
 
-      <section id="section.envvars.optional">
-         <title>Optional Related Environment Variables</title>
-
-         <variablelist>
             <varlistentry>
                <term>VJ_BASE_DIR</term>
 
                <listitem>
                   <para>The environment variable <envar>VJ_BASE_DIR</envar>
-                  tells a VR Juggler application where to find important data
-                  files. As of VR Juggler 2.2, the need for
-                  <envar>VJ_BASE_DIR</envar> has been greatly diminished. When
-                  using a pre-packaged version of VR Juggler for
+                  plays identifiers where VR Juggler is installed. This
+                  information is used for the following purposes:</para>
+
+                  <itemizedlist>
+                     <listitem>
+                        <para>Visual C++ project files used for building VR
+                        Juggler sample applications on <productname
+                        class="registered">Windows</productname> reference
+                        <envar>VJ_BASE_DIR</envar> for the header and library
+                        search paths. In this context,
+                        <envar>VJ_BASE_DIR</envar> is
+                        <emphasis>required</emphasis>.</para>
+                     </listitem>
+
+                     <listitem>
+                        <para>Important data files and plug-ins needed for
+                        proper execution are searched for at run time relative
+                        to the path identified by <envar>VJ_BASE_DIR</envar>.
+                        As of VR Juggler 2.2, this usage of
+                        <envar>VJ_BASE_DIR</envar> has been diminished
+                        greatly. The remainder of the description of
+                        <envar>Vj_BASE_DIR</envar> explains when it may need
+                        to be set and when the default will be more than
+                        sufficient.</para>
+                     </listitem>
+                  </itemizedlist>
+
+                  <para>When using a pre-packaged version of VR Juggler for
                   non-<productname class="registered">Windows</productname>
-                  platforms, the installation path is known when the software
-                  was built. Therefore, there is no need for the software to
-                  be told at run time where it is installed. If VR Juggler is
-                  being used on a non-<productname
+                  platforms, the installation path is at the time of package
+                  construction. Therefore, there is no need for the Juggler
+                  libraries to be told at run time where they are installed.
+                  If VR Juggler is being used on a non-<productname
                   class="registered">Windows</productname> platform and was
                   <emphasis>not</emphasis> installed using packaging such as
                   RPM or a Mac OS X package, then <envar>VJ_BASE_DIR</envar>
@@ -756,15 +774,18 @@ value</screen>
                   successfully.</para>
 
                   <para>On <productname
-                  class="registered">Windows</productname>, the DLLs determine
-                  on their own where they are installed when the are attached
-                  to the application process. As such, the <productname
+                  class="registered">Windows</productname>, the Juggler DLLs
+                  (<filename>vpr-2_0.dll</filename>,
+                  <filename>jccl-1_2.dll</filename>,
+                  <filename>vrj-2_2.dll</filename>, etc.) determine on their
+                  own where they are installed when they are attached to the
+                  application process. As such, the <productname
                   class="registered">Windows</productname> DLLs will
-                  automatically set the environment variables that they need
-                  to function properly on their own. If an environment
-                  variable is already set, then its setting will
-                  <emphasis>not</emphasis> be changed by the DLL when it is
-                  attached to the application process.</para>
+                  automatically set the environment variable(s) that they need
+                  to function properly. If an environment variable is already
+                  set, then its setting will <emphasis>not</emphasis> be
+                  changed by the DLL when it is attached to the application
+                  process.</para>
 
                   <tip>
                      <para>If problems occur at run time with
@@ -772,7 +793,8 @@ value</screen>
                      be found, then setting <envar>VJ_BASE_DIR</envar> will
                      almost certainly fix the problems. If the Juggler
                      installation is corrupted or non-standard (e.g., spread
-                     out across several directory trees), then using some of
+                     out across several directory trees), then using
+                     <envar>VJ_BASE_DIR</envar> in conjunction with some of
                      the environment variables described below will probably
                      prove helpful.</para>
                   </tip>
@@ -802,6 +824,55 @@ value</screen>
                      <envar>VJ_BASE_DIR</envar> is
                      <emphasis>required</emphasis>.</para>
                   </important>
+               </listitem>
+            </varlistentry>
+
+            <varlistentry>
+               <term>VJ_DEPS_DIR</term>
+
+               <listitem>
+                  <para>In VR Juggler 2.0, the <envar>VJ_DEPS_DIR</envar>
+                  environment varible was introduced as a crutch for finding
+                  dependencies such as Boost and CppDOM when building and
+                  running VR Juggler applications. That was before
+                  <application>Flagpoll</application> and RPMs, however. Now,
+                  the recommended usage of VR Juggler is to use
+                  <application>Flagpoll</application> for compiling
+                  applications and to install everything needed using package
+                  management. <application>Flagpoll</application> can find
+                  dependencies on its own, and the
+                  <envar>FLAGPOLL_PATH</envar> environment variable (see
+                  above) extends the search path when necessary. Thus, on
+                  platforms where <application>Flagpoll</application> is being
+                  used, <envar>VJ_DEPS_DIR</envar> plays no role.</para>
+
+                  <para>This does not currently apply to <productname
+                  class="registered">Windows</productname>, unfortunately.
+                  Until <application>Flagpoll</application> is ready for usage
+                  on <productname class="registered">Windows</productname>,
+                  the primary build mechanism will continue to be Visual
+                  Studio<footnote>
+                        <para>Visual Studio will probably always be the
+                        recommended tool for compiling VR Juggler applications
+                        on <productname
+                        class="registered">Windows</productname> even after
+                        <application>Flagpoll</application> has <productname
+                        class="registered">Windows</productname> support. The
+                        idea is to support <emphasis>both</emphasis> Visual
+                        Studio and <application>Flagpoll</application> on
+                        <productname
+                        class="registered">Windows</productname>.</para>
+                     </footnote>. To make things simple in Visual C++ project
+                  files, environment variables can hide path details. The
+                  <envar>VJ_DEPS_DIR</envar> environment variable provides the
+                  path to the complete set of bundled VR Juggler dependencies
+                  (Boost, CppDOM, OpenAL, etc.). It is used by the Visual C++
+                  project files that come with the sample applications. If you
+                  downloaded the dependencies as a separate package, set this
+                  environment variable to the path where that package was
+                  installed. If the dependencies are bundled in the same tree
+                  as VR Juggler, then this environment variable does not have
+                  to be set.</para>
                </listitem>
             </varlistentry>
 
