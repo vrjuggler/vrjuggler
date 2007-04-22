@@ -51,7 +51,8 @@
 static NSMenu* getRecentFilesMenu()
 {
    NSMenu* files_menu = nil;
-   NSMenuItem* item = [[NSApp mainMenu] itemWithTitle:@"File"];
+   NSApplication* app = [NSApplication sharedApplication];
+   NSMenuItem* item = [[app mainMenu] itemWithTitle:@"File"];
 
    if ( item )
    {
