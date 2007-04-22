@@ -41,12 +41,14 @@ int main(int argc, char* argv[])
    Kernel* kernel = Kernel::instance();
    collideApp* application = new collideApp();
 
+#if ! defined(VRJ_USE_COCOA)
    if (argc <= 1)
    {
       std::cout << "\n\n";
       std::cout << "Usage: " << argv[0] << "vjconfigfile[0] vjconfigfile[1] ...  vjconfigfile[n] " << std::endl;
       exit(1);
    }
+#endif
 
    for (int i=1; i< argc; ++i)
    {
