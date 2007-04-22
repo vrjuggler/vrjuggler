@@ -832,7 +832,7 @@ value</screen>
 
                <listitem>
                   <para>In VR Juggler 2.0, the <envar>VJ_DEPS_DIR</envar>
-                  environment varible was introduced as a crutch for finding
+                  environment variable was introduced as a crutch for finding
                   dependencies such as Boost and CppDOM when building and
                   running VR Juggler applications. That was before
                   <application>Flagpoll</application> and RPMs, however. Now,
