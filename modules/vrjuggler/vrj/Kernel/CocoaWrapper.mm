@@ -28,6 +28,7 @@
 
 #include <assert.h>
 #include <boost/bind.hpp>
+#include <objc/objc-runtime.h>
 
 #import <Foundation/NSValue.h>
 #import <Foundation/NSObject.h>
@@ -427,6 +428,7 @@ CocoaWrapper::CocoaWrapper()
    // Determine whether the application delegate needs to respond to
    // application:openFile: and application:openFiles: messages.
    BOOL load_cfg_files = YES;
+   NSString* ctrl_class_name = @"VrjMainController";
 
    if ( vrj_dict )
    {
@@ -436,10 +438,25 @@ CocoaWrapper::CocoaWrapper()
       {
          load_cfg_files = [cfg_handling boolValue];
       }
+
+      NSString* name = [vrj_dict objectForKey:@"VRJControllerClass"];
+
+      if ( nil != name )
+      {
+         ctrl_class_name = name;
+      }
    }
 
-   VrjMainController* main_controller =
-      [[[VrjMainController alloc] init] autorelease];
+   id controller_class = objc_getClass([ctrl_class_name UTF8String]);
+
+   if ( nil == controller_class )
+   {
+      NSLog(@"WARNING: Could not find declaration of %@!\n", ctrl_class_name);
+      NSLog(@"         Falling back on VrjMainController\n");
+      controller_class = [VrjMainController class];
+   }
+
+   id main_controller = [[[controller_class alloc] init] autorelease];
    [main_controller setLoadConfigs:load_cfg_files];
 
    [app setDelegate:main_controller];
