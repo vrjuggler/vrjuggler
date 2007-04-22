@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-22-2007 patrick     Application programmers can now choose to use an
+                        NSApplication delegate other than VrjMainController.
+                        NEW VERSION: 2.1.23
 Apr-07-2007 patrick     Made the number of sample buffers and samples per
                         buffer configurable when using multisampling.
                         NEW VERSION: 2.1.22
