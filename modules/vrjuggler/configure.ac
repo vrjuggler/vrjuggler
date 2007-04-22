@@ -584,7 +584,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     osx_gl_frameworks=''
 
     if test "x$VRJ_USE_X11" != "xyes" ; then
-        osx_core_frameworks="-framework Cocoa"
+        osx_core_frameworks="-framework AppKit -framework Cocoa"
         osx_gl_frameworks="$osx_core_frameworks"
     fi
 
@@ -619,9 +619,9 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
             if test "x$VRJ_USE_X11" = "xyes" ; then
-                APP_EXTRA_LIBS_GL="-lGLU -lGL $osx_frameworks"
+                APP_EXTRA_LIBS_GL="-lGLU -lGL $osx_core_frameworks"
             else
-                APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $osx_frameworks"
+                APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $osx_core_frameworks"
             fi
         else
             APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
