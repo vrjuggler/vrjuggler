@@ -1,14 +1,16 @@
-Microsoft Visual Studio Solution File, Format Version 7.00
+Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkTestBean (C++)", "NetworkTestBean\NetworkTest_CXX.vcproj", "{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkTestBean (Java)", "NetworkTestBean\NetworkTest_Java.vcproj", "{7506244E-1D87-4642-B560-82A0BA674A7D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
-		ConfigName.0 = Debug
-		ConfigName.1 = Release
-	EndGlobalSection
-	GlobalSection(ProjectDependencies) = postSolution
+		Debug = Debug
+		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}.Debug.ActiveCfg = Debug|Win32

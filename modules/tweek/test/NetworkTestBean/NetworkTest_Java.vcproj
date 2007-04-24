@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="NetworkTestBean (Java)"
 	ProjectGUID="{7506244E-1D87-4642-B560-82A0BA674A7D}"
 	Keyword="MakeFileProj">
@@ -34,6 +34,8 @@ nmake /f NMakefile clean all"
 				Output="NetworkTestBean.exe"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"

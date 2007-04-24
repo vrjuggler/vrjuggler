@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="NetworkTestBean (C++)"
 	ProjectGUID="{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}"
 	Keyword="Win32Proj">
@@ -66,7 +66,13 @@ $(VJ_DEPS_DIR)\bin\omniidl  -bcxx -Wbh=.h,s=.cpp -C. -I$(VJ_BASE_DIR)\include Wh
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -121,13 +127,24 @@ $(VJ_DEPS_DIR)\bin\omniidl  -bcxx -Wbh=.h,s=.cpp -C. -I$(VJ_BASE_DIR)\include Wh
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
+			<File
+				RelativePath="main.cpp">
+			</File>
 			<File
 				RelativePath="SliderSubject.cpp">
 			</File>
@@ -139,9 +156,6 @@ $(VJ_DEPS_DIR)\bin\omniidl  -bcxx -Wbh=.h,s=.cpp -C. -I$(VJ_BASE_DIR)\include Wh
 			</File>
 			<File
 				RelativePath="WhiteboardSubjectImpl.cpp">
-			</File>
-			<File
-				RelativePath="main.cpp">
 			</File>
 		</Filter>
 		<Filter
