@@ -87,16 +87,104 @@ public:
    virtual osg::Group* getScene() = 0;
 
    /**
+    * Returns the options to be passed to osgUtil::SceneView::setDefaults()
+    * for each scene view that is configured. This is called by the default
+    * implementation of vrj::OsgApp::configSceneView(). See
+    * osgUtil::SceneView::Options for the available settings.
+    *
+    * @see configSceneView()
+    *
+    * @since 2.3.0
+    */
+   virtual osgUtil::SceneView::Options getSceneViewDefaults()
+   {
+      return osgUtil::SceneView::STANDARD_SETTINGS;
+   }
+
+   /**
     * Configures newly created scene viewers.
     * This is called immediately after a new scene viewer is created for a
     * context.  This is the place to configure application background colors
-    * and other viewer-specific information.
+    * and other viewer-specific information.  Below are some suggestions on
+    * how to configure an osgUtil::SceneView instance with lighting.
+    *
+    * For an application configure with a sky light:
+    *
+    * \code
+    * osgUtil::SceneView::Options MyApp::getSceneViewDefaults()
+    * {
+    *    return osgUtil::SceneView::SKY_LIGHT;
+    * }
+    * \endcode
+    *
+    * For an application configured with a headlight:
+    *
+    * \code
+    * osgUtil::SceneView::Options MyApp::getSceneViewDefaults()
+    * {
+    *    return osgUtil::SceneView::HEADLIGHT;
+    * }
+    * \endcode
+    *
+    * For an application configure with a user-defined light, there are
+    * several steps.
+    *
+    * \code
+    * // First, declare two member variables in your subclass of vrj::OsgApp
+    * such as the following:
+    * osg::ref_ptr<osg::Light> mLight0;
+    * osg::ref_ptr<osg::LightSource> mLightSource0;
+    *
+    * // Then, in init() do something such as the following:
+    * void MyApp::init()
+    * {
+    *    vrj::OsgApp::init();
+    *
+    *    mLight0 = new osg::Light();
+    *    mLight0->setLightNum(0);
+    *    mLight0->setAmbient(osg::Vec4f(0.36862f, 0.36842f, 0.36842f, 1.0f));
+    *    mLight0->setDiffuse(osg::Vec4f(0.88627f, 0.88500f, 0.88500f, 1.0f));
+    *    mLight0->setSpecular(osg::Vec4f(0.49019f, 0.48872f, 0.48872f, 1.0f));
+    *    mLight0->setPosition(osg::Vec4f(10000.0f, 10000.0f, 10000.0f, 0.0f));
+    *    mLight0->setDirection(osg::Vec3f(-1.0f, -1.0f, -1.0f));
+    *
+    *    mLightSource0 = new osg::LightSource();
+    *    mLightSource0->setLight(mLight0.get());
+    *    mLightSource0->setLocalStateSetModes(osg::StateAttribute::ON);
+    *
+    *    // Now that we know we have a root node add the default light to the
+    *    // scene.
+    *    this->getScene()->addChild( mLightSource0.get() );
+    * }
+    *
+    * // Next, override vrj::OsgApp::getSceneViewDefaults() to change the
+    * // option passed to osgUtil::SceneView::setDefaults().
+    * osgUtil::SceneView::Options MyApp::getSceneViewDefaults()
+    * {
+    *    return osgUtil::SceneView::NO_SCENEVIEW_LIGHT;
+    * }
+    *
+    * // Finally, set up the osgUtil::SceneView instance to use this light.
+    * void MyApp::configSceneView(osgUtil::SceneView* newSceneViewer)
+    * {
+    *    vrj::OsgApp::configSceneView(newSceneViewer);
+    *
+    *    // add lights and turn on lighting
+    *    newSceneViewer->getGlobalStateSet()->setAssociatedModes(
+    *       mLight0.get(), osg::StateAttribute::ON
+    *    );
+    *    newSceneViewer->getGlobalStateSet()->setMode(GL_LIGHTING,
+    *                                                 osg::StateAttribute::ON);
+    * }
+    * \endcode
     *
     * @post \p newSceneViewer is initialized.
+    *
+    * @see getSceneViewDefaults()
     */
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
-      newSceneViewer->setDefaults();
+      newSceneViewer->setDefaults(getSceneViewDefaults());
       newSceneViewer->init();
       newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
@@ -283,15 +371,10 @@ inline void OsgApp::contextInit()
    this->configSceneView(new_sv.get());            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
 
-   // This will eventually be changed to no light and all lighting will be handled
-   // by the application.  For the time being it fixes the lighting inconsistanies
-   // over multiple screens
-   new_sv->setLightingMode(osgUtil::SceneView::SKY_LIGHT);
-
    (*sceneViewer) = new_sv;
 
-   //Setup OpenGL light
-   //This should actualy be done in the simulator code
+   // Set up OpenGL light so that the simulator components are lit correctly.
+   // XXX: This should actualy be done in the simulator code.
    GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
    GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
    GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
@@ -322,7 +405,6 @@ inline void OsgApp::contextInit()
    glEnable(GL_COLOR_MATERIAL);
    glShadeModel(GL_SMOOTH);
 }
-
 
 inline void OsgApp::draw()
 {
