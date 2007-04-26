@@ -16,12 +16,18 @@
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}%{?dist}
 
-# JDK 1.5.0 is the lowest version with native support for the x86_64
-# architecture.
-%ifarch x86_64
-%define min_jdk 1.5.0
+%define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
+
+%if %have_java
+   %define java_ver %(java -version 2>&1 | grep 'version' | sed -e 's/.*"\\([1-9]\\.[0-9]*\\.[0-9][0-9]*\\).*/\\1/')
+   %if "%java_ver" == "1.5.0"
+      %define java_pkg jre
+   %else
+      %define java_pkg jdk
+   %endif
+   %define java_req Requires: %java_pkg >= %java_ver
 %else
-%define min_jdk 1.4.2
+%define java_req
 %endif
 
 %ifarch i386 i486 i586
@@ -41,7 +47,6 @@
 %endif
 
 %define have_omniorb %(if [ -x /usr/bin/omniidl ] ; then echo 1; else echo 0; fi)
-%define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
 %define have_audiere %(if [ -x /usr/bin/audiere-config ] ; then echo 1; else echo 0; fi)
 %define have_openal %(if [ -x /usr/bin/openal-config ] ; then echo 1; else echo 0; fi)
 %define have_performer %(if [ -e /usr/lib/libpf.so ] ; then echo 1; else echo 0; fi)
@@ -143,7 +148,7 @@ Version: %{tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
-Requires: jdk >= %{min_jdk}
+%java_req
 Provides: tweek-java-jni = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
 
@@ -157,7 +162,7 @@ Version: %{tweek_version}
 Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
-Requires: jdk >= %{min_jdk}
+%java_req
 Requires: tweek-java-jni = %{tweek_version}-%{tweek_release}
 Provides: tweek-java = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
@@ -217,7 +222,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/Java
-Requires: jdk >= %{min_jdk}
+%java_req
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: jccl-java = %{jccl_version}-%{jccl_release}
 
@@ -233,7 +238,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
-Requires: jdk >= %{min_jdk}
+%java_req
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
 
@@ -417,9 +422,10 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
-Requires: jdk >= %{min_jdk}
+%java_req
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Requires: jccl-java = %{jccl_version}-%{jccl_release}
+Requires: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
 Provides: vrjconfig = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjconfig
@@ -447,7 +453,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
-Requires: jdk >= %{min_jdk}
+%java_req
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Provides: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
 
@@ -894,6 +900,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Apr 25 2007 Patrick Hartling <patrick at infiscape dot com>
+- Improve Java version requirement.
+- Add jccl-rtrc-plugin-java as a requirement for vrjconfig.
+
 * Thu Mar 15 2007 Patrick Hartling <patrick at infiscape dot com>
 - Depend on jdk instead of j2sdk.
 
