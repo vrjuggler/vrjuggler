@@ -44,6 +44,24 @@ namespace tokens = jccl::configuration_tokens;
 namespace jccl
 {
 
+
+/**
+ * This is a helper for use with std::find_if() for comparing element names.
+ */
+struct ElementNamePred
+{
+   ElementNamePred(const std::string& name)
+      : mName(name)
+   {}
+
+   bool operator()(jccl::ConfigElementPtr element)
+   {
+      return (element->getName() == mName);
+   }
+
+   std::string mName;
+};
+
 Configuration::Configuration()
 {}
 
@@ -107,6 +125,27 @@ bool Configuration::remove(const std::string& name)
       }
    }
    return false;
+}
+
+void Configuration::add(ConfigElementPtr newElement)
+{
+   // Before we can add newElement to the database, we have to determine
+   // if there is already a element with the same name.
+   std::vector<ConfigElementPtr>::iterator iter =
+      std::find_if(mElements.begin(), mElements.end(),
+                   ElementNamePred(newElement->getName()));
+
+   // If no existing element has the same name as newElement, then we
+   // can just add it to the end.
+   if ( iter == mElements.end() )
+   {
+      mElements.push_back(newElement);
+   }
+   // Otherwise, overwrite the old version.
+   else
+   {
+      *iter = newElement;
+   }
 }
 
 /* IO functions: */
@@ -322,23 +361,6 @@ void Configuration::extendDefinitionPath(cppdom::NodePtr defPathNode)
    }
 }
 
-/**
- * This is a helper for use with std::find_if() for comparing element names.
- */
-struct ElementNamePred
-{
-   ElementNamePred(const std::string& name)
-      : mName(name)
-   {}
-
-   bool operator()(jccl::ConfigElementPtr element)
-   {
-      return (element->getName() == mName);
-   }
-
-   std::string mName;
-};
-
 /** Load the elements from a given 'elements' tree into this configuration. */
 bool Configuration::loadFromElementNode(cppdom::NodePtr elementsNode,
                                         const std::string& currentFile)
@@ -369,23 +391,7 @@ bool Configuration::loadFromElementNode(cppdom::NodePtr elementsNode,
       }
       else
       {
-         // Before we can add new_element to the database, we have to determine
-         // if there is already a element with the same name.
-         std::vector<ConfigElementPtr>::iterator iter =
-            std::find_if(mElements.begin(), mElements.end(),
-                         ElementNamePred(new_element->getName()));
-
-         // If no existing element has the same name as new_element, then we
-         // can just add it to the end.
-         if ( iter == mElements.end() )
-         {
-            mElements.push_back(new_element);
-         }
-         // Otherwise, overwrite the old version.
-         else
-         {
-            *iter = new_element;
-         }
+         add(new_element);
       }
    }
 

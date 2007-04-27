@@ -95,6 +95,14 @@ public:
     */
    bool remove(const std::string& name);
 
+   /**
+    * Adds the given element to our list of elements.
+    *
+    * @param new_element ConfigElement to add
+    * @note If we already have a ConfigElement with the same name, replace it.
+    */
+   void add(ConfigElementPtr newElement);
+
    /* IO functions: */
 
    /** Write contents of self to out. */
