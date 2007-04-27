@@ -28,6 +28,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
+#include <boost/algorithm/string.hpp>
 #include <boost/concept_check.hpp>
 #include <cppdom/version.h>
 
@@ -585,6 +586,8 @@ std::string ConfigElement::getPropertyString(const std::string& prop, int ind) c
       {
          prop_string_rep = prop_def.getDefaultValueString(ind);
       }
+      // Remove whitespace around text.
+      boost::trim(prop_string_rep);
 
       cppdom::NodePtr enum_child(prop_def.getNode()->getChild(definition_tokens::ENUMERATION));
 
