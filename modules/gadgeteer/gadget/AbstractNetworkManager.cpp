@@ -26,6 +26,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <algorithm>
 #include <iomanip>
 
 #include <vpr/IO/Socket/InetAddr.h>
@@ -244,6 +245,22 @@ namespace gadget
       mNodes.push_back( node );
    }
 
+   struct HostnamePred
+   {
+      HostnamePred(const std::string& nodeHostname)
+         : mHostname(nodeHostname)
+      {
+         /* Do nothing. */ ;
+      }
+
+      bool operator()(gadget::Node* n)
+      {
+         return n->getHostname() == mHostname;
+      }
+
+      const std::string& mHostname;
+   };
+
    void AbstractNetworkManager::removeNode(const std::string& nodeHostname)
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
@@ -251,13 +268,14 @@ namespace gadget
          << " Removing node: " << nodeHostname
          << std::endl << vprDEBUG_FLUSH;
 
-      for (std::vector<gadget::Node*>::iterator itr = mNodes.begin() ; itr != mNodes.end() ; itr++)
+      typedef std::vector<gadget::Node*>::iterator iter_t;
+      HostnamePred pred(nodeHostname);
+      iter_t n = std::find_if(mNodes.begin(), mNodes.end(), pred);
+
+      if ( n != mNodes.end() )
       {
-         if ((*itr)->getHostname() == nodeHostname)
-         {
-            mNodes.erase(itr);
-            return;
-         }
+         mReactor.removeNode(*n);
+         mNodes.erase(n);
       }
    }
    
@@ -475,15 +493,15 @@ namespace gadget
       {
          if ((*i)->getStatus() == Node::NEWCONNECTION)
          {
-            vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
+            vprDEBUG( gadgetDBG_NET_MGR, 0 )
                << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
                << " Node: " << (*i)->getName()
                << " is now CONNECTED."
                << std::endl << vprDEBUG_FLUSH;
 
             new_connection = true;
-            (*i)->start();
             (*i)->setStatus( Node::CONNECTED );
+            mReactor.addNode(*i);
          }
       }
 

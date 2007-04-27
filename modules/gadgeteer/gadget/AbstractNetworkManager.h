@@ -37,6 +37,9 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <gadget/Connector.h>
+#include <gadget/Reactor.h>
+
 
 namespace cluster
 {
@@ -130,6 +133,11 @@ public:
     */
    void debugDumpNodes(int debug_level);
 
+   Reactor& getReactor()
+   {
+      return mReactor;
+   }
+
    /**
     * Get an iterator to the beginning of the Nodes std::vector.
     * The caller of this method must have locked the Nodes list.
@@ -215,6 +223,7 @@ private:
    std::vector<gadget::Node*>    mNodes;         /**< List of nodes in network. */
 
    std::map<vpr::GUID, PacketHandler*>  mHandlerMap;
+   Reactor mReactor;
 };
 
 } // end namespace gadget

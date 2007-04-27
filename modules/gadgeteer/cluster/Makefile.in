@@ -51,7 +51,6 @@ SRCS=		ClusterDelta.cpp	\
 		ClusterDepChecker.cpp	\
 		ClusterException.cpp	\
 		ClusterManager.cpp 	\
-		ClusterNode.cpp		\
 		ClusterPlugin.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk

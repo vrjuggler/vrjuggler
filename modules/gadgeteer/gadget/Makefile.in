@@ -59,6 +59,7 @@ SRCS=		AbstractNetworkManager.cpp	\
 		Node.cpp			\
        		ProxyDepChecker.cpp		\
 		ProxyFactory.cpp		\
+		Reactor.cpp			\
 		RemoteInputManager.cpp		\
 		VirtualDevice.cpp
 
