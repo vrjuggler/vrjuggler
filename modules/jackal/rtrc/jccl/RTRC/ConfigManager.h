@@ -401,25 +401,25 @@ public:   // ----- INCOMING LIST ----- //
    //@}
 
 public:
-   /** @name Configuration Change Callbacks */
+   /** @name Configuration Change Signals */
    //@{
    /**
-    * The type for the thread start and exit signals.
-    * Type definition for configuration signal that is invoked when
-    * configuration changes are made. These slots tak a pointer to
-    * a Configuration and the change type.
+    * Type definition for configuration signal that is emitted when
+    * configuration changes are made. Slots take a pointer to a Configuration
+    * and the change type.
     *
     * @since 1.3.0
     */
    typedef boost::signal<void(Configuration*, PendingElement::Type)> config_signal_t;
 
    /**
-    * Connects the given slot to the signal that is emitted when a configuration
-    * addition or removal happens.
+    * Connects the given slot to the signal that is emitted when a
+    * configuration addition or removal happens.
     *
-    * @post The given callback is appended to \c mConfigurationCallbacks.
+    * @post The given slot connected to \c mConfigurationSignal.
     *
-    * @param slot The slot object to be connected to the configuration change signal.
+    * @param slot The slot object to be connected to the configuration change
+    *             signal.
     *
     * @return The connection object that holds the association between the
     *         configuration signal and the given slot.
