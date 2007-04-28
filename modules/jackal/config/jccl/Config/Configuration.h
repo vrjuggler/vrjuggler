@@ -98,8 +98,10 @@ public:
    /**
     * Adds the given element to our list of elements.
     *
-    * @param new_element ConfigElement to add
+    * @param new_element ConfigElement to add.
     * @note If we already have a ConfigElement with the same name, replace it.
+    *
+    * @since 1.3.1
     */
    void add(ConfigElementPtr newElement);
 
