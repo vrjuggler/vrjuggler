@@ -413,49 +413,90 @@ namespace cluster
          return;
       }
 
-      std::vector<gadget::Node*>::iterator begin_cluster_node =
-         mClusterNetwork->getNodesBegin();
-      std::vector<gadget::Node*>::iterator end_cluster_node =
-         mClusterNetwork->getNodesEnd();
+      cluster::EndBlock temp_end_block(temp);
 
-      cluster::EndBlock* temp_end_block = new EndBlock( temp );
+      // Used to accumulate the number of connected nodes.
+      size_t num_nodes(0);
 
-      for ( std::vector<gadget::Node*>::iterator i=begin_cluster_node ;
-            i!=end_cluster_node;
+      typedef std::vector<gadget::Node*>::iterator iter_t;
+
+      for ( iter_t i = mClusterNetwork->getNodesBegin();
+            i != mClusterNetwork->getNodesEnd();
             ++i )
       {
          if ( (*i)->isConnected() )
          {
             try
             {
-               // Send End Blocks to all connected Nodes
-               (*i)->send( temp_end_block );
+               // Send End Block to the node.
+               (*i)->send(&temp_end_block);
 
-               // Signal Update thread to read Network Packets
-               (*i)->signalUpdate();
+               // Indicate that this node is not up to date. It will be updated
+               // below.
+               (*i)->setUpdated(false);
+
+               ++num_nodes;
             }
-            catch(cluster::ClusterException& cluster_exception)
+            catch (cluster::ClusterException& ex)
             {
-               vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-                  << clrOutBOLD(clrRED, "ERROR: ")
-                  << cluster_exception.what()
+               vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                  << clrOutBOLD("ERROR", clrRED)
+                  << ": Failed to send end block to " << (*i)->getName()
                   << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                  << ex.what() << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                  << "Shutting down the node." << std::endl << vprDEBUG_FLUSH;
 
                (*i)->shutdown();
             }
          }
       }
-      for ( std::vector<gadget::Node*>::iterator i = begin_cluster_node;
-            i != end_cluster_node;
-            ++i )
+
+      gadget::Reactor& reactor = mClusterNetwork->getReactor();
+      size_t completed_nodes(0);
+
+      while ( completed_nodes != num_nodes )
       {
-         if ( (*i)->isConnected() )
+         std::vector<gadget::Node*> ready_nodes =
+            reactor.getReadyNodes(vpr::Interval::NoWait);
+
+         for ( iter_t i = ready_nodes.begin(); i != ready_nodes.end(); ++i )
          {
-            //Block waiting for all packets to be received
-            (*i)->sync();
+            // Make sure that we do not update nodes more than once simply
+            // because there is data ready to read from them. This is an
+            // unfortunate side effect of using a reactor in this clumsy way.
+            if ( (*i)->isUpdated() )
+            {
+               continue;
+            }
+
+            try
+            {
+               // Read network packets.
+               (*i)->update();
+            }
+            catch (cluster::ClusterException& ex)
+            {
+               vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                  << clrOutBOLD("ERROR", clrRED)
+                  << ": Failed to complete state update for "
+                  << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                  << ex.what() << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                  << "Shutting down the node." << std::endl << vprDEBUG_FLUSH;
+
+               (*i)->shutdown();
+            }
+
+            // Record completed state. This happens regardless of whether
+            // the node update completed successfully. Since the node is
+            // shut down if update fails, we would never get completed_nodes
+            // to equal num_nodes otherwise.
+            ++completed_nodes;
          }
       }
-      delete temp_end_block;
    }
 
    bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element )

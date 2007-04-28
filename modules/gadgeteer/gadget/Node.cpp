@@ -50,19 +50,17 @@
 namespace gadget
 {
 
-Node::Node(const std::string& name, const std::string& host_name,
-                         const vpr::Uint16& port, vpr::SocketStream* socket_stream,
-                         AbstractNetworkManager* net_mgr)
-   : mRunning(false), mStatus(DISCONNECTED), mUpdateTriggerSema(0),
-     mNodeDoneSema(0), mControlThread(NULL), mNetworkManager(net_mgr)
+Node::Node(const std::string& name, const std::string& host_name, 
+           const vpr::Uint16 port, vpr::SocketStream* socket_stream,
+           AbstractNetworkManager* net_mgr)
+   : mName(name)
+   , mHostname(host_name)
+   , mPort(port)
+   , mSockStream(socket_stream)
+   , mStatus(DISCONNECTED)
+   , mUpdated(false)
+   , mNetworkManager(net_mgr)
 {
-   mThreadActive = false;
-   mUpdated = false;
-
-   mName = name;
-   mHostname = host_name;
-   mPort = port;
-   mSockStream = socket_stream;
    vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       << clrOutBOLD(clrBLUE,"[Node]")
       << " Created a Node: " << name << " - " << host_name
@@ -77,14 +75,6 @@ Node::~Node()
 void Node::shutdown()
 {
    setStatus(DISCONNECTED);
-   // This may break the accept code since we might not want to delete the Socket.
-   // We may be able to just use a smart pointer to point to the SocketStream.
-   mRunning = false;
-
-   // Make sure that the conrtol loop exits naturally.
-   mUpdateTriggerSema.release();
-
-   //mNodeDoneSema.acquire();
 
    if (NULL != mSockStream)
    {
@@ -94,6 +84,7 @@ void Node::shutdown()
          mSockStream->close();
       }
       delete mSockStream;
+      mSockStream = NULL;
       */
    }
 }
@@ -170,7 +161,7 @@ void Node::setStatus(int connect)
    mStatus = connect;
 }
 
-void Node::update()
+void Node::doUpdate()
 {
    // - If connected() && !updated()
    //   - try recvPacket()
@@ -197,111 +188,32 @@ void Node::update()
    delete temp_packet;
 }
 
-void Node::controlLoop()
+void Node::update()
 {
-   // - Block on an update call
-   // - Update Local Data
-   // - Send
-   // - Signal Sync
+   mUpdated = false;
 
-   while( mRunning )
+   while ( ! mUpdated )
    {
-      // Wait for trigger
-      if( mRunning )
+      try
       {
-         mUpdateTriggerSema.acquire();
+         doUpdate();
       }
-
-      mUpdated = false;
-      while ( mRunning && !mUpdated )
+      catch (cluster::ClusterException& cluster_exception)
       {
-         try
-         {
-            update();
-         }
-         catch(cluster::ClusterException cluster_exception)
-         {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR: ")
-               << cluster_exception.what()
-               << std::endl << vprDEBUG_FLUSH;
-
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<
-               "Node::update() We have lost our connection to: " << getName() << ":" << getPort()
-               << std::endl << vprDEBUG_FLUSH;
-
-            debugDump(vprDBG_CONFIG_LVL);
-
-            // Set the Node as disconnected since we have lost the connection
-            setStatus(DISCONNECTED);
-
-            // Shut down manually instead of calling shutdown since
-            // we are in the control thread.
-            mRunning = false;
-            //if (NULL != mSockStream)
-            //{
-               //if(mSockStream->isOpen())
-               //{
-               //   mSockStream->close();
-               //}
-               //delete mSockStream;
-               //mSockStream = NULL;
-            //}
-         }
-      }
-
-      // Signal done with Update
-      mNodeDoneSema.release();
-   }
-   vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Node: " << getName() << " is stopping."
-                                             << std::endl << vprDEBUG_FLUSH;
-}
-
-/** Starts the control loop. */
-void Node::start()
-{
-   // --- Setup Multi-Process stuff --- //
-   // Create a new thread to handle the control
-
-   if (NULL != mControlThread && mControlThread->valid())
-   {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << "Node " << getName() << " already running..."
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
+            << cluster_exception.what() << clrRESET
             << std::endl << vprDEBUG_FLUSH;
-      return;
+         
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "Node::update() We have lost our connection to: " << getName()
+            << ":" << getPort() << std::endl << vprDEBUG_FLUSH;
+
+         debugDump(vprDBG_CONFIG_LVL);
+         
+         // Set the Node as disconnected since we have lost the connection
+         setStatus(DISCONNECTED);
+      }
    }
-
-   mRunning = true;
-
-   mControlThread = new vpr::Thread(boost::bind(&Node::controlLoop, this));
-
-   if (mControlThread->valid())
-   {
-      mThreadActive = true;
-   }
-   vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
-      << "Node " << getName() << " started. thread: "
-      << mControlThread << std::endl << vprDEBUG_FLUSH;
-}
-
-void Node::signalUpdate()
-{
-   while(!mThreadActive)
-   {
-      vprDEBUG(gadgetDBG_RIM, vprDBG_HVERB_LVL) << "Waiting for thread to start ClusterNode::start().\n" << vprDEBUG_FLUSH;
-      vpr::Thread::yield();
-   }
-   //vprDEBUG(gadgetDBG_RIM,/*vprDBG_HVERB_LVL*/1) << getName() << "Signaling ClusterNode\n" << vprDEBUG_FLUSH;
-   mUpdateTriggerSema.release();
-}
-
-/**
- * Blocks until the end of the frame.
- * @post The frame has been drawn.
- */
-void Node::sync()
-{
-   vprASSERT(mThreadActive == true);
-   mNodeDoneSema.acquire();
 }
 
 bool Node::send(cluster::Packet* out_packet)

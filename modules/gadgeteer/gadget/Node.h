@@ -29,7 +29,6 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/Sync/Semaphore.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Util/Debug.h>
 
@@ -69,8 +68,8 @@ public:
     * @param net_mgr       The network manager.
     */
    Node(const std::string& name, const std::string& host_name, 
-               const vpr::Uint16& port, vpr::SocketStream* socket_stream,
-               AbstractNetworkManager* net_mgr);
+        const vpr::Uint16 port, vpr::SocketStream* socket_stream,
+        AbstractNetworkManager* net_mgr);
 
    /**
     * Shutdown the update thread and close the SocketStream.
@@ -174,27 +173,9 @@ public:
    
 public:
    /**
-    * Start the update thread for this node.
     */
-   void start();
+   void update();
 
-   /**
-    * Control loop for updating this thread.
-    */
-   void controlLoop();
-
-   /**
-    * Signal a semaphore to let the update thread fall into
-    * the code to update the UserData structures.
-    */
-   void signalUpdate();
-         
-   /**
-    * Signal a semaphore to signal that we are done either
-    * updating the UserData or DeviceData.
-    */
-   void sync();
-   
    /**
     * Kill the update thread.
     */
@@ -220,15 +201,14 @@ public:
    
 protected:
    /**
-    * Update this cluster node.
+    * Do the actual work of updating this cluster node.
     */
-   void update();
+   void doUpdate();
 
 protected:
    std::string          mName;                  /**< Node name */
    std::string          mHostname;              /**< Host that it is connected to */
    vpr::Uint16          mPort;                  /**< Port that it is connected to */
-   bool                 mRunning;               /**< Thread is running the control loop */
 
    vpr::SocketStream*   mSockStream;            /**< Socket used for communication to this node */      
    vpr::Mutex           mSockWriteLock;         /**< Lock writing to the SocketStream */
@@ -236,15 +216,8 @@ protected:
 
    vpr::Mutex           mStatusLock;            /**< Lock the isConnected value */
    int                  mStatus;                /**< States if this node is connected */
-   
-   vpr::Mutex           mUpdatedLock;           /**< Lock the isUpdated value */
+
    bool                 mUpdated;               /**< States if this node is updated */
-   
-   vpr::Semaphore       mUpdateTriggerSema;     /**< Semaphore trigger for UserData update  */
-   vpr::Semaphore       mNodeDoneSema;          /**< Semaphore trigger for completion */
-   
-   vpr::Thread*         mControlThread;         /**< Update thread for this node */
-   bool                 mThreadActive;          /**< Has the update thread started? */
 
    vpr::Uint64          mDelta;                 /**< Time delta between remote and local clocks. */
    AbstractNetworkManager*      mNetworkManager;/**< Network that should handle incoming packets. */
