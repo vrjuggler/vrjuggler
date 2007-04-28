@@ -416,7 +416,7 @@ public:
     * Connects the given slot to the signal that is emitted when a
     * configuration addition or removal happens.
     *
-    * @post The given slot connected to \c mConfigurationSignal.
+    * @post The given slot is connected to \c mConfigurationSignal.
     *
     * @param slot The slot object to be connected to the configuration change
     *             signal.
