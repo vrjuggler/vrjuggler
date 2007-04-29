@@ -2,8 +2,8 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <simulated_digital_device name="SimWandButtons02" version="1">
-         <event_window_proxy>WandEventWindowProxy</event_window_proxy>
+      <simulated_digital_device name="SimWandButtons02" version="2">
+         <keyboard_mouse_proxy>WandKeyboardProxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
                <modifier_key>ANY</modifier_key>

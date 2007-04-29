@@ -2,35 +2,45 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <machine_specific name="Cluster(localhost)" version="2">
+      <cluster_node name="Cluster(localhost)" version="1">
          <display_system>
-            <display_system name="Display System" version="1">
+            <display_system name="Display System" version="3">
                <number_of_pipes>1</number_of_pipes>
-               <x11_pipes>-1</x11_pipes>
-               <x11_pipes>-1</x11_pipes>
+               <pipes>-1</pipes>
+               <pipes>-1</pipes>
+               <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="4">
+            <display_window name="SimWindow1" version="5">
                <origin>0</origin>
                <origin>0</origin>
                <size>200</size>
                <size>200</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
                      <blue_size>1</blue_size>
                      <alpha_size>1</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
                      <depth_buffer_size>1</depth_buffer_size>
-                     <fsaa_enable>false</fsaa_enable>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>1</accum_red_size>
+                     <accum_green_size>1</accum_green_size>
+                     <accum_blue_size>1</accum_blue_size>
+                     <accum_alpha_size>1</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>0</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
                <border>true</border>
                <hide_mouse>false</hide_mouse>
+               <full_screen>false</full_screen>
+               <always_on_top>false</always_on_top>
                <active>true</active>
                <simulator_viewports>
                   <simulator_viewport name="Contained Sim Viewports 0" version="3">
@@ -56,29 +66,42 @@
                      </simulator_plugin>
                   </simulator_viewport>
                </simulator_viewports>
+               <keyboard_mouse_device_name />
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="SimWindow2" version="4">
+            <display_window name="SimWindow2" version="5">
                <origin>200</origin>
                <origin>200</origin>
                <size>200</size>
                <size>200</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
                      <blue_size>1</blue_size>
                      <alpha_size>1</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
                      <depth_buffer_size>1</depth_buffer_size>
-                     <fsaa_enable>false</fsaa_enable>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>1</accum_red_size>
+                     <accum_green_size>1</accum_green_size>
+                     <accum_blue_size>1</accum_blue_size>
+                     <accum_alpha_size>1</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>0</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
                <border>true</border>
                <hide_mouse>false</hide_mouse>
+               <full_screen>false</full_screen>
+               <always_on_top>false</always_on_top>
                <active>true</active>
                <simulator_viewports>
                   <simulator_viewport name="Contained Sim Viewports 0" version="3">
@@ -104,29 +127,42 @@
                      </simulator_plugin>
                   </simulator_viewport>
                </simulator_viewports>
+               <keyboard_mouse_device_name />
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="SimWindow3" version="4">
+            <display_window name="SimWindow3" version="5">
                <origin>400</origin>
                <origin>400</origin>
                <size>200</size>
                <size>200</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
                      <blue_size>1</blue_size>
                      <alpha_size>1</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
                      <depth_buffer_size>1</depth_buffer_size>
-                     <fsaa_enable>false</fsaa_enable>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>1</accum_red_size>
+                     <accum_green_size>1</accum_green_size>
+                     <accum_blue_size>1</accum_blue_size>
+                     <accum_alpha_size>1</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>0</num_samples>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
                <border>true</border>
                <hide_mouse>false</hide_mouse>
+               <full_screen>false</full_screen>
+               <always_on_top>false</always_on_top>
                <active>true</active>
                <simulator_viewports>
                   <simulator_viewport name="Contained Sim Viewports 0" version="3">
@@ -152,11 +188,15 @@
                      </simulator_plugin>
                   </simulator_viewport>
                </simulator_viewports>
+               <keyboard_mouse_device_name />
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <listen_port>5959</listen_port>
          <host_name>localhost</host_name>
-      </machine_specific>
+      </cluster_node>
       <cluster_manager name="Remote Input Manager Chunk" version="2">
          <cluster_node>Cluster(localhost)</cluster_node>
       </cluster_manager>

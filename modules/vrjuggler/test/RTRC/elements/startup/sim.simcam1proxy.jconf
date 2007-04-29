@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd" xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
-<elements>
-<position_proxy name="SimCam1 Proxy" version="1"><device>SimCamera1</device>
-<unit>0</unit>
-<position_filters><position_transform_filter name="Position Filters" version="1"><pre_translate>0.0</pre_translate>
-<pre_translate>0.0</pre_translate>
-<pre_translate>0.0</pre_translate>
-<pre_rotation>0.0</pre_rotation>
-<pre_rotation>0.0</pre_rotation>
-<pre_rotation>0.0</pre_rotation>
-<custom_scale>1.0</custom_scale>
-<device_units>1.0</device_units><post_translate>0.0</post_translate>
-<post_translate>0.0</post_translate>
-<post_translate>0.0</post_translate>
-<post_rotation>0.0</post_rotation>
-<post_rotation>0.0</post_rotation>
-<post_rotation>0.0</post_rotation>
-</position_transform_filter></position_filters></position_proxy></elements>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <position_proxy name="SimCam1 Proxy" version="1">
+         <device>SimCamera1</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+   </elements>
 </configuration>
+

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd" xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
-<elements>
-<display_system name="Pipe Setup" version="1"><number_of_pipes>1</number_of_pipes><x11_pipes>-1</x11_pipes><x11_pipes>-1</x11_pipes><x11_pipes>-1</x11_pipes><x11_pipes>-1</x11_pipes><x11_pipes>-1</x11_pipes><x11_pipes>:0.0</x11_pipes><x11_pipes>:0.0</x11_pipes><x11_pipes>:0.0</x11_pipes></display_system></elements>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_system name="Pipe Setup" version="3">
+         <number_of_pipes>1</number_of_pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
+         <pipes>:0.0</pipes>
+         <pipes>:0.0</pipes>
+         <pipes>:0.0</pipes>
+         <use_swap_group>false</use_swap_group>
+      </display_system>
+   </elements>
 </configuration>
+
