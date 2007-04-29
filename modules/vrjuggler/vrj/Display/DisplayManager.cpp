@@ -62,8 +62,8 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
          {
             if ( (*i)->getID() == std::string("display_system") )
             {
-               mDisplaySystemElement = *i;
-               break;         // This guarantees that we get the first displaySystem element.
+               setDisplaySystemElement(*i);
+               break;         // This guarantees that we get the first display_system element.
             }
          }
       }
@@ -89,8 +89,8 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
          {
             if ( (*i).mElement->getID() == std::string("display_system") )
             {
-               mDisplaySystemElement = (*i).mElement;
-               break;         // This guarantees that we get the first displaySystem element.
+               setDisplaySystemElement((*i).mElement);
+               break;         // This guarantees that we get the first display_system element.
             }
          }
       }
@@ -99,6 +99,25 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
    }
 
    return mDisplaySystemElement;
+}
+
+void DisplayManager::setDisplaySystemElement(jccl::ConfigElementPtr elt)
+{
+   if ( elt->getVersion() < 3 )
+   {
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": Display system element '"
+         << elt->getName() << "'" << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DISP_MGR, vprDBG_WARNING_LVL)
+         << "         is out of date.\n";
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+         << "         Expected version 3 but found version "
+         << elt->getVersion() << ".  Pipe\n";
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+         << "         configurations will not work.\n" << vprDEBUG_FLUSH;
+   }
+
+   mDisplaySystemElement = elt;
 }
 
 void DisplayManager::setDrawManager(DrawManager* drawMgr)
@@ -271,9 +290,6 @@ bool DisplayManager::configRemoveDisplay(jccl::ConfigElementPtr element)
    return success_flag;
 }
 
-
-
-
 // notifyDrawMgr = 0; Defaults to 0
 int DisplayManager::addDisplay(DisplayPtr disp, bool notifyDrawMgr)
 {
@@ -383,7 +399,6 @@ DisplayPtr DisplayManager::findDisplayNamed(const std::string& name)
    return vrj::DisplayPtr();  // Didn't find any
 }
 
-
 void DisplayManager::updateProjections(const float scaleFactor)
 {
    // for (all displays) update the projections
@@ -400,4 +415,4 @@ void DisplayManager::updateProjections(const float scaleFactor)
    }
 }
 
-};
+}

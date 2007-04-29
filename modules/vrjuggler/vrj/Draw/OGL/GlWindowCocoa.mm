@@ -44,6 +44,7 @@
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigElement.h>
 
+#include <vrj/Display/DisplayManager.h>
 #include <vrj/Util/Debug.h>
 #import <vrj/Draw/OGL/GlViewCocoa.h>
 #include <vrj/Draw/OGL/GlWindowCocoa.h>
@@ -336,34 +337,31 @@ void GlWindowCocoa::configWindow(vrj::DisplayPtr displayWindow)
    mWindowName =
       [NSString stringWithUTF8String:display_elt->getName().c_str()];
 
-   // TODO: Could use +screens from NSScreen to allow opening of windows on
-   // different screens. The display system configuration isn't necessarily
-   // important. We could use the display ID in the display window
-   // configuration as the screen index.
-/*
+   // Use +screens from NSScreen to allow opening of windows on different
+   // screens.
    const int screen_num = displayWindow->getPipe();
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "[vrj::GlWindowCocoa()] display_number = " << screen_num
       << std::endl << vprDEBUG_FLUSH;
 
-   if ( screen_num >= 0 )
+   jccl::ConfigElementPtr disp_sys_elt =
+      vrj::DisplayManager::instance()->getDisplaySystemElement();
+
+   if ( screen_num >= 0 && screen_num < disp_sys_elt->getNum("pipes") )
    {
-      jccl::ConfigElementPtr disp_sys_elt =
-         DisplayManager::instance()->getDisplaySystemElement();
       mScreen = disp_sys_elt->getProperty<unsigned int>("pipes", screen_num);
 
-      NSArray* screens = [NSArray screens];
+      NSArray* screens = [NSScreen screens];
       if ( mScreen >= [screens count] )
       {
          mScreen = 0;
       }
 
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-         << "[vrj::GlWindowCocoa] Screen: " << mScreen << std::endl
+         << "[vrj::GlWindowCocoa::config()] Screen: " << mScreen << std::endl
          << vprDEBUG_FLUSH;
    }
-*/
 
    // If we are opening the window full screen, then ignore whatever the
    // display window's configuration says about its dimensions and location.

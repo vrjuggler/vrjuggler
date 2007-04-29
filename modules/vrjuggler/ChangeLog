@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-29-2007 patrick     Renamed the x11_pipes property of the display_system
+                        config element to pipes.
+                        NEW VERSION: 2.3.1
 Apr-26-2007 patrick     Improved OSG scene view lighting for subclasses of
                         vrj::OsgApp. Submitted by Doug McCorkle.
 Apr-18-2007 patrick     VR Juggler 2.2 branch created.

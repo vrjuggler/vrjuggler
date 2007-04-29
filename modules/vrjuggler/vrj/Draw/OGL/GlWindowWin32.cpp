@@ -295,7 +295,7 @@ void GlWindowWin32::configWindow(vrj::DisplayPtr disp)
    mPipe = disp->getPipe();
    vprASSERT(mPipe >= 0);
 
-   mXDisplayName = disp_sys_elt->getProperty<std::string>("x11_pipes", mPipe);
+   mXDisplayName = disp_sys_elt->getProperty<std::string>("pipes", mPipe);
    if (mXDisplayName == neg_one_STRING)    // Use display env
    {
        const std::string DISPLAY_str("DISPLAY");

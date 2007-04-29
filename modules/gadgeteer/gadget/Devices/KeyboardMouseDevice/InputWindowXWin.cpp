@@ -103,21 +103,34 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
 
    if (NULL == disp_sys_elt.get())
    {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CONFIG_LVL)
-         << clrOutNORM(clrRED,"ERROR")
-         << ": gadget::InputWindowXWin: display_system element is NULL.\n"
-         << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrRED, "ERROR")
+         << ": [gadget::InputWindowXWin::config()] display_system element "
+         << "is NULL.\n" << vprDEBUG_FLUSH;
       return false;
    }
 
-   
-   if ((x_disp_num >= 0) && (disp_sys_elt.get() != NULL) )
+   if ( x_disp_num >= 0 && disp_sys_elt.get() != NULL )
    {
-      mXDisplayString = disp_sys_elt->getProperty<std::string>("x11_pipes",
+      if ( disp_sys_elt->getVersion() < 3 )
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING") << ": Display system element '"
+            << elt->getName() << "'" << std::endl;
+         vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "         is out of date.\n";
+         vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "         Expected version 3 but found version "
+            << elt->getVersion() << ".  Pipe\n";
+         vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "         configurations will not work.\n" << vprDEBUG_FLUSH;
+      }
+
+      mXDisplayString = disp_sys_elt->getProperty<std::string>("pipes",
                                                                x_disp_num);
       
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "gadget::InputWindowXWin: display: " << mXDisplayString
+         << "[gadget::InputWindowXWin::config()] Display: " << mXDisplayString
          << std::endl << vprDEBUG_FLUSH;
    }
    else

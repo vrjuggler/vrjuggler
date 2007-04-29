@@ -44,6 +44,7 @@
 
 #include <jccl/Config/ConfigElement.h>
 
+#include <gadget/InputManager.h>
 #include <gadget/Util/Debug.h>
 
 #include <gadget/Devices/KeyboardMouseDevice/InputViewCocoa.h>
@@ -168,11 +169,10 @@ bool InputWindowCocoa::config(jccl::ConfigElementPtr e)
    mX = e->getProperty<float>("origin", 0);
    mY = e->getProperty<float>("origin", 1);
 
-   // TODO: We could use the display_number property to choose the NSScreen
-   // where this window will be opened. We could even have the display_system
-   // pipe identifiers correlate to NSScreen instances so that we continue to
-   // have the same level of indirection that is supposed with X11.
-/*
+   // Use the display_number property to choose the NSScreen where this window
+   // will be opened. The display_system pipe identifiers for Cocoa correlate
+   // to NSScreen instances so that we continue to have the same level of
+   // indirection that is supported with X11.
    const int screen_num = e->getProperty<int>("display_number");
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -191,25 +191,24 @@ bool InputWindowCocoa::config(jccl::ConfigElementPtr e)
       return false;
    }
 
-   if ( screen_num >= 0 )
+   if ( screen_num >= 0 && screen_num < disp_sys_elt->getNum("pipes") )
    {
       mScreen = disp_sys_elt->getProperty<unsigned int>("pipes", screen_num);
 
-      NSArray* screens = [NSArray screens];
+      NSArray* screens = [NSScreen screens];
       if ( mScreen >= [screens count] )
       {
          mScreen = 0;
       }
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "[gadget::InputWindowCocoa] Screen: " << mXDisplayString
+         << "[gadget::InputWindowCocoa::config()] Screen: " << mScreen
          << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
       mScreen = 0;
    }
-*/
 
    return true;
 }
