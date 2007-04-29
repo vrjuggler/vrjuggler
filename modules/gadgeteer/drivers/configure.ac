@@ -539,7 +539,7 @@ else
    AC_PATH_PROG([LIBUSB_CONFIG], [libusb-config], [no])
 fi
 
-if test "x$LIBUSB_CONFIG" != "no" ; then
+if test "x$LIBUSB_CONFIG" != "xno" ; then
    _gadget_save_CFLAGS="$CFLAGS"
    _gadget_save_CPPFLAGS="$CPPFLAGS"
    _gadget_save_LDFLAGS="$LDFLAGS"
