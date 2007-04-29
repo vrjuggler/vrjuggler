@@ -1249,7 +1249,7 @@ bool reconfigApp::removeKeyboardWin_check()
    jccl::Configuration cfg;
    cfg.load(mPath + "startup/sim.wandkeyboard.jconf");
    std::vector<jccl::ConfigElementPtr> file_elements;
-   cfg.getByType("event_window", file_elements);
+   cfg.getByType("input_window", file_elements);
 
    const std::string keyboard_name = file_elements[0]->getName();
 
@@ -1269,7 +1269,7 @@ bool reconfigApp::removeKeyboardWin_check()
    jccl::Configuration cfg2;
    cfg2.load(mPath + "startup/sim.wandkeyboardproxy.jconf");
    file_elements.clear();
-   cfg2.getByType("event_window_proxy", file_elements);
+   cfg2.getByType("input_window_proxy", file_elements);
 
    if ( file_elements.size() != 1 )
    {
@@ -1323,7 +1323,7 @@ bool reconfigApp::readdKeyboardWin_check()
    jccl::Configuration cfg;
    cfg.load(mPath + "startup/sim.wandkeyboard.jconf");
    std::vector<jccl::ConfigElementPtr> file_elements;
-   cfg.getByType("event_window", file_elements);
+   cfg.getByType("input_window", file_elements);
 
    const std::string keyboard_name = file_elements[0]->getName();
 
@@ -1343,7 +1343,7 @@ bool reconfigApp::readdKeyboardWin_check()
    jccl::Configuration cfg2;
    cfg2.load(mPath + "startup/sim.wandkeyboardproxy.jconf");
    file_elements.clear();
-   cfg2.getByType("event_window_proxy", file_elements);
+   cfg2.getByType("input_window_proxy", file_elements);
 
    if ( file_elements.size() != 1 )
    {
