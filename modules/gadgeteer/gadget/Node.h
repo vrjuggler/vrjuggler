@@ -89,7 +89,7 @@ public:
    /**
     * Return the name given to this node during configuration.
     */
-   std::string getName()
+   std::string getName() const
    {
       return mName;
    }
@@ -192,7 +192,7 @@ public:
    /**
     * Send the given packet to this node.
     */
-   bool send(cluster::Packet* out_packet);
+   bool send(cluster::Packet* outPacket);
 
    /**
     * Receive a packet from the network.

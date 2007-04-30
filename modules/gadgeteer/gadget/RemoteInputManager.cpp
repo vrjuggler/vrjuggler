@@ -99,6 +99,72 @@ namespace gadget
       //mReconfigurationNeededOnConnection = true;
    }
 
+   bool RemoteInputManager::addDevice(jccl::ConfigElementPtr elm)
+   {
+      vprASSERT(cluster::ClusterManager::instance()->isClusterActive() && "RIM called in non-cluster mode.")
+      bool master = cluster::ClusterManager::instance()->isMaster();
+      bool result(false);
+
+      std::string device_name = elm->getName();
+      // If we are the master, configure the device and tell all slaves to prepare
+      // virtual devices.
+      if (master)
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
+            << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
+            << "Configuring device on master node: " << device_name
+            << std::endl << vprDEBUG_FLUSH;
+
+         InputManager::instance()->configureDevice(elm);
+         gadget::Input* input_device = gadget::InputManager::instance()->getDevice(device_name);
+         if ( input_device != NULL )
+         {
+            result = addDeviceServer(device_name, input_device);
+            DeviceServer* device_server = getDeviceServer(device_name);
+            vprASSERT(NULL != device_server && "Must have device server.");
+   
+            std::string temp_string = input_device->getInputTypeName();
+            vpr::GUID   temp_guid   = device_server->getId();
+            cluster::DeviceAck* device_ack =
+               new cluster::DeviceAck(mHandlerGUID, temp_guid,
+                                      device_name, temp_string, true);
+
+            AbstractNetworkManager::node_list_t nodes = cluster::ClusterManager::instance()->getNetwork()->getNodes();
+            std::cout << "XXXX: NUM NODES: " << nodes.size() << std::endl;
+            for (AbstractNetworkManager::node_list_t::iterator itr = nodes.begin(); itr != nodes.end(); itr++)
+            {
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
+                  << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
+                  << "Sending device ack [" << device_name << "] to [" << (*itr)->getName() << "]"
+                  << std::endl << vprDEBUG_FLUSH;
+
+               device_server->addClient(*itr);
+
+               // Create a responce ACK
+               (*itr)->send(device_ack);
+            }
+         }
+      }
+      else
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
+            << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
+            << "Configuring device on slave node: " << device_name
+            << std::endl << vprDEBUG_FLUSH;
+
+         result = true;
+         /*
+         addVirtualDevice(temp_device_ack->getId(), device_name,
+                          temp_device_ack->getDeviceBaseType(),
+                          temp_device_ack->getHostname());
+
+         // Add this virtual device to the InputManager's list of devices.
+         gadget::InputManager::instance()->addRemoteDevice(getVirtualDevice(device_name), device_name);
+         */
+      }
+      return result;
+   }
+
    /**
     * Handle a incoming packet.
     */
@@ -109,59 +175,59 @@ namespace gadget
       {
          switch ( packet->getPacketType() )
          {
-         case cluster::Header::RIM_DEVICE_REQ:
-            {
-               cluster::DeviceRequest* temp_device_request = dynamic_cast<cluster::DeviceRequest*>(packet);
-               vprASSERT(NULL != temp_device_request && "Dynamic cast failed!");
-               std::string device_name = temp_device_request->getDeviceName();
+         //case cluster::Header::RIM_DEVICE_REQ:
+         //   {
+         //      cluster::DeviceRequest* temp_device_request = dynamic_cast<cluster::DeviceRequest*>(packet);
+         //      vprASSERT(NULL != temp_device_request && "Dynamic cast failed!");
+         //      std::string device_name = temp_device_request->getDeviceName();
 
-               if ( jccl::ConfigManager::instance()->isPendingStale() )
-               {
-                  gadget::Input* temp_input_device = gadget::InputManager::instance()->getDevice(device_name);
-                  if ( temp_input_device != NULL )
-                  {
-                     DeviceServer* temp_device_server = getDeviceServer(device_name);
-                     if ( NULL == temp_device_server )
-                     {
-                        addDeviceServer(device_name, temp_input_device);
-                        temp_device_server = getDeviceServer(device_name);
-                     }
+         //      if ( jccl::ConfigManager::instance()->isPendingStale() )
+         //      {
+         //         gadget::Input* temp_input_device = gadget::InputManager::instance()->getDevice(device_name);
+         //         if ( temp_input_device != NULL )
+         //         {
+         //            DeviceServer* temp_device_server = getDeviceServer(device_name);
+         //            if ( NULL == temp_device_server )
+         //            {
+         //               addDeviceServer(device_name, temp_input_device);
+         //               temp_device_server = getDeviceServer(device_name);
+         //            }
 
-                     temp_device_server->addClient(node);
+         //            temp_device_server->addClient(node);
 
-                     // Create a responce ACK
-                     std::string temp_string = temp_input_device->getInputTypeName();
-                     vpr::GUID   temp_guid   = temp_device_server->getId();
-                     cluster::DeviceAck* temp_ack =
-                        new cluster::DeviceAck(mHandlerGUID, temp_guid,
-                                               device_name, temp_string, true);
-                     node->send(temp_ack);
-                  }
-                  else
-                  {
-                     std::string temp_string = "";
-                     vpr::GUID empty_id;
-                     cluster::DeviceAck* temp_ack =
-                        new cluster::DeviceAck(mHandlerGUID, empty_id, device_name,
-                                               temp_string/*BaseType*/, false);
-                     node->send(temp_ack);
-                  }
-               }
-               else
-               {
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-                  << clrOutBOLD(clrRED,"Pending List is not stale(Config Manager is still configuring the local system) ")
-                  << clrOutBOLD(clrRED,"So we can not process this device request right now.") << std::endl << vprDEBUG_FLUSH;
+         //            // Create a responce ACK
+         //            std::string temp_string = temp_input_device->getInputTypeName();
+         //            vpr::GUID   temp_guid   = temp_device_server->getId();
+         //            cluster::DeviceAck* temp_ack =
+         //               new cluster::DeviceAck(mHandlerGUID, temp_guid,
+         //                                      device_name, temp_string, true);
+         //            node->send(temp_ack);
+         //         }
+         //         else
+         //         {
+         //            std::string temp_string = "";
+         //            vpr::GUID empty_id;
+         //            cluster::DeviceAck* temp_ack =
+         //               new cluster::DeviceAck(mHandlerGUID, empty_id, device_name,
+         //                                      temp_string/*BaseType*/, false);
+         //            node->send(temp_ack);
+         //         }
+         //      }
+         //      else
+         //      {
+         //         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //         << clrOutBOLD(clrRED,"Pending List is not stale(Config Manager is still configuring the local system) ")
+         //         << clrOutBOLD(clrRED,"So we can not process this device request right now.") << std::endl << vprDEBUG_FLUSH;
 
-                  std::string temp_string = "";
-                  vpr::GUID empty_id;
-                  cluster::DeviceAck* temp_ack =
-                     new cluster::DeviceAck(mHandlerGUID, empty_id, device_name,
-                                            temp_string/*BaseType*/, false);
-                  node->send(temp_ack);
-               }
-               break;
-            }
+         //         std::string temp_string = "";
+         //         vpr::GUID empty_id;
+         //         cluster::DeviceAck* temp_ack =
+         //            new cluster::DeviceAck(mHandlerGUID, empty_id, device_name,
+         //                                   temp_string/*BaseType*/, false);
+         //         node->send(temp_ack);
+         //      }
+         //      break;
+         //   }
          case cluster::Header::RIM_DEVICE_ACK:
             {
                // -If ACK
@@ -284,8 +350,7 @@ namespace gadget
       return NULL;
    }
 
-   bool RemoteInputManager::
-   removeVirtualDevicesOnHost(const std::string& host_name)
+   bool RemoteInputManager::removeVirtualDevicesOnHost(const std::string& host_name)
    {
       // - Get a list of all remote devices on the given host
       // - Remove them from the current configuration
@@ -312,8 +377,7 @@ namespace gadget
       return true;
    }
 
-   bool RemoteInputManager::
-   removeDeviceClientsForHost(const std::string& host_name)
+   bool RemoteInputManager::removeDeviceClientsForHost(const std::string& host_name)
    {
       // Loop through all Device Servers and remove any device clients that
       // may exist for the given host
@@ -572,8 +636,11 @@ namespace gadget
 
    vpr::Uint16 RemoteInputManager::getNumberPendingDeviceRequests()
    {
+      return 0;
+      /*
       vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
       return(mPendingDeviceRequests.size());
+      */
    }
 
    bool RemoteInputManager::createPendingConfigRemove(std::string device_name)
@@ -628,12 +695,15 @@ namespace gadget
 
    void RemoteInputManager::addPendingDeviceRequest(cluster::DeviceRequest* new_device_req, Node* node)
    {
+      /*
       vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
       mPendingDeviceRequests[new_device_req] = node;
+      */
    }
 
    void RemoteInputManager::removePendingDeviceRequest(std::string device_name)
    {
+      /*
       vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
 
       std::map<cluster::DeviceRequest*, Node*>::iterator begin = mPendingDeviceRequests.begin();
@@ -648,10 +718,12 @@ namespace gadget
             return;
          }
       }
+      */
    }
 
    void RemoteInputManager::sendDeviceRequests()
    {
+      /*
       vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
 
       std::map<cluster::DeviceRequest*, Node*>::iterator begin = mPendingDeviceRequests.begin();
@@ -670,5 +742,6 @@ namespace gadget
             (*i).second->send((*i).first);
          }
       }
+      */
    }
 }  // end namespace gadget

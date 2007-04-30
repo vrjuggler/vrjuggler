@@ -31,22 +31,27 @@
 
 #include <list>
 #include <map>
+#include <boost/signals.hpp>
 
 #include <vpr/Util/GUID.h>
 #include <vpr/Util/Singleton.h>
 #include <vpr/DynLoad/Library.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
+#include <jccl/Config/Configuration.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 
 #include <cluster/ClusterDepChecker.h>
 #include <cluster/ClusterNetwork.h>
+#include <gadget/PacketHandler.h>
 
 
 namespace gadget
 {
    class Node;
 }
+
+class Packet;
 
 namespace cluster
 {
@@ -56,7 +61,7 @@ class ClusterPlugin;
  *
  * Manages the synchronization of all ClusterPlugins.
  */
-class GADGET_CLASS_API ClusterManager : public jccl::ConfigElementHandler
+class GADGET_CLASS_API ClusterManager : public jccl::ConfigElementHandler, public gadget::PacketHandler
 {
    vprSingletonHeader( ClusterManager );
 protected:
@@ -68,6 +73,7 @@ protected:
    /** Constructor is hidden, so no copying is allowed. */
    ClusterManager( const ClusterManager& cm )
       : jccl::ConfigElementHandler( cm )
+      , gadget::PacketHandler( cm )
    {
       /* Do nothing. */;
    }
@@ -76,6 +82,16 @@ protected:
    {
       /* Do nothing. */ ;
    }
+
+public:
+   /**
+    * Connect to the config manager.
+    */
+   void connectToConfigManager();
+   void disconnectFromConfigManager();
+   void init(bool clusterMaster, bool clusterSlave);
+   void start();
+
 public:
    /**
     * Add a new ClusterPlugin.
@@ -136,7 +152,7 @@ public:
     * Cause the cluster to recover when a connection to
     * a ClusterNode is lost.
     */
-   void recoverFromLostNode( gadget::Node* lost_node );
+   virtual void recoverFromLostNode( gadget::Node* lost_node );
 
    /**
     * Return the representation of the network which
@@ -156,6 +172,11 @@ public:
     * Return true if Configelement is a ClusterManager element.
     */
    bool recognizeClusterManagerConfig( jccl::ConfigElementPtr element );
+
+   /**
+    * Configure the cluster given the current config element.
+    */
+   bool configCluster( jccl::ConfigElementPtr element );
 
    /**
     * Configure the given ConfigElement.
@@ -178,6 +199,15 @@ public:
     * @return true iff this handler can process element.
     */
    bool configCanHandle( jccl::ConfigElementPtr element );
+
+   /**
+    * Check incoming configuration for cluster config elements. If we
+    * we have a cluster_manager element switch into cluster mode, and
+    * remove the element. If we have a cluster_node element, store it
+    * it for later use and remove it.
+    */
+   void configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type);
+   void mergeConfigurations(jccl::Configuration* dst, jccl::Configuration* src, vpr::Uint16 type);
 
    /**
     * Get a pointer to the ConfigElement with the given name.
@@ -204,6 +234,11 @@ public:
    {
       vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
       return mClusterActive;
+   }
+
+   bool isMaster()
+   {
+      return mIsMaster;
    }
 
    /**
@@ -261,6 +296,25 @@ public:
       return mPostPostFrameCallCount;
    }
 
+public:
+   /**
+    * Get the GUID associated with this handler.
+    */
+   virtual vpr::GUID getHandlerGUID()
+   {
+      return vpr::GUID("f3ea94e2-82fc-43f6-a57f-474d3fd1d6eb");
+   }
+   
+   virtual std::string getHandlerName()
+   {
+      return "ClusterManager";
+   }
+
+   /**
+    * Handle a incoming packet.
+    */
+   virtual void handlePacket(cluster::Packet* packet, gadget::Node* node);
+   
 private:
    ClusterDepChecker            mDepChecker;
 
@@ -279,10 +333,23 @@ private:
    vpr::Mutex                   mClusterReadyLock;   /**< Lock on ClusterReady bool.*/
    bool                         mClusterReady;       /**< Flag set true when all dependancies are satisfied. */
 
+   bool                         mClusterStarted;     /**< If the cluster has already started. */
+
+   bool                         mIsMaster;
+   bool                         mIsSlave;
+
+   //@{
+   /** @name Cluster configuration elements. */
+   jccl::ConfigElementPtr       mClusterElement;
+   std::map<std::string, jccl::ConfigElementPtr>        mClusterNodeElements;
+   jccl::Configuration          mSystemConfiguration;
+   //@}
+
    ClusterNetwork*              mClusterNetwork;     /**< The network representation of the cluster. */
 
    vpr::Uint64                  mPreDrawCallCount;       /**< # calls to preDraw() */
    vpr::Uint64                  mPostPostFrameCallCount; /**< # calls to postPostFrame() */
+   boost::signals::connection   mConfigChangeConn;
 };
 
 } // end namespace

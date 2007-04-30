@@ -51,6 +51,8 @@ namespace gadget
 class Node;
 class PacketHandler;
 
+const int DEFAULT_SLAVE_PORT = 12599;
+
 /** \class AbstractNetworkManager AbstractNetworkManager.h gadget/AbstractNetworkManager.h
  *
  * Network abstraction.
@@ -58,6 +60,8 @@ class PacketHandler;
 class GADGET_CLASS_API AbstractNetworkManager : public jccl::ConfigElementHandler
 {
 public:
+   typedef std::vector<gadget::Node*> node_list_t;
+
    /**
     * Construct an empty representation of a network.
     */
@@ -142,7 +146,7 @@ public:
     * Get an iterator to the beginning of the Nodes std::vector.
     * The caller of this method must have locked the Nodes list.
     */
-   std::vector<gadget::Node*>::iterator getNodesBegin()
+   node_list_t::iterator getNodesBegin()
    {
       return mNodes.begin();
    }
@@ -151,9 +155,18 @@ public:
     * Get an iterator to the end of the Nodes std::vector.
     * The caller of this method must have locked the Nodes list.
     */
-   std::vector<gadget::Node*>::iterator getNodesEnd()
+   node_list_t::iterator getNodesEnd()
    {
       return mNodes.end();
+   }
+
+   /**
+    * Get a reference to the list of Nodes.
+    * The caller of this method must have locked the Nodes list.
+    */
+   node_list_t& getNodes()
+   {
+      return mNodes;
    }
 
    /**
@@ -218,10 +231,13 @@ public:
 
    virtual bool attemptConnect(Node* node) = 0;
    virtual void startListening(int listen_port, bool accept_anonymous) = 0;
+   void waitForConnection(const int& listen_port = DEFAULT_SLAVE_PORT);
+   bool connectToSlaves();
+   bool connectTo(Node* node);
 
 private:
-   std::vector<gadget::Node*>    mNodes;         /**< List of nodes in network. */
-
+   node_list_t                  mNodes;         /**< List of nodes in network. */
+   vpr::InetAddr                mListenAddr;    /**< Address to listen for incoming connections on. */
    std::map<vpr::GUID, PacketHandler*>  mHandlerMap;
    Reactor mReactor;
 };

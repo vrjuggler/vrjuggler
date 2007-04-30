@@ -44,6 +44,7 @@ SUBOBJDIR=	$(GADGET_LIBRARY)
 SRCS= \
 	ApplicationDataAck.cpp	       \
 	ApplicationDataRequest.cpp     \
+        ConfigPacket.cpp               \
 	ConnectionAck.cpp	       \
 	ConnectionRequest.cpp	       \
 	DataPacket.cpp		       \

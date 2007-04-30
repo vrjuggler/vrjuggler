@@ -70,9 +70,6 @@
 // a result of including vpr/Thread/Thread.h).
 #include <boost/bind/apply.hpp>
 
-#include <boost/program_options.hpp>
-
-namespace po = boost::program_options;
 
 namespace
 {
@@ -95,15 +92,12 @@ vprSingletonImp(Kernel);
 
 bool Kernel::init(int& argc, char* argv[])
 {
-   bool cluster_master(false);
-   bool cluster_slave(false);
-
    // Declare the supported options.
    po::options_description desc("VR Juggler Options");
    desc.add_options()
        ("help,h", "Produce help message")
-       ("vrjmaster", po::bool_switch(&cluster_master), "This node is the cluster master.")
-       ("vrjslave", po::bool_switch(&cluster_slave), "This node is a cluster slave.")
+       ("vrjmaster", po::bool_switch(), "This node is the cluster master.")
+       ("vrjslave", po::bool_switch(), "This node is a cluster slave.")
    ;
 
    // Construct a parser and do the actuall parsing.
@@ -158,8 +152,13 @@ bool Kernel::init(int& argc, char* argv[])
       return false;
    }
 
-   cluster_master = vm["vrjmaster"].as<bool>();
-   cluster_slave = vm["vrjslave"].as<bool>();
+   return init(vm);
+}
+
+bool Kernel::init(const po::variables_map vm)
+{
+   bool cluster_master = vm["vrjmaster"].as<bool>();
+   bool cluster_slave = vm["vrjslave"].as<bool>();
    if (cluster_master && cluster_slave)
    {
       throw vpr::Exception("Can't be a cluster master and slave.", VPR_LOCATION);
@@ -167,6 +166,8 @@ bool Kernel::init(int& argc, char* argv[])
    std::cout << "Cluster Master [" << (cluster_master ? "True":"False") << "] Slave: [" << (cluster_slave ? "True":"False") << "]" << std::endl;
 
    mClusterManager = cluster::ClusterManager::instance();
+   mClusterManager->init(cluster_master, cluster_slave);
+   mClusterManager->connectToConfigManager();
 
    return true;
 }
@@ -187,13 +188,6 @@ int Kernel::start()
    vpr::SigHandler::registerHandler(SIGBREAK, sig_action, false);
 #endif
 
-   /*
-   if (cluster::ClusterManager::instance()->isActive())
-   {
-      cluster::ClusterManager::instance()->connect()u;
-   }
-   */
-
    if(mControlThread != NULL) // Have already started
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -207,24 +201,56 @@ int Kernel::start()
    mIsRunning = true;
    initSignalButtons();    // Initialize the signal buttons that may be pressed
 
+   // If we are in cluster mode, start the cluster.
+   if (cluster::ClusterManager::instance()->isClusterActive())
+   {
+      cluster::ClusterManager::instance()->start();
+   }
+
+   do
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED,"ERROR:")
+         << " vrj::Kernel::start() configuring before starting cluster." << std::endl << vprDEBUG_FLUSH;
+
+      checkForReconfig();
+   }
+   while (!cluster::ClusterManager::instance()->isClusterReady());
+
    int status(0);
 
-   // Create a new thread to handle the control.
-   try
+   // Only start thread if stop has not already been called.
+   // This could happen for example if a signal(ex. Ctrl-C) is
+   // caught before starting.
+   // TODO: Figure out a cleaner way to get this behavior.
+   if (mExitFlag)
    {
-      // mControlThread is set in controlLoop().
-      new vpr::Thread(boost::bind(&Kernel::controlLoop, this));
-
-      vprDEBUG(vrjDBG_KERNEL, vprDBG_STATE_LVL)
-         << "[vrj::Kernel::start()] Just started control loop." << std::endl
-         << vprDEBUG_FLUSH;
-      status = 1;
+      mIsRunning = false;
+      mExitWaitCondVar.acquire();
+      {
+         mExitWaitCondVar.signal();
+      }
+      mExitWaitCondVar.release();
    }
-   catch (vpr::Exception& ex)
+   else
    {
-      vprDEBUG(vrjDBG_KERNEL, vprDBG_CRITICAL_LVL)
-         << "[vrj::Kernel::start()] Failed to start control loop thread!\n"
-         << ex.what() << std::endl << vprDEBUG_FLUSH;
+      // Create a new thread to handle the control.
+      try
+      {
+         // mControlThread is set in controlLoop().
+         new vpr::Thread(boost::bind(&Kernel::controlLoop, this));
+
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_STATE_LVL)
+            << "[vrj::Kernel::start()] Just started control loop." << std::endl
+            << vprDEBUG_FLUSH;
+         status = 1;
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_CRITICAL_LVL)
+            << "[vrj::Kernel::start()] Failed to start control loop thread!\n"
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
    }
 
    return status;

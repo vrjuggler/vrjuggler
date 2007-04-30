@@ -50,6 +50,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
       debugOutDependencies( element, vprDBG_WARNING_LVL );
       return true;
    }
+   /*
    else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
    {
       // Remote devices should have no dependencies since we are not actually
@@ -89,6 +90,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 
       return pass;
    }
+   */
    else
    {
       vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL ) << "ERROR, Something is seriously wrong, we should never get here\n"
@@ -102,8 +104,8 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 // dependencies.
 bool ClusterDepChecker::canHandle(jccl::ConfigElementPtr element)
 {
-   return (element->getID() == ClusterNetwork::getClusterNodeElementType() ||
-           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( element ));
+   return (element->getID() == ClusterNetwork::getClusterNodeElementType()); // ||
+           //cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( element ));
 }
 
 void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
@@ -126,6 +128,7 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
       vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "none.\n"
          << vprDEBUG_FLUSH;
    }
+   /*
    else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( element ))
    {
       std::string device_host = element->getProperty<std::string>( "device_host");
@@ -166,6 +169,7 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
             << vprDEBUG_FLUSH;
       }
    }
+   */
    vprDEBUG_CONT_END( vprDBG_ALL, dbg_lvl ) << std::endl << vprDEBUG_FLUSH;
 }
 

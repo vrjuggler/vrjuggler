@@ -49,12 +49,12 @@ namespace cluster
 
       // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
-                                      Header::RIM_DATA_PACKET,
-                                      Header::RIM_PACKET_HEAD_SIZE 
-                                       + 16 /*Plugin GUID*/
-                                       + 16 /*Plugin GUID*/
-                                       + mDeviceData->size(),
-                                      0/*Field not curently used*/);
+                           Header::RIM_DATA_PACKET,
+                           Header::RIM_PACKET_HEAD_SIZE 
+                           + 16 /*Plugin GUID*/
+                           + 16 /*Object GUID*/
+                           + mDeviceData->size(),
+                           0/*Field not curently used*/);
       // Serialize the given data.
       serialize();
    }

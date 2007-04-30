@@ -121,53 +121,15 @@ namespace cluster
     */
    bool RIMPlugin::configAdd(jccl::ConfigElementPtr element)
    {
-      // XXX: We may still use this to handle the configuration 
-      //      of clustered RIM connections.
-      if ( ClusterManager::instance()->recognizeRemoteDeviceConfig(element) )
-      {
-         std::string device_host = element->getProperty<std::string>("device_host");
-         gadget::Node* node = ClusterManager::instance()->getNetwork()->getNodeByName(device_host);
-         std::string device_name = element->getName();
+      vprASSERT(ClusterManager::instance()->recognizeRemoteDeviceConfig(element));
+      vprASSERT(ClusterManager::instance()->isClusterActive());
 
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
-            << "Adding the Remote Device: " << device_name
-            << " to the RIM Pending List"
-            << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
+         << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
+         << "Adding device: " << element->getName()
+         << std::endl << vprDEBUG_FLUSH;
 
-         if ( node == NULL )
-         {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
-               << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
-               << clrOutBOLD(clrRED, "WARNING:") << " Cluster node: " << device_host
-               << " does not exist, there must be an error in the ClusterDepChecker."
-               << std::endl << vprDEBUG_FLUSH;
-            return false;
-         }
-         else if ( !node->isConnected() )
-         {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-               << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
-               << clrOutBOLD(clrRED, "WARNING:") << " Cluster node: " << device_host
-               << " is not connected, there must be an error in the ClusterDepChecker."
-               << std::endl << vprDEBUG_FLUSH;
-            return false;
-         }
-
-         DeviceRequest* device_req = new DeviceRequest(getHandlerGUID(), device_name);
-         mRIM.addPendingDeviceRequest(device_req, node);
-         setActive(true);
-         return(true);
-      }
-      else
-      {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL)
-            << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
-            << clrOutBOLD(clrRED, "ERROR: ")
-            << "recognizeRemoteDeviceConfig is broken."
-            << std::endl << vprDEBUG_FLUSH;
-         return(false);
-      }
+      return mRIM.addDevice(element);
    }
 
 

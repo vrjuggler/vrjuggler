@@ -38,6 +38,8 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <gadget/Type/DigitalInterface.h>
 
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
 
 namespace gadget
 {
@@ -103,11 +105,25 @@ public:
    }
 
    /**
+    * Get program options description for VR Juggler.
+    *
+    * @since 2.3
+    */
+   //po::options_description& getOptionsDesc();
+
+   /**
     * Parse command line arguments.
     *
     * @since 2.3
     */
    bool init(int& argc, char* argv[]);
+
+   /**
+    * Initialize kernel with given variables.
+    *
+    * @since 2.3
+    */
+   bool init(const po::variables_map vm);
 
    /** @name Kernel Control Loop Functions */
    //@{

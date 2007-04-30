@@ -56,6 +56,124 @@ namespace gadget
       shutdown();
    }
 
+   void AbstractNetworkManager::waitForConnection(const int& listen_port)
+   {
+      mListenAddr.setPort( listen_port );
+
+      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL )
+         << clrOutBOLD( clrBLUE, "[ClusterNetwork]" )
+         << " Waiting for connection...\n" << vprDEBUG_FLUSH;
+
+      // Create a socket to listen for incoming connections
+      vpr::SocketStream sock( mListenAddr, vpr::InetAddr::AnyAddr );
+      
+      // Open in server mode.
+      try
+      {
+         // Open server enabling reuse of bound address.
+         sock.openServer(true);
+
+         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL )
+         << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+         << " Listening on Port: " << mListenAddr.getPort()
+         << std::endl << vprDEBUG_FLUSH;
+      }
+      catch (vpr::IOException&)
+      {
+         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
+            << clrSetBOLD( clrRED ) << "[AbstractNetworkManager]"
+            << " Unable to open listening socket on port: "
+            << mListenAddr.getPort() << std::endl
+            << clrRESET << vprDEBUG_FLUSH;
+
+         exit(0);
+      }
+
+      // Create a socketstream for new socket
+      vpr::SocketStream* client_sock = new vpr::SocketStream();
+
+      try
+      {
+         // Wait for a connection request.
+         sock.accept( *client_sock, vpr::Interval::NoTimeout );
+
+         vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL)
+            << clrOutBOLD(clrBLUE, "[AbstractNetworkManager]")
+            << " Receiving a connection on Port: "
+            << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
+
+         // Optimize new socket for low latency communication
+         client_sock->setNoDelay( true );
+
+         // Get the hostname and port of the requesting host.
+         const std::string remote_host_name(
+            client_sock->getRemoteAddr().getHostname()
+         );
+         vpr::Uint16 port = client_sock->getRemoteAddr().getPort();
+
+         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
+            << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+            << " Received from: " << remote_host_name
+            << ":" << port << std::endl << vprDEBUG_FLUSH;
+
+         Node* remote_node = getNodeByHostname( remote_host_name );
+
+         vprASSERT(NULL == remote_node && "We already know about the master node.");
+
+         // Get address information about local host.
+         const vpr::InetAddr local = vpr::InetAddr::getLocalHost();
+         const std::string local_hostname = local.getHostname();
+         //cluster::ConnectionAck* temp = NULL;
+
+         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
+            << clrOutBOLD( clrBLUE,"[Acceptor]" )
+            << " Set SockStream and send responce."
+            << std::endl << vprDEBUG_FLUSH;
+
+         // Add the master node to the cluster network.
+         addNode("master", remote_host_name, port, client_sock);
+         remote_node = getNodeByHostname( remote_host_name );
+
+         vprASSERT(NULL != remote_node && "Master node must exist now.");
+
+         vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
+            << clrOutBOLD( clrBLUE,"[Acceptor]" )
+            << " Set new Node as a NEWCONNECTION."
+            << std::endl << vprDEBUG_FLUSH;
+
+         // XXX: Should not need this since network is going
+         //      to be fully connected before starting frame loop.
+
+         // Since we have just recieved a new connection,
+         // set the connected status as so. We are not
+         // in a fully connected state until the begining
+         // of the next frame in Acceptor::updateNewConnetions()
+         // this is becuase we only want to start using a
+         // new connection at the start of a new frame.
+         remote_node->setStatus( Node::NEWCONNECTION );
+         // Print the new state information about this node.
+         remote_node->debugDump( vprDBG_CONFIG_LVL );
+         
+         // XXX: We need to fix this in the near future.
+         //ClusterDelta cluster_delta;
+         //cluster_delta.clientClusterDelta(requesting_node->getSockStream());
+
+         // XXX: Should be alright.
+         remote_node->setStatus( Node::CONNECTED );
+         mReactor.addNode(remote_node);
+      }
+      catch (vpr::IOException&)
+      {
+         // Should never happen since timeout is infinite
+         if (client_sock->isOpen())
+         {
+            client_sock->close();
+         }
+         delete client_sock;
+         client_sock = new vpr::SocketStream;
+      }
+   }
+
    /**
     * Determine if the given hostname matches the local machine's hostname.
     */
@@ -167,6 +285,11 @@ namespace gadget
 
    void AbstractNetworkManager::handlePacket(cluster::Packet* packet, Node* node)
    {
+      //vprDEBUG( gadgetDBG_NET_MGR, 0 )
+      //   << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+      //   << " Got packet."
+      //   << std::endl << vprDEBUG_FLUSH;
+
       // If the ClusterManager should handle this packet, then do so.
       if (packet->getPacketType() == cluster::Header::RIM_END_BLOCK)
       {
@@ -195,10 +318,15 @@ namespace gadget
 
       PacketHandler* temp_handler = getHandlerByGUID( handler_guid );
 
+      //vprDEBUG( gadgetDBG_NET_MGR, 0 )
+      //   << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+      //   << " Got packet for: " << handler_guid.toString()
+      //   << std::endl << vprDEBUG_FLUSH;
+
       if (NULL != temp_handler)
       {
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-            << clrOutBOLD(clrMAGENTA,"[AbstractNetworkManager]")
+            << clrOutBOLD(clrBLUE,"[AbstractNetworkManager]")
             << " Handler \"" << temp_handler->getHandlerName() << "\" will handle this packet."
             << std::endl << vprDEBUG_FLUSH;
 
@@ -208,7 +336,7 @@ namespace gadget
       else
       {
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-            << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+            << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
             << " Handler " << handler_guid.toString() << " does not exist to handle this packet."
             << std::endl << vprDEBUG_FLUSH;
       }
@@ -223,7 +351,7 @@ namespace gadget
       // -Add the new node to the AbstractNetworkManager
       
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-         << clrOutBOLD(clrMAGENTA,"[AbstractNetworkManager]")
+         << clrOutBOLD(clrBLUE,"[AbstractNetworkManager]")
          << " Adding node: " << name
          << std::endl << vprDEBUG_FLUSH;
 
@@ -238,7 +366,7 @@ namespace gadget
       // -Add the given node to the AbstractNetworkManager
       
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-         << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+         << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
          << " Adding node: " << node->getName()
          << std::endl << vprDEBUG_FLUSH;
 
@@ -264,7 +392,7 @@ namespace gadget
    void AbstractNetworkManager::removeNode(const std::string& nodeHostname)
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-         << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+         << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
          << " Removing node: " << nodeHostname
          << std::endl << vprDEBUG_FLUSH;
 
@@ -289,7 +417,7 @@ namespace gadget
       searching_for_node.setAddress( host_name, 0 );
 
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_VERB_LVL )
-         << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+         << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
          << " Looking for Node with hostname: " << host_name
          << std::endl << vprDEBUG_FLUSH;
  
@@ -303,7 +431,7 @@ namespace gadget
          testing_node.setAddress( (*i)->getHostname(), 0 );
          
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_VERB_LVL )
-            << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+            << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
             << " Searcing for: " << searching_for_node.getAddressString()
             << " Testing: " << testing_node.getAddressString()
             << std::endl << vprDEBUG_FLUSH;
@@ -347,6 +475,103 @@ namespace gadget
       }
 
       return num_pending;
+   }
+
+   bool AbstractNetworkManager::connectToSlaves()
+   {
+      bool ret_val = false;
+
+      for (std::vector<Node*>::iterator i = mNodes.begin();
+           i != mNodes.end() ; i++)
+      {
+         if (connectTo(*i))
+         {
+            // If any of the nodes were successful connecting
+            // then we should return true
+            ret_val = true;
+         }
+      }
+      return ret_val;
+   }
+
+
+   bool AbstractNetworkManager::connectTo(Node* node)
+   {
+      //vprASSERT( Node::PENDING == node->getStatus() &&
+      //           "Can not connect to a node that is not pending." );
+
+      vpr::SocketStream* sock_stream(NULL);
+      vpr::InetAddr inet_addr;
+
+      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
+         << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+         << " Attempting to connect to: " << node->getName()
+         << std::endl << vprDEBUG_FLUSH;
+      
+      try
+      {
+         // Set the address that we want to connect to
+         inet_addr.setAddress( node->getHostname(), node->getPort() );
+      }
+      catch (vpr::IOException&)
+      {
+         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
+            << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+            << clrOutBOLD( clrRED, " ERROR:" )
+            << " Failed to set address" << std::endl << vprDEBUG_FLUSH;
+         return false;
+      }
+
+      // Create a new socket stream to this address
+      sock_stream = new vpr::SocketStream( vpr::InetAddr::AnyAddr, inet_addr );
+
+      // If we can successfully open the socket and connect to the server
+      sock_stream->open();
+
+      vpr::Uint16 retry_count(0);
+      while (!sock_stream->isConnected())
+      {
+         try
+         {
+            sock_stream->connect();
+
+            vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL )
+               << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+               << " Successfully connected to: "
+               << node->getHostname() <<":"<< node->getPort()
+               << std::endl << vprDEBUG_FLUSH;
+         }
+         catch (vpr::IOException& ex)
+         {
+            vpr::Uint16 level = vprDBG_CONFIG_STATUS_LVL;
+
+            if (retry_count >= 50)
+            { level = vprDBG_CRITICAL_LVL; }
+
+            vprDEBUG( gadgetDBG_NET_MGR, level)
+               << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+               << clrOutBOLD( clrRED, " ERROR:" )
+               << " Could not connect to Node: "
+               << node->getHostname() << " : " << node->getPort()
+               << " retry: " << retry_count << std::endl
+               << ex.getExtendedDescription() << std::endl << vprDEBUG_FLUSH;
+
+            if (retry_count > 50)
+            { throw; }
+
+            retry_count++;
+            vpr::System::sleep(1);
+         }
+      }
+
+      sock_stream->setNoDelay( true );
+      node->setSockStream( sock_stream );
+
+      // XXX: Should be alright.
+      node->setStatus( Node::CONNECTED );
+      mReactor.addNode(node);
+
+      return true;
    }
 
    bool AbstractNetworkManager::attemptPendingNodes()
@@ -402,6 +627,7 @@ namespace gadget
 
    bool AbstractNetworkManager::configAdd(jccl::ConfigElementPtr element)
    {
+      /*
       if (recognizeClusterMachineConfig(element))
       {
          // -If local machine element
@@ -426,7 +652,7 @@ namespace gadget
                jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
 
                vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL ) << clrSetBOLD(clrCYAN)
-                  << clrOutBOLD( clrMAGENTA,"[AbstractNetworkManager]" )
+                  << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
                   << " Adding Machine specific ConfigElement: "
                   << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
             }
@@ -437,7 +663,7 @@ namespace gadget
          else
          {
             vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-               << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+               << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
                << " Adding Node: " << element->getName()
                << " to the Cluster Network\n" << vprDEBUG_FLUSH;
 
@@ -448,8 +674,8 @@ namespace gadget
             addNode(name, host_name, listen_port);
          }
          return true;
-      }
-      return false;
+      }*/
+      return true;
    }
 
    bool AbstractNetworkManager::configRemove(jccl::ConfigElementPtr element)
@@ -457,7 +683,7 @@ namespace gadget
       if (recognizeClusterMachineConfig( element ))
       {
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-            << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+            << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
             << " Removing the Node: " << element->getName()
             << " from the Cluster Network\n" << vprDEBUG_FLUSH;
          return true;
@@ -465,7 +691,7 @@ namespace gadget
       else
       {
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-            << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+            << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
             << " ERROR, Something is seriously wrong, we should never get here\n"
             << vprDEBUG_FLUSH;
          return false;
@@ -493,8 +719,8 @@ namespace gadget
       {
          if ((*i)->getStatus() == Node::NEWCONNECTION)
          {
-            vprDEBUG( gadgetDBG_NET_MGR, 0 )
-               << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+            vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
+               << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
                << " Node: " << (*i)->getName()
                << " is now CONNECTED."
                << std::endl << vprDEBUG_FLUSH;
@@ -518,7 +744,7 @@ namespace gadget
          if (jccl::ConfigManager::instance()->isPendingStale())
          {
             vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
-               << clrOutBOLD( clrMAGENTA, "[AbstractNetworkManager]" )
+               << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
                << " New connections were made, so refresh the pending list."
                << std::endl << vprDEBUG_FLUSH;
             jccl::ConfigManager::instance()->refreshPendingList();
@@ -548,7 +774,7 @@ namespace gadget
          mHandlerMap.insert( p );
 
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-            << clrOutBOLD( clrMAGENTA, "[Reactor] " )
+            << clrOutBOLD( clrBLUE, "[Reactor] " )
             << "Adding Handler: " << new_handler->getHandlerName() << std::endl << vprDEBUG_FLUSH;
    }
 } // end namespace gadget

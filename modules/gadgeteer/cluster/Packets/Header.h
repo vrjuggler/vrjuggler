@@ -58,6 +58,7 @@ public:
    static const unsigned short RIM_APPDATA_ACK     = 409;
    static const unsigned short RIM_END_BLOCK       = 410;
    static const unsigned short RIM_START_BLOCK     = 411;
+   static const unsigned short CONFIG_PACKET       = 412;
    static const unsigned short RIM_PACKET_HEAD_SIZE = 12;
 
 public:

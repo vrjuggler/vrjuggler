@@ -216,36 +216,22 @@ void Node::update()
    }
 }
 
-bool Node::send(cluster::Packet* out_packet)
+bool Node::send(cluster::Packet* outPacket)
 {
-   vprASSERT(NULL != out_packet && "Can not send a NULL packet.");
+   vprASSERT(NULL != outPacket && "Can not send a NULL packet.");
 
    vpr::Guard<vpr::Mutex> guard(mSockWriteLock);
 
+   cluster::Header* header = outPacket->getHeader();
+
+   vprASSERT(NULL != header && "Node::send() - Can't have a NULL header.");
+   vprASSERT(NULL != mSockStream && "Node::send() - SocketStream can't be NULL");
+
    // -Send header data
    // -Send packet data
-
-   if (mSockStream == NULL)
-   {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << clrOutBOLD(clrRED, "ERROR:")
-         << " SocketSteam is NULL" << std::endl << vprDEBUG_FLUSH;
-      throw cluster::ClusterException("Node::send() - SocketStream is NULL!");
-   }
-
-   cluster::Header* mHeader = out_packet->getHeader();
-
-   if (mHeader == NULL)
-   {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << clrOutBOLD(clrRED, "ERROR:")
-         << " Packet Header is NULL" << std::endl << vprDEBUG_FLUSH;
-      throw cluster::ClusterException("Node::send() - Packet Header is NULL!");
-   }
-
    try
    {
-      mHeader->send(mSockStream);
+      header->send(mSockStream);
    }
    catch (vpr::IOException&)
    {
@@ -253,20 +239,20 @@ bool Node::send(cluster::Packet* out_packet)
       throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
    }
 
-   if(mHeader->getPacketLength() == cluster::Header::RIM_PACKET_HEAD_SIZE)
+   if(header->getPacketLength() == cluster::Header::RIM_PACKET_HEAD_SIZE)
    {
       return true;
    }
 
    // If we have a data packet we need to also send the raw data
-   if (out_packet->getPacketType() != cluster::Header::RIM_DATA_PACKET)
+   if (outPacket->getPacketType() != cluster::Header::RIM_DATA_PACKET)
    {
-      std::vector<vpr::Uint8>* packet_data = out_packet->getData();
+      std::vector<vpr::Uint8>* packet_data = outPacket->getData();
 
       try
       {
          mSockStream->send(*packet_data,
-            mHeader->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE);
+            header->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE);
       }
       catch (vpr::IOException&)
       {
@@ -276,7 +262,7 @@ bool Node::send(cluster::Packet* out_packet)
    }
    else
    {
-      std::vector<vpr::Uint8>* packet_data = out_packet->getData();
+      std::vector<vpr::Uint8>* packet_data = outPacket->getData();
 
       // Since we are sending a DataPacket we are not actually sending all data here. We are only sending 2 GUIDs here
       int size = 32;
@@ -292,7 +278,7 @@ bool Node::send(cluster::Packet* out_packet)
       }
 
 
-      cluster::DataPacket* temp_data_packet = dynamic_cast<cluster::DataPacket*>(out_packet);
+      cluster::DataPacket* temp_data_packet = dynamic_cast<cluster::DataPacket*>(outPacket);
       vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
 
       // Testing GUIDs

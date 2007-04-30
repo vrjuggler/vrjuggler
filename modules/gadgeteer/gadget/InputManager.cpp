@@ -38,6 +38,7 @@
 #include <vpr/DynLoad/LibraryLoader.h>
 #include <vpr/Util/FileUtils.h>
 
+#include <jccl/Config/ConfigDefinition.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
@@ -202,8 +203,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    vprASSERT(configCanHandle(element));
 
    bool ret_val = false;      // Flag to return success
+   cluster::ClusterManager* cluster_manager = cluster::ClusterManager::instance();
 
-   if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
+   if (cluster_manager->isClusterActive() && element->getConfigDefinition()->isParent("input_device"))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "InputManager can not handle remote devices, we must use Remote Input Manager."
@@ -230,7 +232,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       // to start this device and open a window since this KeyboardMouseDevice will
       // be invalid.
       if (NULL != keyboard_mouse_element.get() &&
-         cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( keyboard_mouse_element ))
+          cluster_manager->isClusterActive() &&
+          !cluster_manager->isMaster())
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "InputManager::configAdd() InputWindow not being opened "

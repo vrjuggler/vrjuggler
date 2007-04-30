@@ -126,7 +126,7 @@ protected:
    vpr::BufferObjectReader* mPacketReader;   /**< ObjectReader that is used to parse all data. */
    vpr::BufferObjectWriter* mPacketWriter;   /**< ObjectWriter that is used to serialize all data. */
    std::vector<vpr::Uint8> mData;            /**< std::vector which contains all internal data */
-   vpr::GUID mPluginId;                      /**< GUID that specifies which plugin is responcsible for this packet */
+   vpr::GUID mPluginId;                      /**< GUID that specifies which plugin is responsible for this packet */
 };
 }
 

@@ -121,6 +121,8 @@ public:
    void debugDumpVirtualDevices(int debug_level);
    //@}
 
+   bool addDevice(jccl::ConfigElementPtr elm);
+
 private:
    /** @name VirtualDevice methods */
    //@{

@@ -28,6 +28,7 @@
 
 #include <iomanip>
 #include <sstream>
+#include <boost/bind.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
 
@@ -38,6 +39,7 @@
 
 #include <jccl/Config/ConfigDefinitionPtr.h>
 #include <jccl/Config/ConfigDefinition.h>
+#include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
 
@@ -50,9 +52,10 @@
 
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPlugin.h>
+#include <cluster/Packets/ConfigPacket.h>
 #include <cluster/Packets/EndBlock.h>
+#include <cluster/Packets/Packet.h>
 #include <cluster/ClusterManager.h>
-
 
 namespace fs = boost::filesystem;
 
@@ -150,17 +153,110 @@ namespace cluster
    ClusterManager::ClusterManager()
       : mClusterActive( false )
       , mClusterReady( false )
+      , mClusterStarted( false )
+      , mIsMaster(false)
+      , mIsSlave(false)
+      , mClusterElement()
       , mPreDrawCallCount(0)
       , mPostPostFrameCallCount(0)
    {
       mClusterNetwork = new ClusterNetwork();
-      jccl::ConfigManager::instance()->addConfigElementHandler( mClusterNetwork );
-      jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
+      mClusterNetwork->addHandler(this);
    }
 
    ClusterManager::~ClusterManager()
    {
+      disconnectFromConfigManager();
+   }
+
+   void ClusterManager::connectToConfigManager()
+   {
+      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+
+      // Add the new cluster network as an element handler.
+      // XXX: This may not be needed after restucture.
+      cfg_mgr->addConfigElementHandler( mClusterNetwork );
+      jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
+
+      if (!mConfigChangeConn.connected())
+      {
+         // Connect to configuration change signal.
+         mConfigChangeConn = cfg_mgr->addConfigurationCallback(
+            boost::bind(&ClusterManager::configurationChanged, this, _1, _2)
+         );
+      }
+   }
+
+   void ClusterManager::disconnectFromConfigManager()
+   {
+      // XXX: This may not be needed after restucture.
+      jccl::ConfigManager::instance()->removeConfigElementHandler( mClusterNetwork );
       jccl::DependencyManager::instance()->unregisterChecker(&mDepChecker);
+      mConfigChangeConn.disconnect();
+   }
+
+   void ClusterManager::init(bool clusterMaster, bool clusterSlave)
+   {
+      mIsMaster = clusterMaster;
+      mIsSlave = clusterSlave;
+
+      vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
+      mClusterActive = (clusterMaster || clusterSlave);
+   }
+
+   void ClusterManager::start()
+   {
+      mClusterStarted = true;
+
+      // Connect the entire cluster.
+      if (mIsMaster)
+      {
+         std::cout << "XXX: ClusterManager::start() MASTER" << std::endl;
+         if (NULL == mClusterElement.get())
+         {
+            throw ClusterException("Master must have a ClusterManager config element.", VPR_LOCATION);
+         }
+         configCluster(mClusterElement);
+         mClusterNetwork->connectToSlaves();
+
+
+         // Send initial configuration to each node.
+         ClusterNetwork::node_list_t& nodes = mClusterNetwork->getNodes();
+         for (ClusterNetwork::node_list_t::iterator itr = nodes.begin(); itr != nodes.end(); itr++)
+         {
+            jccl::Configuration node_cfg(mSystemConfiguration);
+
+            // Compile a string of the configuration.
+            std::ostringstream node_output;
+            node_output << node_cfg;
+
+            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+               << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+               << "Send configuration to nodes: " << (*itr)->getName()
+               << std::endl << vprDEBUG_FLUSH;
+
+            ConfigPacket cfg_pkt(node_output.str(), jccl::ConfigManager::PendingElement::ADD);
+            (*itr)->send(&cfg_pkt);
+         }
+         std::cout << "Before barrier" << std::endl;
+         sendEndBlocksAndSignalUpdate(0);
+         std::cout << "After barrier" << std::endl;
+         //while(true)
+         //{;}
+         // Wait for all needed configuration.
+         // Connect to all nodes.
+      }
+      else if (mIsSlave)
+      {
+         std::cout << "XXX: ClusterManager::start() SLAVE" << std::endl;
+         // Start listening on known port for connections.
+         mClusterNetwork->waitForConnection();
+         std::cout << "Before barrier" << std::endl;
+         sendEndBlocksAndSignalUpdate(0);
+         std::cout << "After barrier" << std::endl;
+         //while(true)
+         //{;}
+      }
    }
 
    bool ClusterManager::isClusterReady()
@@ -459,7 +555,8 @@ namespace cluster
       while ( completed_nodes != num_nodes )
       {
          std::vector<gadget::Node*> ready_nodes =
-            reactor.getReadyNodes(vpr::Interval::NoWait);
+            //reactor.getReadyNodes(vpr::Interval::NoWait);
+            reactor.getReadyNodes(vpr::Interval::NoTimeout);
 
          for ( iter_t i = ready_nodes.begin(); i != ready_nodes.end(); ++i )
          {
@@ -501,30 +598,7 @@ namespace cluster
 
    bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element )
    {
-      std::string tp("input_parent");
-      if ( element->getConfigDefinition()->isParent("input_device") &&
-           element->getNum("device_host") > 0 )
-      {
-         std::string device_host =
-            element->getProperty<std::string>( "device_host" );
-         //std::cout << "Checking: " << element->getName() << std::endl;
-         if ( !device_host.empty() )
-         {
-            // THIS IS A HACK: find a better way to do this
-            jccl::ConfigElementPtr device_host_ptr =
-               getConfigElementPointer( device_host );
-            if ( device_host_ptr.get() != NULL )
-            {
-               std::string host_name =
-                  device_host_ptr->getProperty<std::string>( "host_name" );
-               if ( !cluster::ClusterNetwork::isLocalHost( host_name ) )
-               {
-                  return true;
-               }// Device is on the local machine
-            }// Could not find the deviceHost in the configuration
-         }// Device is not a remote device since there is no name in the deviceHost field
-      }// Else it is not a device, or does not have a deviceHost property
-      return false;
+      return (mClusterActive && element->getConfigDefinition()->isParent("input_device"));
    }
 
    bool ClusterManager::recognizeClusterManagerConfig( jccl::ConfigElementPtr element )
@@ -536,7 +610,7 @@ namespace cluster
     *  @pre configCanHandle(element) == true.
     *  @return true iff element was successfully added to configuration.
     */
-   bool ClusterManager::configAdd( jccl::ConfigElementPtr element )
+   bool ClusterManager::configCluster( jccl::ConfigElementPtr element )
    {
       vpr::DebugOutputGuard dbg_output( gadgetDBG_RIM, vprDBG_STATE_LVL,
                               std::string( "Cluster Manager: Adding config element.\n" ),
@@ -546,7 +620,6 @@ namespace cluster
       vprASSERT(recognizeClusterManagerConfig(element));
 
       bool ret_val = false;      // Flag to return success
-
       {
          vprDEBUG( gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << clrOutBOLD(clrCYAN,"[ClusterManager] ")
@@ -570,8 +643,15 @@ namespace cluster
                << "configAdd() New Node Name: " << new_node
                << std::endl << vprDEBUG_FLUSH;
 
-            jccl::ConfigElementPtr new_node_element =
-               getConfigElementPointer( new_node );
+            //jccl::ConfigElementPtr new_node_element =
+            //   getConfigElementPointer( new_node );
+   
+            if (1 != mClusterNodeElements.count(new_node))
+            {
+               throw ClusterException("Can't find configuration for node: " + new_node, VPR_LOCATION);
+            }
+            jccl::ConfigElementPtr new_node_element = mClusterNodeElements[new_node];
+
             std::string new_node_hostname =
                new_node_element->getProperty<std::string>( "host_name" );
 
@@ -589,10 +669,37 @@ namespace cluster
 
                vpr::Guard<vpr::Mutex> guard( mNodesLock );
                mNodes.push_back( new_node_hostname );
+
+               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
+                  << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+                  << " Adding Node: " << element->getName()
+                  << " to the Cluster Network\n" << vprDEBUG_FLUSH;
+
+               std::string name        = new_node_element->getName();
+               std::string host_name   = new_node_element->getProperty<std::string>( "host_name" );
+               //vpr::Uint16 listen_port = new_node_element->getProperty<int>( "listen_port" );
+               vpr::Uint16 listen_port = gadget::DEFAULT_SLAVE_PORT;
+
+               mClusterNetwork->addNode(name, host_name, listen_port);
+            }
+            else
+            {
+               vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_STATUS_LVL )
+                  << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+                  << "configAdd() Local configuration."
+                  << std::endl << vprDEBUG_FLUSH;
             }
          }
+      }
 
+      //vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
+      //mClusterActive = true;
+   }
 
+   bool ClusterManager::configAdd( jccl::ConfigElementPtr element )
+   {
+      bool ret_val = false;      // Flag to return success
+      {
          // Load the plugins.
 
          vpr::DebugOutputGuard dbg_output( gadgetDBG_RIM, vprDBG_STATE_LVL,
@@ -758,11 +865,8 @@ namespace cluster
          }
       }
 
-      vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
-      mClusterActive = true;
-
-      return ret_val;         // Return the success flag if we added at all
-    }
+      return ret_val;
+   }
 
     /** Remove the pending element from the current configuration.
      *  @pre configCanHandle(element) == true.
@@ -803,6 +907,127 @@ namespace cluster
    {
       return "cluster_manager";
    }
+
+void ClusterManager::mergeConfigurations(jccl::Configuration* dst, jccl::Configuration* src, vpr::Uint16 type)
+{
+   std::vector<jccl::ConfigElementPtr>& src_elms = src->vec();
+
+   for (std::vector<jccl::ConfigElementPtr>::iterator itr = src_elms.begin();
+        itr != src_elms.end(); itr++)
+   {
+      if (jccl::ConfigManager::PendingElement::ADD == type)
+      {
+         dst->add(*itr);
+      }
+      else
+      {
+         dst->remove((*itr)->getName());
+      }
+   }
+}
+
+void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type)
+{
+   vprASSERT(!(mIsMaster && mClusterStarted) && "Configuration can not change after cluster is started.");
+
+   const std::string cluster_type("cluster_manager");
+   const std::string cluster_node_type("cluster_node");
+
+   std::vector<jccl::ConfigElementPtr> cluster_elements;
+   cfg->getByType(cluster_type, cluster_elements);
+
+   if (cluster_elements.size() > 0)
+   {
+      if (jccl::ConfigManager::PendingElement::REMOVE == type)
+      {
+         throw ClusterException("Can't remove a cluster_manager element.", VPR_LOCATION);
+      }
+      if (NULL != mClusterElement.get() || cluster_elements.size() > 1)
+      {
+         throw cluster::ClusterException("Can't have more than one cluster configurations.", VPR_LOCATION);
+      }
+
+      // XXX: Do we really still need this lock?
+      //vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
+      //mClusterActive = true;
+      mClusterElement = cluster_elements[0];
+      //cfg->remove(mClusterElement->getName());
+   }
+
+   std::vector<jccl::ConfigElementPtr> cluster_node_elms;
+   cfg->getByType(cluster_node_type, cluster_node_elms);
+
+   for (std::vector<jccl::ConfigElementPtr>::iterator itr = cluster_node_elms.begin();
+        itr != cluster_node_elms.end(); itr++)
+   {
+      jccl::ConfigElementPtr node_elm = *itr;
+      std::string node_name = node_elm->getName();
+      if (mClusterNodeElements.count(node_name) > 0)
+      {
+         throw ClusterException("Already have a configuration element for cluster node: " + node_name);
+      }
+
+      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+         << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+         << "Adding config for node: " << node_name
+         << std::endl << vprDEBUG_FLUSH;
+
+      mClusterNodeElements[node_name] = node_elm;
+
+      // XXX: Leave the ClusterManager configuration around to load the correct plugins.
+      //cfg->remove(node_name);
+
+/*
+         if (isLocalHost( element->getProperty<std::string>( "host_name" ) ))
+         {
+            // NOTE: Add all machine dependent ConfigElementPtr's here
+            vprASSERT( element->getNum("display_system") == 1 
+               && "A Cluster System element must have exactly 1 display_system element" );
+
+            std::vector<jccl::ConfigElementPtr> cluster_node_elements =
+               element->getChildElements();
+
+            for (std::vector<jccl::ConfigElementPtr>::iterator i = cluster_node_elements.begin();
+                 i != cluster_node_elements.end();
+                 ++i)
+            {
+               jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
+
+               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL ) << clrSetBOLD(clrCYAN)
+                  << clrOutBOLD( clrMAGENTA,"[AbstractNetworkManager]" )
+                  << " Adding Machine specific ConfigElement: "
+                  << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
+            }
+
+            const int listen_port = element->getProperty<int>( "listen_port" );
+            startListening( listen_port, false );
+            */
+
+   }
+
+   vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+      << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+      << "Copying configuration from: " << cfg->getFileName()
+      << std::endl << vprDEBUG_FLUSH;
+
+   mergeConfigurations(&mSystemConfiguration, cfg, type);
+
+   std::cout << "CLUSTER MODE: " << (mClusterActive ? "True":"False") << std::endl;
+}
+
+void ClusterManager::handlePacket(cluster::Packet* packet, gadget::Node* node)
+{
+   vprASSERT(Header::CONFIG_PACKET == packet->getPacketType() && "Not a config packet.");
+   cluster::ConfigPacket* cfg_pkt = dynamic_cast<cluster::ConfigPacket*>(packet);
+   vprASSERT(NULL != cfg_pkt && "Failed to cast ConfigPacket.");
+
+   jccl::Configuration incoming_config;
+   //Loading from an istream
+   std::istringstream config_input(cfg_pkt->getConfig());
+   config_input >> incoming_config;
+   std::cout << "Got config packet" << std::endl;
+   jccl::ConfigManager::instance()->addConfigurationAdditions(&incoming_config);
+}
 
    // ---- Configuration Helper Functions ----
    jccl::ConfigElementPtr ClusterManager::getConfigElementPointer( const std::string& name )
