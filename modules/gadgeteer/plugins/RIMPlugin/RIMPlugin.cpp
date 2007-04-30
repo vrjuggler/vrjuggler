@@ -108,7 +108,16 @@ void RIMPlugin::preDraw()
 
 void RIMPlugin::postPostFrame()
 {
-   sendDataAndSync();
+   // Update all local device servers and send their data.
+   for ( device_server_list_t::iterator itr = mDeviceServers.begin(); itr != mDeviceServers.end(); itr++ )
+   {
+      (*itr)->updateLocalData();
+      (*itr)->send();
+   }
+
+   //      second.setNow();
+   //      vpr::Interval diff_time4(second-first);
+   //      std::cout << "Recv DeviceData Time: " << diff_time4.getBaseVal() << std::endl;
 }
 
 void RIMPlugin::sendRequests()
@@ -203,8 +212,6 @@ bool RIMPlugin::configRemove(jccl::ConfigElementPtr elm)
  */
 bool RIMPlugin::configCanHandle(jccl::ConfigElementPtr elm)
 {
-   // XXX: We may still use this to handle the configuration 
-   //      of clustered RIM connections.
    return ClusterManager::instance()->recognizeRemoteDeviceConfig(elm);
 }
 
@@ -395,9 +402,6 @@ void RIMPlugin::debugDumpVirtualDevices(int debug_level)
    }
 }
 
-
-// ===================== DEVICE SERVERS =============================
-
 bool RIMPlugin::addDeviceServer(const std::string& name,
                                          gadget::Input* device)
 {
@@ -415,8 +419,6 @@ void RIMPlugin::addDeviceServer(DeviceServerPtr device)
    vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
    mDeviceServers.push_back(device);
 }
-
-
 
 DeviceServerPtr RIMPlugin::getDeviceServer(const std::string& deviceName)
 {
@@ -447,31 +449,10 @@ void RIMPlugin::debugDumpDeviceServers(int debug_level)
    vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
                                     std::string("-------------- Device Servers --------------\n"),
                                     std::string("---------------------------------------------\n"));
-   for ( device_server_list_t::iterator j = mDeviceServers.begin(); j != mDeviceServers.end(); j++ )
+   for ( device_server_list_t::iterator itr = mDeviceServers.begin(); itr != mDeviceServers.end(); itr++ )
    {
-      (*j)->debugDump(debug_level);
+      (*itr)->debugDump(debug_level);
    }
-}
-
-void RIMPlugin::sendDataAndSync()
-{
-   //      vpr::Interval first;
-   //      vpr::Interval second;
-
-   //      std::cout << "Number Device Servers: " << mDeviceServers.size() << " Number Virtual Devices" << mVirtualDevices.size() << std::endl;
-
-   vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-
-   // Update all local device servers and send their data.
-   for ( unsigned int i=0; i<mDeviceServers.size(); i++ )
-   {
-      mDeviceServers[i]->updateLocalData();
-      mDeviceServers[i]->send();
-   }
-
-   //      second.setNow();
-   //      vpr::Interval diff_time4(second-first);
-   //      std::cout << "Recv DeviceData Time: " << diff_time4.getBaseVal() << std::endl;
 }
 
 }  // end namespace cluster

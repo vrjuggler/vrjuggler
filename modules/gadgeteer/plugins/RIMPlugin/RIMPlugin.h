@@ -58,7 +58,7 @@ public:
    RIMPlugin();
    virtual ~RIMPlugin();
 
-   vpr::GUID getHandlerGUID()
+   vpr::GUID getHandlerGUID() const
    {
       return mHandlerGUID;
    }
@@ -116,14 +116,7 @@ public:
 
 public:
 
-   /**
-    * Calls any action needed by this plugin before postFrame().
-    *
-    * This function was inherited from the Cluster Plugin abstract class.
-    */
-   void sendDataAndSync();
-
-   /** @name Methods used by InputManager */
+   /** @name Virtual device management. */
    //@{
    gadget::Input* getVirtualDevice(const vpr::GUID& device_id);
    gadget::Input* getVirtualDevice(const std::string& device_name);
@@ -148,7 +141,7 @@ private:
    bool addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
                          const std::string& device_base_type,
                          const std::string& hostname);
-   //void addVirtualDevice(VirtualDevicePtr device);
+
    void removeVirtualDevice(const std::string& device_name);
    void removeVirtualDevice(const vpr::GUID& device_id);
    bool removeVirtualDevicesOnHost(const std::string& hostName);
@@ -161,10 +154,6 @@ private:
    void removeDeviceServer(const std::string& device_name);
    void removeDeviceServer(const vpr::Uint16& device_id);
    DeviceServerPtr getDeviceServer(const std::string& device_name);
-   //@}
-
-   /** @name Connection management */
-   //@{
    //@}
 
 protected:
