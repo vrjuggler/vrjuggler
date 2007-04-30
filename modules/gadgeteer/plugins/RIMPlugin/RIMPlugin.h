@@ -37,9 +37,10 @@
 
 #include <cluster/ClusterPlugin.h>
 
-//#include <gadget/RemoteInputManager.h>
-
 #include <jccl/Config/ConfigElementPtr.h>
+
+#include <plugins/RIMPlugin/DeviceServerPtr.h>
+#include <plugins/RIMPlugin/VirtualDevicePtr.h>
 
 namespace gadget
 {
@@ -48,8 +49,6 @@ namespace gadget
 }
 namespace cluster
 {
-   class VirtualDevice;
-   class DeviceServer;
    class DeviceRequest;
    class Packet;
 
@@ -115,20 +114,6 @@ public:
       return(std::string("RIMPlugin"));
    }
 
-     
-   //////////////////////////
-   //    CONFIG METHODS    //
-   //////////////////////////
-
-   bool configAdd(jccl::ConfigElementPtr element);
-   bool configRemove(jccl::ConfigElementPtr element);
-   bool configCanHandle(jccl::ConfigElementPtr element);
-//   jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
-   
-private:   
-   vpr::GUID                    mHandlerGUID;
-//   gadget::RemoteInputManager   mRIM;
-
 public:
 
    /**
@@ -146,11 +131,9 @@ public:
 
    /** @name Configuration methods */
    //@{
-   /*
-   bool configAdd(jccl::ConfigElementPtr element);
-   bool configRemove(jccl::ConfigElementPtr element);
-   bool configCanHandle(jccl::ConfigElementPtr element);
-   */
+   bool configAdd(jccl::ConfigElementPtr elm);
+   bool configRemove(jccl::ConfigElementPtr elm);
+   bool configCanHandle(jccl::ConfigElementPtr elm);
    //@}
 
    /** @name Debug methods */
@@ -159,61 +142,42 @@ public:
    void debugDumpVirtualDevices(int debug_level);
    //@}
 
-   bool addDevice(jccl::ConfigElementPtr elm);
-
 private:
    /** @name VirtualDevice methods */
    //@{
    bool addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
                          const std::string& device_base_type,
                          const std::string& hostname);
-   void addVirtualDevice(VirtualDevice* device);
+   //void addVirtualDevice(VirtualDevicePtr device);
    void removeVirtualDevice(const std::string& device_name);
    void removeVirtualDevice(const vpr::GUID& device_id);
-   bool removeVirtualDevicesOnHost(const std::string& host_name);
+   bool removeVirtualDevicesOnHost(const std::string& hostName);
    //@}
 
    /** @name DeviceServer methods */
    //@{
    bool addDeviceServer(const std::string& name, gadget::Input* device);
-   void addDeviceServer(DeviceServer* device);
+   void addDeviceServer(DeviceServerPtr device);
    void removeDeviceServer(const std::string& device_name);
    void removeDeviceServer(const vpr::Uint16& device_id);
-   DeviceServer* getDeviceServer(const std::string& device_name);
+   DeviceServerPtr getDeviceServer(const std::string& device_name);
    //@}
 
    /** @name Connection management */
    //@{
-   bool removeDeviceClientsForHost(const std::string& host_name);
-   //@}
-
-   /** @name Configuration helpers */
-   //@{
-//   jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
-   bool createPendingConfigRemove(std::string device_name);
-   bool createPendingConfigRemoveAndAdd(std::string device_name);
-   //@}
-
-   /** @name Device request management */
-   //@{
-public:
-   void addPendingDeviceRequest(cluster::DeviceRequest* new_device_req, gadget::Node* node);
-   void sendDeviceRequests();
-private:
-   void removePendingDeviceRequest(std::string device_name);
-   vpr::Uint16 getNumberPendingDeviceRequests();
+   bool removeDeviceClientsForHost(const std::string& hostName);
    //@}
 
 protected:
-   std::map<cluster::DeviceRequest*,
-            gadget::Node*>               mPendingDeviceRequests;     /**< UserData Request list. */
-   vpr::Mutex                           mPendingDeviceRequestsLock; /**< Lock on UserData Request list.*/
+   vpr::GUID                    mHandlerGUID;
 
-   std::map<vpr::GUID, VirtualDevice*>  mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
-   vpr::Mutex                           mVirtualDevicesLock; /**< Lock on Virtual Device list.*/
+   typedef std::map<vpr::GUID, VirtualDevicePtr> virtual_device_map_t;
+   virtual_device_map_t         mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
+   vpr::Mutex                   mVirtualDevicesLock; /**< Lock on Virtual Device list.*/
 
-   std::vector<DeviceServer*>           mDeviceServers;      /**< List of Devices that should act as servers to remote Nodes.*/
-   vpr::Mutex                           mDeviceServersLock;  /**< Lock on Device Server list.*/
+   typedef std::vector<DeviceServerPtr> device_server_list_t;
+   device_server_list_t         mDeviceServers;      /**< List of Devices that should act as servers to remote Nodes.*/
+   vpr::Mutex                   mDeviceServersLock;  /**< Lock on Device Server list.*/
 };
 
 } // end namespace gadget
