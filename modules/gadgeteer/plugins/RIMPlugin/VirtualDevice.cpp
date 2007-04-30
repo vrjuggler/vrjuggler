@@ -29,38 +29,33 @@
 
 namespace cluster
 {
-   VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& base_type, 
-                                const std::string& hostname, gadget::Input* device)
-   {
-      mName = name;
-      mId = id;
-      mBaseType = base_type;
-      mRemoteHostname = hostname;
-      mDevice = device;
-//      mBufferObjectReader = NULL;
-   }
 
-   VirtualDevice::~VirtualDevice()
-   {
-/*      if (mBufferObjectReader != NULL)
-      {
-         delete mBufferObjectReader;
-      }
-*/      
-      if (mDevice != NULL)
-      {
-         delete mDevice;
-      }
-   }
+VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& baseType, 
+                             const std::string& hostname, gadget::Input* device)
+   : mName(name)
+   , mBaseType(baseType)
+   , mRemoteHostname(hostname)
+   , mId(id)
+   , mDevice(device)
+{}
 
-   void VirtualDevice::debugDump(int debug_level)
+VirtualDevice::~VirtualDevice()
+{
+   if (mDevice != NULL)
    {
-      vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
-                                 std::string("-------------- VirtualDevice --------------\n"),
-                                 std::string("-----------------------------------------\n"));
-
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Local ID: " << mId.toString() << std::endl << vprDEBUG_FLUSH; 
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "BaseType: " << mBaseType << std::endl << vprDEBUG_FLUSH;
+      delete mDevice;
    }
+}
+
+void VirtualDevice::debugDump(int debug_level)
+{
+   vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
+                              std::string("-------------- VirtualDevice --------------\n"),
+                              std::string("-----------------------------------------\n"));
+
+   vprDEBUG(gadgetDBG_RIM,debug_level) << "Local ID: " << mId.toString() << std::endl << vprDEBUG_FLUSH; 
+   vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) << "BaseType: " << mBaseType << std::endl << vprDEBUG_FLUSH;
+}
+
 } // End of cluster namespace

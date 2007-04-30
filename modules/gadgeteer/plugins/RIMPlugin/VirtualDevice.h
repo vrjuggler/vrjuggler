@@ -35,66 +35,70 @@
 
 namespace cluster
 {
-   /** \class VirtualDevice VirtualDevice.h gadget/VirtualDevice.h
-    *
-    * Virtual input device type.
+
+/** \class VirtualDevice VirtualDevice.h gadget/VirtualDevice.h
+ *
+ * Virtual input device type.
+ */
+class GADGET_CLUSTER_PLUGIN_CLASS_API VirtualDevice
+{
+public:
+   /**
+    * Construct a new "virtual" device that represents a remote input device.
     */
-   class GADGET_CLUSTER_PLUGIN_CLASS_API VirtualDevice
+   VirtualDevice(const std::string& name, const vpr::GUID& localId,
+                 const std::string& baseType, const std::string& hostname,
+                 gadget::Input* device);
+
+   /**
+    * Deconstructor.
+    */
+   ~VirtualDevice();
+
+   /**
+    * Print debug information.
+    */
+   void debugDump(int debug_level);
+
+   /**
+    * Get the name of the remote device that we represent.
+    */
+   std::string getName() const
    {
-   public:
-      VirtualDevice(const std::string& name, const vpr::GUID& local_id,
-                    const std::string& base_type, const std::string& hostname,
-                    gadget::Input* device);
+      return mName;
+   }
 
-      ~VirtualDevice();
+   /**
+    * Return the hostname for the machine that is connected to the real device.
+    */
+   std::string getRemoteHostname() const
+   {
+      return mRemoteHostname;
+   }
 
-      void debugDump(int debug_level);
+   /**
+    * Get the local id used to identify this device.
+    */
+   vpr::GUID getLocalId() const
+   {
+      return mId;
+   }
 
-      std::string getName()
-      {
-         return mName;
-      }
+   /**
+    * Return a pointer to the low level input device.
+    */
+   gadget::Input* getDevice() const
+   {
+      return mDevice;
+   }
 
-      void setName(std::string name)
-      {
-         mName = name;
-      }
-      
-      std::string getRemoteHostname()
-      {
-         return mRemoteHostname;
-      }
-      
-      vpr::GUID getId()
-      {
-         return mId;
-      }
-      
-      void setLocalId(vpr::GUID id)
-      {
-         mId = id;
-      }
-
-      gadget::Input* getDevice()
-      {
-         return mDevice;
-      }
-      
-      void setDevice(gadget::Input* device)
-      {
-         mDevice = device;
-      }
-
-//      vpr::BufferObjectReader* getBufferObjectReader() { return mBufferObjectReader; }
-//      void setBufferObjectReader(vpr::BufferObjectReader* object_reader) { mBufferObjectReader = object_reader; }
 private:
-         std::string          mName;                     /**< VirtualDevice name */
-         std::string          mBaseType;
-         std::string          mRemoteHostname;
-         vpr::GUID            mId;
-         gadget::Input*       mDevice;
-         vpr::BufferObjectReader*   mBufferObjectReader;      
-   };
+   std::string          mName;                     /**< VirtualDevice name */
+   std::string          mBaseType;
+   std::string          mRemoteHostname;
+   vpr::GUID            mId;
+   gadget::Input*       mDevice;
+};
 
 } // end namespace cluster
 

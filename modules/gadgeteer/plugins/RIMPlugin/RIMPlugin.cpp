@@ -334,24 +334,15 @@ bool RIMPlugin::removeVirtualDevicesOnHost(const std::string& hostName)
    // - Remove them from the current configuration
    vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
 
-   std::vector<std::string> devices_to_remove;
    for ( virtual_device_map_t::iterator i = mVirtualDevices.begin();
-         i != mVirtualDevices.end() ; i++ )
+         i != mVirtualDevices.end(); i++ )
    {
       if ( (*i).second->getRemoteHostname() == hostName )
       {
-         devices_to_remove.push_back((*i).second->getName());
+         removeVirtualDevice((*i).second->getName());
       }
    }
 
-   for ( std::vector<std::string>::iterator i = devices_to_remove.begin();
-       i != devices_to_remove.end();i++ )
-   {
-      // We could just remove it here, but for the sake of testing RTRC
-      // we will create a pending remove
-      removeVirtualDevice(*i);
-      //createPendingConfigRemoveAndAdd(*i);
-   }
    return true;
 }
 
