@@ -116,12 +116,12 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING") << ": Display system element '"
-            << elt->getName() << "'" << std::endl;
+            << disp_sys_elt->getName() << "'" << std::endl;
          vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << "         is out of date.\n";
          vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << "         Expected version 3 but found version "
-            << elt->getVersion() << ".  Pipe\n";
+            << disp_sys_elt->getVersion() << ".  Pipe\n";
          vprDEBUG_NEXTnl(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << "         configurations will not work.\n" << vprDEBUG_FLUSH;
       }
