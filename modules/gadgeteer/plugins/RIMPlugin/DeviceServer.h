@@ -37,80 +37,66 @@ namespace cluster
 {
    class Node;
    
-   /** \class DeviceServer DeviceServer.h gadget/DeviceServer.h
+/** \class DeviceServer DeviceServer.h gadget/DeviceServer.h
+ *
+ * Device server class.
+ */
+class GADGET_CLUSTER_PLUGIN_CLASS_API DeviceServer
+{
+public:
+   /**
+    * Create a new DeviceServer.
     *
-    * Device server class.
+    * @param name      Name of the device that we are sharing.
+    * @param device    Pointer to the device that we are sharing.
+    * @param plugin_id GUID that should be placed at the beginning of 
+    *                  each data packet so that the receiver knows which 
+    *                  plugin the data is coming from.
     */
-   class GADGET_CLUSTER_PLUGIN_CLASS_API DeviceServer
+   DeviceServer(const std::string& name, gadget::Input* device,
+                const vpr::GUID& pluginId);
+
+   /**
+    */
+   ~DeviceServer();
+
+   /**
+    */
+   void send() const;
+
+   /**
+    */
+   void updateLocalData();
+
+   /**
+    */
+   void debugDump(int debugLevel) const;
+
+   /**
+    */
+   std::string getName() const
    {
-   public:
-      /**
-       * Create a new DeviceServer.
-       *
-       * @param name      Name of the device that we are sharing.
-       * @param device    Pointer to the device that we are sharing.
-       * @param plugin_id GUID that should be placed at the beginning of 
-       *                  each data packet so that the receiver knows which 
-       *                  plugin the data is coming from.
-       */
-      DeviceServer(const std::string& name, gadget::Input* device,
-                   const vpr::GUID& plugin_id);
+      return mName;
+   }
 
-      ~DeviceServer();
+   /**
+    */
+   vpr::GUID getId() const
+   {
+      return mId;
+   }
 
-      void send();
-      void updateLocalData();
+private:
+   std::string                         mName;   /**< DeviceServer name */
+   
+   gadget::Input*                      mDevice;
+   cluster::DataPacket*                mDataPacket;
+   vpr::BufferObjectWriter*            mBufferObjectWriter;
+   std::vector<vpr::Uint8>*            mDeviceData;
 
-      void addClient(gadget::Node* new_client_node);
-      void removeClient(const std::string& host_name);
-
-      void debugDump(int debug_level);
-
-      std::string getName() { return mName; }
-
-      /** Locks the active list.
-       *
-       *  This function blocks until it can lock the std::vector of active
-       *  Nodes.
-       *
-       *  The caller of this method must call unlockActive() when it
-       *  is finished viewing/modifying the active list.
-       */
-      void lockClients()
-      { mClientsLock.acquire(); }
-
-      /** Unlocks the active list.
-       *
-       *  The method releases the lock on the active connections std::vector.
-       *
-       *  The caller of this method must have previously locked the active
-       *  list with lockActive().
-       */
-      void unlockClients()
-      { mClientsLock.release(); }
-
-      vpr::GUID getId()
-      {
-         return mId;
-      }
-
-   private:
-      std::string                         mName;   /**< DeviceServer name */
-      std::vector<gadget::Node*>  mClients;
-      vpr::Mutex                          mClientsLock;   /**< Lock on active config list.*/   
-      
-      gadget::Input*                      mDevice;
-      cluster::DataPacket*                mDataPacket;
-      vpr::BufferObjectWriter*            mBufferObjectWriter;
-      std::vector<vpr::Uint8>*            mDeviceData;
-
-      vpr::Semaphore                      deviceServerTriggerSema;/**< Semaphore for draw trigger */
-      vpr::Semaphore                      deviceServerDoneSema;   /**< Semaphore for drawing done */
-      vpr::Thread*                        mControlThread;
-      bool                                mThreadActive;
-      vpr::GUID                           mId;                    /**< GUID for shared device */
-      vpr::GUID                           mPluginGUID;
-   };
+   vpr::GUID                           mId;                    /**< GUID for shared device */
+   vpr::GUID                           mPluginGUID;
+};
 
 } // end namespace cluster
 

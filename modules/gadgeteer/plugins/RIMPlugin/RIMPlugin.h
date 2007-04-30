@@ -165,7 +165,6 @@ private:
 
    /** @name Connection management */
    //@{
-   bool removeDeviceClientsForHost(const std::string& hostName);
    //@}
 
 protected:

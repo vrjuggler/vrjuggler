@@ -166,8 +166,6 @@ bool RIMPlugin::configAdd(jccl::ConfigElementPtr elm)
                << "Sending device ack [" << device_name << "] to [" << (*itr)->getName() << "]"
                << std::endl << vprDEBUG_FLUSH;
 
-            device_server->addClient(*itr);
-
             // Create a responce ACK
             (*itr)->send(device_ack);
          }
@@ -218,7 +216,6 @@ bool RIMPlugin::isPluginReady()
 void RIMPlugin::recoverFromLostNode(gadget::Node* lost_node)
 {
    removeVirtualDevicesOnHost(lost_node->getHostname());
-   removeDeviceClientsForHost(lost_node->getHostname());
 }
 
 /**
@@ -294,7 +291,7 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
    << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
 
    gadget::Input* input_device = gadget::BaseTypeFactory::instance()->loadNetDevice(device_base_type);
-   VirtualDevicePtr virtual_device = VirtualDevicePtr(new VirtualDevice(name, device_id, device_base_type, hostname, temp_input_device));
+   VirtualDevicePtr virtual_device = VirtualDevicePtr(new VirtualDevice(name, device_id, device_base_type, hostname, input_device));
 
    mVirtualDevices[device_id] = virtual_device;
 
@@ -354,25 +351,6 @@ bool RIMPlugin::removeVirtualDevicesOnHost(const std::string& hostName)
       // we will create a pending remove
       removeVirtualDevice(*i);
       //createPendingConfigRemoveAndAdd(*i);
-   }
-   return true;
-}
-
-bool RIMPlugin::removeDeviceClientsForHost(const std::string& hostName)
-{
-   // Loop through all Device Servers and remove any device clients that
-   // may exist for the given host
-   vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-
-   vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-      << clrOutBOLD(clrMAGENTA,"[RemoteInputManager]")
-      << " Removing client, " << hostName << " from all Device Servers.\n"
-      << vprDEBUG_FLUSH;
-
-   for ( device_server_list_t::iterator itr = mDeviceServers.begin();
-         itr != mDeviceServers.end() ; itr++ )
-   {
-      (*itr)->removeClient(hostName);
    }
    return true;
 }
