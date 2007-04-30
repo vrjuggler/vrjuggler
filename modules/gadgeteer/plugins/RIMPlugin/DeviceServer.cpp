@@ -24,10 +24,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/IO/BufferObjectWriter.h>
 #include <cluster/PluginConfig.h>
+#include <cluster/Packets/DataPacket.h>
 #include <cluster/ClusterManager.h>
 #include <gadget/AbstractNetworkManager.h>
 #include <gadget/Node.h>
+#include <gadget/Type/Input.h>
 #include <gadget/Util/Debug.h>
 #include <plugins/RIMPlugin/DeviceServer.h>
 

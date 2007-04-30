@@ -28,13 +28,20 @@
 #define _CLUSTER_DEVICE_SERVER_H
 
 #include <cluster/PluginConfig.h>
-#include <cluster/Packets/DataPacket.h>
-#include <gadget/Type/Input.h>
-#include <vpr/Sync/Semaphore.h>
-#include <vpr/Thread/Thread.h>
+
+namespace vpr
+{
+   class BufferObjectWriter;
+}
+
+namespace gadget
+{
+   class Input;
+}
 
 namespace cluster
 {
+   class DataPacket;
    class Node;
    
 /** \class DeviceServer DeviceServer.h gadget/DeviceServer.h
