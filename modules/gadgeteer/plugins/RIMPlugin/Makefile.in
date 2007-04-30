@@ -46,7 +46,9 @@ INSTALL_FILES=
 SUBOBJDIR=	$(PLUGIN_NAME)
 C_AFTERBUILD=	plugin-dso
 
-SRCS=		RIMPlugin.cpp
+SRCS=		DeviceServer.cpp	\
+		RIMPlugin.cpp		\
+		VirtualDevice.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

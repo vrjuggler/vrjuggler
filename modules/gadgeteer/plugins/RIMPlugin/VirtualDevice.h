@@ -24,22 +24,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef GADGET_VIRTUAL_DEVICE_H
-#define GADGET_VIRTUAL_DEVICE_H
+#ifndef CLUSTER_VIRTUAL_DEVICE_H
+#define CLUSTER_VIRTUAL_DEVICE_H
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/PluginConfig.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/Input.h>
 
 #include <vpr/IO/BufferObjectReader.h>
 
-namespace gadget
+namespace cluster
 {
    /** \class VirtualDevice VirtualDevice.h gadget/VirtualDevice.h
     *
     * Virtual input device type.
     */
-   class GADGET_CLASS_API VirtualDevice
+   class GADGET_CLUSTER_PLUGIN_CLASS_API VirtualDevice
    {
    public:
       VirtualDevice(const std::string& name, const vpr::GUID& local_id,
@@ -96,6 +96,6 @@ private:
          vpr::BufferObjectReader*   mBufferObjectReader;      
    };
 
-} // end namespace gadget
+} // end namespace cluster
 
 #endif

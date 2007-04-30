@@ -53,15 +53,12 @@ SUBDIR=		Devices		        \
 SRCS=		AbstractNetworkManager.cpp	\
 		Acceptor.cpp			\
 		Connector.cpp			\
-		DeviceServer.cpp		\
 		InputLogger.cpp			\
 		InputManager.cpp		\
 		Node.cpp			\
        		ProxyDepChecker.cpp		\
 		ProxyFactory.cpp		\
-		Reactor.cpp			\
-		RemoteInputManager.cpp		\
-		VirtualDevice.cpp
+		Reactor.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

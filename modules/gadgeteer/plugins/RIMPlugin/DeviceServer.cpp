@@ -24,13 +24,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/PluginConfig.h>
 #include <boost/bind.hpp>
 #include <gadget/Util/Debug.h>
 #include <gadget/Node.h>
-#include <gadget/DeviceServer.h>
+#include <plugins/RIMPlugin/DeviceServer.h>
 
-namespace gadget
+namespace cluster
 {
    DeviceServer::DeviceServer(const std::string& name, gadget::Input* device,
                               const vpr::GUID& plugin_guid)
@@ -192,4 +192,4 @@ namespace gadget
          }
       }
    }
-} // End of gadget namespace
+} // End of cluster namespace

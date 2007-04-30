@@ -24,16 +24,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef GADGET_DEVICE_SERVER_H
-#define GADGET_DEVICE_SERVER_H
+#ifndef _CLUSTER_DEVICE_SERVER_H
+#define _CLUSTER_DEVICE_SERVER_H
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/PluginConfig.h>
 #include <cluster/Packets/DataPacket.h>
 #include <gadget/Type/Input.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Thread/Thread.h>
 
-namespace gadget
+namespace cluster
 {
    class Node;
    
@@ -41,7 +41,7 @@ namespace gadget
     *
     * Device server class.
     */
-   class GADGET_CLASS_API DeviceServer
+   class GADGET_CLUSTER_PLUGIN_CLASS_API DeviceServer
    {
    public:
       /**
@@ -112,6 +112,6 @@ namespace gadget
       vpr::GUID                           mPluginGUID;
    };
 
-} // end namespace gadget
+} // end namespace cluster
 
-#endif
+#endif /*_CLUSTER_DEVICE_SERVER_H*/

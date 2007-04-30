@@ -37,7 +37,7 @@
 
 #include <cluster/ClusterPlugin.h>
 
-#include <gadget/RemoteInputManager.h>
+//#include <gadget/RemoteInputManager.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
 
@@ -71,7 +71,7 @@ public:
     * the lost node. And removing the node as a client
     * from all DeviceServers.
     */
-   void recoverFromLostNode(gadget::Node* lost_node);
+   virtual void recoverFromLostNode(gadget::Node* lost_node);
    
    /**
     * Handle a incoming packet.
@@ -123,11 +123,97 @@ public:
    bool configAdd(jccl::ConfigElementPtr element);
    bool configRemove(jccl::ConfigElementPtr element);
    bool configCanHandle(jccl::ConfigElementPtr element);
-   jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
+//   jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
    
 private:   
    vpr::GUID                    mHandlerGUID;
-   gadget::RemoteInputManager   mRIM;
+//   gadget::RemoteInputManager   mRIM;
+
+public:
+
+   /**
+    * Calls any action needed by this plugin before postFrame().
+    *
+    * This function was inherited from the Cluster Plugin abstract class.
+    */
+   void sendDataAndSync();
+
+   /** @name Methods used by InputManager */
+   //@{
+   gadget::Input* getVirtualDevice(const vpr::GUID& device_id);
+   gadget::Input* getVirtualDevice(const std::string& device_name);
+   //@}
+
+   /** @name Configuration methods */
+   //@{
+   /*
+   bool configAdd(jccl::ConfigElementPtr element);
+   bool configRemove(jccl::ConfigElementPtr element);
+   bool configCanHandle(jccl::ConfigElementPtr element);
+   */
+   //@}
+
+   /** @name Debug methods */
+   //@{
+   void debugDumpDeviceServers(int debug_level);
+   void debugDumpVirtualDevices(int debug_level);
+   //@}
+
+   bool addDevice(jccl::ConfigElementPtr elm);
+
+private:
+   /** @name VirtualDevice methods */
+   //@{
+   bool addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
+                         const std::string& device_base_type,
+                         const std::string& hostname);
+   void addVirtualDevice(VirtualDevice* device);
+   void removeVirtualDevice(const std::string& device_name);
+   void removeVirtualDevice(const vpr::GUID& device_id);
+   bool removeVirtualDevicesOnHost(const std::string& host_name);
+   //@}
+
+   /** @name DeviceServer methods */
+   //@{
+   bool addDeviceServer(const std::string& name, gadget::Input* device);
+   void addDeviceServer(DeviceServer* device);
+   void removeDeviceServer(const std::string& device_name);
+   void removeDeviceServer(const vpr::Uint16& device_id);
+   DeviceServer* getDeviceServer(const std::string& device_name);
+   //@}
+
+   /** @name Connection management */
+   //@{
+   bool removeDeviceClientsForHost(const std::string& host_name);
+   //@}
+
+   /** @name Configuration helpers */
+   //@{
+//   jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
+   bool createPendingConfigRemove(std::string device_name);
+   bool createPendingConfigRemoveAndAdd(std::string device_name);
+   //@}
+
+   /** @name Device request management */
+   //@{
+public:
+   void addPendingDeviceRequest(cluster::DeviceRequest* new_device_req, gadget::Node* node);
+   void sendDeviceRequests();
+private:
+   void removePendingDeviceRequest(std::string device_name);
+   vpr::Uint16 getNumberPendingDeviceRequests();
+   //@}
+
+protected:
+   std::map<cluster::DeviceRequest*,
+            gadget::Node*>               mPendingDeviceRequests;     /**< UserData Request list. */
+   vpr::Mutex                           mPendingDeviceRequestsLock; /**< Lock on UserData Request list.*/
+
+   std::map<vpr::GUID, VirtualDevice*>  mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
+   vpr::Mutex                           mVirtualDevicesLock; /**< Lock on Virtual Device list.*/
+
+   std::vector<DeviceServer*>           mDeviceServers;      /**< List of Devices that should act as servers to remote Nodes.*/
+   vpr::Mutex                           mDeviceServersLock;  /**< Lock on Device Server list.*/
 };
 
 } // end namespace gadget

@@ -24,11 +24,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
-#include <gadget/VirtualDevice.h>
+#include <cluster/PluginConfig.h>
+#include <plugins/RIMPlugin/VirtualDevice.h>
 
-
-namespace gadget
+namespace cluster
 {
    VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& base_type, 
                                 const std::string& hostname, gadget::Input* device)
@@ -64,4 +63,4 @@ namespace gadget
       vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) << "BaseType: " << mBaseType << std::endl << vprDEBUG_FLUSH;
    }
-} // End of gadget namespace
+} // End of cluster namespace
