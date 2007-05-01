@@ -71,6 +71,8 @@
 #include <boost/bind/apply.hpp>
 
 
+namespace po = boost::program_options;
+
 namespace
 {
 
@@ -155,7 +157,7 @@ bool Kernel::init(int& argc, char* argv[])
    return init(vm);
 }
 
-bool Kernel::init(const po::variables_map vm)
+bool Kernel::init(const po::variables_map& vm)
 {
    bool cluster_master = vm["vrjmaster"].as<bool>();
    bool cluster_slave = vm["vrjslave"].as<bool>();

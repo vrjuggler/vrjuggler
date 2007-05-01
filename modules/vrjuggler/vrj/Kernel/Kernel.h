@@ -41,8 +41,6 @@
 
 #include <vrj/Kernel/UserPtr.h>
 
-namespace po = boost::program_options;
-
 
 namespace gadget
 {
@@ -111,7 +109,7 @@ public:
     *
     * @since 2.3
     */
-   //po::options_description& getOptionsDesc();
+   //boost::program_options::options_description& getOptionsDesc();
 
    /**
     * Parse command line arguments.
@@ -125,7 +123,7 @@ public:
     *
     * @since 2.3
     */
-   bool init(const po::variables_map vm);
+   bool init(const boost::program_options::variables_map& vm);
 
    /** @name Kernel Control Loop Functions */
    //@{
