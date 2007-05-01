@@ -227,11 +227,6 @@ public:
    void configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type);
    void mergeConfigurations(jccl::Configuration* dst, jccl::Configuration* src, vpr::Uint16 type);
 
-   /**
-    * Get a pointer to the ConfigElement with the given name.
-    */
-   jccl::ConfigElementPtr getConfigElementPointer( const std::string& name );
-
    /*
    Truth table for ClusterManager
 
