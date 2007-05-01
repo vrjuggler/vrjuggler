@@ -100,7 +100,7 @@ public:
     * Returns a list of the current displays.
     * @note DO NOT EDIT THE DISPLAYS
     */
-   const std::vector<vrj::DisplayPtr>& getActiveDisplays()
+   const std::vector<vrj::DisplayPtr>& getActiveDisplays() const
    {
       return mActiveDisplays;
    }
@@ -109,7 +109,7 @@ public:
     * Returns list of inactive displays.
     * @note DO NOT EDIT THE DISPLAYS
     */
-   const std::vector<vrj::DisplayPtr>& getInActiveDisplays()
+   const std::vector<vrj::DisplayPtr>& getInActiveDisplays() const
    {
       return mInactiveDisplays;
    }
@@ -118,7 +118,7 @@ public:
     * Returns list of all displays (inactive and active).
     * @note DO NOT EDIT THE DISPLAYS
     */
-   std::vector<vrj::DisplayPtr> getAllDisplays();
+   std::vector<vrj::DisplayPtr> getAllDisplays() const;
 
    jccl::ConfigElementPtr getDisplaySystemElement();
 

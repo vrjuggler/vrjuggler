@@ -75,6 +75,7 @@ void Projection::config(jccl::ConfigElementPtr element)
 void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
                                           gmtl::Vec3f& ur, gmtl::Vec3f& lr,
                                           gmtl::Vec3f& ul, gmtl::Vec3f& ll)
+   const
 {
    gmtl::Matrix44f view_mat_inv;
    gmtl::invert(view_mat_inv, mViewMat);

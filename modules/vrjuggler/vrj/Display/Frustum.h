@@ -68,7 +68,12 @@ public:
    void set(const float leftVal, const float rightVal, const float bottomVal,
             const float topVal, const float nearVal, const float farVal);
 
-   float& operator[](int elt)
+   float& operator[](const unsigned int elt)
+   {
+      return frust[elt];
+   }
+
+   const float& operator[](const unsigned int elt) const
    {
       return frust[elt];
    }

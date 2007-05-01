@@ -41,7 +41,7 @@ namespace vrj
 
 vprSingletonImp(DisplayManager);
 
-std::vector<DisplayPtr> DisplayManager::getAllDisplays()
+std::vector<DisplayPtr> DisplayManager::getAllDisplays() const
 {
    std::vector<DisplayPtr> ret_val;
    ret_val.insert(ret_val.end(), mActiveDisplays.begin(), mActiveDisplays.end());

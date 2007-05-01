@@ -41,12 +41,12 @@ vrj::UserPtr User::create()
    return vrj::UserPtr(new User());
 }
 
-int User::getId()
+int User::getId() const
 {
    return mUserId;
 }
 
-std::string User::getName()
+const std::string& User::getName() const
 {
    return mName;
 }
