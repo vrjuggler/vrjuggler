@@ -32,6 +32,8 @@
 #include <gadget/Type/PositionInterface.h>
 #include <vpr/Util/Interval.h>
 
+#include <vrj/Kernel/UserPtr.h>
+
 
 namespace vrj
 {
@@ -51,13 +53,16 @@ namespace vrj
  */
 class VJ_CLASS_API User
 {
-public:
+private:
    /** Constructs the user. */
    User()
       : mUserId(-1)
       , mName("")
       , mInterocularDist(0.0f)
    {;}
+
+public:
+   static vrj::UserPtr create();
 
    virtual ~User()
    {;}
@@ -104,7 +109,6 @@ private:
    gadget::PositionInterface mHead;            /**< The head positon. */
    float                     mInterocularDist; /**< Eye seperation */
 
-private:
    static int mNextUserId;     /**< the next user id to assign */
 
    User(const User&) {;}

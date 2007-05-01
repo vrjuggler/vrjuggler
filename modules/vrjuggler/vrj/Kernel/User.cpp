@@ -36,12 +36,20 @@ namespace vrj
 
 int User::mNextUserId = 0;
 
+vrj::UserPtr User::create()
+{
+   return vrj::UserPtr(new User());
+}
 
 int User::getId()
-{ return mUserId; }
+{
+   return mUserId;
+}
 
 std::string User::getName()
-{ return mName; }
+{
+   return mName;
+}
 
 bool User::config(jccl::ConfigElementPtr element)
 {
@@ -77,5 +85,4 @@ bool User::config(jccl::ConfigElementPtr element)
    return true;
 }
 
-
-};
+}

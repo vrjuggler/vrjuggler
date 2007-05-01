@@ -29,6 +29,7 @@
 
 #include <vrj/Draw/OGL/Config.h>
 
+#include <vrj/Kernel/UserPtr.h>
 #include <vrj/Draw/OGL/GlWindowPtr.h>
 
 
@@ -36,14 +37,12 @@ namespace vrj
 {
 
 // Declare the class that we need pointers too below
-class User;
 class Projection;
 class Viewport;
 
-
 /** \class GlUserData GlUserData.h vrj/Draw/OGL/GlUserData.h
  *
- * Holds data about gl users for draw process.
+ * Holds data about OpenGL users for draw process.
  *
  * This class holds interesting information that can be used in an OpenGL draw
  * callback to find information about the user.
@@ -56,20 +55,19 @@ class GlUserData
 {
 public:
    GlUserData()
-      : mUser(NULL)
-      , mProj(NULL)
+      : mProj(NULL)
       , mViewport(NULL)
       , mGlWindow()
    {
       /* Do nothing. */ ;
    }
 
-   User* getUser()
+   UserPtr getUser()
    {
       return mUser;
    }
 
-   void setUser(User* user)
+   void setUser(UserPtr user)
    {
       mUser = user;
    }
@@ -105,7 +103,7 @@ public:
    }
 
 protected:
-   User*        mUser;        /**< The current user we are rendering */
+   UserPtr      mUser;        /**< The current user we are rendering */
    Projection*  mProj;        /**< The current projection being used */
    Viewport*    mViewport;    /**< The current vrj viewport being used */
    GlWindowPtr  mGlWindow;    /**< The current GL window that we are rendering in. (basically the gl context) */

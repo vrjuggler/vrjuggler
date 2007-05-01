@@ -678,7 +678,7 @@ bool Kernel::addUser(jccl::ConfigElementPtr element)
 {
    vprASSERT(element->getID() == "user");
 
-   User* new_user = new User;
+   UserPtr new_user = User::create();
    bool success = new_user->config(element);
 
    if(!success)
@@ -686,7 +686,6 @@ bool Kernel::addUser(jccl::ConfigElementPtr element)
       vprDEBUG(vrjDBG_KERNEL, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:") << " Failed to add new User: "
          << element->getName() << std::endl << vprDEBUG_FLUSH;
-      delete new_user;
    }
    else
    {
@@ -704,7 +703,7 @@ bool Kernel::removeUser(jccl::ConfigElementPtr element)
    vprASSERT(element->getID() == "user");
    
    std::string user_name = element->getName();
-   vrj::User* user = getUser(user_name);
+   vrj::UserPtr user = getUser(user_name);
 
    if (NULL != user)
    {
@@ -820,7 +819,7 @@ gadget::InputManager* Kernel::getInputManager()
    return mInputManager;
 }
 
-User* Kernel::getUser(const std::string& userName)
+UserPtr Kernel::getUser(const std::string& userName)
 {
    for(unsigned int i = 0; i < mUsers.size(); ++i)
    {
@@ -830,7 +829,7 @@ User* Kernel::getUser(const std::string& userName)
       }
    }
 
-   return NULL;
+   return UserPtr();
 }
 
 void Kernel::handleSignal(const int signum)
@@ -986,11 +985,6 @@ Kernel::~Kernel()
    {
       delete mControlThread;
       mControlThread = NULL;
-   }
-
-   for ( std::vector<vrj::User*>::iterator i = mUsers.begin(); i != mUsers.end(); ++i )
-   {
-      delete *i;
    }
 
    mUsers.clear();

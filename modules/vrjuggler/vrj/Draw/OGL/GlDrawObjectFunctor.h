@@ -29,11 +29,11 @@
 
 #include <vrj/Draw/OGL/Config.h>
 
+#include <vrj/Kernel/UserPtr.h>
+
 
 namespace vrj
 {
-
-class User;
 
 /** \class GlDrawObjectFunctor GlDrawObjectFunctor.h vrj/Draw/OGL/GlDrawObjectFunctor.h
  *
@@ -53,7 +53,7 @@ public:
     * Called when the object should be drawn.
     * @pre OpenGL context is set and ready to go.
     */
-   virtual void draw(vrj::User* user) = 0;
+   virtual void draw(vrj::UserPtr user) = 0;
 
    virtual ~GlDrawObjectFunctor()
    {

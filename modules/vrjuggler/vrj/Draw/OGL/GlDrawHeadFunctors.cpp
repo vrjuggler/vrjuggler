@@ -56,7 +56,7 @@ void GlDrawEllipsoidHeadFunctor::contextInit()
    }
 }
 
-void GlDrawEllipsoidHeadFunctor::draw(vrj::User* user)
+void GlDrawEllipsoidHeadFunctor::draw(vrj::UserPtr user)
 {
    // All units are in meters.
    const float head_height(0.254f);      // 10 inches

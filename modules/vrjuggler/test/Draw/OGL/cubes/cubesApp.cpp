@@ -35,9 +35,10 @@
 
 #include <vrj/Draw/OGL/GlUserData.h>
 #include <vrj/Display/Viewport.h>
+#include <vrj/Kernel/User.h>
+#include <vpr/Perf/ProfileManager.h>
 
 #include <cubesApp.h>
-#include <vpr/Perf/ProfileManager.h>
 
 
 // ----------------------------------------------------------------------------
@@ -184,7 +185,8 @@ void cubesApp::init()
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "---------- cubes:App:init() ---------------"
                         << std::endl << vprDEBUG_FLUSH;
-   std::vector<vrj::User*> users = mKernel->getUsers(); // Request user list
+   // Request user list
+   const std::vector<vrj::UserPtr>& users = mKernel->getUsers();
    size_t num_users = users.size();
    vprASSERT(num_users > 0);      // Make sure that we actually have users defined
 
@@ -301,7 +303,7 @@ void cubesApp::contextClose()
 //       display list index).  As such, performance of this method will suffer
 //       on multipipe configurations.
 //       DO NOT IMITATE THIS CODE.
-void cubesApp::myDraw(vrj::User* user)
+void cubesApp::myDraw(vrj::UserPtr user)
 {
    VPR_PROFILE_GUARD_HISTORY("cubesApp::myDraw", 10);
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;

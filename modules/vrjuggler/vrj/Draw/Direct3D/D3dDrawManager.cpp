@@ -219,7 +219,7 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
    if (win->hasDirtyContext())
    {
       // Have dirty context
-      //mGlDrawManager->currentUserData()->setUser(NULL);         // Set user data
+      //mGlDrawManager->currentUserData()->setUser(UserPtr());    // Set user data
       //mGlDrawManager->currentUserData()->setProjection(NULL);
       //mGlDrawManager->currentUserData()->setViewport(NULL);     // Set vp data
       //mGlDrawManager->currentUserData()->setGlWindow(win);      // Set the gl window

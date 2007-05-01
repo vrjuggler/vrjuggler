@@ -31,6 +31,7 @@
 #include <vrj/vrjConfig.h>
 #include <vector>
 #include <boost/function.hpp>
+#include <boost/program_options.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/Util/Singleton.h>
@@ -38,8 +39,10 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <gadget/Type/DigitalInterface.h>
 
-#include <boost/program_options.hpp>
+#include <vrj/Kernel/UserPtr.h>
+
 namespace po = boost::program_options;
+
 
 namespace gadget
 {
@@ -63,7 +66,6 @@ class DisplayManager;
 class PerformanceMediator;
 class DrawManager;
 class SoundManager;
-class User;
 class App;
 class CocoaWrapper;
 
@@ -407,10 +409,10 @@ public:
     *
     * @return NULL if not found.
     */
-   vrj::User* getUser(const std::string& userName);
+   vrj::UserPtr getUser(const std::string& userName);
 
    /** Returns a list of the users. */
-   std::vector<vrj::User*> getUsers()
+   const std::vector<vrj::UserPtr>& getUsers() const
    {
       return mUsers;
    }
@@ -464,7 +466,7 @@ protected:
 
    /** @name Multi-user information */
    //@{
-   std::vector<vrj::User*>   mUsers;    /**< A list of user objects in system */
+   std::vector<vrj::UserPtr> mUsers;    /**< A list of user objects in system */
    //@}
 
    /** Control "signals" from input interfaces. */

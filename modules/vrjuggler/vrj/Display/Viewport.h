@@ -32,14 +32,15 @@
 #include <string>
 #include <gmtl/Vec.h>
 #include <jccl/Config/ConfigElementPtr.h>
+
 #include <vrj/Display/DisplayPtr.h>
+#include <vrj/Kernel/UserPtr.h>
 
 
 namespace vrj
 {
 
 class Projection;
-class User;
 
 /** \class Viewport Viewport.h vrj/Display/Viewport.h
  *
@@ -52,8 +53,7 @@ class VJ_CLASS_API Viewport
 {
 public:
    Viewport()
-      : mUser(NULL)
-      , mType(Viewport::UNDEFINED)
+      : mType(Viewport::UNDEFINED)
       , mActive(false)
       , mXorigin(-1.0f)
       , mYorigin(-1.0f)
@@ -209,7 +209,7 @@ public:
    }
 
    /** Gets the user associated with this viewport. */
-   User* getUser()
+   UserPtr getUser() const
    {
       return mUser;
    }
@@ -245,7 +245,7 @@ public:
 
 protected:
    std::string       mName;               /**< The name of the viewport being displayed */
-   User*             mUser;               /**< The user being rendered by this window */
+   UserPtr           mUser;               /**< The user being rendered by this window */
    Viewport::Type    mType;               /**< The type of display */
    Viewport::View    mView;               /**< Which buffer(s) to display (left, right, stereo) */
    bool              mActive;             /**< Is this viewport active */

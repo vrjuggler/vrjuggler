@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-30-2007 patrick     Handle vrj::User instances as shared pointers.
+                        NEW VERSION: 2.3.2
 Apr-29-2007 patrick     Renamed the x11_pipes property of the display_system
                         config element to pipes.
                         NEW VERSION: 2.3.1

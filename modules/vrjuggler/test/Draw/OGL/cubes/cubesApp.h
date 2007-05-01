@@ -52,7 +52,7 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-#include <vrj/Kernel/User.h>
+#include <vrj/Kernel/UserPtr.h>
 
 #include <vpr/Util/DurationStatCollector.h>
 #include <vpr/Perf/ProfileManager.h>
@@ -98,7 +98,7 @@ public:
    // Takes the string names of the devices to use
    // NOTE: This means that we cannot construct a user until the input manager is loaded
    //       Ex. The Init function
-   UserData(vrj::User* user, std::string wandName, std::string incButton,
+   UserData(vrj::UserPtr user, std::string wandName, std::string incButton,
             std::string decButton, std::string stopButton,
             std::string toggleButton)
       : mShapeSetting(CUBE)
@@ -139,7 +139,7 @@ public:
    float                mCurVelocity;  // The current velocity
    gmtl::Matrix44f      mNavMatrix;    // Matrix for navigation in the application
 
-   vrj::User*           mUser;         // The user we hold data for
+   vrj::UserPtr         mUser;         // The user we hold data for
 
    ShapeSetting mShapeSetting; // Flag identifying the shape to render
 };
@@ -287,7 +287,7 @@ private:
    //----------------------------------------------
    //  Draw the scene.  A bunch of boxes of differing color and stuff
    //----------------------------------------------
-   void myDraw(vrj::User* user);
+   void myDraw(vrj::UserPtr user);
    void initGLState();
 
    void drawCube()

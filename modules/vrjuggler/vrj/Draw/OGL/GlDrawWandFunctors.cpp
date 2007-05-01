@@ -52,7 +52,7 @@ GlDrawConeWandFunctor::~GlDrawConeWandFunctor()
    }
 }
 
-void GlDrawConeWandFunctor::draw(vrj::User* user)
+void GlDrawConeWandFunctor::draw(vrj::UserPtr user)
 {
    boost::ignore_unused_variable_warning(user);
 
@@ -67,7 +67,7 @@ void GlDrawConeWandFunctor::draw(vrj::User* user)
    gluCylinder(mQuadObj, base, 0.0, height, slices, stacks);
 }
 
-void GlDrawRightAngleWandFunctor::draw(vrj::User* user)
+void GlDrawRightAngleWandFunctor::draw(vrj::UserPtr user)
 {
    boost::ignore_unused_variable_warning(user);
 
