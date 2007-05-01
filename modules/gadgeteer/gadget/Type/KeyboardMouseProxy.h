@@ -33,6 +33,7 @@
 //#include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
 #include <gadget/Type/KeyboardMouse/Event.h>
 #include <gadget/Type/KeyboardMouse/EventPtr.h>
+#include <gadget/Type/KeyboardMouseProxyPtr.h>
 
 namespace gadget
 {

@@ -36,8 +36,7 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Util/Debug.h>
 #include <vpr/Util/Interval.h>
-
-#include <boost/shared_ptr.hpp>
+#include <gadget/Type/ProxyPtr.h>
 
 namespace gadget
 {

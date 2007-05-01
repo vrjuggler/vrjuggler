@@ -35,7 +35,7 @@ namespace gadget
 {
 
 BaseDeviceInterface::BaseDeviceInterface()
-   : mProxyPtr(NULL)
+   : mProxyPtr()
    , mProxyName("UnInitialized")
    , mNameSet(false)
 {
@@ -70,7 +70,7 @@ void BaseDeviceInterface::init(const std::string& proxyName)
 // don't try to refresh it.
 void BaseDeviceInterface::refresh()
 {
-   Proxy* prev_proxy_ptr = mProxyPtr;    // Keep track of previous value
+   ProxyPtr prev_proxy_ptr = mProxyPtr;    // Keep track of previous value
 
    // If it is not initialized, then don't try
    if ( ! mNameSet )

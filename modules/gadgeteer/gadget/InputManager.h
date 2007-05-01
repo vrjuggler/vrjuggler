@@ -40,13 +40,13 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <gadget/InputLoggerPtr.h>
 #include <gadget/Type/InputPtr.h>
+#include <gadget/Type/ProxyPtr.h>
 
 
 namespace gadget
 {
 
 // Proxies
-class Proxy;
 class DeviceFactory;
 
 /** \class InputManager InputManager.h gadget/InputManager.h
@@ -244,7 +244,7 @@ public:
     *
     * @return true if the proxy was added correctly.
     */
-   bool addProxy(Proxy* proxy);
+   bool addProxy(ProxyPtr proxy);
 
    /**
     * Gets a proxy having the given name (or alias).
@@ -253,7 +253,7 @@ public:
     *
     * @return NULL if the proxy was not found.
     */
-   Proxy* getProxy(const std::string& proxyName);
+   ProxyPtr getProxy(const std::string& proxyName);
 
    /**
     * Refreshes all the proxies to have them update the device at which they
@@ -276,10 +276,11 @@ public:
 protected:
    std::vector<vpr::LibraryPtr> mLoadedDrivers;
 
-   typedef std::map<std::string,InputPtr> tDevTableType;
+   typedef std::map<std::string, InputPtr> tDevTableType;
+   typedef std::map<std::string, ProxyPtr> proxy_map_t;
 
-   tDevTableType                        mDevTable;
-   std::map<std::string, Proxy*>        mProxyTable;    /**< list of proxies in the system */
+   tDevTableType        mDevTable;
+   proxy_map_t          mProxyTable;    /**< list of proxies in the system */
 
    /**
     * List of alias names for proxies.

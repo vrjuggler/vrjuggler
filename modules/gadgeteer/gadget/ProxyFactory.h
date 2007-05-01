@@ -67,7 +67,7 @@ public:
     * Creates the proxy.
     * @return NULL if the proxy failed creation or configuration.
     */
-   virtual Proxy* createProxy(jccl::ConfigElementPtr element) const = 0;
+   virtual ProxyPtr createProxy(jccl::ConfigElementPtr element) const = 0;
 
    /** Gets the string definition of the type of element we can create. */
    virtual std::string getElementType() const = 0;
@@ -93,9 +93,10 @@ public:
     * Creates the proxy.
     * @return NULL if proxy failed creation or configuration.
     */
-   Proxy* createProxy(jccl::ConfigElementPtr element) const
+   ProxyPtr createProxy(jccl::ConfigElementPtr element) const
    {
-      PROXY* new_proxy = new PROXY;             // Create new proxy
+      // Create new proxy
+      boost::shared_ptr<PROXY> new_proxy = boost::shared_ptr<PROXY>(new PROXY);
       bool success = new_proxy->config(element);  // Attempt to configure it
                                                   // config calls inputmgr registrator
 
@@ -105,8 +106,7 @@ public:
       }
       else                 // Failed
       {
-  //XXX//       delete new_proxy;
-         return NULL;
+         return ProxyPtr();
       }
    }
 
@@ -175,7 +175,7 @@ public:
     * @return NULL is returned if the proxy failed to load.
     *         Otherwise, a pointer to the loaded proxy is returned.
     */
-   Proxy* loadProxy(jccl::ConfigElementPtr element);
+   ProxyPtr loadProxy(jccl::ConfigElementPtr element);
 
 private:
 

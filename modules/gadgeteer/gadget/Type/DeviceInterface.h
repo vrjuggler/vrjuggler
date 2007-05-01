@@ -30,21 +30,12 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 #include <gadget/Util/Debug.h>
+#include <gadget/Type/ProxyPtr.h>
 
 #include <boost/concept_check.hpp>
 
 namespace gadget
 {
-
-class Proxy;
-class AnalogProxy;
-class DigitalProxy;
-class GestureProxy;
-class GloveProxy;
-class KeyboardMouseProxy;
-class PositionProxy;
-class StringProxy;
-class CommandProxy;
 
 /** \class BaseDeviceInterface DeviceInterface.h gadget/Type/DeviceInterface.h
  *
@@ -92,11 +83,11 @@ public:
    /** Identifies whether this device interface is connected to a proxy. */
    bool isConnected() const
    {
-      return (NULL != mProxyPtr);
+      return (NULL != mProxyPtr.get());
    }
 
 protected:
-   Proxy*      mProxyPtr;   /**<  Ptr to the proxy */
+   ProxyPtr    mProxyPtr;   /**<  Ptr to the proxy */
    std::string mProxyName;  /**< The name of the proxy (or alias) we are looking at */
    bool        mNameSet;    /**< Has the user set a name?? */
 
@@ -135,13 +126,15 @@ public:
    DeviceInterface(const DeviceInterface& other)
       : BaseDeviceInterface(other)
    {
-      if (other.mTypeSpecificProxy != NULL)
+      mDummyProxy = boost::shared_ptr<PROXY_TYPE>(new PROXY_TYPE);
+
+      if (NULL != other.mTypeSpecificProxy.get())
       {
          mTypeSpecificProxy = other.mTypeSpecificProxy;
       }
       else
       {
-         mTypeSpecificProxy = &mDummyProxy;
+         mTypeSpecificProxy = mDummyProxy;
       }
    }
 
@@ -149,7 +142,8 @@ public:
    DeviceInterface()
       : BaseDeviceInterface()
    {
-      mTypeSpecificProxy = &mDummyProxy;
+      mDummyProxy = boost::shared_ptr<PROXY_TYPE>(new PROXY_TYPE);
+      mTypeSpecificProxy = mDummyProxy;
    }
 
    /**
@@ -166,7 +160,7 @@ public:
     *
     * @see init()
     */
-   PROXY_TYPE* operator->()
+   boost::shared_ptr<PROXY_TYPE> operator->()
    {
       return mTypeSpecificProxy;
    }
@@ -185,7 +179,7 @@ public:
    //@}
 
    /** Returns the underlying proxy to which we are connected. */
-   PROXY_TYPE* getProxy()
+   boost::shared_ptr<PROXY_TYPE> getProxy()
    {
       return mTypeSpecificProxy;
    }
@@ -205,10 +199,10 @@ public:
    virtual void refresh()
    {
       BaseDeviceInterface::refresh();
-      if(mProxyPtr != NULL)
+      if(NULL!= mProxyPtr.get())
       {
-         mTypeSpecificProxy = dynamic_cast<PROXY_TYPE*>(mProxyPtr);
-         if(NULL == mTypeSpecificProxy)
+         mTypeSpecificProxy = boost::dynamic_pointer_cast<PROXY_TYPE>(mProxyPtr);
+         if(NULL == mTypeSpecificProxy.get())
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "[gadget::DeviceInterface::refresh()] Tried to point at "
@@ -219,27 +213,27 @@ public:
       }
 
       // If either one of the proxy pointers are NULL, then use a dummy
-      if((NULL == mProxyPtr) || (NULL == mTypeSpecificProxy))
+      if((NULL == mProxyPtr.get()) || (NULL == mTypeSpecificProxy.get()))
       {
-         mTypeSpecificProxy = &mDummyProxy;
+         mTypeSpecificProxy = mDummyProxy;
       }
    }
 
 private:
-   PROXY_TYPE*    mTypeSpecificProxy;   /**< The proxy that is being wrapped */
-   PROXY_TYPE     mDummyProxy;
+   boost::shared_ptr<PROXY_TYPE>        mTypeSpecificProxy;   /**< The proxy that is being wrapped */
+   boost::shared_ptr<PROXY_TYPE>        mDummyProxy;
 };
 
 
 // --- Typedefs to the old types --- //
-typedef DeviceInterface<AnalogProxy>      AnalogInterface;
-typedef DeviceInterface<DigitalProxy>     DigitalInterface;
-typedef DeviceInterface<GestureProxy>     GestureInterface;
-typedef DeviceInterface<GloveProxy>       GloveInterface;
-typedef DeviceInterface<KeyboardMouseProxy> KeyboardMouseInterface;
-typedef DeviceInterface<PositionProxy>    PositionInterface;
-typedef DeviceInterface<CommandProxy>     CommandInterface;
-typedef DeviceInterface<StringProxy>      StringInterface;
+typedef DeviceInterface<class AnalogProxy>      AnalogInterface;
+typedef DeviceInterface<class DigitalProxy>     DigitalInterface;
+typedef DeviceInterface<class GestureProxy>     GestureInterface;
+typedef DeviceInterface<class GloveProxy>       GloveInterface;
+typedef DeviceInterface<class KeyboardMouseProxy> KeyboardMouseInterface;
+typedef DeviceInterface<class PositionProxy>    PositionInterface;
+typedef DeviceInterface<class CommandProxy>     CommandInterface;
+typedef DeviceInterface<class StringProxy>      StringInterface;
 
 } // end namespace
 

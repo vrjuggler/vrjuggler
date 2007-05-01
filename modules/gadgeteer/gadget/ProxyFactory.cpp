@@ -113,20 +113,20 @@ bool ProxyFactory::recognizeProxy(jccl::ConfigElementPtr element)
 /**
  * Loads the specified proxy.
  */
-Proxy* ProxyFactory::loadProxy(jccl::ConfigElementPtr element)
+ProxyPtr ProxyFactory::loadProxy(jccl::ConfigElementPtr element)
 {
    vprASSERT(recognizeProxy(element));
 
    int index = findConstructor(element);
 
-   Proxy* new_proxy;
    boost::shared_ptr<ProxyConstructorBase> constructor = mConstructors[index];
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "[gadget::ProxyFactory::loadProxy] Loading proxy: "
       << element->getID() << "  with: "
       << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
-   new_proxy = constructor->createProxy(element);
+
+   ProxyPtr new_proxy = constructor->createProxy(element);
    return new_proxy;
 }
 

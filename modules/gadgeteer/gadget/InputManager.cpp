@@ -96,14 +96,6 @@ void InputManager::shutdown()
    }
 
    mDevTable.clear();
-
-   // Delete all the proxies
-   typedef std::map<std::string, Proxy*>::iterator proxy_iter_t;
-   for ( proxy_iter_t j = mProxyTable.begin(); j != mProxyTable.end(); ++j )
-   {
-      delete (*j).second;
-   }
-
    mProxyTable.clear();
 }
 
@@ -436,14 +428,14 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("gadget::InputManager::configureProxy: Named: ") + proxy_name + std::string("\n"),
                                  std::string("done configuring proxy\n"));
 
-   Proxy* new_proxy;
+   ProxyPtr new_proxy;
 
    // Tell the factory to load the proxy
    // NOTE: The config for the proxy registers it with the input manager
    new_proxy = ProxyFactory::instance()->loadProxy(element);
 
    // Check for success
-   if(NULL == new_proxy)
+   if(NULL == new_proxy.get())
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
@@ -494,9 +486,7 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
    }
 
    out << "\nProxy List:\n";
-   for (std::map<std::string, Proxy*>::iterator i_p = iMgr.mProxyTable.begin();
-        i_p != iMgr.mProxyTable.end();
-        ++i_p)
+   for (InputManager::proxy_map_t::iterator i_p = iMgr.mProxyTable.begin(); i_p != iMgr.mProxyTable.end(); ++i_p)
    {
       out << "    '" << (*i_p).second->getName() << "' refers to ";
       InputPtr proxied_input_dev = (*i_p).second->getProxiedInputDevice();
@@ -554,8 +544,7 @@ bool InputManager::addRemoteDevice(InputPtr devPtr, const std::string& device_na
 
 void InputManager::resetAllDevicesAndProxies()
 {
-   typedef std::map<std::string, Proxy*>::iterator iter_type;
-   for ( iter_type i_p = mProxyTable.begin(); i_p != mProxyTable.end(); ++i_p )
+   for ( proxy_map_t::iterator i_p = mProxyTable.begin(); i_p != mProxyTable.end(); ++i_p )
    {
       (*i_p).second->resetData();
    }
@@ -575,9 +564,7 @@ void InputManager::resetAllDevicesAndProxies()
 void InputManager::updateAllProxies()
 {
    // Update proxies MIGHT NOT NEED
-   for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
-        i_p != mProxyTable.end();
-        ++i_p)
+   for (proxy_map_t::iterator i_p = mProxyTable.begin(); i_p != mProxyTable.end(); ++i_p)
    {
       (*i_p).second->updateDataIfNeeded();
    }
@@ -668,9 +655,7 @@ bool InputManager::removeDevice(const std::string& instName)
    // Stupefy any proxies connected to device
    // NOTE: Could just remove it and then refresh all, but this is a little safer
    //       since we explicitly stupefy the one that we don't want anymore
-   for ( std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
-        i_p != mProxyTable.end();
-        ++i_p )
+   for ( proxy_map_t::iterator i_p = mProxyTable.begin(); i_p != mProxyTable.end(); ++i_p )
    {
       if((*i_p).second->getProxiedInputDevice() == dev_ptr)
       {
@@ -1027,7 +1012,7 @@ void InputManager::addProxyAlias(const std::string& aliasName,
 /**
  * Adds a proxy to the proxy table.
  */
-bool InputManager::addProxy(Proxy* proxy)
+bool InputManager::addProxy(ProxyPtr proxy)
 {
    std::string proxy_name = proxy->getName();
    vprASSERT(!proxy_name.empty() && "Tried to add proxy with empty name");
@@ -1048,7 +1033,7 @@ bool InputManager::addProxy(Proxy* proxy)
 /**
  * Gets index to the proxy/alias named by str.
  */
-Proxy* InputManager::getProxy(const std::string& proxyName)
+ProxyPtr InputManager::getProxy(const std::string& proxyName)
 {
    // Is it in table
    if(mProxyTable.end() != mProxyTable.find(proxyName))     // proxy name
@@ -1065,7 +1050,7 @@ Proxy* InputManager::getProxy(const std::string& proxyName)
       }
    }
 
-   return false;
+   return ProxyPtr();
 }
 
 /**
@@ -1077,9 +1062,7 @@ void InputManager::refreshAllProxies()
       << "gadget::InputManager::refreshAppProxies: Refreshing all...\n"
       << vprDEBUG_FLUSH;
 
-   for ( std::map<std::string, Proxy*>::iterator i = mProxyTable.begin();
-         i != mProxyTable.end();
-         ++i )
+   for ( proxy_map_t::iterator i = mProxyTable.begin(); i != mProxyTable.end(); ++i )
    {
       (*i).second->refresh();
    }

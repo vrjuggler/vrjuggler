@@ -91,14 +91,13 @@ public:
 
 private:
    std::string                         mName;   /**< DeviceServer name */
+   vpr::GUID                           mId;                    /**< GUID for shared device */
+   vpr::GUID                           mPluginGUID;
    
    gadget::InputPtr                    mDevice;
    cluster::DataPacket*                mDataPacket;
    vpr::BufferObjectWriter*            mBufferObjectWriter;
    std::vector<vpr::Uint8>*            mDeviceData;
-
-   vpr::GUID                           mId;                    /**< GUID for shared device */
-   vpr::GUID                           mPluginGUID;
 };
 
 } // end namespace cluster

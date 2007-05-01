@@ -31,6 +31,7 @@
 #include <vpr/Util/Assert.h>
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/Command.h>
+#include <gadget/Type/CommandProxyPtr.h>
 
 namespace gadget
 {

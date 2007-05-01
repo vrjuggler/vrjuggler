@@ -30,6 +30,7 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Proxy.h>
+#include <gadget/Type/DigitalProxyPtr.h>
 #include <vpr/Util/Assert.h>
 
 namespace gadget

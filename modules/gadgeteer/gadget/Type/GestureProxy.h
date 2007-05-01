@@ -32,6 +32,7 @@
 
 #include <gadget/Type/Gesture.h>
 #include <gadget/Type/Proxy.h>
+#include <gadget/Type/GestureProxyPtr.h>
 
 namespace gadget
 {

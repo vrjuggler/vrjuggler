@@ -42,6 +42,7 @@
 #include <gadget/Filter/Position/PositionFilter.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 #include <gadget/Type/PositionData.h>
+#include <gadget/Type/PositionProxyPtr.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>

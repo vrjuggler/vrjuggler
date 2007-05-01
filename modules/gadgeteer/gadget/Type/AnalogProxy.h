@@ -31,6 +31,7 @@
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/AnalogData.h>
+#include <gadget/Type/AnalogProxyPtr.h>
 
 namespace gadget
 {

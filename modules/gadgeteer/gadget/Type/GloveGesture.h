@@ -48,7 +48,7 @@ class GloveGesture : public Gesture
 public:
    GloveGesture()
    {
-      mGloveProxy = NULL;
+      mGloveProxy = GloveProxyPtr();
    }
 
    virtual bool config(jccl::ConfigElementPtr e)
@@ -109,9 +109,9 @@ public:
 
 protected:
    // mGestureNames and mGestureExamples MUST always be same size
-   std::vector<std::string> mGestureNames;    /**<  List of all gesture names */
-   std::vector<GloveData> mGestureExamples;   /**< Examples of all gestures */
-   GloveProxy*            mGloveProxy;        /**< Proxy to the glove */
+   std::vector<std::string>     mGestureNames;    /**<  List of all gesture names */
+   std::vector<GloveData>       mGestureExamples;   /**< Examples of all gestures */
+   GloveProxyPtr                mGloveProxy;        /**< Proxy to the glove */
 };
 
 } // End of gadget namespace

@@ -38,6 +38,7 @@
 
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Proxy.h>
+#include <gadget/Type/GloveProxyPtr.h>
 
 namespace gadget
 {
