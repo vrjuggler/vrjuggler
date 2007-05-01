@@ -33,7 +33,7 @@
 #include <vpr/Util/Interval.h>
 
 #include <vrj/Kernel/UserPtr.h>
-
+#include <gadget/Type/PositionProxyPtr.h>
 
 namespace vrj
 {
@@ -86,7 +86,7 @@ public:
     */
    virtual bool config(jccl::ConfigElementPtr element);
 
-   gadget::PositionProxy* getHeadPosProxy()
+   gadget::PositionProxyPtr getHeadPosProxy()
    {
       return mHead.getProxy();
    }
