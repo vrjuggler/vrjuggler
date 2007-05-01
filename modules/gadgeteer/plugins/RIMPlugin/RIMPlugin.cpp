@@ -291,8 +291,6 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
                                  const std::string& device_base_type,
                                  const std::string& hostname)
 {
-   vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
-
    vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
    << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
    << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
@@ -307,8 +305,6 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
 
 gadget::Input* RIMPlugin::getVirtualDevice(const vpr::GUID& deviceId)
 {
-   vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
-
    for ( virtual_device_map_t::iterator i = mVirtualDevices.begin();
          i != mVirtualDevices.end() ; i++ )
    {
@@ -322,8 +318,6 @@ gadget::Input* RIMPlugin::getVirtualDevice(const vpr::GUID& deviceId)
 
 gadget::Input* RIMPlugin::getVirtualDevice(const std::string& deviceName)
 {
-   vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
-
    for ( virtual_device_map_t::iterator i = mVirtualDevices.begin();
          i != mVirtualDevices.end() ; i++ )
    {
@@ -339,8 +333,6 @@ bool RIMPlugin::removeVirtualDevicesOnHost(const std::string& hostName)
 {
    // - Get a list of all remote devices on the given host
    // - Remove them from the current configuration
-   vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
-
    for ( virtual_device_map_t::iterator i = mVirtualDevices.begin();
          i != mVirtualDevices.end(); i++ )
    {
@@ -355,8 +347,6 @@ bool RIMPlugin::removeVirtualDevicesOnHost(const std::string& hostName)
 
 void RIMPlugin::removeVirtualDevice(const vpr::GUID& device_id)
 {
-   vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
-
    for ( virtual_device_map_t::iterator i = mVirtualDevices.begin();
          i != mVirtualDevices.end() ; i++ )
    {
@@ -372,8 +362,6 @@ void RIMPlugin::removeVirtualDevice(const vpr::GUID& device_id)
 
 void RIMPlugin::removeVirtualDevice(const std::string& device_name)
 {
-   vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
-
    // Remove remote device from the InputManager
    gadget::InputManager::instance()->removeDevice(device_name);
 
@@ -391,8 +379,6 @@ void RIMPlugin::removeVirtualDevice(const std::string& device_name)
 
 void RIMPlugin::debugDumpVirtualDevices(int debug_level)
 {
-   vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
-
    vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
                                     std::string("-------------- Virtual Devices --------------\n"),
                                     std::string("---------------------------------------------\n"));
@@ -403,10 +389,8 @@ void RIMPlugin::debugDumpVirtualDevices(int debug_level)
 }
 
 bool RIMPlugin::addDeviceServer(const std::string& name,
-                                         gadget::Input* device)
+                                gadget::Input* device)
 {
-   vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-
    DeviceServerPtr temp_device_server =
       DeviceServerPtr(new DeviceServer(name, device, mHandlerGUID));
    mDeviceServers.push_back(temp_device_server);
@@ -414,16 +398,8 @@ bool RIMPlugin::addDeviceServer(const std::string& name,
    return true;
 }
 
-void RIMPlugin::addDeviceServer(DeviceServerPtr device)
-{
-   vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-   mDeviceServers.push_back(device);
-}
-
 DeviceServerPtr RIMPlugin::getDeviceServer(const std::string& deviceName)
 {
-   vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-
    DeviceNamePred pred(deviceName);
    device_server_list_t::iterator found = std::find_if(mDeviceServers.begin(), mDeviceServers.end(), pred);
 
@@ -436,16 +412,12 @@ DeviceServerPtr RIMPlugin::getDeviceServer(const std::string& deviceName)
 
 void RIMPlugin::removeDeviceServer(const std::string& deviceName)
 {
-   vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-
    DeviceNamePred pred(deviceName);
    std::remove_if(mDeviceServers.begin(), mDeviceServers.end(), pred);
 }
 
 void RIMPlugin::debugDumpDeviceServers(int debug_level)
 {
-   vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-
    vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
                                     std::string("-------------- Device Servers --------------\n"),
                                     std::string("---------------------------------------------\n"));

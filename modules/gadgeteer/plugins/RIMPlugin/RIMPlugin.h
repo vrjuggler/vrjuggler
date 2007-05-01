@@ -29,8 +29,6 @@
 
 #include <cluster/PluginConfig.h>
 
-#include <vpr/Util/Singleton.h>
-#include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Assert.h>
 
 #include <cluster/ClusterPlugin.h>
@@ -156,7 +154,6 @@ private:
    /** @name DeviceServer methods */
    //@{
    bool addDeviceServer(const std::string& name, gadget::Input* device);
-   void addDeviceServer(DeviceServerPtr device);
    void removeDeviceServer(const std::string& device_name);
    void removeDeviceServer(const vpr::Uint16& device_id);
    DeviceServerPtr getDeviceServer(const std::string& device_name);
@@ -172,11 +169,9 @@ protected:
 #endif
 
    virtual_device_map_t         mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
-   vpr::Mutex                   mVirtualDevicesLock; /**< Lock on Virtual Device list.*/
 
    typedef std::vector<DeviceServerPtr> device_server_list_t;
    device_server_list_t         mDeviceServers;      /**< List of Devices that should act as servers to remote Nodes.*/
-   vpr::Mutex                   mDeviceServersLock;  /**< Lock on Device Server list.*/
 };
 
 } // end namespace gadget

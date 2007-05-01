@@ -159,6 +159,7 @@ namespace cluster
       , mClusterElement()
       , mPreDrawCallCount(0)
       , mPostPostFrameCallCount(0)
+      , mClusterNetwork(NULL)
    {
       mClusterNetwork = new ClusterNetwork();
       mClusterNetwork->addHandler(this);
@@ -166,7 +167,15 @@ namespace cluster
 
    ClusterManager::~ClusterManager()
    {
+      mPlugins.clear();
+      mPluginMap.clear();
+
       disconnectFromConfigManager();
+      if (NULL != mClusterNetwork)
+      {
+         delete mClusterNetwork;
+         mClusterNetwork = NULL;
+      }
    }
 
    void ClusterManager::connectToConfigManager()
@@ -176,7 +185,7 @@ namespace cluster
       // Add the new cluster network as an element handler.
       // XXX: This may not be needed after restucture.
       cfg_mgr->addConfigElementHandler( mClusterNetwork );
-      jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
+      //jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
 
       if (!mConfigChangeConn.connected())
       {
@@ -190,8 +199,11 @@ namespace cluster
    void ClusterManager::disconnectFromConfigManager()
    {
       // XXX: This may not be needed after restucture.
-      jccl::ConfigManager::instance()->removeConfigElementHandler( mClusterNetwork );
-      jccl::DependencyManager::instance()->unregisterChecker(&mDepChecker);
+      if (NULL != mClusterNetwork)
+      {
+         jccl::ConfigManager::instance()->removeConfigElementHandler( mClusterNetwork );
+      }
+      //jccl::DependencyManager::instance()->unregisterChecker(&mDepChecker);
       mConfigChangeConn.disconnect();
    }
 

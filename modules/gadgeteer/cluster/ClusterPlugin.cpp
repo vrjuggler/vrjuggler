@@ -36,9 +36,7 @@ namespace cluster
    }
    
    ClusterPlugin::~ClusterPlugin()
-   {
-      ClusterManager::instance()->removePlugin(shared_from_this());
-   }
+   {;}
 
    void ClusterPlugin::setActive(bool active)
    {
