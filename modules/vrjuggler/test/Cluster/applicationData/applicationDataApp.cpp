@@ -35,7 +35,9 @@
 #endif
 
 #include <gmtl/Generate.h>
+#include <gadget/Node.h>
 #include <cluster/ClusterManager.h>
+#include <cluster/ClusterNetwork.h>
 
 #include "applicationDataApp.h"
 
@@ -69,7 +71,7 @@ void applicationDataApp::init()
    mButton5.init("VJButton5");
    
    vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
-   std::string hostname = "gfxn1";
+   std::string hostname = "timmy";
    mMyData.init(new_guid, hostname);
 }
 
@@ -101,21 +103,6 @@ void applicationDataApp::preFrame()
          mMyData->drawBool = false;
       }
    }
-   static vpr::Interval last_time;
-//   static long frame=0;
-   //static long count=0;
-
-   //count++;
-/*   frame++;
-   
-   vpr::Interval cur_time = mWand->getTimeStamp();
-   vpr::Interval diff_time(cur_time-last_time);
-      
-   std::cout << "\nFrame # " << frame << "  Delta: " << diff_time.getBaseVal() << std::endl;
-   std::cout << "Current: " << cur_time.getBaseVal() << "Last: " << last_time.getBaseVal() << "\n" << std::endl;
-      
-   last_time = cur_time;
-*/   
 }
 
 void applicationDataApp::bufferPreDraw()
@@ -216,18 +203,10 @@ void applicationDataApp::draw()
             }
          glEnd();
       glPopMatrix();
+
       if (mMyData->drawBool == true)
       {
-// This does not work for some reason, I will try to figure out why later.
-//         cluster::UserData< vpr::SerializableObjectMixin<vrjTest::MyType> >  mMyDataCopyTwo(mMyData);
-//                or
-//         mMyDataCopyTwo = mMyData;
-// This does work.         
-
-
-         mMyDataCopy = mMyData;
          drawNetwork();
-         //std::cout << "Bool: " << (int)mMyDataCopy->drawBool << std::endl;
       }
 //   vpr::System::msleep(2000);
 }

@@ -35,9 +35,6 @@
 #include <plugins/ApplicationDataManager/UserData.h>
 #include "MyType.h"
 
-#include <cluster/ClusterNetwork.h>
-#include <cluster/ClusterNode.h>
-
 namespace vrjTest
 {
 
@@ -113,7 +110,6 @@ private:
     * writeObject functions somewhere in our application.
     */
    cluster::UserData< vpr::SerializableObjectMixin<MyType> >  mMyData;
-   cluster::UserData< vpr::SerializableObjectMixin<MyType> >  mMyDataCopy;
    std::vector<gmtl::Vec3f>     mHeadHistory;
 };
 

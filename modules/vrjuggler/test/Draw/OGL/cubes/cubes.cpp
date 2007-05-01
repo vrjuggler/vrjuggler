@@ -77,9 +77,7 @@ int main(int argc, char* argv[])
    }
 #endif
 
-   std::cout << "argc before: " << argc << std::endl;
    kernel->init(argc, argv);
-   std::cout << "argc after: " << argc << std::endl;
 
    // Load any config files specified on the command line
    for( int i = 1; i < argc; ++i )
