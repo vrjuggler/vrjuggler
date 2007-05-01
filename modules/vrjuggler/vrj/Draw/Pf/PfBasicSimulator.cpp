@@ -121,7 +121,8 @@ void PfBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface kmInterfa
 
 
 void PfBasicSimulator::updateProjectionData(const float positionScale,
-                                     Projection* leftProj, Projection* rightProj)
+                                            ProjectionPtr leftProj,
+                                            ProjectionPtr rightProj)
 {
    updateInternalData(positionScale);
 

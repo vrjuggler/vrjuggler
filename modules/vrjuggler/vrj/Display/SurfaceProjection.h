@@ -28,14 +28,16 @@
 #define _VRJ_WALL_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/Projection.h>
+
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Point.h>
 
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/SurfaceProjectionPtr.h>
+
+
 namespace vrj
 {
-
-class Matrix;
 
 /** \class SurfaceProjection SurfaceProjection.h vrj/Display/SurfaceProjection.h
  *
@@ -46,7 +48,7 @@ class Matrix;
  */
 class SurfaceProjection : public Projection
 {
-public:
+protected:
    /**
     * Constructs a new surface projection using the given corner points.
     *
@@ -59,6 +61,22 @@ public:
                      const gmtl::Point3f& lrCorner,
                      const gmtl::Point3f& urCorner,
                      const gmtl::Point3f& ulCorner);
+
+public:
+   /**
+    * Constructs a new surface projection using the given corner points.
+    *
+    * @param llCorner Lower left corner.
+    * @param lrCorner Lower right corner.
+    * @param urCorner Upper right corner.
+    * @param ulCorner Upper left corner.
+    *
+    * @since 2.3.4
+    */
+   static SurfaceProjectionPtr create(const gmtl::Point3f& llCorner,
+                                      const gmtl::Point3f& lrCorner,
+                                      const gmtl::Point3f& urCorner,
+                                      const gmtl::Point3f& ulCorner);
 
    /**
     * Checks the corner points to make sure they form a legal surface. If not,

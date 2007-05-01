@@ -29,8 +29,10 @@
 #include <iomanip>
 
 #include <jccl/Config/ConfigElement.h>
+
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Kernel/User.h>
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
 #include <vrj/Display/Viewport.h>
@@ -46,8 +48,6 @@ Viewport::Viewport()
    , mYorigin(-1.0f)
    , mXsize(-1.0f)
    , mYsize(-1.0f)
-   , mLeftProj(NULL)
-   , mRightProj(NULL)
 {
    ;
 }

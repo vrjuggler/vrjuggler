@@ -28,14 +28,19 @@
 #define _VRJ_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/Frustum.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
+
+#include <boost/noncopyable.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
+
+#include <vrj/Display/Frustum.h>
+#include <vrj/Display/ViewportPtr.h>
+#include <vrj/Display/ProjectionPtr.h>
+
 
 namespace vrj
 {
@@ -51,6 +56,8 @@ namespace vrj
  * that actually compute the projections.
  */
 class VJ_CLASS_API Projection
+   : public boost::enable_shared_from_this<Projection>
+   , boost::noncopyable
 {
 public:
    /** Eye type. */
@@ -60,11 +67,10 @@ public:
       RIGHT = 2   /**< Right eye */
    };
 
-public:
+protected:
    Projection();
 
-   Projection(const Projection& p);
-
+public:
    virtual ~Projection()
    {
       ;

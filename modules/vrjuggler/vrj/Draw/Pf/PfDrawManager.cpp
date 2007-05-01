@@ -1325,7 +1325,7 @@ void PfDrawManager::updatePfProjections()
  * @post chan has its view matrix set to the Performer.
  *       Equivalent of proj's projection data.
  */
-void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, bool simulator)
+void PfDrawManager::updatePfProjection(pfChannel* chan, ProjectionPtr proj)  //, bool simulator)
 {
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
       << "[vrj::PfDrawManager::updatePfProjection()] Entering. viewMat:\n"
@@ -1359,7 +1359,8 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, b
    }
    else
    {
-      CameraProjection* cam_proj = dynamic_cast<CameraProjection*>(proj);
+      CameraProjectionPtr cam_proj =
+         boost::dynamic_pointer_cast<CameraProjection>(proj);
       vprASSERT(cam_proj != NULL && "Trying to use non-camera projection for simulator");
       chan->setAutoAspect(PFFRUST_CALC_HORIZ);
       chan->setNearFar(proj->getFrustum()[Frustum::VJ_NEAR],

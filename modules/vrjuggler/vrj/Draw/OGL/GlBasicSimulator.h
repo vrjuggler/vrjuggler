@@ -114,8 +114,8 @@ public:
    }
 
    virtual void updateProjectionData(const float positionScale,
-                                     Projection* leftProj,
-                                     Projection* rightProj);
+                                     ProjectionPtr leftProj,
+                                     ProjectionPtr rightProj);
 
    /**  Update internal simulator data */
    void updateInternalData(float positionScale);

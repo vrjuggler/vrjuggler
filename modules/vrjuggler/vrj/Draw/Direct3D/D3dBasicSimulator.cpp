@@ -119,8 +119,8 @@ void D3dBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface kmInterf
 
 
 void D3dBasicSimulator::updateProjectionData(const float positionScale,
-                                             Projection* leftProj,
-                                             Projection* rightProj)
+                                             ProjectionPtr leftProj,
+                                             ProjectionPtr rightProj)
 {
    updateInternalData(positionScale);
 

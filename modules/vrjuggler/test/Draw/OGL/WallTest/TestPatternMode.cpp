@@ -51,10 +51,10 @@ void TestPatternMode::draw(WallTest*)
 {
    vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
    vrj::ViewportPtr cur_vp    = user_data->getViewport();
-   vrj::Projection* proj      = user_data->getProjection();
+   vrj::ProjectionPtr proj    = user_data->getProjection();
 
    // XXX: How does this happen?
-   if ( NULL == cur_vp )
+   if ( NULL == cur_vp.get() )
    {
       return;
    }

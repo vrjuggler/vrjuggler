@@ -28,9 +28,11 @@
 #define _VRJ_TRACKED_WALL_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/SurfaceProjection.h>
-#include <vrj/Util/Debug.h>
+
 #include <gadget/Type/PositionInterface.h>
+
+#include <vrj/Display/SurfaceProjection.h>
+#include <vrj/Display/TrackedSurfaceProjectionPtr.h>
 
 
 namespace vrj
@@ -48,9 +50,9 @@ class Matrix;
  */
 class TrackedSurfaceProjection : public SurfaceProjection
 {
-public:
+protected:
    /**
-    * Constructs a Tracked wall projection.
+    * Constructs a Tracked surface projection.
     *
     * @param llCorner    Lower left corner.
     * @param lrCorner    Lower right corner.
@@ -63,6 +65,24 @@ public:
                             const gmtl::Point3f& urCorner,
                             const gmtl::Point3f& ulCorner,
                             const std::string& trackerName);
+
+public:
+   /**
+    * Constructs a Tracked surface projection.
+    *
+    * @param llCorner    Lower left corner.
+    * @param lrCorner    Lower right corner.
+    * @param urCorner    Upper right corner.
+    * @param ulCorner    Upper left corner.
+    * @param trackerName Name of the tracker tracking the screen.
+    *
+    * @since 2.3.4
+    */
+   static TrackedSurfaceProjectionPtr create(const gmtl::Point3f& llCorner,
+                                             const gmtl::Point3f& lrCorner,
+                                             const gmtl::Point3f& urCorner,
+                                             const gmtl::Point3f& ulCorner,
+                                             const std::string& trackerName);
 
    virtual ~TrackedSurfaceProjection()
    {

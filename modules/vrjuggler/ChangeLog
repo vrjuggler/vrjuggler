@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-01-2007 patrick     Handle vrj::Projection instances (and subclasses
+                        thereof) as shared pointers.
+                        NEW VERSION: 2.3.4
 May-01-2007 patrick     Handle vrj::Viewport instances (and subclasses thereof)
                         as shared pointers.
                         NEW VERSION: 2.3.3

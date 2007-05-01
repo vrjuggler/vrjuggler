@@ -28,11 +28,13 @@
 #define _VRJ_CAMERA_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/Projection.h>
-#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
+
+#include <jccl/Config/ConfigElementPtr.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/CameraProjectionPtr.h>
 
 
 namespace vrj
@@ -44,11 +46,14 @@ namespace vrj
  */
 class VJ_CLASS_API CameraProjection : public Projection
 {
+protected:
+   CameraProjection();
+
 public:
-   CameraProjection() : mVertFOV(60.0f)
-   {
-      //mType = Projection::SIM;
-   }
+   /**
+    * @since 2.3.4
+    */
+   static CameraProjectionPtr create();
 
    virtual void config(jccl::ConfigElementPtr element);
 

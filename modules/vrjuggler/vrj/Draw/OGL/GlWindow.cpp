@@ -208,7 +208,7 @@ void GlWindow::setViewBuffer(vrj::Viewport::View view)
    }
 }
 
-void GlWindow::setProjection(vrj::Projection* proj)
+void GlWindow::setProjection(vrj::ProjectionPtr proj)
 {
    if (!mWindowIsOpen)
    {

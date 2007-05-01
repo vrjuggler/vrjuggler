@@ -75,7 +75,7 @@ void StereoEyeTestMode::draw(WallTest*)
 
 void StereoEyeTestMode::drawCubeOrTriangle()
 {
-   vrj::Projection* currentProjection =
+   vrj::ProjectionPtr currentProjection =
       vrj::GlDrawManager::instance()->currentUserData()->getProjection();
    int currentEye = currentProjection->getEye();
 

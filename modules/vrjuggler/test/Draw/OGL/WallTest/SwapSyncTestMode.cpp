@@ -57,7 +57,7 @@ void SwapSyncTestMode::update(WallTest*)
 
 void SwapSyncTestMode::bufferPreDraw(WallTest*)
 {
-   vrj::Projection* currentProjection =
+   vrj::ProjectionPtr currentProjection =
       vrj::GlDrawManager::instance()->currentUserData()->getProjection();
    int currentEye = currentProjection->getEye();
 
@@ -83,7 +83,7 @@ void SwapSyncTestMode::bufferPreDraw(WallTest*)
 
 void SwapSyncTestMode::draw(WallTest*)
 {
-   vrj::Projection* currentProjection =
+   vrj::ProjectionPtr currentProjection =
       vrj::GlDrawManager::instance()->currentUserData()->getProjection();
    int cur_eye = currentProjection->getEye();
 

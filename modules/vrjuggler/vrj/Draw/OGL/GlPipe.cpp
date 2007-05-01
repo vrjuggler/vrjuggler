@@ -276,7 +276,7 @@ void GlPipe::checkForWindowsToClose()
          //Display* the_display = win->getDisplay();         // Get the display for easy access
          mGlDrawManager->setCurrentContext(win->getId());        // Set TS data of context id
          mGlDrawManager->currentUserData()->setUser(UserPtr());  // Set user data
-         mGlDrawManager->currentUserData()->setProjection(NULL);
+         mGlDrawManager->currentUserData()->setProjection(ProjectionPtr());
          mGlDrawManager->currentUserData()->setViewport(ViewportPtr()); // Set vp data
          mGlDrawManager->currentUserData()->setGlWindow(win);    // Set the gl window
 
@@ -385,7 +385,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
    {
       // Have dirty context
       mGlDrawManager->currentUserData()->setUser(UserPtr());    // Set user data
-      mGlDrawManager->currentUserData()->setProjection(NULL);
+      mGlDrawManager->currentUserData()->setProjection(ProjectionPtr());
       mGlDrawManager->currentUserData()->setViewport(ViewportPtr()); // Set vp data
       mGlDrawManager->currentUserData()->setGlWindow(win);      // Set the gl window
 

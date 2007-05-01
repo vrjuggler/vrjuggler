@@ -34,6 +34,7 @@
 #include <vpr/vpr.h>
 
 #include <vrj/Display/Display.h>
+#include <vrj/Display/ProjectionPtr.h>
 #include <vrj/Display/Viewport.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 
@@ -44,9 +45,6 @@
 
 namespace vrj
 {
-
-class Projection;
-class CameraProjection;
 
 // NOTE: Win32 message processing works like the following:
 //
@@ -165,7 +163,7 @@ public:
 
 public:
    /** Sets the projection matrix for this window to proj. */
-   void setProjection(vrj::Projection* proj);
+   void setProjection(vrj::ProjectionPtr proj);
 
    /**
     * Sets the projection matrix for this window to draw the left eye frame.

@@ -58,6 +58,19 @@ TrackedSurfaceProjection(const gmtl::Point3f& llCorner,
    mTracker.init(trackerName);              // Intialize the tracker
 }
 
+TrackedSurfaceProjectionPtr
+TrackedSurfaceProjection::create(const gmtl::Point3f& llCorner,
+                                 const gmtl::Point3f& lrCorner,
+                                 const gmtl::Point3f& urCorner,
+                                 const gmtl::Point3f& ulCorner,
+                                 const std::string& trackerName)
+{
+   return TrackedSurfaceProjectionPtr(
+             new TrackedSurfaceProjection(llCorner, lrCorner, urCorner,
+                                          ulCorner, trackerName)
+          );
+}
+
 void TrackedSurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
                                               const float scaleFactor)
 {

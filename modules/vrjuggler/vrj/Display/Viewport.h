@@ -37,14 +37,13 @@
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <vrj/Display/DisplayPtr.h>
+#include <vrj/Display/ProjectionPtr.h>
 #include <vrj/Display/ViewportPtr.h>
 #include <vrj/Kernel/UserPtr.h>
 
 
 namespace vrj
 {
-
-class Projection;
 
 /** \class Viewport Viewport.h vrj/Display/Viewport.h
  *
@@ -179,13 +178,13 @@ public:
    }
 
    /** Gets the config element that configured this viewport. */
-   jccl::ConfigElementPtr getConfigElement() const
+   const jccl::ConfigElementPtr getConfigElement() const
    {
       return mViewportElement;
    }
 
    /** Gets the user associated with this viewport. */
-   UserPtr getUser() const
+   const UserPtr getUser() const
    {
       return mUser;
    }
@@ -197,19 +196,19 @@ public:
    }
 
    /** Gets the display containing this viewport. */
-   DisplayPtr getDisplay() const
+   const DisplayPtr getDisplay() const
    {
       return mDisplay.lock();
    }
 
    /** Gets the left projection. */
-   Projection* getLeftProj() const
+   const ProjectionPtr getLeftProj() const
    {
       return mLeftProj;
    }
 
    /** Gets the right projection. */
-   Projection* getRightProj() const
+   const ProjectionPtr getRightProj() const
    {
       return mRightProj;
    }
@@ -246,8 +245,8 @@ protected:
     * Defines the projection for this window.
     */
    //@{
-   Projection* mLeftProj;      /**< Left eye projection */
-   Projection* mRightProj;     /**< Right eye projection */
+   ProjectionPtr mLeftProj;      /**< Left eye projection */
+   ProjectionPtr mRightProj;     /**< Right eye projection */
    //@}
 };
 

@@ -35,7 +35,9 @@
 #include <gmtl/Xforms.h>
 #include <gmtl/Output.h>
 
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/Projection.h>
+
 
 namespace vrj
 {
@@ -46,16 +48,6 @@ float Projection::mFarDist = 10000.0f;
 Projection::Projection()
    : mEye(LEFT)
    , mFocusPlaneDist(1.0f)
-{
-   ;
-}
-
-Projection::Projection(const Projection& p)
-   : mViewMat(p.mViewMat)
-   , mFrustum(p.mFrustum)
-   , mEye(p.mEye)
-   , mViewport(p.mViewport)
-   , mFocusPlaneDist(p.mFocusPlaneDist)
 {
    ;
 }

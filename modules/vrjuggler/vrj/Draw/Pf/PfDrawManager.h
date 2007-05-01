@@ -37,6 +37,9 @@
 #include <Performer/pf/pfChannel.h>
 
 #include <vpr/Util/Singleton.h>
+#include <vrj/Display/DisplayPtr.h>
+#include <vrj/Display/ProjectionPtr.h>
+#include <vrj/Display/ViewportPtr.h>
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vrj/Util/Debug.h>
@@ -50,11 +53,7 @@
 namespace vrj
 {
 
-class Display;
 class PfApp;
-class Projection;
-class SimViewport;
-class Viewport;
 class PfInputHandler;
 
     // Performer Config function called in draw proc after window is set up
@@ -249,7 +248,7 @@ protected:
    void callAppChanFuncs();
 
    /** Helper to set channel view params from a Projection. */
-   void updatePfProjection(pfChannel* chan, Projection* proj); //, bool simulator=false);
+   void updatePfProjection(pfChannel* chan, ProjectionPtr proj); //, bool simulator=false);
 
    /** Helper function to create the base scene graph stuff. */
    void initPerformerGraph();

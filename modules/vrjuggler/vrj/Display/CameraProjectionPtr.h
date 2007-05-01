@@ -24,46 +24,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DRAW_SIM_INTERFACE_H_
-#define _VRJ_DRAW_SIM_INTERFACE_H_
+#ifndef _VRJ_CAMERA_PROJECTION_PTR_H_
+#define _VRJ_CAMERA_PROJECTION_PTR_H_
 
-#include <vrj/vrjConfig.h>
-
-#include <jccl/Config/ConfigElementPtr.h>
-
-#include <vrj/Display/SimViewportPtr.h>
-#include <vrj/Display/ProjectionPtr.h>
-#include <vrj/Draw/DrawSimInterface.h>
+#include <boost/shared_ptr.hpp>
 
 
 namespace vrj
 {
 
-   /** \class DrawSimInterface DrawSimInterface.h vrj/Draw/DrawSimInterface.h
-    *
-    * Base class for all simulator interface across all Draw Manager types.
-    */
-   class VJ_CLASS_API DrawSimInterface
-   {
-   public:
-      virtual ~DrawSimInterface();
+class CameraProjection;
+typedef boost::shared_ptr<CameraProjection> CameraProjectionPtr;
+typedef boost::weak_ptr<CameraProjection> CameraProjectionWeakPtr;
 
-      /**
-       * Configures the simulator interface.
-       *
-       * @pre element is a valid configuration element.
-       * @post It should be configured.
-       */
-      virtual bool config(jccl::ConfigElementPtr element) = 0;
-
-      /** Called as part of the viewports updateProjection call. */
-      virtual void updateProjectionData(const float positionScale,
-                                        ProjectionPtr leftProj,
-                                        ProjectionPtr rightProj);
-
-      virtual void initialize(SimViewportPtr simVp) = 0;
-   };
 }
 
 
-#endif
+#endif /* _VRJ_CAMERA_PROJECTION_PTR_H_ */

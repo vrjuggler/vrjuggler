@@ -55,17 +55,7 @@ ViewportPtr SimViewport::create()
 
 SimViewport::~SimViewport()
 {
-   if ( NULL != mLeftProj )
-   {
-      delete mLeftProj;
-      mLeftProj = NULL;
-   }
-
-   if ( NULL != mRightProj )
-   {
-      delete mRightProj;
-      mRightProj = NULL;
-   }
+   /* Do nothing. */ ;
 }
 
    /**  Configure the simulator */
@@ -85,24 +75,20 @@ bool SimViewport::config(jccl::ConfigElementPtr element)
 
    const float vert_fov = element->getProperty<float>("vertical_fov");
 
-   if ( NULL != mLeftProj )
-   {
-      delete mLeftProj;
-   }
+   CameraProjectionPtr camera_proj;
 
-   mLeftProj = new CameraProjection;
-   ((CameraProjection*) mLeftProj)->setVerticalFOV(vert_fov);
+   // Create and set up the left camera projection.
+   camera_proj = CameraProjection::create();
+   camera_proj->setVerticalFOV(vert_fov);
+   mLeftProj = camera_proj;
    mLeftProj->config(element);
    mLeftProj->setEye(Projection::LEFT);
    mLeftProj->setViewport(shared_from_this());
 
-   if ( NULL != mRightProj )
-   {
-      delete mRightProj;
-   }
-
-   mRightProj = new CameraProjection;
-   ((CameraProjection*) mRightProj)->setVerticalFOV(vert_fov);
+   // Create and set up the right camera projection.
+   camera_proj = CameraProjection::create();
+   camera_proj->setVerticalFOV(vert_fov);
+   mRightProj = camera_proj;
    mRightProj->config(element);
    mRightProj->setEye(Projection::RIGHT);
    mRightProj->setViewport(shared_from_this());

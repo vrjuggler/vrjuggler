@@ -26,19 +26,32 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <jccl/Config/ConfigElement.h>
+#include <boost/concept_check.hpp>
 
 #include <gmtl/Output.h>
 #include <gmtl/Generate.h>
 
-#include <vrj/Display/Display.h>
-#include <vrj/Display/CameraProjection.h>
+#include <jccl/Config/ConfigElement.h>
 
-#include <boost/concept_check.hpp>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Display/CameraProjection.h>
 
 
 namespace vrj
 {
+
+CameraProjection::CameraProjection()
+   : mVertFOV(60.0f)
+{
+   /* Do nothing. */ ;
+}
+
+CameraProjectionPtr CameraProjection::create()
+{
+   return CameraProjectionPtr(new CameraProjection());
+}
 
 void CameraProjection::config(jccl::ConfigElementPtr element)
 {

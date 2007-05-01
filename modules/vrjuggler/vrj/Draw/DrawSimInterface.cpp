@@ -38,8 +38,8 @@ DrawSimInterface::~DrawSimInterface()
 }
 
 /** Called as part of the viewports updateProjection call. */
-void DrawSimInterface::updateProjectionData(const float, Projection*,
-                                            Projection*)
+void DrawSimInterface::updateProjectionData(const float, ProjectionPtr,
+                                            ProjectionPtr)
 {
    /* Do nothing. */ ;
 }

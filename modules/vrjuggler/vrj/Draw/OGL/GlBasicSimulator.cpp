@@ -140,8 +140,8 @@ void GlBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface kmInterfa
 
 
 void GlBasicSimulator::updateProjectionData(const float positionScale,
-                                            Projection* leftProj,
-                                            Projection* rightProj)
+                                            ProjectionPtr leftProj,
+                                            ProjectionPtr rightProj)
 {
    updateInternalData(positionScale);
 
@@ -226,7 +226,7 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
    std::vector<vrj::DisplayPtr> disps = display_man->getAllDisplays();
 
    gmtl::Vec3f apex, ur, lr, ul, ll;
-   Projection* proj(NULL);
+   ProjectionPtr proj;
 
    for (unsigned int i=0;i<disps.size();i++)
    {
@@ -242,11 +242,15 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
                SurfaceViewportPtr surf_vp =
                   boost::dynamic_pointer_cast<SurfaceViewport>(view_port);
                vprASSERT(surf_vp.get() != NULL);
-               proj = NULL;
+
                if(0 == proj_num)
+               {
                   proj = surf_vp->getLeftProj();
+               }
                else
+               {
                   proj = surf_vp->getRightProj();
+               }
 
                // Create color values that are unique
                // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors

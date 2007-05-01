@@ -59,6 +59,15 @@ SurfaceProjection::SurfaceProjection(const gmtl::Point3f& llCorner,
    /* Do nothing. */ ;
 }
 
+SurfaceProjectionPtr SurfaceProjection::create(const gmtl::Point3f& llCorner,
+                                               const gmtl::Point3f& lrCorner,
+                                               const gmtl::Point3f& urCorner,
+                                               const gmtl::Point3f& ulCorner)
+{
+   return SurfaceProjectionPtr(new SurfaceProjection(llCorner, lrCorner,
+                                                     urCorner, ulCorner));
+}
+
 void SurfaceProjection::validateCorners()
 {
    gmtl::Vec3f norm1, norm2;

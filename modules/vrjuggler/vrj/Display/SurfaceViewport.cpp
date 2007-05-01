@@ -28,22 +28,22 @@
 
 #include <string>
 #include <gmtl/Math.h>
-//#include <vrj/Math/Coord.h>
 #include <gmtl/Vec.h>
-#include <jccl/Config/ConfigElement.h>
-#include <vrj/Kernel/User.h>
-
-#include <gadget/Type/Position/PositionUnitConversion.h>
-
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
+#include <jccl/Config/ConfigElement.h>
+#include <gadget/Type/Position/PositionUnitConversion.h>
+
+#include <vrj/Kernel/User.h>
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/SurfaceProjection.h>
 #include <vrj/Display/TrackedSurfaceProjection.h>
 #include <vrj/Display/DisplayExceptions.h>
 #include <vrj/Display/SurfaceViewport.h>
+
 
 namespace vrj
 {
@@ -62,17 +62,7 @@ ViewportPtr SurfaceViewport::create()
 
 SurfaceViewport::~SurfaceViewport()
 {
-   if ( NULL != mLeftProj )
-   {
-      delete mLeftProj;
-      mLeftProj = NULL;
-   }
-
-   if ( NULL != mRightProj )
-   {
-      delete mRightProj;
-      mRightProj = NULL;
-   }
+   /* Do nothing. */ ;
 }
 
 bool SurfaceViewport::config(jccl::ConfigElementPtr element)
@@ -115,39 +105,29 @@ bool SurfaceViewport::config(jccl::ConfigElementPtr element)
       mTrackerProxyName = element->getProperty<std::string>("tracker_proxy");
    }
 
-   if ( NULL != mLeftProj )
-   {
-      delete mLeftProj;
-   }
-
-   if ( NULL != mRightProj )
-   {
-      delete mRightProj;
-   }
-
    // Create Projection objects
    // NOTE: The -'s are because we are measuring distance to
    //  the left(bottom) which is opposite the normal axis direction
    //vjMatrix rot_inv;
    //rot_inv.invert(mSurfaceRotation);
-   SurfaceProjection* left_proj(NULL);
-   SurfaceProjection* right_proj(NULL);
+   SurfaceProjectionPtr left_proj;
+   SurfaceProjectionPtr right_proj;
 
    if(!mTracked)
    {
-      left_proj = new SurfaceProjection(mLLCorner, mLRCorner, mURCorner,
-                                        mULCorner);
-      right_proj = new SurfaceProjection(mLLCorner, mLRCorner, mURCorner,
-                                         mULCorner);
+      left_proj = SurfaceProjection::create(mLLCorner, mLRCorner, mURCorner,
+                                            mULCorner);
+      right_proj = SurfaceProjection::create(mLLCorner, mLRCorner, mURCorner,
+                                             mULCorner);
    }
    else
    {
-      left_proj = new TrackedSurfaceProjection(mLLCorner, mLRCorner,
-                                               mURCorner, mULCorner,
-                                               mTrackerProxyName);
-      right_proj = new TrackedSurfaceProjection(mLLCorner, mLRCorner,
-                                                mURCorner, mULCorner,
-                                                mTrackerProxyName);
+      left_proj = TrackedSurfaceProjection::create(mLLCorner, mLRCorner,
+                                                   mURCorner, mULCorner,
+                                                   mTrackerProxyName);
+      right_proj = TrackedSurfaceProjection::create(mLLCorner, mLRCorner,
+                                                    mURCorner, mULCorner,
+                                                    mTrackerProxyName);
    }
 
    try
@@ -181,9 +161,6 @@ bool SurfaceViewport::config(jccl::ConfigElementPtr element)
          << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
          << ex.what() << std::endl << vprDEBUG_FLUSH;
-
-      delete left_proj;
-      delete right_proj;
 
       result = false;
    }

@@ -289,7 +289,7 @@ inline void OpenSGApp::draw()
    vrj::GlUserData* userData = drawMan->currentUserData();
 
    // Copy the matrix
-   vrj::Projection* project = userData->getProjection();
+   vrj::ProjectionPtr project = userData->getProjection();
    vrj::Frustum vrj_frustum = userData->getProjection()->getFrustum();
 
    const float* vj_proj_view_mat = project->getViewMatrix().mData;

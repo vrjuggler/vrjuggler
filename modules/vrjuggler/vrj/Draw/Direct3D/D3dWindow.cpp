@@ -104,7 +104,7 @@ void D3dWindow::setViewBuffer(vrj::Viewport::View view)
    // XXX: Not implemented
 }
 
-void D3dWindow::setProjection(vrj::Projection* proj)
+void D3dWindow::setProjection(vrj::ProjectionPtr proj)
 {
    if (!mWindowIsOpen)
    {

@@ -42,6 +42,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <vrj/Display/Display.h>
+#include <vrj/Display/ProjectionPtr.h>
 #include <vrj/Display/Viewport.h>
 
 #include <vrj/Draw/OGL/GlWindowPtr.h>
@@ -49,9 +50,6 @@
 
 namespace vrj
 {
-
-class Projection;
-class CameraProjection;
 
 /** \class GlWindow GlWindow.h vrj/Draw/OGL/GlWindow.h
  *
@@ -143,7 +141,7 @@ public:
 
 public:
    /** Sets the projection matrix for this window to proj. */
-   void setProjection(vrj::Projection* proj);
+   void setProjection(vrj::ProjectionPtr proj);
 
    /**
     * Sets the projection matrix for this window to draw the left eye frame.
