@@ -86,10 +86,24 @@ protected:
 public:
    /**
     * Connect to the config manager.
+    *
+    * @since 1.3.3
     */
    void connectToConfigManager();
+
+   /**
+    * @since 1.3.3
+    */
    void disconnectFromConfigManager();
+
+   /**
+    * @since 1.3.3
+    */
    void init(bool clusterMaster, bool clusterSlave);
+
+   /**
+    * @since 1.3.3
+    */
    void start();
 
 public:
