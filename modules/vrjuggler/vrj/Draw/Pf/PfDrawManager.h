@@ -84,11 +84,10 @@ protected:
       pfViewport()
       {
          chans[0] = chans[1] = NULL;
-         viewport = NULL;
       }
 
       pfChannel*  chans[2];      /**< The channels. */
-      Viewport* viewport;        /**< The viewport that we are rendering. */
+      ViewportPtr viewport;        /**< The viewport that we are rendering. */
    };
 
    struct pfDisplay

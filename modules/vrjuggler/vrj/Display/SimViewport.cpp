@@ -94,7 +94,7 @@ bool SimViewport::config(jccl::ConfigElementPtr element)
    ((CameraProjection*) mLeftProj)->setVerticalFOV(vert_fov);
    mLeftProj->config(element);
    mLeftProj->setEye(Projection::LEFT);
-   mLeftProj->setViewport(this);
+   mLeftProj->setViewport(shared_from_this());
 
    if ( NULL != mRightProj )
    {
@@ -105,7 +105,7 @@ bool SimViewport::config(jccl::ConfigElementPtr element)
    ((CameraProjection*) mRightProj)->setVerticalFOV(vert_fov);
    mRightProj->config(element);
    mRightProj->setEye(Projection::RIGHT);
-   mRightProj->setViewport(this);
+   mRightProj->setViewport(shared_from_this());
 
    //bool has_simulator(false);
    //has_simulator = element->getProperty<bool>("has_simulator_plugin");

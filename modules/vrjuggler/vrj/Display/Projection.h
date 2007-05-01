@@ -88,15 +88,15 @@ public:
    }
 
    /** Sets the viewport associated with this projection. */
-   void setViewport(Viewport* vp)
+   void setViewport(ViewportPtr vp)
    {
       mViewport = vp;
    }
 
    /** Returns the viewport associated with this projection. */
-   Viewport* getViewport() const
+   ViewportPtr getViewport() const
    {
-      return mViewport;
+      return mViewport.lock();
    }
 
    /**
@@ -146,8 +146,8 @@ protected:
    gmtl::Matrix44f   mViewMat;     /**< The view transformation matrix for this projection */
    Frustum           mFrustum;     /**< The calculated view frustum for this projection */
 
-   Eye         mEye;          /**< The eye that this projection is rendering */
-   Viewport*   mViewport;     /**< The containing viewport for the projection. Used in some projections to get size */
+   Eye             mEye;          /**< The eye that this projection is rendering */
+   ViewportWeakPtr mViewport;     /**< The containing viewport for the projection. Used in some projections to get size */
 
    float       mFocusPlaneDist;     /**< Basically the distance to the surface.  Needed for drawing surface in simulator. */
 

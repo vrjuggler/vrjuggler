@@ -73,7 +73,7 @@ public:
     */
    virtual void draw(const float scaleFactor);
 
-   virtual void initialize(SimViewport* simVp)
+   virtual void initialize(SimViewportPtr simVp)
    {
       mSimViewport = simVp;
    }
@@ -137,7 +137,7 @@ protected: // Drawing functions used by library
    void drawSimulator(const float scaleFactor);
 
 protected:
-   SimViewport*   mSimViewport;
+   SimViewportPtr mSimViewport;
 
    // Drawing attributes
    bool           mDrawProjections;   /**< Should we draw projections */

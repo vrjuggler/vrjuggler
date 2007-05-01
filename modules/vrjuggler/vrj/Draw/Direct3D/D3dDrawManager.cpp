@@ -244,7 +244,7 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
    mApp->contextPreDraw();                 // Do any context pre-drawing
 
    // --- FOR EACH VIEWPORT -- //
-   Viewport* viewport = NULL;
+   ViewportPtr viewport;
    size_t num_vps = the_display->getNumViewports();
    for ( size_t vp_num = 0; vp_num < num_vps; ++vp_num )
    {
@@ -266,14 +266,14 @@ void D3dDrawManager::renderWindow(D3dWindow* win)
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())
          {
-            SimViewport*       sim_vp(NULL);
             D3dSimInterfacePtr draw_sim_i;
 
             if (viewport->isSimulator())
             {
-               sim_vp = dynamic_cast<SimViewport*>(viewport);
-               vprASSERT(NULL != sim_vp);
-               if (NULL != sim_vp)
+               SimViewportPtr sim_vp =
+                  boost::dynamic_pointer_cast<SimViewport>(viewport);
+               vprASSERT(NULL != sim_vp.get());
+               if (NULL != sim_vp.get())
                {
                   draw_sim_i =
                      boost::dynamic_pointer_cast<D3dSimInterface>(
@@ -371,20 +371,20 @@ void D3dDrawManager::addDisplay(DisplayPtr disp)
       << std::endl << vprDEBUG_FLUSH;
 
    // -- Finish Simulator setup
-   std::vector<vrj::Viewport*>::size_type num_vp(disp->getNumViewports());
-   std::vector<vrj::Viewport*>::size_type i;
+   std::vector<vrj::ViewportPtr>::size_type num_vp(disp->getNumViewports());
+   std::vector<vrj::ViewportPtr>::size_type i;
 
    for ( i = 0 ; i < num_vp ; ++i )
    {
-      Viewport* vp = disp->getViewport(i);
+      ViewportPtr vp = disp->getViewport(i);
 
       if (vp->isSimulator())
       {
          jccl::ConfigElementPtr vp_element = vp->getConfigElement();
 
-         SimViewport* sim_vp(NULL);
-         sim_vp = dynamic_cast<SimViewport*>(vp);
-         vprASSERT(NULL != sim_vp);
+         SimViewportPtr sim_vp =
+            boost::dynamic_pointer_cast<SimViewport>(vp);
+         vprASSERT(NULL != sim_vp.get());
 
          sim_vp->setDrawSimInterface(DrawSimInterfacePtr());
 

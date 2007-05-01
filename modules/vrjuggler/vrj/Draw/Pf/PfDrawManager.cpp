@@ -499,7 +499,7 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
    //   - Allocate channels
    //   - Set draw functions
    //   - Setup master chans
-   Viewport* viewport = NULL;
+   ViewportPtr viewport;
    const unsigned int num_vps = disp->getNumViewports();
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
@@ -583,9 +583,9 @@ void PfDrawManager::addDisplay(DisplayPtr disp)
             // -- Finish Simulator setup
             jccl::ConfigElementPtr vp_element = viewport->getConfigElement();
 
-            SimViewport* sim_vp(NULL);
-            sim_vp = dynamic_cast<SimViewport*>(viewport);
-            vprASSERT(NULL != sim_vp);
+            SimViewportPtr sim_vp =
+               boost::dynamic_pointer_cast<SimViewport>(viewport);
+            vprASSERT(NULL != sim_vp.get());
 
             sim_vp->setDrawSimInterface(DrawSimInterfacePtr());
 
@@ -1266,16 +1266,13 @@ void PfDrawManager::updatePfProjections()
          vprASSERT(pf_vp != NULL);
          vprASSERT(pf_vp->viewport != NULL);
 
-         /*
-         SurfaceViewport* surf_vp(NULL);
-         */
-
-         Viewport* cur_vp(pf_vp->viewport);
+         ViewportPtr cur_vp(pf_vp->viewport);
          Viewport::View view;
 
          // --- All viewports --- //
-         //surf_vp = dynamic_cast<SurfaceViewport*>(pf_vp->viewport);
-         //vprASSERT(surf_vp != NULL &&
+         //SurfaceViewportPtr surf_vp =
+         //   boost::dynamic_pointer_cast<SurfaceViewport>(pf_vp->viewport);
+         //vprASSERT(surf_vp.get() != NULL &&
          //          "Could not cast supposedly surface display to SurfaceDisplay.");
          view = cur_vp->getView();
 
@@ -1304,11 +1301,11 @@ void PfDrawManager::updatePfProjections()
          // Sim viewport
          if ( cur_vp->isSimulator() )
          {
-            SimViewport*      sim_vp(NULL);
             PfSimInterfacePtr draw_sim_i;
 
-            sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
-            vprASSERT(sim_vp != NULL &&
+            SimViewportPtr sim_vp =
+               boost::dynamic_pointer_cast<SimViewport>(pf_vp->viewport);
+            vprASSERT(sim_vp.get() != NULL &&
                       "Could not cast supposed simulator display to SimDisplay.");
 
             draw_sim_i =

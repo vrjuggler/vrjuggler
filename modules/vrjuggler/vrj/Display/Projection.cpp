@@ -45,7 +45,6 @@ float Projection::mFarDist = 10000.0f;
 
 Projection::Projection()
    : mEye(LEFT)
-   , mViewport(NULL)
    , mFocusPlaneDist(1.0f)
 {
    ;

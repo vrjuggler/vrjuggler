@@ -67,7 +67,7 @@ public:
       return std::string("default_simulator");
    }
 
-   virtual void initialize(SimViewport* simVp)
+   virtual void initialize(SimViewportPtr simVp)
    {
       mSimViewport = simVp;
    }
@@ -118,7 +118,7 @@ public:  // Sim Drawing parameters
    void initSimulatorGraph();
 
 protected:
-   SimViewport*   mSimViewport;
+   SimViewportPtr mSimViewport;
 
    /** @name Drawing attributes */
    //@{

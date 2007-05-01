@@ -165,11 +165,11 @@ bool SurfaceViewport::config(jccl::ConfigElementPtr element)
       // Configure the projections
       mLeftProj->config(element);
       mLeftProj->setEye(Projection::LEFT);
-      mLeftProj->setViewport(this);
+      mLeftProj->setViewport(shared_from_this());
 
       mRightProj->config(element);
       mRightProj->setEye(Projection::RIGHT);
-      mRightProj->setViewport(this);
+      mRightProj->setViewport(shared_from_this());
    }
    catch (InvalidSurfaceException& ex)
    {

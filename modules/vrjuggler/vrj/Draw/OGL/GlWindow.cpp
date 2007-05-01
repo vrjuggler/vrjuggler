@@ -104,16 +104,16 @@ void GlWindow::finishSetup()
    //   Ideas: - look up device based on registry
    //          - Do something else???
 /*
-   Viewport* viewport(NULL);
-   SimViewport* sim_vp(NULL);
+   ViewportPtr viewport;
    unsigned num_vps = mVrjDisplay->getNumViewports();
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = mVrjDisplay->getViewport(vp_num);
       if(viewport->isSimulator())
       {
-         sim_vp = dynamic_cast<SimViewport*>(viewport);
-         vprASSERT(NULL != sim_vp && "isSimulator lied");
+         SimViewportPtr sim_vp =
+            boost::dynamic_pointer_cast<SimViewport>(viewport);
+         vprASSERT(NULL != sim_vp.get() && "isSimulator lied");
 
          DrawSimInterface* draw_sim = sim_vp->getDrawSimInterface();
          GlSimInterface* gl_draw_sim = dynamic_cast<GlSimInterface*>(draw_sim);
