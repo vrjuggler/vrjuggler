@@ -165,7 +165,7 @@ MIN_VPR_VERSION='1.1.42'
 VPR_PATH([$MIN_VPR_VERSION], ,
          [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 #VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-MIN_JCCL_VERSION='1.1.5'
+MIN_JCCL_VERSION='1.3.1'
 JCCL_PATH_CXX([$MIN_JCCL_VERSION], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
 
