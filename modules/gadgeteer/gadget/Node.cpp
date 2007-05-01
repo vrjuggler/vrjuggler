@@ -36,7 +36,6 @@
 #include <gadget/Node.h>
 #include <gadget/AbstractNetworkManager.h>
 #include <cluster/Packets/Packet.h>
-#include <cluster/Packets/ConnectionAck.h>
 #include <cluster/Packets/DataPacket.h>
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/ClusterManager.h>
@@ -182,7 +181,7 @@ void Node::doUpdate()
    temp_packet->printData(vprDBG_CONFIG_LVL);
 
    // Handle the packet correctly
-   mNetworkManager->handlePacket(temp_packet,this);
+   mNetworkManager->handlePacket(temp_packet, shared_from_this());
 
    // Clean up after ourselves
    delete temp_packet;

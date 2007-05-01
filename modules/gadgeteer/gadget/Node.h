@@ -32,10 +32,10 @@
 #include <vpr/Thread/Thread.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/NodePtr.h>
+#include <boost/enable_shared_from_this.hpp>
 
 namespace cluster
 {
-   class DeviceRequest;
    class Packet;
 }
 
@@ -47,7 +47,7 @@ namespace gadget
  *
  * Network node.
  */
-class GADGET_CLASS_API Node
+class GADGET_CLASS_API Node : public boost::enable_shared_from_this<Node>
 {
 public:
    enum Status
