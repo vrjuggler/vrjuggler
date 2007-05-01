@@ -166,6 +166,11 @@ public:
    void waitForConnection(const int& listen_port = DEFAULT_SLAVE_PORT);
    bool connectToSlaves();
 
+   /**
+    * Send packet to all cluster nodes.
+    *
+    * @since 1.3.6
+    */
    void sendToAll(cluster::PacketPtr packet);
 
    /**
