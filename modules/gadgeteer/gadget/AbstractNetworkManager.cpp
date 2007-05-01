@@ -504,8 +504,6 @@ void AbstractNetworkManager::sendToAll(cluster::PacketPtr packet)
 
          (*itr)->setStatus( gadget::Node::DISCONNECTED );
          (*itr)->shutdown();
-
-         debugDump( vprDBG_CONFIG_LVL );
       }
    }
 }
