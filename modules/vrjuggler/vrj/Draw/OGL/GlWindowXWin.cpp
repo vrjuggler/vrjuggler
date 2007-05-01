@@ -453,22 +453,10 @@ bool GlWindowXWin::open()
  */
 bool GlWindowXWin::close()
 {
-
    //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
    // Assert that we have not impllemented correct shutdown for the case that we
    // are an event source as well
    //vprASSERT(!mIsEventSource  && "Need to implement GLX window close with gadget::EventWindow");
-
-   // Remove any event device from the input manager
-   if ( true == mIsEventSource )
-   {
-      gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
-
-      // XXX: Possibly not the best way to remove this to input manager
-      // - This will internally call stop sampling (and stupify and proxies)
-      //   Note: The stop sampling will not do anything since the event window does not own the window
-      vrj::Kernel::instance()->getInputManager()->removeDevice(dev_ptr);
-   }
 
    if ( mGlxContext )
    {
