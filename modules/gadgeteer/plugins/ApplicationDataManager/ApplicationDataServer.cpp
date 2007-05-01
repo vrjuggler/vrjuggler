@@ -56,8 +56,7 @@ ApplicationDataServer::ApplicationDataServer(const vpr::GUID& guid,  Application
 
 ApplicationDataServer::~ApplicationDataServer()
 {
-   delete mApplicationData;
-   
+   // User is responsible to clean up mApplicationData
    // mDataPacket will clean up the memory that mDeviceData points
    // to since mDataPacket contains a reference to the ame memory.
    delete mDataPacket;
