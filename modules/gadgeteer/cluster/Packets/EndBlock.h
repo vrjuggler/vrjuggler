@@ -35,6 +35,7 @@
 
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
+#include <cluster/Packets/EndBlockPtr.h>
 
 #include <boost/concept_check.hpp>
 

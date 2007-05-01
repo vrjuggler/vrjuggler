@@ -48,9 +48,7 @@ SRCS= \
 	EndBlock.cpp			\
 	Header.cpp			\
 	Packet.cpp			\
-	PacketFactory.cpp		\
-	SyncAck.cpp			\
-	SyncRequest.cpp
+	PacketFactory.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

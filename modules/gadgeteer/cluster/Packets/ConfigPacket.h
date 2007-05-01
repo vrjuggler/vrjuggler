@@ -36,6 +36,7 @@
 
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
+#include <cluster/Packets/ConfigPacketPtr.h>
 
 namespace cluster
 {
