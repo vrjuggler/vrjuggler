@@ -137,8 +137,8 @@ bool Kernel::init(int& argc, char* argv[])
       { continue; }
 
       // Remove the token from argv if we used it.
-      boost::function<bool (char *)> remove_equal_aron = boost::bind(std::equal_to<int>(), 0, boost::bind(strcmp, (*itr).c_str(), _1));
-      new_end = std::remove_if(argv, argv + argc, remove_equal_aron);
+      boost::function<bool (char *)> remove_equal = boost::bind(std::equal_to<int>(), 0, boost::bind(strcmp, (*itr).c_str(), _1));
+      new_end = std::remove_if(argv, argv + argc, remove_equal);
    }
 
    // Overwrite argc to contain the new size of argv.
