@@ -31,7 +31,7 @@
 #include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElementPtr.h>
-
+#include <gadget/Type/GesturePtr.h>
 
 namespace gadget
 {

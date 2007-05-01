@@ -30,8 +30,9 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Assert.h>
 #include <vpr/Sync/Guard.h>
+#include <vpr/Sync/Mutex.h>
 #include <vector>
 
 namespace gadget

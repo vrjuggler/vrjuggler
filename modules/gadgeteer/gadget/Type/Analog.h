@@ -30,11 +30,12 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 
-#include <gadget/Type/AnalogData.h>
-#include <gadget/Type/SampleBuffer.h>
-
-#include <jccl/Config/ConfigElement.h>
 #include <vpr/IO/SerializableObject.h>
+#include <jccl/Config/ConfigElement.h>
+
+#include <gadget/Type/AnalogData.h>
+#include <gadget/Type/AnalogPtr.h>
+#include <gadget/Type/SampleBuffer.h>
 
 
 namespace gadget

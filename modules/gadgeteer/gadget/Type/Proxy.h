@@ -37,6 +37,8 @@
 #include <gadget/Util/Debug.h>
 #include <vpr/Util/Interval.h>
 
+#include <boost/shared_ptr.hpp>
+
 namespace gadget
 {
 
@@ -93,7 +95,7 @@ namespace gadget
        * Returns a pointer to the base class of the devices being proxied.
        * @return NULL if no device is proxied.
        */
-      virtual Input* getProxiedInputDevice() = 0;
+      virtual InputPtr getProxiedInputDevice() = 0;
 
       /**
        * Returns the string rep of the element type used to config this device.
@@ -163,7 +165,7 @@ namespace gadget
    public:
       TypedProxy(const std::string& deviceName = "Unknown")
          : mDeviceName(deviceName)
-         , mTypedDevice(NULL)
+         , mTypedDevice()
       {
          ;
       }
@@ -178,7 +180,7 @@ namespace gadget
        * @param devName The name of the device at which we are pointing.
        * @param devPtr  Pointer to the device.
        */
-      virtual void set(const std::string& devName, DEV_TYPE* devPtr)
+      virtual void set(const std::string& devName, boost::shared_ptr<DEV_TYPE> devPtr)
       {
          mTypedDevice = devPtr;
          if(NULL != devPtr)
@@ -199,10 +201,9 @@ namespace gadget
        */
       virtual bool refresh()
       {
-         Input* input_dev = NULL;
-         input_dev = InputManager::instance()->getDevice(mDeviceName);
+         InputPtr input_dev = InputManager::instance()->getDevice(mDeviceName);
 
-         if ( NULL == input_dev )       // Not found, so stupefy
+         if ( NULL == input_dev.get() )       // Not found, so stupefy
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
                << "[gadget::TypedProxy::refresh()] Could not find device '"
@@ -212,8 +213,8 @@ namespace gadget
          }
          else
          {
-            DEV_TYPE* typed_dev = dynamic_cast<DEV_TYPE*>(input_dev);
-            if ( NULL == typed_dev )
+            boost::shared_ptr<DEV_TYPE> typed_dev = boost::dynamic_pointer_cast<DEV_TYPE>(input_dev);
+            if ( NULL == typed_dev.get() )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                   << "[gadget::TypedProxy::config()] Device was of wrong type: "
@@ -238,8 +239,8 @@ namespace gadget
       }
 
    protected:
-      std::string mDeviceName;   /**< Name of the device to link up with */
-      DEV_TYPE*   mTypedDevice;  /**< The device (type-specific pointer) */
+      std::string                    mDeviceName;   /**< Name of the device to link up with */
+      boost::shared_ptr<DEV_TYPE>    mTypedDevice;  /**< The device (type-specific pointer) */
    };
 
 } // end namespace

@@ -39,6 +39,7 @@
 
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <gadget/InputLoggerPtr.h>
+#include <gadget/Type/InputPtr.h>
 
 
 namespace gadget
@@ -46,7 +47,6 @@ namespace gadget
 
 // Proxies
 class Proxy;
-class Input;
 class DeviceFactory;
 
 /** \class InputManager InputManager.h gadget/InputManager.h
@@ -184,7 +184,7 @@ public:
     *
     * @return NULL if the device is not found.
     */
-   Input* getDevice(const std::string& deviceName);
+   InputPtr getDevice(const std::string& deviceName);
 
    DeviceFactory* getDeviceFactory();
 
@@ -197,7 +197,7 @@ public:
     *
     * @return false if device addition fails.
     */
-   bool addDevice(Input* devPtr);
+   bool addDevice(InputPtr devPtr);
 
    /**
     * Adds the given remote device to the Input Manager.
@@ -208,7 +208,7 @@ public:
     *
     * @return false if device addition fails.
     */
-   bool addRemoteDevice(Input* devPtr, const std::string& device_name);
+   bool addRemoteDevice(InputPtr devPtr, const std::string& device_name);
 
    /**
     * Removes the named device from the device table.
@@ -222,12 +222,12 @@ public:
    bool removeDevice(const std::string& devName);
 
    /**
-    * Removes the device identified by the given gadget::Input pointer.
+    * Removes the device identified by the given gadget::InputPtr.
     * Internally, this just uses removeDevice(const std::string&).
     *
     * @param devPtr The device object to remove.
     */
-   bool removeDevice(const Input* devPtr);
+   bool removeDevice(const InputPtr devPtr);
    //@}
 
 public:
@@ -276,7 +276,7 @@ public:
 protected:
    std::vector<vpr::LibraryPtr> mLoadedDrivers;
 
-   typedef std::map<std::string,Input*> tDevTableType;
+   typedef std::map<std::string,InputPtr> tDevTableType;
 
    tDevTableType                        mDevTable;
    std::map<std::string, Proxy*>        mProxyTable;    /**< list of proxies in the system */

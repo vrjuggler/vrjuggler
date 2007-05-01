@@ -48,7 +48,7 @@ public:
     */
    VirtualDevice(const std::string& name, const vpr::GUID& localId,
                  const std::string& baseType, const std::string& hostname,
-                 gadget::Input* device);
+                 gadget::InputPtr device);
 
    /**
     * Deconstructor.
@@ -87,7 +87,7 @@ public:
    /**
     * Return a pointer to the low level input device.
     */
-   gadget::Input* getDevice() const
+   gadget::InputPtr getDevice() const
    {
       return mDevice;
    }
@@ -97,7 +97,7 @@ private:
    std::string          mBaseType;
    std::string          mRemoteHostname;
    vpr::GUID            mId;
-   gadget::Input*       mDevice;
+   gadget::InputPtr     mDevice;
 };
 
 } // end namespace cluster

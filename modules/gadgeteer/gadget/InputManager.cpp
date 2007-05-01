@@ -89,10 +89,9 @@ void InputManager::shutdown()
    // Stop and delete all devices.
    for ( dev_iter_t a = mDevTable.begin(); a != mDevTable.end(); ++a )
    {
-      if ((*a).second != NULL)
+      if (NULL != (*a).second.get())
       {
          (*a).second->stopSampling();
-         delete (*a).second;
       }
    }
 
@@ -403,8 +402,7 @@ bool InputManager::configureDevice(jccl::ConfigElementPtr element)
                                  std::string("InputManager::configureDevice: device[") + dev_name + std::string("]\n"),
                                  std::string("done configuring device\n"));
 
-   Input* new_device;
-   new_device = DeviceFactory::instance()->loadDevice(element);
+   InputPtr new_device(DeviceFactory::instance()->loadDevice(element));
 
    if ((new_device != NULL) && (new_device->startSampling()))
    {
@@ -418,12 +416,8 @@ bool InputManager::configureDevice(jccl::ConfigElementPtr element)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
          << "New device " << clrSetBOLD(clrCYAN) << dev_name << clrRESET
-         << " failed to start.  Deleting instance" << std::endl
+         << " failed to start. " << std::endl
          << vprDEBUG_FLUSH;
-      if ( NULL != new_device )
-      {
-         delete new_device;
-      }
 
       ret_val = false;
    }
@@ -492,7 +486,7 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
          i != iMgr.mDevTable.end();
          ++i)
    {
-      if ((*i).second != NULL)
+      if (NULL != (*i).second.get())
       {
          out << "    '" << i->first << "' (type: "
              << typeid(*(i->second)).name() << ")" << std::endl;
@@ -505,9 +499,10 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
         ++i_p)
    {
       out << "    '" << (*i_p).second->getName() << "' refers to ";
-      if(NULL != ((*i_p).second->getProxiedInputDevice()))
+      InputPtr proxied_input_dev = (*i_p).second->getProxiedInputDevice();
+      if(NULL != proxied_input_dev.get())
       {
-         out << ((*i_p).second->getProxiedInputDevice())->getInstanceName();
+         out << proxied_input_dev->getInstanceName();
       }
       else
       {
@@ -536,7 +531,7 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
  * Add a device to the InputManager, returns the index
  * where the device was placed
  */
-bool InputManager::addDevice(Input* devPtr)
+bool InputManager::addDevice(InputPtr devPtr)
 {
    mDevTable[devPtr->getInstanceName()] = devPtr;
 
@@ -548,7 +543,7 @@ bool InputManager::addDevice(Input* devPtr)
 /**
  *   Add a remote device to the InputManager that is being updated by a RemoteInputManager.
  */
-bool InputManager::addRemoteDevice(Input* devPtr, const std::string& device_name)
+bool InputManager::addRemoteDevice(InputPtr devPtr, const std::string& device_name)
 {
    mDevTable[device_name] = devPtr;
 
@@ -570,7 +565,7 @@ void InputManager::resetAllDevicesAndProxies()
          i != mDevTable.end();
          ++i )
    {
-      if ( (*i).second != NULL )
+      if ( NULL != (*i).second.get() )
       {
          (*i).second->resetData();
       }
@@ -596,7 +591,7 @@ void InputManager::updateAllDevices()
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); ++i)      // all DEVICES
    {
-      if ((*i).second != NULL)
+      if (NULL != (*i).second.get())
       {
          i->second->updateDataIfNeeded();
       }
@@ -615,7 +610,7 @@ void InputManager::updateAllDevices()
  *
  * @returns - NULL if not found.
  */
-Input* InputManager::getDevice(const std::string& deviceName)
+InputPtr InputManager::getDevice(const std::string& deviceName)
 {
    // Look up in Input Manager
    tDevTableType::iterator ret_dev;
@@ -624,7 +619,7 @@ Input* InputManager::getDevice(const std::string& deviceName)
    {
       return ret_dev->second;
    }
-   return NULL;
+   return InputPtr();
 }
 
 DeviceFactory* InputManager::getDeviceFactory()
@@ -635,7 +630,7 @@ DeviceFactory* InputManager::getDeviceFactory()
 /**
  * Remove the device that is pointed to by devPtr.
  */
-bool InputManager::removeDevice(const Input* devPtr)
+bool InputManager::removeDevice(const InputPtr devPtr)
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); ++i)      // all DEVICES
    {
@@ -662,9 +657,9 @@ bool InputManager::removeDevice(const std::string& instName)
       return false;
    }
 
-   Input* dev_ptr = dev_found->second;
+   InputPtr dev_ptr = dev_found->second;
 
-   if(NULL == dev_ptr)
+   if(NULL == dev_ptr.get())
    {
       return false;
    }
@@ -685,7 +680,6 @@ bool InputManager::removeDevice(const std::string& instName)
 
    // stop the device, delete it, set pointer to NULL
    dev_ptr->stopSampling();
-   delete dev_ptr;
    mDevTable.erase(dev_found);
 
    // Refresh the proxies

@@ -38,6 +38,7 @@
 //#include <vpr/IO/ObjectReader.h>
 //#include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/SerializableObject.h>
+#include <gadget/Type/InputPtr.h>
 
 namespace gadget
 {

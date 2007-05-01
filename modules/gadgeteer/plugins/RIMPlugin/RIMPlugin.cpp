@@ -154,7 +154,7 @@ bool RIMPlugin::configAdd(jccl::ConfigElementPtr elm)
          << std::endl << vprDEBUG_FLUSH;
 
       gadget::InputManager::instance()->configureDevice(elm);
-      gadget::Input* input_device = gadget::InputManager::instance()->getDevice(device_name);
+      gadget::InputPtr input_device = gadget::InputManager::instance()->getDevice(device_name);
       if ( input_device != NULL )
       {
          result = addDeviceServer(device_name, input_device);
@@ -242,7 +242,8 @@ void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::Node* node)
             std::string device_name = temp_device_ack->getDeviceName();
             vprASSERT(temp_device_ack->getAck() && "We only have device ACKs now.");
 
-            if ( getVirtualDevice(device_name) != NULL )
+            gadget::InputPtr input_dev = getVirtualDevice(device_name);
+            if ( NULL != input_dev )
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR:")
                << "Somehow we already have a virtual device named: " << device_name << std::endl << vprDEBUG_FLUSH;
@@ -254,7 +255,9 @@ void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::Node* node)
                                 temp_device_ack->getHostname());
 
                // Add this virtual device to the InputManager's list of devices.
-               gadget::InputManager::instance()->addRemoteDevice(getVirtualDevice(device_name), device_name);
+               input_dev = getVirtualDevice(device_name);
+               vprASSERT(NULL != input_dev.get() && "Can't have a NULL device.");
+               gadget::InputManager::instance()->addRemoteDevice(input_dev, device_name);
             }
             break;
          }
@@ -266,8 +269,8 @@ void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::Node* node)
             //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "RIM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
             //temp_data_packet->printData(1);
 
-            gadget::Input* virtual_device = getVirtualDevice(temp_data_packet->getObjectId());
-            if ( virtual_device != NULL )
+            gadget::InputPtr virtual_device = getVirtualDevice(temp_data_packet->getObjectId());
+            if ( NULL != virtual_device.get() )
             {
                vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
 
@@ -295,7 +298,7 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
    << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
    << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
 
-   gadget::Input* input_device = gadget::BaseTypeFactory::instance()->loadNetDevice(device_base_type);
+   gadget::InputPtr input_device = gadget::InputPtr(gadget::BaseTypeFactory::instance()->loadNetDevice(device_base_type));
    VirtualDevicePtr virtual_device = VirtualDevicePtr(new VirtualDevice(name, device_id, device_base_type, hostname, input_device));
 
    mVirtualDevices[device_id] = virtual_device;
@@ -303,7 +306,7 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
    return true;
 }
 
-gadget::Input* RIMPlugin::getVirtualDevice(const vpr::GUID& deviceId)
+gadget::InputPtr RIMPlugin::getVirtualDevice(const vpr::GUID& deviceId)
 {
    for ( virtual_device_map_t::iterator i = mVirtualDevices.begin();
          i != mVirtualDevices.end() ; i++ )
@@ -313,10 +316,10 @@ gadget::Input* RIMPlugin::getVirtualDevice(const vpr::GUID& deviceId)
          return((*i).second->getDevice());
       }
    }
-   return NULL;
+   return gadget::InputPtr();
 }
 
-gadget::Input* RIMPlugin::getVirtualDevice(const std::string& deviceName)
+gadget::InputPtr RIMPlugin::getVirtualDevice(const std::string& deviceName)
 {
    for ( virtual_device_map_t::iterator i = mVirtualDevices.begin();
          i != mVirtualDevices.end() ; i++ )
@@ -326,7 +329,7 @@ gadget::Input* RIMPlugin::getVirtualDevice(const std::string& deviceName)
          return((*i).second->getDevice());
       }
    }
-   return NULL;
+   return gadget::InputPtr();
 }
 
 bool RIMPlugin::removeVirtualDevicesOnHost(const std::string& hostName)
@@ -389,7 +392,7 @@ void RIMPlugin::debugDumpVirtualDevices(int debug_level)
 }
 
 bool RIMPlugin::addDeviceServer(const std::string& name,
-                                gadget::Input* device)
+                                gadget::InputPtr device)
 {
    DeviceServerPtr temp_device_server =
       DeviceServerPtr(new DeviceServer(name, device, mHandlerGUID));

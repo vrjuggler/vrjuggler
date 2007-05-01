@@ -67,34 +67,50 @@ public:
    gmtl::Vec3f getTipVector(GloveData::GloveComponent component)
    {
       if(isStupefied())
+      {
          return gmtl::Vec3f(0,0,0);
+      }
       else
+      {
          return mTypedDevice->getTipVector(component,mUnitNum);
+      }
    }
 
    gmtl::Matrix44f getTipTransform( GloveData::GloveComponent component)
    {
       if(isStupefied())
+      {
          return gmtl::Matrix44f();
+      }
       else
+      {
          return mTypedDevice->getTipTransform(component,mUnitNum);
+      }
    }
   
    gmtl::Matrix44f getJointTransform(GloveData::GloveComponent component,
                                      GloveData::GloveJoint joint)
    {
       if(isStupefied())
+      {
          return gmtl::Matrix44f();
+      }
       else
+      {
          return mTypedDevice->getJointTransform(component, joint, mUnitNum);
+      }
    }
 
    GloveData getData()
    {
       if(isStupefied())
+      {
          return GloveData();
+      }
       else
+      {
          return mTypedDevice->getGloveData(mUnitNum);
+      }
    }
 
    /** Returns time of last update. */
@@ -106,12 +122,16 @@ public:
    }
 
    /** Returns a pointer to the device held by this proxy. */
-   Glove* getGlovePtr()
+   GlovePtr getGlovePtr()
    {
       if(isStupefied())
-         return NULL;
+      {
+         return GlovePtr();
+      }
       else
+      {
          return mTypedDevice;
+      }
    }
 
    /** Returns the subUnit number that this proxy points to. */
@@ -129,13 +149,15 @@ public:
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual Input* getProxiedInputDevice()
+   virtual InputPtr getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (isStupefied()))
-         return NULL;
+      if((NULL == mTypedDevice.get()) || (isStupefied()))
+      {
+         return InputPtr();
+      }
 
-      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in GloveProxy failed");
+      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
+      vprASSERT((NULL != ret_val.get()) && "Cross-cast in GloveProxy failed");
       return ret_val;
    }
 

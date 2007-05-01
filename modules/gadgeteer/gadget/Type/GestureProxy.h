@@ -68,9 +68,13 @@ public:
       const int defaultGesture(-1);
 
       if(isStupefied())
+      {
          return defaultGesture;
+      }
       else
+      {
          return mTypedDevice->getGesture();
+      }
    }
 
    /**
@@ -82,9 +86,13 @@ public:
    {
       const int defaultGestureIndex(-1);
       if(isStupefied())
+      {
          return defaultGestureIndex;
+      }
       else
+      {
          return mTypedDevice->getGestureIndex(name);
+      }
    }
 
    /**
@@ -95,9 +103,13 @@ public:
    std::string getGestureString(int gestureId = -1)
    {
       if(isStupefied())
+      {
          return std::string("");
+      }
       else
+      {
          return mTypedDevice->getGestureString(gestureId);
+      }
    }
 
    /** Returns time of last update. */
@@ -109,25 +121,31 @@ public:
    }
 
    /** Returns a pointer to the device held by this proxy. */
-   Gesture* getGesturePtr()
+   GesturePtr getGesturePtr()
    {
       if(isStupefied())
-         return NULL;
+      {
+         return GesturePtr();
+      }
       else
+      {
          return mTypedDevice;
+      }
    }
 
    static std::string getElementType();
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual Input* getProxiedInputDevice()
+   virtual InputPtr getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (isStupefied)())
-         return NULL;
+      if((NULL == mTypedDevice.get()) || (isStupefied)())
+      {
+         return InputPtr();
+      }
 
-      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in GestureProxy failed");
+      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
+      vprASSERT((NULL != ret_val.get()) && "Cross-cast in GestureProxy failed");
       return ret_val;
    }
 };

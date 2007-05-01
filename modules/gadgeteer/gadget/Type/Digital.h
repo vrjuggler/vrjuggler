@@ -36,7 +36,7 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
-
+#include <gadget/Type/DigitalPtr.h>
 
 namespace gadget
 {

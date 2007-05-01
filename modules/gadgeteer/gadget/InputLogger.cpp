@@ -387,7 +387,7 @@ void InputLogger::addRecordingSample()
       for(InputManager::tDevTableType::iterator dev_i=input_mgr->mDevTable.begin();
           dev_i != input_mgr->mDevTable.end(); ++dev_i)
       {
-         gadget::Input* cur_dev = (*dev_i).second;
+         gadget::InputPtr cur_dev = (*dev_i).second;
          std::string dev_name = cur_dev->getInstanceName();
 
          cppdom::NodePtr dev_node(new cppdom::Node("device", mRootNode->getContext()));
@@ -444,7 +444,7 @@ void InputLogger::playNextSample()
       cppdom::NodePtr serial_dev_node = *((*cur_dev_node)->getChildren().begin());
       vprASSERT(serial_dev_node.get() != NULL && "Got null serialized device node");
 
-      gadget::Input* dev_ptr = input_mgr->getDevice(dev_name);
+      gadget::InputPtr dev_ptr = input_mgr->getDevice(dev_name);
       if(NULL != dev_ptr)
       {
          vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,

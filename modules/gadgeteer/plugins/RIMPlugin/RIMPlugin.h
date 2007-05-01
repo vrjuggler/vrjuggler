@@ -34,7 +34,7 @@
 #include <cluster/ClusterPlugin.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
-
+#include <gadget/Type/InputPtr.h>
 #include <plugins/RIMPlugin/DeviceServerPtr.h>
 #include <plugins/RIMPlugin/VirtualDevicePtr.h>
 
@@ -48,7 +48,6 @@
 namespace gadget
 {
    class Node;
-   class Input;
 }
 
 namespace cluster
@@ -122,8 +121,8 @@ public:
 
    /** @name Virtual device management. */
    //@{
-   gadget::Input* getVirtualDevice(const vpr::GUID& device_id);
-   gadget::Input* getVirtualDevice(const std::string& device_name);
+   gadget::InputPtr getVirtualDevice(const vpr::GUID& device_id);
+   gadget::InputPtr getVirtualDevice(const std::string& device_name);
    //@}
 
    /** @name Configuration methods */
@@ -153,7 +152,7 @@ private:
 
    /** @name DeviceServer methods */
    //@{
-   bool addDeviceServer(const std::string& name, gadget::Input* device);
+   bool addDeviceServer(const std::string& name, gadget::InputPtr device);
    void removeDeviceServer(const std::string& device_name);
    void removeDeviceServer(const vpr::Uint16& device_id);
    DeviceServerPtr getDeviceServer(const std::string& device_name);

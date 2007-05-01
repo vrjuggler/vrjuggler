@@ -31,7 +31,7 @@ namespace cluster
 {
 
 VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& baseType, 
-                             const std::string& hostname, gadget::Input* device)
+                             const std::string& hostname, gadget::InputPtr device)
    : mName(name)
    , mBaseType(baseType)
    , mRemoteHostname(hostname)
@@ -40,12 +40,7 @@ VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const
 {}
 
 VirtualDevice::~VirtualDevice()
-{
-   if (mDevice != NULL)
-   {
-      delete mDevice;
-   }
-}
+{;}
 
 void VirtualDevice::debugDump(int debug_level)
 {

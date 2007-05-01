@@ -37,7 +37,7 @@
 namespace cluster
 {
 
-DeviceServer::DeviceServer(const std::string& name, gadget::Input* device,
+DeviceServer::DeviceServer(const std::string& name, gadget::InputPtr device,
                            const vpr::GUID& pluginGuid)
    : mName(name)
    , mDevice(device)
@@ -113,6 +113,8 @@ void DeviceServer::updateLocalData()
    // -BufferObjectWriter
    mBufferObjectWriter->getData()->clear();
    mBufferObjectWriter->setCurPos(0);
+
+   vprASSERT(NULL != mDevice.get() && "Can't have a NULL device.");
 
    // This updates the mDeviceData which both mBufferedObjectReader and
    // mDevicePacket point to.

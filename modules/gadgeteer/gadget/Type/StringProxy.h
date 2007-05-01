@@ -99,10 +99,10 @@ public:
    /**
     * Returns a pointer to the gadget::String object that we are proxying.
     */
-   String* getStringPtr()
+   StringPtr getStringPtr()
    {
       // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
-      return (isStupefied() ? NULL : mTypedDevice);
+      return (isStupefied() ? StringPtr() : mTypedDevice);
    }
 
    /**
@@ -118,15 +118,15 @@ public:
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual Input* getProxiedInputDevice()
+   virtual InputPtr getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (mStupefied))
+      if((NULL == mTypedDevice.get()) || (mStupefied))
       {
-         return NULL;
+         return InputPtr();
       }
 
-      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in StringProxy failed");
+      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
+      vprASSERT((NULL != ret_val.get()) && "Cross-cast in StringProxy failed");
       return ret_val;
    }
 

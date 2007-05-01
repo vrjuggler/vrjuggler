@@ -141,12 +141,12 @@ gmtl::Matrix44f PositionProxy::getData(float scaleFactor) const
 
 void PositionProxy::updateData()
 {
-   if((!mStupefied) && (mTypedDevice != NULL))
+   if((!mStupefied) && (NULL != mTypedDevice.get()))
    {
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
 
-      mPositionData = (mTypedDevice->getPositionData (mUnitNum));
+      mPositionData = (mTypedDevice->getPositionData(mUnitNum));
 
       // Create a vector to hold all 1 of our position data samples.
       std::vector<PositionData> temp_sample(1, mPositionData);

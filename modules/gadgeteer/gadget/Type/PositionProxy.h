@@ -109,15 +109,15 @@ public:
    }
 
    /// Returns a pointer to the gadget::Position object held by this proxy.
-   Position* getPositionPtr()
+   PositionPtr getPositionPtr()
    {
-      if(!mStupefied)
+      if(mStupefied || NULL == mTypedDevice.get())
       {
-         return mTypedDevice;
+         return PositionPtr();
       }
       else
       {
-         return NULL;
+         return mTypedDevice;
       }
    }
 
@@ -125,15 +125,15 @@ public:
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual Input* getProxiedInputDevice()
+   virtual InputPtr getProxiedInputDevice()
    {
-      if ( NULL == mTypedDevice || mStupefied )
+      if ( NULL == mTypedDevice.get() || mStupefied )
       {
-         return NULL;
+         return InputPtr();
       }
 
-      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in PositionProxy failed");
+      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
+      vprASSERT((NULL != ret_val.get()) && "Cross-cast in PositionProxy failed");
       return ret_val;
    }
 

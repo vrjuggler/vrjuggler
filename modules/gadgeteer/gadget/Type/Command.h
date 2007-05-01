@@ -28,14 +28,15 @@
 #define _GADGET_COMMAND_H_
 
 #include <gadget/gadgetConfig.h>
-#include <vector>
-#include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
+#include <vpr/IO/SerializableObject.h>
 #include <jccl/Config/ConfigElementPtr.h>
+#include <gadget/Type/CommandPtr.h>
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
-#include <vpr/IO/SerializableObject.h>
 #include <gadget/Util/DeviceSerializationTokens.h>
 
+#include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
+#include <vector>
 
 namespace gadget
 {

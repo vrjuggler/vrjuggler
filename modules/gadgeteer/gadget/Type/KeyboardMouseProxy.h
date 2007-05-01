@@ -57,11 +57,11 @@ public:
    /**
     * Returns a pointer to the gadget::KeyboardMouse object held by this proxy.
     */
-   KeyboardMouse* getKeyboardMousePtr()
+   KeyboardMousePtr getKeyboardMousePtr()
    {
       if(isStupefied())
       {
-         return NULL;
+         return KeyboardMousePtr();
       }
       else
       {
@@ -72,7 +72,7 @@ public:
    /** Returns the time of the last update. */
    virtual vpr::Interval getTimeStamp() const
    {
-      if ( isStupefied() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {
          return vpr::Interval();
       }
@@ -95,7 +95,7 @@ public:
     */
    bool modifierOnly(gadget::Keys modKey)
    {
-      if ( isStupefied() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {
          return false;
       }
@@ -116,7 +116,7 @@ public:
     */
    int keyPressed(gadget::Keys keyId)
    {
-      if ( isStupefied() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {
          return 0;
       }
@@ -131,7 +131,7 @@ public:
     */
    KeyboardMouse::EventQueue getEventQueue()
    {
-      if ( isStupefied() || (mTypedDevice == NULL) )
+      if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {
          return KeyboardMouse::EventQueue();
       }
@@ -145,15 +145,15 @@ public:
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual Input* getProxiedInputDevice()
+   virtual InputPtr getProxiedInputDevice()
    {
-      if ( NULL == mTypedDevice || isStupefied() )
+      if ( NULL == mTypedDevice.get() || isStupefied() )
       {
-         return NULL;
+         return InputPtr();
       }
 
-      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in KeyboardMouseProxy failed");
+      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
+      vprASSERT((NULL != ret_val.get()) && "Cross-cast in KeyboardMouseProxy failed");
       return ret_val;
    }
 };

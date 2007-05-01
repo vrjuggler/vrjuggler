@@ -28,15 +28,11 @@
 #define _CLUSTER_DEVICE_SERVER_H
 
 #include <cluster/PluginConfig.h>
+#include <gadget/Type/InputPtr.h>
 
 namespace vpr
 {
    class BufferObjectWriter;
-}
-
-namespace gadget
-{
-   class Input;
 }
 
 namespace cluster
@@ -60,7 +56,7 @@ public:
     *                  each data packet so that the receiver knows which 
     *                  plugin the data is coming from.
     */
-   DeviceServer(const std::string& name, gadget::Input* device,
+   DeviceServer(const std::string& name, gadget::InputPtr device,
                 const vpr::GUID& pluginId);
 
    /**
@@ -96,7 +92,7 @@ public:
 private:
    std::string                         mName;   /**< DeviceServer name */
    
-   gadget::Input*                      mDevice;
+   gadget::InputPtr                    mDevice;
    cluster::DataPacket*                mDataPacket;
    vpr::BufferObjectWriter*            mBufferObjectWriter;
    std::vector<vpr::Uint8>*            mDeviceData;

@@ -43,6 +43,7 @@
 #include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/IO/SerializableObject.h>
+#include <gadget/Type/PositionPtr.h>
 
 
 namespace gadget

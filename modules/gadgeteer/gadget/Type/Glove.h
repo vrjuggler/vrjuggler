@@ -36,6 +36,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <vpr/IO/SerializableObject.h>
+#include <gadget/Type/GlovePtr.h>
 
 namespace gadget
 {

@@ -29,11 +29,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <string>
-//#include <queue>
-#include <vector>
-#include <boost/concept_check.hpp>
-
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Interval.h>
@@ -41,6 +36,11 @@
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 #include <gadget/Type/KeyboardMouse/EventPtr.h>
+#include <gadget/Type/KeyboardMousePtr.h>
+
+#include <boost/concept_check.hpp>
+#include <string>
+#include <vector>
 
 namespace gadget
 {
