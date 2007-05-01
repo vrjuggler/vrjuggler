@@ -51,21 +51,7 @@ namespace vrj
 class VJ_CLASS_API Display : public boost::enable_shared_from_this<Display>
 {
 protected:
-   Display()
-      : mOriginX(-1)
-      , mOriginY(-1)
-      , mWidth(-1)
-      , mHeight(-1)
-      , mBorder(true)
-      , mHideMouse(false)
-      , mFullScreen(false)
-      , mAlwaysOnTop(false)
-      , mPipe(-1)
-      , mActive(true)
-      , mStereoRequested(false)
-   {
-      ;
-   }
+   Display();
 
 public:
    /**

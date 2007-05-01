@@ -42,6 +42,19 @@
 namespace vrj
 {
 
+SimViewport::SimViewport()
+   : Viewport()
+{
+   ;
+}
+
+SimViewport::SimViewport(const SimViewport& sv)
+   : Viewport(sv)
+   , mSimulator(sv.mSimulator)
+{
+   ;
+}
+
 SimViewport::~SimViewport()
 {
    if ( NULL != mLeftProj )

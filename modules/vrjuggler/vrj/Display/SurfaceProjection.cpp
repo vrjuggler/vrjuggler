@@ -47,6 +47,18 @@
 namespace vrj
 {
 
+SurfaceProjection::SurfaceProjection(const gmtl::Point3f& llCorner,
+                                     const gmtl::Point3f& lrCorner,
+                                     const gmtl::Point3f& urCorner,
+                                     const gmtl::Point3f& ulCorner)
+   : mLLCorner(llCorner)
+   , mLRCorner(lrCorner)
+   , mURCorner(urCorner)
+   , mULCorner(ulCorner)
+{
+   /* Do nothing. */ ;
+}
+
 void SurfaceProjection::validateCorners()
 {
    gmtl::Vec3f norm1, norm2;

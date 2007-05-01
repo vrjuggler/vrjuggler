@@ -46,18 +46,9 @@ namespace vrj
 class VJ_CLASS_API SimViewport : public Viewport
 {
 public:
-   SimViewport()
-      : Viewport()
-   {
-      ;
-   }
+   SimViewport();
 
-   SimViewport(const SimViewport& sv)
-      : Viewport(sv)
-      , mSimulator(sv.mSimulator)
-   {
-      ;
-   }
+   SimViewport(const SimViewport& sv);
 
    virtual ~SimViewport();
 

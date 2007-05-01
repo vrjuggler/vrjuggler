@@ -48,6 +48,13 @@
 namespace vrj
 {
 
+SurfaceViewport::SurfaceViewport()
+   : Viewport()
+   , mTracked(false)
+{
+   /* Do nothing. */ ;
+}
+
 SurfaceViewport::~SurfaceViewport()
 {
    if ( NULL != mLeftProj )

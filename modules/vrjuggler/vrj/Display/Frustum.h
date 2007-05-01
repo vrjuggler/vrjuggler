@@ -54,20 +54,10 @@ public:
       VJ_FAR
    };
 
-   Frustum()
-   {
-      frust[0] = frust[1] = frust[2] = 0.0f;
-      frust[3] = frust[4] = frust[5] = 0.0f;
-   }
+   Frustum();
 
    void setBottomLeftTopRight(const float bottomVal, const float leftVal,
-                              const float topVal, const float rightVal)
-   {
-      frust[VJ_BOTTOM] = bottomVal;
-      frust[VJ_LEFT]   = leftVal;
-      frust[VJ_TOP]    = topVal;
-      frust[VJ_RIGHT]  = rightVal;
-   }
+                              const float topVal, const float rightVal);
 
    void setNearFar(const float nearVal, const float farVal)
    {
@@ -76,15 +66,7 @@ public:
    }
 
    void set(const float leftVal, const float rightVal, const float bottomVal,
-            const float topVal, const float nearVal, const float farVal)
-   {
-      frust[VJ_LEFT]   = leftVal;
-      frust[VJ_RIGHT]  = rightVal;
-      frust[VJ_BOTTOM] = bottomVal;
-      frust[VJ_TOP]    = topVal;
-      frust[VJ_NEAR]   = nearVal;
-      frust[VJ_FAR]    = farVal;
-   }
+            const float topVal, const float nearVal, const float farVal);
 
    float& operator[](int elt)
    {

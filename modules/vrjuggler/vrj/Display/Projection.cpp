@@ -43,6 +43,23 @@ namespace vrj
 float Projection::mNearDist = 0.1f;
 float Projection::mFarDist = 10000.0f;
 
+Projection::Projection()
+   : mEye(LEFT)
+   , mViewport(NULL)
+   , mFocusPlaneDist(1.0f)
+{
+   ;
+}
+
+Projection::Projection(const Projection& p)
+   : mViewMat(p.mViewMat)
+   , mFrustum(p.mFrustum)
+   , mEye(p.mEye)
+   , mViewport(p.mViewport)
+   , mFocusPlaneDist(p.mFocusPlaneDist)
+{
+   ;
+}
 
 void Projection::config(jccl::ConfigElementPtr element)
 {

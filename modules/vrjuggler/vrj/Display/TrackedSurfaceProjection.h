@@ -62,17 +62,7 @@ public:
                             const gmtl::Point3f& lrCorner,
                             const gmtl::Point3f& urCorner,
                             const gmtl::Point3f& ulCorner,
-                            const std::string& trackerName)
-      : SurfaceProjection(llCorner, lrCorner, urCorner, ulCorner)
-      , mOriginalLLCorner(llCorner)
-      , mOriginalLRCorner(lrCorner)
-      , mOriginalURCorner(urCorner)
-      , mOriginalULCorner(ulCorner)
-   {
-      //XXX: Watch for timing problems here if trakcer is not inited first.
-      //     It shoulbe be though from dependency checking
-      mTracker.init(trackerName);              // Intialize the tracker
-   }
+                            const std::string& trackerName);
 
    virtual ~TrackedSurfaceProjection()
    {

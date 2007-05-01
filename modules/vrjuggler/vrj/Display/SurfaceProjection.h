@@ -58,14 +58,7 @@ public:
    SurfaceProjection(const gmtl::Point3f& llCorner,
                      const gmtl::Point3f& lrCorner,
                      const gmtl::Point3f& urCorner,
-                     const gmtl::Point3f& ulCorner)
-      : mLLCorner(llCorner)
-      , mLRCorner(lrCorner)
-      , mURCorner(urCorner)
-      , mULCorner(ulCorner)
-   {
-      /* Do nothing. */ ;
-   }
+                     const gmtl::Point3f& ulCorner);
 
    /**
     * Checks the corner points to make sure they form a legal surface. If not,

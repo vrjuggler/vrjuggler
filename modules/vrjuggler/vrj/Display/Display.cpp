@@ -38,6 +38,22 @@
 namespace vrj
 {
 
+Display::Display()
+   : mOriginX(-1)
+   , mOriginY(-1)
+   , mWidth(-1)
+   , mHeight(-1)
+   , mBorder(true)
+   , mHideMouse(false)
+   , mFullScreen(false)
+   , mAlwaysOnTop(false)
+   , mPipe(-1)
+   , mActive(true)
+   , mStereoRequested(false)
+{
+   ;
+}
+
 Display::~Display()
 {
    for ( std::vector<vrj::Viewport*>::iterator i = mViewports.begin();
