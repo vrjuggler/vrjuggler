@@ -40,9 +40,9 @@ namespace cluster
 DeviceServer::DeviceServer(const std::string& name, gadget::InputPtr device,
                            const vpr::GUID& pluginGuid)
    : mName(name)
-   , mDevice(device)
    , mPluginGUID(pluginGuid)
-   , mDataPacket(NULL)
+   , mDevice(device)
+   , mDataPacket()
    , mBufferObjectWriter(NULL)
    , mDeviceData(NULL)
 {
@@ -59,13 +59,12 @@ DeviceServer::DeviceServer(const std::string& name, gadget::InputPtr device,
    while(temp == mId);
 
    mDeviceData = new std::vector<vpr::Uint8>;
-   mDataPacket = new cluster::DataPacket(pluginGuid, mId, mDeviceData);
+   mDataPacket = cluster::DataPacketPtr(new cluster::DataPacket(pluginGuid, mId, mDeviceData));
    mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
 }
 
 DeviceServer::~DeviceServer()
 {
-   delete mDataPacket;
    // mDataPacket will clean up the memory that mDeviceData points
    // to since mDataPacket contains a reference to the same memory.
    mDeviceData = NULL;
@@ -80,32 +79,7 @@ void DeviceServer::send() const
       << "Sending Device Data for: " << getName() << std::endl
       << vprDEBUG_FLUSH;
 
-   gadget::AbstractNetworkManager::node_list_t nodes = cluster::ClusterManager::instance()->getNetwork()->getNodes();
-   for (gadget::AbstractNetworkManager::node_list_t::iterator itr = nodes.begin(); itr != nodes.end(); itr++)
-   {
-      try
-      {
-         (*itr)->send(mDataPacket);
-      }
-      catch( cluster::ClusterException cluster_exception )
-      {
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << "DeviceServer::send() Caught an exception!"
-            << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << clrOutBOLD(clrRED, "ERROR:") << cluster_exception.what()
-            << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << "DeviceServer::send() We have lost our connection to: "
-            << (*itr)->getName() << ":" << (*itr)->getPort()
-            << std::endl << vprDEBUG_FLUSH;
-
-         (*itr)->setStatus( gadget::Node::DISCONNECTED );
-         (*itr)->shutdown();
-
-         debugDump( vprDBG_CONFIG_LVL );
-      }
-   }
+   cluster::ClusterManager::instance()->getNetwork()->sendToAll(mDataPacket);
 }
 
 void DeviceServer::updateLocalData()

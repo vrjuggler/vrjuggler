@@ -284,7 +284,7 @@ bool AbstractNetworkManager::isLocalHost(const std::string& testHostName)
 }
 
 
-void AbstractNetworkManager::handlePacket(cluster::Packet* packet, NodePtr node)
+void AbstractNetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
 {
    //vprDEBUG( gadgetDBG_NET_MGR, 0 )
    //   << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
@@ -481,11 +481,32 @@ bool AbstractNetworkManager::connectToSlaves()
    return ret_val;
 }
 
-void AbstractNetworkManager::sendToAll(cluster::Packet* packet)
+void AbstractNetworkManager::sendToAll(cluster::PacketPtr packet)
 {
    for (node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
    {
-      (*itr)->send(packet);
+      try
+      {
+         (*itr)->send(packet);
+      }
+      catch( cluster::ClusterException cluster_exception )
+      {
+         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+            << "AbstractNetworkManager::sendToAll() Caught an exception!"
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+            << clrOutBOLD(clrRED, "ERROR:") << cluster_exception.what()
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+            << "DeviceServer::send() We have lost our connection to: "
+            << (*itr)->getName() << ":" << (*itr)->getPort()
+            << std::endl << vprDEBUG_FLUSH;
+
+         (*itr)->setStatus( gadget::Node::DISCONNECTED );
+         (*itr)->shutdown();
+
+         debugDump( vprDBG_CONFIG_LVL );
+      }
    }
 }
 

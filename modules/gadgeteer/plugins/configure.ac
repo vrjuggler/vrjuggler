@@ -298,7 +298,6 @@ AC_CONFIG_FILES([
    Makefile.inc
    plugin.defs.mk
    RIMPlugin/Makefile
-   SwapLockTCPPlugin/Makefile
    VARS.pl
    ])
 

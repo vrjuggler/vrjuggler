@@ -29,6 +29,7 @@
 
 #include <cluster/PluginConfig.h>
 #include <gadget/Type/InputPtr.h>
+#include <cluster/Packets/DataPacketPtr.h>
 
 namespace vpr
 {
@@ -37,7 +38,6 @@ namespace vpr
 
 namespace cluster
 {
-   class DataPacket;
    class Node;
    
 /** \class DeviceServer DeviceServer.h gadget/DeviceServer.h
@@ -95,7 +95,7 @@ private:
    vpr::GUID                           mPluginGUID;
    
    gadget::InputPtr                    mDevice;
-   cluster::DataPacket*                mDataPacket;
+   cluster::DataPacketPtr              mDataPacket;
    vpr::BufferObjectWriter*            mBufferObjectWriter;
    std::vector<vpr::Uint8>*            mDeviceData;
 };

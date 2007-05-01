@@ -48,7 +48,6 @@ namespace vpr
    
 namespace cluster
 {
-   class Packet;
 
 /** \class ClusterPlugin ClusterPlugin.h cluster/ClusterPlugin.h
  *

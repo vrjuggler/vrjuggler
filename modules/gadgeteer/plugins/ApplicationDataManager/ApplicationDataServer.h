@@ -28,6 +28,7 @@
 #define CLUSTER_APPLICATION_DATA_SERVER_H
 
 #include <cluster/PluginConfig.h>
+#include <cluster/Packets/DataPacketPtr.h>
 
 namespace vpr
 {
@@ -42,7 +43,6 @@ namespace gadget
 namespace cluster
 {
 class ApplicationData;
-class DataPacket;
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataServer
 {
@@ -85,7 +85,7 @@ public:
 
 private:
    ApplicationData*             mApplicationData;    /**< Structure that is being shared across the cluster. */
-   DataPacket*                  mDataPacket;         /**< Packet will be sent across the cluster. */
+   DataPacketPtr                mDataPacket;         /**< Packet will be sent across the cluster. */
    vpr::BufferObjectWriter*     mBufferObjectWriter; /**< ObjectWriter used to serialize the ApplicationData. */
    std::vector<vpr::Uint8>*     mDeviceData;         /**< Vector that conatins the data that will be sent across the node */
 };

@@ -52,7 +52,6 @@ namespace gadget
 
 namespace cluster
 {
-   class Packet;
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API RIMPlugin : public cluster::ClusterPlugin
 {
@@ -77,7 +76,7 @@ public:
    /**
     * Handle a incoming packet.
     */
-   void handlePacket(Packet* packet, gadget::NodePtr node);
+   void handlePacket(PacketPtr packet, gadget::NodePtr node);
 
    /** Calls any action needed by this plugin before draw()
     *

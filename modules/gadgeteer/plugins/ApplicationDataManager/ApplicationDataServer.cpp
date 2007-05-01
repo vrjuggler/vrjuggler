@@ -42,7 +42,7 @@ namespace cluster
 
 ApplicationDataServer::ApplicationDataServer(const vpr::GUID& guid,  ApplicationData* userData, const vpr::GUID& pluginGuid)
    : mApplicationData(userData)
-   , mDataPacket(NULL)
+   , mDataPacket()
    , mBufferObjectWriter(NULL)
    , mDeviceData(NULL)
 {
@@ -50,7 +50,7 @@ ApplicationDataServer::ApplicationDataServer(const vpr::GUID& guid,  Application
    mDeviceData = new std::vector<vpr::Uint8>;
    
    // Create a DataPacket that will be updated and sent continually.
-   mDataPacket = new DataPacket(pluginGuid, guid, mDeviceData);
+   mDataPacket = DataPacketPtr(new DataPacket(pluginGuid, guid, mDeviceData));
    mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
 }
 
@@ -59,7 +59,6 @@ ApplicationDataServer::~ApplicationDataServer()
    // User is responsible to clean up mApplicationData
    // mDataPacket will clean up the memory that mDeviceData points
    // to since mDataPacket contains a reference to the ame memory.
-   delete mDataPacket;
    // vpr::BufferObjectWritter does not release mDeviceData
    delete mBufferObjectWriter;
    mDeviceData = NULL;   
@@ -83,32 +82,7 @@ void ApplicationDataServer::serializeAndSend()
    // We must serialize the header again so that we can reset the size.
    mDataPacket->getHeader()->serializeHeader();
 
-   gadget::AbstractNetworkManager::node_list_t nodes = cluster::ClusterManager::instance()->getNetwork()->getNodes();
-   for (gadget::AbstractNetworkManager::node_list_t::iterator itr = nodes.begin(); itr != nodes.end(); itr++)
-   {
-      try
-      {
-         (*itr)->send(mDataPacket);
-      }
-      catch( cluster::ClusterException cluster_exception )
-      {
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << "ApplicationDataServer::send() Caught an exception!"
-            << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << clrOutBOLD(clrRED, "ERROR:") << cluster_exception.what()
-            << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << "DeviceServer::send() We have lost our connection to: "
-            << (*itr)->getName() << ":" << (*itr)->getPort()
-            << std::endl << vprDEBUG_FLUSH;
-
-         (*itr)->setStatus( gadget::Node::DISCONNECTED );
-         (*itr)->shutdown();
-
-         debugDump( vprDBG_CONFIG_LVL );
-      }
-   }
+   cluster::ClusterManager::instance()->getNetwork()->sendToAll(mDataPacket);
 }
 
 void ApplicationDataServer::debugDump(int debug_level)

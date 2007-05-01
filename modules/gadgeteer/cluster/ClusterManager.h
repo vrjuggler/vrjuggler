@@ -42,6 +42,7 @@
 #include <cluster/ClusterDepChecker.h>
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPluginPtr.h>
+#include <cluster/Packets/PacketPtr.h>
 #include <gadget/PacketHandler.h>
 #include <gadget/Util/Debug.h>
 
@@ -56,8 +57,6 @@ namespace gadget
 {
    class Node;
 }
-
-class Packet;
 
 namespace cluster
 {
@@ -332,7 +331,7 @@ public:
    /**
     * Handle a incoming packet.
     */
-   virtual void handlePacket(cluster::Packet* packet, gadget::NodePtr node);
+   virtual void handlePacket(cluster::PacketPtr packet, gadget::NodePtr node);
    
 private:
    ClusterDepChecker            mDepChecker;

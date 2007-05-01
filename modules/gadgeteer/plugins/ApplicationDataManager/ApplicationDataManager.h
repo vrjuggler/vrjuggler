@@ -44,7 +44,6 @@
 namespace cluster
 {
    class ApplicationData;
-   class Packet;
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataManager
    : public cluster::ClusterPlugin
@@ -66,7 +65,7 @@ public:
    /**
     * Handle a incoming packet.
     */
-   void handlePacket(Packet* packet, gadget::NodePtr node);
+   void handlePacket(PacketPtr packet, gadget::NodePtr node);
    
    /**
     * Called each frame by the kernel to update all application level data(ApplicationData).

@@ -32,12 +32,9 @@
 #include <vpr/Thread/Thread.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/NodePtr.h>
-#include <boost/enable_shared_from_this.hpp>
+#include <cluster/Packets/PacketPtr.h>
 
-namespace cluster
-{
-   class Packet;
-}
+#include <boost/enable_shared_from_this.hpp>
 
 namespace gadget
 {
@@ -192,12 +189,12 @@ public:
    /**
     * Send the given packet to this node.
     */
-   bool send(cluster::Packet* outPacket);
+   bool send(cluster::PacketPtr outPacket);
 
    /**
     * Receive a packet from the network.
     */
-   cluster::Packet* recvPacket();
+   cluster::PacketPtr recvPacket();
    
 protected:
    /**

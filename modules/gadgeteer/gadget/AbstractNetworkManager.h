@@ -39,11 +39,7 @@
 
 #include <gadget/NodePtr.h>
 #include <gadget/Reactor.h>
-
-namespace cluster
-{
-   class Packet;
-}
+#include <cluster/Packets/PacketPtr.h>
 
 namespace gadget
 {
@@ -81,7 +77,7 @@ public:
    /**
     * Process an incoming packet.
     */
-   void handlePacket(cluster::Packet* packet, NodePtr node);
+   void handlePacket(cluster::PacketPtr packet, NodePtr node);
 
    void updateNewConnections();
 
@@ -170,7 +166,7 @@ public:
    void waitForConnection(const int& listen_port = DEFAULT_SLAVE_PORT);
    bool connectToSlaves();
 
-   void sendToAll(cluster::Packet* packet);
+   void sendToAll(cluster::PacketPtr packet);
 
    /**
     * Return the number of Nodes in the Pending Nodes list.

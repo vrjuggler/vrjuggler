@@ -173,18 +173,14 @@ void Node::doUpdate()
    //       - Take the action of the packet
 
    vprASSERT(isConnected() && "Node is not connected, we can not update!\nWe must not be calling update from the correct location.");
-   cluster::Packet* temp_packet = NULL;
 
-   temp_packet = recvPacket();
+   cluster::PacketPtr temp_packet = recvPacket();
 
    // Print Packet Information
    temp_packet->printData(vprDBG_CONFIG_LVL);
 
    // Handle the packet correctly
    mNetworkManager->handlePacket(temp_packet, shared_from_this());
-
-   // Clean up after ourselves
-   delete temp_packet;
 }
 
 void Node::update()
@@ -215,7 +211,7 @@ void Node::update()
    }
 }
 
-bool Node::send(cluster::Packet* outPacket)
+bool Node::send(cluster::PacketPtr outPacket)
 {
    vprASSERT(NULL != outPacket && "Can not send a NULL packet.");
 
@@ -277,7 +273,8 @@ bool Node::send(cluster::Packet* outPacket)
       }
 
 
-      cluster::DataPacket* temp_data_packet = dynamic_cast<cluster::DataPacket*>(outPacket);
+      cluster::DataPacketPtr temp_data_packet
+         = boost::dynamic_pointer_cast<cluster::DataPacket>(outPacket);
       vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
 
       // Testing GUIDs
@@ -312,7 +309,7 @@ bool Node::send(cluster::Packet* outPacket)
    return true;
 }
 
-cluster::Packet* Node::recvPacket()
+cluster::PacketPtr Node::recvPacket()
 {
    // - Read in header
    // - Get Constructor for correct PacketType
@@ -344,8 +341,8 @@ cluster::Packet* Node::recvPacket()
       << std::endl << vprDEBUG_FLUSH;
 
    // Get Packet from factory
-   cluster::Packet* new_packet =
-      cluster::PacketFactory::instance()->createObject( packet_head->getPacketType() );
+   cluster::PacketPtr new_packet =
+      cluster::PacketPtr(cluster::PacketFactory::instance()->createObject( packet_head->getPacketType() ));
 
    // Verify that the packet has been made
    if ( NULL == new_packet )

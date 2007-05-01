@@ -160,9 +160,9 @@ bool RIMPlugin::configAdd(jccl::ConfigElementPtr elm)
 
          std::string temp_string = input_device->getInputTypeName();
          vpr::GUID   temp_guid   = device_server->getId();
-         cluster::DeviceAck* device_ack =
-            new cluster::DeviceAck(mHandlerGUID, temp_guid,
-                                   device_name, temp_string, true);
+         cluster::DeviceAckPtr device_ack =
+            cluster::DeviceAckPtr(new cluster::DeviceAck(mHandlerGUID, temp_guid,
+                                                         device_name, temp_string, true));
 
          gadget::AbstractNetworkManager::node_list_t nodes = cluster::ClusterManager::instance()->getNetwork()->getNodes();
          for (gadget::AbstractNetworkManager::node_list_t::iterator itr = nodes.begin(); itr != nodes.end(); itr++)
@@ -225,7 +225,7 @@ void RIMPlugin::recoverFromLostNode(gadget::NodePtr lostNode)
 /**
  * Handle a incoming packet.
  */
-void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::NodePtr node)
+void RIMPlugin::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
 {
    //We are only handling data packets right now.
    if ( NULL != packet && NULL != node )
@@ -234,10 +234,10 @@ void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::NodePtr node)
       {
       case cluster::Header::RIM_DEVICE_ACK:
          {
-            cluster::DeviceAck* temp_device_ack = dynamic_cast<cluster::DeviceAck*>(packet);
-            vprASSERT(NULL != temp_device_ack && "Dynamic cast failed!");
-            std::string device_name = temp_device_ack->getDeviceName();
-            vprASSERT(temp_device_ack->getAck() && "We only have device ACKs now.");
+            cluster::DeviceAckPtr device_ack = boost::dynamic_pointer_cast<cluster::DeviceAck>(packet);
+            vprASSERT(NULL != device_ack.get() && "Dynamic cast failed!");
+            std::string device_name = device_ack->getDeviceName();
+            vprASSERT(device_ack->getAck() && "We only have device ACKs now.");
 
             gadget::InputPtr input_dev = getVirtualDevice(device_name);
             if ( NULL != input_dev )
@@ -247,9 +247,9 @@ void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::NodePtr node)
             }
             else
             {
-               addVirtualDevice(temp_device_ack->getId(), device_name,
-                                temp_device_ack->getDeviceBaseType(),
-                                temp_device_ack->getHostname());
+               addVirtualDevice(device_ack->getId(), device_name,
+                                device_ack->getDeviceBaseType(),
+                                device_ack->getHostname());
 
                // Add this virtual device to the InputManager's list of devices.
                input_dev = getVirtualDevice(device_name);
@@ -260,8 +260,8 @@ void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::NodePtr node)
          }
       case cluster::Header::RIM_DATA_PACKET:
          {
-            cluster::DataPacket* temp_data_packet = dynamic_cast<cluster::DataPacket*>(packet);
-            vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
+            cluster::DataPacketPtr temp_data_packet = boost::dynamic_pointer_cast<cluster::DataPacket>(packet);
+            vprASSERT(NULL != temp_data_packet.get() && "Dynamic cast failed!");
 
             //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "RIM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
             //temp_data_packet->printData(1);

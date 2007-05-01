@@ -247,8 +247,8 @@ namespace cluster
                << "Send configuration to nodes: " << (*itr)->getName()
                << std::endl << vprDEBUG_FLUSH;
 
-            ConfigPacket cfg_pkt(node_output.str(), jccl::ConfigManager::PendingElement::ADD);
-            (*itr)->send(&cfg_pkt);
+            ConfigPacketPtr cfg_pkt(new ConfigPacket(node_output.str(), jccl::ConfigManager::PendingElement::ADD));
+            (*itr)->send(cfg_pkt);
          }
          std::cout << "Before barrier" << std::endl;
          sendEndBlocksAndSignalUpdate(0);
@@ -512,7 +512,7 @@ namespace cluster
          return;
       }
 
-      cluster::EndBlock temp_end_block(temp);
+      cluster::EndBlockPtr end_block(new cluster::EndBlock(temp));
 
       // Used to accumulate the number of connected nodes.
       size_t num_nodes(0);
@@ -528,7 +528,7 @@ namespace cluster
             try
             {
                // Send End Block to the node.
-               (*i)->send(&temp_end_block);
+               (*i)->send(end_block);
 
                // Indicate that this node is not up to date. It will be updated
                // below.
@@ -1014,12 +1014,12 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
    std::cout << "CLUSTER MODE: " << (mClusterActive ? "True":"False") << std::endl;
 }
 
-void ClusterManager::handlePacket(cluster::Packet* packet, gadget::NodePtr node)
+void ClusterManager::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
 {
    boost::ignore_unused_variable_warning(node);
 
    vprASSERT(Header::CONFIG_PACKET == packet->getPacketType() && "Not a config packet.");
-   cluster::ConfigPacket* cfg_pkt = dynamic_cast<cluster::ConfigPacket*>(packet);
+   cluster::ConfigPacketPtr cfg_pkt = boost::dynamic_pointer_cast<cluster::ConfigPacket>(packet);
    vprASSERT(NULL != cfg_pkt && "Failed to cast ConfigPacket.");
 
    jccl::Configuration incoming_config;
