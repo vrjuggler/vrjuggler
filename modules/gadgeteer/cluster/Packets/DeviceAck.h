@@ -113,7 +113,7 @@ public:
    }
 
    /**
-    * Return the hostname of the node that is acknowledging the DeviceRequest
+    * Return the hostname of the node the device is located on.
     */
    std::string getHostname()
    {
@@ -133,7 +133,7 @@ private:
    vpr::GUID   mId;              /**< GUID of the Device that we are acknowledging. */
    std::string mDeviceName;      /**< Name of the device that we are acknowledging. */
    std::string mDeviceBaseType;  /**< Basetype of the device that we are acknowledging. */
-   std::string mHostname;        /**< The hostname of the node that is acknowledging the DeviceRequest */
+   std::string mHostname;        /**< The hostname of the node that the device is on. */
    bool        mAck;             /**< Boolean determining if this is a positive(ACK) or a negative(NACK) responce. */
 };
 }
