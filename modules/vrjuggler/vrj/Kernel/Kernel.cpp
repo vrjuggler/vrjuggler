@@ -142,7 +142,7 @@ bool Kernel::init(int& argc, char* argv[])
    }
 
    // Overwrite argc to contain the new size of argv.
-   argc = std::distance(argv, new_end);
+   argc = std::distance<char**>(argv, new_end);
 
    // Finally store our options and use them.
    po::variables_map vm;
