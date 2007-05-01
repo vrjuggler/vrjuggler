@@ -120,7 +120,9 @@ gmtl::Matrix44f calculateSurfaceRotation(gmtl::Point3f ll,gmtl::Point3f lr,gmtl:
 }
 
 
-void calcSurfaceParameters(vrj::SurfaceViewport* surf, gmtl::Matrix44f& surfRotation, gmtl::Vec3f& center, float& width, float& height)
+void calcSurfaceParameters(vrj::SurfaceViewportPtr surf,
+                           gmtl::Matrix44f& surfRotation, gmtl::Vec3f& center,
+                           float& width, float& height)
 {
    gmtl::Point3f ur,lr,ul,ll;
    surf->getCorners(ll,lr,ur,ul);

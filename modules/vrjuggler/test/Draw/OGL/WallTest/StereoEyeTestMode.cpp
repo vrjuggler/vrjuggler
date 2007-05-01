@@ -26,6 +26,7 @@
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
+#include <vrj/Display/Projection.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 
 #include <WallTestHelpers.h>
@@ -42,13 +43,13 @@ void StereoEyeTestMode::draw(WallTest*)
    {
       for ( unsigned int v = 0; v < disps[i]->getNumViewports(); ++v )
       {
-         vrj::Viewport* viewport = disps[i]->getViewport(v);
+         vrj::ViewportPtr viewport = disps[i]->getViewport(v);
 
          if ( viewport->isSurface())
          {
             // Get a pointer to the surface
-            vrj::SurfaceViewport* surface =
-               dynamic_cast<vrj::SurfaceViewport*>(viewport);
+            vrj::SurfaceViewportPtr surface =
+               boost::dynamic_pointer_cast<vrj::SurfaceViewport>(viewport);
             vprASSERT(surface != NULL);
 
             gmtl::Matrix44f rotate;

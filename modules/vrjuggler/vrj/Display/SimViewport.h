@@ -29,11 +29,12 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
+
 #include <vrj/Draw/DrawSimInterfacePtr.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Display/SimViewportPtr.h>
 
 
 namespace vrj
@@ -45,14 +46,20 @@ namespace vrj
  */
 class VJ_CLASS_API SimViewport : public Viewport
 {
-public:
+protected:
    SimViewport();
 
-   SimViewport(const SimViewport& sv);
+public:
+   /**
+    * Creates a SimViewport instance and returns it wrapped in a ViewportPtr
+    * object.
+    *
+    * @since 2.3.3
+    */
+   static ViewportPtr create();
 
    virtual ~SimViewport();
 
-public:
    /** Configures the simulator. */
    virtual bool config(jccl::ConfigElementPtr element);
 

@@ -601,7 +601,7 @@ bool reconfigApp::verifyAllViewports(vrj::DisplayPtr display,
    bool status(false);
    for ( unsigned int i = 0; i < display->getNumViewports(); ++i )
    {
-      vrj::Viewport* viewport = display->getViewport(i);
+      vrj::ViewportPtr viewport = display->getViewport(i);
       if ( verifyViewport(viewport, viewportElement) )
       {
          status = true;
@@ -611,7 +611,7 @@ bool reconfigApp::verifyAllViewports(vrj::DisplayPtr display,
    return status;
 }
 
-bool reconfigApp::verifyViewport(vrj::Viewport* viewport,
+bool reconfigApp::verifyViewport(vrj::ViewportPtr viewport,
                                  jccl::ConfigElementPtr viewportElement)
 {
    //Verify that the display object has the specified viewport
@@ -1165,7 +1165,7 @@ bool reconfigApp::enableStereoSurface_check()
       return false;
    }
 
-   vrj::Viewport* surfaceViewport = surfaceDisplay->getViewport(0);
+   vrj::ViewportPtr surfaceViewport = surfaceDisplay->getViewport(0);
 
    if ( ! surfaceViewport->inStereo() )
    {
@@ -1220,7 +1220,7 @@ bool reconfigApp::disableStereoSurface_check()
       return false;
    }
 
-   vrj::Viewport* surfaceViewport = surfaceDisplay->getViewport(0);
+   vrj::ViewportPtr surfaceViewport = surfaceDisplay->getViewport(0);
 
    if ( surfaceViewport->inStereo() )
    {

@@ -53,7 +53,7 @@ public:
 
    virtual void draw(WallTest* wallTest);
 
-   void drawWallPattern(vrj::SurfaceViewport* surf);
+   void drawWallPattern(vrj::SurfaceViewportPtr surf);
 
    void drawGrid(float wallWidth, float wallHeight);
 };

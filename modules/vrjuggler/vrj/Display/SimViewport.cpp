@@ -48,11 +48,9 @@ SimViewport::SimViewport()
    ;
 }
 
-SimViewport::SimViewport(const SimViewport& sv)
-   : Viewport(sv)
-   , mSimulator(sv.mSimulator)
+ViewportPtr SimViewport::create()
 {
-   ;
+   return ViewportPtr(new SimViewport());
 }
 
 SimViewport::~SimViewport()

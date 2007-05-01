@@ -50,7 +50,7 @@
 void TestPatternMode::draw(WallTest*)
 {
    vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
-   vrj::Viewport*   cur_vp    = user_data->getViewport();
+   vrj::ViewportPtr cur_vp    = user_data->getViewport();
    vrj::Projection* proj      = user_data->getProjection();
 
    // XXX: How does this happen?
@@ -69,14 +69,14 @@ void TestPatternMode::draw(WallTest*)
       {
          for ( unsigned int v = 0; v < disps[i]->getNumViewports(); ++v )
          {
-            vrj::Viewport* viewport=disps[i]->getViewport(v);
+            vrj::ViewportPtr viewport=disps[i]->getViewport(v);
 
             if ( viewport->isSurface() )
             {
                // Get a pointer to the surface
-               vrj::SurfaceViewport* surface =
-                  dynamic_cast<vrj::SurfaceViewport*>(viewport);
-               vprASSERT(surface != NULL);
+               vrj::SurfaceViewportPtr surface =
+                  boost::dynamic_pointer_cast<vrj::SurfaceViewport>(viewport);
+               vprASSERT(surface.get() != NULL);
 
                drawWallPattern(surface);
             }
@@ -85,15 +85,15 @@ void TestPatternMode::draw(WallTest*)
    }
    else
    {
-      vrj::SurfaceViewport* surface =
-         dynamic_cast<vrj::SurfaceViewport*>(cur_vp);
-      vprASSERT(surface != NULL);
+      vrj::SurfaceViewportPtr surface =
+         boost::dynamic_pointer_cast<vrj::SurfaceViewport>(cur_vp);
+      vprASSERT(surface.get() != NULL);
 
       drawWallPattern(surface);
    }
 }
 
-void TestPatternMode::drawWallPattern(vrj::SurfaceViewport* surf)
+void TestPatternMode::drawWallPattern(vrj::SurfaceViewportPtr surf)
 {
    gmtl::Matrix44f rotate;
    gmtl::Vec3f center;

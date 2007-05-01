@@ -26,6 +26,7 @@
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
+#include <vrj/Display/Projection.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vpr/System.h>
 

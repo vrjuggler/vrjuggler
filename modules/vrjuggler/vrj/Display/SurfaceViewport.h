@@ -29,17 +29,18 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
-#include <vrj/Display/Projection.h>
-#include <jccl/Config/ConfigElementPtr.h>
 #include <gmtl/Point.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 
+#include <jccl/Config/ConfigElementPtr.h>
+
+#include <vrj/Display/Viewport.h>
+#include <vrj/Display/SurfaceViewportPtr.h>
+
+
 namespace vrj
 {
-
 
 /** \class SurfaceViewport SurfaceViewport.h vrj/Display/SurfaceViewport.h
  *
@@ -47,12 +48,20 @@ namespace vrj
  */
 class VJ_CLASS_API SurfaceViewport : public Viewport
 {
-public:
+protected:
    SurfaceViewport();
+
+public:
+   /**
+    * Creates a SurfaceViewport instance and returns it wrapped in a
+    * ViewportPtr object.
+    *
+    * @since 2.3.3
+    */
+   static ViewportPtr create();
 
    virtual ~SurfaceViewport();
 
-public:
    /**
     * Takes a display element and configures the viewport based on it.
     *

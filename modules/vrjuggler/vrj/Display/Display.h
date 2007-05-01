@@ -35,11 +35,11 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Assert.h>
 #include <vrj/Display/DisplayPtr.h>
+#include <vrj/Display/ViewportPtr.h>
 
 
 namespace vrj
 {
-   class Viewport;
 
 /** \class Display Display.h vrj/Display/Display.h
  *
@@ -210,7 +210,7 @@ public:
    /** @name Viewport handling */
    //@{
    /** Gets the number of viewports contained within this window. */
-   std::vector<vrj::Viewport*>::size_type getNumViewports() const
+   std::vector<vrj::ViewportPtr>::size_type getNumViewports() const
    {
       return mViewports.size();
    }
@@ -222,7 +222,7 @@ public:
     *
     * @param vpNum The integer identifier of the requested viewport.
     */
-   vrj::Viewport* getViewport(const std::vector<vrj::Viewport*>::size_type vpNum)
+   vrj::ViewportPtr getViewport(const std::vector<vrj::ViewportPtr>::size_type vpNum)
       const
    {
       return mViewports[vpNum];
@@ -245,7 +245,7 @@ protected:
 
    jccl::ConfigElementPtr mDisplayElement;  /**< The config data for this display */
 
-   std::vector<vrj::Viewport*> mViewports;  /**<  Contained viewports */
+   std::vector<vrj::ViewportPtr> mViewports;  /**<  Contained viewports */
 };
 
 VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);

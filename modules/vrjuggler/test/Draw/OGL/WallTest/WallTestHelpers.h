@@ -49,7 +49,9 @@ void drawPyramid();
 gmtl::Matrix44f calculateSurfaceRotation(gmtl::Point3f ll,gmtl::Point3f lr,gmtl::Point3f ul,gmtl::Point3f ur);
 
 /** Calculate parameters for the given surface. */
-void calcSurfaceParameters(vrj::SurfaceViewport* surf, gmtl::Matrix44f& surfRotation, gmtl::Vec3f& center, float& width, float& height);
+void calcSurfaceParameters(vrj::SurfaceViewportPtr surf,
+                           gmtl::Matrix44f& surfRotation, gmtl::Vec3f& center,
+                           float& width, float& height);
 
 #endif
 

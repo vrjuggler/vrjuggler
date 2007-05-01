@@ -52,7 +52,7 @@ void DisplayInfoMode::draw(WallTest*)
    DisplayManager* displayManager   = vrj::GlDrawManager::instance()->getDisplayManager();
    vrj::GlUserData* user_data       = vrj::GlDrawManager::instance()->currentUserData();
    vrj::DisplayPtr display          = user_data->getViewport()->getDisplay();
-   vrj::Viewport* viewport          = user_data->getViewport();
+   vrj::ViewportPtr viewport        = user_data->getViewport();
    vrj::Projection* proj            = user_data->getProjection();
    int cur_eye                      = proj->getEye();
 

@@ -30,10 +30,14 @@
 #include <vrj/vrjConfig.h>
 
 #include <string>
+#include <boost/noncopyable.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
 #include <gmtl/Vec.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <vrj/Display/DisplayPtr.h>
+#include <vrj/Display/ViewportPtr.h>
 #include <vrj/Kernel/UserPtr.h>
 
 
@@ -50,12 +54,13 @@ class Projection;
  * @date 3-5-2001
  */
 class VJ_CLASS_API Viewport
+   : public boost::enable_shared_from_this<Viewport>
+   , boost::noncopyable
 {
-public:
+protected:
    Viewport();
 
-   Viewport(const Viewport& v);
-
+public:
    virtual ~Viewport()
    {
       ;
@@ -78,7 +83,6 @@ public:
       STEREO=3      /**< Both left and right eyes */
    };
 
-public:
    /**
     * Takes a viewport element and configures the display based one it.
     *
@@ -101,7 +105,6 @@ public:
     */
    virtual void updateProjections(const float positionScale) = 0;
 
-public:
    /** Gets the type of this viewport. */
    Viewport::Type getType() const
    {

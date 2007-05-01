@@ -30,7 +30,6 @@
 
 #include <jccl/Config/ConfigElement.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/Display.h>
@@ -57,13 +56,7 @@ Display::Display()
 
 Display::~Display()
 {
-   typedef std::vector<vrj::Viewport*>::iterator iter_type;
-   for ( iter_type i = mViewports.begin(); i != mViewports.end(); ++i )
-   {
-      delete *i;
-   }
-
-   mViewports.clear();
+   /* Do nothing. */ ;
 }
 
 void Display::updateProjections(const float positionScale)
@@ -162,8 +155,6 @@ void Display::configViewports(jccl::ConfigElementPtr element)
    const unsigned int num_surface_vps = element->getNum("surface_viewports");
 
    jccl::ConfigElementPtr vp_elt;
-   SimViewport* sim_vp = NULL;
-   SurfaceViewport* surf_vp = NULL;
 
    // Create sim viewports
    // - Set the parent display
@@ -172,8 +163,9 @@ void Display::configViewports(jccl::ConfigElementPtr element)
    {
       vp_elt =
          element->getProperty<jccl::ConfigElementPtr>("simulator_viewports", i);
-      sim_vp = new SimViewport;
+      ViewportPtr sim_vp = SimViewport::create();
       sim_vp->setDisplay(shared_from_this());
+
       if ( sim_vp->config(vp_elt) )
       {
          mViewports.push_back(sim_vp);
@@ -186,7 +178,6 @@ void Display::configViewports(jccl::ConfigElementPtr element)
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
             << "       '" << vp_elt->getName() << "'\n" << vprDEBUG_FLUSH;
-         delete sim_vp;
       }
    }
 
@@ -197,7 +188,7 @@ void Display::configViewports(jccl::ConfigElementPtr element)
    {
       vp_elt =
          element->getProperty<jccl::ConfigElementPtr>("surface_viewports", i);
-      surf_vp = new SurfaceViewport;
+      ViewportPtr surf_vp = SurfaceViewport::create();
       surf_vp->setDisplay(shared_from_this());
 
       if ( surf_vp->config(vp_elt) )
@@ -212,7 +203,6 @@ void Display::configViewports(jccl::ConfigElementPtr element)
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_CRITICAL_LVL)
             << "       '" << vp_elt->getName() << "'\n" << vprDEBUG_FLUSH;
-         delete surf_vp;
       }
    }
 }

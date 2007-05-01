@@ -55,6 +55,11 @@ SurfaceViewport::SurfaceViewport()
    /* Do nothing. */ ;
 }
 
+ViewportPtr SurfaceViewport::create()
+{
+   return ViewportPtr(new SurfaceViewport());
+}
+
 SurfaceViewport::~SurfaceViewport()
 {
    if ( NULL != mLeftProj )

@@ -277,7 +277,7 @@ void GlPipe::checkForWindowsToClose()
          mGlDrawManager->setCurrentContext(win->getId());        // Set TS data of context id
          mGlDrawManager->currentUserData()->setUser(UserPtr());  // Set user data
          mGlDrawManager->currentUserData()->setProjection(NULL);
-         mGlDrawManager->currentUserData()->setViewport(NULL);   // Set vp data
+         mGlDrawManager->currentUserData()->setViewport(ViewportPtr()); // Set vp data
          mGlDrawManager->currentUserData()->setGlWindow(win);    // Set the gl window
 
          win->makeCurrent();              // Make the context current
@@ -386,7 +386,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
       // Have dirty context
       mGlDrawManager->currentUserData()->setUser(UserPtr());    // Set user data
       mGlDrawManager->currentUserData()->setProjection(NULL);
-      mGlDrawManager->currentUserData()->setViewport(NULL);     // Set vp data
+      mGlDrawManager->currentUserData()->setViewport(ViewportPtr()); // Set vp data
       mGlDrawManager->currentUserData()->setGlWindow(win);      // Set the gl window
 
       the_app->contextInit();              // Call context init function
@@ -395,12 +395,13 @@ void GlPipe::renderWindow(GlWindowPtr win)
       // viewports.
       for ( size_t vp_num = 0; vp_num < num_vps; ++vp_num )
       {
-         Viewport* viewport = the_display->getViewport(vp_num);
+         ViewportPtr viewport = the_display->getViewport(vp_num);
 
          if ( viewport->isActive() && viewport->isSimulator() )
          {
-            SimViewport* sim_vp = dynamic_cast<SimViewport*>(viewport);
-            vprASSERT(NULL != sim_vp);
+            SimViewportPtr sim_vp =
+               boost::dynamic_pointer_cast<SimViewport>(viewport);
+            vprASSERT(NULL != sim_vp.get());
 
             GlSimInterfacePtr draw_sim_i =
                boost::dynamic_pointer_cast<GlSimInterface>(
@@ -435,7 +436,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
    // --- FOR EACH VIEWPORT -- //
    for ( size_t vp_num = 0; vp_num < num_vps; ++vp_num )
    {
-      Viewport* viewport = the_display->getViewport(vp_num);
+      ViewportPtr viewport = the_display->getViewport(vp_num);
 
       // Should viewport be rendered???
       if (viewport->isActive())
@@ -453,13 +454,13 @@ void GlPipe::renderWindow(GlWindowPtr win)
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())
          {
-            SimViewport*      sim_vp(NULL);
             GlSimInterfacePtr draw_sim_i;
 
             if (viewport->isSimulator())
             {
-               sim_vp = dynamic_cast<SimViewport*>(viewport);
-               vprASSERT(NULL != sim_vp);
+               SimViewportPtr sim_vp =
+                  boost::dynamic_pointer_cast<SimViewport>(viewport);
+               vprASSERT(NULL != sim_vp.get());
                if (NULL != sim_vp)
                {
                   draw_sim_i =

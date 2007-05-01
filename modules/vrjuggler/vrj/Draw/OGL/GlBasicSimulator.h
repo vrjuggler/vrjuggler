@@ -86,7 +86,7 @@ public:
     */
    virtual void draw(const float scaleFactor);
 
-   virtual void initialize(SimViewport* simVp)
+   virtual void initialize(SimViewportPtr simVp)
    {
       mSimViewport = simVp;
    }
@@ -180,7 +180,7 @@ protected:
    GlDrawObjectFunctor* mDrawHeadFunctor;  /**< The functor to draw the head */
 
 protected:
-   SimViewport*   mSimViewport;
+   SimViewportPtr mSimViewport;
 
    // Drawing attributes
    bool           mDrawProjections;   /**< Should we draw projections */

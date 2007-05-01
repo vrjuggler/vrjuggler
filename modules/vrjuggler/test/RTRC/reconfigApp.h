@@ -99,7 +99,7 @@ private:
 
    bool verifyProxy(const std::string& proxyName,
                     const std::string& deviceName);
-   bool verifyViewport(vrj::Viewport* viewport,
+   bool verifyViewport(vrj::ViewportPtr viewport,
                        jccl::ConfigElementPtr viewportElement);
    bool verifyAllViewports(vrj::DisplayPtr display,
                            jccl::ConfigElementPtr viewportElement);

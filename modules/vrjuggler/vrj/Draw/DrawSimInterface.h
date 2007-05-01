@@ -31,13 +31,13 @@
 
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <vrj/Display/SimViewportPtr.h>
 #include <vrj/Draw/DrawSimInterface.h>
 
 
 namespace vrj
 {
    class Projection;
-   class SimViewport;
 
    /** \class DrawSimInterface DrawSimInterface.h vrj/Draw/DrawSimInterface.h
     *
@@ -61,7 +61,7 @@ namespace vrj
                                         Projection* leftProj,
                                         Projection* rightProj);
 
-      virtual void initialize(SimViewport* simVp) = 0;
+      virtual void initialize(SimViewportPtr simVp) = 0;
    };
 }
 

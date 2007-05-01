@@ -42,13 +42,13 @@ void CubeLineMode::draw(WallTest*)
    {
       for ( unsigned int v = 0; v < disps[i]->getNumViewports(); ++v )
       {
-         vrj::Viewport* viewport=disps[i]->getViewport(v);
+         vrj::ViewportPtr viewport=disps[i]->getViewport(v);
 
          if ( viewport->isSurface() )
          {
             // Get a pointer to the surface
-            vrj::SurfaceViewport* surface =
-               dynamic_cast<vrj::SurfaceViewport*>(viewport);
+            vrj::SurfaceViewportPtr surface =
+               boost::dynamic_pointer_cast<vrj::SurfaceViewport>(viewport);
             vprASSERT(surface != NULL);
 
             drawCubeLine(surface);
@@ -57,7 +57,7 @@ void CubeLineMode::draw(WallTest*)
    }
 }
 
-void CubeLineMode::drawCubeLine(vrj::SurfaceViewport* surf)
+void CubeLineMode::drawCubeLine(vrj::SurfaceViewportPtr surf)
 {
    gmtl::Matrix44f rotate;
    gmtl::Vec3f center;

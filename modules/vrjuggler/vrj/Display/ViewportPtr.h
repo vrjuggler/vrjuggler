@@ -24,39 +24,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CUBE_LINE_MODE_H_
-#define _CUBE_LINE_MODE_H_
+#ifndef _VRJ_VIEWPORT_PTR_H_
+#define _VRJ_VIEWPORT_PTR_H_
 
-#include <TestMode.h>
+#include <boost/shared_ptr.hpp>
 
-
-class WallTest;
 
 namespace vrj
 {
 
-class SurfaceViewport;
+class Viewport;
+typedef boost::shared_ptr<Viewport> ViewportPtr;
+typedef boost::weak_ptr<Viewport> ViewportWeakPtr;
 
 }
 
-class CubeLineMode : public TestMode
-{
-public:
-   virtual std::string getName()
-   {
-      return std::string("CubeLineMode");
-   }
 
-   virtual void update(WallTest*)
-   {
-   }
-
-   virtual void draw(WallTest* wallTest);
-
-   void drawCubeLine(vrj::SurfaceViewportPtr surf);
-
-   void drawCubeLine();
-};
-
-
-#endif
+#endif /* _VRJ_VIEWPORT_PTR_H_ */

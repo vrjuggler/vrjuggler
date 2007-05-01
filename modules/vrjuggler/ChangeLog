@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-01-2007 patrick     Handle vrj::Viewport instances (and subclasses thereof)
+                        as shared pointers.
+                        NEW VERSION: 2.3.3
 Apr-30-2007 patrick     Handle vrj::User instances as shared pointers.
                         NEW VERSION: 2.3.2
 Apr-29-2007 patrick     Renamed the x11_pipes property of the display_system

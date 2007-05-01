@@ -30,6 +30,7 @@
 #include <vrj/Draw/OGL/Config.h>
 
 #include <vrj/Kernel/UserPtr.h>
+#include <vrj/Display/ViewportPtr.h>
 #include <vrj/Draw/OGL/GlWindowPtr.h>
 
 
@@ -38,7 +39,6 @@ namespace vrj
 
 // Declare the class that we need pointers too below
 class Projection;
-class Viewport;
 
 /** \class GlUserData GlUserData.h vrj/Draw/OGL/GlUserData.h
  *
@@ -76,12 +76,12 @@ public:
       mProj = proj;
    }
 
-   Viewport* getViewport()
+   ViewportPtr getViewport()
    {
       return mViewport;
    }
 
-   void setViewport(Viewport* vp)
+   void setViewport(ViewportPtr vp)
    {
       mViewport = vp;
    }
@@ -99,7 +99,7 @@ public:
 protected:
    UserPtr      mUser;        /**< The current user we are rendering */
    Projection*  mProj;        /**< The current projection being used */
-   Viewport*    mViewport;    /**< The current vrj viewport being used */
+   ViewportPtr  mViewport;    /**< The current vrj viewport being used */
    GlWindowPtr  mGlWindow;    /**< The current GL window that we are rendering in. (basically the gl context) */
 };
 

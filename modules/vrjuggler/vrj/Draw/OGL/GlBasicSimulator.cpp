@@ -232,15 +232,16 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
    {
       for (unsigned int v=0;v<disps[i]->getNumViewports();v++)
       {
-         Viewport* view_port = disps[i]->getViewport(v);
+         ViewportPtr view_port = disps[i]->getViewport(v);
 
          if (view_port->isSurface())
          {
             for(unsigned proj_num=0;proj_num<2;++proj_num)
             {
                // Get a pointer to the surface
-               SurfaceViewport* surf_vp = dynamic_cast<SurfaceViewport*>(view_port);
-               vprASSERT(surf_vp != NULL);
+               SurfaceViewportPtr surf_vp =
+                  boost::dynamic_pointer_cast<SurfaceViewport>(view_port);
+               vprASSERT(surf_vp.get() != NULL);
                proj = NULL;
                if(0 == proj_num)
                   proj = surf_vp->getLeftProj();

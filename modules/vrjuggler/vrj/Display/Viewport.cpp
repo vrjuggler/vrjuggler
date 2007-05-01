@@ -52,24 +52,6 @@ Viewport::Viewport()
    ;
 }
 
-Viewport::Viewport(const Viewport& v)
-   : mName(v.mName)
-   , mUser(v.mUser)
-   , mType(v.mType)
-   , mView(v.mView)
-   , mActive(v.mActive)
-   , mDisplay(v.mDisplay)
-   , mViewportElement(v.mViewportElement)
-   , mXorigin(v.mXorigin)
-   , mYorigin(v.mYorigin)
-   , mXsize(v.mXsize)
-   , mYsize(v.mYsize)
-   , mLeftProj(v.mLeftProj)
-   , mRightProj(v.mRightProj)
-{
-   ;
-}
-
 bool Viewport::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);

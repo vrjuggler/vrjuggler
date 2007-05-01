@@ -257,19 +257,18 @@ void GlDrawManager::addDisplay(DisplayPtr disp)
       << std::endl << vprDEBUG_FLUSH;
 
    // -- Finish Simulator setup
-   std::vector<vrj::Viewport*>::size_type num_vp(disp->getNumViewports());
+   std::vector<vrj::ViewportPtr>::size_type num_vp(disp->getNumViewports());
 
-   for ( std::vector<vrj::Viewport*>::size_type i = 0 ; i < num_vp ; ++i )
+   for ( std::vector<vrj::ViewportPtr>::size_type i = 0 ; i < num_vp ; ++i )
    {
-      Viewport* vp = disp->getViewport(i);
+      ViewportPtr vp = disp->getViewport(i);
 
       if (vp->isSimulator())
       {
          jccl::ConfigElementPtr vp_element = vp->getConfigElement();
 
-         SimViewport* sim_vp(NULL);
-         sim_vp = dynamic_cast<SimViewport*>(vp);
-         vprASSERT(NULL != sim_vp);
+         SimViewportPtr sim_vp = boost::dynamic_pointer_cast<SimViewport>(vp);
+         vprASSERT(NULL != sim_vp.get());
 
          sim_vp->setDrawSimInterface(DrawSimInterfacePtr());
 

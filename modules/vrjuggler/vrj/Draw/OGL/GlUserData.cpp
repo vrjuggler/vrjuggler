@@ -34,7 +34,6 @@ namespace vrj
 
 GlUserData::GlUserData()
    : mProj(NULL)
-   , mViewport(NULL)
    , mGlWindow()
 {
    /* Do nothing. */ ;
