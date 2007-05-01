@@ -33,8 +33,12 @@
 #include <cluster/ClusterPlugin.h>
 #include <plugins/ApplicationDataManager/ApplicationDataServerPtr.h>
 
-#include <vector>
-#include <map>
+#include <list>
+#ifdef VPR_HASH_MAP_INCLUDE
+#  include VPR_HASH_MAP_INCLUDE
+#else
+#  include <map>
+#endif
 
 namespace cluster
 {
@@ -170,8 +174,13 @@ public:
    static const vpr::GUID                          mPluginGUID;
 
 private:
+#ifdef VPR_HASH_MAP_INCLUDE
+   typedef std::hash_map<vpr::GUID, ApplicationData*, vpr::GUID::hash> object_map_t;
+   typedef std::hash_map<vpr::GUID, ApplicationDataServerPtr, vpr::GUID::hash>  server_map_t;
+#else
    typedef std::map<vpr::GUID, ApplicationData*> object_map_t;
    typedef std::map<vpr::GUID, ApplicationDataServerPtr>  server_map_t;
+#endif
 
    object_map_t         mObjects;       /**< Application level ApplicationData list. */
    server_map_t         mServers;       /**< ApplicationData Server list. */

@@ -24,28 +24,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
-#include <cluster/ClusterPlugin.h>
-#include <cluster/ClusterManager.h>
+#ifndef _CLUSTER_CLUSTER_PLUGIN_PTR_H_
+#define _CLUSTER_CLUSTER_PLUGIN_PTR_H_
+
+#include <boost/shared_ptr.hpp>
 
 namespace cluster
 {
-   ClusterPlugin::ClusterPlugin()
-   {
-      mActive = false;
-   }
-   
-   ClusterPlugin::~ClusterPlugin()
-   {
-      ClusterManager::instance()->removePlugin(shared_from_this());
-   }
+class ClusterPlugin;
+typedef boost::shared_ptr<ClusterPlugin> ClusterPluginPtr;
+typedef boost::weak_ptr<ClusterPlugin> ClusterPluginWeakPtr;
+}
 
-   void ClusterPlugin::setActive(bool active)
-   {
-      mActive = active;
-   }
-   bool ClusterPlugin::isActive()
-   {
-      return(mActive);
-   }
-} // End of gadget namespace
+#endif /*_CLUSTER_CLUSTER_PLUGIN_PTR_H_*/

@@ -48,7 +48,7 @@ extern "C"
 
    GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
    {
-      mgr->addPlugin(new cluster::ApplicationDataManager());
+      mgr->addPlugin(cluster::ClusterPluginPtr(new cluster::ApplicationDataManager()));
    }
 }
 
@@ -62,6 +62,7 @@ ApplicationDataManager::ApplicationDataManager()
 
 ApplicationDataManager::~ApplicationDataManager()
 {
+   // Memory for each ApplicationData object is handled by application.
    mObjects.clear();
    mServers.clear();
 }

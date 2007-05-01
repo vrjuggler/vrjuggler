@@ -50,7 +50,7 @@ extern "C"
 
    GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
    {
-      mgr->addPlugin(new cluster::StartBarrierPlugin());
+      mgr->addPlugin(cluster::ClusterPluginPtr(new cluster::StartBarrierPlugin()));
    }
 }
 

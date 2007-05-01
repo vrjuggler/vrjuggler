@@ -303,11 +303,9 @@ namespace cluster
 
       //vpr::Guard<vpr::Mutex> guard(mPluginsLock);
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
+      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
       {
-         if ( !(*i)->isPluginReady() )
+         if ( !(*itr)->isPluginReady() )
          {
             return false;
          }
@@ -316,87 +314,88 @@ namespace cluster
       return true;
    }
 
-   void ClusterManager::recoverFromLostNode( gadget::Node* lost_node )
+   void ClusterManager::recoverFromLostNode( gadget::Node* node )
    {
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
+      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
       {
-         (*i)->recoverFromLostNode( lost_node );
+         (*itr)->recoverFromLostNode( node );
       }
    }
 
    /**
     * Adds a new plugin to the ClusterManager.
     */
-   void ClusterManager::addPlugin(ClusterPlugin* new_plugin)
+   void ClusterManager::addPlugin(ClusterPluginPtr newPlugin)
    {
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-      if ( !doesPluginExist(new_plugin) )
+      if ( !doesPluginExist(newPlugin) )
       {
-         mPlugins.push_back( new_plugin );
-         std::pair<vpr::GUID, ClusterPlugin*> p =
-            std::make_pair( new_plugin->getHandlerGUID(), new_plugin );
+         mPlugins.push_back( newPlugin );
+         plugin_map_t::value_type p =
+            std::make_pair( newPlugin->getHandlerGUID(), newPlugin );
          mPluginMap.insert( p );
 
          // We should do this here, but since we do not add the manager until
          // its configAdd currently you can see the problem
-         jccl::ConfigManager::instance()->addConfigElementHandler( new_plugin );
-         mClusterNetwork->addHandler( new_plugin );
-         //We can still unregister it when removed below though
+         jccl::ConfigManager::instance()->addConfigElementHandler( newPlugin.get() );
+         mClusterNetwork->addHandler( newPlugin.get() );
+
+         // We can still unregister it when removed below though
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
             << clrOutBOLD( clrCYAN, "[ClusterManager] " )
-            << "Adding Plugin: " << new_plugin->getPluginName()
+            << "Adding Plugin: " << newPlugin->getPluginName()
             << std::endl << vprDEBUG_FLUSH;
       }
    }
 
-   ClusterPlugin* ClusterManager::getPluginByGUID( const vpr::GUID& plugin_guid )
+   ClusterPluginPtr ClusterManager::getPluginByGUID( const vpr::GUID& pluginGuid )
    {
-      std::map<vpr::GUID, ClusterPlugin*>::const_iterator i =
-         mPluginMap.find( plugin_guid );
-      if( i != mPluginMap.end() )
+      plugin_map_t::const_iterator found = mPluginMap.find( pluginGuid );
+
+      if( found != mPluginMap.end() )
       {
-         return ( (*i).second );
+         return ( (*found).second );
       }
-      return NULL;
+
+      return ClusterPluginPtr();
    }
 
    /**
     * Removes a plugin from the ClusterManager
     */
-   void ClusterManager::removePlugin( ClusterPlugin* old_plugin )
+   void ClusterManager::removePlugin( ClusterPluginPtr oldPlugin )
    {
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
 
-      mPluginMap.erase( old_plugin->getHandlerGUID() );
+      // Remove plugin from map.
+      mPluginMap.erase( oldPlugin->getHandlerGUID() );
 
-      std::list<ClusterPlugin*>::iterator found
-         = std::find(mPlugins.begin(), mPlugins.end(), old_plugin);
+      plugin_list_t::iterator found
+         = std::find(mPlugins.begin(), mPlugins.end(), oldPlugin);
 
       if (mPlugins.end() != found)
       {
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
             << clrOutBOLD( clrCYAN, "[ClusterManager] " )
-            << "Removing Plugin: " << old_plugin->getPluginName()
+            << "Removing Plugin: " << oldPlugin->getPluginName()
             << std::endl << vprDEBUG_FLUSH;
          mPlugins.erase(found);
-         jccl::ConfigManager::instance()->removeConfigElementHandler(*found);
+         jccl::ConfigManager::instance()->removeConfigElementHandler((*found).get());
       }
    }
 
    /**
     * Checks if a plugin exists in the ClusterManager
     */
-   bool ClusterManager::doesPluginExist( ClusterPlugin* old_plugin )
+   bool ClusterManager::doesPluginExist( ClusterPluginPtr oldPlugin )
    {
       vprASSERT( mPluginsLock.test() == 1 &&
                  "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()" );
 
-      std::list<ClusterPlugin*>::iterator found
-         = std::find(mPlugins.begin(), mPlugins.end(), old_plugin);
+      plugin_list_t::const_iterator found
+         = std::find(mPlugins.begin(), mPlugins.end(), oldPlugin);
 
       return (mPlugins.end() != found);
    }
@@ -411,11 +410,9 @@ namespace cluster
          << clrOutBOLD( clrCYAN,"[ClusterManager]" )
          << " sendRequests" << std::endl << vprDEBUG_FLUSH;
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
+      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
       {
-         (*i)->sendRequests();
+         (*itr)->sendRequests();
          updateNeeded = true;
       }
 
@@ -436,11 +433,9 @@ namespace cluster
          << clrOutBOLD( clrCYAN,"[ClusterManager]" )
          << " preDraw" << std::endl << vprDEBUG_FLUSH;
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
+      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
       {
-         (*i)->preDraw();
+         (*itr)->preDraw();
          updateNeeded = true;
       }
       if ( updateNeeded )
@@ -465,11 +460,9 @@ namespace cluster
          << clrOutBOLD( clrCYAN,"[ClusterManager]" )
          << " postPostFrame" << std::endl << vprDEBUG_FLUSH;
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
+      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
       {
-         (*i)->postPostFrame();
+         (*itr)->postPostFrame();
          updateNeeded = true;
       }
       if ( updateNeeded )
@@ -483,15 +476,13 @@ namespace cluster
    {
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
 
-      for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end();
-            ++i )
+      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
       {
          //if ((*i)->isActive())
          //{  // As soon as we find a plug-in that creates
             // a barrier, we can continue. Maybe not since
             // this will not match up on different machines
-            if ( (*i)->createBarrier() )
+            if ( (*itr)->createBarrier() )
             {
                return;
             }
@@ -610,7 +601,7 @@ namespace cluster
     *  @pre configCanHandle(element) == true.
     *  @return true iff element was successfully added to configuration.
     */
-   bool ClusterManager::configCluster( jccl::ConfigElementPtr element )
+   void ClusterManager::configCluster( jccl::ConfigElementPtr element )
    {
       vpr::DebugOutputGuard dbg_output( gadgetDBG_RIM, vprDBG_STATE_LVL,
                               std::string( "Cluster Manager: Adding config element.\n" ),
@@ -619,7 +610,6 @@ namespace cluster
       vprASSERT(configCanHandle(element));
       vprASSERT(recognizeClusterManagerConfig(element));
 
-      bool ret_val = false;      // Flag to return success
       {
          vprDEBUG( gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << clrOutBOLD(clrCYAN,"[ClusterManager] ")
@@ -643,9 +633,6 @@ namespace cluster
                << "configAdd() New Node Name: " << new_node
                << std::endl << vprDEBUG_FLUSH;
 
-            //jccl::ConfigElementPtr new_node_element =
-            //   getConfigElementPointer( new_node );
-   
             if (1 != mClusterNodeElements.count(new_node))
             {
                throw ClusterException("Can't find configuration for node: " + new_node, VPR_LOCATION);
@@ -1017,6 +1004,8 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
 
 void ClusterManager::handlePacket(cluster::Packet* packet, gadget::Node* node)
 {
+   boost::ignore_unused_variable_warning(node);
+
    vprASSERT(Header::CONFIG_PACKET == packet->getPacketType() && "Not a config packet.");
    cluster::ConfigPacket* cfg_pkt = dynamic_cast<cluster::ConfigPacket*>(packet);
    vprASSERT(NULL != cfg_pkt && "Failed to cast ConfigPacket.");
@@ -1025,59 +1014,43 @@ void ClusterManager::handlePacket(cluster::Packet* packet, gadget::Node* node)
    //Loading from an istream
    std::istringstream config_input(cfg_pkt->getConfig());
    config_input >> incoming_config;
-   std::cout << "Got config packet" << std::endl;
+
+   vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+      << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+      << "Got configuration packet."
+      << std::endl << vprDEBUG_FLUSH;
+
    jccl::ConfigManager::instance()->addConfigurationAdditions(&incoming_config);
 }
 
-   // ---- Configuration Helper Functions ----
-   jccl::ConfigElementPtr ClusterManager::getConfigElementPointer( const std::string& name )
+/**
+ * Dump the current Status of the InputManager, listing all
+ * the devices, proxies and internal settings
+ */
+std::ostream& operator<<( std::ostream& out, ClusterManager& mgr )
+{
+   out << std::endl << "========== ClusterManager Status =========="
+       << std::endl;
+   out << "preDraw() call count:       " << mgr.mPreDrawCallCount << std::endl;
+   out << "postPostFrame() call count: " << mgr.mPostPostFrameCallCount << std::endl;
+   out << "Plugins:" << std::endl;
+
+   // Dump Plugins
+   for ( ClusterManager::plugin_list_t::iterator itr = mgr.mPlugins.begin();
+         itr != mgr.mPlugins.end(); itr++ )
    {
-      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-      //cfg_mgr->lockPending();
-      //cfg_mgr->unlockPending();
-      for ( std::list<jccl::ConfigManager::PendingElement>::iterator i = cfg_mgr->getPendingBegin();
-            i != cfg_mgr->getPendingEnd() ; ++i )
+      if ( (*itr).get() != NULL )
       {
-         if ( (*i).mElement->getName() == name )
-         {
-            return( (*i).mElement );
-         }
+         out << "  name:" << std::setw(30) << std::setfill(' ') << (*itr)->getPluginName()
+             << "  guid:" << std::setw(30) << std::setfill(' ') << (*itr)->getHandlerGUID()
+             << "  active:" << std::setw(7) << std::setfill(' ')
+             << ( (*itr)->isActive() ? "true" : "false" ) << std::endl;
       }
-      cfg_mgr->lockActive();
-      jccl::ConfigElementPtr temp = cfg_mgr->getActiveConfig()->get( name );
-      cfg_mgr->unlockActive();
-      return( temp );
    }
 
-   /**
-    * Dump the current Status of the InputManager, listing all
-    * the devices, proxies and internal settings
-    */
-   std::ostream& operator<<( std::ostream& out, ClusterManager& mgr )
-   {
-      out << std::endl << "========== ClusterManager Status =========="
-          << std::endl;
-      out << "preDraw() call count:       " << mgr.mPreDrawCallCount << std::endl;
-      out << "postPostFrame() call count: " << mgr.mPostPostFrameCallCount << std::endl;
-      out << "Plugins:" << std::endl;
+   out << std::endl;
 
-      // Dump Plugins
-      for ( std::list<ClusterPlugin*>::iterator i = mgr.mPlugins.begin();
-            i != mgr.mPlugins.end();
-            ++i )
-      {
-         if ( (*i) != NULL )
-         {
-            out << "  name:" << std::setw(30) << std::setfill(' ') << (*i)->getPluginName()
-                << "  guid:" << std::setw(30) << std::setfill(' ') << (*i)->getHandlerGUID()
-                << "  active:" << std::setw(7) << std::setfill(' ')
-                << ( (*i)->isActive() ? "true" : "false" ) << std::endl;
-         }
-      }
-
-      out << std::endl;
-
-      return out;
-   }
+   return out;
+}
 
 } // End of gadget namespace

@@ -29,8 +29,6 @@
 
 #include <cluster/PluginConfig.h>
 
-#include <list>
-
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Assert.h>
@@ -42,11 +40,19 @@
 #include <plugins/RIMPlugin/DeviceServerPtr.h>
 #include <plugins/RIMPlugin/VirtualDevicePtr.h>
 
+#include <list>
+#ifdef VPR_HASH_MAP_INCLUDE
+#  include VPR_HASH_MAP_INCLUDE
+#else
+#  include <map>
+#endif
+
 namespace gadget
 {
    class Node;
    class Input;
 }
+
 namespace cluster
 {
    class DeviceRequest;
@@ -159,7 +165,12 @@ private:
 protected:
    vpr::GUID                    mHandlerGUID;
 
+#ifdef VPR_HASH_MAP_INCLUDE
+   typedef std::hash_map<vpr::GUID, VirtualDevicePtr, vpr::GUID::hash> virtual_device_map_t;
+#else
    typedef std::map<vpr::GUID, VirtualDevicePtr> virtual_device_map_t;
+#endif
+
    virtual_device_map_t         mVirtualDevices;     /**< List of Virtual Devices on the local Node. */
    vpr::Mutex                   mVirtualDevicesLock; /**< Lock on Virtual Device list.*/
 

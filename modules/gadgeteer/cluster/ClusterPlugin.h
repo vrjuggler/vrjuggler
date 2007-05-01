@@ -32,11 +32,13 @@
 
 #include <string> 
 #include <boost/concept_check.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include <vpr/Util/Assert.h>
 
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Config/ConfigElementPtr.h>
+#include <cluster/ClusterPluginPtr.h>
 
 namespace vpr
 {
@@ -53,7 +55,8 @@ namespace cluster
  * Interface for cluster plugins.
  */
 class GADGET_CLASS_API ClusterPlugin 
-   : public jccl::ConfigElementHandler, public gadget::PacketHandler
+   : public jccl::ConfigElementHandler, public gadget::PacketHandler,
+     public boost::enable_shared_from_this<ClusterPlugin>
 {
 public:
    ClusterPlugin();
@@ -85,10 +88,23 @@ public:
       return false;
    }
    
-   //virtual bool isPluginReady() = 0;
-   virtual bool configCanHandle(jccl::ConfigElementPtr element) = 0;
-   virtual bool configAdd(jccl::ConfigElementPtr element) = 0;
-   virtual bool configRemove(jccl::ConfigElementPtr element) = 0;
+   virtual bool configCanHandle(jccl::ConfigElementPtr elm)
+   {
+      boost::ignore_unused_variable_warning(elm);
+      return false;
+   }
+
+   virtual bool configAdd(jccl::ConfigElementPtr elm)
+   {
+      boost::ignore_unused_variable_warning(elm);
+      return false;
+   }
+
+   virtual bool configRemove(jccl::ConfigElementPtr elm)
+   {
+      boost::ignore_unused_variable_warning(elm);
+      return false;
+   }
 
 private:   
    bool  mActive;

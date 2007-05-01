@@ -29,8 +29,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <list>
-#include <map>
 #include <boost/signals.hpp>
 
 #include <vpr/Util/GUID.h>
@@ -43,8 +41,15 @@
 
 #include <cluster/ClusterDepChecker.h>
 #include <cluster/ClusterNetwork.h>
+#include <cluster/ClusterPluginPtr.h>
 #include <gadget/PacketHandler.h>
 
+#include <list>
+#ifdef VPR_HASH_MAP_INCLUDE
+#  include VPR_HASH_MAP_INCLUDE
+#else
+#  include <map>
+#endif
 
 namespace gadget
 {
@@ -55,7 +60,6 @@ class Packet;
 
 namespace cluster
 {
-class ClusterPlugin;
 
 /** \class ClusterManager ClusterManager.h cluster/ClusterManager.h
  *
@@ -110,22 +114,22 @@ public:
    /**
     * Add a new ClusterPlugin.
     */
-   void addPlugin( ClusterPlugin* new_manager );
+   void addPlugin( ClusterPluginPtr plugin );
 
    /**
     * Remove an existing ClusterPlugin.
     */
-   void removePlugin( ClusterPlugin* old_manager );
+   void removePlugin( ClusterPluginPtr plugin );
 
    /**
     * Return the ClusterPlugin with the given GUID.
     */
-   ClusterPlugin* getPluginByGUID( const vpr::GUID& plugin_guid );
+   ClusterPluginPtr getPluginByGUID( const vpr::GUID& plugin_guid );
 private:
    /**
     * Return true if the specified ClusterPlugin exists.
     */
-   bool doesPluginExist( ClusterPlugin* old_plugin );
+   bool doesPluginExist( ClusterPluginPtr old_plugin );
 
    /**
     * Send end block to all other connected nodes and
@@ -190,7 +194,7 @@ public:
    /**
     * Configure the cluster given the current config element.
     */
-   bool configCluster( jccl::ConfigElementPtr element );
+   void configCluster( jccl::ConfigElementPtr element );
 
    /**
     * Configure the given ConfigElement.
@@ -332,10 +336,17 @@ public:
 private:
    ClusterDepChecker            mDepChecker;
 
-   std::list<ClusterPlugin*>    mPlugins;            /**< List of Plugins.*/
+   typedef std::list<ClusterPluginPtr> plugin_list_t;
+#ifdef VPR_HASH_MAP_INCLUDE
+   typedef std::hash_map<vpr::GUID, ClusterPluginPtr, vpr::GUID::hash> plugin_map_t;
+#else
+   typedef std::map<vpr::GUID, ClusterPluginPtr> plugin_map_t;
+#endif
+
+   plugin_list_t                mPlugins;            /**< List of Plugins.*/
    vpr::Mutex                   mPluginsLock;        /**< Lock on plugins list.*/
    std::string                  mBarrierMachineName; /**< Name of the barrier machine.*/
-   std::map<vpr::GUID, ClusterPlugin*> mPluginMap;   /**< Map of ClusterPlugins. */
+   plugin_map_t                 mPluginMap;   /**< Map of ClusterPlugins. */
    std::vector<vpr::LibraryPtr> mLoadedPlugins;
 
    vpr::Mutex                   mNodesLock;          /**< Lock on hostname list. */
