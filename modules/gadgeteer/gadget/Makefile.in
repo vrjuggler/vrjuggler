@@ -56,7 +56,7 @@ SRCS=		AbstractNetworkManager.cpp	\
 		InputLogger.cpp			\
 		InputManager.cpp		\
 		Node.cpp			\
-       		ProxyDepChecker.cpp		\
+		ProxyDepChecker.cpp		\
 		ProxyFactory.cpp		\
 		Reactor.cpp
 

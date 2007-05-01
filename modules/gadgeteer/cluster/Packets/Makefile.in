@@ -42,20 +42,20 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
 SRCS= \
-	ApplicationDataAck.cpp	       \
-	ApplicationDataRequest.cpp     \
-        ConfigPacket.cpp               \
-	ConnectionAck.cpp	       \
-	ConnectionRequest.cpp	       \
-	DataPacket.cpp		       \
-	DeviceAck.cpp		       \
-	DeviceRequest.cpp	       \
-	EndBlock.cpp		       \
-	Header.cpp		       \
-	Packet.cpp		       \
-	PacketFactory.cpp	       \
-	StartBlock.cpp		       \
-	SyncAck.cpp		       \
+	ApplicationDataAck.cpp		\
+	ApplicationDataRequest.cpp	\
+	ConfigPacket.cpp		\
+	ConnectionAck.cpp		\
+	ConnectionRequest.cpp		\
+	DataPacket.cpp			\
+	DeviceAck.cpp			\
+	DeviceRequest.cpp		\
+	EndBlock.cpp			\
+	Header.cpp			\
+	Packet.cpp			\
+	PacketFactory.cpp		\
+	StartBlock.cpp			\
+	SyncAck.cpp			\
 	SyncRequest.cpp
 
 include $(MKPATH)/dpp.obj.mk
