@@ -44,7 +44,6 @@
 namespace cluster
 {
    class ApplicationData;
-   class ApplicationDataRequest;
    class Packet;
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataManager

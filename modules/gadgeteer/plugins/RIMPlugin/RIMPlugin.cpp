@@ -45,10 +45,7 @@
 
 // IO Packets
 #include <cluster/Packets/PacketFactory.h>
-#include <cluster/Packets/ConnectionRequest.h>
-#include <cluster/Packets/DeviceRequest.h>
 #include <cluster/Packets/DeviceAck.h>
-#include <cluster/Packets/ApplicationDataRequest.h>
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/DataPacket.h>
 

@@ -52,7 +52,6 @@ namespace gadget
 
 namespace cluster
 {
-   class DeviceRequest;
    class Packet;
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API RIMPlugin : public cluster::ClusterPlugin

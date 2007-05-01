@@ -125,7 +125,6 @@ void AbstractNetworkManager::waitForConnection(const int& listen_port)
       // Get address information about local host.
       const vpr::InetAddr local = vpr::InetAddr::getLocalHost();
       const std::string local_hostname = local.getHostname();
-      //cluster::ConnectionAck* temp = NULL;
 
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_STATE_LVL )
          << clrOutBOLD( clrBLUE,"[Acceptor]" )

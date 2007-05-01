@@ -528,7 +528,6 @@ namespace cluster
             
             SyncRequest* sync_request;
 
-              // Make sure it is a ConnectionRequest
             try
             {
                sync_request = static_cast<SyncRequest*>(temp_packet);

@@ -130,9 +130,7 @@ endif
 # Subdirectories used for recursion through the source tree.
 SUBDIR=	ApplicationDataManager		\
 	RIMPlugin			\
-	StartBarrierPlugin		\
-	SwapLockTCPPlugin		\
-	SwapLockWiredPlugin
+	SwapLockTCPPlugin
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 

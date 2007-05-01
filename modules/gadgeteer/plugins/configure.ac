@@ -298,9 +298,7 @@ AC_CONFIG_FILES([
    Makefile.inc
    plugin.defs.mk
    RIMPlugin/Makefile
-   StartBarrierPlugin/Makefile
    SwapLockTCPPlugin/Makefile
-   SwapLockWiredPlugin/Makefile
    VARS.pl
    ])
 
