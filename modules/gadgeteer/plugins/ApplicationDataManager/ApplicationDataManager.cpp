@@ -72,9 +72,9 @@ bool ApplicationDataManager::isPluginReady()
    return true;
 }
 
-void ApplicationDataManager::handlePacket(Packet* packet, gadget::Node* node)
+void ApplicationDataManager::handlePacket(Packet* packet, gadget::NodePtr node)
 {
-   if ( NULL != packet && NULL != node )
+   if ( NULL != packet && NULL != node.get() )
    {
       switch ( packet->getPacketType() )
       {

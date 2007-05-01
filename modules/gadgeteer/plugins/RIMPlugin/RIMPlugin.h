@@ -73,12 +73,12 @@ public:
     * the lost node. And removing the node as a client
     * from all DeviceServers.
     */
-   virtual void recoverFromLostNode(gadget::Node* lost_node);
+   virtual void recoverFromLostNode(gadget::NodePtr lostNode);
    
    /**
     * Handle a incoming packet.
     */
-   void handlePacket(Packet* packet, gadget::Node* node);
+   void handlePacket(Packet* packet, gadget::NodePtr node);
 
    /** Calls any action needed by this plugin before draw()
     *

@@ -37,9 +37,8 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
-#include <gadget/Connector.h>
+#include <gadget/NodePtr.h>
 #include <gadget/Reactor.h>
-
 
 namespace cluster
 {
@@ -48,7 +47,6 @@ namespace cluster
 
 namespace gadget
 {
-class Node;
 class PacketHandler;
 
 const int DEFAULT_SLAVE_PORT = 12599;
@@ -60,7 +58,7 @@ const int DEFAULT_SLAVE_PORT = 12599;
 class GADGET_CLASS_API AbstractNetworkManager : public jccl::ConfigElementHandler
 {
 public:
-   typedef std::vector<gadget::Node*> node_list_t;
+   typedef std::vector<NodePtr> node_list_t;
 
    /**
     * Construct an empty representation of a network.
@@ -83,7 +81,7 @@ public:
    /**
     * Process an incoming packet.
     */
-   void handlePacket(cluster::Packet* packet, Node* node);
+   void handlePacket(cluster::Packet* packet, NodePtr node);
 
    void updateNewConnections();
 
@@ -104,7 +102,7 @@ public:
     * The caller of this method mustlock the Nodes list
     * first by callinf lockNodes()
     */
-   void addNode(Node* node);
+   void addNode(NodePtr node);
 
    /**
     * Removes the Node with the given hostname
@@ -116,13 +114,13 @@ public:
     * Returns the Node with the given hostname
     * If no Node with this hostname exists, NULL is returned.
     */
-   gadget::Node* getNodeByHostname(const std::string& host_name);
+   NodePtr getNodeByHostname(const std::string& hostName);
 
    /**
     * Returns the Node with the given name
     * If no Node with this name exists, NULL is returned.
     */
-   gadget::Node* getNodeByName(const std::string& node_name);
+   NodePtr getNodeByName(const std::string& nodeName);
 
    /**
     * Get the number of nodes in network.
@@ -169,10 +167,18 @@ public:
       return mNodes;
    }
 
+   void waitForConnection(const int& listen_port = DEFAULT_SLAVE_PORT);
+   bool connectToSlaves();
+
+   void sendToAll(cluster::Packet* packet);
+
    /**
     * Return the number of Nodes in the Pending Nodes list.
     */
    vpr::Uint16 getNumPendingNodes();
+
+protected:
+   bool connectTo(NodePtr node);
 
 private:
    /**
@@ -229,17 +235,16 @@ public:
    PacketHandler* getHandlerByGUID(const vpr::GUID& handler_guid);
    void addHandler(PacketHandler* new_handler);
 
-   virtual bool attemptConnect(Node* node) = 0;
+   /* XXX: Remove these
+   virtual bool attemptConnect(NodePtr node) = 0;
    virtual void startListening(int listen_port, bool accept_anonymous) = 0;
-   void waitForConnection(const int& listen_port = DEFAULT_SLAVE_PORT);
-   bool connectToSlaves();
-   bool connectTo(Node* node);
+   */
 
 private:
    node_list_t                  mNodes;         /**< List of nodes in network. */
    vpr::InetAddr                mListenAddr;    /**< Address to listen for incoming connections on. */
    std::map<vpr::GUID, PacketHandler*>  mHandlerMap;
-   Reactor mReactor;
+   Reactor                      mReactor;
 };
 
 } // end namespace gadget

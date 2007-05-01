@@ -43,6 +43,7 @@
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPluginPtr.h>
 #include <gadget/PacketHandler.h>
+#include <gadget/Util/Debug.h>
 
 #include <list>
 #ifdef VPR_HASH_MAP_INCLUDE
@@ -170,7 +171,7 @@ public:
     * Cause the cluster to recover when a connection to
     * a ClusterNode is lost.
     */
-   virtual void recoverFromLostNode( gadget::Node* lost_node );
+   virtual void recoverFromLostNode( gadget::NodePtr lost_node );
 
    /**
     * Return the representation of the network which
@@ -331,7 +332,7 @@ public:
    /**
     * Handle a incoming packet.
     */
-   virtual void handlePacket(cluster::Packet* packet, gadget::Node* node);
+   virtual void handlePacket(cluster::Packet* packet, gadget::NodePtr node);
    
 private:
    ClusterDepChecker            mDepChecker;

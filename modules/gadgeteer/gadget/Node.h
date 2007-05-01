@@ -31,7 +31,7 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Util/Debug.h>
-
+#include <gadget/NodePtr.h>
 
 namespace cluster
 {

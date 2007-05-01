@@ -69,7 +69,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 
       // device_host exists in active configuration
       std::string device_host = element->getProperty<std::string>( "device_host" );
-      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName( device_host );
+      gadget::NodePtr node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName( device_host );
 
       if (!cfg_mgr->isElementInActiveList(device_host) || NULL == node)
       {
@@ -132,7 +132,7 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
    else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( element ))
    {
       std::string device_host = element->getProperty<std::string>( "device_host");
-      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName( device_host );
+      gadget::NodePtr node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName( device_host );
 
       vprDEBUG_NEXT( vprDBG_ALL, dbg_lvl ) << "1: "
           << "Device node's ConfigElement"

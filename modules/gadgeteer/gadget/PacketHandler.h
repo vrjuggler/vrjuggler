@@ -32,6 +32,7 @@
 #include <string> 
 #include <boost/concept_check.hpp>
 #include <vpr/Util/GUID.h>
+#include <gadget/NodePtr.h>
 
 namespace vpr
 {
@@ -45,8 +46,6 @@ namespace cluster
 
 namespace gadget
 {
-
-class Node;
 
 /** \class PacketHandler PacketHandler.h gadget/PacketHandler.h
  *
@@ -70,13 +69,13 @@ public:
    /**
     * Handle a incoming packet.
     */
-   virtual void handlePacket(cluster::Packet* packet, Node* node) = 0;
+   virtual void handlePacket(cluster::Packet* packet, NodePtr node) = 0;
    
    /**
     * Virtual function used to inform all handlers that the network
     * has lost its connection to the given Node.
     */
-   virtual void recoverFromLostNode(Node* lostNode) = 0;
+   virtual void recoverFromLostNode(NodePtr lostNode) = 0;
 };
 
 } // end namespace gadget

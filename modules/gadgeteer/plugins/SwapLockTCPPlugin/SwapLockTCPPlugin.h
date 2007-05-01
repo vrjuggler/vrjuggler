@@ -79,7 +79,7 @@ public:
    /**
     * Handle a incoming packet.
     */
-   virtual void handlePacket(Packet* packet, gadget::Node* node);
+   virtual void handlePacket(Packet* packet, gadget::NodePtr node);
 
    /**
     * Virtual function that is unused by this plug since we are only 
@@ -119,9 +119,9 @@ public:
       return(std::string("SwapLockTCPPlugin"));
    }
 
-   virtual void recoverFromLostNode(gadget::Node* lost_node)
+   virtual void recoverFromLostNode(gadget::NodePtr lostNode)
    {
-      boost::ignore_unused_variable_warning(lost_node);
+      boost::ignore_unused_variable_warning(lostNode);
    }
 
    /** Add the pending element to the configuration.

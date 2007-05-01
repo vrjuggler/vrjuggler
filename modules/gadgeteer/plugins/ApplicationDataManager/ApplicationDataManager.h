@@ -32,6 +32,7 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <cluster/ClusterPlugin.h>
 #include <plugins/ApplicationDataManager/ApplicationDataServerPtr.h>
+#include <gadget/NodePtr.h>
 
 #include <list>
 #ifdef VPR_HASH_MAP_INCLUDE
@@ -66,7 +67,7 @@ public:
    /**
     * Handle a incoming packet.
     */
-   void handlePacket(Packet* packet, gadget::Node* node);
+   void handlePacket(Packet* packet, gadget::NodePtr node);
    
    /**
     * Called each frame by the kernel to update all application level data(ApplicationData).
@@ -100,9 +101,9 @@ public:
       return(std::string("ApplicationDataManager"));
    }
    
-   virtual void recoverFromLostNode(gadget::Node* lost_node) 
+   virtual void recoverFromLostNode(gadget::NodePtr lostNode) 
    {
-      boost::ignore_unused_variable_warning(lost_node);
+      boost::ignore_unused_variable_warning(lostNode);
    }
 
    // ---------- ConfigElementHandler Interface ----------- //

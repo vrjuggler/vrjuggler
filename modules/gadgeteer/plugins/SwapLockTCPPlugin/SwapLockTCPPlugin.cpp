@@ -164,7 +164,7 @@ namespace cluster
    {;
    }
 
-   void SwapLockTCPPlugin::handlePacket(Packet* packet, gadget::Node* node)
+   void SwapLockTCPPlugin::handlePacket(Packet* packet, gadget::NodePtr node)
    {
       boost::ignore_unused_variable_warning(packet);
       boost::ignore_unused_variable_warning(node);
@@ -274,18 +274,15 @@ namespace cluster
 
          SyncRequest sync_request(local_host_name, mTCPport);
          
-         gadget::Node* temp_node =
-            new gadget::Node(std::string("Unknown"),
-                                    std::string("Unknown"),
-                                    vpr::Uint16(0),
-                                    mSyncServerSocket,
-                                    ClusterManager::instance()->getNetwork());
+         gadget::NodePtr temp_node =
+            gadget::NodePtr(new gadget::Node(std::string("Unknown"),
+                                             std::string("Unknown"),
+                                             vpr::Uint16(0),
+                                             mSyncServerSocket,
+                                             ClusterManager::instance()->getNetwork()));
             
          temp_node->send(&sync_request);
          Packet* packet = temp_node->recvPacket();
-         
-         delete temp_node;
-         temp_node = NULL;
          
          SyncAck* ack_packet = static_cast<SyncAck*>(packet);
    
@@ -508,15 +505,14 @@ namespace cluster
             Packet* temp_packet;
             try
             {
-               gadget::Node* temp_node =
-                  new gadget::Node(std::string("Unknown"),
-                                          std::string("Unknown"),
-                                          vpr::Uint16(0),
-                                          client_sock,
-                                          ClusterManager::instance()->getNetwork());
+               gadget::NodePtr temp_node =
+                  gadget::NodePtr(new gadget::Node(std::string("Unknown"),
+                                                   std::string("Unknown"),
+                                                   vpr::Uint16(0),
+                                                   client_sock,
+                                                   ClusterManager::instance()->getNetwork()));
 
                temp_packet = temp_node->recvPacket();
-               delete temp_node;
             }
             catch(cluster::ClusterException cluster_exception)
             {
@@ -568,15 +564,14 @@ namespace cluster
             
             temp_ack.printData(vprDBG_CONFIG_LVL);
             
-            gadget::Node* temp_node =
-               new gadget::Node(std::string("Unknown"),
-                                       std::string("Unknown"),
-                                       vpr::Uint16(0),
-                                       client_sock,
-                                       ClusterManager::instance()->getNetwork());
+            gadget::NodePtr temp_node =
+               gadget::NodePtr(new gadget::Node(std::string("Unknown"),
+                                                std::string("Unknown"),
+                                                vpr::Uint16(0),
+                                                client_sock,
+                                                ClusterManager::instance()->getNetwork()));
 
             temp_node->send(&temp_ack);
-            delete temp_node;
 
             // We need a new SocketStream since the old one is now being used by a Node
             client_sock = new vpr::SocketStream;

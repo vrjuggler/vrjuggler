@@ -29,13 +29,11 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Acceptor.h>
-#include <gadget/Connector.h>
-#include <gadget/NetworkManager.h>
+#include <gadget/AbstractNetworkManager.h>
 
 namespace cluster
 {
-   typedef gadget::NetworkManager< gadget::Acceptor, gadget::Connector > ClusterNetwork;
+   typedef gadget::AbstractNetworkManager ClusterNetwork;
 } // end namespace cluster
 
 #endif /* _CLUSTER_NETWORK_H */

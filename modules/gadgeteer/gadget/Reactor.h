@@ -38,7 +38,7 @@
 #include <vector>
 
 #include <vpr/IO/Selector.h>
-
+#include <gadget/NodePtr.h>
 
 namespace gadget
 {
@@ -48,11 +48,11 @@ class Node;
 class Reactor
 {
 public:
-   void addNode(gadget::Node* node);
+   void addNode(gadget::NodePtr node);
 
-   void removeNode(gadget::Node* node);
+   void removeNode(gadget::NodePtr node);
 
-   std::vector<gadget::Node*> getReadyNodes(const vpr::Interval& timeout);
+   std::vector<gadget::NodePtr> getReadyNodes(const vpr::Interval& timeout);
 
    vpr::Uint16 getNumHandles() const
    {
@@ -61,7 +61,7 @@ public:
 
 private:
    vpr::Selector mSelector;
-   std::map<vpr::IOSys::Handle, gadget::Node*> mDemuxTable;
+   std::map<vpr::IOSys::Handle, gadget::NodePtr> mDemuxTable;
 };
 
 }

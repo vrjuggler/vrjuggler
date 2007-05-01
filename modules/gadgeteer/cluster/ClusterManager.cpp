@@ -157,9 +157,9 @@ namespace cluster
       , mIsMaster(false)
       , mIsSlave(false)
       , mClusterElement()
+      , mClusterNetwork(NULL)
       , mPreDrawCallCount(0)
       , mPostPostFrameCallCount(0)
-      , mClusterNetwork(NULL)
    {
       mClusterNetwork = new ClusterNetwork();
       mClusterNetwork->addHandler(this);
@@ -326,7 +326,7 @@ namespace cluster
       return true;
    }
 
-   void ClusterManager::recoverFromLostNode( gadget::Node* node )
+   void ClusterManager::recoverFromLostNode( gadget::NodePtr node )
    {
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
 
@@ -517,7 +517,7 @@ namespace cluster
       // Used to accumulate the number of connected nodes.
       size_t num_nodes(0);
 
-      typedef std::vector<gadget::Node*>::iterator iter_t;
+      typedef std::vector<gadget::NodePtr>::iterator iter_t;
 
       for ( iter_t i = mClusterNetwork->getNodesBegin();
             i != mClusterNetwork->getNodesEnd();
@@ -557,7 +557,7 @@ namespace cluster
 
       while ( completed_nodes != num_nodes )
       {
-         std::vector<gadget::Node*> ready_nodes =
+         std::vector<gadget::NodePtr> ready_nodes =
             //reactor.getReadyNodes(vpr::Interval::NoWait);
             reactor.getReadyNodes(vpr::Interval::NoTimeout);
 
@@ -1014,7 +1014,7 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
    std::cout << "CLUSTER MODE: " << (mClusterActive ? "True":"False") << std::endl;
 }
 
-void ClusterManager::handlePacket(cluster::Packet* packet, gadget::Node* node)
+void ClusterManager::handlePacket(cluster::Packet* packet, gadget::NodePtr node)
 {
    boost::ignore_unused_variable_warning(node);
 

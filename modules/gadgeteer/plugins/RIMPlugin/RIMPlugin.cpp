@@ -220,15 +220,15 @@ bool RIMPlugin::isPluginReady()
    return true;
 }
 
-void RIMPlugin::recoverFromLostNode(gadget::Node* lost_node)
+void RIMPlugin::recoverFromLostNode(gadget::NodePtr lostNode)
 {
-   removeVirtualDevicesOnHost(lost_node->getHostname());
+   removeVirtualDevicesOnHost(lostNode->getHostname());
 }
 
 /**
  * Handle a incoming packet.
  */
-void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::Node* node)
+void RIMPlugin::handlePacket(cluster::Packet* packet, gadget::NodePtr node)
 {
    //We are only handling data packets right now.
    if ( NULL != packet && NULL != node )

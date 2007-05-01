@@ -39,7 +39,7 @@
 namespace gadget
 {
 
-void Reactor::addNode(gadget::Node* node)
+void Reactor::addNode(gadget::NodePtr node)
 {
    vpr::IOSys::Handle handle = node->getSockStream()->getHandle();
 
@@ -51,11 +51,11 @@ void Reactor::addNode(gadget::Node* node)
    }
 }
 
-void Reactor::removeNode(gadget::Node* node)
+void Reactor::removeNode(gadget::NodePtr node)
 {
    vpr::IOSys::Handle handle = node->getSockStream()->getHandle();
 
-   typedef std::map<vpr::IOSys::Handle, gadget::Node*>::iterator iter_t;
+   typedef std::map<vpr::IOSys::Handle, gadget::NodePtr>::iterator iter_t;
    iter_t i = mDemuxTable.find(handle);
 
    if ( i != mDemuxTable.end() )
@@ -65,12 +65,12 @@ void Reactor::removeNode(gadget::Node* node)
    }
 }
 
-std::vector<gadget::Node*> Reactor::getReadyNodes(const vpr::Interval& timeout)
+std::vector<gadget::NodePtr> Reactor::getReadyNodes(const vpr::Interval& timeout)
 {
    vpr::Uint16 num_events(0);
    mSelector.select(num_events, timeout);
 
-   std::vector<gadget::Node*> ready_nodes;
+   std::vector<gadget::NodePtr> ready_nodes;
 
    if ( num_events > 0 )
    {
