@@ -207,17 +207,17 @@ int Kernel::start()
    if (cluster::ClusterManager::instance()->isClusterActive())
    {
       cluster::ClusterManager::instance()->start();
-   }
 
-   do
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << " vrj::Kernel::start() configuring before starting cluster." << std::endl << vprDEBUG_FLUSH;
+      do
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED,"ERROR:")
+            << " vrj::Kernel::start() configuring before starting cluster." << std::endl << vprDEBUG_FLUSH;
 
-      checkForReconfig();
+         checkForReconfig();
+      }
+      while (!cluster::ClusterManager::instance()->isClusterReady());
    }
-   while (!cluster::ClusterManager::instance()->isClusterReady());
 
    int status(0);
 
