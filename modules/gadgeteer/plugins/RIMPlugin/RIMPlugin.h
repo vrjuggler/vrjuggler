@@ -58,7 +58,7 @@ public:
    RIMPlugin();
    virtual ~RIMPlugin();
 
-   vpr::GUID getHandlerGUID() const
+   vpr::GUID getHandlerGUID()
    {
       return mHandlerGUID;
    }
