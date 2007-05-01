@@ -28,23 +28,18 @@
 #define _CLUSTER_APPLICATION_DATA_MANAGER_H
 
 #include <cluster/PluginConfig.h>
+#include <vpr/Util/GUID.h>
+#include <jccl/Config/ConfigElementPtr.h>
+#include <cluster/ClusterPlugin.h>
+#include <plugins/ApplicationDataManager/ApplicationDataServerPtr.h>
+
 #include <vector>
 #include <map>
-
-#include <vpr/vpr.h>
-#include <vpr/Util/GUID.h>
-#include <vpr/Sync/Mutex.h>
-
-#include <cluster/ClusterPlugin.h>
-
-#include <jccl/Config/ConfigElementPtr.h>
-
 
 namespace cluster
 {
    class ApplicationData;
    class ApplicationDataRequest;
-   class ApplicationDataServer;
    class Packet;
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataManager
@@ -112,14 +107,22 @@ public:
     *  @pre configCanHandle (element) == true.
     *  @return true iff element was successfully added to configuration.
     */
-   bool configAdd(jccl::ConfigElementPtr element);
+   bool configAdd(jccl::ConfigElementPtr elm)
+   {
+      boost::ignore_unused_variable_warning(elm);
+      return false;
+   }
    
    /** Remove the pending element from the current configuration.
     *  @pre configCanHandle (element) == true.
     *  @return true iff the element (and any objects it represented)
     *          were successfully removed.
     */
-   bool configRemove(jccl::ConfigElementPtr element);
+   bool configRemove(jccl::ConfigElementPtr elm)
+   {
+      boost::ignore_unused_variable_warning(elm);
+      return false;
+   }
 
    /** Checks if this handler can process element.
     *  Typically, an implementation of handler will check the element's
@@ -127,17 +130,11 @@ public:
     *  it.
     *  @return true iff this handler can process element.
     */
-   bool configCanHandle(jccl::ConfigElementPtr element);
-
-private:      
-   bool recognizeApplicationDataManagerConfig(jccl::ConfigElementPtr element);
-   bool recognizeApplicationDataConfig(jccl::ConfigElementPtr chunk);
-
-   /**
-    * Returns the string representation of the element type used for the
-    * ApplicationDataManager.
-    */   
-   static std::string getElementType();
+   bool configCanHandle(jccl::ConfigElementPtr elm)
+   {
+      boost::ignore_unused_variable_warning(elm);
+      return false;
+   }
 
    // ---------- ApplicationData Interface ----------- //
 public:
@@ -149,57 +146,35 @@ public:
    virtual void addSerializableObject(vpr::SerializableObject* object);
 
    /**
-    * Remove the ApplicationData object from the current configuration
-    * @pre This should only be called by the ApplicationData destructor
-    */
-   void removeApplicationData(ApplicationData* old_user_data);
-
-   /**
     * Print a list of all ApplicationData objects currently in the configuration
     */
    void dumpApplicationData();
    
-
-
    // ---------- Helper Functions ----------- //
 private:
-   /**
-    * Get a pointer to the ApplicationDataServer for the given name
-    */
-   ApplicationDataServer* getApplicationDataServer(const vpr::GUID& id);
 
    /**
     * Get a pointer to the ApplicationData object that is being updated by a remote machine
     */
-   ApplicationData* getRemoteApplicationData(const vpr::GUID& id);
-
-   /**
-    * Add a request for a ApplicationData machine on a remote mahine
-    */
-   void addPendingApplicationDataRequest(ApplicationDataRequest* new_appdata_req, const std::string& hostname);
-
-   /**
-    * Remove a ApplicationData request that has been fulfilled.
-    */
-   void removePendingApplicationDataRequest(const vpr::GUID& guid);
+   ApplicationData* getApplicationData(const vpr::GUID& id)
+   {
+      object_map_t::iterator found = mObjects.find(id);
+      if (mObjects.end() == found)
+      {
+         return NULL;
+      }
+      return (*found).second;
+   }
 
 public:
    static const vpr::GUID                          mPluginGUID;
 
 private:
-   std::map<vpr::GUID, ApplicationData*>           mRemoteApplicationData;              /**< Application level ApplicationData list. */
-   vpr::Mutex                                      mRemoteApplicationDataLock;          /**< Lock on ApplicationData list.*/   
-   
-   std::vector<ApplicationData*>                   mNeedsConfiged;              /**< Application level ApplicationData list. */
-   vpr::Mutex                                      mNeedsConfigedLock;          /**< Lock on ApplicationData list.*/   
+   typedef std::map<vpr::GUID, ApplicationData*> object_map_t;
+   typedef std::map<vpr::GUID, ApplicationDataServerPtr>  server_map_t;
 
-   std::map<ApplicationDataRequest*, std::string>  mPendingApplicationDataRequests;     /**< ApplicationData Request list. */
-   vpr::Mutex                                      mPendingApplicationDataRequestsLock; /**< Lock on ApplicationData Request list.*/   
-
-   std::map<vpr::GUID, ApplicationDataServer*>     mApplicationDataServers;             /**< ApplicationData Server list. */
-   vpr::Mutex                                      mApplicationDataServersLock;         /**< Lock ApplicationData Server list.*/   
-
-   vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */   
+   object_map_t         mObjects;       /**< Application level ApplicationData list. */
+   server_map_t         mServers;       /**< ApplicationData Server list. */
 };
 
 } // end namespace

@@ -41,81 +41,54 @@ namespace gadget
 
 namespace cluster
 {
-   class ApplicationData;
-   class DataPacket;
+class ApplicationData;
+class DataPacket;
 
-   class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataServer
-   {
-   public:
-      /**
-       * Create a new ApplicationDataServer.
-       *
-       * @param guid      GUID of the given ApplicationData.
-       * @param user_data Pointer to the ApplicationData that we are sharing.
-       * @param plugin_id GUID that should be placed at the beginning of 
-       *                  each data packet so that the receiver knows which 
-       *                  plugin the data is coming from.
-       */
-      ApplicationDataServer(const vpr::GUID& guid, ApplicationData* user_data, const vpr::GUID& plugin_id);
+class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataServer
+{
+public:
+   /**
+    * Create a new ApplicationDataServer.
+    *
+    * @param guid      GUID of the given ApplicationData.
+    * @param user_data Pointer to the ApplicationData that we are sharing.
+    * @param plugin_id GUID that should be placed at the beginning of 
+    *                  each data packet so that the receiver knows which 
+    *                  plugin the data is coming from.
+    */
+   ApplicationDataServer(const vpr::GUID& guid, ApplicationData* userData, const vpr::GUID& pluginId);
 
-      /**
-       * Release all memory that is no longer needed.
-       */
-      ~ApplicationDataServer();
+   /**
+    * Release all memory that is no longer needed.
+    */
+   ~ApplicationDataServer();
 
-      /**
-       * Serialize the local ApplicationData and store it in a DataPacket to
-       * send to each client later.
-       */
-      //void updateLocalData();
-      
-      /**
-       * Send mDataPacket, which has been updated in updateLocalData, to each
-       * client.
-       */
-      //void send();
+   /**
+    * Send mDataPacket, which has been updated in updateLocalData, to each
+    * client.
+    */
+   void serializeAndSend();
 
-      void serializeAndSend();
+   /**
+    * Print information about this ApplicationDataServer to the screen.
+    *
+    * @param debug_level The debug level that the information will be
+    *                    displayed at.
+    */
+   void debugDump(int debugLevel);
 
-      /**
-       * Add a Node to the list of clients that should receive data for this
-       * ApplicationData.
-       *
-       * @param new_client_node Node that will be added to the list.
-       */
-      void addClient(gadget::Node* new_client_node);
+   /**
+    * Return the GUID of the ApplicationData that this server is responsible
+    * for.
+    */
+   vpr::GUID getId();
 
-      /**
-       * Remove a Node from the list of clients that should receive data for
-       * this ApplicationData.
-       *
-       * @param host_name Hostname of the Node that will be removed from
-       *                  the list.
-       */
-      void removeClient(const std::string& host_name);
-
-      /**
-       * Print information about this ApplicationDataServer to the screen.
-       *
-       * @param debug_level The debug level that the information will be
-       *                    displayed at.
-       */
-      void debugDump(int debug_level);
-
-      /**
-       * Return the GUID of the ApplicationData that this server is responsible
-       * for.
-       */
-      vpr::GUID getId();
-   private:
-      std::vector<gadget::Node*>           mClients;            /**< Vecor of nodes that this server needs to send data to. */
-      vpr::Mutex                                   mClientsLock;        /**< Lock for the list of clients. */   
-      
-      ApplicationData*                             mApplicationData;    /**< Structure that is being shared across the cluster. */
-      DataPacket*                                  mDataPacket;         /**< Packet will be sent across the cluster. */
-      vpr::BufferObjectWriter*                     mBufferObjectWriter; /**< ObjectWriter used to serialize the ApplicationData. */
-      std::vector<vpr::Uint8>*                     mDeviceData;         /**< Vector that conatins the data that will be sent across the node */
-   };
+private:
+   ApplicationData*             mApplicationData;    /**< Structure that is being shared across the cluster. */
+   DataPacket*                  mDataPacket;         /**< Packet will be sent across the cluster. */
+   vpr::BufferObjectWriter*     mBufferObjectWriter; /**< ObjectWriter used to serialize the ApplicationData. */
+   std::vector<vpr::Uint8>*     mDeviceData;         /**< Vector that conatins the data that will be sent across the node */
+};
 
 } // end namespace cluster
 
