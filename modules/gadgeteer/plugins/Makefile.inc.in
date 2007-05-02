@@ -76,6 +76,7 @@ afterbuild:
 	@$(MAKE) links
 
 beforebuild:
+	@-[ ! -d $(DSO_PLUGIN_DIR) ] && rm -rf $(LIBDIR_BASE)
 	$(MKINSTALLDIRS) $(DSO_PLUGIN_DIR)
 
 # =============================================================================
