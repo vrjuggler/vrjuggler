@@ -28,16 +28,14 @@
 #define CLUSTER_APPLICATION_DATA_SERVER_H
 
 #include <cluster/PluginConfig.h>
+
+#include <boost/noncopyable.hpp>
 #include <cluster/Packets/DataPacketPtr.h>
+#include <plugins/ApplicationDataManager/ApplicationDataServerPtr.h>
 
 namespace vpr
 {
    class BufferObjectWriter;
-}
-
-namespace gadget
-{
-   class Node;
 }
 
 namespace cluster
@@ -45,8 +43,9 @@ namespace cluster
 class ApplicationData;
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataServer
+   : boost::noncopyable
 {
-public:
+protected:
    /**
     * Create a new ApplicationDataServer.
     *
@@ -58,6 +57,15 @@ public:
     */
    ApplicationDataServer(const vpr::GUID& guid, ApplicationData* userData, const vpr::GUID& pluginId);
 
+public:
+   /**
+    * Creates a ApplicationDataServer instance and returns it wrapped in a
+    * ApplicationDataServerPtr object.
+    *
+    * @since 1.3.7
+    */
+   static ApplicationDataServerPtr create(const vpr::GUID& guid, ApplicationData* userData,
+                                          const vpr::GUID& pluginGuid);
    /**
     * Release all memory that is no longer needed.
     */

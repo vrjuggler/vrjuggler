@@ -62,6 +62,12 @@ DeviceServer::DeviceServer(const std::string& name, gadget::InputPtr device,
    mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
 }
 
+DeviceServerPtr DeviceServer::create(const std::string& name, gadget::InputPtr device,
+                                     const vpr::GUID& pluginGuid)
+{
+   return DeviceServerPtr(new DeviceServer(name, device, pluginGuid));
+}
+
 DeviceServer::~DeviceServer()
 {
    // mDataPacket will clean up the memory that mDeviceData points

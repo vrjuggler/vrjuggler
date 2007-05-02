@@ -28,8 +28,11 @@
 #define _CLUSTER_DEVICE_SERVER_H
 
 #include <cluster/PluginConfig.h>
+
+#include <boost/noncopyable.hpp>
 #include <gadget/Type/InputPtr.h>
 #include <cluster/Packets/DataPacketPtr.h>
+#include <plugins/RIMPlugin/DeviceServerPtr.h>
 
 namespace vpr
 {
@@ -45,8 +48,9 @@ namespace cluster
  * Device server class.
  */
 class GADGET_CLUSTER_PLUGIN_CLASS_API DeviceServer
+   : boost::noncopyable
 {
-public:
+protected:
    /**
     * Create a new DeviceServer.
     *
@@ -59,9 +63,18 @@ public:
    DeviceServer(const std::string& name, gadget::InputPtr device,
                 const vpr::GUID& pluginId);
 
+public:
+   /**
+    * Creates a DeviceServer instance and returns it wrapped in a
+    * DeviceServerPtr object.
+    *
+    * @since 1.3.7
+    */
+   static DeviceServerPtr create(const std::string& name, gadget::InputPtr device,
+                                 const vpr::GUID& pluginGuid);
    /**
     */
-   ~DeviceServer();
+   virtual ~DeviceServer();
 
    /**
     */

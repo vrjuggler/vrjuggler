@@ -301,7 +301,9 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
    << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
 
    gadget::InputPtr input_device = gadget::InputPtr(gadget::BaseTypeFactory::instance()->loadNetDevice(device_base_type));
-   VirtualDevicePtr virtual_device = VirtualDevicePtr(new VirtualDevice(name, device_id, device_base_type, hostname, input_device));
+
+   // Create a new VirtualDevice.
+   VirtualDevicePtr virtual_device = VirtualDevice::create(name, device_id, device_base_type, hostname, input_device);
 
    mVirtualDevices[device_id] = virtual_device;
 
@@ -397,7 +399,7 @@ bool RIMPlugin::addDeviceServer(const std::string& name,
                                 gadget::InputPtr device)
 {
    DeviceServerPtr temp_device_server =
-      DeviceServerPtr(new DeviceServer(name, device, mHandlerGUID));
+      DeviceServer::create(name, device, mHandlerGUID);
    mDeviceServers.push_back(temp_device_server);
 
    return true;

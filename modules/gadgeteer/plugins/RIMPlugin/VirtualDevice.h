@@ -28,10 +28,10 @@
 #define CLUSTER_VIRTUAL_DEVICE_H
 
 #include <cluster/PluginConfig.h>
+#include <boost/noncopyable.hpp>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/Input.h>
-
-#include <vpr/IO/BufferObjectReader.h>
+#include <plugins/RIMPlugin/VirtualDevicePtr.h>
 
 namespace cluster
 {
@@ -41,8 +41,9 @@ namespace cluster
  * Virtual input device type.
  */
 class GADGET_CLUSTER_PLUGIN_CLASS_API VirtualDevice
+   : boost::noncopyable
 {
-public:
+protected:
    /**
     * Construct a new "virtual" device that represents a remote input device.
     */
@@ -50,10 +51,23 @@ public:
                  const std::string& baseType, const std::string& hostname,
                  gadget::InputPtr device);
 
+public:
    /**
     * Deconstructor.
     */
-   ~VirtualDevice();
+   virtual ~VirtualDevice();
+
+   /**
+    * Creates a VirtualDevice instance and returns it wrapped in a
+    * VirtualDevicePtr object.
+    *
+    * @since 1.3.7
+    */
+   static VirtualDevicePtr create(const std::string& name, const vpr::GUID& id,
+                                  const std::string& baseType,
+                                  const std::string& hostname,
+                                  gadget::InputPtr device);
+
 
    /**
     * Print debug information.

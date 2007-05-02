@@ -168,7 +168,7 @@ void ApplicationDataManager::addSerializableObject(vpr::SerializableObject* obje
    {
       new_app_data->setIsLocal(true);
       ApplicationDataServerPtr new_server
-         = ApplicationDataServerPtr(new ApplicationDataServer(id, new_app_data, mPluginGUID));
+         = ApplicationDataServer::create(id, new_app_data, mPluginGUID);
       mServers[id] = new_server;
    }
    else

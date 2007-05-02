@@ -28,14 +28,10 @@
 
 #include <gadget/Util/Debug.h>
 
-#include <plugins/ApplicationDataManager/ApplicationDataServer.h> // my header...
-#include <plugins/ApplicationDataManager/ApplicationData.h>
-#include <gadget/Node.h>
-#include <cluster/Packets/DataPacket.h>
-
 #include <vpr/IO/BufferObjectWriter.h>
-
-#include <boost/concept_check.hpp>
+#include <cluster/Packets/DataPacket.h>
+#include <plugins/ApplicationDataManager/ApplicationData.h>
+#include <plugins/ApplicationDataManager/ApplicationDataServer.h>
 
 namespace cluster
 {
@@ -52,6 +48,13 @@ ApplicationDataServer::ApplicationDataServer(const vpr::GUID& guid,  Application
    // Create a DataPacket that will be updated and sent continually.
    mDataPacket = DataPacketPtr(new DataPacket(pluginGuid, guid, mDeviceData));
    mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
+}
+
+ApplicationDataServerPtr ApplicationDataServer::create(const vpr::GUID& guid,
+                                                       ApplicationData* userData,
+                                                       const vpr::GUID& pluginGuid)
+{
+   return ApplicationDataServerPtr(new ApplicationDataServer(guid, userData, pluginGuid));
 }
 
 ApplicationDataServer::~ApplicationDataServer()

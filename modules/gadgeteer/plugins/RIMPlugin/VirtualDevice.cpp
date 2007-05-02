@@ -39,6 +39,13 @@ VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const
    , mDevice(device)
 {}
 
+VirtualDevicePtr VirtualDevice::create(const std::string& name, const vpr::GUID& id,
+                                       const std::string& baseType,
+                                       const std::string& hostname, gadget::InputPtr device)
+{
+   return VirtualDevicePtr(new VirtualDevice(name, id, baseType, hostname, device));
+}
+
 VirtualDevice::~VirtualDevice()
 {;}
 
