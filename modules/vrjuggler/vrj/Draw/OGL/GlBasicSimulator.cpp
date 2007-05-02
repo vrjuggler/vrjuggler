@@ -39,6 +39,7 @@
 #include <jccl/Config/ConfigElement.h>
 
 #include <vrj/Kernel/User.h>
+#include <vrj/Util/Debug.h>
 
 #include <vrj/Draw/OGL/GlDrawManager.h>
 

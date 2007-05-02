@@ -42,6 +42,7 @@
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Util/Debug.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
 

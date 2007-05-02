@@ -31,6 +31,7 @@
 #include <gmtl/Output.h>
 #include <gmtl/Generate.h>
 
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/CameraProjection.h>
 
