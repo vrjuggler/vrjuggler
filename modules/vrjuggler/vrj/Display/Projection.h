@@ -61,23 +61,9 @@ public:
    };
 
 public:
-   Projection()
-      : mEye(LEFT)
-      , mViewport(NULL)
-      , mFocusPlaneDist(1.0f)
-   {
-      ;
-   }
+   Projection();
 
-   Projection(const Projection& p)
-      : mViewMat(p.mViewMat)
-      , mFrustum(p.mFrustum)
-      , mEye(p.mEye)
-      , mViewport(p.mViewport)
-      , mFocusPlaneDist(p.mFocusPlaneDist)
-   {
-      ;
-   }
+   Projection(const Projection& p);
 
    virtual ~Projection()
    {

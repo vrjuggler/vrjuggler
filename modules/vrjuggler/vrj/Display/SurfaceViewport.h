@@ -48,10 +48,7 @@ namespace vrj
 class VJ_CLASS_API SurfaceViewport : public Viewport
 {
 public:
-   SurfaceViewport()
-      : Viewport()
-      , mTracked(false)
-   {;}
+   SurfaceViewport();
 
    virtual ~SurfaceViewport();
 
@@ -74,7 +71,10 @@ public:
    void getCorners(gmtl::Point3f& ll, gmtl::Point3f& lr, gmtl::Point3f& ur,
                    gmtl::Point3f& ul)
    {
-      ll = mLLCorner; lr = mLRCorner; ur = mURCorner; ul = mULCorner;
+      ll = mLLCorner;
+      lr = mLRCorner;
+      ur = mURCorner;
+      ul = mULCorner;
    }
 
    virtual std::ostream& outStream(std::ostream& out,

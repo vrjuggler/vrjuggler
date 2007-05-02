@@ -51,37 +51,9 @@ class User;
 class VJ_CLASS_API Viewport
 {
 public:
-   Viewport()
-      : mUser(NULL)
-      , mType(Viewport::UNDEFINED)
-      , mActive(false)
-      , mXorigin(-1.0f)
-      , mYorigin(-1.0f)
-      , mXsize(-1.0f)
-      , mYsize(-1.0f)
-      , mLeftProj(NULL)
-      , mRightProj(NULL)
-   {
-      ;
-   }
+   Viewport();
 
-   Viewport(const Viewport& v)
-      : mName(v.mName)
-      , mUser(v.mUser)
-      , mType(v.mType)
-      , mView(v.mView)
-      , mActive(v.mActive)
-      , mDisplay(v.mDisplay)
-      , mViewportElement(v.mViewportElement)
-      , mXorigin(v.mXorigin)
-      , mYorigin(v.mYorigin)
-      , mXsize(v.mXsize)
-      , mYsize(v.mYsize)
-      , mLeftProj(v.mLeftProj)
-      , mRightProj(v.mRightProj)
-   {
-      ;
-   }
+   Viewport(const Viewport& v);
 
    virtual ~Viewport()
    {
