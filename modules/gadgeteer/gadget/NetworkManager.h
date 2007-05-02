@@ -29,7 +29,11 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <map>
+#ifdef VPR_HASH_MAP_INCLUDE
+#  include VPR_HASH_MAP_INCLUDE
+#else
+#  include <map>
+#endif
 
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Util/GUID.h>
@@ -39,11 +43,11 @@
 
 #include <gadget/NodePtr.h>
 #include <gadget/Reactor.h>
+#include <gadget/PacketHandlerPtr.h>
 #include <cluster/Packets/PacketPtr.h>
 
 namespace gadget
 {
-class PacketHandler;
 
 const int DEFAULT_SLAVE_PORT = 12599;
 
@@ -222,18 +226,20 @@ public:
     */
    static bool isLocalHost(const std::string& testHostName);
 
-   PacketHandler* getHandlerByGUID(const vpr::GUID& handler_guid);
-   void addHandler(PacketHandler* new_handler);
-
-   /* XXX: Remove these
-   virtual bool attemptConnect(NodePtr node) = 0;
-   virtual void startListening(int listen_port, bool accept_anonymous) = 0;
-   */
+   PacketHandlerPtr getHandlerByGUID(const vpr::GUID& handlerGuid);
+   void addHandler(PacketHandlerPtr newHandler);
 
 private:
    node_list_t                  mNodes;         /**< List of nodes in network. */
    vpr::InetAddr                mListenAddr;    /**< Address to listen for incoming connections on. */
-   std::map<vpr::GUID, PacketHandler*>  mHandlerMap;
+
+#ifdef VPR_HASH_MAP_INCLUDE
+   typedef std::hash_map<vpr::GUID, PacketHandlerPtr, vpr::GUID::hash> packet_handler_map_t;
+#else
+   typedef std::map<vpr::GUID, PacketHandlerPtr> packet_handler_map_t;
+#endif
+
+   packet_handler_map_t         mHandlerMap;
    Reactor                      mReactor;
 };
 

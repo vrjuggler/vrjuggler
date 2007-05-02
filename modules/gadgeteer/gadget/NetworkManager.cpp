@@ -35,6 +35,7 @@
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/PacketFactory.h>
+#include <cluster/ClusterManager.h>
 
 #include <gadget/Node.h>
 #include <gadget/PacketHandler.h>
@@ -399,20 +400,29 @@ void NetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
    }
 
    vpr::GUID handler_guid = packet->getPluginId();
-   PacketHandler* temp_handler = getHandlerByGUID( handler_guid );
+
+   // XXX: HACK We can not hold onto a shared_ptr to ClusterManager in mHandlerMap
+   //      because this would cause it to be destroyed incorrectly.
+   cluster::ClusterManager* cluster_mgr = cluster::ClusterManager::instance();
+   if (handler_guid == cluster_mgr->getHandlerGUID())
+   {
+      cluster_mgr->handlePacket(packet, node);
+      return;
+   }
+
+   PacketHandlerPtr temp_handler = getHandlerByGUID( handler_guid );
 
    //vprDEBUG( gadgetDBG_NET_MGR, 0 )
    //   << clrOutBOLD( clrBLUE, "[NetworkManager]" )
    //   << " Got packet for: " << handler_guid.toString()
    //   << std::endl << vprDEBUG_FLUSH;
 
-   if (NULL != temp_handler)
+   if (NULL != temp_handler.get())
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
          << clrOutBOLD(clrBLUE,"[NetworkManager]")
          << " Handler \"" << temp_handler->getHandlerName() << "\" will handle this packet."
          << std::endl << vprDEBUG_FLUSH;
-
 
       temp_handler->handlePacket( packet, node );
    }
@@ -426,9 +436,9 @@ void NetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
 }
 
 bool NetworkManager::addNode(const std::string& name,
-                                     const std::string& hostName,
-                                     const vpr::Uint16& port,
-                                     vpr::SocketStream* socketStream)
+                             const std::string& hostName,
+                             const vpr::Uint16& port,
+                             vpr::SocketStream* socketStream)
 {
    // -Create a new Node using the given information
    // -Add the new node to the NetworkManager
@@ -712,28 +722,29 @@ std::string NetworkManager::getClusterNodeElementType()
    return "cluster_node";
 }
 
-PacketHandler* NetworkManager::getHandlerByGUID(const vpr::GUID& handler_guid)
+PacketHandlerPtr NetworkManager::getHandlerByGUID(const vpr::GUID& handlerGuid)
 {
-   std::map<vpr::GUID, PacketHandler*>::const_iterator i = mHandlerMap.find( handler_guid );
-   if (i != mHandlerMap.end())
+   packet_handler_map_t::const_iterator found = mHandlerMap.find( handlerGuid );
+
+   if (found != mHandlerMap.end())
    {
-      return ((*i).second);
+      return ((*found).second);
    }
-   return NULL;
+   return PacketHandlerPtr();
 }
 
 /**
  * Adds a new plugin to the ClusterManager.
  */
-void NetworkManager::addHandler(PacketHandler* new_handler)
+void NetworkManager::addHandler(PacketHandlerPtr newHandler)
 {
-   std::pair<vpr::GUID, PacketHandler*> p 
-      = std::make_pair( new_handler->getHandlerGUID(), new_handler );
+   packet_handler_map_t::value_type p 
+      = std::make_pair( newHandler->getHandlerGUID(), newHandler );
    mHandlerMap.insert( p );
 
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
       << clrOutBOLD( clrBLUE, "[Reactor] " )
-      << "Adding Handler: " << new_handler->getHandlerName() << std::endl << vprDEBUG_FLUSH;
+      << "Adding Handler: " << newHandler->getHandlerName() << std::endl << vprDEBUG_FLUSH;
 }
 
 } // end namespace gadget

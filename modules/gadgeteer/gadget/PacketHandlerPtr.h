@@ -24,56 +24,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_PACKET_HANDLER_H_
-#define _GADGET_PACKET_HANDLER_H_
+#ifndef _GADGET_PACKET_HANDLER_PTR_H_
+#define _GADGET_PACKET_HANDLER_PTR_H_
 
-#include <gadget/gadgetConfig.h>
-
-#include <string> 
-#include <vpr/Util/GUID.h>
-#include <gadget/NodePtr.h>
-#include <cluster/Packets/PacketPtr.h>
-#include <gadget/PacketHandlerPtr.h>
-
-namespace vpr
-{
-   class SerializableObject;
-}
+#include <boost/shared_ptr.hpp>
 
 namespace gadget
 {
+class PacketHandler;
+typedef boost::shared_ptr<PacketHandler> PacketHandlerPtr;
+typedef boost::weak_ptr<PacketHandler> PacketHandlerWeakPtr;
+}
 
-/** \class PacketHandler PacketHandler.h gadget/PacketHandler.h
- *
- * Packet handler interface used for network communication.
- */
-class GADGET_CLASS_API PacketHandler
-{
-public:
-   PacketHandler()
-   {;}
-   virtual ~PacketHandler()
-   {;}
-
-   /**
-    * Get the GUID associated with this handler.
-    */
-   virtual vpr::GUID getHandlerGUID() = 0;
-   
-   virtual std::string getHandlerName() = 0;
-
-   /**
-    * Handle a incoming packet.
-    */
-   virtual void handlePacket(cluster::PacketPtr packet, NodePtr node) = 0;
-   
-   /**
-    * Virtual function used to inform all handlers that the network
-    * has lost its connection to the given Node.
-    */
-   virtual void recoverFromLostNode(NodePtr lostNode) = 0;
-};
-
-} // end namespace gadget
-
-#endif /*_GADGET_PACKET_HANDLER_H_*/
+#endif /*_GADGET_PACKET_HANDLER_PTR_H_*/

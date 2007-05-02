@@ -160,7 +160,6 @@ namespace cluster
       , mPostPostFrameCallCount(0)
    {
       mClusterNetwork = new ClusterNetwork();
-      mClusterNetwork->addHandler(this);
    }
 
    ClusterManager::~ClusterManager()
@@ -316,7 +315,7 @@ namespace cluster
          // We should do this here, but since we do not add the manager until
          // its configAdd currently you can see the problem
          jccl::ConfigManager::instance()->addConfigElementHandler( newPlugin.get() );
-         mClusterNetwork->addHandler( newPlugin.get() );
+         mClusterNetwork->addHandler( newPlugin );
 
          // We can still unregister it when removed below though
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
