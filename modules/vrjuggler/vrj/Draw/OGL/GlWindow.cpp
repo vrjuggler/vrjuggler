@@ -73,6 +73,28 @@ namespace vrj
 int GlWindow::mCurMaxWinId = 0;
 vpr::Mutex GlWindow::mWinIdMutex;
 
+GlWindow::GlWindow()
+   : mSwapCount(0)
+   // The context is always dirty when the window is first created
+   , mDirtyContext(true)
+   , mDirtyViewport(true)
+   , mInStereo(false)
+   , mHasBorder(false)
+   , mIsFullScreen(false)
+   , mAlwaysOnTop(false)
+   , mHideMouse(false)
+   , mWindowIsOpen(false)
+   , mWindowWidth(0)
+   , mWindowHeight(0)
+   , mOriginX(0)
+   , mOriginY(0)
+   // XXX: Sync problem on window id value assignment
+   , mWindowId(getNextWindowId())
+   , mIsEventSource(false)
+{
+   /* Do nothing. */ ;
+}
+
 void GlWindow::configWindow(vrj::DisplayPtr displayWindow)
 {
    // We can't config to a NULL display

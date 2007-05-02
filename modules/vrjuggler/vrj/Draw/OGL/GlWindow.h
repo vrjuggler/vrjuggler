@@ -60,27 +60,7 @@ namespace vrj
 class VJ_OGL_CLASS_API GlWindow
 {
 public:
-   GlWindow()
-      : mSwapCount(0)
-      // The context is always dirty when the window is first created
-      , mDirtyContext(true)
-      , mDirtyViewport(true)
-      , mInStereo(false)
-      , mHasBorder(false)
-      , mIsFullScreen(false)
-      , mAlwaysOnTop(false)
-      , mHideMouse(false)
-      , mWindowIsOpen(false)
-      , mWindowWidth(0)
-      , mWindowHeight(0)
-      , mOriginX(0)
-      , mOriginY(0)
-      // XXX: Sync problem on window id value assignment
-      , mWindowId(getNextWindowId())
-      , mIsEventSource(false)
-   {
-      /* Do nothing. */ ;
-   }
+   GlWindow();
 
    /** Virtual destructor. */
    virtual ~GlWindow()
