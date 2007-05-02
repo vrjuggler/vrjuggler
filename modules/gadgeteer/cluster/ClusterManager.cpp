@@ -152,7 +152,6 @@ namespace cluster
 
    ClusterManager::ClusterManager()
       : mClusterActive( false )
-      , mClusterReady( false )
       , mClusterStarted( false )
       , mIsMaster(false)
       , mIsSlave(false)
@@ -223,7 +222,6 @@ namespace cluster
       // Connect the entire cluster.
       if (mIsMaster)
       {
-         std::cout << "XXX: ClusterManager::start() MASTER" << std::endl;
          if (NULL == mClusterElement.get())
          {
             throw ClusterException("Master must have a ClusterManager config element.", VPR_LOCATION);
@@ -250,60 +248,27 @@ namespace cluster
             ConfigPacketPtr cfg_pkt(new ConfigPacket(node_output.str(), jccl::ConfigManager::PendingElement::ADD));
             (*itr)->send(cfg_pkt);
          }
-         std::cout << "Before barrier" << std::endl;
          sendEndBlocksAndSignalUpdate(0);
-         std::cout << "After barrier" << std::endl;
-         //while(true)
-         //{;}
-         // Wait for all needed configuration.
-         // Connect to all nodes.
       }
       else if (mIsSlave)
       {
-         std::cout << "XXX: ClusterManager::start() SLAVE" << std::endl;
          // Start listening on known port for connections.
          mClusterNetwork->waitForConnection();
-         std::cout << "Before barrier" << std::endl;
          sendEndBlocksAndSignalUpdate(0);
-         std::cout << "After barrier" << std::endl;
-         //while(true)
-         //{;}
       }
    }
 
    bool ClusterManager::isClusterReady()
    {
-      // -If the cluster is active and not ready
-      //   -If a StartBarrier jccl::ConfigElement does not exist
-      //    -Warn the user and set cluster ready
-      //   -Get new value of mClusterReady from asking all plugins
-      // -Return the new mClusterReady
-
-      vpr::Guard<vpr::Mutex> ready_guard( mClusterReadyLock );
       vpr::Guard<vpr::Mutex> active_guard( mClusterActiveLock );
 
-      if ( mClusterActive && !mClusterReady )
-      {
-         if ( !jccl::ConfigManager::instance()->hasElementType( "start_barrier_plugin" ) )
-         {
-            vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-               << clrOutBOLD(clrCYAN, "NOTE:") << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-               << "The start_barrier_plugin config element does not exist.\n"
-               << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-               << "If your application depends on each node starting at the "
-               << "same time,\n" << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
-               << "then you should load and configure the Start Barrier "
-               << "Plug-in.\n" << vprDEBUG_FLUSH;
+      const std::string window_type("display_window");
+      bool pending_windows = false;
+      //bool pending_windows = jccl::ConfigManager::instance()->isElementTypeInPendingList(window_type);
 
-            mClusterReady = true;
-         }
-      }
       // Lock it here so that we can avoid confusion in pluginsReady()
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-      return( mClusterReady && pluginsReady() );
+      return( !pending_windows && pluginsReady() );
    }
 
    bool ClusterManager::pluginsReady()

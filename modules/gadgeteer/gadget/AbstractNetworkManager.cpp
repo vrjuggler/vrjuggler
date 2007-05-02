@@ -295,28 +295,12 @@ void AbstractNetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr nod
    if (packet->getPacketType() == cluster::Header::RIM_END_BLOCK)
    {
       // -Set New State
-      if (node == NULL)
-      {
-         return;
-      }
-
+      vprASSERT(NULL != node.get() && "Can't have a NULL node.");
       node->setUpdated( true );
-      return;
-   }
-   else if (packet->getPacketType() == cluster::Header::RIM_CONNECTION_REQ ||
-            packet->getPacketType() == cluster::Header::RIM_CONNECTION_ACK)
-   {
-      //handleLocalPacket(packet, node);
-      
-      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
-         << clrOutBOLD( clrRED, "[ERROR] " )
-         << "RIM_CONNECTION_REQ & RIM_CONNECTION_ACK data packet types are depreciated."
-         << std::endl << vprDEBUG_FLUSH;
       return;
    }
 
    vpr::GUID handler_guid = packet->getPluginId();
-
    PacketHandler* temp_handler = getHandlerByGUID( handler_guid );
 
    //vprDEBUG( gadgetDBG_NET_MGR, 0 )

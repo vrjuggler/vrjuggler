@@ -29,7 +29,6 @@
 #include <plugins/ApplicationDataManager/ApplicationDataManager.h>
 
 #include <cluster/ClusterManager.h>
-#include <gadget/AbstractNetworkManager.h>
 #include <gadget/Node.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/gadgetParam.h>

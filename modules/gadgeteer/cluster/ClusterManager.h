@@ -265,20 +265,6 @@ public:
    bool pluginsReady();
 
    /**
-    * Change the ready state of the ClusterManager.
-    */
-   void setClusterReady( const bool ready )
-   {
-      vpr::Guard<vpr::Mutex> guard( mClusterReadyLock );
-
-      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-         << clrOutBOLD( clrCYAN, "[ClusterManager]" )
-         << " Cluster is ready." << std::endl << vprDEBUG_FLUSH;
-
-      mClusterReady = ready;
-   }
-
-   /**
     * Output the current status of the cluster.
     */
    friend GADGET_API( std::ostream& ) operator<<( std::ostream& out,
@@ -349,9 +335,6 @@ private:
 
    vpr::Mutex                   mClusterActiveLock;  /**< Lock on ClusterActive bool.*/
    bool                         mClusterActive;      /**< Flag informing us if this app is running on a cluster. */
-
-   vpr::Mutex                   mClusterReadyLock;   /**< Lock on ClusterReady bool.*/
-   bool                         mClusterReady;       /**< Flag set true when all dependancies are satisfied. */
 
    bool                         mClusterStarted;     /**< If the cluster has already started. */
 
