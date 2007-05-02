@@ -35,6 +35,7 @@
 #include <gmtl/Xforms.h>
 #include <gmtl/Output.h>
 
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/Projection.h>
 
 namespace vrj

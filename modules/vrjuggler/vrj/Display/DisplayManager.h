@@ -33,7 +33,6 @@
 #include <vpr/Util/Singleton.h>
 
 //#include <gadget/Type/Position.h>
-#include <vrj/Util/Debug.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <vrj/Display/DisplayPtr.h>

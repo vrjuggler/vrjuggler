@@ -31,7 +31,6 @@
 //#include <vrj/Math/Coord.h>
 #include <gmtl/Vec.h>
 #include <jccl/Config/ConfigElement.h>
-#include <vrj/Kernel/User.h>
 
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
@@ -40,6 +39,8 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
+#include <vrj/Util/Debug.h>
+#include <vrj/Kernel/User.h>
 #include <vrj/Display/SurfaceProjection.h>
 #include <vrj/Display/TrackedSurfaceProjection.h>
 #include <vrj/Display/DisplayExceptions.h>

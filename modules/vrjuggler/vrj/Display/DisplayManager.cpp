@@ -28,6 +28,7 @@
 #include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>

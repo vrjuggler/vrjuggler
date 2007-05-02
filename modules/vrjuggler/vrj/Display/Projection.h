@@ -28,14 +28,14 @@
 #define _VRJ_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/Frustum.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
+#include <vrj/Display/Frustum.h>
+#include <vrj/Display/Viewport.h>
+
 
 namespace vrj
 {

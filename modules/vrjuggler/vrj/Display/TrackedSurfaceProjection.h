@@ -28,9 +28,8 @@
 #define _VRJ_TRACKED_WALL_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/SurfaceProjection.h>
-#include <vrj/Util/Debug.h>
 #include <gadget/Type/PositionInterface.h>
+#include <vrj/Display/SurfaceProjection.h>
 
 
 namespace vrj
