@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="p5_glove" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="P5 Data Glove">
+      <abstract>false</abstract>
+      <help>Configuration for a P5 Data Glove device. This device makes use of five analog data sources (0-4): thumb, index, middle, ring, pinky. (&lt;a href="http://www.essentialreality.com/"&gt;more on P5 data glove&lt;/a&gt;, )</help>
+      <parent>glove_device</parent>
+      <parent>analog_device</parent>
+      <parent>positional_device</parent>
+      <category>/Devices/Glove</category>
+      <property valuetype="integer" variable="false" name="number">
+         <help>This is the number of the glove connected to the computer.</help>
+         <value label="number" defaultvalue="0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

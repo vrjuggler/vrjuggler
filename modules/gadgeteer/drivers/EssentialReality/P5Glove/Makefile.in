@@ -1,0 +1,89 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2007 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for gadgeteer/drivers/EssentialReality/P5Glove.  It requires GNU
+# make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+DRIVER_NAME=	P5Glove
+
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+INSTALL_FILES=	
+SUBOBJDIR=	$(DRIVER_NAME)
+
+EXTRA_INCLUDES+=	-I$(srcdir)/libp5glove/src
+
+ifeq (@PLATFORM@, Darwin)
+BUILD_DRIVER=		Y
+EXTRA_SRCS=		usb_hid_macosx.c
+
+POST_DSO_DRIVER_DEPS+=	-framework IOKit -framework CoreFoundation
+endif
+
+ifeq (@HAVE_LIBUSB@, Y)
+BUILD_DRIVER=		Y
+EXTRA_SRCS=		usb_hid_libusb.c
+
+LIBUSB_CFLAGS=		@LIBUSB_CFLAGS@
+LIBUSB_LIBS=		@LIBUSB_LIBS@
+
+EXTRA_CFLAGS+=		$(LIBUSB_CFLAGS)
+EXTRA_CXXFLAGS+=	$(LIBUSB_CFLAGS)
+POST_DSO_DRIVER_DEPS+=	$(LIBUSB_LIBS)
+endif
+
+ifeq  ($(BUILD_DRIVER), Y)
+C_AFTERBUILD=	driver-dso
+
+SRCS=		p5glove.c 		\
+		P5GloveWrapper.cpp	\
+		P5GloveStandalone.cpp	\
+		$(EXTRA_SRCS)
+endif
+
+EXTRA_SRCS_PATH=$(srcdir)/libp5glove/src
+
+include $(MKPATH)/dpp.obj.mk
+include @topdir@/driver.defs.mk
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+   -include $(DEPEND_FILES)
+endif
+endif

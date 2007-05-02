@@ -78,6 +78,11 @@ AC_ARG_WITH(dtk,
 AC_ARG_WITH(vrpn, [  --with-vrpn=<PATH>      VRPN installation],
             _with_vrpn="$withval", _with_vrpn='no')
 
+# Build with libusb path. Then, include the P5Gove drivers ...
+# There is default path.
+AC_ARG_WITH(libusb, [  --with-libusb=<PATH>    libusb installation],
+            _with_libusb="$withval", _with_libusb='no')
+
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -464,6 +469,54 @@ if test "x${_with_vrpn}" != "xno" ; then
     LIBS="${_vjsave_LIBS}"
 fi
 
+# -----------------------------------------------------------------------------
+# libusb
+# -----------------------------------------------------------------------------
+
+# Test for the libusb library
+if test "x${_with_libusb}" != "xno" ; then
+   AC_PATH_PROG([LIBUSB_CONFIG], [libusb-config], [no],
+                [${_with_libusb}/bin])
+else
+   AC_PATH_PROG([LIBUSB_CONFIG], [libusb-config], [no])
+fi
+
+if test "x$LIBUSB_CONFIG" != "xno" ; then
+   _gadget_save_CFLAGS="$CFLAGS"
+   _gadget_save_CPPFLAGS="$CPPFLAGS"
+   _gadget_save_LDFLAGS="$LDFLAGS"
+   _gadget_save_LIBS="$LIBS"
+
+   LIBUSB_CFLAGS=`$LIBUSB_CONFIG --cflags`
+   LIBUSB_LIBS=`$LIBUSB_CONFIG --libs`
+
+   CPPFLAGS="$LIBUSB_CFLAGS $CPPFLAGS"
+   LDFLAGS="$LIBUSB_LIBS $LDFLAGS"
+
+   gadget_have_libusb='no'
+
+   DPP_LANG_SAVE
+   DPP_LANG_C
+
+   AC_CHECK_LIB(usb, usb_init,
+                [AC_CHECK_HEADER([usb.h], [gadget_have_libusb='yes'],
+                                 [gadget_have_libusb='no'])],
+                [gadget_have_libusb='no'])
+
+   DPP_LANG_RESTORE
+
+   if test "x$gadget_have_libusb" = "xyes" ; then
+      HAVE_LIBUSB='Y'
+   else
+      HAVE_LIBUSB='N'
+      AC_MSG_WARN([*** Did not find libusb ***])
+   fi
+
+   CFLAGS="${_gadget_save_CFLAGS}"
+   CPPFLAGS="${_gadget_save_CPPFLAGS}"
+   LDFLAGS="${_gadget_save_LDFLAGS}"
+   LIBS="${_gadget_save_LIBS}"
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for header files.
@@ -613,6 +666,10 @@ AC_SUBST(HAVE_VRPN)
 AC_SUBST(VRPNROOT)
 AC_SUBST(VRPN_LDFLAGS)
 
+AC_SUBST(HAVE_LIBUSB)
+AC_SUBST(LIBUSB_CFLAGS)
+AC_SUBST(LIBUSB_LIBS)
+
 AC_SUBST(DSO_DRIVER_DEPS)
 AC_SUBST(DSO_DRIVER_DEP_FILES)
 AC_SUBST(DSO_DRIVER_PROF_DEPS)
@@ -642,6 +699,8 @@ AC_CONFIG_FILES([
    Ascension/Wanda/Makefile
    Elexol/Makefile
    Elexol/Ether24/Makefile
+   EssentialReality/Makefile
+   EssentialReality/P5Glove/Makefile
    Fakespace/Makefile
    Fakespace/PinchGlove/Makefile
    Immersion/Makefile
