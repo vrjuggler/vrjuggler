@@ -251,6 +251,7 @@ else
 endif
 
 clean-version-links:
+	@rm -rf $(LIBDIR_BASE)
 	@rm -rf $(instlinks)/include/sonix* $(instlinks)/lib*/sonix*	\
            $(instlinks)/$(data_subdir)/sonix*
 	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/sonix*

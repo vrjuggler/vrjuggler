@@ -272,6 +272,7 @@ else
 endif
 
 clean-version-links:
+	@rm -rf $(LIBDIR_BASE)
 	@rm -rf $(instlinks)/include/jccl* $(instlinks)/lib*/jccl*	\
            $(instlinks)/$(data_subdir)/jccl*
 	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/jccl*
