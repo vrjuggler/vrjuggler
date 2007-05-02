@@ -20,7 +20,7 @@
             <enum label="2400" value="2400"/>
             <enum label="4800" value="4800"/>
             <enum label="9600" value="9600"/>
-            <enum label="19200" value="12900"/>
+            <enum label="19200" value="19200"/>
             <enum label="38400" value="38400"/>
             <enum label="57600" value="57600"/>
             <enum label="115200" value="115200"/>
