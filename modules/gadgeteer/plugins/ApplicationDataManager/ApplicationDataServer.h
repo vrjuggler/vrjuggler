@@ -69,7 +69,7 @@ public:
    /**
     * Release all memory that is no longer needed.
     */
-   ~ApplicationDataServer();
+   virtual ~ApplicationDataServer();
 
    /**
     * Send mDataPacket, which has been updated in updateLocalData, to each
