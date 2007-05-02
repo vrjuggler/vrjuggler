@@ -37,10 +37,10 @@ namespace vrj
 int User::mNextUserId = 0;
 
 
-int User::getId()
+int User::getId() const
 { return mUserId; }
 
-std::string User::getName()
+const std::string& User::getName() const
 { return mName; }
 
 bool User::config(jccl::ConfigElementPtr element)

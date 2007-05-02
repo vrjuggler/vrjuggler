@@ -104,7 +104,7 @@ public:
    }
 
    /** Gets the name of this display window. */
-   std::string getName() const
+   const std::string& getName() const
    {
       return mName;
    }
@@ -161,6 +161,7 @@ public:
    
    /** Returns the current origin and size of this display window. */
    void getOriginAndSize(int& originX, int& originY, int& width, int& height)
+      const
    {
       vprASSERT(mOriginX != -1);     // Make sure we have been configured
       originX = mOriginX;
@@ -222,6 +223,7 @@ public:
     * @param vpNum The integer identifier of the requested viewport.
     */
    vrj::Viewport* getViewport(const std::vector<vrj::Viewport*>::size_type vpNum)
+      const
    {
       return mViewports[vpNum];
    }

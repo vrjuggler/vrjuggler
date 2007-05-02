@@ -118,7 +118,7 @@ public:
     */
    void getFrustumApexAndCorners(gmtl::Vec3f& apex, gmtl::Vec3f& ur,
                                  gmtl::Vec3f& lr, gmtl::Vec3f& ul,
-                                 gmtl::Vec3f& ll);
+                                 gmtl::Vec3f& ll) const;
 
    /** Returns this projection's view matrix. */
    const gmtl::Matrix44f& getViewMatrix() const

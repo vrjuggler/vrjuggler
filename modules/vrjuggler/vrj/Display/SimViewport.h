@@ -64,7 +64,7 @@ public:
     */
    virtual void updateProjections(const float positionScale);
 
-   DrawSimInterfacePtr getDrawSimInterface()
+   DrawSimInterfacePtr getDrawSimInterface() const
    {
       return mSimulator;
    }

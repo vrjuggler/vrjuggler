@@ -70,6 +70,7 @@ public:
 
    void getCorners(gmtl::Point3f& ll, gmtl::Point3f& lr, gmtl::Point3f& ur,
                    gmtl::Point3f& ul)
+      const
    {
       ll = mLLCorner;
       lr = mLRCorner;

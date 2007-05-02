@@ -132,7 +132,7 @@ public:
    }
 
    /** Gets the name of this display. */
-   const std::string& getName()
+   const std::string& getName() const
    {
       return mName;
    }
@@ -148,7 +148,7 @@ public:
    }
 
    /** Which view are we supposed to render? */
-   Viewport::View getView()
+   Viewport::View getView() const
    {
       return mView;
    }
@@ -193,19 +193,19 @@ public:
    }
 
    /** Gets the display containing this viewport. */
-   DisplayPtr getDisplay()
+   DisplayPtr getDisplay() const
    {
       return mDisplay.lock();
    }
 
    /** Gets the left projection. */
-   Projection* getLeftProj()
+   Projection* getLeftProj() const
    {
       return mLeftProj;
    }
 
    /** Gets the right projection. */
-   Projection* getRightProj()
+   Projection* getRightProj() const
    {
       return mRightProj;
    }

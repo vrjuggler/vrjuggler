@@ -66,13 +66,13 @@ public:
     * Returns the ID of the user in the system.
     * @post -1 => User has not been configured.
     */
-   int getId();
+   int getId() const;
 
    /**
     * Returns the name of this user object.
     * @post String name of the head.
     */
-   std::string getName();
+   const std::string& getName() const;
 
    /**
     * Configures the user object.
@@ -93,7 +93,7 @@ public:
    }
 
    /** Gets the eye separation. */
-   float getInterocularDistance()
+   float getInterocularDistance() const
    {
       return mInterocularDist;
    }
