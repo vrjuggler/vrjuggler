@@ -46,7 +46,7 @@ ApplicationDataServer::ApplicationDataServer(const vpr::GUID& guid,  Application
    mDeviceData = new std::vector<vpr::Uint8>;
    
    // Create a DataPacket that will be updated and sent continually.
-   mDataPacket = DataPacketPtr(new DataPacket(pluginGuid, guid, mDeviceData));
+   mDataPacket = DataPacket::create(pluginGuid, guid, mDeviceData);
    mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
 }
 

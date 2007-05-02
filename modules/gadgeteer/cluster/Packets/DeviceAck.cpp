@@ -31,116 +31,136 @@
 
 namespace cluster
 {
-   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(DeviceAck);
 
-   DeviceAck::DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
-                        const std::string& device_name, 
-                        const std::string& device_base_type, bool ack)
-   {
-      // Set the local member variables using the given values.
-      mPluginId = plugin_id;
-      mId = id;
-      mDeviceName = device_name;
-      mDeviceBaseType = device_base_type;
-      mAck = ack;
+CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(DeviceAck);
+
+DeviceAck::DeviceAck()
+   : Packet(vpr::GUID())
+{;}
+
+DeviceAck::DeviceAck(const vpr::GUID& pluginId, const vpr::GUID& id, 
+                     const std::string& deviceName, 
+                     const std::string& deviceBaseType, bool ack)
+   : Packet(pluginId)
+   , mId(id)
+   , mDeviceName(deviceName)
+   , mDeviceBaseType(deviceBaseType)
+   , mAck(ack)
+{
+   // Get the localhost name.
+   mHostname = vpr::InetAddr::getLocalHost().getHostname();
+
+   // Create a Header for this packet with the correect type and size.
+   mHeader = new Header(Header::RIM_PACKET,
+                        Header::RIM_DEVICE_ACK,
+                        Header::RIM_PACKET_HEAD_SIZE 
+                        + 16 /*mPluginId*/
+                        + 16 /*mId*/
+                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                        + mDeviceName.size() /*length of mDeviceName*/
+                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                        + mDeviceBaseType.size() /*length of mDeviceBaseType*/
+                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                        + mHostname.size() /*length of mDeviceBaseType*/
+                        + 1 /*mAck*/,
+                        0/*Field not curently used*/);                      
+
+   // Serialize the given data.
+   serialize();
+}
+
+DeviceAckPtr DeviceAck::create()
+{
+   return DeviceAckPtr(new DeviceAck());
+}
+
+DeviceAckPtr DeviceAck::create(const vpr::GUID& pluginId, const vpr::GUID& id,
+                               const std::string& deviceName,
+                               const std::string& deviceBaseType, bool ack)
+{
+   return DeviceAckPtr(new DeviceAck(pluginId, id, deviceName, deviceBaseType, ack));
+}
+
+DeviceAck::~DeviceAck()
+{;}
+
+void DeviceAck::serialize()
+{
+   // Clear the data stream.
+   mPacketWriter->getData()->clear();
+   mPacketWriter->setCurPos(0);
+
+   // Serialize the header.
+   mHeader->serializeHeader();
+   
+   // Serialize plugin GUID
+   mPluginId.writeObject(mPacketWriter);
+   
+   // Serialize Device GUID
+   mId.writeObject(mPacketWriter);
+   
+   // Serialize the Device Name
+   mPacketWriter->writeString(mDeviceName);
+   
+   // Serialize the Base Type of the acknowledged device
+   mPacketWriter->writeString(mDeviceBaseType);
+
+   // Serialize the hostname of the acknowledging node
+   mPacketWriter->writeString(mHostname);
+
+   // Serialize the Ack boolean
+   mPacketWriter->writeBool(mAck);
+}
+
+void DeviceAck::parse(vpr::BufferObjectReader* reader)
+{
+   // De-Serialize plugin GUID
+   mPluginId.readObject(reader);
+
+   // De-Serialize Device GUID
+   mId.readObject(reader);
       
-      // Get the localhost name.
-      mHostname = vpr::InetAddr::getLocalHost().getHostname();
+   // De-Serialize the Device Name
+   mDeviceName = reader->readString();
 
-      // Create a Header for this packet with the correect type and size.
-      mHeader = new Header(Header::RIM_PACKET,
-                                      Header::RIM_DEVICE_ACK,
-                                      Header::RIM_PACKET_HEAD_SIZE 
-                                      + 16 /*mPluginId*/
-                                      + 16 /*mId*/
-                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                                      + mDeviceName.size() /*length of mDeviceName*/
-                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                                      + mDeviceBaseType.size() /*length of mDeviceBaseType*/
-                                      + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                                      + mHostname.size() /*length of mDeviceBaseType*/
-                                      + 1 /*mAck*/,
-                                      0/*Field not curently used*/);                      
-      // Serialize the given data.
-      serialize();
-   }
+   // De-Serialize the Base Type of the acknowledged device
+   mDeviceBaseType = reader->readString();
 
-   void DeviceAck::serialize()
-   {
-      // Clear the data stream.
-      mPacketWriter->getData()->clear();
-      mPacketWriter->setCurPos(0);
+   // De-Serialize the hostname of the acknowledging node
+   mHostname = reader->readString();
 
-      // Serialize the header.
-      mHeader->serializeHeader();
-      
-      // Serialize plugin GUID
-      mPluginId.writeObject(mPacketWriter);
-      
-      // Serialize Device GUID
-      mId.writeObject(mPacketWriter);
-      
-      // Serialize the Device Name
-      mPacketWriter->writeString(mDeviceName);
-      
-      // Serialize the Base Type of the acknowledged device
-      mPacketWriter->writeString(mDeviceBaseType);
+   // De-Serialize the Ack boolean
+   mAck = reader->readBool();
+}
 
-      // Serialize the hostname of the acknowledging node
-      mPacketWriter->writeString(mHostname);
+void DeviceAck::printData(int debug_level)
+{
+   vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
+      <<  clrOutBOLD(clrYELLOW,"==== Device Ack Packet Data ====\n") << vprDEBUG_FLUSH;
+   
+   Packet::printData(debug_level);
 
-      // Serialize the Ack boolean
-      mPacketWriter->writeBool(mAck);
-   }
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Plugin GUID:      ") << mPluginId.toString()
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Device ID:        ") << mId.toString()
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Device Name:      ") << mDeviceName
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Device Base Type: ") << mDeviceBaseType 
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Remote Hostname:  ") << mHostname
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Ack or Nack:      ") << (mAck ? "Ack" : "Nack")  << std::endl
+      << std::endl << vprDEBUG_FLUSH;
 
-   void DeviceAck::parse(vpr::BufferObjectReader* reader)
-   {
-      // De-Serialize plugin GUID
-      mPluginId.readObject(reader);
+   vprDEBUG_END(gadgetDBG_RIM,debug_level) 
+      <<  clrOutBOLD(clrYELLOW,"================================\n") << vprDEBUG_FLUSH;
+}
 
-      // De-Serialize Device GUID
-      mId.readObject(reader);
-         
-      // De-Serialize the Device Name
-      mDeviceName = reader->readString();
-
-      // De-Serialize the Base Type of the acknowledged device
-      mDeviceBaseType = reader->readString();
-
-      // De-Serialize the hostname of the acknowledging node
-      mHostname = reader->readString();
-
-      // De-Serialize the Ack boolean
-      mAck = reader->readBool();
-   }
-
-   void DeviceAck::printData(int debug_level)
-   {
-      vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
-         <<  clrOutBOLD(clrYELLOW,"==== Device Ack Packet Data ====\n") << vprDEBUG_FLUSH;
-      
-      Packet::printData(debug_level);
-
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Plugin GUID:      ") << mPluginId.toString()
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Device ID:        ") << mId.toString()
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Device Name:      ") << mDeviceName
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Device Base Type: ") << mDeviceBaseType 
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Remote Hostname:  ") << mHostname
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Ack or Nack:      ") << (mAck ? "Ack" : "Nack")  << std::endl
-         << std::endl << vprDEBUG_FLUSH;
-
-      vprDEBUG_END(gadgetDBG_RIM,debug_level) 
-         <<  clrOutBOLD(clrYELLOW,"================================\n") << vprDEBUG_FLUSH;
-   }
-}   // end namespace gadget
+} // end namespace gadget

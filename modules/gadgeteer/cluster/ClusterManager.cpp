@@ -246,7 +246,7 @@ namespace cluster
                << "Send configuration to nodes: " << (*itr)->getName()
                << std::endl << vprDEBUG_FLUSH;
 
-            ConfigPacketPtr cfg_pkt(new ConfigPacket(node_output.str(), jccl::ConfigManager::PendingElement::ADD));
+            ConfigPacketPtr cfg_pkt = ConfigPacket::create(node_output.str(), jccl::ConfigManager::PendingElement::ADD);
             (*itr)->send(cfg_pkt);
          }
          updateBarrier(0);

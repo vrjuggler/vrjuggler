@@ -36,74 +36,77 @@
 
 namespace cluster
 {
-   Packet::Packet() : mPluginId()
-   {
-      //mData = new std::vector<vpr::Uint8>(RIM_PACKET_HEAD_SIZE);
-      mPacketReader = new vpr::BufferObjectReader(&mData);
-      mPacketWriter= new vpr::BufferObjectWriter(&mData);
-   }
-   Packet::Packet(std::vector<vpr::Uint8>* data) : mPluginId()
-   {
-      //We must Copy
-      mData = *(data);
-      mPacketReader = new vpr::BufferObjectReader(&mData);
-      mPacketWriter= new vpr::BufferObjectWriter(&mData);
 
-      //parseHeader();
-   }
+Packet::Packet(const vpr::GUID& pluginId)
+   : mPluginId(pluginId)
+{
+   //mData = new std::vector<vpr::Uint8>(RIM_PACKET_HEAD_SIZE);
+   mPacketReader = new vpr::BufferObjectReader(&mData);
+   mPacketWriter= new vpr::BufferObjectWriter(&mData);
+}
+Packet::Packet(std::vector<vpr::Uint8>* data) : mPluginId()
+{
+   //We must Copy
+   mData = *(data);
+   mPacketReader = new vpr::BufferObjectReader(&mData);
+   mPacketWriter= new vpr::BufferObjectWriter(&mData);
 
-   Packet::~Packet()
-   {
-      delete mHeader;
-      delete mPacketReader;
-      delete mPacketWriter;
-      //delete mData;
-   }
+   //parseHeader();
+}
 
-   void Packet::dump()
-   {
-      if (mHeader != NULL)
-      {
-         mHeader->dump();
-      }
-      else
-      {
-         std::cout << "Could not dump Header since it is NULL!" << std::endl;
-      }
-      std::cout << "Dumping Packet(" << mData.size() << " bytes): ";
-      for ( std::vector<vpr::Uint8>::iterator i = mData.begin();
-           i!= mData.end(); i++ )
-      {
-         std::cout << (int)*i << " ";
-      }
-      std::cout << std::endl;
-   }
+Packet::~Packet()
+{
+   delete mHeader;
+   delete mPacketReader;
+   delete mPacketWriter;
+   //delete mData;
+}
 
-   vpr::Uint16 Packet::getPacketType()
+void Packet::dump()
+{
+   if (mHeader != NULL)
    {
-      return mHeader->getPacketType();
+      mHeader->dump();
    }
-
-   void Packet::printData(int debug_level)
+   else
    {
-      if (mHeader != NULL)
-      {
-         mHeader->printData(debug_level);
-         /*
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << clrOutBOLD(clrCYAN,"\n====== Packet Header ======")
-            << "\nRIMCode:    " << mHeader->getRIMCode()
-            << "\nPacketType: " << mHeader->getPacketType()
-            << "\nFrame #:    " << mHeader->getFrame()
-            << "\nLength:     " << mHeader->getPacketLength() << std::endl
-            << vprDEBUG_FLUSH;
-         */
-      }
-      else
-      {
+      std::cout << "Could not dump Header since it is NULL!" << std::endl;
+   }
+   std::cout << "Dumping Packet(" << mData.size() << " bytes): ";
+   for ( std::vector<vpr::Uint8>::iterator i = mData.begin();
+        i!= mData.end(); i++ )
+   {
+      std::cout << (int)*i << " ";
+   }
+   std::cout << std::endl;
+}
+
+vpr::Uint16 Packet::getPacketType()
+{
+   return mHeader->getPacketType();
+}
+
+void Packet::printData(int debug_level)
+{
+   if (mHeader != NULL)
+   {
+      mHeader->printData(debug_level);
+      /*
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << clrOutBOLD(clrRED,"[Packet::printData] Header is still NULL, can not print data!")
+         << clrOutBOLD(clrCYAN,"\n====== Packet Header ======")
+         << "\nRIMCode:    " << mHeader->getRIMCode()
+         << "\nPacketType: " << mHeader->getPacketType()
+         << "\nFrame #:    " << mHeader->getFrame()
+         << "\nLength:     " << mHeader->getPacketLength() << std::endl
          << vprDEBUG_FLUSH;
-      }
+      */
    }
+   else
+   {
+   vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+      << clrOutBOLD(clrRED,"[Packet::printData] Header is still NULL, can not print data!")
+      << vprDEBUG_FLUSH;
+   }
+}
+
 }   // end namespace gadget

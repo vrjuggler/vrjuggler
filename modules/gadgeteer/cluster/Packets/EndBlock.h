@@ -42,11 +42,11 @@
 namespace cluster
 {
 
-class GADGET_CLASS_API EndBlock : public Packet
+class GADGET_CLASS_API EndBlock
+   : public Packet
 {
-public:
-   EndBlock()
-   {;}
+protected:
+   EndBlock();
 
    /**
     * Create a EndBlock packet to signal that the local node has reached the
@@ -54,7 +54,26 @@ public:
     *
     * @param frame_number The current number of frames that have been drawn.
     */
-   EndBlock(const vpr::Uint32& frame_number);
+   EndBlock(const vpr::Uint32 frameNum);
+
+public:
+   /**
+    * Creates a EndBlock instance and returns it wrapped in a
+    * EndBlockPtr object.
+    *
+    * @since 1.3.7
+    */
+   static EndBlockPtr create();
+
+   /**
+    * Creates a EndBlock instance and returns it wrapped in a
+    * EndBlockPtr object.
+    *
+    * @since 1.3.7
+    */
+   static EndBlockPtr create(const vpr::Uint32 frameNum);
+
+   virtual ~EndBlock();
 
    /**
     * Serializes member variables into a data stream.

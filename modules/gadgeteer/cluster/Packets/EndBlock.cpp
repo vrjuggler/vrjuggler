@@ -34,73 +34,88 @@ namespace cluster
 {
 CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(EndBlock);
 
-   /**
-    * Create a EndBlock packet to signal that the local node has reached the
-    * end of the frame.
-    *
-    * @param frame_number The current number of frames that have been drawn.
-    */
-   EndBlock::EndBlock(const vpr::Uint32& frame_number)
-   {
-      // Set the local member variables using the given values.
-      mTempVar = frame_number;
-      // Create a Header for this packet with the correect type and size.
-      mHeader = new Header(Header::RIM_PACKET,
-                                       Header::RIM_END_BLOCK,
-                                       Header::RIM_PACKET_HEAD_SIZE
-                                       + 2 /*Temp Variable*/,
-                                       frame_number);
-      // Serialize the given data.
-      serialize();
-   }
+EndBlock::EndBlock()
+   : Packet(vpr::GUID())
+{;}
 
-   /**
-    * Serializes member variables into a data stream.
-    */
-   void EndBlock::serialize()
-   {
-      //mTempVar = Header::RIM_END_BLOCK;
-      // Clear the data stream.
-      mPacketWriter->getData()->clear();
-      mPacketWriter->setCurPos(0);
+/**
+ * Create a EndBlock packet to signal that the local node has reached the
+ * end of the frame.
+ *
+ * @param frame_number The current number of frames that have been drawn.
+ */
+EndBlock::EndBlock(const vpr::Uint32 frameNum)
+   : Packet(vpr::GUID())
+{
+   // Set the local member variables using the given values.
+   mTempVar = frameNum;
+   // Create a Header for this packet with the correect type and size.
+   mHeader = new Header(Header::RIM_PACKET,
+                        Header::RIM_END_BLOCK,
+                        Header::RIM_PACKET_HEAD_SIZE
+                        + 2 /*Temp Variable*/,
+                        frameNum);
+   // Serialize the given data.
+   serialize();
+}
 
-      // Serialize the header.
-      mHeader->serializeHeader();      
-      
-      // Serialize the Temp Var
-      mPacketWriter->writeUint16(mTempVar);
-   }
+EndBlockPtr EndBlock::create()
+{
+   return EndBlockPtr(new EndBlock());
+}
 
-   /**
-    * Parses the data stream into the local member variables.
-    */
-   void EndBlock::parse(vpr::BufferObjectReader* reader)
-   {
-      // De-Serialize the Temp Var
-      mTempVar = reader->readUint16();
-   }
+EndBlockPtr EndBlock::create(const vpr::Uint32 frameNum)
+{
+   return EndBlockPtr(new EndBlock(frameNum));
+}
 
-   /**
-    * Print the data to the screen in a readable form.
-    */
-   void EndBlock::printData(int debug_level)
-   {
-      boost::ignore_unused_variable_warning(debug_level);
+EndBlock::~EndBlock()
+{;}
+
+/**
+ * Serializes member variables into a data stream.
+ */
+void EndBlock::serialize()
+{
+   //mTempVar = Header::RIM_END_BLOCK;
+   // Clear the data stream.
+   mPacketWriter->getData()->clear();
+   mPacketWriter->setCurPos(0);
+
+   // Serialize the header.
+   mHeader->serializeHeader();      
+   
+   // Serialize the Temp Var
+   mPacketWriter->writeUint16(mTempVar);
+}
+
+/**
+ * Parses the data stream into the local member variables.
+ */
+void EndBlock::parse(vpr::BufferObjectReader* reader)
+{
+   // De-Serialize the Temp Var
+   mTempVar = reader->readUint16();
+}
+
+/**
+ * Print the data to the screen in a readable form.
+ */
+void EndBlock::printData(int debug_level)
+{
+   boost::ignore_unused_variable_warning(debug_level);
 /*      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         <<  clrOutBOLD(clrYELLOW,"====== END BLOCK ======\n") << vprDEBUG_FLUSH;
+      <<  clrOutBOLD(clrYELLOW,"====== END BLOCK ======\n") << vprDEBUG_FLUSH;
 
-      Packet::printData(debug_level);
+   Packet::printData(debug_level);
 
-      vprDEBUG(gadgetDBG_RIM,debug_level)
-         << clrOutBOLD(clrYELLOW, "New State:    ") << mNewState
-         << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level)
+      << clrOutBOLD(clrYELLOW, "New State:    ") << mNewState
+      << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+      <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
 */
-   }
+}
+
 } // end namespace cluster
-
-
-
-

@@ -28,6 +28,8 @@
 #define _GADGET_RIM_PACKET_H
 
 #include <gadget/gadgetConfig.h>
+
+#include <boost/noncopyable.hpp>
 #include <vpr/vprTypes.h>
 #include <vpr/Util/GUID.h>
 
@@ -36,11 +38,6 @@
 #include <vpr/IO/Socket/SocketStream.h>
 
 #include <cluster/ClusterException.h>
-
-namespace gadget
-{
-   class Node;
-}
 
 namespace cluster
 {
@@ -51,18 +48,20 @@ namespace cluster
  * Cluster packet base type.
  */
 class GADGET_CLASS_API Packet
+   : boost::noncopyable
 {
-public:
+protected:
    /**
     * Create a new empty packet.
     */
-   Packet();
+   Packet(const vpr::GUID& pluginId);
 
    /**
     * Copy the given data, and parse the header.
     */
    Packet(std::vector<vpr::Uint8>* data);
 
+public:
    /**
     * Free all memory used by internal data.
     */

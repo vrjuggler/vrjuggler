@@ -42,9 +42,10 @@ namespace cluster
  *
  * Cluster data packet.
  */
-class GADGET_CLASS_API DataPacket : public Packet
+class GADGET_CLASS_API DataPacket
+   : public Packet
 {
-public:
+protected:
    /**
     * Default constructor used by the PacketFactory.
     */
@@ -59,16 +60,31 @@ public:
     * @param data      Pointer to the raw data that we want to send across
     *                  the network
     */
-   DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& object_id,
+   DataPacket(const vpr::GUID& pluginId, const vpr::GUID& objectId,
               std::vector<vpr::Uint8>* data);
+
+public:
+   /**
+    * Creates a DataPacket instance and returns it wrapped in a
+    * DataPacketPtr object.
+    *
+    * @since 1.3.7
+    */
+   static DataPacketPtr create();
+
+   /**
+    * Creates a DataPacket instance and returns it wrapped in a
+    * DataPacketPtr object.
+    *
+    * @since 1.3.7
+    */
+   static DataPacketPtr create(const vpr::GUID& pluginId, const vpr::GUID& objectId,
+                               std::vector<vpr::Uint8>* data);
 
    /**
     * Clean up all unused memory.
     */
-   virtual ~DataPacket()
-   {
-      delete mDeviceData;
-   }
+   virtual ~DataPacket();
 
    /**
     * Serializes member variables into a data stream.

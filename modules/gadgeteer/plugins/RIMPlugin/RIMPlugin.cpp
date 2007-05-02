@@ -172,8 +172,7 @@ bool RIMPlugin::configAdd(jccl::ConfigElementPtr elm)
          std::string temp_string = input_device->getInputTypeName();
          vpr::GUID   temp_guid   = device_server->getId();
          cluster::DeviceAckPtr device_ack =
-            cluster::DeviceAckPtr(new cluster::DeviceAck(mHandlerGUID, temp_guid,
-                                                         device_name, temp_string, true));
+            cluster::DeviceAck::create(mHandlerGUID, temp_guid, device_name, temp_string, true);
 
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")

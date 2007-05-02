@@ -45,11 +45,11 @@ namespace cluster
  *
  * Device acknowledgement packet.
  */
-class GADGET_CLASS_API DeviceAck : public Packet
+class GADGET_CLASS_API DeviceAck
+   : public Packet
 {
-public:
-   DeviceAck()
-   {;}
+protected:
+   DeviceAck();
 
    /**
     * Create a DeviceAck packet to acknowledge a ApplicationDataRequest.
@@ -62,9 +62,30 @@ public:
     * @param ack              Boolean determining if this is a positive (ACK)
     *                         or a negative (NACK) responce.
     */
-   DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id,
-             const std::string& device_name,
-             const std::string& device_base_type, bool ack);
+   DeviceAck(const vpr::GUID& pluginId, const vpr::GUID& id,
+             const std::string& deviceName,
+             const std::string& deviceBaseType, bool ack);
+
+public:
+   /**
+    * Creates a DeviceAck instance and returns it wrapped in a
+    * DeviceAckPtr object.
+    *
+    * @since 1.3.7
+    */
+   static DeviceAckPtr create();
+
+   /**
+    * Creates a DeviceAck instance and returns it wrapped in a
+    * DeviceAckPtr object.
+    *
+    * @since 1.3.7
+    */
+   static DeviceAckPtr create(const vpr::GUID& pluginId, const vpr::GUID& id,
+                              const std::string& deviceName,
+                              const std::string& deviceBaseType, bool ack);
+
+   virtual ~DeviceAck();
 
    /**
     * Serializes member variables into a data stream.

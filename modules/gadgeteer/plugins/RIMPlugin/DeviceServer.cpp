@@ -58,7 +58,7 @@ DeviceServer::DeviceServer(const std::string& name, gadget::InputPtr device,
    while(temp == mId);
 
    mDeviceData = new std::vector<vpr::Uint8>;
-   mDataPacket = cluster::DataPacketPtr(new cluster::DataPacket(pluginGuid, mId, mDeviceData));
+   mDataPacket = cluster::DataPacket::create(pluginGuid, mId, mDeviceData);
    mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
 }
 

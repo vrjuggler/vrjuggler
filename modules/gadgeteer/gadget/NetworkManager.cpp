@@ -287,7 +287,7 @@ bool NetworkManager::isLocalHost(const std::string& testHostName)
 
 void NetworkManager::updateBarrier( const int temp )
 {
-   cluster::EndBlockPtr end_block(new cluster::EndBlock(temp));
+   cluster::EndBlockPtr end_block = cluster::EndBlock::create(temp);
 
    // Used to accumulate the number of connected nodes.
    size_t num_nodes(0);

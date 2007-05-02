@@ -30,62 +30,76 @@
 
 namespace cluster
 {
-   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(ConfigPacket);
 
-   ConfigPacket::ConfigPacket(const std::string config, const vpr::Uint16 type)
-      : mConfig(config)
-      , mType(type)
-   {
-      // Create a Header for this packet with the correect type and size.
-      mHeader = new Header(Header::RIM_PACKET,
-                           getPacketFactoryType(),
-                           Header::RIM_PACKET_HEAD_SIZE 
-                           + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                           + mConfig.size()
-                           + 2 /*mType*/,
-                           0/*Field not curently used*/);
+CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(ConfigPacket);
 
-      // This packet will always be handled by the ConfigHandler.
-      mPluginId = vpr::GUID("f3ea94e2-82fc-43f6-a57f-474d3fd1d6eb");
+ConfigPacket::ConfigPacket()
+   : Packet(vpr::GUID("f3ea94e2-82fc-43f6-a57f-474d3fd1d6eb"))
+{}
 
-      // Serialize the given data.
-      serialize();
-   }
+ConfigPacket::ConfigPacket(const std::string config, const vpr::Uint16 type)
+   : Packet(vpr::GUID("f3ea94e2-82fc-43f6-a57f-474d3fd1d6eb"))
+   , mConfig(config)
+   , mType(type)
+{
+   // Create a Header for this packet with the correect type and size.
+   mHeader = new Header(Header::RIM_PACKET,
+                        getPacketFactoryType(),
+                        Header::RIM_PACKET_HEAD_SIZE 
+                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                        + mConfig.size()
+                        + 2 /*mType*/,
+                        0/*Field not curently used*/);
+
+   // Serialize the given data.
+   serialize();
+}
+
+ConfigPacketPtr ConfigPacket::create()
+{
+   return ConfigPacketPtr(new ConfigPacket());
+}
+
+ConfigPacketPtr ConfigPacket::create(const std::string config, const vpr::Uint16 type)
+{
+   return ConfigPacketPtr(new ConfigPacket(config, type));
+}
+
+void ConfigPacket::serialize()
+{
+   // Clear the data stream.
+   mPacketWriter->getData()->clear();
+   mPacketWriter->setCurPos(0);
+
+   // Serialize the header.
+   mHeader->serializeHeader();
    
-   void ConfigPacket::serialize()
-   {
-      // Clear the data stream.
-      mPacketWriter->getData()->clear();
-      mPacketWriter->setCurPos(0);
+   mPacketWriter->writeString(mConfig);
+   mPacketWriter->writeUint16(mType);
+}
 
-      // Serialize the header.
-      mHeader->serializeHeader();
-      
-      mPacketWriter->writeString(mConfig);
-      mPacketWriter->writeUint16(mType);
-   }
+void ConfigPacket::parse(vpr::BufferObjectReader* reader)
+{
+   mConfig = reader->readString();
+   mType = reader->readUint16();
+}
+
+void ConfigPacket::printData(int debug_level)
+{
+   vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
+      <<  clrOutBOLD(clrYELLOW,"==== Config Packet Data ====\n") << vprDEBUG_FLUSH;
    
-   void ConfigPacket::parse(vpr::BufferObjectReader* reader)
-   {
-      mConfig = reader->readString();
-      mType = reader->readUint16();
-   }
-   
-   void ConfigPacket::printData(int debug_level)
-   {
-      vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
-         <<  clrOutBOLD(clrYELLOW,"==== Config Packet Data ====\n") << vprDEBUG_FLUSH;
-      
-      Packet::printData(debug_level);
+   Packet::printData(debug_level);
 
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Config:       ") << mConfig
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Type          ") << mType
-         << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Config:       ") << mConfig
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_RIM,debug_level) 
+      << clrOutBOLD(clrYELLOW, "Type          ") << mType
+      << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG_END(gadgetDBG_RIM,debug_level) 
-         <<  clrOutBOLD(clrYELLOW,"====================================\n") << vprDEBUG_FLUSH;
-   }
+   vprDEBUG_END(gadgetDBG_RIM,debug_level) 
+      <<  clrOutBOLD(clrYELLOW,"====================================\n") << vprDEBUG_FLUSH;
+}
+
 }   // end namespace gadget

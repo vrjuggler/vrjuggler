@@ -292,7 +292,7 @@ cluster::PacketPtr Node::recvPacket()
 
    // Get Packet from factory
    cluster::PacketPtr new_packet =
-      cluster::PacketPtr(cluster::PacketFactory::instance()->createObject( packet_head->getPacketType() ));
+      cluster::PacketFactory::instance()->createObject( packet_head->getPacketType() );
 
    // Verify that the packet has been made
    if ( NULL == new_packet )

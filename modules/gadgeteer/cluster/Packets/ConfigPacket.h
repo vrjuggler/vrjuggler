@@ -40,71 +40,86 @@
 
 namespace cluster
 {
-   /** \class ConfigPacket ConfigPacket.h cluster/Packets/ConfigPacket.h
+
+/** \class ConfigPacket ConfigPacket.h cluster/Packets/ConfigPacket.h
+ *
+ * Connection acknowledgement packet.
+ */
+class GADGET_CLASS_API ConfigPacket
+   : public Packet
+{
+protected:
+   ConfigPacket();
+
+   /**
+    * Create a ConfigPacket packet that contains a confuration change.
     *
-    * Connection acknowledgement packet.
+    * @param config  Configuration stored as a string.
+    * @param type    Type of configuration change, either ADD or REMOVE;
     */
-   class GADGET_CLASS_API ConfigPacket : public Packet
+   ConfigPacket(const std::string config, const vpr::Uint16 type);
+
+public:
+   /**
+    * Creates a ConfigPacket instance and returns it wrapped in a
+    * ConfigPacketPtr object.
+    *
+    * @since 1.3.7
+    */
+   static ConfigPacketPtr create();
+
+   /**
+    * Creates a ConfigPacket instance and returns it wrapped in a
+    * ConfigPacketPtr object.
+    *
+    * @since 1.3.7
+    */
+   static ConfigPacketPtr create(const std::string config, const vpr::Uint16 type);
+   
+   /**
+    * Serializes member variables into a data stream.
+    */
+   void serialize();
+
+   /**
+    * Parses the data stream into the local member variables.
+    */
+   virtual void parse(vpr::BufferObjectReader* reader);
+
+   /**
+    * Print the data to the screen in a readable form.
+    */
+   virtual void printData(int debug_level);
+
+   /**
+    * Return the type of this packet.
+    */
+   static vpr::Uint16 getPacketFactoryType()
    {
-   public:
-      ConfigPacket()
-      {
-         // This packet will always be handled by the ClusterManager.
-         mPluginId = vpr::GUID("f3ea94e2-82fc-43f6-a57f-474d3fd1d6eb");
-      }
+      return(Header::CONFIG_PACKET);
+   }
 
-      /**
-       * Create a ConfigPacket packet that contains a confuration change.
-       *
-       * @param config  Configuration stored as a string.
-       * @param type    Type of configuration change, either ADD or REMOVE;
-       */
-      ConfigPacket(const std::string config, const vpr::Uint16 type);
+   /**
+    * Return the configuration in string form.
+    */
+   const std::string getConfig() const
+   {
+      return mConfig;
+   }
 
-      /**
-       * Serializes member variables into a data stream.
-       */
-      void serialize();
+   /**
+    * Return the type of configuration change. Either ADD or REMOVE.
+    */
+   const vpr::Uint16 getType() const
+   {
+      return mType;
+   }
 
-      /**
-       * Parses the data stream into the local member variables.
-       */
-      virtual void parse(vpr::BufferObjectReader* reader);
+private:
+   std::string mConfig;      /**< Configuration data in string form. */
+   vpr::Uint16 mType;        /**< Type of configuration change. ADD/REMOVE */
+};
 
-      /**
-       * Print the data to the screen in a readable form.
-       */
-      virtual void printData(int debug_level);
-
-      /**
-       * Return the type of this packet.
-       */
-      static vpr::Uint16 getPacketFactoryType()
-      {
-         return(Header::CONFIG_PACKET);
-      }
-
-      /**
-       * Return the configuration in string form.
-       */
-      const std::string getConfig() const
-      {
-         return mConfig;
-      }
-
-      /**
-       * Return the type of configuration change. Either ADD or REMOVE.
-       */
-      const vpr::Uint16 getType() const
-      {
-         return mType;
-      }
-
-   private:
-      std::string mConfig;      /**< Configuration data in string form. */
-      vpr::Uint16 mType;        /**< Type of configuration change. ADD/REMOVE */
-   };
 }
-
 
 #endif
