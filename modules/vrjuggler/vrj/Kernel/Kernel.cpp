@@ -203,6 +203,11 @@ int Kernel::start()
    mIsRunning = true;
    initSignalButtons();    // Initialize the signal buttons that may be pressed
 
+   if ( NULL == mClusterManager )
+   {
+      mClusterManager = cluster::ClusterManager::instance();
+   }
+
    // If we are in cluster mode, start the cluster.
    if (cluster::ClusterManager::instance()->isClusterActive())
    {
