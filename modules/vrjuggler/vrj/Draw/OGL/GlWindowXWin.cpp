@@ -542,7 +542,7 @@ void GlWindowXWin::configWindow(vrj::DisplayPtr disp)
    // NOTE: ConfigElements return the default value for a property if a value is
    //       not present. So if a pipe string is not specified for this pipe then
    //       it gets the default value of "-1".
-   mXDisplayName = disp_sys_elt->getProperty<std::string>("x11_pipes", mPipe);
+   mXDisplayName = disp_sys_elt->getProperty<std::string>("pipes", mPipe);
 
    if ( mXDisplayName == neg_one_string )    // Use display env
    {

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-01-2007 patrick     Renamed the x11_pipes property of the display_system
+                        config element to pipes.
+                        NEW VERSION: 2.1.24
 Apr-22-2007 patrick     Application programmers can now choose to use an
                         NSApplication delegate other than VrjMainController.
                         NEW VERSION: 2.1.23

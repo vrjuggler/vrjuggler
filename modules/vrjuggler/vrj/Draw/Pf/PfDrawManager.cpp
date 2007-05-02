@@ -128,7 +128,7 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
       // NOTE: ConfigElements return the default value for a property if a
       //       value is not present. So if a pipe string is not specified for
       //       this pipe then it gets the default value of "-1".
-      mPipeStrs.push_back(element->getProperty<std::string>("x11_pipes", i));
+      mPipeStrs.push_back(element->getProperty<std::string>("pipes", i));
 
       if ( mPipeStrs[i] == cur_disp_name )    // Use display env
       {

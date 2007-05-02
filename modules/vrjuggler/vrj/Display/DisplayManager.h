@@ -123,6 +123,8 @@ public:
    jccl::ConfigElementPtr getDisplaySystemElement();
 
 private:
+   void setDisplaySystemElement(jccl::ConfigElementPtr elt);
+
    /**
     * Adds the element to the configuration.
     *

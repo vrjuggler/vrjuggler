@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-01-2007 patrick     Renamed the x11_pipes property of the display_system
+                        config element to pipes.
+                        NEW VERSION: 1.1.27
 Apr-27-2007 aronb       Changed clustering to be single-threaded.
                         NEW VERSION: 1.1.26
 Apr-05-2007 patrick     Made Cocoa the default windowing system on Mac OS X.
