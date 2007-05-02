@@ -386,6 +386,9 @@ links:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler.fpc			\
           $(instlinks)/share/flagpoll/vrjuggler.fpc
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/boost*.fpc			\
+          $(instlinks)/share/flagpoll
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else
