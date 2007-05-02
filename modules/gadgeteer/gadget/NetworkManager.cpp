@@ -438,7 +438,7 @@ bool NetworkManager::addNode(const std::string& name,
       << " Adding node: " << name
       << std::endl << vprDEBUG_FLUSH;
 
-   NodePtr temp_node = NodePtr(new Node(name, hostName, port, socketStream));
+   NodePtr temp_node = Node::create(name, hostName, port, socketStream);
    mNodes.push_back( temp_node );
    
    return true;

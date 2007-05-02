@@ -30,6 +30,8 @@
 #include <gadget/gadgetConfig.h>
 
 #include <string> 
+#include <boost/noncopyable.hpp>
+
 #include <vpr/Util/GUID.h>
 #include <gadget/NodePtr.h>
 #include <cluster/Packets/PacketPtr.h>
@@ -48,10 +50,13 @@ namespace gadget
  * Packet handler interface used for network communication.
  */
 class GADGET_CLASS_API PacketHandler
+   : boost::noncopyable
 {
-public:
+protected:
    PacketHandler()
    {;}
+
+public:
    virtual ~PacketHandler()
    {;}
 

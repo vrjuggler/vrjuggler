@@ -28,13 +28,15 @@
 #define _GADGET_NODE_H
 
 #include <gadget/gadgetConfig.h>
+
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/noncopyable.hpp>
+
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/NodePtr.h>
 #include <cluster/Packets/PacketPtr.h>
-
-#include <boost/enable_shared_from_this.hpp>
 
 namespace gadget
 {
@@ -44,7 +46,9 @@ namespace gadget
  *
  * Network node.
  */
-class GADGET_CLASS_API Node : public boost::enable_shared_from_this<Node>
+class GADGET_CLASS_API Node
+   : public boost::enable_shared_from_this<Node>
+   , boost::noncopyable
 {
 public:
    enum Status
@@ -54,7 +58,8 @@ public:
       NEWCONNECTION  = 2,
       CONNECTED      = 3
    };
-   
+
+protected:
    /**
     * Create a Node with the given attributes.
     *
@@ -65,6 +70,16 @@ public:
     */
    Node(const std::string& name, const std::string& hostName, 
         const vpr::Uint16 port, vpr::SocketStream* socketStream);
+
+public:
+   /**
+    * Creates a Node instance and returns it wrapped in a
+    * NodePtr object.
+    *
+    * @since 1.3.7
+    */
+   static NodePtr create(const std::string& name, const std::string& hostName, 
+                         const vpr::Uint16 port, vpr::SocketStream* socketStream);
 
    /**
     * Shutdown the update thread and close the SocketStream.

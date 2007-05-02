@@ -28,10 +28,7 @@
 
 #include <boost/bind.hpp>
 
-//#include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
-//#include <jccl/Config/ConfigElement.h>
-//#include <vpr/Util/Error.h>
 
 #include <gadget/Node.h>
 #include <gadget/NetworkManager.h>
@@ -62,6 +59,12 @@ Node::Node(const std::string& name, const std::string& hostName,
       << clrOutBOLD(clrBLUE,"[Node]")
       << " Created a Node: " << name << " - " << mHostname
       << std::endl << vprDEBUG_FLUSH;
+}
+
+NodePtr Node::create(const std::string& name, const std::string& hostName, 
+                     const vpr::Uint16 port, vpr::SocketStream* socketStream)
+{
+   return NodePtr(new Node(name, hostName, port, socketStream));
 }
 
 Node::~Node()
