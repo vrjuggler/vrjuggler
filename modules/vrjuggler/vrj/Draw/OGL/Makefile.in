@@ -51,6 +51,7 @@ SRCS=		GlApp.cpp			\
 		GlProcApp.cpp			\
 		GlSimInterface.cpp		\
 		GlSimInterfaceFactory.cpp	\
+		GlUserData.cpp			\
 		GlWindow.cpp
 
 ifeq (@OS_TYPE@, Win32)

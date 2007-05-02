@@ -52,17 +52,10 @@ class Viewport;
  *       By using these values it is possible to create applications that are
  *       non-portable.
  */
-class GlUserData
+class VJ_OGL_CLASS_API GlUserData
 {
 public:
-   GlUserData()
-      : mUser(NULL)
-      , mProj(NULL)
-      , mViewport(NULL)
-      , mGlWindow()
-   {
-      /* Do nothing. */ ;
-   }
+   GlUserData();
 
    User* getUser()
    {
