@@ -64,7 +64,7 @@ extern "C"
 
    GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
    {
-      mgr->addPlugin(cluster::ClusterPluginPtr(new cluster::RIMPlugin()));
+      mgr->addPlugin(cluster::RIMPlugin::create());
    }
 }
 
@@ -95,6 +95,18 @@ RIMPlugin::~RIMPlugin()
 {
    mVirtualDevices.clear();
    mDeviceServers.clear();
+
+   // TODO: Make ConfigManager use shared_ptrs.
+   jccl::ConfigManager::instance()->removeConfigElementHandler(this);
+}
+
+ClusterPluginPtr RIMPlugin::create()
+{
+   RIMPlugin* rim_plugin = new RIMPlugin();
+
+   // TODO: Make ConfigManager use shared_ptrs.
+   jccl::ConfigManager::instance()->addConfigElementHandler(rim_plugin);
+   return ClusterPluginPtr(rim_plugin);
 }
 
 void RIMPlugin::preDraw()

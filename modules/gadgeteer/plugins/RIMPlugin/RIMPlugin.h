@@ -29,15 +29,6 @@
 
 #include <cluster/PluginConfig.h>
 
-#include <vpr/Util/Assert.h>
-
-#include <cluster/ClusterPlugin.h>
-
-#include <jccl/Config/ConfigElementPtr.h>
-#include <gadget/Type/InputPtr.h>
-#include <plugins/RIMPlugin/DeviceServerPtr.h>
-#include <plugins/RIMPlugin/VirtualDevicePtr.h>
-
 #include <list>
 #ifdef VPR_HASH_MAP_INCLUDE
 #  include VPR_HASH_MAP_INCLUDE
@@ -45,19 +36,35 @@
 #  include <map>
 #endif
 
-namespace gadget
-{
-   class Node;
-}
+#include <boost/noncopyable.hpp>
+
+#include <jccl/Config/ConfigElementPtr.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
+#include <cluster/ClusterPlugin.h>
+#include <gadget/Type/InputPtr.h>
+#include <plugins/RIMPlugin/DeviceServerPtr.h>
+#include <plugins/RIMPlugin/VirtualDevicePtr.h>
 
 namespace cluster
 {
 
-class GADGET_CLUSTER_PLUGIN_CLASS_API RIMPlugin : public cluster::ClusterPlugin
+class GADGET_CLUSTER_PLUGIN_CLASS_API RIMPlugin
+   : public cluster::ClusterPlugin
+   , public jccl::ConfigElementHandler
+   , boost::noncopyable
 {
-public:
+protected:
    RIMPlugin();
+public:
    virtual ~RIMPlugin();
+
+   /**
+    * Creates a RIMPlugin instance and returns it wrapped in a
+    * ClusterPluginPtr object.
+    *
+    * @since 1.3.7
+    */
+   static ClusterPluginPtr create();
 
    vpr::GUID getHandlerGUID()
    {

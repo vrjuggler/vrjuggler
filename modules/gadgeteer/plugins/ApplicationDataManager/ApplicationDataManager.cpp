@@ -47,7 +47,7 @@ extern "C"
 
    GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
    {
-      mgr->addPlugin(cluster::ClusterPluginPtr(new cluster::ApplicationDataManager()));
+      mgr->addPlugin(cluster::ApplicationDataManager::create());
    }
 }
 
@@ -58,6 +58,11 @@ const vpr::GUID ApplicationDataManager::mPluginGUID("cc6ca39f-03f2-4779-aa4b-048
 
 ApplicationDataManager::ApplicationDataManager()
 {;}
+
+ClusterPluginPtr ApplicationDataManager::create()
+{
+   return ClusterPluginPtr(new ApplicationDataManager());
+}
 
 ApplicationDataManager::~ApplicationDataManager()
 {

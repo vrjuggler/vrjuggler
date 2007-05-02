@@ -42,7 +42,6 @@
 
 namespace vpr
 {
-   class GUID;
    class SerializableObject;
 }
    
@@ -54,11 +53,12 @@ namespace cluster
  * Interface for cluster plugins.
  */
 class GADGET_CLASS_API ClusterPlugin 
-   : public jccl::ConfigElementHandler, public gadget::PacketHandler,
+   : public gadget::PacketHandler,
      public boost::enable_shared_from_this<ClusterPlugin>
 {
-public:
+protected:
    ClusterPlugin();
+public:
    virtual ~ClusterPlugin();
 
    void setActive(bool active);

@@ -305,9 +305,7 @@ namespace cluster
             std::make_pair( newPlugin->getHandlerGUID(), newPlugin );
          mPluginMap.insert( p );
 
-         // We should do this here, but since we do not add the manager until
-         // its configAdd currently you can see the problem
-         jccl::ConfigManager::instance()->addConfigElementHandler( newPlugin.get() );
+         // Add each plugin as a packet handler.
          mClusterNetwork->addHandler( newPlugin );
 
          // We can still unregister it when removed below though
@@ -350,7 +348,6 @@ namespace cluster
             << "Removing Plugin: " << oldPlugin->getPluginName()
             << std::endl << vprDEBUG_FLUSH;
          mPlugins.erase(found);
-         jccl::ConfigManager::instance()->removeConfigElementHandler((*found).get());
       }
    }
 

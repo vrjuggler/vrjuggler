@@ -28,6 +28,7 @@
 #define _CLUSTER_APPLICATION_DATA_MANAGER_H
 
 #include <cluster/PluginConfig.h>
+#include <boost/noncopyable.hpp>
 #include <vpr/Util/GUID.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <cluster/ClusterPlugin.h>
@@ -47,13 +48,21 @@ namespace cluster
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataManager
    : public cluster::ClusterPlugin
+   , boost::noncopyable
 {
-public:
+protected:
    ApplicationDataManager();
+public:
    virtual ~ApplicationDataManager();
+
+   /**
+    * Creates a ApplicationDataManager instance and returns it wrapped in a
+    * ClusterPluginPtr object.
+    *
+    * @since 1.3.7
+    */
+   static ClusterPluginPtr create();
    
-   // ---------- ClusterPlugin Interface ----------- //   
-public:   
    /**
     * Get the GUID associated with this plugin.
     */

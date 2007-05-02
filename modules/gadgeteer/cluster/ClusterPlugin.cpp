@@ -44,6 +44,6 @@ namespace cluster
    }
    bool ClusterPlugin::isActive()
    {
-      return(mActive);
+      return mActive;
    }
-} // End of gadget namespace
+} // End of cluster namespace
