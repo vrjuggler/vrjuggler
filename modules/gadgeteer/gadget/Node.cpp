@@ -34,7 +34,7 @@
 //#include <vpr/Util/Error.h>
 
 #include <gadget/Node.h>
-#include <gadget/AbstractNetworkManager.h>
+#include <gadget/NetworkManager.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/DataPacket.h>
 #include <cluster/Packets/PacketFactory.h>
@@ -51,7 +51,7 @@ namespace gadget
 
 Node::Node(const std::string& name, const std::string& host_name, 
            const vpr::Uint16 port, vpr::SocketStream* socket_stream,
-           AbstractNetworkManager* net_mgr)
+           NetworkManager* net_mgr)
    : mName(name)
    , mHostname(host_name)
    , mPort(port)

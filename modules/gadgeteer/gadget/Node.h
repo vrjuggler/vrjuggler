@@ -38,7 +38,7 @@
 
 namespace gadget
 {
-   class AbstractNetworkManager;
+   class NetworkManager;
 
 /** \class Node Node.h gadget/Node.h
  *
@@ -66,7 +66,7 @@ public:
     */
    Node(const std::string& name, const std::string& host_name, 
         const vpr::Uint16 port, vpr::SocketStream* socket_stream,
-        AbstractNetworkManager* net_mgr);
+        NetworkManager* net_mgr);
 
    /**
     * Shutdown the update thread and close the SocketStream.
@@ -217,7 +217,7 @@ protected:
    bool                 mUpdated;               /**< States if this node is updated */
 
    vpr::Uint64          mDelta;                 /**< Time delta between remote and local clocks. */
-   AbstractNetworkManager*      mNetworkManager;/**< Network that should handle incoming packets. */
+   NetworkManager*      mNetworkManager;/**< Network that should handle incoming packets. */
 };
 
 } // end namespace gadget

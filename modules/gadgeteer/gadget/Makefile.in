@@ -50,7 +50,7 @@ SUBDIR=		Devices		        \
 		Type			\
 		Util
 
-SRCS=		AbstractNetworkManager.cpp	\
+SRCS=		NetworkManager.cpp		\
 		InputLogger.cpp			\
 		InputManager.cpp		\
 		Node.cpp			\

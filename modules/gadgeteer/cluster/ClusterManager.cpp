@@ -958,7 +958,7 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
                jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
 
                vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL ) << clrSetBOLD(clrCYAN)
-                  << clrOutBOLD( clrMAGENTA,"[AbstractNetworkManager]" )
+                  << clrOutBOLD( clrMAGENTA,"[NetworkManager]" )
                   << " Adding Machine specific ConfigElement: "
                   << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
             }

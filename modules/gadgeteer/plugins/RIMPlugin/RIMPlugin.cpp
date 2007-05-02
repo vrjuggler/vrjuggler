@@ -34,7 +34,6 @@
 #include <gadget/Type/BaseTypeFactory.h>
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/InputManager.h>
-#include <gadget/AbstractNetworkManager.h>
 #include <plugins/RIMPlugin/DeviceServer.h>
 #include <plugins/RIMPlugin/VirtualDevice.h>
 
@@ -164,17 +163,11 @@ bool RIMPlugin::configAdd(jccl::ConfigElementPtr elm)
             cluster::DeviceAckPtr(new cluster::DeviceAck(mHandlerGUID, temp_guid,
                                                          device_name, temp_string, true));
 
-         gadget::AbstractNetworkManager::node_list_t nodes = cluster::ClusterManager::instance()->getNetwork()->getNodes();
-         for (gadget::AbstractNetworkManager::node_list_t::iterator itr = nodes.begin(); itr != nodes.end(); itr++)
-         {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
-               << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
-               << "Sending device ack [" << device_name << "] to [" << (*itr)->getName() << "]"
-               << std::endl << vprDEBUG_FLUSH;
-
-            // Create a responce ACK
-            (*itr)->send(device_ack);
-         }
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
+            << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
+            << "Sending device ack [" << device_name << "] to all cluster nodes."
+            << std::endl << vprDEBUG_FLUSH;
+         cluster::ClusterManager::instance()->getNetwork()->sendToAll(device_ack);
       }
    }
    else

@@ -24,8 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_ABSTRACT_NETWORK_MANAGER_H
-#define _GADGET_ABSTRACT_NETWORK_MANAGER_H
+#ifndef _GADGET_NETWORK_MANAGER_H
+#define _GADGET_NETWORK_MANAGER_H
 
 #include <gadget/gadgetConfig.h>
 
@@ -47,11 +47,11 @@ class PacketHandler;
 
 const int DEFAULT_SLAVE_PORT = 12599;
 
-/** \class AbstractNetworkManager AbstractNetworkManager.h gadget/AbstractNetworkManager.h
+/** \class NetworkManager NetworkManager.h gadget/NetworkManager.h
  *
  * Network abstraction.
  */
-class GADGET_CLASS_API AbstractNetworkManager : public jccl::ConfigElementHandler
+class GADGET_CLASS_API NetworkManager : public jccl::ConfigElementHandler
 {
 public:
    typedef std::vector<NodePtr> node_list_t;
@@ -59,18 +59,18 @@ public:
    /**
     * Construct an empty representation of a network.
     */
-   AbstractNetworkManager();
+   NetworkManager();
 
    /**
     * Disconnect all nodes in network and release memory.
     */
-   virtual ~AbstractNetworkManager();
+   virtual ~NetworkManager();
 
 private:
-   AbstractNetworkManager(const AbstractNetworkManager& anm)
+   NetworkManager(const NetworkManager& anm)
       : jccl::ConfigElementHandler(anm)
    {;}
-   void operator=(const AbstractNetworkManager&)
+   void operator=(const NetworkManager&)
    {;}
 public:
 
@@ -250,4 +250,4 @@ private:
 
 } // end namespace gadget
 
-#endif
+#endif /*_GADGET_NETWORK_MANAGER_H*/

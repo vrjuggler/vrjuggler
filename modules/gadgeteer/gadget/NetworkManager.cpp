@@ -42,23 +42,23 @@
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-#include <gadget/AbstractNetworkManager.h>
+#include <gadget/NetworkManager.h>
 
 #include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
 
 namespace gadget
 {
 
-AbstractNetworkManager::AbstractNetworkManager() 
+NetworkManager::NetworkManager() 
    : mNodes(0), mHandlerMap()
 {;}
 
-AbstractNetworkManager::~AbstractNetworkManager()
+NetworkManager::~NetworkManager()
 {
    shutdown();
 }
 
-void AbstractNetworkManager::waitForConnection(const int& listen_port)
+void NetworkManager::waitForConnection(const int& listen_port)
 {
    mListenAddr.setPort( listen_port );
 
@@ -76,14 +76,14 @@ void AbstractNetworkManager::waitForConnection(const int& listen_port)
       sock.openServer(true);
 
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL )
-      << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+      << clrOutBOLD( clrBLUE, "[NetworkManager]" )
       << " Listening on Port: " << mListenAddr.getPort()
       << std::endl << vprDEBUG_FLUSH;
    }
    catch (vpr::IOException&)
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
-         << clrSetBOLD( clrRED ) << "[AbstractNetworkManager]"
+         << clrSetBOLD( clrRED ) << "[NetworkManager]"
          << " Unable to open listening socket on port: "
          << mListenAddr.getPort() << std::endl
          << clrRESET << vprDEBUG_FLUSH;
@@ -100,7 +100,7 @@ void AbstractNetworkManager::waitForConnection(const int& listen_port)
       sock.accept( *client_sock, vpr::Interval::NoTimeout );
 
       vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL)
-         << clrOutBOLD(clrBLUE, "[AbstractNetworkManager]")
+         << clrOutBOLD(clrBLUE, "[NetworkManager]")
          << " Receiving a connection on Port: "
          << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
 
@@ -114,7 +114,7 @@ void AbstractNetworkManager::waitForConnection(const int& listen_port)
       vpr::Uint16 port = client_sock->getRemoteAddr().getPort();
 
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-         << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+         << clrOutBOLD( clrBLUE, "[NetworkManager]" )
          << " Received from: " << remote_host_name
          << ":" << port << std::endl << vprDEBUG_FLUSH;
 
@@ -178,7 +178,7 @@ void AbstractNetworkManager::waitForConnection(const int& listen_port)
 /**
  * Determine if the given hostname matches the local machine's hostname.
  */
-bool AbstractNetworkManager::isLocalHost(const std::string& testHostName)
+bool NetworkManager::isLocalHost(const std::string& testHostName)
 {
    // Resolve the address of the hostname given to test.
    vpr::InetAddr remote_address;
@@ -284,10 +284,10 @@ bool AbstractNetworkManager::isLocalHost(const std::string& testHostName)
 }
 
 
-void AbstractNetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
+void NetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
 {
    //vprDEBUG( gadgetDBG_NET_MGR, 0 )
-   //   << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+   //   << clrOutBOLD( clrBLUE, "[NetworkManager]" )
    //   << " Got packet."
    //   << std::endl << vprDEBUG_FLUSH;
 
@@ -304,14 +304,14 @@ void AbstractNetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr nod
    PacketHandler* temp_handler = getHandlerByGUID( handler_guid );
 
    //vprDEBUG( gadgetDBG_NET_MGR, 0 )
-   //   << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+   //   << clrOutBOLD( clrBLUE, "[NetworkManager]" )
    //   << " Got packet for: " << handler_guid.toString()
    //   << std::endl << vprDEBUG_FLUSH;
 
    if (NULL != temp_handler)
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-         << clrOutBOLD(clrBLUE,"[AbstractNetworkManager]")
+         << clrOutBOLD(clrBLUE,"[NetworkManager]")
          << " Handler \"" << temp_handler->getHandlerName() << "\" will handle this packet."
          << std::endl << vprDEBUG_FLUSH;
 
@@ -321,22 +321,22 @@ void AbstractNetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr nod
    else
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-         << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+         << clrOutBOLD( clrBLUE, "[NetworkManager]" )
          << " Handler " << handler_guid.toString() << " does not exist to handle this packet."
          << std::endl << vprDEBUG_FLUSH;
    }
 }
 
-bool AbstractNetworkManager::addNode(const std::string& name,
+bool NetworkManager::addNode(const std::string& name,
                                      const std::string& host_name,
                                      const vpr::Uint16& port,
                                      vpr::SocketStream* socketStream)
 {
    // -Create a new Node using the given information
-   // -Add the new node to the AbstractNetworkManager
+   // -Add the new node to the NetworkManager
    
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-      << clrOutBOLD(clrBLUE,"[AbstractNetworkManager]")
+      << clrOutBOLD(clrBLUE,"[NetworkManager]")
       << " Adding node: " << name
       << std::endl << vprDEBUG_FLUSH;
 
@@ -346,12 +346,12 @@ bool AbstractNetworkManager::addNode(const std::string& name,
    return true;
 }
 
-void AbstractNetworkManager::addNode(NodePtr node)
+void NetworkManager::addNode(NodePtr node)
 {
-   // -Add the given node to the AbstractNetworkManager
+   // -Add the given node to the NetworkManager
    
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-      << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+      << clrOutBOLD( clrBLUE, "[NetworkManager]" )
       << " Adding node: " << node->getName()
       << std::endl << vprDEBUG_FLUSH;
 
@@ -374,10 +374,10 @@ struct HostnamePred
    const std::string& mHostname;
 };
 
-void AbstractNetworkManager::removeNode(const std::string& nodeHostname)
+void NetworkManager::removeNode(const std::string& nodeHostname)
 {
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-      << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+      << clrOutBOLD( clrBLUE, "[NetworkManager]" )
       << " Removing node: " << nodeHostname
       << std::endl << vprDEBUG_FLUSH;
 
@@ -392,7 +392,7 @@ void AbstractNetworkManager::removeNode(const std::string& nodeHostname)
    }
 }
    
-NodePtr AbstractNetworkManager::getNodeByHostname(const std::string& host_name)
+NodePtr NetworkManager::getNodeByHostname(const std::string& host_name)
 {
    vpr::DebugOutputGuard dbg_output( gadgetDBG_NET_MGR, vprDBG_VERB_LVL,
       std::string("-------- getNodeByHostname() --------\n"),
@@ -402,7 +402,7 @@ NodePtr AbstractNetworkManager::getNodeByHostname(const std::string& host_name)
    searching_for_node.setAddress( host_name, 0 );
 
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_VERB_LVL )
-      << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+      << clrOutBOLD( clrBLUE, "[NetworkManager]" )
       << " Looking for Node with hostname: " << host_name
       << std::endl << vprDEBUG_FLUSH;
 
@@ -415,7 +415,7 @@ NodePtr AbstractNetworkManager::getNodeByHostname(const std::string& host_name)
       testing_node.setAddress( (*itr)->getHostname(), 0 );
       
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_VERB_LVL )
-         << clrOutBOLD( clrBLUE, "[AbstractNetworkManager]" )
+         << clrOutBOLD( clrBLUE, "[NetworkManager]" )
          << " Searcing for: " << searching_for_node.getAddressString()
          << " Testing: " << testing_node.getAddressString()
          << std::endl << vprDEBUG_FLUSH;
@@ -429,7 +429,7 @@ NodePtr AbstractNetworkManager::getNodeByHostname(const std::string& host_name)
    return NodePtr();
 }
 
-NodePtr AbstractNetworkManager::getNodeByName(const std::string& node_name)
+NodePtr NetworkManager::getNodeByName(const std::string& node_name)
 {
    // -Find Node with given name and return a pointer to it.
    // -If we do not find one, return NULL
@@ -444,12 +444,12 @@ NodePtr AbstractNetworkManager::getNodeByName(const std::string& node_name)
    return NodePtr();
 }
 
-vpr::Uint16 AbstractNetworkManager::getNumPendingNodes()
+vpr::Uint16 NetworkManager::getNumPendingNodes()
 {
    return 0;
 }
 
-bool AbstractNetworkManager::connectToSlaves()
+bool NetworkManager::connectToSlaves()
 {
    bool ret_val = false;
 
@@ -465,7 +465,7 @@ bool AbstractNetworkManager::connectToSlaves()
    return ret_val;
 }
 
-void AbstractNetworkManager::sendToAll(cluster::PacketPtr packet)
+void NetworkManager::sendToAll(cluster::PacketPtr packet)
 {
    for (node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
    {
@@ -476,7 +476,7 @@ void AbstractNetworkManager::sendToAll(cluster::PacketPtr packet)
       catch( cluster::ClusterException cluster_exception )
       {
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << "AbstractNetworkManager::sendToAll() Caught an exception!"
+            << "NetworkManager::sendToAll() Caught an exception!"
             << std::endl << vprDEBUG_FLUSH;
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
             << clrOutBOLD(clrRED, "ERROR:") << cluster_exception.what()
@@ -492,7 +492,7 @@ void AbstractNetworkManager::sendToAll(cluster::PacketPtr packet)
    }
 }
 
-bool AbstractNetworkManager::connectTo(NodePtr node)
+bool NetworkManager::connectTo(NodePtr node)
 {
    //vprASSERT( Node::PENDING == node->getStatus() &&
    //           "Can not connect to a node that is not pending." );
@@ -501,7 +501,7 @@ bool AbstractNetworkManager::connectTo(NodePtr node)
    vpr::InetAddr inet_addr;
 
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
-      << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+      << clrOutBOLD( clrBLUE,"[NetworkManager]" )
       << " Attempting to connect to: " << node->getName()
       << std::endl << vprDEBUG_FLUSH;
    
@@ -513,7 +513,7 @@ bool AbstractNetworkManager::connectTo(NodePtr node)
    catch (vpr::IOException&)
    {
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL )
-         << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+         << clrOutBOLD( clrBLUE,"[NetworkManager]" )
          << clrOutBOLD( clrRED, " ERROR:" )
          << " Failed to set address" << std::endl << vprDEBUG_FLUSH;
       return false;
@@ -533,7 +533,7 @@ bool AbstractNetworkManager::connectTo(NodePtr node)
          sock_stream->connect();
 
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL )
-            << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+            << clrOutBOLD( clrBLUE,"[NetworkManager]" )
             << " Successfully connected to: "
             << node->getHostname() <<":"<< node->getPort()
             << std::endl << vprDEBUG_FLUSH;
@@ -546,7 +546,7 @@ bool AbstractNetworkManager::connectTo(NodePtr node)
          { level = vprDBG_CRITICAL_LVL; }
 
          vprDEBUG( gadgetDBG_NET_MGR, level)
-            << clrOutBOLD( clrBLUE,"[AbstractNetworkManager]" )
+            << clrOutBOLD( clrBLUE,"[NetworkManager]" )
             << clrOutBOLD( clrRED, " ERROR:" )
             << " Could not connect to Node: "
             << node->getHostname() << " : " << node->getPort()
@@ -571,14 +571,14 @@ bool AbstractNetworkManager::connectTo(NodePtr node)
    return true;
 }
 
-bool AbstractNetworkManager::attemptPendingNodes()
+bool NetworkManager::attemptPendingNodes()
 {
    bool ret_val = false;
 
    return ret_val;
 }
 
-void AbstractNetworkManager::shutdown()
+void NetworkManager::shutdown()
 {
    for (node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
    {
@@ -587,7 +587,7 @@ void AbstractNetworkManager::shutdown()
 }
 
 
-void AbstractNetworkManager::debugDumpNodes(int debug_level)
+void NetworkManager::debugDumpNodes(int debug_level)
 {
    vpr::DebugOutputGuard dbg_output(gadgetDBG_NET_MGR,debug_level,
       std::string("-------------- Cluster Network --------------\n"),
@@ -599,38 +599,38 @@ void AbstractNetworkManager::debugDumpNodes(int debug_level)
    }
 }
 
-bool AbstractNetworkManager::recognizeClusterMachineConfig(jccl::ConfigElementPtr element)
+bool NetworkManager::recognizeClusterMachineConfig(jccl::ConfigElementPtr element)
 {
    return (element->getID() == getClusterNodeElementType());
 }
 
-bool AbstractNetworkManager::configCanHandle(jccl::ConfigElementPtr elm)
+bool NetworkManager::configCanHandle(jccl::ConfigElementPtr elm)
 {
    return recognizeClusterMachineConfig(elm);
 }
 
-bool AbstractNetworkManager::configAdd(jccl::ConfigElementPtr elm)
+bool NetworkManager::configAdd(jccl::ConfigElementPtr elm)
 {
    boost::ignore_unused_variable_warning(elm);
    return true;
 }
 
-bool AbstractNetworkManager::configRemove(jccl::ConfigElementPtr elm)
+bool NetworkManager::configRemove(jccl::ConfigElementPtr elm)
 {
    boost::ignore_unused_variable_warning(elm);
    return true;
 }
 
-std::string AbstractNetworkManager::getClusterNodeElementType()
+std::string NetworkManager::getClusterNodeElementType()
 {
    return "cluster_node";
 }
 
-void AbstractNetworkManager::updateNewConnections()
+void NetworkManager::updateNewConnections()
 {
 }
 
-PacketHandler* AbstractNetworkManager::getHandlerByGUID(const vpr::GUID& handler_guid)
+PacketHandler* NetworkManager::getHandlerByGUID(const vpr::GUID& handler_guid)
 {
    std::map<vpr::GUID, PacketHandler*>::const_iterator i = mHandlerMap.find( handler_guid );
    if (i != mHandlerMap.end())
@@ -643,7 +643,7 @@ PacketHandler* AbstractNetworkManager::getHandlerByGUID(const vpr::GUID& handler
 /**
  * Adds a new plugin to the ClusterManager.
  */
-void AbstractNetworkManager::addHandler(PacketHandler* new_handler)
+void NetworkManager::addHandler(PacketHandler* new_handler)
 {
    std::pair<vpr::GUID, PacketHandler*> p 
       = std::make_pair( new_handler->getHandlerGUID(), new_handler );
