@@ -79,8 +79,6 @@ public:
     */
    void handlePacket(cluster::PacketPtr packet, NodePtr node);
 
-   void updateNewConnections();
-
    /**
     * Creates a Node with the given parameters and adds
     * this new node the std::map of Nodes.
@@ -173,19 +171,8 @@ public:
     */
    void sendToAll(cluster::PacketPtr packet);
 
-   /**
-    * Return the number of Nodes in the Pending Nodes list.
-    */
-   vpr::Uint16 getNumPendingNodes();
-
 protected:
    bool connectTo(NodePtr node);
-
-private:
-   /**
-    * Attempt to connect to all Nodes in the PendingNodes list.
-    */
-   bool attemptPendingNodes();
 
 public:
    /**

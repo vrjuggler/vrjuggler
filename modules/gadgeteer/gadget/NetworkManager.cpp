@@ -444,11 +444,6 @@ NodePtr NetworkManager::getNodeByName(const std::string& node_name)
    return NodePtr();
 }
 
-vpr::Uint16 NetworkManager::getNumPendingNodes()
-{
-   return 0;
-}
-
 bool NetworkManager::connectToSlaves()
 {
    bool ret_val = false;
@@ -571,13 +566,6 @@ bool NetworkManager::connectTo(NodePtr node)
    return true;
 }
 
-bool NetworkManager::attemptPendingNodes()
-{
-   bool ret_val = false;
-
-   return ret_val;
-}
-
 void NetworkManager::shutdown()
 {
    for (node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
@@ -624,10 +612,6 @@ bool NetworkManager::configRemove(jccl::ConfigElementPtr elm)
 std::string NetworkManager::getClusterNodeElementType()
 {
    return "cluster_node";
-}
-
-void NetworkManager::updateNewConnections()
-{
 }
 
 PacketHandler* NetworkManager::getHandlerByGUID(const vpr::GUID& handler_guid)
