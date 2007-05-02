@@ -65,6 +65,7 @@ AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild:
+	@-[ ! -d $(DSO_PLUGIN_BASE_DIR) ] && rm -rf $(LIBDIR_BASE)
 	@$(MKINSTALLDIRS) $(DSO_PLUGIN_BASE_DIR)
 
 # Things to do after the object files and library are built.
