@@ -334,6 +334,7 @@ else
 endif
 
 clean-version-links:
+	@rm -rf $(LIBDIR_BASE)
 	@rm -rf $(instlinks)/include/tweek* $(instlinks)/$(data_subdir)/tweek*
 	@rm -f $(instlinks)/lib$(LIBBITSUF)/flagpoll/tweek*
 	@for l in $(LIBS) ; do						\

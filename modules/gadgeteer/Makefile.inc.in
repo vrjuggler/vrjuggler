@@ -257,6 +257,7 @@ else
 endif
 
 clean-version-links:
+	@rm -rf $(LIBDIR_BASE)
 	@rm -rf $(instlinks)/include/gadgeteer*				\
            $(instlinks)/lib*/gadgeteer*					\
            $(instlinks)/$(data_subdir)/gadgeteer*

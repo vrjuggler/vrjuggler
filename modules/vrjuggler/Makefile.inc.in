@@ -396,6 +396,7 @@ else
 endif
 
 clean-version-links:
+	@rm -rf $(LIBDIR_BASE)
 	@rm -rf $(instlinks)/include/vrjuggler*				\
            $(instlinks)/lib*/vrjuggler*					\
            $(instlinks)/$(data_subdir)/vrjuggler*
