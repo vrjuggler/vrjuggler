@@ -56,9 +56,8 @@ Display::Display()
 
 Display::~Display()
 {
-   for ( std::vector<vrj::Viewport*>::iterator i = mViewports.begin();
-         i != mViewports.end();
-         ++i )
+   typedef std::vector<vrj::Viewport*>::iterator iter_type;
+   for ( iter_type i = mViewports.begin(); i != mViewports.end(); ++i )
    {
       delete *i;
    }
@@ -68,7 +67,7 @@ Display::~Display()
 
 void Display::updateProjections(const float positionScale)
 {
-   for(unsigned i=0;i<mViewports.size();i++)
+   for ( unsigned int i = 0; i < mViewports.size(); ++i )
    {
       mViewports[i]->updateProjections(positionScale);
    }
@@ -83,7 +82,7 @@ void Display::setOriginAndSize(const int originX, const int originY,
    mWidth   = width;
    mHeight  = height;
 
-   if(updateConfig)
+   if ( updateConfig )
    {
       mDisplayElement->setProperty<int>("origin", 0, originX);
       mDisplayElement->setProperty<int>("origin", 1, originY);
@@ -158,21 +157,20 @@ void Display::configViewports(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);
 
-   unsigned num_sim_vps = element->getNum("simulator_viewports");
-   unsigned num_surface_vps = element->getNum("surface_viewports");
+   const unsigned int num_sim_vps = element->getNum("simulator_viewports");
+   const unsigned int num_surface_vps = element->getNum("surface_viewports");
 
    jccl::ConfigElementPtr vp_elt;
    SimViewport* sim_vp = NULL;
    SurfaceViewport* surf_vp = NULL;
 
-   unsigned i(0);
-
    // Create sim viewports
    // - Set the parent display
    // - Configure it
-   for(i=0;i<num_sim_vps;i++)
+   for ( unsigned int i = 0; i < num_sim_vps; ++i )
    {
-      vp_elt = element->getProperty<jccl::ConfigElementPtr>("simulator_viewports",i);
+      vp_elt =
+         element->getProperty<jccl::ConfigElementPtr>("simulator_viewports", i);
       sim_vp = new SimViewport;
       sim_vp->setDisplay(shared_from_this());
       if ( sim_vp->config(vp_elt) )
@@ -194,9 +192,10 @@ void Display::configViewports(jccl::ConfigElementPtr element)
    // Create surface viewports
    // - Set the parent display
    // - Configure it
-   for(i=0;i<num_surface_vps;i++)
+   for ( unsigned int i = 0; i < num_surface_vps; ++i )
    {
-      vp_elt = element->getProperty<jccl::ConfigElementPtr>("surface_viewports",i);
+      vp_elt =
+         element->getProperty<jccl::ConfigElementPtr>("surface_viewports", i);
       surf_vp = new SurfaceViewport;
       surf_vp->setDisplay(shared_from_this());
 
