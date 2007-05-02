@@ -31,7 +31,6 @@
 
 #include <vrj/Kernel/App.h>
 
-#include <vrj/Kernel/User.h>
 #include <vrj/Display/Projection.h>
 
 #include <d3d9.h>
