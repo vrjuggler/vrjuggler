@@ -57,7 +57,7 @@ class VJ_OGL_CLASS_API GlUserData
 public:
    GlUserData();
 
-   User* getUser()
+   User* getUser() const
    {
       return mUser;
    }
@@ -67,7 +67,7 @@ public:
       mUser = user;
    }
 
-   Projection* getProjection()
+   Projection* getProjection() const
    {
       return mProj;
    }
@@ -77,7 +77,7 @@ public:
       mProj = proj;
    }
 
-   Viewport* getViewport()
+   Viewport* getViewport() const
    {
       return mViewport;
    }
@@ -87,7 +87,7 @@ public:
       mViewport = vp;
    }
 
-   GlWindowPtr getGlWindow()
+   const GlWindowPtr getGlWindow() const
    {
       return mGlWindow;
    }
