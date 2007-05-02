@@ -31,6 +31,7 @@
 
 #include <vpr/IO/Socket/InetAddr.h>
 
+#include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/PacketFactory.h>
@@ -283,6 +284,103 @@ bool NetworkManager::isLocalHost(const std::string& testHostName)
    return result;
 }
 
+void NetworkManager::updateBarrier( const int temp )
+{
+   cluster::EndBlockPtr end_block(new cluster::EndBlock(temp));
+
+   // Used to accumulate the number of connected nodes.
+   size_t num_nodes(0);
+
+   typedef std::vector<gadget::NodePtr>::iterator iter_t;
+
+   for ( node_list_t::iterator i = mNodes.begin(); i != mNodes.end(); i++)
+   {
+      if ( (*i)->isConnected() )
+      {
+         try
+         {
+            // Send End Block to the node.
+            (*i)->send(end_block);
+
+            // Indicate that this node is not up to date. It will be updated
+            // below.
+            (*i)->setUpdated(false);
+
+            ++num_nodes;
+         }
+         catch (cluster::ClusterException& ex)
+         {
+            vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD("ERROR", clrRED)
+               << ": Failed to send end block to " << (*i)->getName()
+               << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << ex.what() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << "Shutting down the node." << std::endl << vprDEBUG_FLUSH;
+
+            (*i)->shutdown();
+         }
+      }
+   }
+
+   size_t completed_nodes(0);
+
+   while ( completed_nodes != num_nodes )
+   {
+      std::vector<gadget::NodePtr> ready_nodes =
+         //reactor.getReadyNodes(vpr::Interval::NoWait);
+         mReactor.getReadyNodes(vpr::Interval::NoTimeout);
+
+      for ( iter_t i = ready_nodes.begin(); i != ready_nodes.end(); ++i )
+      {
+         // Make sure that we do not update nodes more than once simply
+         // because there is data ready to read from them. This is an
+         // unfortunate side effect of using a reactor in this clumsy way.
+         if ( (*i)->isUpdated() )
+         {
+            continue;
+         }
+
+         try
+         {
+            while ( ! (*i)->isUpdated() )
+            {
+               vprASSERT((*i)->isConnected() && "Node is not connected, we can not update!");
+
+               cluster::PacketPtr temp_packet = (*i)->recvPacket();
+
+               // Print Packet Information
+               temp_packet->printData(vprDBG_CONFIG_LVL);
+
+               // Handle the packet correctly
+               handlePacket(temp_packet, *i);
+            }
+
+         }
+         catch (cluster::ClusterException& ex)
+         {
+            vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD("ERROR", clrRED)
+               << ": Failed to complete state update for "
+               << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << ex.what() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << "Shutting down the node." << std::endl << vprDEBUG_FLUSH;
+
+            (*i)->shutdown();
+            (*i)->debugDump(vprDBG_CONFIG_LVL);
+         }
+
+         // Record completed state. This happens regardless of whether
+         // the node update completed successfully. Since the node is
+         // shut down if update fails, we would never get completed_nodes
+         // to equal num_nodes otherwise.
+         ++completed_nodes;
+      }
+   }
+}
 
 void NetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
 {
@@ -328,7 +426,7 @@ void NetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
 }
 
 bool NetworkManager::addNode(const std::string& name,
-                                     const std::string& host_name,
+                                     const std::string& hostName,
                                      const vpr::Uint16& port,
                                      vpr::SocketStream* socketStream)
 {
@@ -340,7 +438,7 @@ bool NetworkManager::addNode(const std::string& name,
       << " Adding node: " << name
       << std::endl << vprDEBUG_FLUSH;
 
-   NodePtr temp_node = NodePtr(new Node(name, host_name, port, socketStream, this));
+   NodePtr temp_node = NodePtr(new Node(name, hostName, port, socketStream));
    mNodes.push_back( temp_node );
    
    return true;
@@ -392,18 +490,18 @@ void NetworkManager::removeNode(const std::string& nodeHostname)
    }
 }
    
-NodePtr NetworkManager::getNodeByHostname(const std::string& host_name)
+NodePtr NetworkManager::getNodeByHostname(const std::string& hostName)
 {
    vpr::DebugOutputGuard dbg_output( gadgetDBG_NET_MGR, vprDBG_VERB_LVL,
       std::string("-------- getNodeByHostname() --------\n"),
       std::string("--------------------------------------------\n"));
 
    vpr::InetAddr searching_for_node;
-   searching_for_node.setAddress( host_name, 0 );
+   searching_for_node.setAddress( hostName, 0 );
 
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_VERB_LVL )
       << clrOutBOLD( clrBLUE, "[NetworkManager]" )
-      << " Looking for Node with hostname: " << host_name
+      << " Looking for Node with hostname: " << hostName
       << std::endl << vprDEBUG_FLUSH;
 
       

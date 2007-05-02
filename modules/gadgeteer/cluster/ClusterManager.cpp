@@ -53,7 +53,6 @@
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPlugin.h>
 #include <cluster/Packets/ConfigPacket.h>
-#include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/ClusterManager.h>
 
@@ -248,13 +247,13 @@ namespace cluster
             ConfigPacketPtr cfg_pkt(new ConfigPacket(node_output.str(), jccl::ConfigManager::PendingElement::ADD));
             (*itr)->send(cfg_pkt);
          }
-         sendEndBlocksAndSignalUpdate(0);
+         updateBarrier(0);
       }
       else if (mIsSlave)
       {
          // Start listening on known port for connections.
          mClusterNetwork->waitForConnection();
-         sendEndBlocksAndSignalUpdate(0);
+         updateBarrier(0);
       }
    }
 
@@ -396,7 +395,7 @@ namespace cluster
       // Only send end blocks if we really need to.
       if ( updateNeeded )
       {
-         sendEndBlocksAndSignalUpdate(1);
+         updateBarrier(1);
       }
    }
 
@@ -418,7 +417,7 @@ namespace cluster
       if ( updateNeeded )
       {
          mPreDrawCallCount++;
-         sendEndBlocksAndSignalUpdate(2);
+         updateBarrier(2);
       }
    }
 
@@ -445,7 +444,7 @@ namespace cluster
       if ( updateNeeded )
       {
          mPostPostFrameCallCount++;
-         sendEndBlocksAndSignalUpdate(3);
+         updateBarrier(3);
       }
    }
 
@@ -467,101 +466,9 @@ namespace cluster
       }
    }
 
-   void ClusterManager::sendEndBlocksAndSignalUpdate( const int temp )
+   void ClusterManager::updateBarrier( const int temp )
    {
-      // If the network is not fully connected, then don't try to sync.
-      // Trying to sync a network that is not fully connected can lead to
-      // deadlock.
-      if ( mClusterNetwork->getNumPendingNodes() > 0 )
-      {
-         return;
-      }
-
-      cluster::EndBlockPtr end_block(new cluster::EndBlock(temp));
-
-      // Used to accumulate the number of connected nodes.
-      size_t num_nodes(0);
-
-      typedef std::vector<gadget::NodePtr>::iterator iter_t;
-
-      for ( iter_t i = mClusterNetwork->getNodesBegin();
-            i != mClusterNetwork->getNodesEnd();
-            ++i )
-      {
-         if ( (*i)->isConnected() )
-         {
-            try
-            {
-               // Send End Block to the node.
-               (*i)->send(end_block);
-
-               // Indicate that this node is not up to date. It will be updated
-               // below.
-               (*i)->setUpdated(false);
-
-               ++num_nodes;
-            }
-            catch (cluster::ClusterException& ex)
-            {
-               vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << clrOutBOLD("ERROR", clrRED)
-                  << ": Failed to send end block to " << (*i)->getName()
-                  << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << ex.what() << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << "Shutting down the node." << std::endl << vprDEBUG_FLUSH;
-
-               (*i)->shutdown();
-            }
-         }
-      }
-
-      gadget::Reactor& reactor = mClusterNetwork->getReactor();
-      size_t completed_nodes(0);
-
-      while ( completed_nodes != num_nodes )
-      {
-         std::vector<gadget::NodePtr> ready_nodes =
-            //reactor.getReadyNodes(vpr::Interval::NoWait);
-            reactor.getReadyNodes(vpr::Interval::NoTimeout);
-
-         for ( iter_t i = ready_nodes.begin(); i != ready_nodes.end(); ++i )
-         {
-            // Make sure that we do not update nodes more than once simply
-            // because there is data ready to read from them. This is an
-            // unfortunate side effect of using a reactor in this clumsy way.
-            if ( (*i)->isUpdated() )
-            {
-               continue;
-            }
-
-            try
-            {
-               // Read network packets.
-               (*i)->update();
-            }
-            catch (cluster::ClusterException& ex)
-            {
-               vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << clrOutBOLD("ERROR", clrRED)
-                  << ": Failed to complete state update for "
-                  << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << ex.what() << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << "Shutting down the node." << std::endl << vprDEBUG_FLUSH;
-
-               (*i)->shutdown();
-            }
-
-            // Record completed state. This happens regardless of whether
-            // the node update completed successfully. Since the node is
-            // shut down if update fails, we would never get completed_nodes
-            // to equal num_nodes otherwise.
-            ++completed_nodes;
-         }
-      }
+      mClusterNetwork->updateBarrier(temp);
    }
 
    bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element )

@@ -62,11 +62,9 @@ public:
     * @param host_name     Hostname of the remote machine
     * @param port          The scoket port that we should connect to
     * @param socket_stream SocketStream used to communicate with remote machine
-    * @param net_mgr       The network manager.
     */
-   Node(const std::string& name, const std::string& host_name, 
-        const vpr::Uint16 port, vpr::SocketStream* socket_stream,
-        NetworkManager* net_mgr);
+   Node(const std::string& name, const std::string& hostName, 
+        const vpr::Uint16 port, vpr::SocketStream* socketStream);
 
    /**
     * Shutdown the update thread and close the SocketStream.
@@ -170,11 +168,7 @@ public:
    
 public:
    /**
-    */
-   void update();
-
-   /**
-    * Kill the update thread.
+    * Close the node's socket and disconnected status.
     */
    void shutdown();
 
@@ -195,12 +189,6 @@ public:
     * Receive a packet from the network.
     */
    cluster::PacketPtr recvPacket();
-   
-protected:
-   /**
-    * Do the actual work of updating this cluster node.
-    */
-   void doUpdate();
 
 protected:
    std::string          mName;                  /**< Node name */
@@ -217,7 +205,6 @@ protected:
    bool                 mUpdated;               /**< States if this node is updated */
 
    vpr::Uint64          mDelta;                 /**< Time delta between remote and local clocks. */
-   NetworkManager*      mNetworkManager;/**< Network that should handle incoming packets. */
 };
 
 } // end namespace gadget

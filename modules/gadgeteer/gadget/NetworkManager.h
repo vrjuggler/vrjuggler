@@ -79,6 +79,8 @@ public:
     */
    void handlePacket(cluster::PacketPtr packet, NodePtr node);
 
+   void updateBarrier( const int temp );
+
    /**
     * Creates a Node with the given parameters and adds
     * this new node the std::map of Nodes.
@@ -86,7 +88,7 @@ public:
     * The caller of this method mustlock the Nodes list
     * first by callinf lockNodes()
     */
-   bool addNode(const std::string& name, const std::string& host_name,
+   bool addNode(const std::string& name, const std::string& hostName,
                 const vpr::Uint16& port,
                 vpr::SocketStream* socketStream = NULL);
 

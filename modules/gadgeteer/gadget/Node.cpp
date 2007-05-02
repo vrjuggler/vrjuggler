@@ -49,20 +49,18 @@
 namespace gadget
 {
 
-Node::Node(const std::string& name, const std::string& host_name, 
-           const vpr::Uint16 port, vpr::SocketStream* socket_stream,
-           NetworkManager* net_mgr)
+Node::Node(const std::string& name, const std::string& hostName, 
+           const vpr::Uint16 port, vpr::SocketStream* socketStream)
    : mName(name)
-   , mHostname(host_name)
+   , mHostname(hostName)
    , mPort(port)
-   , mSockStream(socket_stream)
+   , mSockStream(socketStream)
    , mStatus(DISCONNECTED)
    , mUpdated(false)
-   , mNetworkManager(net_mgr)
 {
    vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       << clrOutBOLD(clrBLUE,"[Node]")
-      << " Created a Node: " << name << " - " << host_name
+      << " Created a Node: " << name << " - " << mHostname
       << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -158,57 +156,6 @@ void Node::setStatus(int connect)
    }
 
    mStatus = connect;
-}
-
-void Node::doUpdate()
-{
-   // - If connected() && !updated()
-   //   - try recvPacket()
-   //     - Catch ClusterException
-   //       - set not connected
-   //       - add node to connection pending list
-   //       - set reconfig needed on reconnect
-   //     - If no Exception
-   //       - Print Packet Data
-   //       - Take the action of the packet
-
-   vprASSERT(isConnected() && "Node is not connected, we can not update!\nWe must not be calling update from the correct location.");
-
-   cluster::PacketPtr temp_packet = recvPacket();
-
-   // Print Packet Information
-   temp_packet->printData(vprDBG_CONFIG_LVL);
-
-   // Handle the packet correctly
-   mNetworkManager->handlePacket(temp_packet, shared_from_this());
-}
-
-void Node::update()
-{
-   mUpdated = false;
-
-   while ( ! mUpdated )
-   {
-      try
-      {
-         doUpdate();
-      }
-      catch (cluster::ClusterException& cluster_exception)
-      {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
-            << cluster_exception.what() << clrRESET
-            << std::endl << vprDEBUG_FLUSH;
-         
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << "Node::update() We have lost our connection to: " << getName()
-            << ":" << getPort() << std::endl << vprDEBUG_FLUSH;
-
-         debugDump(vprDBG_CONFIG_LVL);
-         
-         // Set the Node as disconnected since we have lost the connection
-         setStatus(DISCONNECTED);
-      }
-   }
 }
 
 bool Node::send(cluster::PacketPtr outPacket)

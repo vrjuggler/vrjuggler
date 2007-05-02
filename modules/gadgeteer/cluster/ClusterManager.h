@@ -135,7 +135,7 @@ private:
     * Send end block to all other connected nodes and
     * signal each connected node to sync.
     */
-   void sendEndBlocksAndSignalUpdate( const int temp );
+   void updateBarrier( const int temp );
 
    /**
     * Returns the string representation of the element type used for the
