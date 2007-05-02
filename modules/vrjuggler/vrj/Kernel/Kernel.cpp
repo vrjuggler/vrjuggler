@@ -347,8 +347,6 @@ void Kernel::controlLoop()
       // Might not want the Kernel to know about the ClusterNetwork
       // It is currently being registered as a jccl::ConfigElementHandler in
       // the ClusterManager constructor
-         vpr::prof::start("Cluster: updateNewConnections.",10);
-       cluster::ClusterManager::instance()->getNetwork()->updateNewConnections();
          vpr::prof::next("Cluster: sendRequests.",10);
        cluster::ClusterManager::instance()->sendRequests();
          vpr::prof::stop();

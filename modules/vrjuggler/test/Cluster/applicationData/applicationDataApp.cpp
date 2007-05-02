@@ -219,9 +219,9 @@ void applicationDataApp::drawNetwork()
 	
    cluster::ClusterNetwork* network = cluster::ClusterManager::instance()->getNetwork();
 	
-   std::vector<gadget::Node*>::iterator begin = network->getNodesBegin();
-   std::vector<gadget::Node*>::iterator end = network->getNodesEnd();
-   std::vector<gadget::Node*>::iterator i;
+   std::vector<gadget::NodePtr>::iterator begin = network->getNodesBegin();
+   std::vector<gadget::NodePtr>::iterator end = network->getNodesEnd();
+   std::vector<gadget::NodePtr>::iterator i;
     
 			// Draw the local machine
    glColor3f(0.75f, 0.75f, 0.0f);
