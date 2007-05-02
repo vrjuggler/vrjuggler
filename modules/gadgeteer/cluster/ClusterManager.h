@@ -43,7 +43,7 @@
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPluginPtr.h>
 #include <cluster/Packets/PacketPtr.h>
-#include <gadget/PacketHandler.h>
+#include <cluster/ConfigHandlerPtr.h>
 #include <gadget/Util/Debug.h>
 
 #include <list>
@@ -65,7 +65,7 @@ namespace cluster
  *
  * Manages the synchronization of all ClusterPlugins.
  */
-class GADGET_CLASS_API ClusterManager : public jccl::ConfigElementHandler, public gadget::PacketHandler
+class GADGET_CLASS_API ClusterManager : public jccl::ConfigElementHandler
 {
    vprSingletonHeader( ClusterManager );
 protected:
@@ -77,7 +77,6 @@ protected:
    /** Constructor is hidden, so no copying is allowed. */
    ClusterManager( const ClusterManager& cm )
       : jccl::ConfigElementHandler( cm )
-      , gadget::PacketHandler( cm )
    {
       /* Do nothing. */;
    }
@@ -165,12 +164,6 @@ public:
     * achieve swaplock.
     */
    void createBarrier();
-
-   /**
-    * Cause the cluster to recover when a connection to
-    * a ClusterNode is lost.
-    */
-   virtual void recoverFromLostNode( gadget::NodePtr lost_node );
 
    /**
     * Return the representation of the network which
@@ -295,25 +288,6 @@ public:
       return mPostPostFrameCallCount;
    }
 
-public:
-   /**
-    * Get the GUID associated with this handler.
-    */
-   virtual vpr::GUID getHandlerGUID()
-   {
-      return vpr::GUID("f3ea94e2-82fc-43f6-a57f-474d3fd1d6eb");
-   }
-   
-   virtual std::string getHandlerName()
-   {
-      return "ClusterManager";
-   }
-
-   /**
-    * Handle a incoming packet.
-    */
-   virtual void handlePacket(cluster::PacketPtr packet, gadget::NodePtr node);
-   
 private:
    ClusterDepChecker            mDepChecker;
 
@@ -348,7 +322,8 @@ private:
    jccl::Configuration          mSystemConfiguration;
    //@}
 
-   ClusterNetwork*              mClusterNetwork;     /**< The network representation of the cluster. */
+   ClusterNetwork*              mClusterNetwork;        /**< The network representation of the cluster. */
+   ConfigHandlerPtr             mConfigHandler;         /**< Delegate that handles all configuration packets. */
 
    vpr::Uint64                  mPreDrawCallCount;       /**< # calls to preDraw() */
    vpr::Uint64                  mPostPostFrameCallCount; /**< # calls to postPostFrame() */

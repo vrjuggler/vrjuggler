@@ -45,7 +45,7 @@ namespace cluster
                            + 2 /*mType*/,
                            0/*Field not curently used*/);
 
-      // This packet will always be handled by the ClusterManager.
+      // This packet will always be handled by the ConfigHandler.
       mPluginId = vpr::GUID("f3ea94e2-82fc-43f6-a57f-474d3fd1d6eb");
 
       // Serialize the given data.

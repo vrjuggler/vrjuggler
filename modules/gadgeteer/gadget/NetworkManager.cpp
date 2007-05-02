@@ -400,16 +400,6 @@ void NetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
    }
 
    vpr::GUID handler_guid = packet->getPluginId();
-
-   // XXX: HACK We can not hold onto a shared_ptr to ClusterManager in mHandlerMap
-   //      because this would cause it to be destroyed incorrectly.
-   cluster::ClusterManager* cluster_mgr = cluster::ClusterManager::instance();
-   if (handler_guid == cluster_mgr->getHandlerGUID())
-   {
-      cluster_mgr->handlePacket(packet, node);
-      return;
-   }
-
    PacketHandlerPtr temp_handler = getHandlerByGUID( handler_guid );
 
    //vprDEBUG( gadgetDBG_NET_MGR, 0 )

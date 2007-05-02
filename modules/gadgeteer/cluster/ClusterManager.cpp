@@ -50,11 +50,12 @@
 #include <gadget/Util/PathHelpers.h>
 #include <gadget/Util/PluginVersionException.h>
 
+#include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPlugin.h>
+#include <cluster/ConfigHandler.h>
 #include <cluster/Packets/ConfigPacket.h>
 #include <cluster/Packets/Packet.h>
-#include <cluster/ClusterManager.h>
 
 namespace fs = boost::filesystem;
 
@@ -159,7 +160,9 @@ namespace cluster
       , mPreDrawCallCount(0)
       , mPostPostFrameCallCount(0)
    {
+      mConfigHandler = ConfigHandler::create();
       mClusterNetwork = new ClusterNetwork();
+      mClusterNetwork->addHandler(mConfigHandler);
    }
 
    ClusterManager::~ClusterManager()
@@ -287,16 +290,6 @@ namespace cluster
       }
 
       return true;
-   }
-
-   void ClusterManager::recoverFromLostNode( gadget::NodePtr node )
-   {
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-
-      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
-      {
-         (*itr)->recoverFromLostNode( node );
-      }
    }
 
    /**
@@ -883,27 +876,6 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
    mergeConfigurations(&mSystemConfiguration, cfg, type);
 
    std::cout << "CLUSTER MODE: " << (mClusterActive ? "True":"False") << std::endl;
-}
-
-void ClusterManager::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
-{
-   boost::ignore_unused_variable_warning(node);
-
-   vprASSERT(Header::CONFIG_PACKET == packet->getPacketType() && "Not a config packet.");
-   cluster::ConfigPacketPtr cfg_pkt = boost::dynamic_pointer_cast<cluster::ConfigPacket>(packet);
-   vprASSERT(NULL != cfg_pkt && "Failed to cast ConfigPacket.");
-
-   jccl::Configuration incoming_config;
-   //Loading from an istream
-   std::istringstream config_input(cfg_pkt->getConfig());
-   config_input >> incoming_config;
-
-   vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-      << clrOutBOLD( clrCYAN, "[ClusterManager] " )
-      << "Got configuration packet."
-      << std::endl << vprDEBUG_FLUSH;
-
-   jccl::ConfigManager::instance()->addConfigurationAdditions(&incoming_config);
 }
 
 /**
