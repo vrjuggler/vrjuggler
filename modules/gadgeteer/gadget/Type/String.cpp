@@ -34,6 +34,14 @@
 namespace gadget
 {
 
+String::String() : mDefaultValue("")
+{;}
+
+StringPtr String::create()
+{
+   return StringPtr(new String());
+}
+
 const StringData String::getStringData(int devNum)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();

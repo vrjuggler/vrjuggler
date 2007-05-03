@@ -28,6 +28,7 @@
 #define _GADGET_GLOVE_H_
 
 #include <gadget/gadgetConfig.h>
+#include <boost/noncopyable.hpp>
 #include <gadget/Type/GloveData.h>
 #include <gadget/Type/DigitalData.h> /* For getGloveDataFromDigitalData */
 #include <gadget/Type/SampleBuffer.h>
@@ -49,18 +50,26 @@ const unsigned short MSG_DATA_GLOVE = 520;
  * It specifies the interface to all glove objects in the system.
  * Gadgeteer will deal only with gloves using this interface.
  */
-class GADGET_CLASS_API Glove : public vpr::SerializableObject
+class GADGET_CLASS_API Glove
+   : public vpr::SerializableObject
+   , boost::noncopyable
 {
 public:
    typedef gadget::SampleBuffer<GloveData> SampleBuffer_t;
 
-public:
+protected:
    Glove();
 
-   virtual ~Glove()
-   {
-      /* Do nothing. */ ;
-   }
+public:
+   /**
+    * Creates a Glove instance and returns it wrapped in a
+    * GlovePtr object.
+    *
+    * @since 1.3.7
+    */
+   static GlovePtr create();
+
+   virtual ~Glove();
 
    virtual bool config(jccl::ConfigElementPtr element);
 

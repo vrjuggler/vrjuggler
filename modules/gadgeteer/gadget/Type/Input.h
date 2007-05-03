@@ -29,6 +29,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
+#include <boost/noncopyable.hpp>
 #include <vpr/vpr.h>
 
 #include <vpr/Sync/Mutex.h>
@@ -69,9 +70,11 @@ namespace gadget
  *       frame.  Because of this, threads should not be reading data while
  *       it is being updated to the most recent copy.
  */
-class GADGET_CLASS_API Input : public vpr::SerializableObject
+class GADGET_CLASS_API Input
+   : public vpr::SerializableObject
+   , boost::noncopyable
 {
-public:
+protected:
    /** Default Constructor.
     *
     * The default constructor is intended only for use by the DummyProxies
@@ -80,6 +83,7 @@ public:
     */
    Input();
 
+public:
 #ifndef VPR_OS_Windows
    /** Input Destructor.
     *
@@ -237,10 +241,6 @@ protected:
    vpr::Thread*   mThread;       /**< The thread being used by the driver. */
    bool           mActive;       /**< Is the driver active? */
    bool           mNeedUpdate;   /**< @since 1.1.19 */
-
-   Input(const Input& o) : vpr::SerializableObject(o)
-   {;}
-   void operator= (const Input&) {;}
 };
 
 } // end namespace

@@ -34,6 +34,17 @@
 namespace gadget
 {
 
+Command::Command()
+{;}
+
+Command::~Command()
+{;}
+
+CommandPtr Command::create()
+{
+   return CommandPtr(new Command());
+}
+
 const CommandData Command::getCommandData(int devNum)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mCommandSamples.stableBuffer();

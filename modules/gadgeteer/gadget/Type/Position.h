@@ -34,8 +34,11 @@
 #define _GADGET_POSITION_H_
 
 #include <gadget/gadgetConfig.h>
+
 #include <typeinfo>
 #include <vector>
+#include <boost/noncopyable.hpp>
+
 #include <gadget/Type/Input.h>
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/SampleBuffer.h>
@@ -66,14 +69,25 @@ const unsigned short MSG_DATA_POS = 422;
  *
  * @see Input, InputMixer
  */
-class GADGET_CLASS_API Position : public vpr::SerializableObject
+class GADGET_CLASS_API Position
+   : public vpr::SerializableObject
+   , boost::noncopyable
 {
 public:
    typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
 
-public:
+protected:
    /** Constructor */
    Position();
+
+public:
+   /**
+    * Creates a Position instance and returns it wrapped in a
+    * PositionPtr object.
+    *
+    * @since 1.3.7
+    */
+   static PositionPtr create();
 
    /** Destructor */
    virtual ~Position();
@@ -167,10 +181,6 @@ public:
 
 protected:
    PositionData      mDefaultValue;   /**< Default positional value to return */
-
-   // gadget::SampleBuffer<T> is not copyable, so neither are we.
-   Position(const gadget::Position& p) : vpr::SerializableObject(p) {;}
-   void operator=(const gadget::Position&) {;}
 
 private:
    std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */

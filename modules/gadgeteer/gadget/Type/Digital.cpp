@@ -39,6 +39,17 @@
 namespace gadget
 {
 
+Digital::Digital()
+{;}
+
+Digital::~Digital()
+{;}
+
+DigitalPtr Digital::create()
+{
+   return DigitalPtr(new Digital());
+}
+
 const DigitalData Digital::getDigitalData(int devNum)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();

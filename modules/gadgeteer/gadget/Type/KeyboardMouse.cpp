@@ -55,6 +55,14 @@ KeyboardMouse::KeyboardMouse()
    mCurKeys[gadget::KEY_NONE] = 1;
 }
 
+KeyboardMousePtr KeyboardMouse::create()
+{
+   return KeyboardMousePtr(new KeyboardMouse());
+}
+
+KeyboardMouse::~KeyboardMouse()
+{;}
+
 std::string KeyboardMouse::getInputTypeName()
 {
    return "keyboard_mouse";

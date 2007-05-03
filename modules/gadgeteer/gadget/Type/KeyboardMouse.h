@@ -29,6 +29,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/noncopyable.hpp>
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Interval.h>
@@ -57,17 +58,26 @@ const unsigned short MSG_DATA_EVENT_WINDOW = 420;
  * counts the number of keyboard and mouse events between updates.  Updates in
  * Juggler occur once per frame.
  */
-class GADGET_CLASS_API KeyboardMouse : public vpr::SerializableObject
+class GADGET_CLASS_API KeyboardMouse
+   : public vpr::SerializableObject
+   , boost::noncopyable
 {
 public:
    typedef std::vector<gadget::EventPtr> EventQueue;
 
+protected:
    KeyboardMouse();
 
-   virtual ~KeyboardMouse()
-   {
-      /* Do nothing. */ ;
-   }
+public:
+   /**
+    * Creates a Position instance and returns it wrapped in a
+    * PositionPtr object.
+    *
+    * @since 1.3.7
+    */
+   static KeyboardMousePtr create();
+
+   virtual ~KeyboardMouse();
 
    virtual std::string getInputTypeName();
 
@@ -155,13 +165,6 @@ public:
    void addEvent(gadget::EventPtr e);
 
 protected:
-   // vpr::Mutex is not copyable, so neither are we.
-   KeyboardMouse(const KeyboardMouse& w) 
-      : vpr::SerializableObject(w)
-   {;}
-
-   void operator=(const KeyboardMouse&) {;}
-
    /**
     * (0,*): Copy of keys for this frame that the user reads from between
     * updates.

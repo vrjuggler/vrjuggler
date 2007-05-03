@@ -53,6 +53,10 @@ Position::Position()
 Position::~Position()
 {;}
 
+PositionPtr Position::create()
+{
+   return PositionPtr(new Position());
+}
 
 // Set up the transformation information
 bool Position::config(jccl::ConfigElementPtr e)

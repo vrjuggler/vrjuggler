@@ -54,6 +54,14 @@ Glove::Glove()
    mGlovePositions.resize(2);
 }
 
+GlovePtr Glove::create()
+{
+   return GlovePtr(new Glove());
+}
+
+Glove::~Glove()
+{;}
+
 bool Glove::config(jccl::ConfigElementPtr e)
 {
    // For now, assume just 2 gloves (left & right)

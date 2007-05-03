@@ -49,6 +49,11 @@ Analog::~Analog()
    /* Do nothing. */ ;
 }
 
+AnalogPtr Analog::create()
+{
+   return AnalogPtr(new Analog());
+}
+
 void Analog::writeObject(vpr::ObjectWriter* writer)
 {
    //std::cout << "[Remote Input Manager] In Analog write" << std::endl;

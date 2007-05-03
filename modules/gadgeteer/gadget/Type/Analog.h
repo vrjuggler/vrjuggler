@@ -29,6 +29,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
+#include <boost/noncopyable.hpp>
 
 #include <vpr/IO/SerializableObject.h>
 #include <jccl/Config/ConfigElement.h>
@@ -57,19 +58,29 @@ const unsigned short MSG_DATA_ANALOG = 421;
  *
  * @see Input, InputMixer
  */
-class GADGET_CLASS_API Analog : public vpr::SerializableObject
+class GADGET_CLASS_API Analog
+   : public vpr::SerializableObject
+   , boost::noncopyable
 {
 public:
    typedef gadget::SampleBuffer<AnalogData> SampleBuffer_t;
 
-public:
-
+protected:
    /**
     * Constructor.
     * @post Set device abilities.
     * @note Must be called from all derived classes.
     */
    Analog();
+
+public:
+   /**
+    * Creates a Analog instance and returns it wrapped in a
+    * AnalogPtr object.
+    *
+    * @since 1.3.7
+    */
+   static AnalogPtr create();
 
    virtual ~Analog();
 
@@ -173,13 +184,6 @@ protected:
    float getMax() const;
    void setMin(float mIn);
    void setMax(float mAx);
-
-   // gadget::SampleBuffer<T> is not copyable, so neither are we.
-   Analog(const gadget::Analog& d)
-      : vpr::SerializableObject(d)
-   {;}
-
-   void operator=(const gadget::Analog&) {;}
 
 private:
    float mMin, mMax;

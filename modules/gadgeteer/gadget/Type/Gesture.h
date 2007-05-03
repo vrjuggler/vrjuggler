@@ -29,6 +29,7 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <boost/noncopyable.hpp>
 #include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/GesturePtr.h>
@@ -49,12 +50,12 @@ namespace gadget
  * string representation of the current gesture.
  *
  */
-class Gesture
+class Gesture : boost::noncopyable
 {
-public:
-   Gesture()
-   {}
+protected:
+   Gesture();
 
+public:
    virtual ~Gesture()
    {;}
 
