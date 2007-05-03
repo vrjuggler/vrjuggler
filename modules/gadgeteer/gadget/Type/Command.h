@@ -76,8 +76,8 @@ protected:
 
 public:
    /**
-    * Creates a Position instance and returns it wrapped in a
-    * PositionPtr object.
+    * Creates a Command instance and returns it wrapped in a
+    * CommandPtr object.
     *
     * @since 1.3.7
     */

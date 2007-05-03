@@ -70,8 +70,8 @@ protected:
 
 public:
    /**
-    * Creates a Position instance and returns it wrapped in a
-    * PositionPtr object.
+    * Creates a KeyboardMouse instance and returns it wrapped in a
+    * KeyboardMousePtr object.
     *
     * @since 1.3.7
     */
