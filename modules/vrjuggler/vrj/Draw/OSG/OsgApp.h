@@ -457,7 +457,7 @@ inline void OsgApp::draw()
    GlUserData* userData = drawMan->currentUserData();
 
    //Get the frustrum
-   Projection* project = userData->getProjection();
+   ProjectionPtr project = userData->getProjection();
    Frustum frustum = project->getFrustum();
    sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],
                                     frustum[Frustum::VJ_RIGHT],
