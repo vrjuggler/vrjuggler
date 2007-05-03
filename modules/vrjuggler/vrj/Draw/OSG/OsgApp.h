@@ -35,6 +35,9 @@
 
 #include <vrj/Display/CameraProjection.h>
 
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
+
 #include <osg/Vec3>
 #include <osg/Matrix>
 #include <osg/Transform>
@@ -272,6 +275,7 @@ private:
 
    int mFrameNumber;
    gadget::PositionInterface mHead;
+   vpr::Mutex mSceneViewLock;
 };
 
 inline void OsgApp::contextInit()
@@ -282,6 +286,11 @@ inline void OsgApp::contextInit()
    osg::ref_ptr<osgUtil::SceneView> new_sv(new osgUtil::SceneView);
    this->configSceneView(new_sv.get());            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
+   // Add the tree to the scene viewer and set properties
+   {
+      vpr::Guard<vpr::Mutex> sv_guard(mSceneViewLock);
+      new_sv->setSceneData(getScene());
+   }
 
    // This will eventually be changed to no light and all lighting will be handled
    // by the application.  For the time being it fixes the lighting inconsistanies
@@ -363,8 +372,6 @@ inline void OsgApp::draw()
    unsigned x_size = unsigned(vp_sx*float(w_width));
    unsigned y_size = unsigned(vp_sy*float(w_height));
 
-   // Add the tree to the scene viewer and set properties
-   sv->setSceneData(getScene());
    //sv->setCalcNearFar(false);
    sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
