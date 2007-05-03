@@ -145,18 +145,6 @@ public:
    static std::string getElementType();
 
    bool config(jccl::ConfigElementPtr element);
-
-   virtual InputPtr getProxiedInputDevice()
-   {
-      if ( NULL == mTypedDevice.get() || isStupefied() )
-      {
-         return InputPtr();
-      }
-
-      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
-      vprASSERT((NULL != ret_val.get()) && "Cross-cast in KeyboardMouseProxy failed");
-      return ret_val;
-   }
 };
 
 

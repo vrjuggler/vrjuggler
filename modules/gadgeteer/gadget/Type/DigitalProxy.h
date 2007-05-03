@@ -119,18 +119,6 @@ public:
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual InputPtr getProxiedInputDevice()
-   {
-      if((NULL == mTypedDevice.get()) || (mStupefied))
-      {
-         return InputPtr();
-      }
-
-      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
-      vprASSERT((NULL != ret_val.get()) && "Cross-cast in DigitalProxy failed");
-      return ret_val;
-   }
-
 private:
    int mUnitNum;     /**<  The sub-unit of the device we are working with */
 

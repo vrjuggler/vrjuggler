@@ -122,18 +122,6 @@ public:
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual InputPtr getProxiedInputDevice()
-   {
-      if((NULL == mTypedDevice.get()) || (mStupefied))
-      {
-         return InputPtr();
-      }
-
-      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
-      vprASSERT((NULL != ret_val.get()) && "Cross-cast in AnalogProxy failed");
-      return ret_val;
-   }
-
 private:
    int         mUnitNum;
    AnalogData  mData;

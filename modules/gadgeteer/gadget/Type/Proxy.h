@@ -94,7 +94,18 @@ namespace gadget
        * Returns a pointer to the base class of the devices being proxied.
        * @return NULL if no device is proxied.
        */
-      virtual InputPtr getProxiedInputDevice() = 0;
+      InputPtr getProxiedInputDevice()
+      {
+         if((NULL == mTypedDevice.get()) || (mStupefied))
+         {
+            return InputPtr();
+         }
+
+         InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
+         vprASSERT((NULL != ret_val.get()) && "Cross-cast failed.");
+         return ret_val;
+      }
+
 
       /**
        * Returns the string rep of the element type used to config this device.

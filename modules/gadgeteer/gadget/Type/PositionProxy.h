@@ -126,18 +126,6 @@ public:
 
    bool config(jccl::ConfigElementPtr element);
 
-   virtual InputPtr getProxiedInputDevice()
-   {
-      if ( NULL == mTypedDevice.get() || mStupefied )
-      {
-         return InputPtr();
-      }
-
-      InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
-      vprASSERT((NULL != ret_val.get()) && "Cross-cast in PositionProxy failed");
-      return ret_val;
-   }
-
 private:
    PositionData      mPositionData;
    int               mUnitNum;
