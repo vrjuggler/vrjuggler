@@ -45,8 +45,8 @@ SUBOBJDIR=		$(GADGET_LIBRARY)
 DIRPRFX=	gadget/
 
 # Subdirectories to compile.
-SUBDIR=		Devices		        \
-		Filter                  \
+SUBDIR=		Devices			\
+		Filter			\
 		Type			\
 		Util
 
