@@ -461,7 +461,7 @@ void GlPipe::renderWindow(GlWindowPtr win)
                SimViewportPtr sim_vp =
                   boost::dynamic_pointer_cast<SimViewport>(viewport);
                vprASSERT(NULL != sim_vp.get());
-               if (NULL != sim_vp)
+               if (NULL != sim_vp.get())
                {
                   draw_sim_i =
                      boost::dynamic_pointer_cast<GlSimInterface>(

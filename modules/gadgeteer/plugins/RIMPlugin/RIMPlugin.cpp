@@ -148,7 +148,7 @@ bool RIMPlugin::configAdd(jccl::ConfigElementPtr elm)
       << "Adding device: " << device_name
       << std::endl << vprDEBUG_FLUSH;
 
-   vprASSERT(cluster::ClusterManager::instance()->isClusterActive() && "RIM called in non-cluster mode.")
+   vprASSERT(cluster::ClusterManager::instance()->isClusterActive() && "RIM called in non-cluster mode.");
    bool master = cluster::ClusterManager::instance()->isMaster();
    bool result(false);
 
