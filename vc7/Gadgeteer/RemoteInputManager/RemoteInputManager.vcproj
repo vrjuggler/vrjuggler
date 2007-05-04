@@ -137,14 +137,32 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\DeviceServer.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\RIMPlugin.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\VirtualDevice.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\DeviceServer.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\DeviceServerPtr.h">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\RIMPlugin.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\VirtualDevice.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\VirtualDevicePtr.h">
 			</File>
 		</Filter>
 		<Filter

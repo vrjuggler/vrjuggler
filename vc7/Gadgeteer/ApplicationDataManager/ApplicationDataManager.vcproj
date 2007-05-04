@@ -155,6 +155,9 @@
 				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\ApplicationDataServer.h">
 			</File>
 			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\ApplicationDataServerPtr.h">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\UserData.h">
 			</File>
 		</Filter>
