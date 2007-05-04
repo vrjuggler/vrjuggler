@@ -60,6 +60,12 @@ protected:
    {;}
 
 public:
+   /**
+    * Creates a CommandProxy instance and returns it wrapped in a
+    * CommandProxyPtr object.
+    *
+    * @since 1.3.7
+    */
    static CommandProxyPtr create(const std::string& deviceName = "UnknownCommand",
                                  const int unitNum = -1);
 

@@ -56,6 +56,12 @@ protected:
    {;}
 
 public:
+   /**
+    * Creates a KeyboardMouseProxy instance and returns it wrapped in a
+    * KeyboardMouseProxyPtr object.
+    *
+    * @since 1.3.7
+    */
    static KeyboardMouseProxyPtr create();
 
    /**
