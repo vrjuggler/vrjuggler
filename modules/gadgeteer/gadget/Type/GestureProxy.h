@@ -51,11 +51,20 @@ namespace gadget
  */
 class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
-public:
+private:
    /** Constructs the proxy to point to the given gesture device. */
    GestureProxy(const std::string& deviceName = "UnknownGesture")
       : TypedProxy<Gesture>(deviceName)
    {;}
+
+public:
+   /**
+    * Creates a GestureProxy instance and returns it wrapped in a
+    * GestureProxyPtr object.
+    *
+    * @since 1.3.7
+    */
+   static GestureProxyPtr create(const std::string& deviceName = "UnknownGesture");
 
    virtual ~GestureProxy()
    {;}

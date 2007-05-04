@@ -32,6 +32,12 @@
 namespace gadget
 {
 
+CommandProxyPtr CommandProxy::create(const std::string& deviceName,
+                                     const int unitNum)
+{
+   return CommandProxyPtr(new CommandProxy(deviceName, unitNum));
+}
+
 std::string CommandProxy::getElementType()
 {
    return "command_proxy";

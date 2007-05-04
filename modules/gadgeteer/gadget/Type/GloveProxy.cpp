@@ -33,6 +33,12 @@
 namespace gadget
 {
 
+GloveProxyPtr GloveProxy::create(const std::string& deviceName,
+                                 const int unitNum)
+{
+   return GloveProxyPtr(new GloveProxy(deviceName, unitNum));
+}
+
 std::string GloveProxy::getElementType()
 {
    return "glove_proxy";

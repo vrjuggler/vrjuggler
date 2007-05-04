@@ -33,6 +33,11 @@
 namespace gadget
 {
 
+KeyboardMouseProxyPtr KeyboardMouseProxy::create()
+{
+   return KeyboardMouseProxyPtr(new KeyboardMouseProxy());
+}
+
 std::string KeyboardMouseProxy::getElementType()
 {
    return "keyboard_mouse_proxy";

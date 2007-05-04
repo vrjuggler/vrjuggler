@@ -96,7 +96,7 @@ public:
    ProxyPtr createProxy(jccl::ConfigElementPtr element) const
    {
       // Create new proxy
-      boost::shared_ptr<PROXY> new_proxy = boost::shared_ptr<PROXY>(new PROXY);
+      ProxyPtr new_proxy = PROXY::create();
       bool success = new_proxy->config(element);  // Attempt to configure it
                                                   // config calls inputmgr registrator
 

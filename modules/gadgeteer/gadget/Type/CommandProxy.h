@@ -49,8 +49,7 @@ namespace gadget
  */
 class GADGET_CLASS_API CommandProxy : public TypedProxy<Command>
 {
-
-public:
+protected:
    /** @name Construction/Destruction */
    //@{
    CommandProxy(const std::string& deviceName = "UnknownCommand",
@@ -59,6 +58,10 @@ public:
       , mUnitNum(unitNum)
       , mData(0)
    {;}
+
+public:
+   static CommandProxyPtr create(const std::string& deviceName = "UnknownCommand",
+                                 const int unitNum = -1);
 
    virtual ~CommandProxy()
    {;}

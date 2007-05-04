@@ -51,9 +51,12 @@ namespace gadget
  */
 class GADGET_CLASS_API KeyboardMouseProxy : public TypedProxy<KeyboardMouse>
 {
-public:
+protected:
    KeyboardMouseProxy()
-   { ; }
+   {;}
+
+public:
+   static KeyboardMouseProxyPtr create();
 
    /**
     * Returns a pointer to the gadget::KeyboardMouse object held by this proxy.

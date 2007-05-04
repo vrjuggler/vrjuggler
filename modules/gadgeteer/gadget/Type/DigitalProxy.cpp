@@ -31,6 +31,11 @@
 
 namespace gadget
 {
+DigitalProxyPtr DigitalProxy::create(const std::string& deviceName,
+                                     const int unitNum)
+{
+   return DigitalProxyPtr(new DigitalProxy(deviceName, unitNum));
+}
 
 std::string DigitalProxy::getElementType()
 {

@@ -33,6 +33,11 @@
 namespace gadget
 {
 
+GestureProxyPtr GestureProxy::create(const std::string& deviceName)
+{
+   return GestureProxyPtr(new GestureProxy(deviceName));
+}
+
 std::string GestureProxy::getElementType()
 {
    return "gesture_proxy";

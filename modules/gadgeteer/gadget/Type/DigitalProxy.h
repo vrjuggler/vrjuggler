@@ -49,8 +49,7 @@ namespace gadget
  */
 class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
-
-public:
+protected:
    /** @name Construction/Destruction */
    //@{
    DigitalProxy(const std::string& deviceName = "UnknownDigital",
@@ -59,6 +58,16 @@ public:
       , mUnitNum(unitNum)
       , mData(0)
    {;}
+
+public:
+   /**
+    * Creates a DigitalProxy instance and returns it wrapped in a
+    * DigitalProxyPtr object.
+    *
+    * @since 1.3.7
+    */
+   static DigitalProxyPtr create(const std::string& deviceName = "UnknownDigital",
+                                 const int unitNum = -1);
 
    virtual ~DigitalProxy()
    {;}

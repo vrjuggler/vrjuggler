@@ -32,6 +32,12 @@
 namespace gadget
 {
 
+StringProxyPtr StringProxy::create(const std::string deviceName,
+                                   const int unitNum)
+{
+   return StringProxyPtr(new StringProxy(deviceName, unitNum));
+}
+
 std::string StringProxy::getElementType()
 {
    return "string_proxy";

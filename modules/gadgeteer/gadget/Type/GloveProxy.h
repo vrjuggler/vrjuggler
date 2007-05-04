@@ -49,7 +49,7 @@ namespace gadget
  */
 class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
-public:
+protected:
    /**
     * Constructs the proxy to point to the given glove device and sub-unit
     * number.
@@ -61,6 +61,16 @@ public:
    {
       mVisible = true;
    }
+
+public:
+   /**
+    * Creates a GloveProxy instance and returns it wrapped in a
+    * GloveProxyPtr object.
+    *
+    * @since 1.3.7
+    */
+   static GloveProxyPtr create(const std::string& deviceName = "UnknownGlove",
+                               const int unitNum = -1);
 
    virtual ~GloveProxy()
    {}

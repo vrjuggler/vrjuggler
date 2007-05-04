@@ -161,9 +161,6 @@ public:
    std::vector<GloveData> getGloveDataFromDigitalData(const std::vector<DigitalData>& digitalData);
 
 protected:
-   Glove(const gadget::Glove& g) : vpr::SerializableObject(g) {;}
-   void operator=(const gadget::Glove&) {;}
-
    SampleBuffer_t  mGloveSamples;   /**< Glove samples */
    GloveData       mDefaultValue;   /**< Default glove data to return */
 

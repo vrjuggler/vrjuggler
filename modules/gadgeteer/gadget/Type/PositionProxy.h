@@ -64,12 +64,22 @@ namespace gadget
  */
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
-public:
+protected:
    PositionProxy(const std::string& deviceName = "UnknownPosition",
       const int unitNum = -1)
       : TypedProxy<Position>(deviceName)
       , mUnitNum(unitNum)
    {;}
+
+public:
+   /**
+    * Creates a PositionProxy instance and returns it wrapped in a
+    * PositionProxyPtr object.
+    *
+    * @since 1.3.7
+    */
+   static PositionProxyPtr create(const std::string& deviceName = "UnknownPosition",
+                                  const int unitNum = -1);
 
    virtual ~PositionProxy() {;}
 

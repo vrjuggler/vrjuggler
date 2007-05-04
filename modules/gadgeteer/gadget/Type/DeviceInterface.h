@@ -126,7 +126,7 @@ public:
    DeviceInterface(const DeviceInterface& other)
       : BaseDeviceInterface(other)
    {
-      mDummyProxy = boost::shared_ptr<PROXY_TYPE>(new PROXY_TYPE);
+      mDummyProxy = PROXY_TYPE::create();
 
       if (NULL != other.mTypeSpecificProxy.get())
       {
@@ -142,7 +142,7 @@ public:
    DeviceInterface()
       : BaseDeviceInterface()
    {
-      mDummyProxy = boost::shared_ptr<PROXY_TYPE>(new PROXY_TYPE);
+      mDummyProxy = PROXY_TYPE::create();
       mTypeSpecificProxy = mDummyProxy;
    }
 

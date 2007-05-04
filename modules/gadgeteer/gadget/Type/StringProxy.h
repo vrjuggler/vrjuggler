@@ -56,10 +56,10 @@ namespace gadget
  *
  * @see gagdet::String
  */
-class GADGET_CLASS_API StringProxy : public TypedProxy<String>
+class GADGET_CLASS_API StringProxy
+   : public TypedProxy<String>
 {
-
-public:
+protected:
    /** @name Construction/Destruction */
    //@{
    StringProxy(const std::string& deviceName = "UnknownString",
@@ -68,6 +68,16 @@ public:
       , mUnitNum(unitNum)
       , mData("")
    {;}
+
+public:
+   /**
+    * Creates a StringProxy instance and returns it wrapped in a
+    * StringProxyPtr object.
+    *
+    * @since 1.3.7
+    */
+   static StringProxyPtr create(const std::string deviceName = "UnknownString",
+                                const int unitNum = -1);
 
    virtual ~StringProxy()
    {;}

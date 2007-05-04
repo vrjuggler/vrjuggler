@@ -31,6 +31,11 @@
 
 namespace gadget
 {
+AnalogProxyPtr AnalogProxy::create(const std::string& deviceName,
+                                   const int unitNum)
+{
+   return AnalogProxyPtr(new AnalogProxy(deviceName, unitNum));
+}
 
 std::string AnalogProxy::getElementType()
 {

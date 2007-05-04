@@ -428,11 +428,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("gadget::InputManager::configureProxy: Named: ") + proxy_name + std::string("\n"),
                                  std::string("done configuring proxy\n"));
 
-   ProxyPtr new_proxy;
-
    // Tell the factory to load the proxy
    // NOTE: The config for the proxy registers it with the input manager
-   new_proxy = ProxyFactory::instance()->loadProxy(element);
+   ProxyPtr new_proxy = ProxyFactory::instance()->loadProxy(element);
 
    // Check for success
    if(NULL == new_proxy.get())

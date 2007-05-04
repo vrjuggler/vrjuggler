@@ -45,6 +45,12 @@
 namespace gadget
 {
 
+PositionProxyPtr PositionProxy::create(const std::string& deviceName,
+                                       const int unitNum)
+{
+   return PositionProxyPtr(new PositionProxy(deviceName, unitNum));
+}
+
 std::string PositionProxy::getElementType()
 {
    return "position_proxy";

@@ -49,8 +49,7 @@ namespace gadget
  */
 class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
-
-public:
+protected:
    /** Constructor. */
    AnalogProxy(const std::string& deviceName = "UnknownAnalog",
                const int unitNum = -1)
@@ -58,6 +57,16 @@ public:
       , mUnitNum(unitNum)
       , mData(-1.0f)
    {;}
+
+public:
+   /**
+    * Creates a AnalogProxy instance and returns it wrapped in a
+    * AnalogProxyPtr object.
+    *
+    * @since 1.3.7
+    */
+   static AnalogProxyPtr create(const std::string& deviceName = "UnknownAnalog",
+                                const int unitNum = -1);
 
    virtual ~AnalogProxy()
    {;}
