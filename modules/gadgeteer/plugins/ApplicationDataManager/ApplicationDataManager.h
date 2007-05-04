@@ -48,7 +48,6 @@ namespace cluster
 
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataManager
    : public cluster::ClusterPlugin
-   , boost::noncopyable
 {
 protected:
    ApplicationDataManager();

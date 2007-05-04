@@ -710,7 +710,7 @@ bool Kernel::removeUser(jccl::ConfigElementPtr element)
    std::string user_name = element->getName();
    vrj::UserPtr user = getUser(user_name);
 
-   if (NULL != user)
+   if (NULL != user.get())
    {
       vprDEBUG(vrjDBG_KERNEL, vprDBG_STATE_LVL)
          << "vrj::Kernel: Removing User: " << user->getName() << std::endl

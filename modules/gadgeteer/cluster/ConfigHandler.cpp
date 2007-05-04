@@ -65,7 +65,7 @@ void ConfigHandler::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node
 
    vprASSERT(Header::CONFIG_PACKET == packet->getPacketType() && "Not a config packet.");
    cluster::ConfigPacketPtr cfg_pkt = boost::dynamic_pointer_cast<cluster::ConfigPacket>(packet);
-   vprASSERT(NULL != cfg_pkt && "Failed to cast ConfigPacket.");
+   vprASSERT(NULL != cfg_pkt.get() && "Failed to cast ConfigPacket.");
 
    jccl::Configuration incoming_config;
    //Loading from an istream

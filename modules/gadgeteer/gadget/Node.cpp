@@ -163,7 +163,7 @@ void Node::setStatus(int connect)
 
 bool Node::send(cluster::PacketPtr outPacket)
 {
-   vprASSERT(NULL != outPacket && "Can not send a NULL packet.");
+   vprASSERT(NULL != outPacket.get() && "Can not send a NULL packet.");
 
    vpr::Guard<vpr::Mutex> guard(mSockWriteLock);
 
@@ -225,7 +225,7 @@ bool Node::send(cluster::PacketPtr outPacket)
 
       cluster::DataPacketPtr temp_data_packet
          = boost::dynamic_pointer_cast<cluster::DataPacket>(outPacket);
-      vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
+      vprASSERT(NULL != temp_data_packet.get() && "Dynamic cast failed!");
 
       // Testing GUIDs
       /*vpr::BufferObjectReader* testing = new vpr::BufferObjectReader(packet_data);
@@ -295,7 +295,7 @@ cluster::PacketPtr Node::recvPacket()
       cluster::PacketFactory::instance()->createObject( packet_head->getPacketType() );
 
    // Verify that the packet has been made
-   if ( NULL == new_packet )
+   if ( NULL == new_packet.get() )
    {
       throw cluster::ClusterException( "Node::recvPacket() - Packet was not found in Factory." );
    }

@@ -53,7 +53,8 @@ namespace gadget
 class Gesture : boost::noncopyable
 {
 protected:
-   Gesture();
+   Gesture()
+   {;}
 
 public:
    virtual ~Gesture()

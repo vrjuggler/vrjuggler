@@ -78,14 +78,14 @@ bool ApplicationDataManager::isPluginReady()
 
 void ApplicationDataManager::handlePacket(PacketPtr packet, gadget::NodePtr node)
 {
-   if ( NULL != packet && NULL != node.get() )
+   if ( NULL != packet.get() && NULL != node.get() )
    {
       switch ( packet->getPacketType() )
       {
       case cluster::Header::RIM_DATA_PACKET:
       {
          DataPacketPtr data_packet = boost::dynamic_pointer_cast<DataPacket>(packet);
-         vprASSERT(NULL != data_packet && "Dynamic cast failed!");
+         vprASSERT(NULL != data_packet.get() && "Dynamic cast failed!");
 
          // Find the ApplicationData Object that we have received data
          // for.

@@ -92,7 +92,7 @@ bool Viewport::config(jccl::ConfigElementPtr element)
    std::string user_name = element->getProperty<std::string>("user");
    mUser = Kernel::instance()->getUser(user_name);
 
-   if(NULL == mUser)
+   if(NULL == mUser.get())
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR:") << " User not found named: '"

@@ -122,7 +122,7 @@ void NetworkManager::waitForConnection(const int& listen_port)
 
       NodePtr remote_node = getNodeByHostname( remote_host_name );
 
-      vprASSERT(NULL == remote_node && "We already know about the master node.");
+      vprASSERT(NULL == remote_node.get() && "We already know about the master node.");
 
       // Get address information about local host.
       const vpr::InetAddr local = vpr::InetAddr::getLocalHost();
@@ -137,7 +137,7 @@ void NetworkManager::waitForConnection(const int& listen_port)
       addNode("master", remote_host_name, port, client_sock);
       remote_node = getNodeByHostname( remote_host_name );
 
-      vprASSERT(NULL != remote_node && "Master node must exist now.");
+      vprASSERT(NULL != remote_node.get() && "Master node must exist now.");
 
       vprDEBUG( gadgetDBG_NET_MGR,vprDBG_STATE_LVL )
          << clrOutBOLD( clrBLUE,"[Acceptor]" )

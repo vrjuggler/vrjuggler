@@ -51,7 +51,6 @@ namespace cluster
 class GADGET_CLUSTER_PLUGIN_CLASS_API RIMPlugin
    : public cluster::ClusterPlugin
    , public jccl::ConfigElementHandler
-   , boost::noncopyable
 {
 protected:
    RIMPlugin();

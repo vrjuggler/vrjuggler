@@ -182,7 +182,7 @@ namespace gadget
       virtual void set(const std::string& devName, boost::shared_ptr<DEV_TYPE> devPtr)
       {
          mTypedDevice = devPtr;
-         if(NULL != devPtr)
+         if(NULL != mTypedDevice.get())
          {
             mDeviceName = devName;
             stupefy(false);

@@ -445,7 +445,7 @@ void InputLogger::playNextSample()
       vprASSERT(serial_dev_node.get() != NULL && "Got null serialized device node");
 
       gadget::InputPtr dev_ptr = input_mgr->getDevice(dev_name);
-      if(NULL != dev_ptr)
+      if(NULL != dev_ptr.get())
       {
          vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                               std::string("Reading device: ") + dev_name + std::string("\n"), "done reading");

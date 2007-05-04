@@ -232,7 +232,7 @@ void RIMPlugin::recoverFromLostNode(gadget::NodePtr lostNode)
 void RIMPlugin::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
 {
    //We are only handling data packets right now.
-   if ( NULL != packet && NULL != node )
+   if ( NULL != packet.get() && NULL != node.get() )
    {
       switch ( packet->getPacketType() )
       {
@@ -244,7 +244,7 @@ void RIMPlugin::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
             vprASSERT(device_ack->getAck() && "We only have device ACKs now.");
 
             gadget::InputPtr input_dev = getVirtualDevice(device_name);
-            if ( NULL != input_dev )
+            if ( NULL != input_dev.get() )
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR:")
                << "Somehow we already have a virtual device named: " << device_name << std::endl << vprDEBUG_FLUSH;

@@ -80,7 +80,7 @@ void BaseDeviceInterface::refresh()
 
    mProxyPtr = InputManager::instance()->getProxy(mProxyName);
 
-   if (NULL == mProxyPtr)
+   if (NULL == mProxyPtr.get())
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "WARNING: DeviceInterface::refresh: could not find proxy: "
@@ -93,7 +93,7 @@ void BaseDeviceInterface::refresh()
          << std::endl << vprDEBUG_FLUSH;
    }
    // ASSERT: We have just gotten a valid proxy to point to
-   else if((NULL != mProxyPtr) && (NULL == prev_proxy_ptr))
+   else if((NULL != mProxyPtr.get()) && (NULL == prev_proxy_ptr.get()))
    {
       const int item_width(25+12);
       //const int type_width(20);
