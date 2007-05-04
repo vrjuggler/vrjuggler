@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-04-2007 patrick     Added lighting code to vrj::GlBasicSimulator so that
+                        OSG and OpenSG application objects do not have to
+                        include that code themselves just so that the simulator
+                        renders nicely.
+                        NEW VERSION: 2.3.5
 May-01-2007 patrick     Handle vrj::Projection instances (and subclasses
                         thereof) as shared pointers.
                         NEW VERSION: 2.3.4

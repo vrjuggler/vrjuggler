@@ -338,23 +338,18 @@ void GlBasicSimulator::initSimulator()
  */
 void GlBasicSimulator::drawSimulator(const float scaleFactor)
 {
-   glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
+   glPushAttrib(GL_ALL_ATTRIB_BITS);
    {
-      // Test to see wethere there is lighting active
-      GLboolean lighting_on, light0_on;
+      // Test to see whether there is lighting active. If there is, we will
+      // use it.
+      GLboolean lighting_on;
       glGetBooleanv(GL_LIGHTING, &lighting_on);
-      glGetBooleanv(GL_LIGHT0, &light0_on);
-
-      bool use_lighting_in_sim = (lighting_on == GL_TRUE);
-
-      //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "lighting on: " << ((lighting_on == GL_TRUE)?"Y":"N")
-      //                       << "  light0_on:" << ((light0_on == GL_TRUE)?"Y":"N") << std::endl << vprDEBUG_FLUSH;
 
       //-----------------set up materials....
-      float mat_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
-      float mat_shininess[] = {50.0f};
-      float mat_diffuse[] = {.7f, .7f, .7f, 1.0f};
-      float mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+      const GLfloat mat_ambient[]   = { 0.1f, 0.1f, 0.1f, 1.0f };
+      const GLfloat mat_shininess[] = { 50.0f };
+      const GLfloat mat_diffuse[]   = { 0.7f, 0.7f, 0.7f, 1.0f };
+      const GLfloat mat_specular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
       //-----------------Call Materials.....
       glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
       glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -363,13 +358,14 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
       //----------------Enable Materials.....
       glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
       glEnable(GL_COLOR_MATERIAL);
+      glShadeModel(GL_SMOOTH);
 
       glDisable(GL_TEXTURE_2D);
       glDisable(GL_TEXTURE_1D);
 
       // Draw base coordinate axis
       ///*
-      if(lighting_on)
+      if ( lighting_on == GL_TRUE )
       {
          glDisable(GL_LIGHTING);
       }
@@ -386,11 +382,26 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
       glPopMatrix();
       //*/
 
-      if(use_lighting_in_sim)
-      {
-         glEnable(GL_LIGHTING);
-         glEnable(GL_NORMALIZE);
-      }
+      const GLfloat light0_ambient[]  = { 0.1f,  0.1f,  0.1f, 1.0f };
+      const GLfloat light0_diffuse[]  = { 0.8f,  0.8f,  0.8f, 1.0f };
+      const GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f, 1.0f };
+      const GLfloat light0_position[] = { 0.0f, 0.75f, 0.75f, 0.0f };
+
+      glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+      glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
+      glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+
+      // At this point, lighting is disabled. We need it back on for the
+      // draw functors.
+      glEnable(GL_LIGHTING);
+      glEnable(GL_LIGHT0);
+
+      // Enable depth testing so that the rendered simulator objects look
+      // correct. For example, in the case of the default head draw functor,
+      // without this, we end up being able to see the eyes when looking at
+      // the back of the head.
+      glEnable(GL_DEPTH_TEST);
 
       // Draw the user's head
       glPushMatrix();
@@ -410,15 +421,14 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
          mDrawWandFunctor->draw(mSimViewport->getUser());
       glPopMatrix();
 
-       // Draw a The display surfaces
-      if(use_lighting_in_sim)
-      {
-         glDisable(GL_LIGHTING);
-      }
+      glDisable(GL_LIGHT0);
+      glDisable(GL_LIGHTING);
 
+      // Draw the display surfaces.
       glPushMatrix();
          glLoadIdentity();
-         drawProjections(shouldDrawProjections(), getSurfaceColor(), scaleFactor);
+         drawProjections(shouldDrawProjections(), getSurfaceColor(),
+                         scaleFactor);
       glPopMatrix();
    }
    glPopAttrib();
