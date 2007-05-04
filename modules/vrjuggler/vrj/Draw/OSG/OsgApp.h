@@ -29,14 +29,16 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
+
+#include <gadget/Type/PositionInterface.h>
+
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlContextData.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 
 #include <vrj/Display/CameraProjection.h>
-
-#include <vpr/Sync/Mutex.h>
-#include <vpr/Sync/Guard.h>
 
 #include <osg/Vec3>
 #include <osg/Matrix>
