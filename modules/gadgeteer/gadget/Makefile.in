@@ -50,9 +50,9 @@ SUBDIR=		Devices		        \
 		Type			\
 		Util
 
-SRCS=		NetworkManager.cpp		\
-		InputLogger.cpp			\
+SRCS=		InputLogger.cpp			\
 		InputManager.cpp		\
+		NetworkManager.cpp		\
 		Node.cpp			\
 		ProxyDepChecker.cpp		\
 		ProxyFactory.cpp		\
