@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-04-2007 patrick     Improved OSG scene view lighting for subclasses of
+                        vrj::OsgApp. Submitted by Doug McCorkle.
+                        NEW VERSION: 2.1.26
 May-04-2007 patrick     Added lighting code to vrj::GlBasicSimulator so that
                         OSG and OpenSG application objects do not have to
                         include that code themselves just so that the simulator
