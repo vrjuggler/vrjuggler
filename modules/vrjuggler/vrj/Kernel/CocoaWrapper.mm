@@ -49,55 +49,11 @@
 #include <vrj/Kernel/CocoaWrapper.h>
 
 
-static NSMenu* getRecentFilesMenu()
-{
-   NSMenu* files_menu = nil;
-   NSApplication* app = [NSApplication sharedApplication];
-   NSMenuItem* item = [[app mainMenu] itemWithTitle:@"File"];
-
-   if ( item )
-   {
-      item = [[item submenu] itemWithTitle:@"Open Recent"];
-
-      if ( item )
-      {
-         files_menu = [item submenu];
-      }
-   }
-
-   return files_menu;
-}
-
-static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
-                                     NSString* accel, const int index)
-{
-/*
-   NSMenuItem* item = [[NSMenuItem alloc] init];
-   [item setTitle:title];
-   [item setAction:@selector(loadConfigFile:)];
-   [item setKeyEquivalent:accel];
-   [menu insertItem:item
-            atIndex:index];
-*/
-   NSMenuItem* item = [menu insertItemWithTitle:title
-                                         action:@selector(loadConfigFile:)
-                                  keyEquivalent:accel
-                                        atIndex:index];
-/*
-   NSMenuItem* item = [menu addItemWithTitle:title
-                                      action:@selector(loadConfigFile:)
-                               keyEquivalent:accel];
-*/
-   [item setKeyEquivalentModifierMask:NSCommandKeyMask];
-   NSLog(@"Inserted item %@ at index %d in menu %@\n", item, index, menu);
-
-   return item;
-}
-
 @interface VrjMainController : NSObject
 {
    BOOL      mLoadConfigs;
    NSString* mRecentCfgFileName;
+   NSString* mLastDir;
 }
 
    -(void) setLoadConfigs:(BOOL) load;
@@ -110,7 +66,30 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
               openFile:(NSString*) file;
    -(BOOL) application:(NSApplication*) theApplication
              openFiles:(NSArray*) files;
+
+   /**
+    * Loads the named VR Juggler configuration file using
+    * vrj::Kernel::loadConfigFile().
+    */
    -(IBAction) loadConfigFile:(id) sender;
+
+   /**
+    * Loads the named VR Juggler configuration file using
+    * vrj::Kernel::loadConfigFile().
+    */
+   -(void) kernelLoadConfigFile:(NSString*) fileName;
+
+   /**
+    * Returns a pointer to the NSMenu object that is the submenu listing the
+    * recently loaded configuration files or nil if no such submenu exists.
+    * In other words, this returns the File -> Open Recent submenu object.
+    * This is a convenice method.
+    */
+   -(NSMenu*) getRecentFilesMenu;
+
+   -(NSMenuItem*) insertCfgFileItem:(NSString*) title
+                              accel:(NSString*) accel
+                              index:(int) index;
 @end
 
 @implementation VrjMainController
@@ -160,7 +139,7 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
          [mRecentCfgFileName retain];
       }
 
-      NSMenu* file_menu = getRecentFilesMenu();
+      NSMenu* file_menu = [self getRecentFilesMenu];
 
       if ( file_menu )
       {
@@ -173,9 +152,9 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
             {
                for ( unsigned int i = 0; i < [cfg_files count]; ++i )
                {
-                  NSString* fname = [cfg_files objectAtIndex:i];;
-                  NSString* accel = [NSString stringWithFormat:@"%d", i];
-                  insertCfgFileItem(file_menu, fname, accel, i);
+                  [self insertCfgFileItem:[cfg_files objectAtIndex:i]
+                                    accel:[NSString stringWithFormat:@"%d", i]
+                                    index:i];
                }
             }
          }
@@ -196,7 +175,7 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
     */
    -(void) applicationWillTerminate:(NSNotification*) aNotification
    {
-      NSMenu* menu = getRecentFilesMenu();
+      NSMenu* menu = [self getRecentFilesMenu];
 
       if ( menu && mRecentCfgFileName )
       {
@@ -250,8 +229,7 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
          const int count = [files count];
          for ( int i = 0; i < count; ++i )
          {
-            NSString* file = [files objectAtIndex:i];
-            vrj::Kernel::instance()->loadConfigFile([file UTF8String]);
+            [self kernelLoadConfigFile:[files objectAtIndex:i]];
          }
       }
 
@@ -260,32 +238,69 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
 
    -(IBAction) loadConfigFile:(id) sender
    {
-      vrj::Kernel::instance()->loadConfigFile([[sender title] UTF8String]);
+      [self kernelLoadConfigFile:[sender title]];
    }
-@end
 
-@interface DummyThread : NSObject
-   +(void) run:(id) obj;
-@end
-
-@implementation DummyThread
-   +(void) run:(id) obj
+   -(void) kernelLoadConfigFile:(NSString*) fileName
    {
-      /* Do nothing. */ ;
+      // Load the configuration file.
+      vrj::Kernel::instance()->loadConfigFile([fileName UTF8String]);
+
+      // Update the submenu listing the recently opened configuration files
+      // to include fileName.
+      NSMenu* files_menu = [self getRecentFilesMenu];
+
+      // NOTE: The 12 accounts for the separator item and the "Clear Menu"
+      // item after the separator.
+      if ( files_menu && [files_menu numberOfItems] > 12 )
+      {
+         [files_menu removeItemAtIndex:0];
+
+         for ( int i = 0; i < 9; ++i )
+         {
+            NSMenuItem* item = [files_menu itemAtIndex:i];
+            [item setKeyEquivalent:[NSString stringWithFormat:@"%d", i]];
+         }
+      }
+
+      if ( files_menu )
+      {
+         const int index = [files_menu indexOfItemWithTitle:fileName];
+
+         if ( index == NSNotFound )
+         {
+            int insert_index(0);
+            const int count = [files_menu numberOfItems];
+
+            for ( int i = 0; i < count; ++i )
+            {
+               NSMenuItem* item = [files_menu itemAtIndex:i];
+
+               if ( [item isSeparatorItem] )
+               {
+                  insert_index = i - 1;
+                  break;
+               }
+            }
+
+            [self insertCfgFileItem:fileName
+                              accel:[NSString stringWithFormat:@"%d", 0]
+                              index:insert_index];
+         }
+      }
    }
-@end
 
-@interface VrjApplicationController : NSObject
-{
-   NSString* mLastDir;
-}
-
-   -(IBAction) openConfiguration:(id) sender;
-   -(IBAction) clearRecentDocuments:(id) sender;
-@end
-
-@implementation VrjApplicationController
-   -(IBAction) openConfiguration:(id) sender
+   /**
+    * Receives the message sent by the File -> Open menu item. An NSOpenPanel
+    * is displayed, and if the user clicks the OK button, the selected .jconf
+    * file(s) is (are) loaded.
+    *
+    * @post If the user clicks the OK button, \c mLastDir has the name of the
+    *       directory where the opened panel was when it was closed.
+    *
+    * @see -kernelLoadConfigFile:
+    */
+   -(IBAction) openDocument:(id) sender
    {
       NSArray* file_types = [NSArray arrayWithObject:@"jconf"];
       NSOpenPanel* panel = [NSOpenPanel openPanel];
@@ -308,58 +323,23 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
          mLastDir = [panel directory];
          [mLastDir retain];
 
-         NSMenu* files_menu = getRecentFilesMenu();
-
          NSArray* files = [panel filenames];
-         int count = [files count];
-         for ( int i = 0; i < count; ++i )
+         const unsigned int count = [files count];
+
+         for ( unsigned int i = 0; i < count; ++i )
          {
             NSString* file = [files objectAtIndex:i];
-            vrj::Kernel::instance()->loadConfigFile([file UTF8String]);
-
-            // TODO: Make this limit controlled by user preferences.
-            // NOTE: The value 12 accounts for the separator item and the
-            // "Clear Menu" item after the separator.
-            if ( files_menu && [files_menu numberOfItems] > 12 )
-            {
-               [files_menu removeItemAtIndex:0];
-
-               for ( int i = 0; i < 9; ++i )
-               {
-                  NSMenuItem* item = [files_menu itemAtIndex:i];
-                  NSString* equiv = [NSString stringWithFormat:@"%d", i];
-                  [item setKeyEquivalent:equiv];
-               }
-            }
-
-            if ( files_menu )
-            {
-               const int index = [files_menu indexOfItemWithTitle:file];
-
-               if ( index == -1 )
-               {
-                  int insert_index(0);
-
-                  for ( int i = 0; i < [files_menu numberOfItems]; ++i )
-                  {
-                     NSMenuItem* item = [files_menu itemAtIndex:i];
-
-                     if ( [item isSeparatorItem] )
-                     {
-                        insert_index = i - 1;
-                        break;
-                     }
-                  }
-
-                  NSString* equiv =
-                     [NSString stringWithFormat:@"%d", insert_index];
-                  insertCfgFileItem(files_menu, file, equiv, insert_index);
-               }
-            }
+            [self kernelLoadConfigFile:file];
          }
       }
    }
 
+   /**
+    * Receives the message sent by the "Clear Menu" item in the
+    * File -> Open Recent submenu.
+    *
+    * @post \c mRecentCfgFiles is empty.
+    */
    -(IBAction) clearRecentDocuments:(id) sender
    {
       NSMenu* menu = [sender menu];
@@ -369,7 +349,8 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
       {
          NSMenuItem* item = [menu itemAtIndex:0];
 
-         if ( [item isSeparatorItem] )
+         if ( [item isSeparatorItem] ||
+              [[item title] isEqualToString:@"Clear Menu"] )
          {
             break;
          }
@@ -378,6 +359,51 @@ static NSMenuItem* insertCfgFileItem(NSMenu* menu, NSString* title,
             [menu removeItem:item];
          }
       }
+   }
+
+   -(NSMenu*) getRecentFilesMenu
+   {
+      NSMenu* files_menu = nil;
+      NSApplication* app = [NSApplication sharedApplication];
+      NSMenuItem* item   = [[app mainMenu] itemWithTitle:@"File"];
+
+      if ( item )
+      {
+         item = [[item submenu] itemWithTitle:@"Open Recent"];
+
+         if ( item )
+         {
+            files_menu = [item submenu];
+         }
+      }
+
+      return files_menu;
+   }
+
+   -(NSMenuItem*) insertCfgFileItem:(NSString*) title
+                              accel:(NSString*) accel
+                              index:(int) index
+   {
+      NSMenu* menu     = [self getRecentFilesMenu];
+      NSMenuItem* item = [menu insertItemWithTitle:title
+                                            action:@selector(loadConfigFile:)
+                                     keyEquivalent:accel
+                                           atIndex:index];
+      [item setKeyEquivalentModifierMask:NSCommandKeyMask];
+      NSLog(@"Inserted item %@ at index %d in menu %@\n", item, index, menu);
+
+      return item;
+   }
+@end
+
+@interface DummyThread : NSObject
+   +(void) run:(id) obj;
+@end
+
+@implementation DummyThread
+   +(void) run:(id) obj
+   {
+      /* Do nothing. */ ;
    }
 @end
 
