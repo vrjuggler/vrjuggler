@@ -40,6 +40,7 @@
 
 #include <vrj/Display/CameraProjection.h>
 
+#include <osg/Version>
 #include <osg/Vec3>
 #include <osg/Matrix>
 #include <osg/Transform>
@@ -343,8 +344,13 @@ protected:
 
       // Update the frame stamp with information from this frame.
       mFrameStamp->setFrameNumber(mFrameNumber);
-      mFrameStamp->setReferenceTime(mHead->getTimeStamp().secd());
 
+      const double head_time(mHead->getTimeStamp().secd());
+      mFrameStamp->setReferenceTime(head_time);
+#if OSG_VERSION_MAJOR >= 1 && OSG_VERSION_MINOR > 2
+      mFrameStamp->setSimulationTime(head_time);
+#endif
+      
       // Set up the time and frame number so time-dependent things (animations,
       // particle system) function correctly.
       // XXX: This may not be necessary.
