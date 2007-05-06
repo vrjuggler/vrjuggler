@@ -49,11 +49,16 @@
 #include <vrj/Kernel/CocoaWrapper.h>
 
 
+static NSString* VRJMaxRecentFiles = @"VRJMaxRecentFiles";
+static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
+
 @interface VrjMainController : NSObject
 {
-   BOOL            mLoadConfigs;
-   NSMutableArray* mRecentCfgFiles;
-   NSString*       mRecentCfgFileName;
+   BOOL                 mLoadConfigs;
+   unsigned char        mMaxRecentFiles;
+   NSMutableArray*      mRecentCfgFiles;
+   NSString*            mPrefsFileName;
+   NSMutableDictionary* mPrefsDict;
 
    NSString* mLastDir;
 }
@@ -97,9 +102,11 @@
 @implementation VrjMainController
    -(id) init
    {
-      mLoadConfigs       = YES;
-      mRecentCfgFileName = nil;
-      mRecentCfgFiles    = nil;
+      mLoadConfigs    = YES;
+      mMaxRecentFiles = 10;
+      mRecentCfgFiles = nil;
+      mPrefsFileName  = nil;
+      mPrefsDict      = nil;
 
       return [super init];
    }
@@ -138,37 +145,61 @@
          [mgr createDirectoryAtPath:vrj_app_dir
                          attributes:nil];
 
-         mRecentCfgFileName =
-            [vrj_app_dir stringByAppendingPathComponent:@"recent_cfgs"];
-         [mRecentCfgFileName retain];
+         mPrefsFileName =
+            [vrj_app_dir stringByAppendingPathComponent:@"prefs.plist"];
+         [mPrefsFileName retain];
+      }
+
+      // If we were able to construct the path to the preferences file, then
+      // we try to load it into a dictionary.
+      if ( mPrefsFileName )
+      {
+         mPrefsDict =
+            [NSDictionary dictionaryWithContentsOfFile:mPrefsFileName];
+      }
+
+      // Create a mutable copy of mPrefsDict.
+      if ( mPrefsDict )
+      {
+         mPrefsDict = [mPrefsDict mutableCopy];
+      }
+      // If we don't have a preferences dictionary at this point, then we
+      // will create one.
+      else
+      {
+         mPrefsDict = [[NSMutableDictionary dictionary] retain];
+      }
+
+      NSNumber* max_recent = [mPrefsDict objectForKey:VRJMaxRecentFiles];
+
+      if ( max_recent )
+      {
+         mMaxRecentFiles = [max_recent unsignedCharValue];
+      }
+
+      mRecentCfgFiles = [mPrefsDict objectForKey:VRJRecentCfgFiles];
+
+      // Create a mutable copy of mRecentCfgFiles.
+      if ( mRecentCfgFiles )
+      {
+         mRecentCfgFiles = [mRecentCfgFiles mutableCopy];
+      }
+      else
+      {
+         mRecentCfgFiles = [[NSMutableArray array] retain];
       }
 
       NSMenu* file_menu = [self getRecentFilesMenu];
 
       if ( file_menu )
       {
-         mRecentCfgFiles =
-            [NSArray arrayWithContentsOfFile:mRecentCfgFileName];
+         const unsigned int count = [mRecentCfgFiles count];
 
-         if ( mRecentCfgFiles )
+         for ( unsigned int i = 0; i < count; ++i )
          {
-            mRecentCfgFiles = [mRecentCfgFiles mutableCopy];
-         }
-         else
-         {
-            mRecentCfgFiles = [[NSMutableArray array] retain];
-         }
-
-         if ( [mRecentCfgFiles count] > 0 )
-         {
-            const unsigned int count = [mRecentCfgFiles count];
-
-            for ( unsigned int i = 0; i < count; ++i )
-            {
-               [self insertCfgFileItem:[mRecentCfgFiles objectAtIndex:i]
-                                 accel:[NSString stringWithFormat:@"%d", i]
-                                 index:i];
-            }
+            [self insertCfgFileItem:[mRecentCfgFiles objectAtIndex:i]
+                              accel:[NSString stringWithFormat:@"%d", i]
+                              index:i];
          }
       }
 
@@ -187,11 +218,16 @@
     */
    -(void) applicationWillTerminate:(NSNotification*) aNotification
    {
-      if ( mRecentCfgFileName )
+      if ( mPrefsFileName )
       {
-         [mRecentCfgFiles writeToFile:mRecentCfgFileName
-                           atomically:YES];
-         [mRecentCfgFileName release];
+         [mPrefsDict setObject:[NSNumber numberWithUnsignedChar:mMaxRecentFiles]
+                        forKey:VRJMaxRecentFiles];
+         [mPrefsDict setObject:mRecentCfgFiles
+                        forKey:VRJRecentCfgFiles];
+
+         [mPrefsDict writeToFile:mPrefsFileName
+                      atomically:YES];
+         [mPrefsFileName release];
       }
 
       vrj::Kernel::instance()->stop();
@@ -249,7 +285,7 @@
       {
          [mRecentCfgFiles removeObjectAtIndex:index];
       }
-      else if ( ! [mRecentCfgFiles count] > 10 )
+      else if ( ! [mRecentCfgFiles count] > mMaxRecentFiles )
       {
          [mRecentCfgFiles removeObjectAtIndex:0];
       }
@@ -258,13 +294,13 @@
 
       NSMenu* files_menu = [self getRecentFilesMenu];
 
-      // NOTE: The 12 accounts for the separator item and the "Clear Menu"
-      // item after the separator.
-      if ( files_menu && [files_menu numberOfItems] > 12 )
+      // NOTE: The mMaxRecentFiles + 2 accounts for the separator item and the
+      // "Clear Menu" item after the separator.
+      if ( files_menu && [files_menu numberOfItems] > mMaxRecentFiles + 2 )
       {
          [files_menu removeItemAtIndex:0];
 
-         for ( int i = 0; i < 9; ++i )
+         for ( int i = 0; i < mMaxRecentFiles; ++i )
          {
             NSMenuItem* item = [files_menu itemAtIndex:i];
             [item setKeyEquivalent:[NSString stringWithFormat:@"%d", i]];
