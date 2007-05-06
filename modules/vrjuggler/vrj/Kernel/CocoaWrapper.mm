@@ -246,7 +246,7 @@ static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
    {
       if ( mLoadConfigs )
       {
-         vrj::Kernel::instance()->loadConfigFile([file UTF8String]);
+         [self kernelLoadConfigFile:file];
       }
 
       return YES;
