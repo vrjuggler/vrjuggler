@@ -5,6 +5,6 @@
 	<key>VRJConfigHandling</key>
 	<false/>
 	<key>VRJControllerClass</key>
-	<string>VrjMainController</string>
+	<string>VRJMainController</string>
 </dict>
 </plist>

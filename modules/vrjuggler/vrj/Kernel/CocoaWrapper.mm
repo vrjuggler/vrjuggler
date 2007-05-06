@@ -52,7 +52,7 @@
 static NSString* VRJMaxRecentFiles = @"VRJMaxRecentFiles";
 static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
 
-@interface VrjMainController : NSObject
+@interface VRJMainController : NSObject
 {
    BOOL                 mLoadConfigs;
    unsigned char        mMaxRecentFiles;
@@ -101,7 +101,7 @@ static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
                               index:(int) index;
 @end
 
-@implementation VrjMainController
+@implementation VRJMainController
    -(id) init
    {
       mLoadConfigs    = YES;
@@ -444,11 +444,11 @@ static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
    }
 @end
 
-@interface DummyThread : NSObject
+@interface VRJDummyThread : NSObject
    +(void) run:(id) obj;
 @end
 
-@implementation DummyThread
+@implementation VRJDummyThread
    +(void) run:(id) obj
    {
       /* Do nothing. */ ;
@@ -479,7 +479,7 @@ CocoaWrapper::CocoaWrapper()
    // Spawn a thread so that Cocoa knows that this is a multi-threaded
    // application.
    [NSThread detachNewThreadSelector:@selector(run:)
-                            toTarget:[DummyThread class]
+                            toTarget:[VRJDummyThread class]
                           withObject:nil];
    assert([NSThread isMultiThreaded]);
 
@@ -502,7 +502,7 @@ CocoaWrapper::CocoaWrapper()
    // Determine whether the application delegate needs to respond to
    // application:openFile: and application:openFiles: messages.
    BOOL load_cfg_files = YES;
-   NSString* ctrl_class_name = @"VrjMainController";
+   NSString* ctrl_class_name = @"VRJMainController";
 
    if ( vrj_dict )
    {
@@ -526,8 +526,8 @@ CocoaWrapper::CocoaWrapper()
    if ( nil == controller_class )
    {
       NSLog(@"WARNING: Could not find declaration of %@!\n", ctrl_class_name);
-      NSLog(@"         Falling back on VrjMainController\n");
-      controller_class = [VrjMainController class];
+      NSLog(@"         Falling back on VRJMainController\n");
+      controller_class = [VRJMainController class];
    }
 
    id main_controller = [[[controller_class alloc] init] autorelease];
