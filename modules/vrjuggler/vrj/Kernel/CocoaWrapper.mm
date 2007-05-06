@@ -75,8 +75,10 @@ static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
              openFiles:(NSArray*) files;
 
    /**
-    * Loads the named VR Juggler configuration file using
-    * vrj::Kernel::loadConfigFile().
+    * Action connected to menu items for recently loaded configuration files.
+    * This simply passes on the load request to -kernelLoadConfigFile:.
+    *
+    * @see -kernelLoadConfigFile:
     */
    -(IBAction) loadConfigFile:(id) sender;
 
@@ -108,29 +110,6 @@ static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
       mPrefsFileName  = nil;
       mPrefsDict      = nil;
 
-      return [super init];
-   }
-
-   -(void) setLoadConfigs:(BOOL) load
-   {
-      mLoadConfigs = load;
-   }
-
-   -(BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication*) sencedr
-   {
-      // We return NO here because we have a different way of shutting down
-      // the application. When vrj::Kernel::stop() is invoked, it will cause
-      // the application run loop to stop by invoking
-      // vrj::CocoaWrapper::stop().
-      return NO;
-   }
-
-   -(void) applicationWillFinishLaunching:(NSNotification*) aNotification
-   {
-   }
-
-   -(void) applicationDidFinishLaunching:(NSNotification*) aNotification
-   {
       NSFileManager* mgr = [NSFileManager defaultManager];
       NSArray* paths =
          NSSearchPathForDirectoriesInDomains(
@@ -203,6 +182,29 @@ static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
          }
       }
 
+      return [super init];
+   }
+
+   -(void) setLoadConfigs:(BOOL) load
+   {
+      mLoadConfigs = load;
+   }
+
+   -(BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication*) sencedr
+   {
+      // We return NO here because we have a different way of shutting down
+      // the application. When vrj::Kernel::stop() is invoked, it will cause
+      // the application run loop to stop by invoking
+      // vrj::CocoaWrapper::stop().
+      return NO;
+   }
+
+   -(void) applicationWillFinishLaunching:(NSNotification*) aNotification
+   {
+   }
+
+   -(void) applicationDidFinishLaunching:(NSNotification*) aNotification
+   {
       // We're ready to allow windows to open!
       NSConditionLock* lock = gadget::InputAreaCocoa::getWindowLock();
       [lock unlock];
