@@ -51,8 +51,10 @@
 
 @interface VrjMainController : NSObject
 {
-   BOOL      mLoadConfigs;
-   NSString* mRecentCfgFileName;
+   BOOL            mLoadConfigs;
+   NSMutableArray* mRecentCfgFiles;
+   NSString*       mRecentCfgFileName;
+
    NSString* mLastDir;
 }
 
@@ -95,8 +97,10 @@
 @implementation VrjMainController
    -(id) init
    {
-      mLoadConfigs = YES;
+      mLoadConfigs       = YES;
       mRecentCfgFileName = nil;
+      mRecentCfgFiles    = nil;
+
       return [super init];
    }
 
@@ -143,19 +147,27 @@
 
       if ( file_menu )
       {
-         NSArray* cfg_files =
+         mRecentCfgFiles =
             [NSArray arrayWithContentsOfFile:mRecentCfgFileName];
 
-         if ( cfg_files )
+         if ( mRecentCfgFiles )
          {
-            if ( [cfg_files count] > 0 )
+            mRecentCfgFiles = [mRecentCfgFiles mutableCopy];
+         }
+         else
+         {
+            mRecentCfgFiles = [[NSMutableArray array] retain];
+         }
+
+         if ( [mRecentCfgFiles count] > 0 )
+         {
+            const unsigned int count = [mRecentCfgFiles count];
+
+            for ( unsigned int i = 0; i < count; ++i )
             {
-               for ( unsigned int i = 0; i < [cfg_files count]; ++i )
-               {
-                  [self insertCfgFileItem:[cfg_files objectAtIndex:i]
-                                    accel:[NSString stringWithFormat:@"%d", i]
-                                    index:i];
-               }
+               [self insertCfgFileItem:[mRecentCfgFiles objectAtIndex:i]
+                                 accel:[NSString stringWithFormat:@"%d", i]
+                                 index:i];
             }
          }
       }
@@ -175,27 +187,10 @@
     */
    -(void) applicationWillTerminate:(NSNotification*) aNotification
    {
-      NSMenu* menu = [self getRecentFilesMenu];
-
-      if ( menu && mRecentCfgFileName )
+      if ( mRecentCfgFileName )
       {
-         const int count = [menu numberOfItems];
-         NSMutableArray* recent_files =
-            [NSMutableArray arrayWithCapacity:count];
-
-         for ( int i = 0; i < count; ++i )
-         {
-            NSMenuItem* item = [menu itemAtIndex:i];
-
-            if ( [item isSeparatorItem] )
-            {
-               break;
-            }
-         }
-
-         NSLog(@"Files: %@\n", recent_files);
-         [recent_files writeToFile:mRecentCfgFileName
-                        atomically:YES];
+         [mRecentCfgFiles writeToFile:mRecentCfgFileName
+                           atomically:YES];
          [mRecentCfgFileName release];
       }
 
@@ -248,6 +243,19 @@
 
       // Update the submenu listing the recently opened configuration files
       // to include fileName.
+      const unsigned int index = [mRecentCfgFiles indexOfObject:fileName];
+
+      if ( index != NSNotFound )
+      {
+         [mRecentCfgFiles removeObjectAtIndex:index];
+      }
+      else if ( ! [mRecentCfgFiles count] > 10 )
+      {
+         [mRecentCfgFiles removeObjectAtIndex:0];
+      }
+
+      [mRecentCfgFiles addObject:fileName];
+
       NSMenu* files_menu = [self getRecentFilesMenu];
 
       // NOTE: The 12 accounts for the separator item and the "Clear Menu"
@@ -359,6 +367,8 @@
             [menu removeItem:item];
          }
       }
+
+      [mRecentCfgFiles removeAllObjects];
    }
 
    -(NSMenu*) getRecentFilesMenu
