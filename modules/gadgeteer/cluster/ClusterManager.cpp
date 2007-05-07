@@ -461,6 +461,9 @@ namespace cluster
             {
                throw ClusterException("Can't find configuration for node: " + new_node, VPR_LOCATION);
             }
+
+            // ClusterManager element is loaded after all node elements
+            // because it is dependent on them.
             jccl::ConfigElementPtr new_node_element = mClusterNodeElements[new_node];
 
             std::string new_node_hostname =
