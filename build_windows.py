@@ -273,6 +273,9 @@ def getDefaultVars(clVerMajor, clVerMinor):
    optional.append(BuildOption('TRACKD_API_ROOT',
                                'TrackdAPI installation directory', '',
                                required = False))
+   optional.append(BuildOption('FTD2XX_ROOT',
+                               'FTD2XX SDK installation directory', '',
+                               required = False))
    optional.append(BuildOption('DOOZER_ROOT',
                                'Doozer installation directory', '',
                                required = False))
@@ -1424,11 +1427,21 @@ def installGadgeteerDrivers(prefix, buildDir):
    drivers = ['DTrack', 'DataGlove', 'DirectXJoystick', 'Ether24',
               'Fastrak', 'Flock', 'IBox', 'IntersenseAPI', 'IS900',
               'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove',
-              'SerialEncoder', 'SpaceBall', 'TrackdAPI', 'VRPN', 'Wanda']
+              'SerialEncoder', 'SpaceBall', 'TrackdAPI', 'VRPN', 'Wanda',
+              'X-IST']
 
    for d in drivers:
       srcdir = os.path.join(srcroot, d)
       installLibs(srcdir, destdir, extensions = ['.dll'])
+
+   srcdir = os.environ['FTD2XX_ROOT']
+   if srcdir != "":
+      printStatus("Installing FTD2XX DLL")
+      destdir = os.path.join(prefix, 'bin')
+
+      ftd2xx_dll = os.path.join(srcdir, 'FTD2XX.dll')
+      if os.path.exists(ftd2xx_dll):
+         smartCopy(ftd2xx_dll, destdir)
 
 def installGadgeteerPlugins(prefix, buildDir):
    printStatus("Installing Gadgeteer cluster plug-ins ...")
