@@ -1502,6 +1502,9 @@ void PFconfigPWin(pfPipeWindow* pWin)
    // Init the vj monitor modes
    pWin->open();
    pfInitGfx();
+
+   // Inform the ClusterManager that a window opened on this node.
+   cluster::ClusterManager::instance()->windowOpened();
    
    // Call user config function
    dm->mApp->configPWin(pWin);
