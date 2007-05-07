@@ -153,8 +153,10 @@ namespace cluster
    ClusterManager::ClusterManager()
       : mClusterActive( false )
       , mClusterStarted( false )
+      , mWindowOpened( false )
       , mIsMaster(false)
       , mIsSlave(false)
+      , mSoftwareSwapLock(false)
       , mClusterElement()
       , mClusterNetwork(NULL)
       , mPreDrawCallCount(0)
@@ -212,7 +214,6 @@ namespace cluster
       mIsMaster = clusterMaster;
       mIsSlave = clusterSlave;
 
-      vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
       mClusterActive = (clusterMaster || clusterSlave);
    }
 
@@ -249,38 +250,23 @@ namespace cluster
             ConfigPacketPtr cfg_pkt = ConfigPacket::create(node_output.str(), jccl::ConfigManager::PendingElement::ADD);
             (*itr)->send(cfg_pkt);
          }
-         updateBarrier(0);
+         barrier();
       }
       else if (mIsSlave)
       {
          // Start listening on known port for connections.
          mClusterNetwork->waitForConnection();
-         updateBarrier(0);
+         barrier();
       }
    }
 
    bool ClusterManager::isClusterReady()
    {
-      vpr::Guard<vpr::Mutex> active_guard( mClusterActiveLock );
-
-      const std::string window_type("display_window");
-      bool pending_windows = false;
-      //bool pending_windows = jccl::ConfigManager::instance()->isElementTypeInPendingList(window_type);
-
-      // Lock it here so that we can avoid confusion in pluginsReady()
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-      return( !pending_windows && pluginsReady() );
+      return( mWindowOpened && pluginsReady() );
    }
 
    bool ClusterManager::pluginsReady()
    {
-      // Plugins are already locked since we only call this method from
-      // isClusterReady which is only called by
-      // StartBarrierPlugin::postPostFrame which has already locked the list
-      // of plugins.
-
-      //vpr::Guard<vpr::Mutex> guard(mPluginsLock);
-
       for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
       {
          if ( !(*itr)->isPluginReady() )
@@ -297,7 +283,6 @@ namespace cluster
     */
    void ClusterManager::addPlugin(ClusterPluginPtr newPlugin)
    {
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
       if ( !doesPluginExist(newPlugin) )
       {
          mPlugins.push_back( newPlugin );
@@ -333,8 +318,6 @@ namespace cluster
     */
    void ClusterManager::removePlugin( ClusterPluginPtr oldPlugin )
    {
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-
       // Remove plugin from map.
       mPluginMap.erase( oldPlugin->getHandlerGUID() );
 
@@ -356,43 +339,16 @@ namespace cluster
     */
    bool ClusterManager::doesPluginExist( ClusterPluginPtr oldPlugin )
    {
-      vprASSERT( mPluginsLock.test() == 1 &&
-                 "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()" );
-
       plugin_list_t::const_iterator found
          = std::find(mPlugins.begin(), mPlugins.end(), oldPlugin);
 
       return (mPlugins.end() != found);
    }
 
-   void ClusterManager::sendRequests()
-   {
-      // Idea is to not create frame lock if we do not need to
-      bool updateNeeded = false;
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-
-      vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
-         << clrOutBOLD( clrCYAN,"[ClusterManager]" )
-         << " sendRequests" << std::endl << vprDEBUG_FLUSH;
-
-      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
-      {
-         (*itr)->sendRequests();
-         updateNeeded = true;
-      }
-
-      // Only send end blocks if we really need to.
-      if ( updateNeeded )
-      {
-         updateBarrier(1);
-      }
-   }
-
    void ClusterManager::preDraw()
    {
       // Idea is to not create frame lock if we do not need to
       bool updateNeeded = false;
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
 
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
          << clrOutBOLD( clrCYAN,"[ClusterManager]" )
@@ -403,10 +359,11 @@ namespace cluster
          (*itr)->preDraw();
          updateNeeded = true;
       }
+
       if ( updateNeeded )
       {
          mPreDrawCallCount++;
-         updateBarrier(2);
+         update(2);
       }
    }
 
@@ -416,10 +373,8 @@ namespace cluster
       //   -If all plugins ready
       //     - isClusterReady
 
-
       // Idea is to not create frame lock if we do not need to
       bool updateNeeded = false;
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
 
       vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
          << clrOutBOLD( clrCYAN,"[ClusterManager]" )
@@ -430,34 +385,30 @@ namespace cluster
          (*itr)->postPostFrame();
          updateNeeded = true;
       }
+
       if ( updateNeeded )
       {
          mPostPostFrameCallCount++;
-         updateBarrier(3);
+         update(3);
       }
    }
 
-   void ClusterManager::createBarrier()
+   void ClusterManager::swapBarrier()
    {
-      vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-
-      for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
+      if (mSoftwareSwapLock)
       {
-         //if ((*i)->isActive())
-         //{  // As soon as we find a plug-in that creates
-            // a barrier, we can continue. Maybe not since
-            // this will not match up on different machines
-            if ( (*itr)->createBarrier() )
-            {
-               return;
-            }
-         //}
+         barrier();
       }
    }
 
-   void ClusterManager::updateBarrier( const int temp )
+   void ClusterManager::update( const int temp )
    {
-      mClusterNetwork->updateBarrier(temp);
+      mClusterNetwork->update(temp);
+   }
+
+   void ClusterManager::barrier()
+   {
+      mClusterNetwork->barrier(mIsMaster);
    }
 
    bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element )
@@ -527,7 +478,6 @@ namespace cluster
                   << "configAdd() Added Node since it is non-local"
                   << std::endl << vprDEBUG_FLUSH;
 
-               vpr::Guard<vpr::Mutex> guard( mNodesLock );
                mNodes.push_back( new_node_hostname );
 
                vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
@@ -552,7 +502,6 @@ namespace cluster
          }
       }
 
-      //vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
       //mClusterActive = true;
    }
 
@@ -568,7 +517,7 @@ namespace cluster
 
          // Keep this up to date with the version of the element definition we're
          // expecting to handle.
-         const unsigned int cur_version(2);
+         const unsigned int cur_version(3);
 
          // If the element version is less than cur_version, we will not try to
          // proceed.  Instead, we'll print an error message and return false so
@@ -712,6 +661,10 @@ namespace cluster
                }
             }
 
+            // Find out if we should we software swap lock.
+            const std::string swap_lock_prop_name( "use_software_swap_lock" );
+            mSoftwareSwapLock = element->getProperty<bool>( swap_lock_prop_name);
+
             ret_val = true;
          }
 
@@ -807,8 +760,6 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
          throw cluster::ClusterException("Can't have more than one cluster configurations.", VPR_LOCATION);
       }
 
-      // XXX: Do we really still need this lock?
-      //vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
       //mClusterActive = true;
       mClusterElement = cluster_elements[0];
       //cfg->remove(mClusterElement->getName());

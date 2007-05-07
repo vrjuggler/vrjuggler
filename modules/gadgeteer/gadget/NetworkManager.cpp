@@ -285,14 +285,60 @@ bool NetworkManager::isLocalHost(const std::string& testHostName)
    return result;
 }
 
-void NetworkManager::updateBarrier( const int temp )
+void NetworkManager::update( const int temp)
+{
+   setAllUpdated(false);
+   size_t num_nodes = sendEndBlocks(temp);
+   updateAllNodes(num_nodes);
+}
+
+void NetworkManager::barrier( bool master )
+{
+   vprDEBUG(gadgetDBG_RIM, vprDBG_HVERB_LVL)
+      << "NetworkManager::barrier() Start"
+      << std::endl << vprDEBUG_FLUSH;
+
+   if (master)
+   {
+      size_t num_nodes = getNumNodes();
+      setAllUpdated(false);
+      updateAllNodes(num_nodes);
+      sendEndBlocks(0);
+   }
+   else
+   {
+      size_t num_nodes = sendEndBlocks(0);
+      setAllUpdated(false);
+      updateAllNodes(num_nodes);
+   }
+
+   vprDEBUG(gadgetDBG_RIM, vprDBG_HVERB_LVL)
+      << "NetworkManager::barrier() Done"
+      << std::endl << vprDEBUG_FLUSH;
+}
+
+size_t NetworkManager::setAllUpdated(const bool updated)
+{
+   // Used to accumulate the number of connected nodes.
+   size_t num_nodes(0);
+
+   for ( node_list_t::iterator i = mNodes.begin(); i != mNodes.end(); i++)
+   {
+      // Indicate that this node is not up to date. It will be updated
+      // below.
+      (*i)->setUpdated(updated);
+
+      ++num_nodes;
+   }
+   return num_nodes;
+}
+
+size_t NetworkManager::sendEndBlocks( const int temp)
 {
    cluster::EndBlockPtr end_block = cluster::EndBlock::create(temp);
 
    // Used to accumulate the number of connected nodes.
    size_t num_nodes(0);
-
-   typedef std::vector<gadget::NodePtr>::iterator iter_t;
 
    for ( node_list_t::iterator i = mNodes.begin(); i != mNodes.end(); i++)
    {
@@ -305,7 +351,7 @@ void NetworkManager::updateBarrier( const int temp )
 
             // Indicate that this node is not up to date. It will be updated
             // below.
-            (*i)->setUpdated(false);
+            //(*i)->setUpdated(false);
 
             ++num_nodes;
          }
@@ -324,10 +370,16 @@ void NetworkManager::updateBarrier( const int temp )
          }
       }
    }
+   return num_nodes;
+}
 
+void NetworkManager::updateAllNodes( const size_t numNodes )
+{
    size_t completed_nodes(0);
 
-   while ( completed_nodes != num_nodes )
+   typedef std::vector<gadget::NodePtr>::iterator iter_t;
+
+   while ( completed_nodes != numNodes )
    {
       std::vector<gadget::NodePtr> ready_nodes =
          //reactor.getReadyNodes(vpr::Interval::NoWait);
@@ -377,7 +429,7 @@ void NetworkManager::updateBarrier( const int temp )
          // Record completed state. This happens regardless of whether
          // the node update completed successfully. Since the node is
          // shut down if update fails, we would never get completed_nodes
-         // to equal num_nodes otherwise.
+         // to equal numNodes otherwise.
          ++completed_nodes;
       }
    }

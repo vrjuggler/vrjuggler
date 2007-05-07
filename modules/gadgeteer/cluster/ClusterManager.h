@@ -131,21 +131,23 @@ private:
    bool doesPluginExist( ClusterPluginPtr old_plugin );
 
    /**
-    * Send end block to all other connected nodes and
-    * signal each connected node to sync.
-    */
-   void updateBarrier( const int temp );
-
-   /**
     * Returns the string representation of the element type used for the
     * ClusterManager.
     */
    static std::string getElementType();
 public:
    /**
-    * Send each ClusterPlugin's requests.
+    * Send end block to all other connected nodes and
+    * signal each connected node to sync.
     */
-   void sendRequests();
+   void update( const int temp = 0);
+
+   /**
+    * Create a software barrier by having all slave nodes send an
+    * end block to the master. Once the master receives an end block
+    * from all nodes, it sends a go message back to all nodes.
+    */
+   void barrier();
 
    /**
     * Synchronize plugins directly before the kernel calls
@@ -163,7 +165,7 @@ public:
     * Cycle through ClusterPlugins until one of them can
     * achieve swaplock.
     */
-   void createBarrier();
+   void swapBarrier();
 
    /**
     * Return the representation of the network which
@@ -238,13 +240,20 @@ public:
     */
    bool isClusterActive()
    {
-      vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
       return mClusterActive;
    }
 
    bool isMaster()
    {
       return mIsMaster;
+   }
+
+   /**
+    * Called when a window is opened on the local machine.
+    */
+   void windowOpened()
+   {
+      mWindowOpened = true;
    }
 
    /**
@@ -268,7 +277,6 @@ public:
     */
    std::vector<std::string> getNodes()
    {
-      vpr::Guard<vpr::Mutex> guard( mNodesLock );
       return mNodes;
    }
 
@@ -299,21 +307,21 @@ private:
 #endif
 
    plugin_list_t                mPlugins;            /**< List of Plugins.*/
-   vpr::Mutex                   mPluginsLock;        /**< Lock on plugins list.*/
    std::string                  mBarrierMachineName; /**< Name of the barrier machine.*/
    plugin_map_t                 mPluginMap;   /**< Map of ClusterPlugins. */
    std::vector<vpr::LibraryPtr> mLoadedPlugins;
 
-   vpr::Mutex                   mNodesLock;          /**< Lock on hostname list. */
    std::vector<std::string>     mNodes;              /**< Hostnames of the nodes in the cluster. */
 
-   vpr::Mutex                   mClusterActiveLock;  /**< Lock on ClusterActive bool.*/
    bool                         mClusterActive;      /**< Flag informing us if this app is running on a cluster. */
 
    bool                         mClusterStarted;     /**< If the cluster has already started. */
+   bool                         mWindowOpened;       /**< If a window has been opened on the local machine. */
 
    bool                         mIsMaster;
    bool                         mIsSlave;
+
+   bool                         mSoftwareSwapLock;
 
    //@{
    /** @name Cluster configuration elements. */

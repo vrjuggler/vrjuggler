@@ -83,8 +83,15 @@ public:
     */
    void handlePacket(cluster::PacketPtr packet, NodePtr node);
 
-   void updateBarrier( const int temp );
+   void update( const int temp);
+   void barrier( bool master );
 
+private:
+   size_t setAllUpdated( const bool updated );
+   size_t sendEndBlocks( const int temp );
+   void updateAllNodes( const size_t numNodes );
+
+public:
    /**
     * Creates a Node with the given parameters and adds
     * this new node the std::map of Nodes.
