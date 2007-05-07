@@ -187,7 +187,7 @@ namespace cluster
       // Add the new cluster network as an element handler.
       // XXX: This may not be needed after restucture.
       cfg_mgr->addConfigElementHandler( mClusterNetwork );
-      //jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
+      jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
 
       if (!mConfigChangeConn.connected())
       {
@@ -205,7 +205,7 @@ namespace cluster
       {
          jccl::ConfigManager::instance()->removeConfigElementHandler( mClusterNetwork );
       }
-      //jccl::DependencyManager::instance()->unregisterChecker(&mDepChecker);
+      jccl::DependencyManager::instance()->unregisterChecker(&mDepChecker);
       mConfigChangeConn.disconnect();
    }
 
