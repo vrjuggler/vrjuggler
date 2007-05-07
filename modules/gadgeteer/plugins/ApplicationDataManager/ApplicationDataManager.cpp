@@ -140,9 +140,6 @@ void ApplicationDataManager::preDraw()
    }
 }
 
-void ApplicationDataManager::sendRequests()
-{;}
-
 void ApplicationDataManager::addSerializableObject(vpr::SerializableObject* object)
 {
    ApplicationData* new_app_data = static_cast<ApplicationData*>(object);

@@ -128,11 +128,6 @@ void RIMPlugin::postPostFrame()
    //      std::cout << "Recv DeviceData Time: " << diff_time4.getBaseVal() << std::endl;
 }
 
-void RIMPlugin::sendRequests()
-{
-   // Do nothing
-}
-
 /** Add the pending elm to the configuration.
  *  @pre configCanHandle (elm) == true.
  *  @return true iff elm was successfully added to configuration.

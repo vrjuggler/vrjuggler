@@ -91,8 +91,6 @@ public:
     */
    virtual void preDraw();
 
-   virtual void sendRequests();
-   
    /** Calls any action needed by this plugin before postFrame()
     *
     *  This function was inherited from the

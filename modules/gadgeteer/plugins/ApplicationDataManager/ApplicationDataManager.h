@@ -86,11 +86,6 @@ public:
    virtual void postPostFrame();
 
    /**
-    * Send all pending requests for ApplicationData to other Nodes.
-    */
-   virtual void sendRequests();
-
-   /**
     * Is this ClusterPlugin ready for the cluster to start the application.
     */
    virtual bool isPluginReady();
