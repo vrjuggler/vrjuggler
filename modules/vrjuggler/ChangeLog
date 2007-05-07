@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-06-2007 patrick     Exposed VRJBasicDelegate so that user-level code can
+                        derive from it to customize response to Cocoa events.
+                        NEW VERSION: 2.3.6
 May-04-2007 patrick     Added lighting code to vrj::GlBasicSimulator so that
                         OSG and OpenSG application objects do not have to
                         include that code themselves just so that the simulator
