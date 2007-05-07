@@ -1455,8 +1455,7 @@ def installGadgeteerPlugins(prefix, buildDir):
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'plugins')
    srcroot = os.path.join(buildDir, 'Gadgeteer')
 
-   plugins = ['ApplicationDataManager', 'RemoteInputManager',
-              'StartBarrierPlugin', 'SwapLockTCPPlugin']
+   plugins = ['ApplicationDataManager', 'RemoteInputManager']
 
    for p in plugins:
       srcdir = os.path.join(srcroot, p)
