@@ -27,8 +27,6 @@
 #ifndef _GADGET_CONFIG_HANDLER_H_
 #define _GADGET_CONFIG_HANDLER_H_
 
-#include <boost/noncopyable.hpp>
-
 #include <gadget/gadgetConfig.h>
 #include <gadget/PacketHandler.h>
 #include <gadget/Node.h>
@@ -43,7 +41,6 @@ namespace cluster
  */
 class GADGET_CLASS_API ConfigHandler
    : public gadget::PacketHandler
-   , boost::noncopyable
 {
 protected:
    ConfigHandler();
