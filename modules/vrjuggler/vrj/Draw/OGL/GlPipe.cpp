@@ -36,6 +36,8 @@
 
 #include <boost/bind.hpp>
 
+#include <cluster/ClusterManager.h>
+
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlApp.h>
@@ -179,44 +181,53 @@ void GlPipe::controlLoop()
    // Loop until flag set
    while (!mControlExit)
    {
-      // --- handle EVENTS for the windows --- //
-      // XXX: This may have to be here because of need to get open window event (Win32)
-      // otherwise I would like to move it to being after the swap to get better performance
+      bool cluster(true);
+      if (cluster::ClusterManager::instance()->isClusterActive())
       {
-         for (unsigned int winId=0;winId<mOpenWins.size();winId++)
-         {
-            mOpenWins[winId]->checkEvents();
-         }
+         cluster = cluster::ClusterManager::instance()->isClusterReady();
       }
 
-      // --- RENDER the windows ---- //
+      if (cluster)
       {
-         mRenderTriggerSema.acquire();
-
-         GlApp* the_app = mGlDrawManager->getApp();
-
-         // --- pipe PRE-draw function ---- //
-         the_app->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
-
-         // Render the windows
-         for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
+         // --- handle EVENTS for the windows --- //
+         // XXX: This may have to be here because of need to get open window event (Win32)
+         // otherwise I would like to move it to being after the swap to get better performance
          {
-            renderWindow(mOpenWins[winId]);
-         }
-         mRenderCompleteSema.release();
-      }
-
-      // ----- SWAP the windows ------ //
-      {
-         mSwapTriggerSema.acquire();
-
-         // Swap all the windows
-         for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
-         {
-            swapWindowBuffers(mOpenWins[winId]);
+            for (unsigned int winId=0;winId<mOpenWins.size();winId++)
+            {
+               mOpenWins[winId]->checkEvents();
+            }
          }
 
-         mSwapCompleteSema.release();
+         // --- RENDER the windows ---- //
+         {
+            mRenderTriggerSema.acquire();
+
+            GlApp* the_app = mGlDrawManager->getApp();
+
+            // --- pipe PRE-draw function ---- //
+            the_app->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
+
+            // Render the windows
+            for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
+            {
+               renderWindow(mOpenWins[winId]);
+            }
+            mRenderCompleteSema.release();
+         }
+
+         // ----- SWAP the windows ------ //
+         {
+            mSwapTriggerSema.acquire();
+
+            // Swap all the windows
+            for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
+            {
+               swapWindowBuffers(mOpenWins[winId]);
+            }
+
+            mSwapCompleteSema.release();
+         }
       }
       checkForWindowsToClose();  // Checks for closing windows
       checkForNewWindows();      // Checks for new windows to open
@@ -267,7 +278,7 @@ void GlPipe::checkForWindowsToClose()
          GlWindowPtr win = mClosingWins[i];
         
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-            << "[vrj::GlPipe::checkForNewWindows()] Just closed window: "
+            << "[vrj::GlPipe::checkForWindowsToClose()] Just closed window: "
             << mClosingWins[i]->getDisplay()->getName() << std::endl
             << *(mClosingWins[i]) << std::endl << vprDEBUG_FLUSH;
 
@@ -316,25 +327,28 @@ void GlPipe::checkForNewWindows()
 
       for (unsigned int winNum=0; winNum<mNewWins.size(); winNum++)
       {
-          if (mNewWins[winNum]->open())
-          {
-              mNewWins[winNum]->makeCurrent();
-              vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-                 << "[vrj::GlPipe::checkForNewWindows()] Just opened window: "
-                 << mNewWins[winNum]->getDisplay()->getName() << std::endl
-                 << *(mNewWins[winNum]) << std::endl << vprDEBUG_FLUSH;
-              mNewWins[winNum]->finishSetup();        // Complete any window open stuff
-              mOpenWins.push_back(mNewWins[winNum]);
-          }
-          else
-          {
-              vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                 << clrOutBOLD(clrRED,"ERROR:")
-                 << " vrj::GlPipe::checkForNewWindows(): Failed to open window: "
-                 << mNewWins[winNum]->getDisplay()->getName().c_str()
-                 << std::endl << vprDEBUG_FLUSH;
-              // XXX: We should handle this error more gracefully
-          }   // Done
+         if (mNewWins[winNum]->open())
+         {
+            // Inform the ClusterManager that a window opened on this node.
+            cluster::ClusterManager::instance()->windowOpened();
+
+            mNewWins[winNum]->makeCurrent();
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+               << "[vrj::GlPipe::checkForNewWindows()] Just opened window: "
+               << mNewWins[winNum]->getDisplay()->getName() << std::endl
+               << *(mNewWins[winNum]) << std::endl << vprDEBUG_FLUSH;
+            mNewWins[winNum]->finishSetup();        // Complete any window open stuff
+            mOpenWins.push_back(mNewWins[winNum]);
+         }
+         else
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD(clrRED,"ERROR:")
+               << " vrj::GlPipe::checkForNewWindows(): Failed to open window: "
+               << mNewWins[winNum]->getDisplay()->getName().c_str()
+               << std::endl << vprDEBUG_FLUSH;
+            // XXX: We should handle this error more gracefully
+         } // Done
       }
 
       mNewWins.erase(mNewWins.begin(), mNewWins.end());
