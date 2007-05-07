@@ -52,7 +52,7 @@
 static NSString* VRJMaxRecentFiles = @"VRJMaxRecentFiles";
 static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
 
-@interface VRJMainController : NSObject
+@interface VRJBasicDelegate : NSObject
 {
    BOOL                 mLoadConfigs;
    unsigned char        mMaxRecentFiles;
@@ -101,7 +101,7 @@ static NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
                               index:(int) index;
 @end
 
-@implementation VRJMainController
+@implementation VRJBasicDelegate
    -(id) init
    {
       mLoadConfigs    = YES;
@@ -502,7 +502,7 @@ CocoaWrapper::CocoaWrapper()
    // Determine whether the application delegate needs to respond to
    // application:openFile: and application:openFiles: messages.
    BOOL load_cfg_files = YES;
-   NSString* ctrl_class_name = @"VRJMainController";
+   NSString* ctrl_class_name = @"VRJBasicDelegate";
 
    if ( vrj_dict )
    {
@@ -513,7 +513,7 @@ CocoaWrapper::CocoaWrapper()
          load_cfg_files = [cfg_handling boolValue];
       }
 
-      NSString* name = [vrj_dict objectForKey:@"VRJControllerClass"];
+      NSString* name = [vrj_dict objectForKey:@"VRJDelegateClass"];
 
       if ( nil != name )
       {
@@ -526,8 +526,8 @@ CocoaWrapper::CocoaWrapper()
    if ( nil == controller_class )
    {
       NSLog(@"WARNING: Could not find declaration of %@!\n", ctrl_class_name);
-      NSLog(@"         Falling back on VRJMainController\n");
-      controller_class = [VRJMainController class];
+      NSLog(@"         Falling back on VRJBasicDelegate\n");
+      controller_class = [VRJBasicDelegate class];
    }
 
    id main_controller = [[[controller_class alloc] init] autorelease];
