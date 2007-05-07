@@ -492,6 +492,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\CameraProjectionPtr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Util\Debug.h"
 				>
 			</File>
@@ -556,7 +560,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\ProjectionPtr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\SimViewport.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\SimViewportPtr.h"
 				>
 			</File>
 			<File
@@ -576,7 +588,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\SurfaceProjectionPtr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\SurfaceViewport.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\SurfaceViewportPtr.h"
 				>
 			</File>
 			<File
@@ -604,7 +624,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\TrackedSurfaceProjectionPtr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\User.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\UserPtr.h"
 				>
 			</File>
 			<File
@@ -613,6 +641,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Viewport.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Display\ViewportPtr.h"
 				>
 			</File>
 			<File
