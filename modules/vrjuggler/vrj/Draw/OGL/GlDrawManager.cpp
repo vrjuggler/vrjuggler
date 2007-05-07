@@ -211,7 +211,7 @@ void GlDrawManager::drawAllPipes()
 
    // Barrier for Cluster
    //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
-   cluster::ClusterManager::instance()->createBarrier();
+   cluster::ClusterManager::instance()->swapBarrier();
    //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
 
