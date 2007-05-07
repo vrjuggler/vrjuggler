@@ -791,32 +791,30 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
       // XXX: Leave the ClusterManager configuration around to load the correct plugins.
       //cfg->remove(node_name);
 
-/*
-         if (isLocalHost( element->getProperty<std::string>( "host_name" ) ))
+      std::string new_node_hostname =
+         node_elm->getProperty<std::string>( "host_name" );
+
+      if (cluster::ClusterNetwork::isLocalHost( new_node_hostname ))
+      {
+         // NOTE: Add all machine dependent ConfigElementPtr's here
+         vprASSERT( node_elm->getNum("display_system") == 1 
+            && "A Cluster System element must have exactly 1 display_system element" );
+
+         std::vector<jccl::ConfigElementPtr> cluster_node_elements =
+            node_elm->getChildElements();
+
+         for (std::vector<jccl::ConfigElementPtr>::iterator i = cluster_node_elements.begin();
+              i != cluster_node_elements.end();
+              ++i)
          {
-            // NOTE: Add all machine dependent ConfigElementPtr's here
-            vprASSERT( element->getNum("display_system") == 1 
-               && "A Cluster System element must have exactly 1 display_system element" );
+            jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
 
-            std::vector<jccl::ConfigElementPtr> cluster_node_elements =
-               element->getChildElements();
-
-            for (std::vector<jccl::ConfigElementPtr>::iterator i = cluster_node_elements.begin();
-                 i != cluster_node_elements.end();
-                 ++i)
-            {
-               jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
-
-               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL ) << clrSetBOLD(clrCYAN)
-                  << clrOutBOLD( clrMAGENTA,"[NetworkManager]" )
-                  << " Adding Machine specific ConfigElement: "
-                  << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
-            }
-
-            const int listen_port = element->getProperty<int>( "listen_port" );
-            startListening( listen_port, false );
-            */
-
+            vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL ) << clrSetBOLD(clrCYAN)
+               << clrOutBOLD( clrMAGENTA,"[NetworkManager]" )
+               << " Adding Machine specific ConfigElement: "
+               << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
+         }
+      }
    }
 
    vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
