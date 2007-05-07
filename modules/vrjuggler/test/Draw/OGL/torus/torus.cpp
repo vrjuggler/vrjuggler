@@ -55,13 +55,15 @@ int main(int argc, char* argv[])
       std::cout<<"\n"<<std::flush;
       std::cout<<"\n"<<std::flush;
       std::cout<<"Usage: "<<argv[0]
-               <<" vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
+               <<" [--vrjmaster] [--vrjslave] vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
                <<std::flush;
       std::cout<<"\n"<<std::flush;
       std::cout<<"\n"<<std::flush;
       exit(1);
    }
 #endif
+
+   kernel->init(argc, argv);
 
    // Load any config files specified on the command line
    for( int i = 1; i < argc; ++i )

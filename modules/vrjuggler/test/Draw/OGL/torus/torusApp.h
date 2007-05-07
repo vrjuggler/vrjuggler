@@ -85,9 +85,6 @@ public:
       //static vpr::Interval last_time;
       //static long iteration=0;
 
-      //static long count=0;
-      //count++;
-
       // Did we ask for an app exit
       //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       //   << "VJAppExit: " << mAppExit->getData() << std::endl
