@@ -157,4 +157,54 @@
          </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
+   <definition_version version="3" label="Cluster Manager Configuration">
+      <abstract>false</abstract>
+      <help>All Cluster Manager configuration settings. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more on Cluster Manager&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
+      <parent/>
+      <category>/Cluster</category>
+      <property valuetype="string" variable="true" name="plugin_path">
+         <help>Each value adds to the path where dynamically loadable plugin objects can be found.  The path may make use of environment variables.  For example: &lt;tt&gt;${VJ_BASE_DIR}/lib/gadgeteer/plugins&lt;/tt&gt;.  If no values are set for this property, the default search path will be &lt;tt&gt;${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/plugins&lt;/tt&gt; depending on the compile-time application binary interface (ABI). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="DSO Path" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="plugin">
+         <help>The names of the cluster plugins to load. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Plugin" defaultvalue=""/>
+         <enumeration editable="true">
+            <enum label="ApplicationDataManager" value="ApplicationDataManager"/>
+            <enum label="RIMPlugin" value="RIMPlugin"/>
+         </enumeration>
+      </property>
+      <property valuetype="configelementpointer" variable="true" name="cluster_node">
+         <help>The list of all active nodes in the cluster. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Machine"/>
+         <allowed_type>cluster_node</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="use_software_swap_lock">
+         <help>Should we use software swap lock.</help>
+         <value label="Use software swap-lock." defaultvalue="true"/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:cluster_manager">
+               <xsl:element namespace="{$jconf}" name="cluster_manager">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">3</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="use_software_swap_lock">
+                     <xsl:text>true</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>
