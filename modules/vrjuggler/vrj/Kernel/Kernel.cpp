@@ -165,7 +165,11 @@ bool Kernel::init(const po::variables_map& vm)
    {
       throw vpr::Exception("Can't be a cluster master and slave.", VPR_LOCATION);
    }
-   std::cout << "Cluster Master [" << (cluster_master ? "True":"False") << "] Slave: [" << (cluster_slave ? "True":"False") << "]" << std::endl;
+
+   vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_STATUS_LVL)
+      << "Cluster Master [" << (cluster_master ? "True":"False")
+      << "] Slave: [" << (cluster_slave ? "True":"False") << "]"
+      << std::endl << vprDEBUG_FLUSH;
 
    mClusterManager = cluster::ClusterManager::instance();
    mClusterManager->init(cluster_master, cluster_slave);
@@ -215,13 +219,12 @@ int Kernel::start()
 
       do
       {
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:")
+         vprDEBUG(vprDBG_ERROR, vprDBG_VERB_LVL)
             << " vrj::Kernel::start() configuring before starting cluster." << std::endl << vprDEBUG_FLUSH;
 
          checkForReconfig();
       }
-      while (!cluster::ClusterManager::instance()->isClusterReady());
+      while (!cluster::ClusterManager::instance()->pluginsReady());
    }
 
    int status(0);
@@ -341,18 +344,18 @@ void Kernel::controlLoop()
 
    vpr::prof::start("Kernel: controlLoop",10);
 
+   bool first_cluster(true);
+
    // --- MAIN CONTROL LOOP -- //
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
-      // Might not want the Kernel to know about the ClusterNetwork
-      // It is currently being registered as a jccl::ConfigElementHandler in
-      // the ClusterManager constructor
-         vpr::prof::next("Cluster: sendRequests.",10);
-       cluster::ClusterManager::instance()->sendRequests();
-         vpr::prof::stop();
+      bool cluster = !mClusterManager->isClusterActive() || mClusterManager->isClusterReady();
 
-      bool cluster = !( cluster::ClusterManager::instance()->isClusterActive() &&
-                        !cluster::ClusterManager::instance()->isClusterReady());
+      if (cluster && first_cluster)
+      {
+         first_cluster = false;
+         mClusterManager->barrier();
+      }
 
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
@@ -374,9 +377,12 @@ void Kernel::controlLoop()
          vpr::Thread::yield();   // Give up CPU
       }
 
-      vpr::prof::start("Cluster: preDraw",10);
-      mClusterManager->preDraw();
-      vpr::prof::stop();
+      if (cluster)
+      {
+         vpr::prof::start("Cluster: preDraw",10);
+         mClusterManager->preDraw();
+         vpr::prof::stop();
+      }
 
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
@@ -429,14 +435,20 @@ void Kernel::controlLoop()
       getInputManager()->resetAllDevicesAndProxies();
          vpr::prof::next("updateAllDevices",10);
       getInputManager()->updateAllDevices();
-         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
-            << "vrj::Kernel::controlLoop: Update ClusterManager\n"
-            << vprDEBUG_FLUSH;
-         vpr::prof::next("Cluster: postPostFrame.",10);
-      mClusterManager->postPostFrame();
-           vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
-            << "vrj::Kernel::controlLoop: Update Proxies\n"
-            << vprDEBUG_FLUSH;
+
+
+      if (cluster)
+      {
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: Update ClusterManager\n"
+               << vprDEBUG_FLUSH;
+            vpr::prof::next("Cluster: postPostFrame.",10);
+         mClusterManager->postPostFrame();
+              vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: Update Proxies\n"
+               << vprDEBUG_FLUSH;
+      }
+
          vpr::prof::next("updateAllProxies",10);
       getInputManager()->updateAllProxies();
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
