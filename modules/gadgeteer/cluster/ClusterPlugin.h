@@ -68,9 +68,6 @@ public:
    virtual void postPostFrame() = 0;
    virtual std::string getPluginName() = 0;
 
-   virtual void sendRequests()
-   {;}
-
    virtual void addSerializableObject(vpr::SerializableObject* object)
    {
       boost::ignore_unused_variable_warning(object);
@@ -82,11 +79,6 @@ public:
       return true;
    }
 
-   virtual bool createBarrier()
-   {
-      return false;
-   }
-   
    virtual bool configCanHandle(jccl::ConfigElementPtr elm)
    {
       boost::ignore_unused_variable_warning(elm);
