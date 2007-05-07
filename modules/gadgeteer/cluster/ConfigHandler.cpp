@@ -77,7 +77,14 @@ void ConfigHandler::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node
       << "Got configuration packet."
       << std::endl << vprDEBUG_FLUSH;
 
-   jccl::ConfigManager::instance()->addConfigurationAdditions(&incoming_config);
+   if (jccl::ConfigManager::PendingElement::ADD == cfg_pkt->getType())
+   {
+      jccl::ConfigManager::instance()->addConfigurationAdditions(&incoming_config);
+   }
+   else
+   {
+      jccl::ConfigManager::instance()->addConfigurationRemovals(&incoming_config);
+   }
 }
 
 } // End of cluster namespace
