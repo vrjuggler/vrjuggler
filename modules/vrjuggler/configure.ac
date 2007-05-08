@@ -175,7 +175,7 @@ VPR_PATH([1.1.44], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 
 JCCL_PATH_CXX([1.1.5], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
-GADGETEER_PATH([1.3.5], ,
+GADGETEER_PATH([1.3.7], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 SNX_PATH([1.1.4], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
