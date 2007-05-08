@@ -109,7 +109,9 @@ public:
     *
     * @since 2.3
     */
-   //boost::program_options::options_description& getOptionsDesc();
+   boost::program_options::options_description& getGeneralOptions();
+   boost::program_options::options_description& getClusterOptions();
+   boost::program_options::options_description& getConfigOptions();
 
    /**
     * Parse command line arguments.
@@ -442,6 +444,11 @@ protected:
     * @since 2.1.14
     */
    void handleSignal(const int signum);
+
+
+   boost::program_options::options_description mGeneralOptionDesc; /**< Command line options description. */
+   boost::program_options::options_description mClusterOptionDesc; /**< Command line options description. */
+   boost::program_options::options_description mConfigOptionDesc;  /**< Command line options description. */
 
    vrj::App*      mApp;                  /**< The current active app object */
    vrj::App*      mNewApp;               /**< New application to set */

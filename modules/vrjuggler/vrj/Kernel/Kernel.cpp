@@ -92,26 +92,41 @@ bool Kernel::sUseCocoaWrapper(true);
 
 vprSingletonImp(Kernel);
 
+po::options_description& Kernel::getClusterOptions()
+{
+   return mClusterOptionDesc;
+}
+
+po::options_description& Kernel::getGeneralOptions()
+{
+   return mGeneralOptionDesc;
+}
+
+po::options_description& Kernel::getConfigOptions()
+{
+   return mConfigOptionDesc;
+}
+
+
 bool Kernel::init(int& argc, char* argv[])
 {
-   // Declare the supported options.
-   po::options_description desc("VR Juggler Options");
-   desc.add_options()
-       ("help,h", "Produce help message")
-       ("vrjmaster", po::bool_switch(), "This node is the cluster master.")
-       ("vrjslave", po::bool_switch(), "This node is a cluster slave.")
-       ("listen_port", po::value<int>(), "Port to listen on for incoming cluster connections.")
-   ;
+   po::options_description all_options("VR Juggler Options");
+   po::options_description& general_desc = getGeneralOptions();
+   po::options_description& cluster_desc = getClusterOptions();
+   all_options.add(general_desc).add(cluster_desc);
+
+   //po::options_description& config_desc = getConfigOptions();
+   //all_options.add(config_desc);
 
    // Construct a parser and do the actuall parsing.
    po::command_line_parser parser(argc, argv);
-   po::parsed_options parsed = parser.options(desc).allow_unregistered().run();
+   po::parsed_options parsed = parser.options(all_options).allow_unregistered().run();
 
    // Keep track of the options that we actually use.
    // XXX: This is only needed because of a bug in versions of boost.program_options < 1.34
    //      where calling po::store(parsed_options, variable_map) throws an exception when
    //      calling find() on a unrecognized option.
-   po::parsed_options used_options(&desc);
+   po::parsed_options used_options(&all_options);
 
    // Keep track of the tokens that we use so that we know to remove them from argv.
    std::vector<std::string> used_tokens;
@@ -151,7 +166,7 @@ bool Kernel::init(int& argc, char* argv[])
 
    if(vm.count("help"))
    {
-      std::cout << desc << std::endl;
+      std::cout << all_options << std::endl;
       return false;
    }
 
@@ -876,7 +891,10 @@ void Kernel::handleSignal(const int signum)
 }
 
 Kernel::Kernel()
-   : mApp(NULL)
+   : mGeneralOptionDesc("General Options")
+   , mClusterOptionDesc("Cluster Options")
+   , mConfigOptionDesc("Configuration Options")
+   , mApp(NULL)
    , mNewApp(NULL)
    , mNewAppSet(false)
    , mIsRunning(false)
@@ -987,6 +1005,19 @@ Kernel::Kernel()
 
       jccl::ParseUtil::setCfgSearchPath(cfg_path);
    }
+
+   mGeneralOptionDesc.add_options()
+       ("help,h", "Produce help message")
+       //("version,v", "Version information")
+   ;
+   mClusterOptionDesc.add_options()
+       ("vrjmaster", po::bool_switch(), "This node is the cluster master.")
+       ("vrjslave", po::bool_switch(), "This node is a cluster slave.")
+       ("listen_port", po::value<int>(), "Port to listen on for incoming cluster connections.")
+   ;
+   mConfigOptionDesc.add_options()
+       ("jconf", po::value< std::vector<std::string> >()->composing(), "VR Juggler Configuration File")
+   ;
 }
 
 Kernel::~Kernel()
