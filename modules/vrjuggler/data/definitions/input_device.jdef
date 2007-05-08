@@ -13,4 +13,29 @@
       </property>
       <upgrade_transform/>
    </definition_version>
+   <definition_version version="2" label="Input Device Base Definition">
+      <abstract>true</abstract>
+      <help>A base definition for all input devices.</help>
+      <parent/>
+      <category>/Devices</category>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:input_device">
+               <xsl:element namespace="{$jconf}" name="input_device">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>
