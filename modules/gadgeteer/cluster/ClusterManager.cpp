@@ -157,7 +157,9 @@ namespace cluster
       , mIsMaster(false)
       , mIsSlave(false)
       , mSoftwareSwapLock(false)
+      , mLocalNodeElement()
       , mClusterElement()
+      , mListenPort(DEFAULT_SLAVE_PORT)
       , mClusterNetwork(NULL)
       , mPreDrawCallCount(0)
       , mPostPostFrameCallCount(0)
@@ -219,6 +221,11 @@ namespace cluster
 
    void ClusterManager::start()
    {
+      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_STATUS_LVL )
+         << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+         << "Cluster mode: " << (mClusterActive ? "True":"False")
+         << std::endl << vprDEBUG_FLUSH;
+
       mClusterStarted = true;
 
       // Connect the entire cluster.
@@ -255,7 +262,7 @@ namespace cluster
       else if (mIsSlave)
       {
          // Start listening on known port for connections.
-         mClusterNetwork->waitForConnection();
+         mClusterNetwork->waitForConnection(mListenPort);
          barrier();
       }
    }
@@ -393,24 +400,6 @@ namespace cluster
       }
    }
 
-   void ClusterManager::swapBarrier()
-   {
-      if (mSoftwareSwapLock)
-      {
-         barrier();
-      }
-   }
-
-   void ClusterManager::update( const int temp )
-   {
-      mClusterNetwork->update(temp);
-   }
-
-   void ClusterManager::barrier()
-   {
-      mClusterNetwork->barrier(mIsMaster);
-   }
-
    bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element )
    {
       return (mClusterActive && element->getConfigDefinition()->isParent("input_device"));
@@ -490,8 +479,11 @@ namespace cluster
 
                std::string name        = new_node_element->getName();
                std::string host_name   = new_node_element->getProperty<std::string>( "host_name" );
-               //vpr::Uint16 listen_port = new_node_element->getProperty<int>( "listen_port" );
-               vpr::Uint16 listen_port = gadget::DEFAULT_SLAVE_PORT;
+               vpr::Uint16 listen_port = new_node_element->getProperty<int>( "listen_port" );
+               if (0 == listen_port)
+               {
+                  listen_port = DEFAULT_SLAVE_PORT;
+               }
 
                mClusterNetwork->addNode(name, host_name, listen_port);
             }
@@ -504,8 +496,6 @@ namespace cluster
             }
          }
       }
-
-      //mClusterActive = true;
    }
 
    bool ClusterManager::configAdd( jccl::ConfigElementPtr element )
@@ -763,7 +753,6 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
          throw cluster::ClusterException("Can't have more than one cluster configurations.", VPR_LOCATION);
       }
 
-      //mClusterActive = true;
       mClusterElement = cluster_elements[0];
       //cfg->remove(mClusterElement->getName());
    }
@@ -796,6 +785,8 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
 
       if (cluster::ClusterNetwork::isLocalHost( new_node_hostname ))
       {
+         mLocalNodeElement = node_elm;
+
          // NOTE: Add all machine dependent ConfigElementPtr's here
          vprASSERT( node_elm->getNum("display_system") == 1 
             && "A Cluster System element must have exactly 1 display_system element" );
@@ -823,8 +814,6 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
       << std::endl << vprDEBUG_FLUSH;
 
    mergeConfigurations(&mSystemConfiguration, cfg, type);
-
-   std::cout << "CLUSTER MODE: " << (mClusterActive ? "True":"False") << std::endl;
 }
 
 /**

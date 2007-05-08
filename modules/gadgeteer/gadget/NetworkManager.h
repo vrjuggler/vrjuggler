@@ -49,8 +49,6 @@
 namespace gadget
 {
 
-const int DEFAULT_SLAVE_PORT = 12599;
-
 /** \class NetworkManager NetworkManager.h gadget/NetworkManager.h
  *
  * Network abstraction.
@@ -174,7 +172,7 @@ public:
       return mNodes;
    }
 
-   void waitForConnection(const int& listen_port = DEFAULT_SLAVE_PORT);
+   void waitForConnection(const vpr::Uint16 listenPort);
    bool connectToSlaves();
 
    /**

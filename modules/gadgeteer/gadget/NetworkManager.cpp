@@ -60,9 +60,9 @@ NetworkManager::~NetworkManager()
    shutdown();
 }
 
-void NetworkManager::waitForConnection(const int& listen_port)
+void NetworkManager::waitForConnection(const vpr::Uint16 listenPort)
 {
-   mListenAddr.setPort( listen_port );
+   mListenAddr.setPort( listenPort);
 
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL )
       << clrOutBOLD( clrBLUE, "[ClusterNetwork]" )

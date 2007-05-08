@@ -61,6 +61,8 @@ namespace gadget
 namespace cluster
 {
 
+const int DEFAULT_SLAVE_PORT = 12599;
+
 /** \class ClusterManager ClusterManager.h cluster/ClusterManager.h
  *
  * Manages the synchronization of all ClusterPlugins.
@@ -95,20 +97,43 @@ public:
    void connectToConfigManager();
 
    /**
+    * Disconnect from the ConfigManager cleanly.
+    *
     * @since 1.3.3
     */
    void disconnectFromConfigManager();
 
    /**
+    * Initialize the ClusterManager so that it knows if it is active.
+    *
+    * @param clusterMaster True if the local node is the cluster master.
+    * @param clusterSlave True if the local node is a slave.
+    *
     * @since 1.3.3
     */
    void init(bool clusterMaster, bool clusterSlave);
 
    /**
+    * Start the cluster by making initial connections.
+    *
+    * @note The master node connects to each slave node on a
+    *       specified port.
+    *
     * @since 1.3.3
     */
    void start();
 
+   /**
+    * Set the port that we should listen on if we are a slave.
+    * @since 1.3.7
+    */
+   void setListenPort(const vpr::Uint16 listenPort)
+   {
+      mListenPort = listenPort;
+   }
+
+   //@{
+   /** @name Plugin management. */
 public:
    /**
     * Add a new ClusterPlugin.
@@ -129,67 +154,32 @@ private:
     * Return true if the specified ClusterPlugin exists.
     */
    bool doesPluginExist( ClusterPluginPtr old_plugin );
+   //@}
 
-   /**
-    * Returns the string representation of the element type used for the
-    * ClusterManager.
-    */
-   static std::string getElementType();
-public:
-   /**
-    * Send end block to all other connected nodes and
-    * signal each connected node to sync.
-    */
-   void update( const int temp = 0);
-
-   /**
-    * Create a software barrier by having all slave nodes send an
-    * end block to the master. Once the master receives an end block
-    * from all nodes, it sends a go message back to all nodes.
-    */
-   void barrier();
-
-   /**
-    * Synchronize plugins directly before the kernel calls
-    * the draw() method.
-    */
-   void preDraw();
-
-   /**
-    * Synchronize plugins directly after the kernel calls
-    * the postFrame() method.
-    */
-   void postPostFrame();
-
-   /**
-    * Cycle through ClusterPlugins until one of them can
-    * achieve swaplock.
-    */
-   void swapBarrier();
-
-   /**
-    * Return the representation of the network which
-    * this cluster is running on.
-    */
-   ClusterNetwork* getNetwork()
-   {
-      return mClusterNetwork;
-   }
-
-   /**
-    * Return true if ConfigElement is a remote device.
-    */
-   bool recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element );
-
+   //@{
+   /** @name ConfigElementHandler methods. */
+private:
    /**
     * Return true if Configelement is a ClusterManager element.
     */
    bool recognizeClusterManagerConfig( jccl::ConfigElementPtr element );
 
    /**
+    * Returns the string representation of the element type used for the
+    * ClusterManager.
+    */
+   static std::string getElementType();
+
+   /**
     * Configure the cluster given the current config element.
     */
    void configCluster( jccl::ConfigElementPtr element );
+
+public:
+   /**
+    * Return true if ConfigElement is a remote device.
+    */
+   bool recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element );
 
    /**
     * Configure the given ConfigElement.
@@ -222,18 +212,58 @@ public:
    void configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type);
    void mergeConfigurations(jccl::Configuration* dst, jccl::Configuration* src, vpr::Uint16 type);
 
-   /*
-   Truth table for ClusterManager
+public:
+   /**
+    * Synchronize plugins directly before the kernel calls
+    * the draw() method.
+    */
+   void preDraw();
 
-   Active   Ready
-      1        0  = 0
-      1        1  = 1
-      0        0  = 1
-      0        1  = 1
+   /**
+    * Synchronize plugins directly after the kernel calls
+    * the postFrame() method.
+    */
+   void postPostFrame();
 
-      (NOT(Active AND (NOT READY)))
-      (NOT(Active) OR (Active AND Ready))
-   */
+   /**
+    * Send end block to all other connected nodes and
+    * signal each connected node to sync.
+    */
+   void update( const int temp = 0)
+   {
+      mClusterNetwork->update(temp);
+   }
+
+   /**
+    * Create a software barrier by having all slave nodes send an
+    * end block to the master. Once the master receives an end block
+    * from all nodes, it sends a go message back to all nodes.
+    */
+   void barrier()
+   {
+      mClusterNetwork->barrier(mIsMaster);
+   }
+
+   /**
+    * Cycle through ClusterPlugins until one of them can
+    * achieve swaplock.
+    */
+   void swapBarrier()
+   {
+      if (mSoftwareSwapLock)
+      {
+         barrier();
+      }
+   }
+
+   /**
+    * Return the representation of the network which
+    * this cluster is running on.
+    */
+   ClusterNetwork* getNetwork()
+   {
+      return mClusterNetwork;
+   }
 
    /**
     * Return true if we are running on a cluster.
@@ -327,9 +357,11 @@ private:
    /** @name Cluster configuration elements. */
    jccl::ConfigElementPtr       mClusterElement;
    std::map<std::string, jccl::ConfigElementPtr>        mClusterNodeElements;
+   jccl::ConfigElementPtr       mLocalNodeElement;
    jccl::Configuration          mSystemConfiguration;
    //@}
 
+   vpr::Uint16                  mListenPort;            /**< Port that we should listen on if we are a slave. */
    ClusterNetwork*              mClusterNetwork;        /**< The network representation of the cluster. */
    ConfigHandlerPtr             mConfigHandler;         /**< Delegate that handles all configuration packets. */
 
