@@ -100,6 +100,7 @@ bool Kernel::init(int& argc, char* argv[])
        ("help,h", "Produce help message")
        ("vrjmaster", po::bool_switch(), "This node is the cluster master.")
        ("vrjslave", po::bool_switch(), "This node is a cluster slave.")
+       ("listen_port", po::value<int>(), "Port to listen on for incoming cluster connections.")
    ;
 
    // Construct a parser and do the actuall parsing.
@@ -174,6 +175,12 @@ bool Kernel::init(const po::variables_map& vm)
    mClusterManager = cluster::ClusterManager::instance();
    mClusterManager->init(cluster_master, cluster_slave);
    mClusterManager->connectToConfigManager();
+
+   if (vm.count("listen_port"))
+   {
+      vpr::Uint16 listen_port = vm["listen_port"].as<int>();
+      mClusterManager->setListenPort(listen_port);
+   }
 
    return true;
 }
