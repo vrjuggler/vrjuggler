@@ -198,7 +198,28 @@
                      <xsl:value-of select="@name"/>
                   </xsl:attribute>
                   <xsl:attribute name="version">3</xsl:attribute>
-                  <xsl:copy-of select="./*"/>
+                  <xsl:for-each select="./jconf:plugin_path">
+                     <xsl:copy-of select="." />
+                  </xsl:for-each>
+                  <xsl:for-each select="./jconf:plugin">
+                     <xsl:variable name="plugin_name">
+                        <xsl:value-of select="." />
+                     </xsl:variable>
+                     <xsl:choose>
+                        <xsl:when test="$plugin_name = 'StartBarrierPlugin'">
+                        </xsl:when>
+                        <xsl:when test="$plugin_name = 'SwapLockTCPPlugin'">
+                        </xsl:when>
+                        <xsl:when test="$plugin_name = 'SwapLockWiredPlugin'">
+                        </xsl:when>
+                        <xsl:otherwise>
+                           <xsl:copy-of select="." />
+                        </xsl:otherwise>
+                     </xsl:choose>
+                  </xsl:for-each>
+                  <xsl:for-each select="./jconf:cluster_node">
+                     <xsl:copy-of select="." />
+                  </xsl:for-each>
                   <xsl:element namespace="{$jconf}" name="use_software_swap_lock">
                      <xsl:text>true</xsl:text>
                   </xsl:element>
