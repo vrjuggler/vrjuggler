@@ -28,6 +28,9 @@
 #include <string.h>
 #include <algorithm>
 #include <boost/bind.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/version.hpp>
 
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
@@ -107,9 +110,118 @@ po::options_description& Kernel::getConfigOptions()
    return mConfigOptionDesc;
 }
 
-
 bool Kernel::init(int& argc, char* argv[])
 {
+#if BOOST_VERSION <= 103200
+   int processed_count(0);
+   std::vector<char*> processed_args;
+   bool cluster_master(false);
+   bool cluster_slave(false);
+   bool print_help(false);
+   std::string listen_port;
+
+   for ( int i = 1; i < argc; ++i )
+   {
+      const std::string arg(argv[i]);
+
+      if ( arg == "--help" || arg == "-h" )
+      {
+         print_help = true;
+         processed_args.push_back(argv[i]);
+         ++processed_count;
+      }
+      else if ( arg == "--vrjmaster" )
+      {
+         if ( ! cluster_slave )
+         {
+            cluster_master = true;
+            processed_args.push_back(argv[i]);
+            ++processed_count;
+         }
+         else
+         {
+            throw vpr::Exception("Can't be a cluster master and slave.",
+                                 VPR_LOCATION);
+         }
+      }
+      else if ( arg == "--vrjslave" )
+      {
+         if ( ! cluster_master )
+         {
+            cluster_slave = true;
+            processed_args.push_back(argv[i]);
+            ++processed_count;
+         }
+         else
+         {
+            throw vpr::Exception("Can't be a cluster master and slave.",
+                                 VPR_LOCATION);
+         }
+      }
+      else if ( arg == "--listen_port" )
+      {
+         if ( i + 1 < argc )
+         {
+            processed_args.push_back(argv[i]);
+            ++processed_count;
+
+            ++i;
+            listen_port = std::string(argv[i]);
+
+            processed_args.push_back(argv[i]);
+            ++processed_count;
+         }
+
+         if ( listen_port.empty() )
+         {
+            std::cerr << "ERROR: No value given for --listen_port"
+                      << std::endl;
+         }
+      }
+   }
+
+   std::for_each(processed_args.begin(), processed_args.end(),
+                 boost::bind(std::remove<char**, char*>, &argv[0],
+                             &argv[0] + argc, _1));
+   argc -= processed_count;
+
+   bool result(true);
+
+   if ( print_help )
+   {
+      std::cout << "General Options:\n"
+                << "  -h [ --help ]         Produce help message\n\n"
+                << "Cluster Options:\n"
+                << "  --vrjmaster           This node is the cluster master.\n"
+                << "  --vrjslave            This node is a cluster slave."
+                << "  --listen_port arg     Port to listen on for incoming cluster connections."
+                << std::endl;
+
+      result = false;
+   }
+   else
+   {
+      mClusterManager = cluster::ClusterManager::instance();
+      mClusterManager->init(cluster_master, cluster_slave);
+      mClusterManager->connectToConfigManager();
+
+      if ( ! listen_port.empty() )
+      {
+         try
+         {
+            mClusterManager->setListenPort(
+               boost::lexical_cast<vpr::Uint16>(listen_port)
+            );
+         }
+         catch (boost::bad_lexical_cast& e)
+         {
+            std::cerr << e.what() << std::endl;
+         }
+      }
+   }
+
+   return result;
+#else
    po::options_description all_options("VR Juggler Options");
    po::options_description& general_desc = getGeneralOptions();
    po::options_description& cluster_desc = getClusterOptions();
@@ -171,6 +283,7 @@ bool Kernel::init(int& argc, char* argv[])
    }
 
    return init(vm);
+#endif
 }
 
 bool Kernel::init(const po::variables_map& vm)
@@ -193,7 +306,7 @@ bool Kernel::init(const po::variables_map& vm)
 
    if (vm.count("listen_port"))
    {
-      vpr::Uint16 listen_port = vm["listen_port"].as<int>();
+      const vpr::Uint16 listen_port = vm["listen_port"].as<vpr::Uint16>();
       mClusterManager->setListenPort(listen_port);
    }
 
