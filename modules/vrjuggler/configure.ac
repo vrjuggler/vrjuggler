@@ -741,7 +741,6 @@ AC_CONFIG_FILES([
    samples/OpenSG/Makefile
    samples/OpenSG/advanced/Makefile
    samples/OpenSG/advanced/OpenSGNavGrab/Makefile
-   samples/OpenSG/advanced/OpenSGViewer/Makefile
    samples/OpenSG/simple/Makefile
    samples/OpenSG/simple/OpenSGNav/Makefile
    samples/Pf/Makefile
