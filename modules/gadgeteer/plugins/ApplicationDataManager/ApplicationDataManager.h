@@ -107,41 +107,6 @@ public:
       boost::ignore_unused_variable_warning(lostNode);
    }
 
-   // ---------- ConfigElementHandler Interface ----------- //
-public:   
-   /** Add the pending element to the configuration.
-    *  @pre configCanHandle (element) == true.
-    *  @return true iff element was successfully added to configuration.
-    */
-   bool configAdd(jccl::ConfigElementPtr elm)
-   {
-      boost::ignore_unused_variable_warning(elm);
-      return false;
-   }
-   
-   /** Remove the pending element from the current configuration.
-    *  @pre configCanHandle (element) == true.
-    *  @return true iff the element (and any objects it represented)
-    *          were successfully removed.
-    */
-   bool configRemove(jccl::ConfigElementPtr elm)
-   {
-      boost::ignore_unused_variable_warning(elm);
-      return false;
-   }
-
-   /** Checks if this handler can process element.
-    *  Typically, an implementation of handler will check the element's
-    *  description name/token to decide if it knows how to deal with
-    *  it.
-    *  @return true iff this handler can process element.
-    */
-   bool configCanHandle(jccl::ConfigElementPtr elm)
-   {
-      boost::ignore_unused_variable_warning(elm);
-      return false;
-   }
-
    // ---------- ApplicationData Interface ----------- //
 public:
    /**
