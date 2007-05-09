@@ -180,6 +180,12 @@
       </xsl:message>
    </xsl:template>
 
+   <xsl:template match="jconf:application_data">
+      <xsl:message>
+         <xsl:text>Removing application_data element.</xsl:text>
+      </xsl:message>
+   </xsl:template>
+
 <!-- EVERYTHING ELSE ======================================================= -->
    <!--
       Copy everything that hasn't already been matched.
