@@ -43,8 +43,8 @@ SUBOBJDIR=	$(GL_LIBRARY)
 
 SRCS=		GlApp.cpp			\
 		GlBasicSimulator.cpp		\
-		GlDrawManager.cpp		\
 		GlDrawHeadFunctors.cpp		\
+		GlDrawManager.cpp		\
 		GlDrawWandFunctors.cpp		\
 		GlExtensionLoader.cpp		\
 		GlPipe.cpp			\
