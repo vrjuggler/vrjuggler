@@ -157,8 +157,6 @@ namespace cluster
       , mIsMaster(false)
       , mIsSlave(false)
       , mSoftwareSwapLock(false)
-      , mLocalNodeElement()
-      , mClusterElement()
       , mListenPort(DEFAULT_SLAVE_PORT)
       , mClusterNetwork(NULL)
       , mPreDrawCallCount(0)
