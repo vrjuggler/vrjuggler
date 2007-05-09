@@ -53,11 +53,6 @@
 #  include <map>
 #endif
 
-namespace gadget
-{
-   class Node;
-}
-
 namespace cluster
 {
 
@@ -303,14 +298,6 @@ public:
                                                   ClusterManager& mgr );
 
    /**
-    * Get a list of hostnames for all ClusterNodes.
-    */
-   std::vector<std::string> getNodes()
-   {
-      return mNodes;
-   }
-
-   /**
     * Return the number of times that preDraw() has been called.
     */
    vpr::Uint64 preDrawCallCount()
@@ -330,18 +317,10 @@ private:
    ClusterDepChecker            mDepChecker;
 
    typedef std::list<ClusterPluginPtr> plugin_list_t;
-#ifdef VPR_HASH_MAP_INCLUDE
-   typedef std::hash_map<vpr::GUID, ClusterPluginPtr, vpr::GUID::hash> plugin_map_t;
-#else
-   typedef std::map<vpr::GUID, ClusterPluginPtr> plugin_map_t;
-#endif
 
    plugin_list_t                mPlugins;            /**< List of Plugins.*/
    std::string                  mBarrierMachineName; /**< Name of the barrier machine.*/
-   plugin_map_t                 mPluginMap;   /**< Map of ClusterPlugins. */
    std::vector<vpr::LibraryPtr> mLoadedPlugins;
-
-   std::vector<std::string>     mNodes;              /**< Hostnames of the nodes in the cluster. */
 
    bool                         mClusterActive;      /**< Flag informing us if this app is running on a cluster. */
 

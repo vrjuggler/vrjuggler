@@ -170,7 +170,6 @@ namespace cluster
    ClusterManager::~ClusterManager()
    {
       mPlugins.clear();
-      mPluginMap.clear();
 
       disconnectFromConfigManager();
       if (NULL != mClusterNetwork)
@@ -291,9 +290,6 @@ namespace cluster
       if ( !doesPluginExist(newPlugin) )
       {
          mPlugins.push_back( newPlugin );
-         plugin_map_t::value_type p =
-            std::make_pair( newPlugin->getHandlerGUID(), newPlugin );
-         mPluginMap.insert( p );
 
          // Add each plugin as a packet handler.
          mClusterNetwork->addHandler( newPlugin );
@@ -306,13 +302,31 @@ namespace cluster
       }
    }
 
+struct PluginGuidPred
+{
+   PluginGuidPred(const vpr::GUID& pluginGuid)
+      : mGuid(pluginGuid)
+   {
+      /* Do nothing. */ ;
+   }
+
+   bool operator()(ClusterPluginPtr plugin)
+   {
+      vprASSERT(NULL != plugin.get() && "Can't have a NULL plugin.");
+      return plugin->getHandlerGUID() == mGuid;
+   }
+
+   const vpr::GUID& mGuid;
+};
+
    ClusterPluginPtr ClusterManager::getPluginByGUID( const vpr::GUID& pluginGuid )
    {
-      plugin_map_t::const_iterator found = mPluginMap.find( pluginGuid );
+      PluginGuidPred pred(pluginGuid);
+      plugin_list_t::const_iterator found = std::find_if(mPlugins.begin(), mPlugins.end(), pred);
 
-      if( found != mPluginMap.end() )
+      if( found != mPlugins.end() )
       {
-         return ( (*found).second );
+         return *found;
       }
 
       return ClusterPluginPtr();
@@ -323,9 +337,6 @@ namespace cluster
     */
    void ClusterManager::removePlugin( ClusterPluginPtr oldPlugin )
    {
-      // Remove plugin from map.
-      mPluginMap.erase( oldPlugin->getHandlerGUID() );
-
       plugin_list_t::iterator found
          = std::find(mPlugins.begin(), mPlugins.end(), oldPlugin);
 
@@ -467,8 +478,6 @@ namespace cluster
                   << clrOutBOLD( clrCYAN, "[ClusterManager] " )
                   << "configAdd() Added Node since it is non-local"
                   << std::endl << vprDEBUG_FLUSH;
-
-               mNodes.push_back( new_node_hostname );
 
                vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
                   << clrOutBOLD( clrCYAN, "[ClusterManager] " )
