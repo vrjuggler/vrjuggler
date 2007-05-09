@@ -47,11 +47,7 @@
 #include <gadget/Util/Debug.h>
 
 #include <list>
-#ifdef VPR_HASH_MAP_INCLUDE
-#  include VPR_HASH_MAP_INCLUDE
-#else
-#  include <map>
-#endif
+#include <map>
 
 namespace cluster
 {
@@ -127,9 +123,10 @@ public:
       mListenPort = listenPort;
    }
 
+public:
    //@{
    /** @name Plugin management. */
-public:
+
    /**
     * Add a new ClusterPlugin.
     */
@@ -144,37 +141,11 @@ public:
     * Return the ClusterPlugin with the given GUID.
     */
    ClusterPluginPtr getPluginByGUID( const vpr::GUID& plugin_guid );
-private:
-   /**
-    * Return true if the specified ClusterPlugin exists.
-    */
-   bool doesPluginExist( ClusterPluginPtr old_plugin );
    //@}
 
-   //@{
-   /** @name ConfigElementHandler methods. */
-private:
-   /**
-    * Return true if Configelement is a ClusterManager element.
-    */
-   bool recognizeClusterManagerConfig( jccl::ConfigElementPtr element );
-
-   /**
-    * Returns the string representation of the element type used for the
-    * ClusterManager.
-    */
-   static std::string getElementType();
-
-   /**
-    * Configure the cluster given the current config element.
-    */
-   void configCluster( jccl::ConfigElementPtr element );
-
 public:
-   /**
-    * Return true if ConfigElement is a remote device.
-    */
-   bool recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element );
+   //@{
+   /** @name ConfigElementHandler Interface. */
 
    /**
     * Configure the given ConfigElement.
@@ -197,17 +168,53 @@ public:
     * @return true iff this handler can process element.
     */
    bool configCanHandle( jccl::ConfigElementPtr element );
+   //@}
+
+   //@{
+   /** @name Configuration helper methods. */
 
    /**
-    * Check incoming configuration for cluster config elements. If we
-    * we have a cluster_manager element switch into cluster mode, and
-    * remove the element. If we have a cluster_node element, store it
-    * it for later use and remove it.
+    * Return true if ConfigElement is a remote device.
+    */
+   bool recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element );
+
+   /**
+    * Store incoming configuration to be sent to cluster slaves.
     */
    void configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type);
+
+private:
+   /**
+    * Return true if Configelement is a ClusterManager element.
+    */
+   bool recognizeClusterManagerConfig( jccl::ConfigElementPtr element );
+
+   /**
+    * Returns the string representation of the element type used for the
+    * ClusterManager.
+    */
+   static std::string getElementType();
+
+   /**
+    * Configure the cluster given the current config element.
+    */
+   void configCluster( jccl::ConfigElementPtr element );
+
+   /**
+    * Merge the source configuration into the destination depending
+    * on the change type.
+    *
+    * @param dst Destination configuration to merge into.
+    * @param src Source configuration to copy changes out of.
+    * @param type Type of change in source configuration. (ADD/REMOVE)
+    */
    void mergeConfigurations(jccl::Configuration* dst, jccl::Configuration* src, vpr::Uint16 type);
+   //@}
 
 public:
+   //@{
+   /** @name Cluster methods. */
+
    /**
     * Synchronize plugins directly before the kernel calls
     * the draw() method.
@@ -268,6 +275,9 @@ public:
       return mClusterActive;
    }
 
+   /**
+    * Return true if we are the cluster master.
+    */
    bool isMaster()
    {
       return mIsMaster;
@@ -290,6 +300,7 @@ public:
     * Return true if all plugins have their dependancies satisfied.
     */
    bool pluginsReady();
+   //@}
 
    /**
     * Output the current status of the cluster.
@@ -318,19 +329,15 @@ private:
 
    typedef std::list<ClusterPluginPtr> plugin_list_t;
 
-   plugin_list_t                mPlugins;            /**< List of Plugins.*/
-   std::string                  mBarrierMachineName; /**< Name of the barrier machine.*/
-   std::vector<vpr::LibraryPtr> mLoadedPlugins;
+   plugin_list_t                mPlugins;               /**< List of Plugins.*/
+   std::string                  mBarrierMachineName;    /**< Name of the barrier machine.*/
+   std::vector<vpr::LibraryPtr> mLoadedPlugins;         /**< List of so/dlls for plugins. */
 
-   bool                         mClusterActive;      /**< Flag informing us if this app is running on a cluster. */
-
-   bool                         mClusterStarted;     /**< If the cluster has already started. */
-   bool                         mWindowOpened;       /**< If a window has been opened on the local machine. */
-
-   bool                         mIsMaster;
-   bool                         mIsSlave;
-
-   bool                         mSoftwareSwapLock;
+   bool                         mClusterActive;         /**< Flag informing us if this app is running on a cluster. */
+   bool                         mClusterStarted;        /**< If the cluster has already started. */
+   bool                         mWindowOpened;          /**< If a window has been opened on the local machine. */
+   bool                         mIsMaster;              /**< True if we are the cluster master. */
+   bool                         mSoftwareSwapLock;      /**< If we should swap lock the cluster in software. */
 
    //@{
    /** @name Cluster configuration elements. */
@@ -349,6 +356,6 @@ private:
    boost::signals::connection   mConfigChangeConn;
 };
 
-} // end namespace
+} // end of cluster namespace
 
-#endif
+#endif /*_CLUSTER_CLUSTER_MANAGER_H*/

@@ -155,7 +155,6 @@ ClusterManager::ClusterManager()
    , mClusterStarted( false )
    , mWindowOpened( false )
    , mIsMaster(false)
-   , mIsSlave(false)
    , mSoftwareSwapLock(false)
    , mListenPort(DEFAULT_SLAVE_PORT)
    , mClusterNetwork(NULL)
@@ -211,7 +210,6 @@ void ClusterManager::disconnectFromConfigManager()
 void ClusterManager::init(bool clusterMaster, bool clusterSlave)
 {
    mIsMaster = clusterMaster;
-   mIsSlave = clusterSlave;
 
    mClusterActive = (clusterMaster || clusterSlave);
 }
@@ -256,7 +254,7 @@ void ClusterManager::start()
       }
       barrier();
    }
-   else if (mIsSlave)
+   else
    {
       // Start listening on known port for connections.
       mClusterNetwork->waitForConnection(mListenPort);
@@ -287,7 +285,10 @@ bool ClusterManager::pluginsReady()
  */
 void ClusterManager::addPlugin(ClusterPluginPtr newPlugin)
 {
-   if ( !doesPluginExist(newPlugin) )
+   plugin_list_t::const_iterator found
+      = std::find(mPlugins.begin(), mPlugins.end(), newPlugin);
+
+   if ( mPlugins.end() == found )
    {
       mPlugins.push_back( newPlugin );
 
@@ -298,6 +299,15 @@ void ClusterManager::addPlugin(ClusterPluginPtr newPlugin)
       vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
          << clrOutBOLD( clrCYAN, "[ClusterManager] " )
          << "Adding Plugin: " << newPlugin->getPluginName()
+         << std::endl << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      // We can still unregister it when removed below though
+      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+         << clrOutBOLD( clrCYAN, "[ClusterManager] " )
+         << clrOutBOLD( clrRED, "WARNING: " )
+         << "Tried to add plugin more than once: " << newPlugin->getPluginName()
          << std::endl << vprDEBUG_FLUSH;
    }
 }
@@ -348,17 +358,6 @@ void ClusterManager::removePlugin( ClusterPluginPtr oldPlugin )
          << std::endl << vprDEBUG_FLUSH;
       mPlugins.erase(found);
    }
-}
-
-/**
- * Checks if a plugin exists in the ClusterManager
- */
-bool ClusterManager::doesPluginExist( ClusterPluginPtr oldPlugin )
-{
-   plugin_list_t::const_iterator found
-      = std::find(mPlugins.begin(), mPlugins.end(), oldPlugin);
-
-   return (mPlugins.end() != found);
 }
 
 void ClusterManager::preDraw()
@@ -416,7 +415,7 @@ bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element
 
 bool ClusterManager::recognizeClusterManagerConfig( jccl::ConfigElementPtr element )
 {
-  return( element->getID() == ClusterManager::getElementType() );
+   return( element->getID() == ClusterManager::getElementType() );
 }
 
 /** Adds the pending element to the configuration.
@@ -853,4 +852,4 @@ std::ostream& operator<<( std::ostream& out, ClusterManager& mgr )
    return out;
 }
 
-} // End of gadget namespace
+} // End of cluster namespace
