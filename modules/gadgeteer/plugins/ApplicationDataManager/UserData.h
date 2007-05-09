@@ -215,11 +215,10 @@ public:
     *                   determined using a configuration element of type
     *                   application_data.
     */
-   void init(const vpr::GUID& id,
-             const std::string& writerAddr = std::string(""))
+   void init(const vpr::GUID& id)
    {
       mAppData = AppDataPtr(new AppDataMixin<TYPE>());
-      mAppData->init(id, writerAddr);
+      mAppData->init(id);
    }
 
    virtual ~UserData()

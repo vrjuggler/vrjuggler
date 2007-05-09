@@ -51,13 +51,10 @@ public:
     * Initialize the application data for the given GUID and host name.
     *
     * @param guid      The GUID used to reference this object.
-    * @param hostName  The hostname of the node that should be responsible for
-    *                  updating this object.
     */
-   void init(const vpr::GUID& guid, const std::string& hostName)
+   void init(const vpr::GUID& guid)
    {
       mId = guid;
-      mHostname = hostName;
 
       ClusterPluginPtr app_data_mgr =
          ClusterManager::instance()->getPluginByGUID(vpr::GUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"));
@@ -114,26 +111,9 @@ public:
       return mId;
    }
 
-   /**
-    * Return the hostname of the node that should update this object.
-    */
-   const std::string& getHostname() const
-   {
-      return mHostname;
-   }
-
-   /**
-    * Return the hostname of the node that should update this object.
-    */
-   void setHostname(const std::string& hostname)
-   {
-      mHostname = hostname;
-   }
-
 private:
    bool        mIsLocal;   /**< True if this object is to be updated by the local node. */
    vpr::GUID   mId;        /**< GUID for this object */
-   std::string mHostname;  /**< Hostname of the machine that should update this object */
 };
 
 } // end namespace gadget

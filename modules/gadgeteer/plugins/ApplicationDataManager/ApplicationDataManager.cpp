@@ -151,9 +151,6 @@ void ApplicationDataManager::addSerializableObject(vpr::SerializableObject* obje
 
    const vpr::GUID id = new_app_data->getId();
 
-   // TODO: Remove hostname field from application data.
-   const std::string hostname = new_app_data->getHostname();
-
    vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
       << " Adding ApplicationData: " << id.toString()
@@ -199,7 +196,6 @@ void ApplicationDataManager::dumpApplicationData()
    for (object_map_t::iterator itr = mObjects.begin(); itr != mObjects.end(); itr++)
    {
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "Hostname: " << (*itr).second->getHostname()
          << "GUID: " << (*itr).second->getId()
          << std::endl << vprDEBUG_FLUSH;
    }
