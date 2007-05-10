@@ -108,18 +108,16 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
          mRecentCfgFiles = [[NSMutableArray array] retain];
       }
 
-      NSMenu* file_menu = [self getRecentFilesMenu];
+      const unsigned int count = [mRecentCfgFiles count];
 
-      if ( file_menu )
+      NSDocumentController* doc_ctrl =
+         [NSDocumentController sharedDocumentController];
+
+      for ( unsigned int i = 0; i < count; ++i )
       {
-         const unsigned int count = [mRecentCfgFiles count];
-
-         for ( unsigned int i = 0; i < count; ++i )
-         {
-            [self insertCfgFileItem:[mRecentCfgFiles objectAtIndex:i]
-                              accel:[NSString stringWithFormat:@"%d", i]
-                              index:i];
-         }
+         NSURL* url =
+            [NSURL fileURLWithPath:[mRecentCfgFiles objectAtIndex:i]];
+         [doc_ctrl noteNewRecentDocumentURL:url];
       }
 
       return [super init];
@@ -209,11 +207,6 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
       return YES;
    }
 
-   -(IBAction) loadConfigFile:(id) sender
-   {
-      [self kernelLoadConfigFile:[sender title]];
-   }
-
    -(void) kernelLoadConfigFile:(NSString*) fileName
    {
       // Load the configuration file.
@@ -234,46 +227,9 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
 
       [mRecentCfgFiles addObject:fileName];
 
-      NSMenu* files_menu = [self getRecentFilesMenu];
-
-      // NOTE: The mMaxRecentFiles + 2 accounts for the separator item and the
-      // "Clear Menu" item after the separator.
-      if ( files_menu && [files_menu numberOfItems] > mMaxRecentFiles + 2 )
-      {
-         [files_menu removeItemAtIndex:0];
-
-         for ( int i = 0; i < mMaxRecentFiles; ++i )
-         {
-            NSMenuItem* item = [files_menu itemAtIndex:i];
-            [item setKeyEquivalent:[NSString stringWithFormat:@"%d", i]];
-         }
-      }
-
-      if ( files_menu )
-      {
-         const int index = [files_menu indexOfItemWithTitle:fileName];
-
-         if ( index == NSNotFound )
-         {
-            int insert_index(0);
-            const int count = [files_menu numberOfItems];
-
-            for ( int i = 0; i < count; ++i )
-            {
-               NSMenuItem* item = [files_menu itemAtIndex:i];
-
-               if ( [item isSeparatorItem] )
-               {
-                  insert_index = i - 1;
-                  break;
-               }
-            }
-
-            [self insertCfgFileItem:fileName
-                              accel:[NSString stringWithFormat:@"%d", 0]
-                              index:insert_index];
-         }
-      }
+      NSDocumentController* doc_ctrl =
+         [NSDocumentController sharedDocumentController];
+      [doc_ctrl noteNewRecentDocumentURL:[NSURL fileURLWithPath:fileName]];
    }
 
    /**
@@ -328,58 +284,9 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
     */
    -(IBAction) clearRecentDocuments:(id) sender
    {
-      NSMenu* menu = [sender menu];
-      const int init_size = [menu numberOfItems];
-
-      for ( int i = 0; i < init_size; ++i )
-      {
-         NSMenuItem* item = [menu itemAtIndex:0];
-
-         if ( [item isSeparatorItem] ||
-              [[item title] isEqualToString:@"Clear Menu"] )
-         {
-            break;
-         }
-         else
-         {
-            [menu removeItem:item];
-         }
-      }
-
+      NSDocumentController* doc_ctrl =
+         [NSDocumentController sharedDocumentController];
+      [doc_ctrl clearRecentDocuments:sender];
       [mRecentCfgFiles removeAllObjects];
-   }
-
-   -(NSMenu*) getRecentFilesMenu
-   {
-      NSMenu* files_menu = nil;
-      NSApplication* app = [NSApplication sharedApplication];
-      NSMenuItem* item   = [[app mainMenu] itemWithTitle:@"File"];
-
-      if ( item )
-      {
-         item = [[item submenu] itemWithTitle:@"Open Recent"];
-
-         if ( item )
-         {
-            files_menu = [item submenu];
-         }
-      }
-
-      return files_menu;
-   }
-
-   -(NSMenuItem*) insertCfgFileItem:(NSString*) title
-                              accel:(NSString*) accel
-                              index:(int) index
-   {
-      NSMenu* menu     = [self getRecentFilesMenu];
-      NSMenuItem* item = [menu insertItemWithTitle:title
-                                            action:@selector(loadConfigFile:)
-                                     keyEquivalent:accel
-                                           atIndex:index];
-      [item setKeyEquivalentModifierMask:NSCommandKeyMask];
-      NSLog(@"Inserted item %@ at index %d in menu %@\n", item, index, menu);
-
-      return item;
    }
 @end

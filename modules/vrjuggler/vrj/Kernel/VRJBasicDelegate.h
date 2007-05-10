@@ -64,30 +64,10 @@
              openFiles:(NSArray*) files;
 
    /**
-    * Action connected to menu items for recently loaded configuration files.
-    * This simply passes on the load request to -kernelLoadConfigFile:.
-    *
-    * @see -kernelLoadConfigFile:
-    */
-   -(IBAction) loadConfigFile:(id) sender;
-
-   /**
     * Loads the named VR Juggler configuration file using
     * vrj::Kernel::loadConfigFile().
     */
    -(void) kernelLoadConfigFile:(NSString*) fileName;
-
-   /**
-    * Returns a pointer to the NSMenu object that is the submenu listing the
-    * recently loaded configuration files or nil if no such submenu exists.
-    * In other words, this returns the File -> Open Recent submenu object.
-    * This is a convenice method.
-    */
-   -(NSMenu*) getRecentFilesMenu;
-
-   -(NSMenuItem*) insertCfgFileItem:(NSString*) title
-                              accel:(NSString*) accel
-                              index:(int) index;
 @end
 
 extern NSString* VRJMaxRecentFiles;
