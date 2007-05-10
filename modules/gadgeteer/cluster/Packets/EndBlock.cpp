@@ -92,10 +92,12 @@ void EndBlock::serialize()
 /**
  * Parses the data stream into the local member variables.
  */
-void EndBlock::parse(vpr::BufferObjectReader* reader)
+void EndBlock::parse()
 {
+   mPacketReader->setCurPos(0);
+
    // De-Serialize the Temp Var
-   mTempVar = reader->readUint16();
+   mTempVar = mPacketReader->readUint16();
 }
 
 /**

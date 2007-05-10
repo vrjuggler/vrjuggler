@@ -109,8 +109,6 @@ private:
    
    gadget::InputPtr                    mDevice;
    cluster::DataPacketPtr              mDataPacket;
-   vpr::BufferObjectWriter*            mBufferObjectWriter;
-   std::vector<vpr::Uint8>*            mDeviceData;
 };
 
 } // end namespace cluster

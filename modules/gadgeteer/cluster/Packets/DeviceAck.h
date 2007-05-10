@@ -95,7 +95,7 @@ public:
    /**
     * Parses the data stream into the local member variables.
     */
-   virtual void parse(vpr::BufferObjectReader* reader);
+   virtual void parse();
 
    /**
     * Print the data to the screen in a readable form.

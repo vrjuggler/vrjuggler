@@ -78,10 +78,12 @@ void ConfigPacket::serialize()
    mPacketWriter->writeUint16(mType);
 }
 
-void ConfigPacket::parse(vpr::BufferObjectReader* reader)
+void ConfigPacket::parse()
 {
-   mConfig = reader->readString();
-   mType = reader->readUint16();
+   mPacketReader->setCurPos(0);
+
+   mConfig = mPacketReader->readString();
+   mType = mPacketReader->readUint16();
 }
 
 void ConfigPacket::printData(int debug_level)

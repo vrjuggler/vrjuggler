@@ -60,8 +60,7 @@ protected:
     * @param data      Pointer to the raw data that we want to send across
     *                  the network
     */
-   DataPacket(const vpr::GUID& pluginId, const vpr::GUID& objectId,
-              std::vector<vpr::Uint8>* data);
+   DataPacket(const vpr::GUID& pluginId, const vpr::GUID& objectId);
 
 public:
    /**
@@ -78,8 +77,7 @@ public:
     *
     * @since 1.3.7
     */
-   static DataPacketPtr create(const vpr::GUID& pluginId, const vpr::GUID& objectId,
-                               std::vector<vpr::Uint8>* data);
+   static DataPacketPtr create(const vpr::GUID& pluginId, const vpr::GUID& objectId);
 
    /**
     * Clean up all unused memory.
@@ -89,12 +87,12 @@ public:
    /**
     * Serializes member variables into a data stream.
     */
-   void serialize();
+   void serialize(vpr::SerializableObject& object);
 
    /**
     * Parses the data stream into the local member variables.
     */
-   virtual void parse(vpr::BufferObjectReader* reader);
+   virtual void parse();
 
    /**
     * Print the data to the screen in a readable form.
@@ -117,17 +115,8 @@ public:
       return mObjectId;
    }
 
-   /**
-    * Return a pointer to the raw data that we are sending across the network
-    */
-   std::vector<vpr::Uint8>* getDeviceData()
-   {
-      return mDeviceData;
-   }
-
 private:
    vpr::GUID                  mObjectId;     /**< GUID of the object that we are sending raw data for. */
-   std::vector<vpr::Uint8>*   mDeviceData;   /**< Raw data that we are sending across the network. */
 };
 
 }// end namespace cluster

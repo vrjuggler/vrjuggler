@@ -85,9 +85,17 @@ public:
    /**
     * Return the vpr::PacketReader object used to retrieve data from the packet.
     */
-   vpr::ObjectReader* getPacketReader()
+   vpr::BufferObjectReader* getPacketReader()
    {
       return mPacketReader;
+   }
+
+   /**
+    * Return the vpr::PacketReader object used to retrieve data from the packet.
+    */
+   vpr::BufferObjectWriter* getPacketWriter()
+   {
+      return mPacketWriter;
    }
 
    /**
@@ -119,7 +127,7 @@ public:
       mHeader = head;
    }
 
-   virtual void parse(vpr::BufferObjectReader* reader) = 0;
+   virtual void parse() = 0;
 protected:
    Header* mHeader;                          /**< Header used to specify the type/size of this packet.*/
    vpr::BufferObjectReader* mPacketReader;   /**< ObjectReader that is used to parse all data. */

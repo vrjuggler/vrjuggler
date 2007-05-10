@@ -259,19 +259,18 @@ void RIMPlugin::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
          }
       case cluster::Header::RIM_DATA_PACKET:
          {
-            cluster::DataPacketPtr temp_data_packet = boost::dynamic_pointer_cast<cluster::DataPacket>(packet);
-            vprASSERT(NULL != temp_data_packet.get() && "Dynamic cast failed!");
+            cluster::DataPacketPtr data_packet = boost::dynamic_pointer_cast<cluster::DataPacket>(packet);
+            vprASSERT(NULL != data_packet.get() && "Dynamic cast failed!");
 
             //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "RIM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
-            //temp_data_packet->printData(1);
+            //data_packet->printData(1);
 
-            gadget::InputPtr virtual_device = getVirtualDevice(temp_data_packet->getObjectId());
+            gadget::InputPtr virtual_device = getVirtualDevice(data_packet->getObjectId());
             if ( NULL != virtual_device.get() )
             {
-               vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
-
-               temp_reader->setAttrib("rim.timestamp.delta", node->getDelta());
-               virtual_device->readObject(temp_reader);
+               vpr::BufferObjectReader* reader = data_packet->getPacketReader();
+               reader->setAttrib("rim.timestamp.delta", node->getDelta());
+               virtual_device->readObject(reader);
             }
             break;
          }

@@ -42,13 +42,11 @@ CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(DataPacket);
 
 DataPacket::DataPacket()
    : Packet(vpr::GUID())
-   , mDeviceData(NULL)
 {;}
 
-DataPacket::DataPacket(const vpr::GUID& pluginId, const vpr::GUID& objectId, std::vector<vpr::Uint8>* data)
+DataPacket::DataPacket(const vpr::GUID& pluginId, const vpr::GUID& objectId)
    : Packet(pluginId)
    , mObjectId(objectId)
-   , mDeviceData(data)
 {      
    // Create a Header for this packet with the correect type and size.
    mHeader = new Header(Header::RIM_PACKET,
@@ -56,10 +54,10 @@ DataPacket::DataPacket(const vpr::GUID& pluginId, const vpr::GUID& objectId, std
                         Header::RIM_PACKET_HEAD_SIZE 
                         + 16 /*Plugin GUID*/
                         + 16 /*Object GUID*/
-                        + mDeviceData->size(),
+                        + 0 /* Empty now, but needs updated later. */,
                         0/*Field not curently used*/);
    // Serialize the given data.
-   serialize();
+   //serialize();
 }
 
 DataPacketPtr DataPacket::create()
@@ -67,18 +65,16 @@ DataPacketPtr DataPacket::create()
    return DataPacketPtr(new DataPacket());
 }
 
-DataPacketPtr DataPacket::create(const vpr::GUID& pluginId, const vpr::GUID& objectId,
-                                 std::vector<vpr::Uint8>* data)
+DataPacketPtr DataPacket::create(const vpr::GUID& pluginId, const vpr::GUID& objectId)
 {
-   return DataPacketPtr(new DataPacket(pluginId, objectId, data));
+   return DataPacketPtr(new DataPacket(pluginId, objectId));
 }
    
 DataPacket::~DataPacket()
 {
-   delete mDeviceData;
 }
 
-void DataPacket::serialize()
+void DataPacket::serialize(vpr::SerializableObject& object)
 {
    // Clear the data stream.
    mPacketWriter->getData()->clear();
@@ -92,26 +88,21 @@ void DataPacket::serialize()
    
    // Serialize device GUID.
    mObjectId.writeObject(mPacketWriter);
-   
-   // mDeviceData is a pointer that points at the DeviceData located in the DeviceServer
-   // this data will be updated every frame before sent.
+
+   object.writeObject(mPacketWriter);
 }
 
-void DataPacket::parse(vpr::BufferObjectReader* reader)
+void DataPacket::parse()
 {
-   // De-Serialize plugin GUID
-   mPluginId.readObject(reader);
+   mPacketReader->setCurPos(0);
 
    // De-Serialize plugin GUID
-   mObjectId.readObject(reader);
-         
-   mDeviceData = new std::vector<vpr::Uint8>();
+   mPluginId.readObject(mPacketReader);
 
-   unsigned int data_size = mHeader->getPacketLength() - Header::RIM_PACKET_HEAD_SIZE - 32;
-   for(unsigned int i = 0 ; i < data_size ; i++)
-   {
-      mDeviceData->push_back(*(reader->readRaw(1)));
-   }
+   // De-Serialize plugin GUID
+   mObjectId.readObject(mPacketReader);
+
+   // There is extra data on the buffer for the object itself.
 }
 
 void DataPacket::printData(int debug_level)
@@ -121,7 +112,6 @@ void DataPacket::printData(int debug_level)
    
    boost::ignore_unused_variable_warning(debug_level);
    
-   /*
    vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
       <<  clrOutBOLD(clrYELLOW,"==== Device Data Packet ====\n") << vprDEBUG_FLUSH;
    
@@ -136,7 +126,6 @@ void DataPacket::printData(int debug_level)
 
    vprDEBUG_END(gadgetDBG_RIM,debug_level) 
       <<  clrOutBOLD(clrYELLOW,"============================\n") << vprDEBUG_FLUSH;
-   */
 }
 
 } // end namespace cluster

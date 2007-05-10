@@ -78,14 +78,12 @@ void Node::shutdown()
 
    if (NULL != mSockStream)
    {
-      /*
       if(mSockStream->isOpen())
       {
          mSockStream->close();
       }
       delete mSockStream;
       mSockStream = NULL;
-      */
    }
 }
 
@@ -184,78 +182,23 @@ bool Node::send(cluster::PacketPtr outPacket)
       throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
    }
 
+   // Early out if we only have a header.
    if(header->getPacketLength() == cluster::Header::RIM_PACKET_HEAD_SIZE)
    {
       return true;
    }
 
-   // If we have a data packet we need to also send the raw data
-   if (outPacket->getPacketType() != cluster::Header::RIM_DATA_PACKET)
+   try
    {
-      std::vector<vpr::Uint8>* packet_data = outPacket->getData();
-
-      try
-      {
-         mSockStream->send(*packet_data,
-            header->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE);
-      }
-      catch (vpr::IOException&)
-      {
-         // TODO: setCause(ex)
-         throw cluster::ClusterException("Packet::recv() - Sending data packet failed!!");
-      }
+      mSockStream->send(*outPacket->getData(),
+         header->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE);
    }
-   else
+   catch (vpr::IOException&)
    {
-      std::vector<vpr::Uint8>* packet_data = outPacket->getData();
-
-      // Since we are sending a DataPacket we are not actually sending all data here. We are only sending 2 GUIDs here
-      int size = 32;
-
-      try
-      {
-         mSockStream->send(*packet_data, size);
-      }
-      catch (vpr::IOException&)
-      {
-         // TODO: setCause(ex)
-         throw cluster::ClusterException("Packet::recv() - Sending packet failed!!");
-      }
-
-
-      cluster::DataPacketPtr temp_data_packet
-         = boost::dynamic_pointer_cast<cluster::DataPacket>(outPacket);
-      vprASSERT(NULL != temp_data_packet.get() && "Dynamic cast failed!");
-
-      // Testing GUIDs
-      /*vpr::BufferObjectReader* testing = new vpr::BufferObjectReader(packet_data);
-      vpr::GUID test;
-      test.readObject(testing);
-      vpr::GUID test2;
-      test2.readObject(testing);
-
-      std::cout << "1: " << test.toString() << " 2: " << test2.toString() << std::endl;
-
-      delete testing;
-
-      // Testing ID
-      testing = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
-      std::cout << "ID: " << (int)testing->readUint16() << std::endl;
-
-      delete testing;
-      */
-
-      try
-      {
-         mSockStream->send(*(temp_data_packet->getDeviceData()),
-                           temp_data_packet->getDeviceData()->size());
-      }
-      catch (vpr::IOException&)
-      {
-         // TODO: setCause(ex)
-         throw cluster::ClusterException("Packet::recv() - Sending Packet Data failed!!");
-      }
+      // TODO: setCause(ex)
+      throw cluster::ClusterException("Packet::recv() - Sending data packet failed!!");
    }
+
    return true;
 }
 
@@ -306,8 +249,6 @@ cluster::PacketPtr Node::recvPacket()
 
    // Set the header for the new packet.
    new_packet->setHeader( packet_head );
-   // Allocate memory for incoming packet.
-   std::vector<vpr::Uint8> incoming_data;
 
    // Make sure that we are connected.
    if ( NULL == mSockStream )
@@ -331,7 +272,7 @@ cluster::PacketPtr Node::recvPacket()
       {
          // Get packet data.
          mSockStream->recvn(
-            incoming_data,
+            *new_packet->getData(),
             packet_head->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE
          );
       }
@@ -348,20 +289,8 @@ cluster::PacketPtr Node::recvPacket()
       }
    }
 
-   vpr::BufferObjectReader* reader = new vpr::BufferObjectReader( &incoming_data );
-
    // Parse Packet with new data
-   new_packet->parse( reader );
-
-   //NOTE: incoming_data goes out of scope here which means that we are left with only the data that we parsed.
-   //TODO: We could save memory by not parsing the raw DataPacket but just passing the location of the memory that we want to use.
-
-   //parse_data_length = DataPacket::ParsedDataLength
-   //recvn(incoming_parse_data, ...)
-   //reader = new reader(incoming_parse_data);
-   //new_packet->parse(reader);
-   //recvn(incoming_raw_data, ...)
-   //new_packet->setRawData(incoming_raw_data);
+   new_packet->parse();
 
    return new_packet;
 }

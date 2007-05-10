@@ -42,8 +42,6 @@ DeviceServer::DeviceServer(const std::string& name, gadget::InputPtr device,
    , mPluginGUID(pluginGuid)
    , mDevice(device)
    , mDataPacket()
-   , mBufferObjectWriter(NULL)
-   , mDeviceData(NULL)
 {
    vpr::GUID temp;
    temp.generate();
@@ -57,9 +55,7 @@ DeviceServer::DeviceServer(const std::string& name, gadget::InputPtr device,
    }
    while(temp == mId);
 
-   mDeviceData = new std::vector<vpr::Uint8>;
-   mDataPacket = cluster::DataPacket::create(pluginGuid, mId, mDeviceData);
-   mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
+   mDataPacket = cluster::DataPacket::create(pluginGuid, mId);
 }
 
 DeviceServerPtr DeviceServer::create(const std::string& name, gadget::InputPtr device,
@@ -70,11 +66,6 @@ DeviceServerPtr DeviceServer::create(const std::string& name, gadget::InputPtr d
 
 DeviceServer::~DeviceServer()
 {
-   // mDataPacket will clean up the memory that mDeviceData points
-   // to since mDataPacket contains a reference to the same memory.
-   mDeviceData = NULL;
-   delete mBufferObjectWriter;
-   mBufferObjectWriter = NULL;
 }
 
 void DeviceServer::send() const
@@ -89,22 +80,14 @@ void DeviceServer::send() const
 
 void DeviceServer::updateLocalData()
 {
-   // -BufferObjectWriter
-   mBufferObjectWriter->getData()->clear();
-   mBufferObjectWriter->setCurPos(0);
-
    vprASSERT(NULL != mDevice.get() && "Can't have a NULL device.");
 
-   // This updates the mDeviceData which both mBufferedObjectReader and
-   // mDevicePacket point to.
-   mDevice->writeObject(mBufferObjectWriter);
+   mDataPacket->serialize(*mDevice);
 
    // We must update the size of the actual data that we are going to send
    mDataPacket->getHeader()->setPacketLength(
       cluster::Header::RIM_PACKET_HEAD_SIZE
-         + 16 /*Plugin GUID*/
-         + 16 /*Plugin GUID*/
-         + mDeviceData->size()
+         + mDataPacket->getData()->size()
    );
 
    // We must serialize the header again so that we can reset the size.
@@ -113,7 +96,6 @@ void DeviceServer::updateLocalData()
 
 void DeviceServer::debugDump(int debugLevel) const
 {
-
    vpr::DebugOutputGuard dbg_output(
       gadgetDBG_RIM, debugLevel,
       "-------------- DeviceServer --------------\n",

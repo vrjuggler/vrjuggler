@@ -94,12 +94,8 @@ void ApplicationDataManager::handlePacket(PacketPtr packet, gadget::NodePtr node
 
          if (user_data != NULL)
          {
-            // Create a object reader to parse the object's data with
-            vpr::BufferObjectReader* temp_reader =
-               new vpr::BufferObjectReader(data_packet->getDeviceData());
-
             // Parse the object's data using the temporary ObjectReader
-            user_data->readObject(temp_reader);
+            user_data->readObject(data_packet->getPacketReader());
          }
          else
          {

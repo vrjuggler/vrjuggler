@@ -112,25 +112,27 @@ void DeviceAck::serialize()
    mPacketWriter->writeBool(mAck);
 }
 
-void DeviceAck::parse(vpr::BufferObjectReader* reader)
+void DeviceAck::parse()
 {
+   mPacketReader->setCurPos(0);
+
    // De-Serialize plugin GUID
-   mPluginId.readObject(reader);
+   mPluginId.readObject(mPacketReader);
 
    // De-Serialize Device GUID
-   mId.readObject(reader);
+   mId.readObject(mPacketReader);
       
    // De-Serialize the Device Name
-   mDeviceName = reader->readString();
+   mDeviceName = mPacketReader->readString();
 
    // De-Serialize the Base Type of the acknowledged device
-   mDeviceBaseType = reader->readString();
+   mDeviceBaseType = mPacketReader->readString();
 
    // De-Serialize the hostname of the acknowledging node
-   mHostname = reader->readString();
+   mHostname = mPacketReader->readString();
 
    // De-Serialize the Ack boolean
-   mAck = reader->readBool();
+   mAck = mPacketReader->readBool();
 }
 
 void DeviceAck::printData(int debug_level)
