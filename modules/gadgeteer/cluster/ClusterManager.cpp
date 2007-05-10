@@ -459,7 +459,8 @@ namespace cluster
       while ( completed_nodes != num_nodes )
       {
          std::vector<gadget::Node*> ready_nodes =
-            reactor.getReadyNodes(vpr::Interval::NoWait);
+            //reactor.getReadyNodes(vpr::Interval::NoWait);
+            reactor.getReadyNodes(vpr::Interval::NoTimeout);
 
          for ( iter_t i = ready_nodes.begin(); i != ready_nodes.end(); ++i )
          {
