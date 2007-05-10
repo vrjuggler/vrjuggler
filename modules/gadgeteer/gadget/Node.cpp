@@ -421,6 +421,8 @@ cluster::Packet* Node::recvPacket()
    // Parse Packet with new data
    new_packet->parse( reader );
 
+   delete reader;
+
    //NOTE: incoming_data goes out of scope here which means that we are left with only the data that we parsed.
    //TODO: We could save memory by not parsing the raw DataPacket but just passing the location of the memory that we want to use.
 

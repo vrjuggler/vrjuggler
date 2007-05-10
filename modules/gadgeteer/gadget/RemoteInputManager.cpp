@@ -136,6 +136,7 @@ namespace gadget
                         new cluster::DeviceAck(mHandlerGUID, temp_guid,
                                                device_name, temp_string, true);
                      node->send(temp_ack);
+                     delete temp_ack;
                   }
                   else
                   {
@@ -145,6 +146,7 @@ namespace gadget
                         new cluster::DeviceAck(mHandlerGUID, empty_id, device_name,
                                                temp_string/*BaseType*/, false);
                      node->send(temp_ack);
+                     delete temp_ack;
                   }
                }
                else
@@ -159,6 +161,7 @@ namespace gadget
                      new cluster::DeviceAck(mHandlerGUID, empty_id, device_name,
                                             temp_string/*BaseType*/, false);
                   node->send(temp_ack);
+                  delete temp_ack;
                }
                break;
             }
@@ -215,6 +218,7 @@ namespace gadget
 
                   temp_reader->setAttrib("rim.timestamp.delta", node->getDelta());
                   virtual_device->readObject(temp_reader);
+                  delete temp_reader;
                }
                break;
             }
