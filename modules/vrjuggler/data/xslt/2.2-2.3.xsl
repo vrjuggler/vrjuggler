@@ -112,6 +112,10 @@
                   <xsl:text>3</xsl:text>
                </xsl:attribute>
 
+               <xsl:for-each select="./jconf:plugin_path">
+                  <xsl:copy-of select="." />
+               </xsl:for-each>
+
                <xsl:for-each select="./jconf:plugin">
                   <xsl:variable name="plugin_name">
                      <xsl:value-of select="." />
@@ -137,6 +141,10 @@
                         <xsl:value-of select="$newline" />
                      </xsl:otherwise>
                   </xsl:choose>
+               </xsl:for-each>
+
+               <xsl:for-each select="./jconf:cluster_node">
+                  <xsl:copy-of select="." />
                </xsl:for-each>
 
                <xsl:element name="use_software_swap_lock">
