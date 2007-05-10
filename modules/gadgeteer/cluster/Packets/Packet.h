@@ -39,9 +39,10 @@
 
 #include <cluster/ClusterException.h>
 
+#include <cluster/Packets/HeaderPtr.h>
+
 namespace cluster
 {
-   class Header;
 
 /** \class Packet Packet.h cluster/Packets/Packet.h
  *
@@ -109,7 +110,7 @@ public:
    /**
     * Get the header for this packet.
     */
-   Header* getHeader()
+   HeaderPtr getHeader()
    {
       return mHeader;
    }
@@ -122,14 +123,14 @@ public:
       return mData;
    }
 
-   void setHeader(Header* head)
+   void setHeader(HeaderPtr head)
    {
       mHeader = head;
    }
 
    virtual void parse() = 0;
 protected:
-   Header* mHeader;                          /**< Header used to specify the type/size of this packet.*/
+   HeaderPtr mHeader;                        /**< Header used to specify the type/size of this packet.*/
    vpr::BufferObjectReader* mPacketReader;   /**< ObjectReader that is used to parse all data. */
    vpr::BufferObjectWriter* mPacketWriter;   /**< ObjectWriter that is used to serialize all data. */
    std::vector<vpr::Uint8> mData;            /**< std::vector which contains all internal data */

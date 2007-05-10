@@ -51,19 +51,19 @@ DeviceAck::DeviceAck(const vpr::GUID& pluginId, const vpr::GUID& id,
    mHostname = vpr::InetAddr::getLocalHost().getHostname();
 
    // Create a Header for this packet with the correect type and size.
-   mHeader = new Header(Header::RIM_PACKET,
-                        Header::RIM_DEVICE_ACK,
-                        Header::RIM_PACKET_HEAD_SIZE 
-                        + 16 /*mPluginId*/
-                        + 16 /*mId*/
-                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                        + mDeviceName.size() /*length of mDeviceName*/
-                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                        + mDeviceBaseType.size() /*length of mDeviceBaseType*/
-                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                        + mHostname.size() /*length of mDeviceBaseType*/
-                        + 1 /*mAck*/,
-                        0/*Field not curently used*/);                      
+   mHeader = Header::create(Header::RIM_PACKET,
+                            Header::RIM_DEVICE_ACK,
+                            Header::RIM_PACKET_HEAD_SIZE 
+                            + 16 /*mPluginId*/
+                            + 16 /*mId*/
+                            + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                            + mDeviceName.size() /*length of mDeviceName*/
+                            + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                            + mDeviceBaseType.size() /*length of mDeviceBaseType*/
+                            + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                            + mHostname.size() /*length of mDeviceBaseType*/
+                            + 1 /*mAck*/,
+                            0/*Field not curently used*/);                      
 
    // Serialize the given data.
    serialize();

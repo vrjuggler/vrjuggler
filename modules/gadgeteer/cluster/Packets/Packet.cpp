@@ -56,7 +56,6 @@ Packet::Packet(std::vector<vpr::Uint8>* data) : mPluginId()
 
 Packet::~Packet()
 {
-   delete mHeader;
    delete mPacketReader;
    delete mPacketWriter;
    //delete mData;
@@ -64,7 +63,7 @@ Packet::~Packet()
 
 void Packet::dump()
 {
-   if (mHeader != NULL)
+   if (NULL != mHeader.get())
    {
       mHeader->dump();
    }
@@ -88,7 +87,7 @@ vpr::Uint16 Packet::getPacketType()
 
 void Packet::printData(int debug_level)
 {
-   if (mHeader != NULL)
+   if (NULL != mHeader.get())
    {
       mHeader->printData(debug_level);
       /*

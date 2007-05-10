@@ -49,15 +49,15 @@ DataPacket::DataPacket(const vpr::GUID& pluginId, const vpr::GUID& objectId)
    , mObjectId(objectId)
 {      
    // Create a Header for this packet with the correect type and size.
-   mHeader = new Header(Header::RIM_PACKET,
-                        Header::RIM_DATA_PACKET,
-                        Header::RIM_PACKET_HEAD_SIZE 
-                        + 16 /*Plugin GUID*/
-                        + 16 /*Object GUID*/
-                        + 0 /* Empty now, but needs updated later. */,
-                        0/*Field not curently used*/);
-   // Serialize the given data.
-   //serialize();
+   mHeader = Header::create(Header::RIM_PACKET,
+                            Header::RIM_DATA_PACKET,
+                            Header::RIM_PACKET_HEAD_SIZE 
+                            + 16 /*Plugin GUID*/
+                            + 16 /*Object GUID*/
+                            + 0 /* Empty now, but needs updated later. */,
+                            0/*Field not curently used*/);
+
+   // NOTE: We don't serialize here because we want to reuse the data packet.
 }
 
 DataPacketPtr DataPacket::create()

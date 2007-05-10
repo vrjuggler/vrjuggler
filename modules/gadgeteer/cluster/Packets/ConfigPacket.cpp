@@ -43,13 +43,13 @@ ConfigPacket::ConfigPacket(const std::string config, const vpr::Uint16 type)
    , mType(type)
 {
    // Create a Header for this packet with the correect type and size.
-   mHeader = new Header(Header::RIM_PACKET,
-                        getPacketFactoryType(),
-                        Header::RIM_PACKET_HEAD_SIZE 
-                        + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                        + mConfig.size()
-                        + 2 /*mType*/,
-                        0/*Field not curently used*/);
+   mHeader = Header::create(Header::RIM_PACKET,
+                            getPacketFactoryType(),
+                            Header::RIM_PACKET_HEAD_SIZE 
+                            + vpr::BufferObjectReader::STRING_LENGTH_SIZE
+                            + mConfig.size()
+                            + 2 /*mType*/,
+                            0/*Field not curently used*/);
 
    // Serialize the given data.
    serialize();

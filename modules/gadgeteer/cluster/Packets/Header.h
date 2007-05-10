@@ -29,12 +29,15 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/noncopyable.hpp>
+
 #include <vpr/vprTypes.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
 #include <cluster/ClusterException.h>
+#include <cluster/Packets/HeaderPtr.h>
 
 namespace cluster
 {
@@ -44,6 +47,7 @@ namespace cluster
  * Cluster packet header block.
  */
 class GADGET_CLASS_API Header
+   : boost::noncopyable
 {
 public:
    static const unsigned short RIM_PACKET          = 400;
@@ -61,13 +65,33 @@ public:
    static const unsigned short CONFIG_PACKET       = 412;
    static const unsigned short RIM_PACKET_HEAD_SIZE = 12;
 
-public:
+protected:
    /**
     * Directly read the needed header data from socket(blocking), and parse the
     * header.
     */
-   Header() : mPacketReader(NULL), mPacketWriter(NULL)
-   {;}
+   Header();
+
+   Header( const vpr::Uint16 code, const vpr::Uint16 type,
+           const vpr::Uint32 length, const vpr::Uint32 frame );
+
+public:
+   static HeaderPtr create();
+   static HeaderPtr create(const vpr::Uint16 code, const vpr::Uint16 type,
+                           const vpr::Uint32 length, const vpr::Uint32 frame);
+   virtual ~Header()
+   {
+      if ( NULL != mPacketReader )
+      {
+         delete mPacketReader;
+         mPacketReader = NULL;
+      }
+      if ( NULL != mPacketWriter )
+      {
+         delete mPacketWriter;
+         mPacketWriter = NULL;
+      }
+   }
 
    /**
     * Reads the packet header from the given socket.
@@ -85,23 +109,6 @@ public:
     *        to read from \p stream.
     */
    void readData(vpr::SocketStream* stream);
-
-   Header( vpr::Uint16 RIM_code, vpr::Uint16 packet_type,
-           vpr::Uint32 packet_length, vpr::Uint32 frame );
-
-   virtual ~Header()
-   {
-      if ( NULL != mPacketReader )
-      {
-         delete mPacketReader;
-         mPacketReader = NULL;
-      }
-      if ( NULL != mPacketWriter )
-      {
-         delete mPacketWriter;
-         mPacketWriter = NULL;
-      }
-   }
 
    void serializeHeader();
 

@@ -50,11 +50,11 @@ EndBlock::EndBlock(const vpr::Uint32 frameNum)
    // Set the local member variables using the given values.
    mTempVar = frameNum;
    // Create a Header for this packet with the correect type and size.
-   mHeader = new Header(Header::RIM_PACKET,
-                        Header::RIM_END_BLOCK,
-                        Header::RIM_PACKET_HEAD_SIZE
-                        + 2 /*Temp Variable*/,
-                        frameNum);
+   mHeader = Header::create(Header::RIM_PACKET,
+                            Header::RIM_END_BLOCK,
+                            Header::RIM_PACKET_HEAD_SIZE
+                            + 2 /*Temp Variable*/,
+                            frameNum);
    // Serialize the given data.
    serialize();
 }

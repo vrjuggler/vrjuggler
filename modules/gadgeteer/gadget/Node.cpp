@@ -165,7 +165,7 @@ bool Node::send(cluster::PacketPtr outPacket)
 
    vpr::Guard<vpr::Mutex> guard(mSockWriteLock);
 
-   cluster::Header* header = outPacket->getHeader();
+   cluster::HeaderPtr header = outPacket->getHeader();
 
    vprASSERT(NULL != header && "Node::send() - Can't have a NULL header.");
    vprASSERT(NULL != mSockStream && "Node::send() - SocketStream can't be NULL");
@@ -213,7 +213,7 @@ cluster::PacketPtr Node::recvPacket()
 
    vpr::Guard<vpr::Mutex> guard(mSockReadLock);
 
-   cluster::Header* packet_head = new cluster::Header();
+   cluster::HeaderPtr packet_head = cluster::Header::create();
 
    try
    {
