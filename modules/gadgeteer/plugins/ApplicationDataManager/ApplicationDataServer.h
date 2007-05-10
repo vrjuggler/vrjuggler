@@ -94,8 +94,6 @@ public:
 private:
    ApplicationData*             mApplicationData;    /**< Structure that is being shared across the cluster. */
    DataPacketPtr                mDataPacket;         /**< Packet will be sent across the cluster. */
-//   vpr::BufferObjectWriter*     mBufferObjectWriter; /**< ObjectWriter used to serialize the ApplicationData. */
-//   std::vector<vpr::Uint8>*     mDeviceData;         /**< Vector that conatins the data that will be sent across the node */
 };
 
 } // end namespace cluster

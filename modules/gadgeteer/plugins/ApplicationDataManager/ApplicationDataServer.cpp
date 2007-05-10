@@ -39,15 +39,9 @@ namespace cluster
 ApplicationDataServer::ApplicationDataServer(const vpr::GUID& guid,  ApplicationData* userData, const vpr::GUID& pluginGuid)
    : mApplicationData(userData)
    , mDataPacket()
-//   , mBufferObjectWriter(NULL)
-//   , mDeviceData(NULL)
 {
-   // mDataPacket and mBufferObjectWriter both use mDeviceData as their data buffer.
-   //mDeviceData = new std::vector<vpr::Uint8>;
-   
    // Create a DataPacket that will be updated and sent continually.
    mDataPacket = DataPacket::create(pluginGuid, guid);
-   //mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
 }
 
 ApplicationDataServerPtr ApplicationDataServer::create(const vpr::GUID& guid,
@@ -60,23 +54,13 @@ ApplicationDataServerPtr ApplicationDataServer::create(const vpr::GUID& guid,
 ApplicationDataServer::~ApplicationDataServer()
 {
    // User is responsible to clean up mApplicationData
-   // mDataPacket will clean up the memory that mDeviceData points
-   // to since mDataPacket contains a reference to the ame memory.
-   // vpr::BufferObjectWritter does not release mDeviceData
-   //delete mBufferObjectWriter;
-   //mDeviceData = NULL;   
 }
 
 void ApplicationDataServer::serializeAndSend()
 {
-   // Clear old data and reset the position of mBufferObjectWriter
-   //mBufferObjectWriter->getData()->clear();
-   //mBufferObjectWriter->setCurPos(0);
-   mDataPacket->getData()->clear();
+   // Clear old data and reset the position.
+   mDataPacket->getData().clear();
    mDataPacket->getPacketWriter()->setCurPos(0);
-
-   // This updates the mApplicationData which both mBufferedObjectReader and mDevicePacket point to
-   //mApplicationData->writeObject(mBufferObjectWriter);
 
    mDataPacket->serialize(*mApplicationData);
 
@@ -84,8 +68,7 @@ void ApplicationDataServer::serializeAndSend()
    mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
                                     + 16 /*Plugin GUID*/
                                     + 16 /*Plugin GUID*/
-                                    + mDataPacket->getData()->size());
-//                                    + mDeviceData->size());
+                                    + mDataPacket->getData().size());
 
    // We must serialize the header again so that we can reset the size.
    mDataPacket->getHeader()->serializeHeader();

@@ -117,9 +117,9 @@ public:
    /**
     * Get a std::vector containing all internal data.
     */
-   std::vector<vpr::Uint8>* getData()
+   std::vector<vpr::Uint8>& getData()
    {
-      return &mData;
+      return mData;
    }
 
    void setHeader(Header* head)

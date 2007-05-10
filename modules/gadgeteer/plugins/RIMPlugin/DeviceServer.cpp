@@ -87,7 +87,7 @@ void DeviceServer::updateLocalData()
    // We must update the size of the actual data that we are going to send
    mDataPacket->getHeader()->setPacketLength(
       cluster::Header::RIM_PACKET_HEAD_SIZE
-         + mDataPacket->getData()->size()
+         + mDataPacket->getData().size()
    );
 
    // We must serialize the header again so that we can reset the size.

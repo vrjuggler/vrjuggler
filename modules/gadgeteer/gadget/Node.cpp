@@ -190,7 +190,7 @@ bool Node::send(cluster::PacketPtr outPacket)
 
    try
    {
-      mSockStream->send(*outPacket->getData(),
+      mSockStream->send(outPacket->getData(),
          header->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE);
    }
    catch (vpr::IOException&)
@@ -272,7 +272,7 @@ cluster::PacketPtr Node::recvPacket()
       {
          // Get packet data.
          mSockStream->recvn(
-            *new_packet->getData(),
+            new_packet->getData(),
             packet_head->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE
          );
       }
