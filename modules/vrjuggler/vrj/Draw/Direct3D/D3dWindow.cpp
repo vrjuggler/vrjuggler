@@ -111,11 +111,7 @@ void D3dWindow::setProjection(vrj::Projection* proj)
       return;
    }
 
-   const float* frust = proj->getFrustum().frust;
-
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)  << "---- Frustum ----\n"
-               << proj->getFrustum().frust << std::endl
-               << vprDEBUG_FLUSH;
+   const std::vector<float>& frust = proj->getFrustum().getValues();
 
    D3DXMATRIX proj_matrix;
    ZeroMemory( &proj_matrix, sizeof( D3DXMATRIX ) );

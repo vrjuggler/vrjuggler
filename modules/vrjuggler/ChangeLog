@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-11-2007 patrick     Made the data member of vrj::Frustum private and added
+                        vrj::Frustum::getValues() as the accessor for that
+                        data.
+                        NEW VERSION: 2.1.27
 May-04-2007 patrick     Improved OSG scene view lighting for subclasses of
                         vrj::OsgApp. Submitted by Doug McCorkle.
                         NEW VERSION: 2.1.26
