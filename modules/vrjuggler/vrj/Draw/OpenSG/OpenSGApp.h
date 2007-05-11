@@ -36,12 +36,17 @@
 /*-----------------------------OpenSG includes--------------------------------*/
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGThread.h>
-#include <OpenSG/OSGRenderAction.h>
 #include <OpenSG/OSGMatrixCamera.h>
 #include <OpenSG/OSGPassiveWindow.h>
 #include <OpenSG/OSGPassiveViewport.h>
 #include <OpenSG/OSGPassiveBackground.h>
 #include <OpenSG/OSGMatrixUtility.h>
+
+#if OSG_MAJOR_VERSION >= 2
+#include <OpenSG/OSGRenderTraversalAction.h>
+#else
+#include <OpenSG/OSGRenderAction.h>
+#endif
 
 /*----------------------------------------------------------------------------*/
 
@@ -66,8 +71,12 @@ public:
       {
          ;
       }
-
+#if OSG_MAJOR_VERSION >= 2
+      OSG::RenderTraversalAction* mRenderAction;    /**< The render trav action for the scene */
+#else
       OSG::RenderAction*         mRenderAction;    /**< The render action for the scene */
+#endif
+
       OSG::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
       OSG::PassiveViewportPtr    mViewport;        /**< passive viewport to render with (the context) */
       OSG::PassiveBackgroundPtr  mBackground;      /**< passive background to render with (the context) */
@@ -252,7 +261,11 @@ inline void OpenSGApp::contextInit()
    OSG::endEditCP(c_data->mCamera);
 
    // Could actually make one of these per thread instead of context.
+#if OSG_MAJOR_VERSION >= 2
+   c_data->mRenderAction = OSG::RenderTraversalAction::create();
+#else
    c_data->mRenderAction = OSG::RenderAction::create();
+#endif
    // c_data->mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
 
    // Initialize OpenSG's OpenGL state
@@ -335,8 +348,9 @@ inline void OpenSGApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    glPopAttrib();    // Pop the attribute store
-
+#if OSG_MAJOR_VERSION < 2
    FINFO(("Frame done on Window %lx.\n", c_data->mWin.getCPtr() ));
+#endif
 }
 
 } // End of vrj namespace
