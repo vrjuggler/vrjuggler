@@ -383,10 +383,10 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
 
    while ( completed_nodes != numNodes )
    {
+      std::vector<gadget::NodePtr> ready_nodes;
       try
       {
-	 std::vector<gadget::NodePtr> ready_nodes =
-	    mReactor.getReadyNodes(node_timeout);
+	    mReactor.getReadyNodes(ready_nodes, node_timeout);
 	    //reactor.getReadyNodes(vpr::Interval::NoWait);
 	    //mReactor.getReadyNodes(vpr::Interval::NoTimeout);
       }
@@ -394,7 +394,7 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
       {
 	 vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
 	    << clrOutBOLD(clrBLUE,"[NetworkManager]")
-	    << " " << (int)((int)numNodes - ready_nodes.size())
+	    << " " << (int)((int)numNodes - completed_nodes) - ready_nodes.size()
 	    << " still waiting after timeout."
 	    << std::endl << vprDEBUG_FLUSH;
       }

@@ -65,16 +65,15 @@ void Reactor::removeNode(gadget::NodePtr node)
    }
 }
 
-std::vector<gadget::NodePtr> Reactor::getReadyNodes(const vpr::Interval& timeout)
+void Reactor::getReadyNodes(std::vector<gadget::NodePtr> readyList, const vpr::Interval& timeout)
 {
    vpr::Uint16 num_events(0);
    mSelector.select(num_events, timeout);
 
-   std::vector<gadget::NodePtr> ready_nodes;
 
    if ( num_events > 0 )
    {
-      ready_nodes.reserve(num_events);
+      readyList.reserve(num_events);
 
       for ( vpr::Uint16 i = 0; i < mSelector.getNumHandles(); ++i )
       {
@@ -83,12 +82,10 @@ std::vector<gadget::NodePtr> Reactor::getReadyNodes(const vpr::Interval& timeout
 
          if ( 0 != event_mask )
          {
-            ready_nodes.push_back(mDemuxTable[h]);
+            readyList.push_back(mDemuxTable[h]);
          }
       }
    }
-
-   return ready_nodes;
 }
 
 }

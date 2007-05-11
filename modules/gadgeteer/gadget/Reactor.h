@@ -52,7 +52,7 @@ public:
 
    void removeNode(gadget::NodePtr node);
 
-   std::vector<gadget::NodePtr> getReadyNodes(const vpr::Interval& timeout);
+   void getReadyNodes(std::vector<gadget::NodePtr> readyList, const vpr::Interval& timeout);
 
    vpr::Uint16 getNumHandles() const
    {
