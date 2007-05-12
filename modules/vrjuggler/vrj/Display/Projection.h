@@ -132,8 +132,8 @@ public:
       return mViewMat;
    }
 
-   /** Returns a copy of this projection's frustum. */
-   vrj::Frustum getFrustum() const
+   /** Returns a constant reference to this projection's frustum. */
+   const vrj::Frustum& getFrustum() const
    {
       return mFrustum;
    }
