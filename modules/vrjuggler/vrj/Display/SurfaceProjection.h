@@ -24,13 +24,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_WALL_PROJECTION_H_
-#define _VRJ_WALL_PROJECTION_H_
+#ifndef _VRJ_SURFACE_PROJECTION_H_
+#define _VRJ_SURFACE_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
 
-#include <gmtl/MatrixOps.h>
 #include <gmtl/Point.h>
+#include <gmtl/Matrix.h>
 
 #include <vrj/Display/Projection.h>
 #include <vrj/Display/SurfaceProjectionPtr.h>
@@ -89,22 +89,42 @@ public:
     */
    void validateCorners();
 
-   /** Configures the projection using the element given. */
+   /** Configures the projection using the given element. */
    virtual void config(jccl::ConfigElementPtr element);
 
    /**
-    * Recalculates the projection matrix.
-    * @pre WallRotation matrix must be set correctly.
-    *      mOrigin*'s must all be set correctly.
-    * @pre eyePos is scaled by position factor.
-    * @pre scaleFactor is the scale current used
-    * @post frustum has been recomputed for given eyePos.
+    * Recalculates the projection matrix. This uses a method that needs to
+    * know the distance in the screen plane from the origin (determined by the
+    * normal to the plane throught the origin) to the edges of the screen.
+    * This method can be used for any rectangular planar screen. By adjusting
+    * the wall rotation matrix, this method can be used for the general case
+    * of a rectangular screen in 3-space.
+    *
+    * @pre WallRotation matrix must be set correctly. All \c mOrigin*
+    *      values must be set correctly. \p eyePos must be set correctly.
+    *      \p scaleFactor is the current scaling in use.
+    * @post \c mFrustum has been recomputed for the given eye position.
+    *
+    * @param eyePos      The eye position.
+    * @param scaleFactor The scale factor currently in use.
     */
    virtual void calcViewMatrix(const gmtl::Matrix44f& eyePos,
                                const float scaleFactor);
 
    /**
-    * Calculates the frustum needed for the view matrix.
+    * Calculates the view frustum needed for the view matrix. This uses a
+    * method that needs to know the distance in the screen plane from the
+    * origin (determined by the normal to the plane through the origin) to the
+    * edges of the screen. This method can be used for any rectangular planar
+    * screen. By adjusting the wall rotation matrix, this method can be used
+    * for the general case of a rectangular screen in 3-space.
+    *
+    * @pre \c m_base_M_surface and \c m_surface_M_base matrices must be set
+    *      correctly. All the \c mOrigin* values must be set correctly.
+    *
+    * @param eyePos      The eye position.
+    * @param scaleFactor The scale factor currently in use.
+    *
     * @note This function is called as part of calcViewMatrix.
     */
    virtual void calcViewFrustum(const gmtl::Matrix44f& eyePos,
@@ -117,10 +137,10 @@ protected:
    /**
     * @name Screen calculation functions
     *
-    * These calculate mOriginToScreen, etc, from the screen corners.
-    * calculateOffsets requires that mLLCorner to mULCorner be set correctly,
-    * and it will handle calling calculateSurfaceRotation and
-    * calculateCornersInBaseFrame.
+    * These calculate \c mOriginToScreen, etc, from the screen corners.
+    * calculateOffsets() requires that \c mLLCorner to \c mULCorner be set
+    * correctly, and it will handle calling calculateSurfaceRotation() and
+    * calculateCornersInBaseFrame().
     */
    //@{
    void calculateOffsets();
@@ -135,15 +155,15 @@ protected:
     *
     * Base              - B  - Base coordinate system of the real physical
     *                          world.<br>
-    * Surface           - S  - Cordinate frame that is aligned with the surface.
-    *                          This is the coordinates that.  The surface and
-    *                          frustum (projection) parameters are stored
-    *                          in/relative to.<br>
+    * Surface           - S  - Cordinate frame that is aligned with the
+    *                          surface. This is the coordinates that. The
+    *                          surface and frustum (projection) parameters are
+    *                          stored in/relative to.<br>
     * Surface Transform - ST - Coordinate frame that offsets the Surface in
-    *                          space.  Only used for tracked surfaces.<br>
+    *                          space. Only used for tracked surfaces.<br>
     * Eye               - E  - Coordinate system that is aligned with the eye.
     *                          This is the frame that the frustum is drawn in
-    *                          for final projection.  This is where the "view"
+    *                          for final projection. This is where the "view"
     *                          starts from.
     */
    //@{
