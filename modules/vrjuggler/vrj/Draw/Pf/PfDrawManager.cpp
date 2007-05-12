@@ -1350,7 +1350,7 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, ProjectionPtr proj)  //,
    if(!simulator)
    {
    */
-      vrj::Frustum frust(proj->getFrustum());
+      const vrj::Frustum& frust(proj->getFrustum());
       chan->setAutoAspect(PFFRUST_CALC_NONE);         // No auto aspect
       chan->setNearFar(frust[Frustum::VJ_NEAR], frust[Frustum::VJ_FAR]);
       chan->makePersp(frust[Frustum::VJ_LEFT], frust[Frustum::VJ_RIGHT],

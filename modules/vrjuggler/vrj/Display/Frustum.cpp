@@ -32,31 +32,31 @@ namespace vrj
 {
 
 Frustum::Frustum()
+   : mFrust(6, 0.0f)
 {
-   frust[0] = frust[1] = frust[2] = 0.0f;
-   frust[3] = frust[4] = frust[5] = 0.0f;
+   /* Do nothing. */ ;
 }
 
 void Frustum::setBottomLeftTopRight(const float bottomVal,
                                     const float leftVal, const float topVal,
                                     const float rightVal)
 {
-   frust[VJ_BOTTOM] = bottomVal;
-   frust[VJ_LEFT]   = leftVal;
-   frust[VJ_TOP]    = topVal;
-   frust[VJ_RIGHT]  = rightVal;
+   mFrust[VJ_BOTTOM] = bottomVal;
+   mFrust[VJ_LEFT]   = leftVal;
+   mFrust[VJ_TOP]    = topVal;
+   mFrust[VJ_RIGHT]  = rightVal;
 }
 
 void Frustum::set(const float leftVal, const float rightVal,
                   const float bottomVal, const float topVal,
                   const float nearVal, const float farVal)
 {
-   frust[VJ_LEFT]   = leftVal;
-   frust[VJ_RIGHT]  = rightVal;
-   frust[VJ_BOTTOM] = bottomVal;
-   frust[VJ_TOP]    = topVal;
-   frust[VJ_NEAR]   = nearVal;
-   frust[VJ_FAR]    = farVal;
+   mFrust[VJ_LEFT]   = leftVal;
+   mFrust[VJ_RIGHT]  = rightVal;
+   mFrust[VJ_BOTTOM] = bottomVal;
+   mFrust[VJ_TOP]    = topVal;
+   mFrust[VJ_NEAR]   = nearVal;
+   mFrust[VJ_FAR]    = farVal;
 }
 
 // ---- FRIEND FUNCTIONS ---- //

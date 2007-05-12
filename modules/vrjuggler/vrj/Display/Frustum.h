@@ -30,6 +30,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <iostream>
+#include <vector>
 
 
 namespace vrj
@@ -46,12 +47,12 @@ class VJ_CLASS_API Frustum
 public:
    enum entry
    {
-      VJ_LEFT = 0,
-      VJ_RIGHT = 1,
-      VJ_BOTTOM,
-      VJ_TOP,
-      VJ_NEAR,
-      VJ_FAR
+      VJ_LEFT = 0,      /**< Left (X minium) */
+      VJ_RIGHT = 1,     /**< Right (X maximum) */
+      VJ_BOTTOM,        /**< Bottom (Y minimum) */
+      VJ_TOP,           /**< Top (Y maximum) */
+      VJ_NEAR,          /**< Near (Z minimum) */
+      VJ_FAR            /**< Far (Z maximum) */
    };
 
    Frustum();
@@ -61,8 +62,8 @@ public:
 
    void setNearFar(const float nearVal, const float farVal)
    {
-      frust[VJ_NEAR] = nearVal;
-      frust[VJ_FAR]  = farVal;
+      mFrust[VJ_NEAR] = nearVal;
+      mFrust[VJ_FAR]  = farVal;
    }
 
    void set(const float leftVal, const float rightVal, const float bottomVal,
@@ -70,19 +71,29 @@ public:
 
    float& operator[](const unsigned int elt)
    {
-      return frust[elt];
+      return mFrust[elt];
    }
 
    const float& operator[](const unsigned int elt) const
    {
-      return frust[elt];
+      return mFrust[elt];
    }
 
-public:
-   float frust[6];  /**< Left, Right, Bottom, Top, Near, Far */
+   /**
+    * Returns the values for this frustum object. The values can (and should)
+    * be accessed using the identifiers defined in vrj::Frustum::entry.
+    *
+    * @since 2.1.27
+    */
+   const std::vector<float>& getValues() const
+   {
+      return mFrust;
+   }
+
+private:
+   std::vector<float> mFrust;   /**< Left, Right, Bottom, Top, Near, Far */
 };
 
-// ---- FRIEND FUNCTIONS ---- //
 std::ostream& operator<<(std::ostream& out, Frustum& _frust);
 
 }

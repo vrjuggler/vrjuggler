@@ -237,15 +237,11 @@ void GlWindow::setProjection(vrj::ProjectionPtr proj)
       return;
    }
 
-   const float* frust = proj->getFrustum().frust;
-
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HEX_LVL)  << "---- Frustum ----\n"
-               << proj->getFrustum().frust << std::endl
-               << vprDEBUG_FLUSH;
-
    // --- Set up the projection --- //
    glMatrixMode(GL_PROJECTION);
    {
+      const std::vector<float>& frust = proj->getFrustum().getValues();
+
       glLoadIdentity();             // Load identity matrix
       glFrustum(frust[Frustum::VJ_LEFT],frust[Frustum::VJ_RIGHT],
                  frust[Frustum::VJ_BOTTOM],frust[Frustum::VJ_TOP],
