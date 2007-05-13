@@ -65,11 +65,11 @@ void Reactor::removeNode(gadget::NodePtr node)
    }
 }
 
-void Reactor::getReadyNodes(std::vector<gadget::NodePtr> readyList, const vpr::Interval& timeout)
+void Reactor::getReadyNodes(std::vector<gadget::NodePtr>& readyList,
+                            const vpr::Interval& timeout)
 {
    vpr::Uint16 num_events(0);
    mSelector.select(num_events, timeout);
-
 
    if ( num_events > 0 )
    {
