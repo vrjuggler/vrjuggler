@@ -22,7 +22,7 @@
 	<key>CFBundleExecutable</key>
 	<string>JavaApplicationStub</string>
 	<key>CFBundleGetInfoString</key>
-	<string>VRJConfig v1.1.0. Copyright &#x00A9; 1998&#2013;2007 Iowa State University</string>
+	<string>VRJConfig v1.3.0. Copyright &#x00A9; 1998&#2013;2007 Iowa State University</string>
 	<key>CFBundleIconFile</key>
 	<string>vrjconfig.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>
