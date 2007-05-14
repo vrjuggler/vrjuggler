@@ -64,10 +64,10 @@ class Viewport;
 class PfInputHandler;
 
     // Performer Config function called in draw proc after window is set up
-void PFconfigPWin(pfPipeWindow* pWin);
-void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye,
-                bool stereo, bool simulator);
-void PfAppFunc(pfChannel *chan, void* chandata);
+void PFconfigPWin(pfPipeWindow*);
+void PfDrawFunc(pfChannel*, void*, const bool, const bool, const bool,
+                const bool);
+void PfAppFunc(pfChannel*, void*);
 
 /** \class PfDrawManager PfDrawManager.h vrj/Draw/Pf/PfDrawmanager.h
  *
@@ -198,10 +198,10 @@ public:
 
    void debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel);
 
-   friend void PFconfigPWin(pfPipeWindow* pWin);
-   friend void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye,
-                          bool right_eye, bool stereo);
-   friend void PfAppFunc(pfChannel *chan, void* chandata);
+   friend void PFconfigPWin(pfPipeWindow*);
+   friend void PfDrawFunc(pfChannel*, void*, const bool, const bool,
+                          const bool);
+   friend void PfAppFunc(pfChannel*, void*);
 
 public: // Config element handlers
    /**
@@ -280,9 +280,9 @@ protected:
 
    /**
     * Returns a Performer pipe.
-    * @pre pipe_num < mNumPipes, Fork must have happend.
+    * @pre pipeNum < mNumPipes, Fork must have happend.
     */
-   pfPipe* getPfPipe(unsigned pipe_num);
+   pfPipe* getPfPipe(const unsigned int pipeNum);
 
    /**
     * @name Display helpers
@@ -291,8 +291,8 @@ protected:
    //@{
    void releaseDisplay(pfDisplay& disp);
    void releaseViewport(pfDisplay& disp, pfViewport& vp);
-   pfPipeWindow* allocatePipeWin(unsigned pipeNum);
-   void releasePipeWin(pfPipeWindow* pipeWin, unsigned pipeNum);
+   pfPipeWindow* allocatePipeWin(const unsigned int pipeNum);
+   void releasePipeWin(pfPipeWindow* pipeWin, const unsigned int pipeNum);
    //@}
 
    /** Returns the needed mono frame buffer config. */
