@@ -94,6 +94,8 @@ public:
       return gadget::PositionUnitConversion::ConvertToFeet;
    }
 
+   virtual void exit();
+
    void setModelFileName(std::string filename)
    {
       std::cout << "[OpenSGNav::setModelFileName()] Set filename '"
@@ -114,12 +116,12 @@ private:
    //   mLightBeacon:[Transform]
    //         |
    //     mModelRoot
-   OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
-   OSG::TransformPtr   mSceneTransform;  /**< Transform core */
-   OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
+   OSG::NodeRefPtr        mSceneRoot;       /**< The root of the scene */
+   OSG::TransformRefPtr   mSceneTransform;  /**< Transform core */
+   OSG::NodeRefPtr        mModelRoot;       /**< Root of the loaded model */
 
-   OSG::NodePtr  mLightNode;       /**< Light node to use */
-   OSG::NodePtr  mLightBeacon;     /**< A beacon for the light */
+   OSG::NodeRefPtr  mLightNode;       /**< Light node to use */
+   OSG::NodeRefPtr  mLightBeacon;     /**< A beacon for the light */
 
 public:
    gadget::PositionInterface  mWandPos;     /**< The position of the wand */
