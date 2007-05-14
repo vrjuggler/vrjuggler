@@ -110,9 +110,27 @@ void OpenSGNav::preFrame()
    OSG::Matrix trans_mat(OSG::Matrix::identity());
    trans_mat.setTranslate(trans[0], trans[1], trans[2]);
 
-   OSG::beginEditCP(mSceneTransform);
-      mSceneTransform->getMatrix().multLeft(trans_mat);
-   OSG::endEditCP(mSceneTransform);
+#if OSG_MAJOR_VERSION < 2
+   CPEdit(mSceneTransform, OSG::Transform::MatrixFieldMask);
+   mSceneTransform->getMatrix().multLeft(trans_mat);
+#else
+   mSceneTransform->editMatrix().multLeft(trans_mat);
+#endif
+
+   vrj::OpenSGApp::preFrame();
+}
+
+void OpenSGNav::exit()
+{
+   // Ensure that we release all the OSG::RefPtr<T> objects that we hold so
+   // that OpenSG can shut down cleanly.
+   mSceneRoot      = OSG::NullFC;
+   mSceneTransform = OSG::NullFC;
+   mModelRoot      = OSG::NullFC;
+   mLightNode      = OSG::NullFC;
+   mLightBeacon    = OSG::NullFC;
+
+   vrj::OpenSGApp::exit();
 }
 
 /** Initialize GL state. Hold over from regular OGL apps */
@@ -152,8 +170,12 @@ void OpenSGNav::initScene()
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "[OpenSGNav::initScene()] Loading '" << mFileToLoad << "' ..."
          << std::endl << vprDEBUG_FLUSH;
-      mModelRoot =
-         OSG::SceneFileHandler::the().read((OSG::Char8*) (mFileToLoad.c_str()));
+      const OSG::Char8* file = mFileToLoad.c_str();
+#if OSG_MAJOR_VERSION < 2
+      mModelRoot = OSG::SceneFileHandler::the().read(file);
+#else
+      mModelRoot = OSG::SceneFileHandler::the()->read(file);
+#endif
    }
 
    // --- Light setup --- //
@@ -168,43 +190,37 @@ void OpenSGNav::initScene()
    OSG::Matrix light_pos;
    light_pos.setTransform(OSG::Vec3f(2.0f, 5.0f, 4.0f));
 
-   OSG::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
-      light_beacon_core->setMatrix(light_pos);
-   OSG::endEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
+#if OSG_MAJOR_VERSION < 2
+   CPEdit(light_beacon_core, OSG::Transform::MatrixFieldMask);
+   CPEdit(mLightBeacon, OSG::Node::CoreFieldMask);
+   CPEdit(mLightNode, OSG::Node::CoreFieldMask | OSG::Node::ChildrenFieldMask);
+   CPEditAll(light_core);
+   CPEdit(mSceneRoot, OSG::Node::CoreFieldMask | OSG::Node::ChildrenFieldMask);
+#endif
 
-   OSG::beginEditCP(mLightBeacon);
-      mLightBeacon->setCore(light_beacon_core);
-   OSG::endEditCP(mLightBeacon);
+   light_beacon_core->setMatrix(light_pos);
+
+   mLightBeacon->setCore(light_beacon_core);
 
    // Setup light node
-   OSG::addRefCP(mLightNode);
-   OSG::beginEditCP(mLightNode);
-      mLightNode->setCore(light_core);
-      mLightNode->addChild(mLightBeacon);
-   OSG::endEditCP(mLightNode);
+   mLightNode->setCore(light_core);
+   mLightNode->addChild(mLightBeacon);
 
-   OSG::beginEditCP(light_core);
-      light_core->setAmbient   (0.9, 0.8, 0.8, 1);
-      light_core->setDiffuse   (0.6, 0.6, 0.6, 1);
-      light_core->setSpecular  (1, 1, 1, 1);
-      light_core->setDirection (0, 0, 1);
-      light_core->setBeacon    (mLightNode);
-   OSG::endEditCP(light_core);
+   light_core->setAmbient  (0.9, 0.8, 0.8, 1);
+   light_core->setDiffuse  (0.6, 0.6, 0.6, 1);
+   light_core->setSpecular (1, 1, 1, 1);
+   light_core->setDirection(0, 0, 1);
+   light_core->setBeacon   (mLightNode);
 
    // --- Setup Scene -- //
    // add the loaded scene to the light node, so that it is lit by the light
-   OSG::addRefCP(mModelRoot);
-   OSG::beginEditCP(mLightNode);
-      mLightNode->addChild(mModelRoot);
-   OSG::endEditCP(mLightNode);
+   mLightNode->addChild(mModelRoot);
 
    // create the root part of the scene
    mSceneRoot = OSG::Node::create();
    mSceneTransform = OSG::Transform::create();
 
    // Set up the root node
-   OSG::beginEditCP(mSceneRoot);
-      mSceneRoot->setCore(mSceneTransform);
-      mSceneRoot->addChild(mLightNode);
-   OSG::endEditCP(mSceneRoot);
+   mSceneRoot->setCore(mSceneTransform);
+   mSceneRoot->addChild(mLightNode);
 }

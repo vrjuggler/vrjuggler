@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-14-2007 patrick     Finished making vrj::OpenSGApp work with both OpenSG
+                        1.x and 2.0.
+                        NEW VERSION: 2.3.8
 May-11-2007 patrick     Made the data member of vrj::Frustum private and added
                         vrj::Frustum::getValues() as the accessor for that
                         data.

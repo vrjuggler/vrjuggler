@@ -43,6 +43,8 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
 OPENSG_LIBS=	$(shell osg-config --libs) -lOSGBase -lOSGSystem
 OPENSG_CFLAGS=	$(shell osg-config --cflags)
+#OPENSG_LIBS=	$(shell osg2-config OSGFileIO OSGWindow OSGRenderTraversal --libs)
+#OPENSG_CFLAGS=	$(shell osg2-config OSGFileIO OSGWindow OSGRenderTraversal --cflags)
 
 EXTRA_CXXFLAGS+=	$(OPENSG_CFLAGS)
 EXTRA_LIBS+=		$(OPENSG_LIBS)

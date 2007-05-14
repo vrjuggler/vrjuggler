@@ -125,10 +125,26 @@ public:
    virtual void apiInit();
 
    /**
-    * Shuts down OpenSG.  If overridden, the overriding method call this
+    * Shuts down OpenSG.  If overridden, the overriding method must call this
     * method.
     */
    virtual void exit();
+
+   /**
+    * For OpenSG 1.x, this method does nothing. For OpenSG 2, it ensures that
+    * all scene graph changes have been committed prior to rendering. If
+    * overridden, the overriding method must call this method. It is
+    * recommended that the invocation of this method be the last step in the
+    * override of latePreFrame().
+    *
+    * @since 2.3.8
+    */
+   virtual void latePreFrame()
+   {
+#if OSG_MAJOR_VERSION >= 2
+      OSG::commitChanges();
+#endif
+   }
 
    /**
     * OpenGL Drawing functions.
@@ -239,26 +255,28 @@ inline void OpenSGApp::contextInit()
    c_data->mBackground = OSG::PassiveBackground::create();
    c_data->mCamera     = OSG::MatrixCamera::create();
 
-   // Setup the viewport
-   OSG::beginEditCP(c_data->mViewport);
-      c_data->mViewport->setLeft(0);
-      c_data->mViewport->setRight(1);
-      c_data->mViewport->setBottom(0);
-      c_data->mViewport->setTop(1);
-      c_data->mViewport->setCamera(c_data->mCamera);
-      c_data->mViewport->setBackground(c_data->mBackground);
-   OSG::endEditCP  (c_data->mViewport);
+#if OSG_MAJOR_VERSION < 2
+   // Create container pointer editors for the field containers modified
+   // below.
+   OSG::CPEditor vp_editor(c_data->mViewport);
+   OSG::CPEditor win_editor(c_data->mWin);
+   OSG::CPEditor camera_editor(c_data->mCamera);
+#endif
 
-   // Setup the Window
-   OSG::beginEditCP(c_data->mWin);
-      c_data->mWin->addPort(c_data->mViewport);
-   OSG::endEditCP  (c_data->mWin);
+   // Set up the viewport.
+   c_data->mViewport->setLeft(0);
+   c_data->mViewport->setRight(1);
+   c_data->mViewport->setBottom(0);
+   c_data->mViewport->setTop(1);
+   c_data->mViewport->setCamera(c_data->mCamera);
+   c_data->mViewport->setBackground(c_data->mBackground);
 
-   // Setup the camera
-   OSG::beginEditCP(c_data->mCamera);
-      c_data->mCamera->setNear(0.1);
-      c_data->mCamera->setFar (10000);
-   OSG::endEditCP(c_data->mCamera);
+   // Set up the Window.
+   c_data->mWin->addPort(c_data->mViewport);
+
+   // Set up the camera.
+   c_data->mCamera->setNear(0.1);
+   c_data->mCamera->setFar (10000);
 
    // Could actually make one of these per thread instead of context.
 #if OSG_MAJOR_VERSION >= 2
@@ -271,6 +289,10 @@ inline void OpenSGApp::contextInit()
    // Initialize OpenSG's OpenGL state
 
    c_data->mWin->init();
+
+#if OSG_MAJOR_VERSION >= 2
+   OSG::commitChanges();
+#endif
 }
 
 inline void OpenSGApp::contextPreDraw()
@@ -320,18 +342,25 @@ inline void OpenSGApp::draw()
    OSG::Matrix full_view_matrix = frustum_matrix;
    full_view_matrix.mult(view_xform_mat);   // Compute complete projection matrix
 
-   // Setup the camera
-   OSG::beginEditCP(c_data->mCamera);
-      c_data->mCamera->setNear(vrj_frustum[vrj::Frustum::VJ_NEAR]);
-      c_data->mCamera->setFar(vrj_frustum[vrj::Frustum::VJ_FAR]);
-      c_data->mCamera->setProjectionMatrix( frustum_matrix );  // Set projection matrix
-      c_data->mCamera->setModelviewMatrix( view_xform_mat );   // Set modelview matrix
-   OSG::endEditCP(c_data->mCamera);
+#if OSG_MAJOR_VERSION < 2
+   // Create container pointer editors for the field containers modified
+   // below.
+   OSG::CPEditor camera_editor(c_data->mCamera,
+                               OSG::MatrixCamera::NearFieldMask |
+                                  OSG::MatrixCamera::FarFieldMask |
+                                  OSG::MatrixCamera::ProjectionMatrixFieldMask |
+                                  OSG::MatrixCamera::ModelviewMatrixFieldMask);
+   OSG::CPEditor vp_editor(c_data->mViewport, OSG::Viewport::RootFieldMask);
+#endif
 
-   // Setup the viewport
-   OSG::beginEditCP(c_data->mViewport);
-      c_data->mViewport->setRoot(getScene());
-   OSG::endEditCP  (c_data->mViewport);
+   // Set up the camera.
+   c_data->mCamera->setNear(vrj_frustum[vrj::Frustum::VJ_NEAR]);
+   c_data->mCamera->setFar(vrj_frustum[vrj::Frustum::VJ_FAR]);
+   c_data->mCamera->setProjectionMatrix(frustum_matrix);  // Set projection matrix
+   c_data->mCamera->setModelviewMatrix(view_xform_mat);   // Set modelview matrix
+
+   // Set up the viewport.
+   c_data->mViewport->setRoot(getScene());
 
    // --- Trigger the draw --- //
 
