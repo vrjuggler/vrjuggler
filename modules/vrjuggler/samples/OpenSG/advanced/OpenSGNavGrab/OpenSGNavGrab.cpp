@@ -41,6 +41,10 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Vec.h>
 
+#if OSG_MAJOR_VERSION >= 2
+#  include <OpenSG/OSGTypedGeoIntegralProperty.h>
+#endif
+
 #include <OpenSGNavGrab.h>
 
 
@@ -49,8 +53,6 @@
 OpenSGNavGrab::OpenSGNavGrab(vrj::Kernel* kern)
    : vrj::OpenSGApp(kern)
    , mVelocity(0.0f)
-   , mIntersectedObj(NULL)
-   , mGrabbedObj(NULL)
    , mIntersectColor(1.0f, 1.0f, 0.0f)
    , mGrabColor(1.0f, 0.0f, 1.0f)
 {
@@ -59,12 +61,7 @@ OpenSGNavGrab::OpenSGNavGrab(vrj::Kernel* kern)
 
 OpenSGNavGrab::~OpenSGNavGrab()
 {
-   for ( std::vector<GrabObject*>::iterator i = mObjects.begin();
-         i != mObjects.end();
-         ++i )
-   {
-      delete *i;
-   }
+   /* Do nothing. */ ;
 }
 
 void OpenSGNavGrab::setModelsToLoad(const std::vector<std::string>& fileNames)
@@ -106,9 +103,11 @@ void OpenSGNavGrab::initScene()
    mModelRoot = OSG::Node::create();
    mModelGroup = OSG::Group::create();
 
-   OSG::beginEditCP(mModelRoot);
-      mModelRoot->setCore(mModelGroup);
-   OSG::endEditCP(mModelRoot);
+#if OSG_MAJOR_VERSION < 2
+   CPEdit(mModelRoot, OSG::Node::CoreFieldMask);
+#endif
+
+   mModelRoot->setCore(mModelGroup);
 
    // Load the model to use.
    if ( mFilesToLoad.empty() )
@@ -119,8 +118,7 @@ void OpenSGNavGrab::initScene()
 
       // Box geometry: 2.5x2.5x2.5 (units are in feet)
       // Center point: (0,0,0)
-      OSG::NodePtr geom_node = OSG::makeBox(2.5f, 2.5f, 2.5f, 1, 1, 1);
-      OSG::addRefCP(geom_node);
+      OSG::NodeRefPtr geom_node(OSG::makeBox(2.5f, 2.5f, 2.5f, 1, 1, 1));
 
       // Move it so that it would butt up against a wall five feet in front
       // of the user and another wall five feet to the left of the user.
@@ -136,19 +134,23 @@ void OpenSGNavGrab::initScene()
       OSG::Vec3f distance_vec;
       OSG::Pnt3f::RealReturnType max_dist(0.0f);
 
-      std::vector<OSG::NodePtr> nodes;
+      std::vector<OSG::NodeRefPtr> nodes;
 
       // Load all the models that the user told us to load.
-      for ( std::vector<std::string>::iterator i = mFilesToLoad.begin();
-            i != mFilesToLoad.end();
-            ++i )
+      typedef std::vector<std::string>::iterator iter_type;
+      for ( iter_type i = mFilesToLoad.begin(); i != mFilesToLoad.end(); ++i )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "[OpenSGNavGrab::initScene()] Loading '" << *i << "' ..."
             << std::endl << vprDEBUG_FLUSH;
-         OSG::NodePtr geom_node =
-            OSG::SceneFileHandler::the().read((OSG::Char8*) (*i).c_str());
-         OSG::addRefCP(geom_node);
+         const OSG::Char8* file = (*i).c_str();
+         OSG::NodeRefPtr geom_node(
+#if OSG_MAJOR_VERSION < 2
+            OSG::SceneFileHandler::the().read(file)
+#else
+            OSG::SceneFileHandler::the()->read(file)
+#endif
+         );
 
          nodes.push_back(geom_node);
 
@@ -180,7 +182,7 @@ void OpenSGNavGrab::initScene()
       // translation value.
       if ( ! nodes.empty() )
       {
-         const std::vector<OSG::NodePtr>::size_type num_objs(nodes.size());
+         const std::vector<OSG::NodeRefPtr>::size_type num_objs(nodes.size());
          const OSG::Real32 interval_dist(distance_vec[0]);
 
          // Set the left extreme of the line of models.  The full extent of
@@ -192,7 +194,8 @@ void OpenSGNavGrab::initScene()
          OSG::Real32 x_offset =
             -(interval_dist * OSG::Real32(num_objs) - interval_dist) / 2.0f;
 
-         for ( std::vector<OSG::NodePtr>::iterator i = nodes.begin();
+         typedef std::vector<OSG::NodeRefPtr>::iterator iter_type;
+         for ( iter_type i = nodes.begin();
                i != nodes.end();
                ++i, x_offset += interval_dist )
          {
@@ -225,45 +228,42 @@ void OpenSGNavGrab::initScene()
    OSG::Matrix light_pos;
    light_pos.setTransform(OSG::Vec3f(2.0f, 5.0f, 4.0f));
 
-   OSG::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
-      light_beacon_core->setMatrix(light_pos);
-   OSG::endEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
+#if OSG_MAJOR_VERSION < 2
+   CPEdit(light_beacon_core, OSG::Transform::MatrixFieldMask);
+   CPEdit(mLightBeacon, OSG::Node::CoreFieldMask);
+   CPEdit(mLightNode, OSG::Node::CoreFieldMask | OSG::Node::ChildrenFieldMask);
+   CPEditAll(light_core);
+#endif
 
-   OSG::beginEditCP(mLightBeacon);
-      mLightBeacon->setCore(light_beacon_core);
-   OSG::endEditCP(mLightBeacon);
+   light_beacon_core->setMatrix(light_pos);
+
+   mLightBeacon->setCore(light_beacon_core);
 
    // Set up light node
-   OSG::addRefCP(mLightNode);
-   OSG::beginEditCP(mLightNode);
-      mLightNode->setCore(light_core);
-      mLightNode->addChild(mLightBeacon);
-   OSG::endEditCP(mLightNode);
+   mLightNode->setCore(light_core);
+   mLightNode->addChild(mLightBeacon);
 
-   OSG::beginEditCP(light_core);
-      light_core->setAmbient(0.9, 0.8, 0.8, 1);
-      light_core->setDiffuse(0.6, 0.6, 0.6, 1);
-      light_core->setSpecular(1, 1, 1, 1);
-      light_core->setDirection(0, 0, 1);
-      light_core->setBeacon(mLightNode);
-   OSG::endEditCP(light_core);
+   light_core->setAmbient(0.9, 0.8, 0.8, 1);
+   light_core->setDiffuse(0.6, 0.6, 0.6, 1);
+   light_core->setSpecular(1, 1, 1, 1);
+   light_core->setDirection(0, 0, 1);
+   light_core->setBeacon(mLightNode);
 
    // --- Set up scene -- //
    // add the loaded scene to the light node, so that it is lit by the light
-
-   OSG::beginEditCP(mLightNode);
-      mLightNode->addChild(mModelRoot);
-   OSG::endEditCP(mLightNode);
+   mLightNode->addChild(mModelRoot);
 
    // create the root part of the scene
    mSceneRoot = OSG::Node::create();
    mSceneTransform = OSG::Transform::create();
 
+#if OSG_MAJOR_VERSION < 2
+   CPEdit(mSceneRoot, OSG::Node::CoreFieldMask | OSG::Node::ChildrenFieldMask);
+#endif
+
    // Set up the root node
-   OSG::beginEditCP(mSceneRoot);
-      mSceneRoot->setCore(mSceneTransform);
-      mSceneRoot->addChild(mLightNode);
-   OSG::endEditCP(mSceneRoot);
+   mSceneRoot->setCore(mSceneTransform);
+   mSceneRoot->addChild(mLightNode);
 }
 
 /** Called once per context at context creation */
@@ -313,24 +313,54 @@ void OpenSGNavGrab::preFrame()
    const gmtl::Matrix44f wand_mat(mWandPos->getData(getDrawScaleFactor()));
    updateGrabbing(wand_mat);
    updateNavigation(wand_mat);
+
+   vrj::OpenSGApp::preFrame();
 }
 
 void OpenSGNavGrab::reset()
 {
    mVelocity = 0.0f;
 
-   OSG::beginEditCP(mSceneTransform, OSG::Transform::MatrixFieldMask);
-      mSceneTransform->getMatrix().setIdentity();
-   OSG::endEditCP(mSceneTransform, OSG::Transform::MatrixFieldMask);
+#if OSG_MAJOR_VERSION < 2
+   CPEdit(mSceneTransform, OSG::Transform::MatrixFieldMask);
 
-   for ( std::vector<GrabObject*>::iterator i = mObjects.begin();
-         i != mObjects.end();
-         ++i )
+   mSceneTransform->getMatrix().setIdentity();
+#else
+   mSceneTransform->editMatrix().setIdentity();
+#endif
+
+   typedef std::vector<GrabObjectPtr>::iterator iter_type;
+   for ( iter_type i = mObjects.begin(); i != mObjects.end(); ++i )
    {
-      OSG::beginEditCP((*i)->xformCore, OSG::Transform::MatrixFieldMask);
-         (*i)->xformCore->getMatrix().setValue((*i)->homePos);
-      OSG::endEditCP((*i)->xformCore, OSG::Transform::MatrixFieldMask);
+#if OSG_MAJOR_VERSION < 2
+      OSG::TransformPtr core = (*i)->getXformNode();
+      CPEdit(core, OSG::Transform::MatrixFieldMask);
+      core->getMatrix().setValue((*i)->getHomePos());
+#else
+      (*i)->getXformNode()->editMatrix().setValue((*i)->getHomePos());
+#endif
    }
+}
+
+void OpenSGNavGrab::exit()
+{
+   mObjects.clear();
+
+   mIntersectedObj = GrabObjectPtr();
+   mGrabbedObj     = GrabObjectPtr();
+
+   mSceneRoot         = OSG::NullFC;
+   mSceneTransform    = OSG::NullFC;
+   mModelRoot         = OSG::NullFC;
+   mModelGroup        = OSG::NullFC;
+   mLightNode         = OSG::NullFC;
+   mLightBeacon       = OSG::NullFC;
+   mHighlight         = OSG::NullFC;
+   mHighlightNode     = OSG::NullFC;
+   mHighlightPoints   = OSG::NullFC;
+   mHighlightMaterial = OSG::NullFC;
+
+   vrj::OpenSGApp::exit();
 }
 
 // ----------------------------- Private methods ------------------------------
@@ -370,25 +400,26 @@ void OpenSGNavGrab::initGLState()
    glEnable(GL_NORMALIZE);
 }
 
-OpenSGNavGrab::GrabObject* OpenSGNavGrab::makeGrabbable(OSG::NodePtr model,
-                                                        const OSG::Matrix& modelPos)
+OpenSGNavGrab::GrabObjectPtr
+OpenSGNavGrab::makeGrabbable(OSG::NodeRefPtr model,
+                             const OSG::Matrix& modelPos)
 {
-   OSG::TransformPtr model_xform_core = OSG::Transform::create();
-   OSG::beginEditCP(model_xform_core, OSG::Transform::MatrixFieldMask);
-      model_xform_core->setMatrix(modelPos);
-   OSG::endEditCP(model_xform_core, OSG::Transform::MatrixFieldMask);
+   OSG::TransformNodePtr model_xform_node = OSG::TransformNodePtr::create();
 
-   OSG::NodePtr model_xform_node = OSG::Node::create();
-   OSG::beginEditCP(model_xform_node);
-      model_xform_node->setCore(model_xform_core);
-      model_xform_node->addChild(model);
-   OSG::endEditCP(model_xform_node);
+#if OSG_MAJOR_VERSION < 2
+   OSG::TransformPtr core = model_xform_node;
+   CPEdit(core, OSG::Transform::MatrixFieldMask);
+   OSG::CPEditor e(model_xform_node.node(),
+                   OSG::Node::CoreFieldMask | OSG::Node::ChildrenFieldMask);
+   CPEdit(mModelRoot, OSG::Node::ChildrenFieldMask);
+#endif
 
-   OSG::beginEditCP(mModelRoot, OSG::Node::ChildrenFieldMask);
-      mModelRoot->addChild(model_xform_node);
-   OSG::endEditCP(mModelRoot, OSG::Node::ChildrenFieldMask);
+   model_xform_node->setMatrix(modelPos);
+   model_xform_node.node()->addChild(model);
 
-   return new GrabObject(model_xform_node, model_xform_core, modelPos);
+   mModelRoot->addChild(model_xform_node.node());
+
+   return GrabObject::create(model_xform_node, modelPos);
 }
 
 void OpenSGNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
@@ -415,17 +446,17 @@ void OpenSGNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
 
    // Only perform the intersection testing when we are not already grabbing
    // an object.
-   if ( mGrabbedObj == NULL )
+   if ( mGrabbedObj.get() == NULL )
    {
-      GrabObject* intersect_obj(NULL);
+      GrabObjectPtr intersect_obj;
 
       // Find the first object--if any--in mObjects with which the wand
       // intersects.
-      for ( std::vector<GrabObject*>::iterator o = mObjects.begin();
-            o != mObjects.end();
-            ++o )
+      typedef std::vector<GrabObjectPtr>::iterator iter_type;
+      for ( iter_type o = mObjects.begin(); o != mObjects.end(); ++o )
       {
-         const OSG::DynamicVolume& bbox = (*o)->xformNode->getVolume();
+         const OSG::DynamicVolume& bbox =
+            (*o)->getXformNode().node()->getVolume();
 
          if ( bbox.intersect(wand_point) )
          {
@@ -440,35 +471,34 @@ void OpenSGNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
       {
          // If mIntersectedObj was not NULL, then we need to remove the
          // bounding box rendering that is now out of date.
-         if ( mIntersectedObj != NULL )
+         if ( mIntersectedObj.get() != NULL )
          {
-            OSG::beginEditCP(mIntersectedObj->xformNode,
-                             OSG::Node::ChildrenFieldMask);
-               mIntersectedObj->xformNode->subChild(mHighlightNode);
-            OSG::endEditCP(mIntersectedObj->xformNode,
-                           OSG::Node::ChildrenFieldMask);
+#if OSG_MAJOR_VERSION < 2
+            OSG::CPEditor e(mIntersectedObj->getXformNode().node(),
+                            OSG::Node::ChildrenFieldMask);
+#endif
+            mIntersectedObj->getXformNode().node()->subChild(mHighlightNode);
          }
 
          mIntersectedObj = intersect_obj;
 
          // If mIntersectedObj is non-NULL, we have selected a new object.
          // Create a new bounding box around that object.
-         if ( mIntersectedObj != NULL )
+         if ( mIntersectedObj.get() != NULL )
          {
-            mHighlight = mIntersectedObj->xformNode->getChild(0);
+            mHighlight = mIntersectedObj->getXformNode().node()->getChild(0);
+
+#if OSG_MAJOR_VERSION < 2
+            CPEdit(mHighlightMaterial, OSG::SimpleMaterial::DiffuseFieldMask);
+            OSG::CPEditor e(mIntersectedObj->getXformNode().node(),
+                            OSG::Node::ChildrenFieldMask);
+#endif
 
             // Set the highlight color to mIntersectColor.
-            OSG::beginEditCP(mHighlightMaterial,
-                             OSG::SimpleMaterial::DiffuseFieldMask);
-               mHighlightMaterial->setDiffuse(mIntersectColor);
-            OSG::endEditCP(mHighlightMaterial,
-                           OSG::SimpleMaterial::DiffuseFieldMask);
+            mHighlightMaterial->setDiffuse(mIntersectColor);
 
-            OSG::beginEditCP(mIntersectedObj->xformNode,
-                             OSG::Node::ChildrenFieldMask);
-               mIntersectedObj->xformNode->addChild(mHighlightNode);
-            OSG::endEditCP(mIntersectedObj->xformNode,
-                           OSG::Node::ChildrenFieldMask);
+            mIntersectedObj->getXformNode().node()->addChild(mHighlightNode);
+
             updateHighlight();
          }
       }
@@ -476,42 +506,46 @@ void OpenSGNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
 
    // Enable grabbing only when no other object is currently grabbed, when
    // the wand button is intersecting an object, and when button 0 is pressed.
-   if ( mIntersectedObj != NULL && mGrabbedObj == NULL &&
+   if ( mIntersectedObj.get() != NULL && mGrabbedObj.get() == NULL &&
         mButton0->getData() == gadget::Digital::ON )
    {
       mGrabbedObj = mIntersectedObj;
 
+#if OSG_MAJOR_VERSION < 2
+      CPEdit(mHighlightMaterial, OSG::SimpleMaterial::DiffuseFieldMask);
+#endif
+
       // Set the highlight color to mGrabColor.
-      OSG::beginEditCP(mHighlightMaterial,
-                       OSG::SimpleMaterial::DiffuseFieldMask);
-         mHighlightMaterial->setDiffuse(mGrabColor);
-      OSG::endEditCP(mHighlightMaterial,
-                     OSG::SimpleMaterial::DiffuseFieldMask);
+      mHighlightMaterial->setDiffuse(mGrabColor);
    }
    // We cannot be grabbing anything unless button 0 is pressed.
    else if ( mButton0->getData() != gadget::Digital::ON )
    {
       // If we are dropping a grabbed object, then set the highlight color
       // back to mIntersectColor.
-      if ( mGrabbedObj != NULL )
+      if ( mGrabbedObj.get() != NULL )
       {
-         OSG::beginEditCP(mHighlightMaterial,
-                          OSG::SimpleMaterial::DiffuseFieldMask);
-            mHighlightMaterial->setDiffuse(mIntersectColor);
-         OSG::endEditCP(mHighlightMaterial,
-                        OSG::SimpleMaterial::DiffuseFieldMask);
+#if OSG_MAJOR_VERSION < 2
+      CPEdit(mHighlightMaterial, OSG::SimpleMaterial::DiffuseFieldMask);
+#endif
+
+         mHighlightMaterial->setDiffuse(mIntersectColor);
       }
 
-      mGrabbedObj = NULL;
+      mGrabbedObj = GrabObjectPtr();
    }
 
    // If mGrabbedObj is non-NULL, then we are grabbing the object pointed at
    // by mGrabbedObj.
-   if ( mGrabbedObj != NULL )
+   if ( mGrabbedObj.get() != NULL )
    {
-      OSG::beginEditCP(mGrabbedObj->xformCore, OSG::Transform::MatrixFieldMask);
-         mGrabbedObj->xformCore->getMatrix().setTranslate(wand_point);
-      OSG::endEditCP(mGrabbedObj->xformCore, OSG::Transform::MatrixFieldMask);
+#if OSG_MAJOR_VERSION < 2
+      OSG::TransformPtr core = mGrabbedObj->getXformNode();
+      CPEdit(core, OSG::Transform::MatrixFieldMask);
+      mGrabbedObj->getXformNode()->getMatrix().setTranslate(wand_point);
+#else
+      mGrabbedObj->getXformNode()->editMatrix().setTranslate(wand_point);
+#endif
    }
 }
 
@@ -526,9 +560,12 @@ void OpenSGNavGrab::updateNavigation(const gmtl::Matrix44f& wandMatrix)
    OSG::Matrix trans_mat(OSG::Matrix::identity());
    trans_mat.setTranslate(trans[0], trans[1], trans[2]);
 
-   OSG::beginEditCP(mSceneTransform, OSG::Transform::MatrixFieldMask);
-      mSceneTransform->getMatrix().multLeft(trans_mat);
-   OSG::endEditCP(mSceneTransform, OSG::Transform::MatrixFieldMask);
+#if OSG_MAJOR_VERSION < 2
+   CPEdit(mSceneTransform, OSG::Transform::MatrixFieldMask);
+   mSceneTransform->getMatrix().multLeft(trans_mat);
+#else
+   mSceneTransform->editMatrix().multLeft(trans_mat);
+#endif
 }
 
 // This implementation is adapted from
@@ -539,73 +576,84 @@ void OpenSGNavGrab::initHighlight()
    {
       mHighlightMaterial = OSG::SimpleMaterial::create();
 
-      OSG::beginEditCP(mHighlightMaterial);
-         mHighlightMaterial->setLit(false);
-      OSG::endEditCP(mHighlightMaterial);
+#if OSG_MAJOR_VERSION < 2
+      CPEdit(mHighlightMaterial, OSG::SimpleMaterial::LitFieldMask);
+#endif
+
+      mHighlightMaterial->setLit(false);
    }
 
    if ( mHighlightNode == OSG::NullFC )
    {
-      OSG::GeoPTypesPtr type = OSG::GeoPTypesUI8::create();
-      OSG::beginEditCP(type);
-         type->push_back(GL_LINE_STRIP);
-         type->push_back(GL_LINES);
-      OSG::endEditCP(type);
-
-      OSG::GeoPLengthsPtr lens = OSG::GeoPLengthsUI32::create();
-      OSG::beginEditCP(lens);
-         lens->push_back(10);
-         lens->push_back(6);
-      OSG::endEditCP(lens);
-
+#if OSG_MAJOR_VERSION < 2
+      OSG::GeoPTypesPtr type       = OSG::GeoPTypesUI8::create();
+      OSG::GeoPLengthsPtr lens     = OSG::GeoPLengthsUI32::create();
+#else
+      OSG::GeoPTypesUI8Ptr type    = OSG::GeoPTypesUI8::create();
+      OSG::GeoPLengthsUI32Ptr lens = OSG::GeoPLengthsUI32::create();
+#endif
       OSG::GeoIndicesUI32Ptr index = OSG::GeoIndicesUI32::create();
-      OSG::beginEditCP(index);
-         index->getFieldPtr()->push_back(0);
-         index->getFieldPtr()->push_back(1);
-         index->getFieldPtr()->push_back(3);
-         index->getFieldPtr()->push_back(2);
-         index->getFieldPtr()->push_back(0);
-         index->getFieldPtr()->push_back(4);
-         index->getFieldPtr()->push_back(5);
-         index->getFieldPtr()->push_back(7);
-         index->getFieldPtr()->push_back(6);
-         index->getFieldPtr()->push_back(4);
+      mHighlightPoints             = OSG::GeoPositions3f::create();
+      OSG::GeometryPtr geo         = OSG::Geometry::create();
+      mHighlightNode               = OSG::Node::create();
 
-         index->getFieldPtr()->push_back(1);
-         index->getFieldPtr()->push_back(5);
-         index->getFieldPtr()->push_back(2);
-         index->getFieldPtr()->push_back(6);
-         index->getFieldPtr()->push_back(3);
-         index->getFieldPtr()->push_back(7);
-      OSG::endEditCP(index);
+#if OSG_MAJOR_VERSION < 2
+      CPEditAll(type);
+      CPEditAll(lens);
+      CPEditAll(index);
+      CPEditAll(mHighlightPoints);
+      CPEditAll(geo);
+      CPEdit(mHighlightNode, OSG::Node::CoreFieldMask);
+#endif
 
-      mHighlightPoints = OSG::GeoPositions3f::create();
-      OSG::beginEditCP(mHighlightPoints);
-         mHighlightPoints->push_back(OSG::Pnt3f(-1, -1, -1));
-         mHighlightPoints->push_back(OSG::Pnt3f( 1, -1, -1));
-         mHighlightPoints->push_back(OSG::Pnt3f(-1,  1, -1));
-         mHighlightPoints->push_back(OSG::Pnt3f( 1,  1, -1));
-         mHighlightPoints->push_back(OSG::Pnt3f(-1, -1,  1));
-         mHighlightPoints->push_back(OSG::Pnt3f( 1, -1,  1));
-         mHighlightPoints->push_back(OSG::Pnt3f(-1,  1,  1));
-         mHighlightPoints->push_back(OSG::Pnt3f( 1,  1,  1));
-      OSG::endEditCP(mHighlightPoints);
+      type->push_back(GL_LINE_STRIP);
+      type->push_back(GL_LINES);
 
-      OSG::GeometryPtr geo = OSG::Geometry::create();
-      OSG::beginEditCP(geo);
-         geo->setTypes(type);
-         geo->setLengths(lens);
-         geo->setIndices(index);
-         geo->setPositions(mHighlightPoints);
-         geo->setMaterial(mHighlightMaterial);
-      OSG::endEditCP(geo);
-      OSG::addRefCP(geo);
+      lens->push_back(10);
+      lens->push_back(6);
 
-      mHighlightNode = OSG::Node::create();
-      OSG::beginEditCP(mHighlightNode);
-         mHighlightNode->setCore(geo);
-      OSG::endEditCP(mHighlightNode);
-      OSG::addRefCP(mHighlightNode);
+#if OSG_MAJOR_VERSION < 2
+      OSG::GeoIndicesUI32::StoredFieldType* index_field =
+         index->getFieldPtr();
+#else
+      OSG::GeoIndicesUI32::StoredFieldType* index_field =
+         index->editFieldPtr();
+#endif
+
+      index_field->push_back(0);
+      index_field->push_back(1);
+      index_field->push_back(3);
+      index_field->push_back(2);
+      index_field->push_back(0);
+      index_field->push_back(4);
+      index_field->push_back(5);
+      index_field->push_back(7);
+      index_field->push_back(6);
+      index_field->push_back(4);
+
+      index_field->push_back(1);
+      index_field->push_back(5);
+      index_field->push_back(2);
+      index_field->push_back(6);
+      index_field->push_back(3);
+      index_field->push_back(7);
+
+      mHighlightPoints->push_back(OSG::Pnt3f(-1, -1, -1));
+      mHighlightPoints->push_back(OSG::Pnt3f( 1, -1, -1));
+      mHighlightPoints->push_back(OSG::Pnt3f(-1,  1, -1));
+      mHighlightPoints->push_back(OSG::Pnt3f( 1,  1, -1));
+      mHighlightPoints->push_back(OSG::Pnt3f(-1, -1,  1));
+      mHighlightPoints->push_back(OSG::Pnt3f( 1, -1,  1));
+      mHighlightPoints->push_back(OSG::Pnt3f(-1,  1,  1));
+      mHighlightPoints->push_back(OSG::Pnt3f( 1,  1,  1));
+
+      geo->setTypes(type);
+      geo->setLengths(lens);
+      geo->setIndices(index);
+      geo->setPositions(mHighlightPoints);
+      geo->setMaterial(mHighlightMaterial);
+
+      mHighlightNode->setCore(geo);
    }
 }
 
@@ -623,19 +671,22 @@ void OpenSGNavGrab::updateHighlight()
    OSG::Pnt3f min, max;
    vol.getBounds(min, max);
 
-   OSG::beginEditCP(mHighlightPoints);
-      mHighlightPoints->setValue(OSG::Pnt3f(min[0], min[1], min[2]), 0);
-      mHighlightPoints->setValue(OSG::Pnt3f(max[0], min[1], min[2]), 1);
-      mHighlightPoints->setValue(OSG::Pnt3f(min[0], max[1], min[2]), 2);
-      mHighlightPoints->setValue(OSG::Pnt3f(max[0], max[1], min[2]), 3);
-      mHighlightPoints->setValue(OSG::Pnt3f(min[0], min[1], max[2]), 4);
-      mHighlightPoints->setValue(OSG::Pnt3f(max[0], min[1], max[2]), 5);
-      mHighlightPoints->setValue(OSG::Pnt3f(min[0], max[1], max[2]), 6);
-      mHighlightPoints->setValue(OSG::Pnt3f(max[0], max[1], max[2]), 7);
-   OSG::endEditCP(mHighlightPoints);
+#if OSG_MAJOR_VERSION < 2
+   CPEditAll(mHighlightPoints);
+   OSG::CPEditor e(mHighlightNode->getCore(),
+                   OSG::Geometry::PositionsFieldMask);
+#endif
 
-   OSG::beginEditCP(mHighlightNode->getCore(),
-                    OSG::Geometry::PositionsFieldMask);
-   OSG::endEditCP(mHighlightNode->getCore(),
-                  OSG::Geometry::PositionsFieldMask);
+   mHighlightPoints->setValue(OSG::Pnt3f(min[0], min[1], min[2]), 0);
+   mHighlightPoints->setValue(OSG::Pnt3f(max[0], min[1], min[2]), 1);
+   mHighlightPoints->setValue(OSG::Pnt3f(min[0], max[1], min[2]), 2);
+   mHighlightPoints->setValue(OSG::Pnt3f(max[0], max[1], min[2]), 3);
+   mHighlightPoints->setValue(OSG::Pnt3f(min[0], min[1], max[2]), 4);
+   mHighlightPoints->setValue(OSG::Pnt3f(max[0], min[1], max[2]), 5);
+   mHighlightPoints->setValue(OSG::Pnt3f(min[0], max[1], max[2]), 6);
+   mHighlightPoints->setValue(OSG::Pnt3f(max[0], max[1], max[2]), 7);
+
+#if OSG_MAJOR_VERSION >= 2
+   OSG::commitChanges();
+#endif
 }

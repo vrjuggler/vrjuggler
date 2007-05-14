@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-14-2007 patrick     Merged changes from the trunk to get vrj::OpenSGApp and
+                        the OpenSG sample applications working with both OpenSG
+                        1.x and 2.x.
 Apr-09-2007 patrick     Made the number of sample buffers and samples per
                         buffer configurable when using multisampling.
 

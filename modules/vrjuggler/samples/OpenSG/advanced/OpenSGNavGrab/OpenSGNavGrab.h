@@ -35,12 +35,17 @@
 
 #include <string>
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
-#include <OpenSG/OSGGeoPropPtrs.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGSimpleMaterial.h>
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGGL.h>
+#if OSG_MAJOR_VERSION < 2
+#  include <OpenSG/OSGGeoPropPtrs.h>
+#else
+#  include <OpenSG/OSGTypedGeoVectorProperty.h>
+#endif
 
 #include <gmtl/Matrix.h>
 
@@ -102,29 +107,47 @@ public:
 
    virtual void reset();
 
+   virtual void exit();
+
 private:
-   struct GrabObject
+   class GrabObject;
+   typedef boost::shared_ptr<GrabObject> GrabObjectPtr;
+
+   class GrabObject
    {
-      GrabObject(OSG::NodePtr node, OSG::TransformPtr xform,
-                 const OSG::Matrix& pos)
-         : xformNode(node)
-         , xformCore(xform)
-         , homePos(pos)
+   public:
+      static GrabObjectPtr create(OSG::TransformNodePtr node,
+                                  const OSG::Matrix& pos)
+      {
+         return GrabObjectPtr(new GrabObject(node, pos));
+      }
+
+      OSG::TransformNodePtr getXformNode() const
+      {
+         return mXformNode;
+      }
+
+      const OSG::Matrix& getHomePos() const
+      {
+         return mHomePos;
+      }
+
+   private:
+      GrabObject(OSG::TransformNodePtr node, const OSG::Matrix& pos)
+         : mXformNode(node)
+         , mHomePos(pos)
       {
          ;
       }
 
       /** The transform node (parent) for the grabbable object. */
-      OSG::NodePtr xformNode;
-
-      /** The transform core for the grabbable object. */
-      OSG::TransformPtr xformCore;
+      OSG::TransformNodePtr mXformNode;
 
       /**
        * The original transformation for the grabbable object.  This is used
        * for resetting the scene.
        */
-      const OSG::Matrix homePos;
+      const OSG::Matrix mHomePos;
    };
 
    /** Initialize GL state.  Hold-over from regular OpenGL apps. */
@@ -141,7 +164,8 @@ private:
     * @return A new GrabObject instance.  It is the responsibility of the
     *         caller to release the memory.
     */
-   GrabObject* makeGrabbable(OSG::NodePtr model, const OSG::Matrix& modelPos);
+   GrabObjectPtr makeGrabbable(OSG::NodeRefPtr model,
+                               const OSG::Matrix& modelPos);
 
    void updateGrabbing(const gmtl::Matrix44f& wandMatrix);
 
@@ -160,13 +184,13 @@ private:
    //   mLightBeacon:[Transform]
    //         |
    //   mModelRoot:[mModelGroup]
-   OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
-   OSG::TransformPtr   mSceneTransform;  /**< Transform core */
-   OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
-   OSG::GroupPtr       mModelGroup;
+   OSG::NodeRefPtr      mSceneRoot;       /**< The root of the scene */
+   OSG::TransformRefPtr mSceneTransform;  /**< Transform core */
+   OSG::NodeRefPtr      mModelRoot;       /**< Root of the loaded model */
+   OSG::GroupRefPtr     mModelGroup;
 
-   OSG::NodePtr  mLightNode;       /**< Light node to use */
-   OSG::NodePtr  mLightBeacon;     /**< A beacon for the light */
+   OSG::NodeRefPtr mLightNode;       /**< Light node to use */
+   OSG::NodeRefPtr mLightBeacon;     /**< A beacon for the light */
 
    gadget::PositionInterface  mWandPos;     /**< The position of the wand */
    gadget::DigitalInterface   mButton0;     /**< Wand button 0 */
@@ -177,21 +201,21 @@ private:
 
    /** @name Grabbed object management */
    //@{
-   std::vector<GrabObject*> mObjects;
-   GrabObject*              mIntersectedObj;
-   GrabObject*              mGrabbedObj;
+   std::vector<GrabObjectPtr> mObjects;
+   GrabObjectPtr              mIntersectedObj;
+   GrabObjectPtr              mGrabbedObj;
    //@}
 
    /** @name Highlight node management */
    //@{
-   OSG::Color3f           mIntersectColor;
-   OSG::Color3f           mGrabColor;
+   OSG::Color3f              mIntersectColor;
+   OSG::Color3f              mGrabColor;
 
-   OSG::NodePtr           mHighlight;        /**< The node to highlight */
-   OSG::NodePtr           mHighlightNode;    /**< The highlight node */
-   OSG::GeoPositions3fPtr mHighlightPoints;  /**< Points for mHighlightNode */
+   OSG::NodeRefPtr           mHighlight;       /**< The node to highlight */
+   OSG::NodeRefPtr           mHighlightNode;   /**< The highlight node */
+   OSG::GeoPositions3fPtr    mHighlightPoints; /**< Points for mHighlightNode */
 
-   OSG::SimpleMaterialPtr mHighlightMaterial;
+   OSG::SimpleMaterialRefPtr mHighlightMaterial;
    //@}
 };
 
