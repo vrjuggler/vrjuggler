@@ -444,14 +444,6 @@
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowWin32.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowXWin.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlxExtensionLoader.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -522,15 +514,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlViewCocoa.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindow.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowCocoa.h"
 				>
 			</File>
 			<File
@@ -539,14 +523,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowWin32.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowXWin.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlxExtensionLoader.h"
 				>
 			</File>
 		</Filter>
