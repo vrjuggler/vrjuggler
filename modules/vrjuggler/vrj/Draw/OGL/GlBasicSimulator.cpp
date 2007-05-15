@@ -172,7 +172,7 @@ void GlBasicSimulator::updateProjectionData(const float positionScale,
 }
 
 /**  Update internal simulator data */
-void GlBasicSimulator::updateInternalData(float positionScale)
+void GlBasicSimulator::updateInternalData(const float positionScale)
 {
    mHeadPos = mSimViewport->getUser()->getHeadPosProxy()->getData(positionScale);
    mWandPos = mWand->getData(positionScale);
@@ -208,7 +208,6 @@ void GlBasicSimulator::drawObjects()
    glPopAttrib();
 }
 
-
 /**
  * Draw the projections.
  *
@@ -216,11 +215,14 @@ void GlBasicSimulator::drawObjects()
  *       If withApex, then it draws the frustums with different colors.
  *       If !withApex, then just draws the surfaces in all white.
  */
-void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, const float scaleFactor)
+void GlBasicSimulator::drawProjections(const bool drawFrustum,
+                                       const gmtl::Vec3f& surfColor,
+                                       const float scaleFactor)
 {
    const float ALPHA_VALUE(0.25f);
 
-   DisplayManager* display_man = vrj::GlDrawManager::instance()->getDisplayManager();
+   DisplayManager* display_man = 
+      vrj::GlDrawManager::instance()->getDisplayManager();
    display_man->updateProjections(scaleFactor);                     // Update all projections for drawing
 
    std::vector<vrj::DisplayPtr> disps = display_man->getAllDisplays();
@@ -228,22 +230,22 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
    gmtl::Vec3f apex, ur, lr, ul, ll;
    ProjectionPtr proj;
 
-   for (unsigned int i=0;i<disps.size();i++)
+   for ( unsigned int i = 0; i < disps.size(); ++i )
    {
-      for (unsigned int v=0;v<disps[i]->getNumViewports();v++)
+      for ( unsigned int v = 0; v < disps[i]->getNumViewports(); ++v )
       {
          ViewportPtr view_port = disps[i]->getViewport(v);
 
-         if (view_port->isSurface())
+         if ( view_port->isSurface() )
          {
-            for(unsigned proj_num=0;proj_num<2;++proj_num)
-            {
-               // Get a pointer to the surface
-               SurfaceViewportPtr surf_vp =
-                  boost::dynamic_pointer_cast<SurfaceViewport>(view_port);
-               vprASSERT(surf_vp.get() != NULL);
+            // Get a pointer to the surface viewport.
+            SurfaceViewportPtr surf_vp =
+               boost::dynamic_pointer_cast<SurfaceViewport>(view_port);
+            vprASSERT(surf_vp.get() != NULL);
 
-               if(0 == proj_num)
+            for ( unsigned int proj_num = 0; proj_num < 2; ++proj_num )
+            {
+               if ( 0 == proj_num )
                {
                   proj = surf_vp->getLeftProj();
                }
@@ -253,58 +255,92 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
                }
 
                // Create color values that are unique
-               // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
-               int red_on = (i & 0x1); int green_on = ((i >> 1) & 0x1); int blue_on = ((i >> 2) & 0x1);
+               // Basically count in binary (skipping 0), and use the first 3
+               // digits.  That will give six colors
+               const int red_on = i & 0x1;
+               const int green_on = (i >> 1) & 0x1;
+               const int blue_on = (i >> 2) & 0x1;
 
                float red(0.0f), green(0.0f), blue(0.0f);
-               if (red_on > 0) red = 1.0f;
-               if (green_on > 0) green = 1.0f;
-               if (blue_on > 0) blue = 1.0f;
+               if ( red_on > 0 )
+               {
+                  red = 1.0f;
+               }
+               if ( green_on > 0 )
+               {
+                  green = 1.0f;
+               }
+               if ( blue_on > 0 )
+               {
+                  blue = 1.0f;
+               }
 
-               if ((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
+               if ( ! red_on && ! blue_on && ! green_on )      // Case of 0's (black is bad)
+               {
                   red = blue = green = 0.75f;
+               }
 
                gmtl::Vec3f surf_color;
-               gmtl::Vec3f apex_color;
-               if (drawFrustum)
+               if ( drawFrustum )
                {
-                  surf_color = gmtl::Vec3f(red,blue,green);
+                  surf_color = gmtl::Vec3f(red, blue, green);
                }
                else
                {
                   surf_color = surfColor;
                }
-               apex_color = surf_color;
-               if(1 == proj_num)  // Right eye
+
+               gmtl::Vec3f apex_color(surf_color);
+
+               if ( 1 == proj_num )  // Right eye
                {
                   apex_color = gmtl::Vec3f(1.0f, 1.0f, 1.0f) - apex_color;    // Invert it
                }
 
-               // Compute scaled colors for the corners
-               // ll is going to be lighter and upper right is going to be darker
+               // Compute scaled colors for the corners.
+               // The lower left is going to be lighter, and the upper right
+               // is going to be darker.
                const float ll_scale(0.10f);
                const float ul_scale(0.55f);
                const float ur_scale(1.0f);
-               gmtl::Vec4f ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
-               gmtl::Vec4f ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-               gmtl::Vec4f lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-               gmtl::Vec4f ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
+               const gmtl::Vec4f ll_clr(ll_scale * surf_color[0],
+                                        ll_scale * surf_color[1],
+                                        ll_scale * surf_color[2],
+                                        ALPHA_VALUE);
+               const gmtl::Vec4f ul_clr(ul_scale * surf_color[0],
+                                        ul_scale * surf_color[1],
+                                        ul_scale * surf_color[2],
+                                        ALPHA_VALUE);
+               const gmtl::Vec4f lr_clr(ul_scale * surf_color[0],
+                                        ul_scale * surf_color[1],
+                                        ul_scale * surf_color[2],
+                                        ALPHA_VALUE);
+               const gmtl::Vec4f ur_clr(ur_scale * surf_color[0],
+                                        ur_scale * surf_color[1],
+                                        ur_scale * surf_color[2],
+                                        ALPHA_VALUE);
 
                // Draw the thingy
                proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
-               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "apex: " << apex
-                                                           << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+                  << "apex: " << apex << std::endl << vprDEBUG_FLUSH;
 
-               glColor4fv(&(apex_color[0]));
+               glColor4fv(&apex_color[0]);
                glPushMatrix();
-                  if (drawFrustum)
+                  if ( drawFrustum )
                   {
-                     drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
+                     drawLine(apex, ur);
+                     drawLine(apex, lr);
+                     drawLine(apex, ul);
+                     drawLine(apex, ll);
                   }
 
-                  glColor4fv(&(ur_clr[0]));
+                  glColor4fv(&ur_clr[0]);
                   // Draw the outline
-                  drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
+                  drawLine(ur, lr);
+                  drawLine(lr, ll);
+                  drawLine(ll, ul);
+                  drawLine(ul, ur);
 
                   // Draw the surface
                   glEnable(GL_BLEND);
@@ -434,7 +470,8 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
    glPopAttrib();
 }
 
-void GlBasicSimulator::drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
+void GlBasicSimulator::drawLine(const gmtl::Vec3f& start,
+                                const gmtl::Vec3f& end)
 {
    glBegin(GL_LINES);
       glVertex3fv(start.mData);
@@ -442,7 +479,7 @@ void GlBasicSimulator::drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
    glEnd();
 }
 
-void GlBasicSimulator::drawBox(float size, GLenum type)
+void GlBasicSimulator::drawBox(const float size, const GLenum type)
 {
   static GLfloat n[6][3] =
   {
@@ -485,12 +522,12 @@ void GlBasicSimulator::drawBox(float size, GLenum type)
 }
 
 
-void GlBasicSimulator::drawWireCube(float size)
+void GlBasicSimulator::drawWireCube(const float size)
 {
   drawBox(size, GL_LINE_LOOP);
 }
 
-void GlBasicSimulator::drawSolidCube(float size)
+void GlBasicSimulator::drawSolidCube(const float size)
 {
   drawBox(size, GL_QUADS);
 }
