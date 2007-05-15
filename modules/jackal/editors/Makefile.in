@@ -47,11 +47,11 @@ BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 
 # If we can build both C and C++ profiled objects, we will build profiled
 # libraries.
-ifeq ($(BUILD_PROF_C), Y)
-ifeq ($(BUILD_PROF_CXX), Y)
-   BUILD_PROF_LIBS=	1
-endif
-endif
+#ifeq ($(BUILD_PROF_C), Y)
+#ifeq ($(BUILD_PROF_CXX), Y)
+#   BUILD_PROF_LIBS=	1
+#endif
+#endif
 
 beandir=		$(projdatadir)/beans
 javadir=		$(projdatadir)/java
