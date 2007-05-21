@@ -30,7 +30,6 @@
 #include <iomanip>
 
 #include <vpr/IO/Socket/InetAddr.h>
-#include <vpr/IO/TimeoutException.h>
 
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/Header.h>
@@ -377,27 +376,14 @@ size_t NetworkManager::sendEndBlocks( const int temp)
 void NetworkManager::updateAllNodes( const size_t numNodes )
 {
    size_t completed_nodes(0);
-   static vpr::Interval node_timeout(5, vpr::Interval::Sec);
 
    typedef std::vector<gadget::NodePtr>::iterator iter_t;
 
    while ( completed_nodes != numNodes )
    {
-      std::vector<gadget::NodePtr> ready_nodes;
-      try
-      {
-	    mReactor.getReadyNodes(ready_nodes, node_timeout);
-	    //reactor.getReadyNodes(vpr::Interval::NoWait);
-	    //mReactor.getReadyNodes(vpr::Interval::NoTimeout);
-      }
-      catch (vpr::TimeoutException&)
-      {
-	 vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
-	    << clrOutBOLD(clrBLUE,"[NetworkManager]")
-	    << " " << (int)((int)numNodes - completed_nodes) - ready_nodes.size()
-	    << " still waiting after timeout."
-	    << std::endl << vprDEBUG_FLUSH;
-      }
+      std::vector<gadget::NodePtr> ready_nodes =
+         //reactor.getReadyNodes(vpr::Interval::NoWait);
+         mReactor.getReadyNodes(vpr::Interval::NoTimeout);
 
       for ( iter_t i = ready_nodes.begin(); i != ready_nodes.end(); ++i )
       {
