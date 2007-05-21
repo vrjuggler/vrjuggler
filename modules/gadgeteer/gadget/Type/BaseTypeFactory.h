@@ -92,6 +92,20 @@ private:
       vprASSERT(mConstructors.size() == 0);
    }
 
+   ~BaseTypeFactory()
+   {
+      for (std::vector<BaseTypeConstructorBase*>::iterator itr = mConstructors.begin();
+           itr != mConstructors.end(); itr++)
+      {
+         if (NULL != *itr)
+         {
+            delete *itr;
+            *itr = NULL;
+         }
+      }
+      mConstructors.clear();
+   }
+
    // This should be replaced with device plugins.
    /**
     * @post Devices are loaded that the system knows about.
