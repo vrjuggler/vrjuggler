@@ -44,7 +44,6 @@
 #include <jccl/RTRC/DependencyManager.h>
 
 #include <gadget/gadgetParam.h>
-#include <gadget/Type/DeviceFactory.h>
 #include <gadget/Node.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Util/PathHelpers.h>
@@ -738,6 +737,22 @@ void ClusterManager::mergeConfigurations(jccl::Configuration* dst, jccl::Configu
    }
 }
 
+struct ElementTypePred
+{
+   ElementTypePred(const std::string& type)
+      : mType(type)
+   {
+      /* Do nothing. */ ;
+   }
+
+   bool operator()(jccl::ConfigElementPtr elm)
+   {
+      return elm->getID() == mType;
+   }
+
+   const std::string& mType;
+};
+
 void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type)
 {
    vprASSERT(!(mIsMaster && mClusterStarted) && "Configuration can not change after cluster is started.");
@@ -797,12 +812,17 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
          vprASSERT( node_elm->getNum("display_system") == 1 
             && "A Cluster System element must have exactly 1 display_system element" );
 
-         std::vector<jccl::ConfigElementPtr> cluster_node_elements =
-            node_elm->getChildElements();
+         // Get a list of all embedded elements.
+         typedef std::vector<jccl::ConfigElementPtr> elm_list_t;
+         elm_list_t child_elms = node_elm->getChildElements();
 
-         for (std::vector<jccl::ConfigElementPtr>::iterator i = cluster_node_elements.begin();
-              i != cluster_node_elements.end();
-              ++i)
+         // If there are no display windows, then don't wait for the display to open.
+         ElementTypePred pred("display_window");
+         elm_list_t::const_iterator found = std::find_if(child_elms.begin(), child_elms.end(), pred);
+         if (child_elms.end() == found)
+         { mWindowOpened = true; }
+
+         for (elm_list_t::iterator i = child_elms.begin(); i != child_elms.end(); ++i)
          {
             jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
 
