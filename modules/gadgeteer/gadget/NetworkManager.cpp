@@ -31,6 +31,7 @@
 
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/TimeoutException.h> 
+#include <vpr/Perf/ProfileManager.h>
 
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/Header.h>
@@ -288,9 +289,11 @@ bool NetworkManager::isLocalHost(const std::string& testHostName)
 
 void NetworkManager::update( const int temp)
 {
+   vpr::prof::start("ClusterManager::update()",10);
    setAllUpdated(false);
    size_t num_nodes = sendEndBlocks(temp);
    updateAllNodes(num_nodes);
+   vpr::prof::stop();
 }
 
 void NetworkManager::barrier( bool master )
@@ -299,6 +302,7 @@ void NetworkManager::barrier( bool master )
       << "NetworkManager::barrier() Start"
       << std::endl << vprDEBUG_FLUSH;
 
+   vpr::prof::start("ClusterManager::barrier()",10);
    if (master)
    {
       size_t num_nodes = getNumNodes();
@@ -312,6 +316,7 @@ void NetworkManager::barrier( bool master )
       setAllUpdated(false);
       updateAllNodes(num_nodes);
    }
+   vpr::prof::stop();
 
    vprDEBUG(gadgetDBG_RIM, vprDBG_HVERB_LVL)
       << "NetworkManager::barrier() Done"
@@ -336,6 +341,7 @@ size_t NetworkManager::setAllUpdated(const bool updated)
 
 size_t NetworkManager::sendEndBlocks( const int temp)
 {
+   vpr::prof::start("ClusterManager::sendEndBlocks()",10);
    cluster::EndBlockPtr end_block = cluster::EndBlock::create(temp);
 
    // Used to accumulate the number of connected nodes.
@@ -371,6 +377,7 @@ size_t NetworkManager::sendEndBlocks( const int temp)
          }
       }
    }
+   vpr::prof::stop();
    return num_nodes;
 }
 
@@ -381,6 +388,7 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
 
    typedef std::vector<gadget::NodePtr>::iterator iter_t;
 
+   vpr::prof::start("ClusterManager::updateAllNodes()",10);
    while ( completed_nodes != numNodes )
    {
       std::vector<gadget::NodePtr> ready_nodes;
@@ -448,6 +456,7 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
          ++completed_nodes;
       }
    }
+   vpr::prof::stop();
 }
 
 void NetworkManager::handlePacket(cluster::PacketPtr packet, NodePtr node)
