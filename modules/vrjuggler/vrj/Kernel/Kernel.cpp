@@ -488,6 +488,10 @@ void Kernel::controlLoop()
 
       if (cluster && first_cluster)
       {
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+            << "vrj::Kernel::controlLoop: First cluster barrier.()\n"
+            << vprDEBUG_FLUSH;
+
          first_cluster = false;
          mClusterManager->barrier();
       }
