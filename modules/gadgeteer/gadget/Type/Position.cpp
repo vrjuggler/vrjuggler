@@ -51,7 +51,15 @@ Position::Position()
 {;}
 
 Position::~Position()
-{;}
+{
+   for (std::vector<PositionFilter*>::iterator itr = mPositionFilters.begin();
+        itr != mPositionFilters.end(); itr++)
+   {
+      delete (*itr);
+      (*itr) = NULL;
+   }
+   mPositionFilters.clear();
+}
 
 PositionPtr Position::create()
 {
@@ -100,6 +108,9 @@ bool Position::config(jccl::ConfigElementPtr e)
                << " configuration failed; " << filter_id << " will NOT "
                << "be loaded.\n"
                << vprDEBUG_FLUSH;
+
+            delete new_filter;
+            new_filter = NULL;
          }
       }
       else

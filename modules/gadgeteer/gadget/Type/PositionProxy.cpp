@@ -98,8 +98,21 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       new_filter = PositionFilterFactory::instance()->createObject(filter_id);
       if(new_filter != NULL)
       {
-         new_filter->config(cur_filter);
-         mPositionFilters.push_back(new_filter);
+         if (new_filter->config(cur_filter))
+         {
+            mPositionFilters.push_back(new_filter);
+         }
+         else
+         {
+            vprDEBUG( vprDBG_ERROR, vprDBG_CONFIG_STATUS_LVL )
+               << "   Filter [" << i << "]: Type:" << filter_id
+               << " configuration failed; " << filter_id << " will NOT "
+               << "be loaded.\n"
+               << vprDEBUG_FLUSH;
+
+            delete new_filter;
+            new_filter = NULL;
+         }
       }
       else
       {
