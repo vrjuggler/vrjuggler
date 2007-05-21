@@ -138,7 +138,12 @@ public:
    /**
     * Print out debug information about all nodes.
     */
-   void debugDumpNodes(int debug_level);
+   void debugDumpNodes(int debugLevel);
+
+   /**
+    * Print the status of each node in the cluster.
+    */
+   void printStatus(int debugLevel);
 
    Reactor& getReactor()
    {

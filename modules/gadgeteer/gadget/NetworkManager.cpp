@@ -30,6 +30,7 @@
 #include <iomanip>
 
 #include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/TimeoutException.h> 
 
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/Header.h>
@@ -375,15 +376,29 @@ size_t NetworkManager::sendEndBlocks( const int temp)
 
 void NetworkManager::updateAllNodes( const size_t numNodes )
 {
+   static vpr::Interval node_timeout(5, vpr::Interval::Sec);
    size_t completed_nodes(0);
 
    typedef std::vector<gadget::NodePtr>::iterator iter_t;
 
    while ( completed_nodes != numNodes )
    {
-      std::vector<gadget::NodePtr> ready_nodes =
-         //reactor.getReadyNodes(vpr::Interval::NoWait);
-         mReactor.getReadyNodes(vpr::Interval::NoTimeout);
+      std::vector<gadget::NodePtr> ready_nodes;
+
+      try
+      {
+         //ready_nodes = mReactor.getReadyNodes(vpr::Interval::NoTimeout);
+         ready_nodes = mReactor.getReadyNodes(node_timeout);
+      }
+      catch (vpr::TimeoutException& ex)
+      {
+         vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL ) 
+            << clrOutBOLD(clrBLUE,"[NetworkManager]") 
+            << " " << (int)((int)numNodes - ready_nodes.size()) 
+            << " still waiting after timeout." 
+            << std::endl << vprDEBUG_FLUSH; 
+         printStatus(vprDBG_CRITICAL_LVL);
+      }
 
       for ( iter_t i = ready_nodes.begin(); i != ready_nodes.end(); ++i )
       {
@@ -724,18 +739,55 @@ void NetworkManager::shutdown()
    }
 }
 
-
-void NetworkManager::debugDumpNodes(int debug_level)
+void NetworkManager::debugDumpNodes(int debugLevel)
 {
-   vpr::DebugOutputGuard dbg_output(gadgetDBG_NET_MGR,debug_level,
+   vpr::DebugOutputGuard dbg_output(gadgetDBG_NET_MGR,debugLevel,
       std::string("-------------- Cluster Network --------------\n"),
       std::string("---------------------------------------------\n"));
 
    for(node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
    {
-      (*itr)->debugDump( debug_level );
+      (*itr)->debugDump( debugLevel );
    }
 }
+
+void NetworkManager::printStatus(int debugLevel)
+{
+   vpr::DebugOutputGuard dbg_output(gadgetDBG_NET_MGR,debugLevel,
+      std::string("-------------- Cluster Network --------------\n"),
+      std::string("---------------------------------------------\n"));
+
+   const int name_width(20);
+   const int hostname_width(20);
+   const int port_width(6);
+
+   for(node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
+   {
+      vprDEBUG(vprDBG_ALL,debugLevel)
+         << "Name: " << std::setiosflags(std::ios::right)
+         << std::setfill(' ') << std::setw(name_width) << (*itr)->getName()
+         << "  Hostname: " << std::setiosflags(std::ios::right)
+         << std::setfill(' ') << std::setw(hostname_width) << (*itr)->getHostname()
+         << "  Port: " << std::setiosflags(std::ios::right)
+         << std::setfill(' ') << std::setw(port_width) << (*itr)->getPort()
+         << std::resetiosflags(std::ios::right) << "  ";
+
+      /*
+         vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrYELLOW) << "NEED DEPS" << clrRESET << " ]";
+      */
+      if ((*itr)->isUpdated())
+      {
+         vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrGREEN) << "UPDATED" << clrRESET << " ]";
+      }
+      else
+      {
+         vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrRED) << "WAITING" << clrRESET << " ]";
+      }
+
+      vprDEBUG_CONTnl(vprDBG_ALL,debugLevel) << std::endl << vprDEBUG_FLUSH;
+   }
+}
+
 
 bool NetworkManager::recognizeClusterMachineConfig(jccl::ConfigElementPtr element)
 {
