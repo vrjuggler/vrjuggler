@@ -80,18 +80,7 @@ public:
    static HeaderPtr create(const vpr::Uint16 code, const vpr::Uint16 type,
                            const vpr::Uint32 length, const vpr::Uint32 frame);
    virtual ~Header()
-   {
-      if ( NULL != mPacketReader )
-      {
-         delete mPacketReader;
-         mPacketReader = NULL;
-      }
-      if ( NULL != mPacketWriter )
-      {
-         delete mPacketWriter;
-         mPacketWriter = NULL;
-      }
-   }
+   {;}
 
    /**
     * Reads the packet header from the given socket.
@@ -155,8 +144,6 @@ public:
 
    virtual void printData( const int debug_level );
 protected:
-   vpr::BufferObjectReader* mPacketReader;
-   vpr::BufferObjectWriter* mPacketWriter;
    std::vector<vpr::Uint8> mData;
 
    vpr::Uint16 mRIMCode;

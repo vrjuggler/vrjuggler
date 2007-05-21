@@ -34,15 +34,11 @@ namespace cluster
 {
 
 Header::Header()
-   : mPacketReader(NULL)
-   , mPacketWriter(NULL)
 {;}
 
 Header::Header( const vpr::Uint16 code, const vpr::Uint16 type,
                 const vpr::Uint32 length, const vpr::Uint32 frame )
-   : mPacketReader(NULL)
-   , mPacketWriter(NULL)
-   , mRIMCode(code)
+   : mRIMCode(code)
    , mPacketType(type)
    , mPacketLength(length)
    , mFrame(frame)
@@ -116,36 +112,35 @@ void Header::readData(vpr::SocketStream* stream)
             exit(0);
       }
       
-      mPacketReader = new vpr::BufferObjectReader( &mData );
       parseHeader();
    }
 }
 
 void Header::serializeHeader()
 {  
-   mPacketWriter = new vpr::BufferObjectWriter(&mData);
-   mPacketWriter->getData()->clear();
-   mPacketWriter->setCurPos( 0 );
+   vpr::BufferObjectWriter writer(&mData);
+   writer.getData()->clear();
+   writer.setCurPos( 0 );
 
    // -Write all packet header information to the base Header class
 
       
-//   std::cout << "Head Starting at Position: " << mPacketWriter->getCurPos() << std::endl;
-   mPacketWriter->writeUint16( mRIMCode );
+//   std::cout << "Head Starting at Position: " << writer.getCurPos() << std::endl;
+   writer.writeUint16( mRIMCode );
 //   std::cout << "Write RIMCode: " << mRIMCode << std::endl;
-//   std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
+//   std::cout << "Current Position: " << writer.getCurPos() << std::endl;
 
-   mPacketWriter->writeUint16( mPacketType );
+   writer.writeUint16( mPacketType );
 //   std::cout << "Write PacketType: " << mPacketType << std::endl;
-//   std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
+//   std::cout << "Current Position: " << writer.getCurPos() << std::endl;
 
-   mPacketWriter->writeUint32( mFrame );
+   writer.writeUint32( mFrame );
 //   std::cout << "Write Frame: " << mFrame << std::endl;
-//   std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
+//   std::cout << "Current Position: " << writer.getCurPos() << std::endl;
 
-   mPacketWriter->writeUint32( mPacketLength );
+   writer.writeUint32( mPacketLength );
 //   std::cout << "Write Packet Length: " << mPacketLength << std::endl;
-//   std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
+//   std::cout << "Current Position: " << writer.getCurPos() << std::endl;
 }
 
 void Header::parseHeader()
@@ -157,20 +152,21 @@ void Header::parseHeader()
    // -Is this a valid RIM packet?
    //  -If not exit immediately
       
-   //std::cout << "Head Starting at Position: " << mPacketReader->getCurPos() << std::endl;
+   vpr::BufferObjectReader reader( &mData );
+   //std::cout << "Head Starting at Position: " << reader.getCurPos() << std::endl;
    
-   mRIMCode = mPacketReader->readUint16();
+   mRIMCode = reader.readUint16();
 //   std::cout << "Read RIMCode: " << mRIMCode << std::endl;
-//   std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
-   mPacketType = mPacketReader->readUint16();
+//   std::cout << "Current Position: " << reader.getCurPos() << std::endl;
+   mPacketType = reader.readUint16();
 //   std::cout << "Read PacketType: " << mPacketType << std::endl;
-//   std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
-   mFrame = mPacketReader->readUint32();
+//   std::cout << "Current Position: " << reader.getCurPos() << std::endl;
+   mFrame = reader.readUint32();
 //   std::cout << "Read Frame#: " << mFrame << std::endl;
-//   std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
-   mPacketLength = mPacketReader->readUint32();
+//   std::cout << "Current Position: " << reader.getCurPos() << std::endl;
+   mPacketLength = reader.readUint32();
 //   std::cout << "Read Packet Length: " << mPacketLength << std::endl;
-//   std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
+//   std::cout << "Current Position: " << reader.getCurPos() << std::endl;
 
    if ( RIM_PACKET != mRIMCode )
    {
