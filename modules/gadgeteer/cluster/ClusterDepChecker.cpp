@@ -115,8 +115,6 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
       << "---- Dependencies for " << element->getName()
       << " (type: " << element->getID() << ") ----\n" << vprDEBUG_FLUSH;
 
-   jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-
    if (element->getID() == ClusterNetwork::getClusterNodeElementType())
    {
       // Machine Specific element should have no dependencies since we are
@@ -137,7 +135,9 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
       vprDEBUG_NEXT( vprDBG_ALL, dbg_lvl ) << "1: "
           << "Device node's ConfigElement"
           << " ==> " << vprDEBUG_FLUSH;
-      
+
+      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+
       if (!cfg_mgr->isElementInActiveList( device_host ) || NULL == node)
       {
          vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "not in active list.\n"
