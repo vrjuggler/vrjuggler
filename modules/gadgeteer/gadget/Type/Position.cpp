@@ -55,8 +55,11 @@ Position::~Position()
    for (std::vector<PositionFilter*>::iterator itr = mPositionFilters.begin();
         itr != mPositionFilters.end(); itr++)
    {
-      delete (*itr);
-      (*itr) = NULL;
+      if (NULL != *itr)
+      {
+         delete *itr;
+         *itr = NULL;
+      }
    }
    mPositionFilters.clear();
 }
