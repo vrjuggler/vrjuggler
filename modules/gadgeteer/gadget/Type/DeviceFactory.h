@@ -55,19 +55,7 @@ private:
       vprASSERT(mConstructors.size() == 0);
    }
 
-   ~DeviceFactory()
-   {
-      for (std::vector<DeviceConstructorBase*>::iterator itr = mConstructors.begin();
-           itr != mConstructors.end(); itr++)
-      {
-         if (NULL != *itr)
-         {
-            delete *itr;
-            *itr = NULL;
-         }
-      }
-      mConstructors.clear();
-   }
+   ~DeviceFactory();
 
    /**
     * Performs static loading of devices that cannot be loaded through the

@@ -50,6 +50,20 @@ namespace gadget
 // Initialize the singleton ptr
 vprSingletonImpWithInitFunc( BaseTypeFactory, hackLoadKnownDevices );
 
+BaseTypeFactory::~BaseTypeFactory()
+{
+   typedef std::vector<BaseTypeConstructorBase*>::iterator iter_type;
+   for ( iter_type itr = mConstructors.begin(); itr != mConstructors.end(); ++itr )
+   {
+      if (NULL != *itr)
+      {
+         delete *itr;
+         *itr = NULL;
+      }
+   }
+   mConstructors.clear();
+}
+
 /**
  * Registers all the devices that I know about.
  * @note This should really be moved to dynamic library loading code.

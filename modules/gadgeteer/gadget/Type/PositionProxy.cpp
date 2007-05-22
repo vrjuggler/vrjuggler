@@ -51,6 +51,20 @@ PositionProxyPtr PositionProxy::create(const std::string& deviceName,
    return PositionProxyPtr(new PositionProxy(deviceName, unitNum));
 }
 
+PositionProxy::~PositionProxy()
+{
+   typedef std::vector<PositionFilter*>::iterator iter_type;
+   for ( iter_type itr = mPositionFilters.begin(); itr != mPositionFilters.end(); ++itr )
+   {
+      if (NULL != *itr)
+      {
+         delete *itr;
+         *itr = NULL;
+      }
+   }
+   mPositionFilters.clear();
+}
+
 std::string PositionProxy::getElementType()
 {
    return "position_proxy";

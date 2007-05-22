@@ -81,19 +81,7 @@ public:
    static PositionProxyPtr create(const std::string& deviceName = "UnknownPosition",
                                   const int unitNum = -1);
 
-   virtual ~PositionProxy()
-   {
-      for (std::vector<PositionFilter*>::iterator itr = mPositionFilters.begin();
-           itr != mPositionFilters.end(); itr++)
-      {
-         if (NULL != *itr)
-         {
-            delete *itr;
-            *itr = NULL;
-         }
-      }
-      mPositionFilters.clear();
-   }
+   virtual ~PositionProxy();
 
    /**
     * Updates the proxy's copy of the data.
