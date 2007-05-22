@@ -51,7 +51,18 @@ Position::Position()
 {;}
 
 Position::~Position()
-{;}
+{
+   for (std::vector<PositionFilter*>::iterator itr = mPositionFilters.begin();
+        itr != mPositionFilters.end(); itr++)
+   {
+      if (NULL != *itr)
+      {
+         delete *itr;
+         *itr = NULL;
+      }
+   }
+   mPositionFilters.clear();
+}
 
 
 // Set up the transformation information
@@ -96,6 +107,9 @@ bool Position::config(jccl::ConfigElementPtr e)
                << " configuration failed; " << filter_id << " will NOT "
                << "be loaded.\n"
                << vprDEBUG_FLUSH;
+
+            delete new_filter;
+            new_filter = NULL;
          }
       }
       else

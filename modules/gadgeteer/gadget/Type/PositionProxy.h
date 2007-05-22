@@ -70,7 +70,7 @@ public:
       , mUnitNum(unitNum)
    {;}
 
-   virtual ~PositionProxy() {;}
+   virtual ~PositionProxy();
 
    /**
     * Updates the proxy's copy of the data.

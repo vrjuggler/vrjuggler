@@ -55,6 +55,8 @@ private:
       vprASSERT(mConstructors.size() == 0);
    }
 
+   ~DeviceFactory();
+
    /**
     * Performs static loading of devices that cannot be loaded through the
     * dynamic plug-in mechanism.

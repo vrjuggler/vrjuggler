@@ -92,6 +92,8 @@ private:
       vprASSERT(mConstructors.size() == 0);
    }
 
+   ~BaseTypeFactory();
+
    // This should be replaced with device plugins.
    /**
     * @post Devices are loaded that the system knows about.
