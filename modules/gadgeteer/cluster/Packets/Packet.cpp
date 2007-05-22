@@ -46,12 +46,10 @@ Packet::Packet(const vpr::GUID& pluginId)
 }
 Packet::Packet(std::vector<vpr::Uint8>* data) : mPluginId()
 {
-   //We must Copy
+   // Copy data.
    mData = *(data);
    mPacketReader = new vpr::BufferObjectReader(&mData);
    mPacketWriter= new vpr::BufferObjectWriter(&mData);
-
-   //parseHeader();
 }
 
 Packet::~Packet()
@@ -61,7 +59,7 @@ Packet::~Packet()
    //delete mData;
 }
 
-void Packet::dump()
+void Packet::dump() const
 {
    if (NULL != mHeader.get())
    {
@@ -72,24 +70,24 @@ void Packet::dump()
       std::cout << "Could not dump Header since it is NULL!" << std::endl;
    }
    std::cout << "Dumping Packet(" << mData.size() << " bytes): ";
-   for ( std::vector<vpr::Uint8>::iterator i = mData.begin();
-        i!= mData.end(); i++ )
+   for ( std::vector<vpr::Uint8>::const_iterator i = mData.begin();
+         i!= mData.end(); i++ )
    {
       std::cout << (int)*i << " ";
    }
    std::cout << std::endl;
 }
 
-vpr::Uint16 Packet::getPacketType()
+vpr::Uint16 Packet::getPacketType() const
 {
    return mHeader->getPacketType();
 }
 
-void Packet::printData(int debug_level)
+void Packet::printData(int debugLevel) const
 {
    if (NULL != mHeader.get())
    {
-      mHeader->printData(debug_level);
+      mHeader->printData(debugLevel);
       /*
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << clrOutBOLD(clrCYAN,"\n====== Packet Header ======")

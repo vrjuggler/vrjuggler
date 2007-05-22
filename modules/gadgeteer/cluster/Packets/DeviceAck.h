@@ -100,7 +100,7 @@ public:
    /**
     * Print the data to the screen in a readable form.
     */
-   virtual void printData(int debug_level);
+   virtual void printData(int debugLevel) const;
 
    /**
     * Return the type of this packet.

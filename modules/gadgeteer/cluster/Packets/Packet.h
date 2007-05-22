@@ -71,22 +71,22 @@ public:
    /**
     * Dump all internal data to the screen.
     */
-   void dump();
+   void dump() const;
 
    /**
     * Get the type of this packet.
     */
-   vpr::Uint16 getPacketType();
+   vpr::Uint16 getPacketType() const;
 
    /**
     * Print the internal data in a readable format.
     */
-   virtual void printData(int debug_level) = 0;
+   virtual void printData(int debugLevel) const;
 
    /**
     * Return the vpr::PacketReader object used to retrieve data from the packet.
     */
-   vpr::BufferObjectReader* getPacketReader()
+   vpr::BufferObjectReader* getPacketReader() const
    {
       return mPacketReader;
    }
@@ -94,7 +94,7 @@ public:
    /**
     * Return the vpr::PacketReader object used to retrieve data from the packet.
     */
-   vpr::BufferObjectWriter* getPacketWriter()
+   vpr::BufferObjectWriter* getPacketWriter() const
    {
       return mPacketWriter;
    }
@@ -102,7 +102,7 @@ public:
    /**
     * Get the GUID of the Plugin that should handle this packet.
     */
-   vpr::GUID getPluginId()
+   vpr::GUID getPluginId() const
    {
       return mPluginId;
    }
@@ -110,7 +110,7 @@ public:
    /**
     * Get the header for this packet.
     */
-   HeaderPtr getHeader()
+   HeaderPtr getHeader() const
    {
       return mHeader;
    }

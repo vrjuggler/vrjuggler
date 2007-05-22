@@ -135,33 +135,33 @@ void DeviceAck::parse()
    mAck = mPacketReader->readBool();
 }
 
-void DeviceAck::printData(int debug_level)
+void DeviceAck::printData(int debugLevel) const
 {
-   vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
+   vprDEBUG_BEGIN(gadgetDBG_RIM,debugLevel) 
       <<  clrOutBOLD(clrYELLOW,"==== Device Ack Packet Data ====\n") << vprDEBUG_FLUSH;
    
-   Packet::printData(debug_level);
+   Packet::printData(debugLevel);
 
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Plugin GUID:      ") << mPluginId.toString()
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Device ID:        ") << mId.toString()
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Device Name:      ") << mDeviceName
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Device Base Type: ") << mDeviceBaseType 
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Remote Hostname:  ") << mHostname
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Ack or Nack:      ") << (mAck ? "Ack" : "Nack")  << std::endl
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG_END(gadgetDBG_RIM,debug_level) 
+   vprDEBUG_END(gadgetDBG_RIM,debugLevel) 
       <<  clrOutBOLD(clrYELLOW,"================================\n") << vprDEBUG_FLUSH;
 }
 

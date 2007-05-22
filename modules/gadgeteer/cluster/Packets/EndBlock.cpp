@@ -103,15 +103,15 @@ void EndBlock::parse()
 /**
  * Print the data to the screen in a readable form.
  */
-void EndBlock::printData(int debug_level)
+void EndBlock::printData(int debugLevel) const
 {
-   boost::ignore_unused_variable_warning(debug_level);
+   boost::ignore_unused_variable_warning(debugLevel);
 /*      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       <<  clrOutBOLD(clrYELLOW,"====== END BLOCK ======\n") << vprDEBUG_FLUSH;
 
-   Packet::printData(debug_level);
+   Packet::printData(debugLevel);
 
-   vprDEBUG(gadgetDBG_RIM,debug_level)
+   vprDEBUG(gadgetDBG_RIM,debugLevel)
       << clrOutBOLD(clrYELLOW, "New State:    ") << mNewState
       << std::endl << vprDEBUG_FLUSH;
 

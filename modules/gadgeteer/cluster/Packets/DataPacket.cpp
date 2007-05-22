@@ -105,26 +105,26 @@ void DataPacket::parse()
    // There is extra data on the buffer for the object itself.
 }
 
-void DataPacket::printData(int debug_level)
+void DataPacket::printData(int debugLevel) const
 {
    // NOTE: This should be removed if any of the below code ever puts
-   // debug_level to use.
+   // debugLevel to use.
    
-   boost::ignore_unused_variable_warning(debug_level);
+   boost::ignore_unused_variable_warning(debugLevel);
    
-   vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
+   vprDEBUG_BEGIN(gadgetDBG_RIM,debugLevel) 
       <<  clrOutBOLD(clrYELLOW,"==== Device Data Packet ====\n") << vprDEBUG_FLUSH;
    
-   Packet::printData(debug_level);
+   Packet::printData(debugLevel);
 
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Plugin ID: ") << mPluginId.toString()
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Object ID: ") << mObjectId.toString()
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG_END(gadgetDBG_RIM,debug_level) 
+   vprDEBUG_END(gadgetDBG_RIM,debugLevel) 
       <<  clrOutBOLD(clrYELLOW,"============================\n") << vprDEBUG_FLUSH;
 }
 

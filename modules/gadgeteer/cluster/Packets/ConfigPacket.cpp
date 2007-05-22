@@ -86,21 +86,21 @@ void ConfigPacket::parse()
    mType = mPacketReader->readUint16();
 }
 
-void ConfigPacket::printData(int debug_level)
+void ConfigPacket::printData(int debugLevel) const
 {
-   vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
+   vprDEBUG_BEGIN(gadgetDBG_RIM,debugLevel) 
       <<  clrOutBOLD(clrYELLOW,"==== Config Packet Data ====\n") << vprDEBUG_FLUSH;
    
-   Packet::printData(debug_level);
+   Packet::printData(debugLevel);
 
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Config:       ") << mConfig
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_RIM,debug_level) 
+   vprDEBUG(gadgetDBG_RIM,debugLevel) 
       << clrOutBOLD(clrYELLOW, "Type          ") << mType
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG_END(gadgetDBG_RIM,debug_level) 
+   vprDEBUG_END(gadgetDBG_RIM,debugLevel) 
       <<  clrOutBOLD(clrYELLOW,"====================================\n") << vprDEBUG_FLUSH;
 }
 
