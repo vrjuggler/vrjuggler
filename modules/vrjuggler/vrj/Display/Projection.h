@@ -166,7 +166,7 @@ protected:
 
 public:
    /** Sets the system-wide near and far values. */
-   static void setNearFar(float near_val, float far_val);
+   static void setNearFar(const float nearVal, const float farVal);
 
    /**
     * Retrieves the system-wide near and far values.
