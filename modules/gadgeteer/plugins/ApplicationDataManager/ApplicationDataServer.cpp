@@ -58,16 +58,10 @@ ApplicationDataServer::~ApplicationDataServer()
 
 void ApplicationDataServer::serializeAndSend()
 {
-   // Clear old data and reset the position.
-   mDataPacket->getData().clear();
-   mDataPacket->getPacketWriter()->setCurPos(0);
-
    mDataPacket->serialize(*mApplicationData);
 
    // We must update the size of the actual data that we are going to send
    mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
-                                    + 16 /*Plugin GUID*/
-                                    + 16 /*Plugin GUID*/
                                     + mDataPacket->getData().size());
 
    // We must serialize the header again so that we can reset the size.
