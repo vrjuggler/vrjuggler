@@ -351,13 +351,19 @@ int Kernel::start()
    if (cluster::ClusterManager::instance()->isClusterActive())
    {
       cluster::ClusterManager::instance()->start();
+      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
       do
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_VERB_LVL)
             << " vrj::Kernel::start() configuring before starting cluster." << std::endl << vprDEBUG_FLUSH;
 
-         checkForReconfig();
+         unsigned num_processed(0);
+         do
+         {
+            num_processed = cfg_mgr->attemptReconfiguration();
+         }
+         while (num_processed > 0);
       }
       while (!cluster::ClusterManager::instance()->pluginsReady());
    }
