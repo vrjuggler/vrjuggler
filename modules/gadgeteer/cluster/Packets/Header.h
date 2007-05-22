@@ -65,8 +65,14 @@ public:
     * Directly read the needed header data from socket(blocking), and parse the
     * header.
     */
-   Header() : mPacketReader(NULL), mPacketWriter(NULL)
+   Header();
+
+   Header( const vpr::Uint16 code, const vpr::Uint16 type,
+           const vpr::Uint32 length, const vpr::Uint32 frame );
+
+   virtual ~Header()
    {;}
+
 
    /**
     * Reads the packet header from the given socket.
@@ -84,23 +90,6 @@ public:
     *        to read from \p stream.
     */
    void readData(vpr::SocketStream* stream);
-
-   Header( vpr::Uint16 RIM_code, vpr::Uint16 packet_type,
-           vpr::Uint32 packet_length, vpr::Uint32 frame );
-
-   virtual ~Header()
-   {
-      if ( NULL != mPacketReader )
-      {
-         delete mPacketReader;
-         mPacketReader = NULL;
-      }
-      if ( NULL != mPacketWriter )
-      {
-         delete mPacketWriter;
-         mPacketWriter = NULL;
-      }
-   }
 
    void serializeHeader();
 
@@ -147,8 +136,6 @@ public:
 
    virtual void printData( const int debug_level );
 protected:
-   vpr::BufferObjectReader* mPacketReader;
-   vpr::BufferObjectWriter* mPacketWriter;
    std::vector<vpr::Uint8> mData;
 
    vpr::Uint16 mRIMCode;
