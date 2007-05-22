@@ -499,6 +499,10 @@ public:
     */
    void setIOStatStrategy(vpr::BaseIOStatsStrategy* strat)
    {
+      if (NULL != mStatsStrategy)
+      {
+         delete mStatsStrategy;
+      }
       mStatsStrategy = strat;
       if(mStatsStrategy != NULL)              // If we have a non-NULL strategy
       {

@@ -71,6 +71,14 @@ SocketStreamImplBSD::SocketStreamImplBSD(const InetAddr& localAddr,
 SocketStreamImplBSD::SocketStreamImplBSD(const SocketStreamImplBSD& sock)
    : SocketImplBSD(sock.mLocalAddr, sock.mRemoteAddr, SocketTypes::STREAM)
 {
+   // mHandle is created in the base class constructor. Since we are creating
+   // a copy we must clean up existing memory.
+   if (NULL != mHandle)
+   {
+      delete mHandle;
+      mHandle = NULL;
+   }
+
    mHandle         = new FileHandleImplUNIX(sock.mHandle->getName());
    mHandle->mFdesc = sock.mHandle->mFdesc;
 }
@@ -134,6 +142,13 @@ void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,
    else
    {
       sock.setRemoteAddr(addr);
+
+      // Clean up the existing handle.
+      if (NULL != sock.mHandle)
+      {
+         delete sock.mHandle;
+         sock.mHandle = NULL;
+      }
       sock.mHandle         = new FileHandleImplUNIX(addr.getAddressString());
       sock.mHandle->mFdesc = accept_sock;
       sock.mHandle->mOpen  = true;

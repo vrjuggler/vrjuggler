@@ -121,7 +121,10 @@ BlockIO::BlockIO(const BlockIO& other)
 
 BlockIO::~BlockIO()
 {
-   /* Do nothing. */ ;
+   if (NULL != mStatsStrategy)
+   {
+      delete mStatsStrategy;
+   }
 }
 
 vpr::Uint32 BlockIO::read_s(void* buffer, const vpr::Uint32 length,
