@@ -144,13 +144,26 @@ public:
 
 protected:
    /** Container for the thread-specific context-specific data. */
-   template<class DataType>
+   template<class DATA_TYPE>
    struct ThreadContextData
    {
    public:
+      typedef std::vector<DATA_TYPE*> data_list_t;
+
       ThreadContextData()
          : mContextDataVector()
       {;}
+
+      ~ThreadContextData()
+      {
+         for (typename data_list_t::iterator itr = mContextDataVector.begin();
+              mContextDataVector.end() != itr; itr++)
+         {
+            delete *itr;
+            (*itr) = NULL;
+         }
+         mContextDataVector.clear();
+      }
 
       /* Makes sure that the vector is at least requiredSize large */
       void checkSize(unsigned requiredSize)
@@ -160,12 +173,12 @@ protected:
             mContextDataVector.reserve(requiredSize);          // Resize smartly
             while(mContextDataVector.size() < requiredSize)    // Add any new items needed
             {
-               mContextDataVector.push_back(new DataType());
+               mContextDataVector.push_back(new DATA_TYPE());
             }
          }
       }
 
-      std::vector<DataType*> mContextDataVector;   /**< Vector of user data */
+      data_list_t mContextDataVector;   /**< Vector of user data */
    };
 
    /**
