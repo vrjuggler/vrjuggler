@@ -34,189 +34,194 @@
 #include <cluster/Packets/Header.h>
 #include <gadget/Util/Debug.h>
 
+#include <vpr/IO/BufferObjectReader.h>
+#include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
 namespace cluster
+{
+
+Header::Header()
+{;}
+
+Header::Header( const vpr::Uint16 code, const vpr::Uint16 type,
+                const vpr::Uint32 length, const vpr::Uint32 frame )
+   : mRIMCode(code)
+   , mPacketType(type)
+   , mPacketLength(length)
+   , mFrame(frame)
+{;}
+
+void Header::readData( vpr::SocketStream* stream ) throw ( cluster::ClusterException )
+{
+   vprASSERT( NULL != stream && "Can not create a Header using a NULL SocketStream" );
+
+   // - Is stream is a valid SocketStream?
+   //   - Read in the packet from the socket
+   //   - Set the BufferObjectReader and BufferObjectWriter to use mData  <====We only need BufferObjectReader
+   if (NULL == stream)
+   {
+      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+         << clrOutBOLD( clrRED, "ERROR:" )
+         << " SocketSteam is NULL"
+         << std::endl << vprDEBUG_FLUSH;
+
+      throw cluster::ClusterException("Header::Header() - SocketStream is NULL");
+   }
+   else
+   {
+      vpr::Uint32 bytes_read;   
+      
+      vpr::ReturnStatus status =
+         stream->readn( mData, Header::RIM_PACKET_HEAD_SIZE, bytes_read );
+
+      if ( status != vpr::ReturnStatus::Succeed ||
+           bytes_read != RIM_PACKET_HEAD_SIZE )
+      {
+         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+            << clrOutBOLD( clrRED, "ERROR:" )
+            << "Header::readData() - Could not read the header!"
+            << std::endl << vprDEBUG_FLUSH;
+         
+         stream->close();
+         delete stream;
+         stream = NULL;
+         
+         if ( status != vpr::ReturnStatus::Succeed )
+         {
+            throw cluster::ClusterException( "Header::Header() - Could not read the header!" );
+         }
+         else
+         {
+            throw cluster::ClusterException( "Header::Header() - Bytes Read was lower than RIM_PACKET_HEAD_SIZE" );
+         }            
+      }
+      
+      if ( bytes_read != RIM_PACKET_HEAD_SIZE )
+      {
+         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+            << clrOutBOLD( clrRED, "ERROR:" )
+            << "Header::Header Something is seriously wrong here!\n" 
+            << "We only read: " << bytes_read << " bytes for the header\n"
+            << "When we need " << RIM_PACKET_HEAD_SIZE << " bytes!" << std::endl
+            << vprDEBUG_FLUSH;
+            exit(0);
+      }
+      
+      parseHeader();
+   }
+
+}
+
+void Header::serializeHeader()
 {  
-   Header::Header( vpr::Uint16 RIM_code, vpr::Uint16 packet_type,
-                   vpr::Uint32 packet_length, vpr::Uint32 frame ) : mPacketReader(NULL), mPacketWriter(NULL)
-   {
-      mRIMCode = RIM_code;
-      mPacketType = packet_type;
-      mPacketLength = packet_length;
-      mFrame = frame;
-   }
-   
-   void Header::readData( vpr::SocketStream* stream ) throw ( cluster::ClusterException )
-   {
-      vprASSERT( NULL != stream && "Can not create a Header using a NULL SocketStream" );
+   vpr::BufferObjectWriter writer(&mData);
+   writer.getData()->clear();
+   writer.setCurPos( 0 );
 
-      // - Is stream is a valid SocketStream?
-      //   - Read in the packet from the socket
-      //   - Set the BufferObjectReader and BufferObjectWriter to use mData  <====We only need BufferObjectReader
-      if (NULL == stream)
-      {
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << clrOutBOLD( clrRED, "ERROR:" )
-            << " SocketSteam is NULL"
-            << std::endl << vprDEBUG_FLUSH;
+   // -Write all packet header information to the base Header class
 
-         throw cluster::ClusterException("Header::Header() - SocketStream is NULL");
-      }
-      else
-      {
-         vpr::Uint32 bytes_read;   
-         
-         vpr::ReturnStatus status =
-            stream->readn( mData, Header::RIM_PACKET_HEAD_SIZE, bytes_read );
-
-         if ( status != vpr::ReturnStatus::Succeed ||
-              bytes_read != RIM_PACKET_HEAD_SIZE )
-         {
-            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-               << clrOutBOLD( clrRED, "ERROR:" )
-               << "Header::readData() - Could not read the header!"
-               << std::endl << vprDEBUG_FLUSH;
-            
-            stream->close();
-            delete stream;
-            stream = NULL;
-            
-            if ( status != vpr::ReturnStatus::Succeed )
-            {
-               throw cluster::ClusterException( "Header::Header() - Could not read the header!" );
-            }
-            else
-            {
-               throw cluster::ClusterException( "Header::Header() - Bytes Read was lower than RIM_PACKET_HEAD_SIZE" );
-            }            
-         }
-         
-         if ( bytes_read != RIM_PACKET_HEAD_SIZE )
-         {
-            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-               << clrOutBOLD( clrRED, "ERROR:" )
-               << "Header::Header Something is seriously wrong here!\n" 
-               << "We only read: " << bytes_read << " bytes for the header\n"
-               << "When we need " << RIM_PACKET_HEAD_SIZE << " bytes!" << std::endl
-               << vprDEBUG_FLUSH;
-               exit(0);
-         }
-         
-         mPacketReader = new vpr::BufferObjectReader( &mData );
-         parseHeader();
-      }
-
-   }
-
-   void Header::serializeHeader()
-   {  
-      mPacketWriter = new vpr::BufferObjectWriter(&mData);
-      mPacketWriter->getData()->clear();
-      mPacketWriter->setCurPos( 0 );
-
-      // -Write all packet header information to the base Header class
-
-         
-//         std::cout << "Head Starting at Position: " << mPacketWriter->getCurPos() << std::endl;
-      mPacketWriter->writeUint16( mRIMCode );
+      
+//         std::cout << "Head Starting at Position: " << writer.getCurPos() << std::endl;
+   writer.writeUint16( mRIMCode );
 //         std::cout << "Write RIMCode: " << mRIMCode << std::endl;
-//         std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
+//         std::cout << "Current Position: " << writer.getCurPos() << std::endl;
 
-      mPacketWriter->writeUint16( mPacketType );
+   writer.writeUint16( mPacketType );
 //         std::cout << "Write PacketType: " << mPacketType << std::endl;
-//         std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
+//         std::cout << "Current Position: " << writer.getCurPos() << std::endl;
 
-      mPacketWriter->writeUint32( mFrame );
+   writer.writeUint32( mFrame );
 //         std::cout << "Write Frame: " << mFrame << std::endl;
-//         std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
+//         std::cout << "Current Position: " << writer.getCurPos() << std::endl;
 
-      mPacketWriter->writeUint32( mPacketLength );
+   writer.writeUint32( mPacketLength );
 //         std::cout << "Write Packet Length: " << mPacketLength << std::endl;
-//         std::cout << "Current Position: " << mPacketWriter->getCurPos() << std::endl;
-   }
+//         std::cout << "Current Position: " << writer.getCurPos() << std::endl;
+}
+
+void Header::parseHeader()
+{
+   // *Now that we have recieved the correct number 
+   //  of bytes from the socket(RIM_PACKET_HEAD_SIZE)
    
-   void Header::parseHeader()
-   {
-      // *Now that we have recieved the correct number 
-      //  of bytes from the socket(RIM_PACKET_HEAD_SIZE)
+   // -Parse the new data using a BufferObjectReader
+   // -Is this a valid RIM packet?
+   //  -If not exit immediately
+   vpr::BufferObjectReader reader( &mData );
       
-      // -Parse the new data using a BufferObjectReader
-      // -Is this a valid RIM packet?
-      //  -If not exit immediately
-         
-         //std::cout << "Head Starting at Position: " << mPacketReader->getCurPos() << std::endl;
-      
-      mRIMCode = mPacketReader->readUint16();
+      //std::cout << "Head Starting at Position: " << reader.getCurPos() << std::endl;
+   
+   mRIMCode = reader.readUint16();
 //         std::cout << "Read RIMCode: " << mRIMCode << std::endl;
-//         std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
-      mPacketType = mPacketReader->readUint16();
+//         std::cout << "Current Position: " << reader.getCurPos() << std::endl;
+   mPacketType = reader.readUint16();
 //         std::cout << "Read PacketType: " << mPacketType << std::endl;
-//         std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
-      mFrame = mPacketReader->readUint32();
+//         std::cout << "Current Position: " << reader.getCurPos() << std::endl;
+   mFrame = reader.readUint32();
 //         std::cout << "Read Frame#: " << mFrame << std::endl;
-//         std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
-      mPacketLength = mPacketReader->readUint32();
+//         std::cout << "Current Position: " << reader.getCurPos() << std::endl;
+   mPacketLength = reader.readUint32();
 //         std::cout << "Read Packet Length: " << mPacketLength << std::endl;
-//         std::cout << "Current Position: " << mPacketReader->getCurPos() << std::endl;
+//         std::cout << "Current Position: " << reader.getCurPos() << std::endl;
 
-      if ( RIM_PACKET != mRIMCode )
-      {
-         vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << clrOutBOLD( clrRED, "ERROR:" )
-            << " This Packet is not a valid RIM Packet!!"
-            << " RIMCode: " << mRIMCode << " is not valid!"
-            << std::endl << vprDEBUG_FLUSH;
-            
-            throw cluster::ClusterException( "Header::parseHeader() - Invalid packet header!" );
-      }
-   }
-   
-   vpr::ReturnStatus Header::send( vpr::SocketStream* socket )
+   if ( RIM_PACKET != mRIMCode )
    {
-      vprASSERT( NULL != socket && "Socket is NULL" );
-
-      // -Send the data in this packet
-      vpr::Uint32 bytes_written;
-      
-      vpr::ReturnStatus status = socket->send( mData, RIM_PACKET_HEAD_SIZE, bytes_written );
-      return status;
-
+      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+         << clrOutBOLD( clrRED, "ERROR:" )
+         << " This Packet is not a valid RIM Packet!!"
+         << " RIMCode: " << mRIMCode << " is not valid!"
+         << std::endl << vprDEBUG_FLUSH;
+         
+         throw cluster::ClusterException( "Header::parseHeader() - Invalid packet header!" );
    }
+}
+
+vpr::ReturnStatus Header::send( vpr::SocketStream* socket )
+{
+   vprASSERT( NULL != socket && "Socket is NULL" );
+
+   // -Send the data in this packet
+   vpr::Uint32 bytes_written;
    
-   void Header::dump()
+   vpr::ReturnStatus status = socket->send( mData, RIM_PACKET_HEAD_SIZE, bytes_written );
+   return status;
+
+}
+
+void Header::dump()
+{
+   std::cout << "Dumping Header(" << mData.size() << " bytes): ";
+   for ( std::vector<vpr::Uint8>::iterator i = mData.begin();
+        i!= mData.end(); i++ )
    {
-      std::cout << "Dumping Header(" << mData.size() << " bytes): ";
-      for ( std::vector<vpr::Uint8>::iterator i = mData.begin();
-           i!= mData.end(); i++ )
-      {
-         std::cout << (int)*i << " ";
-      }
-      std::cout << std::endl;
+      std::cout << (int)*i << " ";
    }
+   std::cout << std::endl;
+}
+
+void Header::printData( const int debug_level )
+{
+   vprDEBUG_BEGIN( gadgetDBG_RIM, debug_level )
+      << clrOutBOLD( clrYELLOW, "====== Packet Header ======" )
+      << std::endl << vprDEBUG_FLUSH;
    
-   void Header::printData( const int debug_level )
-   {
-      vprDEBUG_BEGIN( gadgetDBG_RIM, debug_level )
-         << clrOutBOLD( clrYELLOW, "====== Packet Header ======" )
-         << std::endl << vprDEBUG_FLUSH;
-      
-      vprDEBUG( gadgetDBG_RIM, debug_level )
-         << clrOutBOLD( clrYELLOW, "RIMCode:    " ) << mRIMCode
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG( gadgetDBG_RIM, debug_level )
-         << clrOutBOLD( clrYELLOW, "PacketType: " ) << mPacketType
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG( gadgetDBG_RIM, debug_level )
-         << clrOutBOLD( clrYELLOW, "Frame #:    " ) << mFrame
-         << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG( gadgetDBG_RIM, debug_level )
-         << clrOutBOLD( clrYELLOW, "Length:     " ) << mPacketLength
-         << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG( gadgetDBG_RIM, debug_level )
+      << clrOutBOLD( clrYELLOW, "RIMCode:    " ) << mRIMCode
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG( gadgetDBG_RIM, debug_level )
+      << clrOutBOLD( clrYELLOW, "PacketType: " ) << mPacketType
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG( gadgetDBG_RIM, debug_level )
+      << clrOutBOLD( clrYELLOW, "Frame #:    " ) << mFrame
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG( gadgetDBG_RIM, debug_level )
+      << clrOutBOLD( clrYELLOW, "Length:     " ) << mPacketLength
+      << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG_END( gadgetDBG_RIM, debug_level )
-         << clrOutBOLD( clrYELLOW, "===========================" )
-         << std::endl << vprDEBUG_FLUSH;
-   }
+   vprDEBUG_END( gadgetDBG_RIM, debug_level )
+      << clrOutBOLD( clrYELLOW, "===========================" )
+      << std::endl << vprDEBUG_FLUSH;
+}
 
-}// end namespace cluster
+}// end cluster namespace
