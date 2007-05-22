@@ -76,9 +76,22 @@ protected:
            const vpr::Uint32 length, const vpr::Uint32 frame );
 
 public:
+   /**
+    * Factory method that returns an empty header.
+    */
    static HeaderPtr create();
+
+   /**
+    * Factory method.
+    *
+    * @param code Packet code
+    * @param type The type of the packet.
+    * @param length Size of data for entire packet.
+    * @param frame The frame number the packet was sent. NOTE: Not currently used.
+    */
    static HeaderPtr create(const vpr::Uint16 code, const vpr::Uint16 type,
                            const vpr::Uint32 length, const vpr::Uint32 frame);
+
    virtual ~Header()
    {;}
 
@@ -113,21 +126,21 @@ public:
     * @throw cluster::ClusterException is thrown if the packet header cannot
     *        be written to \p socket.
     */
-   void send(vpr::SocketStream* socket);
+   void send(vpr::SocketStream* socket) const;
 
-   void dump();
+   void dump() const;
 
-   vpr::Uint16 getRIMCode()
+   vpr::Uint16 getRIMCode() const
    {
       return mRIMCode;
    }
 
-   vpr::Uint16 getPacketType()
+   vpr::Uint16 getPacketType() const
    {
       return mPacketType;
    }
 
-   vpr::Uint32 getPacketLength()
+   vpr::Uint32 getPacketLength() const
    {
       return mPacketLength;
    }
@@ -137,12 +150,12 @@ public:
       mPacketLength = length;
    }
 
-   vpr::Uint32 getFrame()
+   vpr::Uint32 getFrame() const
    {
       return mFrame;
    }
 
-   virtual void printData( const int debug_level );
+   void printData( const int debug_level ) const;
 protected:
    std::vector<vpr::Uint8> mData;
 
