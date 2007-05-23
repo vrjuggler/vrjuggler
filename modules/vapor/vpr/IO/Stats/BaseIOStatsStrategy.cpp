@@ -41,7 +41,9 @@ namespace vpr
 {
 
 void BaseIOStatsStrategy::setRealObject(vpr::BlockIO* real)
-{ mRealObject = real; }
+{
+   mRealObject = real;
+}
 
 void BaseIOStatsStrategy::read_s(void* buffer, const vpr::Uint32 length,
                                  vpr::Uint32& bytes_read,
