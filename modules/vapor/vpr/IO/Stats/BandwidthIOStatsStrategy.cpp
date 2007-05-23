@@ -42,6 +42,8 @@ namespace vpr
 {
 
 BandwidthIOStatsStrategy::BandwidthIOStatsStrategy()
+   : mReadStats(100)
+   , mWriteStats(100)
 {
    /* Do nothing. */ ;
 }
