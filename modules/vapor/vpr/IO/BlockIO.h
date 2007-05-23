@@ -48,11 +48,11 @@
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>
 
-#include <vpr/IO/Stats/BaseIOStatsStrategy.h>
-
 
 namespace vpr
 {
+
+class BaseIOStatsStrategy;
 
 /** \class BlockIO BlockIO.h vpr/IO/BlockIO.h
  *
@@ -497,18 +497,7 @@ public:
    /**
     * Sets the IO stats strategy to use.
     */
-   void setIOStatStrategy(vpr::BaseIOStatsStrategy* strat)
-   {
-      if (NULL != mStatsStrategy)
-      {
-         delete mStatsStrategy;
-      }
-      mStatsStrategy = strat;
-      if(mStatsStrategy != NULL)              // If we have a non-NULL strategy
-      {
-         mStatsStrategy->setRealObject(this); // Tell it about us
-      }
-   }
+   void setIOStatStrategy(vpr::BaseIOStatsStrategy* strat);
 
    /**
     * Gets the current IO stats strategy.
