@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-05-23 aronb    Changed the default socket statistics collection strategy
+                    to NullIOStatsStrategy.
+                    NEW VERSION: 1.1.46
 2007-05-23 patrick  Cleaned up internal handling of vpr::Interval objects in
                     read/write methods of I/O classes. The public read/write
                     methods in vpr::BlockIO now take vpr::Interval objectcs by
