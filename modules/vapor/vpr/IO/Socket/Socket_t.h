@@ -678,8 +678,7 @@ protected:
     *                contents are to be stored.
     * @param length  The number of bytes to be read.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for reading.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for reading.
     *
     * @return The number of bytes read into the buffer is returned.
     *
@@ -690,10 +689,8 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual vpr::Uint32 read_i(
-      void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   )
+   virtual vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
+                              const vpr::Interval& timeout)
    {
       return mSocketImpl->read_i(buffer, length, timeout);
    }
@@ -713,8 +710,7 @@ protected:
     *                  contents are to be stored.
     * @param length    The number of bytes to be read.
     * @param timeout   The maximum amount of time to wait for data to be
-    *                  available for reading.  This argument is optional and
-    *                  defaults to vpr::Interval::NoTimeout.
+    *                  available for reading.
     *
     * @return The number of bytes read into the buffer is returned.
     *
@@ -723,10 +719,8 @@ protected:
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   virtual vpr::Uint32 readn_i(
-      void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   )
+   virtual vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout)
    {
       return mSocketImpl->readn_i(buffer, length, timeout);
    }
@@ -742,8 +736,7 @@ protected:
     * @param buffer  A pointer to the buffer to be written.
     * @param length  The length of the buffer.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for writing.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for writing.
     *
     * @throws ConnectionResetException if connection is reset.
     * @throws NoRouteToHostException if a route to host does not exist.
@@ -756,10 +749,8 @@ protected:
     * @throws vpr::SocketException if the write operation failed.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   virtual vpr::Uint32 write_i(
-      const void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   )
+   virtual vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout)
    {
       return mSocketImpl->write_i(buffer, length, timeout);
    }

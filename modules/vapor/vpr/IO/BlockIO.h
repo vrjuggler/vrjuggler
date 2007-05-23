@@ -561,28 +561,22 @@ protected:
     * Read strategy.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual vpr::Uint32 read_s(
-      void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   );
+   virtual vpr::Uint32 read_s(void* buffer, const vpr::Uint32 length,
+                              const vpr::Interval& timeout);
 
    /**
     * Read strategy.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual vpr::Uint32 readn_s(
-      void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   );
+   virtual vpr::Uint32 readn_s(void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout);
 
    /**
     * Write strategy.
     * @throws vpr::IOException if the operation failed.
     */
-   virtual vpr::Uint32 write_s(
-      const void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   );
+   virtual vpr::Uint32 write_s(const void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout);
 
    /**
     * Implementation of the read() template method.  This reads at most the
@@ -598,8 +592,7 @@ protected:
     *                contents are to be stored.
     * @param length  The number of bytes to be read.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for reading.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for reading.
     *
     * @return The number of bytes read into the buffer is returned.
     *
@@ -609,10 +602,8 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the read operation failed.
     */
-   virtual vpr::Uint32 read_i(
-      void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   ) = 0;
+   virtual vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
+                              const vpr::Interval& timeout) = 0;
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -628,8 +619,7 @@ protected:
     *                contents are to be stored.
     * @param length  The number of bytes to be read.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for reading.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for reading.
     *
     * @return The number of bytes read into the buffer is returned.
     *
@@ -637,10 +627,8 @@ protected:
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
-   virtual vpr::Uint32 readn_i(
-      void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   ) = 0;
+   virtual vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout) = 0;
 
    /**
     * Implementation of the write() template method.  This writes the given
@@ -653,8 +641,7 @@ protected:
     * @param buffer  A pointer to the buffer to be written.
     * @param length  The length of the buffer.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for writing.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for writing.
     *
     * @return The number of bytes written to the device is returned.
     *
@@ -664,10 +651,8 @@ protected:
     *         timeout interval.
     * @throws vpr::IOException if the file handle write operation failed.
     */
-   virtual vpr::Uint32 write_i(
-      const void* buffer, const vpr::Uint32 length,
-      const vpr::Interval timeout = vpr::Interval::NoTimeout
-   ) = 0;
+   virtual vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout) = 0;
 
    // Friends
    friend class vpr::BaseIOStatsStrategy;    // Need it to be able to call the protected read_i, readn_i, and write_i memebers
