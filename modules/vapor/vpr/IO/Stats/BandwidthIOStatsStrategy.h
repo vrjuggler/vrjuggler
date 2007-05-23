@@ -38,7 +38,7 @@
 
 #include <vpr/vprConfig.h>
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
-#include <vpr/Util/StatCollector.h>
+#include <vpr/Util/SampleLimitedStatCollector.h>
 
 
 namespace vpr
@@ -78,19 +78,19 @@ public:
                         const vpr::Interval& timeout);
    //@}
 
-   vpr::StatCollector<vpr::Uint32, true>& readStats()
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true>& readStats()
    {
       return mReadStats;
    }
 
-   vpr::StatCollector<vpr::Uint32, true>& writeStats()
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true>& writeStats()
    {
       return mWriteStats;
    }
 
 private:
-   vpr::StatCollector<vpr::Uint32, true> mReadStats;
-   vpr::StatCollector<vpr::Uint32, true> mWriteStats;
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true> mReadStats;
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true> mWriteStats;
 };
 
 } //namespace vpr

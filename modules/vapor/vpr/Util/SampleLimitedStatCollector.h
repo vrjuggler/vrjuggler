@@ -42,8 +42,9 @@
 #include <vpr/Util/Interval.h>
 
 #include <deque>
-#include <utility>
 #include <typeinfo>
+#include <utility>
+#include <vector>
 
 namespace vpr
 {
