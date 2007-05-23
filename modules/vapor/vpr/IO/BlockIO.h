@@ -40,19 +40,17 @@
 
 #include <vector>
 #include <string>
-#include <string.h>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/IO/IOException.h>
 #include <vpr/IO/IOSys.h>
-#include <vpr/IO/Selector.h>
 
 
 namespace vpr
 {
 
 class BaseIOStatsStrategy;
+class Interval;
 
 /** \class BlockIO BlockIO.h vpr/IO/BlockIO.h
  *

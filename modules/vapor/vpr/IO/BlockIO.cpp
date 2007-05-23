@@ -36,6 +36,7 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+#include <vpr/IO/Selector.h>
 #include <vpr/IO/BlockIO.h>
 
 
