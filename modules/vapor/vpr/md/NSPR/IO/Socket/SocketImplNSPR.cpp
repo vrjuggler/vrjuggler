@@ -456,9 +456,8 @@ bool SocketImplNSPR::isConnected() const
    return false;
 }
 
-
 vpr::Uint32 SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
-                                   const vpr::Interval timeout)
+                                   const vpr::Interval& timeout)
 {
    vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
 
@@ -498,7 +497,7 @@ vpr::Uint32 SocketImplNSPR::read_i(void* buffer, const vpr::Uint32 length,
 }
 
 vpr::Uint32 SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
-                                    const vpr::Interval timeout)
+                                    const vpr::Interval& timeout)
 {
    vprASSERT(NULL != mHandle && "Can not read from a socket with a NULL handle.");
 
@@ -554,7 +553,7 @@ vpr::Uint32 SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
 
 vpr::Uint32 SocketImplNSPR::write_i(const void* buffer,
                                     const vpr::Uint32 length,
-                                    const vpr::Interval timeout)
+                                    const vpr::Interval& timeout)
 {
    vprASSERT(NULL != mHandle && "Can not write to a socket with a NULL handle.");
 

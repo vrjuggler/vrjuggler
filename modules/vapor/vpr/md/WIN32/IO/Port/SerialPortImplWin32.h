@@ -938,7 +938,7 @@ public:
     * @throw vpr::IOException         If the read operation failed.
     */
    vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                      const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -964,7 +964,7 @@ public:
     * @throw vpr::IOException  If an error ocured while reading.
     */
    vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                       const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write() template method.  This writes the given
@@ -990,7 +990,7 @@ public:
     * @throw vpr::IOException         If the write operation failed.
     */
    vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                       const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
 protected:
    HANDLE mHandle;     /**< handle to communication file */

@@ -310,7 +310,7 @@ public:
     * @throws vpr::IOException if the read operation failed.
     */
    vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                      const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the readn template method.  This reads exactly the
@@ -336,7 +336,7 @@ public:
     * @throws vpr::IOException if an error ocured while reading.
     */
    vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                       const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write template method.  This writes the buffer to
@@ -361,7 +361,7 @@ public:
     * @throws vpr::IOException if the write operation failed.
     */
    vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                       const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Returns the number of bytes available for reading in the receive

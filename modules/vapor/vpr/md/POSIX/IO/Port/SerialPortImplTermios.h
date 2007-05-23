@@ -986,7 +986,7 @@ public:
     * @see vpr::FileHandleImplUNIX::read_i()
     */
    vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                      const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->read_i(buffer, length, timeout);
@@ -1018,7 +1018,7 @@ public:
     * @see vpr::FileHandleImplUNIX::readn_i()
     */
    vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                       const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->readn_i(buffer, length, timeout);
@@ -1049,7 +1049,7 @@ public:
     * @see vpr::FileHandleImplUNIX::write_i()
     */
    vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                       const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
       return mHandle->write_i(buffer, length, timeout);
