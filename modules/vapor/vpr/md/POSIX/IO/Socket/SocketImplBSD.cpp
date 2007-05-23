@@ -500,7 +500,7 @@ void SocketImplBSD::setRemoteAddr(const InetAddr& addr)
 }
 
 vpr::Uint32 SocketImplBSD::read_i(void* buffer, const vpr::Uint32 length,
-                                  const vpr::Interval timeout)
+                                  const vpr::Interval& timeout)
 {
    vprASSERT(NULL != mHandle &&
              "Can not read from a socket with a NULL handle.");
@@ -521,7 +521,7 @@ vpr::Uint32 SocketImplBSD::read_i(void* buffer, const vpr::Uint32 length,
 }
 
 vpr::Uint32 SocketImplBSD::readn_i(void* buffer, const vpr::Uint32 length,
-                                   const vpr::Interval timeout)
+                                   const vpr::Interval& timeout)
 {
    vprASSERT(NULL != mHandle &&
              "Can not read from a socket with a NULL handle.");
@@ -540,7 +540,7 @@ vpr::Uint32 SocketImplBSD::readn_i(void* buffer, const vpr::Uint32 length,
 
 vpr::Uint32 SocketImplBSD::write_i(const void* buffer,
                                    const vpr::Uint32 length,
-                                   const vpr::Interval timeout)
+                                   const vpr::Interval& timeout)
 {
    mBlockingFixed = true;
 

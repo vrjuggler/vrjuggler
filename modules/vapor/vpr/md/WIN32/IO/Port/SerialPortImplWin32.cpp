@@ -541,7 +541,7 @@ void SerialPortImplWin32::setParity(const vpr::SerialTypes::ParityType& type)
 
 vpr::Uint32 SerialPortImplWin32::write_i(const void* buffer,
                                          const vpr::Uint32 length,
-                                         const vpr::Interval timeout)
+                                         const vpr::Interval& timeout)
 {
    unsigned long bytes;
 
@@ -592,7 +592,7 @@ void SerialPortImplWin32::setRequestToSend(bool val)
 }
 
 vpr::Uint32 SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
-                                        const vpr::Interval timeout)
+                                        const vpr::Interval& timeout)
 {
    unsigned long bytes;
 
@@ -637,7 +637,7 @@ vpr::Uint32 SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 length,
 
 vpr::Uint32 SerialPortImplWin32::readn_i(void* buffer,
                                          const vpr::Uint32 length,
-                                         const vpr::Interval timeout)
+                                         const vpr::Interval& timeout)
 {
    //Call read_i for now
    return read_i(buffer, length, timeout);

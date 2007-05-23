@@ -377,7 +377,7 @@ vpr::Int32 FileHandleImplUNIX::getReadBufferSize() const
 // Read the specified number of bytes from the file handle into the given
 // bufer.
 vpr::Uint32 FileHandleImplUNIX::read_i(void* buffer, const vpr::Uint32 length,
-                                       const vpr::Interval timeout)
+                                       const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes_read(0);
 
@@ -432,7 +432,7 @@ vpr::Uint32 FileHandleImplUNIX::read_i(void* buffer, const vpr::Uint32 length,
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 vpr::Uint32 FileHandleImplUNIX::readn_i(void* buffer,
                                         const vpr::Uint32 buffer_size,
-                                        const vpr::Interval timeout)
+                                        const vpr::Interval& timeout)
 {
    if ( vpr::Interval::NoTimeout != timeout )
    {
@@ -510,7 +510,7 @@ vpr::Uint32 FileHandleImplUNIX::readn_i(void* buffer,
 // Write the buffer to the file handle.
 vpr::Uint32 FileHandleImplUNIX::write_i(const void* buffer,
                                         const vpr::Uint32 length,
-                                        const vpr::Interval timeout)
+                                        const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes_written(0);
 
