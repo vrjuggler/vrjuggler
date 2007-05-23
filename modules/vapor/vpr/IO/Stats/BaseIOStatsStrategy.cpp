@@ -50,7 +50,7 @@ void vpr::BaseIOStatsStrategy::read_s(void* buffer, const vpr::Uint32 length,
 void vpr::BaseIOStatsStrategy::readn_s(void* buffer, const vpr::Uint32 length,
                                        vpr::Uint32& bytes_read,
                                        const vpr::Interval& timeout)
-&{
+{
    bytes_read = mRealObject->readn_i(buffer, length, timeout);
 }
 
