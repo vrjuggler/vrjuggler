@@ -5,5 +5,7 @@ DATE       AUTHOR   CHANGE
                     methods in vpr::BlockIO now take vpr::Interval objectcs by
                     const reference.
                     NEW VERSION: 2.1.1
+2007-05-23 aronb    Changed the default socket statistics collection strategy
+                    to NullIOStatsStrategy.
 2007-04-18 patrick  VR Juggler 2.2 branch created.
                     NEW VERSION: 2.1.0
