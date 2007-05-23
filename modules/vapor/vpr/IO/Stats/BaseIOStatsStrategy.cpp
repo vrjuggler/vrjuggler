@@ -40,6 +40,17 @@
 namespace vpr
 {
 
+BaseIOStatsStrategy::BaseIOStatsStrategy()
+   : mRealObject(NULL)
+{
+    /* Do nothing. */ ;
+}
+
+BaseIOStatsStrategy::~BaseIOStatsStrategy()
+{
+   mRealObject = NULL;
+}
+
 void BaseIOStatsStrategy::setRealObject(vpr::BlockIO* real)
 {
    mRealObject = real;

@@ -54,13 +54,9 @@ class BlockIO;    // forward declare
 class VPR_CLASS_API BaseIOStatsStrategy
 {
 public:
-   BaseIOStatsStrategy()
-   {
-       mRealObject = NULL;
-   }
+   BaseIOStatsStrategy();
 
-   virtual ~BaseIOStatsStrategy()
-   {;}
+   virtual ~BaseIOStatsStrategy();
 
    void setRealObject(vpr::BlockIO* real);
 
