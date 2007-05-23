@@ -1,4 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-Apr-18-2007 patrick     VR Juggler 2.2 branch created.
-                        NEW VERSION: 2.1.0
+2007-05-23 patrick  Cleaned up internal handling of vpr::Interval objects in
+                    read/write methods of I/O classes. The public read/write
+                    methods in vpr::BlockIO now take vpr::Interval objectcs by
+                    const reference.
+                    NEW VERSION: 2.1.1
+2007-04-18 patrick  VR Juggler 2.2 branch created.
+                    NEW VERSION: 2.1.0
