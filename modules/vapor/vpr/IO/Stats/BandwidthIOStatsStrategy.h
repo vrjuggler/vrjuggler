@@ -37,13 +37,9 @@
 #define VPR_BW_IOSTATS_H
 
 #include <vpr/vprConfig.h>
-#include <boost/concept_check.hpp>
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
-#include <vpr/Util/DateTime.h>
-#include <vpr/Util/Interval.h>
 #include <vpr/Util/StatCollector.h>
 
-#include <deque>
 
 namespace vpr
 {
@@ -53,56 +49,35 @@ namespace vpr
  * Strategy for collecting bandwidth data about the block I/O device.
  * Holds all stats for Bandwidth collection.
  */
-class BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
+class VPR_CLASS_API BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
 {
 public:
-   BandwidthIOStatsStrategy()
-   {;}
+   BandwidthIOStatsStrategy();
 
-   virtual ~BandwidthIOStatsStrategy()
-   {;}
+   virtual ~BandwidthIOStatsStrategy();
 
+   /** @name Strategy Interface */
+   //@{
    /**
     * @pre The read operation must have already occured.
     */
    virtual void read_s(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytesRead, const vpr::Interval& timeout)
-   {
-      boost::ignore_unused_variable_warning(buffer);
-      boost::ignore_unused_variable_warning(length);
-      boost::ignore_unused_variable_warning(timeout);
-
-      mReadStats.addSample(bytesRead);
-   }
+                       vpr::Uint32& bytesRead, const vpr::Interval& timeout);
 
    /**
     * @pre The read operation must have already occured.
     */
    virtual void readn_s(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytesRead, const vpr::Interval& timeout)
-   {
-      boost::ignore_unused_variable_warning(buffer);
-      boost::ignore_unused_variable_warning(length);
-      boost::ignore_unused_variable_warning(timeout);
-
-      mReadStats.addSample(bytesRead);
-   }
+                        vpr::Uint32& bytesRead, const vpr::Interval& timeout);
 
    /**
     * @pre The write operation must have already occured.
     */
    virtual void write_s(const void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytesWritten,
-                        const vpr::Interval& timeout)
-   {
-      boost::ignore_unused_variable_warning(buffer);
-      boost::ignore_unused_variable_warning(length);
-      boost::ignore_unused_variable_warning(timeout);
+                        const vpr::Interval& timeout);
+   //@}
 
-      mWriteStats.addSample(bytesWritten);
-   }
-
-public:
    vpr::StatCollector<vpr::Uint32, true>& readStats()
    {
       return mReadStats;
