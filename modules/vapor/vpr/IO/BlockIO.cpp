@@ -128,7 +128,7 @@ BlockIO::~BlockIO()
 }
 
 vpr::Uint32 BlockIO::read_s(void* buffer, const vpr::Uint32 length,
-                            const vpr::Interval timeout)
+                            const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes(0);
 
@@ -145,7 +145,7 @@ vpr::Uint32 BlockIO::read_s(void* buffer, const vpr::Uint32 length,
 }
 
 vpr::Uint32 BlockIO::readn_s(void* buffer, const vpr::Uint32 length,
-                             const vpr::Interval timeout)
+                             const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes(0);
 
@@ -162,7 +162,7 @@ vpr::Uint32 BlockIO::readn_s(void* buffer, const vpr::Uint32 length,
 }
 
 vpr::Uint32 BlockIO::write_s(const void* buffer, const vpr::Uint32 length,
-                             const vpr::Interval timeout)
+                             const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes(0);
 

@@ -320,8 +320,7 @@ protected:
     *                  successfully read from the file will be stored.
     *                  The value will be -1 if an error occurred.
     * @param timeout   The amount of time to wait before returning to the
-    *                  caller.  This argument is optional and defaults to
-    *                  vpr::Interval::NoTimeout.
+    *                  caller.
     *
     * @throws vpr::WouldBlockException if the file is in non-blocking mode,
     *         and there is no data to read.
@@ -330,8 +329,7 @@ protected:
     * @throws vpr::IOException if the read operation failed.
     */
    void read_i(void* buffer, const vpr::Uint32 length,
-               vpr::Uint32& bytesRead,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+               vpr::Uint32& bytesRead, const vpr::Interval& timeout)
    {
       mHandleImpl.read_i(buffer, length, bytesRead, timeout);
    }
@@ -353,16 +351,14 @@ protected:
     *                  successfully read from the file will be stored.
     *                  The value will be -1 if an error occurred.
     * @param timeout   The amount of time to wait before returning to the
-    *                  caller.  This argument is optional and defaults to
-    *                  vpr::Interval::NoTimeout.
+    *                  caller.
     *
     * @throws vpr::EOFException if end of file or end of stream has been
     *         reached unexpectedly during input.
     * @throws vpr::IOException if an error ocured while reading.
     */
    void readn_i(void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesRead,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                vpr::Uint32& bytesRead, const vpr::Interval& timeout)
    {
       mHandleImpl.readn_i(buffer, length, bytesRead, timeout);
    }
@@ -381,8 +377,7 @@ protected:
     *                     stored.  The value will be -1 if an error
     *                     occurred.
     * @param timeout      The amount of time to wait before returning to the
-    *                     caller.  This argument is optional and defaults to
-    *                     vpr::Interval::NoTimeout.
+    *                     caller.
     *
     * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
     *         and the write operation could not be completed.
@@ -391,8 +386,7 @@ protected:
     * @throws vpr::IOException if the write operation failed.
     */
    void write_i(const void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytesWritten,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                vpr::Uint32& bytesWritten, const vpr::Interval& timeout)
    {
       mHandleImpl.write_i(buffer, length, bytesWritten, timeout);
    }
