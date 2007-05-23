@@ -48,8 +48,9 @@
 #include <vpr/Util/Interval.h>
 
 #include <deque>
-#include <utility>
 #include <typeinfo>
+#include <utility>
+#include <vector>
 
 namespace vpr
 {
@@ -256,12 +257,6 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getInstAverage()
       if(diff_sec > 0)
       {
         inst_average = double(mPrevSample1 + mPrevSample2)/diff_sec;
-      }
-
-      // Haven't had sample in quite a while, so clamp to zero.
-      if(diff_time > this->mSTAMaxTime)
-      {
-         inst_average = 0.0;
       }
    }
    else
