@@ -50,7 +50,6 @@ namespace vpr
 {
 
 class BaseIOStatsStrategy;
-class Interval;
 
 /** \class BlockIO BlockIO.h vpr/IO/BlockIO.h
  *
