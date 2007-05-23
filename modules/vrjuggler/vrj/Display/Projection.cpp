@@ -81,29 +81,34 @@ void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
    gmtl::Matrix44f view_mat_inv;
    gmtl::invert(view_mat_inv, mViewMat);
 
-   // vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "GetApex:\nview mat:\n" << mViewMat << "\nviewMatInv:\n" << view_mat_inv << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+   //   << "[vrj::Projection::getFrustumApexAndCorners()]" << std::endl;
+   //vprDEBUG_NEXTnl(vprDBG_ALL, vprDBG_HVERB_LVL)
+   //   << "View matrix:\n" << mViewMat << std::endl;
+   //vprDEBUG_NEXTnl(vprDBG_ALL, vprDBG_HVERB_LVL)
+   //   << "Inverse view matrix:\n" << view_mat_inv << std::endl
+   //   << vprDEBUG_FLUSH;
 
-
-   //float near_dist = mFocusPlaneDist;
+   //const float near_dist = mFocusPlaneDist;
    // Use like triangles to get the params for the focus surface
-   float mult_factor = mFocusPlaneDist/mFrustum[Frustum::VJ_NEAR];
-   float bot = mFrustum[Frustum::VJ_BOTTOM]*mult_factor;
-   float left = mFrustum[Frustum::VJ_LEFT]*mult_factor;
-   float top = mFrustum[Frustum::VJ_TOP]*mult_factor;
-   float right = mFrustum[Frustum::VJ_RIGHT]*mult_factor;
+   const float mult_factor = mFocusPlaneDist / mFrustum[Frustum::VJ_NEAR];
+   const float bot         = mFrustum[Frustum::VJ_BOTTOM] * mult_factor;
+   const float left        = mFrustum[Frustum::VJ_LEFT] * mult_factor;
+   const float top         = mFrustum[Frustum::VJ_TOP] * mult_factor;
+   const float right       = mFrustum[Frustum::VJ_RIGHT] * mult_factor;
 
    // Create points in clip space
-   gmtl::Point3f apexClip(0.0f, 0.0f, 0.0f);
-   gmtl::Point3f urClip(right, top, -mFocusPlaneDist);
-   gmtl::Point3f lrClip(right, bot, -mFocusPlaneDist);
-   gmtl::Point3f ulClip(left, top, -mFocusPlaneDist);
-   gmtl::Point3f llClip(left, bot, -mFocusPlaneDist);
+   const gmtl::Point3f apex_clip(0.0f, 0.0f, 0.0f);
+   const gmtl::Point3f ur_clip(right, top, -mFocusPlaneDist);
+   const gmtl::Point3f lr_clip(right, bot, -mFocusPlaneDist);
+   const gmtl::Point3f ul_clip(left, top, -mFocusPlaneDist);
+   const gmtl::Point3f ll_clip(left, bot, -mFocusPlaneDist);
 
-   apex = view_mat_inv * apexClip;
-   ur = view_mat_inv * urClip;
-   lr = view_mat_inv * lrClip;
-   ul = view_mat_inv * ulClip;
-   ll = view_mat_inv * llClip;
+   apex = view_mat_inv * apex_clip;
+   ur   = view_mat_inv * ur_clip;
+   lr   = view_mat_inv * lr_clip;
+   ul   = view_mat_inv * ul_clip;
+   ll   = view_mat_inv * ll_clip;
 }
 
 std::ostream& Projection::outStream(std::ostream& out,
@@ -132,14 +137,14 @@ std::ostream& Projection::outStream(std::ostream& out,
    return out;
 }
 
-void Projection::setNearFar(float near_val, float far_val)
+void Projection::setNearFar(const float nearVal, const float farVal)
 {
    vprDEBUG(vprDBG_ALL,vprDBG_STATE_LVL)
-      << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
-      << "near: " << near_val << " far:" << far_val << std::endl
+      << clrOutNORM(clrCYAN, "[vrj::Projection::setNearFar()] ")
+      << "near: " << nearVal << ", far:" << farVal << std::endl
       << vprDEBUG_FLUSH;
-   mNearDist = near_val;
-   mFarDist = far_val;
+   mNearDist = nearVal;
+   mFarDist = farVal;
 }
 
 void Projection::getNearFar(float& nearVal, float& farVal)
