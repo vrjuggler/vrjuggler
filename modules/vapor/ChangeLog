@@ -1,5 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-05-23 patrick  Cleaned up internal handling of vpr::Interval objects in
+                    read/write methods of I/O classes. The public read/write
+                    methods in vpr::BlockIO now take vpr::Interval objectcs by
+                    const reference.
+                    NEW VERSION: 1.1.45
 2007-04-05 patrick  Added thread start/exit notification signals. Boost.Signals
                     is now a required dependency.
                     NEW VERSION: 1.1.44
