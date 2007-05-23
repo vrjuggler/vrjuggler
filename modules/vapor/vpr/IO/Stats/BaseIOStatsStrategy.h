@@ -68,16 +68,14 @@ public:
 
 public:
    virtual void read_s(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytes_read,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                       vpr::Uint32& bytes_read, const vpr::Interval& timeout);
 
    virtual void readn_s(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytes_read,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                        vpr::Uint32& bytes_read, const vpr::Interval& timeout);
 
    virtual void write_s(const void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytes_written,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                        const vpr::Interval& timeout);
 
 protected:
     vpr::BlockIO*   mRealObject;

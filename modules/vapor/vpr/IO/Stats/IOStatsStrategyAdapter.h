@@ -58,16 +58,14 @@ class IOStatsStrategyAdapter : public BASE_ONE, public BASE_TWO
 {
 public:
    virtual void read_s(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytesRead,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                       vpr::Uint32& bytesRead, const vpr::Interval& timeout)
    {
       BASE_ONE::read_s(buffer, length, bytesRead, timeout);
       BASE_TWO::read_s(buffer, length, bytesRead, timeout);
    }
 
    virtual void readn_s(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytesRead,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                        vpr::Uint32& bytesRead, const vpr::Interval& timeout)
    {
       BASE_ONE::readn_s(buffer, length, bytesRead, timeout);
       BASE_TWO::readn_s(buffer, length, bytesRead, timeout);
@@ -75,7 +73,7 @@ public:
 
    virtual void write_s(const void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytesWritten,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                        const vpr::Interval& timeout)
    {
       BASE_ONE::write_s(buffer, length, bytesWritten, timeout);
       BASE_TWO::write_s(buffer, length, bytesWritten, timeout);
