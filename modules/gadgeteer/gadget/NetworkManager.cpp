@@ -175,7 +175,6 @@ void NetworkManager::waitForConnection(const vpr::Uint16 listenPort)
          client_sock->close();
       }
       delete client_sock;
-      client_sock = new vpr::SocketStream;
    }
 }
 
