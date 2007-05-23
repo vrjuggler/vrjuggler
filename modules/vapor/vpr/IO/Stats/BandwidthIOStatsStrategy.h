@@ -66,8 +66,7 @@ public:
     * @pre The read operation must have already occured.
     */
    virtual void read_s(void* buffer, const vpr::Uint32 length,
-                       vpr::Uint32& bytesRead,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                       vpr::Uint32& bytesRead, const vpr::Interval& timeout)
    {
       boost::ignore_unused_variable_warning(buffer);
       boost::ignore_unused_variable_warning(length);
@@ -80,8 +79,7 @@ public:
     * @pre The read operation must have already occured.
     */
    virtual void readn_s(void* buffer, const vpr::Uint32 length,
-                        vpr::Uint32& bytesRead,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                        vpr::Uint32& bytesRead, const vpr::Interval& timeout)
    {
       boost::ignore_unused_variable_warning(buffer);
       boost::ignore_unused_variable_warning(length);
@@ -95,7 +93,7 @@ public:
     */
    virtual void write_s(const void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytesWritten,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                        const vpr::Interval& timeout)
    {
       boost::ignore_unused_variable_warning(buffer);
       boost::ignore_unused_variable_warning(length);

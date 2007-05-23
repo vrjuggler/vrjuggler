@@ -42,21 +42,21 @@ void vpr::BaseIOStatsStrategy::setRealObject(vpr::BlockIO* real)
 
 void vpr::BaseIOStatsStrategy::read_s(void* buffer, const vpr::Uint32 length,
                                       vpr::Uint32& bytes_read,
-                                      const vpr::Interval timeout)
+                                      const vpr::Interval& timeout)
 {
    bytes_read = mRealObject->read_i(buffer, length, timeout);
 }
 
 void vpr::BaseIOStatsStrategy::readn_s(void* buffer, const vpr::Uint32 length,
                                        vpr::Uint32& bytes_read,
-                                       const vpr::Interval timeout)
+                                       const vpr::Interval& timeout)
 {
    bytes_read = mRealObject->readn_i(buffer, length, timeout);
 }
 
 void vpr::BaseIOStatsStrategy::write_s(const void* buffer, const vpr::Uint32 length,
                                        vpr::Uint32& bytes_written,
-                                       const vpr::Interval timeout)
+                                       const vpr::Interval& timeout)
 {
    bytes_written = mRealObject->write_i(buffer, length, timeout);
 }
