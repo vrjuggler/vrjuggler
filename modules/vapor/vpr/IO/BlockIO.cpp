@@ -35,6 +35,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+#include <vpr/IO/Selector.h>
 #include <vpr/IO/BlockIO.h>
 
 
@@ -91,6 +93,21 @@ bool BlockIO::isWriteBlocked(const vpr::Interval& timeout)
    }
 
    return is_blocked;
+}
+
+void BlockIO::setIOStatStrategy(vpr::BaseIOStatsStrategy* strat)
+{
+   if ( NULL != mStatsStrategy )
+   {
+      delete mStatsStrategy;
+   }
+
+   mStatsStrategy = strat;
+
+   if ( mStatsStrategy != NULL )           // If we have a non-NULL strategy
+   {
+      mStatsStrategy->setRealObject(this); // Tell it about us
+   }
 }
 
 BlockIO::BlockIO()
