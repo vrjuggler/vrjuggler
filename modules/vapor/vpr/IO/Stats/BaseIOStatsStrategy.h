@@ -88,9 +88,13 @@ protected:
  * @note Must derive from vpr::BaseIOStatsStrategy because the compiler still
  *       expects that interface.
  */
-class NullIOStatsStrategy : public BaseIOStatsStrategy
+class VPR_CLASS_API NullIOStatsStrategy : public BaseIOStatsStrategy
 {
 public:
+   NullIOStatsStrategy();
+
+   virtual ~NullIOStatsStrategy();
+
    enum { IS_NULL = 1 };
 };
 

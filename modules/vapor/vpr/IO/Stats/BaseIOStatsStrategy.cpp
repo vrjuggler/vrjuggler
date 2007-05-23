@@ -60,3 +60,13 @@ void vpr::BaseIOStatsStrategy::write_s(const void* buffer, const vpr::Uint32 len
 {
    bytes_written = mRealObject->write_i(buffer, length, timeout);
 }
+
+vpr::NullIOStatsStrategy::NullIOStatsStrategy()
+{
+   /* Do nothing. */ ;
+}
+
+vpr::NullIOStatsStrategy::~NullIOStatsStrategy()
+{
+   /* Do nothing. */ ;
+}
