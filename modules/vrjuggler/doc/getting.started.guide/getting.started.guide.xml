@@ -2331,84 +2331,174 @@ value</screen>
       <section>
          <title>Running an Application in a VR System</title>
 
-         <para>Running an application full-scale in a VR system is more
-         complicated than running in simulator mode. The reason for this is
-         that VR systems tend to differ in configuration and in available
+         <para>Running an application full-scale in a VR system tends to be
+         more complicated than running in simulator mode. The reason for this
+         is that VR systems tend to differ in configuration and in available
          hardware. VR Juggler is flexible enough to handle most any
          configuration you throw at it, but those configurations need to be
-         put together first. Examples of configuration files used in VRAC's C4
-         system are provided, and they are used in this documentation. It
-         should be noted, however, that for any particular system, custom
-         configuration files will probably have to be written. The idea behind
-         this section is to provide a basic understanding of what is needed to
-         get started with running in a VR system.</para>
+         put together first. VR systems can be driven by a single, multi-pipe
+         machine or a cluster of computers communicating over a network. VR
+         Juggler supports both, and the details are captured in the
+         configuration.</para>
 
-         <para>The example configuration files in the directory
-         <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>
-         modeled after those used for VRAC's C4 system are as follows:</para>
+         <para>Example configuration files for different VR system
+         configurations come with VR Juggler. An example of using a single
+         multi-pipe computer is shown for VRAC's C4 system when it was driven
+         by a single multi-pipe SGI Onyx computer. For a cluster, there is a
+         configuration file for VRAC's so-called <quote>ptah cluster</quote>
+         that ran Linux. It should be noted, however, that for any particular
+         VR system, custom configuration files will almost certainly have to
+         be written. The idea behind this section is to provide a basic
+         understanding of what is needed to get started with running in a VR
+         system. Configuration topics are addressed in the VR Juggler
+         <emphasis>Configuration Guide</emphasis>.</para>
 
-         <itemizedlist>
-            <listitem>
-               <para><filename>C4.closed.jconf</filename> - The single
-               configuration file that includes the other configuration files
-               necessary for loading a VR Juggler application in the C4 in its
-               closed configuration with full tracking and stereoscopic
-               graphics.</para>
-            </listitem>
+         <section>
+            <title>Single Machine Configuration</title>
 
-            <listitem>
-               <para><filename>C4.closed.mono.jconf</filename> - The single
-               configuration file that includes the other configuration files
-               necessary for loading a VR Juggler application in the C4 in its
-               closed configuration with full tracking and monoscopic
-               graphics.</para>
-            </listitem>
+            <para>The example configuration files in the directory
+            <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>
+            modeled after those used for VRAC's Onyx-powered C4 system are as
+            follows:</para>
 
-            <listitem>
-               <para><filename>C4.base.jconf</filename> - The basic
-               configuration file needed by all applications when run in the
-               C4. It defines commonly used VR Juggler concepts that are
-               beyond the scope of this particular book.</para>
-            </listitem>
+            <itemizedlist>
+               <listitem>
+                  <para><filename>C4.closed.jconf</filename> - The single
+                  configuration file that includes the other configuration
+                  files necessary for loading a VR Juggler application in the
+                  C4 in its closed configuration with full tracking and
+                  stereoscopic graphics.</para>
+               </listitem>
 
-            <listitem>
-               <para><filename>C4.displays.closed.jconf</filename> - The basic
-               display configuration file needed to run with all four walls
-               active and rendering stereoscopic graphics. This defines only
-               the four surface displays to be opened. The corners are
-               configured for the closed position of the movable walls.</para>
-            </listitem>
+               <listitem>
+                  <para><filename>C4.closed.mono.jconf</filename> - The single
+                  configuration file that includes the other configuration
+                  files necessary for loading a VR Juggler application in the
+                  C4 in its closed configuration with full tracking and
+                  monoscopic graphics.</para>
+               </listitem>
 
-            <listitem>
-               <para><filename>C4.displays.closed.mono.jconf</filename> - The
-               basic display configuration file needed to run with all four
-               walls active and rendering monoscopic graphics. This defines
-               only the four surface displays to be opened. The corners are
-               configured for the closed position of the movable walls.</para>
-            </listitem>
+               <listitem>
+                  <para><filename>C4.base.jconf</filename> - The basic
+                  configuration file needed by all applications when run in
+                  the C4. It defines commonly used VR Juggler concepts that
+                  are beyond the scope of this particular book.</para>
+               </listitem>
 
-            <listitem>
-               <para><filename>C4.mstar.jconf</filename> - The Ascension
-               MotionStar configuration file that defines which bird provides
-               input for the head and for the wand.</para>
-            </listitem>
+               <listitem>
+                  <para><filename>C4.displays.closed.jconf</filename> - The
+                  basic display configuration file needed to run with all four
+                  walls active and rendering stereoscopic graphics. This
+                  defines only the four surface displays to be opened. The
+                  corners are configured for the closed position of the
+                  movable walls.</para>
+               </listitem>
 
-            <listitem>
-               <para><filename>C4.rfwand.jconf</filename> - The radio
-               frequency wireless mouse that acts as a wand.</para>
-            </listitem>
-         </itemizedlist>
+               <listitem>
+                  <para><filename>C4.displays.closed.mono.jconf</filename> -
+                  The basic display configuration file needed to run with all
+                  four walls active and rendering monoscopic graphics. This
+                  defines only the four surface displays to be opened. The
+                  corners are configured for the closed position of the
+                  movable walls.</para>
+               </listitem>
 
-         <para>Running the application is the same as in simulator mode except
-         that the configuration files given on the command line are different.
-         For example, to run MPApp in the C4 with stereoscopic graphics, the
-         following command would be used:</para>
+               <listitem>
+                  <para><filename>C4.mstar.jconf</filename> - The Ascension
+                  MotionStar configuration file that defines which bird
+                  provides input for the head and for the wand.</para>
+               </listitem>
 
-         <screen>% MPApp C4.closed.jconf</screen>
+               <listitem>
+                  <para><filename>C4.rfwand.jconf</filename> - The radio
+                  frequency wireless mouse that acts as a wand.</para>
+               </listitem>
+            </itemizedlist>
 
-         <para>On Mac OS X, the following command would be used:</para>
+            <para>Running the application is the same as in simulator mode
+            except that the configuration files given on the command line are
+            different. For example, to run MPApp in the C4 with stereoscopic
+            graphics, the following command would be used:</para>
 
-         <screen>% MPApp.app/Contents/MacOS/MPApp C4.closed.jconf</screen>
+            <screen>% MPApp C4.closed.jconf</screen>
+
+            <para>On Mac OS X, the following command would be used:</para>
+
+            <screen>% MPApp.app/Contents/MacOS/MPApp C4.closed.jconf</screen>
+         </section>
+
+         <section>
+            <title>Cluster Configuration</title>
+
+            <important>
+               <para>The usage of VR Juggler on a cluster has changed since VR
+               Juggler 1.1 through 2.2. A strict client/server architecture is
+               now used, and the roles of the cluster master (the server) and
+               the cluster slaves (the clients) must be defined clearly in the
+               configuration and when an application is run.</para>
+            </important>
+
+            <para>Clusters involve multiple machines, and running VR Juggler
+            on a cluster means running the application on every node of that
+            cluster. Every node must load the same configuration whether it is
+            defined in multiple files or in a single file. VR Juggler (more
+            specifically, Gadgeteer) sorts out which parts of the
+            configuration apply to each node<footnote>
+                  <para>The details of how to configure a cluster are beyond
+                  the scope of this document; readers are directed to the VR
+                  Juggler <emphasis>Configuration Guide</emphasis>.</para>
+               </footnote>.</para>
+
+            <para>The way that any given cluster-ready VR Juggler application
+            works is up to the people who created the application.
+            Applications may use varying command line options depending on the
+            role of the node in the cluster, or different applications may be
+            run on each node, again depending on the role of the node. Two
+            things remain consistent, however:</para>
+
+            <orderedlist>
+               <listitem>
+                  <para>A command line option is required to indicate whether
+                  the node is the cluster master
+                  (<option>--vrjmaster</option>) or a cluster slave
+                  (<option>--vrjslave</option>), and</para>
+               </listitem>
+
+               <listitem>
+                  <para>The VR Juggler configuration files are loaded
+                  <emphasis>only</emphasis> by the cluster master.</para>
+               </listitem>
+            </orderedlist>
+
+            <para>For MPApp, the usage on a cluster is the same as what we
+            have shown previously. The only things that change are the
+            configuration files that are loaded and the execution of the
+            <command>MPApp</command> binary on <emphasis>all nodes of the
+            cluster</emphasis>. If we were to use the example configuration
+            <filename>ptah.cluster.jconf</filename>, the usage on the cluster
+            master would be as follows:</para>
+
+            <screen>% MPApp --vrjmaster ptah.cluster.jconf</screen>
+
+            <para>On all the cluster slave nodes, the usage would be the
+            following:</para>
+
+            <screen>% MPApp --vrjslave</screen>
+
+            <para>On Mac OS X, the following command would be used on the
+            cluster master:</para>
+
+            <screen>% MPApp.app/Contents/MacOS/MPApp --vrjmaster ptah.cluster.jconf</screen>
+
+            <para>On the cluster slaves, the command is as follows:</para>
+
+            <screen>% MPApp.app/Contents/MacOS/MPApp --vrjslave</screen>
+
+            <para>Note that the cluster slave nodes do not load any VR Juggler
+            configuration files. The relevant parts of the configuration are
+            distributed over the network by the cluster master to each of the
+            cluster slaves.</para>
+         </section>
       </section>
    </chapter>
 
