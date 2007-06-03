@@ -1360,7 +1360,7 @@ value</screen>
       <title>Running a VR Juggler Sample Program</title>
 
       <para>It is important to note that the same VR Juggler application can
-      be run in simulator mode or in a full-scale VR system with no
+      be run in a simulator configuration or in a full-scale VR system with no
       modifications. What does change is the configuration files used when
       starting the program. In
       <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you
@@ -1395,23 +1395,25 @@ value</screen>
       <section id="section.running.simulator">
          <title>Running an Application with a Simulator Configuration</title>
 
-         <para>Running in <quote>simulator mode</quote> means that your input
-         is simulated and your display windows may have limited functionality.
-         (By <quote>simulated input</quote>, we mean that input is provided
-         through windows that take keyboard and mouse input and translate that
-         into transformations in the virtual world.) Simulator viewports are
-         limited primarily in that they cannot display stereo graphics. It is
-         important to note that a simulator viewport is a special kind of VR
-         Juggler viewport within a display window. Instead of basing its
-         viewpoint on the head position of one of the users, the viewpoint is
-         controlled by a separate camera that is just another positional
-         device. Within a simulator viewport, VR Juggler draws certain objects
-         to help visualize the environment. For example, the heads of users
-         are represented as blue ellipsoids with gray eyes, and a wand (if
-         present) is drawn as a green pointing device. Besides these common
-         simulator objects, display surfaces can be drawn. These represent
-         projection screens or HMD viewing projections and are drawn as
-         translucent rectangles.</para>
+         <para>Running with a simulator configuration means that your input is
+         simulated and your display windows may have limited functionality.
+         (By <quote>simulated input,</quote> we mean that input is provided
+         through desktop windows that take keyboard and mouse input and
+         translate that into what would be provided by various types of
+         physical input devices used in VR systems.) Simulator viewports are
+         limited primarily in that they cannot display stereo graphics.</para>
+
+         <para>It is important to note that a simulator viewport is a special
+         kind of VR Juggler viewport within a display window. Instead of
+         basing its viewpoint on the head position of one of the users, the
+         viewpoint is controlled by a separate camera that is just another
+         positional device. Within a simulator viewport, VR Juggler draws
+         certain objects to help visualize the environment. For example, the
+         heads of users are represented as blue ellipsoids with gray eyes, and
+         a wand (if present) is drawn as a green pointing device. Besides
+         these common simulator objects, display surfaces can be drawn. These
+         semi-transparent rectangles represent projection screens or HMD
+         viewing projections.</para>
 
          <para>As mentioned, several simulator configuration files are
          provided with a VR Juggler distribution. These files provide a
@@ -1421,33 +1423,28 @@ value</screen>
          the configuration files and how to view or modify the configuration,
          refer to the <emphasis>VRJConfig Guide</emphasis>. (Using VRJConfig
          is the best way to find out how a specific configuration file is set
-         up.) The configuration files of interest for simulator mode are as
-         follows:</para>
+         up.) The configuration files of interest for simulator configurations
+         are as follows:</para>
 
          <itemizedlist>
             <listitem>
                <para><filename>sim.base.jconf</filename> - The basic
-               configuration file needed by all applications when run in
-               simulator mode. It defines commonly used VR Juggler concepts
-               that are beyond the scope of this particular book. It also
-               defines simulated head movement using the keyboard. For now, it
-               is sufficient to know that it is required to run the sample
-               applications in simulator mode.</para>
-
-               <para>This file also contains the basic simulator display
-               configuration file needed by all applications when run in
-               simulator mode. It defines the display windows where the
-               rendering magic occurs. Two simulator display windows are
-               configured by this file: a small one that is active by default
-               and a larger one that is inactive initially.</para>
+               configuration file used with other simulator configuration
+               <quote>mix-in</quote> files. It defines commonly used VR
+               Juggler concepts that are beyond the scope of this particular
+               book. It also defines simulated head movement using the
+               keyboard. This file also contains the display configuration
+               information needed by other simulator configuration mix-in
+               files. It defines the display window with its simulator
+               viewport where the rendering occurs.</para>
             </listitem>
 
             <listitem>
                <para><filename>sim.analog.wandmixin.jconf</filename> - A
                <quote>mix-in</quote> configuration file that defines simulated
                analog input using the keyboard. This is only required for
-               applications where analog input is used and needs to be
-               simulated when in simulator mode.</para>
+               applications where analog input is used and a physical analog
+               input device needs to be simulated.</para>
             </listitem>
 
             <listitem>
@@ -1460,18 +1457,34 @@ value</screen>
             <listitem>
                <para><filename>sim.c6displays.mixin.jconf</filename> - A
                <quote>mix-in</quote> configuration file that defines the
-               surface displays of VRAC's C6. This is not required for any
+               surfaces of a six-wall <productname
+               class="trade">CAVE</productname>-like VR system with two
+               additional surfaces at odd angles. Each surface is rendered in
+               a separate display window. This is not required for any
                application but can be used to test opening multiple display
                windows (each containing either a surface or a simulator
-               viewport) before running in a multi-screen VR system.</para>
+               viewport) before running in a multi-pipe VR system. Note,
+               however, that this configuration does not leverage
+               multi-threaded rendering, just multi-window rendering.</para>
+            </listitem>
+
+            <listitem>
+               <para><filename>sim.c6viewports.mixin.jconf</filename> - A
+               <quote>mix-in</quote> configuration file that defines the
+               surfaces of a six-wall <productname
+               class="trade">CAVE</productname>-like VR system. Each surface
+               is rendered in a separate viewport within a single display
+               window. This is not required for any application but can be
+               used to test using multiple viewports in a single window (each
+               containing either a surface or a simulator viewport).</para>
             </listitem>
 
             <listitem>
                <para><filename>sim.digital.glove.mixin.jconf</filename> - A
                <quote>mix-in</quote> configuration file that defines simulated
                digital glove input using the keyboard. This is only required
-               for applications where digital glove input is used and needs to
-               be simulated when in simulator mode.</para>
+               for applications where digital glove input is used and a
+               physical digital input device needs to be simulated.</para>
             </listitem>
 
             <listitem>
@@ -1479,15 +1492,16 @@ value</screen>
                <quote>mix-in</quote> configuration file that defines simulated
                gesture-based glove input using the keyboard. This is only
                required for applications where gesture-based glove input is
-               used and needs to be simulated when in simulator mode.</para>
+               used and a physical glove needs to be simulated.</para>
             </listitem>
 
             <listitem>
                <para><filename>sim.wand.mixin.jconf</filename> - A
                <quote>mix-in</quote> configuration file that defines simulated
                wand input using the mouse. This is only required for
-               applications where wand input is used and needs to be simulated
-               when in simulator mode.</para>
+               applications where wand input is used and needs to be
+               simulated. Wand input is defined as a tracked positional device
+               with several digital buttons.</para>
             </listitem>
 
             <listitem>
@@ -1498,9 +1512,6 @@ value</screen>
                single display window for all input.</para>
             </listitem>
          </itemizedlist>
-
-         <para>For the MPApp application, we need the base configuration file
-         and the wand mix-in configuration file.</para>
 
          <section>
             <title>Starting the Application</title>
@@ -2332,14 +2343,14 @@ value</screen>
          <title>Running an Application in a VR System</title>
 
          <para>Running an application full-scale in a VR system tends to be
-         more complicated than running in simulator mode. The reason for this
-         is that VR systems tend to differ in configuration and in available
-         hardware. VR Juggler is flexible enough to handle most any
-         configuration you throw at it, but those configurations need to be
-         put together first. VR systems can be driven by a single, multi-pipe
-         machine or a cluster of computers communicating over a network. VR
-         Juggler supports both, and the details are captured in the
-         configuration.</para>
+         more complicated than running with a simulator configuration. The
+         reason for this is that VR systems tend to differ in configuration
+         and in available hardware. VR Juggler is flexible enough to handle
+         most any configuration you throw at it, but those configurations need
+         to be put together first. VR systems can be driven by a single,
+         multi-pipe machine or a cluster of computers communicating over a
+         network. VR Juggler supports both, and the details are captured in
+         the configuration.</para>
 
          <para>Example configuration files for different VR system
          configurations come with VR Juggler. An example of using a single
@@ -2415,10 +2426,11 @@ value</screen>
                </listitem>
             </itemizedlist>
 
-            <para>Running the application is the same as in simulator mode
-            except that the configuration files given on the command line are
-            different. For example, to run MPApp in the C4 with stereoscopic
-            graphics, the following command would be used:</para>
+            <para>Running the application is the same as with a simulator
+            configuration except that the configuration files given on the
+            command line are different. For example, to run MPApp in the C4
+            with stereoscopic graphics, the following command would be
+            used:</para>
 
             <screen>% MPApp C4.closed.jconf</screen>
 
