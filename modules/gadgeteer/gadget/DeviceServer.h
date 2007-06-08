@@ -76,7 +76,10 @@ namespace gadget
        */
       void debugDump(int debugLevel);
 
-      std::string getName() { return mName; }
+      const std::string& getName() const
+      {
+         return mName;
+      }
 
       /** Locks the active list.
        *
@@ -99,7 +102,7 @@ namespace gadget
       void unlockClients()
       { mClientsLock.release(); }
 
-      vpr::GUID getId()
+      const vpr::GUID& getId() const
       {
          return mId;
       }
