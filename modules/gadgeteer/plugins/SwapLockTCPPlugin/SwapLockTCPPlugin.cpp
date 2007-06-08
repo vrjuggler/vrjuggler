@@ -32,6 +32,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/IO/Port/SerialPort.h>
 
 #include <gadget/Util/Debug.h>
@@ -380,8 +381,22 @@ namespace cluster
             }
 */            
          }
+         catch (vpr::ConnectionResetException& ex)
+         {
+            vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD(clrRED, "FATAL ERROR")
+               << ": [SwapLockTCPPlugin::masterReceive()] Connection reset "
+               << "while waiting on response from " << (*i)->getRemoteAddr()
+               << "!";
+            vprDEBUG_NEXTnl(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << ex.what() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG_NEXTnl(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+               << "Bailing out!" << std::endl << vprDEBUG_FLUSH;
+            throw;
+         }
       } 
    }
+
    void SwapLockTCPPlugin::slaveSend()
    {
       vprASSERT(mSyncServerSocket!=NULL && "mSyncServerSocket is NULL!");
