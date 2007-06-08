@@ -36,7 +36,6 @@
 #include "MyType.h"
 
 #include <cluster/ClusterNetwork.h>
-#include <cluster/ClusterNode.h>
 
 namespace vrjTest
 {

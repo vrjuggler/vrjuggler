@@ -35,6 +35,7 @@
 #endif
 
 #include <gmtl/Generate.h>
+#include <gadget/Node.h>
 #include <cluster/ClusterManager.h>
 
 #include "applicationDataApp.h"
