@@ -161,7 +161,8 @@ namespace gadget
 
    void DeviceServer::debugDump(int debugLevel)
    {
-      vpr::Guard<vpr::Mutex> guard(mClientsLock);
+      vprASSERT(mClientsLock.test() &&
+                "mClientsLock must be locked by the caller");
 
       vpr::DebugOutputGuard dbg_output(
          gadgetDBG_RIM, debugLevel,

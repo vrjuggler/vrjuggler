@@ -448,7 +448,9 @@ namespace gadget
                                        std::string("---------------------------------------------\n"));
       for ( std::vector<DeviceServer*>::iterator j = mDeviceServers.begin(); j != mDeviceServers.end(); j++ )
       {
+         (*j)->lockClients();
          (*j)->debugDump(debug_level);
+         (*j)->unlockClients();
       }
    }
 

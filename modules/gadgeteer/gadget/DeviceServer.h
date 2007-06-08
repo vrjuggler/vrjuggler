@@ -64,7 +64,17 @@ namespace gadget
       void addClient(gadget::Node* new_client_node);
       void removeClient(const std::string& host_name);
 
-      void debugDump(int debug_level);
+      /**
+       * Dumps the state of the clients as debug output.
+       *
+       * @pre \c mClientsLock is locked by the calling thread.
+       *
+       * @param debugLevel The debug output level to use for the output.
+       *
+       * @see lockClients()
+       * @see unlockClients()
+       */
+      void debugDump(int debugLevel);
 
       std::string getName() { return mName; }
 
