@@ -344,8 +344,8 @@ namespace cluster
       
       vpr::Guard<vpr::Mutex> guard(mSyncClientsLock);
 
-      for (std::vector<vpr::SocketStream*>::iterator i = mSyncClients.begin();
-           i < mSyncClients.end();i++)
+      typedef std::vector<vpr::SocketStream*>::iterator iter_t;
+      for ( iter_t i = mSyncClients.begin(); i != mSyncClients.end(); ++i )
       {
          try
          {
