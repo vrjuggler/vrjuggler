@@ -246,8 +246,14 @@ case $target_os in
     osf4.0)
         AC_DEFINE(VPR_OS_DUX, , [Define if building on Digital UNIX.])
         ;;
-    # A machine running Solaris (aka SunOS).  Currently only i386 is known
+    # A machine running Solaris (aka SunOS) 10.  Currently only i386 is known
     # to work.
+    solaris2.10)
+        VPR_FORCE_SUBSYSTEM([POSIX])
+        AC_DEFINE(VPR_OS_Solaris, , [Define if building on Solaris/SunOS.])
+        ;;
+    # A machine running Solaris (aka SunOS) older than version 10 (2.10/5.10).
+    # Currently only i386 is known to work.
     solaris*)
         VPR_FORCE_SUBSYSTEM([NSPR])
         AC_DEFINE(VPR_OS_Solaris, , [Define if building on Solaris/SunOS.])
