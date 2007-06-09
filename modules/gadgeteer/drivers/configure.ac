@@ -378,7 +378,7 @@ if test "x${_with_vrpn}" != "xno" ; then
             VRPNLIBDIR='pc_linux_ia64'
          fi
       fi
-   elif test "x$PLATFORM" = "xFreeBSD" ; then
+   elif test "x$PLATFORM" = "xFreeBSD" -o "x$PLATFORM" = "xDragonFly" ; then
       VRPNLIBDIR='pc_FreeBSD'
    elif test "x$PLATFORM" = "xAIX" ; then
       VRPNLIBDIR='powerpc_aix'
