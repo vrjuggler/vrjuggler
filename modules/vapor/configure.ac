@@ -206,6 +206,11 @@ case $target_os in
         VPR_FORCE_SUBSYSTEM([POSIX])
         AC_DEFINE(VPR_OS_FreeBSD, , [Define if building on FreeBSD.])
         ;;
+    # A machine running DragonFlyBSD.
+    dragonfly*)
+        VPR_FORCE_SUBSYSTEM([POSIX])
+        AC_DEFINE(VPR_OS_DragonFly, , [Define if building on DragonFly.])
+        ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
         # We have to use the NSPR subsystem on HP-UX 10.20.

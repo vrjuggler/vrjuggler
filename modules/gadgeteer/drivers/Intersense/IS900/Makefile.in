@@ -45,6 +45,7 @@ INSTALL_FILES=
 SUBOBJDIR=	$(DRIVER_NAME)
 
 ifneq (@PLATFORM@, FreeBSD)
+ifneq (@PLATFORM@, DragonFly)
 ifneq (@PLATFORM@, Darwin)
 C_AFTERBUILD=	driver-dso
 
@@ -56,6 +57,7 @@ SRCS=		isdriver.cpp			\
 		wsock.cpp			\
 		Intersense.cpp			\
 		IntersenseStandalone.cpp
+endif
 endif
 endif
 

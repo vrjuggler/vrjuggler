@@ -216,9 +216,10 @@ case $target_os in
             ;;
       esac
       ;;
-   # A machine running FreeBSD.
-   freebsd*)
-      AC_DEFINE(__freebsd__, 1, [Define to 1 if building on FreeBSD.])
+   # A machine running FreeBSD or DragonFlyBSD.
+   freebsd*|dragonfly*)
+      AC_DEFINE(__freebsd__, 1,
+                [Define to 1 if building on FreeBSD or DragonFly.])
       EXTRA_DEFS="$EXTRA_DEFS -D__freebsd__"
 
       case $target_cpu in
@@ -241,10 +242,11 @@ case $target_os in
       esac
 
       changequote(<<, >>)
-      tweek_freebsd_ver=`echo $target_os | sed -e 's/freebsd\([1-9][0-9]*\)\..*/\1/'`
+      # This will match $target_os of the form freebsdX.Y... or dragonflyX.Y...
+      tweek_bsd_ver=`echo $target_os | sed -e 's/^.*[dy]\([1-9][0-9]*\)\..*/\1/'`
       changequote([, ])
-      AC_DEFINE_UNQUOTED(__OSVERSION__, $tweek_freebsd_ver)
-      EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=$tweek_freebsd_ver"
+      AC_DEFINE_UNQUOTED(__OSVERSION__, $tweek_bsd_ver)
+      EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=$tweek_bsd_ver"
 
       ;;
    # HP PA-RISC machine running HP-UX.20.
