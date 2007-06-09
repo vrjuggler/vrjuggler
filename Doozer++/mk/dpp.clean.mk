@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.clean.mk,v
-# Date modified: 2005/02/16 17:38:43
-# Version:       1.15
+# Date modified: 2006/12/31 16:55:00
+# Version:       1.16
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.clean.mk,v 1.15 2005/02/16 17:38:43 patrickh Exp
+# dpp.clean.mk,v 1.16 2006/12/31 16:55:00 patrickh Exp
 #
 # This include file <dpp.clean.mk> handles clean-up operations.  It adds a
 # 'clean' target and a 'cleandepend' target.

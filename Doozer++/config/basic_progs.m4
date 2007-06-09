@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          basic_progs.m4,v
-dnl Date modified: 2006/05/17 18:42:30
-dnl Version:       1.20
+dnl Date modified: 2006/12/31 16:54:59
+dnl Version:       1.21
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl Variables defined:
 dnl     GMAKE                - The GNU make executable.
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.20 2006/05/17 18:42:30 patrickh Exp
+dnl basic_progs.m4,v 1.21 2006/12/31 16:54:59 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          general.m4,v
-dnl Date modified: 2006/12/19 14:37:03
-dnl Version:       1.93
+dnl Date modified: 2007/05/30 22:37:11
+dnl Version:       1.95
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -46,10 +46,10 @@ dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.93 2006/12/19 14:37:03 patrickh Exp
+dnl general.m4,v 1.95 2007/05/30 22:37:11 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 2.1.10)
+define(DPP_DPPVERSION, 2.1.11)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.

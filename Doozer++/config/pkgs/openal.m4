@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2006/11/09 22:12:22
-dnl Version:       1.24
+dnl Date modified: 2006/12/31 16:55:00
+dnl Version:       1.25
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -46,7 +46,7 @@ dnl     AL_LIBDIR   - The directory containing the OpenAL library. On Mac OS X,
 dnl                   this is the directory containing the OpenAL framework.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.24 2006/11/09 22:12:22 patrickh Exp
+dnl openal.m4,v 1.25 2006/12/31 16:55:00 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
