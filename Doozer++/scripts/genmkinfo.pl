@@ -2,7 +2,7 @@
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# genmkinfo.pl,v 1.4 2005/01/08 22:44:44 patrickh Exp
+# genmkinfo.pl,v 1.5 2006/12/31 16:55:01 patrickh Exp
 
 require 5.004;
 

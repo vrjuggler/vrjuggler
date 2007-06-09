@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.install.mk,v
-# Date modified: 2005/01/08 22:44:42
-# Version:       1.15
+# Date modified: 2006/12/31 16:55:00
+# Version:       1.16
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.install.mk,v 1.15 2005/01/08 22:44:42 patrickh Exp
+# dpp.install.mk,v 1.16 2006/12/31 16:55:00 patrickh Exp
 #
 # This include file <dpp.install.mk> handles install operations.  It adds an
 # 'install' target.

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          portaudio.m4,v
-dnl Date modified: 2005/01/08 22:44:41
-dnl Version:       1.14
+dnl Date modified: 2006/12/31 16:55:00
+dnl Version:       1.15
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -48,7 +48,7 @@ dnl     PORTAUDIO_LDFLAGS  - Extra linker flags for the PortAudio library
 dnl                          directory.
 dnl ===========================================================================
 
-dnl portaudio.m4,v 1.14 2005/01/08 22:44:41 patrickh Exp
+dnl portaudio.m4,v 1.15 2006/12/31 16:55:00 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has PortAudio installed.  This

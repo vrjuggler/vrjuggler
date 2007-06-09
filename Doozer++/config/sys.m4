@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,15 +28,16 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2006/04/12 15:15:24
-dnl Version:       1.64
+dnl Date modified: 2007/05/30 22:37:11
+dnl Version:       1.66
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
 dnl Determine the canonical system type and define a ton of variables for
 dnl system-dependent settings.  The platforms supported in this file are AIX,
-dnl Cygnus-Win32, FreeBSD, HP-UX, IRIX, Linux, and Solaris.
+dnl Cygnus-Win32, FreeBSD, NetBSD, OpenBSD, DragonFly, HP-UX, IRIX, Linux, and
+dnl Solaris.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
 dnl     DPP_SYSTEM_SETUP - Based on the given detected host and CPU, set up
@@ -58,7 +59,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.64 2006/04/12 15:15:24 patrickh Exp
+dnl sys.m4,v 1.66 2007/05/30 22:37:11 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -175,6 +176,25 @@ AC_DEFUN([DPP_SYSTEM_SETUP],
          esac
 
          PLATFORM='FreeBSD'
+         ;;
+      dnl A machine running DragonFly.
+      dragonfly*)
+         dnl If no ABI has been set yet, default to ELF with whatever the
+         dnl CPU architecture is.
+         if test "x$ABI" = "x" ; then
+            DPP_ABI_CFG('ELF', $target_cpu)
+         fi
+
+         case $target_cpu in
+            *86)
+               ABI_LIST='ELF_i386'
+               ;;
+            *)
+               ABI_LIST="ELF_$target_cpu"
+               ;;
+         esac
+
+         PLATFORM='DragonFly'
          ;;
       dnl HP PA-RISC machine running HP-UX 10.20.
       hpux10.20)
