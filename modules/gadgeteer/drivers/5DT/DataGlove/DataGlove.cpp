@@ -33,6 +33,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/gadgetParam.h>
+#include <gadget/Util/Debug.h>
 #include <drivers/5DT/DataGlove/DataGloveStandalone.h> /* standalone dataglove driver */
 #include <drivers/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
 

@@ -34,11 +34,11 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/Position.h>
 #include <drivers/Intersense/IS900/IntersenseStandalone.h>
 
 // maximum number of digital and analog buttons possible on a IS interface
@@ -103,8 +103,8 @@ struct ISStationConfig
  * See also: Position
  */
 //class Intersense : public Input, public Position, public Digital, public Analog
-class Intersense :
-   public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>, Position>
+class Intersense
+   : public input_digital_analog_position_t
 {
 protected:
    struct IsenseData

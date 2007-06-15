@@ -32,10 +32,10 @@
 #include <vector>
 #include <utility>
 
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Type/InputMixer.h>
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystickStandalone.h>
 
 
@@ -47,7 +47,8 @@ namespace gadget
  *
  * @see Digital, Analog
  */
-class DirectXJoystick : public InputMixer<InputMixer<Input, Digital>, Analog>
+class DirectXJoystick
+   : public input_digital_analog_t
 {
 public:
 

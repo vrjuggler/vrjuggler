@@ -31,19 +31,20 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Guard.h>
 
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/InputMixer.h>
 
 #include "SerialEncoderStandalone.h"
 #include "SEIBus.h"
 
 
-class SerialEncoder:public gadget::InputMixer<gadget::Input,gadget::Position>
+class SerialEncoder
+   : public gadget::input_position_t
 {
 public:
    SerialEncoder();

@@ -1,5 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-15-2007 aronb       Introduced typedefs for known gadget::InputMixer<>
+                        instantiations to be used as the base class for device
+                        drivers.
+                        NEW VERSION: 1.1.28
+Jun-15-2007 aronb       Fixed the VRPN driver so that it works correctly in a
+                        cluster configuration again.
 May-01-2007 patrick     Renamed the x11_pipes property of the display_system
                         config element to pipes.
                         NEW VERSION: 1.1.27

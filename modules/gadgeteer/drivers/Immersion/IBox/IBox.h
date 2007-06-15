@@ -29,10 +29,10 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Type/InputMixer.h>
 #include <drivers/Immersion/IBox/IBoxStandalone.h>
 
 namespace gadget
@@ -44,7 +44,8 @@ namespace gadget
  * The Immersion Box is a 4 Digital, 4 Analog input device, the Ibox class
  * therefore must inherit from both Digital and Analog.
  */
-class IBox : public InputMixer<InputMixer<Input,Digital>,Analog>
+class IBox
+   : public input_digital_analog_t
 {
 public:
    /** Construction/Destruction */
