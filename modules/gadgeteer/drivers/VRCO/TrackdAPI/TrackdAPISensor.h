@@ -29,9 +29,9 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/InputMixer.h>
 
 #define TRACKD_DLL_EXPORTS 0
 #include GADGET_TRACKD_API_H
@@ -51,7 +51,8 @@ namespace gadget
  *
  * @see gadget::Position
  */
-class TrackdAPISensor : public InputMixer<Input,Position>
+class TrackdAPISensor
+   : public input_position_t
 {
 public:
 

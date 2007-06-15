@@ -32,9 +32,9 @@
 #include <string>
 #include <vpr/Thread/Thread.h>
 
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/InputMixer.h>
 #include <drivers/Ascension/MotionStar/MotionStarStandalone.h>
 
 
@@ -65,7 +65,8 @@ namespace gadget
  *
  * @see Position
  */
-class MotionStar : public InputMixer<Input,Position>
+class MotionStar
+   : public input_position_t
 {
 public:
 
