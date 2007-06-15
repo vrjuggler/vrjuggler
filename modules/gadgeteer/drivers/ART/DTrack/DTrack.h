@@ -31,6 +31,10 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <gadget/Type/InputBaseTypes.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/Type/Position.h>
 
 #include "DTrackStandalone.h"
 
@@ -38,7 +42,8 @@
 namespace gadget
 {
 
-class DTrack : public input_digital_analog_position_t;
+class DTrack
+   : public input_digital_analog_position_t
 {
 public:
 	DTrack();
