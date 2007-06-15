@@ -87,7 +87,7 @@ namespace gadget
  * @see gadget::Digital, gadget::Analog, gadget::Position
  */
 class Vrpn
-   : public InputMixer<InputMixer<InputMixer<Input, Analog>, Digital>,
+   : public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>,
                        Position>
 {
 public:
