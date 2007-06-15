@@ -43,9 +43,9 @@
 #include <string>
 
 #include <vpr/Thread/Thread.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Command.h>
-#include <gadget/Type/InputMixer.h>
 
 #include <drivers/Microsoft/SpeechRecognition/MSFTSpeechServerManager.h>
 
@@ -58,7 +58,7 @@ namespace gadget
 {
 
 class MSFTSpeechRecogDigital
-   : public gadget::InputMixer<gadget::Input, gadget::Command>
+   : public input_command_t
 {
 public:
    MSFTSpeechRecogDigital();

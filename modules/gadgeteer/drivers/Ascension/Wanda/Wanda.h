@@ -38,10 +38,10 @@
 #include <vpr/vpr.h>
 #include <vpr/vprDomain.h>
 
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Analog.h>
 #include <gadget/Type/Digital.h>
-#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/Analog.h>
 #include <drivers/Ascension/Wanda/WandaStandalone.h>
 
 
@@ -51,7 +51,8 @@ namespace gadget
 /**
  * Gadgeteer wrapper around wanda::WandaStandalone driver.
  */
-class Wanda : public InputMixer<Input, InputMixer<Digital, Analog> >
+class Wanda
+   : public input_digital_analog_t
 {
 public:
    Wanda(const char* portName = "/dev/ttyS0");

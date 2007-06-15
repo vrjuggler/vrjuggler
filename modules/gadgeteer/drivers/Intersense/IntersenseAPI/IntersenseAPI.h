@@ -36,11 +36,11 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/Position.h>
 #include <drivers/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
 
 
@@ -74,7 +74,7 @@ namespace gadget
  * @see Position
  */
 class IntersenseAPI
-   : public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>, Position>
+   : public input_digital_analog_position_t
 {
 public:
    IntersenseAPI();

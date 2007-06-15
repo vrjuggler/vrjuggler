@@ -35,11 +35,11 @@
 #endif
 
 #include <gadget/gadgetParam.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/InputManager.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/Analog.h>
+#include <gadget/InputManager.h>
 
 /*
   Note:  this code needs read (or read/write) access to the serial/usb ports
@@ -803,8 +803,7 @@ class spaceBall2003B : public spaceBall4000FLX
 //----------------------------------------------------------------------------
 /** A driver for puck-like devices
 */
-class PuckDevice : public gadget::InputMixer<gadget::InputMixer
-                         <gadget::Input,gadget::Digital>,gadget::Analog>
+class PuckDevice : public gadget::input_digital_analog_t
 {
   public:
     /// constructor

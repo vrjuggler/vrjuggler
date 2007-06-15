@@ -51,9 +51,9 @@
 #define _LOGICLASS_H_
 
 #include <gadget/Devices/DriverConfig.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/InputMixer.h>
 #include <gmtl/Vec.h>
 #include <vector>
 
@@ -90,7 +90,8 @@ namespace gadget
 *  Digital driver support could/should be added in the future.
 */
 //class ThreeDMouse : public gadget::Input, public gadget::Position
-class ThreeDMouse : public InputMixer<Input,Position>
+class ThreeDMouse
+   : public input_position_t
 {
 public:
    /** Default constructor. */

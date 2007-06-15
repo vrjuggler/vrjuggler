@@ -36,9 +36,9 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
-#include <gadget/Type/InputMixer.h>
 #include <drivers/Elexol/Ether24/Ether24Standalone.h>
 
 
@@ -49,7 +49,7 @@ namespace gadget
  * @see Digital
  */
 class Ether24
-   : public InputMixer<Input, Digital>
+   : public input_digital_t
 {
 public:
    Ether24();

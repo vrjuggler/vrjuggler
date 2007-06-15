@@ -52,11 +52,11 @@
 #include <vector>
 
 #include <vpr/Sync/Mutex.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/Position.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -87,8 +87,7 @@ namespace gadget
  * @see gadget::Digital, gadget::Analog, gadget::Position
  */
 class Vrpn
-   : public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>,
-                       Position>
+   : public input_digital_analog_position_t
 {
 public:
 

@@ -51,10 +51,10 @@
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/InputMixer.h>
 
 #include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
 
@@ -62,7 +62,8 @@
 namespace gadget
 {
 
-class Fastrak : public InputMixer<InputMixer<Input,Digital>, Position>
+class Fastrak
+   : public input_digital_position_t
 {
 public:
    Fastrak();           // must call gadget::Analog()? see gadget/Type/Analog.h

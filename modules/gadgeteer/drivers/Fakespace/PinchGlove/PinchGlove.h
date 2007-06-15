@@ -40,10 +40,10 @@
 
 #include <drivers/Fakespace/PinchGlove/PinchGloveStandalone.h>
 
-#include <gadget/Type/Digital.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/InputMixer.h>
 #include <gadget/Type/Glove.h>
+#include <gadget/Type/Digital.h>
 
 namespace gadget
 {
@@ -51,7 +51,8 @@ namespace gadget
 /**
  * Fakespace PinchGlove device.
  */
-class PinchGlove : public InputMixer<InputMixer<Input, Glove>, Digital>
+class PinchGlove
+   : public input_glove_digital_t
 {
 public:
    /**

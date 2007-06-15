@@ -46,9 +46,19 @@
 #include <gadget/Type/Command.h>
 #include <gadget/Type/String.h>
 #include <gadget/Type/InputMixer.h>
-//#include <gadget/Type/BaseTypes.h>
 #include <gadget/Util/Debug.h>
+#include <gadget/Type/InputBaseTypes.h>
 
+
+#define REGISTER_CONSTRUCTOR_TYPE(INPUT_TYPE) \
+   BaseTypeConstructor< INPUT_TYPE::MixedPlaceholderType >* con_ ## INPUT_TYPE  \
+         = new BaseTypeConstructor< INPUT_TYPE::MixedPlaceholderType >;         \
+   if (NULL == con_ ## INPUT_TYPE)                                              \
+   {                                                                            \
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)                                  \
+         << clrOutBOLD(clrRED,"ERROR:") << " Failed to load a known type "      \
+         << #INPUT_TYPE << std::endl << vprDEBUG_FLUSH;                         \
+   }
 
 namespace gadget
 {
@@ -68,89 +78,21 @@ void BaseTypeFactory::hackLoadKnownDevices()
 
    // Platform-independent devices.
 
-   // Input Digital
-   BaseTypeConstructor< InputMixer<Input,Digital>::MixedPlaceholderType >* input_digital
-         = new BaseTypeConstructor< InputMixer<Input,Digital>::MixedPlaceholderType >;
-
-   // Input Analog
-   BaseTypeConstructor< InputMixer<Input,Analog>::MixedPlaceholderType >* input_analog
-         = new BaseTypeConstructor< InputMixer<Input,Analog>::MixedPlaceholderType >;
-
-   // Input Position
-   BaseTypeConstructor< InputMixer<Input,Position>::MixedPlaceholderType >* input_position
-         = new BaseTypeConstructor< InputMixer<Input,Position>::MixedPlaceholderType >;
-
-   // Input Digital Analog
-   // Input Analog Digital
-   BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Analog>::MixedPlaceholderType >* input_digital_analog
-         = new BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Analog>::MixedPlaceholderType >;
-
-   // Input Digital Position
-   // Input Position Digital
-   BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Position>::MixedPlaceholderType >* input_digital_position
-         = new BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Position>::MixedPlaceholderType >;
-
-   // Input Analog Position
-   // Input Position Analog
-   BaseTypeConstructor< InputMixer< InputMixer<Input,Analog> , Position>::MixedPlaceholderType >* input_analog_position
-         = new BaseTypeConstructor< InputMixer< InputMixer<Input,Analog> , Position>::MixedPlaceholderType >;
-
-   // Input Digital Analog Position
-   BaseTypeConstructor< InputMixer< InputMixer< InputMixer<Input,Digital> , Analog> , Position>::MixedPlaceholderType >* input_digital_analog_position
-         = new BaseTypeConstructor< InputMixer< InputMixer< InputMixer<Input,Digital> , Analog> , Position>::MixedPlaceholderType >;
-
-   // SimInput Input Position
-   BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >* siminput_input_position
-         = new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >;
-
-   // SimInput Input Digital
-   BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >* siminput_input_digital
-         = new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >;
-
-   // SimInput Input Analog
-   BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_analog
-         = new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >;
-
-   // Input KeyboardMouse
-   BaseTypeConstructor< InputMixer<Input,KeyboardMouse>::MixedPlaceholderType >* input_keyboard
-         = new BaseTypeConstructor< InputMixer<Input,KeyboardMouse>::MixedPlaceholderType >;
-
-   // Input String
-   BaseTypeConstructor< InputMixer<Input, String>::MixedPlaceholderType >* input_string
-         = new BaseTypeConstructor< InputMixer<Input, String>::MixedPlaceholderType >;
-
-   // Input Command
-   BaseTypeConstructor< InputMixer<Input, Command>::MixedPlaceholderType >* input_command
-         = new BaseTypeConstructor< InputMixer<Input, Command>::MixedPlaceholderType >;
-
-   // Input Glove
-   BaseTypeConstructor< InputMixer<Input,Glove>::MixedPlaceholderType >* input_glove
-         = new BaseTypeConstructor< InputMixer<Input,Glove>::MixedPlaceholderType >;
-
-   // Input Glove Digital
-   BaseTypeConstructor< InputMixer< InputMixer<Input, Glove> , Digital>::MixedPlaceholderType >* input_glove_digital
-         = new BaseTypeConstructor< InputMixer< InputMixer<Input, Glove> , Digital>::MixedPlaceholderType >;
-
-   if( (NULL == input_digital) ||
-       (NULL == input_analog) ||
-       (NULL == input_position) ||
-       (NULL == input_digital_analog) ||
-       (NULL == input_digital_position) ||
-       (NULL == input_analog_position) ||
-       (NULL == input_digital_analog_position) ||
-       (NULL == siminput_input_position) ||
-       (NULL == siminput_input_digital) ||
-       (NULL == siminput_input_analog) ||
-       (NULL == input_keyboard) ||
-       (NULL == input_string) ||
-       (NULL == input_command) ||
-       (NULL == input_glove) ||
-       (NULL == input_glove_digital) )
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-         << clrOutBOLD(clrRED,"ERROR:") << " Failed to load a known device\n"
-         << vprDEBUG_FLUSH;
-   }
+   REGISTER_CONSTRUCTOR_TYPE(input_digital_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_analog_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_position_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_keyboard_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_string_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_command_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_glove_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_digital_analog_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_digital_position_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_analog_position_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_glove_digital_t);
+   REGISTER_CONSTRUCTOR_TYPE(siminput_input_position);
+   REGISTER_CONSTRUCTOR_TYPE(siminput_input_digital);
+   REGISTER_CONSTRUCTOR_TYPE(siminput_input_analog);
+   REGISTER_CONSTRUCTOR_TYPE(input_digital_analog_position_t);
 }
 
 void BaseTypeFactory::registerNetDevice(BaseTypeConstructorBase* constructor)

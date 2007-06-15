@@ -35,10 +35,10 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Type/InputMixer.h>
 #include <drivers/Open/Trackd/TrackdControllerStandalone.h>
 
 
@@ -57,7 +57,8 @@ namespace gadget
  * @see Digital, Analog
  */
 //class TrackdController : public Input, public Digital, public Analog
-class TrackdController : public InputMixer<InputMixer<Input,Digital>,Analog>
+class TrackdController
+   : public input_digital_analog_t
 {
 public:
 

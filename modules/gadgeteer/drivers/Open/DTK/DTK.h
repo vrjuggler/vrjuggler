@@ -34,10 +34,11 @@
 #define _GADGET_DIVERSE_TOOLKIT_H_
 
 #include <gadget/Devices/DriverConfig.h>
+#include <gadget/Type/InputBaseTypes.h>
+#include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/InputMixer.h>
 #include <drivers/Open/DTK/DTKMemorySegment.h>
 
 
@@ -51,7 +52,8 @@ class dtkClient;
 
 //class GADGET_CLASS_API DTK : public Input, public Position, public Digital,
 //                           public Analog
-class GADGET_CLASS_API DTK : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
+class DTK
+   : public input_digital_analog_position_t
 {
 public:
    /** Constructor. */

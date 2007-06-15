@@ -30,11 +30,7 @@
 #define _GADGET_DTRACK_H_
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/InputBaseTyped.h>
 
 #include "DTrackStandalone.h"
 
@@ -42,7 +38,7 @@
 namespace gadget
 {
 
-class DTrack : public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>, Position>
+class DTrack : public input_digital_analog_position_t;
 {
 public:
 	DTrack();
