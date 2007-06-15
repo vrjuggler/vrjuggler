@@ -30,7 +30,7 @@
 #define _GADGET_DTRACK_H_
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Type/InputBaseTyped.h>
+#include <gadget/Type/InputBaseTypes.h>
 
 #include "DTrackStandalone.h"
 
