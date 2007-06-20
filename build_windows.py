@@ -233,6 +233,8 @@ def getDefaultVars(clVerMajor, clVerMinor):
                                'Directory containing the Boost C++ header tree',
                                ''))
    required.append(BuildOption('NSPR_ROOT', 'NSPR installation directory', ''))
+   required.append(BuildOption('NSPR_INCLUDES', 'Directory containing nspr.h',
+                               ''))
    required.append(BuildOption('CPPDOM_ROOT', 'CppDOM installation directory',
                                ''))
    required.append(BuildOption('CPPDOM_INCLUDES',
@@ -314,6 +316,12 @@ def setVars(clVerMajor, clVerMinor):
            options.get('BOOST_INCLUDES', '') == '':
          boost_ver = result
          options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
+
+      # The following is a little hack to get a reasonable default set for
+      # the NSPR_INCLUDES variable before the user has to enter it manually.
+      if opt.envVar == 'NSPR_ROOT' and \
+         options.get('NSPR_INCLUDES', '') == '':
+         options['NSPR_INCLUDES'] = os.path.join(result, 'include')
 
       # The following is a little hack to get a reasonable default set for
       # the CPPDOM_INCLUDES variable before the user has to enter it manually.
@@ -1696,7 +1704,7 @@ def simpleInstall(name, root, prefix, includeDir = None, optional = False):
 
 def installNSPR(prefix):
    simpleInstall('NSPR headers and libraries', os.environ['NSPR_ROOT'],
-                 prefix)
+                 prefix, os.environ['NSPR_INCLUDES'])
 
 def installCppDOM(prefix):
    simpleInstall('CppDOM headers and libraries', os.environ['CPPDOM_ROOT'],
