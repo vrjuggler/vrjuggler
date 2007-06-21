@@ -73,7 +73,7 @@ namespace vpr
       typedef class SocketImplSIM           SocketImpl;
       typedef class SocketDatagramImplSIM   SocketDatagramImpl;
       typedef class SocketStreamImplSIM     SocketStreamImpl;
-      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef class NullIOStatsStrategy     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrSIM InetAddr;
@@ -105,16 +105,7 @@ namespace vpr
       typedef class SocketImplNSPR           SocketImpl;
       typedef class SocketDatagramImplNSPR   SocketDatagramImpl;
       typedef class SocketStreamImplNSPR     SocketStreamImpl;
-
-#ifdef __SUNPRO_CC
-      class BaseIOStatsStrategy;
-      class BandwidthIOStatsStrategy;
-      class IOStatsStrategyAdapter<class T1, class T2>;
-
-      typedef IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy> SocketIOStatsStrategy;
-#else
-      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
-#endif
+      typedef class NullIOStatsStrategy      SocketIOStatsStrategy; 
    };
 
    typedef class InetAddrNSPR InetAddr;
@@ -147,7 +138,7 @@ namespace vpr
       typedef class SocketImplBSD           SocketImpl;
       typedef class SocketDatagramImplBSD   SocketDatagramImpl;
       typedef class SocketStreamImplBSD     SocketStreamImpl;
-      typedef IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef class NullIOStatsStrategy     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrBSD    InetAddr;

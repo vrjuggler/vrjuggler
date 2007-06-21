@@ -47,7 +47,7 @@
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
 #include <vpr/Util/DateTime.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/StatCollector.h>
+#include <vpr/Util/SampleLimitedStatCollector.h>
 
 #include <deque>
 
@@ -63,6 +63,8 @@ class BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
 {
 public:
    BandwidthIOStatsStrategy()
+      : mReadStats(100)
+      , mWriteStats(100)
    {;}
 
    virtual ~BandwidthIOStatsStrategy()
@@ -120,19 +122,19 @@ public:
    }
 
 public:
-   vpr::StatCollector<vpr::Uint32, true>& readStats()
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true>& readStats()
    {
       return mReadStats;
    }
 
-   vpr::StatCollector<vpr::Uint32, true>& writeStats()
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true>& writeStats()
    {
       return mWriteStats;
    }
 
 private:
-   vpr::StatCollector<vpr::Uint32, true> mReadStats;
-   vpr::StatCollector<vpr::Uint32, true> mWriteStats;
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true> mReadStats;
+   vpr::SampleLimitedStatCollector<vpr::Uint32, true> mWriteStats;
 };
 
 } //namespace vpr
