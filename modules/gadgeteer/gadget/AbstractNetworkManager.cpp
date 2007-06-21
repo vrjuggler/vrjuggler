@@ -400,6 +400,22 @@ namespace gadget
        return recognizeClusterMachineConfig(element);
    }
 
+   struct ElementPred
+   {
+      ElementPred(const std::string& type)
+         : mType(type)
+      {
+         /* Do nothing. */ ;
+      }
+
+      bool operator()(const jccl::ConfigManager::PendingElement& p)
+      {
+         return p.mElement->getID() == mType;
+      }
+
+      const std::string mType;
+   };
+
    bool AbstractNetworkManager::configAdd(jccl::ConfigElementPtr element)
    {
       if (recognizeClusterMachineConfig(element))
@@ -412,6 +428,23 @@ namespace gadget
 
          if (isLocalHost( element->getProperty<std::string>( "host_name" ) ))
          {
+            // XXX: Hack to ensure that we don't start listening for connections until
+            //      we have fully configured all other nodes.
+            ElementPred pred(getClusterNodeElementType());
+
+            jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+            unsigned int num_pending_nodes =
+               std::count_if(cfg_mgr->getPendingBegin(), cfg_mgr->getPendingEnd(), pred);
+
+            if (num_pending_nodes > 1)
+            {
+               vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL ) << clrSetBOLD(clrRED)
+                  << clrOutBOLD( clrMAGENTA,"[AbstractNetworkManager]" )
+                  << " Some nodes not configured yet: " << num_pending_nodes
+                  << clrRESET << std::endl << vprDEBUG_FLUSH;
+               return false;
+            }
+
             // NOTE: Add all machine dependent ConfigElementPtr's here
             vprASSERT( element->getNum("display_system") == 1 
                && "A Cluster System element must have exactly 1 display_system element" );
