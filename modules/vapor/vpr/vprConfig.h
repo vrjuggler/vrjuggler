@@ -115,7 +115,7 @@ namespace std
  * namespace. The code below works around that behavior by bringing the
  * stdext namespace into the std namespace.
  */
-#elif defined(_MSC_VER) && _MSC_VER >= 14
+#elif defined(_MSC_VER) && _MSC_VER >= 1400
 namespace std
 {
    using namespace stdext;
