@@ -119,7 +119,7 @@ void Node::debugDump(int debug_level)
 void Node::printStats(int debug_level)
 {
    vpr::BaseIOStatsStrategy* stats = mSockStream->getIOStatStrategy();
-   vpr::BandwidthIOStatsStrategy* bw_interface = dynamic_cast<vpr::BandwidthIOStatsStrategy*>(stats );
+   vpr::BandwidthIOStatsStrategy* bw_interface = dynamic_cast<vpr::BandwidthIOStatsStrategy*>(stats);
 
    if(bw_interface != NULL)
    {
