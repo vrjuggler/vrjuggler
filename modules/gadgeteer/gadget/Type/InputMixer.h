@@ -33,6 +33,8 @@
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/SerializableObject.h>
 
+#include <gadget/Type/InputPtr.h>
+
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 
@@ -55,6 +57,11 @@ template <class ParentType>
 class InputPlaceHolder  : public ParentType
 {
 public:
+   static InputPtr create()
+   {
+      return InputPtr(new InputPlaceHolder);
+   }
+
    virtual bool sample()
    {
       return false;
@@ -153,9 +160,9 @@ public:
       reader->endTag();
    }
 
-   std::string getInputTypeName()
+   static std::string getInputTypeName()
    {
-     return(ComposedParent::getInputTypeName() + NewParent::getInputTypeName());    //Input,Digital,Analog,Position, NEED THIS TOO
+      return(ComposedParent::getInputTypeName() + NewParent::getInputTypeName());    //Input,Digital,Analog,Position, NEED THIS TOO
    }
 };
 

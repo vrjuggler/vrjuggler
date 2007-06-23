@@ -35,6 +35,7 @@
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Singleton.h>
+#include <vpr/Util/Factory.h>
 
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
@@ -42,168 +43,103 @@
 namespace gadget
 {
 
-/** \class BaseTypeConstructorBase BaseTypeFactory.h gadget/Type/BaseTypeFactory.h
+/** \struct NullFactoryError BaseTypeFactory.h gadget/Type/BaseTypeFactor.y
  *
- * Base class for virtual construction of devices.
- * Implementations of this class are registered with the device factory
- * for each device in the system.
+ * @param IdentifierType  The factory identifier type.
+ * @param AbstractProduct The type of the product created by the factory.
  */
-class BaseTypeConstructorBase
+template<class IdentifierType, class AbstractProduct>
+struct NullFactoryError
+{
+   static boost::shared_ptr<AbstractProduct> onUnknownType(IdentifierType)
+   {
+      return boost::shared_ptr<AbstractProduct>();
+   }
+};
+
+/**
+ * Implements a useful little template function usable as a Creator in factory.
+ */
+template<class AbstractProduct, class ConcreteProduct>
+boost::shared_ptr<AbstractProduct> CreateProduct()
+{
+   return (ConcreteProduct::create());
+}
+
+/** \class Factory Factory.h vpr/Util/Factory.h
+ *
+ * Implements generic Factory pattern.
+ *
+ * @param AbstractProduct    The base class for the hierarchy for the object
+ *                           factory.
+ * @param IndentifierType    The ID type for indexing the creators (must be
+ *                           sortable).
+ * @param ProductCreator     The callable entity that creates objects.  It
+ *                           must support <tt>AbstractProduct* operator()</tt>.
+ *                           For example, functions, functors, and classes are
+ *                           valid types to use for this parameter.  The
+ *                           default type is a simple function.
+ * @param FactoryErrorPolicy The handler for failed lookups.  It must support
+ *                           the following:
+ * \code
+ * FactoryErrorImpl<IdentifierType, AbstractProduct> fErrorImpl;
+ * AbstractProduct* p = fErrorImpl.onUnknownType(id)
+ * \endcode
+ */
+template<
+   class AbstractProduct,
+   class IdentifierType,
+   typename ProductCreator = boost::shared_ptr<AbstractProduct> (*)(),
+      class FactoryErrorPolicy = NullFactoryError<IdentifierType, AbstractProduct>
+>
+class Factory : public FactoryErrorPolicy
 {
 public:
-   /**
-    * Constructor.
-    * @post Device is registered.
-    */
-   BaseTypeConstructorBase()
-   {;}
-
-   virtual ~BaseTypeConstructorBase()
-   {;}
-
-   /** Creates the device. */
-   virtual Input* createNetDevice(std::string baseType)
+   bool registerCreator(const IdentifierType& id, ProductCreator creator)
    {
-      boost::ignore_unused_variable_warning(baseType);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "ERROR: DeviceConstructorBase::createDevice: Should never be called"
-         << std::endl << vprDEBUG_FLUSH;
-      return NULL;
+      // XXX: It would probably be better to use CreatorMap::value_type here.
+      std::pair<const IdentifierType, ProductCreator> p = std::make_pair(id, creator);
+      return mCreatorMap.insert(p).second;
    }
 
-   /** Gets the name of the type of element we can create. */
-   virtual std::string getInputTypeName()
+   bool unregisterCreator(const IdentifierType& id)
    {
-      return std::string("BaseConstructor: Invalid type");
+      return (mCreatorMap.erase(id) == 1);   // return (num_erased == 1)
    }
+   bool isRegistered(const IdentifierType& id)
+   {
+      return ( mCreatorMap.find(id) != mCreatorMap.end());
+   }
+
+   boost::shared_ptr<AbstractProduct> createObject(const IdentifierType& id)
+   {
+      typename CreatorMap::const_iterator i = mCreatorMap.find(id);
+      if(i != mCreatorMap.end())
+      {
+         return (i->second)();
+      }
+
+      return onUnknownType(id);     // Calls template method from FactoryErrorPolicy<>
+   }
+
+protected:
+   typedef std::map<IdentifierType, ProductCreator> CreatorMap;
+   CreatorMap mCreatorMap;
 };
 
 /** \class BaseTypeFactory BaseTypeFactory.h gadget/Type/BaseTypeFactory.h
  *
- * Object used for creating devices.
+ * Cluster packet factory.
  */
-class GADGET_CLASS_API BaseTypeFactory
+class GADGET_CLASS_API BaseTypeFactory :
+   public gadget::Factory<Input, std::string>
 {
-private:
-   // Singleton so must be private
-   BaseTypeFactory()
-   {
-      mConstructors = std::vector<BaseTypeConstructorBase*>(0);
-      vprASSERT(mConstructors.size() == 0);
-   }
-
-   ~BaseTypeFactory();
-
-   // This should be replaced with device plugins.
-   /**
-    * @post Devices are loaded that the system knows about.
-    */
-   void hackLoadKnownDevices();
-
 public:
-   void registerNetDevice(BaseTypeConstructorBase* constructor);
-
-   /**
-    * Queries if the factory knows about the given device.
-    *
-    * @pre base_type is a valid configuration element type.
-    * @param base_type The base type of the config element element we are
-    *                  requesting about knowledge to create.
-    *
-    * @return true if the factory knows how to create the device; false if not.
-    */
-   bool recognizeNetDevice(std::string base_type);
-
-   /**
-    * Loads the specified device.
-    *
-    * @pre recognizeNetDevice(base_type) == true.
-    *
-    * @param base_type The base type of the specification of the device to
-    *                  load.
-    *
-    * @return NULL is returned if the device failed to load.
-    *         Otherwise, a pointer to the loaded device is returned.
-    *
-    * @see recognizeNetDevice
-    */
-   Input* loadNetDevice(std::string base_type);
-
-private:
-   /**
-    * Finds a constructor for the given device type.
-    * @return -1 is returned if the constructor is not found.
-    *         Otherwise, the index of the constructor is returned.
-    */
-   int   findConstructor(std::string base_type);
-
-   void debugDump();
-
-private:
-   std::vector<BaseTypeConstructorBase*> mConstructors;  /**<  List of the device constructors */
-
    vprSingletonHeaderWithInitFunc(BaseTypeFactory, hackLoadKnownDevices);
+private:
+   void hackLoadKnownDevices();
 };
 
-/** \class BaseTypeConstructor BaseTypeFactory.h gadget/Type/BaseTypeFactory.h
- *
- * Type-specific input device creator.
- */
-template <class DEV>
-class BaseTypeConstructor : public BaseTypeConstructorBase, public DEV
-{
-public:
-   BaseTypeConstructor()
-   {
-      vprASSERT(BaseTypeFactory::instance() != NULL);
-      BaseTypeFactory::instance()->registerNetDevice(this);
-   }
-
-   virtual ~BaseTypeConstructor()
-   {
-      /* Do nothing. */ ;
-   }
-
-   Input* createNetDevice(std::string baseType)
-   {
-      boost::ignore_unused_variable_warning(baseType);
-      DEV* new_dev = new DEV;
-      //bool success = new_dev->config(element);
-      //if(success)
-      //{
-         return new_dev;
-      //}
-      //else
-      //{
-      //   delete new_dev;
-      //   return NULL;
-      //}
-   }
-
-   virtual std::string getInputTypeName()
-   {
-      return DEV::getInputTypeName();
-   }
-
-   /**
-    * Invokes the global scope delete operator.  This is required for proper
-    * releasing of memory in DLLs on Win32.
-    */
-   void operator delete(void* p)
-   {
-      ::operator delete(p);
-   }
-
-protected:
-   /**
-    * Deletes this object.  This is an implementation of the pure virtual
-    * gadget::Input::destroy() method.
-    */
-   virtual void destroy()
-   {
-      delete this;
-   }
-};
 
 } // end namespace gadget
 

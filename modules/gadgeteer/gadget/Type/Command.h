@@ -139,7 +139,7 @@ public:
       return mCommandSamples.stableBuffer();
    }
 
-   virtual std::string getInputTypeName()
+   static std::string getInputTypeName()
    {
       return std::string("Command");
    }

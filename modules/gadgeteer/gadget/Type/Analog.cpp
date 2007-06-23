@@ -225,11 +225,6 @@ const Analog::SampleBuffer_t::buffer_t& Analog::getAnalogDataBuffer()
    return mAnalogSamples.stableBuffer();
 }
 
-std::string Analog::getInputTypeName()
-{
-   return std::string("Analog");
-}
-
 // Given a value that will range from [min() <= n <= max()].
 // This returns a value that is normalized to [0,1]
 // if n < mMin or n > mMax, then result = mMin or mMax respectively.

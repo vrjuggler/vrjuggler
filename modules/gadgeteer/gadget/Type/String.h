@@ -135,7 +135,8 @@ public:
    {
       return mStringSamples.stableBuffer();
    }
-   virtual std::string getInputTypeName()
+
+   static std::string getInputTypeName()
    {
       return std::string("String");
    }

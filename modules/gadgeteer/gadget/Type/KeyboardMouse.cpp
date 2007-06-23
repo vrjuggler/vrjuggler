@@ -63,11 +63,6 @@ KeyboardMousePtr KeyboardMouse::create()
 KeyboardMouse::~KeyboardMouse()
 {;}
 
-std::string KeyboardMouse::getInputTypeName()
-{
-   return "keyboard_mouse";
-}
-
 /**
  * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
  */

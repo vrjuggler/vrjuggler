@@ -79,7 +79,10 @@ public:
 
    virtual ~KeyboardMouse();
 
-   virtual std::string getInputTypeName();
+   static std::string getInputTypeName()
+   {
+      return "keyboard_mouse";
+   }
 
    /**
     * Writes both \c mCurKeys and \c mCurEventQueueLock to a stream using the

@@ -27,6 +27,8 @@
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
 
+#include <vpr/Util/Factory.h>
+
 #include <gadget/Type/BaseTypeFactory.h>
 
 // Platform-independent devices.
@@ -43,36 +45,25 @@
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/InputBaseTypes.h>
 
-
-#define REGISTER_CONSTRUCTOR_TYPE(INPUT_TYPE) \
-   BaseTypeConstructor< INPUT_TYPE::MixedPlaceholderType >* con_ ## INPUT_TYPE  \
-         = new BaseTypeConstructor< INPUT_TYPE::MixedPlaceholderType >;         \
-   if (NULL == con_ ## INPUT_TYPE)                                              \
-   {                                                                            \
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)                                  \
-         << clrOutBOLD(clrRED,"ERROR:") << " Failed to load a known type "      \
-         << #INPUT_TYPE << std::endl << vprDEBUG_FLUSH;                         \
-   }
-
 namespace gadget
 {
 
-// Initialize the singleton ptr
-vprSingletonImpWithInitFunc( BaseTypeFactory, hackLoadKnownDevices );
+/**
+ * Registers a creator for the BaseType base class.
+ *
+ * @pre Requires that the method std::string getInputTypeName() be defined for
+ *      class BaseType.
+ *
+ * Ex: GADGET_REGISTER_BASE_TYPE_CREATOR(ConnectionAck)
+ */
+#define GADGET_REGISTER_BASE_TYPE_CREATOR(BaseType) \
+const bool reg_ctr_ ## BaseType = \
+   gadget::BaseTypeFactory::instance()-> \
+      registerCreator(BaseType::MixedPlaceholderType::getInputTypeName(), \
+                      gadget::CreateProduct<Input, BaseType::MixedPlaceholderType>); \
+   boost::ignore_unused_variable_warning(reg_ctr_ ## BaseType);
 
-BaseTypeFactory::~BaseTypeFactory()
-{
-   typedef std::vector<BaseTypeConstructorBase*>::iterator iter_type;
-   for ( iter_type itr = mConstructors.begin(); itr != mConstructors.end(); ++itr )
-   {
-      if (NULL != *itr)
-      {
-         delete *itr;
-         *itr = NULL;
-      }
-   }
-   mConstructors.clear();
-}
+vprSingletonImpWithInitFunc( BaseTypeFactory, hackLoadKnownDevices );
 
 /**
  * Registers all the devices that I know about.
@@ -85,97 +76,21 @@ void BaseTypeFactory::hackLoadKnownDevices()
    // They just register themselves in their constructor.
 
    // Platform-independent devices.
-
-   REGISTER_CONSTRUCTOR_TYPE(input_digital_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_analog_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_position_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_keyboard_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_string_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_command_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_glove_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_digital_analog_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_digital_position_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_analog_position_t);
-   REGISTER_CONSTRUCTOR_TYPE(input_glove_digital_t);
-   REGISTER_CONSTRUCTOR_TYPE(siminput_input_position);
-   REGISTER_CONSTRUCTOR_TYPE(siminput_input_digital);
-   REGISTER_CONSTRUCTOR_TYPE(siminput_input_analog);
-   REGISTER_CONSTRUCTOR_TYPE(input_digital_analog_position_t);
-}
-
-void BaseTypeFactory::registerNetDevice(BaseTypeConstructorBase* constructor)
-{
-   vprASSERT(constructor != NULL);
-   mConstructors.push_back(constructor);     // Add the constructor to the list
-}
-
-// Simply query all device constructors registered looking
-// for one that knows how to load the device
-bool BaseTypeFactory::recognizeNetDevice(std::string base_type)
-{
-   return ! (findConstructor(base_type) == -1);
-}
-
-/**
- * Loads the specified device.
- */
-Input* BaseTypeFactory::loadNetDevice(std::string base_type)
-{
-   vprASSERT(recognizeNetDevice(base_type));
-
-   int index = findConstructor(base_type);
-
-   Input* new_dev;
-   BaseTypeConstructorBase* constructor = mConstructors[index];
-
-   new_dev = constructor->createNetDevice(base_type);
-   if(new_dev!=NULL)
-   {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
-         << "[NetDevice Factory] Found the BaseType\n"<< vprDEBUG_FLUSH;
-   }
-   return new_dev;
-}
-
-int BaseTypeFactory::findConstructor(std::string base_type)
-{
-   //std::string element_type(element->getID());
-
-   for ( unsigned int i = 0; i < mConstructors.size(); ++i )
-   {
-      // Get next constructor
-      BaseTypeConstructorBase* construct = mConstructors[i];
-      vprASSERT(construct != NULL);
-      if(construct->getInputTypeName() == base_type)
-      {
-         return i;
-      }
-   }
-
-   return -1;
-}
-
-
-void BaseTypeFactory::debugDump()
-{
-   vprDEBUG_OutputGuard(gadgetDBG_RIM, vprDBG_VERB_LVL,
-      std::string("gadget::BaseTypeFactory::debugDump\n"),
-      std::string("------ END DUMP ------\n"));
-
-   vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL) << "num constructors:"
-                             << mConstructors.size() << "\n"
-                             << vprDEBUG_FLUSH;
-
-   for ( unsigned int cNum = 0; cNum < mConstructors.size(); ++cNum )
-   {
-      BaseTypeConstructorBase* dev_constr = mConstructors[cNum];
-      vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL)
-         << cNum << ": Constructor:" << (void*)dev_constr
-         << "   type:" << typeid(*dev_constr).name() << "\n" << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL) << "   recog:"
-                                << dev_constr->getInputTypeName() << "\n"
-                                << vprDEBUG_FLUSH;
-   }
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_analog_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_position_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_keyboard_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_string_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_command_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_glove_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_position_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_analog_position_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_glove_digital_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_position);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_digital);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_analog);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_position_t);
 }
 
 } // End of gadget namespace
