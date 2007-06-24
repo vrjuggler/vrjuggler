@@ -24,8 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_NETDEVICE_FACTORY_H_
-#define _GADGET_NETDEVICE_FACTORY_H_
+#ifndef _GADGET_BASE_TYPE_FACTORY_H_
+#define _GADGET_BASE_TYPE_FACTORY_H_
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
@@ -34,11 +34,9 @@
 
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigElementPtr.h>
-#include <vpr/Util/Singleton.h>
-#include <vpr/Util/Factory.h>
-
-#include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Singleton.h>
 
 namespace gadget
 {
@@ -57,15 +55,6 @@ struct NullFactoryError
    }
 };
 
-/**
- * Implements a useful little template function usable as a Creator in factory.
- */
-template<class AbstractProduct, class ConcreteProduct>
-boost::shared_ptr<AbstractProduct> CreateProduct()
-{
-   return (ConcreteProduct::create());
-}
-
 /** \class Factory Factory.h vpr/Util/Factory.h
  *
  * Implements generic Factory pattern.
@@ -74,8 +63,8 @@ boost::shared_ptr<AbstractProduct> CreateProduct()
  *                           factory.
  * @param IndentifierType    The ID type for indexing the creators (must be
  *                           sortable).
- * @param ProductCreator     The callable entity that creates objects.  It
- *                           must support <tt>AbstractProduct* operator()</tt>.
+ * @param ProductCreator     The callable entity that creates objects. It must support 
+ *                           <tt>boost::shared_ptr<AbstractProduct> operator()</tt>.
  *                           For example, functions, functors, and classes are
  *                           valid types to use for this parameter.  The
  *                           default type is a simple function.
@@ -83,7 +72,7 @@ boost::shared_ptr<AbstractProduct> CreateProduct()
  *                           the following:
  * \code
  * FactoryErrorImpl<IdentifierType, AbstractProduct> fErrorImpl;
- * AbstractProduct* p = fErrorImpl.onUnknownType(id)
+ * boost::shared_ptr<AbstractProduct> p = fErrorImpl.onUnknownType(id)
  * \endcode
  */
 template<
@@ -129,7 +118,7 @@ protected:
 
 /** \class BaseTypeFactory BaseTypeFactory.h gadget/Type/BaseTypeFactory.h
  *
- * Cluster packet factory.
+ * Input base type factory.
  */
 class GADGET_CLASS_API BaseTypeFactory :
    public gadget::Factory<Input, std::string>

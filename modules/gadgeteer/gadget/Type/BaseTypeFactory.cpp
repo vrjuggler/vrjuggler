@@ -27,8 +27,6 @@
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
 
-#include <vpr/Util/Factory.h>
-
 #include <gadget/Type/BaseTypeFactory.h>
 
 // Platform-independent devices.
@@ -60,7 +58,7 @@ namespace gadget
 const bool reg_ctr_ ## BaseType = \
    gadget::BaseTypeFactory::instance()-> \
       registerCreator(BaseType::MixedPlaceholderType::getInputTypeName(), \
-                      gadget::CreateProduct<Input, BaseType::MixedPlaceholderType>); \
+                      BaseType::MixedPlaceholderType::create); \
    boost::ignore_unused_variable_warning(reg_ctr_ ## BaseType);
 
 vprSingletonImpWithInitFunc( BaseTypeFactory, hackLoadKnownDevices );
