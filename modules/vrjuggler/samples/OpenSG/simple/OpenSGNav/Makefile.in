@@ -41,8 +41,8 @@ DZR_BASE_DIR=	$(shell flagpoll doozer --get-prefix)
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 
-OPENSG_LIBS=	$(shell osg-config --libs) -lOSGBase -lOSGSystem
-OPENSG_CFLAGS=	$(shell osg-config --cflags)
+OPENSG_LIBS=	$(shell osg-config --libs Base System)
+OPENSG_CFLAGS=	$(shell osg-config --cflags Base System)
 #OPENSG_LIBS=	$(shell osg2-config OSGFileIO OSGWindow OSGRenderTraversal --libs)
 #OPENSG_CFLAGS=	$(shell osg2-config OSGFileIO OSGWindow OSGRenderTraversal --cflags)
 
