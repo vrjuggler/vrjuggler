@@ -167,7 +167,7 @@ bool Node::send(cluster::PacketPtr outPacket)
 
    cluster::HeaderPtr header = outPacket->getHeader();
 
-   vprASSERT(NULL != header && "Node::send() - Can't have a NULL header.");
+   vprASSERT(NULL != header.get() && "Node::send() - Can't have a NULL header.");
    vprASSERT(NULL != mSockStream && "Node::send() - SocketStream can't be NULL");
 
    // -Send header data
