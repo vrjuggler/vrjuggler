@@ -293,7 +293,7 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
    << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
    << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
 
-   gadget::InputPtr input_device = gadget::InputPtr(gadget::BaseTypeFactory::instance()->loadNetDevice(device_base_type));
+   gadget::InputPtr input_device = gadget::InputPtr(gadget::BaseTypeFactory::instance()->createObject(device_base_type));
 
    // Create a new VirtualDevice.
    VirtualDevicePtr virtual_device = VirtualDevice::create(name, device_id, device_base_type, hostname, input_device);
