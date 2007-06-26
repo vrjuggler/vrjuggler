@@ -141,6 +141,14 @@ The required environment variables are as follows:
     This must contain a directory named <tt>lib</tt> and a directory
     named <tt>include</tt>.
   </dd>
+  <dt><tt>NSPR_INCLUDES</tt></dt>
+  <dd>
+    The directory containing the root of the NSPR header tree. For some NSPR
+    installations, the NSPR headers are in a subdirectory of
+    <tt>%NSPR_ROOT%\include</tt> named <tt>nspr</tt>. In that case, this
+    environment variable must be set to <tt>%NSPR_ROOT%\include\nspr</tt>.
+    Otherwise, it should be set to <tt>%NSPR_ROOT%\include</tt>.
+  </dd>
   <dt><tt>CPPDOM_ROOT</tt></dt>
   <dd>
     The root directory of an installed copy of

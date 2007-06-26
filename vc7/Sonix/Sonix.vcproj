@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\VPR"
+				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\VPR"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;SNX_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -77,7 +77,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\VPR"
+				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\VPR"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;_OPT;SNX_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"

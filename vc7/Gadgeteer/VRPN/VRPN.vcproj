@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;&quot;$(VRPN_ROOT)\quat&quot;;&quot;$(VRPN_ROOT)\vrpn&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers"
+				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;&quot;$(VRPN_ROOT)\quat&quot;;&quot;$(VRPN_ROOT)\vrpn&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -78,7 +78,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;&quot;$(VRPN_ROOT)\quat&quot;;&quot;$(VRPN_ROOT)\vrpn&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers"
+				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;&quot;$(VRPN_ROOT)\quat&quot;;&quot;$(VRPN_ROOT)\vrpn&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
