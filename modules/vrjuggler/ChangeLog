@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-26-2007 patrick     Changed the preprocessor identification of debug versus
+                        optimized to look for VJ_DEBUG or JUGGLER_DEBUG
+                        instead of _DEBUG (and VJ_OPT or JUGGLER_OPT instead
+                        of _OPT).
+                        NEW VERSION: 2.3.9
 May-14-2007 patrick     Finished making vrj::OpenSGApp work with both OpenSG
                         1.x and 2.0.
                         NEW VERSION: 2.3.8
