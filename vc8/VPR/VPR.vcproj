@@ -383,6 +383,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\Barrier.cpp"
 				>
 			</File>
