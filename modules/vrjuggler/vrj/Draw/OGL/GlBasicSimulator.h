@@ -98,17 +98,17 @@ public:
    virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface);
 
 public:
-   const gmtl::Matrix44f& getCameraPos()
+   const gmtl::Matrix44f& getCameraPos() const
    {
       return mCameraPos;
    }
 
-   const gmtl::Matrix44f& getHeadPos()
+   const gmtl::Matrix44f& getHeadPos() const
    {
       return mHeadPos;
    }
 
-   const gmtl::Matrix44f& getWandPos()
+   const gmtl::Matrix44f& getWandPos() const
    {
       return mWandPos;
    }
@@ -118,15 +118,15 @@ public:
                                      Projection* rightProj);
 
    /**  Update internal simulator data */
-   void updateInternalData(float positionScale);
+   void updateInternalData(const float positionScale);
 
 public:  // Sim Drawing parameters
-   bool shouldDrawProjections()
+   bool shouldDrawProjections() const
    {
       return mDrawProjections;
    }
 
-   gmtl::Vec3f getSurfaceColor()
+   const gmtl::Vec3f& getSurfaceColor() const
    {
       return mSurfaceColor;
    }
@@ -139,7 +139,7 @@ protected: // Drawing functions used by library
    void drawObjects();
 
    /** Draws projections in OpenGL. */
-   void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor,
+   void drawProjections(const bool drawFrustum, const gmtl::Vec3f& surfColor,
                         const float scaleFactor);
 
    /**
@@ -169,10 +169,10 @@ protected: // Drawing functions used by library
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();
-   void drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end);
-   void drawBox(float size, GLenum type);
-   void drawWireCube(float size);
-   void drawSolidCube(float size);
+   void drawLine(const gmtl::Vec3f& start, const gmtl::Vec3f& end);
+   void drawBox(const float size, const GLenum type);
+   void drawWireCube(const float size);
+   void drawSolidCube(const float size);
    //void drawGlove(gadget::GloveProxy* gloveProxy);
 
 protected:
