@@ -409,7 +409,7 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
          //ready_nodes = mReactor.getReadyNodes(vpr::Interval::NoTimeout);
          ready_nodes = mReactor.getReadyNodes(node_timeout);
       }
-      catch (vpr::TimeoutException& ex)
+      catch (vpr::TimeoutException&)
       {
          vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL ) 
             << clrOutBOLD(clrBLUE,"[NetworkManager]") 
