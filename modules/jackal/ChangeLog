@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+2007-06-26 patrick      Changed the preprocessor identification of debug versus
+                        optimized to look for JCCL_DEBUG or JUGGLER_DEBUG
+                        instead of _DEBUG (and JCCL_OPT or JUGGLER_OPT instead
+                        of _OPT).
+                        NEW VERSION: 1.3.2
 Apr-27-2007 aronb       Allow a jccl::ConfigElement to be added to a
                         jccl::Configuration programatically.
                         NEW VERSION: 1.3.1
