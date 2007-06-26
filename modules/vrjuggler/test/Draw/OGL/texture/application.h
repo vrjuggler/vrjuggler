@@ -47,6 +47,7 @@
 
 // VR juggler
 #include <vpr/Util/Interval.h>
+#include <gadget/Type/PositionInterface.h>
 #include <vrj/Draw/OGL/GlApp.h>     // base OpenGL application API
 #include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
 

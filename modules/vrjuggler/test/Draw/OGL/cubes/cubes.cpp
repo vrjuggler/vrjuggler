@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 #ifdef VPR_OS_Windows
       // Create a stringstream to format the output.
       std::stringstream error_output;
-      err0r_output << "No VR Juggler configuration files given!" << std::endl;
+      error_output << "No VR Juggler configuration files given!" << std::endl;
       error_output << cubes_desc << std::endl;
       // Display a message box to inform the user of the error.
       MessageBox( NULL, error_output.str().c_str(), "VR Juggler Usage Error",
