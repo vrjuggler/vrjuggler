@@ -56,10 +56,14 @@ namespace fs = boost::filesystem;
 namespace vpr
 {
 
-#ifdef VPR_DEBUG
-static const std::string DSO_NAME_EXT("_d");
+#if defined(VPR_DEBUG)
+#  if defined(_DEBUG)
+std::string LibraryLoader::sDsoNameExt("_d");
+#  else
+std::string LibraryLoader::sDsoNameExt("_g");
+#  endif
 #else
-static const std::string DSO_NAME_EXT("");
+std::string LibraryLoader::sDsoNameExt("");
 #endif
 
 #if defined(VPR_OS_Windows)
@@ -231,7 +235,7 @@ void LibraryLoader::callEntryPoint(vpr::LibraryPtr dso,
 
 std::string LibraryLoader::makeFullDSOName(const std::string& dsoBaseName)
 {
-   return dsoBaseName + DSO_NAME_EXT + DSO_FILE_EXT;
+   return dsoBaseName + sDsoNameExt + DSO_FILE_EXT;
 }
 
 void LibraryLoader::makeBoostFsVector(const std::vector<std::string>& strVec,

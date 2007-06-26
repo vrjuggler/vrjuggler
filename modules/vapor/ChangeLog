@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-06-26 patrick  Allow user-level code to customize the DSO name extension
+                    used to distinguish between build variants through the
+                    new function vpr::LibraryLoader::setDSONameExt().
+                    NEW VERSION: 2.1.2
 2007-05-23 patrick  Cleaned up internal handling of vpr::Interval objects in
                     read/write methods of I/O classes. The public read/write
                     methods in vpr::BlockIO now take vpr::Interval objectcs by
