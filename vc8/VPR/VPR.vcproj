@@ -383,7 +383,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.cpp">
+				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.cpp"
 				>
 			</File>
 			<File
