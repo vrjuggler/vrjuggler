@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-26-2007 patrick     Exposed VRJBasicDelegate so that user-level code can
+                        derive from it to customize response to Cocoa events.
+                        NEW VERSION: 2.1.29
 May-14-2007 patrick     Finished making vrj::OpenSGApp work with both OpenSG
                         1.x and 2.0.
                         NEW VERSION: 2.1.28

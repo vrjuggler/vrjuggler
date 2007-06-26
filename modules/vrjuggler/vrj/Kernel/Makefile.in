@@ -49,7 +49,8 @@ SRCS=		App.cpp			\
 
 ifeq (@PLATFORM@, Darwin)
    ifeq (@GADGET_USE_COCOA@, yes)
-      SRCS+=	CocoaWrapper.mm
+      SRCS+=	CocoaWrapper.mm		\
+		VRJBasicDelegate.mm
    endif
 endif
 

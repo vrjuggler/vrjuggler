@@ -70,7 +70,7 @@ Libs.private:
 libs: ${vrj_ldflags} ${vrj_libs}
 extra_libs : ${extra_libs}
 static_libs: ${static_begin} ${vrj_ldflags} ${vrj_libs} ${static_end}
-profiled_libs: ${vrj_ldflags} ${vrj_prof_libs}
+profiled_libs: ${vrj_ldflags} ${vrj_prof_libs} ${extra_libs}
 profiled_static_libs: ${static_begin} ${vrj_ldflags} ${vrj_prof_libs} ${static_end}
 
 # Draw Manager Choices
