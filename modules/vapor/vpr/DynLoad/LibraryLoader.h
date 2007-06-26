@@ -218,19 +218,57 @@ public:
     * a substring of the name of the actual file that will be loaded.  A
     * platform-specific extension (.so, .dll, etc) will be appended, and for
     * an instantiation of this class in debug-enabled code, the suffix "_d"
-    * will be appended to the DSO's base name.  For example, given the base
-    * name mydso, a debug build on Windows would search for the file
-    * mydso_d.dll.  For a release (optimized) build, it would search for
-    * mysdso.dll.
+    * or "_g" will be appended to the DSO's base name.  For example, given the
+    * base name mydso, a build using the Visual C++ debug runtime on Windows
+    * would search for the file mydso_d.dll.  For an optimized build made
+    * against the release runtime, it would search for mysdso.dll.  For a
+    * debug-enabled build made against the release runtime, it would search
+    * for mydso_g.dll.  The determination of which name extension to use is
+    * made at compile time, but it can be customized using setDSONameExt().
     *
     * @param dsoBaseName The base name of the DSO to be loaded.
+    *
+    * @see setDSONameExt()
     */
    static std::string makeFullDSOName(const std::string& dsoBaseName);
+
+   /**
+    * Changes the name extension applied when makeFullDSOName() constructs
+    * the name of the shared library to load.
+    *
+    * @parram nameExt The new name extension (such as "_x") that will be used
+    *                 by makeFullDSOName().
+    *
+    * @since 1.1.47
+    *
+    * @see makeFullDSOName()
+    */
+   static void setDSONameExt(const std::string& nameExt)
+   {
+      sDsoNameExt = nameExt;
+   }
+
+   /**
+    * Retrieves the current name extension applied when makeFullDSOName()
+    * constructs the name of the shared library to load.
+    *
+    * @since 1.1.47
+    *
+    * @see makeFullDSOName()
+    */
+   static const std::string& getDSONameExt()
+   {
+      return sDsoNameExt;
+   }
 
 private:
    static void makeBoostFsVector(const std::vector<std::string>& strVec,
                                  std::vector<boost::filesystem::path>& boostFsVec);
 
+   /**
+    * @since 1.1.47
+    */
+   static std::string sDsoNameExt;
 };
 
 }

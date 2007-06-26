@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-06-26 patrick  Allow user-level code to customize the DSO name extension
+                    used to distinguish between build variants through the
+                    new function vpr::LibraryLoader::setDSONameExt().
+                    NEW VERSION: 1.1.47
 2007-05-23 aronb    Changed the default socket statistics collection strategy
                     to NullIOStatsStrategy.
                     NEW VERSION: 1.1.46
