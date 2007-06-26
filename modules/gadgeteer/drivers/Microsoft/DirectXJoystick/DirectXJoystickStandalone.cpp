@@ -26,10 +26,6 @@
 
 #include <windows.h>
 
-#ifdef _DEBUG
-#  include <iostream>
-#endif
-
 #include <dinput.h>
 #include <stdlib.h>
 #include <math.h>
@@ -343,44 +339,26 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
       if ( doi->guidType == GUID_XAxis )
       {
          value_addr = &mJsData.lX;
-#ifdef _DEBUG
-         std::cout << "Object for X axis" << std::endl;
-#endif
       }
       else if ( doi->guidType == GUID_YAxis )
       {
          value_addr = &mJsData.lY;
-#ifdef _DEBUG
-         std::cout << "Object for Y axis" << std::endl;
-#endif
       }
       else if ( doi->guidType == GUID_ZAxis )
       {
          value_addr = &mJsData.lZ;
-#ifdef _DEBUG
-         std::cout << "Object for Z axis" << std::endl;
-#endif
       }
       else if ( doi->guidType == GUID_RxAxis )
       {
          value_addr = &mJsData.lRx;
-#ifdef _DEBUG
-         std::cout << "Object for X axis rotation" << std::endl;
-#endif
       }
       else if ( doi->guidType == GUID_RyAxis )
       {
          value_addr = &mJsData.lRy;
-#ifdef _DEBUG
-         std::cout << "Object for Y axis rotation" << std::endl;
-#endif
       }
       else if ( doi->guidType == GUID_RzAxis )
       {
          value_addr = &mJsData.lRz;
-#ifdef _DEBUG
-         std::cout << "Object for Z axis rotation" << std::endl;
-#endif
       }
       else if ( doi->guidType == GUID_Slider )
       {
@@ -394,14 +372,8 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
          {
             value_addr = &mJsData.rglSlider[1];
          }
-#ifdef _DEBUG
-         std::cout << "Object for slider" << std::endl;
-#endif
       }
 
-#ifdef _DEBUG
-      std::cout << "Setting mAxisValueMap[" << axis_index << "]" << std::endl;
-#endif
       mAxisValueMap[axis_index] = value_addr;
       axis_index--;
    }
