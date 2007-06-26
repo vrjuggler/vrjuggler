@@ -175,35 +175,6 @@ public:
       return ret_val;
    }
 
-   // Specializations of getProperty<T> placed inline for Visual Studio 7.
-   // MIPSpro and GCC do not handle this.  They get out-of-line
-   // specializations, found below.
-#if defined(_MSC_VER) && _MSC_VER == 1300
-   template<>
-   std::string getProperty<std::string>(const std::string& prop, int ind) const
-   {
-      std::string prop_string = getPropertyString(prop,ind);
-      return prop_string;
-   }
-
-   /**
-    * Specialization for booleans so that we can read "true" and "false" rather
-    * than "1" and "0".
-    */
-   template<>
-   bool getProperty<bool>(const std::string& prop, int ind) const
-   {
-      return getProperty_bool(prop, ind);
-   }
-
-   template<>
-   ConfigElementPtr getProperty<ConfigElementPtr>(const std::string& prop,
-                                                  int ind) const
-   {
-      return getProperty_ElementPtr(prop, ind);
-   }
-#endif /* defined(_MSC_VER) && _MSC_VER == 1300 */
-
    /**
     * Gets value that defaults to property 0.
     *
@@ -212,16 +183,8 @@ public:
     *       In other words we couldn't use a default value for the property
     *       index within the std::string and ConfigElementPtr specializations.
     */
-#if defined(_MSC_VER) && _MSC_VER == 1300
-   template<class T>
-   T getProperty(const std::string& prop) const
-   {
-      return getProperty<T>(prop, 0);
-   }
-#else
    template<class T>
    T getProperty(const std::string& prop) const;
-#endif
 
    /**
     * Sets a value for the given property.
@@ -325,7 +288,6 @@ protected:
    bool                mValid; /**< Flag to signal whether element is valid. */
 };
 
-#if ! defined(_MSC_VER) || _MSC_VER > 1300
 template<>
 inline std::string ConfigElement::getProperty<std::string>(const std::string& prop, int ind) const
 {
@@ -358,7 +320,6 @@ inline T ConfigElement::getProperty(const std::string& prop) const
 {
    return getProperty<T>(prop, 0);
 }
-#endif /* ! defined(_MSC_VER) || _MSC_VER > 1300 */
 
 } // namespace jccl
 
