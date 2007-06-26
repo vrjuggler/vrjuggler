@@ -12,15 +12,63 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="DebugDLL"
-			IntermediateDirectory="DebugDLL"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
+				PreprocessorDefinitions="WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/button_drv_g.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/button_drv_g.pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/button_drv_g.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="DebugRt|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				PreprocessorDefinitions="WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,8 +109,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="ReleaseDLL"
-			IntermediateDirectory="ReleaseDLL"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -71,7 +119,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="WIN32;_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
+				PreprocessorDefinitions="WIN32;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"

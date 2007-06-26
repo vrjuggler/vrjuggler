@@ -46,7 +46,182 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
+				MinimalRebuild="false"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4312"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).dll"
+				Version="$(VRJ_VERSION_DOT)"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\Gadgeteer\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).lib"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugDLL|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
+				MinimalRebuild="false"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4312"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).dll"
+				Version="$(VRJ_VERSION_DOT)"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\Gadgeteer\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).lib"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugRtDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -107,7 +282,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="DebugDLL|x64"
+			Name="DebugRtDLL|x64"
 			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
@@ -135,7 +310,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -225,7 +400,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_OPT"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -318,7 +493,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_OPT"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"

@@ -87,7 +87,10 @@ int main (int argc, char **argv)
 
    std::string host_name = vpr::System::getHostname();
    metric_prefix = host_name + "/";
+#ifdef VPR_DEBUG
 #ifdef _DEBUG
+   metric_prefix += "DebugRt/";
+#else
    metric_prefix += "Debug/";
 #endif
 #ifdef _OPT

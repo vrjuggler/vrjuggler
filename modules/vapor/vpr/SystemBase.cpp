@@ -79,7 +79,7 @@ using boost::format;
 
 namespace
 {
-#if defined(VPR_OS_Windows) && defined(_DEBUG)
+#if defined(VPR_OS_Windows) && defined(VPR_DEBUG)
 #if _MSC_VER >= 1400
 #  pragma intrinsic(_ReturnAddress)
 #endif
@@ -284,7 +284,7 @@ std::string SystemBase::getCallStack()
 // result of frame_offset being set incorrectly. Without having inline
 // assembly on amd64 or ia64 (as of Visual C++ 8.0), it is not clear how to
 // deal with these architectures.
-#if defined(_DEBUG) && defined(_M_IX86)
+#if defined(VPR_DEBUG) && defined(_M_IX86)
    // This will be used over and over again below.  In particular, we need
    // to be sure that SymInitialize() and SymCleanup() are called with the
    // same process handle value.
@@ -428,11 +428,11 @@ std::string SystemBase::getCallStack()
 
       SymCleanup(proc);
    }
-#else   /* ! defined(_DEBUG) */
+#else   /* ! defined(VPR_DEBUG) */
    ret_stack = "Stack trace:\n"
                "   <Call stack printing not supported>\n"
                "   Use a debug build to get a stack trace\n";
-#endif  /* defined(_DEBUG) */
+#endif  /* defined(VPR_DEBUG) */
 #endif  /* defined(HAVE_BACKTRACE) */
 
    return ret_stack;

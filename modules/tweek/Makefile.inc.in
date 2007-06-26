@@ -43,8 +43,8 @@ top_srcdir=	@top_srcdir@
 JACORB_DIR=	$(JUGGLERROOT_ABS)/external/JacORB
 
 # Extra compiler and linker options needed only by this file.
-DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
-OPT_FLAGS=	-D_OPT -DNDEBUG @OPT_FLAGS@
+DBG_FLAGS=	-DJUGGLER_DEBUG @DBG_FLAGS@
+OPT_FLAGS=	-DJUGGLER_OPT -DNDEBUG @OPT_FLAGS@
 
 # =============================================================================
 # Build and installation directory naming and ownership information.

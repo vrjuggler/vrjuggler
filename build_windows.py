@@ -1057,7 +1057,8 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
 
 def installLibs(srcRoot, destdir,
                 buildPlatforms = ['Win32', 'x64'],
-                buildTypes = ['ReleaseDLL', 'DebugDLL', 'Release', 'Debug'],
+                buildTypes = ['ReleaseDLL', 'DebugDLL', 'DebugRtDLL',
+                              'Release', 'Debug'],
                 extensions = ['.dll', '.lib']):
    for p in buildPlatforms:
       for t in buildTypes:
@@ -1365,17 +1366,22 @@ def installSonix(prefix, buildDir):
 def installSonixPlugins(prefix, buildDir):
    printStatus("Installing Sonix plug-ins ...")
 
-   destdir_dbg = os.path.join(prefix, 'lib', 'snx', 'plugins', 'dbg')
-   destdir_opt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
+   destdir_dbg   = os.path.join(prefix, 'lib', 'snx', 'plugins', 'dbg')
+   destdir_dbgrt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'dbgrt')
+   destdir_opt   = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
 
    srcroot = os.path.join(buildDir, 'Sonix', 'OpenAL')
    installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
+               extensions = ['.dll'])
+   installLibs(srcroot, destdir_dbgrt, buildTypes = ['DebugRtDLL'],
                extensions = ['.dll'])
    installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
                extensions = ['.dll'])
 
    srcroot = os.path.join(buildDir, 'Sonix', 'Audiere')
    installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
+               extensions = ['.dll'])
+   installLibs(srcroot, destdir_dbgrt, buildTypes = ['DebugRtDLL'],
                extensions = ['.dll'])
    installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
                extensions = ['.dll'])

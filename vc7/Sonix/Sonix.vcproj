@@ -20,7 +20,62 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;SNX_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;SNX_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4251;4275"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/sonix_g-$(SNX_VERSION).dll"
+				Version="$(SNX_VERSION_DOT)"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/sonix_g-$(SNX_VERSION).pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/sonix_g-$(SNX_VERSION).lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="DebugRtDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\VPR"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;SNX_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -78,7 +133,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories=".;..\..\modules\sonix;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;_OPT;SNX_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_SNX_BUILD_;JUGGLER_OPT;SNX_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"

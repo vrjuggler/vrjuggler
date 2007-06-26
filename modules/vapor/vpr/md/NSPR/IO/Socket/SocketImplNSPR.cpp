@@ -912,7 +912,7 @@ SocketImplNSPR::~SocketImplNSPR()
       }
    }
 
-#ifdef _DEBUG
+#ifdef VPR_DEBUG
    // Mark socket as destroyed
    mHandle = (PRFileDesc*)(0xDEADBEEF);
    mName = "Destructed";

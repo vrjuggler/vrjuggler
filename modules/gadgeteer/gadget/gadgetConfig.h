@@ -47,9 +47,14 @@
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 
-#ifdef _DEBUG
+/*
+ * If either JUGGLER_DEBUG or _DEBUG is defined, that implies the need for
+ * GADGET_DEBUG.
+ */
+#if ! defined(GADGET_DEBUG) && (defined(JUGGLER_DEBUG) || defined(_DEBUG))
 #   define GADGET_DEBUG
-#else
+/* If JUGGLER_OPT is defined, make sure that GADGET_OPT is also defined. */
+#elif defined(JUGGLER_OPT) && ! defined(GADGET_OPT)
 #   define GADGET_OPT
 #endif
 

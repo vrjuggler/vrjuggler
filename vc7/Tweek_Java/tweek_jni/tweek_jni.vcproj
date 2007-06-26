@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="ReleaseDLL|Win32"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\Release"
+			IntermediateDirectory="$(PlatformName)\Release"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool

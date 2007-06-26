@@ -21,7 +21,64 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/gadget_g-$(GADGET_VERSION).dll"
+				Version="$(GADGET_VERSION_DOT)"
+				LinkIncremental="0"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/gadget_g-$(GADGET_VERSION).pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/gadget_g-$(GADGET_VERSION).lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories=".."/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="DebugRtDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -81,7 +138,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;_OPT;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;JUGGLER_OPT;GADGET_ROOT_DIR=\&quot;$(instprefix)\&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
