@@ -33,11 +33,10 @@
 #include <vpr/IO/TimeoutException.h> 
 #include <vpr/Perf/ProfileManager.h>
 
-
-#ifdef VPR_DEBUG
-   #include <vpr/IO/Stats/BandwidthIOStatsStrategy.h>
-   #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
-   #include <vpr/IO/Stats/IOStatsStrategyAdapter.h>
+#ifdef GADGET_DEBUG
+#  include <vpr/IO/Stats/BandwidthIOStatsStrategy.h>
+#  include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+#  include <vpr/IO/Stats/IOStatsStrategyAdapter.h>
 #endif
 
 #include <cluster/Packets/EndBlock.h>
@@ -105,7 +104,7 @@ void NetworkManager::waitForConnection(const vpr::Uint16 listenPort)
    // Create a socketstream for new socket
    vpr::SocketStream* client_sock = new vpr::SocketStream();
 
-#ifdef VPR_DEBUG
+#ifdef GADGET_DEBUG
    typedef class vpr::IOStatsStrategyAdapter<class vpr::BaseIOStatsStrategy, class vpr::BandwidthIOStatsStrategy>  strategy_t;
    vpr::BaseIOStatsStrategy* new_strategy = new strategy_t;
    client_sock->setIOStatStrategy(new_strategy);
@@ -703,7 +702,7 @@ bool NetworkManager::connectTo(NodePtr node)
    // Create a new socket stream to this address
    sock_stream = new vpr::SocketStream( vpr::InetAddr::AnyAddr, inet_addr );
 
-#ifdef VPR_DEBUG
+#ifdef GADGET_DEBUG
    typedef class vpr::IOStatsStrategyAdapter<class vpr::BaseIOStatsStrategy, class vpr::BandwidthIOStatsStrategy>  strategy_t;
    vpr::BaseIOStatsStrategy* new_strategy = new strategy_t;
    sock_stream->setIOStatStrategy(new_strategy);
