@@ -167,10 +167,8 @@ public:
    template<class T>
    T getProperty(const std::string& prop, int ind) const
    {
-      std::string prop_string = getPropertyString(prop,ind);
-
       T ret_val = T();
-      std::istringstream iss(prop_string);
+      std::istringstream iss(getPropertyString(prop, ind));
       iss >> ret_val;
       return ret_val;
    }
@@ -291,8 +289,7 @@ protected:
 template<>
 inline std::string ConfigElement::getProperty<std::string>(const std::string& prop, int ind) const
 {
-   std::string prop_string = getPropertyString(prop,ind);
-   return prop_string;
+   return getPropertyString(prop, ind);
 }
 
 /**
