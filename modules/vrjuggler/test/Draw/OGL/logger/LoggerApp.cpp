@@ -24,6 +24,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#if defined(WIN32) || defined(WIN64)
+#  include <windows.h>
+#endif
+
 #include <iostream>
 
 #if defined(__APPLE__)

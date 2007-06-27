@@ -52,6 +52,7 @@
 
 // Gadgeteer Input devices:
 #include <gadget/Type/AnalogInterface.h>
+#include <gadget/Type/PositionInterface.h>
 
 // texture application objects
 #include "renderGeometry.h"  // render interleaved vertex array data
