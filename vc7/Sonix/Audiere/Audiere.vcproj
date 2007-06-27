@@ -39,7 +39,7 @@
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(AUDIERE_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\..\Sonix\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/AudierePlugin.pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/AudierePlugin.lib"

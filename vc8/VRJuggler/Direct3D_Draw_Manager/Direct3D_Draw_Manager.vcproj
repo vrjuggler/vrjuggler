@@ -74,7 +74,7 @@
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\Gadgeteer\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile="$(OutDir)/vrj_d3d_g-$(VRJ_VERSION).pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/vrj_d3d_g-$(VRJ_VERSION).lib"

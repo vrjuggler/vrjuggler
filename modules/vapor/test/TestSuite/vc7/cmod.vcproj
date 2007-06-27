@@ -33,7 +33,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/cmod.dll"
 				LinkIncremental="1"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/cmod.pdb"
 				SubSystem="0"
 				ImportLibrary="$(OutDir)/cmod.lib"

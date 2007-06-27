@@ -33,7 +33,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/dsomod2.dll"
 				LinkIncremental="1"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/dsomod2.pdb"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/dsomod2.lib"

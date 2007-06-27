@@ -38,7 +38,7 @@
 				OutputFile="$(OutDir)/button_drv_g.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/button_drv_g.pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/button_drv_g.lib"

@@ -39,7 +39,7 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/tweek_g-$(TWEEK_VERSION).pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/tweek_g-$(TWEEK_VERSION).lib"
@@ -219,10 +219,10 @@
 				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectManagerImpl.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
+				RelativePath="..\..\modules\tweek\tweek\tweekmain.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\tweek\tweek\tweekmain.cpp">
+				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
 			</File>
 		</Filter>
 		<Filter

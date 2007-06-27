@@ -72,7 +72,7 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile="$(OutDir)/tweek_g-$(TWEEK_VERSION).pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/tweek_g-$(TWEEK_VERSION).lib"

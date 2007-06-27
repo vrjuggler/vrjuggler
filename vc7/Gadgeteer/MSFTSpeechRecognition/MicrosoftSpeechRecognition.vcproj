@@ -39,7 +39,7 @@
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(MS_SPEECH_SDK_ROOT)\Lib\i386&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/MSFTSpeechRecog_drv_g.pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/MSFTSpeechRecog_drv_g.lib"

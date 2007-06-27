@@ -73,7 +73,7 @@
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile="$(OutDir)/gadget_g-$(GADGET_VERSION).pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/gadget_g-$(GADGET_VERSION).lib"

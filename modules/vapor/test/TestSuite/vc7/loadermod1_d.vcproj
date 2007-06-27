@@ -33,7 +33,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/loadermod1_d.dll"
 				LinkIncremental="1"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/loadermod1_d.pdb"
 				SubSystem="0"
 				ImportLibrary="$(OutDir)/loadermod1_d.lib"

@@ -33,7 +33,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/cxxmod.dll"
 				LinkIncremental="1"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/cxxmod.pdb"
 				SubSystem="0"
 				ImportLibrary="$(OutDir)/cxxmod.lib"

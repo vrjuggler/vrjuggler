@@ -39,7 +39,7 @@
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/jccl_g-$(JCCL_VERSION).pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/jccl_g-$(JCCL_VERSION).lib"
@@ -218,6 +218,9 @@
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ElementFactory.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\jackal\common\jccl\jcclmain.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\jackal\config\jccl\Config\ParseUtil.cpp">
 			</File>
 			<File
@@ -225,9 +228,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\jackal\common\jccl\Util\Version.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\jackal\common\jccl\jcclmain.cpp">
 			</File>
 		</Filter>
 		<Filter

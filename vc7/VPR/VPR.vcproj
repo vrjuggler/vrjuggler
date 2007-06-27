@@ -40,7 +40,7 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/vpr_g-$(VPR_VERSION).pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/vpr_g-$(VPR_VERSION).lib"

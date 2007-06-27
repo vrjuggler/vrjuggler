@@ -41,7 +41,7 @@
 				OutputFile="$(OutDir)/applicationData.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/applicationData.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>

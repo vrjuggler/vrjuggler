@@ -72,7 +72,7 @@
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile="$(OutDir)/sonix_g-$(SNX_VERSION).pdb"
 				SubSystem="1"
 				ImportLibrary="$(OutDir)/sonix_g-$(SNX_VERSION).lib"
