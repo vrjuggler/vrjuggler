@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-26-2007 patrick     Changed the preprocessor identification of debug versus
+                        optimized to look for GADGET_DEBUG or JUGGLER_DEBUG
+                        instead of _DEBUG (and GADGET_OPT or JUGGLER_OPT
+                        instead of _OPT).
+                        NEW VERSION: 1.1.29
 Jun-15-2007 aronb       Introduced typedefs for known gadget::InputMixer<>
                         instantiations to be used as the base class for device
                         drivers.
