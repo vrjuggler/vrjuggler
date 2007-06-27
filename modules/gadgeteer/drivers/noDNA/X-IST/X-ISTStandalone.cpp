@@ -122,7 +122,6 @@ bool X_ISTStandalone::connectToHardware(const int gloveNumber)
    FT_W32_PurgeComm(mComm, PURGE_TXCLEAR | PURGE_RXCLEAR);
 
    char buffer[256];
-   char name[256];
 
 // Get firmware version
    buffer[0] = 0x11;
@@ -141,9 +140,8 @@ bool X_ISTStandalone::connectToHardware(const int gloveNumber)
    memset(buffer, 0, sizeof(buffer));
    read(buffer, 40);
    FT_W32_PurgeComm(mComm, PURGE_TXCLEAR | PURGE_RXCLEAR);
-   sprintf(name, (char*)buffer);
 //   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-//      << "[X-IST] hardware version : " << name << std::endl
+//      << "[X-IST] hardware version : " << buffer << std::endl
 //      << vprDEBUG_FLUSH;
 
 // Get product id
@@ -152,9 +150,8 @@ bool X_ISTStandalone::connectToHardware(const int gloveNumber)
    memset(buffer, 0, sizeof(buffer));
    read(buffer, 40);
    FT_W32_PurgeComm(mComm, PURGE_TXCLEAR | PURGE_RXCLEAR);
-   sprintf(name,(char*)buffer);
 //   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-//      << "[X-IST] product id : " << name << std::endl << vprDEBUG_FLUSH;
+//      << "[X-IST] product id : " << buffer << std::endl << vprDEBUG_FLUSH;
 
    return true;
 }
