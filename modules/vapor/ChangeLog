@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-06-27 patrick  Changed the preprocessor identification of debug versus
+                    optimized to look for VPR_DEBUG or JUGGLER_DEBUG instead
+                    of _DEBUG (and VPR_OPT or JUGGLER_OPT instead of _OPT).
+                    NEW VERSION: 1.1.48
 2007-06-26 patrick  Allow user-level code to customize the DSO name extension
                     used to distinguish between build variants through the
                     new function vpr::LibraryLoader::setDSONameExt().
