@@ -1,5 +1,5 @@
 /* Gadgeteer Driver for 'A.R.T. DTrack' Tracker
- * Copyright (C) 2005, Advanced Realtime Tracking GmbH
+ * Copyright (C) 2005-2007, Advanced Realtime Tracking GmbH
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,13 +17,13 @@
  *
  *
  * Purpose: standalone driver class; derived from the A.R.T. sample source
- *          code 'DTracklib' (version v1.2.1), just modified for use with VPR
+ *          code 'DTrackSDK' (version v1.3.1), modified for use with VPR
  *
  * Authors: Kurt Achatz, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
  *
- * Last modified: 2005/05/28
+ * Last modified: 2007/03/27
  *
- * DTrackStandalone.h,v 1.2 2005/06/16 14:44:01 kurt Exp
+ * DTrackStandalone.h,v 1.3 2007/06/20 15:14:01 kurt Exp
  */
 
 #ifndef _GADGET_DTRACK_STANDALONE_H_
@@ -36,60 +36,69 @@
 #include <vpr/IO/Socket/SocketDatagram.h>
 
 // --------------------------------------------------------------------------
-// Data types and macros
+// Data types
 
-// Body data (6DOF):
-
-typedef struct{
-	unsigned long id;     // id number
-	float quality;        // quality (0 <= qu <= 1)
-	
-	float loc[3];         // location (in mm)
-	float ang[3];         // orientation angles (eta, theta, phi; in deg)
-	float rot[9];         // rotation matrix (column-wise)
-} dtracklib_body_type;
-
-// A.R.T. FlyStick data (6DOF + buttons):
+// Standard body data (6DOF):
+//  - currently not tracked bodies are getting a quality of -1
 
 typedef struct{
-	unsigned long id;     // id number
+	int id;               // id number (starting with 0)
 	float quality;        // quality (0 <= qu <= 1, no tracking if -1)
-	unsigned long bt;     // pressed buttons (binary coded)
 	
 	float loc[3];         // location (in mm)
-	float ang[3];         // orientation angles (eta, theta, phi; in deg)
 	float rot[9];         // rotation matrix (column-wise)
-} dtracklib_flystick_type;
+} dtrack_body_type;
+
+// A.R.T. Flystick data (6DOF + buttons):
+//  - currently not tracked bodies are getting a quality of -1
+//  - note the maximum number of buttons and joystick values
+
+#define DTRACK_FLYSTICK_MAX_BUTTON    16  // maximum number of buttons
+#define DTRACK_FLYSTICK_MAX_JOYSTICK   8  // maximum number of joystick values
+
+typedef struct{
+	int id;               // id number (starting with 0)
+	float quality;        // quality (0 <= qu <= 1, no tracking if -1)
+
+	int num_button;       // number of buttons
+	int button[DTRACK_FLYSTICK_MAX_BUTTON];  // button state (1 pressed, 0 not pressed)
+	                                         // (0 front, 1..n-1 right to left)
+	int num_joystick;     // number of joystick values
+	float joystick[DTRACK_FLYSTICK_MAX_JOYSTICK];  // joystick value (-1 <= joystick <= 1) 
+	                                               // (0 horizontal, 1 vertical)
+
+	float loc[3];         // location (in mm)
+	float rot[9];         // rotation matrix (column-wise)
+} dtrack_flystick_type;
 
 // Measurement tool data (6DOF + buttons):
+//  - currently not tracked bodies are getting a quality of -1
+//  - note the maximum number of buttons
+
+#define DTRACK_MEATOOL_MAX_BUTTON    1  // maximum number of buttons
 
 typedef struct{
-	unsigned long id;     // id number
+	int id;               // id number (starting with 0)
 	float quality;        // quality (0 <= qu <= 1, no tracking if -1)
-	unsigned long bt;     // pressed buttons (binary coded)
+	
+	int num_button;       // number of buttons
+	int button[DTRACK_MEATOOL_MAX_BUTTON];  // button state (1 pressed, 0 not pressed)
 	
 	float loc[3];         // location (in mm)
 	float rot[9];         // rotation matrix (column-wise)
-} dtracklib_meatool_type;
+} dtrack_meatool_type;
 
-// Single marker data (3DOF):
+// A.R.T. Fingertracking hand data (6DOF + fingers):
+//  - currently not tracked bodies are getting a quality of -1
 
-typedef struct{
-	unsigned long id;     // id number
-	float quality;        // quality (0 <= qu <= 1)
-	
-	float loc[3];         // location (in mm)
-} dtracklib_marker_type;
-
-// A.R.T. DataGlove data (6DOF + fingers):
-
-#define DTRACKLIB_GLOVE_MAX_NFINGER   3  // maximum number of fingers
+#define DTRACK_HAND_MAX_FINGER    5  // maximum number of fingers
 
 typedef struct{
-	unsigned long id;     // id number
-	float quality;        // quality (0 <= qu <= 1)
+	int id;               // id number (starting with 0)
+	float quality;        // quality (0 <= qu <= 1, no tracking if -1)
+
 	int lr;               // left (0) or right (1) hand
-	int nfinger;          // number of fingers
+	int nfinger;          // number of fingers (maximum 5)
 
 	float loc[3];         // back of the hand: location (in mm)
 	float rot[9];         // back of the hand: rotation matrix (column-wise) 
@@ -97,23 +106,21 @@ typedef struct{
 	struct{
 		float loc[3];            // finger: location (in mm)
 		float rot[9];            // finger: rotation matrix (column-wise) 
-		
+
 		float radiustip;         // finger: radius of tip
 		float lengthphalanx[3];  // finger: length of phalanxes; order: outermost, middle, innermost
 		float anglephalanx[2];   // finger: angle between phalanxes
-	} finger[DTRACKLIB_GLOVE_MAX_NFINGER];  // order: thumb, index finger, ...
-} dtracklib_glove_type;
+	} finger[DTRACK_HAND_MAX_FINGER];  // order: thumb, index finger, middle finger, ...
+} dtrack_hand_type;
 
+// Single marker data (3DOF):
 
-// DTrack remote commands:
-
-#define DTRACKLIB_CMD_CAMERAS_OFF           0x1000
-#define DTRACKLIB_CMD_CAMERAS_ON            0x1001
-#define DTRACKLIB_CMD_CAMERAS_AND_CALC_ON   0x1003
-
-#define DTRACKLIB_CMD_SEND_DATA             0x3100
-#define DTRACKLIB_CMD_STOP_DATA             0x3200
-#define DTRACKLIB_CMD_SEND_N_DATA           0x3300
+typedef struct{
+	int id;               // id number (starting with 1)
+	float quality;        // quality (0 <= qu <= 1)
+	
+	float loc[3];         // location (in mm)
+} dtrack_marker_type;
 
 
 // --------------------------------------------------------------------------
@@ -127,15 +134,15 @@ public:
 //
 // udpport (i): UDP port number to receive data from DTrack
 //
-// remote_ip (i): DTrack remote control: ip address of DTrack PC (NULL if not used)
+// remote_host (i): DTrack remote control: hostname or IP address of DTrack PC (NULL if not used)
 // remote_port (i): port number of DTrack remote control (0 if not used)
 //
 // udpbufsize (i): size of buffer for UDP packets (in bytes)
-// udptimeout_us (i): UDP timeout (receiving and sending) in us (micro sec)
+// udptimeout_us (i): UDP timeout (receiving and sending) in us (micro second)
 
 	DTrackStandalone(
-		unsigned short udpport = 5000, const char* remote_ip = NULL, unsigned short remote_port = 0,
-		int udpbufsize = 10000, unsigned long udptimeout_us = 1000000
+		int udpport = 5000, const char* remote_host = NULL, int remote_port = 0,
+		int udpbufsize = 20000, int udptimeout_us = 1000000
 	);
 
 // Destructor:
@@ -165,35 +172,40 @@ public:
 	bool receive(void);
 
 // Get data of last received DTrack data packet:
+//  - currently not tracked bodies are getting a quality of -1
 
-	unsigned long get_framenr(void);  // frame counter
-	double get_timestamp(void);       // timestamp (-1, if information not available)
+	unsigned int get_framecounter(void);        // frame counter
+	double get_timestamp(void);                 // timestamp (-1 if information not available)
 
-	int get_nbodycal(void);           // number of calibrated bodies (-1, if information not available)
-	int get_nbody(void);                            // number of tracked bodies
-	dtracklib_body_type get_body(int ind);          // 6d data (ind (i): index 0..max-1)
+	int get_num_body(void);                     // number of calibrated standard bodies (as far as known)
+	dtrack_body_type get_body(int id);          // standard body data (id (i): standard body id 0..max-1)
 
-	int get_nflystick(void);                        // number of calibrated flysticks
-	dtracklib_flystick_type get_flystick(int ind);  // 6df data (ind (i): index 0..max-1)
+	int get_num_flystick(void);                 // number of calibrated Flysticks
+	dtrack_flystick_type get_flystick(int id);  // Flystick data (id (i): Flystick id 0..max-1)
 
-	int get_nmeatool(void);                         // number of calibrated measurement tools
-	dtracklib_meatool_type get_meatool(int ind);    // 6dmt data (ind (i): index 0..max-1)
+	int get_num_meatool(void);                  // number of calibrated measurement tools
+	dtrack_meatool_type get_meatool(int id);    // measurement tool data (id (i): tool id 0..max-1)
 
-	int get_nmarker(void);                          // number of tracked single markers
-	dtracklib_marker_type get_marker(int ind);      // 3d data (ind (i): index 0..max-1)
+	int get_num_hand(void);                     // number of calibrated Fingertracking hands (as far as known)
+	dtrack_hand_type get_hand(int id);          // Fingertracking hand data (id (i): hand id 0..max-1)
 
-	int get_nglove(void);                           // number of tracked DataGloves
-	dtracklib_glove_type get_glove(int ind);        // gl data (ind (i): index 0..max-1)
+	int get_num_marker(void);                   // number of tracked single markers
+	dtrack_marker_type get_marker(int index);   // single marker data (index (i): index 0..max-1)
 
 
-// Send one remote control command (UDP; ASCII protocol) to DTrack:
+// Send remote control commands (UDP; ASCII protocol) to DTrack:
 //
-// cmd (i): command code
-// val (i): additional value (if needed)
+// onoff (i): switch function on or off
 //
-// return value (o): sending was successfull
+// return value (o): sending of remote commands was successfull
 
-	bool send(unsigned short cmd, int val = 0);
+	bool cmd_cameras(bool onoff);             // control cameras
+	bool cmd_tracking(bool onoff);            // control tracking calculation (default: on)
+	bool cmd_sending_data(bool onoff);        // control sending of UDP output data (default: on)
+
+// frames (i): number of frames
+
+	bool cmd_sending_fixed_data(int frames);  // start sending of a fixed number of UDP output frames
 
 
 private:
@@ -205,25 +217,28 @@ private:
 
 	bool d_use_remote;              // use DTrack remote command access
 	vpr::InetAddr d_remote;         // DTrack remote address
+	bool d_remote_cameras;          // DTrack status: cameras on/off
+	bool d_remote_tracking;         // DTrack status: tracking on/off
+	bool d_remote_sending;          // DTrack status: sending of UDP output data on/off
 
-	unsigned long act_framenr;                          // frame counter
-	double act_timestamp;                               // timestamp (-1, if information not available)
+	unsigned int act_framecounter;                   // frame counter
+	double act_timestamp;                            // timestamp (-1, if information not available)
 	
-	int act_nbodycal;                                   // number of calibrated bodies (-1, if information not available)
-	int act_nbody;                                      // number of tracked bodies
-	std::vector<dtracklib_body_type> act_body;          // array containing 6d data
+	int act_num_body;                                // number of calibrated standard bodies (as far as known)
+	std::vector<dtrack_body_type> act_body;          // array containing standard body data
 
-	int act_nflystick;                                  // number of calibrated flysticks
-	std::vector<dtracklib_flystick_type> act_flystick;  // array containing 6df data
+	int act_num_flystick;                            // number of calibrated Flysticks
+	std::vector<dtrack_flystick_type> act_flystick;  // array containing Flystick data
 
-	int act_nmeatool;                                   // number of calibrated measurement tools
-	std::vector<dtracklib_meatool_type> act_meatool;    // array containing 6dmt data
+	int act_num_meatool;                             // number of calibrated measurement tools
+	std::vector<dtrack_meatool_type> act_meatool;    // array containing measurement tool data
 
-	int act_nmarker;                                    // number of tracked single markers
-	std::vector<dtracklib_marker_type> act_marker;      // array containing 3d data
+	int act_num_hand;                                // number of calibrated Fingertracking hands (as far as known)
+	std::vector<dtrack_hand_type> act_hand;          // array containing Fingertracking hands data
+
+	int act_num_marker;                              // number of tracked single markers
+	std::vector<dtrack_marker_type> act_marker;      // array containing single marker data
 	
-	int act_nglove;                                     // number of tracked DataGloves
-	std::vector<dtracklib_glove_type> act_glove;        // array containing gl data
 
 	int d_lasterror;                // last receive/send error
 	
@@ -231,6 +246,8 @@ private:
 	void set_timeout(void);         // set last receive/send error to 'timeout'
 	void set_udperror(void);        // set last receive/send error to 'udp error'
 	void set_parseerror(void);      // set last receive/send error to 'parse error'
+	
+	bool cmd_send(int cmd, int val = 0);  // send remote control command
 };
 
 
