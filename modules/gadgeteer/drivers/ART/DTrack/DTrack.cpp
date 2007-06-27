@@ -1,5 +1,5 @@
 /* Gadgeteer Driver for 'A.R.T. DTrack' Tracker
- * Copyright (C) 2005, Advanced Realtime Tracking GmbH
+ * Copyright (C) 2005-2007, Advanced Realtime Tracking GmbH
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,9 +21,9 @@
  * Authors: Sylvain Brandel, LSIIT-IGG (http://igg.u-strasbg.fr)
  *          Kurt Achatz, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
  *
- * Last modified: 2005/06/16
+ * Last modified: 2007/06/20
  *
- * DTrack.cpp,v 1.2 2005/06/16 14:43:31 kurt Exp
+ * DTrack.cpp,v 1.5 2007/06/20 15:12:58 kurt Exp
  */
 
 #include <gadget/Devices/DriverConfig.h>
@@ -39,10 +39,11 @@
 
 // some constants:
 
-#define VERSION_STRING   "DTrack Driver v0.1.0; (C) 2005, Advanced Realtime Tracking GmbH"
+#define VERSION_STRING   "DTrack Driver v0.2.0; (C) 2005-2007, Advanced Realtime Tracking GmbH"
 
 #define BUTTONS_PER_FLYSTICK    8  // number of buttons per 'Flystick' (fixed)
 #define VALUATORS_PER_FLYSTICK  2  // number of valuators per 'Flystick' (fixed)
+#define BUTTONS_PER_MEATOOL     2  // number of buttons per 'Measurement Tool' (fixed)
 
 
 extern "C" GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
@@ -94,7 +95,7 @@ DTrack::~DTrack()
 std::string DTrack::getElementType()
 {
 
-	return "dtrack";
+	return std::string("dtrack");
 }
 
 
@@ -162,8 +163,7 @@ bool DTrack::startSampling()
 	// start DTrack (if necessary):
 
 	if(use_commands){
-		standalone->send(DTRACKLIB_CMD_CAMERAS_AND_CALC_ON);
-		standalone->send(DTRACKLIB_CMD_SEND_DATA);
+		standalone->cmd_cameras(true);
 	}
 
 	// start sample thread:
@@ -208,8 +208,7 @@ bool DTrack::stopSampling()
 	// stop DTrack (if necessary):
 
 	if(use_commands){
-		standalone->send(DTRACKLIB_CMD_STOP_DATA);
-		standalone->send(DTRACKLIB_CMD_CAMERAS_OFF);
+		standalone->cmd_cameras(false);
 	}
 
 	// release standalone object:
@@ -244,8 +243,9 @@ void DTrack::thrFunction(void* classPointer)
 bool DTrack::sample()
 {
 	bool stat;
-	unsigned long i;
-	unsigned long nbody, nflystick;
+	int i, j, id;
+	int nbt, nvt;
+	int num_body, num_flystick, num_meatool;
 
 	if(!thrRunning){
 		return false;
@@ -257,30 +257,18 @@ bool DTrack::sample()
 		return false;
 	}
 
-	nbody = (unsigned long )standalone->get_nbody();
-	nflystick = (unsigned long )standalone->get_nflystick();
-
-	if(standalone->get_nbodycal() > -1){        // number of calibrated bodies available
-		unsigned long nbodycal = (unsigned long )standalone->get_nbodycal();
-		nbodycal -= standalone->get_nmeatool();  // ignore measurement tools
+	num_body = standalone->get_num_body();
+	num_flystick = standalone->get_num_flystick();
+	num_meatool = standalone->get_num_meatool();
 	
-		resize_curPosition(nbodycal);
-	}
+	resize_curPosition(num_flystick + num_meatool + num_body);
+	resize_curDigital(num_flystick * BUTTONS_PER_FLYSTICK + num_meatool * BUTTONS_PER_MEATOOL);
+	resize_curAnalog(num_flystick * VALUATORS_PER_FLYSTICK);
 
 	// get 'Flystick' data:
 
-	resize_curPosition(nflystick);
-
-	if(nflystick * BUTTONS_PER_FLYSTICK > curDigital.size()){
-		curDigital.resize(nflystick * BUTTONS_PER_FLYSTICK);   // all elements will be set later
-	}
-
-	if(nflystick * VALUATORS_PER_FLYSTICK > curAnalog.size()){
-		curAnalog.resize(nflystick * VALUATORS_PER_FLYSTICK);  // all elements will be set later
-	}
-
-	for(i=0; i<nflystick; i++){
-		dtracklib_flystick_type dat = standalone->get_flystick(i);
+	for(i=0; i<num_flystick; i++){
+		dtrack_flystick_type dat = standalone->get_flystick(i);
 		
 		if(dat.quality >= 0){  // check if Flystick position is tracked
 			curPosition[i].mPosData = getpos(dat);
@@ -289,59 +277,75 @@ bool DTrack::sample()
 
 		// Flystick buttons:
 
-		unsigned long bt = dat.bt;
-		for(int j=0; j<BUTTONS_PER_FLYSTICK; j++){
-			curDigital[i*BUTTONS_PER_FLYSTICK + j] = bt & 0x0001;
-			curDigital[i*BUTTONS_PER_FLYSTICK + j].setTime();
+		nbt = dat.num_button;
+		
+		if(nbt > BUTTONS_PER_FLYSTICK){
+			nbt = BUTTONS_PER_FLYSTICK;
+		}
+		
+		for(j=0; j<nbt; j++){
+			id = j + i * BUTTONS_PER_FLYSTICK;  // VRJuggler id number
 			
-			bt >>= 1;
+			curDigital[id] = dat.button[j];
+			curDigital[id].setTime();
 		}
 		
-		// Flystick 'HAT switch' (valuators simulated using four buttons):
+		// Flystick valuators ('HAT switch' or 'joystick'):
 		
-		for(int j=0; j<VALUATORS_PER_FLYSTICK; j++){
-			curAnalog[i*VALUATORS_PER_FLYSTICK + j] = 0;
-			curAnalog[i*VALUATORS_PER_FLYSTICK + j].setTime();
+		nvt = dat.num_joystick;
+		
+		if(nvt > VALUATORS_PER_FLYSTICK){
+			nvt = VALUATORS_PER_FLYSTICK;
 		}
 		
-		float f, fn;
-
-		f = 0;
-		if(dat.bt & 0x0020){  
-			f = -1;
-		}else if(dat.bt & 0x0080){
-			f = 1;
+		for(j=0; j<nvt; j++){
+			id = j + i * VALUATORS_PER_FLYSTICK;  // VRJuggler id number
+			
+			curAnalog[id] = dat.joystick[j] / 2.0 + 0.5;  // normalizing
+			curAnalog[id].setTime();
 		}
+	}
 
-		if(f != 0){
-			this->normalizeMinToMax(f, fn);
-			curAnalog[i*VALUATORS_PER_FLYSTICK + 0] = fn;
+	// get 'measurement tool' data:
+
+	for(i=0; i<num_meatool; i++){
+		dtrack_meatool_type dat = standalone->get_meatool(i);
+		
+		if(dat.quality >= 0){  // check if position is tracked
+			id = i + num_flystick;  // VRJuggler id number
+			
+			curPosition[id].mPosData = getpos(dat);
+			curPosition[id].setTime();
+		}                      // otherwise keep last valid position
+
+		// measurement tool buttons:
+
+		nbt = dat.num_button;
+		
+		if(nbt > BUTTONS_PER_MEATOOL){
+			nbt = BUTTONS_PER_MEATOOL;
 		}
-
-		f = 0;
-		if(dat.bt & 0x0010){  
-			f = -1;
-		}else if(dat.bt & 0x0040){
-			f = 1;
-		}
-
-		if(f != 0){
-			this->normalizeMinToMax(f, fn);
-			curAnalog[i*VALUATORS_PER_FLYSTICK + 1] = fn;
+		
+		for(j=0; j<nbt; j++){
+			id = j + i * BUTTONS_PER_MEATOOL + num_flystick * BUTTONS_PER_FLYSTICK;  // VRJuggler id number
+			
+			curDigital[id] = dat.button[j];
+			curDigital[id].setTime();
 		}
 	}
 
 	// get 'standard body' data:
 
-	for(i=0; i<nbody; i++){
-		dtracklib_body_type dat = standalone->get_body(i);
+	for(i=0; i<num_body; i++){
+		dtrack_body_type dat = standalone->get_body(i);
 
-		unsigned long id = dat.id + nflystick;  // VRJuggler id number of this 'Standard Body'
-		resize_curPosition(id+1);
+		if(dat.quality >= 0){  // check if position is tracked
+			id = i + num_flystick + num_meatool;  // VRJuggler id number
 
-		curPosition[id].mPosData = getpos(dat);
-		curPosition[id].setTime();
-	}  // bodies not in this list are not tracked: keep their last valid position
+			curPosition[id].mPosData = getpos(dat);
+			curPosition[id].setTime();
+		}                      // otherwise keep last valid position
+	}
 
 	// update buffers:
 
@@ -371,16 +375,52 @@ void DTrack::updateData()
 // Resize curPosition vector:
 // n (i): new size
 
-void DTrack::resize_curPosition(unsigned long n)
+void DTrack::resize_curPosition(int n)
 {
-	unsigned long nsize = curPosition.size();
+	int nsize = (int )curPosition.size();
 
 	if(n > nsize){
 		curPosition.resize(n);
 
-		for(unsigned long i=nsize; i<n; i++){  // set default for new elements
+		for(int i=nsize; i<n; i++){  // set default for new elements
 			curPosition[i].mPosData = getpos_default();
 			curPosition[i].setTime();
+		}
+	}
+}
+
+// Resize curDigital vector:
+// n (i): new size
+
+void DTrack::resize_curDigital(int n)
+{
+	int nsize = (int )curDigital.size();
+
+	if(n > nsize){
+		curDigital.resize(n);
+
+		for(int i=nsize; i<n; i++){  // set default for new elements
+			curDigital[i] = 0;
+			curDigital[i].setTime();
+		}
+	}
+}
+
+// Resize curAnalog vector:
+// n (i): new size
+
+void DTrack::resize_curAnalog(int n)
+{
+	int nsize = (int )curAnalog.size();
+	float fn;
+
+	if(n > nsize){
+		curAnalog.resize(n);
+
+		for(int i=nsize; i<n; i++){  // set default for new elements
+			this->normalizeMinToMax(0, fn);
+			curAnalog[i] = fn;
+			curAnalog[i].setTime();
 		}
 	}
 }
@@ -391,7 +431,7 @@ void DTrack::resize_curPosition(unsigned long n)
 // bod (i): DTracklib pose of a body or Flystick
 // return value (o): gmtl pose
 
-gmtl::Matrix44f DTrack::getpos(dtracklib_body_type& bod)
+gmtl::Matrix44f DTrack::getpos(dtrack_body_type& bod)
 {
 	gmtl::Matrix44f ret_val;
 
@@ -409,7 +449,25 @@ gmtl::Matrix44f DTrack::getpos(dtracklib_body_type& bod)
 	return ret_val;
 }
 
-gmtl::Matrix44f DTrack::getpos(dtracklib_flystick_type& bod)
+gmtl::Matrix44f DTrack::getpos(dtrack_flystick_type& bod)
+{
+	gmtl::Matrix44f ret_val;
+
+	for(int i=0; i<3; i++){
+		for(int j=0; j<3; j++){
+			ret_val[i][j] = bod.rot[i + 3*j];
+		}
+
+		ret_val[3][i] = 0;
+		ret_val[i][3] = bod.loc[i] / 1000;  // convert to meters
+	}
+
+	ret_val[3][3] = 1;
+
+	return ret_val;
+}
+
+gmtl::Matrix44f DTrack::getpos(dtrack_meatool_type& bod)
 {
 	gmtl::Matrix44f ret_val;
 
