@@ -538,17 +538,6 @@ make BUILD_PROF_C=N BUILD_PROF_CXX=N install prefix=%{buildroot}%{_prefix}
 # Just in case... stupid scons
 find %{buildroot}%{_prefix} -name .sconsign -exec rm {} \;
 
-# The following is to change tweek-base.sh so that it does not depend on
-# tweek-config. The reason that it uses tweek-config is so that the Tweek
-# installation can be moved around. Since this is being installed through a
-# package, we do not need to worry about that use case.
-tweek_jars=`%{buildroot}%{_bindir}/tweek-config --prefix=%{_prefix} --jars`
-cat %{buildroot}%{_bindir}/tweek-base.sh | \
- sed -e 's|if test ! -x "$TWEEK_BASE_DIR/bin/tweek-config".*|if ! true; then|' \
-     -e "s|\`\$TWEEK_BASE_DIR/bin/tweek-config --jars\`|\"$tweek_jars\"|" \
-   > %{buildroot}%{_bindir}/tweek-base.sh.tmp
-mv %{buildroot}%{_bindir}/tweek-base.sh.tmp %{buildroot}%{_bindir}/tweek-base.sh
-
 %clean
 rm -rf %{buildroot}
 
@@ -602,56 +591,57 @@ rm -rf %{buildroot}
 
 %files -n vpr
 %defattr(-, root, root)
-%{_libdir}/libvpr.so.*
-%{_libdir}/%{vj_arch}/libvpr.so.*
-%{_libdir}/%{vj_arch}/*/libvpr.so.*
+%{_libdir}/libvpr*.so
+%dir %{_libdir}/%{vj_arch}/
+%dir %{_libdir}/%{vj_arch}/debug/
+%dir %{_libdir}/%{vj_arch}/opt/
+%dir %{_libdir}/%{vj_arch}/profiled/
+%{_libdir}/%{vj_arch}/libvpr*.so
+%{_libdir}/%{vj_arch}/*/libvpr*.so
 %doc COPYING.txt modules/vapor/ChangeLog
 
 %files -n vpr-devel
 %defattr(-, root, root)
-%{_bindir}/vpr-config
-%{_includedir}/vpr
-%{_libdir}/libvpr.a
-%{_libdir}/%{vj_arch}/libvpr.a
-%{_libdir}/%{vj_arch}/*/libvpr.a
-%{_libdir}/libvpr.so
-%{_libdir}/%{vj_arch}/libvpr.so
-%{_libdir}/%{vj_arch}/*/libvpr.so
+%{_includedir}/vpr-%{vpr_version}/
+%{_libdir}/libvpr*.a
+%{_libdir}/%{vj_arch}/libvpr*.a
+%{_libdir}/%{vj_arch}/*/libvpr*.a
 %{_libdir}/flagpoll/boost*.fpc
 %{_libdir}/flagpoll/vpr*.fpc
 %{_prefix}/share/aclocal/vpr.m4
 %{_prefix}/share/aclocal/vrj-helpers.m4
-%{_prefix}/share/vpr
+%{_prefix}/share/vpr-%{vpr_version}
 
 %if %have_omniorb
 %files -n tweek-c++
 %defattr(-, root, root)
-%{_libdir}/libtweek.so.*
-%{_libdir}/%{vj_arch}/libtweek.so.*
-%{_libdir}/%{vj_arch}/*/libtweek.so.*
-%{_prefix}/share/tweek/data
+%{_libdir}/libtweek*.so
+%dir %{_libdir}/%{vj_arch}/
+%dir %{_libdir}/%{vj_arch}/debug/
+%dir %{_libdir}/%{vj_arch}/opt/
+%dir %{_libdir}/%{vj_arch}/profiled/
+%{_libdir}/%{vj_arch}/libtweek*.so
+%{_libdir}/%{vj_arch}/*/libtweek*.so
+%dir %{_prefix}/share/tweek-%{tweek_version}/
+%{_prefix}/share/tweek-%{tweek_version}/data
 %doc COPYING.txt modules/tweek/ChangeLog
 
 %files -n tweek-c++-devel
 %defattr(-, root, root)
-%{_bindir}/tweek-config
-%{_includedir}/tweek
-%{_libdir}/libtweek.a
-%{_libdir}/%{vj_arch}/libtweek.a
-%{_libdir}/%{vj_arch}/*/libtweek.a
-%{_libdir}/libtweek.so
-%{_libdir}/%{vj_arch}/libtweek.so
-%{_libdir}/%{vj_arch}/*/libtweek.so
+%{_includedir}/tweek-%{tweek_version}
+%{_libdir}/libtweek*.a
+%{_libdir}/%{vj_arch}/libtweek*.a
+%{_libdir}/%{vj_arch}/*/libtweek*.a
 %{_libdir}/flagpoll/tweek*.fpc
 %{_prefix}/share/aclocal/tweek.m4
-%{_prefix}/share/tweek/test
-%{_prefix}/share/tweek/tweek.appdefs.mk
+%{_prefix}/share/tweek-%{tweek_version}/test
+%{_prefix}/share/tweek-%{tweek_version}/tweek.appdefs.mk
 %endif
 
 %if %have_java
 %files -n tweek-java-jni
 %defattr(-, root, root)
-%{_prefix}/share/tweek/java/%{tweek_arch}
+%{_prefix}/share/tweek-%{tweek_version}/java/%{tweek_arch}
 
 %files -n tweek-java
 %defattr(-, root, root)
@@ -660,213 +650,224 @@ rm -rf %{buildroot}
 %{_bindir}/logkit-1.2.jar
 %{_bindir}/tweek
 %{_bindir}/tweek-base.sh
-%{_prefix}/share/tweek/beans
-%{_prefix}/share/tweek/java/*.jar
-%{_prefix}/share/tweek/java/*.txt
-%{_prefix}/share/tweek/LICENSE
-%{_prefix}/share/tweek/README.source
+%dir %{_prefix}/share/tweek-%{tweek_version}/beans/
+%{_prefix}/share/tweek-%{tweek_version}/beans
+%dir %{_prefix}/share/tweek-%{tweek_version}/java/
+%{_prefix}/share/tweek-%{tweek_version}/java/*.jar
+%{_prefix}/share/tweek-%{tweek_version}/java/*.txt
+%{_prefix}/share/tweek-%{tweek_version}/LICENSE
+%{_prefix}/share/tweek-%{tweek_version}/README.source
 %doc COPYING.txt modules/tweek/ChangeLog
 %endif
 
 %files -n jccl-c++
 %defattr(-, root, root)
-%{_libdir}/libjccl.so.*
-%{_libdir}/%{vj_arch}/libjccl.so.*
-%{_libdir}/%{vj_arch}/*/libjccl.so.*
-%{_prefix}/share/jccl/data
-%{_prefix}/share/jccl/tools
+%{_libdir}/libjccl*.so
+%dir %{_libdir}/%{vj_arch}/
+%dir %{_libdir}/%{vj_arch}/debug/
+%dir %{_libdir}/%{vj_arch}/opt/
+%dir %{_libdir}/%{vj_arch}/profiled/
+%{_libdir}/%{vj_arch}/libjccl*.so
+%{_libdir}/%{vj_arch}/*/libjccl*.so
+%dir %{_prefix}/share/jccl-%{jccl_version}/
+%{_prefix}/share/jccl-%{jccl_version}/data
+%{_prefix}/share/jccl-%{jccl_version}/tools
 %doc COPYING.txt modules/jackal/ChangeLog
 
 %files -n jccl-c++-devel
 %defattr(-, root, root)
-%{_bindir}/jccl-config
-%{_includedir}/jccl
-%{_libdir}/libjccl.a
-%{_libdir}/%{vj_arch}/libjccl.a
-%{_libdir}/%{vj_arch}/*/libjccl.a
-%{_libdir}/libjccl.so
-%{_libdir}/%{vj_arch}/libjccl.so
-%{_libdir}/%{vj_arch}/*/libjccl.so
+%{_includedir}/jccl-%{jccl_version}
+%{_libdir}/libjccl*.a
+%{_libdir}/%{vj_arch}/libjccl*.a
+%{_libdir}/%{vj_arch}/*/libjccl*.a
 %{_libdir}/flagpoll/jccl*.fpc
 %{_prefix}/share/aclocal/jccl.m4
-%{_prefix}/share/jccl/test
+%{_prefix}/share/jccl-%{jccl_version}/test
 
 %if %have_omniorb
 %files -n jccl-rtrc-plugin-c++
 %defattr(-, root, root)
-%{_libdir}/jccl
+%{_libdir}/jccl-%{jccl_version}
 %endif
 
 %if %have_java
 %files -n jccl-java
 %defattr(-, root, root)
-%{_prefix}/share/jccl/beans/jccl_config.*
-%{_prefix}/share/jccl/beans/jccl_editors.*
-%{_prefix}/share/jccl/java
+%dir %{_prefix}/share/jccl-%{jccl_version}/beans/
+%{_prefix}/share/jccl-%{jccl_version}/beans/jccl_config.*
+%{_prefix}/share/jccl-%{jccl_version}/beans/jccl_editors.*
+%{_prefix}/share/jccl-%{jccl_version}/java
 %doc COPYING.txt modules/jackal/ChangeLog
 
 %files -n jccl-rtrc-plugin-java
 %defattr(-, root, root)
-%{_prefix}/share/jccl/beans/jccl_rtrc.*
+%{_prefix}/share/jccl-%{jccl_version}/beans/jccl_rtrc.*
 %endif
 
 %files -n sonix
 %defattr(-, root, root)
-%{_libdir}/libsonix.so.*
-%{_libdir}/%{vj_arch}/libsonix.so.*
-%{_libdir}/%{vj_arch}/*/libsonix.so.*
-%{_prefix}/share/sonix/data
+%{_libdir}/libsonix*.so
+%dir %{_libdir}/%{vj_arch}/
+%dir %{_libdir}/%{vj_arch}/debug/
+%dir %{_libdir}/%{vj_arch}/opt/
+%dir %{_libdir}/%{vj_arch}/profiled/
+%{_libdir}/%{vj_arch}/libsonix*.so
+%{_libdir}/%{vj_arch}/*/libsonix*.so
+%dir %{_libdir}/sonix-%{sonix_version}/
+%dir %{_libdir}/sonix-%{sonix_version}/plugins/
+%dir %{_libdir}/sonix-%{sonix_version}/plugins/dbg/
+%dir %{_libdir}/sonix-%{sonix_version}/plugins/opt/
+%{_prefix}/share/sonix-%{sonix_version}/data
 %doc COPYING.txt modules/sonix/ChangeLog
 
 %files -n sonix-devel
 %defattr(-, root, root)
-%{_bindir}/sonix-config
-%{_includedir}/snx
-%{_libdir}/libsonix.a
-%{_libdir}/%{vj_arch}/libsonix.a
-%{_libdir}/%{vj_arch}/*/libsonix.a
-%{_libdir}/libsonix.so
-%{_libdir}/%{vj_arch}/libsonix.so
-%{_libdir}/%{vj_arch}/*/libsonix.so
+%{_includedir}/sonix-%{sonix_version}
+%{_libdir}/libsonix*.a
+%{_libdir}/%{vj_arch}/libsonix*.a
+%{_libdir}/%{vj_arch}/*/libsonix*.a
 %{_libdir}/flagpoll/sonix*.fpc
 %{_prefix}/share/aclocal/sonix.m4
-%{_prefix}/share/sonix/samples
+%{_prefix}/share/sonix-%{sonix_version}/samples
 
 %if %have_audiere
 %files -n sonix-plugin-audiere
 %defattr(-, root, root)
-%{_libdir}/snx/plugins/*/Audiere_snd.so
+%{_libdir}/sonix-%{sonix_version}/plugins/*/Audiere_snd.so
 %endif
 
 %if %have_openal
 %files -n sonix-plugin-openal
 %defattr(-, root, root)
-%{_libdir}/snx/plugins/*/OpenAL_snd.so
+%{_libdir}/sonix-%{sonix_version}/plugins/*/OpenAL_snd.so
 %endif
 
 %files -n gadgeteer
 %defattr(-, root, root)
-%{_libdir}/libgadget.so.*
-%{_libdir}/%{vj_arch}/libgadget.so.*
-%{_libdir}/%{vj_arch}/*/libgadget.so.*
-%{_libdir}/gadgeteer
-%{_prefix}/share/gadgeteer/data
-%{_prefix}/share/gadgeteer/tools
+%{_libdir}/libgadget*.so
+%dir %{_libdir}/%{vj_arch}/
+%dir %{_libdir}/%{vj_arch}/debug/
+%dir %{_libdir}/%{vj_arch}/opt/
+%dir %{_libdir}/%{vj_arch}/profiled/
+%{_libdir}/%{vj_arch}/libgadget*.so
+%{_libdir}/%{vj_arch}/*/libgadget*.so
+#%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/
+#%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/
+#%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/
+%{_libdir}/gadgeteer-%{gadgeteer_version}
+%dir %{_prefix}/share/gadgeteer-%{gadgeteer_version}/
+%{_prefix}/share/gadgeteer-%{gadgeteer_version}/data
+%{_prefix}/share/gadgeteer-%{gadgeteer_version}/tools
 %doc COPYING.txt modules/gadgeteer/ChangeLog
 
 %files -n gadgeteer-devel
 %defattr(-, root, root)
-%{_bindir}/gadgeteer-config
-%{_includedir}/cluster
-%{_includedir}/gadget
-%{_includedir}/plugins
-%{_libdir}/libgadget.a
-%{_libdir}/%{vj_arch}/libgadget.a
-%{_libdir}/%{vj_arch}/*/libgadget.a
-%{_libdir}/libgadget.so
-%{_libdir}/%{vj_arch}/libgadget.so
-%{_libdir}/%{vj_arch}/*/libgadget.so
+%{_includedir}/gadgeteer-%{gadgeteer_version}/cluster
+%{_includedir}/gadgeteer-%{gadgeteer_version}/gadget
+%{_includedir}/gadgeteer-%{gadgeteer_version}/plugins
+%{_libdir}/libgadget*.a
+%{_libdir}/%{vj_arch}/libgadget*.a
+%{_libdir}/%{vj_arch}/*/libgadget*.a
 %{_libdir}/flagpoll/gadgeteer*.fpc
 %{_prefix}/share/aclocal/gadget.m4
-%{_prefix}/share/gadgeteer/*.mk
-%{_prefix}/share/gadgeteer/samples
-%{_prefix}/share/gadgeteer/test
+%{_prefix}/share/gadgeteer-%{gadgeteer_version}/*.mk
+%{_prefix}/share/gadgeteer-%{gadgeteer_version}/samples
+%{_prefix}/share/gadgeteer-%{gadgeteer_version}/test
 
 %files
 %defattr(-, root, root)
-%{_libdir}/libvrj.so.*
-%{_libdir}/%{vj_arch}/libvrj.so.*
-%{_libdir}/%{vj_arch}/*/libvrj.so.*
-%{_prefix}/share/vrjuggler/data
-%{_prefix}/share/vrjuggler/tools
+%{_libdir}/libvrj*.so
+%dir %{_libdir}/%{vj_arch}/
+%dir %{_libdir}/%{vj_arch}/debug/
+%dir %{_libdir}/%{vj_arch}/opt/
+%dir %{_libdir}/%{vj_arch}/profiled/
+%{_libdir}/%{vj_arch}/libvrj*.so
+%{_libdir}/%{vj_arch}/*/libvrj*.so
+%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version}/
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/data
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/tools
 %doc COPYING.txt INSTALL.html INSTALL.txt README.html README.txt modules/vrjuggler/ChangeLog modules/vrjuggler/RELEASE_NOTES.txt
 
 %files -n vrjuggler-devel
 %defattr(-, root, root)
-%{_bindir}/vrjuggler-config
-%{_includedir}/vrj/*.h
-%{_includedir}/vrj/Display
-%{_includedir}/vrj/Draw/*.h
-%{_includedir}/vrj/Kernel
-%{_includedir}/vrj/Performance
-%{_includedir}/vrj/Sound
-%{_includedir}/vrj/Test
-%{_includedir}/vrj/Util
-%{_libdir}/libvrj.a
-%{_libdir}/%{vj_arch}/libvrj.a
-%{_libdir}/%{vj_arch}/*/libvrj.a
-%{_libdir}/libvrj.so
-%{_libdir}/%{vj_arch}/libvrj.so
-%{_libdir}/%{vj_arch}/*/libvrj.so
+%dir %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/*.h
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Display
+%dir %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/*.h
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Kernel
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Performance
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Sound
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Test
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Util
+%{_libdir}/libvrj*.a
+%{_libdir}/%{vj_arch}/libvrj*.a
+%{_libdir}/%{vj_arch}/*/libvrj*.a
 %{_libdir}/flagpoll/vrjuggler*.fpc
 %{_prefix}/share/aclocal/vrj.m4
-%{_prefix}/share/vrjuggler/*.mk
-%{_prefix}/share/vrjuggler/samples
-%{_prefix}/share/vrjuggler/test
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/*.mk
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/samples
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/test
 
 %files -n vrjuggler-opengl
 %defattr(-, root, root)
-%{_libdir}/libvrj_ogl.so.*
-%{_libdir}/%{vj_arch}/libvrj_ogl.so.*
-%{_libdir}/%{vj_arch}/*/libvrj_ogl.so.*
+%{_libdir}/libvrj_ogl*.so
+%{_libdir}/%{vj_arch}/libvrj_ogl*.so
+%{_libdir}/%{vj_arch}/*/libvrj_ogl*.so
 
 %files -n vrjuggler-opengl-devel
 %defattr(-, root, root)
-%{_includedir}/vrj/Draw/OGL
-%{_includedir}/vrj/Draw/OSG
-%{_includedir}/vrj/Draw/OpenSG
-%{_libdir}/libvrj_ogl.a
-%{_libdir}/%{vj_arch}/libvrj_ogl.a
-%{_libdir}/%{vj_arch}/*/libvrj_ogl.a
-%{_libdir}/libvrj_ogl.so
-%{_libdir}/%{vj_arch}/libvrj_ogl.so
-%{_libdir}/%{vj_arch}/*/libvrj_ogl.so
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OGL
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OSG
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OpenSG
+%{_libdir}/libvrj_ogl*.a
+%{_libdir}/%{vj_arch}/libvrj_ogl*.a
+%{_libdir}/%{vj_arch}/*/libvrj_ogl*.a
 
 %if %have_performer
 %files -n vrjuggler-performer
 %defattr(-, root, root)
-%{_libdir}/libvrj_pf.so.*
-%{_libdir}/%{_arch}/libvrj_pf.so.*
-%{_libdir}/%{_arch}/*/libvrj_pf.so.*
+%{_libdir}/libvrj_pf*.so
+%{_libdir}/%{_arch}/libvrj_pf*.so
+%{_libdir}/%{_arch}/*/libvrj_pf*.so
 
 %files -n vrjuggler-performer-devel
 %defattr(-, root, root)
-%{_includedir}/vrj/Draw/Pf
-%{_libdir}/libvrj_pf.a
-%{_libdir}/%{vj_arch}/libvrj_pf.a
-%{_libdir}/%{vj_arch}/*/libvrj_pf.a
-%{_libdir}/libvrj_pf.so
-%{_libdir}/%{vj_arch}/libvrj_pf.so
-%{_libdir}/%{vj_arch}/*/libvrj_pf.so
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/Pf
+%{_libdir}/libvrj_pf*.a
+%{_libdir}/%{vj_arch}/libvrj_pf*.a
+%{_libdir}/%{vj_arch}/*/libvrj_pf*.a
 %endif
 
 %if %have_java
 %files -n vrjconfig
 %defattr(-, root, root)
 %{_bindir}/vrjconfig
-%{_prefix}/share/vrjuggler/beans/customeditors
-%{_prefix}/share/vrjuggler/beans/wizards
-%{_prefix}/share/vrjuggler/beans/VRJConfig.*
-%{_prefix}/share/vrjuggler/java/CommonEditors.jar
-%{_prefix}/share/vrjuggler/java/jgraphaddons.jar
-%{_prefix}/share/vrjuggler/java/jgraph.jar
+%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/customeditors
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/wizards
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/VRJConfig.*
+%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/CommonEditors.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jgraphaddons.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jgraph.jar
 %doc COPYING.txt modules/vrjuggler/vrjconfig/LICENSE-java-laf.txt
 %endif
 
 %if %have_omniorb
 %files -n vrjuggler-perf-plugin-c++
 %defattr(-, root, root)
-%{_libdir}/vrjuggler
+%{_libdir}/vrjuggler-%{vrjuggler_version}
 %endif
 
 %if %have_java
 %files -n vrjuggler-perf-plugin-java
 %defattr(-, root, root)
-%{_prefix}/share/vrjuggler/beans/PerformanceMonitor.*
-%{_prefix}/share/vrjuggler/java/gnujaxp.jar
-%{_prefix}/share/vrjuggler/java/jcommon.jar
-%{_prefix}/share/vrjuggler/java/jfreechart.jar
-%{_prefix}/share/vrjuggler/java/servlet.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/PerformanceMonitor.*
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/gnujaxp.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jcommon.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jfreechart.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/servlet.jar
 %endif
 
 %files -n juggler
