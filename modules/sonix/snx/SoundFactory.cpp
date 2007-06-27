@@ -138,8 +138,12 @@ SoundFactory::SoundFactory()
    std::string sonix_subdir(sonix_subdir_base + "/plugins/");
 #endif
 
-#ifdef SNX_DEBUG
+#if defined(SNX_DEBUG)
+#if defined(_DEBUG)
+   std::string sonix_path(snx_base_dir + sonix_subdir + "dbgrt");
+#else
    std::string sonix_path(snx_base_dir + sonix_subdir + "dbg");
+#endif
 #else
    std::string sonix_path(snx_base_dir + sonix_subdir + "opt");
 #endif

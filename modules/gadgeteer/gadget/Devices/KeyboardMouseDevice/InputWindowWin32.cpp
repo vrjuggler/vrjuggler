@@ -282,8 +282,12 @@ BOOL InputWindowWin32::MenuInit(HINSTANCE hInstance)
    pWndClass->lpszMenuName  = ("MenuMenu"),
    pWndClass->lpszClassName = ("Gadgeteer Event Window");
 
-#ifdef _DEBUG
-#  define LIBNAME "gadget_d.dll"
+#if defined(GADGET_DEBUG)
+#  if defined(_DEBUG)
+#     define LIBNAME "gadget_d.dll"
+#  else
+#     define LIBNAME "gadget_g.dll"
+#  endif
 #else
 #  define LIBNAME "gadget.dll"
 #endif

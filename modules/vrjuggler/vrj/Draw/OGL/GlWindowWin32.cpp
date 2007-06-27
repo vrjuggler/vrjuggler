@@ -721,8 +721,12 @@ bool GlWindowWin32::registerWindowClass()
    mWinClass.lpszMenuName   = NULL;
    mWinClass.lpszClassName  = GL_WINDOW_WIN32_CLASSNAME;
 
-#ifdef _DEBUG
-#  define LIBNAME "vrj_ogl_d.dll"
+#if defined(VJ_DEBUG)
+#  if defined(_DEBUG)
+#     define LIBNAME "vrj_ogl_d.dll"
+#  else
+#     define LIBNAME "vrj_ogl_g.dll"
+#  endif
 #else
 #  define LIBNAME "vrj_ogl.dll"
 #endif

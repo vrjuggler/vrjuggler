@@ -477,8 +477,12 @@ bool D3dWindow::registerWindowClass()
    mWinClass.lpszMenuName   = NULL;
    mWinClass.lpszClassName  = D3D_WINDOW_WIN32_CLASSNAME;
 
-#ifdef _DEBUG
-#  define LIBNAME "vrj_d3d_d.dll"
+#if defined(VJ_DEBUG)
+#  if defined(_DEBUG)
+#     define LIBNAME "vrj_d3d_d.dll"
+#  else
+#     define LIBNAME "vrj_d3d_g.dll"
+#  endif
 #else
 #  define LIBNAME "vrj_d3d.dll"
 #endif

@@ -68,9 +68,14 @@
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 
-#ifdef _DEBUG
+/*
+ * If either JUGGLER_DEBUG or _DEBUG is defined, that implies the need for
+ * VPR_DEBUG.
+ */
+#if ! defined(VPR_DEBUG) && (defined(JUGGLER_DEBUG) || defined(_DEBUG))
 #   define VPR_DEBUG
-#else
+/* If JUGGLER_OPT is defined, make sure that VPR_OPT is also defined. */
+#elif defined(JUGGLER_OPT) && ! defined(VPR_OPT)
 #   define VPR_OPT
 #endif
 

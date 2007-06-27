@@ -50,7 +50,7 @@ MutexPosix::MutexPosix()
    int result(0);
 
    // Initialize the mutex.
-#ifndef _DEBUG
+#ifndef VPR_DEBUG
    result = pthread_mutex_init(&mMutex, NULL);
 #else
 #ifdef VPR_OS_Linux

@@ -47,9 +47,14 @@
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 
-#ifdef _DEBUG
+/*
+ * If either JUGGLER_DEBUG or _DEBUG is defined, that implies the need for
+ * TWEEK_DEBUG.
+ */
+#if ! defined(TWEEK_DEBUG) && (defined(JUGGLER_DEBUG) || defined(_DEBUG))
 #   define TWEEK_DEBUG
-#else
+/* If JUGGLER_OPT is defined, make sure that TWEEK_OPT is also defined. */
+#elif defined(JUGGLER_OPT) && ! defined(TWEEK_OPT)
 #   define TWEEK_OPT
 #endif
 

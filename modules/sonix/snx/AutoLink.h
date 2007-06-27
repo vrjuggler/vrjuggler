@@ -39,8 +39,12 @@
 #if defined(WIN32) || defined(WIN64)
 #  include <snx/snxParam.h>
 
-#  if defined(SNX_DEBUG) && !defined(_USE_RELEASE_RUNTIME)
-#     define SNX_LIB_RT_OPT "_d"
+#  if defined(SNX_DEBUG)
+#     if defined(_DEBUG)
+#        define SNX_LIB_RT_OPT "_d"
+#     else
+#        define SNX_LIB_RT_OPT "_g"
+#     endif
 #  else
 #     define SNX_LIB_RT_OPT ""
 #  endif

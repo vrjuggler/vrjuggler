@@ -42,12 +42,17 @@
 #undef PACKAGE_STRING
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
-/** Debug settings */
-#ifdef _DEBUG 
-#  define JCCL_DEBUG 
-#else 
-#   define JCCL_OPT 
-#endif 
+
+/*
+ * If either JUGGLER_DEBUG or _DEBUG is defined, that implies the need for
+ * JCCL_DEBUG.
+ */
+#if ! defined(JCCL_DEBUG) && (defined(JUGGLER_DEBUG) || defined(_DEBUG))
+#   define JCCL_DEBUG
+/* If JUGGLER_OPT is defined, make sure that JCCL_OPT is also defined. */
+#elif defined(JUGGLER_OPT) && ! defined(JCCL_OPT)
+#   define JCCL_OPT
+#endif
 
 // Windows
 #if defined(WIN32) || defined(WIN64)

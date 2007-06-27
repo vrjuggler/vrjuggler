@@ -187,7 +187,7 @@ public:
          );
       }
 
-#if defined(_DEBUG)
+#if defined(VPR_DEBUG)
       // If we are in an error state other than EAGAIN, something is very
       // wrong.
       if ( -1 == result && EAGAIN != errno )

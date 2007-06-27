@@ -39,8 +39,12 @@
 #if defined(WIN32) || defined(WIN64)
 #  include <vpr/vprParam.h>
 
-#  if defined(VPR_DEBUG) && !defined(_USE_RELEASE_RUNTIME)
-#     define VPR_LIB_RT_OPT "_d"
+#  if defined(VPR_DEBUG)
+#     if defined(_DEBUG)
+#        define VPR_LIB_RT_OPT "_d"
+#     else
+#        define VPR_LIB_RT_OPT "_g"
+#     endif
 #  else
 #     define VPR_LIB_RT_OPT ""
 #  endif

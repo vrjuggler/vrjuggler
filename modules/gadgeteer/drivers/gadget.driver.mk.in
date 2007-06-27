@@ -114,12 +114,12 @@ ifeq ($(BUILD_TYPE), dbg)
    BUILD_TYPE_EXT=	_d
    DEBUG_APP=		TRUE
    OPTIM_APP=		FALSE
-   EXTRA_DEFS+=		-D_DEBUG
+   EXTRA_DEFS+=		-DJUGGLER_DEBUG
 else
    BUILD_TYPE_EXT=	
    DEBUG_APP=		FALSE
    OPTIM_APP=		TRUE
-   EXTRA_DEFS+=		-D_OPT -DNDEBUG
+   EXTRA_DEFS+=		-DJUGGLER_OPT -DNDEBUG
 endif
 
 DSO_DRIVER_DEPS=	$(shell flagpoll gadgeteer --libs)

@@ -35,8 +35,12 @@
 #     include <vrj/vrjParam.h>
 #  endif
 
-#  if defined(VJ_DEBUG) && !defined(_USE_RELEASE_RUNTIME)
-#     define VJ_LIB_RT_OPT "_d"
+#  if defined(VJ_DEBUG)
+#     if defined(_DEBUG)
+#        define VJ_LIB_RT_OPT "_d"
+#     else
+#        define VJ_LIB_RT_OPT "_g"
+#     endif
 #  else
 #     define VJ_LIB_RT_OPT ""
 #  endif

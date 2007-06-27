@@ -318,7 +318,7 @@ protected:
 
    void setDebugData()
    {
-#ifdef _DEBUG
+#ifdef VPR_DEBUG
       mDebugStringAddress = getAddressString();
 #endif
    }
@@ -327,7 +327,7 @@ protected:
    vpr::Uint32 mAddress;
    vpr::SocketTypes::Domain mFamily;
 
-#ifdef _DEBUG
+#ifdef VPR_DEBUG
    std::string mDebugStringAddress;
 #endif
 };

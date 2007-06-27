@@ -96,7 +96,7 @@ public:
 
    ~InetAddrNSPR()
    {
-#ifdef _DEBUG
+#ifdef VPR_DEBUG
       mAddr.inet.family = mAddr.inet.port = mAddr.inet.ip = 1221;
 #endif
    }
