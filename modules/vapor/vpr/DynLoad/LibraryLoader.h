@@ -225,6 +225,7 @@ public:
     * debug-enabled build made against the release runtime, it would search
     * for mydso_g.dll.  The determination of which name extension to use is
     * made at compile time, but it can be customized using setDSONameExt().
+    * On non-Windows platforms, the debug version is the "_d" variant.
     *
     * @param dsoBaseName The base name of the DSO to be loaded.
     *
