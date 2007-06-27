@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-27-2007 patrick     Changed the preprocessor identification of debug versus
+                        optimized to look for JCCL_DEBUG or JUGGLER_DEBUG
+                        instead of _DEBUG (and JCCL_OPT or JUGGLER_OPT instead
+                        of _OPT).
+                        NEW VERSION: 1.1.13
 Jan-30-2007 patrick     Eliminated the need to set JCCL_BASE_DIR on Windows to
                         run applications.
                         NEW VERSION: 1.1.12
