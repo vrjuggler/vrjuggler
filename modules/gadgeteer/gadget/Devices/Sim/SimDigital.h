@@ -70,25 +70,6 @@ public:
 
    virtual std::vector<KeyModPair> getKeys() { return mSimKeys; }
 
-   /**
-    * Invokes the global scope delete operator.  This is required for proper
-    * releasing of memory in DLLs on Win32.
-    */
-   void operator delete(void* p)
-   {
-      ::operator delete(p);
-   }
-
-protected:
-   /**
-    * Deletes this object.  This is an implementation of the pure virtual
-    * gadget::Input::destroy() method.
-    */
-   virtual void destroy()
-   {
-      delete this;
-   }
-
 private:
    std::vector<KeyModPair> mSimKeys;       /**< The keys to press for digital simulation */
 };

@@ -129,24 +129,6 @@ public:
    /** Return the element type associated with this device type. */
    static std::string getElementType();
 
-   /**
-    * Invokes the global scope delete operator.  This is required for proper
-    * releasing of memory in DLLs on Win32.
-    */
-   void operator delete(void* p)
-   {
-      ::operator delete(p);
-   }
-
-protected:
-   /**
-    * Deletes this object.  This is an implementation of the pure virtual
-    * gadget::Input::destroy() method.
-    */
-   void destroy()
-   {
-      delete this;
-   }
 private:
    float        mMouseSensitivity;
 

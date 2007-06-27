@@ -68,17 +68,6 @@ public:
 
    void threadedSampleFunction();
 
-   void operator delete(void* p)
-   {
-      ::operator delete(p);
-   }
-
-protected:
-   virtual void destroy()
-   {
-      delete this;
-   }
-
 private:
    vpr::Thread* mSampleThread;
    bool  mExitFlag;

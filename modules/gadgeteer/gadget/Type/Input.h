@@ -84,7 +84,6 @@ protected:
    Input();
 
 public:
-#ifndef VPR_OS_Windows
    /** Input Destructor.
     *
     * Free the memory for the Instance Name and Serial Port strings if
@@ -94,7 +93,6 @@ public:
    {
       ;
    }
-#endif
 
    /**
     * Config method.
@@ -213,30 +211,7 @@ public:
       return mActive;
    }
 
-#ifdef VPR_OS_Windows
-   /**
-    * Overlaod delete so that we can delete our memory correctly.  This is
-    * necessary for DLLs on Windows to release memory from the correct memory
-    * space.  All subclasses must overload delete similarly.
-    */
-   void operator delete(void* p)
-   {
-      if ( NULL != p )
-      {
-         Input* input_ptr = static_cast<Input*>(p);
-         input_ptr->destroy();
-      }
-   }
-#endif
-
 protected:
-   /**
-    * Subclasses must implement this so that dynamically loaded device drivers
-    * delete themselves in the correct memory space.  This uses a template
-    * pattern.
-    */
-   virtual void destroy() = 0;
-
    std::string    mInstName;
    vpr::Thread*   mThread;       /**< The thread being used by the driver. */
    bool           mActive;       /**< Is the driver active? */
