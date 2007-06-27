@@ -57,7 +57,7 @@ namespace vpr
 {
 
 #if defined(VPR_DEBUG)
-#  if defined(_DEBUG)
+#  if defined(_DEBUG) || ! defined(VPR_OS_Windows)
 std::string LibraryLoader::sDsoNameExt("_d");
 #  else
 std::string LibraryLoader::sDsoNameExt("_g");
