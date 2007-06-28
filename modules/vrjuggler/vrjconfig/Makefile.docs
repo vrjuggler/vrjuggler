@@ -47,7 +47,7 @@ SRC_PATH=	$(srcdir):$(srcdir)/commoneditors
 JDOM_DIR=	../../../external/jdom
 JGRAPH_DIR=	../../../external/jgraph/lib
 TL_DIR=		../../../external/TableLayout
-CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar:$(JGRAPH_DIR)/jgraph.jar:$(JGRAPH_DIR)/jgraphaddons.jar:$(TWEEK_BASE_DIR)/share/tweek/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekServices.jar:$(TWEEK_BASE_DIR)/share/tweek/java/ui.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_config.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_editors.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_rtrc.jar
+CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar:$(JGRAPH_DIR)/jgraph.jar:$(JGRAPH_DIR)/jgraphaddons.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekServices.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/ui.jar:$(JCCL_BASE_DIR)/share/jccl-$(JCCL_VERSION)/beans/jccl_config.jar:$(JCCL_BASE_DIR)/share/jccl-$(JCCL_VERSION)/beans/jccl_editors.jar:$(JCCL_BASE_DIR)/share/jccl-$(JCCL_VERSION)/beans/jccl_rtrc.jar
 
 include ../doc/version.mk
 
@@ -65,8 +65,8 @@ docs:
           -header "<p><b>$(APP_NAME)</b><br>v$(PROJECT_NUMBER)</p>"	\
           -bottom "<font size=1>Copyright &copy; 1998&ndash;2007 Iowa State University. All rights reserved.</font>" \
           -link "http://java.sun.com/j2se/1.4.2/docs/api/"		\
-          -link "http://www.vrjuggler.org/tweek/1.0-beta3/programmer.reference.java" \
-          -link "http://www.vrjuggler.org/jccl/1.0-beta3/programmer.reference.java" \
+          -link "http://www.vrjuggler.org/tweek/1.1/programmer.reference.java" \
+          -link "http://www.vrjuggler.org/jccl/1.1/programmer.reference.java" \
           -link "http://www.jdom.org/docs/apidocs/" 			\
           -link "http://www.jgraph.com/doc/jgraph/" 			\
           $(DOC_PKGS)

@@ -60,7 +60,7 @@ LIQUID_DIR=	$(SWING_LAF_DIR)/liquid
 SRC_PATH=	$(srcdir):$(srcdir)/../extensions/java
 JDOM_DIR=	../../../external/jdom
 
-CLASSPATH=	$(JDOM_DIR)/build/jdom.jar:$(JGOODIES_DIR)/looks.jar:$(LIQUID_DIR)/liquidlnf.jar:$(KUNSTSTOFF_DIR):$(TWEEK_BASE_DIR)/share/tweek/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekServices.jar
+CLASSPATH=	$(JDOM_DIR)/build/jdom.jar:$(JGOODIES_DIR)/looks.jar:$(LIQUID_DIR)/liquidlnf.jar:$(KUNSTSTOFF_DIR):$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekServices.jar
 
 JACORB_DIR=	../../../external/JacORB
 IDL=		$(JACORB_DIR)/idl
