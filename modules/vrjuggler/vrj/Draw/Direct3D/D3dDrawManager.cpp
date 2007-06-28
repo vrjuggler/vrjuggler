@@ -30,6 +30,9 @@
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
 
+#include <gmtl/Vec.h>
+#include <gmtl/Output.h>
+
 #include <jccl/Config/ConfigElement.h>
 
 #include <cluster/ClusterManager.h>
@@ -47,9 +50,7 @@
 #include <vrj/Draw/Direct3D/D3dWindow.h>
 #include <vrj/Draw/Direct3D/D3dSimInterfaceFactory.h>
 #include <vrj/Draw/Direct3D/D3dSimInterface.h>
-
-#include <gmtl/Vec.h>
-#include <gmtl/Output.h>
+#include <vrj/Util/Debug.h>
 
 #include <vrj/Draw/Direct3D/D3dDrawManager.h>
 
