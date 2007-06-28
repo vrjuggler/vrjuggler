@@ -227,9 +227,6 @@
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNode.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterPlugin.cpp">
 			</File>
 			<File
@@ -365,6 +362,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\ProxyFactory.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Reactor.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\RemoteInputManager.cpp">
 			</File>
 			<File
@@ -463,9 +463,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNetwork.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\cluster\ClusterNode.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterPlugin.h">
@@ -691,6 +688,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\ProxyFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Reactor.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\RemoteInputManager.h">
