@@ -39,8 +39,12 @@
 #    JAVA_HOME      - The root directory of the Java runtime installation.
 #    TWEEK_BASE_DIR - The root directory of a Tweek Java API installation
 #    		      (using <buildir>/instlinks works fine).
+#    TWEEK_VERSION  - The version of the Tweek Java API installation (see
+#                     modules/tweek/VERSION).
 #    JCCL_BASE_DIR  - The root directory of a JCCL Java API installation
 #    		      (using <buildir>/instlinks works fine).
+#    JCCL_VERSION   - The version of the JCCL Java API installation (see
+#                     modules/jackal/VERSION).
 #
 # Furthermore, the 'doxygen' command must be in the user's path, and it is
 # generally best if the Graphviz tools are also in the user's path.
@@ -83,8 +87,14 @@ all:
 ifndef TWEEK_BASE_DIR
 	$(warning TWEEK_BASE_DIR is not set)
 endif
+ifndef TWEEK_VERSION
+	$(warning TWEEK_VERSION is not set)
+endif
 ifndef JCCL_BASE_DIR
 	$(warning JCCL_BASE_DIR is not set)
+endif
+ifndef JCCL_VERSION
+	$(warning JCCL_VERSION is not set)
 endif
 	@for dir in $(SUBDIR) ; do				\
             echo "===> $$dir" ;					\

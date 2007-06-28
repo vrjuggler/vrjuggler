@@ -46,7 +46,7 @@ DOC_PKGS=	$(BASE_PKG).config		\
 SRC_PATH=	$(srcdir)/config:$(srcdir)/editors:$(srcdir)/plugins/corba_rtrc
 JDOM_DIR=	../../external/jdom
 TL_DIR=		../../external/TableLayout
-CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar:$(TWEEK_BASE_DIR)/share/tweek/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekServices.jar:$(TWEEK_BASE_DIR)/share/tweek/java/ui.jar
+CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/TweekServices.jar:$(TWEEK_BASE_DIR)/share/tweek-$(TWEEK_VERSION)/java/ui.jar
 
 JACORB_DIR=	../../external/JacORB
 IDL=		$(JACORB_DIR)/idl
