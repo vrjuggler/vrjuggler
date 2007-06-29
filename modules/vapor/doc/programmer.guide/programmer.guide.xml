@@ -3117,10 +3117,6 @@ cv.release();</programlisting>
          <classname>vpr::SignalAction</classname>. The signal action registers
          the handler for the given set of signals with the operating
          system.</para>
-
-         <para>At this time, the signal handling abstraction has not been put
-         into use in any Juggler Project code. As such, it is not well tested,
-         and it should be considered a work in progress.</para>
       </chapter>
    </part>
 
