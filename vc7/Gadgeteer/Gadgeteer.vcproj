@@ -582,6 +582,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputAreaWin32.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputBaseTypes.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.h">
 			</File>
 			<File
