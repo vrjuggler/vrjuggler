@@ -738,16 +738,13 @@
 
             <para>The serial port abstraction is handled differently than the
             other I/O abstraction components. We wrap two serial port
-            interfaces: termios and Win32 overlapped I/O<footnote>
-                  <para>This is the only Win32-native code in VPR. All other
-                  Win32 interfaces are handled by NSPR.</para>
-               </footnote>. Because NSPR does not provide a serial port layer,
-            we have to allow the termios to be used with NSPR on UNIX-based
-            platforms. While this makes the implementation a little clumsy and
-            the build system a little more complicated, it has little if any
-            impact on users. The point of the abstraction is to hide the
-            low-level details to provide a consistent interface across
-            platforms.</para>
+            interfaces: termios and Win32 overlapped I/O. Because NSPR does
+            not provide a serial port layer, we have to allow the termios to
+            be used with NSPR on UNIX-based platforms. While this makes the
+            implementation a little clumsy and the build system a little more
+            complicated, it has little if any impact on users. The point of
+            the abstraction is to hide the low-level details to provide a
+            consistent interface across platforms.</para>
          </section>
       </chapter>
 
@@ -1452,6 +1449,11 @@ my_id = vpr::Thread::self();</programlisting>
                      <para><classname>vpr::ThreadNSPR</classname>: A wrapper
                      around Netscape Portable Runtime threads</para>
                   </listitem>
+
+                  <listitem>
+                     <para><classname>vpr::ThreadWin32</classname>: A wrapper
+                     around Win32 threads</para>
+                  </listitem>
                </itemizedlist>
 
                <para>The interface itself is defined in
@@ -1470,7 +1472,7 @@ my_id = vpr::Thread::self();</programlisting>
                thread implementations to act as the
                <classname>vpr::Thread</classname> interface. For example, if
                compiling on Win32, the class
-               <classname>vpr::ThreadNSPR</classname> is
+               <classname>vpr::ThreadWin32</classname> is
                <type>typedef</type>'d to be
                <classname>vpr::Thread</classname>. Since the interface is
                consistent among all the wrappers, everything works as though
@@ -1491,20 +1493,17 @@ my_id = vpr::Thread::self();</programlisting>
                   url="http://www.mozilla.org/projects/nspr/index.html">Netscape
                   Portable Runtime</ulink> (NSPR) threads<indexterm>
                         <primary>NSPR</primary>
-                     </indexterm>. We have removed the Win32-specific threads
-                  because NSPR already supports that implementation. Further
-                  implementations may be removed in favor of using what NSPR
-                  offers. Doing this will offload much of our efforts onto the
-                  NSPR. NSPR threads do not support all the features we have,
-                  however, because they took the lowest-common-denominator
-                  approach. As with all technology, there is a trade-off in
-                  relieving some of our work load by using an existing
-                  cross-platform thread implementation: our interface becomes
-                  limited to what features that implementation provides. It
-                  remains to be seen exactly how much of VPR's threading
-                  subsystem will be removed, and those programmers who choose
-                  to use it should be careful to watch the mailing lists for
-                  discussions and announcements about changes.</para>
+                     </indexterm>. NSPR threads do not support all the
+                  features we have, however, because they took the
+                  lowest-common-denominator approach. As with all technology,
+                  there is a trade-off in relieving some of our work load by
+                  using an existing cross-platform thread implementation: our
+                  interface becomes limited to what features that
+                  implementation provides. It remains to be seen exactly how
+                  much of VPR's threading subsystem will be removed, and those
+                  programmers who choose to use it should be careful to watch
+                  the mailing lists for discussions and announcements about
+                  changes.</para>
                </note>
             </section>
          </section>
@@ -3251,15 +3250,188 @@ cv.release();</programlisting>
          <title>Singletons</title>
 
          <para>A <firstterm>singleton</firstterm> is a common design pattern
-         <xref linkend="ref.design.patterns" />. In VPR, the class
+         <xref linkend="ref.design.patterns" />. VPR offers two ways to
+         implement a singleton, both of which come from the header
+         <filename>vpr/Util/Singleton.h</filename>. Libraries such as <ulink
+         url="http://sourceforge.net/projects/loki-lib/">Loki</ulink> offer
+         other approaches.</para>
+
+         <para>The first way of creating a singleton using VPR is to use the C
+         preprocessor approach. In this case, we utilize two macros:
+         <literal>vprSingletonHeader()</literal><indexterm>
+               <primary>macros</primary>
+
+               <secondary>vprSingletonHeader</secondary>
+            </indexterm> and <literal>vprSingletonImp()</literal><indexterm>
+               <primary>macros</primary>
+
+               <secondary>vprSingletonImp</secondary>
+            </indexterm>. One goes in the class declaration (in the header
+         file), and the other goes with the class definition (in the
+         <filename>.cpp</filename> file). The basic usage of these macros is
+         shown in <xref linkend="example.vprSingletonHeader" /> and <xref
+         linkend="example.vprSingletonImp" />.</para>
+
+         <example id="example.vprSingletonHeader">
+            <title>Use of <literal>vprSingletonHeader()</literal></title>
+
+            <programlisting>#include &lt;boost/noncopyable.hpp&gt;
+#include &lt;vpr/Util/Singleton.h&gt;
+
+class MySingleton : boost::noncopyable
+{
+public:
+   // Public operations ...
+   void doSomething();
+
+private:
+   // Prevent instantiation by user code.
+   MySingleton()
+   {
+      // Some constructor actions ...
+   }
+
+   // Bring in the singleton declaration pieces.
+   vprSingletonHeader(MySingleton);
+};</programlisting>
+         </example>
+
+         <example id="example.vprSingletonImp">
+            <title>Use of <literal>vprSingletonImp()</literal></title>
+
+            <programlisting>#include "MySingleton.h"
+
+// Bring in the singleton definition pieces.
+vprSingletonImp(MySingleton);
+
+void MySingleton::doSomething()
+{
+   // Do something ...
+}</programlisting>
+         </example>
+
+         <para>In some cases, an object may need to perform some
+         initialization steps after being instantiated. In that case, use the
+         macro <literal>vprSingletonHeaderWithInitFunc()</literal><indexterm>
+               <primary>macros</primary>
+
+               <secondary>vprSingletonHeaderWithInitFunc</secondary>
+            </indexterm> instead of <literal>vprSingletonHeader()</literal>
+         and <literal>vprSingletonImpWithInitFunc()</literal><indexterm>
+               <primary>macros</primary>
+
+               <secondary>vprSingletonImpWithInitFunc</secondary>
+            </indexterm> instead of <literal>vprSingletonImp()</literal>. An
+         example of this is shown in <xref
+         linkend="example.vprSingletonHeaderWithInitFunc" /> and <xref
+         linkend="example.vprSingletonImpWithInitFunc" />. The initialization
+         method must take no parameters and return nothing.</para>
+
+         <example id="example.vprSingletonHeaderWithInitFunc">
+            <title>Use of
+            <literal>vprSingletonHeaderWithInitFunc()</literal></title>
+
+            <programlisting>#include &lt;boost/noncopyable.hpp&gt;
+#include &lt;vpr/Util/Singleton.h&gt;
+
+class MySingleton : boost::noncopyable
+{
+public:
+   // Public operations ...
+   void doSomething();
+
+private:
+   // Prevent instantiation by user code.
+   MySingleton()
+   {
+      // Some constructor actions ...
+   }
+
+   void init()
+   {
+      // Perform initialization operations ...
+   }
+
+   // Bring in the singleton declaration pieces.
+   vprSingletonHeaderWithInitFunc(MySingleton, init);
+};</programlisting>
+         </example>
+
+         <example id="example.vprSingletonImpWithInitFunc">
+            <title>Use of
+            <literal>vprSingletonImpWithInitFunc()</literal></title>
+
+            <programlisting>#include "MySingleton.h"
+
+// Bring in the singleton definition pieces.
+vprSingletonImp(MySingleton);
+
+void MySingleton::doSomething()
+{
+   // Do something ...
+}</programlisting>
+         </example>
+
+         <para>In VPR 1.1 and beyond, the destructor for singleton objects is
+         called when the application exits. This can result in some
+         undesirable behavior if one singleton depends on another, thus
+         meaning that the order in which they are deleted can make a
+         difference. Without any specific ordering being imposed, singleton
+         objects are deleted in the reverse order in which they were
+         instantiated. Since it is not always possible to control the order of
+         instantiation, it can be useful to control the order of destruction.
+         This can be done by setting the <quote>lifetime</quote> or
+         <quote>longevity</quote> of a singleton. The higher the longevity,
+         the later that the singleton will be deleted when the application is
+         exiting. This is accomplished using either
+         <literal>vprSingletonImpLifetime()</literal><indexterm>
+               <primary>macros</primary>
+
+               <secondary>vprSingletonImpLifetime</secondary>
+            </indexterm> or
+         <literal>vprSingletonImpLifetimeWithInitFunc()</literal><indexterm>
+               <primary>macros</primary>
+
+               <secondary>vprSingletonImpLifetimeWithInitFunc</secondary>
+            </indexterm>. The macro used must be paired with either
+         <literal>vprSingletonHeader()</literal> or
+         <literal>vprSingletonHeaderWithInitFunc()</literal>. Usage of
+         <literal>vprSingletonImpLifetime()</literal> is shown in <xref
+         linkend="example.vprSingletonImpLifetime" />.</para>
+
+         <example id="example.vprSingletonImpLifetime">
+            <title>Use of <literal>vprSingletonImpLifetime()</literal></title>
+
+            <programlisting>#include "MySingleton.h"
+
+// Bring in the singleton definition pieces. Delete it early
+// in the application exit process.
+vprSingletonImpLifetime(MySingleton, 10);
+
+void MySingleton::doSomething()
+{
+   // Do something ...
+}</programlisting>
+         </example>
+
+         <para>The other approach uses a template class called
          <classname>vpr::Singleton&lt;T&gt;<indexterm>
                <primary>classes</primary>
 
                <secondary>vpr::Singleton&lt;T&gt;</secondary>
-            </indexterm></classname> provides a template-based implementation
-         of this pattern. An example of its use is as follows:</para>
+            </indexterm></classname>. An example of its use is shown in <xref
+         linkend="example.vpr.Singleton.template" />.</para>
 
-         <programlisting linenumbering="numbered">class MySingleton : public vpr::Singleton&lt;MySingleton&gt;
+         <example id="example.vpr.Singleton.template">
+            <title>Use of
+            <classname>vpr::Singleton&lt;T&gt;</classname></title>
+
+            <programlisting linenumbering="numbered">#include &lt;boost/noncopyable.hpp&gt;
+#include &lt;vpr/Util/Singleton.h&gt;
+
+class MySingleton
+   : public vpr::Singleton&lt;MySingleton&gt;
+   , boost::noncopyable
 {
 public:
    // Public operations ...
@@ -3277,31 +3449,26 @@ private:
    {
       // Some constructor actions ...
    }
-
-   // Prevent copying.
-   MySingleton(const MySingleton&amp; o)
-   {
-      ;
-   }
-
-   MySingleton&amp; operator=(const MySingleton&amp; o)
-   {
-      ;
-   }
 };</programlisting>
+         </example>
 
-         <para>Getting a reference to the singleton (and calling the
+         <warning>
+            <para>Singletons implemented using
+            <classname>vpr::Singleton&lt;T&gt;</classname> do not work across
+            DLLs on <productname class="registered">Microsoft
+            Windows</productname> or shared libraries
+            (<filename>.dylib</filename> files) on Mac OS X. If the singleton
+            is for internal use only, such as in the case of an application,
+            then using <classname>vpr::Singleton&lt;T&gt;</classname> is fine.
+            Otherwise, the C preprocessor approach must be used.</para>
+         </warning>
+
+         <para>In all singleton implementations, getting a reference to the
+         singleton object (and calling the
          <methodname>doSomething()</methodname> method) is then done using the
          following syntax:</para>
 
          <programlisting>MySingleton::instance()-&gt;doSomething();</programlisting>
-
-         <para>There is some old code in
-         <filename>vpr/Util/Singleton.h</filename> for a singleton
-         implementation based on macros defined by the C preprocessor. We
-         maintain this code for backwards compatibility, but we recommend that
-         new code use the template-based implementation described
-         above.</para>
       </chapter>
 
       <chapter id="chapter.factory">
@@ -3403,9 +3570,8 @@ private:
          defines the use of the SPROC threading subsystem, BSD sockets, and
          termios serial I/O. When compiling on Windows, where only NSPR is
          used, the domain specifies the use of native Win32 serial I/O and
-         NSPR for everything else. Moreover, the simulated sockets can be
-         mixed with any of the threading subsystems using this
-         paradigm.</para>
+         NSPR for socket I/O. Moreover, the simulated sockets can be mixed
+         with any of the threading subsystems using this paradigm.</para>
       </appendix>
 
       <appendix id="appendix.gfdl">
