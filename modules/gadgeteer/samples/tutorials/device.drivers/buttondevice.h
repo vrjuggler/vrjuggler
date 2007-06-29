@@ -111,10 +111,9 @@ protected:
 private:
    /**
     * Our sampling function that is executed by the spawned sample thread.
-    * This function is declared as a static member of ButtonDevice.  It simply
-    * calls ButtonDevice::sample() over and over.
+    * This function simply calls ButtonDevice::sample() over and over.
     */
-   static void threadedSampleFunction(void* classPointer);
+   void threadedSampleFunction();
 
    vpr::Thread*  mSampleThread;
    bool          mRunning;

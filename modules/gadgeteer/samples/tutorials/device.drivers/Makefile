@@ -36,4 +36,7 @@ BUILD_TYPE=	dbg
 DRIVER_NAME=	button
 SRCS=		buttondevice.cpp
 
-include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk
+GADGET_BASE_DIR=$(shell flagpoll gadgeteer --get-prefix)
+GADGET_VERSION=	$(shell flagpoll gadgeteer --modversion)
+
+include $(GADGET_BASE_DIR)/share/gadgeteer-$(GADGET_VERSION)/gadget.driver.mk
