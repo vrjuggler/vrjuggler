@@ -47,7 +47,7 @@ default: plugin-dso
 # variable.  We'll assume that if $VJ_BASE_DIR is set, it points to the place
 # where Gadgeteer is installed as well.
 GADGET_BASE_DIR?=	$(VJ_BASE_DIR)
-DZR_BASE_DIR?=		$(GADGET_BASE_DIR)/share/Doozer
+DZR_BASE_DIR?=		$(shell flagpoll doozer --get-prefix)
 
 # -----------------------------------------------------------------------------
 # Base variables for compiling and linking.

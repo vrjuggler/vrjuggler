@@ -44,7 +44,7 @@
 default: driver-dso
 
 GADGET_BASE_DIR?=	@prefix@
-DZR_BASE_DIR?=		$(GADGET_BASE_DIR)/share/Doozer
+DZR_BASE_DIR?=		$(shell flagpoll doozer --get-prefix)
 
 # -----------------------------------------------------------------------------
 # Base variables for compiling and linking.
