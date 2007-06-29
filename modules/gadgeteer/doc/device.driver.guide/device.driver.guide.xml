@@ -915,13 +915,27 @@
             old class hierarchy is used (which is still allowed), the device
             cannot be shared between computers.</para>
 
-            <note>
-               <para>As of this writing, the Input Mixer is not expected to be
-               a long-term solution. A future version of Gadgeteer may do away
-               with <classname>gadget::InputMixer&lt;S,T&gt;</classname>, and
-               as such, driver authors should be aware of potential API
-               changes in the future.</para>
-            </note>
+            <para>When deriving from
+            <classname>gadget::InputMixer&lt;S,T&gt;</classname>, it is highly
+            recommended that one of the predefined instantiations be used to
+            ensure that a known type is used as a base class for the device
+            driver. The order that the classes are listed in the
+            <classname>gadget::InputMixer&lt;S,T&gt;</classname> is critical
+            because the Remote Input Manager only knows about certain
+            instantiations. If an unexpected instantiation is encountered,
+            problems will occur. In the best case, the device data will not be
+            shared in a cluster configuration. In the worst case, the
+            application will crash. The known instantiations are all listed in
+            the file <filename>gadget/Type/InputBaseTypes.h</filename>.</para>
+
+            <caution>
+               <para>The Input Mixer may not be a long-term solution, though
+               it has been in place for quite a while. A future version of
+               Gadgeteer may do away with
+               <classname>gadget::InputMixer&lt;S,T&gt;</classname>, and as
+               such, driver authors should be aware of potential API changes
+               in the future.</para>
+            </caution>
          </section>
       </chapter>
 
@@ -1172,23 +1186,25 @@
 
                <para>For example, to make a driver that registers button
                presses, derive from
-               <classname>gadget::Digital</classname>:</para>
+               <classname>gadget::input_digital_t</classname> (the
+               <classname>gadget::InputMixer&lt;S,T&gt;</classname>
+               instantiation that includes only
+               <classname>gadget::Digital</classname>):</para>
 
                <programlisting>class ButtonDevice
-   : public gadget::InputMixer&lt;gadget::Input, gadget::Digital&gt;</programlisting>
+   : public gadget::input_digital_t</programlisting>
 
                <para>Suppose that a game controller driver supporting buttons
                and joystick axes is needed. In this case, an additional
                component is needed for the for analog input from the X and Y
                axes. Since the device is both digital and analog, its class
                must derive from both <classname>gadget::Digital</classname>
-               and <classname>gadget::Analog</classname> using C++ multiple
-               inheritance:</para>
+               and <classname>gadget::Analog</classname> using the appropriate
+               <classname>gadget::InputMixer&lt;S,T&gt;</classname>
+               instantiation:</para>
 
                <programlisting>class JoystickDevice
-   : public gadget::InputMixer&lt;gadget::Input,
-                               gadget::InputMixer&lt;gadget::Digital,
-                                                  gadget::Analog&gt; &gt;</programlisting>
+   : public gadget::input_digital_analog_t</programlisting>
 
                <para>Using the type <classname>ButtonDevice</classname> as
                declared above, we will proceed with the implementation of the
@@ -1296,14 +1312,12 @@
                      <programlisting>namespace
 {
 
-void nonMemberSampleFunction(void* arg)
+void nonMemberSampleFunction(ButtonDevice* devPtr)
 {
-   ButtonDevice* dev_ptr = static_cast&lt;ButtonDevice*&gt;(arg);
-
-   // Keep working until mRunning becomes false.
-   while ( dev_ptr-&gt;isRunning() )
+   // Keep working until isRunning() returns false.
+   while ( devPtr-&gt;isRunning() )
    {
-      dev_ptr-&gt;sample();
+      devPtr-&gt;sample();
    }
 }
 
@@ -1312,7 +1326,7 @@ void nonMemberSampleFunction(void* arg)
 bool ButtonDevice::startSampling()
 {
    mRunning = true;
-   mThread = new vpr::Thread(nonMemberSampleFunction, (void*) this);
+   mThread = new vpr::Thread(boost::bind(nonMemberSampleFunction, this));
    return true;
 }</programlisting>
                   </example>
@@ -1328,14 +1342,16 @@ public:
    bool sample();
 
 private:
-   static void staticMemberSampleFunction(void* arg);
+   static void staticMemberSampleFunction(ButtonDevice* devPtr);
    ...
 };
 
 bool ButtonDevice::startSampling()
 {
    mRunning = true;
-   mThread = new vpr::Thread(staticMemberSampleFunction, (void*) this);
+   mThread =
+      new vpr::Thread(boost::bind(ButtonDevice::staticMemberSampleFunction,
+                                  this));
    return true;
 }
 
@@ -1357,15 +1373,12 @@ void ButtonDevice::staticMemberSampleFunction(void* arg)
                      <programlisting>bool ButtonDevice::startSampling()
 {
    mRunning = true;
-   vpr::ThreadMemberFunctor&lt;ButtonDevice&gt;* functor =
-      new vpr::ThreadMemberFunctor&lt;ButtonDevice&gt;(
-         this, &amp;ButtonDevice::membersampleFunction, NULL
-      );
-   mThread = new vpr::Thread(functor);
+   mThread =
+      new vpr::Thread(boost::bind(&amp;ButtonDevice::memberSampleFunction, this);
    return true;
 }
 
-void ButtonDevice::memberSampleFunction(void* arg)
+void ButtonDevice::memberSampleFunction()
 {
    // Keep working until mRunning becomes false.
    while ( mRunning )
@@ -2365,11 +2378,22 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
             example is for a fictitious piece of hardware that has only one
             button.</para>
 
-            <example id="example.ButtonDevice.h">
-               <title><filename>ButtonDevice.h</filename></title>
+            <important>
+               <para>This implementation is trivial by design. A more
+               appropriate implementation for this case would not use a thread
+               for sampling and would instead call
+               <methodname>sample()</methodname> from
+               <methodname>updateData()</methodname> so that only one sample
+               is recorded per frame. The reason for doing this is because
+               this <quote>driver</quote> is not I/O-bound and instead just
+               adds a value to the digital sample buffer every time
+               <methodname>sample()</methodname> is invoked.</para>
+            </important>
 
-               <programlisting linenumbering="numbered">
-#ifndef _EXAMPLE_BUTTON_DEVICE_H_
+            <example id="example.ButtonDevice.h">
+               <title><filename>buttondevice.h</filename></title>
+
+               <programlisting linenumbering="numbered">#ifndef _EXAMPLE_BUTTON_DEVICE_H_
 #define _EXAMPLE_BUTTON_DEVICE_H_
 
 #include &lt;gadget/Devices/DriverConfig.h&gt;
@@ -2459,11 +2483,10 @@ protected:
 private:
    /**
     * Our sampling function that is executed by the spawned
-    * sample thread.  This function is declared as a static member
-    * of ButtonDevice.  It simply calls ButtonDevice::sample()
-    * over and over.
+    * sample thread.  This function simply calls
+    * ButtonDevice::sample() over and over.
     */
-   static void threadedSampleFunction(void* classPointer);
+   void threadedSampleFunction();
 
    vpr::Thread*  mSampleThread;
    bool          mRunning;
@@ -2482,6 +2505,7 @@ private:
                <programlisting linenumbering="numbered">#include &lt;gadget/Devices/DriverConfig.h&gt;
 
 #include &lt;vector&gt;
+#include &lt;boost/bind.hpp&gt;
 
 #include &lt;vpr/vpr.h&gt;
 #include &lt;vpr/System.h&gt;
@@ -2538,19 +2562,22 @@ bool ButtonDevice::config(jccl::ConfigElementPtr e)
 // repeatedly.
 bool ButtonDevice::startSampling()
 {
-   mRunning = true;
-   mSampleThread = new vpr::Thread(threadedSampleFunction,
-                                   (void*) this);
+   mRunning = false;
 
-   if ( ! mSampleThread-&gt;valid() )
+   try
    {
-      mRunning = false;
-      return false; // thread creation failed
+      mSampleThread =
+         new vpr::Thread(boost::bind(&amp;ButtonDevice::threadedSampleFunction,
+                                     this));
+      mRunning = true;
    }
-   else
+   catch (vpr::Exception&amp; ex)
    {
-      return true; // thread creation success
+      std::cerr &lt;&lt; "Failed to spawn sample thread!\n" &lt;&lt; ex.what()
+                &lt;&lt; std::endl;
    }
+
+   return mRunning;
 }
 
 // Records (or samples) the current data.  This is called
@@ -2598,18 +2625,13 @@ void ButtonDevice::updateData()
 }
 
 // Our sampling function that is executed by the spawned sample
-// thread.  This function is declared as a static member of
-// ButtonDevice.  It simply calls ButtonDevice::sample() over and
-// over.
-void ButtonDevice::threadedSampleFunction(void* classPointer)
+// thread.
+void ButtonDevice::threadedSampleFunction()
 {
-   ButtonDevice* this_ptr =
-      static_cast&lt;ButtonDevice*&gt;(classPointer);
-
    // spin until someone kills "mSampleThread"
-   while ( this_ptr-&gt;mRunning )
+   while ( mRunning )
    {
-     this_ptr-&gt;sample();
+      sample();
    }
 }</programlisting>
             </example>
@@ -2667,7 +2689,10 @@ BUILD_TYPE=     dbg
 DRIVER_NAME=    button
 SRCS=           buttondevice.cpp
 
-include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
+GADGET_BASE_DIR=$(shell flagpoll gadgeteer --get-prefix)
+GADGET_VERSION= $(shell flagpoll gadgeteer --modversion)
+
+include $(GADGET_BASE_DIR)/share/gadgeteer-$(GADGET_VERSION)/gadget.driver.mk</programlisting>
             </example>
 
             <para>The following is a Visual C++ project file for a driver that
@@ -2700,7 +2725,55 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
                                 Name="VCCLCompilerTool"
                                 Optimization="0"
                                 AdditionalIncludeDirectories="&amp;quot;$(VJ_BASE_DIR)\include&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\include&amp;quot;"
-                                PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
+                                PreprocessorDefinitions="WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
+                                MinimalRebuild="FALSE"
+                                RuntimeLibrary="2"
+                                BufferSecurityCheck="FALSE"
+                                RuntimeTypeInfo="TRUE"
+                                UsePrecompiledHeader="0"
+                                WarningLevel="3"
+                                Detect64BitPortabilityProblems="TRUE"
+                                DebugInformationFormat="1"
+                                DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/&gt;
+                        &lt;Tool
+                                Name="VCCustomBuildTool"/&gt;
+                        &lt;Tool
+                                Name="VCLinkerTool"
+                                AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+                                OutputFile="$(OutDir)/button_drv_g.dll"
+                                LinkIncremental="1"
+                                AdditionalLibraryDirectories="&amp;quot;$(VJ_BASE_DIR)\lib&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\lib&amp;quot;"
+                                GenerateDebugInformation="FALSE"
+                                ProgramDatabaseFile="$(OutDir)/button_drv_g.pdb"
+                                SubSystem="1"
+                                ImportLibrary="$(OutDir)/button_drv_g.lib"
+                                TargetMachine="1"/&gt;
+                        &lt;Tool
+                                Name="VCMIDLTool"/&gt;
+                        &lt;Tool
+                                Name="VCPostBuildEventTool"/&gt;
+                        &lt;Tool
+                                Name="VCPreBuildEventTool"/&gt;
+                        &lt;Tool
+                                Name="VCPreLinkEventTool"/&gt;
+                        &lt;Tool
+                                Name="VCResourceCompilerTool"/&gt;
+                        &lt;Tool
+                                Name="VCWebServiceProxyGeneratorTool"/&gt;
+                        &lt;Tool
+                                Name="VCWebDeploymentTool"/&gt;
+                &lt;/Configuration&gt;
+                &lt;Configuration
+                        Name="DebugRt|Win32"
+                        OutputDirectory="DebugDLL"
+                        IntermediateDirectory="DebugDLL"
+                        ConfigurationType="2"
+                        CharacterSet="2"&gt;
+                        &lt;Tool
+                                Name="VCCLCompilerTool"
+                                Optimization="0"
+                                AdditionalIncludeDirectories="&amp;quot;$(VJ_BASE_DIR)\include&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\include&amp;quot;"
+                                PreprocessorDefinitions="WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
                                 MinimalRebuild="FALSE"
                                 BasicRuntimeChecks="3"
                                 RuntimeLibrary="3"
@@ -2715,7 +2788,7 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
                                 Name="VCCustomBuildTool"/&gt;
                         &lt;Tool
                                 Name="VCLinkerTool"
-                                AdditionalDependencies="gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+                                AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
                                 OutputFile="$(OutDir)/button_drv_d.dll"
                                 LinkIncremental="1"
                                 AdditionalLibraryDirectories="&amp;quot;$(VJ_BASE_DIR)\lib&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\lib&amp;quot;"
@@ -2751,7 +2824,7 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
                                 InlineFunctionExpansion="1"
                                 OmitFramePointers="TRUE"
                                 AdditionalIncludeDirectories="&amp;quot;$(VJ_BASE_DIR)\include&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\include&amp;quot;"
-                                PreprocessorDefinitions="WIN32;_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
+                                PreprocessorDefinitions="WIN32;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_DRIVER_BUILD_"
                                 StringPooling="TRUE"
                                 MinimalRebuild="FALSE"
                                 RuntimeLibrary="2"
@@ -2767,7 +2840,7 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
                                 Name="VCCustomBuildTool"/&gt;
                         &lt;Tool
                                 Name="VCLinkerTool"
-                                AdditionalDependencies="gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+                                AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
                                 OutputFile="$(OutDir)/button_drv.dll"
                                 LinkIncremental="1"
                                 AdditionalLibraryDirectories="&amp;quot;$(VJ_BASE_DIR)\lib&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\lib&amp;quot;"
