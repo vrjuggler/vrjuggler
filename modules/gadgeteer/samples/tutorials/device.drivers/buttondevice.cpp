@@ -27,6 +27,7 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <vector>
+#include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -78,18 +79,22 @@ bool ButtonDevice::config(jccl::ConfigElementPtr e)
 // Spanws the sample thread, which calls ButtonDevice::sample() repeatedly.
 bool ButtonDevice::startSampling()
 {
-   mRunning = true;
-   mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this);
+   mRunning = false;
 
-   if ( ! mSampleThread->valid() )
+   try
    {
-      mRunning = false;
-      return false; // thread creation failed
+      mSampleThread =
+         new vpr::Thread(boost::bind(&ButtonDevice::threadedSampleFunction,
+                                     this));
+      mRunning = true;
    }
-   else
+   catch (vpr::Exception& ex)
    {
-      return true; // thread creation success
+      std::cerr << "Failed to spawn sample thread!\n" << ex.what()
+                << std::endl;
    }
+
+   return mRunning;
 }
 
 // Records (or samples) the current data.  This is called repeatedly by the
@@ -139,15 +144,12 @@ void ButtonDevice::updateData()
 // Our sampling function that is executed by the spawned sample thread.
 // This function is declared as a static member of ButtonDevice.  It simply
 // calls ButtonDevice::sample() over and over.
-void ButtonDevice::threadedSampleFunction(void* classPointer)
+void ButtonDevice::threadedSampleFunction()
 {
-   ButtonDevice* this_ptr = static_cast<ButtonDevice*>( classPointer );
-
    // spin until someone kills "mSampleThread"
-   while ( this_ptr->mRunning )
+   while ( mRunning )
    {
-     this_ptr->sample();
-     vpr::System::sleep(1); //specify some time here, so you don't waste CPU cycles
+      sample();
+      vpr::System::sleep(1); //specify some time here, so you don't waste CPU cycles
    }
 }
-
