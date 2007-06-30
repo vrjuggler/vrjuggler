@@ -185,33 +185,27 @@
       </xsl:message>
    </xsl:template>
 
+   <xsl:template match="jconf:device_host" />
+
 <!-- EVERYTHING ELSE ======================================================= -->
    <!--
       Copy everything that hasn't already been matched.
    -->
    <xsl:template match="*">
       <xsl:choose>
+         <!--
+            When a node has a jconf:device_host child, we copy its attributes
+            and proceed with a recursive template application. The template
+            above that matches jconf:device_host takes care of deleting it.
+         -->
          <xsl:when test="count(./jconf:device_host) &gt; 0">
             <xsl:message>
                <xsl:text>Removing device_host property from </xsl:text>
                <xsl:value-of select="@name" />
             </xsl:message>
             <xsl:element name="{name()}">
-               <xsl:attribute name="name">
-                  <xsl:value-of select="@name" />
-               </xsl:attribute>
-               <xsl:attribute name="version">
-                  <xsl:value-of select="@version" />
-               </xsl:attribute>
-               <xsl:for-each select="./*">
-                  <xsl:variable name="elt_name">
-                     <xsl:value-of select="name(.)" />
-                  </xsl:variable>
-                  <xsl:if test="$elt_name != 'device_host'">
-                     <xsl:copy-of select="." />
-                     <xsl:value-of select="$newline" />
-                  </xsl:if>
-               </xsl:for-each>
+               <xsl:copy-of select="./@*" />
+               <xsl:apply-templates />
             </xsl:element>
          </xsl:when>
          <xsl:otherwise>
