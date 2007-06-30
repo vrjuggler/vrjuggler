@@ -111,7 +111,6 @@
          <rotation_delta>2.0</rotation_delta>
          <translation_coordinate_system>Global</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
-         <device_host />
       </simulated_positional_device>
       <alias name="VJGlove" version="1">
          <proxy />
@@ -129,7 +128,6 @@
       </gesture_proxy>
       <keyboard_mouse_device name="Glove Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <device_host />
       </keyboard_mouse_device>
       <input_window name="Glove Input Window" version="1">
          <origin>600</origin>
@@ -149,7 +147,6 @@
          <port>/dev/ttyd1</port>
          <baud>9600</baud>
          <glove_position>GlovePos Proxy</glove_position>
-         <device_host />
       </pinch_glove>
       <simulated_glove_gesture name="SimGloveGesture" version="3">
          <keyboard_mouse_proxy>GloveKeyProxy</keyboard_mouse_proxy>
@@ -179,7 +176,6 @@
          </key_presses>
          <trained_filename>${VJ_BASE_DIR}/share/gadgeteer/data/gesture/simpleSimGestures.dat</trained_filename>
          <glove_position>GlovePos Proxy</glove_position>
-         <device_host />
       </simulated_glove_gesture>
       <digital_proxy name="PinchLeftThumb" version="1">
          <device>FakespacePinchGlove</device>

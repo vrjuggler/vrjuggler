@@ -9,7 +9,6 @@
          <receive_port>5000</receive_port>
          <server_name />
          <command_port />
-         <device_host />
       </dtrack>
       <position_proxy name="Flystick1" version="1">
          <device>DTrack Device</device>

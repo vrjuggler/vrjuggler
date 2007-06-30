@@ -76,7 +76,6 @@
       </alias>
       <keyboard_mouse_device name="Head Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <device_host>Node 0</device_host>
       </keyboard_mouse_device>
       <input_window name="Head Input Window" version="1">
          <origin>1200</origin>
@@ -91,7 +90,6 @@
       </input_window>
       <keyboard_mouse_device name="Sim View Cameras Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <device_host>Node 0</device_host>
       </keyboard_mouse_device>
       <input_window name="Sim View Cameras Control" version="1">
          <origin>1200</origin>
@@ -212,7 +210,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimHeadPos" version="3">
          <keyboard_mouse_proxy>Main Sim Keyboard Proxy</keyboard_mouse_proxy>
@@ -316,7 +313,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimCamera2" version="3">
          <keyboard_mouse_proxy>Camera Keyboard Proxy</keyboard_mouse_proxy>
@@ -420,7 +416,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <user name="User1" version="1">
          <head_position>VJHead</head_position>
@@ -448,7 +443,6 @@
                <key>KEY_ESC</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
       <simulated_digital_device name="AppDigitalSim" version="2">
          <keyboard_mouse_proxy>Main Sim Keyboard Proxy</keyboard_mouse_proxy>
@@ -476,7 +470,6 @@
                <key>KEY_R</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
       <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
          <naming_service_host>localhost</naming_service_host>
@@ -564,7 +557,6 @@
       </digital_proxy>
       <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <device_host>Node 0</device_host>
       </keyboard_mouse_device>
       <input_window name="Wand Input Window" version="1">
          <origin>1200</origin>
@@ -679,7 +671,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <keyboard_mouse_proxy name="Wand Keyboard Proxy" version="1">
          <device>Wand Keyboard</device>
@@ -740,15 +731,13 @@
                <key>KEY_8</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
-      <cluster_manager name="Cluster Manager" version="2">
-         <plugin>StartBarrierPlugin</plugin>
+      <cluster_manager name="Cluster Manager" version="3">
          <plugin>RIMPlugin</plugin>
-         <plugin>SwapLockTCPPlugin</plugin>
          <plugin>ApplicationDataManager</plugin>
          <cluster_node>Node 0</cluster_node>
          <cluster_node>Node 1</cluster_node>
+         <use_software_swap_lock>true</use_software_swap_lock>
       </cluster_manager>
       <cluster_node name="Node 0" version="1">
          <display_system>
@@ -957,13 +946,6 @@
          <listen_port>8501</listen_port>
          <host_name>telperion.infiscape.com</host_name>
       </cluster_node>
-      <start_barrier_plugin name="Start Barrier Plug-in" version="1">
-         <start_master>Node 0</start_master>
-      </start_barrier_plugin>
-      <swap_lock_tcp_plugin name="TCP Swap Lock Pug-in" version="1">
-         <sync_server>Node 0</sync_server>
-         <listen_port>8600</listen_port>
-      </swap_lock_tcp_plugin>
    </elements>
 </configuration>
 

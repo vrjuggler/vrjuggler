@@ -31,14 +31,12 @@
                <key>KEY_ESC</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
       <keyboard_mouse_proxy name="Main Sim Input Window" version="1">
          <device>Exit Keyboard</device>
       </keyboard_mouse_proxy>
       <keyboard_mouse_device name="Exit Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <device_host />
       </keyboard_mouse_device>
       <input_window name="Exit Input Window" version="1">
          <origin>0</origin>

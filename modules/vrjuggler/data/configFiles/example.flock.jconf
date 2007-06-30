@@ -30,7 +30,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </flock>
       <alias name="VJHead" version="1">
          <proxy>HeadProxy</proxy>

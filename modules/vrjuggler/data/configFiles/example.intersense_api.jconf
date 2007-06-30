@@ -135,7 +135,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </intersense_api>
       <alias name="VJAnalog0" version="1">
          <proxy>Analog 0 Proxy</proxy>

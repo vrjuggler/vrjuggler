@@ -46,7 +46,6 @@
       </digital_proxy>
       <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>0.02</mouse_sensitivity>
-         <device_host />
       </keyboard_mouse_device>
       <input_window name="Wand Input Window" version="1">
          <origin>0</origin>
@@ -97,7 +96,6 @@
                <key>MOUSE_NEGX</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
       <keyboard_mouse_proxy name="Wand Keyboard Proxy" version="1">
          <device>Wand Keyboard</device>

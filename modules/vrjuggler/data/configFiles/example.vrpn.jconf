@@ -82,7 +82,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </vrpn>
       <digital_proxy name="Button0Proxy" version="1">
          <device>Vrpn</device>

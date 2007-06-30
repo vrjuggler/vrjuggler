@@ -5,7 +5,6 @@
       <directx_joystick name="Logitech Dual Action" version="1">
          <min>0.0</min>
          <max>255.0</max>
-         <device_host />
       </directx_joystick>
       <input_manager name="IM DirectX Joystick" version="2">
          <driver>DirectXJoystick_drv</driver>

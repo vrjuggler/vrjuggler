@@ -64,7 +64,6 @@
          <min>0.0</min>
          <max>255.0</max>
          <initial_value>0.0</initial_value>
-         <device_host />
       </simulated_analog_device>
       <alias name="VJAnalog0" version="1">
          <proxy>AnaProxy 0</proxy>

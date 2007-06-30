@@ -114,7 +114,6 @@
       <simulated_relative_position name="SimRelativePosition1" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Wand Proxy</relative_proxy>
-         <device_host />
       </simulated_relative_position>
       <input_manager name="Input Manager" version="2">
          <driver>Trackd_drv</driver>
@@ -139,13 +138,11 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </trackd_sensor>
       <trackd_controller name="TrackdControllerDev" version="1">
          <shared_memory_key>4147</shared_memory_key>
          <min>0.0</min>
          <max>0.0</max>
-         <device_host />
       </trackd_controller>
    </elements>
 </configuration>

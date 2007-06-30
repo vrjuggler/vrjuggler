@@ -32,7 +32,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </motion_star>
       <motion_star name="Motion Star slave" version="2">
          <address>mstar2</address>
@@ -61,7 +60,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </motion_star>
       <alias name="VJHead" version="1">
          <proxy>HeadProxy</proxy>

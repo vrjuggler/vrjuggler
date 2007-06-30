@@ -10,7 +10,6 @@
          <min>-34.0</min>
          <max>34.0</max>
          <read_timeout>20</read_timeout>
-         <device_host />
       </wanda>
       <digital_proxy name="Digital Proxy 0" version="1">
          <device>Wanda</device>

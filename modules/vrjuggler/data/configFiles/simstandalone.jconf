@@ -4,7 +4,6 @@
    <elements>
       <keyboard_mouse_device name="Sim Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <device_host />
       </keyboard_mouse_device>
       <input_window name="Sim Input" version="1">
          <origin>870</origin>
@@ -149,7 +148,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimHeadPos" version="3">
          <keyboard_mouse_proxy>Sim Keyboard Proxy</keyboard_mouse_proxy>
@@ -253,7 +251,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <position_proxy name="Wand Proxy" version="1">
          <device>SimWandPos</device>
@@ -380,7 +377,6 @@
       <simulated_relative_position name="SimRelativePosition1" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Wand Proxy</relative_proxy>
-         <device_host />
       </simulated_relative_position>
       <simulated_digital_device name="SimWandButtons" version="2">
          <keyboard_mouse_proxy>Sim Keyboard Proxy</keyboard_mouse_proxy>
@@ -438,7 +434,6 @@
                <key>KEY_8</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
       <display_window name="SimWindow" version="5">
          <origin>50</origin>
@@ -515,7 +510,6 @@
                <key>KEY_ESC</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
       <simulated_digital_device name="AppDigitalSim" version="2">
          <keyboard_mouse_proxy>Sim Keyboard Proxy</keyboard_mouse_proxy>
@@ -543,7 +537,6 @@
                <key>KEY_R</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
       </simulated_digital_device>
       <alias name="VJAppExit" version="1">
          <proxy>VJAppExitProxy</proxy>

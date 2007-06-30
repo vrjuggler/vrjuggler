@@ -4,7 +4,6 @@
    <elements>
       <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <device_host />
       </keyboard_mouse_device>
       <input_window name="Wand Input Window" version="1">
          <origin>950</origin>
@@ -19,7 +18,6 @@
       </input_window>
       <keyboard_mouse_device name="Head Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <device_host />
       </keyboard_mouse_device>
       <input_window name="Head Input Window" version="1">
          <origin>950</origin>
@@ -34,7 +32,6 @@
       </input_window>
       <keyboard_mouse_device name="Sim View Cameras Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <device_host />
       </keyboard_mouse_device>
       <input_window name="Sim View Cameras Control" version="1">
          <origin>950</origin>
@@ -173,7 +170,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimCamera2" version="3">
          <keyboard_mouse_proxy>Camera Keyboard Proxy</keyboard_mouse_proxy>
@@ -277,7 +273,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="Position Simulator1" version="3">
          <keyboard_mouse_proxy>Camera Keyboard Proxy</keyboard_mouse_proxy>
@@ -381,7 +376,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </simulated_positional_device>
       <position_proxy name="Wand Proxy" version="1">
          <device>Flock_o_Birds</device>
@@ -506,14 +500,12 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </flock>
       <ibox name="IBox1" version="1">
          <port>/dev/ttyd4</port>
          <baud>38400</baud>
          <min>0.0</min>
          <max>255.0</max>
-         <device_host />
       </ibox>
       <display_window name="big wall" version="5">
          <origin>922</origin>

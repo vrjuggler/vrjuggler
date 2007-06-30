@@ -135,7 +135,6 @@
          <port_name>/dev/input/js0</port_name>
          <min>-32767.0</min>
          <max>32767.0</max>
-         <device_host />
       </linux_joydev>
    </elements>
 </configuration>

@@ -54,7 +54,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
       </intersense>
       <alias name="VJWand" version="1">
          <proxy>Wand Proxy</proxy>
