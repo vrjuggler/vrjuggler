@@ -77,16 +77,7 @@
 
    <xsl:template match="jconf:configuration">
       <xsl:copy>
-
-         <!-- XXX: Why doesn't xsl:copy copy these two attributes? -->
-         <xsl:attribute name="name">
-            <xsl:value-of select="@name"/>
-         </xsl:attribute>
-         <xsl:attribute name="xsl:schemaLocation"
-                        namespace="http://www.w3.org/2001/XMLSchema-instance">
-            <xsl:value-of select="@xsi:schemaLocation"/>
-         </xsl:attribute>
-
+         <xsl:copy-of select="./@*" />
          <xsl:apply-templates />
       </xsl:copy>
    </xsl:template>
