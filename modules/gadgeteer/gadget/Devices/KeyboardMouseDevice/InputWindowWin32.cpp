@@ -35,7 +35,26 @@
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
+#include <gadget/gadgetParam.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputWindowWin32.h>
+
+// The following is used below in InputWindowWin32::MenuInit(). The key parts
+// are GADGET_LIB_RT_OPT and GADGET_VERSION_STR.
+#  if defined(GADGET_DEBUG)
+#     if defined(_DEBUG)
+#        define GADGET_LIB_RT_OPT "_d"
+#     else
+#        define GADGET_LIB_RT_OPT "_g"
+#     endif
+#  else
+#     define GADGET_LIB_RT_OPT ""
+#  endif
+
+#  define GADGET_STRINGIZE(X) GADGET_DO_STRINGIZE(X)
+#  define GADGET_DO_STRINGIZE(X) #X
+#  define GADGET_VERSION_STR GADGET_STRINGIZE(__GADGET_MAJOR__) "_" \
+                             GADGET_STRINGIZE(__GADGET_MINOR__) "_" \
+                             GADGET_STRINGIZE(__GADGET_PATCH__)
 
 
 namespace gadget
@@ -282,19 +301,10 @@ BOOL InputWindowWin32::MenuInit(HINSTANCE hInstance)
    pWndClass->lpszMenuName  = ("MenuMenu"),
    pWndClass->lpszClassName = ("Gadgeteer Event Window");
 
-#if defined(GADGET_DEBUG)
-#  if defined(_DEBUG)
-#     define LIBNAME "gadget_d.dll"
-#  else
-#     define LIBNAME "gadget_g.dll"
-#  endif
-#else
-#  define LIBNAME "gadget.dll"
-#endif
-
    if (pWndClass->hIcon == NULL)
    {
-      HINSTANCE hDLLInstance = LoadLibrary( LIBNAME );
+      HINSTANCE hDLLInstance =
+         LoadLibrary("gadget" GADGET_LIB_RT_OPT "-" GADGET_VERSION_STR ".dll");
       if (hDLLInstance != NULL)
       {
          pWndClass->hIcon = LoadIcon(hDLLInstance, "GADGETEER_ICON");
