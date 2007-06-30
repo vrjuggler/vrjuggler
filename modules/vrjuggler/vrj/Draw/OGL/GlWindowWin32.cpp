@@ -41,6 +41,25 @@
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlWindowWin32.h>
 
+// The following is used below in GlWindowWin32::registerWindowClass(). The
+// key parts are VJ_LIB_RT_OPT and VJ_VERSION_STR.
+#  if defined(VJ_DEBUG)
+#     if defined(_DEBUG)
+#        define VJ_LIB_RT_OPT "_d"
+#     else
+#        define VJ_LIB_RT_OPT "_g"
+#     endif
+#  else
+#     define VJ_LIB_RT_OPT ""
+#  endif
+
+#  define VJ_STRINGIZE(X) VJ_DO_STRINGIZE(X)
+#  define VJ_DO_STRINGIZE(X) #X
+#  define VJ_VERSION_STR VJ_STRINGIZE(__VJ_MAJOR__) "_" \
+                         VJ_STRINGIZE(__VJ_MINOR__) "_" \
+                         VJ_STRINGIZE(__VJ_PATCH__)
+
+
 static const char* GL_WINDOW_WIN32_CLASSNAME("vrj::GlWindowWin32");
 
 namespace vrj
@@ -721,19 +740,10 @@ bool GlWindowWin32::registerWindowClass()
    mWinClass.lpszMenuName   = NULL;
    mWinClass.lpszClassName  = GL_WINDOW_WIN32_CLASSNAME;
 
-#if defined(VJ_DEBUG)
-#  if defined(_DEBUG)
-#     define LIBNAME "vrj_ogl_d.dll"
-#  else
-#     define LIBNAME "vrj_ogl_g.dll"
-#  endif
-#else
-#  define LIBNAME "vrj_ogl.dll"
-#endif
-
    if (mWinClass.hIcon == NULL)
    {
-      HINSTANCE hDLLInstance = LoadLibrary( LIBNAME );
+      HINSTANCE hDLLInstance =
+         LoadLibrary("vrj_ogl" VJ_LIB_RT_OPT "-" VJ_VERSION_STR ".dll");
       if (hDLLInstance != NULL)
       {
          mWinClass.hIcon = LoadIcon(hDLLInstance, "VRJUGGLER_ICON");

@@ -40,6 +40,24 @@
 
 #include <vrj/Draw/Direct3D/D3dSimInterface.h>
 
+// The following is used below in D3dWindow::registerWindowClass(). The key
+// parts are VJ_LIB_RT_OPT and VJ_VERSION_STR.
+#  if defined(VJ_DEBUG)
+#     if defined(_DEBUG)
+#        define VJ_LIB_RT_OPT "_d"
+#     else
+#        define VJ_LIB_RT_OPT "_g"
+#     endif
+#  else
+#     define VJ_LIB_RT_OPT ""
+#  endif
+
+#  define VJ_STRINGIZE(X) VJ_DO_STRINGIZE(X)
+#  define VJ_DO_STRINGIZE(X) #X
+#  define VJ_VERSION_STR VJ_STRINGIZE(__VJ_MAJOR__) "_" \
+                         VJ_STRINGIZE(__VJ_MINOR__) "_" \
+                         VJ_STRINGIZE(__VJ_PATCH__)
+
 // This variable determines which matrix stack we put the viewing transformation
 // If it is on the proj matrix, then lighting and env maps work but fog breaks.
 #define USE_PROJECTION_MATRIX 1  /* Should we put the camera transforms on the
@@ -477,19 +495,10 @@ bool D3dWindow::registerWindowClass()
    mWinClass.lpszMenuName   = NULL;
    mWinClass.lpszClassName  = D3D_WINDOW_WIN32_CLASSNAME;
 
-#if defined(VJ_DEBUG)
-#  if defined(_DEBUG)
-#     define LIBNAME "vrj_d3d_d.dll"
-#  else
-#     define LIBNAME "vrj_d3d_g.dll"
-#  endif
-#else
-#  define LIBNAME "vrj_d3d.dll"
-#endif
-
    if (mWinClass.hIcon == NULL)
    {
-      HINSTANCE hDLLInstance = LoadLibrary( LIBNAME );
+      HINSTANCE hDLLInstance =
+         LoadLibrary("vrj_d3d" VJ_LIB_RT_OPT "-" VJ_VERSION_STR ".dll");
       if (hDLLInstance != NULL)
       {
          mWinClass.hIcon = LoadIcon(hDLLInstance, "VRJUGGLER_ICON");
