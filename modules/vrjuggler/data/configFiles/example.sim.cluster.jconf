@@ -573,7 +573,7 @@
          <size>200</size>
          <display_number>-1</display_number>
          <keyboard_mouse_device_name>Wand Keyboard</keyboard_mouse_device_name>
-         <lock_key>29</lock_key>
+         <lock_key>KEY_L</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </input_window>
@@ -876,7 +876,7 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name />
-               <lock_key>0</lock_key>
+               <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
             </display_window>
@@ -949,7 +949,7 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name />
-               <lock_key>0</lock_key>
+               <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
             </display_window>
