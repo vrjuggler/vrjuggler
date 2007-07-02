@@ -76,28 +76,6 @@ your specific configuration.
    that the output file should end with the extension ".jconf" for 2.0
    Alpha 4 and beyond.
 
-2.2-2.3.xsl
------------
-
-   An XSLT stylesheet that provides the upgrade path for configuration files
-   created for VR Juggler 2.1/2.2 to VR Juggler 2.3/3.0. This addresses
-   configuration updates that cannot be performed by VRJConfig, although
-   none of the updates performed by this transform are critical. VRJConfig
-   will take care of the important changes; this transform just cleans things
-   up by removing config elements that are now defunct.
-
-   To use this stylesheet with the xsltproc command, run xsltproc as
-   follows:
-
-      xsltproc -o <output>.jconf 2.2-2.3.xsl <input>.jconf
-
-   To use it with Xalan, run the xalan wrapper (shell script or batch
-   file) as follows:
-
-      xalan -in <input>.jconf -out <output>.jconf -xsl 2.2-2.3.xsl
-
-   Fill in your input filename and output filename appropriately.
-
 key_sym_2_0.xsl
 ---------------
 
