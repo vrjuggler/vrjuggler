@@ -40,10 +40,11 @@ ECHO [ERR] %JAVA_HOME%\bin\java.exe does not exist, so VRJConfig cannot be
 ECHO [ERR] started.
 :TEST_VJ_BASE
 IF NOT "%VJ_BASE_DIR%" == "" GOTO TEST_VJ_EXIST
-ECHO [ERR] VJ_BASE_DIR unset; please set the environment variable VJ_BASE_DIR to
-ECHO [ERR] point to your VR Juggler installation directory.  For more information,
-ECHO [ERR] please see INSTALL.html
-GOTO ERREXIT
+set VJ_BASE_DIR=%~d0%~p0\..
+ECHO NOTE: VJ_BASE_DIR environment variable unset; defaulting to
+ECHO       %VJ_BASE_DIR%
+ECHO       If this is incorrect, see INSTALL.html and set the value
+ECHO       correctly.
 :TEST_VJ_EXIST
 IF EXIST "%VJ_BASE_DIR%" GOTO TEST_TWEEK_BASE
 ECHO [ERR] The VJ_BASE_DIR %VJ_BASE_DIR% does not appear to exist.  Please
