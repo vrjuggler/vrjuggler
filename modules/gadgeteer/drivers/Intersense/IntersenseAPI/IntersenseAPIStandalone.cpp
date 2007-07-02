@@ -172,7 +172,8 @@ int IntersenseAPIStandalone::convertPort(const std::string& port)
 
 bool IntersenseAPIStandalone::close()
 {
-   return (bool)ISD_CloseTracker( mHandle );
+   mActive = static_cast<bool>(ISD_CloseTracker(mHandle));
+   return mActive;
 }
 
 bool IntersenseAPIStandalone::updateData()
