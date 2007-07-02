@@ -81,10 +81,12 @@ your specific configuration.
 
    An XSLT stylesheet that provides the upgrade path for configuration files
    created for VR Juggler 2.1/2.2 to VR Juggler 2.3/3.0. This addresses
-   configuration updates that cannot be performed by VRJConfig, although
-   none of the updates performed by this transform are critical. VRJConfig
-   will take care of the important changes; this transform just cleans things
-   up by removing config elements that are now defunct.
+   configuration updates that cannot be performed by VRJConfig. VR Juggler 2.2
+   configuration files must be processed with this transform before they can
+   be loaded into VRJConfig because some common config elements for versions
+   prior to 2.3/3.0 are no longer in use. These must be removed before
+   VRJConfig will allow such configurations to be loaded for automatic
+   updating, and this transform performs that task.
 
    To use this stylesheet with the xsltproc command, run xsltproc as
    follows:
