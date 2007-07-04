@@ -44,7 +44,7 @@ default: TestSuite
 # The 'bundle' target is only for use on Mac OS X with Cocoa.
 all bundle:
 	@for dir in $(SUBDIRS) ; do		\
-            cd $$dir && $(MAKE) $@ ;		\
+            cd $$dir && $(MAKE) $@ || exit 1 ;	\
             cd .. ;				\
          done
 
@@ -57,5 +57,5 @@ $(SUBDIRS):
 clean clobber:
 	@for dir in $(SUBDIRS) ; do			\
             echo "==> Cleaning in $$dir" ;		\
-            cd $$dir && $(MAKE) $@ && cd .. ;		\
+            cd $$dir && $(MAKE) $@ && cd .. || exit 1 ;	\
         done

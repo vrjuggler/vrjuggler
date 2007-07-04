@@ -41,7 +41,7 @@ default: all
 # The 'bundle' target is only for use on Mac OS X with Cocoa.
 all bundle:
 	@for dir in $(APPS) ; do		\
-            cd $$dir && $(MAKE) $@ ;		\
+            cd $$dir && $(MAKE) $@ || exit 1 ;	\
             cd .. ;				\
          done
 
@@ -53,6 +53,6 @@ $(APPS):
 # -----------------------------------------------------------------------------
 clean:
 	@for dir in $(APPS) ; do		\
-            cd $$dir && $(MAKE) $@ ;		\
+            cd $$dir && $(MAKE) $@ || exit 1 ;	\
             cd .. ;				\
          done
