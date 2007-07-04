@@ -327,6 +327,16 @@ links:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/tweek.fpc			\
           $(instlinks)/share/flagpoll/tweek.fpc
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek-java.fpc		\
+          $(instlinks)/share/flagpoll/tweek-java.fpc
+endif
+endif
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek-python.fpc		\
+          $(instlinks)/share/flagpoll/tweek-python.fpc
 ifdef BUILD_TYPE
 	$(MAKE) links-$(BUILD_TYPE)
 else
@@ -448,6 +458,16 @@ install-flagpoll:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/tweek.fpc 						\
           $(libdir)$(LIBBITSUF)/flagpoll/tweek-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/tweek-java.fpc					\
+          $(libdir)$(LIBBITSUF)/flagpoll/tweek-java-$(VERSION_DOT).$(PLATFORM).noarch.fpc
+endif
+endif
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/tweek-python.fpc					\
+          $(libdir)$(LIBBITSUF)/flagpoll/tweek-python-$(VERSION_DOT).$(PLATFORM).noarch.fpc
 
 PREINSTALL_HEADERS=	pre-install-headers
 

@@ -1,0 +1,42 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = @VERSION_DOT@
+
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+MICRO_VERSION = @MICRO_VERSION@
+tweek_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+topdir = @topdir@
+data_subdir = @data_subdir@
+
+config_java_idl = @config_java_idl@
+tweek_idlflags_java = @tweek_idlflags_java@
+tweek_idl_inc_flag_java = @tweek_idl_incflag_java@
+tweek_idlgendir_java = @tweek_idlgendir_java@
+tweek_java_api_jars = @tweek_java_api_jars@
+tweek_ext_jars = @tweek_ext_jars@
+BUILD_JAVA = @BUILD_JAVA@
+tweek_share_dir = ${prefix}/@TWEEK_SHARE_DIR@
+
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+Name: Tweek-Java
+Description: Tweek is a portable GUI for applications. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly.
+URL: http://www.vrjuggler.org/tweek/
+Version: ${tweek_version}
+Provides: tweek-java
+Arch: noarch
+
+######################### Tweek-Specific Flagpoll Variables ###################
+
+java_api_available: ${BUILD_JAVA}
+java_idl: ${config_java_idl}
+java_idlflags: ${tweek_idlflags_java}
+java_idlgendir: ${tweek_idlgendir_java}
+java_idlincflag: ${tweek_idl_inc_flag_java}
+jars: ${tweek_java_api_jars}
+ext_jars: ${tweek_ext_jars}
