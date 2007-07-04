@@ -40,7 +40,7 @@ default: all
 # The 'bundle' target only is for use on Mac OS X with Cocoa.
 all bundle:
 	@for dir in $(SUBDIRS) ; do		\
-            cd $$dir && $(MAKE) $@ ;		\
+            cd $$dir && $(MAKE) $@ || exit 1 ;	\
             cd .. ;				\
          done
 
@@ -52,6 +52,6 @@ $(SUBDIRS):
 # -----------------------------------------------------------------------------
 clean clobber:
 	@for dir in $(SUBDIRS) ; do		\
-            cd $$dir && $(MAKE) $@ ;		\
+            cd $$dir && $(MAKE) $@ || exit 1 ;	\
             cd .. ;				\
          done

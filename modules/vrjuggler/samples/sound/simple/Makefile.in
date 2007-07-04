@@ -46,7 +46,7 @@ $(DIRS)::
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	@for dir in $(DIRS) ; do		\
-            cd $$dir && $(MAKE) clean ;		\
-            cd .. ;				\
+	@for dir in $(DIRS) ; do			\
+            cd $$dir && $(MAKE) clean || exit 1 ;	\
+            cd .. ;					\
         done
