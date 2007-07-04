@@ -512,7 +512,7 @@ Release: %{vrjuggler_release}
 Group: Development/Java
 License: LGPL
 URL: http://www.vrjuggler.org/
-Requires: tweek-java = %{vpr_version}-%{vpr_release}
+Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Requires: jccl-java = %{jccl_version}-%{jccl_release}
 Requires: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
 Requires: vrjconfig = %{vrjuggler_version}-%{vrjuggler_release}
