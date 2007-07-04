@@ -39,6 +39,7 @@
 #include <Performer/pfutil.h>
 
     // --- VR Juggler Stuff --- //
+#include <jccl/Config/ConfigElement.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
 #include <vrj/Util/Debug.h>
