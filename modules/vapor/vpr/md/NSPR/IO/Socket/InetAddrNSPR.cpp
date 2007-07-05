@@ -92,7 +92,11 @@ void InetAddrNSPR::setAddress(const std::string& address)
    host_port = address.substr(pos + 1);
    port      = (vpr::Uint16) atoi(host_port.c_str());
 
-   lookupAddress(host_addr);
+   if ( ! host_addr.empty() )
+   {
+      lookupAddress(host_addr);
+   }
+
    setPort(port);
    setFamily(vpr::SocketTypes::INET);
 }
