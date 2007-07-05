@@ -508,7 +508,7 @@ Requires: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
 Requires: sonix-devel = %{sonix_version}-%{sonix_release}
 Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
 Requires: vrjuggler-opengl-devel = %{vrjuggler_version}-%{vrjuggler_release}
-Requires: doozer >= 2.1
+Requires: doozer >= 2.1.6
 
 %description -n juggler-devel
 The header files and libraries needed for developing VR applications using
