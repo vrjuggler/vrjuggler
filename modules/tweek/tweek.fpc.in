@@ -33,7 +33,7 @@ tweek_prof_libs = @tweek_prof_libs@
 tweek_libs = @tweek_libs@
 tweek_extra_ldflags = @tweek_extra_ldflags@
 
-extra_libs = ${tweek_extra_ldflags} ${tweek_extra_libs}
+extra_libs = ${tweek_extra_ldflags}
 
 
 ########################### Public Variables ############################
@@ -57,8 +57,8 @@ cxx_api_available: ${BUILD_CXX}
 libs: ${libs} ${tweek_libs}
 extra_libs: ${extra_libs}
 static_libs: ${static_begin} ${libs} ${tweek_libs} ${static_end}
-profiled_libs: ${libs} ${tweek_prof_libs}
-profiled_static_libs: ${static_begin} ${libs} ${tweek_prof_libs} ${static_end}
+profiled_libs: ${tweek_ldflags} ${tweek_prof_libs} ${extra_libs}
+profiled_static_libs: ${static_begin} ${tweek_prof_libs} ${static_end}
 cxx_idl: ${CXX_IDL_CMD}
 cxx_idlflags: ${tweek_idlflags_cxx}
 cxx_idlgendir: ${tweek_idlgendir_cxx}
