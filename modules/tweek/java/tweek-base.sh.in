@@ -51,7 +51,7 @@ else
    # Java classpath separator character.
    JCPS="@JCPS@"
 
-   TWEEK_JARS=`flagpoll tweek --get-jars`
+   TWEEK_JARS=`flagpoll tweek-java --get-jars`
    CLASSPATH="${TWEEK_JARS}${JCPS}${CLASSPATH}"
    export CLASSPATH
 
