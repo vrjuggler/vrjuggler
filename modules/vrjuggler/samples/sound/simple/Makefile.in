@@ -30,23 +30,29 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-DIRS=	sonix soundManager
+APPS=	sonix		\
+	soundManager
 
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(DIRS)
+# The 'bundle' target is only for use on Mac OS X with Cocoa.
+all bundle:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ || exit 1 ;	\
+            cd .. ;				\
+         done
 
-$(DIRS)::
-	cd $@ && $(MAKE)
+$(APPS):
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean:
-	@for dir in $(DIRS) ; do			\
-            cd $$dir && $(MAKE) clean || exit 1 ;	\
-            cd .. ;					\
-        done
+clean clobber:
+	@for dir in $(APPS) ; do		\
+            cd $$dir && $(MAKE) $@ || exit 1 ;	\
+            cd .. ;				\
+         done
