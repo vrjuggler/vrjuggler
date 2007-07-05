@@ -1451,6 +1451,8 @@ VJ_MTREE_LIB_GEN(TWEEK, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    tweek.fpc
+   tweek-java.fpc
+   tweek-python.fpc
    Makefile
    Makefile.inc
    common.defs.mk

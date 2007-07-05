@@ -669,6 +669,7 @@ def updateVersions(vcDir, options):
    mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
                              'TWEEK_VERSION', tweek_subst_vars,
                              [(r'tweek\tweekParam.h',), ('tweek.fpc',),
+                              ('tweek-java.fpc',), ('tweek-python.fpc',),
                               (r'tweek\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 
@@ -1115,6 +1116,8 @@ def installTweek(prefix, buildDir):
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
    smartCopy(os.path.join(buildDir, 'Tweek_CXX', 'tweek.fpc'), destdir)
+   smartCopy(os.path.join(buildDir, 'Tweek_CXX', 'tweek-java.fpc'), destdir)
+   smartCopy(os.path.join(buildDir, 'Tweek_CXX', 'tweek-python.fpc'), destdir)
 
    destdir = os.path.join(prefix, 'share', 'tweek', 'test')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'test')
@@ -1438,7 +1441,7 @@ def installGadgeteerDrivers(prefix, buildDir):
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'drivers')
    srcroot = os.path.join(buildDir, 'Gadgeteer')
 
-   drivers = ['DTrack', 'DataGlove', 'DirectXJoystick', 'Ether24',
+   drivers = ['DTrack', 'DataGlove', 'X-IST', 'DirectXJoystick', 'Ether24',
               'Fastrak', 'Flock', 'IBox', 'IntersenseAPI', 'IS900',
               'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove',
               'SerialEncoder', 'SpaceBall', 'TrackdAPI', 'VRPN', 'Wanda',

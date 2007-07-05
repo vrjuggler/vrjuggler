@@ -1,0 +1,38 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = @VERSION_DOT@
+
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+MICRO_VERSION = @MICRO_VERSION@
+tweek_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+topdir = @topdir@
+data_subdir = @data_subdir@
+
+PYTHON_IDL = @PYTHON_IDL@
+tweek_idlflags_python = @tweek_idlflags_python@
+tweek_idl_inc_flag_python = @tweek_idl_incflag_python@
+tweek_idlgendir_python = @tweek_idlgendir_python@
+BUILD_PYTHON_IDL = @BUILD_PYTHON_IDL@
+tweek_share_dir = ${prefix}/@TWEEK_SHARE_DIR@
+
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+Name: Tweek-Python
+Description: Tweek is a portable GUI for applications. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly.
+URL: http://www.vrjuggler.org/tweek/
+Version: ${tweek_version}
+Provides: tweek-python
+Arch: noarch
+
+######################### Tweek-Specific Flagpoll Variables ###################
+
+python_idl_available: ${BUILD_PYTHON_IDL}
+python_idl: ${PYTHON_IDL}
+python_idlflags: ${tweek_idlflags_python}
+python_idlgendir: ${tweek_idlgendir_python}
+python_idlincflag: ${tweek_idl_inc_flag_python}

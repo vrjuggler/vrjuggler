@@ -16,23 +16,11 @@ tweek_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
 topdir = @topdir@
 data_subdir = @data_subdir@
 
-config_java_idl = @config_java_idl@
 CXX_IDL_CMD = @CXX_IDL_CMD@
-PYTHON_IDL = @PYTHON_IDL@
-tweek_idlflags_java = @tweek_idlflags_java@
 tweek_idlflags_cxx = @tweek_idlflags_cxx@
-tweek_idlflags_python = @tweek_idlflags_python@
-tweek_idl_inc_flag_java = @tweek_idl_incflag_java@
 tweek_idl_inc_flag_cxx = @tweek_idl_incflag_cxx@
-tweek_idl_inc_flag_python = @tweek_idl_incflag_python@
-tweek_idlgendir_java = @tweek_idlgendir_java@
 tweek_idlgendir_cxx = @tweek_idlgendir_cxx@
-tweek_idlgendir_python = @tweek_idlgendir_python@
-tweek_java_api_jars = @tweek_java_api_jars@
-tweek_ext_jars = @tweek_ext_jars@
 BUILD_CXX = @BUILD_CXX@
-BUILD_JAVA = @BUILD_JAVA@
-BUILD_PYTHON_IDL = @BUILD_PYTHON_IDL@
 tweek_extra_cxxflags = @tweek_extra_cxxflags@
 tweek_extra_include_dirs = @tweek_extra_include_dirs@
 includedir = @includedir@
@@ -55,7 +43,7 @@ Name: Tweek
 Description: Tweek is a portable GUI for applications. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly.
 URL: http://www.vrjuggler.org/tweek/
 Version: ${tweek_version}
-Provides: tweek
+Provides: tweek tweek-c++
 Requires: @CXX_ORB_DEPS@ vpr = @VPR_VERSION@
 Arch: ${ISA}
 Libs: ${tweek_ldflags} ${tweek_libs} ${extra_libs}
@@ -63,7 +51,7 @@ Libs.private:
 Cflags: ${tweek_cxxflags} ${tweek_extra_cxxflags} -I${includedir} ${tweek_extra_include_dirs}
 
 
-######################### Tweek Specific Flagpoll Variables ###################
+######################### Tweek-Specific Flagpoll Variables ###################
 
 cxx_api_available: ${BUILD_CXX}
 libs: ${libs} ${tweek_libs}
@@ -76,20 +64,4 @@ cxx_idlflags: ${tweek_idlflags_cxx}
 cxx_idlgendir: ${tweek_idlgendir_cxx}
 cxx_idlincflag: ${tweek_idl_inc_flag_cxx}
 
-java_api_available: ${BUILD_JAVA}
-java_idl: ${config_java_idl}
-java_idlflags: ${tweek_idlflags_java}
-java_idlgendir: ${tweek_idlgendir_java}
-java_idlincflag: ${tweek_idl_inc_flag_java}
-jars: ${tweek_java_api_jars}
-ext_jars: ${tweek_ext_jars}
-
 tweek_app_defs_file: ${tweek_share_dir}/tweek.appdefs.mk
-
-python_idl_available: ${BUILD_PYTHON_IDL}
-python_idl: ${PYTHON_IDL}
-python_idlflags: ${tweek_idlflags_python}
-python_idlgendir: ${tweek_idlgendir_python}
-python_idlincflag: ${tweek_idl_inc_flag_python}
-
-
