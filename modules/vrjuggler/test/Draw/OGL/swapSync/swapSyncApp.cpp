@@ -37,6 +37,8 @@
 #include <gmtl/Generate.h>
 #include <stdlib.h>
 #include <vpr/System.h>
+#include <vpr/Util/Debug.h>
+
 #include "swapSyncApp.h"
 
 
