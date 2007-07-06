@@ -73,53 +73,63 @@ void buildAndThrowException(PRFileDesc* handle, const PRErrorCode err_code,
    boost::ignore_unused_variable_warning(handle);
 #endif
 
-   std::string err_string = vpr::Error::getCurrentErrorMsg();
+   const std::string err_string = vpr::Error::getCurrentErrorMsg();
 
    // Build and throw exception
-   if (PR_IN_PROGRESS_ERROR == err_code ||
-       PR_WOULD_BLOCK_ERROR == err_code)
+   if ( PR_IN_PROGRESS_ERROR == err_code ||
+        PR_WOULD_BLOCK_ERROR == err_code )
    {
-      throw vpr::WouldBlockException(prefix + "Operation still in progress: " + err_string, location);
+      throw vpr::WouldBlockException(
+         prefix + "Operation still in progress: " + err_string, location
+      );
    }
-   else if( PR_IS_CONNECTED_ERROR == err_code)
+   else if ( PR_IS_CONNECTED_ERROR == err_code )
    {
-      throw vpr::SocketException(prefix + "Socket already connected: " + err_string, location);
+      throw vpr::SocketException(
+         prefix + "Socket already connected: " + err_string, location
+      );
    }
-   else if(PR_CONNECT_REFUSED_ERROR == err_code)
+   else if ( PR_CONNECT_REFUSED_ERROR == err_code )
    {
-      throw vpr::ConnectionRefusedException(prefix + "Connection refused: " + err_string, location);
+      throw vpr::ConnectionRefusedException(
+         prefix + "Connection refused: " + err_string, location
+      );
    }
-   else if(PR_CONNECT_RESET_ERROR == err_code ||
-           PR_SOCKET_SHUTDOWN_ERROR == err_code ||
-           PR_CONNECT_ABORTED_ERROR == err_code ||
-           PR_NOT_CONNECTED_ERROR == err_code)
+   else if ( PR_CONNECT_RESET_ERROR == err_code ||
+             PR_SOCKET_SHUTDOWN_ERROR == err_code ||
+             PR_CONNECT_ABORTED_ERROR == err_code ||
+             PR_NOT_CONNECTED_ERROR == err_code )
    {
       std::ostringstream msg_stream;
-	  if ( PR_CONNECT_RESET_ERROR == err_code )
-	  {
+      if ( PR_CONNECT_RESET_ERROR == err_code )
+      {
          msg_stream << "Connection reset: ";
-	  }
-	  else if ( PR_SOCKET_SHUTDOWN_ERROR == err_code )
-	  {
+      }
+      else if ( PR_SOCKET_SHUTDOWN_ERROR == err_code )
+      {
          msg_stream << "Socket shutdown: ";
-	  }
-	  else if ( PR_CONNECT_ABORTED_ERROR == err_code )
-	  {
+      }
+      else if ( PR_CONNECT_ABORTED_ERROR == err_code )
+      {
          msg_stream << "Connection aborted: ";
-	  }
-	  else if ( PR_NOT_CONNECTED_ERROR == err_code )
-	  {
+      }
+      else if ( PR_NOT_CONNECTED_ERROR == err_code )
+      {
          msg_stream << "Not connected: ";
-	  }
+      }
 
-	  throw vpr::ConnectionResetException(prefix + msg_stream.str() + err_string, location);
+      throw vpr::ConnectionResetException(
+         prefix + msg_stream.str() + err_string, location
+      );
    }
-   else if (PR_NETWORK_UNREACHABLE_ERROR == err_code)
+   else if ( PR_NETWORK_UNREACHABLE_ERROR == err_code )
    {
-      throw vpr::NoRouteToHostException(prefix + "No route to host: " + err_string, location);
+      throw vpr::NoRouteToHostException(
+         prefix + "No route to host: " + err_string, location
+      );
    }
-   else if (PR_CONNECT_TIMEOUT_ERROR == err_code ||
-            PR_IO_TIMEOUT_ERROR == err_code)
+   else if ( PR_CONNECT_TIMEOUT_ERROR == err_code ||
+             PR_IO_TIMEOUT_ERROR == err_code )
    {
 #if defined(WINNT)
       // Handle the case of a timeout error on an NT socket. We have to tell
@@ -205,9 +215,9 @@ void SocketImplNSPR::open()
       // Now that this socket is open, we can set the blocking state.
       setBlocking(mOpenBlocking);
 
-//         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-//            << "[vpr::SocketImplNSPR::open()] handle = " << mHandle << "\n"
-//            << vprDEBUG_FLUSH;
+//      vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
+//         << "[vpr::SocketImplNSPR::open()] handle = " << mHandle << "\n"
+//         << vprDEBUG_FLUSH;
    }
 }
 
@@ -216,7 +226,7 @@ void SocketImplNSPR::close()
 {
    if ( NULL != mHandle )
    {
-//      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+//      vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
 //         << "[vpr::SocketImplNSPR::close()] handle = " << mHandle
 //         << " (Socket now invalid)\n" << vprDEBUG_FLUSH;
 
@@ -246,8 +256,8 @@ void SocketImplNSPR::close()
 // Bind this socket to the address in the host address member variable.
 void SocketImplNSPR::bind()
 {
-   vprASSERT((true == mOpen) && "Trying to bind an un-opened socket");
-   vprASSERT((mHandle != NULL) && "Trying to bind with NULL handle");
+   vprASSERT(true == mOpen && "Trying to bind an un-opened socket");
+   vprASSERT(mHandle != NULL && "Trying to bind with NULL handle");
 
    // Bind the socket to the address in mLocalAddr.
    PRStatus status = PR_Bind(mHandle, mLocalAddr.getPRNetAddr());
@@ -256,7 +266,8 @@ void SocketImplNSPR::bind()
    if ( status == PR_FAILURE )
    {
       std::ostringstream ex_text;
-      ex_text << "[vpr::SocketImplNSPR::bind] " << " addr: [" << mLocalAddr << "] ";
+      ex_text << "[vpr::SocketImplNSPR::bind()] " << " addr: '" << mLocalAddr
+              << "' ";
       buildAndThrowException(mHandle, ex_text.str(), VPR_LOCATION);
    }
    // Otherwise, return success.
@@ -328,8 +339,8 @@ void SocketImplNSPR::setBlocking(bool blocking)
 // establishing a connection with the destination.
 void SocketImplNSPR::connect(vpr::Interval timeout)
 {
-   vprASSERT((true == mOpen) && "Trying to connect an un-opened socket");
-   vprASSERT((mHandle != NULL) && "Trying to connect with NULL handle");
+   vprASSERT(true == mOpen && "Trying to connect an un-opened socket");
+   vprASSERT(mHandle != NULL && "Trying to connect with NULL handle");
 
    if ( mConnectCalled )
    {
@@ -356,7 +367,8 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
       const PRErrorCode err = PR_GetError();
 
       // This is a non-blocking connection.
-      if ( (err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR) && !isBlocking() )
+      if ( (err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR) &&
+           ! isBlocking() )
       {
          // Use the timeout to wait for the connection to complete.
          if ( vpr::Interval::NoWait != timeout )
@@ -369,32 +381,39 @@ void SocketImplNSPR::connect(vpr::Interval timeout)
             {
                // Wait for read/write on the socket.
                SelectorImplNSPR selector;
-               selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write |
-                  SelectorBase::Except | SelectorBase::Error);
+               selector.addHandle(getHandle(), SelectorBase::Read |
+                                                  SelectorBase::Write |
+                                                  SelectorBase::Except |
+                                                  SelectorBase::Error);
                vpr::Uint16 num_events(0);
                selector.select(num_events, timeout);
 
                vpr::Uint16 event = selector.getOut(getHandle());
-               if (SelectorBase::Except == event || SelectorBase::Error == event)
+               if ( SelectorBase::Except == event ||
+                    SelectorBase::Error == event )
                {
                   close();
-                  // XXX: This throws a WouldBlockException, even though it shouldn't because
-                  //      the PR_Connect failed.
+                  // XXX: This throws a WouldBlockException, even though it
+                  //      shouldn't because the PR_Connect() call failed.
                   //buildAndThrowException(mHandle,
                   //                       "[vpr::SocketImplNSPR::connect()] ",
                   //                       VPR_LOCATION);
-                  throw SocketException("[vpr::SocketImplNSPR::connect() Non-Blocking socket "
-                     "with timeout failed: ] ", VPR_LOCATION);
+                  throw SocketException(
+                     "[vpr::SocketImplNSPR::connect()] Non-Blocking socket with timeout failed: ",
+                     VPR_LOCATION
+                  );
                }
 
                mBound = true;
                mConnectCalled = true;
                mBlockingFixed = true;
             }
-            catch(TimeoutException& te) // Select timed out, so the connect timed out
+            // Select timed out, so the connect timed out
+            catch (TimeoutException& te)
             {
                close();
-               throw TimeoutException("Timeout while connecting.", VPR_LOCATION);
+               throw TimeoutException("Timeout while connecting.",
+                                      VPR_LOCATION);
             }
          }
          else // non-blocking connect started
@@ -450,27 +469,32 @@ bool SocketImplNSPR::isConnected() const
       try
       {
          SelectorImplNSPR selector;
-         selector.addHandle(getHandle(), SelectorBase::Read | SelectorBase::Write |
-            SelectorBase::Except | SelectorBase::Error);
+         selector.addHandle(getHandle(), SelectorBase::Read |
+                                            SelectorBase::Write |
+                                            SelectorBase::Except |
+                                            SelectorBase::Error);
 
          vpr::Uint16 num_events(0);
          selector.select(num_events, vpr::Interval::NoWait);
 
-         vpr::Uint16 event = selector.getOut(getHandle());
-         if (SelectorBase::Except == event || SelectorBase::Error == event)
+         const vpr::Uint16 event = selector.getOut(getHandle());
+         if ( SelectorBase::Except == event || SelectorBase::Error == event )
          {
             //close();
-            throw SocketException("[vpr::SocketImplNSPR::isConnected()] ", VPR_LOCATION);
+            throw SocketException("[vpr::SocketImplNSPR::isConnected()] ",
+                                  VPR_LOCATION);
          }
 
       }
-      catch(vpr::TimeoutException& ex)
+      catch (vpr::TimeoutException& ex)
       {
          boost::ignore_unused_variable_warning(ex);
          return false;
       }
+
       return true;
    }
+
    return false;
 }
 
@@ -656,7 +680,8 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
          opt_data.option = PR_SockOpt_MaxSegment;
          break;
       default:
-         throw SocketException("Unsupported option passed to getOption.", VPR_LOCATION);
+         throw SocketException("Unsupported option passed to getOption().",
+                               VPR_LOCATION);
          break;
    }
 
@@ -675,7 +700,8 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
          {
             case vpr::SocketOptions::Linger:
                data.linger.enabled = opt_data.value.linger.polarity;
-               data.linger.seconds = PR_IntervalToSeconds(opt_data.value.linger.linger);
+               data.linger.seconds =
+                  PR_IntervalToSeconds(opt_data.value.linger.linger);
                break;
             case vpr::SocketOptions::ReuseAddr:
                data.reuse_addr = (opt_data.value.reuse_addr != 0 ? true
@@ -737,7 +763,8 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
             case vpr::SocketOptions::AddMember:
             case vpr::SocketOptions::DropMember:
             default:
-               vprASSERT(false && "Socket option handled incorrectly.");  // Should never get here
+               // Should never get here
+               vprASSERT(false && "Socket option handled incorrectly.");
                break;
          }
       }
@@ -767,7 +794,8 @@ void SocketImplNSPR::setOption(const vpr::SocketOptions::Types option,
       case vpr::SocketOptions::Linger:
          opt_data.option                = PR_SockOpt_Linger;
          opt_data.value.linger.polarity = data.linger.enabled;
-         opt_data.value.linger.linger   = PR_SecondsToInterval(data.linger.seconds);
+         opt_data.value.linger.linger   =
+            PR_SecondsToInterval(data.linger.seconds);
          break;
       case vpr::SocketOptions::ReuseAddr:
          opt_data.option           = PR_SockOpt_Reuseaddr;
@@ -850,13 +878,14 @@ void SocketImplNSPR::setOption(const vpr::SocketOptions::Types option,
          opt_data.value.max_segment = data.max_segment;
          break;
       default:
-         throw SocketException("Unsupported option passed to setOption.", VPR_LOCATION);
+         throw SocketException("Unsupported option passed to setOption().",
+                               VPR_LOCATION);
          break;
    }
 
    if ( mHandle == NULL )
    {
-      throw SocketException("Cannot set option on a NULL socket",
+      throw SocketException("Cannot set option on a NULL socket.",
                             VPR_LOCATION);
    }
    else

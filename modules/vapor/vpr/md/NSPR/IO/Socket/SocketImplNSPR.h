@@ -201,8 +201,8 @@ public:
     * @throw vpr::WouldBlockException If the socket is in non-blocking mode,
     *                                 and the connect operation could not be
     *                                 completed.
-    * @throw vpr::TimeoutException    If the connection could not complete within the
-    *                                 timeout interval.
+    * @throw vpr::TimeoutException    If the connection could not complete
+    *                                 within the timeout interval.
     * @throw vpr::SocketException     If could not connect.
     */
    void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
@@ -213,7 +213,6 @@ public:
     * @return \c true if this socket is connected to a remote address.
     * @return \c false if this socket is not currently connect (the other side
     *         may have disconnected).
-    * @throws nothing
     */
    bool isConnected() const;
 
