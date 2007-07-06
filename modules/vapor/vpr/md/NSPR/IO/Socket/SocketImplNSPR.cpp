@@ -136,7 +136,14 @@ void buildAndThrowException(PRFileDesc* handle, const PRErrorCode err_code,
       // NSPR to put the socket back into the right state. We do not need to
       // worry about whether the socket is blocking because the timeout is
       // ignored by non-blocking NSPR sockets.
-      PR_NT_CancelIo(handle);
+      // NOTE: According to the NSPR tech note about this, PR_NT_CancelIo()
+      // does not need to be called when PR_CONNECT_TIMEOUT_ERROR is returned.
+      // See the following for more information:
+      // http://www.mozilla.org/projects/nspr/tech-notes/ntiotimeoutinterrupt.html
+      if ( PR_IO_TIMEOUT_ERROR == err_code )
+      {
+         PR_NT_CancelIo(handle);
+      }
 #endif
 
       throw vpr::TimeoutException(prefix + "Timeout: " + err_string, location);
