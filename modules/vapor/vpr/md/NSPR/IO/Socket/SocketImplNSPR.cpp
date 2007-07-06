@@ -546,7 +546,9 @@ vpr::Uint32 SocketImplNSPR::readn_i(void* buffer, const vpr::Uint32 length,
          {
             continue;
          }
-         buildAndThrowException(mHandle, "[vpr::SocketImplNSPR::readn_i] ",
+
+         buildAndThrowException(mHandle, err_code,
+                                "[vpr::SocketImplNSPR::readn_i] ",
                                 VPR_LOCATION);
       }
       // Read 0 bytes.
