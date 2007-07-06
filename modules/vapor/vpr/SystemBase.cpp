@@ -278,7 +278,7 @@ std::string SystemBase::getCallStack()
    free(strings);
 
    ret_stack = trace_stream.str();
-#elif defined(VPR_OS_Windows) && 0
+#elif defined(VPR_OS_Windows)
 // XXX: The code for getting the stack trace on amd64 and ia64 is not working.
 // GetStackWalk64() always returns failure on the first call. This may be the
 // result of frame_offset being set incorrectly. Without having inline
