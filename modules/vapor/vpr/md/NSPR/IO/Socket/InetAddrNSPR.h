@@ -74,13 +74,7 @@ public:
     * @post Zero out the address and set it to \c PR_INADDR_ANY.
     * @note This is not a valid destination address for client communication.
     */
-   InetAddrNSPR()
-   {
-      memset(&mAddr, 0, sizeof(mAddr));
-      setFamily(SocketTypes::INET);
-      setAddressValue(PR_INADDR_ANY);
-      setPort(0);
-   }
+   InetAddrNSPR();
 
    /**
     * Copy constructor.
@@ -89,17 +83,9 @@ public:
     *
     * @param addr The vpr::InetAddr object to be copied into this object.
     */
-   InetAddrNSPR(const InetAddrNSPR& addr)
-   {
-      mAddr = addr.mAddr;
-   }
+   InetAddrNSPR(const InetAddrNSPR& addr);
 
-   ~InetAddrNSPR()
-   {
-#ifdef VPR_DEBUG
-      mAddr.inet.family = mAddr.inet.port = mAddr.inet.ip = 1221;
-#endif
-   }
+   ~InetAddrNSPR();
 
    /**
     * Returns the local host's default address.

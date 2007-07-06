@@ -65,10 +65,7 @@ public:
     * @post The member variables are initialized to default values.  The
     *       socket type is set to vpr::SocketTypes::DATAGRAM.
     */
-   SocketDatagramImplNSPR() : SocketImplNSPR(SocketTypes::DATAGRAM)
-   {
-      /* Do nothing. */ ;
-   }
+   SocketDatagramImplNSPR();
 
    /**
     * Constructor.
@@ -81,19 +78,10 @@ public:
     *                   communicate.
     */
    SocketDatagramImplNSPR(const InetAddr& localAddr,
-                          const InetAddr& remoteAddr)
-      : SocketImplNSPR(localAddr, remoteAddr, SocketTypes::DATAGRAM)
-   {
-      /* Do nothing. */ ;
-   }
+                          const InetAddr& remoteAddr);
 
    /** Copy constructor. */
-   SocketDatagramImplNSPR(const SocketDatagramImplNSPR& sock)
-      : SocketImplNSPR(sock)
-   {
-      mLocalAddr  = sock.mLocalAddr;
-      mRemoteAddr = sock.mRemoteAddr;
-   }
+   SocketDatagramImplNSPR(const SocketDatagramImplNSPR& sock);
 
    /**
     * Receives a message from the specified address.

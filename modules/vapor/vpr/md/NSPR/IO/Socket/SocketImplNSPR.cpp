@@ -941,6 +941,23 @@ SocketImplNSPR::SocketImplNSPR(const vpr::InetAddr& localAddr,
    mName = mLocalAddr.getAddressString();
 }
 
+// XXX: We need to have a reference count here
+SocketImplNSPR::SocketImplNSPR(const SocketImplNSPR& sock)
+   : mName(sock.mName)
+   , mHandle(sock.mHandle)
+   , mLocalAddr(sock.mLocalAddr)
+   , mRemoteAddr(sock.mRemoteAddr)
+   , mType(sock.mType)
+   , mOpen(sock.mOpen)
+   , mBound(sock.mBound)
+   , mConnectCalled(sock.mConnectCalled)
+   , mOpenBlocking(sock.mOpenBlocking)
+   , mBlocking(sock.mBlocking)
+   , mBlockingFixed(sock.mBlockingFixed)
+{
+   /* Do nothing. */ ;
+}
+
 // Destructor.  This currently does nothing.
 SocketImplNSPR::~SocketImplNSPR()
 {
