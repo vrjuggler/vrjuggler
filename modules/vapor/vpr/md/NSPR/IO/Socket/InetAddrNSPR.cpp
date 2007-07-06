@@ -51,6 +51,26 @@ std::vector<vpr::InetAddrNSPR> getIfAddrs(const bool withLoopback,
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
+InetAddrNSPR::InetAddrNSPR()
+{
+   memset(&mAddr, 0, sizeof(mAddr));
+   setFamily(SocketTypes::INET);
+   setAddressValue(PR_INADDR_ANY);
+   setPort(0);
+}
+
+InetAddrNSPR::InetAddrNSPR(const InetAddrNSPR& addr)
+{
+   mAddr = addr.mAddr;
+}
+
+InetAddrNSPR::~InetAddrNSPR()
+{
+#ifdef VPR_DEBUG
+   mAddr.inet.family = mAddr.inet.port = mAddr.inet.ip = 1221;
+#endif
+}
+
 vpr::InetAddrNSPR InetAddrNSPR::getLocalHost()
 {
    char local_host_name[257];

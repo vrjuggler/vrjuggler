@@ -73,6 +73,13 @@ SocketStreamImplNSPR::SocketStreamImplNSPR(const vpr::InetAddr& localAddr,
    ;
 }
 
+// XXX: We need to have a reference count here
+SocketStreamImplNSPR::SocketStreamImplNSPR(const SocketStreamImplNSPR& sock)
+   : SocketImplNSPR(sock)
+{
+   /* Just call base class */ ;
+}
+
 // Listen on the socket for incoming connection requests.
 void SocketStreamImplNSPR::listen(const int backlog)
 {

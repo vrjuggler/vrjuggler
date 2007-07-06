@@ -84,13 +84,8 @@ public:
 
    /**
     * Copy constructor.
-    * XXX: We need to have a reference count here
     */
-   SocketStreamImplNSPR(const SocketStreamImplNSPR& sock)
-      : SocketImplNSPR(sock)
-   {
-      /* Just call base class */ ;
-   }
+   SocketStreamImplNSPR(const SocketStreamImplNSPR& sock);
 
    /**
     * Listens on the socket for incoming connection requests.

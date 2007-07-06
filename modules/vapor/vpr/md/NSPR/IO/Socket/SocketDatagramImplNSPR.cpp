@@ -56,6 +56,27 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
+SocketDatagramImplNSPR::SocketDatagramImplNSPR()
+   : SocketImplNSPR(SocketTypes::DATAGRAM)
+{
+   /* Do nothing. */ ;
+}
+
+SocketDatagramImplNSPR::SocketDatagramImplNSPR(const InetAddr& localAddr,
+                                               const InetAddr& remoteAddr)
+   : SocketImplNSPR(localAddr, remoteAddr, SocketTypes::DATAGRAM)
+{
+   /* Do nothing. */ ;
+}
+
+SocketDatagramImplNSPR::
+SocketDatagramImplNSPR(const SocketDatagramImplNSPR& sock)
+   : SocketImplNSPR(sock)
+{
+   mLocalAddr  = sock.mLocalAddr;
+   mRemoteAddr = sock.mRemoteAddr;
+}
+
 vpr::Uint32 SocketDatagramImplNSPR::recvfrom(void* msg,
                                              const vpr::Uint32 length,
                                              vpr::InetAddr& from,
