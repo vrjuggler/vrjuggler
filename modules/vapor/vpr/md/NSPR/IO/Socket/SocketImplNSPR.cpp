@@ -94,7 +94,25 @@ void buildAndThrowException(PRFileDesc* handle, const PRErrorCode err_code,
            PR_CONNECT_ABORTED_ERROR == err_code ||
            PR_NOT_CONNECTED_ERROR == err_code)
    {
-      throw vpr::ConnectionResetException(prefix + "Connection reset: " + err_string, location);
+      std::ostringstream msg_stream;
+	  if ( PR_CONNECT_RESET_ERROR == err_code )
+	  {
+         msg_stream << "Connection reset: ";
+	  }
+	  else if ( PR_SOCKET_SHUTDOWN_ERROR == err_code )
+	  {
+         msg_stream << "Socket shutdown: ";
+	  }
+	  else if ( PR_CONNECT_ABORTED_ERROR == err_code )
+	  {
+         msg_stream << "Connection aborted: ";
+	  }
+	  else if ( PR_NOT_CONNECTED_ERROR == err_code )
+	  {
+         msg_stream << "Not connected: ";
+	  }
+
+	  throw vpr::ConnectionResetException(prefix + msg_stream.str() + err_string, location);
    }
    else if (PR_NETWORK_UNREACHABLE_ERROR == err_code)
    {
