@@ -38,15 +38,16 @@
 
 #include <jccl/RTRC/ConfigManager.h>
 #include <gadget/InputManager.h>
-#include <gadget/Devices/Sim/SimPosition.h>
-#include <gadget/Devices/Sim/SimDigital.h>
-#include <gadget/Devices/Sim/SimAnalog.h>
-#include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Devices/KeyboardMouseDevice/InputWindowXWin.h>
 #include <gadget/Type/AnalogProxy.h>
+#include <gadget/Type/KeyboardMouse.h>
+#include <gadget/Type/KeyboardMouseProxy.h>
+#include <gadget/Devices/Sim/SimAnalog.h>
+#include <gadget/Devices/Sim/SimDigital.h>
 
 #include <vrj/Display/Display.h>
 #include <vrj/Display/DisplayManager.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Kernel/User.h>
 #include <vrj/Util/Debug.h>
 #include <reconfigApp.h>
 
@@ -480,7 +481,7 @@ bool reconfigApp::verifyProxy(const std::string& proxyName,
                               const std::string& deviceName)
 {
    //Try to get the new proxy and check its values
-   gadget::Proxy* proxy =
+   gadget::ProxyPtr proxy =
       gadget::InputManager::instance()->getProxy(proxyName);
 
    if ( NULL == proxy )
@@ -495,9 +496,9 @@ bool reconfigApp::verifyProxy(const std::string& proxyName,
       return false;
    }
 
-   gadget::Input* inputDevice = proxy->getProxiedInputDevice();
+   gadget::InputPtr inputDevice = proxy->getProxiedInputDevice();
 
-   if ( NULL == inputDevice )
+   if ( NULL == inputDevice.get() )
    {
       std::cout << "\tError: Proxy does not point at a valid device"
                 << std::endl;
@@ -1253,8 +1254,8 @@ bool reconfigApp::removeKeyboardWin_check()
 
    const std::string keyboard_name = file_elements[0]->getName();
 
-   gadget::KeyboardMouse* keyboard =
-      dynamic_cast<gadget::KeyboardMouse*>(
+   gadget::KeyboardMousePtr keyboard =
+      boost::dynamic_pointer_cast<gadget::KeyboardMouse>(
          gadget::InputManager::instance()->getDevice(keyboard_name)
       );
 
@@ -1278,8 +1279,8 @@ bool reconfigApp::removeKeyboardWin_check()
       return false;
    }
 
-   gadget::KeyboardMouseProxy* keyboard_proxy =
-      dynamic_cast<gadget::KeyboardMouseProxy*>(
+   gadget::KeyboardMouseProxyPtr keyboard_proxy =
+      boost::dynamic_pointer_cast<gadget::KeyboardMouseProxy>(
          gadget::InputManager::instance()->getProxy(file_elements[0]->getName())
       );
 
@@ -1327,8 +1328,8 @@ bool reconfigApp::readdKeyboardWin_check()
 
    const std::string keyboard_name = file_elements[0]->getName();
 
-   gadget::KeyboardMouse* keyboard =
-      dynamic_cast<gadget::KeyboardMouse*>(
+   gadget::KeyboardMousePtr keyboard =
+      boost::dynamic_pointer_cast<gadget::KeyboardMouse>(
          gadget::InputManager::instance()->getDevice(keyboard_name)
       );
 
@@ -1352,8 +1353,8 @@ bool reconfigApp::readdKeyboardWin_check()
       return false;
    }
 
-   gadget::KeyboardMouseProxy* keyboard_proxy =
-      dynamic_cast<gadget::KeyboardMouseProxy*>(
+   gadget::KeyboardMouseProxyPtr keyboard_proxy =
+      boost::dynamic_pointer_cast<gadget::KeyboardMouseProxy>(
          gadget::InputManager::instance()->getProxy(file_elements[0]->getName())
       );
 
@@ -1380,7 +1381,11 @@ bool reconfigApp::readdKeyboardWin_check()
    }
 
    //Make sure the pointers match up
-   if ( ((gadget::KeyboardMouse*) (keyboard_proxy->getProxiedInputDevice())) != keyboard)
+   gadget::KeyboardMousePtr dev =
+      boost::dynamic_pointer_cast<gadget::KeyboardMouse>(
+         keyboard_proxy->getProxiedInputDevice()
+      );
+   if ( dev != keyboard)
    {
       std::cout << "\tError: pointers don't match up" << std::endl;
       return false;
@@ -1413,7 +1418,7 @@ bool reconfigApp::removeSimPos_exec()
 bool reconfigApp::removeSimPos_check()
 {
    //Look at the button proxy and see what it points at
-   gadget::Proxy* proxy =
+   gadget::ProxyPtr proxy =
       gadget::InputManager::instance()->getProxy("ExtraPositionProxy");
 
    if ( proxy == NULL )
@@ -1481,8 +1486,8 @@ bool reconfigApp::repointProxy_check()
    //Get the proxy's name from the file
    const std::string proxyname = file_elements[0]->getName();
 
-   gadget::PositionProxy* proxy =
-      dynamic_cast<gadget::PositionProxy*>(
+   gadget::PositionProxyPtr proxy =
+      boost::dynamic_pointer_cast<gadget::PositionProxy>(
          gadget::InputManager::instance()->getProxy(proxyname)
       );
 
@@ -1517,12 +1522,12 @@ bool reconfigApp::reconfigSimPos_exec()
 bool reconfigApp::reconfigSimPos_check()
 {
    //Get the sim position pointer
-   gadget::SimPosition* device =
-      dynamic_cast<gadget::SimPosition*>(
+   gadget::PositionPtr device =
+      boost::dynamic_pointer_cast<gadget::Position>(
          gadget::InputManager::instance()->getDevice("SimHeadPos")
       );
 
-   if ( device == NULL )
+   if ( device.get() == NULL )
    {
       std::cout << "\tError: Could not find the sim position device"
                 << std::endl;
@@ -1555,12 +1560,12 @@ bool reconfigApp::reconfigSimDigital_exec()
 bool reconfigApp::reconfigSimDigital_check()
 {
    //Get the sim digital pointer
-   gadget::SimDigital* device =
-      dynamic_cast<gadget::SimDigital*>(
+   boost::shared_ptr<gadget::SimDigital> device =
+      boost::dynamic_pointer_cast<gadget::SimDigital>(
          gadget::InputManager::instance()->getDevice("SimWandButtons02")
       );
 
-   if ( device == NULL )
+   if ( device.get() == NULL )
    {
       std::cout << "\tError: Could not find the sim digital device"
                 << std::endl;
@@ -1622,12 +1627,12 @@ bool reconfigApp::reconfigSimAnalog_exec()
 bool reconfigApp::reconfigSimAnalog_check()
 {
    //Get the sim analog pointer
-   gadget::SimAnalog* device =
-      dynamic_cast<gadget::SimAnalog*>(
+   boost::shared_ptr<gadget::SimAnalog> device =
+      boost::dynamic_pointer_cast<gadget::SimAnalog>(
          gadget::InputManager::instance()->getDevice("AnalogDevice1")
       );
 
-   if ( device == NULL )
+   if ( device.get() == NULL )
    {
       std::cout << "\tError: Could not find the sim analog device"
                 << std::endl;
@@ -1715,7 +1720,7 @@ bool reconfigApp::removeSimDigital_exec()
 bool reconfigApp::removeSimDigital_check()
 {
    //Look at the button proxy and see what it points at
-   gadget::Proxy* proxy =
+   gadget::ProxyPtr proxy =
       gadget::InputManager::instance()->getProxy("Button0Proxy");
 
    if ( proxy == NULL )
@@ -1775,7 +1780,7 @@ bool reconfigApp::removeSimAnalog_exec()
 bool reconfigApp::removeSimAnalog_check()
 {
    //Look at the button proxy and see what it points at
-   gadget::Proxy* proxy =
+   gadget::ProxyPtr proxy =
       gadget::InputManager::instance()->getProxy("ExtraAnalogProxy");
 
    if (proxy == NULL)
@@ -1986,9 +1991,10 @@ bool reconfigApp::addStupefiedAnalogProxy_exec()
 bool reconfigApp::addStupefiedAnalogProxy_check()
 {
    //Try to get the new proxy and check its values
-   gadget::Proxy* tempProxy =
+   gadget::ProxyPtr tempProxy =
       gadget::InputManager::instance()->getProxy("StupidAnalogProxy01");
-   gadget::AnalogProxy* proxy = dynamic_cast<gadget::AnalogProxy*>(tempProxy);
+   gadget::AnalogProxyPtr proxy =
+      boost::dynamic_pointer_cast<gadget::AnalogProxy>(tempProxy);
 
    if ( proxy == NULL )
    {
