@@ -52,7 +52,7 @@ public:
     * Initializes the surface color to a white, gray, and black gradient.
     * This will be the default surface color unless we are told otherwise.
     */
-   ConfigApp();
+   ConfigApp(vrj::Kernel* kern = NULL);
 
    /**
     * Define a virtual destructor for good measure.

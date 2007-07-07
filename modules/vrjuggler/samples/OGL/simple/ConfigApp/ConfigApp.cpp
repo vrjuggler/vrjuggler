@@ -41,10 +41,15 @@ using namespace jccl;
 
 // Initializes the surface color to a white, gray, and black gradient.  This
 // will be the default surface color unless we are told otherwise.
-ConfigApp::ConfigApp()
-   : vrj::GlApp(), mSurfaceWidth(40.0f), mSurfaceLength(40.0f),
-     mStartButton(0), mStopButton(1), mFlashlightButton(2), mNavigating(false),
-     mUserVelocity(0.0f)
+ConfigApp::ConfigApp(vrj::Kernel* kern)
+   : vrj::GlApp(kern)
+   , mSurfaceWidth(40.0f)
+   , mSurfaceLength(40.0f)
+   , mStartButton(0)
+   , mStopButton(1)
+   , mFlashlightButton(2)
+   , mNavigating(false)
+   , mUserVelocity(0.0f)
 {
    mSurfaceColor_ll[0] = 1.0f;
    mSurfaceColor_ll[1] = 1.0f;

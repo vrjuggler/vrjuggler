@@ -51,18 +51,15 @@
 class NavGrabApp : public vrj::GlApp
 {
 public:
-   NavGrabApp()
-      : vrj::GlApp(), mSphereQuad(NULL), mSphereIsect(false),
-        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false),
-        mFramesToSleep(25), mTestRunner(NULL)
-   {
-      initShapes();
-   }
-
-   NavGrabApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern), mSphereQuad(NULL), mSphereIsect(false),
-        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false),
-        mFramesToSleep(25), mTestRunner(NULL)
+   NavGrabApp(vrj::Kernel* kern = NULL)
+      : vrj::GlApp(kern)
+      , mSphereQuad(NULL)
+      , mSphereIsect(false)
+      , mSphereSelected(false)
+      , mCubeIsect(false)
+      , mCubeSelected(false)
+      , mFramesToSleep(25)
+      , mTestRunner(NULL)
    {
       initShapes();
    }
