@@ -80,9 +80,9 @@ void GlProcAppWrapper::postFrame()
 
 void GlProcAppWrapper::bufferPreDraw()
 {
-   if ( ! mBufferPredrawMethod.empty() )
+   if ( ! mBufferPreDrawMethod.empty() )
    {
-      mBufferPredrawMethod();
+      mBufferPreDrawMethod();
    }
 }
 
@@ -104,9 +104,9 @@ void VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m)
    GlProcAppWrapper::instance()->setContextInitMethod(m);
 }
    
-void VRJSetBufferPredrawMethod(vrj::GlProcAppWrapper::callback_t m)
+void VRJSetBufferPreDrawMethod(vrj::GlProcAppWrapper::callback_t m)
 { 
-   GlProcAppWrapper::instance()->setBufferPredrawMethod(m);
+   GlProcAppWrapper::instance()->setBufferPreDrawMethod(m);
 }
 
 void VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m)

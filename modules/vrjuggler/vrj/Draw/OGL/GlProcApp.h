@@ -70,9 +70,9 @@ public:
       mContextInit = f;
    }
 
-   void setBufferPredrawMethod(callback_t f)
+   void setBufferPreDrawMethod(callback_t f)
    {
-      mBufferPredrawMethod = f;
+      mBufferPreDrawMethod = f;
    }
 
    void setPreFrameMethod(callback_t f)
@@ -109,7 +109,7 @@ protected:
    callback_t  mPreframeMethod;
    callback_t  mPostframeMethod;
    callback_t  mIntraframeMethod;
-   callback_t  mBufferPredrawMethod;
+   callback_t  mBufferPreDrawMethod;
 };
 
 /**
@@ -120,7 +120,7 @@ VJ_OGL_API(void) VRJSetGLDrawMethod(vrj::GlProcAppWrapper::callback_t m);
 
 VJ_OGL_API(void) VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJSetBufferPredrawMethod(vrj::GlProcAppWrapper::callback_t m);
+VJ_OGL_API(void) VRJSetBufferPreDrawMethod(vrj::GlProcAppWrapper::callback_t m);
 
 VJ_OGL_API(void) VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m);
 
