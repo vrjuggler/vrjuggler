@@ -47,6 +47,7 @@
 
 #include <vrj/Display/Display.h>
 #include <vrj/Display/DisplayManager.h>
+#include <vrj/Kernel/User.h>
 #include <vrj/Util/Debug.h>
 #include <reconfigApp.h>
 
