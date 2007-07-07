@@ -44,6 +44,7 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+#include <vrj/Display/DisplayPtr.h>
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Kernel/Kernel.h>
 
