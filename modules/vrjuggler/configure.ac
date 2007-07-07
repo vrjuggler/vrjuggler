@@ -173,18 +173,20 @@ VRJ_USE_X11="$GADGET_USE_X11"
 if test "x$VRJ_USE_X11" = "xyes" ; then
    AC_PATH_XTRA
 
-   vjsave_CPPFLAGS="$CPPFLAGS"
-   AC_MSG_CHECKING([for extra flags needed to include GL/glx.h])
-   AC_TRY_CPP([#include <GL/glx.h>], [AC_MSG_RESULT([none])],
-      [CPPFLAGS="$CPPFLAGS -I/usr/X11R6/include"
-       AC_TRY_CPP([#include <GL/glx.h>],
-          [X_CFLAGS="$X_CFLAGS -I/usr/X11R6/include"
-           AC_MSG_RESULT([-I/usr/X11R6/include])],
-          [AC_MSG_RESULT([failed to preprocess GL/glx.h])
-           AC_MSG_ERROR([*** GLX header required ***])]
-      )]
-   )
-   CPPFLAGS="$vjsave_CPPFLAGS"
+   if test "x$PLATFORM" = "xDarwin" ; then
+      vjsave_CPPFLAGS="$CPPFLAGS"
+      AC_MSG_CHECKING([for extra flags needed to include GL/glx.h])
+      AC_TRY_CPP([#include <GL/glx.h>], [AC_MSG_RESULT([none])],
+         [CPPFLAGS="$CPPFLAGS -I/usr/X11R6/include"
+          AC_TRY_CPP([#include <GL/glx.h>],
+             [X_CFLAGS="$X_CFLAGS -I/usr/X11R6/include"
+              AC_MSG_RESULT([-I/usr/X11R6/include])],
+             [AC_MSG_RESULT([failed to preprocess GL/glx.h])
+              AC_MSG_ERROR([*** GLX header required ***])]
+         )]
+      )
+      CPPFLAGS="$vjsave_CPPFLAGS"
+   fi
 
    AC_DEFINE([VRJ_USE_X11], , [Define if the X Window System will be used.])
 # IF we are not using X11 on Mac OS X, then we need to make sure that we can
