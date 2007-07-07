@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
    // is not necessary.
    VRJSetGLDrawMethod(&draw);                 // Set draw method
    VRJSetGLContextInitMethod(&initGLState);   // Set init for GL state
-   VRJSetBufferPredrawMethod(&bufferPreDraw); // Set method for clearing the buffers
+   VRJSetBufferPreDrawMethod(&bufferPreDraw); // Set method for clearing the buffers
    VRJSetPreFrameMethod(&preFrame);           // Set preframe callback
 
 #ifdef USE_BLOCKING_METHOD
