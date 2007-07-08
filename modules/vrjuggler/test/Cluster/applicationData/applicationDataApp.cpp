@@ -55,7 +55,7 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 
 
 applicationDataApp::applicationDataApp(vrj::Kernel* kernel)
-   : vrj::GlApp(kernel) 
+   : vrj::opengl::App(kernel) 
 {}
 
 applicationDataApp::~applicationDataApp()

@@ -27,112 +27,29 @@
 #ifndef _VRJ_GL_PROC_APP_H_
 #define _VRJ_GL_PROC_APP_H_
 
-#include <vrj/Draw/OGL/Config.h>
+/**
+ * \file
+ *
+ * This file is for backwards compatibility with VR Juggler 2.x code. New
+ * code should not include this header and should use
+ * vrj/Draw/OpenGL/ProcApp.h.
+ *
+ * @deprecated This file has been deprecated in favor of
+ *             vrj/Draw/OpenGL/ProcApp.h.
+ */
 
-#include <boost/function.hpp>     // Could use function pointers, but this is a little easier to read
+#if defined(__GNUC__)
+#warning "This header is deprecated. Use vrj/Draw/OpenGL/ProcApp.h instead."
+#endif
 
-#include <vpr/Util/Singleton.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/ProcApp.h>
 
 
 namespace vrj
 {
 
-/** \class GlProcAppWrapper GlProcApp.h vrj/Draw/OGL/GlProcApp.h
- *
- * Wrapper class used to allow procedural-style application programming.
- * Callbacks are registered with this class using helper functions.  Those
- * callbacks are invoked indirectly by the VR Juggler kernel through the
- * \c vrj::App and \c vrj::GlApp interface methods implemented in this class.
- */
-class VJ_OGL_CLASS_API GlProcAppWrapper : public vrj::GlApp
-{
-public:
-   typedef boost::function0<void> callback_t;      /** Type for callbacks */
+using namespace vrj::opengl;
 
-protected:
-   GlProcAppWrapper();
-
-   virtual ~GlProcAppWrapper();
-
-   vprSingletonHeader(GlProcAppWrapper);
-
-public:
-   /** @name Getters and setters for the callback methods */
-   //@{
-   void setDrawMethod(callback_t f)
-   {
-      mDrawMethod = f;
-   }
-
-   void setContextInitMethod(callback_t f)
-   {
-      mContextInit = f;
-   }
-
-   void setBufferPreDrawMethod(callback_t f)
-   {
-      mBufferPreDrawMethod = f;
-   }
-
-   void setPreFrameMethod(callback_t f)
-   {
-      mPreframeMethod = f;
-   }
-
-   void setPostFrameMethod(callback_t f)
-   {
-      mPostframeMethod = f;
-   }
-
-   void setIntraFrameMethod(callback_t f)
-   {
-      mIntraframeMethod = f;
-   }
-   //@}
-
-   virtual void contextInit();
-
-   virtual void preFrame();
-
-   virtual void intraFrame();
-
-   virtual void postFrame();
-
-   virtual void bufferPreDraw();
-
-   virtual void draw();
-
-protected:
-   callback_t  mDrawMethod;
-   callback_t  mContextInit;
-   callback_t  mPreframeMethod;
-   callback_t  mPostframeMethod;
-   callback_t  mIntraframeMethod;
-   callback_t  mBufferPreDrawMethod;
-};
-
-/**
- * Set of procedures for wrapping an application using a procedural interface.
- */
-//@{
-VJ_OGL_API(void) VRJSetGLDrawMethod(vrj::GlProcAppWrapper::callback_t m);
-
-VJ_OGL_API(void) VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m);
-
-VJ_OGL_API(void) VRJSetBufferPreDrawMethod(vrj::GlProcAppWrapper::callback_t m);
-
-VJ_OGL_API(void) VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m);
-
-VJ_OGL_API(void) VRJSetIntraFrameMethod(vrj::GlProcAppWrapper::callback_t m);
-
-VJ_OGL_API(void) VRJSetPostFrameMethod(vrj::GlProcAppWrapper::callback_t m);
-
-VJ_OGL_API(void) VRJConfigure(int argc, char* argv[]);
-
-   /** Start everything running */
-VJ_OGL_API(void) VRJProcRunSystem();
-//@}
 }
 
 

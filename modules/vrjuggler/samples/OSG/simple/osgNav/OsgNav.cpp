@@ -44,7 +44,8 @@
 #   include <remotenav/Subject/RemoteNavSubjectImpl.h>
 #endif
 
-OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
+OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv)
+   : vrj::osg::App(kern)
 {
    mFileToLoad = std::string("");
 
@@ -64,7 +65,7 @@ void OsgNav::latePreFrame()
    mNavTrans->setMatrix(osg_current_matrix);
 
    // Finish updating the scene graph.
-   vrj::OsgApp::latePreFrame();
+   vrj::osg::App::latePreFrame();
 }
 
 void OsgNav::preFrame()

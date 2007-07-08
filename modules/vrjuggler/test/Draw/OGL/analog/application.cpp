@@ -28,7 +28,7 @@
 
 //: Constructor
 AnalogDemoApplication::AnalogDemoApplication( vrj::Kernel* kern )
-   : vrj::GlApp(kern)
+   : vrj::opengl::App(kern)
    , x(0.0f)
    , mLastFrameTime(vpr::Interval::now())
 {

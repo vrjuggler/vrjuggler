@@ -36,7 +36,7 @@
 #define WALLTEST_H
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 #include <vrj/Display/SurfaceViewport.h>
 
 #include <gadget/Type/PositionInterface.h>
@@ -51,7 +51,7 @@ using namespace vrj;
 /** Test program for wall settings.
  *
  */
-class WallTest : public GlApp
+class WallTest : public opengl::App
 {
 public:
    WallTest()

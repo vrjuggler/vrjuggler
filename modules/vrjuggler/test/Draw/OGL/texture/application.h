@@ -48,8 +48,8 @@
 // VR juggler
 #include <vpr/Util/Interval.h>
 #include <gadget/Type/PositionInterface.h>
-#include <vrj/Draw/OGL/GlApp.h>     // base OpenGL application API
-#include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
+#include <vrj/Draw/OpenGL/App.h>     // base OpenGL application API
+#include <vrj/Draw/OpenGL/ContextData.h> // for OpenGL resource IDs
 
 // texture application objects
 #include "renderGeometry.h"  // render interleaved vertex array data
@@ -62,7 +62,7 @@
 
 //: VR Juggler application demonstration to show you
 //  how to do texturing in an OpenGL juggler application
-class TextureDemoApplication : public vrj::GlApp
+class TextureDemoApplication : public vrj::opengl::App
 {
 public:
    //: Constructor
@@ -99,9 +99,9 @@ public:
 private:
    float x;
 
-   // use the type: GlContextData<ResourceID>
+   // use the type: opengl::ContextData<ResourceID>
    // to store your OpenGL texture object and display list IDs
-   // i.e. GlContextData<ResourceID>  mTexObj;
+   // i.e. opengl::ContextData<ResourceID>  mTexObj;
    class ResourceID
    {
    public:
@@ -114,26 +114,27 @@ private:
    // helper functions to make your code easier to read
    // i.e. hides all the static_cast and template lengthyness
    static void setTexObjID( Texture& t,
-                            vrj::GlContextData<ResourceID>& texObjectID )
+                            vrj::opengl::ContextData<ResourceID>& texObjectID )
    {
       void* data = reinterpret_cast<void*>( &texObjectID );
       t.setUserData( data );
    }
    static int& getTexObjID( Texture& t )
    {
-      vrj::GlContextData<ResourceID>* texObject = static_cast<vrj::GlContextData<ResourceID>* >( t.userData() );
+      vrj::opengl::ContextData<ResourceID>* texObject =
+         static_cast<vrj::opengl::ContextData<ResourceID>* >( t.userData() );
       return (*texObject)->id;
    }
 
    // Cube objects:
-   Texture                        mCubeTexture;
-   vrj::GlContextData<ResourceID> mCubeTextureObj;
-   cubeGeometry                   mCubeGeometry;
-   vrj::GlContextData<ResourceID> mCubeDisplayList;
+   Texture                              mCubeTexture;
+   vrj::opengl::ContextData<ResourceID> mCubeTextureObj;
+   cubeGeometry                         mCubeGeometry;
+   vrj::opengl::ContextData<ResourceID> mCubeDisplayList;
 
    // Floor:
-   Texture                        mFloorTexture;
-   vrj::GlContextData<ResourceID> mFloorTextureObj;
+   Texture                              mFloorTexture;
+   vrj::opengl::ContextData<ResourceID> mFloorTextureObj;
 
    gadget::PositionInterface mWand;
 

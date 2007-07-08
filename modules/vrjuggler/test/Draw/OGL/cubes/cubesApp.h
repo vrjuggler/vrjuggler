@@ -41,8 +41,8 @@
 #include <vector>
 
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OPenGL/App.h>
+#include <vrj/Draw/OPenGL/ContextData.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -149,11 +149,11 @@ public:
 //
 // This application simply renders a field of cubes.
 //---------------------------------------------------
-class cubesApp : public vrj::GlApp
+class cubesApp : public vrj::opengl::App
 {
 public:
    cubesApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern)
+      : vrj::opengl::App(kern)
       , mCurFrameNum(0)
    {
       /* Do nothing. */ ;
@@ -241,7 +241,7 @@ public:
       glClear(GL_DEPTH_BUFFER_BIT);
       initGLState();    // This should really be in another function
 
-      myDraw(vrj::GlDrawManager::instance()->currentUserData()->getUser());
+      myDraw(vrj::opengl::DrawManager::instance()->currentUserData()->getUser());
    }
 
    // Clear the buffer each frame.
@@ -315,11 +315,11 @@ private:
    }
 
 public:
-   vrj::GlContextData<ContextData>  mDlCubeData;  // Data for cube display lists
-   vrj::GlContextData<ContextData>  mDlConeData;  // Data for cone display lists
-   vrj::GlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
-   vrj::GlContextData<GLUquadric*>  mConeQuad;
-   vrj::GlContextData<GLUquadric*>  mBaseQuad;
+   vrj::opengl::ContextData<ContextData> mDlCubeData;  // Data for cube display lists
+   vrj::opengl::ContextData<ContextData> mDlConeData;  // Data for cone display lists
+   vrj::opengl::ContextData<ContextData> mDlDebugData; // Data for debugging display lists
+   vrj::opengl::ContextData<GLUquadric*> mConeQuad;
+   vrj::opengl::ContextData<GLUquadric*> mBaseQuad;
    std::vector<UserData*>           mUserData;    // All the users in the program
    vpr::TSObjectProxy<ContextTimingData>  mContextTiming;
 

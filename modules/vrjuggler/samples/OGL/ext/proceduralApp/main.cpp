@@ -52,7 +52,7 @@
 #include <gadget/Type/DigitalInterface.h>
 
 // --- Extensions for procedural apps --- //
-#include <vrj/Draw/OGL/GlProcApp.h>
+#include <vrj/Draw/OpenGL/ProcApp.h>
 
 
 // Callback methods
@@ -67,6 +67,7 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 
 
 using namespace vrj;
+using namespace vrj::opengl;
 using namespace gmtl;
 
 // Global variables //

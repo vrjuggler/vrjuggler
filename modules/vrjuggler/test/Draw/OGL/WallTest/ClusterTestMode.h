@@ -29,7 +29,7 @@
 
 #include <TestMode.h>
 #include <Text.h>
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 
 
 class WallTest;
@@ -40,6 +40,7 @@ public:
    ClusterTestMode()
       : mSleepTime(250)
    {;}
+
    virtual std::string getName()
    {
       return std::string("ClusterTestMode");
@@ -49,7 +50,7 @@ public:
 
    virtual void draw(WallTest* wallTest);
 
-   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
+   vrj::opengl::ContextData<Text> mText; /**< Context specific copy of text. */
    vpr::Uint32 mSleepTime;
 };
 

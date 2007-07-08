@@ -33,7 +33,7 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Output.h>
 
-#include <vrj/Draw/OGL/GlUserData.h>
+#include <vrj/Draw/OpenGL/UserData.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Kernel/User.h>
 #include <vpr/Perf/ProfileManager.h>
@@ -181,7 +181,7 @@ void UserData::updateShapeSetting()
 void cubesApp::init()
 {
    VPR_PROFILE_GUARD("cubesApp::init");
-   vrj::GlApp::init();
+   vrj::opengl::App::init();
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "---------- cubes:App:init() ---------------"
                         << std::endl << vprDEBUG_FLUSH;
@@ -299,9 +299,9 @@ void cubesApp::contextClose()
 // Draw the scene.  A bunch of boxes of
 // differing color and stuff.
 // NOTE: This draw routine places extreme stress on VR Juggler's
-//       vrj::GlContextData class (by repeatedly dereferencing it to access a
-//       display list index).  As such, performance of this method will suffer
-//       on multipipe configurations.
+//       vrj::pengl::ContextData class (by repeatedly dereferencing it to
+//       access a display list index).  As such, performance of this method
+//       will suffer on multipipe configurations.
 //       DO NOT IMITATE THIS CODE.
 void cubesApp::myDraw(vrj::UserPtr user)
 {
@@ -313,7 +313,8 @@ void cubesApp::myDraw(vrj::UserPtr user)
    static const float INCR = 0.1f;
 
    /*
-   vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
+   vrj::opengl::UserData* user_data =
+      vrj::opengl::DrawManager::instance()->currentUserData();
    int cur_eye = user_data->getProjection()->getEye();
 
    if(cur_eye == vrj::Projection::LEFT)

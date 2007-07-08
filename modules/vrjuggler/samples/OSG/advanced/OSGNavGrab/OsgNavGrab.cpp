@@ -40,7 +40,8 @@
 
 #include <string>
 
-OsgNavGrab::OsgNavGrab(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
+OsgNavGrab::OsgNavGrab(vrj::Kernel* kern, int& argc, char** argv)
+   : vrj::osg::App(kern)
 {
    mFileToLoad = std::string("");
 }
@@ -55,7 +56,7 @@ void OsgNavGrab::latePreFrame()
    mNavTrans->setMatrix(osg_current_matrix);
 
    // Finish updating the scene graph.
-   vrj::OsgApp::latePreFrame();
+   vrj::osg::App::latePreFrame();
 }
 
 void OsgNavGrab::preFrame()

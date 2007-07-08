@@ -29,8 +29,8 @@
 #include <gadget/Type/Digital.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
-#include <vrj/Draw/OGL/GlDrawManager.h>
-#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
+#include <vrj/Draw/OpenGL/Window.h>
 
 #include <WallTest.h>
 #include <WallTestHelpers.h>
@@ -43,8 +43,9 @@
 
 void ClusterTestMode::draw(WallTest* wallTest)
 {
-   vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
-   vrj::GlWindowPtr window = user_data->getGlWindow();
+   vrj::opengl::UserData* user_data =
+      vrj::opengl::DrawManager::instance()->currentUserData();
+   vrj::opengl::WindowPtr window = user_data->getGlWindow();
    gmtl::Matrix44f wand_matrix = wallTest->mWand->getData();
    gmtl::Vec3f wand_pos = gmtl::makeTrans<gmtl::Vec3f>(wand_matrix);
 

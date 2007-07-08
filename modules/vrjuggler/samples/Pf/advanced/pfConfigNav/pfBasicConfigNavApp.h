@@ -41,7 +41,7 @@
     // --- VR Juggler Stuff --- //
 #include <jccl/Config/ConfigElement.h>
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
+#include <vrj/Draw/Pf/App.h>    // the performer application base type
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Projection.h>  // for setNearFar (for setting clipping planes)
 #include <pfFileIO.h>

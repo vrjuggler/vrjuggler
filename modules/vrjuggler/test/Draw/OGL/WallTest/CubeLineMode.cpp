@@ -26,7 +26,7 @@
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
-#include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
 
 #include <WallTestHelpers.h>
 #include <CubeLineMode.h>
@@ -35,7 +35,7 @@
 void CubeLineMode::draw(WallTest*)
 {
    vrj::DisplayManager* displayManager =
-      vrj::GlDrawManager::instance()->getDisplayManager();
+      vrj::opengl::DrawManager::instance()->getDisplayManager();
    std::vector<vrj::DisplayPtr> disps = displayManager->getAllDisplays();
 
    for ( unsigned int i = 0; i < disps.size(); ++i )

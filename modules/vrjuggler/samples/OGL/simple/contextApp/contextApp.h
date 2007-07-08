@@ -32,8 +32,8 @@
 #include <iostream>
 #include <iomanip>
 
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/App.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -54,7 +54,7 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
  * It also has basic code that draws a box centered on
  * the origin
  */
-class contextApp : public GlApp
+class contextApp : public opengl::App
 {
 public:
    contextApp()
@@ -179,7 +179,7 @@ private:
    }
 
 public:
-   GlContextData<GLuint>  mCubeDlId;    /**< ID of the cube display list */
+   opengl::ContextData<GLuint> mCubeDlId; /**< ID of the cube display list */
 
    gadget::PositionInterface  mWand;    /**< Positional interface for Wand position */
    gadget::PositionInterface  mHead;    /**< Positional interface for Head position */

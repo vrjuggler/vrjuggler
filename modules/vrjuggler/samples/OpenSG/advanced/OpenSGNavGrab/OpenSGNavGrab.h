@@ -47,10 +47,10 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-#include <vrj/Draw/OpenSG/OpenSGApp.h>
+#include <vrj/Draw/OpenSG/App.h>
 
 
-class OpenSGNavGrab : public vrj::OpenSGApp
+class OpenSGNavGrab : public vrj::opensg::App
 {
 public:
    OpenSGNavGrab(vrj::Kernel* kern);

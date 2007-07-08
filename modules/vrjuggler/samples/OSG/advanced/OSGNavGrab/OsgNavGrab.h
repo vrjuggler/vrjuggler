@@ -49,12 +49,12 @@
 
 #include "nav.h"
 
-#include <vrj/Draw/OSG/OsgApp.h>
+#include <vrj/Draw/OSG/App.h>
 
 /**
  * Demonstration Open Scene Graph application class
  */
-class OsgNavGrab : public vrj::OsgApp
+class OsgNavGrab : public vrj::osg::App
 {
 public:
    OsgNavGrab(vrj::Kernel* kern, int& argc, char** argv);
@@ -78,7 +78,7 @@ public:
 
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
-      vrj::OsgApp::configSceneView(newSceneViewer);
+      vrj::osg::App::configSceneView(newSceneViewer);
 
       newSceneViewer->getLight()->setAmbient(osg::Vec4(0.3f,0.3f,0.3f,1.0f));
       newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));

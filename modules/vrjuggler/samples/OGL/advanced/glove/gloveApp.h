@@ -32,8 +32,8 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/App.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 #include <gadget/Type/GloveInterface.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -65,7 +65,7 @@
 // the nav is a hack, and well, it works for this silly little app.
 // be warned, it (navigation.h) won't be fun to extend
 
-class gloveApp : public vrj::GlApp
+class gloveApp : public vrj::opengl::App
 {
 // utility functions
 protected:
@@ -74,7 +74,7 @@ protected:
 // Application Functions:
 public:
    gloveApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern)
+      : vrj::opengl::App(kern)
       , mCubeSelected(false)
       , mSphereSelected(false)
       , mConeSelected(false)
@@ -203,7 +203,7 @@ protected:
 
    gmtl::Matrix44f mNavigation;
 
-   vrj::GlContextData<Scene> mScene;
+   vrj::opengl::ContextData<Scene> mScene;
 };
 
 

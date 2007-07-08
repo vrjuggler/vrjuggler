@@ -51,7 +51,7 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 
 
 LoggerApp::LoggerApp(vrj::Kernel* kernel)
-   : vrj::GlApp(kernel)
+   : vrj::opengl::App(kernel)
 {}
 
 LoggerApp::~LoggerApp()

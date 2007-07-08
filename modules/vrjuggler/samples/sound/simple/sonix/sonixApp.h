@@ -38,7 +38,7 @@
 #  include <GL/gl.h>
 #endif
 
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -57,12 +57,12 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 //----------------------------------------------------
 // Demonstration OpenGL application class with sound
 //----------------------------------------------------
-class sonixApp : public vrj::GlApp
+class sonixApp : public vrj::opengl::App
 {
 public:
    // Constructor.
    sonixApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern)         // Initialize base class
+      : vrj::opengl::App(kern)         // Initialize base class
    {;}
 
    // Destructor.

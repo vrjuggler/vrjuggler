@@ -30,7 +30,7 @@
 #include <TestMode.h>
 #include <gmtl/Vec.h>
 #include <vector>
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 #include <Text.h>
 
 class WallTest;
@@ -55,7 +55,7 @@ protected:
    std::vector<gmtl::Vec4f>  mLeftBufferColors;
    std::vector<gmtl::Vec4f>  mRightBufferColors;
    unsigned                  mFrameNum;
-   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
+   vrj::opengl::ContextData<Text> mText; /**< Context specific copy of text. */
 };
 
 

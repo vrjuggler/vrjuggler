@@ -37,7 +37,7 @@
 #endif
 
 #include <vpr/Util/Interval.h>
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 #include <Text.h>
 
 
@@ -74,7 +74,7 @@ public:
 
    std::stringstream    mOverlayTextStream;  /**< Text to write out each frame. */
    std::string          mOverlayTextToDraw;
-   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
+   vrj::opengl::ContextData<Text> mText;  /**< Context specific copy of text. */
 
    std::deque<float>    mFrameRateHistory;
    unsigned             mNumTrackedFrames;   /**< Number of frame rates to keep. */

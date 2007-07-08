@@ -48,8 +48,8 @@
 
 /*-----------------------------Juggler includes-------------------------------*/
 #include <vrj/vrjConfig.h>
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Draw/OpenSG/OpenSGApp.h>
+#include <vrj/Draw/OpenGL/App.h>
+#include <vrj/Draw/OpenSG/App.h>
 #include <vpr/Util/Singleton.h>
 
 #include <gmtl/Matrix.h>
@@ -60,7 +60,7 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 
 // Common viewer helper classes
 #include <Common/User.h>
@@ -68,11 +68,12 @@
 #include <Common/SelectionMethod.h>
 
 
-class OpenSGViewer : public vrj::OpenSGApp
+class OpenSGViewer : public vrj::opensg::App
 {
 public:
     OpenSGViewer(vrj::Kernel* kern)
-       : vrj::OpenSGApp(kern), velocity(0.0f)
+       : vrj::opensg::App(kern)
+       , velocity(0.0f)
     {
         std::cout << "OpenSGViewer::OpenSGViewer called\n";
         mFileToLoad = std::string("");

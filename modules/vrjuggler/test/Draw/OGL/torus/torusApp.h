@@ -30,7 +30,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -42,11 +42,11 @@ namespace vrjTest
 // Torus test OpenGL application class.
 // This application simply renders a torus in the corner of a multi-wall
 // projection system.
-class torusApp : public vrj::GlApp
+class torusApp : public vrj::opengl::App
 {
 public:
    torusApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern)
+      : vrj::opengl::App(kern)
       , mTorusRotation(0.0f)
    {
       ;

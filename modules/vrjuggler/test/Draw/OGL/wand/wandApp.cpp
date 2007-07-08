@@ -51,7 +51,7 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 
 
 wandApp::wandApp(vrj::Kernel* kernel)
-   : vrj::GlApp(kernel)
+   : vrj::opengl::App(kernel)
 {}
 
 wandApp::~wandApp()

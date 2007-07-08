@@ -48,20 +48,20 @@
 // Handle any initialization needed before API
 void OpenSGNav::init()
 {
-   vrj::OpenSGApp::init();      // Call base class init
+   vrj::opensg::App::init();      // Call base class init
 }
 
 /** Called once per context at context creation */
 void OpenSGNav::contextInit()
 {
-   vrj::OpenSGApp::contextInit();
+   vrj::opensg::App::contextInit();
    initGLState();
 }
 
 void OpenSGNav::draw()
 {
    // Call parent class first to render the scene graph
-   vrj::OpenSGApp::draw();
+   vrj::opensg::App::draw();
 }
 
 void OpenSGNav::preFrame()
@@ -117,7 +117,7 @@ void OpenSGNav::preFrame()
    mSceneTransform->editMatrix().multLeft(trans_mat);
 #endif
 
-   vrj::OpenSGApp::preFrame();
+   vrj::opensg::App::preFrame();
 }
 
 void OpenSGNav::exit()
@@ -130,7 +130,7 @@ void OpenSGNav::exit()
    mLightNode      = OSG::NullFC;
    mLightBeacon    = OSG::NullFC;
 
-   vrj::OpenSGApp::exit();
+   vrj::opensg::App::exit();
 }
 
 /** Initialize GL state. Hold over from regular OGL apps */

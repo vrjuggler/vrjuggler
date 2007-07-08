@@ -47,8 +47,8 @@
 
 // VR juggler
 #include <vpr/Util/Interval.h>
-#include <vrj/Draw/OGL/GlApp.h>     // base OpenGL application API
-#include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
+#include <vrj/Draw/OpenGL/App.h>     // base OpenGL application API
+#include <vrj/Draw/OpenGL/ContextData.h> // for OpenGL resource IDs
 
 // Gadgeteer Input devices:
 #include <gadget/Type/AnalogInterface.h>
@@ -60,7 +60,7 @@
 
 //: VR Juggler application demonstration to show you
 //  how to do texturing in an OpenGL juggler application
-class AnalogDemoApplication : public vrj::GlApp
+class AnalogDemoApplication : public vrj::opengl::App
 {
 public:
    //: Constructor
@@ -110,8 +110,8 @@ private:
       int id;
    };
 
-   cubeGeometry                   mCubeGeometry;
-   vrj::GlContextData<ResourceID> mCubeDisplayList;
+   cubeGeometry                         mCubeGeometry;
+   vrj::opengl::ContextData<ResourceID> mCubeDisplayList;
 
    gadget::PositionInterface mWand;
 

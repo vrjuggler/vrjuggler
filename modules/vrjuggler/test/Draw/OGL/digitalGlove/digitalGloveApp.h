@@ -40,7 +40,7 @@
 #endif
 
 #include <gmtl/Point.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/GloveInterface.h>
@@ -53,12 +53,12 @@
 // This application draws a glove and some rays and spheres
 // on the glove
 //----------------------------------------------------
-class digitalGloveApp : public vrj::GlApp
+class digitalGloveApp : public vrj::opengl::App
 {
 public:
    // Constructor.
    digitalGloveApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern)            // Initialize base class
+      : vrj::opengl::App(kern)          // Initialize base class
       , mQuadObj(NULL)
    {
    }

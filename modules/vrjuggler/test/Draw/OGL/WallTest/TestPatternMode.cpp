@@ -38,7 +38,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 
-#include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/Display.h>
@@ -49,7 +49,8 @@
 
 void TestPatternMode::draw(WallTest*)
 {
-   vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
+   vrj::opengl::UserData* user_data =
+      vrj::opengl::DrawManager::instance()->currentUserData();
    vrj::ViewportPtr cur_vp    = user_data->getViewport();
    vrj::ProjectionPtr proj    = user_data->getProjection();
 
@@ -62,7 +63,7 @@ void TestPatternMode::draw(WallTest*)
    if ( cur_vp->isSimulator() )
    {
       vrj::DisplayManager* displayManager =
-         vrj::GlDrawManager::instance()->getDisplayManager();
+         vrj::opengl::DrawManager::instance()->getDisplayManager();
       std::vector<vrj::DisplayPtr> disps = displayManager->getAllDisplays();
 
       for ( unsigned int i = 0; i < disps.size(); ++i )

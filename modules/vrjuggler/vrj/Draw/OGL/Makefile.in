@@ -41,35 +41,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GL_LIBRARY)
 
-SRCS=		GlApp.cpp			\
-		GlBasicSimulator.cpp		\
-		GlDrawHeadFunctors.cpp		\
-		GlDrawManager.cpp		\
-		GlDrawWandFunctors.cpp		\
-		GlExtensionLoader.cpp		\
-		GlPipe.cpp			\
-		GlProcApp.cpp			\
-		GlSimInterface.cpp		\
-		GlSimInterfaceFactory.cpp	\
-		GlUserData.cpp			\
-		GlWindow.cpp
-
-ifeq (@OS_TYPE@, Win32)
-   SRCS+=	GlWindowWin32.cpp
-else
-   ifeq (@PLATFORM@, Darwin)
-      ifeq (@GADGET_USE_X11@, yes)
-         SRCS+=	GlWindowXWin.cpp	\
-		GlxExtensionLoader.cpp
-      else
-         SRCS+=	GlViewCocoa.mm		\
-		GlWindowCocoa.mm
-      endif
-   else
-      SRCS+=	GlWindowXWin.cpp	\
-		GlxExtensionLoader.cpp
-   endif
-endif
+SRCS=
 
 include $(MKPATH)/dpp.obj.mk
 

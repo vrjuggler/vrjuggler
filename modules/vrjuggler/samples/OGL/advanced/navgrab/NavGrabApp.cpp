@@ -42,7 +42,7 @@
 
 void NavGrabApp::init()
 {
-   vrj::GlApp::init();
+   vrj::opengl::App::init();
 
    mHead.init("VJHead");
    mWand.init("VJWand");

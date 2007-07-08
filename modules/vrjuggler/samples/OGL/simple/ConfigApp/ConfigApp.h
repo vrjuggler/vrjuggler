@@ -37,7 +37,7 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 
 using namespace gmtl;
@@ -45,14 +45,14 @@ using namespace jccl;
 using namespace gadget;
 using namespace vrj;
 
-class ConfigApp : public GlApp
+class ConfigApp : public opengl::App
 {
 public:
    /**
     * Initializes the surface color to a white, gray, and black gradient.
     * This will be the default surface color unless we are told otherwise.
     */
-   ConfigApp();
+   ConfigApp(vrj::Kernel* kern = NULL);
 
    /**
     * Define a virtual destructor for good measure.

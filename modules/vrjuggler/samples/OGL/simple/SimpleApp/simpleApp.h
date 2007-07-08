@@ -38,7 +38,7 @@
 #  include <GL/gl.h>
 #endif
 
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -58,7 +58,7 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
  * It also has basic code that draws a box centered on
  * the origin.
  */
-class simpleApp : public GlApp
+class simpleApp : public opengl::App
 {
 public:
    simpleApp()

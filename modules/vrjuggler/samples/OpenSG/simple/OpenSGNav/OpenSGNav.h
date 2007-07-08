@@ -39,8 +39,8 @@
 
 /*-----------------------------Juggler includes-------------------------------*/
 #include <vrj/vrjConfig.h>
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Draw/OpenSG/OpenSGApp.h>
+#include <vrj/Draw/OpenGL/App.h>
+#include <vrj/Draw/OpenSG/App.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -51,15 +51,15 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 
 
 
-class OpenSGNav : public vrj::OpenSGApp
+class OpenSGNav : public vrj::opensg::App
 {
 public:
    OpenSGNav(vrj::Kernel* kern)
-      : vrj::OpenSGApp(kern)
+      : vrj::opensg::App(kern)
       , mFileToLoad("")
       , mVelocity(0.0f)
    {

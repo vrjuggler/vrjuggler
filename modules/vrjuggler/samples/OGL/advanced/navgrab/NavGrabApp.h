@@ -43,26 +43,23 @@
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 #include <vrj/Test/TestRunner.h>
 
 
-class NavGrabApp : public vrj::GlApp
+class NavGrabApp : public vrj::opengl::App
 {
 public:
-   NavGrabApp()
-      : vrj::GlApp(), mSphereQuad(NULL), mSphereIsect(false),
-        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false),
-        mFramesToSleep(25), mTestRunner(NULL)
-   {
-      initShapes();
-   }
-
-   NavGrabApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern), mSphereQuad(NULL), mSphereIsect(false),
-        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false),
-        mFramesToSleep(25), mTestRunner(NULL)
+   NavGrabApp(vrj::Kernel* kern = NULL)
+      : vrj::opengl::App(kern)
+      , mSphereQuad(NULL)
+      , mSphereIsect(false)
+      , mSphereSelected(false)
+      , mCubeIsect(false)
+      , mCubeSelected(false)
+      , mFramesToSleep(25)
+      , mTestRunner(NULL)
    {
       initShapes();
    }

@@ -29,7 +29,7 @@
 #include <gadget/InputLogger.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 
@@ -41,7 +41,7 @@ namespace vrjTest
  *
  * This application tests the InputLogger interface in gadgeteer.
  */
-class LoggerApp : public vrj::GlApp
+class LoggerApp : public vrj::opengl::App
 {
 public:
    /** Constructor. */

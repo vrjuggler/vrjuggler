@@ -27,80 +27,38 @@
 #ifndef _VRJ_GL_USER_DATA_H_
 #define _VRJ_GL_USER_DATA_H_
 
-#include <vrj/Draw/OGL/Config.h>
+/**
+ * \file
+ *
+ * This file is for backwards compatibility with VR Juggler 2.x code. New
+ * code should not include this header and should use
+ * vrj/Draw/OpenGL/UserData.h.
+ *
+ * @deprecated This file has been deprecated in favor of
+ *             vrj/Draw/OpenGL/UserData.h.
+ */
 
-#include <vrj/Kernel/UserPtr.h>
-#include <vrj/Display/ProjectionPtr.h>
-#include <vrj/Display/ViewportPtr.h>
-#include <vrj/Draw/OGL/GlWindowPtr.h>
+#if defined(__GNUC__)
+#warning "This header is deprecated. Use vrj/Draw/OpenGL/UserData.h instead."
+#endif
+
+#include <vrj/Draw/OpenGL/UserData.h>
 
 
 namespace vrj
 {
 
-/** \class GlUserData GlUserData.h vrj/Draw/OGL/GlUserData.h
+/**
+ * Backwards compatibility type declaration for vrj::opengl::UserData.
  *
- * Holds data about OpenGL users for draw process.
+ * @since 2.3.11
  *
- * This class holds interesting information that can be used in an OpenGL draw
- * callback to find information about the user.
- *
- * @note These values are only intended for use by advanced users/applications.
- *       By using these values it is possible to create applications that are
- *       non-portable.
+ * @deprecated vrj::GlUserData has been deprecated in favor of
+ *             vrj::opengl::UserData.
  */
-class VJ_OGL_CLASS_API GlUserData
-{
-public:
-   GlUserData();
-
-   const UserPtr getUser() const
-   {
-      return mUser;
-   }
-
-   void setUser(UserPtr user)
-   {
-      mUser = user;
-   }
-
-   const ProjectionPtr getProjection() const
-   {
-      return mProj;
-   }
-
-   void setProjection(ProjectionPtr proj)
-   {
-      mProj = proj;
-   }
-
-   const ViewportPtr getViewport() const
-   {
-      return mViewport;
-   }
-
-   void setViewport(ViewportPtr vp)
-   {
-      mViewport = vp;
-   }
-
-   const GlWindowPtr getGlWindow() const
-   {
-      return mGlWindow;
-   }
-
-   void setGlWindow(GlWindowPtr win)
-   {
-      mGlWindow = win;
-   }
-
-protected:
-   UserPtr       mUser;        /**< The current user we are rendering */
-   ProjectionPtr mProj;        /**< The current projection being used */
-   ViewportPtr   mViewport;    /**< The current vrj viewport being used */
-   GlWindowPtr   mGlWindow;    /**< The current GL window that we are rendering in. (basically the gl context) */
-};
+typedef vrj::opengl::UserData GlUserData;
 
 }
+
 
 #endif

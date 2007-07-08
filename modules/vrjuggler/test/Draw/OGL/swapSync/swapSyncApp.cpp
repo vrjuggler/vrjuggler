@@ -50,7 +50,8 @@ namespace vrjTest
 {
 
 SwapSyncApp::SwapSyncApp(vrj::Kernel* kernel)
-   : vrj::GlApp(kernel), mFrameNum(0)
+   : vrj::opengl::App(kernel)
+   , mFrameNum(0)
 {}
 
 SwapSyncApp::~SwapSyncApp()

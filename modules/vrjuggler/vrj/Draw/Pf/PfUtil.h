@@ -24,36 +24,30 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_PF_UTIL_H_
-#define _VRJ_PF_UTIL_H_
+#ifndef _VRJ_PF_UTIL_COMPAT_H_
+#define _VRJ_PF_UTIL_COMPAT_H_
 
-/**************************************************
-* Performer helper routines                       *
-***************************************************/
+/**
+ * \file
+ *
+ * This file is for backwards compatibility with VR Juggler 2.x code. New
+ * code should not include this header and should use vrj/Draw/Pf/Util.h.
+ *
+ * @deprecated This file has been deprecated in favor of vrj/Draw/Pf/Util.h.
+ */
 
-#include <vrj/Draw/Pf/Config.h>
+#if defined(__GNUC__)
+#warn "WARNING: This header is deprecated. Use vrj/Draw/Pf/Util.h instead."
+#endif
 
-#include <Performer/pr/pfLinMath.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
+#include <vrj/Draw/Pf/Util.h>
 
 namespace vrj
 {
 
-
-/** Converts Performer matrix to Juggler (GMTL) matrix. */
-VJ_PF_API(gmtl::Matrix44f) GetVjMatrix(const pfMatrix& perfMat);
-
-/** Converts Juggler (GMTL) matrix to Pf Matrix. */
-VJ_PF_API(pfMatrix) GetPfMatrix(const gmtl::Matrix44f& mat);
-
-/** Converts Performer 3-element vector to Juggler (GMTL) vector. */
-VJ_PF_API(gmtl::Vec3f) GetVjVec(const pfVec3& vec);
-
-/** Converts Juggler (GMTL) vector to Pf vector. */
-VJ_PF_API(pfVec3) GetPfVec(const gmtl::Vec3f& vec);
-
+using namespace vrj::pf;
 
 }
+
 
 #endif

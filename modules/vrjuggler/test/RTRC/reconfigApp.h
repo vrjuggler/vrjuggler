@@ -45,15 +45,15 @@
 #include <gadget/Type/DigitalInterface.h>
 
 #include <vrj/Display/DisplayPtr.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 #include <vrj/Kernel/Kernel.h>
 
 
-class reconfigApp : public vrj::GlApp
+class reconfigApp : public vrj::opengl::App
 {
 public:
    reconfigApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern)
+      : vrj::opengl::App(kern)
       , mNewCfg(NULL)
    {
       /* Do nothing. */ ;

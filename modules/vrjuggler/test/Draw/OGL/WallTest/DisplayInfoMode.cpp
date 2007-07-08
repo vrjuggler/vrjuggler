@@ -36,7 +36,7 @@
 #include <GL/gl.h>
 #endif
 
-#include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/Display.h>
@@ -49,8 +49,10 @@
 
 void DisplayInfoMode::draw(WallTest*)
 {
-   DisplayManager* displayManager   = vrj::GlDrawManager::instance()->getDisplayManager();
-   vrj::GlUserData* user_data       = vrj::GlDrawManager::instance()->currentUserData();
+   DisplayManager* displayManager =
+      vrj::opengl::DrawManager::instance()->getDisplayManager();
+   vrj::opengl::UserData* user_data =
+      vrj::opengl::DrawManager::instance()->currentUserData();
    vrj::DisplayPtr display          = user_data->getViewport()->getDisplay();
    vrj::ViewportPtr viewport        = user_data->getViewport();
    vrj::ProjectionPtr proj          = user_data->getProjection();

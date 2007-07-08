@@ -34,7 +34,7 @@
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Output.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
@@ -48,9 +48,10 @@ using namespace vrj;
  *
  * This application demonstrates getting and printing input
  *
- * @note It is derived from GlApp only because App is an abstract base class.
+ * @note It is derived from opengl::App only because App is an abstract base
+ *       class.
  */
-class simpleInput : public GlApp
+class simpleInput : public opengl::App
 {
 public:
    simpleInput()

@@ -29,7 +29,7 @@
 
 #include <TestMode.h>
 #include <Text.h>
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 
 
 class WallTest;
@@ -50,7 +50,7 @@ public:
 
    void drawCubeOrTriangle();
    
-   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
+   vrj::opengl::ContextData<Text> mText; /**< Context specific copy of text. */
 };
 
 

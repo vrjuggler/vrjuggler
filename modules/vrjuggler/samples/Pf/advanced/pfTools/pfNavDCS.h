@@ -34,7 +34,7 @@
 
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Draw/Pf/PfUtil.h>
+#include <vrj/Draw/Pf/Util.h>
 #include <gadget/Type/PositionInterface.h>
 
 #include <navigator.h>
@@ -122,7 +122,7 @@ inline void pfNavDCS::updateTransformMatrix()
    gmtl::Matrix44f cur_pos_inv, cur_pos;
    cur_pos = mNaver->getCurPos();
    gmtl::invert( cur_pos_inv, cur_pos );
-   pfMatrix model_move = vrj::GetPfMatrix( cur_pos_inv );
+   pfMatrix model_move = vrj::pf::GetPfMatrix(cur_pos_inv);
    this->setMat( model_move );
 }
 

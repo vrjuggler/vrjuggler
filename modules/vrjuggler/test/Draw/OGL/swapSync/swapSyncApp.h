@@ -26,7 +26,7 @@
 #ifndef _SWAP_SYNC_APP_
 #define _SWAP_SYNC_APP_
 
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 namespace vrjTest
 {
@@ -38,7 +38,7 @@ namespace vrjTest
  * this with a different color each frame.  The point is to allow
  * easy visual detection of synchronized swapping.
  */
-class SwapSyncApp : public vrj::GlApp
+class SwapSyncApp : public vrj::opengl::App
 {
 public:
    SwapSyncApp(vrj::Kernel* kernel);

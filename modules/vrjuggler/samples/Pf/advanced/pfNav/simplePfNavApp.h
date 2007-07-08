@@ -31,7 +31,7 @@
 #include "KeyFramer.h" // for keyframer...
 #include <PfAppStats.h> // for stats
 #include "StopWatch.h"    // for time
-#include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
+#include <vrj/Draw/Pf/App.h>    // the performer application base type
 
 #include <snx/SoundHandle.h>
 
@@ -51,7 +51,7 @@ extern int AppNotifyPostTrav( pfTraverser* trav, void* data );
 // but really hard to understand.
 // - i.e. don't use this to learn vrjuggler or performer!
 //        you've been warned...
-class simplePfNavApp : public vrj::PfApp
+class simplePfNavApp : public vrj::pf::App
 {
 public:
    // Model and sound member classes

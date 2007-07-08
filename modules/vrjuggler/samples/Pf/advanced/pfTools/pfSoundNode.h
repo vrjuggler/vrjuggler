@@ -32,7 +32,7 @@
 #include <Performer/pr/pfLinMath.h>
 
 #include <vrj/Util/Debug.h>
-#include <vrj/Draw/Pf/PfUtil.h>
+#include <vrj/Draw/Pf/Util.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfTraverser.h>
 

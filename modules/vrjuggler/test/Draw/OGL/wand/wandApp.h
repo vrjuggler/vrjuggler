@@ -28,7 +28,7 @@
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 
@@ -43,7 +43,7 @@ namespace vrjTest
  * This application simply renders a box on the wand with the axes for the
  * wand's coordinate space.
  */
-class wandApp : public vrj::GlApp
+class wandApp : public vrj::opengl::App
 {
 public:
    /** Constructor. */
@@ -53,17 +53,18 @@ public:
    ~wandApp();
 
    /**
-    * Execute any initialization needed before the API is started<BR><BR>
+    * Execute any initialization needed before the API is started.
     * Initialize VR Juggler device interfaces here.
     *
-    * This is called once before OGL is initialized
+    * This is called once before OpenGL is initialized
     */
    void init();
 
    /**
-    * Function that is called immediately after a new OGL context is created.
-    * This is called for every display window that is opened.  Initialize GL
-    * state here. Also used to create context specific information<BR>
+    * Function that is called immediately after a new OpenGL context is
+    * created. This is called for every display window that is opened.
+    * Initialize OpenGL state here. Also used to create context specific
+    * information.
     *
     * This is called once for each display (twice for each stereo display)
     */

@@ -51,7 +51,7 @@
 // Handle any initialization needed before API
 void OpenSGViewer::init()
 {
-   vrj::OpenSGApp::init();      // Call base class init
+   vrj::opensg::App::init();      // Call base class init
    mUser->init();
 
    // Setup the selection and manipulation methods
@@ -64,14 +64,14 @@ void OpenSGViewer::init()
 /** Called once per context at context creation */
 void OpenSGViewer::contextInit()
 {
-   vrj::OpenSGApp::contextInit();
+   vrj::opensg::App::contextInit();
    initGLState();
 }
 
 void OpenSGViewer::draw()
 {
    // Call parent class first to render the scene graph
-   vrj::OpenSGApp::draw();
+   vrj::opensg::App::draw();
 }
 
 void OpenSGViewer::preFrame()

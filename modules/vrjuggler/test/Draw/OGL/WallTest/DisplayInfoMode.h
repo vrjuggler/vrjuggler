@@ -27,7 +27,7 @@
 #ifndef _DISPLAY_INFO_MODE_H_
 #define _DISPLAY_INFO_MODE_H_
 
-#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 
 #include <Text.h>
 #include <TestMode.h>
@@ -50,7 +50,7 @@ public:
    virtual void draw(WallTest*);
 
 protected:
-   vrj::GlContextData<Text>   mText;         /**< Context specific copy of text. */
+   vrj::opengl::ContextData<Text> mText; /**< Context specific copy of text. */
 };
 
 

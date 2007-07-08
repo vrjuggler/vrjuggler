@@ -28,7 +28,7 @@
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <vpr/IO/SerializableObject.h>
@@ -44,7 +44,7 @@ namespace vrjTest
  * This application simply renders a box on the wand with the axes for the
  * wand's coordinate space.
  */
-class applicationDataApp : public vrj::GlApp
+class applicationDataApp : public vrj::opengl::App
 {
 public:
    /** Constructor. */

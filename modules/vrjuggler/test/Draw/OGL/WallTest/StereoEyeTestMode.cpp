@@ -27,7 +27,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
-#include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
 
 #include <WallTestHelpers.h>
 #include <StereoEyeTestMode.h>
@@ -36,7 +36,7 @@
 void StereoEyeTestMode::draw(WallTest*)
 {
    vrj::DisplayManager* displayManager =
-      vrj::GlDrawManager::instance()->getDisplayManager();
+      vrj::opengl::DrawManager::instance()->getDisplayManager();
    std::vector<vrj::DisplayPtr> disps = displayManager->getAllDisplays();
 
    for ( unsigned int i = 0; i < disps.size(); ++i )
@@ -76,7 +76,7 @@ void StereoEyeTestMode::draw(WallTest*)
 void StereoEyeTestMode::drawCubeOrTriangle()
 {
    vrj::ProjectionPtr currentProjection =
-      vrj::GlDrawManager::instance()->currentUserData()->getProjection();
+      vrj::opengl::DrawManager::instance()->currentUserData()->getProjection();
    int currentEye = currentProjection->getEye();
 
    glPushMatrix();

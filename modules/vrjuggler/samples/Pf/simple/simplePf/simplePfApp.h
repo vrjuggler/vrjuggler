@@ -40,14 +40,14 @@
 
 // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
+#include <vrj/Draw/Pf/App.h>    /* the performer application base type */
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Projection.h>  /* for setNearFar (for setting clipping planes) */
 
 using namespace vrj;
 
 // Declare my application class
-class simplePfApp : public PfApp
+class simplePfApp : public pf::App
 {
 public:
    simplePfApp()

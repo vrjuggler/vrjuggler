@@ -1,5 +1,13 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-08-2007 patrick     Code in the Draw Manager implementations is now in a
+                        namespace specific to each implementation, and the
+                        classes contained therein no longer have the Draw
+                        Manager abbreviation at the start of their name. The
+                        namespaces are vrj::opengl (vrj/Draw/OpenGL), vrj::osg
+                        (vrj/Draw/OSG), vrj::opensg (vrj/Draw/OpenSG), vrj::pf
+                        (vrj/Draw/Pf), and vrj::direct3d (vrj/Draw/Performer).
+                        NEW VERSION: 2.3.11
 Jul-08-2007 patrick     Debug-enabled code linked against the release runtime
                         on Windows is now named the same as optimized code.
                         The debug DLLs are installed in the "debug"

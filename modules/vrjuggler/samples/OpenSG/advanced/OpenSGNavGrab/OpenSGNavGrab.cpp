@@ -45,7 +45,7 @@
 // ------------------------------ Public methods ------------------------------
 
 OpenSGNavGrab::OpenSGNavGrab(vrj::Kernel* kern)
-   : vrj::OpenSGApp(kern)
+   : vrj::opensg::App(kern)
    , mVelocity(0.0f)
    , mIntersectColor(1.0f, 1.0f, 0.0f)
    , mGrabColor(1.0f, 0.0f, 1.0f)
@@ -81,8 +81,8 @@ void OpenSGNavGrab::init()
    mButton2.init("VJButton2");
 
    // Call the base class init() implementation.  This is required for
-   // subclasses of vrj::OpenSGApp that override vrj::OpenSGApp::init().
-   vrj::OpenSGApp::init();
+   // subclasses of vrj::opensg::App that override vrj::opensg::App::init().
+   vrj::opensg::App::init();
 }
 
 void OpenSGNavGrab::initScene()
@@ -264,8 +264,9 @@ void OpenSGNavGrab::initScene()
 void OpenSGNavGrab::contextInit()
 {
    // Call the base class contextInit() implementation.  This is required for
-   // subclasses of vrj::OpenSGApp that override vrj::OpenSGApp::contextInit().
-   vrj::OpenSGApp::contextInit();
+   // subclasses of vrj::opensg::App that override
+   // vrj::opensg::App::contextInit().
+   vrj::opensg::App::contextInit();
    initGLState();
 }
 
@@ -308,7 +309,7 @@ void OpenSGNavGrab::preFrame()
    updateGrabbing(wand_mat);
    updateNavigation(wand_mat);
 
-   vrj::OpenSGApp::preFrame();
+   vrj::opensg::App::preFrame();
 }
 
 void OpenSGNavGrab::reset()
@@ -354,7 +355,7 @@ void OpenSGNavGrab::exit()
    mHighlightPoints   = OSG::NullFC;
    mHighlightMaterial = OSG::NullFC;
 
-   vrj::OpenSGApp::exit();
+   vrj::opensg::App::exit();
 }
 
 // ----------------------------- Private methods ------------------------------

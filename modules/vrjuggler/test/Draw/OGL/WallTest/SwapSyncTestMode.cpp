@@ -27,7 +27,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
-#include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
 #include <vpr/System.h>
 
 #include <WallTestHelpers.h>
@@ -58,7 +58,7 @@ void SwapSyncTestMode::update(WallTest*)
 void SwapSyncTestMode::bufferPreDraw(WallTest*)
 {
    vrj::ProjectionPtr currentProjection =
-      vrj::GlDrawManager::instance()->currentUserData()->getProjection();
+      vrj::opengl::DrawManager::instance()->currentUserData()->getProjection();
    int currentEye = currentProjection->getEye();
 
    unsigned choice = (mFrameNum % 4);
@@ -84,7 +84,7 @@ void SwapSyncTestMode::bufferPreDraw(WallTest*)
 void SwapSyncTestMode::draw(WallTest*)
 {
    vrj::ProjectionPtr currentProjection =
-      vrj::GlDrawManager::instance()->currentUserData()->getProjection();
+      vrj::opengl::DrawManager::instance()->currentUserData()->getProjection();
    int cur_eye = currentProjection->getEye();
 
 

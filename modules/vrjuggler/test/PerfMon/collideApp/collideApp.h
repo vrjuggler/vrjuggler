@@ -42,7 +42,7 @@
 #include <GL/glu.h>
 #endif
 
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <vpr/vpr.h>
@@ -117,7 +117,7 @@ public:
  * Various new features of VR Juggler are demonstrated here
  * using collision detection.
  */
-class collideApp : public GlApp
+class collideApp : public opengl::App
 {
 public:
    collideApp()

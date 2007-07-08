@@ -27,16 +27,38 @@
 #ifndef _VRJ_GL_WINDOW_PTR_H_
 #define _VRJ_GL_WINDOW_PTR_H_
 
-#include <boost/shared_ptr.hpp>
+/**
+ * \file
+ *
+ * This file is for backwards compatibility with VR Juggler 2.x code. New
+ * code should not include this header and should use
+ * vrj/Draw/OpenGL/GlWindowPtr.h.
+ *
+ * @deprecated This file has been deprecated in favor of
+ *             vrj/Draw/OpenGL/GlWindowPtr.h.
+ */
+
+#if defined(__GNUC__)
+#warning "This header is deprecated. Use vrj/Draw/OpenGL/WindowPtr.h instead."
+#endif
+
+#include <vrj/Draw/OpenGL/WindowPtr.h>
 
 
 namespace vrj
 {
 
-class GlWindow;
-typedef boost::shared_ptr<GlWindow> GlWindowPtr;
+/**
+ * Backwards compatibility type declaration for vrj::opengl::WindowPtr.
+ *
+ * @since 2.3.11
+ *
+ * @deprecated vrj::GlWindowPtr has been deprecated in favor of
+ *             vrj::opengl::WindowPtr.
+ */
+typedef vrj::opengl::WindowPtr GlWindowPtr;
 
-}
+} // End of vrj namespace
 
 
 #endif /* _VRJ_GL_WINDOW_PTR_H_ */

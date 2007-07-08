@@ -38,7 +38,7 @@
 #  include <GL/gl.h>
 #endif
 
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 
 #include <snx/SoundHandle.h>
 #include <gadget/Type/PositionInterface.h>
@@ -56,12 +56,12 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 //
 // This application simply renders a box on the wand
 //----------------------------------------------------
-class soundManagerApp : public vrj::GlApp
+class soundManagerApp : public vrj::opengl::App
 {
 public:
    // Constructor.
    soundManagerApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern)         // Initialize base class
+      : vrj::opengl::App(kern)         // Initialize base class
    {;}
 
    // Destructor.
