@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-08-2007 patrick     Debug-enabled code linked against the release runtime
+                        on Windows is now named the same as optimized code.
+                        The debug DLLs are installed in the "debug"
+                        subdirectory.
+                        NEW VERSION: 1.3.2
 Jun-26-2007 patrick     Changed the preprocessor identification of debug versus
                         optimized to look for SNX_DEBUG or JUGGLER_DEBUG
                         instead of _DEBUG (and SNX_OPT or JUGGLER_OPT instead
