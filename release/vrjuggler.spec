@@ -830,6 +830,7 @@ rm -rf %{buildroot}
 %defattr(-, root, root)
 %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OGL
 %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OSG
+%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OpenGL
 %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OpenSG
 %{_libdir}/libvrj_ogl*.a
 %{_libdir}/%{vj_arch}/libvrj_ogl*.a
