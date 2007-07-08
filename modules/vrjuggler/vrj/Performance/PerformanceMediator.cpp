@@ -188,6 +188,12 @@ namespace vrj
                           std::string(vrjuggler_subdir) /
                           std::string("plugins");
 
+#if defined(VJ_DEBUG)
+      // For a debug build, search in plugins/debug first.
+      search_path.insert(search_path.begin(),
+                         search_path[0] / std::string("debug"));
+#endif
+
       try
       {
          // In the long run, we may not want to hard-code the base name of the
