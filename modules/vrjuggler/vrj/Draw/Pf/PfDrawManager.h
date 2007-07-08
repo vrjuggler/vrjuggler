@@ -39,7 +39,7 @@
  */
 
 #if defined(__GNUC__)
-#warn "WARNING: This header is deprecated. Use vrj/Draw/Pf/DrawManager.h instead."
+#warning "This header is deprecated. Use vrj/Draw/Pf/DrawManager.h instead."
 #endif
 
 #include <vrj/Draw/Pf/DrawManager.h>

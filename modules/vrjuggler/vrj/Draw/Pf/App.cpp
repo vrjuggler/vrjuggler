@@ -26,26 +26,32 @@
 
 #include <vrj/Draw/Pf/Config.h>
 
-#include <vrj/Draw/Pf/PfDrawManager.h>
-#include <vrj/Draw/Pf/PfApp.h>
+#include <vrj/Draw/Pf/DrawManager.h>
+#include <vrj/Draw/Pf/App.h>
 
 
 namespace vrj
 {
 
-PfApp::PfApp(Kernel* kern) : App(kern)
+namespace pf
+{
+
+App::App(Kernel* kern)
+   : vrj::App(kern)
 {
    /* Do nothing. */ ;
 }
 
-PfApp::~PfApp()
+App::~App()
 {
    /* Do nothing. */ ;
 }
 
-vrj::DrawManager* PfApp::getDrawManager()
+vrj::DrawManager* App::getDrawManager()
 {
-   return PfDrawManager::instance();
+   return vrj::pf::DrawManager::instance();
 }
+
+} // End of pf namespace
 
 } // End of vrj namespace

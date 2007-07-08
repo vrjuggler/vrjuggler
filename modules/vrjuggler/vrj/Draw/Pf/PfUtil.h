@@ -37,7 +37,7 @@
  */
 
 #if defined(__GNUC__)
-#warn "WARNING: This header is deprecated. Use vrj/Draw/Pf/Util.h instead."
+#warning "This header is deprecated. Use vrj/Draw/Pf/Util.h instead."
 #endif
 
 #include <vrj/Draw/Pf/Util.h>

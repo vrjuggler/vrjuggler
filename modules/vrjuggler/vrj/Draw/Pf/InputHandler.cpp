@@ -32,7 +32,7 @@
 #include <Performer/pf/pfPipeWindow.h>
 
 #include <vrj/Util/Debug.h>
-#include <vrj/Draw/Pf/PfInputHandler.h>
+#include <vrj/Draw/Pf/InputHandler.h>
 
 #ifndef GET_X_LPARAM
 #  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
@@ -44,8 +44,11 @@
 namespace vrj
 {
 
-PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow,
-                               const std::string& displayName)
+namespace pf
+{
+
+InputHandler::InputHandler(pfPipeWindow* pipeWindow,
+                           const std::string& displayName)
 {
    mName = displayName;
    mPipeWindow = pipeWindow;
@@ -61,7 +64,7 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow,
 }
 
 #ifndef VPR_OS_Windows
-void PfInputHandler::openConnection()
+void InputHandler::openConnection()
 {
    static Atom wm_protocols, wm_delete_window;
 
@@ -115,11 +118,10 @@ void PfInputHandler::openConnection()
 }
 #endif
 
-void PfInputHandler::checkEvents()
+void InputHandler::checkEvents()
 {
    handleEvents();
 }
-
 
 #ifdef VPR_OS_Windows
 LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam,
@@ -148,7 +150,7 @@ LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam,
 #endif
 
 #ifndef VPR_OS_Windows
-void PfInputHandler::handleEvents()
+void InputHandler::handleEvents()
 {
    XEvent		event;
 
@@ -191,17 +193,19 @@ void PfInputHandler::handleEvents()
    }
 }
 
-int PfInputHandler::errorHandler(::Display*, XErrorEvent* e)
+int InputHandler::errorHandler(::Display*, XErrorEvent* e)
 {
    char* errorOutput = new char[512];
    XGetErrorText(e->display, (int) e->error_code, errorOutput, 512);
    vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR:")
-         << "PfInputHandler::errorHandler Caught X Error '\n" << errorOutput
-         << "'\n" << vprDEBUG_FLUSH;
+      << clrOutNORM(clrRED, "ERROR")
+      << ": [vrj::pf::InputHandler::errorHandler()] Caught X Error \n'"
+      << errorOutput << "'\n" << vprDEBUG_FLUSH;
    delete [] errorOutput;
    return 0;
 }
 #endif /* VPR_OS_Windows */
+
+} // End of pf namespace
 
 } // End of vrj namespace

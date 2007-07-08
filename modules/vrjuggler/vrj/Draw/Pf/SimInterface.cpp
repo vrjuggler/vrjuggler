@@ -26,20 +26,25 @@
 
 #include <vrj/Draw/Pf/Config.h>
 
-#include <vrj/Draw/Pf/PfSimInterface.h>
+#include <vrj/Draw/Pf/SimInterface.h>
 
 
 namespace vrj
 {
 
-PfSimInterface::PfSimInterface()
+namespace pf
+{
+
+SimInterface::SimInterface()
 {
    /* Do nothing. */ ;
 }
 
-PfSimInterface::~PfSimInterface()
+SimInterface::~SimInterface()
 {
    /* Do nothing. */ ;
+}
+
 }
 
 }

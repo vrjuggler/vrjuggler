@@ -58,10 +58,10 @@ class App;
 class InputHandler;
 
     // Performer Config function called in draw proc after window is set up
-void PFconfigPWin(pfPipeWindow*);
-void PfDrawFunc(pfChannel*, void*, const bool, const bool, const bool,
-                const bool);
-void PfAppFunc(pfChannel*, void*);
+void configPWin(pfPipeWindow*);
+void drawFunc(pfChannel*, void*, const bool, const bool, const bool,
+              const bool);
+void appFunc(pfChannel*, void*);
 
 /** \class vrj::pf::DrawManager DrawManager.h vrj/Draw/Pf/Drawmanager.h
  *
@@ -151,9 +151,9 @@ public:
    /**
     * Sets the app the draw whould interact with.
     * @pre None
-    * @post self'.app = _app
+    * @post self'.app = app
     */
-   virtual void setApp(App* _app);
+   virtual void setApp(vrj::App* app);
 
    /**
     * Initializes the drawing API (if not already running).  We should call
@@ -191,10 +191,10 @@ public:
 
    void debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel);
 
-   friend void PFconfigPWin(pfPipeWindow*);
-   friend void PfDrawFunc(pfChannel*, void*, const bool, const bool,
-                          const bool);
-   friend void PfAppFunc(pfChannel*, void*);
+   friend void configPWin(pfPipeWindow*);
+   friend void drawFunc(pfChannel*, void*, const bool, const bool,
+                        const bool);
+   friend void appFunc(pfChannel*, void*);
 
 public: // Config element handlers
    /**
@@ -228,7 +228,7 @@ protected:     // --- Config handling functions --- //
    virtual bool configRemove(jccl::ConfigElementPtr)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-         << "vrj::PfDrawManager::configRemove: configRemove is not supported.\n"
+         << "vrj::pf::DrawManager::configRemove: configRemove is not supported.\n"
          << vprDEBUG_FLUSH;
       return false;
    }
@@ -352,7 +352,7 @@ protected:
    //@}
 
 private:
-   PfDrawManager()
+   DrawManager()
       : mApp(NULL)
       , mSurfMasterChan(NULL)
       , mSimMasterChan(NULL)
@@ -363,10 +363,12 @@ private:
       , mRootWithSim(NULL)
    {;}
 
-   virtual ~PfDrawManager();
+   virtual ~DrawManager();
 
-   vprSingletonHeader(PfDrawManager);
+   vprSingletonHeader(DrawManager);
 };
+
+}
 
 }
 

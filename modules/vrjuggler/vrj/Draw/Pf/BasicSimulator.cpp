@@ -26,6 +26,7 @@
 
 #include <vrj/Draw/Pf/Config.h>
 
+#include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
 #include <gmtl/MatrixOps.h>
@@ -48,7 +49,7 @@
 
 #include <vrj/Kernel/User.h>
 
-#include <vrj/Draw/Pf/PfDrawManager.h>
+#include <vrj/Draw/Pf/DrawManager.h>
 
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Projection.h>
@@ -56,30 +57,32 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
-#include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
-#include <vrj/Draw/Pf/PfBasicSimulator.h>
+#include <vrj/Draw/Pf/SimInterfaceFactory.h>
+#include <vrj/Draw/Pf/Util.h>
 
-#include <boost/concept_check.hpp>
+#include <vrj/Draw/Pf/BasicSimulator.h>
 
 
 namespace vrj
 {
 
-VRJ_REGISTER_PF_SIM_INTERFACE_CREATOR(PfBasicSimulator);
+namespace pf
+{
 
-PfBasicSimulator::PfBasicSimulator() : mRootWithSim(NULL),
-   mSimTree(NULL), mHeadDCS(NULL), mWandDCS(NULL)
+VRJ_REGISTER_PF_SIM_INTERFACE_CREATOR(BasicSimulator);
+
+BasicSimulator::BasicSimulator()
+   : mRootWithSim(NULL)
+   , mSimTree(NULL)
+   , mHeadDCS(NULL)
+   , mWandDCS(NULL)
 {
    //setDrawWandFunctor(new GlDrawConeWandFunctor());
    //setDrawWandFunctor(new GlDrawRightAngleWandFunctor());
 }
 
-/**
- * Configure the basic simulator config.
- * @pre element is a valid configuration element.
- * @post It should be configured.
- */
-bool PfBasicSimulator::config(jccl::ConfigElementPtr element)
+// Configure the basic simulator config.
+bool BasicSimulator::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);
    vprASSERT(element->getID() == std::string("default_simulator"));
@@ -90,12 +93,12 @@ bool PfBasicSimulator::config(jccl::ConfigElementPtr element)
    mCamera.init(camera_proxy_str);
    mWand.init(wand_proxy_str);      // Configure the wand to use
 
-   if(!mCamera.isConnected())
+   if ( ! mCamera.isConnected() )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << "PfBasicSimulator:: Fatal Error: Camera not found named: "
-         << camera_proxy_str.c_str() << vprDEBUG_FLUSH;
+         << clrOutNORM(clrRED, "ERROR")
+         << ": [vrj::pf::BasicSimulator::config()] Fatal Error: Camera not "
+         << "found named: " << camera_proxy_str << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
 
@@ -110,19 +113,17 @@ bool PfBasicSimulator::config(jccl::ConfigElementPtr element)
    return true;
 }
 
-/**
- * Sets the keyboard/mouse device the simulator can use to get input from the
- * user.
- */
-void PfBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface)
+// Sets the keyboard/mouse device the simulator can use to get input from the
+// user.
+void
+BasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface)
 {
    boost::ignore_unused_variable_warning(kmInterface);
 }
 
-
-void PfBasicSimulator::updateProjectionData(const float positionScale,
-                                            ProjectionPtr leftProj,
-                                            ProjectionPtr rightProj)
+void BasicSimulator::updateProjectionData(const float positionScale,
+                                          ProjectionPtr leftProj,
+                                          ProjectionPtr rightProj)
 {
    updateInternalData(positionScale);
 
@@ -133,8 +134,8 @@ void PfBasicSimulator::updateProjectionData(const float positionScale,
 
    // -- Calculate camera (eye) Positions -- //
    vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
-      << "[vrj::PfBasicSimulator::updateProjectionData()] Getting cam position"
-      << std::endl << vprDEBUG_FLUSH;
+      << "[vrj::pf::BasicSimulator::updateProjectionData()] Getting cam "
+      << "position" << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
       << "CamPos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
 
@@ -150,8 +151,8 @@ void PfBasicSimulator::updateProjectionData(const float positionScale,
    rightProj->calcViewMatrix(right_eye_pos, positionScale);
 }
 
-/**  Update internal simulator data */
-void PfBasicSimulator::updateInternalData(float positionScale)
+// Update internal simulator data.
+void BasicSimulator::updateInternalData(float positionScale)
 {
    mHeadPos = mSimViewport->getUser()->getHeadPosProxy()->getData(positionScale);
    mWandPos = mWand->getData(positionScale);
@@ -160,15 +161,13 @@ void PfBasicSimulator::updateInternalData(float positionScale)
    gmtl::invert(mCameraPos);
 }
 
-
-
-
-bool PfBasicSimulator::configPerformerAPI(jccl::ConfigElementPtr element)
+bool BasicSimulator::configPerformerAPI(jccl::ConfigElementPtr element)
 {
    //vprASSERT(Element->getID() == std::string("apiPerformer"));
 
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "PfBasicSimulator::configPerformerAPI:"
-                                            << " Configuring Performer\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
+   << "[vrj::pf::BasicSimulator::configPerformerAPI()] "
+   << " Configuring Performer\n" << vprDEBUG_FLUSH;
 
    // --- Get simulator model info --- //
    std::string head_file = element->getProperty<std::string>("head_model");
@@ -176,14 +175,14 @@ bool PfBasicSimulator::configPerformerAPI(jccl::ConfigElementPtr element)
    if(head_file.empty())
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "WARNING: PfBasicSimulator::config: simHeadModel not set."
-         << std::endl << vprDEBUG_FLUSH;
+         << "WARNING: [vrj::pf::BasicSimulator::configPerformerAPI()] "
+         << "head_model not set." << std::endl << vprDEBUG_FLUSH;
    }
    if(wand_file.empty())
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "WARNING: PfBasicSimulator::config: simWandModel not set."
-         << std::endl << vprDEBUG_FLUSH;
+         << "WARNING: [vrj::pf::BasicSimulator::configPerformerAPI()] "
+         << "wand_model not set." << std::endl << vprDEBUG_FLUSH;
    }
 
    mHeadModel = vpr::replaceEnvVars(head_file);
@@ -193,7 +192,7 @@ bool PfBasicSimulator::configPerformerAPI(jccl::ConfigElementPtr element)
       << "Head Model: " << mHeadModel.c_str() << std::endl
       << "Wand Model: " << mWandModel.c_str() << std::endl << vprDEBUG_FLUSH;
 
-   mRootWithSim = PfDrawManager::instance()->getRootWithSim();
+   mRootWithSim = vrj::pf::DrawManager::instance()->getRootWithSim();
    if (NULL != mRootWithSim)
    {
       initSimulatorGraph();
@@ -202,7 +201,7 @@ bool PfBasicSimulator::configPerformerAPI(jccl::ConfigElementPtr element)
    return false;
 }
 
-void PfBasicSimulator::initSimulatorGraph()
+void BasicSimulator::initSimulatorGraph()
 {
    pfNode* head_node(NULL);
    pfNode* wand_node(NULL);
@@ -211,13 +210,13 @@ void PfBasicSimulator::initSimulatorGraph()
    {
       head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-         << "[vrj::PfBasicSimulator::initSimulatorGraph()] Loaded head model: "
-         << mHeadModel.c_str() << std::endl << vprDEBUG_FLUSH;
+         << "[vrj::pf::BasicSimulator::initSimulatorGraph()] Loaded head "
+         << "model: " << mHeadModel << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-         << "[vrj::PfBasicSimulator::initSimulatorGraph()] "
+         << "[vrj::pf::BasicSimulator::initSimulatorGraph()] "
          << "No wand head specified.\n" << vprDEBUG_FLUSH;
    }
 
@@ -225,13 +224,13 @@ void PfBasicSimulator::initSimulatorGraph()
    {
       wand_node = pfdLoadFile(mWandModel.c_str());     // Load wand model
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-         << "[vrj::PfBasicSImulator::initSimulatorGraph()] "
+         << "[vrj::pf::BasicSImulator::initSimulatorGraph()] "
          << "Loaded wand model: " << mWandModel << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-         << "[vrj::PfDrawManager::initSimulatorGraph()] "
+         << "[vrj::pf::BasicSimulator::initSimulatorGraph()] "
          << "No wand model specified.\n" << vprDEBUG_FLUSH;
    }
 
@@ -258,14 +257,16 @@ void PfBasicSimulator::initSimulatorGraph()
    }
 }
 
-void PfBasicSimulator::updateSimulatorSceneGraph()
+void BasicSimulator::updateSimulatorSceneGraph()
 {
-      gmtl::Matrix44f vj_head_mat = getHeadPos();          // Get Juggler matrices
-      gmtl::Matrix44f vj_wand_mat = getWandPos();
-      pfMatrix head_mat = GetPfMatrix(vj_head_mat);    // Convert to Performer
-      pfMatrix wand_mat = GetPfMatrix(vj_wand_mat);
-      mHeadDCS->setMat(head_mat);                        // Set the DCS nodes
-      mWandDCS->setMat(wand_mat);
+   gmtl::Matrix44f vj_head_mat = getHeadPos();          // Get Juggler matrices
+   gmtl::Matrix44f vj_wand_mat = getWandPos();
+   pfMatrix head_mat = GetPfMatrix(vj_head_mat);    // Convert to Performer
+   pfMatrix wand_mat = GetPfMatrix(vj_wand_mat);
+   mHeadDCS->setMat(head_mat);                        // Set the DCS nodes
+   mWandDCS->setMat(wand_mat);
+}
+
 }
 
 }

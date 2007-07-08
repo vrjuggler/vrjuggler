@@ -26,12 +26,17 @@
 
 #include <vrj/Draw/Pf/Config.h>
 
-#include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
+#include <vrj/Draw/Pf/SimInterfaceFactory.h>
 
 
 namespace vrj
 {
 
-vprSingletonImp(PfSimInterfaceFactory)
+namespace pf
+{
+
+vprSingletonImp(SimInterfaceFactory)
+
+}
 
 }
