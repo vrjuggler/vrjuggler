@@ -71,14 +71,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/corba_perf_mon_g.dll"
+				OutputFile="$(OutDir)/corba_perf_mon.dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\Tweek_CXX\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VRJuggler\$(OutDir)&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/corba_perf_mon_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/corba_perf_mon.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/corba_perf_mon_g.lib"
+				ImportLibrary="$(OutDir)/corba_perf_mon.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -160,14 +160,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/corba_perf_mon_g.dll"
+				OutputFile="$(OutDir)/corba_perf_mon.dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\Tweek_CXX\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VRJuggler\$(OutDir)&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/corba_perf_mon_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/corba_perf_mon.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/corba_perf_mon_g.lib"
+				ImportLibrary="$(OutDir)/corba_perf_mon.lib"
 				TargetMachine="17"
 			/>
 			<Tool

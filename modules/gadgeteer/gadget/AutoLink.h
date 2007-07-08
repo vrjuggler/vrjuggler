@@ -30,12 +30,8 @@
 #if defined(WIN32) || defined(WIN64)
 #  include <gadget/gadgetParam.h>
 
-#  if defined(GADGET_DEBUG)
-#     if defined(_DEBUG)
-#        define GADGET_LIB_RT_OPT "_d"
-#     else
-#        define GADGET_LIB_RT_OPT "_g"
-#     endif
+#  if defined(GADGET_DEBUG) && defined(_DEBUG)
+#     define GADGET_LIB_RT_OPT "_d"
 #  else
 #     define GADGET_LIB_RT_OPT ""
 #  endif

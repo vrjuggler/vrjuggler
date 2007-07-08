@@ -70,14 +70,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).dll"
+				OutputFile="$(OutDir)/vrj_ogl-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\Gadgeteer\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/vrj_ogl-$(VRJ_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).lib"
+				ImportLibrary="$(OutDir)/vrj_ogl-$(VRJ_VERSION).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -158,14 +158,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).dll"
+				OutputFile="$(OutDir)/vrj_ogl-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\Gadgeteer\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/vrj_ogl-$(VRJ_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/vrj_ogl_g-$(VRJ_VERSION).lib"
+				ImportLibrary="$(OutDir)/vrj_ogl-$(VRJ_VERSION).lib"
 				TargetMachine="17"
 			/>
 			<Tool

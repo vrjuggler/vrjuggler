@@ -68,14 +68,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/DTrack_drv_g.dll"
+				OutputFile="$(OutDir)/DTrack_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/DTrack_drv_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/DTrack_drv.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/DTrack_drv_g.lib"
+				ImportLibrary="$(OutDir)/DTrack_drv.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -155,14 +155,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/DTrack_drv_g.dll"
+				OutputFile="$(OutDir)/DTrack_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/DTrack_drv_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/DTrack_drv.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/DTrack_drv_g.lib"
+				ImportLibrary="$(OutDir)/DTrack_drv.lib"
 				TargetMachine="17"
 			/>
 			<Tool

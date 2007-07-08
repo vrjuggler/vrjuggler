@@ -35,14 +35,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr8.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/DirectXJoystick_drv_g.dll"
+				OutputFile="$(OutDir)/DirectXJoystick_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
-				ProgramDatabaseFile="$(OutDir)/DirectXJoystick_drv_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/DirectXJoystick_drv.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/DirectXJoystick_drv_g.lib"
+				ImportLibrary="$(OutDir)/DirectXJoystick_drv.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>

@@ -30,12 +30,8 @@
 #if defined(WIN32) || defined(WIN64)
 #  include <jccl/jcclParam.h>
 
-#  if defined(JCCL_DEBUG)
-#     if defined(_DEBUG)
-#        define JCCL_LIB_RT_OPT "_d"
-#     else
-#        define JCCL_LIB_RT_OPT "_g"
-#     endif
+#  if defined(JCCL_DEBUG) && defined(_DEBUG)
+#     define JCCL_LIB_RT_OPT "_d"
 #  else
 #     define JCCL_LIB_RT_OPT ""
 #  endif
