@@ -128,7 +128,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-MIN_VPR_VERSION='1.1.23'
+MIN_VPR_VERSION='2.1.4'
 VPR_PATH([$MIN_VPR_VERSION], , [AC_MSG_ERROR([*** VPR required for Sonix ***])])
 
 MIN_GMTL_VERSION='0.4.11'
