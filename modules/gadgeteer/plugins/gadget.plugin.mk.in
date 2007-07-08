@@ -114,7 +114,7 @@ RM_LN=			@RM_LN@
 # Common code for plugin DSOs.
 # -----------------------------------------------------------------------------
 ifeq ($(BUILD_TYPE), dbg)
-   BUILD_TYPE_EXT=	_d
+   BUILD_TYPE_EXT=	
    DEBUG_APP=		TRUE
    OPTIM_APP=		FALSE
    EXTRA_DEFS+=		-DJUGGLER_DEBUG
