@@ -67,15 +67,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/tweek_g-$(TWEEK_VERSION).dll"
+				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/tweek_g-$(TWEEK_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/tweek-$(TWEEK_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/tweek_g-$(TWEEK_VERSION).lib"
+				ImportLibrary="$(OutDir)/tweek-$(TWEEK_VERSION).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -153,15 +153,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/tweek_g-$(TWEEK_VERSION).dll"
+				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports64.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/tweek_g-$(TWEEK_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/tweek-$(TWEEK_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/tweek_g-$(TWEEK_VERSION).lib"
+				ImportLibrary="$(OutDir)/tweek-$(TWEEK_VERSION).lib"
 				TargetMachine="17"
 			/>
 			<Tool

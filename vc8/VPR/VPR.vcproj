@@ -68,15 +68,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vpr_g-$(VPR_VERSION).dll"
+				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/vpr_g-$(VPR_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/vpr-$(VPR_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/vpr_g-$(VPR_VERSION).lib"
+				ImportLibrary="$(OutDir)/vpr-$(VPR_VERSION).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -155,15 +155,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vpr_g-$(VPR_VERSION).dll"
+				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/vpr_g-$(VPR_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/vpr-$(VPR_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/vpr_g-$(VPR_VERSION).lib"
+				ImportLibrary="$(OutDir)/vpr-$(VPR_VERSION).lib"
 				TargetMachine="17"
 			/>
 			<Tool

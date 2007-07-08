@@ -1,5 +1,12 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-08-2007 patrick     Debug-enabled code linked against the release runtime
+                        on Windows is now named the same as optimized code.
+                        The debug DLLs are installed in the "debug"
+                        subdirectory. On non-Windows platforms, debug-enabled
+                        plug-ins no longer use the "_d" name variation and are
+                        installed in the "debug" subdirectory.
+                        NEW VERSION: 1.1.14
 Jun-27-2007 patrick     Changed the preprocessor identification of debug versus
                         optimized to look for JCCL_DEBUG or JUGGLER_DEBUG
                         instead of _DEBUG (and JCCL_OPT or JUGGLER_OPT instead

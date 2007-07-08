@@ -35,13 +35,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/button_drv_g.dll"
+				OutputFile="$(OutDir)/button_drv.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="FALSE"
-				ProgramDatabaseFile="$(OutDir)/button_drv_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/button_drv.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/button_drv_g.lib"
+				ImportLibrary="$(OutDir)/button_drv.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>

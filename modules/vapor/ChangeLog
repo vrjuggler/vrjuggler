@@ -1,5 +1,11 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-07-08 patrick  Debug-enabled code linked against the release runtime on
+                    Windows is now named the same as optimized code. The debug
+                    DLLs are installed in the "debug" subdirectory.
+                    vpr::LibraryLoader no longer looks for plug-ins with the
+                    "_g" name variation by default.
+                    NEW VERSION: 1.1.49
 2007-06-27 patrick  Changed the preprocessor identification of debug versus
                     optimized to look for VPR_DEBUG or JUGGLER_DEBUG instead
                     of _DEBUG (and VPR_OPT or JUGGLER_OPT instead of _OPT).

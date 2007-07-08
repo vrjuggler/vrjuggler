@@ -68,13 +68,19 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                try
                {
                   fs::path dll_path(tmppath, fs::native);
-                  const std::string base_dir =
-                     dll_path.branch_path().branch_path().native_directory_string();
+                  fs::path base_dir = dll_path.branch_path().branch_path();
+#if (defined(JUGGLER_DEBUG) || defined(JCCL_DEBUG)) && ! defined(_DEBUG)
+                  // The debug DLL linked against the release runtime is in
+                  // <base_dir>\lib\debug.
+                  base_dir = base_dir.branch_path();
+#endif
+                  const std::string base_dir_str =
+                     base_dir.native_directory_string();
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-                  _putenv_s("JCCL_BASE_DIR", base_dir.c_str());
+                  _putenv_s("JCCL_BASE_DIR", base_dir_str.c_str());
 #else
                   std::ostringstream env_stream;
-                  env_stream << "JCCL_BASE_DIR=" << base_dir;
+                  env_stream << "JCCL_BASE_DIR=" << base_dir_str;
                   putenv(env_stream.str().c_str());
 #endif
                }

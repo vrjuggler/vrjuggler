@@ -174,7 +174,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-MIN_VPR_VERSION='1.1.35'
+MIN_VPR_VERSION='1.1.49'
 VPR_PATH([$MIN_VPR_VERSION], BUILD_CXX='Y', 
          [AC_MSG_WARN([*** VPR required for JCCL ***])
           BUILD_CXX='N'])

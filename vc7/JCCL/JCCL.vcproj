@@ -35,14 +35,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/jccl_g-$(JCCL_VERSION).dll"
+				OutputFile="$(OutDir)/jccl-$(JCCL_VERSION).dll"
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
-				ProgramDatabaseFile="$(OutDir)/jccl_g-$(JCCL_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/jccl-$(JCCL_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/jccl_g-$(JCCL_VERSION).lib"
+				ImportLibrary="$(OutDir)/jccl-$(JCCL_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>

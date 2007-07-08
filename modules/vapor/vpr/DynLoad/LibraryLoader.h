@@ -218,14 +218,13 @@ public:
     * a substring of the name of the actual file that will be loaded.  A
     * platform-specific extension (.so, .dll, etc) will be appended, and for
     * an instantiation of this class in debug-enabled code, the suffix "_d"
-    * or "_g" will be appended to the DSO's base name.  For example, given the
-    * base name mydso, a build using the Visual C++ debug runtime on Windows
-    * would search for the file mydso_d.dll.  For an optimized build made
-    * against the release runtime, it would search for mysdso.dll.  For a
-    * debug-enabled build made against the release runtime, it would search
-    * for mydso_g.dll.  The determination of which name extension to use is
-    * made at compile time, but it can be customized using setDSONameExt().
-    * On non-Windows platforms, the debug version is the "_d" variant.
+    * will be appended to the DSO's base name.  For example, given the base
+    * name mydso, a debug build on Windows would search for the file
+    * mydso_d.dll.  For a release (optimized) build, it would search for
+    * mysdso.dll.  The determination of which name extension to use is made
+    * at compile time, but it can be customized using setDSONameExt().  On
+    * non-Windows platforms, the debug version has no special naming
+    * convention by default.
     *
     * @param dsoBaseName The base name of the DSO to be loaded.
     *

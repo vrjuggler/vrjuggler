@@ -68,14 +68,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/MSFTSpeechRecog_drv_g.dll"
+				OutputFile="$(OutDir)/MSFTSpeechRecog_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(MS_SPEECH_SDK_ROOT)\Lib\i386&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/MSFTSpeechRecog_drv_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/MSFTSpeechRecog_drv.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/MSFTSpeechRecog_drv_g.lib"
+				ImportLibrary="$(OutDir)/MSFTSpeechRecog_drv.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -155,14 +155,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/MSFTSpeechRecog_drv_g.dll"
+				OutputFile="$(OutDir)/MSFTSpeechRecog_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(MS_SPEECH_SDK_ROOT)\Lib\i386&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/MSFTSpeechRecog_drv_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/MSFTSpeechRecog_drv.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/MSFTSpeechRecog_drv_g.lib"
+				ImportLibrary="$(OutDir)/MSFTSpeechRecog_drv.lib"
 				TargetMachine="17"
 			/>
 			<Tool

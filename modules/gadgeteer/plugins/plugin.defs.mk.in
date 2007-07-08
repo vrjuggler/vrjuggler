@@ -37,16 +37,17 @@
 # -----------------------------------------------------------------------------
 # Common code for plugin DSOs.
 # -----------------------------------------------------------------------------
-ifeq ($(BUILD_TYPE), dbg)
-   BUILD_TYPE_EXT=	_d
-endif
-
 LIBDIR_NAME?=	lib$(LIBBITSUF)
 
 # $(LIBDIR_BASE) is the base directory where the libraries will be built.
 LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
 
-DSO_PLUGIN_SUBDIR=	$(PLUGIN_DIR_VERSION)/plugins
+PLUGIN_DIR=		$(PLUGIN_DIR_VERSION)/plugins
+ifeq ($(BUILD_TYPE), dbg)
+   DSO_PLUGIN_SUBDIR=	$(PLUGIN_DIR)/debug
+else
+   DSO_PLUGIN_SUBDIR=	$(PLUGIN_DIR)
+endif
 DSO_PLUGIN_DIR=		$(LIBDIR_BASE)/$(DSO_PLUGIN_SUBDIR)
 
 PLUGIN_DSO=		$(PLUGIN_NAME)$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)

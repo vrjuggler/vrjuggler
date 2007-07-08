@@ -56,12 +56,8 @@ namespace fs = boost::filesystem;
 namespace vpr
 {
 
-#if defined(VPR_DEBUG)
-#  if defined(_DEBUG) || ! defined(VPR_OS_Windows)
+#if defined(VPR_DEBUG) && defined(_DEBUG) && defined(VPR_OS_Windows)
 std::string LibraryLoader::sDsoNameExt("_d");
-#  else
-std::string LibraryLoader::sDsoNameExt("_g");
-#  endif
 #else
 std::string LibraryLoader::sDsoNameExt("");
 #endif

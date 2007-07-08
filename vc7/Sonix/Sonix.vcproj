@@ -35,14 +35,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/sonix_g-$(SNX_VERSION).dll"
+				OutputFile="$(OutDir)/sonix-$(SNX_VERSION).dll"
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\VPR\$(OutDir)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
-				ProgramDatabaseFile="$(OutDir)/sonix_g-$(SNX_VERSION).pdb"
+				ProgramDatabaseFile="$(OutDir)/sonix-$(SNX_VERSION).pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/sonix_g-$(SNX_VERSION).lib"
+				ImportLibrary="$(OutDir)/sonix-$(SNX_VERSION).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>

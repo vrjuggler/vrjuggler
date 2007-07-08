@@ -138,11 +138,16 @@ void ConfigManager::loadRemoteReconfig()
    std::string jccl_subdir(jccl_subdir_base);
 #endif
 
-
    std::vector<fs::path> search_path(1);
    search_path[0] = fs::path(base_dir, fs::native) /
                        (std::string("lib") + bit_suffix) /
                        std::string(jccl_subdir) / std::string("plugins");
+
+#if defined(JCCL_DEBUG)
+   // For a debug build, search in plugins/debug first.
+   search_path.insert(search_path.begin(),
+                      search_path[0] / std::string("debug"));
+#endif
 
    // In the long run, we may not want to hard-code the base name of the
    // plug-in we load.  If we ever reach a point where we have multiple ways

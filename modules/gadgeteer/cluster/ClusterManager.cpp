@@ -667,6 +667,12 @@ namespace cluster
                << default_search_dir.native_directory_string() << "'\n"
                << vprDEBUG_FLUSH;
 
+#if defined(GADGET_DEBUG)
+            // For a debug build, search in the debug subdirectory of
+            // default_search_dir before looking in default_search_dir.
+            search_path.push_back(default_search_dir / std::string("debug"));
+#endif
+
             search_path.push_back( default_search_dir );
 
             // --- Load cluster plugin dsos -- //

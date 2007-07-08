@@ -68,14 +68,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/RIMPlugin_g.dll"
+				OutputFile="$(OutDir)/RIMPlugin.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/RIMPlugin_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/RIMPlugin.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/RIMPlugin_g.lib"
+				ImportLibrary="$(OutDir)/RIMPlugin.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -334,14 +334,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/RIMPlugin_g.dll"
+				OutputFile="$(OutDir)/RIMPlugin.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="false"
-				ProgramDatabaseFile="$(OutDir)/RIMPlugin_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/RIMPlugin.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/RIMPlugin_g.lib"
+				ImportLibrary="$(OutDir)/RIMPlugin.lib"
 				TargetMachine="17"
 			/>
 			<Tool

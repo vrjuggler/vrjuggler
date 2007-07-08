@@ -37,16 +37,17 @@
 # -----------------------------------------------------------------------------
 # Common code for driver DSOs.
 # -----------------------------------------------------------------------------
-ifeq ($(BUILD_TYPE), dbg)
-   BUILD_TYPE_EXT=	_d
-endif
-
 LIBDIR_NAME?=	lib$(LIBBITSUF)
 
 # $(LIBDIR_BASE) is the base directory where the libraries will be built.
 LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
 
-DSO_DRIVER_SUBDIR=	$(DRIVER_DIR_VERSION)/drivers
+DRIVER_DIR=		$(DRIVER_DIR_VERSION)/drivers
+ifeq ($(BUILD_TYPE), dbg)
+   DSO_DRIVER_SUBDIR=	$(DRIVER_DIR)/debug
+else
+   DSO_DRIVER_SUBDIR=	$(DRIVER_DIR)
+endif
 DSO_DRIVER_DIR=		$(LIBDIR_BASE)/$(DSO_DRIVER_SUBDIR)
 
 DRIVER_DSO=		$(DRIVER_NAME)_drv$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
