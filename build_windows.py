@@ -831,7 +831,7 @@ def updateVersions(vcDir, options):
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 
    for m in mods:
-      #m.setVersionEnvVar()
+      m.setVersionEnvVar()
       m.updateParamFiles()
       m.removeOldVersions()
 
