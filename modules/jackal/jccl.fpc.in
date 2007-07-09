@@ -30,7 +30,6 @@ BUILD_CXX = @BUILD_CXX@
 BUILD_JAVA = @BUILD_JAVA@
 jccl_extra_cxxflags = @jccl_extra_cxxflags@
 jccl_cxxflags = @jccl_cxxflags@
-includedir = @includedir@
 jccl_ldflags = @jccl_ldflags@
 jccl_prof_libs = @jccl_prof_libs@
 jccl_libs = @jccl_libs@
