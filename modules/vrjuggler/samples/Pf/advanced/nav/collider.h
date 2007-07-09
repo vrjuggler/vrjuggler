@@ -38,9 +38,7 @@
 class collider
 {
 public:
-   virtual ~collider()
-   {
-   }
+   virtual ~collider();
 
    //: test a movement
    //!ARGS: curPos - The current position we are at
@@ -48,16 +46,22 @@ public:
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!ARGS: curPosWithDelta - Does the curPos already have delta added in?
    //!RETURNS: true - There was a hit.
-   virtual bool testMove(gmtl::Vec3f curPos, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool curPosWithDelta = false) = 0;
+   virtual bool testMove(const gmtl::Vec3f& curPos,
+                         const gmtl::Vec3f& delta, gmtl::Vec3f& correction,
+                         bool curPosWithDelta = false) = 0;
 
    // Did it collide in the last frame
    // API specific functions could return more info about the collision
-   bool didCollide()
-   { return mDidCollide; }
+   bool didCollide() const
+   {
+      return mDidCollide;
+   }
 
 protected:
-   void setDidCollide(bool val)
-   { mDidCollide = val; }
+   void setDidCollide(const bool val)
+   {
+      mDidCollide = val;
+   }
 
    bool mDidCollide;
 };

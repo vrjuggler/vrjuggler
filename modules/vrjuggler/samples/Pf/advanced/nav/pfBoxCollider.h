@@ -48,61 +48,21 @@ public:
       mWorldNode = world;
    }
 
+   virtual ~pfBoxCollider();
+
    //: test a movement
    //!ARGS: whereYouAre - The current position we are at
    //!ARGS: delta - The amount we want to move
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!RETURNS: true - There was a hit.
-   virtual bool testMove(gmtl::Vec3f whereYouAre, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool whereYouAreWithDelta = false);
+   virtual bool testMove(const gmtl::Vec3f& whereYouAre,
+                         const gmtl::Vec3f& delta, gmtl::Vec3f& correction,
+                         bool whereYouAreWithDelta = false);
 
 public:
    pfNode* mWorldNode;        // The world to collide with
    pfTerryBoxCollide terryCollide;
 };
 
-
-inline bool pfBoxCollider::testMove( gmtl::Vec3f feetPosition, gmtl::Vec3f feetDelta, gmtl::Vec3f& correction, bool whereYouAreWithDelta)
-{
-   pfVec3 pf_feet_position = vrj::pf::GetPfVec(feetPosition);
-   pfVec3 pf_feet_delta = vrj::pf::GetPfVec(feetDelta);
-   pfVec3 pf_feet_destination = (pf_feet_position + pf_feet_delta);
-   pfVec3 pf_correction;         // Needs to be set
-
-   // whats the maximum step height?
-   float step_height( 5.0f ); // value picked out of my ass.
-   pfVec3 up( 0.0f, 0.0f, 1.0f );
-   // whats the ray start position that would test for that step height?
-   pfVec3 pf_step_destination = pf_feet_destination + up * step_height;
-
-
-   // get the speed, can only be positive bye definition of .length()
-   /*
-   float speed = pf_feet_delta.length();
-
-   // get the radius..       // Terry hack
-   float vol_radius = speed * 2.0f;
-
-   // constrain value to always have unit length or greater
-   if(vol_radius < 1.0f)
-      vol_radius = 1.0f;
-
-   terryCollide.setRadius( vol_radius );    // Setup collision volume
-   */
-
-   terryCollide.setVelocity( pf_feet_delta );
-
-   if (terryCollide.collide( pf_correction, mWorldNode, pf_step_destination) )
-   {
-      correction = vrj::pf::GetVjVec(pf_correction);
-
-      setDidCollide(true);
-      return true;
-   }
-   else
-   {
-      setDidCollide(false);
-      return false;
-   }
-}
 
 #endif

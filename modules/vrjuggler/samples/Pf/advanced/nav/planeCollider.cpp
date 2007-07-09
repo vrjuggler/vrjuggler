@@ -24,30 +24,29 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _PLANE_COLLIDER_H_
-#define _PLANE_COLLIDER_H_
+#include <gmtl/VecOps.h>
+#include "planeCollider.h"
 
-#include <collider.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Matrix.h>
 
-class planeCollider : public collider
+bool planeCollider::testMove(const gmtl::Vec3f& curPos,
+                             const gmtl::Vec3f& delta,
+                             gmtl::Vec3f& correction,
+                             bool curPosWithDelta)
 {
-public:
-   planeCollider() : mHeight( 0 )
+   correction.set(0,0,0);
+
+   gmtl::Vec3f target_pos = curPos+delta;
+   if(target_pos[1] < mHeight)
    {
+      correction[1] = (mHeight-target_pos[1]);  // Get it back up there
+      setDidCollide(true);
+      return true;
+   }
+   else
+   {
+      setDidCollide(false);
+      return false;
    }
 
-   virtual ~planeCollider()
-   {
-   }
+}
 
-   bool testMove(const gmtl::Vec3f& curPos, const gmtl::Vec3f& delta,
-                 gmtl::Vec3f& correction, bool curPosWithDelta = false);
-
-private:
-   float mHeight;    // Height of the plane
-};
-
-
-#endif

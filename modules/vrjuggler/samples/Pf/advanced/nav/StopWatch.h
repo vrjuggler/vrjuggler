@@ -27,7 +27,6 @@
 #ifndef STOP_WATCH_INCLUDED
 #define STOP_WATCH_INCLUDED
 
-#include <vpr/System.h>
 
 //: A StopWatch
 //  This class monitors frame rate, and general time performance metrics
@@ -88,7 +87,7 @@ private:
 
 public:
    //: Default constructor.
-   StopWatch(const int& averageFpsRefreshRate = 15);
+   StopWatch(const int averageFpsRefreshRate = 15);
 
    //: get the current time
    //  useful for profiling
@@ -111,96 +110,5 @@ public:
    //  result - Resets every param except for [refreshRate]
    void           reset();
 };
-
-///////////////////////////////////
-// Implementation:
-///////////////////////////////////
-
-//: Default constructor.
-inline StopWatch::StopWatch(const int& averageFpsRefreshRate)
-   : timeAverage(0.0)
-   , timeInstant(0.0)
-   , count(0)
-   , fpsAverage(0.0)
-   , fpsInstant(0.0)
-   , refreshRate(averageFpsRefreshRate)
-   , startTime(0.0)
-   , stopTime(0.0)
-   , _timeAccumulator(0.0)
-{;}
-
-//: get the current time
-//  useful for profiling
-//  returns - a number of any scalar type (see top for time format)
-// TODO: does compiler optimize the
-//       case where T = double???, if not, then un-template this.
-inline void StopWatch::getTime(double& num)
-{
-   vpr::TimeVal tv;
-   vpr::System::gettimeofday(&tv);
-
-   // compose sec with microsec for sec.millisec
-   double goodPrecision = static_cast<double>(tv.tv_sec) +
-                             (static_cast<double>(tv.tv_usec) / 1000000.0);
-
-   // cast the high-precision number down to what user wants.
-   num = goodPrecision;
-}
-
-//: Starts the stopwatch
-//  result - sets the value startTime
-inline void StopWatch::start()
-{
-   getTime(startTime);
-}
-
-//: Stops the stopwatch
-//  results - sets the value stopTime,      <BR>
-//            sets the value time,     <BR>
-//            sets the value fpsAverage (every [refreshRate] times that stop is called),    <BR>
-//            sets the value fpsInstant,    <BR>
-//            sets the value count.    <BR>
-inline void StopWatch::stop()
-{
-   getTime(stopTime);
-
-   // get the time for this one frame.
-   timeInstant = stopTime - startTime;
-
-   // every [refreshRate] frames, calc the average FPS
-   if (count % refreshRate == 0)
-   {
-      double refreshrate = refreshRate;
-      fpsAverage = refreshrate / _timeAccumulator;
-      timeAverage = _timeAccumulator / refreshrate;
-
-      // reset the accumulator
-      _timeAccumulator = 0.0;
-   }
-
-   // accumulate the frame times to later calc
-   // the average FPS time.
-   _timeAccumulator += timeInstant;
-
-   // calculate the instantaneous FPS value (1 frame/sec)
-   fpsInstant = 1.0 / timeInstant;
-
-   // Increment the number of frames elapsed
-   ++count;
-}
-
-//: Reset the stopwatch
-//  result - Resets every param except for [refreshRate]
-inline void StopWatch::reset()
-{
-   startTime = 0.0;
-   stopTime = 0.0;
-   _timeAccumulator = 0.0;
-
-   count = 0;
-   fpsAverage = 0.0;
-   fpsInstant = 0.0;
-   timeInstant = 0.0;
-}
 
 #endif

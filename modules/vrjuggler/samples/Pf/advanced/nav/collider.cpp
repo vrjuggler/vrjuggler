@@ -24,30 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _PLANE_COLLIDER_H_
-#define _PLANE_COLLIDER_H_
+#include "collider.h"
 
-#include <collider.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Matrix.h>
-
-class planeCollider : public collider
+collider::~collider()
 {
-public:
-   planeCollider() : mHeight( 0 )
-   {
-   }
-
-   virtual ~planeCollider()
-   {
-   }
-
-   bool testMove(const gmtl::Vec3f& curPos, const gmtl::Vec3f& delta,
-                 gmtl::Vec3f& correction, bool curPosWithDelta = false);
-
-private:
-   float mHeight;    // Height of the plane
-};
-
-
-#endif
+}

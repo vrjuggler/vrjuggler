@@ -37,7 +37,12 @@ APP_NAME=	pfBasicConfigNav@EXEEXT@
 srcdir=		@srcdir@
 COMMON_SRCS=	simplePfNavApp.cpp	\
 		FileIO.cpp		\
+		StopWatch.cpp		\
+		collider.cpp		\
+		navigator.cpp		\
+		pfBoxCollider.cpp	\
 		pfFileIO.cpp		\
+		pfPogoCollider.cpp	\
 		pfSoundNode.cpp		\
 		pfSoundTraverser.cpp	\
 		pfTerryCollide.cpp	\
