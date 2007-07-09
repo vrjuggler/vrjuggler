@@ -63,8 +63,8 @@ public:
 
 inline bool pfBoxCollider::testMove( gmtl::Vec3f feetPosition, gmtl::Vec3f feetDelta, gmtl::Vec3f& correction, bool whereYouAreWithDelta)
 {
-   pfVec3 pf_feet_position = vrj::GetPfVec(feetPosition);
-   pfVec3 pf_feet_delta = vrj::GetPfVec(feetDelta);
+   pfVec3 pf_feet_position = vrj::pf::GetPfVec(feetPosition);
+   pfVec3 pf_feet_delta = vrj::pf::GetPfVec(feetDelta);
    pfVec3 pf_feet_destination = (pf_feet_position + pf_feet_delta);
    pfVec3 pf_correction;         // Needs to be set
 
@@ -93,7 +93,7 @@ inline bool pfBoxCollider::testMove( gmtl::Vec3f feetPosition, gmtl::Vec3f feetD
 
    if (terryCollide.collide( pf_correction, mWorldNode, pf_step_destination) )
    {
-      correction = vrj::GetVjVec(pf_correction);
+      correction = vrj::pf::GetVjVec(pf_correction);
 
       setDidCollide(true);
       return true;

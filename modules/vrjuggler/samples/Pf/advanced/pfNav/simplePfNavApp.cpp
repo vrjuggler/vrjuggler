@@ -247,7 +247,7 @@ void simplePfNavApp::preFrame()
       gmtl::Matrix44f mat;
       mKeyFramer.getMatrix( mat );
       pfMatrix pf_mat;
-      pf_mat = vrj::GetPfMatrix( mat );
+      pf_mat = vrj::pf::GetPfMatrix(mat);
       mAnimDCS->setMat( pf_mat );
 
       // Emit a time
@@ -612,7 +612,7 @@ void simplePfNavApp::initializeModels()
 
       // set trans
       //pfVec3 pf_nextModelDcsTrans;
-      pfVec3 pf_model_trans = vrj::GetPfVec( mModelList[x].pos );
+      pfVec3 pf_model_trans = vrj::pf::GetPfVec(mModelList[x].pos);
       mModelList[x].modelDCS->setTrans( pf_model_trans[0],
                                           pf_model_trans[1],
                                           pf_model_trans[2]);
@@ -668,7 +668,7 @@ void simplePfNavApp::initializeSounds()
 
       // set trans
       pfVec3 pf_nextSoundDcsTrans;
-      pf_nextSoundDcsTrans = vrj::GetPfVec( mSoundList[x].pos );
+      pf_nextSoundDcsTrans = vrj::pf::GetPfVec(mSoundList[x].pos);
       nextSoundDCS->setTrans( pf_nextSoundDcsTrans[0],
             pf_nextSoundDcsTrans[1],
             pf_nextSoundDcsTrans[2]);

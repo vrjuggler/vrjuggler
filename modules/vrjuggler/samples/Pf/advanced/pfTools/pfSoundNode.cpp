@@ -87,7 +87,7 @@ int pfSoundNode::app(pfTraverser *trav)
 
       // set my sound's position.
       pfVec3 pf_soundPosition = coord.xyz;
-      gmtl::Vec3f soundPosition = vrj::GetVjVec(pf_soundPosition);
+      gmtl::Vec3f soundPosition = vrj::pf::GetVjVec(pf_soundPosition);
       snx::sonix::instance()->setPosition(mSound, soundPosition[0],
                                           soundPosition[1], soundPosition[2]);
 

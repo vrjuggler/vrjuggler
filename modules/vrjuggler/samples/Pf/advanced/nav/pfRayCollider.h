@@ -138,8 +138,8 @@ inline bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whe
 
 inline bool pfRayCollider::testMove(gmtl::Vec3f _whereYouAre, gmtl::Vec3f _delta, gmtl::Vec3f& correction, bool whereYouAreWithDelta)
 {
-   pfVec3 whereYouAre = vrj::GetPfVec(_whereYouAre);
-   pfVec3 delta = vrj::GetPfVec(_delta);
+   pfVec3 whereYouAre = vrj::pf::GetPfVec(_whereYouAre);
+   pfVec3 delta = vrj::pf::GetPfVec(_delta);
    pfVec3 whereYouWantToBe = whereYouAre + delta;
 
    pfVec3 intersectionPt;
@@ -147,7 +147,7 @@ inline bool pfRayCollider::testMove(gmtl::Vec3f _whereYouAre, gmtl::Vec3f _delta
    if (this->testRayCollision(intersectionPt, whereYouReallyAre, mWorldNode,0x1, whereYouAre, whereYouWantToBe))
    {
       pfVec3 pf_correction = (whereYouReallyAre - whereYouWantToBe);
-      correction = vrj::GetVjVec( pf_correction);
+      correction = vrj::pf::GetVjVec(pf_correction);
 
       std::cout<<"pfRayCollider: Collided "<<correction<<"\n"<<std::flush;
 
