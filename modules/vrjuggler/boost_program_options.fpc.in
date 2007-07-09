@@ -1,5 +1,6 @@
 # Private Variables
 prefix = @BOOST_ROOT@
+boost_ldflags = @BOOST_LDFLAGS@ @BOOST_PO_LINK@
 
 # Standard Flagpoll Variables
 Name: Boost.program_options
@@ -10,4 +11,4 @@ Provides: Boost.program_options
 Requires: boost = @BOOST_VERSION_DOT@
 Arch: @ISA@
 Cflags: @BOOST_INCLUDES@
-Libs: -L@BOOST_LIBDIR@ -l@boost_po_name@
+Libs: ${boost_ldflags}

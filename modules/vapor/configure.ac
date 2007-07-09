@@ -756,6 +756,8 @@ done
 
 if test "x$vpr_have_boost_fs" != "xyes" ; then
    AC_MSG_ERROR([*** Boost.Filesystem required by VPR ***])
+else
+   BOOST_FS_LINK="-l$boost_fs_name"
 fi
 
 testBoostSignals ( )
@@ -798,6 +800,8 @@ fi
 
 if test "x$vpr_have_boost_signals" != "xyes" ; then
    AC_MSG_ERROR([*** Boost.Signals required by VPR ***])
+else
+   BOOST_SIGNALS_LINK="-l$boost_signals_name"
 fi
 
 DPP_LANG_RESTORE
@@ -970,7 +974,7 @@ fi
 # alternative to using $srcdir.
 UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
-# Put together the basic information needed to compile VPR applications.
+# Put together the basic information needed to compile VPR applicsignalsions.
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $LIBS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_signals_name.lib $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
@@ -1140,7 +1144,9 @@ AC_SUBST(ABI_LIST)
 
 AC_SUBST(BOOST_VERSION_DOT)
 AC_SUBST(BOOST_LIBDIR)
+AC_SUBST(BOOST_FS_LINK)
 AC_SUBST(boost_fs_name)
+AC_SUBST(BOOST_SIGNALS_LINK)
 AC_SUBST(boost_signals_name)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)

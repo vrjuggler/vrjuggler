@@ -296,6 +296,8 @@ done
 
 if test "x$vrj_have_boost_po" != "xyes" ; then
    AC_MSG_ERROR([*** Boost.program_options required by VR Juggler ***])
+else
+   BOOST_PO_LINK="-l$boost_po_name"
 fi
 
 DPP_LANG_RESTORE
@@ -833,6 +835,7 @@ AC_SUBST(vrj_pf_extra_libs)
 
 AC_SUBST(BOOST_VERSION_DOT)
 AC_SUBST(BOOST_LIBDIR)
+AC_SUBST(BOOST_PO_LINK)
 AC_SUBST(boost_po_name)
 
 AC_SUBST(tweek_java_api_jars_bundle)

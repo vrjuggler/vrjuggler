@@ -454,6 +454,72 @@ def writeCacheFile(optionDict):
       cache_file.write(output)
    cache_file.close()
 
+def getBoostVersion():
+   boost_ver_re = re.compile(r'#define\s+BOOST_LIB_VERSION\s+"(.+)"')
+
+   info = ('0', '0', '0')
+   if os.environ.has_key('BOOST_INCLUDES'):
+      ver_file = open(os.path.join(os.environ['BOOST_INCLUDES'], 'boost',
+                                   'version.hpp'))
+      lines = ver_file.readlines()
+      ver_file.close()
+      for l in lines:
+         match = boost_ver_re.search(l)
+         if match is not None:
+            ver_info = match.group(1).split('_')
+            info = tuple(ver_info)
+            break
+
+   return info
+
+def buildVersion(inputFile, exps):
+   ver_file = open(inputFile)
+   lines = ver_file.readlines()
+   ver_file.close()
+
+   nums = [0 for e in exps]
+
+   for l in lines:
+      i = 0
+      while i < len(exps):
+         match = exps[i].search(l)
+         if match is not None:
+            nums[i] = match.group(1)
+            break
+         i = i + 1
+
+   return tuple(nums)
+
+def getCppDOMVersion():
+   exps = [
+      re.compile(r'#define\s+CPPDOM_VERSION_MAJOR\s+(\d+)'),
+      re.compile(r'#define\s+CPPDOM_VERSION_MINOR\s+(\d+)'),
+      re.compile(r'#define\s+CPPDOM_VERSION_PATCH\s+(\d+)')
+   ]
+
+   info = (0, 0, 0)
+   if os.environ.has_key('CPPDOM_INCLUDES'):
+      info = buildVersion(os.path.join(os.environ['CPPDOM_INCLUDES'], 'cppdom',
+                                       'version.h'),
+                          exps)
+
+   return info
+
+def getGMTLVersion():
+   exps = [
+      re.compile(r'#define\s+GMTL_VERSION_MAJOR\s+(\d+)'),
+      re.compile(r'#define\s+GMTL_VERSION_MINOR\s+(\d+)'),
+      re.compile(r'#define\s+GMTL_VERSION_PATCH\s+(\d+)')
+   ]
+
+   nums = [0, 0, 0]
+   if os.environ.has_key('GMTL_INCLUDES'):
+      info = buildVersion(os.path.join(os.environ['GMTL_INCLUDES'], 'gmtl',
+                                       'Version.h'),
+                          exps)
+
+   return info
+
 def updateVersions(vcDir, options):
    class JugglerModule:
       def __init__(self, srcDir, vcDir, projDir, versionEnvVar, substVars,
@@ -492,11 +558,17 @@ def updateVersions(vcDir, options):
             else:
                self.__genParamFile(output, template)
 
+      def getVersion(self, joinStr, versionInfo = None):
+         if versionInfo is None:
+            (version, major, minor, patch, build) = self.__getVersionInfo()
+         else:
+            (version, major, minor, patch, build) = versionInfo
+         return '%d%s%d%s%d' % (major, joinStr, minor, joinStr, patch)
+
       def setVersionEnvVar(self):
-         (version, major, minor, patch, build) = self.__getVersionInfo()
-         os.environ[self.version_env_var] = '%d_%d_%d' % (major, minor, patch)
-         os.environ[self.version_env_var_dot] = '%d.%d.%d' % \
-                                                   (major, minor, patch)
+         vi = self.__getVersionInfo()
+         os.environ[self.version_env_var]     = self.getVersion('_', vi)
+         os.environ[self.version_env_var_dot] = self.getVersion('.', vi)
 
       def removeOldVersions(self):
          output_files = []
@@ -605,17 +677,24 @@ def updateVersions(vcDir, options):
    mods = []
 
    vpr_subst_vars = {}
-   vpr_subst_vars['vpr_cxxflags'] = '/EHsc /GR'
-   vpr_subst_vars['vpr_ldflags_compiler'] = r'/link /libpath:$libdir'
-   vpr_subst_vars['vpr_ldflags_linker'] = r'/libpath:$libdir'
+   vpr_subst_vars['vpr_cxxflags'] = '/DBOOST_ALL_DYN_LINK /DCPPDOM_DYN_LINK /EHsc /GR'
+   vpr_subst_vars['vpr_ldflags'] = r'/libpath:$libdir'
    vpr_subst_vars['vpr_libs'] = ''
-   vpr_subst_vars['vpr_extra_ldflags_linker'] = r'/libpath:${VJ_DEPS_DIR}\lib'
+   vpr_subst_vars['vpr_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
    vpr_subst_vars['vpr_extra_libs'] = 'libnspr4.lib libplc4.lib'
-   mods.append(JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
-                             vpr_subst_vars,
-                             [(r'vpr\vprParam.h',), ('vpr.fpc',),
-                              (r'vpr\version.rc',
-                               os.path.join(gJugglerDir, 'version.rc.in'))]))
+   vpr_subst_vars['BOOST_ROOT'] = r'${fpc_file_cwd}\..\..'
+   vpr_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
+   vpr_subst_vars['BOOST_INCLUDES'] = r'/I${prefix}\include'
+   vpr_subst_vars['BOOST_LDFLAGS'] = r'/libpath:${prefix}\lib'
+   vpr_subst_vars['CPPDOM_VERSION'] = '.'.join(getCppDOMVersion())
+   vpr_module = JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
+                              vpr_subst_vars,
+                              [(r'vpr\vprParam.h',), ('vpr.fpc',),
+                               ('boost.fpc',), ('boost_filesystem.fpc',),
+                               ('boost_signals.fpc',),
+                               (r'vpr\version.rc',
+                                os.path.join(gJugglerDir, 'version.rc.in'))])
+   mods.append(vpr_module)
 
    # XXX: These are pretty weak assumptions.
    tweek_have_cxx  = options.get('OMNIORB_ROOT', '') != ''
@@ -640,8 +719,7 @@ def updateVersions(vcDir, options):
             (os.environ['OMNITHREAD_VERSION'], os.environ['OMNIORB_VERSION'],
              os.environ['OMNIORB_VERSION'])
 
-   tweek_subst_vars['tweek_ldflags_compiler'] = r'/link /libpath:$libdir'
-   tweek_subst_vars['tweek_ldflags_linker'] = r'/libpath:$libdir'
+   tweek_subst_vars['tweek_ldflags'] = r'/libpath:$libdir'
    tweek_subst_vars['tweek_libs'] = ''
    tweek_subst_vars['tweek_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
    tweek_subst_vars['tweek_idlflags_java'] = r'-I$prefix\include'
@@ -654,6 +732,8 @@ def updateVersions(vcDir, options):
    tweek_subst_vars['tweek_idlgendir_python'] = '-C'
    tweek_subst_vars['tweek_java_api_jars'] = ';'.join(tweek_jars)
    tweek_subst_vars['tweek_ext_jars'] = ';'.join(tweek_ext_jars)
+   #tweek_subst_vars['CXX_ORB_DEPS'] = 'omniORB4 omnithread3 omniDynamic4'
+   tweek_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
 
    if tweek_have_cxx:
       tweek_subst_vars['BUILD_CXX'] = 'Y'
@@ -666,12 +746,13 @@ def updateVersions(vcDir, options):
       tweek_subst_vars['BUILD_JAVA'] = 'N'
 
    tweek_subst_vars['BUILD_PYTHON_IDL'] = 'N'
-   mods.append(JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
-                             'TWEEK_VERSION', tweek_subst_vars,
-                             [(r'tweek\tweekParam.h',), ('tweek.fpc',),
-                              ('tweek-java.fpc',), ('tweek-python.fpc',),
-                              (r'tweek\version.rc',
-                               os.path.join(gJugglerDir, 'version.rc.in'))]))
+   tweek_module = JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
+                                'TWEEK_VERSION', tweek_subst_vars,
+                                [(r'tweek\tweekParam.h',), ('tweek.fpc',),
+                                 ('tweek-java.fpc',), ('tweek-python.fpc',),
+                                 (r'tweek\version.rc',
+                                  os.path.join(gJugglerDir, 'version.rc.in'))])
+   mods.append(tweek_module)
 
    jccl_jars = []
    for j in gJcclJars + gJcclRtrcJars:
@@ -679,62 +760,78 @@ def updateVersions(vcDir, options):
 
    jccl_subst_vars = {}
    jccl_subst_vars['jccl_cxxflags'] = '/EHsc /GR'
-   jccl_subst_vars['jccl_ldflags_compiler'] = r'/link /libpath:$libdir'
-   jccl_subst_vars['jccl_ldflags_linker'] = r'/libpath:$libdir'
+   jccl_subst_vars['jccl_ldflags'] = r'/libpath:$libdir'
    jccl_subst_vars['jccl_libs'] = ''
    jccl_subst_vars['BUILD_CXX'] = tweek_subst_vars['BUILD_CXX']
    jccl_subst_vars['BUILD_JAVA'] = tweek_subst_vars['BUILD_JAVA']
    jccl_subst_vars['jccl_java_api_jars'] = ';'.join(jccl_jars)
-   mods.append(JugglerModule(r'modules\jackal', vcDir, 'JCCL', 'JCCL_VERSION',
-                             jccl_subst_vars,
-                             [(r'jccl\jcclParam.h',
-                               os.path.join(gJugglerDir,
-                                            r'modules\jackal\common\jccl\jcclParam.h.in')),
-                              ('jccl.fpc',),
-                              (r'jccl\version.rc',
-                               os.path.join(gJugglerDir, 'version.rc.in'))
-                             ]))
+   jccl_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
+   jccl_module = JugglerModule(r'modules\jackal', vcDir, 'JCCL', 'JCCL_VERSION',
+                               jccl_subst_vars,
+                               [(r'jccl\jcclParam.h',
+                                 os.path.join(gJugglerDir,
+                                              r'modules\jackal\common\jccl\jcclParam.h.in')),
+                                ('jccl.fpc',),
+                                (r'jccl\version.rc',
+                                 os.path.join(gJugglerDir, 'version.rc.in'))
+                               ])
+   mods.append(jccl_module)
 
    snx_subst_vars = {}
    snx_subst_vars['snx_cxxflags'] = '/EHsc /GR'
-   snx_subst_vars['snx_ldflags_compiler'] = r'/link /libpath:$libdir'
-   snx_subst_vars['snx_ldflags_linker'] = r'/libpath:$libdir'
+   snx_subst_vars['snx_ldflags'] = r'/libpath:$libdir'
    snx_subst_vars['snx_libs'] = ''
-   mods.append(JugglerModule(r'modules\sonix', vcDir, 'Sonix', 'SNX_VERSION',
-                             snx_subst_vars,
-                             [(r'snx\snxParam.h',), ('sonix.fpc',),
-                              (r'snx\version.rc',
-                               os.path.join(gJugglerDir, 'version.rc.in'))]))
+   snx_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
+   snx_subst_vars['GMTL_VERSION'] = '.'.join(getGMTLVersion())
+   snx_module = JugglerModule(r'modules\sonix', vcDir, 'Sonix', 'SNX_VERSION',
+                              snx_subst_vars,
+                              [(r'snx\snxParam.h',), ('sonix.fpc',),
+                               (r'snx\version.rc',
+                                os.path.join(gJugglerDir, 'version.rc.in'))])
+   mods.append(snx_module)
 
    gadget_subst_vars = {}
    gadget_subst_vars['gadget_cxxflags'] = '/EHsc /GR'
-   gadget_subst_vars['gadget_ldflags_compiler'] = r'/link /libpath:$libdir'
-   gadget_subst_vars['gadget_ldflags_linker'] = r'/libpath:$libdir'
+   gadget_subst_vars['gadget_ldflags'] = r'/libpath:$libdir'
    gadget_subst_vars['gadget_libs'] = ''
    gadget_subst_vars['gadget_extra_libs'] = \
       'comctl32.lib ws2_32.lib user32.lib'
-   mods.append(JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
-                             'GADGET_VERSION', gadget_subst_vars,
-                             [(r'gadget\gadgetParam.h',), ('gadgeteer.fpc',),
-                              (r'gadget\version.rc',
-                               os.path.join(gJugglerDir, 'version.rc.in'))]))
+   gadget_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
+   gadget_subst_vars['JCCL_VERSION'] = jccl_module.getVersion('.')
+   gadget_subst_vars['GMTL_VERSION'] = snx_subst_vars['GMTL_VERSION']
+   gadget_module = JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
+                                 'GADGET_VERSION', gadget_subst_vars,
+                                 [(r'gadget\gadgetParam.h',),
+                                  ('gadgeteer.fpc',),
+                                  (r'gadget\version.rc',
+                                   os.path.join(gJugglerDir, 'version.rc.in'))
+                                 ])
+   mods.append(gadget_module)
 
    vrj_subst_vars = {}
    vrj_subst_vars['vrj_cxxflags'] = '/EHsc /GR'
-   vrj_subst_vars['vrj_ldflags_compiler'] = r'/link /libpath:$libdir'
-   vrj_subst_vars['vrj_ldflags_linker'] = r'/libpath:$libdir'
+   vrj_subst_vars['vrj_ldflags'] = r'/libpath:$libdir'
    vrj_subst_vars['vrj_libs'] = ''
    vrj_subst_vars['vrj_ogl_extra_libs'] = 'opengl32.lib glu32.lib'
    vrj_subst_vars['vrj_pf_extra_libs'] = \
       '/libpath:${PFROOT}\lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib'
+   vrj_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
+   vrj_subst_vars['JCCL_VERSION'] = gadget_subst_vars['JCCL_VERSION']
+   vrj_subst_vars['SNX_VERSION'] = snx_module.getVersion('.')
+   vrj_subst_vars['GADGET_VERSION'] = gadget_module.getVersion('.')
+   vrj_subst_vars['BOOST_ROOT'] = r'${fpc_file_cwd}\..\..'
+   vrj_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
+   vrj_subst_vars['BOOST_INCLUDES'] = r'/I${prefix}\include'
+   vrj_subst_vars['BOOST_LDFLAGS'] = r'/libpath:${prefix}\lib'
    mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              'VRJ_VERSION', vrj_subst_vars,
                              [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
+                              ('boost_program_options.fpc',),
                               (r'vrj\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))]))
 
    for m in mods:
-      m.setVersionEnvVar()
+      #m.setVersionEnvVar()
       m.updateParamFiles()
       m.removeOldVersions()
 
@@ -1092,7 +1189,9 @@ def installVPR(prefix, buildDir):
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
-   smartCopy(os.path.join(buildDir, 'VPR', 'vpr.fpc'), destdir)
+   fpc_files = glob.glob(os.path.join(buildDir, 'VPR', '*.fpc'))
+   for f in fpc_files:
+      smartCopy(f, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vpr', 'test')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'test')
@@ -1497,7 +1596,9 @@ def installVRJuggler(prefix, buildDir):
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
-   smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc'), destdir)
+   fpc_files = glob.glob(os.path.join(buildDir, 'VRJuggler', '*.fpc'))
+   for f in fpc_files:
+      smartCopy(f, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'data')
