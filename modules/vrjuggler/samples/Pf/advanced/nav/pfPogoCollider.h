@@ -48,6 +48,10 @@ public:
       mWorldNode = world;
    }
 
+   virtual ~pfPogoCollider()
+   {
+   }
+
    //: test a movement
    //!ARGS: feetPosition - The current position we are at
    //!ARGS: delta - The amount we want to move
