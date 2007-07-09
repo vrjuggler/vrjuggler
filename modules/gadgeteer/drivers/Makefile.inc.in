@@ -78,6 +78,7 @@ afterbuild:
 beforebuild:
 	@-[ ! -d $(DSO_DRIVER_DIR) ] && rm -rf $(LIBDIR_BASE)
 	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
+	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)/debug
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
