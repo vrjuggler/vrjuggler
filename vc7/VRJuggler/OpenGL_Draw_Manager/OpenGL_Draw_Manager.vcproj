@@ -195,107 +195,128 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlApp.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\App.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlBasicSimulator.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\BasicSimulator.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctors.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawManager.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawWandFunctors.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoader.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoader.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderWGL.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlPipe.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Pipe.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlProcApp.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ProcApp.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlSimInterface.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\SimInterface.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlSimInterfaceFactory.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\SimInterfaceFactory.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlUserData.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\UserData.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindow.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Window.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowWin32.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\WindowWin32.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\Config.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\App.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlApp.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\BasicSimulator.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlBasicSimulator.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Config.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlContextData.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ContextData.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawHeadFunctors.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctors.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawManager.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawManager.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawObjectFunctor.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawObjectFunctor.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawWandFunctors.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawWandFunctors.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoader.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoader.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlExtensionLoaderWin32.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderWGL.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlPipe.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlApp.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlProcApp.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlContextData.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlSimInterface.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlDrawManager.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlSimInterfaceFactory.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlProcApp.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlSimInterfacePtr.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlUserData.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlUserData.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindow.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlWindow.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Ogl\GlWindowPtr.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowWin32.h">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Pipe.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ProcApp.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\SimInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\SimInterfaceFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\SimInterfacePtr.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\UserData.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Window.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\WindowPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\WindowWin32.h">
 			</File>
 		</Filter>
 		<Filter

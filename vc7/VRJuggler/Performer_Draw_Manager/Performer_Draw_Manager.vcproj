@@ -195,56 +195,53 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfApp.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\App.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfBasicSimulator.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\DrawManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfDrawManager.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfInputHandler.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterface.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterfaceFactory.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfUtil.cpp">
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\Util.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\App.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\BasicSimulator.h">
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\Config.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\DrawManager.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\InputHandler.h">
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfApp.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfBasicSimulator.h">
-			</File>
-			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfDrawManager.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfInputHandler.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterface.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterfaceFactory.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterfacePtr.h">
-			</File>
-			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfUtil.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\SimInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\SimInterfaceFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\SimInterfacePtr.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\Util.h">
 			</File>
 		</Filter>
 		<Filter
