@@ -116,8 +116,6 @@ protected:
 // Load with new settings
 bool pfBasicConfigNavApp::configAdd( jccl::ConfigElementPtr element )
 {
-   int x;
-
    vprASSERT(std::string("pf_basic_nav_app") == element->getID());
 
    // Set the properties based on the element values
@@ -166,7 +164,7 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigElementPtr element )
 
    // models
    mModelList.clear();//start out clean
-   for (x = 0; x < element->getNum( "models" ); ++x)
+   for ( unsigned int x = 0; x < element->getNum("models"); ++x )
    {
       jccl::ConfigElementPtr model_element =
          element->getProperty<jccl::ConfigElementPtr>( "models", x );
@@ -188,7 +186,7 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigElementPtr element )
 
    // sounds
    mSoundList.clear();//start out clean
-   for (x = 0; x < element->getNum( "sounds" ); ++x)
+   for ( unsigned int x = 0; x < element->getNum("sounds"); ++x )
    {
       jccl::ConfigElementPtr sound_element =
          element->getProperty<jccl::ConfigElementPtr>( "sounds", x );
