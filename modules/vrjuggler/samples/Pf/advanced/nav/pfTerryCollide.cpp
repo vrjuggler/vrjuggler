@@ -24,12 +24,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <Performer/pr.h>
+#include <Performer/pr/pfGeoSet.h>
+#include <Performer/pfutil.h>
+
 #include "pfTerryCollide.h"
 
 // Set up intersection masks for collision detection using 'mask' as the
 // intersection mask. Cache normals and such inside geosets if the geometry
 // is static, but not if it is dynamic, i.e., its vertices change.
-void pfTerryCollide::nodeSetup( pfNode *node, int mode, int mask )
+void pfTerryCollide::nodeSetup(pfNode *node, const int mode, const int mask)
 {
    int fullmode;
 

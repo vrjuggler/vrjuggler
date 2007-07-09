@@ -49,19 +49,19 @@ public:
    pfSegSet                mCollideVolume;
    pfVec3                  mUnitBox[8];
       
-   pfTerryBoxCollide( int isectMask = 0x01 );
+   pfTerryBoxCollide(const int isectMask = 0x01);
 
    // set the intersect mask of this volume
    // needs to match every node tht you want to intersect with
    // read the performer manpage docs for more info 
    // (see pfNode, or pfGeoSet::isect function
    // NOTE: probably the same mask you used in nodeSetup
-   void setup( const int& isectMask ); 
+   void setup(const int isectMask);
    
    // set the radius of the simulated box/sphere volume
-   void setRadius(float radius);
+   void setRadius(const float radius);
    
-   void setVelocity( pfVec3 velocityVec );
+   void setVelocity(const pfVec3& velocityVec);
    
    //: To collide with objects using the simulated volume
    //: routine, call collide(displacement vector, the whole
@@ -81,7 +81,7 @@ public:
    //
    // NOTE: before calling this function call setRadius(radius of volume) 
    //       first
-   int collide( pfVec3 &bounce, pfNode *objNode, pfVec3 pos);
+   int collide(pfVec3& bounce, pfNode *objNode, const pfVec3& pos);
 };
 
 #endif

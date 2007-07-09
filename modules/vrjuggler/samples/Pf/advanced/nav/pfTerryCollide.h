@@ -29,11 +29,6 @@
 
 #include <Performer/pf.h>
 #include <Performer/pf/pfNode.h>
-#include <Performer/pr.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pfutil.h>
-#include <iostream>
-#include <math.h>
 
 ///////////////////////////////////////////////////////////////////////////////////
 // base class for terry's nav routines.
@@ -58,7 +53,7 @@ public:
    // remain in the same place should be COLLIDE_STATIC.
    // This function is not necessary if you don't want to
    // distinguish different geometry using different masks.
-   void nodeSetup( pfNode* node, int mode, int mask );
+   void nodeSetup(pfNode* node, const int mode, const int mask);
    
    // data structure to get intersection result back from pfHit::mQuery
    class pfHitQueryResult

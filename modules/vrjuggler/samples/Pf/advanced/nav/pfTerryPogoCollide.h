@@ -29,11 +29,6 @@
 
 #include <Performer/pf.h>
 #include <Performer/pf/pfNode.h>
-#include <Performer/pr.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pfutil.h>
-#include <iostream>
-#include <math.h>
 
 #include "pfTerryCollide.h" // my base class
 
@@ -60,7 +55,9 @@ public:
    // posAboveYourFeet is set to a place inbetween your feet and head, 
    //                  that would normally be comfortable height for a human to step.
    // heightAboveYourFeet is the length from posAboveYourFeet to your feet
-   bool collide( pfVec3& correction, pfNode *objNode, int mask, pfVec3 posAboveYourFeet, float heightAboveYourFeet );
+   bool collide(pfVec3& correction, pfNode *objNode, const int mask,
+                const pfVec3& posAboveYourFeet,
+                const float heightAboveYourFeet);
 
    //: collideRide(displacement vector, position
    //: offset, rotation offset, the whole world, mask, your
@@ -74,7 +71,9 @@ public:
    // the time, you'll probably just want to use the heading
    // from the rotation offset.  The vector stores an hpr, but
    // the pitch and roll probably won't be useful.
-   bool collideRide( pfVec3 &bounce, pfVec3 &ridexyz, pfVec3 &ridehpr, pfNode *objNode, int mask, pfVec3 pos, float length );
+   bool collideRide(pfVec3& bounce, pfVec3& ridexyz, pfVec3& ridehpr,
+                    pfNode* objNode, const int mask, pfVec3 pos,
+                    const float length);
 };
       
 
