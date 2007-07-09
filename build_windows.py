@@ -971,7 +971,8 @@ def mkinstalldirs(dir):
 #   print "Checking for", dir
    if not os.path.exists(dir):
       (head, tail) = os.path.split(dir)
-      mkinstalldirs(head)
+      if len(head) > 0:
+         mkinstalldirs(head)
       os.mkdir(dir)
 
 def makeTree(prefix):
