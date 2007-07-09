@@ -92,7 +92,7 @@ ExtensionLoaderWGL::ExtensionLoaderWGL()
 
 void ExtensionLoaderWGL::registerExtensions()
 {
-   vrj::ExtensionLoader::registerExtensions();
+   vrj::opengl::ExtensionLoader::registerExtensions();
 
    mWglFuncs->wglJoinSwapGroupNV       = (PFNWGLJOINSWAPGROUPNVPROC)       (getFunctionByName("wglJoinSwapGroupNV"));
    mWglFuncs->wglBindSwapBarrierNV     = (PFNWGLBINDSWAPBARRIERNVPROC)     (getFunctionByName("wglBindSwapBarrierNV"));

@@ -183,7 +183,7 @@ void DrawManager::main()
 }
 
 // Renders the window using Direct3D.
-void DrawManager::renderWindow(vrj::direc3d::Window* win)
+void DrawManager::renderWindow(vrj::direct3d::Window* win)
 {
    float vp_ox, vp_oy, vp_sx, vp_sy;    // Viewport origin and size
    Viewport::View view;                 // The view for the active viewport
