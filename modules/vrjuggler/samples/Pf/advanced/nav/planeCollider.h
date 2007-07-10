@@ -39,6 +39,10 @@ public:
    {
    }
 
+   virtual ~planeCollider()
+   {
+   }
+
    bool testMove(gmtl::Vec3f curPos, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool curPosWithDelta = false);
 
 private:

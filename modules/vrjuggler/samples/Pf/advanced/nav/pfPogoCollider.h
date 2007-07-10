@@ -48,6 +48,10 @@ public:
       mWorldNode = world;
    }
 
+   virtual ~pfPogoCollider()
+   {
+   }
+
    //: test a movement
    //!ARGS: feetPosition - The current position we are at
    //!ARGS: delta - The amount we want to move
@@ -69,8 +73,8 @@ protected:
 // NOTE: not a robust collider, use in combination with a ray collider, or robust volume collider.
 inline bool pfPogoCollider::testMove( gmtl::Vec3f feetPosition, gmtl::Vec3f feetDelta, gmtl::Vec3f& correction, bool feetPositionWithDelta )
 {
-   pfVec3 pf_feet_position    = vrj::GetPfVec(feetPosition);
-   pfVec3 pf_feet_delta       = vrj::GetPfVec(feetDelta);
+   pfVec3 pf_feet_position    = vrj::pf::GetPfVec(feetPosition);
+   pfVec3 pf_feet_delta       = vrj::pf::GetPfVec(feetDelta);
    pfVec3 pf_feet_destination = pf_feet_position + pf_feet_delta;
    pfVec3 pf_correction;      // Needs to be set
 
@@ -82,7 +86,7 @@ inline bool pfPogoCollider::testMove( gmtl::Vec3f feetPosition, gmtl::Vec3f feet
 
    if (terryCollide.collide( pf_correction, mWorldNode, 0x1, pf_step_destination, step_height))
    {
-      correction = vrj::GetVjVec(pf_correction);
+      correction = vrj::pf::GetVjVec(pf_correction);
 
       setDidCollide(true);
       return true;

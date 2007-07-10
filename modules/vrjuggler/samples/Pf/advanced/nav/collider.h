@@ -38,6 +38,9 @@
 class collider
 {
 public:
+   virtual ~collider()
+   {
+   }
 
    //: test a movement
    //!ARGS: curPos - The current position we are at
