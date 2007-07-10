@@ -10,6 +10,25 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.2.0 Beta 1
+Released: July 9, 2007
+
+    Please refer to the following to get started with VR Juggler 2.2.0:
+
+       http://developer.vrjuggler.org/wiki/MigratingToVrjTwoTwo
+
+    In general, there are no required application changes to update from
+    VR Juggler 2.0 to VR Juggler 2.2. However, applications making direct
+    use of VPR (the VR Juggler Portable Runtime) classes including
+    vpr::SerializableObject must be updated for API changes in VPR 2.0.
+
+    VR Juggler 2.0 configurations must be loaded into VRJConfig in order
+    to be updated automatically. Before doing that, however, it is highly
+    recommended that all VR Juggler 2.0 configuration files be processed
+    using an XSLT processor and the stylesheet
+    modules/vrjuggler/data/xslt/key_sym_2_0.xsl. More information about this
+    can be found on the above referenced web page.
+
  Version: 2.1.9
 Released: June 19, 2006
 
