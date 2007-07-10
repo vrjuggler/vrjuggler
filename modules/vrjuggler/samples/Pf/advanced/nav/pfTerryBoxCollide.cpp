@@ -28,7 +28,7 @@
 
 const int pfTerryBoxCollide::COLLIDE_SEGMENTS( 8 );
 
-pfTerryBoxCollide::pfTerryBoxCollide( int isectMask )
+pfTerryBoxCollide::pfTerryBoxCollide(const int isectMask)
 {
    mUnitBox[0] = pfVec3(0.57735f, 0.57735f, 0.57735f);
    mUnitBox[1] = pfVec3(0.57735f, 0.57735f, -0.57735f);
@@ -55,13 +55,13 @@ pfTerryBoxCollide::pfTerryBoxCollide( int isectMask )
 // set the intersect mask of this volume
 // needs to match every node tht you want to intersect with
 // read the performer docs for more info (see pfNode, or pfGeoSet::isect function)
-void pfTerryBoxCollide::setup( const int& isectMask )
+void pfTerryBoxCollide::setup(const int isectMask)
 {
    mCollideVolume.isectMask = isectMask;
 }   
 
 //  Effectively sets the radius of your bounding volume (box/sphere)
-void pfTerryBoxCollide::setRadius( float radius )
+void pfTerryBoxCollide::setRadius(const float radius)
 {
    int i;
 
@@ -71,7 +71,7 @@ void pfTerryBoxCollide::setRadius( float radius )
    }
 }
 
-void pfTerryBoxCollide::setVelocity( pfVec3 velocityVec )
+void pfTerryBoxCollide::setVelocity(const pfVec3& velocityVec)
 {
    int i;
    float velocity_length = velocityVec.length();
@@ -95,7 +95,8 @@ void pfTerryBoxCollide::setVelocity( pfVec3 velocityVec )
    }
 }
 
-int pfTerryBoxCollide::collide(pfVec3& correction, pfNode* objNode, pfVec3 pos )
+int pfTerryBoxCollide::collide(pfVec3& correction, pfNode* objNode,
+                               const pfVec3& pos)
 {   
    int i, j, returnval = 0;
    float distance;

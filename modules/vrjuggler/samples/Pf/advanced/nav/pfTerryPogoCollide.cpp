@@ -24,6 +24,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <Performer/pr.h>
+#include <Performer/pr/pfGeoSet.h>
+#include <Performer/pfutil.h>
+#include <iostream>
+#include <math.h>
+
 #include "pfTerryPogoCollide.h"
 
 // posAboveYourFeet: either foot position or head position is generally computed from a navigation
@@ -42,7 +48,10 @@
 // posAboveYourFeet is set to a place inbetween your feet and head, 
 //                  that would normally be comfortable height for a human to step.
 // heightAboveYourFeet is the length from posAboveYourFeet to your feet
-bool pfTerryPogoCollide::collide( pfVec3& correction, pfNode *objNode, int mask, pfVec3 posAboveYourFeet, float heightAboveYourFeet )
+bool pfTerryPogoCollide::collide(pfVec3& correction, pfNode* objNode,
+                                 const int mask,
+                                 const pfVec3& posAboveYourFeet,
+                                 const float heightAboveYourFeet)
 {
     pfHit **hit[1];
     pfSegSet segset;
@@ -82,9 +91,10 @@ bool pfTerryPogoCollide::collide( pfVec3& correction, pfNode *objNode, int mask,
    return false;
 }
 
-
-
-bool pfTerryPogoCollide::collideRide( pfVec3 &bounce, pfVec3 &ridexyz, pfVec3 &ridehpr, pfNode *objNode, int mask, pfVec3 pos, float length )
+bool pfTerryPogoCollide::collideRide(pfVec3& bounce, pfVec3& ridexyz,
+                                     pfVec3& ridehpr, pfNode* objNode,
+                                     const int mask, pfVec3 pos,
+                                     const float length)
 {
    pfHit** hit[1];
    pfSegSet segset;
