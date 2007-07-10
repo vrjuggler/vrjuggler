@@ -24,6 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <gmtl/Generate.h>
 #include <gmtl/Quat.h>
 #include <gmtl/QuatOps.h>
 
