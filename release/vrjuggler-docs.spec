@@ -176,7 +176,7 @@ rm -rf %{buildroot}
 %build
 %if %{have_java}
 make DIRS="modules/tweek modules/jackal modules/jackal/plugins"
-make -f Makefile.docs TWEEK_BASE_DIR=`pwd`/instlinks JCCL_BASE_DIR=`pwd`/instlinks all
+make -f Makefile.docs TWEEK_BASE_DIR=`pwd`/instlinks TWEEK_VERSION=%{tweek_version} JCCL_BASE_DIR=`pwd`/instlinks JCCL_VERSION=%{jccl_version} all
 %else
 make -f Makefile.docs JAVADOC_SUBDIR= all
 %endif
