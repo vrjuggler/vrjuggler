@@ -651,7 +651,7 @@ def updateVersions(vcDir, options):
          subst_vars['PLATFORM']           = 'Windows'
          subst_vars['data_subdir']        = 'share'
          subst_vars['USE_GCC']            = 'no'
-         subst_vars['includedir']         = r'${prefix}\include'
+         subst_vars['includedir']         = r'"${prefix}\include"'
          subst_vars['libdir']             = r'${exec_prefix}\lib'
 
          try:
@@ -660,8 +660,17 @@ def updateVersions(vcDir, options):
             input_file.close()
 
             for i in xrange(len(input_lines)):
+               def f(m):
+                  print "match:", m.group(1)
+                  val = subst_vars.get(m.group(1), '')
+                  print "  replace:", val
+                  return val
+
+               #input_lines[i] = \
+               #   self.subst_re.sub(lambda m: subst_vars.get(m.group(1), ''),
+               #                     input_lines[i])
                input_lines[i] = \
-                  self.subst_re.sub(lambda m: subst_vars.get(m.group(1), ''),
+                  self.subst_re.sub(f,
                                     input_lines[i])
 
             printStatus("Generating updated " + output)
@@ -675,17 +684,18 @@ def updateVersions(vcDir, options):
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
+   rt_part = ""
 
    vpr_subst_vars = {}
    vpr_subst_vars['vpr_cxxflags'] = '/DBOOST_ALL_DYN_LINK /DCPPDOM_DYN_LINK /EHsc /GR'
-   vpr_subst_vars['vpr_ldflags'] = r'/libpath:$libdir'
+   vpr_subst_vars['vpr_ldflags'] = r'/libpath:"$libdir"'
    vpr_subst_vars['vpr_libs'] = ''
-   vpr_subst_vars['vpr_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
+   vpr_subst_vars['vpr_extra_ldflags'] = r'/libpath:"${VJ_DEPS_DIR}\lib"'
    vpr_subst_vars['vpr_extra_libs'] = 'libnspr4.lib libplc4.lib'
-   vpr_subst_vars['BOOST_ROOT'] = r'${fpc_file_cwd}\..\..'
+   vpr_subst_vars['BOOST_ROOT'] = r'${fp_file_cwd}\..\..'
    vpr_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
-   vpr_subst_vars['BOOST_INCLUDES'] = r'/I${prefix}\include'
-   vpr_subst_vars['BOOST_LDFLAGS'] = r'/libpath:${prefix}\lib'
+   vpr_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'
+   vpr_subst_vars['BOOST_LDFLAGS'] = r'/libpath:"${prefix}\lib"'
    vpr_subst_vars['CPPDOM_VERSION'] = '.'.join(getCppDOMVersion())
    vpr_module = JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
                               vpr_subst_vars,
@@ -694,6 +704,9 @@ def updateVersions(vcDir, options):
                                ('boost_signals.fpc',),
                                (r'vpr\version.rc',
                                 os.path.join(gJugglerDir, 'version.rc.in'))])
+   lib_name = 'vpr' + rt_part + '-' + vpr_module.getVersion('_') + '.lib'
+   vpr_subst_vars['vpr_libs'] += lib_name
+
    mods.append(vpr_module)
 
    # XXX: These are pretty weak assumptions.
@@ -713,17 +726,17 @@ def updateVersions(vcDir, options):
    tweek_subst_vars = {}
    tweek_subst_vars['tweek_cxxflags'] = '/EHsc /GR'
    if tweek_have_cxx:
-      tweek_subst_vars['tweek_cxxflags'] += ' /DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I$prefix\\include\\tweek\\idl'
+      tweek_subst_vars['tweek_cxxflags'] += ' /DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I"$prefix\\include\\tweek\\idl"'
       tweek_subst_vars['tweek_extra_libs'] = \
          'omnithread%s_rt.lib omniORB%s_rt.lib omniDynamic%s_rt.lib' % \
             (os.environ['OMNITHREAD_VERSION'], os.environ['OMNIORB_VERSION'],
              os.environ['OMNIORB_VERSION'])
 
-   tweek_subst_vars['tweek_ldflags'] = r'/libpath:$libdir'
+   tweek_subst_vars['tweek_ldflags'] = r'/libpath:"$libdir"'
    tweek_subst_vars['tweek_libs'] = ''
-   tweek_subst_vars['tweek_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
-   tweek_subst_vars['tweek_idlflags_java'] = r'-I$prefix\include'
-   tweek_subst_vars['tweek_idlflags_cxx'] = r'-bcxx -Wbh=.h,s=.cpp -I$prefix\include'
+   tweek_subst_vars['tweek_extra_ldflags'] = r'/libpath:"${VJ_DEPS_DIR}\lib"'
+   tweek_subst_vars['tweek_idlflags_java'] = r'-I"$prefix\include"'
+   tweek_subst_vars['tweek_idlflags_cxx'] = r'-bcxx -Wbh=.h,s=.cpp -I"$prefix\include"'
    tweek_subst_vars['tweek_idl_inc_flag_java'] = '-I'
    tweek_subst_vars['tweek_idl_inc_flag_cxx'] = '-I'
    tweek_subst_vars['tweek_idl_inc_flag_python'] = '-I'
@@ -752,6 +765,8 @@ def updateVersions(vcDir, options):
                                  ('tweek-java.fpc',), ('tweek-python.fpc',),
                                  (r'tweek\version.rc',
                                   os.path.join(gJugglerDir, 'version.rc.in'))])
+   lib_name = 'tweek' + rt_part + '-' + tweek_module.getVersion('_') + '.lib'
+   tweek_subst_vars['tweek_libs'] += lib_name
    mods.append(tweek_module)
 
    jccl_jars = []
@@ -760,7 +775,7 @@ def updateVersions(vcDir, options):
 
    jccl_subst_vars = {}
    jccl_subst_vars['jccl_cxxflags'] = '/EHsc /GR'
-   jccl_subst_vars['jccl_ldflags'] = r'/libpath:$libdir'
+   jccl_subst_vars['jccl_ldflags'] = r'/libpath:"$libdir"'
    jccl_subst_vars['jccl_libs'] = ''
    jccl_subst_vars['BUILD_CXX'] = tweek_subst_vars['BUILD_CXX']
    jccl_subst_vars['BUILD_JAVA'] = tweek_subst_vars['BUILD_JAVA']
@@ -775,11 +790,13 @@ def updateVersions(vcDir, options):
                                 (r'jccl\version.rc',
                                  os.path.join(gJugglerDir, 'version.rc.in'))
                                ])
+   lib_name = 'jccl' + rt_part + '-' + jccl_module.getVersion('_') + '.lib'
+   jccl_subst_vars['jccl_libs'] += lib_name
    mods.append(jccl_module)
 
    snx_subst_vars = {}
    snx_subst_vars['snx_cxxflags'] = '/EHsc /GR'
-   snx_subst_vars['snx_ldflags'] = r'/libpath:$libdir'
+   snx_subst_vars['snx_ldflags'] = r'/libpath:"$libdir"'
    snx_subst_vars['snx_libs'] = ''
    snx_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
    snx_subst_vars['GMTL_VERSION'] = '.'.join(getGMTLVersion())
@@ -788,11 +805,13 @@ def updateVersions(vcDir, options):
                               [(r'snx\snxParam.h',), ('sonix.fpc',),
                                (r'snx\version.rc',
                                 os.path.join(gJugglerDir, 'version.rc.in'))])
+   lib_name = 'snx' + rt_part + '-' + snx_module.getVersion('_') + '.lib'
+   snx_subst_vars['snx_libs'] += lib_name
    mods.append(snx_module)
 
    gadget_subst_vars = {}
    gadget_subst_vars['gadget_cxxflags'] = '/EHsc /GR'
-   gadget_subst_vars['gadget_ldflags'] = r'/libpath:$libdir'
+   gadget_subst_vars['gadget_ldflags'] = r'/libpath:"$libdir"'
    gadget_subst_vars['gadget_libs'] = ''
    gadget_subst_vars['gadget_extra_libs'] = \
       'comctl32.lib ws2_32.lib user32.lib'
@@ -806,29 +825,40 @@ def updateVersions(vcDir, options):
                                   (r'gadget\version.rc',
                                    os.path.join(gJugglerDir, 'version.rc.in'))
                                  ])
+   lib_name = 'gadget' + rt_part + '-' + gadget_module.getVersion('_') + '.lib'
+   gadget_subst_vars['gadget_libs'] += lib_name
    mods.append(gadget_module)
 
    vrj_subst_vars = {}
    vrj_subst_vars['vrj_cxxflags'] = '/EHsc /GR'
-   vrj_subst_vars['vrj_ldflags'] = r'/libpath:$libdir'
+   vrj_subst_vars['vrj_ldflags'] = r'/libpath:"$libdir"'
    vrj_subst_vars['vrj_libs'] = ''
+   vrj_subst_vars['vrj_ogl_lib'] = ''
+   vrj_subst_vars['vrj_pf_lib'] = ''
    vrj_subst_vars['vrj_ogl_extra_libs'] = 'opengl32.lib glu32.lib'
    vrj_subst_vars['vrj_pf_extra_libs'] = \
-      '/libpath:${PFROOT}\lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib'
+      '/libpath:"${PFROOT}\lib" libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib'
    vrj_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
    vrj_subst_vars['JCCL_VERSION'] = gadget_subst_vars['JCCL_VERSION']
    vrj_subst_vars['SNX_VERSION'] = snx_module.getVersion('.')
    vrj_subst_vars['GADGET_VERSION'] = gadget_module.getVersion('.')
-   vrj_subst_vars['BOOST_ROOT'] = r'${fpc_file_cwd}\..\..'
+   vrj_subst_vars['BOOST_ROOT'] = r'${fp_file_cwd}\..\..'
    vrj_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
-   vrj_subst_vars['BOOST_INCLUDES'] = r'/I${prefix}\include'
-   vrj_subst_vars['BOOST_LDFLAGS'] = r'/libpath:${prefix}\lib'
-   mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
+   vrj_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'
+   vrj_subst_vars['BOOST_LDFLAGS'] = r'/libpath:"${prefix}\lib"'
+   vrj_module = JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              'VRJ_VERSION', vrj_subst_vars,
                              [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
                               ('boost_program_options.fpc',),
                               (r'vrj\version.rc',
-                               os.path.join(gJugglerDir, 'version.rc.in'))]))
+                               os.path.join(gJugglerDir, 'version.rc.in'))])
+   lib_name = 'vrj' + rt_part + '-' + vrj_module.getVersion('_') + '.lib'
+   ogl_lib_name = 'vrj_ogl' + rt_part + '-' + vrj_module.getVersion('_') + '.lib'
+   pf_lib_name = 'vrj_pf' + rt_part + '-' + vrj_module.getVersion('_') + '.lib'
+   vrj_subst_vars['vrj_libs'] += lib_name
+   vrj_subst_vars['vrj_ogl_lib'] += ogl_lib_name
+   vrj_subst_vars['vrj_pf_lib'] += pf_lib_name
+   mods.append(vrj_module)
 
    for m in mods:
       m.setVersionEnvVar()
