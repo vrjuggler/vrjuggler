@@ -159,7 +159,7 @@
 				OutputFile="$(OutDir)/vrj-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\Gadgeteer\$(OutDir)&quot;;&quot;..\Sonix\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\Gadgeteer\$(OutDir)&quot;;&quot;..\Sonix\$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/vrj-$(VRJ_VERSION).pdb"
 				SubSystem="1"

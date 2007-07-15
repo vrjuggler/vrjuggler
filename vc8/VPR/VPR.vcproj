@@ -158,7 +158,7 @@
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;&quot;$(NSPR_ROOT)\lib&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/vpr-$(VPR_VERSION).pdb"

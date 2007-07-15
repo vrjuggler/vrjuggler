@@ -163,7 +163,7 @@
 				OutputFile="$(OutDir)/corba_perf_mon.dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\Tweek_CXX\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VRJuggler\$(OutDir)&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\Tweek_CXX\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VRJuggler\$(OutDir)&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/corba_perf_mon.pdb"
 				SubSystem="1"
