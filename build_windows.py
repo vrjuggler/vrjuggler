@@ -47,6 +47,7 @@ EXIT_STATUS_INVALID_ARGUMENT     = 7
 
 gJugglerDir      = os.path.dirname(os.path.abspath(sys.argv[0]))
 gOptionsFileName = "options.cache"
+gBuild64         = False
 
 gJdomJars = [
    'jdom.jar',
@@ -357,6 +358,16 @@ def postProcessOptions(options):
       os.environ['JACORB_PATH'] = os.path.join(gJugglerDir, r'external\JacORB')
 
    if os.environ['OMNIORB_ROOT'] != '' and os.path.exists(os.environ['OMNIORB_ROOT']):
+      # A 64-bit build of omniORB has to have been compiled against a 64-bit
+      # build of Python. Unfortunately, when omniidl.exe acts as the Python
+      # interpreter, it doesn't take care of setting PYTHONHOME, and this
+      # prevents it from being able to find core modules (such as sys.py or
+      # os.py). We'll assume that a 64-bit Python interpreter is being used
+      # to run this script and use its installation prefix as PYTHONHOME to
+      # help out omniidl.exe.
+      if gBuild64 and not os.environ.has_key('PYTHONHOME'):
+         os.environ['PYTHONHOME'] = sys.prefix
+
       omni_bin = os.path.join(os.environ['OMNIORB_ROOT'], 'bin')
 
       if os.path.exists(os.path.join(omni_bin, 'omniidl.exe')):
@@ -402,9 +413,13 @@ def postProcessOptions(options):
 
    # Determine if al.h is in the base include directory or in include\AL.
    if os.environ['OPENAL_ROOT'] != '':
-      # TODO: Extend for Win64.
+      if gBuild64:
+         subdir = 'Win64'
+      else:
+         subdir = 'Win32'
+
       lib_dirs = [os.path.join(os.environ['OPENAL_ROOT'], 'libs'),
-                  os.path.join(os.environ['OPENAL_ROOT'], 'libs', 'Win32')]
+                  os.path.join(os.environ['OPENAL_ROOT'], 'libs', subdir)]
 
       for l in lib_dirs:
          openal_lib = os.path.join(l, 'OpenAL32.lib')
@@ -1775,7 +1790,8 @@ def doDependencyInstall(prefix):
    installOmniORB(prefix)
    installDoozer(prefix)
 
-def simpleInstall(name, root, prefix, includeDir = None, optional = False):
+def simpleInstall(name, root, prefix, includeDir = None, libDir = 'lib',
+                  optional = False):
    if optional and root == '':
       return
 
@@ -1792,7 +1808,7 @@ def simpleInstall(name, root, prefix, includeDir = None, optional = False):
       installDir(srcdir, destdir, ['.h', '.hpp', '.ipp'])
 
    # Install all libraries.
-   srcdir = os.path.join(root, 'lib')
+   srcdir = os.path.join(root, libDir)
 
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'lib')
@@ -1817,8 +1833,13 @@ def installNSPR(prefix):
                  prefix, os.environ['NSPR_INCLUDES'])
 
 def installCppDOM(prefix):
+   if gBuild64:
+      libdir = 'lib64'
+   else:
+      libdir = 'lib'
+
    simpleInstall('CppDOM headers and libraries', os.environ['CPPDOM_ROOT'],
-                 prefix, os.environ['CPPDOM_INCLUDES'])
+                 prefix, os.environ['CPPDOM_INCLUDES'], libdir)
 
 def installDoozer(prefix):
    doozer_dir = os.environ['DOOZER_ROOT']
@@ -1869,9 +1890,17 @@ def installOpenAL(prefix):
       destdir = os.path.join(prefix, 'bin')
 
       # OpenAL 1.0 and 1.1 put the redistributable DLL in different places.
-      dll_dirs = [os.path.join(srcdir, 'dll'),
-                  os.path.join(r'C:\windows', 'SysWOW64'),
-                  os.path.join(r'C:\windows', 'system32')]
+      dll_dirs = [os.path.join(srcdir, 'dll')]
+
+      sysroot = os.environ['SystemRoot']
+
+      # For a 64-bit build, we know that we only have to to look in one place
+      # for the DLL.
+      if gBuild64:
+         dll_dirs.append(os.path.join(sysroot, 'system32'))
+      else:
+         dll_dirs += [os.path.join(sysroot, 'SysWOW64'),
+                      os.path.join(sysroot, 'system32')]
 
       for d in dll_dirs:
          dll = os.path.join(d, 'OpenAL32.dll')
@@ -2137,6 +2166,22 @@ class GuiFrontEnd:
 
       # CommandFrame Innards.
       next_row = 0
+      self.mRoot.CommandFrame.Build64Check = \
+         Tkinter.Checkbutton(self.mRoot.CommandFrame,
+                             text="64-bit Build",
+                             bg = self.JugglerYellow,
+                             activebackground = self.JugglerYellow,
+                             onvalue = "Yes", offvalue = "No")
+      self.mRoot.CommandFrame.Build64Check.Variable = Tkinter.StringVar()
+      build64 = "No"
+      if gBuild64:
+         build64 = "Yes"
+      self.mRoot.CommandFrame.Build64Check.Variable.set(build64)
+      self.mRoot.CommandFrame.Build64Check["variable"] = \
+         self.mRoot.CommandFrame.Build64Check.Variable
+      self.mRoot.CommandFrame.Build64Check.grid(row = next_row, column = 0,
+                                                sticky = Tkinter.EW, pady = 4)
+      next_row = next_row + 1
       self.mRoot.CommandFrame.OpenVSCheck = \
          Tkinter.Checkbutton(self.mRoot.CommandFrame,
                              text="Open Visual Studio IDE",
@@ -2257,6 +2302,11 @@ class GuiFrontEnd:
       # Set the environment vars.
       for k in self.mTkOptions.iterkeys():
          os.environ[k] = self.mTkOptions[k].get()
+
+      # This has to be done before calling postProcessOptions().
+      if self.mRoot.CommandFrame.Build64Check.Variable.get() == "Yes":
+         global gBuild64
+         gBuild64 = True
 
       if True:#self.validateOptions():
          postProcessOptions(self.mOptions)
@@ -2414,7 +2464,7 @@ def main():
 
    try:
       cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cano:h",
-                                         ["nogui", "nobuild", "auto",
+                                         ["64", "nogui", "nobuild", "auto",
                                           "options-file=", "help"])
    except getopt.GetoptError:
       usage()
@@ -2423,9 +2473,12 @@ def main():
    skip_vs = False
 
    global gOptionsFileName
+   global gBuild64
    for o, a in cmd_opts:
       if o in ("-c","--nogui"):
          disable_tk = True
+      elif o == "--64":
+         gBuild64 = True
       elif o in ("-o", "--options-file="):
          gOptionsFileName = a
 
@@ -2482,6 +2535,8 @@ def usage():
    print "Python script for building VR Juggler on Windows.\n"
    print "-c, --nogui              Disable the Tkinter GUI front end"
    print "                         (i.e., Run in command line mode)."
+   print "--64                     Indicate that a 64-bit build will"
+   print "                         be made."
    #print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, 'options.cache' if it exists, or the file given by the -o option.  Only used in command line mode."
    print "-o, --options-file=FILE  Uses FILE to Load/Save Options."
    print "-h, --help               Print this usage text and quit."
