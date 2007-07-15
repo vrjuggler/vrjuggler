@@ -28,8 +28,8 @@ of the steps for building and installing VR Juggler on Windows follow:
 <ol>
   <li>
     Install <a href="http://www.python.org/">Python</a> 2.2 or newer. To build
-    a 64-bit version of VR Juggler on Windows, the 64-bit build of Python 2.5 is
-    required.
+    a 64-bit version of VR Juggler on Windows, the 64-bit build of Python 2.5
+    is <i>required</i>.
   </li>
   <li>
     Run <tt>build_windows.py</tt> and fill in at least the paths to the
@@ -54,7 +54,7 @@ In order to <a href="#run_build_windows_py">run the helper script
 <tt>build_windows.py</tt></a>, you must have
 <a href="http://www.python.org/">Python</a> 2.2 or newer installed on your
 system. (To build a 64-bit version of VR Juggler, the 64-bit version of
-Python 2.5 must be installed.) Visit the Python website for
+Python 2.5 <i>must</i> be installed.) Visit the Python website for
 <a href="http://www.python.org/download/">download and install
 instructions</a>.
 </p>
@@ -71,6 +71,12 @@ Visual Studio for you, and when the build is complete, it will perform
 all the necessary installation steps&mdash;including installation of
 VR Juggler's C++ dependencies into a convenient, centralized location.
 </p>
+
+<blockquote>
+<b>IMPORTANT:</b> To create a 64-bit build on Windows, the command line
+option <b><tt>--64</tt></b> must be used, or the <q>64-bit Build</q> option
+in the GUI must be selected.
+</blockquote>
 
 <blockquote>
 <b>NOTE:</b> For the build to work correctly, you must use the
