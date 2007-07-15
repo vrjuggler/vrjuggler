@@ -81,7 +81,9 @@ AC_DEFUN([GMTL_PATH],
         ok='yes'
       else 
         if test "$fp_major" -eq "$req_fp_major"; then
-            if test "$fp_minor" -ge "$req_fp_minor"; then
+            if test "$fp_minor" -gt "$req_fp_minor"; then
+               ok='yes'
+            elif test "$fp_minor" -ge "$req_fp_minor"; then
                if test "$fp_micro" -ge "$req_fp_micro"; then
                   ok='yes'
                fi
