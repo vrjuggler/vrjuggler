@@ -157,7 +157,7 @@
 				OutputFile="$(OutDir)/jccl-$(JCCL_VERSION).dll"
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/jccl-$(JCCL_VERSION).pdb"
 				SubSystem="1"

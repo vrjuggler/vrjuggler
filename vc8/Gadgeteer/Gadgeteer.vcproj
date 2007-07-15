@@ -159,7 +159,7 @@
 				OutputFile="$(OutDir)/gadget-$(GADGET_VERSION).dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/gadget-$(GADGET_VERSION).pdb"
 				SubSystem="1"
