@@ -660,17 +660,8 @@ def updateVersions(vcDir, options):
             input_file.close()
 
             for i in xrange(len(input_lines)):
-               def f(m):
-                  print "match:", m.group(1)
-                  val = subst_vars.get(m.group(1), '')
-                  print "  replace:", val
-                  return val
-
-               #input_lines[i] = \
-               #   self.subst_re.sub(lambda m: subst_vars.get(m.group(1), ''),
-               #                     input_lines[i])
                input_lines[i] = \
-                  self.subst_re.sub(f,
+                  self.subst_re.sub(lambda m: subst_vars.get(m.group(1), ''),
                                     input_lines[i])
 
             printStatus("Generating updated " + output)
@@ -817,7 +808,7 @@ def updateVersions(vcDir, options):
       'comctl32.lib ws2_32.lib user32.lib'
    gadget_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
    gadget_subst_vars['JCCL_VERSION'] = jccl_module.getVersion('.')
-   gadget_subst_vars['MIN_GMTL_VERSION'] = snx_subst_vars['GMTL_VERSION']
+   gadget_subst_vars['MIN_GMTL_VERSION'] = snx_subst_vars['MIN_GMTL_VERSION']
    gadget_module = JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                                  'GADGET_VERSION', gadget_subst_vars,
                                  [(r'gadget\gadgetParam.h',),
