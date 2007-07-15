@@ -1842,18 +1842,8 @@ def installCppDOM(prefix):
                  prefix, os.environ['CPPDOM_INCLUDES'], libdir)
 
 def installDoozer(prefix):
-   doozer_dir = os.environ['DOOZER_ROOT']
-
-   if doozer_dir != "":
-      printStatus("Installing Doozer makefile bits")
-
-      srcdir  = os.path.join(doozer_dir, 'share', 'Doozer')
-      destdir = os.path.join(prefix, 'share', 'Doozer')
-      installDir(srcdir, destdir, ['.mk'])
-
-      srcdir  = os.path.join(doozer_dir, 'share', 'flagpoll')
-      destdir = os.path.join(prefix, 'share', 'flagpoll')
-      installDir(srcdir, destdir, ['.fpc'])
+   simpleInstall('Installing Doozer makefile bits',
+                 os.getenv('DOOZER_ROOT', ''), prefix, optional = True)
 
 def installBoost(prefix):
    printStatus("Installing Boost headers and libraries")
