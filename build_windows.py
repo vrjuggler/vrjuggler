@@ -799,7 +799,7 @@ def updateVersions(vcDir, options):
    snx_subst_vars['snx_ldflags'] = r'/libpath:"$libdir"'
    snx_subst_vars['snx_libs'] = ''
    snx_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
-   snx_subst_vars['GMTL_VERSION'] = '.'.join(getGMTLVersion())
+   snx_subst_vars['MIN_GMTL_VERSION'] = '.'.join(getGMTLVersion())
    snx_module = JugglerModule(r'modules\sonix', vcDir, 'Sonix', 'SNX_VERSION',
                               snx_subst_vars,
                               [(r'snx\snxParam.h',), ('sonix.fpc',),
@@ -817,7 +817,7 @@ def updateVersions(vcDir, options):
       'comctl32.lib ws2_32.lib user32.lib'
    gadget_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
    gadget_subst_vars['JCCL_VERSION'] = jccl_module.getVersion('.')
-   gadget_subst_vars['GMTL_VERSION'] = snx_subst_vars['GMTL_VERSION']
+   gadget_subst_vars['MIN_GMTL_VERSION'] = snx_subst_vars['GMTL_VERSION']
    gadget_module = JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                                  'GADGET_VERSION', gadget_subst_vars,
                                  [(r'gadget\gadgetParam.h',),

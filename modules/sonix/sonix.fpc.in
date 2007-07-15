@@ -47,7 +47,7 @@ Description: Sonix provides simple audio sound objects on top of several audio A
 URL: http://www.vrjuggler.org/sonix/
 Version: ${snx_version}
 Provides: sonix
-Requires: vpr = @VPR_VERSION@ gmtl >= @GMTL_VERSION@
+Requires: vpr = @VPR_VERSION@ gmtl >= @MIN_GMTL_VERSION@
 Arch: ${ISA}
 Cflags: ${snx_cxxflags} ${snx_extra_cxxflags} -I${includedir}
 Libs: ${snx_ldflags} ${snx_libs}
