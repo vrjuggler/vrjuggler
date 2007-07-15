@@ -1882,6 +1882,13 @@ def installGMTL(prefix):
    simpleInstall('GMTL headers', os.environ['GMTL_ROOT'], prefix,
                  os.environ['GMTL_INCLUDES'])
 
+   # Install all libraries.
+   srcdir = os.path.join(os.environ['GMTL_ROOT'], 'share', 'flagpoll')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'lib', 'flagpoll')
+      installDir(srcdir, destdir)
+
 def installAudiere(prefix):
    simpleInstall('Audiere headers, libraries, and executables',
                  os.getenv('AUDIERE_ROOT', ''), prefix, optional = True)
