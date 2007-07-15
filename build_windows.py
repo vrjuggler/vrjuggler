@@ -1805,6 +1805,13 @@ def simpleInstall(name, root, prefix, includeDir = None, optional = False):
       destdir = os.path.join(prefix, 'bin')
       installDir(srcdir, destdir)
 
+   # Install all data files.
+   srcdir = os.path.join(root, 'share')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'share')
+      installDir(srcdir, destdir)
+
 def installNSPR(prefix):
    simpleInstall('NSPR headers and libraries', os.environ['NSPR_ROOT'],
                  prefix, os.environ['NSPR_INCLUDES'])
