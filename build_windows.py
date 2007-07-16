@@ -710,9 +710,6 @@ def updateVersions(vcDir, options):
                                ('boost_signals.fpc',),
                                (r'vpr\version.rc',
                                 os.path.join(gJugglerDir, 'version.rc.in'))])
-   lib_name = 'vpr' + rt_part + '-' + vpr_module.getVersion('_') + '.lib'
-   vpr_subst_vars['vpr_libs'] += lib_name
-
    mods.append(vpr_module)
 
    # XXX: These are pretty weak assumptions.
@@ -771,8 +768,6 @@ def updateVersions(vcDir, options):
                                  ('tweek-java.fpc',), ('tweek-python.fpc',),
                                  (r'tweek\version.rc',
                                   os.path.join(gJugglerDir, 'version.rc.in'))])
-   lib_name = 'tweek' + rt_part + '-' + tweek_module.getVersion('_') + '.lib'
-   tweek_subst_vars['tweek_libs'] += lib_name
    mods.append(tweek_module)
 
    jccl_jars = []
@@ -796,8 +791,6 @@ def updateVersions(vcDir, options):
                                 (r'jccl\version.rc',
                                  os.path.join(gJugglerDir, 'version.rc.in'))
                                ])
-   lib_name = 'jccl' + rt_part + '-' + jccl_module.getVersion('_') + '.lib'
-   jccl_subst_vars['jccl_libs'] += lib_name
    mods.append(jccl_module)
 
    snx_subst_vars = {}
@@ -811,8 +804,6 @@ def updateVersions(vcDir, options):
                               [(r'snx\snxParam.h',), ('sonix.fpc',),
                                (r'snx\version.rc',
                                 os.path.join(gJugglerDir, 'version.rc.in'))])
-   lib_name = 'snx' + rt_part + '-' + snx_module.getVersion('_') + '.lib'
-   snx_subst_vars['snx_libs'] += lib_name
    mods.append(snx_module)
 
    gadget_subst_vars = {}
@@ -831,8 +822,6 @@ def updateVersions(vcDir, options):
                                   (r'gadget\version.rc',
                                    os.path.join(gJugglerDir, 'version.rc.in'))
                                  ])
-   lib_name = 'gadget' + rt_part + '-' + gadget_module.getVersion('_') + '.lib'
-   gadget_subst_vars['gadget_libs'] += lib_name
    mods.append(gadget_module)
 
    vrj_subst_vars = {}
@@ -858,12 +847,6 @@ def updateVersions(vcDir, options):
                               ('boost_program_options.fpc',),
                               (r'vrj\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))])
-   lib_name = 'vrj' + rt_part + '-' + vrj_module.getVersion('_') + '.lib'
-   ogl_lib_name = 'vrj_ogl' + rt_part + '-' + vrj_module.getVersion('_') + '.lib'
-   pf_lib_name = 'vrj_pf' + rt_part + '-' + vrj_module.getVersion('_') + '.lib'
-   vrj_subst_vars['vrj_libs'] += lib_name
-   vrj_subst_vars['vrj_ogl_lib'] += ogl_lib_name
-   vrj_subst_vars['vrj_pf_lib'] += pf_lib_name
    mods.append(vrj_module)
 
    for m in mods:
