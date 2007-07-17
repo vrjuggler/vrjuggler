@@ -739,8 +739,8 @@ VJ_SHARE_DIR="$data_subdir/$DATA_VERSION"
 vrj_ldflags="-L\$prefix/lib\$LIBBITSUF"
 vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
 
-vrj_lib="-l$vrj_lib_name"
-vrj_prof_lib="-l$vrj_prof_lib_name"
+vrj_libs="-l$vrj_lib_name"
+vrj_prof_libs="-l$vrj_prof_lib_name"
 vrj_ogl_lib="-l$vrjogl_lib_name"
 vrj_ogl_prof_lib="-l$vrjogl_prof_lib_name"
 
@@ -823,10 +823,10 @@ AC_SUBST(vrj_extra_libs)
 AC_SUBST(vrj32_flags)
 AC_SUBST(vrj64_flags)
 
-AC_SUBST(vrj_lib)
+AC_SUBST(vrj_libs)
 AC_SUBST(vrj_ogl_lib)
 AC_SUBST(vrj_pf_lib)
-AC_SUBST(vrj_prof_lib)
+AC_SUBST(vrj_prof_libs)
 AC_SUBST(vrj_ogl_prof_lib)
 AC_SUBST(vrj_pf_prof_lib)
 AC_SUBST(vrj_extra_libs)
