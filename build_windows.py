@@ -666,7 +666,7 @@ def updateVersions(vcDir, options):
          subst_vars['PLATFORM']           = 'Windows'
          subst_vars['data_subdir']        = 'share'
          subst_vars['USE_GCC']            = 'no'
-         subst_vars['includedir']         = r'${prefix}\include'
+         subst_vars['includedir']         = r'"${prefix}\include"'
          subst_vars['libdir']             = r'${exec_prefix}\lib'
 
          try:
@@ -690,17 +690,18 @@ def updateVersions(vcDir, options):
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
+   rt_part = ""
 
    vpr_subst_vars = {}
    vpr_subst_vars['vpr_cxxflags'] = '/DBOOST_ALL_DYN_LINK /DCPPDOM_DYN_LINK /EHsc /GR'
-   vpr_subst_vars['vpr_ldflags'] = r'/libpath:$libdir'
+   vpr_subst_vars['vpr_ldflags'] = r'/libpath:"$libdir"'
    vpr_subst_vars['vpr_libs'] = ''
-   vpr_subst_vars['vpr_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
-   vpr_subst_vars['vpr_extra_libs'] = 'libnspr4.lib libplc4.lib'
-   vpr_subst_vars['BOOST_ROOT'] = r'${fpc_file_cwd}\..\..'
+   vpr_subst_vars['vpr_extra_ldflags'] = r'/libpath:"${VJ_DEPS_DIR}\lib"'
+   vpr_subst_vars['subsystem_libs'] = 'libnspr4.lib libplc4.lib'
+   vpr_subst_vars['BOOST_ROOT'] = r'${fp_file_cwd}\..\..'
    vpr_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
-   vpr_subst_vars['BOOST_INCLUDES'] = r'/I${prefix}\include'
-   vpr_subst_vars['BOOST_LDFLAGS'] = r'/libpath:${prefix}\lib'
+   vpr_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'
+   vpr_subst_vars['BOOST_LDFLAGS'] = r'/libpath:"${prefix}\lib"'
    vpr_subst_vars['CPPDOM_VERSION'] = '.'.join(getCppDOMVersion())
    vpr_module = JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
                               vpr_subst_vars,
@@ -728,17 +729,17 @@ def updateVersions(vcDir, options):
    tweek_subst_vars = {}
    tweek_subst_vars['tweek_cxxflags'] = '/EHsc /GR'
    if tweek_have_cxx:
-      tweek_subst_vars['tweek_cxxflags'] += ' /DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I$prefix\\include\\tweek\\idl'
+      tweek_subst_vars['tweek_cxxflags'] += ' /DTWEEK_HAVE_CXX /D__WIN32__=1 /D__x86__=1 /D__NT__=1 /D__OSVERSION__=5 /DUSE_core_stub_in_nt_dll /DUSE_core_stub_in_nt_dll_NOT_DEFINED_Subject /I"$prefix\\include\\tweek\\idl"'
       tweek_subst_vars['tweek_extra_libs'] = \
          'omnithread%s_rt.lib omniORB%s_rt.lib omniDynamic%s_rt.lib' % \
             (os.environ['OMNITHREAD_VERSION'], os.environ['OMNIORB_VERSION'],
              os.environ['OMNIORB_VERSION'])
 
-   tweek_subst_vars['tweek_ldflags'] = r'/libpath:$libdir'
+   tweek_subst_vars['tweek_ldflags'] = r'/libpath:"$libdir"'
    tweek_subst_vars['tweek_libs'] = ''
-   tweek_subst_vars['tweek_extra_ldflags'] = r'/libpath:${VJ_DEPS_DIR}\lib'
-   tweek_subst_vars['tweek_idlflags_java'] = r'-I$prefix\include'
-   tweek_subst_vars['tweek_idlflags_cxx'] = r'-bcxx -Wbh=.h,s=.cpp -I$prefix\include'
+   tweek_subst_vars['tweek_extra_ldflags'] = r'/libpath:"${VJ_DEPS_DIR}\lib"'
+   tweek_subst_vars['tweek_idlflags_java'] = r'-I"$prefix\include"'
+   tweek_subst_vars['tweek_idlflags_cxx'] = r'-bcxx -Wbh=.h,s=.cpp -I"$prefix\include"'
    tweek_subst_vars['tweek_idl_inc_flag_java'] = '-I'
    tweek_subst_vars['tweek_idl_inc_flag_cxx'] = '-I'
    tweek_subst_vars['tweek_idl_inc_flag_python'] = '-I'
@@ -775,7 +776,7 @@ def updateVersions(vcDir, options):
 
    jccl_subst_vars = {}
    jccl_subst_vars['jccl_cxxflags'] = '/EHsc /GR'
-   jccl_subst_vars['jccl_ldflags'] = r'/libpath:$libdir'
+   jccl_subst_vars['jccl_ldflags'] = r'/libpath:"$libdir"'
    jccl_subst_vars['jccl_libs'] = ''
    jccl_subst_vars['BUILD_CXX'] = tweek_subst_vars['BUILD_CXX']
    jccl_subst_vars['BUILD_JAVA'] = tweek_subst_vars['BUILD_JAVA']
@@ -794,10 +795,10 @@ def updateVersions(vcDir, options):
 
    snx_subst_vars = {}
    snx_subst_vars['snx_cxxflags'] = '/EHsc /GR'
-   snx_subst_vars['snx_ldflags'] = r'/libpath:$libdir'
+   snx_subst_vars['snx_ldflags'] = r'/libpath:"$libdir"'
    snx_subst_vars['snx_libs'] = ''
    snx_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
-   snx_subst_vars['GMTL_VERSION'] = '.'.join(getGMTLVersion())
+   snx_subst_vars['MIN_GMTL_VERSION'] = '.'.join(getGMTLVersion())
    snx_module = JugglerModule(r'modules\sonix', vcDir, 'Sonix', 'SNX_VERSION',
                               snx_subst_vars,
                               [(r'snx\snxParam.h',), ('sonix.fpc',),
@@ -807,13 +808,13 @@ def updateVersions(vcDir, options):
 
    gadget_subst_vars = {}
    gadget_subst_vars['gadget_cxxflags'] = '/EHsc /GR'
-   gadget_subst_vars['gadget_ldflags'] = r'/libpath:$libdir'
+   gadget_subst_vars['gadget_ldflags'] = r'/libpath:"$libdir"'
    gadget_subst_vars['gadget_libs'] = ''
    gadget_subst_vars['gadget_extra_libs'] = \
       'comctl32.lib ws2_32.lib user32.lib'
    gadget_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
    gadget_subst_vars['JCCL_VERSION'] = jccl_module.getVersion('.')
-   gadget_subst_vars['GMTL_VERSION'] = snx_subst_vars['GMTL_VERSION']
+   gadget_subst_vars['MIN_GMTL_VERSION'] = snx_subst_vars['MIN_GMTL_VERSION']
    gadget_module = JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                                  'GADGET_VERSION', gadget_subst_vars,
                                  [(r'gadget\gadgetParam.h',),
@@ -825,24 +826,27 @@ def updateVersions(vcDir, options):
 
    vrj_subst_vars = {}
    vrj_subst_vars['vrj_cxxflags'] = '/EHsc /GR'
-   vrj_subst_vars['vrj_ldflags'] = r'/libpath:$libdir'
+   vrj_subst_vars['vrj_ldflags'] = r'/libpath:"$libdir"'
    vrj_subst_vars['vrj_libs'] = ''
+   vrj_subst_vars['vrj_ogl_lib'] = ''
+   vrj_subst_vars['vrj_pf_lib'] = ''
    vrj_subst_vars['vrj_ogl_extra_libs'] = 'opengl32.lib glu32.lib'
    vrj_subst_vars['vrj_pf_extra_libs'] = \
-      '/libpath:${PFROOT}\lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib'
+      '/libpath:"${PFROOT}\lib" libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib'
    vrj_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
    vrj_subst_vars['JCCL_VERSION'] = gadget_subst_vars['JCCL_VERSION']
    vrj_subst_vars['SNX_VERSION'] = snx_module.getVersion('.')
    vrj_subst_vars['GADGET_VERSION'] = gadget_module.getVersion('.')
-   vrj_subst_vars['BOOST_ROOT'] = r'${fpc_file_cwd}\..\..'
+   vrj_subst_vars['BOOST_ROOT'] = r'${fp_file_cwd}\..\..'
    vrj_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
-   vrj_subst_vars['BOOST_INCLUDES'] = r'/I${prefix}\include'
-   vrj_subst_vars['BOOST_LDFLAGS'] = r'/libpath:${prefix}\lib'
-   mods.append(JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
+   vrj_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'
+   vrj_subst_vars['BOOST_LDFLAGS'] = r'/libpath:"${prefix}\lib"'
+   vrj_module = JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              'VRJ_VERSION', vrj_subst_vars,
                              [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
                               (r'vrj\version.rc',
-                               os.path.join(gJugglerDir, 'version.rc.in'))]))
+                               os.path.join(gJugglerDir, 'version.rc.in'))])
+   mods.append(vrj_module)
 
    for m in mods:
       m.setVersionEnvVar()
@@ -1203,9 +1207,8 @@ def installVPR(prefix, buildDir):
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
-   fpc_files = glob.glob(os.path.join(buildDir, 'VPR', '*.fpc'))
-   for f in fpc_files:
-      smartCopy(f, destdir)
+   fpc_file = os.path.join(buildDir, 'VPR', 'vpr.fpc')
+   smartCopy(fpc_file, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vpr', 'test')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'test')
@@ -1611,7 +1614,8 @@ def installVRJuggler(prefix, buildDir):
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
-   smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc'), destdir)
+   fpc_file = os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc')
+   smartCopy(fpc_file, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'data')
@@ -1779,11 +1783,11 @@ def installMsvcRT(prefix):
       printStatus("WARNING: Could not install MSVC runtime DLLs")
       print ex
 
-def doDependencyInstall(prefix):
+def doDependencyInstall(prefix, buildDir):
    makeTree(prefix)
    installNSPR(prefix)
    installCppDOM(prefix)
-   installBoost(prefix)
+   installBoost(prefix, buildDir)
    installGMTL(prefix)
    installAudiere(prefix)
    installOpenAL(prefix)
@@ -1845,8 +1849,14 @@ def installDoozer(prefix):
    simpleInstall('Installing Doozer makefile bits',
                  os.getenv('DOOZER_ROOT', ''), prefix, optional = True)
 
-def installBoost(prefix):
+def installBoost(prefix, buildDir):
    printStatus("Installing Boost headers and libraries")
+
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   fpc_files = glob.glob(os.path.join(buildDir, 'VPR', 'boost*.fpc'))
+   fpc_files += glob.glob(os.path.join(buildDir, 'VRJuggler', 'boost*.fpc'))
+   for f in fpc_files:
+      smartCopy(f, destdir)
 
    srcroot = os.environ['BOOST_ROOT']
 
@@ -1867,6 +1877,13 @@ def installBoost(prefix):
 def installGMTL(prefix):
    simpleInstall('GMTL headers', os.environ['GMTL_ROOT'], prefix,
                  os.environ['GMTL_INCLUDES'])
+
+   # Install all libraries.
+   srcdir = os.path.join(os.environ['GMTL_ROOT'], 'share', 'flagpoll')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'lib', 'flagpoll')
+      installDir(srcdir, destdir)
 
 def installAudiere(prefix):
    simpleInstall('Audiere headers, libraries, and executables',
@@ -2311,7 +2328,8 @@ class GuiFrontEnd:
                 os.path.join(gJugglerDir, self.mVcDir))
 
    def installDeps(self):
-      doDependencyInstall(self.mTkOptions['deps-prefix'].get())
+      doDependencyInstall(self.mTkOptions['deps-prefix'].get(),
+                          os.path.join(gJugglerDir, self.mVcDir))
 
    def getFile(self, optionIndex, initialDir, toEntry):
       def clearAndGet(self, optionIndex, initialDir):
@@ -2376,7 +2394,8 @@ class GuiFrontEnd:
 
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
          self.printMessage("Installing Juggler Dependencies...")
-         doDependencyInstall(self.mTkOptions['deps-prefix'].get())
+         doDependencyInstall(self.mTkOptions['deps-prefix'].get(),
+                             os.path.join(gJugglerDir, self.mVcDir))
 
       self.printMessage("Build and Installation Finished.")
       self.updateCommandFrame()
@@ -2509,7 +2528,7 @@ def main():
                print "Proceed with VR Juggler dependency installation [y]: ",
                proceed = sys.stdin.readline().strip(" \n")
                if proceed == '' or proceed.lower().startswith('y'):
-                  doDependencyInstall(options['deps-prefix'])
+                  doDependencyInstall(options['deps-prefix'], os.path.join(gJugglerDir, vc_dir))
       except OSError, osEx:
          print "Could not execute %s: %s" % (devenv_cmd, osEx)
          sys.exit(EXIT_STATUS_MSVS_START_ERROR)

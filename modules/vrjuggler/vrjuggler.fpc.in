@@ -34,8 +34,8 @@ vrj_cxxflags = @vrj_cxxflags@
 vrj_share_dir = ${prefix}/@VJ_SHARE_DIR@
 
 vrj_ldflags = @vrj_ldflags@
-vrj_libs =  @vrj_lib@
-vrj_prof_libs = @vrj_prof_lib@
+vrj_libs =  @vrj_libs@
+vrj_prof_libs = @vrj_prof_libs@
 
 vrj_ogl_lib = @vrj_ogl_lib@
 vrj_pf_lib = @vrj_pf_lib@
