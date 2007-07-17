@@ -697,7 +697,7 @@ def updateVersions(vcDir, options):
    vpr_subst_vars['vpr_ldflags'] = r'/libpath:"$libdir"'
    vpr_subst_vars['vpr_libs'] = ''
    vpr_subst_vars['vpr_extra_ldflags'] = r'/libpath:"${VJ_DEPS_DIR}\lib"'
-   vpr_subst_vars['vpr_extra_libs'] = 'libnspr4.lib libplc4.lib'
+   vpr_subst_vars['subsystem_libs'] = 'libnspr4.lib libplc4.lib'
    vpr_subst_vars['BOOST_ROOT'] = r'${fp_file_cwd}\..\..'
    vpr_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
    vpr_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'
@@ -1208,9 +1208,8 @@ def installVPR(prefix, buildDir):
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
-   fpc_files = glob.glob(os.path.join(buildDir, 'VPR', '*.fpc'))
-   for f in fpc_files:
-      smartCopy(f, destdir)
+   fpc_file = os.path.join(buildDir, 'VPR', 'vpr.fpc')
+   smartCopy(fpc_file, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vpr', 'test')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'test')
@@ -1615,9 +1614,8 @@ def installVRJuggler(prefix, buildDir):
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
-   fpc_files = glob.glob(os.path.join(buildDir, 'VRJuggler', '*.fpc'))
-   for f in fpc_files:
-      smartCopy(f, destdir)
+   fpc_file = os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc')
+   smartCopy(fpc_file, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'data')
@@ -1785,11 +1783,11 @@ def installMsvcRT(prefix):
       printStatus("WARNING: Could not install MSVC runtime DLLs")
       print ex
 
-def doDependencyInstall(prefix):
+def doDependencyInstall(prefix, buildDir):
    makeTree(prefix)
    installNSPR(prefix)
    installCppDOM(prefix)
-   installBoost(prefix)
+   installBoost(prefix, buildDir)
    installGMTL(prefix)
    installAudiere(prefix)
    installOpenAL(prefix)
@@ -1851,8 +1849,14 @@ def installDoozer(prefix):
    simpleInstall('Installing Doozer makefile bits',
                  os.getenv('DOOZER_ROOT', ''), prefix, optional = True)
 
-def installBoost(prefix):
+def installBoost(prefix, buildDir):
    printStatus("Installing Boost headers and libraries")
+
+   destdir = os.path.join(prefix, 'lib', 'flagpoll')
+   fpc_files = glob.glob(os.path.join(buildDir, 'VPR', 'boost*.fpc'))
+   fpc_files += glob.glob(os.path.join(buildDir, 'VRJuggler', 'boost*.fpc'))
+   for f in fpc_files:
+      smartCopy(f, destdir)
 
    srcroot = os.environ['BOOST_ROOT']
 
@@ -2324,7 +2328,8 @@ class GuiFrontEnd:
                 os.path.join(gJugglerDir, self.mVcDir))
 
    def installDeps(self):
-      doDependencyInstall(self.mTkOptions['deps-prefix'].get())
+      doDependencyInstall(self.mTkOptions['deps-prefix'].get(),
+                          os.path.join(gJugglerDir, self.mVcDir))
 
    def getFile(self, optionIndex, initialDir, toEntry):
       def clearAndGet(self, optionIndex, initialDir):
@@ -2389,7 +2394,8 @@ class GuiFrontEnd:
 
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
          self.printMessage("Installing Juggler Dependencies...")
-         doDependencyInstall(self.mTkOptions['deps-prefix'].get())
+         doDependencyInstall(self.mTkOptions['deps-prefix'].get(),
+                             os.path.join(gJugglerDir, self.mVcDir))
 
       self.printMessage("Build and Installation Finished.")
       self.updateCommandFrame()
@@ -2522,7 +2528,7 @@ def main():
                print "Proceed with VR Juggler dependency installation [y]: ",
                proceed = sys.stdin.readline().strip(" \n")
                if proceed == '' or proceed.lower().startswith('y'):
-                  doDependencyInstall(options['deps-prefix'])
+                  doDependencyInstall(options['deps-prefix'], os.path.join(gJugglerDir, vc_dir))
       except OSError, osEx:
          print "Could not execute %s: %s" % (devenv_cmd, osEx)
          sys.exit(EXIT_STATUS_MSVS_START_ERROR)
