@@ -347,7 +347,7 @@ protected:
 
       const double head_time(mHead->getTimeStamp().secd());
       mFrameStamp->setReferenceTime(head_time);
-#if OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_MAJOR_VERSION > 2
+#if OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_MAJOR_VERSION >= 2
       // This is available in OSG 1.9 and newer.
       mFrameStamp->setSimulationTime(head_time);
 #endif
