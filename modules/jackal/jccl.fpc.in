@@ -40,6 +40,10 @@ extra_libs = ${jccl_extra_ldflags} ${jccl_extra_libs}
 
 static_begin = @static_begin@
 static_end = @static_end@
+
+jccl_header_subdir = @jccl_header_subdir@
+jccl_data_subdir   = @jccl_data_subdir@
+jccl_plugin_subdir = @jccl_plugin_subdir@
 ########################### Public Variables ############################
 
 ######################### Standard Flagpoll Variables ###################
@@ -66,3 +70,7 @@ profiled_static_libs: ${static_begin} ${jccl_ldflags} ${jccl_prof_libs} ${static
 
 java_api_available: ${BUILD_JAVA}
 jars: ${jccl_java_api_jars}
+
+jccl_header_subdir: ${jccl_header_subdir}
+jccl_data_subdir: ${jccl_data_subdir}
+jccl_plugin_subdir: ${jccl_plugin_subdir}
