@@ -93,6 +93,8 @@ AC_DEFUN([SNX_PATH],
             SNX_PROF_LIBS_STATIC=`$FLAGPOLL $sonix_flagpoll_args --get-profiled-static-libs`
             SNX_EXTRA_LIBS=`$FLAGPOLL $sonix_flagpoll_args --get-extra-libs`
             SNX_VERSION=`$FLAGPOLL $sonix_flagpoll_args --modversion`
+            SNX_DATA_SUBDIR=`$FLAGPOLL $sonix_flagpoll_args --get-snx-data-subdir`
+            SNX_PLUGIN_SUBDIR=`$FLAGPOLL $sonix_flagpoll_args --get-snx-plugin-subdir`
 
             DPP_VERSION_CHECK_MSG_NO_CACHE([Sonix], [$SNX_VERSION],
                                            [$min_sonix_version], [$2], [$3])
@@ -123,5 +125,6 @@ AC_DEFUN([SNX_PATH],
     AC_SUBST(SNX_PROF_LIBS_STATIC)
     AC_SUBST(SNX_EXTRA_LIBS)
     AC_SUBST(SNX_VERSION)
-
+    AC_SUBST(SNX_DATA_SUBDIR)
+    AC_SUBST(SNX_PLUGIN_SUBDIR)
 ])

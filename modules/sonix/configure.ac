@@ -168,6 +168,7 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
    CLOSE_HEADER_VERSION='..'
    LIBRARY_VERSION="-$VERSION_UNDERSCORE"
    DATA_VERSION="sonix-$VERSION_DOT"
+   PLUGIN_VERSION="sonix-$VERSION_DOT"
 
    AC_DEFINE([SNX_USE_VERSIONING], ,
              [Define if full package versioning capabilities are enabled])
@@ -175,11 +176,12 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
                       [Sonix version string])
 
 # If versioning is disabled, then none of the version variables need to be
-# set except for $DATA_VERSION. Its use is different than the others. The
-# important thing to note is that the directory name is unversioned in this
-# case.
+# set except for $DATA_VERSION and $PLUGIN_VERSION. Their use is different
+# than the others. The important thing to note is that the directory name is
+# unversioned in this case.
 else
    DATA_VERSION="sonix"
+   PLUGIN_VERSION="sonix"
 fi
 
 
@@ -337,6 +339,9 @@ fi
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
 includedir="$includedir/$HEADER_VERSION"
+snx_header_subdir="$HEADER_VERSION"
+snx_data_subdir="$DATA_VERSION"
+snx_plugin_subdir="$PLUGIN_VERSION"
 
 DPP_SUBST
 DPP_GET_PROJECTDIR
@@ -355,6 +360,7 @@ AC_SUBST(HEADER_VERSION)
 AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(DATA_VERSION)
+AC_SUBST(PLUGIN_VERSION)
 
 AC_SUBST(MIN_VPR_VERSION)
 AC_SUBST(MIN_GMTL_VERSION)
@@ -379,6 +385,9 @@ AC_SUBST(snx_libs)
 AC_SUBST(snx_prof_libs)
 AC_SUBST(snx32_flags)
 AC_SUBST(snx64_flags)
+AC_SUBST(snx_header_subdir)
+AC_SUBST(snx_data_subdir)
+AC_SUBST(snx_plugin_subdir)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
