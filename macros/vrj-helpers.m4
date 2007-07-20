@@ -337,6 +337,79 @@ AC_DEFUN([VJ_LINKER_SETUP],
    AC_SUBST(CC_SONAME_FLAG)
 ])
 
+AC_DEFUN([VJ_GET_BOOST_TOOLSET],
+[
+   vj_boost_major=$1
+   vj_boost_minor=$2
+
+   getToolsetGCC ( )
+   {
+      if test $vj_boost_major -eq 1 -a $vj_boost_minor -ge 34 ; then
+         split_gcc_ver=`$CXX -dumpversion | sed -e 's/\./ /g'`
+         gcc_major=`echo $split_gcc_ver | awk '{ print $[1] }' -`
+         gcc_minor=`echo $split_gcc_ver | awk '{ print $[2] }' -`
+
+         toolset="-gcc$gcc_major$gcc_minor"
+      else
+         toolset='-gcc'
+      fi
+
+      echo $toolset
+   }
+
+   # Build up the possible Boost library suffix names. These will be stored in
+   # $boost_suffixes and used later as necessary.
+   case $CC in
+      gcc*|*/gcc*)
+         $3=`getToolsetGCC`
+         ;;
+      icc*|*/icc*)
+         if test "x$OS_TYPE" = "xWin32" ; then
+            $3='-iw'
+         else
+            $3='-il'
+         fi
+         ;;
+      cygcl|msvccc|cl*|CL*)
+         $3="-${BOOST_TOOL:=vc7}"
+         ;;
+      cc*|*/cc*)
+         if test "x$GCC" = "xyes" ; then
+            $3=`getToolsetGCC`
+         else
+            case $PLATFORM in
+               IRIX)
+                  $3='-mp'
+                  ;;
+               Solaris)
+                  $3='-sw'
+                  ;;
+            esac
+         fi
+         ;;
+   esac
+
+   # A correct installation of Boost on Darwin does not include the toolset
+   # name as part of the library file name.
+   if test "x$PLATFORM" = "xDarwin" ; then
+      $3=''
+      $4=''
+   else
+      # We can only use multi-threading versions of Boost libraries if we are
+      # not using SPROC threads.  Boost does not support SPROC.
+      if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
+         $4='-mt'
+      fi
+   fi
+])
+
+AC_DEFUN([VJ_GET_BOOST_LIB_SUFFIX_LIST],
+[
+   VJ_GET_BOOST_TOOLSET($1, $2, [toolset], [threading])
+
+   $4="$toolset$threading-$3 $toolset$threading $threading"
+])
+
 dnl ---------------------------------------------------------------------------
 dnl This defines a handy little macro that will remove all duplicate strings
 dnl from arg-list and assign the result to variable.  The given argument list
