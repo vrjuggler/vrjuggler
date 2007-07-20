@@ -179,52 +179,8 @@ GADGETEER_PATH([1.3.7], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 SNX_PATH([1.1.4], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
-# Build up the possible Boost library suffix names. These will be stored in
-# $boost_suffixes and used later as necessary.
-case $CC in
-   gcc*|*/gcc*)
-      toolset='-gcc'
-      ;;
-   icc*|*/icc*)
-      if test "x$OS_TYPE" = "xWin32" ; then
-         toolset='-iw'
-      else
-         toolset='-il'
-      fi
-      ;;
-   cygcl|msvccc|cl*|CL*)
-      toolset="-${BOOST_TOOL:=vc7}"
-      ;;
-   cc*|*/cc*)
-      if test "x$GCC" = "xyes" ; then
-         toolset='-gcc'
-      else
-         case $PLATFORM in
-            IRIX)
-               toolset='-mp'
-               ;;
-            Solaris)
-               toolset='-sw'
-               ;;
-         esac
-      fi
-      ;;
-esac
-
-# A correct installation of Boost on Darwin does not include the toolset name
-# as part of the library file name.
-if test "x$PLATFORM" = "xDarwin" ; then
-   toolset=''
-   threading=''
-else
-   # We can only use multi-threading versions of Boost libraries if we are
-   # not using SPROC threads.  Boost does not support SPROC.
-   if test "x$SUBSYSTEM" != "xSPROC" -a "x$ABI" != "x64" ; then
-      threading='-mt'
-   fi
-fi
-
-boost_suffixes="$toolset$threading-$BOOST_LIB_VERSION $toolset$threading $threading"
+VJ_GET_BOOST_LIB_SUFFIX_LIST([$dpp_boost_major], [$dpp_boost_minor],
+                             [$BOOST_LIB_VERSION], [boost_suffixes])
 
 if test "x$given_boost_po_libname" != "x" ; then
    boost_po_name="$given_boost_po_libname"
