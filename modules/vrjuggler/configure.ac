@@ -301,6 +301,7 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
    CLOSE_HEADER_VERSION='..'
    LIBRARY_VERSION="-$VERSION_UNDERSCORE"
    DATA_VERSION="vrjuggler-$VERSION_DOT"
+   PLUGIN_VERSION="vrjuggler-$VERSION_DOT"
 
    AC_DEFINE([VRJ_USE_VERSIONING], ,
              [Define if full package versioning capabilities are enabled])
@@ -308,13 +309,13 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
                       [VR Juggler version string])
 
 # If versioning is disabled, then none of the version variables need to be
-# set except for $DATA_VERSION. Its use is different than the others. The
-# important thing to note is that the directory name is unversioned in this
-# case.
+# set except for $DATA_VERSION and $PLUGIN_VERSION. Their use is different
+# than the others. The important thing to note is that the directory name is
+# unversioned in this case.
 else
    DATA_VERSION="vrjuggler"
+   PLUGIN_VERSION="vrjuggler"
 fi
-
 
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
@@ -629,6 +630,9 @@ vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 includedir="$includedir/$HEADER_VERSION"
+vrj_header_subdir="$HEADER_VERSION"
+vrj_data_subdir="$DATA_VERSION"
+vrj_plugin_subdir="$PLUGIN_VERSION"
 
 DPP_SUBST
 
@@ -646,6 +650,7 @@ AC_SUBST(HEADER_VERSION)
 AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(DATA_VERSION)
+AC_SUBST(PLUGIN_VERSION)
 
 AC_SUBST(ANT)
 AC_SUBST(EXTRA_LDFLAGS)
@@ -693,6 +698,9 @@ AC_SUBST(vrj_pf_prof_lib)
 AC_SUBST(vrj_extra_libs)
 AC_SUBST(vrj_ogl_extra_libs)
 AC_SUBST(vrj_pf_extra_libs)
+AC_SUBST(vrj_header_subdir)
+AC_SUBST(vrj_data_subdir)
+AC_SUBST(vrj_plugin_subdir)
 
 AC_SUBST(tweek_java_api_jars_bundle)
 AC_SUBST(tweek_ext_java_api_jars_bundle)
