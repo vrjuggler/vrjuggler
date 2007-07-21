@@ -38,6 +38,9 @@ snx_prof_libs = @snx_prof_libs@
 
 snx_extra_cxxflags = @snx_extra_cxxflags@
 
+snx_header_subdir = @snx_header_subdir@
+snx_data_subdir   = @snx_data_subdir@
+snx_plugin_subdir = @snx_plugin_subdir@
 ########################### Public Variables ############################
 
 ######################### Standard Flagpoll Variables ###################
@@ -58,3 +61,7 @@ libs: ${snx_ldflags} ${snx_libs}
 static_libs: ${static_begin} ${snx_ldflags} ${snx_libs} ${static_end}
 profiled_libs: ${libs} ${snx_prof_libs}
 profiled_static_libs: ${static_begin} ${libs} ${snx_prof_libs} ${static_end}
+
+snx_header_subdir: ${snx_header_subdir}
+snx_data_subdir: ${snx_data_subdir}
+snx_plugin_subdir: ${snx_plugin_subdir}
