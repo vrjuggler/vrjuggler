@@ -235,6 +235,7 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
    CLOSE_HEADER_VERSION='..'
    LIBRARY_VERSION="-$VERSION_UNDERSCORE"
    DATA_VERSION="gadgeteer-$VERSION_DOT"
+   PLUGIN_VERSION="gadgeteer-$VERSION_DOT"
 
    AC_DEFINE([GADGET_USE_VERSIONING], ,
              [Define if full package versioning capabilities are enabled])
@@ -242,11 +243,12 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
                       [Gadgeteer version string])
 
 # If versioning is disabled, then none of the version variables need to be
-# set except for $DATA_VERSION. Their use is different than the others. The
-# important thing to note is that the directory name is unversioned in this
-# case.
+# set except for $DATA_VERSION and $PLUGIN_VERSION. Their use is different
+# than the others. The important thing to note is that the directory name is
+# unversioned in this case.
 else
    DATA_VERSION="gadgeteer"
+   PLUGIN_VERSION="gadgeteer"
 fi
 
 # Add these C++ options when compiling with G++.
@@ -428,6 +430,9 @@ fi
 gadget_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
 includedir="$includedir/$HEADER_VERSION"
+gadget_header_subdir="$HEADER_VERSION"
+gadget_data_subdir="$DATA_VERSION"
+gadget_plugin_subdir="$PLUGIN_VERSION"
 
 DPP_SUBST
 
@@ -476,6 +481,9 @@ AC_SUBST(gadget32_flags)
 AC_SUBST(gadget64_flags)
 AC_SUBST(gadget_use_x11)
 AC_SUBST(gadget_use_cocoa)
+AC_SUBST(gadget_header_subdir)
+AC_SUBST(gadget_data_subdir)
+AC_SUBST(gadget_plugin_subdir)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

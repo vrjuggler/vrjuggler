@@ -70,7 +70,7 @@
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
 mtreedir=		$(topdir)/mtree
-projdatadir=		$(datadir)/@DATA_VERSION@
+projdatadir=		$(datadir)/@DATA_SUBDIR@
 releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
@@ -88,7 +88,7 @@ RM_LN=			@RM_LN@
 WARNS=			2
 DRIVER_ROOT_ABS=	@DRIVER_ROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
-DRIVER_DIR_VERSION=     @DRIVER_DIR_VERSION@
+GADGET_DRIVER_SUBDIR=	@DRIVER_SUBDIR@
 
 
 STATICLIB_EXT=          @STATICLIB_EXT@

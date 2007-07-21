@@ -42,7 +42,7 @@ LIBDIR_NAME?=	lib$(LIBBITSUF)
 # $(LIBDIR_BASE) is the base directory where the libraries will be built.
 LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
 
-DSO_DRIVER_SUBDIR=	$(DRIVER_DIR_VERSION)/drivers
+DSO_DRIVER_SUBDIR=	$(GADGET_DRIVER_SUBDIR)/drivers
 DSO_DRIVER_DIR=		$(LIBDIR_BASE)/$(DSO_DRIVER_SUBDIR)
 
 ifeq ($(BUILD_TYPE), dbg)

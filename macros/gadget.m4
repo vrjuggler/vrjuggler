@@ -87,6 +87,9 @@ AC_DEFUN([GADGETEER_PATH],
 
             GADGET_USE_X11=`$FLAGPOLL $gadget_flagpoll_args --get-use-x11`
             GADGET_USE_COCOA=`$FLAGPOLL $gadget_flagpoll_args --get-use-cocoa`
+            GADGET_HEADER_SUBDIR=`$FLAGPOLL $gadget_flagpoll_args --get-gadget-header-subdir`
+            GADGET_DATA_SUBDIR=`$FLAGPOLL $gadget_flagpoll_args --get-gadget-data-subdir`
+            GADGET_PLUGIN_SUBDIR=`$FLAGPOLL $gadget_flagpoll_args --get-gadget-plugin-subdir`
 
             DPP_VERSION_CHECK_MSG_NO_CACHE([Gadgeteer], [$GADGET_VERSION],
                                            [$min_gadget_version], [$2], [$3])
@@ -124,4 +127,7 @@ AC_DEFUN([GADGETEER_PATH],
 
     AC_SUBST(GADGET_USE_X11)
     AC_SUBST(GADGET_USE_COCOA)
+    AC_SUBST(GADGET_HEADER_SUBDIR)
+    AC_SUBST(GADGET_DATA_SUBDIR)
+    AC_SUBST(GADGET_PLUGIN_SUBDIR)
 ])
