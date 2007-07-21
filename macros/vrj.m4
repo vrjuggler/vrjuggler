@@ -82,6 +82,9 @@ AC_DEFUN([VRJUGGLER_PATH],
             VRJ_PROF_LIBS_STATIC=`$FLAGPOLL $vrj_flagpoll_args --get-profiled-static-libs`
             VRJ_EXTRA_LIBS=`$FLAGPOLL $vrj_flagpoll_args --get-extra-libs`
             VRJ_VERSION=`$FLAGPOLL $vrj_flagpoll_args --modversion`
+            VRJ_HEADER_SUBDIR=`$FLAGPOLL $vrj_flagpoll_args --get-vrj-header-subdir`
+            VRJ_DATA_SUBDIR=`$FLAGPOLL $vrj_flagpoll_args --get-vrj-data-subdir`
+            VRJ_PLUGIN_SUBDIR=`$FLAGPOLL $vrj_flagpoll_args --get-vrj-plugin-subdir`
 
             DPP_VERSION_CHECK_MSG_NO_CACHE([VR Juggler], [$VRJ_VERSION],
                                            [$min_vrj_version], [$2], [$3])
@@ -111,4 +114,7 @@ AC_DEFUN([VRJUGGLER_PATH],
     AC_SUBST(VRJ_PROF_LIBS_STATIC)
     AC_SUBST(VRJ_EXTRA_LIBS)
     AC_SUBST(VRJ_VERSION)
+    AC_SUBST(VRJ_HEADER_SUBDIR)
+    AC_SUBST(VRJ_DATA_SUBDIR)
+    AC_SUBST(VRJ_PLUGIN_SUBDIR)
 ])
