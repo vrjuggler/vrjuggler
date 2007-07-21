@@ -215,19 +215,20 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
    CLOSE_HEADER_VERSION='..'
    LIBRARY_VERSION="-$VERSION_UNDERSCORE"
    DATA_VERSION="jccl-$VERSION_DOT"
+   PLUGIN_VERSION="jccl-$VERSION_DOT"
 
    AC_DEFINE([JCCL_USE_VERSIONING], ,
              [Define if full package versioning capabilities are enabled])
    AC_DEFINE_UNQUOTED([JCCL_VERSION_DOT], ["$VERSION_DOT"],
                       [Jackal version string])
 # If versioning is disabled, then none of the version variables need to be
-# set except for $DATA_VERSION. Its use is different than the others. The
-# important thing to note is that the directory name is unversioned in this
-# case.
+# set except for $DATA_VERSION and $PLUGIN_VERSION. Their use is different
+# than the others. The important thing to note is that the directory name is
+# unversioned in this case.
 else
    DATA_VERSION="jccl"
+   PLUGIN_VERSION="jccl"
 fi
-
 
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
@@ -411,6 +412,9 @@ jccl_java_api_jars="${jccl_java_api_jars}${JCPS}${jccl_java_api_beans}"
 changequote([, ])
 
 includedir="$includedir/$HEADER_VERSION"
+jccl_header_subdir="$HEADER_VERSION"
+jccl_data_subdir="$DATA_VERSION"
+jccl_plugin_subdir="$PLUGIN_VERSION"
 
 DPP_SUBST
 
@@ -428,6 +432,7 @@ AC_SUBST(HEADER_VERSION)
 AC_SUBST(CLOSE_HEADER_VERSION)
 AC_SUBST(LIBRARY_VERSION)
 AC_SUBST(DATA_VERSION)
+AC_SUBST(PLUGIN_VERSION)
 
 AC_SUBST(MIN_VPR_VERSION)
 
@@ -465,6 +470,9 @@ AC_SUBST(jccl_extra_libs)
 AC_SUBST(jccl32_flags)
 AC_SUBST(jccl64_flags)
 AC_SUBST(jccl_java_api_jars)
+AC_SUBST(jccl_header_subdir)
+AC_SUBST(jccl_data_subdir)
+AC_SUBST(jccl_plugin_subdir)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

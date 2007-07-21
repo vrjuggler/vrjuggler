@@ -130,6 +130,8 @@ AC_DEFUN([JCCL_PATH_CXX],
             JCCL_PROF_LIBS=`$FLAGPOLL $jccl_flagpoll_args --get-profiled-libs`
             JCCL_LIBS_STATIC=`$FLAGPOLL $jccl_flagpoll_args --get-static-libs`
             JCCL_PROF_LIBS_STATIC=`$FLAGPOLL $jccl_flagpoll_args --get-profiled-static-libs`
+            JCCL_DATA_SUBDIR=`$FLAGPOLL $jccl_flagpoll_args --get-jccl-data-subdir`
+            JCCL_PLUGIN_SUBDIR=`$FLAGPOLL $jccl_flagpoll_args --get-jccl-plugin-subdir`
 
             ifelse([$2], , :, [$2])
          fi
@@ -145,6 +147,8 @@ AC_DEFUN([JCCL_PATH_CXX],
    AC_SUBST([JCCL_LIBS_STATIC])
    AC_SUBST([JCCL_PROF_LIBS_STATIC])
    AC_SUBST([JCCL_EXTRA_LIBS])
+   AC_SUBST([JCCL_DATA_SUBDIR])
+   AC_SUBST([JCCL_PLUGIN_SUBDIR])
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -175,6 +179,7 @@ AC_DEFUN([JCCL_PATH_JAVA],
 
          if test "x$jccl_version_okay" = "xyes" ; then
             JCCL_JARS=`$FLAGPOLL $jccl_flagpoll_args --get-jars`
+            JCCL_DATA_SUBDIR=`$FLAGPOLL $jccl_flagpoll_args --get-jccl-data-subdir`
 
             ifelse([$2], , :, [$2])
          fi
@@ -185,6 +190,7 @@ AC_DEFUN([JCCL_PATH_JAVA],
    fi
 
    AC_SUBST([JCCL_JARS])
+   AC_SUBST([JCCL_DATA_SUBDIR])
 ])
 
 dnl ---------------------------------------------------------------------------
