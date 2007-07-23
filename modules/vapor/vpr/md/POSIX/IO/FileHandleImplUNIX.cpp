@@ -476,7 +476,10 @@ vpr::Uint32 FileHandleImplUNIX::readn_i(void* buffer,
          // Otherwise, we have an error situation, so return failure status.
          else
          {
-            throw IOException("Error reading from: " + mName, VPR_LOCATION);
+            std::ostringstream msg_stream;
+            msg_stream << "Error reading from " << mName << ": "
+                       << strerror(errno);
+            throw IOException(msg_stream.str(), VPR_LOCATION);
          }
       }
       // We have read EOF, so there is nothing more to read.  At this point,
