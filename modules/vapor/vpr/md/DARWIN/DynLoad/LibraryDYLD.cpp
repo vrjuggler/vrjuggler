@@ -215,7 +215,9 @@ void* LibraryDYLD::findSymbol(const char* symbolName)
    // If the library has not been loaded yet, throw an exception.
    if ( NULL == mLibrary )
    {
-      throw vpr::LibraryException("Library not loaded.", VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "Library not loaded: '" << mName << "'";
+      throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
    }
 
    return internalDlsym(mLibrary, symbolName);
