@@ -108,7 +108,7 @@ void LibraryUNIX::unload()
 
 void* LibraryUNIX::findSymbol(const char* symbolName)
 {
-   // If the library has not been loaded yet, do it now.
+   // If the library has not been loaded yet, throw an exception.
    if ( NULL == mLibrary )
    {
       throw vpr::LibraryException("Library not loaded.", VPR_LOCATION);

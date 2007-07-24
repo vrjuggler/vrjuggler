@@ -185,25 +185,15 @@ public:
     * is unloaded, for instance, the results of any findSymbol() calls become
     * invalid as well.
     *
-    * @post If the library was not loaded, it is loaded before symbol lookup.
+    * @pre The library must be loaded before calling.
     *
     * @param symbolName The text representation of the symbol to resolve.
     *
     * @return An untyped pointer, possibly NULL.
     *
-    * @throw vpr::IOException is thrown if an I/O error occurs.
+    * @throw vpr::LibraryException if the library has not been loaded.
     */
-   void* findSymbol(const char* symbolName)
-   {
-      // If no library has been loaded yet, do it now.  This is done to mimic
-      // the NSPR behavior.
-      if ( NULL == mLibrary )
-      {
-         load();
-      }
-
-      return internalDlsym(mLibrary, symbolName);
-   }
+   void* findSymbol(const char* symbolName);
 
    void* findSymbol(const std::string& symbolName)
    {
