@@ -80,7 +80,7 @@ void Header::readData(vpr::SocketStream* stream)
    catch (vpr::IOException& ex)
    {
       vprDEBUG( gadgetDBG_RIM, vprDBG_CRITICAL_LVL )
-         << "Header::readData() - Could not read the header!"
+         << "Header::readData() - Could not read the header!\n"
          << ex.what()
          << std::endl << vprDEBUG_FLUSH;
       throw ex;
