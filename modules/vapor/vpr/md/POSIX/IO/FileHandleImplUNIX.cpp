@@ -321,9 +321,8 @@ void FileHandleImplUNIX::setSynchronousWrite(bool sync)
          << (sync ? "synchronous" : "asynchronous") << " writes on "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
 
-      std::stringstream msg_stream;
-      msg_stream << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] "
-                 << "Failed to enable "
+      std::ostringstream msg_stream;
+      msg_stream << "Failed to enable "
                  << (sync ? "synchronous" : "asynchronous") << " writes on "
                  << mName << ": " << strerror(errno);
       throw IOException(msg_stream.str(), VPR_LOCATION);
@@ -334,9 +333,8 @@ void FileHandleImplUNIX::setSynchronousWrite(bool sync)
       << (sync ? "synchronous" : "asynchronous")
       << " writes on this platform!\n" << vprDEBUG_FLUSH;
 
-   std::stringstream msg_stream;
-   msg_stream << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] "
-              << "Cannot enable " << (sync ? "synchronous" : "asynchronous")
+   std::ostringstream msg_stream;
+   msg_stream << "Cannot enable " << (sync ? "synchronous" : "asynchronous")
               << " writes on this platform!";
    throw IOException(msg_stream.str(), VPR_LOCATION);
 #endif
@@ -401,8 +399,8 @@ vpr::Uint32 FileHandleImplUNIX::read_i(void* buffer, const vpr::Uint32 length,
       else  // "real" error, so throw IO Exception
       {
          std::ostringstream msg_stream;
-         msg_stream << "[vpr::FileHandleImplUNIX::read_i()] Error reading from "
-                    << mName << ":" << strerror(errno);
+         msg_stream << "Error reading from " << mName << ":"
+                    << strerror(errno);
          throw IOException(msg_stream.str(), VPR_LOCATION);
       }
    }
@@ -416,8 +414,9 @@ vpr::Uint32 FileHandleImplUNIX::read_i(void* buffer, const vpr::Uint32 length,
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
 
       // XXX: Failure status may not be exactly what we want to return.
-      throw IOException("[vpr::FileHandleImplUNIX::read_i()] Nothing read from "
-         + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
+      std::ostringstream msg_stream;
+      msg_stream << "Nothing read from " << mName << ": " << strerror(errno);
+      throw IOException(msg_stream.str(), VPR_LOCATION);
    }
    else
    {
@@ -476,7 +475,10 @@ vpr::Uint32 FileHandleImplUNIX::readn_i(void* buffer,
          // Otherwise, we have an error situation, so return failure status.
          else
          {
-            throw IOException("Error reading from: " + mName, VPR_LOCATION);
+            std::ostringstream msg_stream;
+            msg_stream << "Error reading from " << mName << ": "
+                       << strerror(errno);
+            throw IOException(msg_stream.str(), VPR_LOCATION);
          }
       }
       // We have read EOF, so there is nothing more to read.  At this point,
@@ -490,10 +492,10 @@ vpr::Uint32 FileHandleImplUNIX::readn_i(void* buffer,
             << mFdesc << " and " << bytes_read << " bytes read in total."
             << std::endl << vprDEBUG_FLUSH;
 
-         std::stringstream ss;
-         ss << "[vpr::FileHandleImplUNIX::readn_i()] Read EOF with "
-            << bytes_left << " bytes left to read from file handle "
-            << mFdesc << " and " << bytes_read << " bytes read in total.";
+         std::ostringstream ss;
+         ss << "Read EOF with " << bytes_left
+            << " bytes left to read from file handle " << mFdesc << " and "
+            << bytes_read << " bytes read in total.";
          throw EOFException(ss.str(), VPR_LOCATION);
       }
       else
@@ -537,8 +539,9 @@ vpr::Uint32 FileHandleImplUNIX::write_i(const void* buffer,
             << mName << ": " << strerror(errno) << std::endl
             << vprDEBUG_FLUSH;
 
-         throw IOException("[vpr::FileHandleImplUNIX::write_i()] Error writing to "
-            + mName + ": " + std::string(strerror(errno)), VPR_LOCATION);
+         std::ostringstream msg_stream;
+         msg_stream << "Error writing to " << mName << strerror(errno);
+         throw IOException(msg_stream.str(), VPR_LOCATION);
       }
    }
    else
