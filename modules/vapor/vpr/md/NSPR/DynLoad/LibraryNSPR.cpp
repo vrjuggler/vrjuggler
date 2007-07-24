@@ -114,7 +114,7 @@ void LibraryNSPR::unload()
    }
 }
 
-void* LibraryNSPR::findSymbol(const char* symbolName)
+void* LibraryNSPR::findSymbol(const std::string& symbolName)
 {
    // If the library has not been loaded yet, throw an exception.
    if ( NULL == mLibrary )
@@ -123,7 +123,8 @@ void* LibraryNSPR::findSymbol(const char* symbolName)
       msg_stream << "Library not loaded: '" << mName << "'";
       throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
    }
-   return PR_FindSymbol(mLibrary, symbolName);
+
+   return PR_FindSymbol(mLibrary, symbolName.c_str());
 }
 
 } // End of vpr namespace
