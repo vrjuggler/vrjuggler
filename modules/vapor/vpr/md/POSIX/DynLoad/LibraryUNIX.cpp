@@ -106,7 +106,7 @@ void LibraryUNIX::unload()
    }
 }
 
-void* LibraryUNIX::findSymbol(const char* symbolName)
+void* LibraryUNIX::findSymbol(const std::string& symbolName)
 {
    // If the library has not been loaded yet, throw an exception.
    if ( NULL == mLibrary )
@@ -116,10 +116,10 @@ void* LibraryUNIX::findSymbol(const char* symbolName)
       throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
    }
 
-   return dlsym(mLibrary, symbolName);
+   return dlsym(mLibrary, symbolName.c_str());
 }
 
-void* LibraryUNIX::findSymbolAndLibrary(const char* symbolName,
+void* LibraryUNIX::findSymbolAndLibrary(const std::string& symbolName,
                                         LibraryUNIX& lib)
 {
    boost::ignore_unused_variable_warning(symbolName);

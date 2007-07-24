@@ -161,7 +161,6 @@ public:
       return mLibrary != NULL;
    }
 
-   //@{
    /**
     * Finds and returns an untyped reference to the specified symbol in this
     * library.  If no library was loaded previously, all libraries known to the
@@ -182,30 +181,17 @@ public:
     *
     * @throw vpr::LibraryException if the library has not been loaded.
     */
-   void* findSymbol(const char* symbolName);
+   void* findSymbol(const std::string& symbolName);
 
-   void* findSymbol(const std::string& symbolName)
-   {
-      return findSymbol(symbolName.c_str());
-   }
-   //@}
-
-   //@{
    /**
     * Finds a symbol in one of the currently loaded libraries, and returns
     * both the symbol and the library in which it was found.
     */
-   static void* findSymbolAndLibrary(const char* symbolName, LibraryNSPR& lib)
-   {
-      return PR_FindSymbolAndLibrary(symbolName, &lib.mLibrary);
-   }
-
    static void* findSymbolAndLibrary(const std::string& symbolName,
                                      LibraryNSPR& lib)
    {
-      return findSymbolAndLibrary(symbolName.c_str(), lib);
+      return PR_FindSymbolAndLibrary(symbolName.c_str(), &lib.mLibrary);
    }
-   //@}
 
 protected:
    /**
