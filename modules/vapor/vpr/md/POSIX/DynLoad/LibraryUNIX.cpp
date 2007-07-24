@@ -35,10 +35,12 @@
 
 #include <vpr/vprConfig.h>
 
+#include <dlfcn.h>
 #include <stdlib.h>
 #include <sstream>
 #include <boost/concept_check.hpp>
 
+#include <vpr/DynLoad/LibraryException.h>
 #include <vpr/IO/IOException.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
@@ -102,6 +104,19 @@ void LibraryUNIX::unload()
    {
       mLibrary = NULL;
    }
+}
+
+void* LibraryUNIX::findSymbol(const char* symbolName)
+{
+   // If the library has not been loaded yet, throw an exception.
+   if ( NULL == mLibrary )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Library not loaded: '" << mName << "'";
+      throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
+   }
+
+   return dlsym(mLibrary, symbolName);
 }
 
 void* LibraryUNIX::findSymbolAndLibrary(const char* symbolName,

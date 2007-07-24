@@ -174,14 +174,15 @@ public:
     * is unloaded, for instance, the results of any findSymbol() calls become
     * invalid as well.
     *
+    * @pre The library must be loaded before calling.
+    *
     * @param symbolName The text representation of the symbol to resolve.
     *
     * @return An untyped pointer, possibly NULL.
+    *
+    * @throw vpr::LibraryException if the library has not been loaded.
     */
-   void* findSymbol(const char* symbolName)
-   {
-      return PR_FindSymbol(mLibrary, symbolName);
-   }
+   void* findSymbol(const char* symbolName);
 
    void* findSymbol(const std::string& symbolName)
    {

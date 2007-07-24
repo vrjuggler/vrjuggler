@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <sstream>
 
+#include <vpr/DynLoad/LibraryException.h>
 #include <vpr/IO/IOException.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
@@ -111,6 +112,18 @@ void LibraryNSPR::unload()
    {
       mLibrary = NULL;
    }
+}
+
+void* LibraryNSPR::findSymbol(const char* symbolName)
+{
+   // If the library has not been loaded yet, throw an exception.
+   if ( NULL == mLibrary )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Library not loaded: '" << mName << "'";
+      throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
+   }
+   return PR_FindSymbol(mLibrary, symbolName);
 }
 
 } // End of vpr namespace

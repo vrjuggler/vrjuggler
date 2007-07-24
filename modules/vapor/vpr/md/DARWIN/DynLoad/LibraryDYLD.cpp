@@ -69,6 +69,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <mach-o/dyld.h>
 #include <boost/concept_check.hpp>
 
+#include <vpr/DynLoad/LibraryException.h>
 #include <vpr/IO/IOException.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
@@ -207,6 +208,19 @@ void LibraryDYLD::unload()
    {
       mLibrary = NULL;
    }
+}
+
+void* LibraryDYLD::findSymbol(const char* symbolName)
+{
+   // If the library has not been loaded yet, throw an exception.
+   if ( NULL == mLibrary )
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Library not loaded: '" << mName << "'";
+      throw vpr::LibraryException(msg_stream.str(), VPR_LOCATION);
+   }
+
+   return internalDlsym(mLibrary, symbolName);
 }
 
 void* LibraryDYLD::findSymbolAndLibrary(const char* symbolName,
