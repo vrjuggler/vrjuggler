@@ -95,7 +95,7 @@ public:
     * Gets the root of the scene to render.
     * Called each frame to get the current scene to render.
     */
-   virtual osg::Group* getScene() = 0;
+   virtual ::osg::Group* getScene() = 0;
 
    /**
     * Returns the options to be passed to osgUtil::SceneView::setDefaults()
@@ -197,7 +197,7 @@ public:
    {
       newSceneViewer->setDefaults(getSceneViewDefaults());
       newSceneViewer->init();
-      newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+      newSceneViewer->setClearColor(::osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
       // Needed for stereo to work.
       newSceneViewer->setDrawBufferValue(GL_NONE);
@@ -244,7 +244,7 @@ public:
    virtual void init()
    {
       mUpdateVisitor = new osgUtil::UpdateVisitor();
-      mFrameStamp    = new osg::FrameStamp();
+      mFrameStamp    = new ::osg::FrameStamp();
       mUpdateVisitor->setFrameStamp(mFrameStamp.get());
 
       vrj::opengl::App::init();
@@ -369,11 +369,11 @@ protected:
       getScene()->accept(*mUpdateVisitor);
    }
 
-   vrj::opengl::ContextData< osg::ref_ptr<osgUtil::SceneView> > sceneViewer;
+   vrj::opengl::ContextData< ::osg::ref_ptr<osgUtil::SceneView> > sceneViewer;
 
 private:
-   osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
-   osg::ref_ptr<osg::FrameStamp> mFrameStamp;
+   ::osg::ref_ptr<::osg::NodeVisitor> mUpdateVisitor;
+   ::osg::ref_ptr<::osg::FrameStamp> mFrameStamp;
 
    int mFrameNumber;
    gadget::PositionInterface mHead;
@@ -386,7 +386,7 @@ inline void App::contextInit()
       vrj::opengl::DrawManager::instance()->getCurrentContext();
 
    // --- Create new context specific scene viewer -- //
-   osg::ref_ptr<osgUtil::SceneView> new_sv(new osgUtil::SceneView);
+   ::osg::ref_ptr<osgUtil::SceneView> new_sv(new osgUtil::SceneView);
    this->configSceneView(new_sv.get());            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
    // Add the tree to the scene viewer and set properties
@@ -415,7 +415,7 @@ inline void App::draw()
    glMatrixMode(GL_PROJECTION);
    glPushMatrix();
 
-   osg::ref_ptr<osgUtil::SceneView> sv;
+   ::osg::ref_ptr<osgUtil::SceneView> sv;
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
 
@@ -457,7 +457,7 @@ inline void App::draw()
                                     frustum[Frustum::VJ_FAR]);
 
    // Copy the view matrix
-   sv->setViewMatrix(osg::Matrix(project->getViewMatrix().mData));
+   sv->setViewMatrix(::osg::Matrix(project->getViewMatrix().mData));
 
    //Draw the scene
    // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
