@@ -197,6 +197,27 @@ void DrawRightAngleWandFunctor::draw(vrj::UserPtr)
       glVertex3fv(&(VertexData[3*Indices[(i*3)+2]]));
    }
    glEnd();
+
+   // --- Draw the axis --- //
+   gmtl::Vec3f x_axis(0.15f, 0.0f, 0.0f);
+   gmtl::Vec3f y_axis(0.0f, 0.15f, 0.0f);
+   gmtl::Vec3f z_axis(0.0f, 0.0f, 0.15f);
+   gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
+
+   glPushAttrib(GL_LIGHTING_BIT);
+   glDisable(GL_LIGHTING);
+   glBegin(GL_LINES);
+       glColor3f(1.0f, 0.0f, 0.0f);
+       glVertex3fv(origin.mData);
+       glVertex3fv(x_axis.mData);
+       glColor3f(0.0f, 1.0f, 0.0f);
+       glVertex3fv(origin.mData);
+       glVertex3fv(y_axis.mData);
+       glColor3f(0.0f, 0.0f, 1.0f);
+       glVertex3fv(origin.mData);
+       glVertex3fv(z_axis.mData);
+   glEnd();
+   glPopAttrib();
 }
 
 }
