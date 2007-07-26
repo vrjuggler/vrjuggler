@@ -56,7 +56,7 @@ namespace vrj
 namespace osg
 {
 
-/** \class vrj::osg:;App OsgApp.h vrj/Draw/OSG/OsgApp.h
+/** \class vrj::osg::App App.h vrj/Draw/OSG/App.h
  *
  * Encapsulates an Open Scene Graph (OSG) application.  This defines the base
  * class from which OSG-based application classes should be derived.  It makes
@@ -73,14 +73,14 @@ namespace osg
 class App : public vrj::opengl::App
 {
 public:
-   OsgApp(Kernel* kern = NULL)
+   App(Kernel* kern = NULL)
       : vrj::opengl::App(kern)
       , mFrameNumber(0)
    {
       ;
    }
 
-   virtual ~OsgApp()
+   virtual ~App()
    {
       ;
    }
@@ -100,7 +100,7 @@ public:
    /**
     * Returns the options to be passed to osgUtil::SceneView::setDefaults()
     * for each scene view that is configured. This is called by the default
-    * implementation of vrj::OsgApp::configSceneView(). See
+    * implementation of vrj::osg::App::configSceneView(). See
     * osgUtil::SceneView::Options for the available settings.
     *
     * @see configSceneView()
@@ -141,7 +141,7 @@ public:
     * several steps.
     *
     * \code
-    * // First, declare two member variables in your subclass of vrj::OsgApp
+    * // First, declare two member variables in your subclass of vrj::osg::App
     * such as the following:
     * osg::ref_ptr<osg::Light> mLight0;
     * osg::ref_ptr<osg::LightSource> mLightSource0;
@@ -149,7 +149,7 @@ public:
     * // Then, in init() do something such as the following:
     * void MyApp::init()
     * {
-    *    vrj::OsgApp::init();
+    *    vrj::osg::App::init();
     *
     *    mLight0 = new osg::Light();
     *    mLight0->setLightNum(0);
@@ -168,7 +168,7 @@ public:
     *    this->getScene()->addChild( mLightSource0.get() );
     * }
     *
-    * // Next, override vrj::OsgApp::getSceneViewDefaults() to change the
+    * // Next, override vrj::osg::App::getSceneViewDefaults() to change the
     * // option passed to osgUtil::SceneView::setDefaults().
     * osgUtil::SceneView::Options MyApp::getSceneViewDefaults()
     * {
@@ -178,7 +178,7 @@ public:
     * // Finally, set up the osgUtil::SceneView instance to use this light.
     * void MyApp::configSceneView(osgUtil::SceneView* newSceneViewer)
     * {
-    *    vrj::OsgApp::configSceneView(newSceneViewer);
+    *    vrj::osg::App::configSceneView(newSceneViewer);
     *
     *    // add lights and turn on lighting
     *    newSceneViewer->getGlobalStateSet()->setAssociatedModes(
@@ -330,8 +330,8 @@ protected:
     * Performs the update stage on the scene graph.  This function should be
     * called as the last thing that happens in latePreFrame(). If
     * latePreFrame() is not overridden, then this happens automatically.
-    * Otherwise be sure to call vrj::OsgApp::latePreFrame() as the last thing
-    * in application object's override of latePreFrame().
+    * Otherwise be sure to call vrj::osg::App::latePreFrame() as the last
+    * thing in application object's override of latePreFrame().
     *
     * @pre The library is preparing to switch from the serial preDraw stages
     *      to the parallel draw stages.
@@ -380,7 +380,7 @@ private:
    vpr::Mutex mSceneViewLock;
 };
 
-inline void OsgApp::contextInit()
+inline void App::contextInit()
 {
    const unsigned int unique_context_id =
       vrj::opengl::DrawManager::instance()->getCurrentContext();
@@ -398,7 +398,7 @@ inline void OsgApp::contextInit()
    (*sceneViewer) = new_sv;
 }
 
-inline void OsgApp::draw()
+inline void App::draw()
 {
    glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -462,7 +462,7 @@ inline void OsgApp::draw()
    //Draw the scene
    // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
    // should only be called by a single thread. The equivalent of calling
-   // osgUtil::SceneView::update() is in vrj::OsgApp::update().
+   // osgUtil::SceneView::update() is in vrj::osg::App::update().
    sv->cull();
    sv->draw();
 
