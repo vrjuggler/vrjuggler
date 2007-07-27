@@ -290,10 +290,11 @@ bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
                                  const std::string& hostname)
 {
    vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-   << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
-   << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
+      << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
+      << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
 
    gadget::InputPtr input_device = gadget::InputPtr(gadget::BaseTypeFactory::instance()->createObject(device_base_type));
+   vprASSERT(NULL != input_dev.get() && "BaseTypeFactory returned a NULL input device.");
 
    // Create a new VirtualDevice.
    VirtualDevicePtr virtual_device = VirtualDevice::create(name, device_id, device_base_type, hostname, input_device);
