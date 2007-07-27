@@ -372,8 +372,8 @@ protected:
    vrj::opengl::ContextData< ::osg::ref_ptr<osgUtil::SceneView> > sceneViewer;
 
 private:
-   ::osg::ref_ptr<::osg::NodeVisitor> mUpdateVisitor;
-   ::osg::ref_ptr<::osg::FrameStamp> mFrameStamp;
+   ::osg::ref_ptr< ::osg::NodeVisitor > mUpdateVisitor;
+   ::osg::ref_ptr< ::osg::FrameStamp >  mFrameStamp;
 
    int mFrameNumber;
    gadget::PositionInterface mHead;
