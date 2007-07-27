@@ -85,10 +85,11 @@ void BaseTypeFactory::hackLoadKnownDevices()
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_position_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_analog_position_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_glove_digital_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_position_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_position);
    GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_digital);
    GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_analog);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_position_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_digital_glove_t);
 }
 
 } // End of gadget namespace

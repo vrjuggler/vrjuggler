@@ -30,10 +30,10 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Type/InputMixer.h>
 
 namespace gadget
 {
@@ -50,7 +50,8 @@ namespace gadget
  * This class should not be used directly by the user.
  */
 //class SimDigital : public Input, public Digital, public SimInput
-class SimDigital : public InputMixer<InputMixer<SimInput,Input>,Digital>
+class SimDigital
+   : public siminput_input_digital
 {
 public:
    SimDigital();

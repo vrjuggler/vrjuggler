@@ -29,9 +29,9 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/InputMixer.h>
 #include <gadget/Type/PositionInterface.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
@@ -51,7 +51,7 @@ namespace gadget
  */
 //class SimSetablePosition : public Input, public Position
 class GADGET_CLASS_API SimSetablePosition
-   : public InputMixer<Input, Position>
+   : public input_position_t
 {
 public:
    SimSetablePosition()

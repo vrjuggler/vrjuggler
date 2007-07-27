@@ -30,10 +30,10 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Glove.h>
-#include <gadget/Type/InputMixer.h>
 
 #include <gadget/Devices/Sim/SimInput.h>
 
@@ -51,7 +51,8 @@ namespace gadget
  *
  * This class should not be used directly by the user.
  */
-class SimDigitalGlove : virtual public InputMixer< InputMixer< InputMixer<Input,Digital>, SimInput>, Glove>
+class SimDigitalGlove
+   : public siminput_input_digital_glove_t
 {
 public:
    /** Default constructor. */

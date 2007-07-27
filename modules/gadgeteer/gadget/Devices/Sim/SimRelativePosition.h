@@ -28,10 +28,10 @@
 #define _GADGET_SIM_RELATIVE_POSITION_H
 
 #include <gadget/gadgetConfig.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/InputMixer.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
 
@@ -47,8 +47,8 @@ namespace gadget
  *
  * @note This class should not be used directly by the user.
  */
-//class SimRelativePosition : public Input, public Position
-class SimRelativePosition : public InputMixer<Input,Position>
+class SimRelativePosition
+   : public input_position_t
 {
 public:
    SimRelativePosition() {;}
