@@ -32,10 +32,10 @@
 #include <vector>
 
 #include <jccl/Config/ConfigElementPtr.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Type/InputMixer.h>
 
 
 namespace gadget
@@ -49,8 +49,8 @@ namespace gadget
  *
  * This class should not be used directly by the user.
  */
-//class SimAnalog : public Input, public Analog, public SimInput
-class SimAnalog : public InputMixer<InputMixer<SimInput,Input>,Analog>
+class SimAnalog
+   : public siminput_input_analog
 {
 public:
    SimAnalog();

@@ -29,10 +29,10 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Devices/Sim/SimInput.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/InputMixer.h>
 #include <gmtl/Vec.h>
 
 namespace gadget
@@ -44,8 +44,8 @@ namespace gadget
  * Simulates a positional device from an event source.
  * This class should not be accessed directly by the user.
  */
-//class SimPosition :  public SimInput, public Input, public Position
-class SimPosition : public InputMixer<InputMixer<SimInput,Input>,Position>
+class SimPosition
+   : public siminput_input_position
 {
 public:
    /** Constants for the key array. */

@@ -97,10 +97,11 @@ void BaseTypeFactory::hackLoadKnownDevices()
    REGISTER_CONSTRUCTOR_TYPE(input_digital_position_t);
    REGISTER_CONSTRUCTOR_TYPE(input_analog_position_t);
    REGISTER_CONSTRUCTOR_TYPE(input_glove_digital_t);
+   REGISTER_CONSTRUCTOR_TYPE(input_digital_analog_position_t);
    REGISTER_CONSTRUCTOR_TYPE(siminput_input_position);
    REGISTER_CONSTRUCTOR_TYPE(siminput_input_digital);
    REGISTER_CONSTRUCTOR_TYPE(siminput_input_analog);
-   REGISTER_CONSTRUCTOR_TYPE(input_digital_analog_position_t);
+   REGISTER_CONSTRUCTOR_TYPE(siminput_input_digital_glove_t);
 }
 
 void BaseTypeFactory::registerNetDevice(BaseTypeConstructorBase* constructor)
