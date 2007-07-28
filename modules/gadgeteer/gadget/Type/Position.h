@@ -147,7 +147,7 @@ public:
       mPosSamples.swapBuffers();
    }
 
-   static std::string getInputTypeName()
+   virtual std::string getInputTypeName()
    {
       return std::string("Position");
    }

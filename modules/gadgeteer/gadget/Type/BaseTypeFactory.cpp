@@ -54,11 +54,13 @@ namespace gadget
  *
  * Ex: GADGET_REGISTER_BASE_TYPE_CREATOR(ConnectionAck)
  */
-#define GADGET_REGISTER_BASE_TYPE_CREATOR(BaseType) \
-const bool reg_ctr_ ## BaseType = \
-   gadget::BaseTypeFactory::instance()-> \
-      registerCreator(BaseType::MixedPlaceholderType::getInputTypeName(), \
-                      BaseType::MixedPlaceholderType::create); \
+/*const bool reg_ctr_input_ ## BaseType = BaseType::MixedPlaceholderType::create()  \*/
+#define GADGET_REGISTER_BASE_TYPE_CREATOR(BaseType)                             \
+InputPtr input_ ## BaseType = BaseType::MixedPlaceholderType::create();         \
+const bool reg_ctr_ ## BaseType =                                               \
+   gadget::BaseTypeFactory::instance()->                                        \
+      registerCreator(input_ ## BaseType->getInputTypeName(),                   \
+                      BaseType::MixedPlaceholderType::create);                  \
    boost::ignore_unused_variable_warning(reg_ctr_ ## BaseType);
 
 vprSingletonImpWithInitFunc( BaseTypeFactory, hackLoadKnownDevices );

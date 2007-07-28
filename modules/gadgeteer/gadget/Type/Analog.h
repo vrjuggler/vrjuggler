@@ -164,7 +164,7 @@ public:
     */
    const SampleBuffer_t::buffer_t& getAnalogDataBuffer();
 
-   static std::string getInputTypeName()
+   virtual std::string getInputTypeName()
    {
       return std::string("Analog");
    }

@@ -79,7 +79,7 @@ public:
 
    virtual ~KeyboardMouse();
 
-   static std::string getInputTypeName()
+   virtual std::string getInputTypeName()
    {
       return "keyboard_mouse";
    }

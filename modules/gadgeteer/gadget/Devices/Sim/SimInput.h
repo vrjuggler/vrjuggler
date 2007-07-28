@@ -98,7 +98,7 @@ public:
     */
    virtual bool config(jccl::ConfigElementPtr element);
 
-   static std::string getInputTypeName()
+   virtual std::string getInputTypeName()
    {
        return std::string("SimInput");
    }

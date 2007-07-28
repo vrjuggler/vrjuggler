@@ -160,7 +160,7 @@ public:
       reader->endTag();
    }
 
-   static std::string getInputTypeName()
+   virtual std::string getInputTypeName()
    {
       return(ComposedParent::getInputTypeName() + NewParent::getInputTypeName());    //Input,Digital,Analog,Position, NEED THIS TOO
    }
