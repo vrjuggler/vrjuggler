@@ -39,8 +39,7 @@
 #  define GADGET_STRINGIZE(X) GADGET_DO_STRINGIZE(X)
 #  define GADGET_DO_STRINGIZE(X) #X
 #  define GADGET_VERSION_STR GADGET_STRINGIZE(__GADGET_MAJOR__) "_" \
-                             GADGET_STRINGIZE(__GADGET_MINOR__) "_" \
-                             GADGET_STRINGIZE(__GADGET_PATCH__)
+                             GADGET_STRINGIZE(__GADGET_MINOR__)
 
 #  pragma comment(lib, "gadget" GADGET_LIB_RT_OPT "-" GADGET_VERSION_STR ".lib")
 

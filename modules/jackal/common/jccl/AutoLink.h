@@ -39,8 +39,7 @@
 #  define JCCL_STRINGIZE(X) JCCL_DO_STRINGIZE(X)
 #  define JCCL_DO_STRINGIZE(X) #X
 #  define JCCL_VERSION_STR JCCL_STRINGIZE(__JCCL_MAJOR__) "_" \
-                           JCCL_STRINGIZE(__JCCL_MINOR__) "_" \
-                           JCCL_STRINGIZE(__JCCL_PATCH__)
+                           JCCL_STRINGIZE(__JCCL_MINOR__)
 
 #  pragma comment(lib, "jccl" JCCL_LIB_RT_OPT "-" JCCL_VERSION_STR ".lib")
 

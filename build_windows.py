@@ -578,7 +578,7 @@ def updateVersions(vcDir, options):
             (version, major, minor, patch, build) = self.__getVersionInfo()
          else:
             (version, major, minor, patch, build) = versionInfo
-         return '%d%s%d%s%d' % (major, joinStr, minor, joinStr, patch)
+         return '%d%s%d' % (major, joinStr, minor)
 
       def setVersionEnvVar(self):
          vi = self.__getVersionInfo()

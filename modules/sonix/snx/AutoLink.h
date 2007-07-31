@@ -48,8 +48,7 @@
 #  define SNX_STRINGIZE(X) SNX_DO_STRINGIZE(X)
 #  define SNX_DO_STRINGIZE(X) #X
 #  define SNX_VERSION_STR SNX_STRINGIZE(__SNX_MAJOR__) "_" \
-                          SNX_STRINGIZE(__SNX_MINOR__) "_" \
-                          SNX_STRINGIZE(__SNX_PATCH__)
+                          SNX_STRINGIZE(__SNX_MINOR__)
 
 #  pragma comment(lib, "sonix" SNX_LIB_RT_OPT "-" SNX_VERSION_STR ".lib")
 

@@ -48,8 +48,7 @@
 #  define VPR_STRINGIZE(X) VPR_DO_STRINGIZE(X)
 #  define VPR_DO_STRINGIZE(X) #X
 #  define VPR_VERSION_STR VPR_STRINGIZE(__VPR_MAJOR__) "_" \
-                          VPR_STRINGIZE(__VPR_MINOR__) "_" \
-                          VPR_STRINGIZE(__VPR_PATCH__)
+                          VPR_STRINGIZE(__VPR_MINOR__)
 
 #  pragma comment(lib, "vpr" VPR_LIB_RT_OPT "-" VPR_VERSION_STR ".lib")
 

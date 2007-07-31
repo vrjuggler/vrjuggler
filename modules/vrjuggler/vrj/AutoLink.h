@@ -44,8 +44,7 @@
 #  define VJ_STRINGIZE(X) VJ_DO_STRINGIZE(X)
 #  define VJ_DO_STRINGIZE(X) #X
 #  define VJ_VERSION_STR VJ_STRINGIZE(__VJ_MAJOR__) "_" \
-                         VJ_STRINGIZE(__VJ_MINOR__) "_" \
-                         VJ_STRINGIZE(__VJ_PATCH__)
+                         VJ_STRINGIZE(__VJ_MINOR__)
 
 #  if ! defined(VJ_LIB_NAME)
 #     error "Macro VJ_LIB_NAME not set (internal error)"

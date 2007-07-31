@@ -39,8 +39,7 @@
 #  define TWEEK_STRINGIZE(X) TWEEK_DO_STRINGIZE(X)
 #  define TWEEK_DO_STRINGIZE(X) #X
 #  define TWEEK_VERSION_STR TWEEK_STRINGIZE(__TWEEK_MAJOR__) "_" \
-                            TWEEK_STRINGIZE(__TWEEK_MINOR__) "_" \
-                            TWEEK_STRINGIZE(__TWEEK_PATCH__)
+                            TWEEK_STRINGIZE(__TWEEK_MINOR__)
 
 #  pragma comment(lib, "tweek" TWEEK_LIB_RT_OPT "-" TWEEK_VERSION_STR ".lib")
 
