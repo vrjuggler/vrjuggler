@@ -167,6 +167,7 @@ AC_DEFUN([TWEEK_PATH_CXX],
                TWEEK_PROF_LIBS=`$FLAGPOLL $tweek_cxx_flagpoll_args --get-profiled_libs`
                TWEEK_LIBS_STATIC=`$FLAGPOLL $tweek_cxx_flagpoll_args --get-static-libs`
                TWEEK_PROF_LIBS_STATIC_LD=`$FLAGPOLL $tweek_cxx_flagpoll_args --get-profiled-static-libs`
+               TWEEK_DATA_SUBDIR=`$FLAGPOLL $tweek_cxx_flagpoll_args --get-tweek-data-subdir`
 
                TWEEK_CXX_IDL=`$FLAGPOLL $tweek_cxx_flagpoll_args --get-cxx-idl`
                TWEEK_CXX_IDL_OPTS=`$FLAGPOLL $tweek_cxx_flagpoll_args --get-cxx-idlflags`
@@ -244,6 +245,7 @@ AC_DEFUN([TWEEK_PATH_JAVA],
                TWEEK_JAVA_IDL_INCFLAG=`$FLAGPOLL $tweek_java_flagpoll_args --get-java-idlincflag`
                TWEEK_JARS=`$FLAGPOLL $tweek_java_flagpoll_args --get-jars`
                TWEEK_EXT_JARS=`$FLAGPOLL $tweek_java_flagpoll_args --get-ext-jars`
+               TWEEK_DATA_SUBDIR=`$FLAGPOLL $tweek_java_flagpoll_args --get-tweek-data-subdir`
 
                ifelse([$2], , :, [$2])
             fi
@@ -301,8 +303,7 @@ AC_DEFUN([TWEEK_PATH_PYTHON],
             TWEEK_PYTHON_IDL_OPTS=`$FLAGPOLL $tweek_python_flagpoll_args ---get-python-idlflags`
             TWEEK_PYTHON_IDL_GENDIR_OPT=`$FLAGPOLL $tweek_python_flagpoll_args --get-python-idlgendir`
             TWEEK_PYTHON_IDL_INCFLAG=`$FLAGPOLL $tweek_python_flagpoll_args --get-python-idlincflag`
-            TWEEK_JARS=`$FLAGPOLL $tweek_python_flagpoll_args --get-jars`
-            TWEEK_EXT_JARS=`$FLAGPOLL $tweek_python_flagpoll_args --get-ext-jars`
+            TWEEK_DATA_SUBDIR=`$FLAGPOLL $tweek_python_flagpoll_args --get-tweek-data-subdir`
 
             ifelse([$2], , :, [$2])
          fi

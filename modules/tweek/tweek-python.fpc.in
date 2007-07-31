@@ -19,6 +19,7 @@ tweek_idlgendir_python = @tweek_idlgendir_python@
 BUILD_PYTHON_IDL = @BUILD_PYTHON_IDL@
 tweek_share_dir = ${prefix}/@TWEEK_SHARE_DIR@
 
+tweek_data_subdir = @tweek_data_subdir@
 ########################### Public Variables ############################
 
 ######################### Standard Flagpoll Variables ###################
@@ -36,3 +37,5 @@ python_idl: ${PYTHON_IDL}
 python_idlflags: ${tweek_idlflags_python}
 python_idlgendir: ${tweek_idlgendir_python}
 python_idlincflag: ${tweek_idl_inc_flag_python}
+
+tweek_data_subdir: ${tweek_data_subdir}

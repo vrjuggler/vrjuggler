@@ -1132,6 +1132,8 @@ fi
 TWEEK_DATA_DIR="share/$DATA_VERSION"
 
 includedir="$includedir/$HEADER_VERSION"
+tweek_header_subdir="$HEADER_VERSION"
+tweek_data_subdir="$DATA_VERSION"
 
 # Add these C++ options when compiling with G++.
 #if test "x$GXX" = "xyes" ; then
@@ -1442,6 +1444,8 @@ AC_SUBST(tweek_ext_jars)
 AC_SUBST(tweek_idlflags_python)
 AC_SUBST(tweek_idl_incflag_python)
 AC_SUBST(tweek_idlgendir_python)
+AC_SUBST(tweek_header_subdir)
+AC_SUBST(tweek_data_subdir)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

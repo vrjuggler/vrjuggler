@@ -35,7 +35,8 @@ tweek_extra_ldflags = @tweek_extra_ldflags@
 
 extra_libs = ${tweek_extra_ldflags}
 
-
+tweek_header_subdir = @tweek_header_subdir@
+tweek_data_subdir   = @tweek_data_subdir@
 ########################### Public Variables ############################
 
 ######################### Standard Flagpoll Variables ###################
@@ -65,3 +66,6 @@ cxx_idlgendir: ${tweek_idlgendir_cxx}
 cxx_idlincflag: ${tweek_idl_inc_flag_cxx}
 
 tweek_app_defs_file: ${tweek_share_dir}/tweek.appdefs.mk
+
+tweek_header_subdir: ${tweek_header_subdir}
+tweek_data_subdir: ${tweek_data_subdir}

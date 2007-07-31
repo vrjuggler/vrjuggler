@@ -21,6 +21,7 @@ tweek_ext_jars = @tweek_ext_jars@
 BUILD_JAVA = @BUILD_JAVA@
 tweek_share_dir = ${prefix}/@TWEEK_SHARE_DIR@
 
+tweek_data_subdir = @tweek_data_subdir@
 ########################### Public Variables ############################
 
 ######################### Standard Flagpoll Variables ###################
@@ -40,3 +41,5 @@ java_idlgendir: ${tweek_idlgendir_java}
 java_idlincflag: ${tweek_idl_inc_flag_java}
 jars: ${tweek_java_api_jars}
 ext_jars: ${tweek_ext_jars}
+
+tweek_data_subdir: ${tweek_data_subdir}
