@@ -179,9 +179,10 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
 VJ_VERSION_GROK(../VERSION)
 
+TWEEK_DATA_DIR="share/$TWEEK_DATA_SUBDIR"
+JCCL_DATA_DIR="share/$JCCL_DATA_SUBDIR"
+
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
-   TWEEK_DATA_DIR="share/tweek-$TWEEK_VERSION"
-   JCCL_DATA_DIR="share/jccl-$JCCL_VERSION"
    VRJ_VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION"
    VRJ_DATA_VERSION="vrjuggler-$VRJ_VERSION_DOT"
    VRJ_DATA_DIR="share/vrjuggler-$VRJ_VERSION_DOT"
@@ -192,8 +193,6 @@ if test "x$ENABLE_VERSIONING" = "xyes" ; then
 # important thing to note is that the directory name is unversioned in this
 # case.
 else
-   TWEEK_DATA_DIR="share/tweek"
-   JCCL_DATA_DIR="share/jccl"
    VRJ_DATA_VERSION="vrjuggler"
    VRJ_DATA_DIR="share/vrjuggler"
    PLUGIN_DIR_VERSION="vrjuggler"
