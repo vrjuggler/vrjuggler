@@ -486,13 +486,17 @@ void Kernel::controlLoop()
    vpr::prof::start("Kernel: controlLoop",10);
 
    bool first_cluster(true);
+   bool cluster_active = mClusterManager->isClusterActive();
 
    // --- MAIN CONTROL LOOP -- //
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
-      bool cluster = !mClusterManager->isClusterActive() || mClusterManager->isClusterReady();
+      // Are we not running in cluster configuration, or the cluster is ready.
+      bool cluster_ready = mClusterManager->isClusterReady();
+      bool call_app = !cluster_active || cluster_ready;
+      bool call_cluster = cluster_active && cluster_ready;
 
-      if (cluster && first_cluster)
+      if (call_cluster && first_cluster)
       {
          vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
             << "vrj::Kernel::controlLoop: First cluster barrier.()\n"
@@ -503,7 +507,7 @@ void Kernel::controlLoop()
       }
 
       // Iff we have an app and a draw manager
-      if((mApp != NULL) && (mDrawManager != NULL) && cluster)
+      if((mApp != NULL) && (mDrawManager != NULL) && call_app)
       {
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: mApp->preFrame()\n"
@@ -522,14 +526,14 @@ void Kernel::controlLoop()
          vpr::Thread::yield();   // Give up CPU
       }
 
-      if (cluster)
+      if (call_cluster)
       {
          vpr::prof::start("Cluster: preDraw",10);
          mClusterManager->preDraw();
          vpr::prof::stop();
       }
 
-      if((mApp != NULL) && (mDrawManager != NULL) && cluster)
+      if((mApp != NULL) && (mDrawManager != NULL) && call_app)
       {
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: mApp->latePreFrame()\n"
@@ -582,7 +586,7 @@ void Kernel::controlLoop()
       getInputManager()->updateAllDevices();
 
 
-      if (cluster)
+      if (call_cluster)
       {
             vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
                << "vrj::Kernel::controlLoop: Update ClusterManager\n"
