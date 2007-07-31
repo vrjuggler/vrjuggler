@@ -62,7 +62,7 @@ Description: VR Juggler provides virtual reality (VR) software developers with a
 URL: http://www.vrjuggler.org/
 Version: ${vrj_version}
 Provides: vrjuggler
-Requires: gadgeteer = @GADGET_VERSION@ sonix = @SNX_VERSION@ jccl = @JCCL_VERSION@ vpr = @VPR_VERSION@
+Requires: gadgeteer >= 1.2 gadgeteer < 1.3 sonix >= 1.2 sonix < 1.3 jccl >= 1.2 jccl < 1.3 vpr >= 2.0 vpr < 2.1
 Arch: ${ISA}
 Cflags: ${vrj_cxxflags} ${vrj_extra_cxxflags} -I${includedir}
 Libs: ${vrj_ldflags} ${vrj_libs} ${extra_libs}
