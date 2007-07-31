@@ -1108,8 +1108,8 @@ VJ_VERSION_GROK(VERSION)
 # naming. Unstable builds use all three version numbers; stable builds use
 # only the major and minor version numbers.
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
-   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
-   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}"
 
    HEADER_VERSION="tweek-$VERSION_DOT"
    CLOSE_HEADER_VERSION='..'
