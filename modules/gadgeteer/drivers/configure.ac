@@ -380,11 +380,21 @@ if test "x${_with_vrpn}" != "xno" ; then
    elif test "x$PLATFORM" = "xAIX" ; then
       VRPNLIBDIR='powerpc_aix'
    elif test "x$PLATFORM" = "xDarwin" ; then
-      if test "x$ISA" = "xuniversal" ; then
-         VRPNLIBDIR='universal_macosx'
-      else
-         VRPNLIBDIR='powerpc_macosx'
-      fi
+      case $ISA in
+         universal)
+            VRPNLIBDIR='universal_macosx'
+            ;;
+         powerpc)
+            VRPNLIBDIR='powerpc_macosx'
+            ;;
+         *86)
+            # XXX: Currently, VRPN does not have explicit support for Intel
+            # Macs. Using its powerpc_macosx configuration to build works,
+            # though.
+            VRPNLIBDIR='powerpc_macosx'
+            #VRPNLIBDIR='pc_macosx'
+            ;;
+      esac
    elif test "x$PLATFORM" = "xSolaris" ; then
       case $target_cpu in
          *86)
