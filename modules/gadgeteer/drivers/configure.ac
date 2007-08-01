@@ -358,127 +358,64 @@ if test "x${_with_vrpn}" != "xno" ; then
    _vjsave_LDFLAGS="$LDFLAGS"
    _vjsave_LIBS="$LIBS"
 
-   VRPN_INCLUDES="-I$VRPNROOT/quat -I$VRPNROOT/vrpn"
-#   VRPN_INCLUDES="-I$VRPNROOT/vrpn"
-
-   if test "x$OS_TYPE" = "xWin32" ; then
-      VRPNLIBDIR='pc_win32/Debug'
-   elif test "x$PLATFORM" = "xLinux" ; then
-      VRPNLIBDIR='pc_linux'
-
-      if test "x$ISA" = "xx86_64" ; then
-         if test -d "$VRPNROOT/vrpn/pc_linux64" ; then
-            VRPNLIBDIR='pc_linux64'
-         fi
-      elif test "x$ISA" = "ia64" ; then
-         if test -d "$VRPNROOT/vrpn/pc_linux_ia64" ; then
-            VRPNLIBDIR='pc_linux_ia64'
-         fi
-      fi
-   elif test "x$PLATFORM" = "xFreeBSD" -o "x$PLATFORM" = "xDragonFly" ; then
-      VRPNLIBDIR='pc_FreeBSD'
-   elif test "x$PLATFORM" = "xAIX" ; then
-      VRPNLIBDIR='powerpc_aix'
-   elif test "x$PLATFORM" = "xDarwin" ; then
-      case $ISA in
-         universal)
-            VRPNLIBDIR='universal_macosx'
-            ;;
-         powerpc)
-            VRPNLIBDIR='powerpc_macosx'
-            ;;
-         *86)
-            # XXX: Currently, VRPN does not have explicit support for Intel
-            # Macs. Using its powerpc_macosx configuration to build works,
-            # though.
-            VRPNLIBDIR='powerpc_macosx'
-            #VRPNLIBDIR='pc_macosx'
-            ;;
-      esac
-   elif test "x$PLATFORM" = "xSolaris" ; then
-      case $target_cpu in
-         *86)
-            # Not supported by VRPN yet
-            ;;
-         *)
-            VRPNLIBDIR='sparc_solaris'
-            ;;
-      esac
-   elif test "x$PLATFORM" = "xIRIX" ; then
-      VRPNLIBDIR='sgi_irix'
-      if test "x$ABI" = "xN32" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.n32"
-      elif test "x$ABI" = "x64" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.64"
-      fi
-
-      if test "x$ISA" = "xmips3" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.mips3"
-      elif test "x$ISA" = "xmips4" ; then
-         VRPNLIBDIR="$VRPNLIBDIR.mips4"
-      fi
+   if test "x$VRPNROOT" != "x/usr" ; then
+      VRPN_INCLUDES="-I$VRPNROOT/include"
    fi
 
    if test "x$OS_TYPE" = "xWin32" ; then
-      TEST_VRPN_LDFLAGS="/libpath:\"$VRPNROOT/quat/$VRPNLIBDIR\" /libpath:\"$VRPNROOT/vrpn/$VRPNLIBDIR\" vrpn.lib quat.lib"
+      TEST_VRPN_LIBS="vrpn.lib quat.lib"
+      LDFLAGS="/libpath:\"$VRPNROOT/lib\" $LDFLAGS"
    else
       # SGI link order seems to clash with default rule VRPN_LDFLAGS
       # reset below to proper value for subsequent builds.
       if test "x$PLATFORM" = "xIRIX" ; then
-         TEST_VRPN_LDFLAGS="-L$VRPNROOT/quat/$VRPNLIBDIR -L$VRPNROOT/vrpn/$VRPNLIBDIR -all -lvrpn -lquat -lm"
+         TEST_VRPN_LIBS="-all -lvrpn -lm"
       else
-         TEST_VRPN_LDFLAGS="-L$VRPNROOT/quat/$VRPNLIBDIR -L$VRPNROOT/vrpn/$VRPNLIBDIR -lvrpn -lquat -lm"
+         TEST_VRPN_LIBS="-lvrpn -lm"
       fi
+
+      LDFLAGS="-L$VRPNROOT/lib $LDFLAGS"
    fi
 
-    CPPFLAGS="$VRPN_INCLUDES $CPPFLAGS"
-    LDFLAGS="$TEST_VRPN_LDFLAGS $LDFLAGS"
+   CPPFLAGS="$VRPN_INCLUDES $CPPFLAGS"
+   LIBS="$TEST_VRPN_LIBS $LIBS"
 
-    vj_have_vrpn='no'
+   vj_have_vrpn='no'
 
-    DPP_LANG_SAVE
-    DPP_LANG_CPLUSPLUS
+   DPP_LANG_SAVE
+   DPP_LANG_CPLUSPLUS
 
-    CPPFLAGS="$CPPFLAGS $STDFLAGS"
+   CPPFLAGS="$CPPFLAGS $STDFLAGS"
 
-    # Try to link
-#     AC_TRY_LINK([
-# include <stdlib.h>
-# include <stdio.h>
-# include <signal.h>
-# include <string.h>
+   # Try to link
+   AC_CACHE_CHECK([for vrpn_Button_Remote in -lvrpn],
+                  [ac_cv_vrpn_Button_Remote_in_vrpn],
+                  [AC_TRY_LINK([
+#include <vrpn_Button.h>
+],
+                     [vrpn_Button_Remote* b = new vrpn_Button_Remote("");],
+                     [ac_cv_vrpn_Button_Remote_in_vrpn='yes'
+                       rm -rf ./ii_files ],
+                     [ac_cv_vrpn_Button_Remote_in_vrpn='no'])])
 
-# ifndef _WIN32
-# include <strings.h>
-# endif
+   vj_have_vrpn="$ac_cv_vrpn_Button_Remote_in_vrpn"
 
-# include <vrpn_Shared.h>
-# include <vrpn_Button.h>
-# ],
-# [vrpn_Button_Remote * b = new vrpn_Button_Remote("");],
-#                        [ vj_have_vrpn='yes'
-#                          rm -rf ./ii_files ],
-#                        vj_have_vrpn='no')
-   AC_CHECK_HEADER([vrpn_Button.h], [vj_have_vrpn='yes'], [vj_have_vrpn='no'])
+   CPPFLAGS="${_vjsave_CPPFLAGS}"
 
-#   AC_CHECK_LIB(vrpn, [vrpn_Button_Remote], [vj_have_vrpn='yes'],
-#   [vj_have_vrpn='no'])
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
+   DPP_LANG_RESTORE
 
-    DPP_LANG_RESTORE
+   if test "x$vj_have_vrpn" = "xyes" ; then
+      HAVE_VRPN='Y'
+      VRPN_LDFLAGS="-L$VRPNROOT/lib $TEST_VRPN_LIBS"
+   else
+      HAVE_VRPN='N'
+      AC_MSG_WARN([*** Did not find VRPN in $VRPNROOT ***])
+   fi
 
-    if test "x$vj_have_vrpn" = "xyes" ; then
-       HAVE_VRPN='Y'
-       VRPN_LDFLAGS="$TEST_VRPN_LDFLAGS"
-    else
-       HAVE_VRPN='N'
-       AC_MSG_WARN([*** Did not find VRPN in $VRPNROOT ***])
-    fi
-
-    CFLAGS="${_vjsave_CFLAGS}"
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-    LDFLAGS="${_vjsave_LDFLAGS}"
-    LIBS="${_vjsave_LIBS}"
+   CFLAGS="${_vjsave_CFLAGS}"
+   CPPFLAGS="${_vjsave_CPPFLAGS}"
+   LDFLAGS="${_vjsave_LDFLAGS}"
+   LIBS="${_vjsave_LIBS}"
 fi
 
 # -----------------------------------------------------------------------------
