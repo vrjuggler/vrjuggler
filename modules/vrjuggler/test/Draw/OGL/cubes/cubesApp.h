@@ -41,8 +41,8 @@
 #include <vector>
 
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/OPenGL/App.h>
-#include <vrj/Draw/OPenGL/ContextData.h>
+#include <vrj/Draw/OpenGL/App.h>
+#include <vrj/Draw/OpenGL/ContextData.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
