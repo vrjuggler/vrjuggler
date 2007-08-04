@@ -59,7 +59,7 @@ AC_DEFUN([GADGETEER_PATH],
         gadget_flagpoll_args="gadgeteer"
     fi
 
-    AM_PATH_FLAGPOLL([0.8.1], ,
+    AM_PATH_FLAGPOLL([0.9.1], ,
                      [AC_MSG_ERROR(*** Flagpoll required for Gadgeteer flags ***)])
     min_gadget_version=ifelse([$1], ,0.0.1,[$1])
 

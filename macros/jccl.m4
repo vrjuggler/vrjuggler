@@ -48,7 +48,7 @@ AC_DEFUN([_JCCL_PATH_SETUP],
         jccl_flagpoll_args="jccl"
     fi
 
-    AM_PATH_FLAGPOLL([0.8.1], ,
+    AM_PATH_FLAGPOLL([0.9.1], ,
                      [AC_MSG_ERROR(*** Flagpoll required for JCCL flags ***)])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.
