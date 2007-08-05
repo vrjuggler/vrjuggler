@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <boost/bind.hpp>
 
+#include <vpr/Perf/ProfileManager.h>
 #include <jccl/Config/ConfigElement.h>
 
 #include <cluster/ClusterManager.h>
@@ -194,35 +195,43 @@ void DrawManager::drawAllPipes()
                         "vrj::opengl::DrawManager::drawAllPipes() done.\n");
 
    // RENDER
-   // Start rendering all the pipes
-   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
    {
-      pipes[pipe_num]->triggerRender();
-   }
+      VPR_PROFILE_GUARD_HISTORY("DrawManager::drawAllPipes Render", 10);
+      // Start rendering all the pipes
+      for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
+      {
+         pipes[pipe_num]->triggerRender();
+      }
 
       // Wait for rendering to finish on all the pipes
-   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
-   {
-      pipes[pipe_num]->completeRender();
+      for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
+      {
+         pipes[pipe_num]->completeRender();
+      }
    }
-
    // Barrier for Cluster
-   //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
-   cluster::ClusterManager::instance()->swapBarrier();
-   //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
-
-
-   // SWAP
-   // Start swapping all the pipes
-   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
    {
-      pipes[pipe_num]->triggerSwap();
+      VPR_PROFILE_GUARD_HISTORY(
+         "DrawManager::drawAllPipes Cluster Swap Barrier", 10
+      );
+      //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
+      cluster::ClusterManager::instance()->swapBarrier();
+      //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
    }
-
-   // Wait for swapping to finish on all the pipes
-   for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
+   // SWAP
    {
-      pipes[pipe_num]->completeSwap();
+      VPR_PROFILE_GUARD_HISTORY("DrawManager::drawAllPipes Swap", 10);
+      // Start swapping all the pipes
+      for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
+      {
+         pipes[pipe_num]->triggerSwap();
+      }
+
+      // Wait for swapping to finish on all the pipes
+      for ( unsigned int pipe_num = 0; pipe_num < pipes.size(); ++pipe_num )
+      {
+         pipes[pipe_num]->completeSwap();
+      }
    }
 }
 

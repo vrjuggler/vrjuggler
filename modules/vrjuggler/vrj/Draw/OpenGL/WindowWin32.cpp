@@ -33,6 +33,7 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Perf/ProfileManager.h>
 #include <gadget/InputManager.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Kernel/Kernel.h>
@@ -284,6 +285,7 @@ bool WindowWin32::makeCurrent()
 // Process events here
 void WindowWin32::swapBuffers()
 {
+   VPR_PROFILE_GUARD_HISTORY("WindowWin32::swapBuffers", 10);
    vprASSERT(mDeviceContext != NULL);
    Window::swapBuffers();
    SwapBuffers(mDeviceContext);

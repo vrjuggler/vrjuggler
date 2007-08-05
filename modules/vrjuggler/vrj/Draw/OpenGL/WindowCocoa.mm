@@ -42,6 +42,7 @@
 #import <OpenGL/GL.h>
 
 #include <vpr/Thread/Thread.h>
+#include <vpr/Perf/ProfileManager.h>
 #include <jccl/Config/ConfigElement.h>
 
 #include <vrj/Display/DisplayManager.h>
@@ -381,6 +382,7 @@ void WindowCocoa::configWindow(vrj::DisplayPtr displayWindow)
 
 void WindowCocoa::swapBuffers()
 {
+   VPR_PROFILE_GUARD_HISTORY("WindowCocoa::swapBuffers", 10);
    acquireRenderLock();
    vrj::opengl::Window::swapBuffers();
 

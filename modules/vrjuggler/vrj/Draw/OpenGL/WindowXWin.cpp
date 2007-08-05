@@ -35,6 +35,7 @@
 #include <GL/glx.h>
 
 #include <vpr/vpr.h>
+#include <vpr/Perf/ProfileManager.h>
 #include <jccl/Config/ConfigElement.h>
 
 #include <vrj/Draw/OpenGL/Window.h>
@@ -490,6 +491,7 @@ bool WindowXWin::close()
 // Buffer swapping method.
 void WindowXWin::swapBuffers()
 {
+   VPR_PROFILE_GUARD_HISTORY("WindowXWin::swapBuffers", 10);
    vrj::opengl::Window::swapBuffers();
    glXSwapBuffers(mXDisplay, mXWindow);
 }
