@@ -26,12 +26,10 @@
 
 #include <tweek/tweekConfig.h>
 
-#include <cstdio>
 #include <sstream>
 #include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
-//#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
@@ -69,7 +67,18 @@ CorbaManager::CorbaManager()
       << vprDEBUG_FLUSH;
 }
 
-bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
+CorbaManager::~CorbaManager()
+{
+   shutdown();
+
+   if ( mOrbThread != NULL )
+   {
+      delete mOrbThread;
+      mOrbThread = NULL;
+   }
+}
+
+bool CorbaManager::init(const std::string& localID, int& argc, char** argv,
                         const std::string& nsHost, const vpr::Uint16& nsPort,
                         const std::string& iiopVersion)
 {
@@ -89,7 +98,7 @@ bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
          << "')\n" << vprDEBUG_FLUSH;
       mORB = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING);
 
-      status = createChildPOA(local_id);
+      status = createChildPOA(localID);
 
       try
       {
@@ -104,18 +113,11 @@ bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
          // the Naming Service.
          else
          {
-            std::ostringstream port_stream;
-            port_stream << nsPort;
-
-            std::string ns_uri("corbaloc:iiop:");
-            ns_uri += iiopVersion;
-            ns_uri += std::string("@");
-            ns_uri += nsHost;
-            ns_uri += std::string(":");
-            ns_uri += port_stream.str();
-            ns_uri += std::string("/NameService");
-
-            mRootContext = tweek::getRootNamingContextByURI(mORB, ns_uri);
+            std::ostringstream uri_stream;
+            uri_stream << "corbaloc:iiop:" << iiopVersion << "@" << nsHost
+                       << ":" << nsPort << "/NameService";
+            mRootContext = tweek::getRootNamingContextByURI(mORB,
+                                                            uri_stream.str());
          }
 
          if ( ! CORBA::is_nil(mRootContext) )
@@ -401,7 +403,7 @@ bool CorbaManager::destroySubjectManager()
 // Private methods.
 // ============================================================================
 
-bool CorbaManager::createChildPOA(const std::string& local_id)
+bool CorbaManager::createChildPOA(const std::string& localID)
 {
    bool status(true);
    CORBA::Object_var obj;
@@ -433,7 +435,7 @@ bool CorbaManager::createChildPOA(const std::string& local_id)
    policy_list[2] =
       PortableServer::ThreadPolicy::_duplicate(thread_policy);
 
-   std::string poa_name = "tweek_" + local_id;
+   std::string poa_name = "tweek_" + localID;
 
    try
    {
@@ -467,17 +469,12 @@ bool CorbaManager::createChildPOA(const std::string& local_id)
 
 void CorbaManager::run()
 {
-   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server is running!\n"
-                                              << vprDEBUG_FLUSH;
-
+   // NOTE: Do not put uses of vprDEBUG here. It can cause crashes on exit
+   // as singletons are destroyed.
    PortableServer::POAManager_var pman = mChildPOA->the_POAManager();
 
    pman->activate();
    mORB->run();
-//   mORB->destroy();
-
-   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server has shut down\n"
-                                              << vprDEBUG_FLUSH;
 }
 
 } // End of tweek namespace

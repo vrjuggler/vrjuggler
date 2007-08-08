@@ -69,23 +69,14 @@ public:
     *       Service, and destroyed.  The ORB is shut down, and its thread
     *       stopped.
     */
-   ~CorbaManager()
-   {
-      shutdown();
-
-      if ( mOrbThread != NULL )
-      {
-         delete mOrbThread;
-         mOrbThread = NULL;
-      }
-   }
+   ~CorbaManager();
 
    /**
     * Initializes the ORB and POA associated with this object.  A child POA of
     * the root POA (RootPOA) is created, and all servants registered with this
     * manager are activated within that child POA.
     *
-    * @param localId     A string providing a unique identifier for the local
+    * @param localID     A string providing a unique identifier for the local
     *                    POA.
     * @param argc        The size of the following argument vector.  This will
     *                    be modified if any elements are removed from argv.
@@ -108,7 +99,7 @@ public:
     *                    the Naming Service.  Common values are "1.0" and
     *                    "1.2".  It defaults to "1.0".
     */
-   bool init(const std::string& localId, int& argc, char** argv,
+   bool init(const std::string& localID, int& argc, char** argv,
              const std::string& nsHost = std::string(""),
              const vpr::Uint16& nsPort = vpr::Uint16(2809),
              const std::string& iiopVersion = std::string("1.0"));
@@ -119,11 +110,11 @@ public:
     * @post If the ORB and root POA were initialized successfully in init(),
     *       they are destroyed and shut down.
     *
-    * @param wait_for_completion If true, block until all pending requests and
-    *                            events are completed.  This parameter is
-    *                            optional and defaults to true.
+    * @param waitForCompletion If true, block until all pending requests and
+    *                          events are completed.  This parameter is
+    *                          optional and defaults to true.
     */
-   void shutdown(bool wait_for_completion = true);
+   void shutdown(bool waitForCompletion = true);
 
    /**
     * Checks the validity of this service object to ensure that initialization
@@ -193,7 +184,7 @@ public:
    void run();
 
 private:
-   bool createChildPOA(const std::string& local_id);
+   bool createChildPOA(const std::string& localID);
 
    std::string mAppName;
 
