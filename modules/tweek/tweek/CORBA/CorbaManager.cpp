@@ -471,17 +471,13 @@ bool CorbaManager::createChildPOA(const std::string& localID)
 
 void CorbaManager::run()
 {
-   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server is running!\n"
-                                              << vprDEBUG_FLUSH;
-
+   // NOTE: Do not put uses of vprDEBUG here. It can cause crashes on exit
+   // as singletons are destroyed.
    PortableServer::POAManager_var pman = mChildPOA->the_POAManager();
 
    pman->activate();
    mORB->run();
 //   mORB->destroy();
-
-   vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL) << "Server has shut down\n"
-                                              << vprDEBUG_FLUSH;
 }
 
 } // End of tweek namespace
