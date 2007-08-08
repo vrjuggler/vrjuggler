@@ -115,18 +115,11 @@ bool CorbaManager::init(const std::string& localID, int& argc, char** argv,
          // the Naming Service.
          else
          {
-            std::ostringstream port_stream;
-            port_stream << nsPort;
-
-            std::string ns_uri("corbaloc:iiop:");
-            ns_uri += iiopVersion;
-            ns_uri += std::string("@");
-            ns_uri += nsHost;
-            ns_uri += std::string(":");
-            ns_uri += port_stream.str();
-            ns_uri += std::string("/NameService");
-
-            mRootContext = tweek::getRootNamingContextByURI(mORB, ns_uri);
+            std::ostringstream uri_stream;
+            uri_stream << "corbaloc:iiop:" << iiopVersion << "@" << nsHost
+                       << ":" << nsPort << "/NameService";
+            mRootContext = tweek::getRootNamingContextByURI(mORB,
+                                                            uri_stream.str());
          }
 
          if ( ! CORBA::is_nil(mRootContext) )
