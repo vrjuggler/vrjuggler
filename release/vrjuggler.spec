@@ -661,7 +661,6 @@ rm -rf %{buildroot}
 %{_bindir}/tweek
 %{_bindir}/tweek-base.sh
 %{_libdir}/flagpoll/tweek-java-%{tweek_version}*.fpc
-%dir %{_prefix}/share/tweek-%{tweek_version}/beans/
 %{_prefix}/share/tweek-%{tweek_version}/beans
 %dir %{_prefix}/share/tweek-%{tweek_version}/java/
 %{_prefix}/share/tweek-%{tweek_version}/java/*.jar
