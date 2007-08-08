@@ -80,7 +80,7 @@ CorbaManager::~CorbaManager()
    }
 }
 
-bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
+bool CorbaManager::init(const std::string& localID, int& argc, char** argv,
                         const std::string& nsHost, const vpr::Uint16& nsPort,
                         const std::string& iiopVersion)
 {
@@ -100,7 +100,7 @@ bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
          << "')\n" << vprDEBUG_FLUSH;
       mORB = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING);
 
-      status = createChildPOA(local_id);
+      status = createChildPOA(localID);
 
       try
       {
@@ -412,7 +412,7 @@ bool CorbaManager::destroySubjectManager()
 // Private methods.
 // ============================================================================
 
-bool CorbaManager::createChildPOA(const std::string& local_id)
+bool CorbaManager::createChildPOA(const std::string& localID)
 {
    bool status(true);
    CORBA::Object_var obj;
@@ -444,7 +444,7 @@ bool CorbaManager::createChildPOA(const std::string& local_id)
    policy_list[2] =
       PortableServer::ThreadPolicy::_duplicate(thread_policy);
 
-   std::string poa_name = "tweek_" + local_id;
+   std::string poa_name = "tweek_" + localID;
 
    try
    {
