@@ -69,16 +69,7 @@ public:
     *       Service, and destroyed.  The ORB is shut down, and its thread
     *       stopped.
     */
-   ~CorbaManager()
-   {
-      shutdown();
-
-      if ( mOrbThread != NULL )
-      {
-         delete mOrbThread;
-         mOrbThread = NULL;
-      }
-   }
+   ~CorbaManager();
 
    /**
     * Initializes the ORB and POA associated with this object.  A child POA of

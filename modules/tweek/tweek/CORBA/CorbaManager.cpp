@@ -69,6 +69,17 @@ CorbaManager::CorbaManager()
       << vprDEBUG_FLUSH;
 }
 
+CorbaManager::~CorbaManager()
+{
+   shutdown();
+
+   if ( mOrbThread != NULL )
+   {
+      delete mOrbThread;
+      mOrbThread = NULL;
+   }
+}
+
 bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
                         const std::string& nsHost, const vpr::Uint16& nsPort,
                         const std::string& iiopVersion)
@@ -476,7 +487,7 @@ void CorbaManager::run()
    mORB->run();
 //   mORB->destroy();
 
-   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server has shut down\n"
+   vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL) << "Server has shut down\n"
                                               << vprDEBUG_FLUSH;
 }
 
