@@ -11,7 +11,7 @@
 %define jccl_release %{global_release}%{?dist}
 %define sonix_version 1.3.2
 %define sonix_release %{global_release}%{?dist}
-%define gadgeteer_version 1.3.12
+%define gadgeteer_version 1.3.13
 %define gadgeteer_release %{global_release}%{?dist}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}%{?dist}
