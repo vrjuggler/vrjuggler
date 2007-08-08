@@ -353,7 +353,7 @@ if test "x${_with_vrpn}" != "xno" ; then
       VRPNROOT="$_with_vrpn"
    fi
 
-   _vjsave_CFLAGS="$CFLAGS"
+   _vjsave_CXXFLAGS="$CXXFLAGS"
    _vjsave_CPPFLAGS="$CPPFLAGS"
    _vjsave_LDFLAGS="$LDFLAGS"
    _vjsave_LIBS="$LIBS"
@@ -379,6 +379,21 @@ if test "x${_with_vrpn}" != "xno" ; then
 
    CPPFLAGS="$VRPN_INCLUDES $CPPFLAGS"
    LIBS="$TEST_VRPN_LIBS $LIBS"
+
+   # VRPN will normally be compiled to use pthreads in the same context as
+   # when VPR was compiled to use pthreads.
+   if test "x$VPR_SUBSYSTEM" = "xPOSIX" ; then
+      DPP_CC_PTHREAD_ARG
+
+      if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
+         DPP_CC_PTHREADS_ARG
+      fi
+
+      DPP_GET_PTHREAD_LIB
+
+      CXXFLAGS="$PTHREAD_ARG $CXXFLAGS"
+      LIBS="$LIBS $PTHREAD_LIB"
+   fi
 
    vj_have_vrpn='no'
 
@@ -412,7 +427,7 @@ if test "x${_with_vrpn}" != "xno" ; then
       AC_MSG_WARN([*** Did not find VRPN in $VRPNROOT ***])
    fi
 
-   CFLAGS="${_vjsave_CFLAGS}"
+   CXXFLAGS="${_vjsave_CXXFLAGS}"
    CPPFLAGS="${_vjsave_CPPFLAGS}"
    LDFLAGS="${_vjsave_LDFLAGS}"
    LIBS="${_vjsave_LIBS}"
