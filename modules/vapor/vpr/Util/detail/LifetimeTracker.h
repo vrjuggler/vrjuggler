@@ -26,10 +26,6 @@
 #include <cstdlib>
 #include <new>
 
-#if defined(__GNUC__)
-#  include <cxxabi.h>
-#endif
-
 namespace vpr
 {
     namespace detail
@@ -71,27 +67,6 @@ namespace vpr
         {
             static void Delete(T* pObj)
             {
-#if defined(__GNUC__)
-               const char* mangled_name(typeid(T).name());
-               int status;
-               char* type_name = abi::__cxa_demangle(mangled_name, NULL, NULL,
-                                                     &status);
-
-               if ( status == 0 )
-               {
-                  std::cout << "Deleter<T>::Delete() for " << type_name
-                            << std::endl;
-                  free(type_name);
-               }
-               else
-               {
-                  std::cout << "Deleter<T>::Delete() for " << mangled_name
-                            << std::endl;
-               }
-#else
-               std::cout << "Deleter<T>::Delete() for " << typeid(T).name()
-                         << std::endl;
-#endif
                delete pObj;
             }
         };
