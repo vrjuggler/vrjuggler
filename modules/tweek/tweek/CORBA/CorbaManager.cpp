@@ -26,12 +26,10 @@
 
 #include <tweek/tweekConfig.h>
 
-#include <cstdio>
 #include <sstream>
 #include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
-//#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
@@ -477,7 +475,6 @@ void CorbaManager::run()
 
    pman->activate();
    mORB->run();
-//   mORB->destroy();
 }
 
 } // End of tweek namespace
