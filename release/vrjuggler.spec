@@ -107,7 +107,7 @@ Version: %{vpr_version}
 Release: %{vpr_release}
 URL: http://www.vrjuggler.org/vapor/
 Group: Development/C++
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: cppdom-devel >= 0.3.3
 Requires: boost-devel >= 1.32
 Requires: vpr = %{vpr_version}-%{vpr_release}
@@ -142,7 +142,7 @@ Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/C++
 Requires: libomniorb-devel >= 4.0.6-2
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
 Requires: tweek-c++ = %{tweek_version}-%{tweek_release}
 Provides: tweek-c++-devel = %{tweek_version}-%{tweek_release}
@@ -173,7 +173,7 @@ URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
 %java_req
 Requires: tweek-java-jni = %{tweek_version}-%{tweek_release}
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Provides: tweek-java = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
 
@@ -204,7 +204,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
 Provides: jccl-c++-devel = %{jccl_version}-%{jccl_release}
 
@@ -277,7 +277,7 @@ Release: %{sonix_release}
 URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: gmtl >= 0.4.5
 Requires: sonix = %{sonix_version}-%{sonix_release}
 Provides: sonix-devel = %{sonix_version}-%{sonix_release}
@@ -340,7 +340,7 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: gmtl >= 0.4.5
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
 Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
@@ -358,7 +358,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
 Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
 Requires: sonix-devel = %{sonix_version}-%{sonix_release}
@@ -393,7 +393,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: vrjuggler-opengl = %{vrjuggler_version}-%{vrjuggler_release}
 Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
 Provides: vrjuggler-opengl-devel = %{vrjuggler_version}-%{vrjuggler_release}
@@ -422,7 +422,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
-Requires: flagpoll >= 0.8.1
+Requires: flagpoll >= 0.9.1
 Requires: vrjuggler-performer = %{vrjuggler_version}-%{vrjuggler_release}
 Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
 Provides: vrjuggler-performer-devel = %{vrjuggler_version}-%{vrjuggler_release}
