@@ -33,7 +33,7 @@
 #include <iomanip>
 #include <GL/gl.h>
 
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OpenGL/App.h>
 #include <vpr/Util/Interval.h>
 
 #include <gadget/Type/PositionInterface.h>
@@ -56,7 +56,7 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
  * It also has basic code that draws a box centered on
  * the origin.
  */
-class SpeechRecogApp : public GlApp
+class SpeechRecogApp : public opengl::App
 {
 public:
    SpeechRecogApp() : mLastRecString(""), mLastRecDigital(0)
