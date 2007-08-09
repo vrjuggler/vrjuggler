@@ -419,14 +419,18 @@ inline void OsgApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
 
-   GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
-   gl_manager = GlDrawManager::instance();
+   // The OpenGL Draw Manager that we are rendering for.
+   //Get the view matrix and the frustrum form the draw manager
+   GlDrawManager* gl_manager =
+      dynamic_cast<GlDrawManager*>(this->getDrawManager());
+   vprASSERT(gl_manager != NULL);
+   GlUserData* user_uata = gl_manager->currentUserData();
 
    // Set the up the viewport (since OSG clears it out)
    float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
    int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
-   gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
-   gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
+   user_data->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+   user_data->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
    // compute unsigned versions of the viewport info (for passing to glViewport)
    const unsigned int ll_x =
@@ -442,13 +446,8 @@ inline void OsgApp::draw()
    sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
 
-   //Get the view matrix and the frustrum form the draw manager
-   GlDrawManager* drawMan = dynamic_cast<GlDrawManager*>(this->getDrawManager());
-   vprASSERT(drawMan != NULL);
-   GlUserData* userData = drawMan->currentUserData();
-
    //Get the frustrum
-   Projection* project = userData->getProjection();
+   Projection* project = user_data->getProjection();
    Frustum frustum = project->getFrustum();
    sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],
                                     frustum[Frustum::VJ_RIGHT],
