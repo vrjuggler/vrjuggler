@@ -441,7 +441,7 @@ inline void App::draw()
 
    // compute unsigned versions of the viewport info (for passing to glViewport)
    const unsigned int ll_x =
-      static_cast<unsigned int>(vp_o x * static_cast<float>(w_width));
+      static_cast<unsigned int>(vp_ox * static_cast<float>(w_width));
    const unsigned int ll_y =
       static_cast<unsigned int>(vp_oy * static_cast<float>(w_height));
    const unsigned int x_size =
