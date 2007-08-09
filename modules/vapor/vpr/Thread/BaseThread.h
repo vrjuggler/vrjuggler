@@ -288,7 +288,7 @@ public:
     * integer value assigned when the thread was created.
     *
     * @return -1 is returned if this is a bad thread.  This usually means that
-    *         there was a reation error.
+    *         there was a creation error.
     * @return Otherwise, the value returned is this thread's ID.
     */
    vpr::Int32 getTID()
