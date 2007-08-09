@@ -424,7 +424,7 @@ inline void OsgApp::draw()
    GlDrawManager* gl_manager =
       dynamic_cast<GlDrawManager*>(this->getDrawManager());
    vprASSERT(gl_manager != NULL);
-   GlUserData* user_uata = gl_manager->currentUserData();
+   GlUserData* user_data = gl_manager->currentUserData();
 
    // Set the up the viewport (since OSG clears it out)
    float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
