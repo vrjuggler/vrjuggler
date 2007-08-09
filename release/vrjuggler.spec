@@ -1,4 +1,22 @@
 # Spec file for vrjuggler.
+#
+# There are three optional packages that can be enabled through command line
+# options to rpmbuild(1). They are as follows:
+#
+#    _with_ftd2xx:
+#    _with_trackdapi:
+#    _with_vrpn:
+#
+# These are the symbols to define using the --define option. The value must
+# then be --with-<name>=/path/to/software where <name> is vrpn, ftd2xx, or
+# trackdapi and /path/to/software is the path to the package root. For example,
+# to provide the build with a path to VRPN, run rpmbuild(1) as follows:
+#
+#    rpmbuild -ba --define "_with_vrpn --with-vrpn=/path/to/vrpn" vrjuggler.spec
+#
+# Other optional packages such as Java, OpenAL, Audiere, and OpenGL Performer
+# are detected automatically. They must be installed in /usr in order to be
+# detected correctly.
 %define name vrjuggler
 %define global_version 2.3.11
 %define global_release 1
@@ -13,6 +31,28 @@
 %define sonix_release %{global_release}%{?dist}
 %define gadgeteer_version 1.3.13
 %define gadgeteer_release %{global_release}%{?dist}
+%define gadgeteer_dataglove_release %{global_release}%{?dist}
+%define gadgeteer_dtrack_release %{global_release}%{?dist}
+%define gadgeteer_etherio24_release %{global_release}%{?dist}
+%define gadgeteer_flock_release %{global_release}%{?dist}
+%define gadgeteer_fastrak_release %{global_release}%{?dist}
+%define gadgeteer_ibox_release %{global_release}%{?dist}
+%define gadgeteer_intersense_api_release %{global_release}%{?dist}
+%define gadgeteer_is900_release %{global_release}%{?dist}
+%define gadgeteer_joydev_release %{global_release}%{?dist}
+%define gadgeteer_motionstar_release %{global_release}%{?dist}
+%define gadgeteer_p5glove_release %{global_release}%{?dist}
+%define gadgeteer_pinchglove_release %{global_release}%{?dist}
+%define gadgeteer_serial_encoder_release %{global_release}%{?dist}
+%define gadgeteer_spaceball_release %{global_release}%{?dist}
+%define gadgeteer_threedmouse_release %{global_release}%{?dist}
+%define gadgeteer_trackd_release %{global_release}%{?dist}
+%define gadgeteer_trackd_api_release %{global_release}%{?dist}
+%define gadgeteer_vrpn_release %{global_release}%{?dist}
+%define gadgeteer_wanda_release %{global_release}%{?dist}
+%define gadgeteer_x_ist_release %{global_release}%{?dist}
+%define gadgeteer_app_data_mgr_release %{global_release}%{?dist}
+%define gadgeteer_rim_release %{global_release}%{?dist}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}%{?dist}
 
@@ -46,10 +86,18 @@
 %endif
 %endif
 
+%{!?_with_ftd2xx: %{!?_without_ftd2xx: %define _without_ftd2xx --without-ftd2xx}}
+%{!?_with_trackdapi: %{!?_without_trackdapi: %define _without_trackdapi --without-trackdapi}}
+%{!?_with_vrpn: %{!?_without_vrpn: %define _without_vrpn --without-vrpn}}
+
 %define have_omniorb %(if [ -x /usr/bin/omniidl ] ; then echo 1; else echo 0; fi)
 %define have_audiere %(if [ -x /usr/bin/audiere-config ] ; then echo 1; else echo 0; fi)
 %define have_openal %(if [ -x /usr/bin/openal-config ] ; then echo 1; else echo 0; fi)
+%define have_libusb %(if [ -x /usr/bin/libusb-config ] ; then echo 1; else echo 0; fi)
 %define have_performer %(if [ -e /usr/lib/libpf.so ] ; then echo 1; else echo 0; fi)
+%define have_ftd2xx %{?_with_ftd2xx:1}%{!?_with_ftd2xx:0}
+%define have_trackdapi %{?_with_trackdapi:1}%{!?_with_trackdapi:0}
+%define have_vrpn %{?_with_vrpn:1}%{!?_with_vrpn:0}
 
 Name: vrjuggler
 Summary: VR Juggler is the virtual platform for VR application development
@@ -64,6 +112,7 @@ Requires: vpr = %{vpr_version}-%{vpr_release}
 Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
 Requires: sonix = %{sonix_version}-%{sonix_release}
 Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer-plugin-remote-input-manager = %{gadgeteer_version}-%{gadgeteer_release}
 Provides: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description
@@ -345,6 +394,331 @@ The header files and libraries needed for developing programs and device
 drivers using Gadgeteer. This is required for writing device driver
 and cluster plug-ins to Gadgeteer.
 
+%package -n gadgeteer-driver-5dt-dataglove
+Summary: Fakespace Pinch Glove driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_dataglove_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-5dt-dataglove
+The Gadgeteer driver plug-in for the 5DT DataGlove input device.
+
+%package -n gadgeteer-driver-dtrack
+Summary: ART DTrack driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_dtrack_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-dtrack
+The Gadgeteer driver plug-in for the ART DTrack optical tracking system.
+
+%package -n gadgeteer-driver-etherio24
+Summary: Elexol Ether I/O 24 driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_etherio24_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-etherio24
+The Gadgeteer driver plug-in for the Elexol Ether I/O 24 input device.
+
+%package -n gadgeteer-driver-flock
+Summary: Ascension Flock of Birds driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_flock_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-flock
+The Gadgeteer driver plug-in for the Ascension Flock of Birds tracking
+system.
+
+%package -n gadgeteer-driver-fastrak
+Summary: Polhemus Fastrak driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_fastrak_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-fastrak
+The Gadgeteer driver plug-in for the Polhemus Fastrak tracking system.
+
+%package -n gadgeteer-driver-ibox
+Summary: ImmersionTech Interface Box (IBox) driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_ibox_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-ibox
+The Gadgeteer driver plug-in for the ImmersionTech Interface Box (IBox)
+input device.
+
+%package -n gadgeteer-driver-intersense-api
+Summary: InterSense Interface SDK driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_intersense_api_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-intersense-api
+The Gadgeteer driver plug-in for the InterSense Interface SDK, used for
+communicating with all InterSense tracker products.
+
+%package -n gadgeteer-driver-is900
+Summary: InterSense IS-900 driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_is900_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-is900
+The Gadgeteer driver plug-in for the InterSense IS-900 tracking system via
+the RS-232 interface. This plug-in should generally not be used. Use
+gadgeteer-driver-intersense-api instead.
+
+%package -n gadgeteer-driver-joydev
+Summary: Linux game controller driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_joydev_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-joydev
+The Gadgeteer driver plug-in for accessing game controllers on Linux via
+the joydev device.
+
+%package -n gadgeteer-driver-motionstar
+Summary: Ascension MotionStar driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_motionstar_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-motionstar
+The Gadgeteer driver plug-in for the Ascension MotionStar Wireless tracking
+system.
+
+%if %have_libusb
+%package -n gadgeteer-driver-p5glove
+Summary: Essential Reality P5 Glove driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_p5glove_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+BuildRequires: libusb-devel
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-p5glove
+The Gadgeteer driver plug-in for the Essential Reality P5 Glove input device.
+%endif
+
+%package -n gadgeteer-driver-pinchglove
+Summary: Fakespace Pinch Glove driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_pinchglove_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-pinchglove
+The Gadgeteer driver plug-in for the Fakespace Pinch Glove input device.
+
+%package -n gadgeteer-driver-serial-encoder
+Summary: U.S. Digital Serial Encoder driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_serial_encoder_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-serial-encoder
+The Gadgeteer driver plug-in for U.S. Digital Serial Encoder devices.
+
+%package -n gadgeteer-driver-spaceball
+Summary: 3Dconnexion SpaceBall driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_spaceball_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-spaceball
+The Gadgeteer driver plug-in for 3Dconnexion SpaceBall devices.
+
+%package -n gadgeteer-driver-threedmouse
+Summary: Logitech 3D Mouse driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_threedmouse_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-threedmouse
+The Gadgeteer driver plug-in for the Logitech 3D Mouse input device.
+
+%package -n gadgeteer-driver-trackd
+Summary: TrackD communication driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_trackd_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-trackd
+The Gadgeteer driver plug-in for commnicating with VRCO TrackD.
+
+%if %have_trackdapi
+%package -n gadgeteer-driver-trackd-api
+Summary: TrackD API driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_trackd_api_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-trackd
+The Gadgeteer driver plug-in for commnicating with the TrackD API from VRCO.
+%endif
+
+%if %have_vrpn
+%package -n gadgeteer-driver-vrpn
+Summary: VRPN driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_vrpn_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-vrpn
+The Gadgeteer driver plug-in for VRPN.
+%endif
+
+%package -n gadgeteer-driver-wanda
+Summary: Ascension Wanda driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_wanda_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-wanda
+The Gadgeteer driver plug-in for the Ascension Wanda input device.
+
+%if %have_ftd2xx && %have_libusb
+%package -n gadgeteer-driver-x-ist
+Summary: noDNA X-IST driver plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_x_ist_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-driver-x-ist
+The Gadgeteer driver plug-in for noDNA X-IST glove device.
+%endif
+
+%package -n gadgeteer-plugin-application-data-manager
+Summary: Application Data Manager cluster plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_app_data_mgr_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-plugin-application-data-manager
+The Gadgeteer cluster plug-in for the Application Data Manager.
+
+%package -n gadgeteer-plugin-remote-input-manager
+Summary: Remote Input Manager cluster plug-in for Gadgeteer
+Version: %{gadgeteer_version}
+Release: %{gadgeteer_rim_release}
+URL: http://www.vrjuggler.org/gadgeteer/
+Group: Development/C++
+Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+BuildRequires: gmtl >= 0.4.5
+Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+
+%description -n gadgeteer-plugin-remote-input-manager
+The Gadgeteer cluster plug-in for the Remote Input Manager. This will be
+needed for all clustered VR Juggler applications.
+
 %package -n vrjuggler-devel
 Summary: The VR Juggler Headers
 Version: %{vrjuggler_version}
@@ -537,7 +911,8 @@ rm -rf %{buildroot}
 #%setup -DT -q -n %{name}-%{global_version}-%{global_release}-src
 ./configure.pl --with-boost=/usr --with-boost-includes=/usr/include     \
                --with-gmtl=/usr --with-openal=/usr --with-audiere=/usr  \
-               --prefix=%{_prefix} %{abi_option}
+               --prefix=%{_prefix} %{abi_option} %{?_with_vrpn}         \
+               %{?_with_ftd2xx} %{?_with_trackdapi}
 
 %build
 make %{?_smp_mflags} BUILD_PROF_C=N BUILD_PROF_CXX=N build
@@ -761,10 +1136,11 @@ rm -rf %{buildroot}
 %dir %{_libdir}/%{vj_arch}/profiled/
 %{_libdir}/%{vj_arch}/libgadget*.so
 %{_libdir}/%{vj_arch}/*/libgadget*.so
-#%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/
-#%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/
-#%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/
-%{_libdir}/gadgeteer-%{gadgeteer_version}
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/debug/
 %dir %{_prefix}/share/gadgeteer-%{gadgeteer_version}/
 %{_prefix}/share/gadgeteer-%{gadgeteer_version}/data
 %{_prefix}/share/gadgeteer-%{gadgeteer_version}/tools
@@ -783,6 +1159,124 @@ rm -rf %{buildroot}
 %{_prefix}/share/gadgeteer-%{gadgeteer_version}/*.mk
 %{_prefix}/share/gadgeteer-%{gadgeteer_version}/samples
 %{_prefix}/share/gadgeteer-%{gadgeteer_version}/test
+
+%files -n gadgeteer-driver-5dt-dataglove
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/DataGlove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/DataGlove_drv.so
+
+%files -n gadgeteer-driver-dtrack
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/DTrack_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/DTrack_drv.so
+
+%files -n gadgeteer-driver-etherio24
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/ElexolEther24_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/ElexolEther24_drv.so
+
+%files -n gadgeteer-driver-flock
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Flock_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Flock_drv.so
+
+%files -n gadgeteer-driver-fastrak
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Fastrak_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Fastrak_drv.so
+
+%files -n gadgeteer-driver-ibox
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/IBox_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/IBox_drv.so
+
+%files -n gadgeteer-driver-intersense-api
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/IntersenseAPI_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/IntersenseAPI_drv.so
+
+%files -n gadgeteer-driver-is900
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/IS900_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/IS900_drv.so
+
+%files -n gadgeteer-driver-joydev
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/LinuxJoydev_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/LinuxJoydev_drv.so
+
+%files -n gadgeteer-driver-motionstar
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/MotionStar_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/MotionStar_drv.so
+
+%if %have_libusb
+%files -n gadgeteer-driver-p5glove
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/P5Glove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/P5Glove_drv.so
+%endif
+
+%files -n gadgeteer-driver-pinchglove
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/PinchGlove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/PinchGlove_drv.so
+
+%files -n gadgeteer-driver-serial-encoder
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/SerialEncoder_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/SerialEncoder_drv.so
+
+%files -n gadgeteer-driver-spaceball
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/SpaceBall_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/SpaceBall_drv.so
+
+%files -n gadgeteer-driver-threedmouse
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/ThreeDMouse_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/ThreeDMouse_drv.so
+
+%files -n gadgeteer-driver-trackd
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Trackd_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Trackd_drv.so
+
+%if %have_trackdapi
+%files -n gadgeteer-driver-trackd-api
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/TrackdAPI_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/TrackdAPI_drv.so
+%endif
+
+%if %have_vrpn
+%files -n gadgeteer-driver-vrpn
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/VRPN_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/VRPN_drv.so
+%endif
+
+%files -n gadgeteer-driver-wanda
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Wanda_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Wanda_drv.so
+
+%if %have_ftd2xx && %have_libusb
+%files -n gadgeteer-driver-x-ist
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/X-IST_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/X-IST_drv.so
+%endif
+
+%files -n gadgeteer-plugin-application-data-manager
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/ApplicationDataManager.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/debug/ApplicationDataManager.so
+
+%files -n gadgeteer-plugin-remote-input-manager
+%defattr(-, root, root)
+%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/RIMPlugin.so
+%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/debug/RIMPlugin.so
 
 %files
 %defattr(-, root, root)
@@ -896,6 +1390,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Aug 09 2007 Patrick Hartling <patrick at infiscape dot com>
+- Package Gadgeteer drivers and plug-ins individually.
+
 * Wed Apr 25 2007 Patrick Hartling <patrick at infiscape dot com>
 - Improve Java version requirement.
 - Add jccl-rtrc-plugin-java as a requirement for vrjconfig.
