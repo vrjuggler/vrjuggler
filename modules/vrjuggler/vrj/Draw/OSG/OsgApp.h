@@ -191,6 +191,12 @@ public:
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
       newSceneViewer->setDefaults(getSceneViewDefaults());
+
+      // Set the timing information in the scene view. This has to be done
+      // only once per osgUtil::SceneView instance and should be done before
+      // calling osgUtil::SceneView::init().
+      newSceneViewer->setFrameStamp(mFrameStamp.get());
+
       newSceneViewer->init();
       newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
@@ -412,9 +418,6 @@ inline void OsgApp::draw()
    osg::ref_ptr<osgUtil::SceneView> sv;
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
-
-   // Set the timing information in the scene view.
-   sv->setFrameStamp(mFrameStamp.get());
 
    GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = GlDrawManager::instance();
