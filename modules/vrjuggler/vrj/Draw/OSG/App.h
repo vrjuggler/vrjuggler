@@ -431,11 +431,13 @@ inline void App::draw()
       dynamic_cast<vrj::opengl::DrawManager*>(this->getDrawManager());
    vprASSERT(gl_manager != NULL);
 
+   vrj::opengl::UserData* user_data = gl_manager->currentUserData();
+
    // Set the up the viewport (since OSG clears it out)
    float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
    int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
-   gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
-   gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
+   user_data->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+   user_data->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
    // compute unsigned versions of the viewport info (for passing to glViewport)
    unsigned ll_x = unsigned(vp_ox*float(w_width));
@@ -447,10 +449,8 @@ inline void App::draw()
    sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
 
-   vrj::opengl::UserData* userData = gl_manager->currentUserData();
-
    //Get the frustrum
-   ProjectionPtr project = userData->getProjection();
+   ProjectionPtr project = user_data->getProjection();
    Frustum frustum = project->getFrustum();
    sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],
                                     frustum[Frustum::VJ_RIGHT],
