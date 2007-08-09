@@ -429,10 +429,14 @@ inline void OsgApp::draw()
    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
    // compute unsigned versions of the viewport info (for passing to glViewport)
-   unsigned ll_x = unsigned(vp_ox*float(w_width));
-   unsigned ll_y = unsigned(vp_oy*float(w_height));
-   unsigned x_size = unsigned(vp_sx*float(w_width));
-   unsigned y_size = unsigned(vp_sy*float(w_height));
+   const unsigned int ll_x =
+      static_cast<unsigned int>(vp_ox * static_cast<float>(w_width));
+   const unsigned int ll_y =
+      static_cast<unsigned int>(vp_oy * static_cast<float>(w_height));
+   const unsigned int x_size =
+      static_cast<unsigned int>(vp_sx * static_cast<float>(w_width));
+   const unsigned int y_size =
+      static_cast<unsigned int>(vp_sy * static_cast<float>(w_height));
 
    //sv->setCalcNearFar(false);
    sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
