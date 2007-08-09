@@ -15,32 +15,32 @@
    </definition_version>
    <definition_version version="2" label="Swap Lock Plugin">
       <abstract>false</abstract>
-      <help>Configuration for the parallel port swap lock plug-in to the Cluster Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more on start barrier plug-in&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
+      <help>Configuration for the parallel port swap lock plug-in to the Cluster Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more on start barrier plug-in&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
       <parent/>
       <category>/Cluster</category>
       <property valuetype="configelementpointer" variable="false" name="sync_server">
-         <help>Cluster Node that is responsible for syncronizing all other nodes. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
+         <help>Cluster Node that is responsible for syncronizing all other nodes. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
          <value label="Sync Server Machine"/>
          <allowed_type>cluster_node</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="slave_one">
-         <help>Should we syncronize with slave #1? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
+         <help>Should we syncronize with slave #1? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
          <value label="Slave One" defaultvalue="false"/>
       </property>
       <property valuetype="boolean" variable="false" name="slave_two">
-         <help>Should we syncronize with slave #2? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
+         <help>Should we syncronize with slave #2? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
          <value label="Slave One" defaultvalue="false"/>
       </property>
       <property valuetype="boolean" variable="false" name="slave_three">
-         <help>Should we syncronize with slave #3? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
+         <help>Should we syncronize with slave #3? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
          <value label="Slave One" defaultvalue="false"/>
       </property>
       <property valuetype="boolean" variable="false" name="slave_four">
-         <help>Should we syncronize with slave #4? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
+         <help>Should we syncronize with slave #4? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
          <value label="Slave One" defaultvalue="false"/>
       </property>
       <property valuetype="boolean" variable="false" name="slave_five">
-         <help>Should we syncronize with slave #5? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
+         <help>Should we syncronize with slave #5? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04s03.html#section.swap.lock.wired"&gt;more ...&lt;/a&gt;)</help>
          <value label="Slave One" defaultvalue="false"/>
       </property>
       <upgrade_transform>

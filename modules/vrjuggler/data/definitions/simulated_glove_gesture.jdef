@@ -29,11 +29,11 @@
    </definition_version>
    <definition_version version="3" label="Simulated Gesture Glove Device">
       <abstract>false</abstract>
-      <help>Simulated glove gesture device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Simulated glove gesture device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>glove_device</parent>
       <category>/Devices/Simulator</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
-         <help>The proxy to the keyboard/mouse input handler to use. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>The proxy to the keyboard/mouse input handler to use. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Keyboard/Mouse Proxy"/>
          <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>

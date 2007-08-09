@@ -3,11 +3,11 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="sound_manager_sonix" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Sonix Sound Manager">
       <abstract>false</abstract>
-      <help>Configuration for the VR Juggler Sound Manager based on Sonix. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more on the Sonix Sound Manager&lt;/a&gt;)</help>
+      <help>Configuration for the VR Juggler Sound Manager based on Sonix. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apes02.html"&gt;more on the Sonix Sound Manager&lt;/a&gt;)</help>
       <parent/>
       <category>/Audio</category>
       <property valuetype="string" variable="false" name="api">
-         <help>Which sound API to use? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Which sound API to use? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="API" defaultvalue="Stub"/>
          <enumeration editable="true">
             <enum label="Stub" value="Stub"/>
@@ -18,17 +18,17 @@
          </enumeration>
       </property>
       <property valuetype="float" variable="false" name="listener_position">
-         <help>Position of the listener (that's you!) in world coordinate space.  Usually 0, 0, 0. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Position of the listener (that's you!) in world coordinate space.  Usually 0, 0, 0. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="x" defaultvalue="0.0"/>
          <value label="y" defaultvalue="0.0"/>
          <value label="z" defaultvalue="0.0"/>
       </property>
       <property valuetype="string" variable="true" name="file_search_path">
-         <help>Paths to search for sound files. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Paths to search for sound files. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Search Path" defaultvalue="${HOME}/sounds"/>
       </property>
       <property valuetype="configelement" variable="true" name="sound">
-         <help>Specify a list of sounds here. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Specify a list of sounds here. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Sound Object"/>
          <allowed_type>sound</allowed_type>
       </property>

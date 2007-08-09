@@ -7,7 +7,7 @@
       <parent/>
       <category>/Devices</category>
       <property valuetype="configelementpointer" variable="false" name="device_host">
-         <help>Points to the cluster node config element for the machine to which the device is physically connected. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
+         <help>Points to the cluster node config element for the machine to which the device is physically connected. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
          <value label="Host Node"/>
          <allowed_type>cluster_node</allowed_type>
       </property>

@@ -3,38 +3,38 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="intersense" icon_path="jar:file:${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/IntersenseEditor.jar!/org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="InterSense IS-900">
       <abstract>false</abstract>
-      <help>Configuration for the InterSense IS-900 tracking device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configuration for the InterSense IS-900 tracking device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <parent>digital_device</parent>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
-         <help>The name of the serial port (/dev/ttyS0, COM1, etc.) to which the IS-900 is attached. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
+         <help>The name of the serial port (/dev/ttyS0, COM1, etc.) to which the IS-900 is attached. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
          <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
-         <help>Serial port speed. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
+         <help>Serial port speed. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
          <value label="Baud" defaultvalue="115200"/>
       </property>
       <property valuetype="configelement" variable="true" name="stations">
-         <help>Settings for each Station. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
+         <help>Settings for each Station. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
          <value label="Stations"/>
          <allowed_type>intersense_station</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="verbose">
-         <help>Enable output from the low-level InterSense driver. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
+         <help>Enable output from the low-level InterSense driver. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
          <value label="Verbose Enabled" defaultvalue="false"/>
       </property>
       <property valuetype="string" variable="false" name="script">
-         <help>File path of script sent to the tracker on startup. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
+         <help>File path of script sent to the tracker on startup. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
          <value label="Script File" defaultvalue=""/>
       </property>
       <property valuetype="float" variable="false" name="min">
-         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
+         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
          <value label="Range Minimum" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="max">
-         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
+         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html"&gt;more on Intersense trackers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas03.html#d0e5261"&gt;more on the IS-900 driver&lt;/a&gt;)</help>
          <value label="Range Maximum" defaultvalue="1.0"/>
       </property>
       <upgrade_transform/>

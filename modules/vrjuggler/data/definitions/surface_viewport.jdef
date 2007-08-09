@@ -55,21 +55,21 @@
    </definition_version>
    <definition_version version="2" label="Surface Viewport">
       <abstract>false</abstract>
-      <help>This viewport displays a surface onto which images are projected. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more on viewports&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;)</help>
+      <help>This viewport displays a surface onto which images are projected. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html"&gt;more on viewports&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;)</help>
       <parent/>
       <category>/Display</category>
       <property valuetype="float" variable="false" name="origin">
-         <help>Viewport origin.  The lower left corner is (0.0,0.0), and the placement must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
+         <help>Viewport origin.  The lower left corner is (0.0,0.0), and the placement must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="size">
-         <help>Viewport size.  The size must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
+         <help>Viewport size.  The size must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
          <value label="Width" defaultvalue="1.0"/>
          <value label="Height" defaultvalue="1.0"/>
       </property>
       <property valuetype="integer" variable="false" name="view">
-         <help>Which eye will be rendered by the Draw Manager's rendering thread for the containing display window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Which eye will be rendered by the Draw Manager's rendering thread for the containing display window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="View" defaultvalue="1"/>
          <enumeration editable="false">
             <enum label="Left Eye" value="1"/>
@@ -78,31 +78,31 @@
          </enumeration>
       </property>
       <property valuetype="float" variable="false" name="lower_left_corner">
-         <help>The location of the lower left corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <help>The location of the lower left corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
          <value label="Z" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="lower_right_corner">
-         <help>The location of the lower right corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <help>The location of the lower right corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
          <value label="Z" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="upper_right_corner">
-         <help>The location of the upper right corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <help>The location of the upper right corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
          <value label="Z" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="upper_left_corner">
-         <help>The location of the upper left corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <help>The location of the upper left corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
          <value label="Z" defaultvalue="0.0"/>
       </property>
       <property valuetype="configelementpointer" variable="false" name="user">
-         <help>This is the user for whom this viewport is drawing. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>This is the user for whom this viewport is drawing. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="User"/>
          <allowed_type>user</allowed_type>
       </property>
@@ -115,7 +115,7 @@
          <value label="Is Tracked" defaultvalue="false"/>
       </property>
       <property valuetype="configelementpointer" variable="false" name="tracker_proxy">
-         <help>The tracker proxy that tracks the screen's reference frame (usually for the eyes of head-mounted displays). This should always be false for surfaces that are fixed in place. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The tracker proxy that tracks the screen's reference frame (usually for the eyes of head-mounted displays). This should always be false for surfaces that are fixed in place. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Tracker Proxy"/>
          <allowed_type>position_proxy</allowed_type>
       </property>

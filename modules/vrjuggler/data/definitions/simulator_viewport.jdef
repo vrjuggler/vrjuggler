@@ -3,21 +3,21 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="simulator_viewport" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="3" label="Simulator Viewport">
       <abstract>false</abstract>
-      <help>This is a viewport surface that simulator images are projected on. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more on viewports&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;)</help>
+      <help>This is a viewport surface that simulator images are projected on. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html"&gt;more on viewports&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;)</help>
       <parent/>
       <category>/Display/Simulator</category>
       <property valuetype="float" variable="false" name="origin">
-         <help>Viewport origin.  The lower left corner is (0.0,0.0), and the placement must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
+         <help>Viewport origin.  The lower left corner is (0.0,0.0), and the placement must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="size">
-         <help>Viewport size.  The size must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
+         <help>Viewport size.  The size must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
          <value label="Width" defaultvalue="1.0"/>
          <value label="Height" defaultvalue="1.0"/>
       </property>
       <property valuetype="integer" variable="false" name="view">
-         <help>Which eye will be rendered by the Draw Manager's rendering thread for the containing display window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Which eye will be rendered by the Draw Manager's rendering thread for the containing display window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="View" defaultvalue="1"/>
          <enumeration editable="false">
             <enum label="Left Eye" value="1"/>
@@ -26,7 +26,7 @@
          </enumeration>
       </property>
       <property valuetype="configelementpointer" variable="false" name="user">
-         <help>This is the user for whom this viewport is drawing. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>This is the user for whom this viewport is drawing. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="User"/>
          <allowed_type>user</allowed_type>
       </property>
@@ -35,11 +35,11 @@
          <value label="Use this viewport?" defaultvalue="true"/>
       </property>
       <property valuetype="float" variable="false" name="vertical_fov">
-         <help>Vertical field of view in degrees. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
+         <help>Vertical field of view in degrees. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Vertical Field of View" defaultvalue="80.0"/>
       </property>
       <property valuetype="configelement" variable="true" name="simulator_plugin">
-         <help>Configuration of a simulator plug-in. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
+         <help>Configuration of a simulator plug-in. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Simulator Plugin"/>
          <allowed_type>simulator_plugin</allowed_type>
       </property>

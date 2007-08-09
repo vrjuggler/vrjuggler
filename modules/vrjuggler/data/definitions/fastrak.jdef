@@ -186,7 +186,7 @@
    </definition_version>
    <definition_version version="2" label="Fastrak">
       <abstract>false</abstract>
-      <help>Polhemus Fastrak 3D tracker. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas04.html"&gt;more on Fastrak&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Polhemus Fastrak 3D tracker. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apas04.html"&gt;more on Fastrak&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <parent>digital_device</parent>
       <category>/Devices/Positional</category>
