@@ -73,19 +73,7 @@ public:
     * @note All contained windows SHOULD have the same pipe number.
     */
    Pipe(const size_t num, vrj::opengl::DrawManager* glMgr,
-        vpr::Mutex* drawMgrWinLock)
-      : mActiveThread(NULL)
-      , mPipeNum(num)
-      , mControlExit(false)
-      , mGlDrawManager(glMgr)
-      , mDrawMgrWinLock(drawMgrWinLock)
-      , mRenderTriggerSema(0)
-      , mRenderCompleteSema(0)
-      , mSwapTriggerSema(0)
-      , mSwapCompleteSema(0)
-   {
-      mThreadRunning = false;
-   }
+        vpr::Mutex* drawMgrWinLock);
 
    ~Pipe();
 
