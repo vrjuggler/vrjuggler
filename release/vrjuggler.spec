@@ -786,13 +786,13 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root)
-%{_libdir}/libvrj*.so
+%{_libdir}/libvrj-*.so
 %dir %{_libdir}/%{vj_arch}/
 %dir %{_libdir}/%{vj_arch}/debug/
 %dir %{_libdir}/%{vj_arch}/opt/
 %dir %{_libdir}/%{vj_arch}/profiled/
-%{_libdir}/%{vj_arch}/libvrj*.so
-%{_libdir}/%{vj_arch}/*/libvrj*.so
+%{_libdir}/%{vj_arch}/libvrj-*.so
+%{_libdir}/%{vj_arch}/*/libvrj-*.so
 %dir %{_prefix}/share/vrjuggler-%{vrjuggler_version}/
 %{_prefix}/share/vrjuggler-%{vrjuggler_version}/data
 %{_prefix}/share/vrjuggler-%{vrjuggler_version}/tools
@@ -810,9 +810,9 @@ rm -rf %{buildroot}
 %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Sound
 %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Test
 %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Util
-%{_libdir}/libvrj*.a
-%{_libdir}/%{vj_arch}/libvrj*.a
-%{_libdir}/%{vj_arch}/*/libvrj*.a
+%{_libdir}/libvrj-*.a
+%{_libdir}/%{vj_arch}/libvrj-*.a
+%{_libdir}/%{vj_arch}/*/libvrj-*.a
 %{_libdir}/flagpoll/vrjuggler*.fpc
 %{_prefix}/share/aclocal/vrj.m4
 %{_prefix}/share/vrjuggler-%{vrjuggler_version}/*.mk
