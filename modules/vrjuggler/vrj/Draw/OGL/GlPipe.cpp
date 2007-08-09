@@ -51,6 +51,22 @@
 namespace vrj
 {
 
+GlPipe::GlPipe(const size_t num, vrj::GlDrawManager* glMgr,
+               vpr::Mutex* drawMgrWinLock)
+   : mActiveThread(NULL)
+   , mThreadRunning(false)
+   , mPipeNum(num)
+   , mControlExit(false)
+   , mGlDrawManager(glMgr)
+   , mDrawMgrWinLock(drawMgrWinLock)
+   , mRenderTriggerSema(0)
+   , mRenderCompleteSema(0)
+   , mSwapTriggerSema(0)
+   , mSwapCompleteSema(0)
+{
+   /* Do nothihg. */ ;
+}
+
 GlPipe::~GlPipe()
 {
    if ( NULL != mActiveThread )

@@ -64,19 +64,7 @@ public:
     *
     * @note All contained windows SHOULD have the same pipe number.
     */
-   GlPipe(size_t num, GlDrawManager* glMgr, vpr::Mutex* drawMgrWinLock)
-      : mActiveThread(NULL)
-      , mPipeNum(num)
-      , mControlExit(0)
-      , mGlDrawManager(glMgr)
-      , mDrawMgrWinLock(drawMgrWinLock)
-      , mRenderTriggerSema(0)
-      , mRenderCompleteSema(0)
-      , mSwapTriggerSema(0)
-      , mSwapCompleteSema(0)
-   {
-      mThreadRunning = false;
-   }
+   GlPipe(size_t num, GlDrawManager* glMgr, vpr::Mutex* drawMgrWinLock);
 
    ~GlPipe();
 
