@@ -38,13 +38,14 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 
-#include <gadget/Type/PositionInterface.h>
-
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlContextData.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 
 #include <vrj/Display/CameraProjection.h>
+
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Kernel/User.h>
 
 #include <osg/Version>
 #include <osg/Vec3>
@@ -168,8 +169,6 @@ public:
 
       GlApp::init();
 
-      mHead.init("VJHead");
-
       //Create the scene
       this->initScene();
    }
@@ -269,7 +268,9 @@ protected:
       // Update the frame stamp with information from this frame.
       mFrameStamp->setFrameNumber(mFrameNumber);
 
-      const double head_time(mHead->getTimeStamp().secd());
+      const double head_time(
+         mKernel->getUsers()[0]->getHeadPosProxy()->getTimeStamp().secd()
+      );
       mFrameStamp->setReferenceTime(head_time);
 #if OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_MAJOR_VERSION >= 2
       // This is available in OSG 1.9 and newer.
@@ -295,7 +296,6 @@ private:
    osg::ref_ptr<osg::FrameStamp> mFrameStamp;
 
    int mFrameNumber;
-   gadget::PositionInterface mHead;
    vpr::Mutex mSceneViewLock;
 };
 
