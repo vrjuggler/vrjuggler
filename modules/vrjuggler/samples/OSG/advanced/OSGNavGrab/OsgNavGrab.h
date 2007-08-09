@@ -33,7 +33,6 @@
 #include <iomanip>
 #include <math.h>
 
-#include <vrj/Draw/OGL/GlApp.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
 #include <gadget/Type/PositionInterface.h>
