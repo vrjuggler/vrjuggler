@@ -7,7 +7,7 @@
       <parent>input_device</parent>
       <category>/Devices</category>
       <property valuetype="configelement" variable="true" name="position_filters">
-         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html"&gt;more on input devices&lt;/&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s05.html"&gt;more on position transform filters&lt;/&gt;)</help>
+         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html"&gt;more on input devices&lt;/&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s05.html"&gt;more on position transform filters&lt;/&gt;)</help>
          <value label="Position Filter"/>
          <allowed_type>position_transform_filter</allowed_type>
       </property>

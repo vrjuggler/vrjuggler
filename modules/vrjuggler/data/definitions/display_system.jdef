@@ -59,15 +59,15 @@
    </definition_version>
    <definition_version version="3" label="Display System">
       <abstract>false</abstract>
-      <help>Graphics pipe configuration for display windows. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
+      <help>Graphics pipe configuration for display windows. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
       <parent/>
       <category>/Display</category>
       <property valuetype="integer" variable="false" name="number_of_pipes">
-         <help>The number of pipes on the system. This is only used by the OpenGL Performer Draw Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The number of pipes on the system. This is only used by the OpenGL Performer Draw Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="Number of Pipes" defaultvalue="0"/>
       </property>
       <property valuetype="string" variable="true" name="pipes">
-         <help>The pipe identifier. For the X Window System, this is the display string for a pipe (e.g., :1.0). The string "-1" is treated as being equal to the &lt;tt&gt;$DISPLAY&lt;/tt&gt; environment variable. For Cocoa, this is treated as an integer index into the available screens. NOTE: This is a zero-based list. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The pipe identifier. For the X Window System, this is the display string for a pipe (e.g., :1.0). The string "-1" is treated as being equal to the &lt;tt&gt;$DISPLAY&lt;/tt&gt; environment variable. For Cocoa, this is treated as an integer index into the available screens. NOTE: This is a zero-based list. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="Pipe Identifier" defaultvalue=":0.0"/>
       </property>
         <property valuetype="boolean" variable="false" name="use_swap_group">

@@ -70,11 +70,11 @@
          </enumeration>
       </property>
       <property valuetype="boolean" variable="false" name="start_locked">
-         <help>Do we start with the window locked? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
+         <help>Do we start with the window locked? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
          <value label="Start Locked" defaultvalue="false"/>
       </property>
       <property valuetype="integer" variable="false" name="sleep_time">
-         <help>This is the number of milliseconds that the event update loop should sleep between updates. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
+         <help>This is the number of milliseconds that the event update loop should sleep between updates. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
          <value label="Sleep Time" defaultvalue="75"/>
       </property>
       <upgrade_transform/>

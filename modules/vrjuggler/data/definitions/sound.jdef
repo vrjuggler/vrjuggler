@@ -44,43 +44,43 @@
    </definition_version>
    <definition_version version="2" label="Sound Object">
       <abstract>false</abstract>
-      <help>This holds information for one sound. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more on sound objects&lt;/a&gt;)</help>
+      <help>This holds information for one sound. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more on sound objects&lt;/a&gt;)</help>
       <parent/>
       <category>/Audio</category>
       <property valuetype="string" variable="false" name="filename">
-         <help>Filename to use for the sound. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Filename to use for the sound. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="file name" defaultvalue="default.wav"/>
       </property>
       <property valuetype="boolean" variable="false" name="ambient">
-         <help>Is it position based sound (vol changes with movement)? Or is it just ambient. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Is it position based sound (vol changes with movement)? Or is it just ambient. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Is Ambient" defaultvalue="true"/>
       </property>
       <property valuetype="boolean" variable="false" name="retriggerable">
-         <help>can the sound retrigger during play? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>can the sound retrigger during play? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Is Retriggerable" defaultvalue="true"/>
       </property>
       <property valuetype="boolean" variable="false" name="streaming">
-         <help>Is the sound streaming? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Is the sound streaming? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Is Streaming" defaultvalue="false"/>
       </property>
       <property valuetype="integer" variable="false" name="loop">
-         <help>How many times does the sound loop? (-1 infinite) (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>How many times does the sound loop? (-1 infinite) (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Loop Count" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="pitch_bend">
-         <help>Change the pitch of the sound, values can be 0 to n where: 1 is normal, 2 is doubled, 0.5 halved. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Change the pitch of the sound, values can be 0 to n where: 1 is normal, 2 is doubled, 0.5 halved. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Pitch Bend" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="cutoff">
-         <help>Change the low pass filter cutoff, values can be 0 to 1. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Change the low pass filter cutoff, values can be 0 to 1. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Low Pass Filter Cutoff" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="volume">
-         <help>Change the loudness of the sound, values can be 0 to 1. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Change the loudness of the sound, values can be 0 to 1. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Volume/Gain" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="position">
-         <help>Position of the sound in world coordinate space. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Position of the sound in world coordinate space. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apes02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="x" defaultvalue="0.0"/>
          <value label="y" defaultvalue="0.0"/>
          <value label="z" defaultvalue="0.0"/>

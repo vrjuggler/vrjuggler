@@ -3,25 +3,25 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="cluster_node" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Cluster Node">
       <abstract>false</abstract>
-      <help>Settings for the specified node in the cluster. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more on cluster nodes&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
+      <help>Settings for the specified node in the cluster. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more on cluster nodes&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
       <parent/>
       <category>/Cluster</category>
       <property valuetype="configelement" variable="false" name="display_system">
-         <help>Embedded display system for this specific cluster node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
+         <help>Embedded display system for this specific cluster node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
          <value label="Display System"/>
          <allowed_type>display_system</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="display_windows">
-         <help>Embedded display windows for this specifc cluster node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
+         <help>Embedded display windows for this specifc cluster node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
          <value label="Display Window"/>
          <allowed_type>display_window</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="listen_port">
-         <help>Port on which the Remote Input Manager listens for incoming cluster connections. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
+         <help>Port on which the Remote Input Manager listens for incoming cluster connections. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
          <value label="Listen Port" defaultvalue="0"/>
       </property>
       <property valuetype="string" variable="false" name="host_name">
-         <help>Host name for this specific cluster node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
+         <help>Host name for this specific cluster node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
          <value label="Host Name" defaultvalue=""/>
       </property>
       <upgrade_transform/>

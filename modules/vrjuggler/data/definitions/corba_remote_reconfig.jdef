@@ -3,19 +3,19 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="corba_remote_reconfig" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="CORBA Remote Run-Time Reconfiguration">
       <abstract>false</abstract>
-      <help>Configuration for the CORBA-based remote run-time reconfiguration plug-in to the Configuration Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch05.html"&gt;more on remote run-time reconfiguration&lt;/a&gt;)</help>
+      <help>Configuration for the CORBA-based remote run-time reconfiguration plug-in to the Configuration Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch05.html"&gt;more on remote run-time reconfiguration&lt;/a&gt;)</help>
       <parent/>
       <category>/Config</category>
       <property valuetype="string" variable="false" name="naming_service_host">
-         <help>The name of the host computer where the CORBA Naming Service is running. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch05.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The name of the host computer where the CORBA Naming Service is running. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Naming Service host" defaultvalue="localhost"/>
       </property>
       <property valuetype="integer" variable="false" name="naming_service_port">
-         <help>The port on which the CORBA Naming Service is listening for incoming connections. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch05.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The port on which the CORBA Naming Service is listening for incoming connections. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Naming Service port number" defaultvalue="2809"/>
       </property>
       <property valuetype="string" variable="false" name="iiop_version">
-         <help>The version of the Internet Inter-ORB Protocol (IIOP) used for communication with the Naming Service.  This is usually 1.0 or 1.2. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch05.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The version of the Internet Inter-ORB Protocol (IIOP) used for communication with the Naming Service.  This is usually 1.0 or 1.2. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="IIOP Version" defaultvalue="1.0"/>
       </property>
       <upgrade_transform/>

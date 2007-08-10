@@ -3,7 +3,7 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="simulated_relative_position" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Simulated Relative Position">
       <abstract>false</abstract>
-      <help>A positional device simulator for one device relative to another. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>A positional device simulator for one device relative to another. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <category>/Devices/Simulator</category>
       <property valuetype="configelementpointer" variable="false" name="base_frame_proxy">

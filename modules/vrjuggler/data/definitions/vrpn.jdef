@@ -27,33 +27,33 @@
    </definition_version>
    <definition_version version="2" label="VRPN">
       <abstract>false</abstract>
-      <help>Configure an interface to an external VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more on VRPN&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configure an interface to an external VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs02.html"&gt;more on VRPN&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <parent>digital_device</parent>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="tracker_server">
-         <help>Tracker server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Tracker server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Tracker Server" defaultvalue="Tracker0@localhost"/>
       </property>
       <property valuetype="string" variable="false" name="button_server">
-         <help>Button server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Button server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Button Server" defaultvalue="Button0@localhost"/>
       </property>
       <property valuetype="string" variable="false" name="analog_server">
-         <help>Analog server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Analog server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Analog Server" defaultvalue="Analog@localhost"/>
       </property>
       <property valuetype="integer" variable="false" name="tracker_count">
-         <help>Number of trackers supported by VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Number of trackers supported by VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Number of trackers" defaultvalue="2"/>
       </property>
       <property valuetype="integer" variable="false" name="button_count">
-         <help>Number of buttons supported by VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Number of buttons supported by VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Number of buttons" defaultvalue="1"/>
       </property>
       <property valuetype="integer" variable="false" name="analog_count">
-         <help>Number of analog inputs supported by VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Number of analog inputs supported by VRPN server. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Number of analogs" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="min">

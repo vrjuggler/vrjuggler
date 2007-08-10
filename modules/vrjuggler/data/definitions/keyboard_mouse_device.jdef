@@ -2,11 +2,11 @@
 <?org-vrjuggler-jccl-settings definition.version="3.1"?>
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="keyboard_mouse_device" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Keyboard/Mouse Input Handler">
-      <help>Configures an input handler that accepts keyboard and mouse events as input from the windowing system. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on keyboard/mouse input handlers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configures an input handler that accepts keyboard and mouse events as input from the windowing system. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on keyboard/mouse input handlers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>input_device</parent>
       <category>/Devices</category>
       <property valuetype="float" variable="false" name="mouse_sensitivity">
-         <help>Mouse sensitivity. 1 is 1 keypress per pixel moved; 0.1 is 1 key for 10 pixels. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <help>Mouse sensitivity. 1 is 1 keypress per pixel moved; 0.1 is 1 key for 10 pixels. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Mouse Sensitivity" defaultvalue="1.0"/>
       </property>
       <upgrade_transform/>

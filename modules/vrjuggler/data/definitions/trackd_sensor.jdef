@@ -3,11 +3,11 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="trackd_sensor" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Trackd Sensor">
       <abstract>false</abstract>
-      <help>Configure the interface to a trackd sensor memory area. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas05.html"&gt;more on Trackd&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configure the interface to a trackd sensor memory area. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas05.html"&gt;more on Trackd&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <category>/Devices</category>
       <property valuetype="integer" variable="false" name="shared_memory_key">
-         <help>This is the shared memory key for the trackd information. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas05.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>This is the shared memory key for the trackd information. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Shared Memory Key" defaultvalue="4126"/>
       </property>
       <upgrade_transform/>

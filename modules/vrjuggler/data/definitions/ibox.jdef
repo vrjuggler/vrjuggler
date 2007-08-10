@@ -3,24 +3,24 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="ibox" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="IBox">
       <abstract>false</abstract>
-      <help>Configuration for the Immersion Tech Interface Box (IBox). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs03.html"&gt;more on IBox&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configuration for the Immersion Tech Interface Box (IBox). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs03.html"&gt;more on IBox&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>digital_device</parent>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
-         <help>The name of the serial port to which the IBox is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The name of the serial port to which the IBox is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
-         <help>Serial port speed. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Serial port speed. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Baud Rate" defaultvalue="38400"/>
       </property>
       <property valuetype="float" variable="false" name="min">
-         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Analog Minimum" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="max">
-         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The upper bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apcs03.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Analog Maximum" defaultvalue="255.0"/>
       </property>
       <upgrade_transform/>

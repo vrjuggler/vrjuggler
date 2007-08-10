@@ -3,11 +3,11 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="msft_speech_recog_string" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/IntersenseEditor.jar!/org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Microsoft Speech API (String)">
       <abstract>false</abstract>
-      <help>Microsoft Speech API string-driven speech recognition device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apds02.html"&gt;more on the Microsoft Speech API driver&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Microsoft Speech API string-driven speech recognition device. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apds02.html"&gt;more on the Microsoft Speech API driver&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>string_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="grammar_file">
-         <help>A valid path to an XML file containing the Win32 SAPI grammar to be used for interpreting speech input from the user. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apds02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>A valid path to an XML file containing the Win32 SAPI grammar to be used for interpreting speech input from the user. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apds02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Grammar XML File Location" defaultvalue=""/>
       </property>
       <upgrade_transform/>

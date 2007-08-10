@@ -76,15 +76,15 @@
    </definition_version>
    <definition_version version="2" label="MotionStar Wireless">
       <abstract>false</abstract>
-      <help>Ascension MotionStar Wireless server chassis configuration.  One instance of this driver is needed for each pack that will be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more on MotionStar&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Ascension MotionStar Wireless server chassis configuration.  One instance of this driver is needed for each pack that will be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more on MotionStar&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
       <property valuetype="string" variable="false" name="address">
-         <help>Host name or IP address of the server to which this driver will connect. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Host name or IP address of the server to which this driver will connect. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Server Address" defaultvalue=""/>
       </property>
       <property valuetype="integer" variable="false" name="server_port">
-         <help>The port on the server to which the client connects.  UDP -&gt; 5000, TCP -&gt; 6000 (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The port on the server to which the client connects.  UDP -&gt; 5000, TCP -&gt; 6000 (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Server Port" defaultvalue="6000"/>
          <enumeration editable="false">
             <enum label="UDP Port" value="5000"/>
@@ -92,11 +92,11 @@
          </enumeration>
       </property>
       <property valuetype="boolean" variable="false" name="is_master">
-         <help>Is this server chassis a master?  A slave chassis will be used in a multi-pack configuration. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Is this server chassis a master?  A slave chassis will be used in a multi-pack configuration. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Is master?" defaultvalue="true"/>
       </property>
       <property valuetype="integer" variable="false" name="hemisphere">
-         <help>Transmitter hemisphere to use. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Transmitter hemisphere to use. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Hemisphere" defaultvalue="0"/>
          <enumeration editable="false">
             <enum label="Front" value="0"/>
@@ -108,7 +108,7 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="data_format">
-         <help>Data format for the sensors. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Data format for the sensors. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Data Format" defaultvalue="4"/>
          <enumeration editable="false">
             <enum label="No Data" value="0"/>
@@ -122,7 +122,7 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="mode">
-         <help>The sample mode for the running driver.  This should almost always be set to "Run Continuous" (0). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>The sample mode for the running driver.  This should almost always be set to "Run Continuous" (0). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Sample Mode" defaultvalue="0"/>
          <enumeration editable="false">
             <enum label="Run Continuous" value="0"/>
@@ -130,11 +130,11 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="report_rate">
-         <help>Report rate for the sensors (0-255).  This should usually be 1. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Report rate for the sensors (0-255).  This should usually be 1. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Bird Report Rate" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="measurement_rate">
-         <help>Measurement rate for the chassis.  This must be set to a valid value based on the configuration of the hardware and the allowed values documented in the MotionStar Wireless manual. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Measurement rate for the chassis.  This must be set to a valid value based on the configuration of the hardware and the allowed values documented in the MotionStar Wireless manual. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Chassis Measurement Rate" defaultvalue="86.1"/>
       </property>
       <upgrade_transform>
