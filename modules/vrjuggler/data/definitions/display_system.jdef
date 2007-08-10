@@ -63,7 +63,7 @@
       <parent/>
       <category>/Display</category>
       <property valuetype="integer" variable="false" name="number_of_pipes">
-         <help>The number of pipes on the system. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
+         <help>The number of pipes on the system. This is only used by the OpenGL Performer Draw Manager. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more ...&lt;/a&gt;)</help>
          <value label="Number of Pipes" defaultvalue="0"/>
       </property>
       <property valuetype="string" variable="true" name="pipes">
