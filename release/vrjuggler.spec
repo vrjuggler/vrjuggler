@@ -124,7 +124,6 @@ Requires: sonix = %{sonix_version}-%{sonix_release}
 Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
 Requires: gadgeteer-plugin-remote-input-manager = %{gadgeteer_version}-%{gadgeteer_release}
 Requires: gadgeteer-plugin-start-barrier = %{gadgeteer_version}-%{gadgeteer_release}
-Provides: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description
 VR Juggler provides virtual reality (VR) software developers with a suite of
@@ -147,7 +146,6 @@ BuildRequires: glibc-devel
 BuildRequires: e2fsprogs-devel
 BuildRequires: cppdom-devel >= 0.3.3
 BuildRequires: boost-devel >= 1.32
-Provides: vpr = %{vpr_version}-%{vpr_release}
 
 %description -n vpr
 The VR Juggler Portable Runtime (VPR) provides an object-oriented
@@ -164,7 +162,6 @@ Requires: flagpoll >= 0.9.1
 Requires: cppdom-devel >= 0.3.3
 Requires: boost-devel >= 1.32
 Requires: vpr = %{vpr_version}-%{vpr_release}
-Provides: vpr-devel = %{vpr_version}-%{vpr_release}
 
 %description -n vpr-devel
 The header files and libraries needed for developing programs using the
@@ -179,7 +176,6 @@ Group: Development/C++
 Requires: libomniorb >= 4.0.6-2
 Requires: vpr = %{vpr_version}-%{vpr_release}
 BuildRequires: libomniorb-devel >= 4.0.6-2
-Provides: tweek-c++ = %{tweek_version}-%{tweek_release}
 
 %description -n tweek-c++
 The Tweek C++ API provides a wrapper around CORBA for writing applications
@@ -198,7 +194,6 @@ Requires: libomniorb-devel >= 4.0.6-2
 Requires: flagpoll >= 0.9.1
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
 Requires: tweek-c++ = %{tweek_version}-%{tweek_release}
-Provides: tweek-c++-devel = %{tweek_version}-%{tweek_release}
 
 %description -n tweek-c++-devel
 The header files and libraries needed for developing programs using the
@@ -211,7 +206,6 @@ Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
 %java_req
-Provides: tweek-java-jni = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
 
 %description -n tweek-java-jni
@@ -227,7 +221,6 @@ Group: Development/Java
 %java_req
 Requires: tweek-java-jni = %{tweek_version}-%{tweek_release}
 Requires: flagpoll >= 0.9.1
-Provides: tweek-java = %{tweek_version}-%{tweek_release}
 AutoReqProv: no
 
 %description -n tweek-java
@@ -246,7 +239,6 @@ Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
 Requires: vpr = %{vpr_version}-%{vpr_release}
-Provides: jccl-c++ = %{jccl_version}-%{jccl_release}
 
 %description -n jccl-c++
 The JCCL C++ API provides a dynamic configuration system based on XML.
@@ -259,7 +251,6 @@ URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
 Requires: flagpoll >= 0.9.1
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
-Provides: jccl-c++-devel = %{jccl_version}-%{jccl_release}
 
 %description -n jccl-c++-devel
 The header files and libraries needed for developing programs using the
@@ -274,7 +265,6 @@ Group: Development/C++
 Requires: vpr = %{vpr_version}-%{vpr_release}
 Requires: tweek-c++ = %{tweek_version}-%{tweek_release}
 Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
-Provides: jccl-rtrc-plugin-c++ = %{jccl_version}-%{jccl_release}
 
 %description -n jccl-rtrc-plugin-c++
 A plug-in to the JCCL Config Manager written in C++ that provides the
@@ -288,7 +278,6 @@ URL: http://www.vrjuggler.org/jccl/
 Group: Development/Java
 %java_req
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
-Provides: jccl-java = %{jccl_version}-%{jccl_release}
 
 %description -n jccl-java
 The JCCL Java API provides a collection of JavaBeans that are used for
@@ -304,7 +293,6 @@ URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
 %java_req
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
-Provides: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
 
 %description -n jccl-rtrc-plugin-java
 A plug-in to the JCCL Config Manager written in C++ that provides the
@@ -318,7 +306,6 @@ URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
 Requires: vpr = %{vpr_version}-%{vpr_release}
 BuildRequires: gmtl >= 0.4.5
-Provides: sonix = %{sonix_version}-%{sonix_release}
 
 %description -n sonix
 Sonix is a dynamically reconfigurable wrapper around audio APIs.
@@ -333,7 +320,6 @@ Requires: vpr-devel = %{vpr_version}-%{vpr_release}
 Requires: flagpoll >= 0.9.1
 Requires: gmtl >= 0.4.5
 Requires: sonix = %{sonix_version}-%{sonix_release}
-Provides: sonix-devel = %{sonix_version}-%{sonix_release}
 
 %description -n sonix-devel
 The header files and libraries needed for developing programs using Sonix.
@@ -347,7 +333,6 @@ Group: Development/C++
 Requires: sonix = %{sonix_version}-%{sonix_release}
 Requires: audiere >= 1.9.3
 BuildRequires: audiere-devel >= 1.9.3
-Provides: sonix-plugin-audiere = %{sonix_version}-%{sonix_release}
 
 %description -n sonix-plugin-audiere
 Sonix plug-in that uses Audiere to generate sounds.
@@ -363,7 +348,6 @@ Requires: openal >= 0.0.8
 Requires: freealut >= 1.0.1
 BuildRequires: openal-devel >= 0.0.8
 BuildRequires: freealut-devel >= 1.0.1
-Provides: sonix-plugin-openal = %{sonix_version}-%{sonix_release}
 
 %description -n sonix-plugin-openal
 Sonix plug-in that uses OpenAL to generate sounds.
@@ -380,7 +364,6 @@ Requires: libSM.so.6
 Requires: vpr = %{vpr_version}-%{vpr_release}
 Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
 BuildRequires: gmtl >= 0.4.5
-Provides: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
 
 %description -n gadgeteer
 Gadgeteer is an extensible, highly configurable, cluster-ready input
@@ -398,7 +381,6 @@ Requires: gmtl >= 0.4.5
 Requires: vpr-devel = %{vpr_version}-%{vpr_release}
 Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
 Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
-Provides: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
 
 %description -n gadgeteer-devel
 The header files and libraries needed for developing programs and device
@@ -790,7 +772,6 @@ Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
 Requires: sonix-devel = %{sonix_version}-%{sonix_release}
 Requires: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
 Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
-Provides: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjuggler-devel
 The header files and libraries needed for developing VR applications using
@@ -807,7 +788,6 @@ Requires: libGLU.so.1
 Requires: libXxf86vm.so.1
 Requires: libXext.so.6
 Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
-Provides: vrjuggler-opengl = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjuggler-opengl
 The VR Juggler OpenGL Draw Manager, which is needed for running applications
@@ -822,7 +802,6 @@ Group: Development/C++
 Requires: flagpoll >= 0.9.1
 Requires: vrjuggler-opengl = %{vrjuggler_version}-%{vrjuggler_release}
 Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
-Provides: vrjuggler-opengl-devel = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjuggler-opengl-devel
 The header files and libraries needed for compiling VR Juggler applications
@@ -836,7 +815,6 @@ Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
 Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
-Provides: vrjuggler-performer = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjuggler-performer
 The VR Juggler OpenGL Performer Draw Manager, which is needed for running
@@ -851,7 +829,6 @@ Group: Development/C++
 Requires: flagpoll >= 0.9.1
 Requires: vrjuggler-performer = %{vrjuggler_version}-%{vrjuggler_release}
 Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
-Provides: vrjuggler-performer-devel = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjuggler-performer-devel
 The header files and libraries needed for compiling VR Juggler applications
@@ -868,7 +845,6 @@ Group: Development/Java
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
 Requires: jccl-java = %{jccl_version}-%{jccl_release}
 Requires: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
-Provides: vrjconfig = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjconfig
 VRJConfig is a Java-based GUI for editing VR Juggler configurations. It
@@ -882,7 +858,6 @@ URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
 Requires: tweek-c++ = %{tweek_version}-%{tweek_release}
 Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
-Provides: vrjuggler-perf-plugin-c++ = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjuggler-perf-plugin-c++
 A plug-in to the VR Juggler Performance Mediator written in C++ that provides
@@ -897,7 +872,6 @@ URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
 %java_req
 Requires: tweek-java = %{tweek_version}-%{tweek_release}
-Provides: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
 
 %description -n vrjuggler-perf-plugin-java
 A plug-in to the VR Juggler Performance Mediator written in Java that
