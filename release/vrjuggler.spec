@@ -108,11 +108,11 @@ URL: http://www.vrjuggler.org/
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{global_version}-%{global_release}-buildroot
 License: LGPL
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
-Requires: sonix = %{sonix_version}-%{sonix_release}
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
-Requires: gadgeteer-plugin-remote-input-manager = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
+Requires: sonix = %{sonix_version}
+Requires: gadgeteer = %{gadgeteer_version}
+Requires: gadgeteer-plugin-remote-input-manager = %{gadgeteer_version}
 
 %description
 VR Juggler provides virtual reality (VR) software developers with a suite of
@@ -150,7 +150,7 @@ Group: Development/C++
 Requires: flagpoll >= 0.9.1
 Requires: cppdom-devel >= 0.3.3
 Requires: boost-devel >= 1.32
-Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: vpr = %{vpr_version}
 
 %description -n vpr-devel
 The header files and libraries needed for developing programs using the
@@ -163,7 +163,7 @@ Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/C++
 Requires: libomniorb >= 4.0.6-2
-Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: vpr = %{vpr_version}
 BuildRequires: libomniorb-devel >= 4.0.6-2
 
 %description -n tweek-c++
@@ -181,8 +181,8 @@ URL: http://www.vrjuggler.org/tweek/
 Group: Development/C++
 Requires: libomniorb-devel >= 4.0.6-2
 Requires: flagpoll >= 0.9.1
-Requires: vpr-devel = %{vpr_version}-%{vpr_release}
-Requires: tweek-c++ = %{tweek_version}-%{tweek_release}
+Requires: vpr-devel = %{vpr_version}
+Requires: tweek-c++ = %{tweek_version}
 
 %description -n tweek-c++-devel
 The header files and libraries needed for developing programs using the
@@ -208,7 +208,7 @@ Release: %{tweek_release}
 URL: http://www.vrjuggler.org/tweek/
 Group: Development/Java
 %java_req
-Requires: tweek-java-jni = %{tweek_version}-%{tweek_release}
+Requires: tweek-java-jni = %{tweek_version}
 Requires: flagpoll >= 0.9.1
 AutoReqProv: no
 
@@ -227,7 +227,7 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: vpr = %{vpr_version}
 
 %description -n jccl-c++
 The JCCL C++ API provides a dynamic configuration system based on XML.
@@ -239,7 +239,7 @@ Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
 Requires: flagpoll >= 0.9.1
-Requires: vpr-devel = %{vpr_version}-%{vpr_release}
+Requires: vpr-devel = %{vpr_version}
 
 %description -n jccl-c++-devel
 The header files and libraries needed for developing programs using the
@@ -251,9 +251,9 @@ Version: %{jccl_version}
 Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: tweek-c++ = %{tweek_version}-%{tweek_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: tweek-c++ = %{tweek_version}
+Requires: jccl-c++ = %{jccl_version}
 
 %description -n jccl-rtrc-plugin-c++
 A plug-in to the JCCL Config Manager written in C++ that provides the
@@ -266,7 +266,7 @@ Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/Java
 %java_req
-Requires: tweek-java = %{tweek_version}-%{tweek_release}
+Requires: tweek-java = %{tweek_version}
 
 %description -n jccl-java
 The JCCL Java API provides a collection of JavaBeans that are used for
@@ -281,7 +281,7 @@ Release: %{jccl_release}
 URL: http://www.vrjuggler.org/jccl/
 Group: Development/C++
 %java_req
-Requires: tweek-java = %{tweek_version}-%{tweek_release}
+Requires: tweek-java = %{tweek_version}
 
 %description -n jccl-rtrc-plugin-java
 A plug-in to the JCCL Config Manager written in C++ that provides the
@@ -293,7 +293,7 @@ Version: %{sonix_version}
 Release: %{sonix_release}
 URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
+Requires: vpr = %{vpr_version}
 BuildRequires: gmtl >= 0.4.5
 
 %description -n sonix
@@ -305,10 +305,10 @@ Version: %{sonix_version}
 Release: %{sonix_release}
 URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
-Requires: vpr-devel = %{vpr_version}-%{vpr_release}
+Requires: vpr-devel = %{vpr_version}
 Requires: flagpoll >= 0.9.1
 Requires: gmtl >= 0.4.5
-Requires: sonix = %{sonix_version}-%{sonix_release}
+Requires: sonix = %{sonix_version}
 
 %description -n sonix-devel
 The header files and libraries needed for developing programs using Sonix.
@@ -319,7 +319,7 @@ Version: %{sonix_version}
 Release: %{sonix_release}
 URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
-Requires: sonix = %{sonix_version}-%{sonix_release}
+Requires: sonix = %{sonix_version}
 Requires: audiere >= 1.9.3
 BuildRequires: audiere-devel >= 1.9.3
 
@@ -332,7 +332,7 @@ Version: %{sonix_version}
 Release: %{sonix_release}
 URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
-Requires: sonix = %{sonix_version}-%{sonix_release}
+Requires: sonix = %{sonix_version}
 Requires: openal >= 0.0.8
 Requires: freealut >= 1.0.1
 BuildRequires: openal-devel >= 0.0.8
@@ -350,8 +350,8 @@ Group: Development/C++
 Requires: libX11.so.6
 Requires: libICE.so.6
 Requires: libSM.so.6
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
 
 %description -n gadgeteer
@@ -367,9 +367,9 @@ URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
 Requires: flagpoll >= 0.9.1
 Requires: gmtl >= 0.4.5
-Requires: vpr-devel = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: vpr-devel = %{vpr_version}
+Requires: jccl-c++-devel = %{jccl_version}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-devel
 The header files and libraries needed for developing programs and device
@@ -382,10 +382,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_dataglove_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-5dt-dataglove
 The Gadgeteer driver plug-in for the 5DT DataGlove input device.
@@ -396,10 +396,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_dtrack_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-dtrack
 The Gadgeteer driver plug-in for the ART DTrack optical tracking system.
@@ -410,10 +410,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_etherio24_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-etherio24
 The Gadgeteer driver plug-in for the Elexol Ether I/O 24 input device.
@@ -424,10 +424,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_flock_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-flock
 The Gadgeteer driver plug-in for the Ascension Flock of Birds tracking
@@ -439,10 +439,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_fastrak_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-fastrak
 The Gadgeteer driver plug-in for the Polhemus Fastrak tracking system.
@@ -453,10 +453,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_ibox_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-ibox
 The Gadgeteer driver plug-in for the ImmersionTech Interface Box (IBox)
@@ -468,10 +468,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_intersense_api_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-intersense-api
 The Gadgeteer driver plug-in for the InterSense Interface SDK, used for
@@ -483,10 +483,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_is900_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-is900
 The Gadgeteer driver plug-in for the InterSense IS-900 tracking system via
@@ -499,10 +499,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_joydev_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-joydev
 The Gadgeteer driver plug-in for accessing game controllers on Linux via
@@ -514,10 +514,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_motionstar_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-motionstar
 The Gadgeteer driver plug-in for the Ascension MotionStar Wireless tracking
@@ -530,11 +530,11 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_p5glove_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
 BuildRequires: libusb-devel
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-p5glove
 The Gadgeteer driver plug-in for the Essential Reality P5 Glove input device.
@@ -546,10 +546,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_pinchglove_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-pinchglove
 The Gadgeteer driver plug-in for the Fakespace Pinch Glove input device.
@@ -560,10 +560,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_serial_encoder_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-serial-encoder
 The Gadgeteer driver plug-in for U.S. Digital Serial Encoder devices.
@@ -574,10 +574,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_spaceball_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-spaceball
 The Gadgeteer driver plug-in for 3Dconnexion SpaceBall devices.
@@ -588,10 +588,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_threedmouse_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-threedmouse
 The Gadgeteer driver plug-in for the Logitech 3D Mouse input device.
@@ -602,10 +602,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_trackd_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-trackd
 The Gadgeteer driver plug-in for commnicating with VRCO TrackD.
@@ -617,10 +617,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_trackd_api_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-trackd
 The Gadgeteer driver plug-in for commnicating with the TrackD API from VRCO.
@@ -633,10 +633,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_vrpn_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-vrpn
 The Gadgeteer driver plug-in for VRPN.
@@ -648,10 +648,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_wanda_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-wanda
 The Gadgeteer driver plug-in for the Ascension Wanda input device.
@@ -663,10 +663,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_x_ist_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-driver-x-ist
 The Gadgeteer driver plug-in for noDNA X-IST glove device.
@@ -678,10 +678,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_app_data_mgr_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-plugin-application-data-manager
 The Gadgeteer cluster plug-in for the Application Data Manager.
@@ -692,10 +692,10 @@ Version: %{gadgeteer_version}
 Release: %{gadgeteer_rim_release}
 URL: http://www.vrjuggler.org/gadgeteer/
 Group: Development/C++
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
 BuildRequires: gmtl >= 0.4.5
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
+Requires: gadgeteer = %{gadgeteer_version}
 
 %description -n gadgeteer-plugin-remote-input-manager
 The Gadgeteer cluster plug-in for the Remote Input Manager. This will be
@@ -708,11 +708,11 @@ Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
 Requires: flagpoll >= 0.9.1
-Requires: vpr-devel = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
-Requires: sonix-devel = %{sonix_version}-%{sonix_release}
-Requires: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
-Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vpr-devel = %{vpr_version}
+Requires: jccl-c++-devel = %{jccl_version}
+Requires: sonix-devel = %{sonix_version}
+Requires: gadgeteer-devel = %{gadgeteer_version}
+Requires: vrjuggler = %{vrjuggler_version}
 
 %description -n vrjuggler-devel
 The header files and libraries needed for developing VR applications using
@@ -728,7 +728,7 @@ Requires: libGL.so.1
 Requires: libGLU.so.1
 Requires: libXxf86vm.so.1
 Requires: libXext.so.6
-Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler = %{vrjuggler_version}
 
 %description -n vrjuggler-opengl
 The VR Juggler OpenGL Draw Manager, which is needed for running applications
@@ -741,8 +741,8 @@ Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
 Requires: flagpoll >= 0.9.1
-Requires: vrjuggler-opengl = %{vrjuggler_version}-%{vrjuggler_release}
-Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-opengl = %{vrjuggler_version}
+Requires: vrjuggler-devel = %{vrjuggler_version}
 
 %description -n vrjuggler-opengl-devel
 The header files and libraries needed for compiling VR Juggler applications
@@ -755,7 +755,7 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
-Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler = %{vrjuggler_version}
 
 %description -n vrjuggler-performer
 The VR Juggler OpenGL Performer Draw Manager, which is needed for running
@@ -768,8 +768,8 @@ Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
 Requires: flagpoll >= 0.9.1
-Requires: vrjuggler-performer = %{vrjuggler_version}-%{vrjuggler_release}
-Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vrjuggler-performer = %{vrjuggler_version}
+Requires: vrjuggler-devel = %{vrjuggler_version}
 
 %description -n vrjuggler-performer-devel
 The header files and libraries needed for compiling VR Juggler applications
@@ -783,9 +783,9 @@ Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
 %java_req
-Requires: tweek-java = %{tweek_version}-%{tweek_release}
-Requires: jccl-java = %{jccl_version}-%{jccl_release}
-Requires: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
+Requires: tweek-java = %{tweek_version}
+Requires: jccl-java = %{jccl_version}
+Requires: jccl-rtrc-plugin-java = %{jccl_version}
 
 %description -n vrjconfig
 VRJConfig is a Java-based GUI for editing VR Juggler configurations. It
@@ -797,8 +797,8 @@ Version: %{vrjuggler_version}
 Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/C++
-Requires: tweek-c++ = %{tweek_version}-%{tweek_release}
-Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: tweek-c++ = %{tweek_version}
+Requires: vrjuggler = %{vrjuggler_version}
 
 %description -n vrjuggler-perf-plugin-c++
 A plug-in to the VR Juggler Performance Mediator written in C++ that provides
@@ -812,7 +812,7 @@ Release: %{vrjuggler_release}
 URL: http://www.vrjuggler.org/vrjuggler/
 Group: Development/Java
 %java_req
-Requires: tweek-java = %{tweek_version}-%{tweek_release}
+Requires: tweek-java = %{tweek_version}
 
 %description -n vrjuggler-perf-plugin-java
 A plug-in to the VR Juggler Performance Mediator written in Java that
@@ -826,12 +826,12 @@ Release: %{vrjuggler_release}
 Group: Development/C++
 License: LGPL
 URL: http://www.vrjuggler.org/
-Requires: vpr = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++ = %{jccl_version}-%{jccl_release}
-Requires: gadgeteer = %{gadgeteer_version}-%{gadgeteer_release}
-Requires: sonix = %{sonix_version}-%{sonix_release}
-Requires: vrjuggler = %{vrjuggler_version}-%{vrjuggler_release}
-Requires: vrjuggler-opengl = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vpr = %{vpr_version}
+Requires: jccl-c++ = %{jccl_version}
+Requires: gadgeteer = %{gadgeteer_version}
+Requires: sonix = %{sonix_version}
+Requires: vrjuggler = %{vrjuggler_version}
+Requires: vrjuggler-opengl = %{vrjuggler_version}
 
 %description -n juggler
 The Juggler Suite provides virtual reality (VR) software developers with a
@@ -850,12 +850,12 @@ Release: %{vrjuggler_release}
 Group: Development/C++
 License: LGPL
 URL: http://www.vrjuggler.org/
-Requires: vpr-devel = %{vpr_version}-%{vpr_release}
-Requires: jccl-c++-devel = %{jccl_version}-%{jccl_release}
-Requires: gadgeteer-devel = %{gadgeteer_version}-%{gadgeteer_release}
-Requires: sonix-devel = %{sonix_version}-%{sonix_release}
-Requires: vrjuggler-devel = %{vrjuggler_version}-%{vrjuggler_release}
-Requires: vrjuggler-opengl-devel = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: vpr-devel = %{vpr_version}
+Requires: jccl-c++-devel = %{jccl_version}
+Requires: gadgeteer-devel = %{gadgeteer_version}
+Requires: sonix-devel = %{sonix_version}
+Requires: vrjuggler-devel = %{vrjuggler_version}
+Requires: vrjuggler-opengl-devel = %{vrjuggler_version}
 Requires: doozer >= 2.1.6
 
 %description -n juggler-devel
@@ -869,11 +869,11 @@ Release: %{vrjuggler_release}
 Group: Development/Java
 License: LGPL
 URL: http://www.vrjuggler.org/
-Requires: tweek-java = %{tweek_version}-%{tweek_release}
-Requires: jccl-java = %{jccl_version}-%{jccl_release}
-Requires: jccl-rtrc-plugin-java = %{jccl_version}-%{jccl_release}
-Requires: vrjconfig = %{vrjuggler_version}-%{vrjuggler_release}
-Requires: vrjuggler-perf-plugin-java = %{vrjuggler_version}-%{vrjuggler_release}
+Requires: tweek-java = %{tweek_version}
+Requires: jccl-java = %{jccl_version}
+Requires: jccl-rtrc-plugin-java = %{jccl_version}
+Requires: vrjconfig = %{vrjuggler_version}
+Requires: vrjuggler-perf-plugin-java = %{vrjuggler_version}
 
 %description -n juggler-java
 The Java software from the Juggler Suite including VRJConfig.
