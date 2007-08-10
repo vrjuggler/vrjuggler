@@ -287,6 +287,13 @@ protected:
       // equivalent to calling osgUtil::SceneView::update() but does not
       // require access to the context-specific osgUtil::SceneView instance.
       getScene()->accept(*mUpdateVisitor);
+      
+      // NOTE: This comment was taken from osgUtil::SceneView::update():
+      // Now force a recompute of the bounding volume while we are still in
+      // the read/write app phase, this should prevent the need to recompute
+      // the bounding volumes from within the cull traversal which may be
+      // multi-threaded.
+      getScene()->getBound();
    }
 
    vrj::GlContextData< osg::ref_ptr<osgUtil::SceneView> > sceneViewer;
