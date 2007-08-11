@@ -1560,14 +1560,18 @@ def installGadgeteerDrivers(prefix, buildDir):
       srcdir = os.path.join(srcroot, d)
       installLibs(srcdir, destdir, extensions = ['.dll'])
 
-   srcdir = os.environ['FTD2XX_ROOT']
-   if srcdir != "":
-      printStatus("Installing FTD2XX DLL")
+   if os.environ['FTD2XX_ROOT'] != "":
+      if gBuild64:
+         srcdir = os.path.join(os.environ['FTD2XX_ROOT'], 'amd64')
+      else:
+         srcdir = os.path.join(os.environ['FTD2XX_ROOT'], 'i386')
+
+      printStatus("Installing FTD2XX DLLs")
       destdir = os.path.join(prefix, 'bin')
 
-      ftd2xx_dll = os.path.join(srcdir, 'FTD2XX.dll')
-      if os.path.exists(ftd2xx_dll):
-         smartCopy(ftd2xx_dll, destdir)
+      ftd2xx_dlls = glob.glob(os.path.join(srcdir, '*.dll'))
+      for d in ftd2xx_dlls:
+         smartCopy(d, destdir)
 
 def installGadgeteerPlugins(prefix, buildDir):
    printStatus("Installing Gadgeteer cluster plug-ins ...")
