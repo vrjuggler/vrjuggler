@@ -31,6 +31,8 @@
 #include <string>
 #include <vector>
 
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Analog.h>
 #include <gadget/Type/InputBaseTypes.h>
 #include <drivers/noDNA/X-IST/X-ISTStandalone.h>
 
