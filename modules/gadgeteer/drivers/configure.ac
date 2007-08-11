@@ -450,11 +450,14 @@ if test "x${_with_ftd2xx}" != "xno" ; then
    _gadget_save_LDFLAGS="$LDFLAGS"
    _gadget_save_LIBS="$LIBS"
 
-   FTD2XX_LIBDIR="$FTD2XX_ROOT/lib"
-
    FTD2XX_INCLUDES="-I$FTD2XX_ROOT/include"
-   FTD2XX_LDFLAGS="-L$FTD2XX_LIBDIR"
-   FTD2XX_LIBS="-lftd2xx -lusb"
+   FTD2XX_LDFLAGS="-L$FTD2XX_ROOT/lib"
+   FTD2XX_LIBS="-lftd2xx"
+
+   if test "x$PLATFORM" = "xLinux" ; then
+      FTD2XX_LIBS="$FTD2XX_LIBS -lusb"
+      gadget_ftd2xx_extra_libs='-lusb'
+   fi
 
    CPPFLAGS="$FTD2XX_INCLUDES $CPPFLAGS"
    LDFLAGS="$FTD2XX_LDFLAGS $LDFLAGS"
@@ -469,7 +472,7 @@ if test "x${_with_ftd2xx}" != "xno" ; then
    AC_CHECK_LIB([ftd2xx], [FT_ListDevices],
                 [AC_CHECK_HEADER([ftd2xx.h], [gadget_have_ftd2xx='yes'],
                                  [gadget_have_ftd2xx='no'])],
-                [gadget_have_ftd2xx='no'], [-lusb])
+                [gadget_have_ftd2xx='no'], [$gadget_ftd2xx_extra_libs])
 
    DPP_LANG_RESTORE
 
