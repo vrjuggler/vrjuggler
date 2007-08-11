@@ -376,7 +376,7 @@ size_t NetworkManager::sendEndBlocks( const int temp)
          catch (cluster::ClusterException& ex)
          {
             vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-               << clrOutBOLD("ERROR", clrRED)
+               << clrOutBOLD(clrRED, "ERROR")
                << ": Failed to send end block to " << (*i)->getName()
                << std::endl << vprDEBUG_FLUSH;
             vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
@@ -448,7 +448,7 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
          catch (cluster::ClusterException& ex)
          {
             vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-               << clrOutBOLD("ERROR", clrRED)
+               << clrOutBOLD(clrRED, "ERROR")
                << ": Failed to complete state update for "
                << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
             vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
