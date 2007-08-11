@@ -70,6 +70,7 @@ typedef InputMixer< InputMixer<Input, Digital>, Analog> input_digital_analog_t;
 typedef InputMixer< InputMixer<Input, Digital>, Position> input_digital_position_t;
 typedef InputMixer< InputMixer<Input, Analog>, Position> input_analog_position_t;
 typedef InputMixer< InputMixer<Input, Glove>, Digital> input_glove_digital_t;
+typedef InputMixer< InputMixer< InputMixer< InputMixer<Input, Glove>, Digital>, Analog>, Position> input_glove_digital_analog_position_t;
 typedef InputMixer< InputMixer< InputMixer<Input, Digital>, Analog>, Position> input_digital_analog_position_t;
 typedef InputMixer< InputMixer<SimInput, Input>, Position> siminput_input_position;
 typedef InputMixer< InputMixer<SimInput, Input>, Digital> siminput_input_digital;
