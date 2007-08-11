@@ -64,16 +64,12 @@ namespace gadget
 
 P5GloveWrapper::P5GloveWrapper()
    : mGlove(NULL)
-   , mAnalogP5(5)
+   , mAnalogP5(5, 0.0f)
    , mDigitalP5(3)
    , mPositionP5(1)
    , mExitFlag(false)
 {
-   mAnalogP5[0] = 0.0f;
-   mAnalogP5[1] = 0.0f;
-   mAnalogP5[2] = 0.0f;
-   mAnalogP5[3] = 0.0f;
-   mAnalogP5[5] = 0.0f;
+   /* Do nothing. */ ;
 }
 
 P5GloveWrapper::~P5GloveWrapper()
