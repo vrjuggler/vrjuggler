@@ -36,6 +36,7 @@
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/InputMixer.h>
+#include <gadget/Type/InputBaseTypes.h>
 #include <drivers/EssentialReality/P5Glove/P5GloveStandalone.h>
 
 
@@ -45,8 +46,8 @@ namespace gadget
 /**
  * Software interface to EssentialReality P5glove hardware.
  */
-class P5GloveWrapper :
-   public InputMixer<InputMixer<InputMixer<Input, Digital>, Analog>, Position>
+class P5GloveWrapper
+   : public input_glove_digital_analog_position_t
 {
 public:
    /** Constructor. */
