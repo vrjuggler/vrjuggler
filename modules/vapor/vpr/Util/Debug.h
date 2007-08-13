@@ -108,7 +108,7 @@ namespace vpr
 #ifdef VPR_OS_Windows
    struct out_color
    {
-      out_color(WORD attribute)
+      explicit out_color(const WORD attribute)
          : mOutColor(attribute)
       {;}
       WORD mOutColor;
