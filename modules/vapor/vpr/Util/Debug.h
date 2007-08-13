@@ -341,7 +341,7 @@ namespace vpr
       //@{
       void pushThreadLocalColumn(int column);
       void popThreadLocalColumn();
-      void pushThreadLocalColor(color_out_t color);
+      void pushThreadLocalColor(const color_out_t& color);
       void popThreadLocalColor();
       //@}
 
@@ -440,7 +440,7 @@ namespace vpr
     */
    struct DebugColorGuard
    {
-      DebugColorGuard(color_out_t color_val)
+      DebugColorGuard(const color_out_t& color_val)
       {
          vprDEBUG_PushTSColor(color_val);
       }
@@ -459,9 +459,9 @@ namespace vpr
    struct VPR_CLASS_API DebugOutputGuard
    {
       DebugOutputGuard(const vpr::DebugCategory& cat, const int level,
-                       std::string entryText,
-                       std::string exitText = std::string(""),
-                       bool indent = true);
+                       const std::string& entryText,
+                       const std::string& exitText = std::string(""),
+                       const bool indent = true);
 
       ~DebugOutputGuard();
 

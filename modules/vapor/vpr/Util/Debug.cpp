@@ -502,7 +502,7 @@ void Debug::popThreadLocalColumn()
    }
 }
 
-void Debug::pushThreadLocalColor(color_out_t color)
+void Debug::pushThreadLocalColor(const color_out_t& color)
 {
    (*gVprDebugCurColor).push_back(color);
 }
@@ -544,8 +544,10 @@ void Debug::incrementIndentLevel()
 }
 
 DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
-                                   const int level, std::string entryText,
-                                   std::string exitText, bool indent)
+                                   const int level,
+                                   const std::string& entryText,
+                                   const std::string& exitText,
+                                   const bool indent)
    : mCat(cat)
    , mLevel(level)
    , mEntryText(entryText)
