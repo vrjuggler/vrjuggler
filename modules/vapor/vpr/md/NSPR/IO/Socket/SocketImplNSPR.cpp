@@ -380,12 +380,14 @@ vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
    else if ( bytes == -1 )      // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    {
       const PRErrorCode err_code = PR_GetError();
-
-      std::ostringstream err_stream;
-      vpr::Error::outputCurrentError(err_stream, "Read failed");
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[vpr::SocketImplNSPR::read_i()] " << err_stream.str()
-         << vprDEBUG_FLUSH;
+      if ( err_code != PR_IO_TIMEOUT_ERROR )
+      {
+         std::ostringstream err_stream;
+         vpr::Error::outputCurrentError(err_stream, "Read failed");
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketImplNSPR::read_i()] " << err_stream.str()
+            << vprDEBUG_FLUSH;
+      }
 
       bytesRead = 0;
 
