@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+[2.0.0 released - 8.14.2007]===================================================
 2007-07-24 aronb    vpr::Library::findSymbol() throws vpr::LibraryException if
                     the library has not been loaded.
 2007-07-08 patrick  Debug-enabled code linked against the release runtime on

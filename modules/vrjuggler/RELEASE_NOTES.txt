@@ -10,8 +10,8 @@ For all versions:
 
 ===============================================================================
 
- Version: 2.2.0 Beta 1
-Released: July 9, 2007
+ Version: 2.2.0
+Released: August 14, 2007
 
     Please refer to the following to get started with VR Juggler 2.2.0:
 
@@ -29,14 +29,94 @@ Released: July 9, 2007
     modules/vrjuggler/data/xslt/key_sym_2_0.xsl. More information about this
     can be found on the above referenced web page.
 
- Version: 2.1.9
-Released: June 19, 2006
+    New in this release:
+       * Improved cluster scalability and performance.
 
-    Required application and configuration changes for upgrading from
-    releases prior to 2.0.2 and 2.1.9:
+       * Improved error handling and recovery through the use of exceptions
+         for error reporting. VR Juggler 2.2 is based on VPR 2.0 which uses
+         exception handling for all error reporting. vpr::ReturnStatus is now
+         considered deprecated.
 
-        * Subclasses of vrj::OsgApp that override latePreFrame() must call
-          up to vrj::OsgApp::latePreFrame() as the last step of the override
-          implementation.
+       * Easier command-line application build support by leveraging
+         Flagpoll (see https://realityforge.vrsource.org/view/FlagPoll/WebHome
+         for more information). While the use of Flagpoll on Windows is still
+         being refined, by the time VR Juggler 2.2.0 is released, command line
+         compilation using Flagpoll will be supported on all platforms. Note
+         that the *-config Perl scripts (such as vrjuggler-config) no longer
+         exist in VR Juggler 2.2. Forward compatibility for this change was
+         introduced with VR Juggler 2.0.2.
 
-===============================================================================
+       * Cocoa support on Mac OS X. VR Juggler applications are deployed as
+         bundles, and X11 is not required at all. Mac OS X users should review
+         the updated VR Juggler /Getting Started Guide/ for information on
+         application execution options.
+
+       * Support for parallel installations. To facilitate long-lived
+         applications, the Juggler runtime (shared libraries and data files)
+         from multiple versions can be installed in parallel. To get the most
+         from this capability, users are strongly encouraged to use GMTL 0.5.4
+         and CppDOM 0.7.9 or newer, both of which also support parallel
+         installations.
+
+       * Versioned headers, data files, and shared libraries on non-Windows
+         platforms. This is all in support of parallel installations.
+
+       * Versioned DLLs on Windows. Windows builds should use automatic
+         linking to avoid complicated detection of .lib file names. Forward
+         compatibility for this change (i.e., automatic linking) was
+         introduced in VR Juggler 2.0.2.
+
+       * Support for 64-bit applications on Windows. This requires the use of
+         the CVS HEAD version of NSPR (currently known as NSPR 4.7).
+
+       * Reduced dependency on NSPR on Windows. We are using Windows threading
+         and synchronization primitives directly instead of the NSPR wrappers.
+
+       * Reduced run-time dependence on environment variables such as
+         VJ_BASE_DIR and SNX_BASE_DIR. This has been in the works since the
+         VR Juggler 2.0 beta stages. Now, for the Windows case, running
+         VR Juggler applications does not require setting VJ_BASE_DIR at all.
+         The installation path is determined at run time when the DLLs are
+         attached to the process. The Visual C++ project files still reference
+         VJ_BASE_DIR and VJ_DEPS_DIR, however.
+
+       * Support for OpenSG 2.0 in vrj::OpenSGApp.
+
+       * Early support for Direct3D. The VR Juggler Direct3D Draw Manager is
+         in the alpha stages of development, and feedback and improvements
+         would be welcome.
+
+       * Proper destruction of singletons created using the VPR singleton
+         preprocessor macros when the application exits. This facilitates much
+         cleaner shutdown, especially in the case of device drivers.
+
+       * More flexible debug handling on Windows. There are now two
+         debug-enabled versions of all binaries: one linked against the
+         release runtime and one linked against the debug runtime. This allows
+         applications linked against the release runtime to switch to using
+         debug-enabled Juggler libraries simply by changing the PATH
+         environment variable. This same capability has always existed on
+         non-Windows platforms by modifying (DY)LD_LIBRARY_PATH.
+
+       * Expanded use of boost::shared_ptr<> for better (internal) memory
+         handling. User-level code will probably not see much of this.
+
+       * Fixed stability problems with OSG applications when run with a
+         multi-pipe/multi-threaded VR Juggler configuration.
+
+       * Eliminated the need for OSG- and OpenSG-based applications to define
+         plain OpenGL lighting just to make the VR Juggler simulator
+         components render well. See the OSG and OpenSG sample applications
+         for the current state of things.
+
+       * Initial Unicode support for Gadgeteer keyboard/mouse devices.
+
+       * Support for the noDNA X-IST device. Submitted by Damien Touraine.
+
+       * Support for the USB Essential Reality P5 Glove. Submitted by Damian
+         Touraine.
+
+       * Revamped Polhemus Fastrak driver that is much easier to configure.
+
+       * Enhanced configurability of multisampling with OpenGL windows.
+         Currently, this is only supported fully on the X Window System.

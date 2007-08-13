@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.2.0 released - 8.14.2007]===================================================
+Aug-09-2007 patrick     Stability improvements for vrj::OsgApp when using
+                        multi-pipe/multi-threaded configurations.
+
+[2.2 beta 1 released - 7.9.2007]===============================================
 Jul-08-2007 patrick     Debug-enabled code linked against the release runtime
                         on Windows is now named the same as optimized code.
                         The debug DLLs are installed in the "debug"
