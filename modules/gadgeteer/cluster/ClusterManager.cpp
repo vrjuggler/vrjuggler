@@ -440,7 +440,7 @@ namespace cluster
             catch (cluster::ClusterException& ex)
             {
                vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << clrOutBOLD("ERROR", clrRED)
+                  << clrOutBOLD(clrRED, "ERROR")
                   << ": Failed to send end block to " << (*i)->getName()
                   << std::endl << vprDEBUG_FLUSH;
                vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
@@ -480,7 +480,7 @@ namespace cluster
             catch (cluster::ClusterException& ex)
             {
                vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
-                  << clrOutBOLD("ERROR", clrRED)
+                  << clrOutBOLD(clrRED, "ERROR")
                   << ": Failed to complete state update for "
                   << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
                vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
