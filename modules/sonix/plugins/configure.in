@@ -193,7 +193,7 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
          LIBS="$snx_save_LIBS"
          if test "x$HAVE_OPENAL" = "xY" ; then
             DPP_PTHREAD_FINISH
-            DPP_HAVE_ALUT([/usr/local], [HAVE_ALUT='Y'],
+            DPP_HAVE_ALUT([$OALROOT], [HAVE_ALUT='Y'],
                           [AC_MSG_WARN([*** OpenAL plug-in cannot be built. ***])])
          fi
 
