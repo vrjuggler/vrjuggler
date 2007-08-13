@@ -545,6 +545,460 @@ int main(int argc, char* argv[])
                   </calloutlist>
                </programlistingco>
             </section>
+
+            <section>
+               <title>Mac OS X Considerations</title>
+
+               <indexterm zone="section.app.main.structure">
+                  <primary>applications</primary>
+
+                  <secondary>main function</secondary>
+
+                  <tertiary>Mac OS X</tertiary>
+               </indexterm>
+
+               <para>VR Juggler 2.2 introduces support for Cocoa on Mac OS X.
+               Cocoa itself is quite different than the X11 or Win32 APIs as
+               far as restrictions on threading and the implementation of the
+               <function>main()</function> function. The fundamental issue,
+               however, is that both the <classname>NSApplication</classname>
+               singleton object and the <classname>vrj::Kernel</classname>
+               singleton object want to be in charge of application execution.
+               A balance has been struck that generally allows VR Juggler
+               applications to look and act the same on Mac OS X as on any
+               other platform while still taking advantage of unique features
+               that Cocoa and Mac OS X have to offer.</para>
+
+               <section>
+                  <title>Application Bundles</title>
+
+                  <para>First and foremost, when using a Cocoa-aware version
+                  of VR Juggler, applications have to be constructed as
+                  bundles. The details of OS X application bundles are far
+                  beyond the scope of this document. However, VR Juggler
+                  provides just about everything that is required to make an
+                  application bundle. This makes sense because VR Juggler is
+                  an application framework that dictates how applications are
+                  written and executed. Thus, it also provides the core
+                  information required for proper application construction and
+                  execution on Mac OS X.</para>
+
+                  <para>To get started, it is helpful to understand what the
+                  application bundle will look like when we have everything in
+                  place. An application bundle is a directory structure with a
+                  special name. For example, <filename>MPApp.app</filename>
+                  will show up in the <application>Finder</application> as an
+                  application named <quote>MPApp</quote> that can be
+                  double-clicked. The name can contain spaces if so
+                  desired.</para>
+
+                  <para>Under the base directory is the
+                  <filename>Contents</filename> subdirectory. It will contain
+                  the files <filename>Info.plist</filename> and
+                  <filename>PkgInfo</filename>.</para>
+
+                  <para>Next, there are two subdirectories
+                  <filename>MacOS</filename> and
+                  <filename>Resources</filename>. Compiled binaries should
+                  normally go into the <filename>MacOS</filename>
+                  subdirectory. If nothing else, the bundle executable (the
+                  compiled application binary) <emphasis>must</emphasis> go in
+                  the <filename>MacOS</filename> directory. Shared libraries
+                  can go into the <filename>Resources</filename> directory if
+                  desired. Generally, though, the
+                  <filename>Resources</filename> directory will contain
+                  platform-independent data files.</para>
+
+                  <para>In the resources directory, there will be another
+                  subdirectory <filename>en.lproj</filename><footnote>
+                        <para>This is the English language project data.
+                        Translations of <filename>MainMenu.nib</filename>
+                        would go into the appropriate language-specific
+                        subdirectory.</para>
+                     </footnote> which in turn contains
+                  <filename>MainMenu.nib</filename> from
+                  <filename>$VJ_BASE_DIR/share/vrjuggler/data/bundle</filename>.
+                  This is a critical part of the application bundle, and it is
+                  very important that this NIB behave correctly. The NIB
+                  defines the user interface for the VR Juggler application,
+                  and what is provided with VR Juggler is set up and ready to
+                  go for the most common cases. It is possible to use a
+                  different <filename>MainMenu.nib</filename>, but customizing
+                  it will require care.</para>
+
+                  <sidebar>
+                     <para>The ability to customize the user interface of the
+                     VR Juggler application by using a different
+                     <filename>MainMenu.nib</filename> and a different
+                     application delegate (see <xref
+                     linkend="section.custom.delegate" />) makes VR Juggler on
+                     Mac OS X unique with respect to other platforms. Whereas
+                     the user interface used with <productname
+                     class="registered">Microsoft Windows</productname> and
+                     the X Window System is essentially hard coded, the Mac OS
+                     X Cocoa interface has been designed with flexibility in
+                     mind. Simply put, the Cocoa support in VR Juggler
+                     leverages the dynamic nature of Cocoa to provide features
+                     that are not so easily available on other
+                     platforms.</para>
+                  </sidebar>
+
+                  <section>
+                     <title><filename>Info.plist</filename></title>
+
+                     <para>The files and directories needed for application
+                     bundle creation can be found in the directory
+                     <filename>$VJ_BASE_DIR/share/vrjuggler/data/bundle</filename>.
+                     The first of these is
+                     <filename>Contents/Info.plist</filename>, the basic
+                     property list for an application bundle. Open it with the
+                     Property List Editor application and change the
+                     <literal>@APP_NAME@</literal> strings accordingly for the
+                     name of the application being constructed. For the
+                     <literal>CFBundleExecutable</literal> property, be sure
+                     to change <literal>@APP_NAME@</literal> to be the name of
+                     the executable that will be in the Contents/MacOS
+                     directory. Other properties to change are those that
+                     include copyright and version information.</para>
+                  </section>
+
+                  <section>
+                     <title><filename>PkgInfo</filename></title>
+
+                     <para>The contents of
+                     <filename>Contents/PkgInfo</filename> define the
+                     application bundle as an application bundle. The contents
+                     of the file will often be <literal>APPL????</literal>,
+                     though other characters are allowed in place of the
+                     <literal>????</literal> part.</para>
+                  </section>
+
+                  <section>
+                     <title><filename>Resources</filename> Directory</title>
+
+                     <para>The <filename>Contents/Resources</filename>
+                     directory contains data files related to application
+                     execution. The file <filename>vrjuggler.plist</filename>,
+                     the use of which is highly recommended, must be put in
+                     this directory. The application bundle icon file (a file
+                     with the extension <filename>.icns</filename>) is also
+                     stored in this directory. A default icon file,
+                     <filename>vrjuggler.icns</filename>, can be used, or a
+                     custom one can be made. The file to use must be named in
+                     <filename>Contents/Info.plist</filename>.</para>
+                  </section>
+
+                  <section>
+                     <title><filename>vrjuggler.plist</filename></title>
+
+                     <para>For VR Juggler application bundles, a useful file
+                     is <filename>vrjuggler.plist</filename>. The default
+                     version of this file from
+                     <filename>$VJ_BASE_DIR/share/vrjuggler/data/bundle</filename>
+                     disables VR Juggler configuration file loading through
+                     <classname>NSApplication</classname> channels and
+                     identifies the <classname>NSApplication</classname>
+                     delegate class type that will be used (see <xref
+                     linkend="section.custom.delegate" />). These are set
+                     using the properties <literal>VRJConfigHandling</literal>
+                     and <literal>VRJDelegateClass</literal>
+                     respectively.</para>
+
+                     <para>The <quote>configuration file loading through
+                     <classname>NSApplication</classname> channels</quote> bit
+                     has to do with associating VR Juggler configuration files
+                     with application bundles. There are different means by
+                     which data can be delivered to applications on Mac OS X.
+                     For example, double-clicking on a file in the
+                     <application>Finder</application> (or selecting
+                     <guimenuitem>Open With</guimenuitem> in the context menu
+                     for the file) causes a registered handler application to
+                     be opened. The file is given to the application once it
+                     has opened through the
+                     <classname>NSApplication</classname> event system. By
+                     setting the <literal>VRJConfigHandling</literal> property
+                     to <literal>false</literal> in
+                     <filename>Contents/Resources/vrjuggler.plist</filename>,
+                     this capability is disabled for the application bundle in
+                     question. That is, the application bundle will ignore the
+                     <classname>NSApplication</classname> events pertaining to
+                     configuration files to be loaded as a result of
+                     double-clicking on the said files. Configuration files
+                     can still be opened on the fly using the
+                     <guimenu>File</guimenu> menu defined in the default NIB
+                     (see below).</para>
+                  </section>
+
+                  <section>
+                     <title><filename>en.lproj</filename> Directory</title>
+
+                     <para>The <filename>en.lproj</filename> subdirectory of
+                     <filename>Contents/Resources</filename> contains
+                     information translated in the English language. The most
+                     important item in this directory is MainMenu.nib
+                     (discussed next), but the optional file
+                     <filename>$VJ_BASE_DIR/share/vrjuggler/data/bundle/InfoPlist.strings</filename>,
+                     or some other version of same, can be copied into this
+                     directory. Other language-specific directories can be
+                     created as subdirectories of
+                     <filename>Contents/Resources</filename> as necessary.
+                     They, too, must contain a
+                     <filename>MainMenu.nib</filename>.</para>
+                  </section>
+
+                  <section>
+                     <title><filename>MainMenu.nib</filename></title>
+
+                     <para>This is the NIB for the VR juggler application
+                     bundle. It has been designed using Interface Builder with
+                     a simple user interface that knows how to interact with a
+                     VR Juggler application. The interface includes the
+                     <guimenu>File</guimenu> menu with the item for opening VR
+                     Juggler configuration files on the fly. Other menus and
+                     menu items can be added by making a custom MainMenu.nib.
+                     Using the version from
+                     <filename>$VJ_BASE_DIR/share/vrjuggler/data/bundle</filename>
+                     as a starting point is a good idea. Note that
+                     <filename>MainMenu.nib</filename> is a directory, and it
+                     should be copied recursively to
+                     <filename>Contents/Resources/en.lproj</filename>.</para>
+                  </section>
+               </section>
+
+               <section id="section.cocoa.app.execution">
+                  <title>Application Execution</title>
+
+                  <para>The <function>main()</function> function
+                  implementation show in <xref
+                  linkend="section.app.main.structure" /> will work without
+                  any problems on Mac OS X. However, many of the VR Juggler
+                  sample and test applications have a slightly more
+                  complicated <function>main()</function> function. In
+                  particular, these applications usually determine whether the
+                  user has passed in any arguments through the command line
+                  and exit with an error message explaining how to run the
+                  application if none were given. The example below shows how
+                  this is commonly done with an <literal>if</literal>
+                  statement before anything else:</para>
+
+                  <programlisting linenumbering="numbered">@include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;vrj/Kernel/Kernel.h&gt;
+#include &lt;simpleApp.h&gt;
+
+int main(int argc, char* argv[])
+{
+   if ( argc &lt;= 1 )
+   {
+      std::cout &lt;&lt; "Usage: " &lt;&lt; argv[0]
+                &lt;&lt; "cfgfile[0] cfgfile[1] ... cfgfile[n]"
+                &lt;&lt; std::endl;
+      std::exit(EXIT_FAILURE);
+   }
+
+   vrj::Kernel* kernel = vrj::Kernel::instance(); // Get the kernel
+   simpleApp* app      = new simpleApp();         // Create the app object
+
+   kernel-&gt;loadConfigFile(...);             // Configure the kernel
+   kernel-&gt;start();                         // Start the kernel thread
+   kernel-&gt;setApplication(app);             // Give application to kernel
+   kernel-&gt;waitForKernelStop();             // Block until kernel stops
+
+   return 0;
+}</programlisting>
+
+                  <para>This approach will not necessarily work on Mac OS X
+                  because users normally expect to be able to launch an
+                  application by double-clicking on its icon in the
+                  <application>Finder</application> and then loading data into
+                  it through a GUI. If a user launched the above application
+                  that way, the application would exit immediately, and the
+                  user would have to open the
+                  <application>Console</application> application to find out
+                  what went wrong. Launching from the command line, while
+                  perfectly valid on Mac OS X, is simply not what users
+                  expect. At the same time, remote launching of VR juggler
+                  applications in a cluster will almost certainly require
+                  launching without the use of the
+                  <application>Finder</application> and passing in arguments
+                  through <varname>argv</varname>. This is definitely the case
+                  when using <ulink
+                  url="https://realityforge.vrsource.org/trac/maestro/">Maestro</ulink>.</para>
+
+                  <para>If a VR Juggler application will be run on Mac OS X,
+                  the programmer has to decide whether command line processing
+                  is critical to the execution of the application. There are
+                  three options available to VR Juggler programmers on Mac OS
+                  X: rely exclusively on command line arguments to launch,
+                  handle no command line arguments, or allow the use of
+                  command line arguments but do not require them. Given that
+                  VR Juggler applications written on all other platforms are
+                  highly likely to rely exclusively on command line arguments
+                  to launch, the first choice is expected to be the most
+                  commonly chosen approach. Nevertheless, we will explain all
+                  three.</para>
+
+                  <section>
+                     <title>Relying Exclusively on Command Line Arguments to
+                     Launch</title>
+
+                     <para>If a VR Juggler application used on Mac OS X will
+                     rely solely on command line arguments to launch, it is
+                     operating in exactly the same manner as on all other
+                     platforms. The <function>main()</function> function can
+                     be written as is shown in this document to exit if no
+                     command line arguments are supplied. There is still one
+                     more thing to do, though. In the
+                     <filename>Resources</filename> directory of the
+                     application bundle, there must be a property list file in
+                     the bundle called
+                     <filename>Contents/Resources/vrjuggler.plist</filename>.
+                     This property list must have the property
+                     <literal>VRJConfigHandling</literal> set to
+                     <literal>false</literal>. This is the default setting for
+                     this property if the <filename>vrjuggler.plist</filename>
+                     file that comes with VR Juggler was used in constructing
+                     the application bundle.</para>
+
+                     <para>To execute the application, run the program in
+                     <filename>&lt;appname&gt;.app/Contents/MacOS</filename>
+                     from a command prompt and pass in the command line
+                     arguments. The appropriate event handling will be set up
+                     so that the application will behave just as any other Mac
+                     OS X application.</para>
+                  </section>
+
+                  <section>
+                     <title>Handling No Command Line Arguments at Launch
+                     Time</title>
+
+                     <para>If no command line arguments are to be handled
+                     (i.e., the application is to behave the same as typical
+                     Mac OS X applications), then the
+                     <function>main()</function> function shown above needs to
+                     change. Specifically, it cannot exit with an error
+                     message if no command line arguments are passed in. To
+                     keep the application portable, a preprocessor conditional
+                     can be used, as shown in <xref
+                     linkend="example.cocoa.no.cmd.flags" />. Then, in
+                     <filename>Contents/Resources/vrjuggler.plist</filename>,
+                     set the <literal>VRJConfigHandling</literal> property to
+                     <literal>true</literal>. To execute the application,
+                     double-click the application bundle icon in the
+                     <application>Finder</application> or use the
+                     <command>open</command> command from a command
+                     prompt.</para>
+
+                     <example id="example.cocoa.no.cmd.flags">
+                        <title>Ignoring Command Line Arguments on Mac OS
+                        X</title>
+
+                        <programlisting linenumbering="numbered">@include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;vrj/Kernel/Kernel.h&gt;
+#include &lt;simpleApp.h&gt;
+
+int main(int argc, char* argv[])
+{
+#if ! defined(VRJ_USE_COCOA)
+   if ( argc &lt;= 1 )
+   {
+      std::cout &lt;&lt; "Usage: " &lt;&lt; argv[0]
+                &lt;&lt; "cfgfile[0] cfgfile[1] ... cfgfile[n]"
+                &lt;&lt; std::endl;
+      std::exit(EXIT_FAILURE);
+   }
+#endif
+
+   vrj::Kernel* kernel = vrj::Kernel::instance(); // Get the kernel
+   simpleApp* app      = new simpleApp();         // Create the app object
+
+#if ! defined(VRJ_USE_COCOA)
+   kernel-&gt;loadConfigFile(...);             // Configure the kernel
+#endif
+   kernel-&gt;start();                         // Start the kernel thread
+   kernel-&gt;setApplication(app);             // Give application to kernel
+   kernel-&gt;waitForKernelStop();             // Block until kernel stops
+
+   return 0;
+}</programlisting>
+                     </example>
+                  </section>
+
+                  <section>
+                     <title>Allowing Optional Use of Command Line
+                     Arguments</title>
+
+                     <para>A compromise can be struck between the previous two
+                     options by allowing optional use of command line
+                     arguments. The compromise is simple: do not require
+                     command line arguments but still handle them if they are
+                     given. The form of the main() function that allows this
+                     is shown in <xref
+                     linkend="example.cocoa.optional.cmd.flags" />. Note that
+                     the <literal>#if</literal> around the call to
+                     <methodname>vrj::Kernel::loadConfigFile()</methodname>
+                     has been removed.</para>
+
+                     <example id="example.cocoa.optional.cmd.flags">
+                        <title>Handling Optional Command Line Arguments on Mac
+                        OS X</title>
+
+                        <programlisting linenumbering="numbered">@include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;vrj/Kernel/Kernel.h&gt;
+#include &lt;simpleApp.h&gt;
+
+int main(int argc, char* argv[])
+{
+#if ! defined(VRJ_USE_COCOA)
+   if ( argc &lt;= 1 )
+   {
+      std::cout &lt;&lt; "Usage: " &lt;&lt; argv[0]
+                &lt;&lt; "cfgfile[0] cfgfile[1] ... cfgfile[n]"
+                &lt;&lt; std::endl;
+      std::exit(EXIT_FAILURE);
+   }
+#endif
+
+   vrj::Kernel* kernel = vrj::Kernel::instance(); // Get the kernel
+   simpleApp* app      = new simpleApp();         // Create the app object
+
+   kernel-&gt;loadConfigFile(...);             // Configure the kernel
+   kernel-&gt;start();                         // Start the kernel thread
+   kernel-&gt;setApplication(app);             // Give application to kernel
+   kernel-&gt;waitForKernelStop();             // Block until kernel stops
+
+   return 0;
+}</programlisting>
+                     </example>
+
+                     <para>The only decision left to make is what value to use
+                     for the <literal>VRJConfigHandling</literal> property in
+                     <filename>Contents/Resources/vrjuggler.plist</filename>.
+                     If we set it to <filename>false</filename> (recall that
+                     that is the default in the
+                     <filename>$VJ_BASE_DIR/share/vrjuggler/data/bundle/vrjuggler.plist</filename>
+                     version), the application cannot be used as a handler for
+                     VR Juggler configuration files. If we set it to true, we
+                     have to be prepared for configuration files to come in
+                     other than through the command line or through the use of
+                     the <guimenu>File</guimenu> menu. The default
+                     <classname>NSApplication</classname> delegate
+                     (<classname>VRJBasicDelegate</classname>) can deal with
+                     either case. The default behavior for VR Juggler sample
+                     applications is to allow configuration files to be
+                     specified on the command line through the use of a
+                     <function>main()</function> function similar to that
+                     shown in <xref
+                     linkend="example.cocoa.optional.cmd.flags" /> and to
+                     leave the property <literal>VRJConfigHandling</literal>
+                     in
+                     <filename>Contents/Resources/vrjuggler.plist</filename>
+                     set to <literal>false</literal>.</para>
+                  </section>
+               </section>
+            </section>
          </section>
 
          <section>
@@ -10829,6 +11283,403 @@ public:
             the wand. Users can provide their own draw functors to customize
             the look of the basic simulator without going to the trouble of
             writing a custom simulator.</para>
+         </section>
+      </chapter>
+
+      <chapter>
+         <title>Advanced Topics</title>
+
+         <para>In this chapter, we address topics that are considered to be
+         for advanced uses of VR Juggler. This is not to say that they are
+         difficult concepts or hard-to-use features. Rather, they are not
+         things that the average VR Juggler application programmer will do or
+         even need to be aware of when writing VR software. These are
+         important, interesting, and worthwhile topics nonetheless.</para>
+
+         <section id="section.custom.delegate">
+            <title>Making a Custom <classname>NSApplication</classname>
+            Delegate on Mac OS X</title>
+
+            <para>The Cocoa support for VR Juggler is designed to take
+            advantage of the flexibility of Cocoa application design and, more
+            generally, the flexibility of the Objective-C language.
+            Specifically, VR Juggler application programmers targeting Mac OS
+            X have a unique opportunity to customize the behavior of VR
+            Juggler application behavior. Behind the scenes,
+            <classname>vrj::CocoaWrapper</classname> registers a delegate, an
+            instance of the Objective-C class
+            <classname>VRJBasicDelegate</classname>, with the
+            <classname>NSApplication</classname> singleton. Messages from
+            <classname>NSApplication</classname> are received and handled by
+            this object. VR Juggler application programmers can tailor the
+            handling of these messages by creating and using a custom
+            <classname>NSApplication</classname> delegate.</para>
+
+            <para>The full details of delegates and customizing the behavior
+            of <classname>NSApplication</classname> are well beyond the scope
+            of this document. Readers are referred to Apple's documentation
+            for <ulink
+            url="http://developer.apple.com/referencelibrary/GettingStarted/GS_Cocoa/index.html">Cocoa</ulink>
+            and <ulink
+            url="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/NSApplication_Class/Reference/Reference.html"><classname>NSApplication</classname>
+            class reference</ulink>. We will proceed from here under the
+            assumption that readers are already familiar with the relevant and
+            necessary topics including, but not limited to, Objective-C,
+            Objective-C++, and <classname>NSApplication</classname>.</para>
+
+            <para>In a typical Cocoa application, the delegate would be given
+            to the <classname>NSApplication</classname> singleton instance by
+            sending that object the<methodname>-setDelegate:</methodname>
+            message. Doing so, however, will interfere with the proper
+            functionality of VR Juggler. Thus, the registration mechanism is
+            done using the <literal>VRJDelegateClass</literal> property in
+            <filename>Contents/Resources/vrjuggler.plist</filename>. The
+            default value of this property is
+            <classname>VRJBasicDelegate</classname>. By changing this to the
+            name of the custom class, <classname>vrj::CocoaWrapper</classname>
+            will instantiate, register, and use the custom class instead.
+            (Being able to do this is a simple and elegant feature of
+            Objective-C.)</para>
+
+            <para>There are two ways to create a custom delegate class. The
+            class can either stand on its own as a subclass of
+            <classname>NSObject</classname>, or it can derive from
+            <classname>VRJBasicDelegate</classname>. The decision about which
+            approach to use depends on whether complete or partial
+            customization is desired. For this discussion, we will focus on
+            complete customization—that is, creating a new delegate type by
+            deriving from <classname>NSObject</classname>.</para>
+
+            <sidebar>
+               <para>It is worth pointing out that
+               <classname>VRJBasicDelegate</classname> is not necessarily
+               designed to be extended. It can be customized, but mainly, this
+               customization is done by overriding methods to
+               <emphasis>replace</emphasis> the behavior of the base class
+               rather than to extend it. Refer to the implementation of
+               <classname>VRJBasicDelegate</classname> to get a better idea of
+               the implications of overriding it for the purposes of
+               customization. The code can be found in
+               <filename>modules/vrjuggler/vrj/Kernel/VRJBasicDelegate.mm</filename>
+               and
+               <filename>modules/vrjuggler/vrj/Kernel/VRJBasicDelegate.h</filename>.</para>
+            </sidebar>
+
+            <para>As noted, the job of the delegate is to respond to messages
+            from <classname>NSApplication</classname>. The messages that are
+            delivered to the delegate are documented in the
+            <classname>NSApplication</classname> reference, and we will not
+            duplicate that information here. Instead, we will concentrate on a
+            small subset of these messages related to document loading. The
+            purpose is twofold. First, this explanation helps in understanding
+            the implementation of <classname>VRJBasicDelegate</classname>,
+            thereby clarifying options for customizing the behavior of that
+            class. Second, document loading is a prominent topic in Mac OS X
+            application development, and it is likely to be of the most
+            interest to VR application programmers, too.</para>
+
+            <para>To get things under way, have a glance at <xref
+            linkend="example.basic.delegate.impl" />. It is a relatively
+            simple class that uses Objective-C++ capabilities to create a
+            simple bridge between <filename>NSApplication</filename> and
+            <classname>vrj::Kernel</classname>. The documents being loaded in
+            this case are VR Juggler configuration files, but it is not much
+            of a leap to imagine the use of any other document type (i.e.,
+            data file used as input to the application). We will review each
+            of the methods of this class.</para>
+
+            <example id="example.basic.delegate.impl">
+               <title><filename>MyDelegate.mm</filename>: Basic Delegate
+               Implementation</title>
+
+               <programlisting linenumbering="numbered">#import &lt;Foundation/NSArray.h&gt;
+#import &lt;Foundation/NSString.h&gt;
+#import &lt;AppKit/NSApplication.h&gt;
+
+#include &lt;vrj/Kernel/Kernel.h&gt;
+
+
+@interface MyDelegate : NSObject
+{
+   BOOL mLoadConfigs;
+}
+@end
+
+@implementation MyDelegate
+   -(id) init
+   {
+      mLoadConfigs = YES;
+      return [super init];
+   }
+
+   -(void) setLoadConfigs:(BOOL) load
+   {
+      mLoadConfigs = load;
+   }
+
+   -(BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication*) sender
+   {
+      // We return NO here because we have a different way of shutting down
+      // the application. When vrj::Kernel::stop() is invoked, it will cause
+      // the application run loop to stop by invoking
+      // vrj::CocoaWrapper::stop().
+      return NO;
+   }
+
+   -(BOOL) application:(NSApplication*) theApplication
+              openFile:(NSString*) file
+   {
+      if ( mLoadConfigs )
+      {
+         vrj::Kernel::instance()-&gt;loadConfigFile([file UTF8String]);
+      }
+
+      return YES;
+   }
+
+   -(void) application:(NSApplication*) theApplication
+             openFiles:(NSArray*) files
+   {
+      if ( mLoadConfigs )
+      {
+         const int count = [files count];
+         for ( int i = 0; i &lt; count; ++i )
+         {
+            NSString* file = [files objectAtIndex:i];
+            vrj::Kernel::instance()-&gt;loadConfigFile([file UTF8String]);
+         }
+      }
+   }
+@end</programlisting>
+            </example>
+
+            <section>
+               <title>Data Members</title>
+
+               <para>The class <classname>MyDelegate</classname> has a single
+               data member, <varname>mLoadConfigs</varname>, that determines
+               how instances of this class will respond to certain messages
+               sent by <classname>NSApplication</classname>. The value will be
+               changed if <classname>vrj::CocoaWrapper</classname> sends the
+               <methodname>-setLoadConfigs:</methodname> message as a result
+               of the property <literal>VRJConfigHandling</literal> being set
+               in
+               <filename>Contents/Resources/vrjuggler.plist</filename>.</para>
+            </section>
+
+            <section>
+               <title>Designated Initializer</title>
+
+               <para>Every <classname>NSObject</classname> subclass has a
+               designated initializer. In the case of the VR Juggler
+               <classname>NSApplication</classname> delegate, this is the
+               basic <methodname>-init</methodname> method. The current usage
+               of the application delegate requires that this method be the
+               designated initializer, meaning that it is the only initializer
+               that will be invoked upon creating the delegate instance. This
+               limitation may be fixed in a future version of
+               <classname>vrj::CocoaWrapper</classname>. If the custom
+               delegate does not accept the -init message, then the inherited
+               <classname>NSObject</classname> version will be used.</para>
+
+               <para>In the meantime, this is where all object initialization
+               takes place. What this means exactly is up to the delegate
+               author. In this case, we set the data member
+               <varname>mLoadConfigs</varname> to <constant>YES</constant>,
+               send our base class the <methodname>-init</methodname> message,
+               and return the result. This last step (a widely used
+               convention) is what must be done by any custom delegate
+               implementation of <methodname>-init</methodname>.</para>
+            </section>
+
+            <section>
+               <title><methodname>-setLoadConfigs:</methodname></title>
+
+               <para>This method is a unique aspect of the delegate as it is
+               handled by <classname>vrj::CocoaWrapper</classname>.
+               Specifically, <classname>vrj::CocoaWrapper</classname> will
+               examine <filename>Contents/Resources/vrjuggler.plist</filename>
+               to see if it contains the property
+               <literal>VRJConfigHandling</literal>. If it does, it will send
+               this message to the delegate instance with the value as it is
+               set in the property list. This happens before the delegate
+               object is handed off to the
+               <classname>NSApplication</classname> singleton. The
+               consequences of setting and using the
+               <literal>VRJConfigHandling</literal> property were described in
+               <xref linkend="section.cocoa.app.execution" />.</para>
+
+               <para>A custom delegate does not have to implement this method.
+               If it does not, the Objective-C runtime will print a warning on
+               the console stating that the object does not receive this
+               message. (A future version of
+               <classname>vrj::CocoaWrapper</classname> may examine the
+               delegate interface to determine if it receives the message just
+               to avoid having that message printed.) It is up to the delegate
+               author to determine if implementing this method is necessary
+               and, if so, how it should behave. In our example, we set
+               <varname>mLoadConfigs</varname> to the value of the parameter,
+               just as <classname>VRJBasicDelegate</classname> does.</para>
+            </section>
+
+            <section>
+               <title><methodname>-applicationShouldTerminateAfterLastWindowClosed:</methodname></title>
+
+               <para>This method is used by
+               <classname>NSApplication</classname> to allow customization of
+               application shutdown. In the case of an application delegate
+               instantiated and used by
+               <classname>vrj::CocoaWrapper</classname>, it is critical that
+               this method return the value <constant>NO</constant>. The VR
+               Juggler kernel knows about
+               <classname>vrj::CocoaWrapper</classname> and knows how to shut
+               it down when the time is right. Because of that, we want the
+               kernel to control the termination process.</para>
+            </section>
+
+            <section>
+               <title><methodname>-application:openFile:</methodname></title>
+
+               <para>Now, we get to one of the methods used by
+               <classname>NSApplication</classname> to tell its delegate when
+               to open a single data file. Remember that our simple delegate
+               just handles VR Juggler configuration files. Moreover, it is
+               assuming (probably unsafely) that the only files that it will
+               be given to load are VR Juggler configuration files.</para>
+
+               <para>In any case, <classname>NSApplication</classname> sends
+               this message to its delegate at well-defined times. The
+               response of our simple delegate is based on the value of
+               <varname>mLoadConfigs</varname>. If it is true (set to
+               <constant>YES</constant>), that means that our delegate will
+               load configuration files as a result of the user
+               double-clicking on <filename>.jconf</filename> files in the
+               <application>Finder</application> or through the use of the
+               <command>open</command> command. Loading of configuration files
+               is done through the usual means of passing the file name to the
+               <classname>vrj::Kernel</classname> instance. Note that we
+               convert the <classname>NSString</classname> Unicode value to a
+               UTF8 string because that is what
+               <methodname>vrj::Kernel::loadConfigFile()</methodname> knows
+               how to handle. A future version of VR Juggler may have proper
+               Unicode support so that this step is not necessary.</para>
+
+               <para>Note that this method returns <constant>YES</constant>
+               regardless of the value of <varname>mLoadConfigs</varname>.
+               This has the effect of making
+               <classname>NSApplication</classname> think that the file was
+               loaded even if it was ignored. In some cases, it may make more
+               sense to return <constant>NO</constant> instead. As with just
+               about everything in the custom delegate, the exact response to
+               this message is up to the author.</para>
+            </section>
+
+            <section>
+               <title><methodname>-application:openFiles:</methodname></title>
+
+               <para>This method is the multi-file counterpart to
+               <methodname>-application:openFile:</methodname>. The behavior
+               is essentially the same except that it iterates over the
+               contents of the given NSArray object and calls
+               <methodname>vrj::Kernel::loadConfigFile()</methodname> for each
+               of the contained <classname>NSString</classname>
+               objects.</para>
+            </section>
+         </section>
+
+         <section>
+            <title>Defining Custom Cocoa/VR Juggler Bridging on Mac OS
+            X</title>
+
+            <para>More intrepid programmers may find that writing a custom
+            NSApplication delegate is not sufficient for customizing VR
+            Juggler application behavior on Mac OS X. In that event, the
+            customization can be even more extensive by replacing the use of
+            <classname>vrj::CocoaWrapper</classname> altogether. For all
+            intents and purposes, <classname>vrj::CocoaWrapper</classname> is
+            grafted on to <classname>vrj::Kernel</classname> to provide the
+            mediator between the competing desires of
+            <classname>NSApplication</classname> and
+            <classname>vrj::Kernel</classname> to control application
+            execution<footnote>
+                  <para>This is not a strictly accurate description of the
+                  design because <classname>vrj::Kernel</classname> has to
+                  know about <classname>vrj::CocoaWrapper</classname> and call
+                  its methods at certain times. A true mediator would sit
+                  above <classname>vrj::Kernel</classname> and
+                  <classname>vrj::CocoaWrapper</classname> and coordinate
+                  their interaction to prevent such tight coupling, but
+                  introducing that sort of design would complicate things
+                  unnecessarily.</para>
+               </footnote>. <classname>vrj::Kernel</classname> can be told not
+            to use <classname>vrj::CocoaWrapper</classname>, thus providing an
+            extension point where a different Cocoa/VR Juggler bridging can be
+            used. This is done by calling the static method
+            <methodname>vrj::Kernel::setUseCocoaWrapper()</methodname> with
+            the parameter <constant>false</constant>
+            <emphasis>before</emphasis> the first call to
+            <methodname>vrj::Kernel::instance()</methodname>.</para>
+
+            <para>In general, the programmer of this bridging code is free to
+            do whatever makes sense, but there are a few caveats. First, every
+            thread that is created by any Juggler component needs to have an
+            <classname>NSAutoReleasePool</classname> created. This is done by
+            registering thread start and thread exit methods with
+            <classname>vpr::Thread</classname>.</para>
+
+            <para>Next, AppKit and Cocoa need to know that they are being used
+            in a multi-threaded environment. They are made aware of this fact
+            when the first <classname>NSThread</classname> object is created.
+            VPR uses low-level POSIX threads on Mac OS X rather than using
+            <classname>NSThread</classname>. Thus, a dummy thread needs to be
+            created using <classname>NSThread</classname>. All it has to do is
+            run an empty method and exit. The thread start callback is
+            registered using
+            <methodname>vpr::Thread::addThreadStartCallback()</methodname>,
+            and the thread exit callback is registered using
+            <methodname>vpr::Thread::addThreadExitCallback()</methodname>. The
+            thread start callback must allocate and initialize a
+            thread-specific instance of
+            <classname>NSAutoReleasePool</classname>, and the thread exit
+            callback must release its reference to the
+            <classname>NSAutoReleasePool</classname> instance created by the
+            thread start callback. These callbacks have to be registered
+            <emphasis>before</emphasis> any <classname>vpr::Thread</classname>
+            objects are created.</para>
+
+            <para>Finally, the global window lock must be held until it is
+            safe to open input and graphics windows. This is necessary because
+            Gadgeteer and VR Juggler open windows in threads other than the
+            primordial, and AppKit does not handle that well. This lock (an
+            instance of <classname>NSConditionLock</classname>) is retrieved
+            using the static method
+            <methodname>gadget::InputAreaCocoa::getWindowLock()</methodname>.
+            The job of the bridging code is to acquire the lock as soon as it
+            can. Specifically, it should do it <emphasis>before</emphasis>
+            creating the <classname>NSApplication</classname> singleton object
+            by sending the <classname>NSApplication</classname> class the
+            <methodname>+sharedApplication</methodname> message.</para>
+
+            <para>Beyond that, the programmer is free to do as s/he wishes in
+            the implementation of the Cocoa/VR Juggler bridging code.
+            Referring to the implementation of
+            <classname>vrj::CocoaWrapper</classname> is highly recommended
+            (see
+            <filename>modules/vrjuggler/vrj/Kernel/CocoaWrapper.mm</filename>
+            and
+            <filename>modules/vrjuggler/vrj/Kernel/CocoaWrapper.h</filename>
+            in the source tree), but its exact behavior does not have to be
+            replicated. The points presented above are the most important
+            things that must be done by any implementation of bridging
+            code.</para>
+
+            <para>Ultimately, all of this work is done to help VR Juggler get
+            along with Cocoa. VR Juggler makes heavy use of multi-threading
+            whereas AppKit and Cocoa tend to work best in single-threaded
+            environments—or at in least environments where the primordial
+            thread is receiving and dispatching all window system events.
+            Things are just not that simple with VR Juggler, and thus the
+            bridge between these frameworks plays a vital role.</para>
          </section>
       </chapter>
    </part>
