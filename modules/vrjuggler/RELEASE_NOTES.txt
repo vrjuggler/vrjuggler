@@ -10,6 +10,13 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.0.4
+Released: August 14, 2007
+    Bugs fixed in this release:
+      * Stability improvements for Open Scene Graph applications when using
+        multi-pipe/multi-threaded configurations.
+      * The VRPN driver works in a cluster configuration again.
+
  Version: 2.0.3
 Released: February 14, 2007
     Bugs fixed in this release:

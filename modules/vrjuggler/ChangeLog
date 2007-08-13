@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0.3 released - 8.14.2007]===================================================
 Aug-14-2007 patrick     Merged stability fixes to vrj::OsgApp from the trunk.
 May-14-2007 patrick     Merged changes from the trunk to get vrj::OpenSGApp and
                         the OpenSG sample applications working with both OpenSG

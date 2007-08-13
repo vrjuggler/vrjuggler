@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.0.4 released - 8.14.2007]===================================================
+
 [1.0.3 released - 2.14.2007]===================================================
 Feb-14-2007 patrick     Fixed a critical bug in the loading of included config
                         files when using a relative path.
