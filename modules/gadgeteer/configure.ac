@@ -31,7 +31,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([Gadgeteer], [1.1], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Gadgeteer], [1.2], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([gadget/gadgetDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2007 by Iowa State University])
