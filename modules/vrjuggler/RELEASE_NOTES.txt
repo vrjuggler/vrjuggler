@@ -39,12 +39,11 @@ Released: August 14, 2007
 
        * Easier command-line application build support by leveraging
          Flagpoll (see https://realityforge.vrsource.org/view/FlagPoll/WebHome
-         for more information). While the use of Flagpoll on Windows is still
-         being refined, by the time VR Juggler 2.2.0 is released, command line
-         compilation using Flagpoll will be supported on all platforms. Note
-         that the *-config Perl scripts (such as vrjuggler-config) no longer
-         exist in VR Juggler 2.2. Forward compatibility for this change was
-         introduced with VR Juggler 2.0.2.
+         for more information). This includes support for the use of Flagpoll
+         on Windows by using Flagpoll 0.9.1 or enwer. Note that the *-config
+         Perl scripts (such as vrjuggler-config) no longer exist in VR Juggler
+         2.2. Forward compatibility for this change was introduced with VR
+         Juggler 2.0.2.
 
        * Cocoa support on Mac OS X. VR Juggler applications are deployed as
          bundles, and X11 is not required at all. Mac OS X users should review
