@@ -11089,6 +11089,13 @@ public:
       return NO;
    }
 
+   -(void) applicationDidFinishLaunching:(NSNotification*) aNotification
+   {
+      // We're ready to allow windows to open!
+      NSConditionLock* lock = gadget::InputAreaCocoa::getWindowLock();
+      [lock unlock];
+   }
+
    -(BOOL) application:(NSApplication*) theApplication
               openFile:(NSString*) file
    {
@@ -11198,6 +11205,21 @@ public:
                <classname>vrj::CocoaWrapper</classname> and knows how to shut
                it down when the time is right. Because of that, we want the
                kernel to control the termination process.</para>
+            </section>
+
+            <section>
+               <title><methodname>-applicationDidFinishLaunching:</methodname></title>
+
+               <para>When the application finishes launching, NSApplication
+               sends this message to its delegate. In the case of VR Juggler,
+               this is when we know that it is safe to allow threads for
+               Gadgeteer input windows and VR Juggler graphics pipes to open
+               windows. Until now, any such threads have been blocking on the
+               global window lock, acquired when
+               <classname>vrj::CocoaWrapper</classname> was instantiated. When
+               the delegate receives this message, it is time to release that
+               lock. Other operations can be performed in this method
+               implementation, but this step is absolutely critical.</para>
             </section>
 
             <section>
@@ -11321,7 +11343,13 @@ public:
             can. Specifically, it should do it <emphasis>before</emphasis>
             creating the <classname>NSApplication</classname> singleton object
             by sending the <classname>NSApplication</classname> class the
-            <methodname>+sharedApplication</methodname> message.</para>
+            <methodname>+sharedApplication</methodname> message. The global
+            lock must be released once we know that the application has
+            finished launching. If a delegate is used with the
+            <classname>NSApplication</classname> singleton, the lock should be
+            released when the delegate receives the
+            <methodname>-applicationDidFinishLaunching:</methodname>
+            message.</para>
 
             <para>Beyond that, the programmer is free to do as s/he wishes in
             the implementation of the Cocoa/VR Juggler bridging code.
