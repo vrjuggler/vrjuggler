@@ -455,8 +455,8 @@ if test "x${_with_ftd2xx}" != "xno" ; then
    FTD2XX_LIBS="-lftd2xx"
 
    if test "x$PLATFORM" = "xLinux" ; then
-      FTD2XX_LIBS="$FTD2XX_LIBS -lusb"
-      gadget_ftd2xx_extra_libs='-lusb'
+      FTD2XX_LIBS="$FTD2XX_LIBS -lusb -ldl"
+      gadget_ftd2xx_extra_libs='-pthread -lusb -ldl'
    fi
 
    CPPFLAGS="$FTD2XX_INCLUDES $CPPFLAGS"
