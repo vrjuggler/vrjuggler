@@ -56,6 +56,14 @@
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}%{?dist}
 
+# Change these to drop the patch number for the stable release.
+%define vpr_version_dist %{vpr_version}
+%define tweek_version_dist %{tweek_version}
+%define jccl_version_dist %{jccl_version}
+%define sonix_version_dist %{sonix_version}
+%define gadgeteer_version_dist %{gadgeteer_version}
+%define vrjuggler_version_dist %{vrjuggler_version}
+
 %define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
 
 %if %have_java
@@ -960,7 +968,7 @@ rm -rf %{buildroot}
 
 %files -n vpr-devel
 %defattr(-, root, root)
-%{_includedir}/vpr-%{vpr_version}/
+%{_includedir}/vpr-%{vpr_version_dist}/
 %{_libdir}/libvpr*.a
 %{_libdir}/%{vj_arch}/libvpr*.a
 %{_libdir}/%{vj_arch}/*/libvpr*.a
@@ -968,7 +976,7 @@ rm -rf %{buildroot}
 %{_libdir}/flagpoll/vpr*.fpc
 %{_prefix}/share/aclocal/vpr.m4
 %{_prefix}/share/aclocal/vrj-helpers.m4
-%{_prefix}/share/vpr-%{vpr_version}
+%{_prefix}/share/vpr-%{vpr_version_dist}
 
 %if %have_omniorb
 %files -n tweek-c++
@@ -980,27 +988,27 @@ rm -rf %{buildroot}
 %dir %{_libdir}/%{vj_arch}/profiled/
 %{_libdir}/%{vj_arch}/libtweek*.so
 %{_libdir}/%{vj_arch}/*/libtweek*.so
-%dir %{_prefix}/share/tweek-%{tweek_version}/
-%{_prefix}/share/tweek-%{tweek_version}/data
+%dir %{_prefix}/share/tweek-%{tweek_version_dist}/
+%{_prefix}/share/tweek-%{tweek_version_dist}/data
 %doc COPYING.txt modules/tweek/ChangeLog
 
 %files -n tweek-c++-devel
 %defattr(-, root, root)
-%{_includedir}/tweek-%{tweek_version}
+%{_includedir}/tweek-%{tweek_version_dist}
 %{_libdir}/libtweek*.a
 %{_libdir}/%{vj_arch}/libtweek*.a
 %{_libdir}/%{vj_arch}/*/libtweek*.a
-%{_libdir}/flagpoll/tweek-%{tweek_version}*.fpc
-%{_libdir}/flagpoll/tweek-python-%{tweek_version}*.fpc
+%{_libdir}/flagpoll/tweek-%{tweek_version_dist}*.fpc
+%{_libdir}/flagpoll/tweek-python-%{tweek_version_dist}*.fpc
 %{_prefix}/share/aclocal/tweek.m4
-%{_prefix}/share/tweek-%{tweek_version}/test
-%{_prefix}/share/tweek-%{tweek_version}/tweek.appdefs.mk
+%{_prefix}/share/tweek-%{tweek_version_dist}/test
+%{_prefix}/share/tweek-%{tweek_version_dist}/tweek.appdefs.mk
 %endif
 
 %if %have_java
 %files -n tweek-java-jni
 %defattr(-, root, root)
-%{_prefix}/share/tweek-%{tweek_version}/java/%{tweek_arch}
+%{_prefix}/share/tweek-%{tweek_version_dist}/java/%{tweek_arch}
 
 %files -n tweek-java
 %defattr(-, root, root)
@@ -1009,13 +1017,13 @@ rm -rf %{buildroot}
 %{_bindir}/logkit-1.2.jar
 %{_bindir}/tweek
 %{_bindir}/tweek-base.sh
-%{_libdir}/flagpoll/tweek-java-%{tweek_version}*.fpc
-%{_prefix}/share/tweek-%{tweek_version}/beans
-%dir %{_prefix}/share/tweek-%{tweek_version}/java/
-%{_prefix}/share/tweek-%{tweek_version}/java/*.jar
-%{_prefix}/share/tweek-%{tweek_version}/java/*.txt
-%{_prefix}/share/tweek-%{tweek_version}/LICENSE
-%{_prefix}/share/tweek-%{tweek_version}/README.source
+%{_libdir}/flagpoll/tweek-java-%{tweek_version_dist}*.fpc
+%{_prefix}/share/tweek-%{tweek_version_dist}/beans
+%dir %{_prefix}/share/tweek-%{tweek_version_dist}/java/
+%{_prefix}/share/tweek-%{tweek_version_dist}/java/*.jar
+%{_prefix}/share/tweek-%{tweek_version_dist}/java/*.txt
+%{_prefix}/share/tweek-%{tweek_version_dist}/LICENSE
+%{_prefix}/share/tweek-%{tweek_version_dist}/README.source
 %doc COPYING.txt modules/tweek/ChangeLog
 %endif
 
@@ -1028,39 +1036,39 @@ rm -rf %{buildroot}
 %dir %{_libdir}/%{vj_arch}/profiled/
 %{_libdir}/%{vj_arch}/libjccl*.so
 %{_libdir}/%{vj_arch}/*/libjccl*.so
-%dir %{_prefix}/share/jccl-%{jccl_version}/
-%{_prefix}/share/jccl-%{jccl_version}/data
-%{_prefix}/share/jccl-%{jccl_version}/tools
+%dir %{_prefix}/share/jccl-%{jccl_version_dist}/
+%{_prefix}/share/jccl-%{jccl_version_dist}/data
+%{_prefix}/share/jccl-%{jccl_version_dist}/tools
 %doc COPYING.txt modules/jackal/ChangeLog
 
 %files -n jccl-c++-devel
 %defattr(-, root, root)
-%{_includedir}/jccl-%{jccl_version}
+%{_includedir}/jccl-%{jccl_version_dist}
 %{_libdir}/libjccl*.a
 %{_libdir}/%{vj_arch}/libjccl*.a
 %{_libdir}/%{vj_arch}/*/libjccl*.a
 %{_libdir}/flagpoll/jccl*.fpc
 %{_prefix}/share/aclocal/jccl.m4
-%{_prefix}/share/jccl-%{jccl_version}/test
+%{_prefix}/share/jccl-%{jccl_version_dist}/test
 
 %if %have_omniorb
 %files -n jccl-rtrc-plugin-c++
 %defattr(-, root, root)
-%{_libdir}/jccl-%{jccl_version}
+%{_libdir}/jccl-%{jccl_version_dist}
 %endif
 
 %if %have_java
 %files -n jccl-java
 %defattr(-, root, root)
-%dir %{_prefix}/share/jccl-%{jccl_version}/beans/
-%{_prefix}/share/jccl-%{jccl_version}/beans/jccl_config.*
-%{_prefix}/share/jccl-%{jccl_version}/beans/jccl_editors.*
-%{_prefix}/share/jccl-%{jccl_version}/java
+%dir %{_prefix}/share/jccl-%{jccl_version_dist}/beans/
+%{_prefix}/share/jccl-%{jccl_version_dist}/beans/jccl_config.*
+%{_prefix}/share/jccl-%{jccl_version_dist}/beans/jccl_editors.*
+%{_prefix}/share/jccl-%{jccl_version_dist}/java
 %doc COPYING.txt modules/jackal/ChangeLog
 
 %files -n jccl-rtrc-plugin-java
 %defattr(-, root, root)
-%{_prefix}/share/jccl-%{jccl_version}/beans/jccl_rtrc.*
+%{_prefix}/share/jccl-%{jccl_version_dist}/beans/jccl_rtrc.*
 %endif
 
 %files -n sonix
@@ -1072,33 +1080,33 @@ rm -rf %{buildroot}
 %dir %{_libdir}/%{vj_arch}/profiled/
 %{_libdir}/%{vj_arch}/libsonix*.so
 %{_libdir}/%{vj_arch}/*/libsonix*.so
-%dir %{_libdir}/sonix-%{sonix_version}/
-%dir %{_libdir}/sonix-%{sonix_version}/plugins/
-%dir %{_libdir}/sonix-%{sonix_version}/plugins/dbg/
-%dir %{_libdir}/sonix-%{sonix_version}/plugins/opt/
-%{_prefix}/share/sonix-%{sonix_version}/data
+%dir %{_libdir}/sonix-%{sonix_version_dist}/
+%dir %{_libdir}/sonix-%{sonix_version_dist}/plugins/
+%dir %{_libdir}/sonix-%{sonix_version_dist}/plugins/dbg/
+%dir %{_libdir}/sonix-%{sonix_version_dist}/plugins/opt/
+%{_prefix}/share/sonix-%{sonix_version_dist}/data
 %doc COPYING.txt modules/sonix/ChangeLog
 
 %files -n sonix-devel
 %defattr(-, root, root)
-%{_includedir}/sonix-%{sonix_version}
+%{_includedir}/sonix-%{sonix_version_dist}
 %{_libdir}/libsonix*.a
 %{_libdir}/%{vj_arch}/libsonix*.a
 %{_libdir}/%{vj_arch}/*/libsonix*.a
 %{_libdir}/flagpoll/sonix*.fpc
 %{_prefix}/share/aclocal/sonix.m4
-%{_prefix}/share/sonix-%{sonix_version}/samples
+%{_prefix}/share/sonix-%{sonix_version_dist}/samples
 
 %if %have_audiere
 %files -n sonix-plugin-audiere
 %defattr(-, root, root)
-%{_libdir}/sonix-%{sonix_version}/plugins/*/Audiere_snd.so
+%{_libdir}/sonix-%{sonix_version_dist}/plugins/*/Audiere_snd.so
 %endif
 
 %if %have_openal
 %files -n sonix-plugin-openal
 %defattr(-, root, root)
-%{_libdir}/sonix-%{sonix_version}/plugins/*/OpenAL_snd.so
+%{_libdir}/sonix-%{sonix_version_dist}/plugins/*/OpenAL_snd.so
 %endif
 
 %files -n gadgeteer
@@ -1110,147 +1118,146 @@ rm -rf %{buildroot}
 %dir %{_libdir}/%{vj_arch}/profiled/
 %{_libdir}/%{vj_arch}/libgadget*.so
 %{_libdir}/%{vj_arch}/*/libgadget*.so
-%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/
-%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/
-%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/
-%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/
-%dir %{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/debug/
-%dir %{_prefix}/share/gadgeteer-%{gadgeteer_version}/
-%{_prefix}/share/gadgeteer-%{gadgeteer_version}/data
-%{_prefix}/share/gadgeteer-%{gadgeteer_version}/tools
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version_dist}/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version_dist}/plugins/
+%dir %{_libdir}/gadgeteer-%{gadgeteer_version_dist}/plugins/debug/
+%{_prefix}/share/gadgeteer-%{gadgeteer_version_dist}/data
+%{_prefix}/share/gadgeteer-%{gadgeteer_version_dist}/tools
 %doc COPYING.txt modules/gadgeteer/ChangeLog
 
 %files -n gadgeteer-devel
 %defattr(-, root, root)
-%{_includedir}/gadgeteer-%{gadgeteer_version}/cluster
-%{_includedir}/gadgeteer-%{gadgeteer_version}/gadget
-%{_includedir}/gadgeteer-%{gadgeteer_version}/plugins
+%{_includedir}/gadgeteer-%{gadgeteer_version_dist}/cluster
+%{_includedir}/gadgeteer-%{gadgeteer_version_dist}/gadget
+%{_includedir}/gadgeteer-%{gadgeteer_version_dist}/plugins
 %{_libdir}/libgadget*.a
 %{_libdir}/%{vj_arch}/libgadget*.a
 %{_libdir}/%{vj_arch}/*/libgadget*.a
 %{_libdir}/flagpoll/gadgeteer*.fpc
 %{_prefix}/share/aclocal/gadget.m4
-%{_prefix}/share/gadgeteer-%{gadgeteer_version}/*.mk
-%{_prefix}/share/gadgeteer-%{gadgeteer_version}/samples
-%{_prefix}/share/gadgeteer-%{gadgeteer_version}/test
+%{_prefix}/share/gadgeteer-%{gadgeteer_version_dist}/*.mk
+%{_prefix}/share/gadgeteer-%{gadgeteer_version_dist}/samples
+%{_prefix}/share/gadgeteer-%{gadgeteer_version_dist}/test
 
 %files -n gadgeteer-driver-5dt-dataglove
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/DataGlove_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/DataGlove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/DataGlove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/DataGlove_drv.so
 
 %files -n gadgeteer-driver-dtrack
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/DTrack_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/DTrack_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/DTrack_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/DTrack_drv.so
 
 %files -n gadgeteer-driver-etherio24
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/ElexolEther24_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/ElexolEther24_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/ElexolEther24_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/ElexolEther24_drv.so
 
 %files -n gadgeteer-driver-flock
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Flock_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Flock_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/Flock_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/Flock_drv.so
 
 %files -n gadgeteer-driver-fastrak
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Fastrak_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Fastrak_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/Fastrak_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/Fastrak_drv.so
 
 %files -n gadgeteer-driver-ibox
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/IBox_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/IBox_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/IBox_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/IBox_drv.so
 
 %files -n gadgeteer-driver-intersense-api
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/IntersenseAPI_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/IntersenseAPI_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/IntersenseAPI_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/IntersenseAPI_drv.so
 
 %files -n gadgeteer-driver-is900
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/IS900_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/IS900_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/IS900_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/IS900_drv.so
 
 %files -n gadgeteer-driver-joydev
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/LinuxJoydev_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/LinuxJoydev_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/LinuxJoydev_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/LinuxJoydev_drv.so
 
 %files -n gadgeteer-driver-motionstar
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/MotionStar_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/MotionStar_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/MotionStar_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/MotionStar_drv.so
 
 %if %have_libusb
 %files -n gadgeteer-driver-p5glove
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/P5Glove_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/P5Glove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/P5Glove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/P5Glove_drv.so
 %endif
 
 %files -n gadgeteer-driver-pinchglove
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/PinchGlove_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/PinchGlove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/PinchGlove_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/PinchGlove_drv.so
 
 %files -n gadgeteer-driver-serial-encoder
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/SerialEncoder_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/SerialEncoder_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/SerialEncoder_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/SerialEncoder_drv.so
 
 %files -n gadgeteer-driver-spaceball
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/SpaceBall_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/SpaceBall_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/SpaceBall_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/SpaceBall_drv.so
 
 %files -n gadgeteer-driver-threedmouse
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/ThreeDMouse_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/ThreeDMouse_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/ThreeDMouse_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/ThreeDMouse_drv.so
 
 %files -n gadgeteer-driver-trackd
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Trackd_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Trackd_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/Trackd_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/Trackd_drv.so
 
 %if %have_trackdapi
 %files -n gadgeteer-driver-trackd-api
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/TrackdAPI_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/TrackdAPI_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/TrackdAPI_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/TrackdAPI_drv.so
 %endif
 
 %if %have_vrpn
 %files -n gadgeteer-driver-vrpn
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/VRPN_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/VRPN_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/VRPN_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/VRPN_drv.so
 %endif
 
 %files -n gadgeteer-driver-wanda
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/Wanda_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/Wanda_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/Wanda_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/Wanda_drv.so
 
 %if %have_ftd2xx && %have_libusb
 %files -n gadgeteer-driver-x-ist
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/X-IST_drv.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/drivers/debug/X-IST_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/X-IST_drv.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/drivers/debug/X-IST_drv.so
 %endif
 
 %files -n gadgeteer-plugin-application-data-manager
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/ApplicationDataManager.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/debug/ApplicationDataManager.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/plugins/ApplicationDataManager.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/plugins/debug/ApplicationDataManager.so
 
 %files -n gadgeteer-plugin-remote-input-manager
 %defattr(-, root, root)
-%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/RIMPlugin.so
-%{_libdir}/gadgeteer-%{gadgeteer_version}/plugins/debug/RIMPlugin.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/plugins/RIMPlugin.so
+%{_libdir}/gadgeteer-%{gadgeteer_version_dist}/plugins/debug/RIMPlugin.so
 
 %files
 %defattr(-, root, root)
@@ -1261,31 +1268,31 @@ rm -rf %{buildroot}
 %dir %{_libdir}/%{vj_arch}/profiled/
 %{_libdir}/%{vj_arch}/libvrj-*.so
 %{_libdir}/%{vj_arch}/*/libvrj-*.so
-%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version}/
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/data
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/tools
+%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/data
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/tools
 %doc COPYING.txt INSTALL.html INSTALL.txt README.html README.txt modules/vrjuggler/ChangeLog modules/vrjuggler/RELEASE_NOTES.txt
 
 %files -n vrjuggler-devel
 %defattr(-, root, root)
-%dir %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/*.h
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Display
-%dir %{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/*.h
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Kernel
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Performance
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Sound
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Test
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Util
+%dir %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/*.h
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Display
+%dir %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/*.h
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Kernel
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Performance
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Sound
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Test
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Util
 %{_libdir}/libvrj-*.a
 %{_libdir}/%{vj_arch}/libvrj-*.a
 %{_libdir}/%{vj_arch}/*/libvrj-*.a
 %{_libdir}/flagpoll/vrjuggler*.fpc
 %{_prefix}/share/aclocal/vrj.m4
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/*.mk
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/samples
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/test
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/*.mk
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/samples
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/test
 
 %files -n vrjuggler-opengl
 %defattr(-, root, root)
@@ -1295,10 +1302,9 @@ rm -rf %{buildroot}
 
 %files -n vrjuggler-opengl-devel
 %defattr(-, root, root)
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OGL
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OSG
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OpenGL
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/OpenSG
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OGL
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OSG
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OpenSG
 %{_libdir}/libvrj_ogl*.a
 %{_libdir}/%{vj_arch}/libvrj_ogl*.a
 %{_libdir}/%{vj_arch}/*/libvrj_ogl*.a
@@ -1312,7 +1318,7 @@ rm -rf %{buildroot}
 
 %files -n vrjuggler-performer-devel
 %defattr(-, root, root)
-%{_includedir}/vrjuggler-%{vrjuggler_version}/vrj/Draw/Pf
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/Pf
 %{_libdir}/libvrj_pf*.a
 %{_libdir}/%{vj_arch}/libvrj_pf*.a
 %{_libdir}/%{vj_arch}/*/libvrj_pf*.a
@@ -1322,31 +1328,31 @@ rm -rf %{buildroot}
 %files -n vrjconfig
 %defattr(-, root, root)
 %{_bindir}/vrjconfig
-%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/customeditors
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/wizards
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/VRJConfig.*
-%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/CommonEditors.jar
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jgraphaddons.jar
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jgraph.jar
+%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/beans/
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/beans/customeditors
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/beans/wizards
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/beans/VRJConfig.*
+%dir %{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/CommonEditors.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/jgraphaddons.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/jgraph.jar
 %doc COPYING.txt modules/vrjuggler/vrjconfig/LICENSE-java-laf.txt
 %endif
 
 %if %have_omniorb
 %files -n vrjuggler-perf-plugin-c++
 %defattr(-, root, root)
-%{_libdir}/vrjuggler-%{vrjuggler_version}
+%{_libdir}/vrjuggler-%{vrjuggler_version_dist}
 %endif
 
 %if %have_java
 %files -n vrjuggler-perf-plugin-java
 %defattr(-, root, root)
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/beans/PerformanceMonitor.*
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/gnujaxp.jar
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jcommon.jar
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/jfreechart.jar
-%{_prefix}/share/vrjuggler-%{vrjuggler_version}/java/servlet.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/beans/PerformanceMonitor.*
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/gnujaxp.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/jcommon.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/jfreechart.jar
+%{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/java/servlet.jar
 %endif
 
 %files -n juggler
