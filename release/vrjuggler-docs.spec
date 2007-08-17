@@ -26,6 +26,13 @@
 
 %define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
 
+%define vpr_version_dist 2.1
+%define tweek_version_dist 1.3
+%define jccl_version_dist 1.3
+%define sonix_version_dist 1.3
+%define gadgeteer_version_dist 1.3
+%define vrjuggler_version_dist 2.3
+
 Name: vrjuggler-docs
 Summary: Documentation for VR Juggler, the virtual platform for VR application development
 Version: %{global_version}
@@ -176,7 +183,7 @@ rm -rf %{buildroot}
 %build
 %if %{have_java}
 make DIRS="modules/tweek modules/jackal modules/jackal/plugins"
-make -f Makefile.docs TWEEK_BASE_DIR=`pwd`/instlinks TWEEK_VERSION=%{tweek_version} JCCL_BASE_DIR=`pwd`/instlinks JCCL_VERSION=%{jccl_version} all
+make -f Makefile.docs TWEEK_BASE_DIR=`pwd`/instlinks TWEEK_VERSION=%{tweek_version_dist} JCCL_BASE_DIR=`pwd`/instlinks JCCL_VERSION=%{jccl_version_dist} all
 %else
 make -f Makefile.docs JAVADOC_SUBDIR= all
 %endif
@@ -188,16 +195,16 @@ make -f Makefile.docs webroot=%{buildroot} install
 make -f Makefile.docs JAVADOC_SUBDIR= webroot=%{buildroot} install
 %endif
 # This file is not part of the documentation, it is for the website.
-rm -f %{buildroot}/tweek/1.1/beanlist.xsd
+rm -f %{buildroot}/tweek/1.2/beanlist.xsd
 # Ignore the Juggler build system documentation.
 rm -rf %{buildroot}/docs
 mkdir -p %{buildroot}%{_docdir}
-mv %{buildroot}/vapor/2.1 %{buildroot}%{_docdir}/vpr-%{vpr_version}
-mv %{buildroot}/tweek/1.3 %{buildroot}%{_docdir}/tweek-%{tweek_version}
-mv %{buildroot}/jccl/1.3 %{buildroot}%{_docdir}/jccl-%{jccl_version}
-mv %{buildroot}/sonix/1.3 %{buildroot}%{_docdir}/sonix-%{sonix_version}
-mv %{buildroot}/gadgeteer/1.3 %{buildroot}%{_docdir}/gadgeteer-%{gadgeteer_version}
-mv %{buildroot}/vrjuggler/2.3 %{buildroot}%{_docdir}/vrjuggler-%{vrjuggler_version}
+mv %{buildroot}/vapor/%{vpr_version_dist} %{buildroot}%{_docdir}/vpr-%{vpr_version}
+mv %{buildroot}/tweek/%{tweek_version_dist} %{buildroot}%{_docdir}/tweek-%{tweek_version}
+mv %{buildroot}/jccl/%{jccl_version_dist} %{buildroot}%{_docdir}/jccl-%{jccl_version}
+mv %{buildroot}/sonix/%{sonix_version_dist} %{buildroot}%{_docdir}/sonix-%{sonix_version}
+mv %{buildroot}/gadgeteer/%{gadgeteer_version_dist} %{buildroot}%{_docdir}/gadgeteer-%{gadgeteer_version}
+mv %{buildroot}/vrjuggler/%{vrjuggler_version_dist} %{buildroot}%{_docdir}/vrjuggler-%{vrjuggler_version}
 
 %clean
 rm -rf %{buildroot}
