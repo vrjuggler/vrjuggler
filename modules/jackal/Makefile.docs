@@ -69,7 +69,7 @@ docs:
           -doctitle "$(APP_NAME) v$(PROJECT_NUMBER)"			\
           -header "<p><b>$(APP_NAME)</b><br>v$(PROJECT_NUMBER)</p>"	\
           -bottom "<font size=1>Copyright &copy; 1998&ndash;2007 Iowa State University. All rights reserved.</font>" \
-          -link "http://java.sun.com/j2se/1.4.2/docs/api/"		\
+          -link "http://java.sun.com/j2se/1.5.0/docs/api/"		\
           -link "http://www.vrjuggler.org/tweek/$(PROJECT_NUMBER)/programmer.reference.java" \
           -link "http://www.jdom.org/docs/apidocs/" 			\
           $(DOC_PKGS)
