@@ -169,7 +169,7 @@ public:
     *
     *    // Now that we know we have a root node add the default light to the
     *    // scene.
-    *    this->getScene()->addChild( mLightSource0.get() );
+    *    getScene()->addChild(mLightSource0.get());
     * }
     *
     * // Next, override vrj::osg::App::getSceneViewDefaults() to change the
