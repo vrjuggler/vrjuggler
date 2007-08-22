@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-08-21 patrick  Removed support for SPROC.
+                    NEW VERSION: 2.1.5
 2007-07-24 aronb    vpr::Library::findSymbol() throws vpr::LibraryException if
                     the library has not been loaded.
 2007-07-08 patrick  Debug-enabled code linked against the release runtime on

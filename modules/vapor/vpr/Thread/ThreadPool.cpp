@@ -125,12 +125,6 @@ void ThreadPool::threadLoop(OneThread* myThread)
    listLock.acquire();
    listLock.release();     // Do this to make sure addThread is done
 
-#ifdef VPR_USE_IRIX_SPROC
-
-   // --- SIGNAL Handlers ---- //
-   prctl(PR_TERMCHILD);       // What should I do with. FIX - Allen
-#endif
-
    for ( ;; )
    {
       // --- WAIT FOR WORK --- //

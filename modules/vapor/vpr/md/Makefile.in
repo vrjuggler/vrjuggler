@@ -49,7 +49,6 @@ SUBDIR=		DARWIN	\
 		NSPR	\
 		POSIX	\
 		SIM	\
-		SPROC	\
 		WIN32	\
 		common
 

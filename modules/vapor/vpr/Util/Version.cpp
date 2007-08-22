@@ -62,8 +62,6 @@ VPR_IMPLEMENT(std::string) getSubsystem ()
    subsystem_string = std::string("NSPR");
 #elif defined(VPR_USE_PTHREADS)
    subsystem_string = std::string("POSIX");
-#elif defined(VPR_USE_IRIX_SPROC)
-   subsystem_string = std::string("IRIX_SPROC");
 #endif
 
    return subsystem_string;

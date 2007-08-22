@@ -104,18 +104,14 @@
                         Network
                         ..
                     ..
-                    SPROC
-                        SharedMem
-                        ..
-                        Sync
-                        ..
-                        Thread
-                        ..
-                    ..
                     WIN32
                         IO
                             Port
                             ..
+                        ..
+                        Sync
+                        ..
+                        Thread
                         ..
                     ..
                 ..

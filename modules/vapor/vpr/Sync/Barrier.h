@@ -45,15 +45,9 @@
 
 #include <vpr/vprConfig.h>
 
-#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#  include <ulocks.h>
-#  include <vpr/md/SPROC/Sync/BarrierSGI.h>
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR || \
-      VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX || \
-      VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
-#  include <vpr/Sync/CondVar.h>
-#  include <vpr/Sync/Mutex.h>
-#  include <vpr/Sync/Guard.h>
+#include <vpr/Sync/CondVar.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 
 
 namespace vpr
@@ -82,8 +76,7 @@ public:
 
 /** \class Barrier Barrier.h vpr/Sync/Barrier.h
  *
- * Implements "barrier synchronization" primitive.  This is used for non-SPROC
- * threading subsystems.
+ * Implements "barrier synchronization" primitive.
  */
 class Barrier
 {
@@ -131,6 +124,5 @@ private:
 
 } // End of vpr namespace
 
-#endif  /* ! VPR_USE_IRIX_SPROC */
 
 #endif  /* _VPR_Barrier_h_ */

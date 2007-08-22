@@ -84,8 +84,8 @@ extern VPR_API(vpr::Uint32) getVersionNumber();
 
 /**
  * Returns the name of the threading subsystem used to compile VPR. It will be
- * one of \c "POSIX", \c "SPROC", or \c "NSPR". This identifier is part of the
- * full version string returned by vpr::getVersionString().
+ * one of \c "POSIX" or \c "NSPR". This identifier is part of the full version
+ * string returned by vpr::getVersionString().
  *
  * @see vpr::getVersionString()
  */

@@ -962,13 +962,6 @@
             </listitem>
 
             <listitem>
-               <para>The <function>sproc(2)</function> manual page on IRIX or
-               on <ulink
-               url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&amp;db=man&amp;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&amp;srch=sproc">SGI's
-               technical publications site</ulink>.</para>
-            </listitem>
-
-            <listitem>
                <para>The <function>pthread(3)</function> manual page for your
                operating system. The pthread functions are part of a POSIX
                standard and will be the same across platforms.</para>
@@ -1369,12 +1362,10 @@ thread-&gt;setPrio(prio);</programlisting>
                <methodname>kill()</methodname> method with no argument cancels
                the execution of the thread. When using POSIX threads, this is
                actually implemented using
-               <methodname>pthread_cancel(3)</methodname>. On IRIX with SPROC
-               threads, a <constant>SIGKILL</constant> is sent to the thread
-               to end its execution forcibly. The syntax for using this method
-               is basically the same as in the previous section, but it is
-               repeated to make that clear. Again assuming that there is a
-               running thread with a pointer to its
+               <methodname>pthread_cancel(3)</methodname>. The syntax for
+               using this method is basically the same as in the previous
+               section, but it is repeated to make that clear. Again assuming
+               that there is a running thread with a pointer to its
                <classname>vpr::Thread</classname> object stored in
                <varname>thread</varname>, use the following:</para>
 
@@ -1404,8 +1395,7 @@ thread-&gt;setPrio(prio);</programlisting>
                <para>Lastly, it is common to request the currently running
                thread's identifier. This only makes sense when called from a
                point on that thread's flow of execution. (In POSIX threads,
-               this is the notion of <quote>self</quote>. For IRIX SPROC
-               threads, this means getting the process ID.) The
+               this is the notion of <quote>self</quote>.) The
                <classname>vpr::Thread</classname> API provides a static method
                that can be called at any time in the thread that is currently
                running. It returns a pointer to a
@@ -1440,13 +1430,6 @@ my_id = vpr::Thread::self();</programlisting>
                are:</para>
 
                <itemizedlist>
-                  <listitem>
-                     <para><classname>vpr::ThreadSGI</classname>: A wrapper
-                     around IRIX SPROC threads (refer to the
-                     <function>sproc(2)</function> manual page for more
-                     information)</para>
-                  </listitem>
-
                   <listitem>
                      <para><classname>vpr::ThreadPosix</classname>: A wrapper
                      around POSIX threads (both Draft 4 and Draft 10 of the
@@ -3150,11 +3133,11 @@ cv.release();</programlisting>
             <classname>vpr::SocketDatagram</classname>. Indeed, user code
             actually uses instances of those classes. The use of sim sockets
             versus real sockets is made when VPR is compiled, in the same way
-            that the threading abstraction (NSPR versus POSIX versus Win32
-            versus SPROC) is chosen at compile time. Ideally, user code should
-            not have to change at all to use sim sockets, thus making it
-            possible to test network algorithms with exactly the same code as
-            would be used with real sockets.</para>
+            that the threading abstraction (NSPR versus POSIX versus Win32) is
+            chosen at compile time. Ideally, user code should not have to
+            change at all to use sim sockets, thus making it possible to test
+            network algorithms with exactly the same code as would be used
+            with real sockets.</para>
 
             <para>Of course, the real world is not ideal. While it is very
             true that most code does not have to change to use sim sockets,
@@ -3635,12 +3618,13 @@ private:
          platform-specific <quote>domain</quote>, as specified in the header
          <filename>vpr/vprDomain.h</filename>. These domains allow a form of
          parameterization of VPR components using the C preprocessor. For
-         example, when compiling on IRIX with SPROC threads, the domain
-         defines the use of the SPROC threading subsystem, BSD sockets, and
-         termios serial I/O. When compiling on Windows, where only NSPR is
-         used, the domain specifies the use of native Win32 serial I/O and
-         NSPR for socket I/O. Moreover, the simulated sockets can be mixed
-         with any of the threading subsystems using this paradigm.</para>
+         example, when compiling on IRIX with POSIX threads, the domain
+         defines the use of the POSIX threading subsystem, BSD sockets, and
+         termios serial I/O. When compiling on Windows, where a mixture of
+         NSPR and the Win32 API is used, the domain specifies the use of
+         native Win32 serial I/O and NSPR for socket I/O. Moreover, the
+         simulated sockets can be mixed with any of the threading subsystems
+         using this paradigm.</para>
       </appendix>
 
       <appendix id="appendix.gfdl">

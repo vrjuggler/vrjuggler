@@ -50,15 +50,9 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		DeadlockException.cpp	\
+SRCS=		Barrier.cpp		\
+		DeadlockException.cpp	\
 		LockException.cpp
-
-ifeq (@SUBSYSTEM@, SPROC)
-SRCS+=		CondVarGeneric.cpp	\
-		RWMutex.cpp
-else
-SRCS+=		Barrier.cpp
-endif
 
 include $(MKPATH)/dpp.obj.mk
 

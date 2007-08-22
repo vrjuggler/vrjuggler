@@ -49,8 +49,7 @@
 #  include <vpr/md/NSPR/Sync/RWMutexNSPR.h>
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #  include <vpr/md/POSIX/Sync/RWMutexPosix.h>
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC || \
-      VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
+#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
 
 #  include <boost/noncopyable.hpp>
 

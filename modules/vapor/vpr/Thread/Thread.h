@@ -48,13 +48,8 @@
 
 #include <vpr/Thread/BaseThread.h>
 
-/* IRIX SPROC */
-#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#  include <vpr/md/SPROC/Thread/ThreadSGI.h>
-#  include <vpr/md/SPROC/Thread/ThreadKeySGI.h>
-
 /* POSIX */
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #ifndef _POSIX_C_SOURCE
 #  define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
@@ -71,7 +66,7 @@
 /* NSPR */
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #  include <vpr/md/NSPR/Thread/ThreadNSPR.h>
-#endif  /* VPR_USE_IRIX_SPROC */
+#endif  /* VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX */
 
 
 #endif  /* _VPR_THREAD_H_ */

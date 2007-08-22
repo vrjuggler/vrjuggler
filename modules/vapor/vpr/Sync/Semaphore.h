@@ -45,10 +45,7 @@
 
 #include <vpr/vprConfig.h>
 
-#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#   include <ulocks.h>
-#   include <vpr/md/SPROC/Sync/SemaphoreSGI.h>
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif

@@ -45,9 +45,7 @@
 
 #include <vpr/vprConfig.h>
 
-#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
-#   include <vpr/md/SPROC/Sync/MutexSGI.h>    
-#elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/Sync/MutexPosix.h>
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_WIN32
 #   include <vpr/md/WIN32/Sync/MutexWin32.h>

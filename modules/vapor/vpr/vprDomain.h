@@ -43,9 +43,8 @@
 #define VPR_DOMAIN_NONE       0
 #define VPR_DOMAIN_NSPR       1
 #define VPR_DOMAIN_POSIX      2
-#define VPR_DOMAIN_IRIX_SPROC 3
-#define VPR_DOMAIN_SIMULATOR  4
-#define VPR_DOMAIN_WIN32      5
+#define VPR_DOMAIN_SIMULATOR  3
+#define VPR_DOMAIN_WIN32      4
 
 // This is the VPR I/O domain.  It defines all the platform-independent types
 // used for doing I/O (sockets and serial ports mostly) in VPR.
@@ -121,7 +120,7 @@ namespace vpr
       typedef SerialPort_t<class SerialPortImplTermios> SerialPort;
 #  endif  /* VPR_OS_Windows */
 
-/* POSIX and SPROC */
+/* POSIX */
 #else
 #  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_POSIX
 
@@ -175,35 +174,21 @@ namespace vpr
    typedef class ThreadNSPR    Thread;
    typedef class ThreadKeyNSPR KeyId;
 
-/* POSIX and SPROC */
+/* POSIX */
 #else
    typedef class ErrorImplPosix Error;
    typedef class SystemPosix    System;
 
-#  ifdef VPR_USE_IRIX_SPROC
-#     define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_IRIX_SPROC
+#  define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_POSIX
 
-      typedef class BarrierSGI     Barrier;
-      typedef class CondVarGeneric CondVar;
-      typedef class MutexSGI       Mutex;
-      typedef class SemaphoreSGI   Semaphore;
+   typedef class CondVarPosix   CondVar;
+   typedef class MutexPosix     Mutex;
+   typedef class RWMutexPosix   RWMutex;
+   typedef class SemaphorePosix Semaphore;
 
-      typedef struct cancel_state  cancel_state_t;
-      typedef class ThreadSGI      Thread;
-      typedef class ThreadKeySGI   KeyId;
-#  else
-#     define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_POSIX
-
-      typedef class CondVarPosix   CondVar;
-      typedef class MutexPosix     Mutex;
-      typedef class RWMutexPosix   RWMutex;
-      typedef class SemaphorePosix Semaphore;
-
-      typedef int                  cancel_state_t;
-      typedef class ThreadPosix    Thread;
-      typedef class ThreadKeyPosix KeyId;
-#  endif /* ifdef VPR_USE_IRIX_SPROC */
-
+   typedef int                  cancel_state_t;
+   typedef class ThreadPosix    Thread;
+   typedef class ThreadKeyPosix KeyId;
 #endif /* ifdef VPR_USE_NSPR */
 }
 

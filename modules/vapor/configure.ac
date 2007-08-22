@@ -88,11 +88,9 @@ fi
 
 DPP_STD_CPP(yes)
 
-# Define which threading model to use.  Possible values are "SPROC", "POSIX",
-# or "NSPR".
-# The default is "SPROC".
+# Define which threading model to use.  Possible values are "POSIX" or "NSPR".
 AC_ARG_ENABLE([subsystem],
-              [  --enable-subsystem=<SPROC|POSIX|NSPR>
+              [  --enable-subsystem=<POSIX|NSPR>
                           Define OS abstraction subsystem],
               [SUBSYSTEM="$enableval"], [SUBSYSTEM='none'])
 
@@ -106,9 +104,6 @@ AC_ARG_ENABLE([simulator],
 
 # Rudimentary spell checking based on the first letter in the $SUBSYSTEM name.
 case $SUBSYSTEM in
-    S*)
-        SUBSYSTEM='SPROC'
-        ;;
     P*)
         SUBSYSTEM='POSIX'
         ;;
@@ -233,7 +228,7 @@ case $target_os in
             DBG_FLAGS="$DBG_FLAGS -gslim"
         fi
 
-        VPR_FORCE_SUBSYSTEM([SPROC])
+        VPR_FORCE_SUBSYSTEM([POSIX])
         AC_DEFINE(VPR_OS_IRIX, , [Define if building on IRIX.])
         AC_DEFINE(_BSD_TYPES,)
         ;;
@@ -281,7 +276,7 @@ DPP_CXX_RTTI([AC_MSG_ERROR([*** The library requires C++ RTTI support ***])])
 DPP_CXX_STATIC_CAST([AC_MSG_ERROR([*** The library requires C++ static_cast<> ***])])
 
 # Now check to see if the compiler accepts the -pthread option.
-if test "x$SUBSYSTEM" != "xSPROC" -a "x$NSPR_THREADS_ENABLED" = "xno" ; then
+if test "x$NSPR_THREADS_ENABLED" = "xno" ; then
     DPP_CC_PTHREAD_ARG
 
     if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
@@ -309,10 +304,10 @@ DPP_CHECK_DYNLOAD_LIB([USE_DYLD='N'], [USE_DYLD='Y'])
 DPP_HAVE_CPPUNIT([1.9.10])
 
 # Shared memory and synchronization primitives.
-SEMAPHORE_SYS=''		# POSIX, SPROC, NSPR
-MUTEX_SYS=''			# POSIX, SPROC, NSPR
-SHMEM_SYS=''			# POSIX, SPROC, NSPR
-THREAD_SYS=''			# POSIX, SPROC, NSPR
+SEMAPHORE_SYS=''		# POSIX, NSPR
+MUTEX_SYS=''			# POSIX, NSPR
+SHMEM_SYS=''			# POSIX, NSPR
+THREAD_SYS=''			# POSIX, NSPR
 
 # Test for libpthread or for libcma if libpthread is not present.  If the
 # library is found, check for pthread_kill().  If it is present, Draft 10 (the
@@ -358,27 +353,6 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
     SHMEM_SYS='POSIX'
     THREAD_SYS='POSIX'
     SEMPANORE_SYS='POSIX'
-    HANDLE_ABS='UNIX'
-    SERIAL_PORT_ABS='TERMIOS'
-    SOCKET_ABS='BSD'
-# If we are not using POSIX threads, we must be using the IRIX sproc(2) model,
-# but we test $SUBSYSTEM just to be sure it is set right.
-elif test "x$SUBSYSTEM" = "xSPROC" ; then
-    AC_CHECK_HEADERS([sys/types.h])
-    AC_CHECK_HEADERS([sys/prctl.h], ,
-        [AC_MSG_ERROR([*** IRIX sproc(2) threading will not be used (no headers found) ***])],
-[#if HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-])
-
-    AC_DEFINE(VPR_USE_IRIX_SPROC, , [Define if using IRIX SPROC threads.])
-
-    # Set to IRIX sproc threading, synchronization and shared memory.
-    THREAD_SYS='SPROC'
-    SEMAPHORE_SYS='SPROC'
-    SHMEM_SYS='SPROC'
-    MUTEX_SYS='SPROC'
     HANDLE_ABS='UNIX'
     SERIAL_PORT_ABS='TERMIOS'
     SOCKET_ABS='BSD'
@@ -430,10 +404,6 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
 # -----------------------------------------------------------------------------
-if test "x$SUBSYTEM" = "xSPROC" ; then
-   AC_TYPE_PID_T
-fi
-
 AC_TYPE_SIZE_T
 AC_TYPE_SIGNAL
 DPP_TYPE_SOCKLEN_T
@@ -1014,20 +984,17 @@ vpr_prof_libs="-l$vpr_prof_lib_name"
 
 # Information needed to generate vpr-config.
 case $SUBSYSTEM in
-    SPROC)
-        subsystem_libs="$SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
-        static_begin="-B static"
-        static_end="-B dynamic"
-        # This is for the MIPSpro Compilers 7.3.
-        BOOST_INCLUDES="$BOOST_INCLUDES -I$BOOST_INCLUDE_DIR/boost/compatibility/cpp_c_headers"
-        ;;
     POSIX)
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
+        # This is for the MIPSpro Compilers 7.3.
+        #BOOST_INCLUDES="$BOOST_INCLUDES -I$BOOST_INCLUDE_DIR/boost/compatibility/cpp_c_headers"
         ;;
     NSPR)
         vpr_extra_deps='nspr >= 4.0'
 
         subsystem_libs="$NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
+        # This is for the MIPSpro Compilers 7.3.
+        #BOOST_INCLUDES="$BOOST_INCLUDES -I$BOOST_INCLUDE_DIR/boost/compatibility/cpp_c_headers"
         ;;
 esac
 
@@ -1156,10 +1123,6 @@ AC_CONFIG_FILES([
    vpr/md/SIM/IO/Makefile
    vpr/md/SIM/IO/Socket/Makefile
    vpr/md/SIM/Network/Makefile
-   vpr/md/SPROC/Makefile
-   vpr/md/SPROC/SharedMem/Makefile
-   vpr/md/SPROC/Sync/Makefile
-   vpr/md/SPROC/Thread/Makefile
    vpr/md/WIN32/Makefile
    vpr/md/WIN32/IO/Makefile
    vpr/md/WIN32/IO/Port/Makefile
