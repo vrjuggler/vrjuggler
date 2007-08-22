@@ -8282,11 +8282,8 @@ last_frame = current_frame; // You can get the delta in microseconds from
                   <quote>AudioWorks</quote>, or <quote>Audiere</quote>, as
                   shown in <xref linkend="example.sonix.OpenAL" />. The choice
                   of which to use depends on availability and compatibility.
-                  For example, AudioWorks is available on the IRIX operating
-                  system, but it can only be used with a build of VR Juggler
-                  that uses SPROC threads. On the other hand, OpenAL and
-                  Audiere on IRIX can only be used with a pthreads build of VR
-                  Juggler.</para>
+                  For example, OpenAL and Audiere on IRIX can only be used
+                  with a pthreads build of VR Juggler.</para>
 
                   <example id="example.sonix.OpenAL">
                      <title>Initializing the Sonix Sound APi</title>
