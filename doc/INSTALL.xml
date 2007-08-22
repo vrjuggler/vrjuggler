@@ -18,8 +18,8 @@
       <title>Introduction</title>
 
       <para>You have downloaded the source code for Version 2.3 of the Juggler
-      Project. This is the code that will become VR Juggler 2.4, and it is the
-      code that is used to create the VR juggler 2.4 pre-releases. Please be
+      Project. This is the code that will become VR Juggler 3.0, and it is the
+      code that is used to create the VR Juggler 3.0 pre-releases. Please be
       aware that this code represents a work in progress, and if you acquired
       it directly from Subversion rather than using a pre-packaged source code
       snapshot, the code may have bugs affecting compilation and
@@ -970,7 +970,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
                      <para>This example using an ad hoc naming convention
                      based on operating system and threading subsystem. Other
-                     examples could be <filename>build.irix.sproc</filename>,
+                     examples could be <filename>build.linux.posix</filename>,
                      <filename>build.solaris.nspr</filename>, etc.</para>
                   </listitem>
 
@@ -985,7 +985,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
                      This is when you must tell the module configure scripts
                      where all the package dependencies are found.</para>
 
-                     <screen>../configure.pl --prefix=$HOME/vrjuggler-2.4 --with-java-orb=JDK</screen>
+                     <screen>../configure.pl --prefix=$HOME/vrjuggler-3.0 --with-java-orb=JDK</screen>
 
                      <important>
                         <para>You will probably have to specify the path to
@@ -1142,16 +1142,6 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
             Currently, we primarily use omniORB 4.0. Visit the <ulink
             url="http://omniorb.sourceforge.net/">omniORB website</ulink> to
             download omniORB.</para>
-
-            <note>
-               <para>IRIX users must configure Tweek (and its VPR dependency)
-               to use the POSIX subsystem or the NSPR subsystem. omniORB
-               <emphasis>will not work</emphasis> with SPROC threads. To
-               configure VPR to use either POSIX threads or NSPR threads, pass
-               either <option>--enable-subsystem=POSIX</option> or
-               <option>--enable-subsystem=NSPR</option> respectively to
-               <command>configure.pl</command>.</para>
-            </note>
 
             <para>For the following steps, assume that you have omniORB
             installed in <filename>&lt;OMNIORB_PATH&gt;</filename>. Assuming

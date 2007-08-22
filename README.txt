@@ -1,5 +1,4 @@
 
-
 Juggler Project Overview
 
 
@@ -101,12 +100,10 @@ Description
  VPR itself contains a great deal of platform-specific code. It categorizes
  this code into subsystems, and various subsystems may be chosen depending
  upon the target platform and target threading system. For example, on IRIX,
- there are three possible subsystems: SPROC, POSIX, and Netscape Portable
- Runtime (NSPR). Win32, on the other hand, only uses the NSPR subsystem. The
+ there are three possible subsystems: POSIX and Netscape Portable Runtime
+ (NSPR). Win32, on the other hand, only uses the NSPR subsystem. The
  subsystems are:
 
-
-*  SPROC (IRIX only)
 
 *  POSIX (UNIX-based platforms only)
 
@@ -245,7 +242,7 @@ VRJConfig
  The back-end is much more extensible. It allows users to write plug-in
  editors to simplify complex editing tasks. User-defined configuration
  elements can be handled in a much more dynamic manner as well. No
- modification of VR Juggler or JCCL "system" files must be made
+ modification of VR Juggler or JCCL &#8220;system&#8221; files must be made
  to get user-defined elements into the editor.
 
  VRJConfig is itself a JavaBean that is loaded into the Tweek Java GUI.

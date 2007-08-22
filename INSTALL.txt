@@ -1,5 +1,4 @@
 
-
 Building and Installing the Juggler Project (Version 2.3)
 
 
@@ -44,8 +43,8 @@ The Juggler Team
 Introduction
 
  You have downloaded the source code for Version 2.3 of the Juggler Project.
- This is the code that will become VR Juggler 2.4, and it is the code that
- is used to create the VR juggler 2.4 pre-releases. Please be aware that
+ This is the code that will become VR Juggler 3.0, and it is the code that
+ is used to create the VR Juggler 3.0 pre-releases. Please be aware that
  this code represents a work in progress, and if you acquired it directly
  from Subversion rather than using a pre-packaged source code snapshot, the
  code may have bugs affecting compilation and execution.
@@ -271,8 +270,8 @@ Boost
 
 Important
 
- Mac OS X users should compile the Boost libraries using the "darwin"
- toolset.
+ Mac OS X users should compile the Boost libraries using the
+ "darwin" toolset.
 
 
 CppDOM
@@ -687,7 +686,7 @@ Configuring the Juggler Build
 Using configure.pl
 
  In the base juggler source directory, we have a "global" configure script
- written in Perl called configure.pl. To get the command- line options for
+ written in Perl called configure.pl. To get the command-line options for
  this script, use one of the following (the second being much more detailed):
 
 
@@ -728,7 +727,7 @@ Important
 
       This example using an ad hoc naming convention based on operating
       system and threading subsystem. Other examples could be
-      build.irix.sproc, build.solaris.nspr, etc.
+      build.linux.posix, build.solaris.nspr, etc.
 
   2.  Enter the new build directory.
 
@@ -740,7 +739,7 @@ Important
       are found.
 
 
-       ../configure.pl --prefix=$HOME/vrjuggler-2.4 --with-java-orb=JDK
+       ../configure.pl --prefix=$HOME/vrjuggler-3.0 --with-java-orb=JDK
 
 
      Important
@@ -853,15 +852,6 @@ Tweek
 
  Tweek needs JDK 1.4 or newer and a C++ CORBA implementation. Currently, we
  primarily use omniORB 4.0. Visit the omniORB website to download omniORB.
-
-
-Note
-
- IRIX users must configure Tweek (and its VPR dependency) to use the POSIX
- subsystem or the NSPR subsystem. omniORB will not work with SPROC threads.
- To configure VPR to use either POSIX threads or NSPR threads, pass either -
- -enable-subsystem=POSIX or --enable-subsystem=NSPR respectively to
- configure.pl.
 
  For the following steps, assume that you have omniORB installed in
  <OMNIORB_PATH>. Assuming you have the external packages installed, do the
