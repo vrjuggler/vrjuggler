@@ -447,7 +447,7 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-MIN_VPR_VERSION='1.1.35'
+MIN_VPR_VERSION='2.1.5'
 VPR_PATH([$MIN_VPR_VERSION], [BUILD_CXX='Y'],
          [AC_MSG_WARN([*** VPR required for Tweek C++ API ***])
           BUILD_CXX='N'])
@@ -924,16 +924,6 @@ setup_PyORBit ( )
    # dynamically.  In other words, there is nothing to build.
    BUILD_PYTHON_IDL='N'
 }
-
-# omniORB requires pthreads, and that conflicts with IRIX SPROC threads.
-if test "x$VPR_SUBSYSTEM" = "xSPROC" ; then
-   case $cxx_orb_name in
-      omniORB*|TAO)
-         AC_MSG_WARN([*** Tweek C++ API will not run with SPROC threads ***])
-         BUILD_CXX='N'
-         ;;
-   esac
-fi
 
 # --------------------
 # Find the C++ ORB.
