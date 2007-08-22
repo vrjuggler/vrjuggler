@@ -533,10 +533,6 @@
                </listitem>
 
                <listitem>
-                  <para>SPROC: Used for the SPROC thread wrapper class</para>
-               </listitem>
-
-               <listitem>
                   <para>Win32: Used for Win32-specific wrapper classes</para>
                </listitem>
             </itemizedlist>
