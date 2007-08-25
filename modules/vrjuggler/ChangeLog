@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-25-2007 patrick     Changed the return type of the virtual method
+                        vrj::osg::App::getSceneViewDefaults() from
+                        osgUtil::SceneView::Options to unsigned int to fix
+                        compile errors.
+                        NEW VERSION: 2.3.12
 Jul-08-2007 patrick     Code in the Draw Manager implementations is now in a
                         namespace specific to each implementation, and the
                         classes contained therein no longer have the Draw
