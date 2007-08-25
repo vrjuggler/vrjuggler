@@ -104,9 +104,13 @@ public:
     *
     * @see configSceneView()
     *
+    * @note The signatue of this method changed after VR Juggler 2.2.0 was
+    *       released. Instead of returning osgUtil::SceneView::Options, it
+    *       now returns unsigned int.
+    *
     * @since 2.1.26
     */
-   virtual osgUtil::SceneView::Options getSceneViewDefaults()
+   virtual unsigned int getSceneViewDefaults()
    {
       return osgUtil::SceneView::STANDARD_SETTINGS;
    }
@@ -121,7 +125,7 @@ public:
     * For an application configure with a sky light:
     *
     * \code
-    * osgUtil::SceneView::Options MyApp::getSceneViewDefaults()
+    * unsigned int MyApp::getSceneViewDefaults()
     * {
     *    return osgUtil::SceneView::SKY_LIGHT;
     * }
@@ -130,7 +134,7 @@ public:
     * For an application configured with a headlight:
     *
     * \code
-    * osgUtil::SceneView::Options MyApp::getSceneViewDefaults()
+    * unsigned int MyApp::getSceneViewDefaults()
     * {
     *    return osgUtil::SceneView::HEADLIGHT;
     * }
@@ -169,7 +173,7 @@ public:
     *
     * // Next, override vrj::OsgApp::getSceneViewDefaults() to change the
     * // option passed to osgUtil::SceneView::setDefaults().
-    * osgUtil::SceneView::Options MyApp::getSceneViewDefaults()
+    * unsigned int MyApp::getSceneViewDefaults()
     * {
     *    return osgUtil::SceneView::NO_SCENEVIEW_LIGHT;
     * }

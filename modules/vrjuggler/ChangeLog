@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-25-2007 patrick     Changed the return type of the virtual method
+                        vrj::OsgApp::getSceneViewDefaults() from
+                        osgUtil::SceneView::Options to unsigned int to fix
+                        compile errors.
+
 [2.2.0 released - 8.14.2007]===================================================
 Aug-09-2007 patrick     Stability improvements for vrj::OsgApp when using
                         multi-pipe/multi-threaded configurations.
