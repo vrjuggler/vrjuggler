@@ -29,11 +29,8 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <set>
-
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
-#include <vpr/Thread/Thread.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlContextData.h>
@@ -76,7 +73,11 @@ public:
       : GlApp(kern)
       , mFrameNumber(0)
    {
-      ;
+      // Tell osg::Referenced to use thread-safe reference counting. We do
+      // this here for all applications and all configurations though it is
+      // only strictly necessary when VR Juggler is configured to use
+      // multi-threaded rendering.
+      osg::Referenced::setThreadSafeReferenceCounting(true);
    }
 
    virtual ~OsgApp()
@@ -393,20 +394,10 @@ private:
 
    int mFrameNumber;
    vpr::Mutex mSceneViewLock;
-   std::set<vpr::Int32> mThreadIDs;
 };
 
 inline void OsgApp::contextInit()
 {
-   // Tell osg::Referenced to use thread-safe reference counting if we detect
-   // that there is more than one rendering thread. The means by which we make
-   // this determination is less than ideal, but the dynamic configuration
-   // aspect of VR Juggler makes this one of the safer options that we have.
-   // Nevertheless, this is still a hack, and it should not be mimicked. You
-   // have been warned!
-   mThreadIDs.insert(vpr::Thread::self()->getTID());
-   osg::Referenced::setThreadSafeReferenceCounting(mThreadIDs.size() > 1);
-
    const unsigned int unique_context_id =
       GlDrawManager::instance()->getCurrentContext();
 
