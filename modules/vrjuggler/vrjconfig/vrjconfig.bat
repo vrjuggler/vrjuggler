@@ -40,7 +40,7 @@ ECHO [ERR] %JAVA_HOME%\bin\java.exe does not exist, so VRJConfig cannot be
 ECHO [ERR] started.
 :TEST_VJ_BASE
 IF NOT "%VJ_BASE_DIR%" == "" GOTO TEST_VJ_EXIST
-set VJ_BASE_DIR=%~d0%~p0\..
+set VJ_BASE_DIR=%~d0%~p0..
 ECHO NOTE: VJ_BASE_DIR environment variable unset; defaulting to
 ECHO       %VJ_BASE_DIR%
 ECHO       If this is incorrect, see INSTALL.html and set the value
