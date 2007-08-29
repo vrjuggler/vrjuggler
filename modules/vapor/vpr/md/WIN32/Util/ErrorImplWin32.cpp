@@ -43,19 +43,24 @@ namespace vpr
 
 std::string ErrorImplWin32::getCurrentErrorMsg()
 {
-   char* msg_buffer(NULL);
-
-   DWORD error_code = GetLastError();
-   FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-                 NULL, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                 (LPTSTR) &msg_buffer, 0, NULL);
-
    std::string err_str;
+   const DWORD error_code(GetLastError());
 
-   if ( NULL != msg_buffer )
+   if ( ERROR_SUCCESS != error_code )
    {
-      err_str = msg_buffer;
-      LocalFree(msg_buffer);
+      char* msg_buffer(NULL);
+
+      FormatMessage(
+         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+         NULL, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+         (LPTSTR) &msg_buffer, 0, NULL
+      );
+
+      if ( NULL != msg_buffer )
+      {
+         err_str = msg_buffer;
+         LocalFree(msg_buffer);
+      }
    }
 
    return err_str;
