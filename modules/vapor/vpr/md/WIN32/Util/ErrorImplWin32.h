@@ -54,6 +54,11 @@ namespace vpr
 class VPR_CLASS_API ErrorImplWin32 : public ErrorBase
 {
 public:
+   /**
+    * Returns the current error message from the OS for a failed operation.
+    * If the current error code is \c ERROR_SUCCESS or there is no message for
+    * the current error, then an empty string is returned.
+    */
    static std::string getCurrentErrorMsg();
 
    static void outputCurrentError(std::ostream& out,
