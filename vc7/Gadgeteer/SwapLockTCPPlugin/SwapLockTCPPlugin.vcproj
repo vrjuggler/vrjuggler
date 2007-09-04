@@ -35,14 +35,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/SwapLockTCPPlugin_g.dll"
+				OutputFile="$(OutDir)/SwapLockTCPPlugin.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="FALSE"
-				ProgramDatabaseFile="$(OutDir)/SwapLockTCPPlugin_g.pdb"
+				ProgramDatabaseFile="$(OutDir)/SwapLockTCPPlugin.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/SwapLockTCPPlugin_g.lib"
+				ImportLibrary="$(OutDir)/SwapLockTCPPlugin.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
