@@ -155,7 +155,7 @@
 				OutputFile="$(OutDir)/X-IST_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(FTD2XX_ROOT)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(FTD2XX_ROOT)\i386&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VPR\$(OutDir)&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/X-IST_drv.pdb"
 				SubSystem="1"
