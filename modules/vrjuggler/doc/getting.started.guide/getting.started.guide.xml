@@ -1526,7 +1526,7 @@ value</screen>
             in the directory <filename>$HOME/.vrjconfig</filename>. The
             environment variable <envar>VJ_CFG_PATH</envar> is useful in
             providing a search path for finding your configuration files.
-            (Refer to <xref linkend="section.envvars.optional" /> for more
+            (Refer to <xref linkend="section.envvars.required" /> for more
             information on using <envar>VJ_CFG_PATH</envar>). To simplify
             running applications, you may want to make a shell script (or
             batch file as appropriate) that does all the work of passing
