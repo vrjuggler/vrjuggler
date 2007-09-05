@@ -10,7 +10,7 @@
          <file_search_path>.</file_search_path>
          <sound>
             <sound name="bump" version="2">
-               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/bump.wav</filename>
+               <filename>${VJ_DATA_DIR}/data/sounds/bump.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
                <streaming>true</streaming>
@@ -25,7 +25,7 @@
          </sound>
          <sound>
             <sound name="step" version="2">
-               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/footstep.wav</filename>
+               <filename>${VJ_DATA_DIR}/data/sounds/footstep.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
                <streaming>true</streaming>
@@ -40,7 +40,7 @@
          </sound>
          <sound>
             <sound name="ambience" version="2">
-               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/ambience.wav</filename>
+               <filename>${VJ_DATA_DIR}/data/sounds/ambience.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
                <streaming>true</streaming>
@@ -55,7 +55,7 @@
          </sound>
          <sound>
             <sound name="accel" version="2">
-               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/accel.wav</filename>
+               <filename>${VJ_DATA_DIR}/data/sounds/accel.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
                <streaming>true</streaming>
@@ -70,7 +70,7 @@
          </sound>
          <sound>
             <sound name="land" version="2">
-               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/land.wav</filename>
+               <filename>${VJ_DATA_DIR}/data/sounds/land.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
                <streaming>true</streaming>
@@ -85,7 +85,7 @@
          </sound>
          <sound>
             <sound name="stop" version="2">
-               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/stop.wav</filename>
+               <filename>${VJ_DATA_DIR}/data/sounds/stop.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
                <streaming>true</streaming>

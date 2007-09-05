@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-04-2007 patrick     Use new environment variable VJ_DATA_DIR as a way to
+                        look up files in VJ_BASE_DIR/share/vrjuggler.
+                        NEW VERSION: 2.3.13
+Sep-04-2007 patrick     Set VJ_BASE_DIR automatically on all platforms.
 Aug-25-2007 patrick     Changed the return type of the virtual method
                         vrj::osg::App::getSceneViewDefaults() from
                         osgUtil::SceneView::Options to unsigned int to fix

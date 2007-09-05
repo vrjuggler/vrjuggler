@@ -471,8 +471,8 @@
                      <surface_color>0.7</surface_color>
                      <surface_color>0.7</surface_color>
                      <surface_color>1.0</surface_color>
-                     <head_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt</head_model>
-                     <wand_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt</wand_model>
+                     <head_model>${VJ_DATA_DIR}/data/models/head.flt</head_model>
+                     <wand_model>${VJ_DATA_DIR}/data/models/wand.flt</wand_model>
                   </default_simulator>
                </simulator_plugin>
             </simulator_viewport>
