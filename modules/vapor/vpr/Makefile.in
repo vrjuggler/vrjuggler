@@ -59,7 +59,8 @@ SUBDIR=		DynLoad		\
 		Util		\
 		md
 
-SRCS=		SystemBase.cpp
+SRCS=		SystemBase.cpp	\
+		vprmain.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

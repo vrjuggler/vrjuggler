@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-09-04 patrick  Set VPR_BASE_DIR automatically on all platforms.
 2007-08-21 patrick  Removed support for SPROC.
                     NEW VERSION: 2.1.5
 2007-07-24 aronb    vpr::Library::findSymbol() throws vpr::LibraryException if
