@@ -56,7 +56,8 @@ SRCS=		InputLogger.cpp			\
 		Node.cpp			\
 		ProxyDepChecker.cpp		\
 		ProxyFactory.cpp		\
-		Reactor.cpp
+		Reactor.cpp			\
+		gadgetmain.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
