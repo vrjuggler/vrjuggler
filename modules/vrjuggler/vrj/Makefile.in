@@ -52,7 +52,7 @@ SUBDIR=		Display		\
 		Test		\
 		Util
 
-SRCS=		
+SRCS=		vrjmain.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
