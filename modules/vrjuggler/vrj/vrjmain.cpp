@@ -181,7 +181,11 @@ extern "C" void __attribute ((constructor)) vrjLibraryInit()
       Dl_info info;
       info.dli_fname = 0;
       const int result =
-         dladdr(reinterpret_cast<const void*>(&vrjLibraryInit), &info);
+#if defined(__GNUC__) && __GNUC_MAJOR__ < 4
+         dladdr((void*) &vrjLibraryInit, &info);
+#else
+         dladdr(reinterpret_cast<void*>(&vrjLibraryInit), &info);
+#endif
 
       // NOTE: dladdr(3) really does return a non-zero value on success.
       if ( 0 != result )
