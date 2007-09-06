@@ -2,7 +2,7 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <guipanel name="Configuration Editor">
-      <file name="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/beans/VRJConfig.jar"
+      <file name="${VJ_BASE_DIR}/${VJ_DATA_DIR}/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.VrjConfig" />
       <dependencies>
          <bean>ConfigBroker</bean>
@@ -14,7 +14,7 @@
       <tree path="/VRJConfig/" />
    </guipanel>
    <guipanel name="Config Definition Editor">
-      <file name="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/beans/VRJConfig.jar"
+      <file name="${VJ_BASE_DIR}/${VJ_DATA_DIR}/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.ConfigDefinitionEditor" />
       <dependencies>
          <bean>ConfigBroker</bean>
@@ -24,7 +24,7 @@
       <tree path="/VRJConfig/" />
    </guipanel>
    <guipanel name="Control Panel">
-      <file name="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/beans/VRJConfig.jar"
+      <file name="${VJ_BASE_DIR}/${VJ_DATA_DIR}/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.controlpanel.ControlPanelView" />
       <dependencies>
          <bean>ConfigBroker</bean>
