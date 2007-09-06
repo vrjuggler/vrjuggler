@@ -35,15 +35,18 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstdlib>
+#include <sstream>
+#include <string>
+
 #if defined(HAVE_BACKTRACE)
 #  include <sys/types.h>
 #  include <unistd.h>
 #  include <execinfo.h>
-#  include <sstream>
 #elif defined(VPR_OS_Darwin)
 #  include <iomanip>
-#  include <sstream>
 #  include <vector>
+#  include <boost/algorithm/string/predicate.hpp>
 
 extern "C"
 {
@@ -60,14 +63,10 @@ extern "C"
 #     include <intrin.h>
 #  endif
 
-#  include <stdlib.h>
 #  include <dbghelp.h>
 #  include <iomanip>
-#  include <sstream>
 #  include <boost/format.hpp>
 #endif
-
-#include <string>
 
 #if (! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
      ((__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || __GNUC__ > 3)) || \
@@ -207,35 +206,67 @@ bool getLogicalAddress(void* addr, char* szModule, const DWORD len,
 }
 #endif   /* ifdef VPR_OS_Windows */
 
-std::string demangleTraceString(char* traceLine)
+std::string demangleTraceString(const std::string& traceLine)
 {
 #ifdef USE_CXA_DEMANGLE
    // Try to extract the mangled name from the line (if it exists)
    // and replace it with a demangled version of the name.
    // Example: build.linux/stuff/classfile(_ZN4vpr11Someing33methodEv+0xd3) [0x80cfa29]
+   // For Mac OS X, things are a little different. A symbol may be of the
+   // form _ZN3vpr9ExceptionC2ERKSsS2_:F(0,1), or it may be a simple function
+   // name, probably with a leading underscore.
 
    std::string trace_line(traceLine);
    std::string mangled_name, demangled_name;
 
    std::string::size_type start(std::string::npos), end(std::string::npos);
+
+#if defined(VPR_OS_Darwin)
+   end = trace_line.find(":F(");
+
+   // If trace_line does not contain ":F(", then we set the start to be either
+   // 0 or 1 depending on whether trace_line starts with "_", and we set end
+   // to be the end of the string.
+   if ( std::string::npos == end )
+   {
+      start = boost::algorithm::starts_with(trace_line, "_") ? 1 : 0;
+      end   = trace_line.size();
+   }
+   else
+   {
+      start = 0;
+   }
+#else
    start = trace_line.find("(_");
    if(std::string::npos != start)
    {
       end = trace_line.find_first_of("+)",start);
    }
+#endif
 
    if(std::string::npos != end)
    {
-      mangled_name.assign(trace_line, start+1, end-start-1);
+      std::string::size_type assign_start, assign_end;
+#if defined(VPR_OS_Darwin)
+      assign_start = start;
+      assign_end   = end;
+#else
+      assign_start = start + 1;
+      assign_end   = end - start - 1;
+#endif
+      mangled_name.assign(trace_line, assign_start, assign_end);
+
       int status;
       char* demangled_buf = abi::__cxa_demangle(mangled_name.c_str(), NULL,
                                                 NULL, &status);
       if(0==status)
       {
-         demangled_name = std::string(demangled_buf);
-         free(demangled_buf);
-
-         trace_line.replace(start+1, (end-start-1), demangled_name);
+#if defined(VPR_OS_Darwin)
+         trace_line = demangled_buf;
+#else
+         trace_line.replace(start + 1, end - start - 1, demangled_buf);
+#endif
+         std::free(demangled_buf);
       }
       else if(-1==status)
       {
@@ -500,7 +531,14 @@ std::string SystemBase::getCallStack()
       CrawlFrame cur_frame;
       cur_frame.pc    = frame->savedLR;
       cur_frame.frame = reinterpret_cast<size_t>(frame);
-      cur_frame.name  = getFunctionName(frame->savedLR, &cur_frame.offset);
+
+      const std::string func_name = getFunctionName(frame->savedLR,
+                                                    &cur_frame.offset);
+
+      if ( ! func_name.empty() )
+      {
+         cur_frame.name = demangleTraceString(func_name);
+      }
 
       if ( cur_frame.pc != 0 )
       {
