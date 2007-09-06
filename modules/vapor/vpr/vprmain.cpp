@@ -132,71 +132,74 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
  */
 extern "C" void __attribute ((constructor)) vprLibraryInit()
 {
-   Dl_info info;
-   info.dli_fname = 0;
-   const int result = dladdr(reinterpret_cast<const void*>(&vprLibraryInit),
-                             &info);
+   const char* env_dir = std::getenv("VPR_BASE_DIR");
 
-   // NOTE: dladdr(3) really does return a non-zero value on success.
-   if ( 0 != result )
+   if ( NULL == env_dir )
    {
-      try
+      Dl_info info;
+      info.dli_fname = 0;
+      const int result =
+         dladdr(reinterpret_cast<const void*>(&vprLibraryInit), &info);
+
+      // NOTE: dladdr(3) really does return a non-zero value on success.
+      if ( 0 != result )
       {
-         fs::path lib_file(info.dli_fname, fs::native);
-         lib_file = fs::system_complete(lib_file);
+         try
+         {
+            fs::path lib_file(info.dli_fname, fs::native);
+            lib_file = fs::system_complete(lib_file);
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
-         const std::string bit_suffix("32");
+            const std::string bit_suffix("32");
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
       defined(VPR_OS_Linux) && defined(__x86_64__)
-         const std::string bit_suffix("64");
+            const std::string bit_suffix("64");
 #else
-         const std::string bit_suffix("");
+            const std::string bit_suffix("");
 #endif
 
-         // Get the directory containing this shared library.
-         const fs::path lib_path = lib_file.branch_path();
+            // Get the directory containing this shared library.
+            const fs::path lib_path = lib_file.branch_path();
 
-         // Start the search for the root of the VPR installation in the
-         // parent of the directory containing this shared library.
-         fs::path base_dir = lib_path.branch_path();
+            // Start the search for the root of the VPR installation in the
+            // parent of the directory containing this shared library.
+            fs::path base_dir = lib_path.branch_path();
 
-         // Use the lib subdirectory to figure out when we have found the root
-         // of the VPR installation tree.
-         const fs::path lib_subdir(std::string("lib") + bit_suffix);
+            // Use the lib subdirectory to figure out when we have found the
+            // root of the VPR installation tree.
+            const fs::path lib_subdir(std::string("lib") + bit_suffix);
 
-         bool found(false);
-         while ( ! found && ! base_dir.empty() )
-         {
-            try
+            bool found(false);
+            while ( ! found && ! base_dir.empty() )
             {
-               if ( ! fs::exists(base_dir / lib_subdir) )
+               try
+               {
+                  if ( ! fs::exists(base_dir / lib_subdir) )
+                  {
+                     base_dir = base_dir.branch_path();
+                  }
+                  else
+                  {
+                     found = true;
+                  }
+               }
+               catch (fs::filesystem_error&)
                {
                   base_dir = base_dir.branch_path();
                }
-               else
-               {
-                  found = true;
-               }
             }
-            catch (fs::filesystem_error&)
-            {
-               base_dir = base_dir.branch_path();
-            }
-         }
 
-         if ( found )
-         {
-            // We use the overwrite value of 0 as a way around testing whether
-            // the environment variable is already set.
-            setenv("VPR_BASE_DIR", base_dir.native_directory_string().c_str(),
-                   0);
+            if ( found )
+            {
+               setenv("VPR_BASE_DIR",
+                      base_dir.native_directory_string().c_str(), 1);
+            }
          }
-      }
-      catch (fs::filesystem_error& ex)
-      {
-         std::cerr << "Automatic assignment of VPR_BASE_DIR failed:\n"
-                   << ex.what() << std::endl;
+         catch (fs::filesystem_error& ex)
+         {
+            std::cerr << "Automatic assignment of VPR_BASE_DIR failed:\n"
+                      << ex.what() << std::endl;
+         }
       }
    }
 }
