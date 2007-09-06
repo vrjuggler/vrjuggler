@@ -35,24 +35,38 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstdlib>
+#include <sstream>
+#include <string>
+
 #if defined(HAVE_BACKTRACE)
 #  include <sys/types.h>
 #  include <unistd.h>
 #  include <execinfo.h>
-#  include <sstream>
+#elif defined(VPR_OS_Darwin)
+#  include <iomanip>
+#  include <vector>
+#  include <boost/algorithm/string/predicate.hpp>
+
+extern "C"
+{
+
+#  include <mach-o/dyld.h>
+#  include <mach-o/loader.h>
+#  include <mach-o/nlist.h>
+#  include <mach-o/stab.h>
+
+}
+
 #elif defined(VPR_OS_Windows)
 #  if _MSC_VER >= 1400
 #     include <intrin.h>
 #  endif
 
-#  include <stdlib.h>
 #  include <dbghelp.h>
 #  include <iomanip>
-#  include <sstream>
 #  include <boost/format.hpp>
 #endif
-
-#include <string>
 
 #if (! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
      ((__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || __GNUC__ > 3)) || \
@@ -79,6 +93,7 @@ using boost::format;
 
 namespace
 {
+
 #if defined(VPR_OS_Windows) && defined(VPR_DEBUG)
 #if _MSC_VER >= 1400
 #  pragma intrinsic(_ReturnAddress)
@@ -191,35 +206,67 @@ bool getLogicalAddress(void* addr, char* szModule, const DWORD len,
 }
 #endif   /* ifdef VPR_OS_Windows */
 
-std::string demangleTraceString(char* traceLine)
+std::string demangleTraceString(const std::string& traceLine)
 {
 #ifdef USE_CXA_DEMANGLE
    // Try to extract the mangled name from the line (if it exists)
    // and replace it with a demangled version of the name.
    // Example: build.linux/stuff/classfile(_ZN4vpr11Someing33methodEv+0xd3) [0x80cfa29]
+   // For Mac OS X, things are a little different. A symbol may be of the
+   // form _ZN3vpr9ExceptionC2ERKSsS2_:F(0,1), or it may be a simple function
+   // name, probably with a leading underscore.
 
    std::string trace_line(traceLine);
    std::string mangled_name, demangled_name;
 
    std::string::size_type start(std::string::npos), end(std::string::npos);
+
+#if defined(VPR_OS_Darwin)
+   end = trace_line.find(":F(");
+
+   // If trace_line does not contain ":F(", then we set the start to be either
+   // 0 or 1 depending on whether trace_line starts with "_", and we set end
+   // to be the end of the string.
+   if ( std::string::npos == end )
+   {
+      start = boost::algorithm::starts_with(trace_line, "_") ? 1 : 0;
+      end   = trace_line.size();
+   }
+   else
+   {
+      start = 0;
+   }
+#else
    start = trace_line.find("(_");
    if(std::string::npos != start)
    {
       end = trace_line.find_first_of("+)",start);
    }
+#endif
 
    if(std::string::npos != end)
    {
-      mangled_name.assign(trace_line, start+1, end-start-1);
+      std::string::size_type assign_start, assign_end;
+#if defined(VPR_OS_Darwin)
+      assign_start = start;
+      assign_end   = end;
+#else
+      assign_start = start + 1;
+      assign_end   = end - start - 1;
+#endif
+      mangled_name.assign(trace_line, assign_start, assign_end);
+
       int status;
       char* demangled_buf = abi::__cxa_demangle(mangled_name.c_str(), NULL,
                                                 NULL, &status);
       if(0==status)
       {
-         demangled_name = std::string(demangled_buf);
-         free(demangled_buf);
-
-         trace_line.replace(start+1, (end-start-1), demangled_name);
+#if defined(VPR_OS_Darwin)
+         trace_line = demangled_buf;
+#else
+         trace_line.replace(start + 1, end - start - 1, demangled_buf);
+#endif
+         std::free(demangled_buf);
       }
       else if(-1==status)
       {
@@ -229,7 +276,7 @@ std::string demangleTraceString(char* traceLine)
       else if(-2 == status)
       {
 //         std::cerr << "vpr::SystemBase::demangleTraceString: mangled_name "
-//                   << "is not a valid name under the C++ ABI mangling '
+//                   << "is not a valid name under the C++ ABI mangling "
 //                   << "rules.\n";
       }
       else if(-3 == status)
@@ -248,6 +295,171 @@ std::string demangleTraceString(char* traceLine)
 #endif
 }
 
+#if defined(VPR_OS_Darwin)
+struct CrawlFrame
+{
+   unsigned int pc;
+   size_t frame;
+   std::string name;
+   unsigned int offset;
+};
+
+const mach_header* findOwnerOfPC(const unsigned int pc)
+{
+   const unsigned int count = _dyld_image_count();
+   for ( unsigned int index = 0; index < count; ++index )
+   {
+      const mach_header* header = _dyld_get_image_header(index);
+      const unsigned int offset = _dyld_get_image_vmaddr_slide(index);
+      const load_command* cmd =
+         reinterpret_cast<const load_command*>(
+            reinterpret_cast<const char*>(header) + sizeof(mach_header)
+         );
+
+      for ( unsigned int cmdex = 0;
+            cmdex < header->ncmds;
+            ++cmdex, cmd = reinterpret_cast<const load_command*>(reinterpret_cast<const char*>(cmd) + cmd->cmdsize))
+      {
+         switch (cmd->cmd)
+         {
+            case LC_SEGMENT:
+               {
+                  const segment_command* seg =
+                     reinterpret_cast<const segment_command*>(cmd);
+                  if ( pc >= (seg->vmaddr + offset) &&
+                       pc < (seg->vmaddr + offset + seg->vmsize) )
+                  {
+                     return header;
+                  }
+               }
+               break;
+         }
+      }
+   }
+
+   return NULL;
+}
+
+std::string getFunctionName(const unsigned int pc, unsigned int* offset)
+{
+   const mach_header* header = findOwnerOfPC(pc);
+   if ( header != NULL )
+   {
+      const segment_command* seg_linkedit(NULL);
+      const segment_command* seg_text(NULL);
+      const symtab_command* symtab(NULL);
+
+      const load_command* cmd =
+         reinterpret_cast<const load_command*>(
+            reinterpret_cast<const char*>(header) + sizeof(mach_header)
+         );
+
+      for ( unsigned int index = 0;
+            index < header->ncmds;
+            ++index, cmd = reinterpret_cast<const load_command*>(reinterpret_cast<const char*>(cmd) + cmd->cmdsize) )
+      {
+         switch (cmd->cmd)
+         {
+            case LC_SEGMENT:
+               if ( ! strncmp(reinterpret_cast<const segment_command*>(cmd)->segname, SEG_TEXT, 16) )
+               {
+                  seg_text = reinterpret_cast<const segment_command*>(cmd);
+               }
+               else if ( ! strncmp(reinterpret_cast<const segment_command*>(cmd)->segname, SEG_LINKEDIT, 16) )
+               {
+                  seg_linkedit = reinterpret_cast<const segment_command*>(cmd);
+               }
+               break;
+            
+            case LC_SYMTAB:
+               symtab = reinterpret_cast<const symtab_command*>(cmd);
+               break;
+         }
+      }
+      
+      if ( seg_text == NULL || seg_linkedit == NULL || symtab == NULL )
+      {
+         *offset = 0;
+         return NULL;
+      }
+
+      size_t vm_slide = reinterpret_cast<size_t>(header) - seg_text->vmaddr;
+      const size_t file_slide = (seg_linkedit->vmaddr - seg_text->vmaddr) -
+                                   seg_linkedit->fileoff;
+      struct nlist* symbase =
+         reinterpret_cast<struct nlist*>(
+            reinterpret_cast<size_t>(header) + symtab->symoff + file_slide
+         );
+      char* strings =
+         reinterpret_cast<char*>(
+            reinterpret_cast<size_t>(header) + symtab->stroff + file_slide
+         );
+      
+      // Look for a global symbol.
+      unsigned int index;
+      struct nlist* sym(NULL);
+      for ( index = 0, sym = symbase; index < symtab->nsyms; ++index, ++sym )
+      {
+         if ( sym->n_type != N_FUN )
+         {
+            continue;
+         }
+
+         char* name = sym->n_un.n_strx ? (strings + sym->n_un.n_strx) : NULL;
+         const unsigned int base = sym->n_value + vm_slide;
+
+         for ( index += 1, sym += 1; index < symtab->nsyms; ++index, ++sym )
+         {
+            if ( sym->n_type == N_FUN )
+            {
+               break;
+            }
+         }
+
+         if ( pc >= base  &&  pc <= (base + sym->n_value) && name != NULL &&
+              std::strlen(name) > 0 )
+         {
+            *offset = pc - base;
+            return std::string(name);
+         }
+      }
+
+      // Look for a reasonably close private symbol.
+      char* name;
+      unsigned int base;
+      for ( name = NULL, base = 0xFFFFFFFF, index = 0, sym = symbase;
+            index < symtab->nsyms;
+            ++index, ++sym )
+      {
+         if ( (sym->n_type & 0x0E) != 0x0E )
+         {
+            continue;
+         }
+
+         if ( (sym->n_value + vm_slide) > pc )
+         {
+            continue;
+         }
+
+         if ( base != 0xFFFFFFFF &&
+              (pc - (sym->n_value + vm_slide)) >= (pc - base) )
+         {
+            continue;
+         }
+
+         name = sym->n_un.n_strx ? (strings + sym->n_un.n_strx) : NULL;
+         base = sym->n_value + vm_slide;
+      }
+
+      *offset = pc - base;
+      return (name != NULL) ? std::string(name) : std::string();
+   }
+   
+   *offset = 0;
+   return std::string();
+}
+#endif  /* VPR_OS_Darwin */
+
 }
 
 namespace vpr
@@ -262,12 +474,11 @@ std::string SystemBase::getCallStack()
    size_t size;
    char** strings;
 
-   pid_t cur_pid = getpid();
    size = backtrace(trace_syms, 100);
    strings = backtrace_symbols(trace_syms, size);
 
    std::ostringstream trace_stream;
-   trace_stream << "Stack trace: thread: " << cur_pid << std::endl;
+   trace_stream << "Stack trace for process: " << getpid() << std::endl;
 
    for (size_t i = 0; i < size; ++i)
    {
@@ -276,6 +487,112 @@ std::string SystemBase::getCallStack()
    }
 
    free(strings);
+
+   ret_stack = trace_stream.str();
+#elif defined(VPR_OS_Darwin)
+#if defined(__ppc__) || defined(__ppc64__)
+   struct StackFrame
+   {
+      unsigned int savedSP;
+      unsigned int savedCR;
+      unsigned int savedLR;
+      unsigned int reserved[2];
+      unsigned int savedRTOC;
+   };
+#elif defined(__i386__)
+   struct StackFrame
+   {
+      unsigned int savedSP;
+      unsigned int savedLR;
+   };
+#else
+#error Unknown platform
+#endif
+
+   std::ostringstream trace_stream;
+   trace_stream << "Stack trace for process: " << getpid() << std::endl;
+
+   std::vector<CrawlFrame> stack;
+   StackFrame* frame(NULL);
+
+#if defined(__ppc__) || defined(__ppc64__)
+   frame = *(StackFrame**) __builtin_frame_address(0);
+#elif defined(__i386__)
+   frame = (StackFrame*) __builtin_frame_address(0);
+#endif
+
+   for ( ; frame != NULL; frame = (StackFrame*) frame->savedSP)
+   {
+      if ( (frame->savedLR & ~3) == 0 || (~(frame->savedLR) & ~3) == 0 )
+      {
+         break;
+      }
+
+      CrawlFrame cur_frame;
+      cur_frame.pc    = frame->savedLR;
+      cur_frame.frame = reinterpret_cast<size_t>(frame);
+
+      const std::string func_name = getFunctionName(frame->savedLR,
+                                                    &cur_frame.offset);
+
+      if ( ! func_name.empty() )
+      {
+         cur_frame.name = demangleTraceString(func_name);
+      }
+
+      if ( cur_frame.pc != 0 )
+      {
+         cur_frame.pc -= 4;
+      }
+
+      stack.push_back(cur_frame);
+   }
+
+   typedef std::vector<CrawlFrame>::reverse_iterator iter_type;
+   for ( iter_type i = stack.rbegin(); i != stack.rend(); ++i )
+   {
+      std::string func_name("(unknown)");
+
+      if ( ! (*i).name.empty() )
+      {
+         typedef std::string::size_type size_type;
+         const size_type name_len((*i).name.size());
+         for ( size_type j = 0; j < name_len; ++j )
+         {
+            bool objc(false);
+            if ( j == 1  &&  (*i).name[j] == '[' )
+            {
+               objc = true;
+            }
+
+            if ( objc && (*i).name[j] == ']' )
+            {
+               objc = false;
+            }
+
+            if ( ! objc && (*i).name[j] == ':' )
+            {
+               break;
+            }
+         }
+
+         std::ostringstream func_stream;
+         func_stream << (*i).name << "+" << std::hex << (*i).offset;
+         func_name = func_stream.str();
+      }
+
+      const char fill_char(trace_stream.fill());
+      const std::ios::fmtflags fmt_flags(trace_stream.flags());
+      trace_stream.fill('0');
+      trace_stream.setf(std::ios::uppercase);
+      trace_stream.setf(std::ios::hex | std::ios::right,
+                        std::ios::adjustfield | std::ios::basefield);
+      trace_stream << "  " << std::setw(sizeof(void*) * 2) << (*i).frame
+                   << "  " << std::setw(sizeof(void*) * 2) << (*i).pc;
+      trace_stream.flags(fmt_flags);
+      trace_stream.fill(fill_char);
+      trace_stream << "  " << func_name << std::endl;
+   }
 
    ret_stack = trace_stream.str();
 #elif defined(VPR_OS_Windows)
