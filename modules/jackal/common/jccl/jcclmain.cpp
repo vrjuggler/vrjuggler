@@ -188,7 +188,7 @@ extern "C" void __attribute ((constructor)) jcclLibraryInit()
          const fs::path lib_subdir(std::string("lib") + bit_suffix);
 
          bool found(false);
-         while ( ! found )
+         while ( ! found && ! base_dir.empty() )
          {
             try
             {
@@ -207,15 +207,17 @@ extern "C" void __attribute ((constructor)) jcclLibraryInit()
             }
          }
 
-         std::cout << base_dir.native_directory_string() << std::endl;
-         const fs::path data_dir = base_dir / JCCL_SHARE_DIR;
+         if ( found )
+         {
+            const fs::path data_dir = base_dir / JCCL_SHARE_DIR;
 
-         // We use the overwrite value of 0 as a way around testing whether
-         // the environment variables are already set.
-         setenv("JCCL_BASE_DIR", base_dir.native_directory_string().c_str(),
-                0);
-         setenv("JCCL_DATA_DIR", data_dir.native_directory_string().c_str(),
-                0);
+            // We use the overwrite value of 0 as a way around testing whether
+            // the environment variables are already set.
+            setenv("JCCL_BASE_DIR",
+                   base_dir.native_directory_string().c_str(), 0);
+            setenv("JCCL_DATA_DIR",
+                   data_dir.native_directory_string().c_str(), 0);
+         }
       }
       catch (fs::filesystem_error& ex)
       {

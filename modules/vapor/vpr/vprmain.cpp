@@ -166,7 +166,7 @@ extern "C" void __attribute ((constructor)) vprLibraryInit()
          const fs::path lib_subdir(std::string("lib") + bit_suffix);
 
          bool found(false);
-         while ( ! found )
+         while ( ! found && ! base_dir.empty() )
          {
             try
             {
@@ -185,9 +185,13 @@ extern "C" void __attribute ((constructor)) vprLibraryInit()
             }
          }
 
-         // We use the overwrite value of 0 as a way around testing whether
-         // the environment variable is already set.
-         setenv("VPR_BASE_DIR", base_dir.native_directory_string().c_str(), 0);
+         if ( found )
+         {
+            // We use the overwrite value of 0 as a way around testing whether
+            // the environment variable is already set.
+            setenv("VPR_BASE_DIR", base_dir.native_directory_string().c_str(),
+                   0);
+         }
       }
       catch (fs::filesystem_error& ex)
       {
