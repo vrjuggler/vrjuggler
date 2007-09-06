@@ -139,6 +139,15 @@ bool WindowWin32::open()
 
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
+   // The desired client rectangle size (left, top, right, bottom).
+   RECT rc = { 0, 0, mWindowWidth, mWindowHeight };
+
+   if ( ! AdjustWindowRect(&rc, style, false) )
+   {
+      doInternalError("Failed to adjust window rectangle");
+      return false;
+   }
+
    // Ensure that the input window base class has the right dimension
    // information.
    InputAreaWin32::resize(mWindowWidth, mWindowHeight);
@@ -147,8 +156,8 @@ bool WindowWin32::open()
    mWinHandle = CreateWindowEx(ex_style, GL_WINDOW_WIN32_CLASSNAME,
                                mWindowName.c_str(), style, mOriginX,
                                root_height - mOriginY - mWindowHeight,
-                               mWindowWidth, mWindowHeight, NULL, NULL, hMod,
-                               NULL);
+                               rc.right - rc.left, rc.bottom - rc.top,
+                               NULL, NULL, hMod, NULL);
 
    // If window was not created, quit
    if ( NULL == mWinHandle )
