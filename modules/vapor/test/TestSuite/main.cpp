@@ -93,6 +93,7 @@ int main (int argc, char **argv)
 #else
    metric_prefix += "Debug/";
 #endif
+#endif
 #ifdef _OPT
    metric_prefix += "Opt/";
 #endif
