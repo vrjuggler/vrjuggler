@@ -60,30 +60,35 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
    {
       case DLL_PROCESS_ATTACH:
          {
+            char* env_dir(NULL);
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+            size_t len;
+            _dupenv_s(&env_dir, &len, "VJ_BASE_DIR");
+#else
+            env_dir = std::getenv("VJ_BASE_DIR");
+#endif
+
             try
             {
-               char tmppath[1024];
-               std::memset(tmppath, 0, sizeof(tmppath));
-               GetModuleFileName(module, tmppath, sizeof(tmppath));
+               fs::path base_dir;
 
-               const fs::path dll_path(tmppath, fs::native);
-               fs::path base_dir = dll_path.branch_path().branch_path();
-#if (defined(JUGGLER_DEBUG) || defined(VJ_DEBUG)) && ! defined(_DEBUG)
-               // The debug DLL linked against the release runtime is in
-               // <base_dir>\lib\debug.
-               base_dir = base_dir.branch_path();
-#endif
-
-               char* env_dir(NULL);
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-               size_t len;
-               _dupenv_s(&env_dir, &len, "VJ_BASE_DIR");
-#else
-               env_dir = std::getenv("VJ_BASE_DIR");
-#endif
-
+               // If VJ_BASE_DIR is not set, look up the path to this DLL and
+               // use it to provide a default setting for that environment
+               // variable.
                if ( NULL == env_dir )
                {
+                  char tmppath[1024];
+                  std::memset(tmppath, 0, sizeof(tmppath));
+                  GetModuleFileName(module, tmppath, sizeof(tmppath));
+
+                  const fs::path dll_path(tmppath, fs::native);
+                  base_dir = dll_path.branch_path().branch_path();
+#if (defined(JUGGLER_DEBUG) || defined(VJ_DEBUG)) && ! defined(_DEBUG)
+                  // The debug DLL linked against the release runtime is in
+                  // <base_dir>\lib\debug.
+                  base_dir = base_dir.branch_path();
+#endif
+
                   const std::string base_dir_str =
                      base_dir.native_directory_string();
 
@@ -95,12 +100,14 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                   putenv(env_stream.str().c_str());
 #endif
                }
-#if defined(_MSC_VER) && _MSC_VER >= 1400
                else
                {
+                  base_dir = fs::path(env_dir, fs::native);
+#if defined(_MSC_VER) && _MSC_VER >= 1400
                   std::free(env_dir);
-               }
+                  env_dir = NULL;
 #endif
+               }
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                _dupenv_s(&env_dir, &len, "VJ_DATA_DIR");
@@ -108,6 +115,8 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                env_dir = std::getenv("VJ_DATA_DIR");
 #endif
 
+               // If VJ_BASE_DIR is not set, set a default relative to
+               // base_dir.
                if ( NULL == env_dir )
                {
                   fs::path data_dir(base_dir / "share" / "vrjuggler");
@@ -126,6 +135,7 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                else
                {
                   std::free(env_dir);
+                  env_dir = NULL;
                }
 #endif
             }
@@ -133,6 +143,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
             {
                std::cerr << "Automatic assignment of VR Juggler environment "
                          << "variables failed:\n" << ex.what() << std::endl;
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+               if ( NULL != env_dir )
+               {
+                  std::free(env_dir);
+               }
+#endif
             }
          }
          break;
@@ -154,76 +171,93 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
  */
 extern "C" void __attribute ((constructor)) vrjLibraryInit()
 {
-   Dl_info info;
-   info.dli_fname = 0;
-   const int result = dladdr(reinterpret_cast<const void*>(&vrjLibraryInit),
-                             &info);
+   fs::path base_dir;
+   const char* env_dir = std::getenv("VJ_BASE_DIR");
 
-   // NOTE: dladdr(3) really does return a non-zero value on success.
-   if ( 0 != result )
+   // If VJ_BASE_DIR is not set, look up the path to this shared library and
+   // use it to provide a default setting for that environment variable.
+   if ( NULL == env_dir )
    {
-      try
+      Dl_info info;
+      info.dli_fname = 0;
+      const int result =
+         dladdr(reinterpret_cast<const void*>(&vrjLibraryInit), &info);
+
+      // NOTE: dladdr(3) really does return a non-zero value on success.
+      if ( 0 != result )
       {
-         fs::path lib_file(info.dli_fname, fs::native);
-         lib_file = fs::system_complete(lib_file);
+         try
+         {
+            fs::path lib_file(info.dli_fname, fs::native);
+            lib_file = fs::system_complete(lib_file);
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
-         const std::string bit_suffix("32");
+            const std::string bit_suffix("32");
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
       defined(VPR_OS_Linux) && defined(__x86_64__)
-         const std::string bit_suffix("64");
+            const std::string bit_suffix("64");
 #else
-         const std::string bit_suffix("");
+            const std::string bit_suffix("");
 #endif
 
-         // Get the directory containing this shared library.
-         const fs::path lib_path = lib_file.branch_path();
+            // Get the directory containing this shared library.
+            const fs::path lib_path = lib_file.branch_path();
 
-         // Start the search for the root of the VR Juggler installation in
-         // the parent of the directory containing this shared library.
-         fs::path base_dir = lib_path.branch_path();
+            // Start the search for the root of the VR Juggler installation in
+            // the parent of the directory containing this shared library.
+            base_dir = lib_path.branch_path();
 
-         // Use the lib subdirectory to figure out when we have found the root
-         // of the VR Juggler installation tree.
-         const fs::path lib_subdir(std::string("lib") + bit_suffix);
+            // Use the lib subdirectory to figure out when we have found the
+            // root of the VR Juggler installation tree.
+            const fs::path lib_subdir(std::string("lib") + bit_suffix);
 
-         bool found(false);
-         while ( ! found && ! base_dir.empty() )
-         {
-            try
+            bool found(false);
+            while ( ! found && ! base_dir.empty() )
             {
-               if ( ! fs::exists(base_dir / lib_subdir) )
+               try
+               {
+                  if ( ! fs::exists(base_dir / lib_subdir) )
+                  {
+                     base_dir = base_dir.branch_path();
+                  }
+                  else
+                  {
+                     found = true;
+                  }
+               }
+               catch (fs::filesystem_error&)
                {
                   base_dir = base_dir.branch_path();
                }
-               else
-               {
-                  found = true;
-               }
             }
-            catch (fs::filesystem_error&)
+
+            if ( found )
             {
-               base_dir = base_dir.branch_path();
+               setenv("VJ_BASE_DIR",
+                      base_dir.native_directory_string().c_str(), 1);
             }
          }
-
-         if ( found )
+         catch (fs::filesystem_error& ex)
          {
-            const fs::path data_dir = base_dir / VJ_SHARE_DIR;
-
-            // We use the overwrite value of 0 as a way around testing whether
-            // the environment variables are already set.
-            setenv("VJ_BASE_DIR", base_dir.native_directory_string().c_str(),
-                   0);
-            setenv("VJ_DATA_DIR", data_dir.native_directory_string().c_str(),
-                   0);
+            std::cerr << "Automatic assignment of VJ_BASE_DIR failed:\n"
+                      << ex.what() << std::endl;
          }
       }
-      catch (fs::filesystem_error& ex)
-      {
-         std::cerr << "Automatic assignment of VR Juggler environment "
-                   << "variables failed:\n" << ex.what() << std::endl;
-      }
+   }
+   else
+   {
+      base_dir = fs::path(env_dir, fs::native);
+   }
+
+   if ( ! base_dir.empty() )
+   {
+      // If base_dir were empty, this would result in data_dir being relative
+      // to the current working directory.
+      const fs::path data_dir = base_dir / VJ_SHARE_DIR;
+
+      // We use the overwrite value of 0 as a way around testing whether the
+      // environment variable is already set.
+      setenv("VJ_DATA_DIR", data_dir.native_directory_string().c_str(), 0);
    }
 }
 #endif  /* defined(WIN32) || defined(WIN64) */
