@@ -1,0 +1,45 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = @VERSION_DOT@
+
+ISA = @ISA@
+ABI = @ABI@
+MAJOR_VERSION = @MAJOR_VERSION@
+MINOR_VERSION = @MINOR_VERSION@
+MICRO_VERSION = @MICRO_VERSION@
+LIBBITSUF = @LIBBITSUF@
+PLATFORM = @PLATFORM@
+vrj_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+vrj_ldflags = @vrj_ldflags@
+includedir = @includedir@
+libdir = @libdir@
+
+static_begin = @APP_LINK_STATIC_ON@
+static_end = @APP_LINK_STATIC_OFF@
+
+vrj_pf_lib = @vrj_pf_lib@
+vrj_pf_prof_lib = @vrj_pf_prof_lib@
+vrj_pf_extra_libs = @vrj_pf_extra_libs@
+
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+Name: VR Juggler Performer Draw Manager
+Description: Draw manager for applications that are based on Performer.
+URL: http://www.vrjuggler.org/
+Version: ${vrj_version}
+Provides: vrjuggler-performer
+Requires: vrjuggler = ${vrj_version}
+Arch: ${ISA}
+Cflags: -I${includedir}
+Libs: ${vrj_ldflags} ${vrj_pf_lib} ${vrj_pf_extra_libs}
+Libs.private:
+
+######################### VR Juggler Specific Flagpoll Variables ##############
+
+# Draw Manager Choices
+vrj_pf_libs: ${vrj_pf_lib} ${vrj_pf_extra_libs}
+vrj_pf_prof_libs: ${vrj_pf_prof_lib} ${vrj_pf_extra_libs}
