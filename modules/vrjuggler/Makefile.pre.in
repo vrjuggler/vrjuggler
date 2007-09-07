@@ -67,6 +67,8 @@ Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
 vrjuggler.fpc.in: ;
+vrjuggler-opengl.fpc.in: ;
+vrjuggler-performer.fpc.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 
@@ -76,7 +78,9 @@ configure: configure.in $(M4_DEPS)
 config.status: configure ;
 
 Makefile: $(srcdir)/VERSION configure config.status Makefile.in		\
-          Makefile.inc.in make.defs.mk.in vrjuggler.fpc.in
+          Makefile.inc.in make.defs.mk.in vrjuggler.fpc.in		\
+          vrjuggler-opengl.fpc.in vrjuggler-performer.fpc.in
+
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 
 %:: Makefile
