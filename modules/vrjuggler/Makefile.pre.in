@@ -63,6 +63,8 @@ Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
 vrjuggler.fpc.in: ;
+vrjuggler-opengl.fpc.in: ;
+vrjuggler-performer.fpc.in: ;
 $(M4_DEPS): ;
 $(srcdir)/VERSION: ;
 $(VERSION_FILES): ;
@@ -73,7 +75,8 @@ configure: configure.ac $(M4_DEPS)
 config.status: configure ;
 
 Makefile: $(srcdir)/VERSION configure config.status Makefile.in		\
-          Makefile.inc.in make.defs.mk.in vrjuggler.fpc.in $(VERSION_FILES)
+          Makefile.inc.in make.defs.mk.in vrjuggler.fpc.in		\
+          vrjuggler-opengl.fpc.in vrjuggler-performer.fpc.in $(VERSION_FILES)
 	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 	@$(MAKE) -f Makefile cleandepend
 
