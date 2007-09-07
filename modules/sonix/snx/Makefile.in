@@ -50,6 +50,7 @@ SRCS=		SoundFactory.cpp		\
 		SoundHandle.cpp			\
 		SoundImplementation.cpp 	\
 		StubSoundImplementation.cpp 	\
+		snxmain.cpp			\
 		sonix.cpp
 
 SUBDIR=		Util
