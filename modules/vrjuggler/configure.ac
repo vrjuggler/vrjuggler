@@ -813,6 +813,8 @@ VJ_MTREE_LIB_GEN(VJ, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    vrjuggler.fpc
+   vrjuggler-opengl.fpc
+   vrjuggler-performer.fpc
    boost_program_options.fpc
    Makefile
    Makefile.inc
