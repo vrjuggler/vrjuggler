@@ -47,7 +47,7 @@ DIRPRFX=	common/jccl/
 SUBDIR=		Plugins		\
 		Util
 
-SRCS=		
+SRCS=		jcclmain.cpp
 
 EXTRA_INCLUDES=	\
 	-I$(top_srcdir)/config	\

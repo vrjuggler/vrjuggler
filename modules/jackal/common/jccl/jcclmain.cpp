@@ -24,18 +24,27 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#if defined(WIN32) || defined(WIN64)
-#include <windows.h>
+#include <jccl/jcclConfig.h>
+
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
 #include <string>
+
+#if ! defined(WIN32) && ! defined(WIN64)
+#  include <dlfcn.h>
+#endif
+
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
+
+#include <vpr/vpr.h>
 
 
 namespace fs = boost::filesystem;
 
+#if defined(WIN32) || defined(WIN64)
 /**
  * Windows DLL entry point function. This ensures that the environment
  * variable \c JCCL_BASE_DIR is set as soon as this DLL is attached to the
@@ -51,31 +60,38 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
    {
       case DLL_PROCESS_ATTACH:
          {
-#if defined(_MSC_VER) && _MSC_VER >= 1400
             char* env_dir(NULL);
+#if defined(_MSC_VER) && _MSC_VER >= 1400
             size_t len;
             _dupenv_s(&env_dir, &len, "JCCL_BASE_DIR");
 #else
-            const char* env_dir = std::getenv("JCCL_BASE_DIR");
+            env_dir = std::getenv("JCCL_BASE_DIR");
 #endif
 
-            if ( NULL == env_dir )
+            try
             {
-               char tmppath[1024];
-               std::memset(tmppath, 0, sizeof(tmppath));
-               GetModuleFileName(module, tmppath, sizeof(tmppath));
+               fs::path base_dir;
 
-               try
+               // If JCCL_BASE_DIR is not set, look up the path to this DLL
+               // and use it to provide a default setting for that environment
+               // variable.
+               if ( NULL == env_dir )
                {
-                  fs::path dll_path(tmppath, fs::native);
-                  fs::path base_dir = dll_path.branch_path().branch_path();
+                  char tmppath[1024];
+                  std::memset(tmppath, 0, sizeof(tmppath));
+                  GetModuleFileName(module, tmppath, sizeof(tmppath));
+
+                  const fs::path dll_path(tmppath, fs::native);
+                  base_dir = dll_path.branch_path().branch_path();
 #if (defined(JUGGLER_DEBUG) || defined(JCCL_DEBUG)) && ! defined(_DEBUG)
                   // The debug DLL linked against the release runtime is in
                   // <base_dir>\lib\debug.
                   base_dir = base_dir.branch_path();
 #endif
+
                   const std::string base_dir_str =
                      base_dir.native_directory_string();
+
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   _putenv_s("JCCL_BASE_DIR", base_dir_str.c_str());
 #else
@@ -84,18 +100,57 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                   putenv(env_stream.str().c_str());
 #endif
                }
-               catch (fs::filesystem_error& ex)
+               else
                {
-                  std::cerr << "Automatic assignment of JCCL_BASE_DIR failed:\n"
-                            << ex.what() << std::endl;
-               }
-            }
+                  base_dir = fs::path(env_dir, fs::native);
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-            else
-            {
-               std::free(env_dir);
-            }
+                  std::free(env_dir);
+                  env_dir = NULL;
 #endif
+               }
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+               _dupenv_s(&env_dir, &len, "JCCL_DATA_DIR");
+#else
+               env_dir = std::getenv("JCCL_DATA_DIR");
+#endif
+
+               // If JCCL_BASE_DIR is not set, set a default relative to
+               // base_dir.
+               if ( NULL == env_dir )
+               {
+                  fs::path data_dir(base_dir / "share" / "jccl");
+                  const std::string data_dir_str =
+                     data_dir.native_directory_string();
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+                  _putenv_s("JCCL_DATA_DIR", data_dir_str.c_str());
+#else
+                  std::ostringstream env_stream;
+                  env_stream << "JCCL_DATA_DIR=" << data_dir_str;
+                  putenv(env_stream.str().c_str());
+#endif
+               }
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+               else
+               {
+                  std::free(env_dir);
+                  env_dir = NULL;
+               }
+#endif
+            }
+            catch (fs::filesystem_error& ex)
+            {
+               std::cerr << "Automatic assignment of JCCL environment "
+                         << "variables failed:\n" << ex.what() << std::endl;
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+               if ( NULL != env_dir )
+               {
+                  std::free(env_dir);
+               }
+#endif
+            }
          }
          break;
       default:
@@ -104,6 +159,109 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 
    return TRUE;
 }
+#else
+/**
+ * Non-Windows shared library constructor. This ensures that the environment
+ * variable \c JCCL_BASE_DIR is set as soon as this shared library is loaded.
+ * If it is not set, then it sets it based on an assumption about the
+ * structure of a JCCL installation. More specifically, an assumption is made
+ * that this shared library lives in the \c lib subdirectory of the JCCL
+ * installation. Therefore, the root of the JCCL installation is the parent of
+ * the directory containing this shared library.
+ */
+extern "C" void __attribute ((constructor)) jcclLibraryInit()
+{
+   fs::path base_dir;
+   const char* env_dir = std::getenv("JCCL_BASE_DIR");
 
+   // If JCCL_BASE_DIR is not set, look up the path to this shared library and
+   // use it to provide a default setting for that environment variable.
+   if ( NULL == env_dir )
+   {
+      Dl_info info;
+      info.dli_fname = 0;
+      const int result =
+#if defined(__GNUC__) && __GNUC_MAJOR__ < 4
+         dladdr((void*) &jcclLibraryInit, &info);
+#else
+         dladdr(reinterpret_cast<void*>(&jcclLibraryInit), &info);
+#endif
 
+      // NOTE: dladdr(3) really does return a non-zero value on success.
+      if ( 0 != result )
+      {
+         try
+         {
+            fs::path lib_file(info.dli_fname, fs::native);
+            lib_file = fs::system_complete(lib_file);
+
+#if defined(VPR_OS_IRIX) && defined(_ABIN32)
+            const std::string bit_suffix("32");
+#elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
+      defined(VPR_OS_Linux) && defined(__x86_64__)
+            const std::string bit_suffix("64");
+#else
+            const std::string bit_suffix("");
+#endif
+
+            // Get the directory containing this shared library.
+            const fs::path lib_path = lib_file.branch_path();
+
+            // Start the search for the root of the JCCL installation in the
+            // parent of the directory containing this shared library.
+            base_dir = lib_path.branch_path();
+
+            // Use the lib subdirectory to figure out when we have found the
+            // root of the JCCL installation tree.
+            const fs::path lib_subdir(std::string("lib") + bit_suffix);
+
+            bool found(false);
+            while ( ! found && ! base_dir.empty() )
+            {
+               try
+               {
+                  if ( ! fs::exists(base_dir / lib_subdir) )
+                  {
+                     base_dir = base_dir.branch_path();
+                  }
+                  else
+                  {
+                     found = true;
+                  }
+               }
+               catch (fs::filesystem_error&)
+               {
+                  base_dir = base_dir.branch_path();
+               }
+            }
+
+            if ( found )
+            {
+               setenv("JCCL_BASE_DIR",
+                      base_dir.native_directory_string().c_str(), 1);
+            }
+         }
+         catch (fs::filesystem_error& ex)
+         {
+            std::cerr << "Automatic assignment of JCCL_BASE_DIR failed:\n"
+                      << ex.what() << std::endl;
+         }
+      }
+   }
+   else
+   {
+      base_dir = fs::path(env_dir, fs::native);
+   }
+
+   if ( ! base_dir.empty() )
+   {
+      // If base_dir were empty, this would result in data_dir being relative
+      // to the current working directory.
+      const fs::path data_dir = base_dir / JCCL_SHARE_DIR;
+
+      // We use the overwrite value of 0 as a way around testing whether the
+      // environment variable is already set.
+      setenv("JCCL_DATA_DIR", data_dir.native_directory_string().c_str(), 0);
+   }
+}
 #endif  /* defined(WIN32) || defined(WIN64) */
