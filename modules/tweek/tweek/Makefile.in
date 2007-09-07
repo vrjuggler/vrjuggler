@@ -49,7 +49,7 @@ SUBDIR=		CORBA	\
 		Util	\
 		idl
 
-SRCS=		
+SRCS=		tweekmain.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

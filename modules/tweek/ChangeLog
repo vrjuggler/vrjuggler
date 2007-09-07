@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2007-09-07 patrick     Set TWEEK_BASE_DIR automatically on all platforms.
+
 [1.2.0 released - 8.14.2007]===================================================
 2007-07-08 patrick     Debug-enabled code linked against the release runtime
                        on Windows is now named the same as optimized code.
