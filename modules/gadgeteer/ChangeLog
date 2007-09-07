@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-07-2007 patrick     Set GADGET_BASE_DIR automatically on all platforms. Use
+                        the new environment variable GADGET_DATA_DIR as a way
+                        to look up files in GADGET_BASE_DIR/share/gadgeteer.
+
 [1.2.0 released - 8.14.2007]===================================================
 Jul-08-2007 patrick     Debug-enabled code linked against the release runtime
                         on Windows is now named the same as optimized code.
