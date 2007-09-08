@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings definition.version="3.1"?>
-<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="pinch_glove" icon_path="jar:file:${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/PinchGloveEditor.jar!/org/vrjuggler/vrjconfig/customeditors/pinchglove/images/PinchGloveIcon.png" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="pinch_glove" icon_path="jar:file:${VJ_DATA_DIR}/beans/customeditors/PinchGloveEditor.jar!/org/vrjuggler/vrjconfig/customeditors/pinchglove/images/PinchGloveIcon.png" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Pinch Glove">
       <abstract>false</abstract>
       <help>Configuration for the Fakespace Pinch Glove. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/apbs02.html"&gt;more on Pinch Gloves&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.2/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
