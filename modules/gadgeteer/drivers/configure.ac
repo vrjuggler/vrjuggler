@@ -83,7 +83,7 @@ AC_ARG_WITH(ftd2xx, [  --with-ftd2xx=<PATH>    ftd2xx installation],
 # Build with libusb path. Then, include the P5Gove drivers ...
 # There is default path.
 AC_ARG_WITH(libusb, [  --with-libusb=<PATH>    libusb installation],
-            _with_libusb="$withval", _with_libusb='no')
+            _with_libusb="$withval", _with_libusb='/usr')
 
 # Define the binary format.
 DPP_ABI_SETUP
