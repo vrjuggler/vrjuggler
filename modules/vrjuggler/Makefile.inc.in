@@ -386,12 +386,16 @@ links:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler.fpc			\
           $(instlinks)/share/flagpoll/vrjuggler.fpc
+ifeq ($(GL_API), Y)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler-opengl.fpc			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler-opengl.fpc		\
           $(instlinks)/share/flagpoll/vrjuggler-opengl.fpc
+endif
+ifeq ($(PF_API), Y)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler-performer.fpc			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler-performer.fpc	\
           $(instlinks)/share/flagpoll/vrjuggler-performer.fpc
+endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/boost*.fpc			\
           $(instlinks)/share/flagpoll
@@ -575,12 +579,16 @@ install-flagpoll:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/vrjuggler.fpc 					\
           $(libdir)$(LIBBITSUF)/flagpoll/vrjuggler-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
+ifeq ($(GL_API), Y)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vrjuggler-opengl.fpc 					\
+          $(topdir)/vrjuggler-opengl.fpc 				\
           $(libdir)$(LIBBITSUF)/flagpoll/vrjuggler-opengl-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
+endif
+ifeq ($(PF_API), Y)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vrjuggler-performer.fpc 					\
+          $(topdir)/vrjuggler-performer.fpc 				\
           $(libdir)$(LIBBITSUF)/flagpoll/vrjuggler-performer-$(VERSION_DOT).$(PLATFORM).$(ISA).fpc
+endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/boost_program_options.fpc				\
           $(libdir)$(LIBBITSUF)/flagpoll/boost_program_options-$(BOOST_VERSION).$(ISA).fpc
