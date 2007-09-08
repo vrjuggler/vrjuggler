@@ -2,14 +2,14 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <generic name="FlockEditor">
-      <file name="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/beans/customeditors/FlockEditor.jar"
+      <file name="${VJ_BASE_DIR}/${VJ_DATA_DIR}/beans/customeditors/FlockEditor.jar"
             class="org.vrjuggler.vrjconfig.customeditors.flock.FlockEditor"/>
       <dependencies>
          <bean>ConfigBroker</bean>
          <jar path="${JCCL_BASE_DIR}/${JCCL_DATA_DIR}/beans">jccl_config.jar</jar>
          <jar path="${JCCL_BASE_DIR}/${JCCL_DATA_DIR}/beans">jccl_editors.jar</jar>
          <jar path="${JCCL_BASE_DIR}/${JCCL_DATA_DIR}/java">TableLayout.jar</jar>
-         <jar path="${VJ_BASE_DIR}/${VRJ_DATA_DIR}/java">CommonEditors.jar</jar>
+         <jar path="${VJ_BASE_DIR}/${VJ_DATA_DIR}/java">CommonEditors.jar</jar>
       </dependencies>
    </generic>
 </beanlist>

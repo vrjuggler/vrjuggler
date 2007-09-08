@@ -183,18 +183,18 @@ TWEEK_DATA_DIR="share/$TWEEK_DATA_SUBDIR"
 JCCL_DATA_DIR="share/$JCCL_DATA_SUBDIR"
 
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
-   VRJ_VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION"
-   VRJ_DATA_VERSION="vrjuggler-$VRJ_VERSION_DOT"
-   VRJ_DATA_DIR="share/vrjuggler-$VRJ_VERSION_DOT"
-   PLUGIN_DIR_VERSION="vrjuggler-$VRJ_VERSION_DOT"
+   VJ_VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION"
+   VJ_DATA_VERSION="vrjuggler-$VJ_VERSION_DOT"
+   VJ_DATA_DIR="share/vrjuggler-$VJ_VERSION_DOT"
+   PLUGIN_DIR_VERSION="vrjuggler-$VJ_VERSION_DOT"
 
 # If versioning is disabled, then none of the version variables need to be
 # set except for $DATA_VERSION. Its use is different than the others. The
 # important thing to note is that the directory name is unversioned in this
 # case.
 else
-   VRJ_DATA_VERSION="vrjuggler"
-   VRJ_DATA_DIR="share/vrjuggler"
+   VJ_DATA_VERSION="vrjuggler"
+   VJ_DATA_DIR="share/vrjuggler"
    PLUGIN_DIR_VERSION="vrjuggler"
 fi
 
@@ -233,8 +233,8 @@ AC_SUBST(JUGGLERROOT_ABS)
 
 AC_SUBST(TWEEK_DATA_DIR)
 AC_SUBST(JCCL_DATA_DIR)
-AC_SUBST(VRJ_DATA_VERSION)
-AC_SUBST(VRJ_DATA_DIR)
+AC_SUBST(VJ_DATA_VERSION)
+AC_SUBST(VJ_DATA_DIR)
 AC_SUBST(PLUGIN_DIR_VERSION)
 AC_SUBST(ANT)
 AC_SUBST(RM_LN)
