@@ -1288,7 +1288,7 @@ rm -rf %{buildroot}
 %{_libdir}/libvrj-*.a
 %{_libdir}/%{vj_arch}/libvrj-*.a
 %{_libdir}/%{vj_arch}/*/libvrj-*.a
-%{_libdir}/flagpoll/vrjuggler*.fpc
+%{_libdir}/flagpoll/vrjuggler-%{vrjuggler_version}*.fpc
 %{_prefix}/share/aclocal/vrj.m4
 %{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/*.mk
 %{_prefix}/share/vrjuggler-%{vrjuggler_version_dist}/samples
@@ -1308,6 +1308,7 @@ rm -rf %{buildroot}
 %{_libdir}/libvrj_ogl*.a
 %{_libdir}/%{vj_arch}/libvrj_ogl*.a
 %{_libdir}/%{vj_arch}/*/libvrj_ogl*.a
+%{_libdir}/flagpoll/vrjuggler-opengl-%{vrjuggler_version}*.fpc
 
 %if %have_performer
 %files -n vrjuggler-performer
@@ -1322,6 +1323,7 @@ rm -rf %{buildroot}
 %{_libdir}/libvrj_pf*.a
 %{_libdir}/%{vj_arch}/libvrj_pf*.a
 %{_libdir}/%{vj_arch}/*/libvrj_pf*.a
+%{_libdir}/flagpoll/vrjuggler-performer-%{vrjuggler_version}*.fpc
 %endif
 
 %if %have_java
