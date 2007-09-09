@@ -842,6 +842,8 @@ def updateVersions(vcDir, options):
    vrj_module = JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              'VRJ_VERSION', vrj_subst_vars,
                              [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
+                              ('vrjuggler-opengl.fpc',),
+                              ('vrjuggler-performer.fpc',),
                               (r'vrj\version.rc',
                                os.path.join(gJugglerDir, 'version.rc.in'))])
    mods.append(vrj_module)
@@ -1616,8 +1618,12 @@ def installVRJuggler(prefix, buildDir):
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
-   fpc_file = os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc')
-   smartCopy(fpc_file, destdir)
+   smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc'), destdir)
+   smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler-opengl.fpc'),
+             destdir)
+   if os.getenv('PFROOT', '') != '':
+      smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler-performer.fpc'),
+                destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'data')
