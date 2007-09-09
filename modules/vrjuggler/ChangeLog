@@ -1,7 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Sep-08-2007 patrick     Added vrjuggler-direct3d fpc file.
-Sep-06-2007 dshipton    Added vrjuggler-opengl and vrjuggler-performer fpc
+Sep-09-2007 patrick     Added vrjuggler-direct3d fpc file.
+Sep-07-2007 dshipton    Added vrjuggler-opengl and vrjuggler-performer fpc
                         files for easier Draw Manager selection by application
                         builds.
 Sep-04-2007 patrick     Use new environment variable VJ_DATA_DIR as a way to
