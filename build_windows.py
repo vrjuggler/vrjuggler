@@ -826,8 +826,11 @@ def updateVersions(vcDir, options):
    vrj_subst_vars['vrj_cxxflags'] = '/EHsc /GR'
    vrj_subst_vars['vrj_ldflags'] = r'/libpath:"$libdir"'
    vrj_subst_vars['vrj_libs'] = ''
+   vrj_subst_vars['vrj_d3d_lib'] = ''
    vrj_subst_vars['vrj_ogl_lib'] = ''
    vrj_subst_vars['vrj_pf_lib'] = ''
+   vrj_subst_vars['vrj_d3d_extra_libs'] = \
+      'd3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib'
    vrj_subst_vars['vrj_ogl_extra_libs'] = 'opengl32.lib glu32.lib'
    vrj_subst_vars['vrj_pf_extra_libs'] = \
       '/libpath:"${PFROOT}\lib" libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib'
@@ -842,6 +845,7 @@ def updateVersions(vcDir, options):
    vrj_module = JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              'VRJ_VERSION', vrj_subst_vars,
                              [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
+                              ('vrjuggler-direct3d.fpc',),
                               ('vrjuggler-opengl.fpc',),
                               ('vrjuggler-performer.fpc',),
                               (r'vrj\version.rc',
@@ -1619,6 +1623,8 @@ def installVRJuggler(prefix, buildDir):
 
    destdir = os.path.join(prefix, 'lib', 'flagpoll')
    smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler.fpc'), destdir)
+   smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler-direct3d.fpc'),
+             destdir)
    smartCopy(os.path.join(buildDir, 'VRJuggler', 'vrjuggler-opengl.fpc'),
              destdir)
    if os.getenv('PFROOT', '') != '':
