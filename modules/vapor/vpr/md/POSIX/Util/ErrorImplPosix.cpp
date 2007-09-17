@@ -34,7 +34,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vpr/vprConfig.h>
-#include <string.h>
+#include <cstring>
 #include <errno.h>
 #include <vpr/md/POSIX/Util/ErrorImplPosix.h>
 
@@ -44,7 +44,7 @@ namespace vpr
 
 std::string ErrorImplPosix::getCurrentErrorMsg()
 {
-   const char* err_str(strerror(errno));
+   const char* err_str(std::strerror(errno));
 
    if ( NULL != err_str )
    {
@@ -56,10 +56,10 @@ std::string ErrorImplPosix::getCurrentErrorMsg()
    }
 }
 
-void ErrorImplPosix::outputCurrentError (std::ostream& out,
-                                         const std::string& prefix)
+void ErrorImplPosix::outputCurrentError(std::ostream& out,
+                                        const std::string& prefix)
 {
-   const char* err_str = strerror(errno);
+   const char* err_str = std::strerror(errno);
 
    out << "Error (POSIX): " << prefix << " (" << errno;
 

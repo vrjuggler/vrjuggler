@@ -37,7 +37,7 @@
 #define _VPR_ERROR_IMPL_POSIX_H_
 
 #include <vpr/vprConfig.h>
-#include <iostream>
+#include <iosfwd>
 #include <string>
 #include <vpr/Util/ErrorBase.h>
 
@@ -49,13 +49,14 @@ namespace vpr
  *
  * POSIX Implementation of cross-platform error reporting class.
  */
-class VPR_CLASS_API ErrorImplPosix : public ErrorBase
+class ErrorImplPosix : public ErrorBase
 {
 public:
    /** @since 1.1.6 */
    static std::string getCurrentErrorMsg();
 
-   static void outputCurrentError(std::ostream& out, const std::string& prefix);
+   static void outputCurrentError(std::ostream& out,
+                                  const std::string& prefix);
 
    static ErrorType getCurrentError()
    {
