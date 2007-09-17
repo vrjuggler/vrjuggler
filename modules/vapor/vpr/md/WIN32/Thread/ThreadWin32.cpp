@@ -336,7 +336,7 @@ std::vector<unsigned int> ThreadWin32::getRunOn() const
 {
    std::vector<unsigned int> cpus;
 
-   if ( ThreadPosix::self() == this )
+   if ( ThreadWin32::self() == this )
    {
       DWORD_PTR proc_affinity_mask;
       DWORD_PTR sys_affinity_mask;
