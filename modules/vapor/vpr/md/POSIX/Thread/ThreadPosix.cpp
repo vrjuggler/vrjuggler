@@ -470,7 +470,7 @@ std::vector<unsigned int> ThreadPosix::getRunOn() const
          {
             if ( CPU_ISSET(i, &cpu_mask) )
             {
-               cpus.push_back(cpu);
+               cpus.push_back(i);
             }
          }
       }
