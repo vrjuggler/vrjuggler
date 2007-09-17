@@ -284,7 +284,7 @@ public:  // ----- Various other thread functions ------
     *
     * @since 2.1.6
     */
-   void setRunOn(const unsigned int cpu);
+   void setRunOn(const int cpu);
 
    /**
     * Gets the CPU affinity for this thread (the CPU on which this thread
