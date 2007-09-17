@@ -52,7 +52,7 @@ vpr::Mutex sStartSignalLock;
 vpr::Mutex sExitSignalLock;
 
 vpr::Int32 BaseThread::mNextThreadId = 0;
-vpr::TSTable BaseThread::gTSTable;
+vpr::TSTable BaseThread::sTSTable;
 
 boost::signals::connection BaseThread::
 addThreadStartCallback(BaseThread::state_signal_t::slot_function_type slot)
@@ -68,6 +68,17 @@ addThreadExitCallback(BaseThread::state_signal_t::slot_function_type slot)
    return sExitSignal.connect(slot);
 }
 
+BaseThread::BaseThread()
+   : mThreadId(-1)
+{
+   ;
+}
+
+BaseThread::~BaseThread()
+{
+   /* Do nothing. */ ;
+}
+
 /**
  * Ouputs the state of the object.
  */
@@ -78,7 +89,6 @@ std::ostream& BaseThread::outStream(std::ostream& out)
    out.unsetf(std::ios::right);
    return out;
 }
-
 
    // ---- Ouput operator ---- //
 std::ostream& operator<<(std::ostream& out, vpr::Thread* threadPtr)
@@ -95,14 +105,13 @@ std::ostream& operator<<(std::ostream& out, vpr::Thread* threadPtr)
    return out;
 }
 
-void BaseThread::registerThread(bool succesfulCreation)
+void BaseThread::registerThread(const bool succesfulCreation)
 {
-   if(succesfulCreation)   // Succeed
+   if ( succesfulCreation )   // Succeed
    {
       createThreadId();
-      Thread* thread_ptr = dynamic_cast<Thread*>(this);
-      vprASSERT(NULL != thread_ptr);
-      ThreadManager::instance()->addThread(thread_ptr); // Add the thread to the table
+      // Add the thread to the table
+      ThreadManager::instance()->addThread(static_cast<Thread*>(this));
    }
    else
    {
@@ -112,9 +121,9 @@ void BaseThread::registerThread(bool succesfulCreation)
 
 void BaseThread::unregisterThread()
 {
-   vpr::Thread* thread_ptr = dynamic_cast<vpr::Thread*>(this);
-   vprASSERT(NULL != thread_ptr);
-   vpr::ThreadManager::instance()->removeThread(thread_ptr);
+   vpr::ThreadManager::instance()->removeThread(
+      static_cast<vpr::Thread*>(this)
+   );
 }
 
 //--------------------------------------------

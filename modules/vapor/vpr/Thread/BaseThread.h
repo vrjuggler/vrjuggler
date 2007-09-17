@@ -38,8 +38,10 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/signal.hpp>
+
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
 
@@ -60,10 +62,11 @@ typedef boost::function<void()> thread_func_t;
  *
  * Provides functionality that is common to all threading implementations.
  *
- * @note This class is not designed to be used as a polymorphic base class
- * to hold references to threads.  Just use the real thread type.
+ * @note This class is \em not designed to be used as a polymorphic base class
+ *       to hold references to threads. The lack of virtual methods should
+ *       make this fact self-evident. Just use the real thread type.
  */
-class VPR_CLASS_API BaseThread
+class VPR_CLASS_API BaseThread : private boost::noncopyable
 {
 public:
    /** @name Thread State Callback Handling */
@@ -156,21 +159,10 @@ public:
       VPR_UNJOINABLE_THREAD  /**< The thread cannot be attached with join() */
    };
 
-   BaseThread() : mThreadId(-1)
-   {
-      ;
-   }
+protected:
+   BaseThread();
 
-   virtual ~BaseThread()
-   {
-      ;
-   }
-
-   /** Sets the thread's functor--the code that will get executed. */
-   virtual void setFunctor(const vpr::thread_func_t& functor) = 0;
-
-   /** Starts the thread's execution. */
-   virtual void start() = 0;
+   ~BaseThread();
 
 public:     // Thread specific data caching
    /**
@@ -184,103 +176,18 @@ public:     // Thread specific data caching
       return &mTSTable;
    }
 
+   const TSTable* getTSTable() const
+   {
+      return &mTSTable;
+   }
+
    /**
     * Get the Thread the global thread specific data table.
     * This table is shared by all threads that were not created by VPR.
     */
    static TSTable* getGlobalTSTable()
    {
-      return &gTSTable;
-   }
-
-private:
-   TSTable        mTSTable;  /**< Thread specific data for the thread */
-   static TSTable gTSTable;  /**< Global thread specific data.  Used in all
-                                  threads NOT created by vpr.  (ie. the
-                                  primordial thread). */
-
-protected:
-   /**
-    * After the object has been created, call this routine to complete
-    * initialization.  It is done this way because I need to call this based
-    * on stuff that happens in derived class's constructor.
-    *
-    * @pre The Thread Manager should be lock()'ed before calling this function
-    *       so that the addThread() function can execute correctly
-    * @post Thread is setup correctly to run.
-    *       The thread has been registered with the system.
-    *       Creates the thread's ID (mThreadId).
-    *
-    * @param successfulCreation Did the thread get created correctly?
-    */
-   void registerThread(bool successfulCreation);
-
-   void unregisterThread();
-
-public:
-   /**
-    * Causes the calling thread wait for the termination of this thread.
-    *
-    * @post The caller blocks until this thread finishes its execution.
-    *       This routine may return immediately if this thread has already
-    *       exited.
-    *
-    * @param status Current state of the terminating thread when that thread
-    *               calls the exit routine (optional).
-    *
-    * @note This implementation does onthing. See the derived classes for more
-    *       information.
-    */
-   virtual void join(void** = NULL)
-   {
-      /* Do nothing. */ ;
-   }
-
-   /**
-    * Resumes the execution of this thread (if it was previously suspended
-    * using suspend()).
-    *
-    * @note This implementation does nothing. See the derived classes for more
-    *       information.
-    */
-   virtual void resume()
-   {
-      /* Do nothing. */ ;
-   }
-
-   /**
-    * Suspends the execution of this thread.
-    *
-    * @note This implementation does nothing. See the derived classes for more
-    *       information.
-    */
-   virtual void suspend()
-   {
-      /* Do nothing. */ ;
-   }
-
-   /**
-    * Gets this thread's priority.
-    *
-    * @return This implementation always returns \c VPR_PRIORITY_NORMAL. See
-    *         the derived classes for more information.
-    */
-   virtual VPRThreadPriority getPrio()
-   {
-      return VPR_PRIORITY_NORMAL;
-   }
-
-   /**
-    * Sets this thread's priority.
-    *
-    * @param prio The new priority for this thread.
-    *
-    * @note This implementation does nothing. See the derived classes for more
-    *       information.
-    */
-   virtual void setPrio(const VPRThreadPriority)
-   {
-      /* Do nothing. */ ;
+      return &sTSTable;
    }
 
    /**
@@ -291,7 +198,7 @@ public:
     *         there was a creation error.
     * @return Otherwise, the value returned is this thread's ID.
     */
-   vpr::Int32 getTID()
+   vpr::Int32 getTID() const
    {
       return mThreadId;
    }
@@ -307,45 +214,40 @@ public:
     *       schedules a newly created thread.  However, true is returned if
     *       and only if the thread has been spawned successfully.
     */
-   bool valid()
+   bool valid() const
    {
-      return (mThreadId != -1);
+      return mThreadId != -1;
    }
 
-   /**
-    * Sends the specified signal to this thread (not necessarily \c SIGKILL).
-    *
-    * @post This thread receives the specified signal.
-    *
-    * @param signum The signal to send to this thread.
-    *
-    * @note This implementation does nothing. See the derived classes for
-    *       more information.
-    */
-   virtual void kill(const int)
-   {
-      /* Do nothing. */ ;
-   }
+private:
+   TSTable        mTSTable;  /**< Thread specific data for the thread */
+   static TSTable sTSTable;  /**< Global thread specific data.  Used in all
+                                  threads NOT created by vpr.  (ie. the
+                                  primordial thread). */
 
-   /**
-    * Kills (cancels) this thread.
-    *
-    * @post This thread is cancelled. Immediate cancellation is not guaranteed.
-    *
-    * @note This implementation does nothing. See the derived classes for
-    *       more information.
-    */
-   virtual void kill()
-   {
-      /* Do nothing. */ ;
-   }
-
+protected:
    /**
     * Ouputs the state of the object.
     */
-   virtual std::ostream& outStream(std::ostream& out);
+   std::ostream& outStream(std::ostream& out);
 
-protected:
+   /**
+    * After the object has been created, call this routine to complete
+    * initialization.  It is done this way because I need to call this based
+    * on stuff that happens in derived class's constructor.
+    *
+    * @pre The Thread Manager should be lock()'ed before calling this function
+    *       so that the addThread() function can execute correctly
+    * @post Thread is setup correctly to run.
+    *       The thread has been registered with the system.
+    *       Creates the thread's ID (mThreadId).
+    *
+    * @param successfulCreation Did the thread get created correctly?
+    */
+   void registerThread(const bool successfulCreation);
+
+   void unregisterThread();
+
    /**
     * Initializes the state of the object.
     */
@@ -354,15 +256,12 @@ protected:
       mThreadId = getNextThreadId();
    }
 
-private:
-   /// Don't allow copy
-   BaseThread(BaseThread&)
-   {;}
-
 protected:
-   vpr::Int32  mThreadId;    //! The local id for the thread, -1 ==> invalid thread
-
-   // --- STATICS ---- //
+   /**
+    * The local ID for the thread. A value of -1 implies that this is an
+    * invalid thread.
+    */
+   vpr::Int32 mThreadId;
 
 private:
    // XXX: What happens when it rolls over after we have been running for a

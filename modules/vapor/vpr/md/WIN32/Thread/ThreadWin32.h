@@ -147,14 +147,14 @@ public:
     * @post This thread is removed from the thread table and from the local
     *       thread hash.
     */
-   virtual ~ThreadWin32();
+   ~ThreadWin32();
 
    /**
     * Sets the functor that this thread will execute.
     *
     * @pre The thread is not already running.  The functor is valid.
     */
-   virtual void setFunctor(const vpr::thread_func_t& functor);
+   void setFunctor(const vpr::thread_func_t& functor);
 
    /**
     * Starts this thread's execution.
@@ -174,7 +174,7 @@ public:
     * @throw vpr::Exception is thrown if anything else went wrong during the
     *        creation of the thread.
     */
-   virtual void start();
+   void start();
 
 protected:
    /**
@@ -226,7 +226,7 @@ public:  // ----- Various other thread functions ------
     * @throw vpr::UncaughtThreadException is thrown if an exception was
     *        thrown by code executing in this thread and was not caught.
     */
-   virtual void join(void** status = NULL);
+   void join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -236,13 +236,13 @@ public:  // ----- Various other thread functions ------
     *      function.
     *
     */
-   virtual void resume();
+   void resume();
 
    /**
     * Suspends the execution of this thread.
     *
     */
-   virtual void suspend();
+   void suspend();
 
    /**
     * Gets this thread's priority.
@@ -250,7 +250,7 @@ public:  // ----- Various other thread functions ------
     * @throw vpr::IllegalArgumentException is thrown if this is not a valid
     *        thread (and thus cannot have its scheduling queried).
     */
-   virtual VPRThreadPriority getPrio();
+   VPRThreadPriority getPrio() const;
 
    /**
     * Sets this thread's priority.
@@ -259,7 +259,7 @@ public:  // ----- Various other thread functions ------
     *
     * @param prio The new priority for this thread.
     */
-   virtual void setPrio(const VPRThreadPriority prio);
+   void setPrio(const VPRThreadPriority prio);
 
    /**
     * Sets the CPU affinity for this thread (the CPU on which this thread
@@ -302,7 +302,7 @@ public:  // ----- Various other thread functions ------
     *           Thrown if the CPU affinity for the running thread could not
     *           be queried.
     */
-   std::vector<unsigned int> getRunOn();
+   std::vector<unsigned int> getRunOn() const;
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -324,7 +324,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note This method does nothing. Use kill() instead.
     */
-   virtual void kill(const int)
+   void kill(const int)
    {
       std::cerr << "vpr::ThreadWin32::kill() is not implemented!"
                 << std::endl;
@@ -335,7 +335,7 @@ public:  // ----- Various other thread functions ------
     *
     * @post This thread is cancelled.
     */
-   virtual void kill()
+   void kill()
    {
       CloseHandle(mThreadHandle);
    }
@@ -377,10 +377,10 @@ private:
    vpr::thread_func_t mStartFunctor;
 
    /** Converts a VPR thread priority to its Win32 equivalent. */
-   int vprThreadPriorityToWin32(const VPRThreadPriority priority);
+   int vprThreadPriorityToWin32(const VPRThreadPriority priority) const;
 
    /** Converts a Win32 thread priority to its VPR equivalent. */
-   VPRThreadPriority win32ThreadPriorityToVPR(const int priority);
+   VPRThreadPriority win32ThreadPriorityToVPR(const int priority) const;
 
    struct staticWrapper
    {

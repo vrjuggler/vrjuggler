@@ -268,7 +268,7 @@ void ThreadNSPR::startThread()
    }
 }
 
-BaseThread::VPRThreadPriority ThreadNSPR::getPrio()
+BaseThread::VPRThreadPriority ThreadNSPR::getPrio() const
 {
    return nsprThreadPriorityToVPR(PR_GetThreadPriority(mThread));
 }
@@ -283,8 +283,8 @@ void ThreadNSPR::setPrio(const VPRThreadPriority prio)
 // Private methods follow.
 // ===========================================================================
 
-
-PRThreadPriority ThreadNSPR::vprThreadPriorityToNSPR(const VPRThreadPriority priority)
+PRThreadPriority
+ThreadNSPR::vprThreadPriorityToNSPR(const VPRThreadPriority priority) const
 {
    PRThreadPriority nspr_prio;
 
@@ -308,6 +308,7 @@ PRThreadPriority ThreadNSPR::vprThreadPriorityToNSPR(const VPRThreadPriority pri
 }
 
 PRThreadScope ThreadNSPR::vprThreadScopeToNSPR(const VPRThreadScope scope)
+   const
 {
    PRThreadScope nspr_scope;
 
@@ -325,6 +326,7 @@ PRThreadScope ThreadNSPR::vprThreadScopeToNSPR(const VPRThreadScope scope)
 }
 
 PRThreadState ThreadNSPR::vprThreadStateToNSPR(const VPRThreadState state)
+   const
 {
    PRThreadState nspr_state;
 
@@ -341,7 +343,8 @@ PRThreadState ThreadNSPR::vprThreadStateToNSPR(const VPRThreadState state)
    return nspr_state;
 }
 
-BaseThread::VPRThreadPriority ThreadNSPR::nsprThreadPriorityToVPR(const PRThreadPriority priority)
+BaseThread::VPRThreadPriority
+ThreadNSPR::nsprThreadPriorityToVPR(const PRThreadPriority priority) const
 {
    VPRThreadPriority vpr_prio;
 
@@ -364,7 +367,8 @@ BaseThread::VPRThreadPriority ThreadNSPR::nsprThreadPriorityToVPR(const PRThread
    return vpr_prio;
 }
 
-BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR(const PRThreadScope scope)
+BaseThread::VPRThreadScope
+ThreadNSPR::nsprThreadScopeToVPR(const PRThreadScope scope) const
 {
    VPRThreadScope vpr_scope;
 
@@ -382,7 +386,8 @@ BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR(const PRThreadScope 
    return vpr_scope;
 }
 
-BaseThread::VPRThreadState ThreadNSPR::nsprThreadStateToVPR(const PRThreadState state)
+BaseThread::VPRThreadState
+ThreadNSPR::nsprThreadStateToVPR(const PRThreadState state) const
 {
    VPRThreadState vpr_state;
 

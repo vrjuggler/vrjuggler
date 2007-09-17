@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-09-16 patrick  Removed polymorphism from vpr::BaseThread and vpr::Thread.
+                    NEW VERSION: 2.1.7
 2007-09-16 patrick  Added vpr::ThreadWin32::setRunOn() and
                     vpr::ThreadWin32::getRunOn(). Added Linux-specific
                     implementations of vpr::ThreadPosix::setRunOn() and

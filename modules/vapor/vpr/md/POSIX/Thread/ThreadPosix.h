@@ -152,14 +152,14 @@ public:  // ---- Thread CREATION and SPAWNING -----
     * @post This thread is removed from the thread table and from the local
     *       thread hash.
     */
-   virtual ~ThreadPosix();
+   ~ThreadPosix();
 
    /**
     * Sets the functor that this thread will execute.
     *
     * @pre The thread is not already running.  The functor is valid.
     */
-   virtual void setFunctor(const vpr::thread_func_t& functor);
+   void setFunctor(const vpr::thread_func_t& functor);
 
    /**
     * Starts this thread's execution.
@@ -179,7 +179,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
     * @throw vpr::Exception is thrown if anything else went wrong during the
     *        creation of the thread.
     */
-   virtual void start();
+   void start();
 
 protected:
    /**
@@ -232,7 +232,7 @@ public:  // ----- Various other thread functions ------
     * @throw vpr::UncaughtThreadException is thrown if an exception was
     *        thrown by code executing in this thread and was not caught.
     */
-   virtual void join(void** status = NULL);
+   void join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -248,7 +248,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
-   virtual void resume()
+   void resume()
    {
       this->kill(SIGCONT);
    }
@@ -265,7 +265,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note This is not currently supported on HP-UX 10.20.
     */
-   virtual void suspend()
+   void suspend()
    {
       this->kill(SIGSTOP);
    }
@@ -285,7 +285,7 @@ public:  // ----- Various other thread functions ------
     * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
     */
-   virtual VPRThreadPriority getPrio();
+   VPRThreadPriority getPrio() const;
 
    /**
     * Sets this thread's priority.
@@ -301,7 +301,7 @@ public:  // ----- Various other thread functions ------
     * @note This is only supported on systems that support thread priority
     *       scheduling in their pthreads implementation.
     */
-   virtual void setPrio(const VPRThreadPriority prio);
+   void setPrio(const VPRThreadPriority prio);
 
    /**
     * Sets the CPU affinity for this thread (the CPU on which this thread
@@ -327,7 +327,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note Currently, this is only available on IRIX 6.5 and Linux.
     */
-   virtual void setRunOn(const unsigned int cpu);
+   void setRunOn(const unsigned int cpu);
 
    /**
     * Gets the CPU affinity for this thread (the CPU on which this thread
@@ -353,9 +353,9 @@ public:  // ----- Various other thread functions ------
     *
     * @note Currently, this is only available on IRIX 6.5 and Linux.
     * @note The return value of this method was changed from int to
-    *       std::vector<unsigned int> in VPR 2.1.7.
+    *       std::vector<unsigned int> in VPR 2.1.6.
     */
-   virtual std::vector<unsigned int> getRunOn();
+   std::vector<unsigned int> getRunOn() const;
 
    /**
     * Yields execution of the calling thread to allow a different blocked
@@ -383,7 +383,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
-   virtual void kill(const int signum);
+   void kill(const int signum);
 
    /**
     * Kills (cancels) this thread.
@@ -394,7 +394,7 @@ public:  // ----- Various other thread functions ------
     *       stop or it may ignore the cancel altogether.  Thus, immediate
     *       cancellation is not guaranteed.
     */
-   virtual void kill()
+   void kill()
    {
       pthread_cancel(mThread);
    }
@@ -436,22 +436,22 @@ private:
    vpr::thread_func_t mStartFunctor;
 
    /** Converts a VPR thread priority to its Pthread equivalent. */
-   int vprThreadPriorityToPOSIX(const VPRThreadPriority priority);
+   int vprThreadPriorityToPOSIX(const VPRThreadPriority priority) const;
 
    /** Converts a VPR thread scope to its Pthread equivalent. */
-   int vprThreadScopeToPOSIX(const VPRThreadScope scope);
+   int vprThreadScopeToPOSIX(const VPRThreadScope scope) const;
 
    /** Converts a VPR thread state value to its Pthread equivalent. */
-   int vprThreadStateToPOSIX(const VPRThreadState state);
+   int vprThreadStateToPOSIX(const VPRThreadState state) const;
 
    /** Converts a Pthread thread priority to its VPR equivalent. */
-   VPRThreadPriority posixThreadPriorityToVPR(const int priority);
+   VPRThreadPriority posixThreadPriorityToVPR(const int priority) const;
 
    /** Converts a Pthread thread scope to its VPR equivalent. */
-   VPRThreadScope posixThreadScopeToVPR(const int scope);
+   VPRThreadScope posixThreadScopeToVPR(const int scope) const;
 
    /** Converts a Pthread thread state value to its VPR equivalent. */
-   VPRThreadState posixThreadStateToVPR(const int state);
+   VPRThreadState posixThreadStateToVPR(const int state) const;
 
 // ===========================================================================
 // Static stuff follows.

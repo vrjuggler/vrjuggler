@@ -144,14 +144,14 @@ public:
     * @post This thread is removed from the thread table and from the local
     *        thread hash.
     */
-   virtual ~ThreadNSPR();
+   ~ThreadNSPR();
 
    /**
     * Sets the functor that this thread will execute.
     *
     * @pre The thread is not already running.  The functor is valid.
     */
-   virtual void setFunctor(const vpr::thread_func_t& functor);
+   void setFunctor(const vpr::thread_func_t& functor);
 
    /**
     * Creates a new thread that will execute this thread's functor.
@@ -166,7 +166,7 @@ public:
     * @throw vpr::ResourceException is thrown if a thread could not be
     *        allocated.
     */
-   virtual void start();
+   void start();
 
    /**
     * Makes the calling thread wait for the termination of this thread.
@@ -184,7 +184,7 @@ public:
     * @throw vpr::UncaughtThreadException is thrown if an exception was
     *        thrown by code executing in this thread and was not caught.
     */
-   virtual void join(void** status = NULL);
+   void join(void** status = NULL);
 
    /**
     * Resumes the execution of a thread that was previously suspended using
@@ -200,7 +200,7 @@ public:
     *
     * @note This operation is not currently supported with NSPR threads.
     */
-   virtual void resume()
+   void resume()
    {
 //      this->kill(SIGCONT);
    }
@@ -217,7 +217,7 @@ public:
     *
     * @note This operation is not currently supported with NSPR threads.
     */
-   virtual void suspend()
+   void suspend()
    {
 //      this->kill(SIGSTOP);
    }
@@ -230,7 +230,7 @@ public:
     * @throw vpr::IllegalArgumentException is thrown if this is not a valid
     *        thread (and thus cannot have its scheduling queried).
     */
-   virtual VPRThreadPriority getPrio();
+   VPRThreadPriority getPrio() const;
 
    /**
     * Sets this thread's priority.
@@ -242,14 +242,14 @@ public:
     * @note The priority must correspond to a value in the PRThreadPriority
     *        enumerated type.
     */
-   virtual void setPrio(const VPRThreadPriority prio);
+   void setPrio(const VPRThreadPriority prio);
 
-   virtual void setRunOn(const unsigned int)
+   void setRunOn(const unsigned int)
    {
       /* Do nothing. */ ;
    }
 
-   virtual std::vector<unsigned int> getRunOn()
+   std::vector<unsigned int> getRunOn() const
    {
       return std::vector<unsigned int>();
    }
@@ -267,7 +267,7 @@ public:
     *
     * @note This operation is not currently supported by NSPR threads.
     */
-   virtual void kill(const int)
+   void kill(const int)
    {
       /* Do nothing. */ ;
    }
@@ -283,7 +283,7 @@ public:
     *
     * @note This operation is not currently supported by NSPR threads.
     */
-   virtual void kill()
+   void kill()
    {
       /* Do nothing. */ ;
    }
@@ -312,7 +312,7 @@ public:
    /**
     * Provides a way of printing the process ID neatly.
     */
-   virtual std::ostream& outStream(std::ostream& out);
+   std::ostream& outStream(std::ostream& out);
 
 // All private member variables and functions.
 private:
@@ -342,17 +342,19 @@ private:
    bool              mThreadStartCompleted;  /**< Flag for signaling when thread start is completed */
    vpr::CondVarNSPR  mThreadStartCondVar;    /**< CondVar for thread starting */
 
-   PRThreadPriority vprThreadPriorityToNSPR(const VPRThreadPriority priority);
+   PRThreadPriority vprThreadPriorityToNSPR(const VPRThreadPriority priority)
+      const;
 
-   PRThreadScope vprThreadScopeToNSPR(const VPRThreadScope scope);
+   PRThreadScope vprThreadScopeToNSPR(const VPRThreadScope scope) const;
 
-   PRThreadState vprThreadStateToNSPR(const VPRThreadState state);
+   PRThreadState vprThreadStateToNSPR(const VPRThreadState state) const;
 
-   VPRThreadPriority nsprThreadPriorityToVPR(const PRThreadPriority priority);
+   VPRThreadPriority nsprThreadPriorityToVPR(const PRThreadPriority priority)
+      const;
 
-   VPRThreadScope nsprThreadScopeToVPR(const PRThreadScope scope);
+   VPRThreadScope nsprThreadScopeToVPR(const PRThreadScope scope) const;
 
-   VPRThreadState nsprThreadStateToVPR(const PRThreadState state);
+   VPRThreadState nsprThreadStateToVPR(const PRThreadState state) const;
 
    static PRUint32               mTicksPerSec;
 

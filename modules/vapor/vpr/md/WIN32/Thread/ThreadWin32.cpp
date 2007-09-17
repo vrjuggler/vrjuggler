@@ -271,7 +271,7 @@ void ThreadWin32::suspend()
    }
 }
 
-BaseThread::VPRThreadPriority ThreadWin32::getPrio()
+BaseThread::VPRThreadPriority ThreadWin32::getPrio() const
 {
    const int priority = GetThreadPriority(mThreadHandle);
 
@@ -332,7 +332,7 @@ void ThreadWin32::setRunOn(const unsigned int cpu)
    }
 }
 
-std::vector<unsigned int> ThreadWin32::getRunOn()
+std::vector<unsigned int> ThreadWin32::getRunOn() const
 {
    std::vector<unsigned int> cpus;
 
@@ -398,6 +398,7 @@ std::ostream& ThreadWin32::outStream(std::ostream& out)
 }
 
 int ThreadWin32::vprThreadPriorityToWin32(const VPRThreadPriority priority)
+   const
 {
    int win32_prio(THREAD_PRIORITY_NORMAL);
 
@@ -421,7 +422,7 @@ int ThreadWin32::vprThreadPriorityToWin32(const VPRThreadPriority priority)
 }
 
 BaseThread::VPRThreadPriority
-ThreadWin32::win32ThreadPriorityToVPR(const int priority)
+ThreadWin32::win32ThreadPriorityToVPR(const int priority) const
 {
    VPRThreadPriority vpr_prio;
 

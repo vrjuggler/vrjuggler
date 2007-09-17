@@ -327,7 +327,7 @@ void ThreadPosix::join(void** status)
 }
 
 // Get this thread's priority.
-BaseThread::VPRThreadPriority ThreadPosix::getPrio()
+BaseThread::VPRThreadPriority ThreadPosix::getPrio() const
 {
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
    int policy;
@@ -428,7 +428,7 @@ void ThreadPosix::setRunOn(const unsigned int cpu)
    }
 }
 
-std::vector<unsigned int> ThreadPosix::getRunOn()
+std::vector<unsigned int> ThreadPosix::getRunOn() const
 {
    std::vector<unsigned int> cpus;
 
@@ -542,6 +542,7 @@ std::ostream& ThreadPosix::outStream(std::ostream& out)
 // ===========================================================================
 
 int ThreadPosix::vprThreadPriorityToPOSIX(const VPRThreadPriority priority)
+   const
 {
    int posix_prio;
    int min_prio, max_prio;
@@ -569,7 +570,7 @@ int ThreadPosix::vprThreadPriorityToPOSIX(const VPRThreadPriority priority)
    return posix_prio;
 }
 
-int ThreadPosix::vprThreadScopeToPOSIX(const VPRThreadScope scope)
+int ThreadPosix::vprThreadScopeToPOSIX(const VPRThreadScope scope) const
 {
    int posix_scope;
 
@@ -589,7 +590,7 @@ int ThreadPosix::vprThreadScopeToPOSIX(const VPRThreadScope scope)
    return posix_scope;
 }
 
-int ThreadPosix::vprThreadStateToPOSIX(const VPRThreadState state)
+int ThreadPosix::vprThreadStateToPOSIX(const VPRThreadState state) const
 {
    int posix_state;
 
@@ -610,7 +611,7 @@ int ThreadPosix::vprThreadStateToPOSIX(const VPRThreadState state)
 }
 
 BaseThread::VPRThreadPriority ThreadPosix::
-posixThreadPriorityToVPR(const int priority)
+posixThreadPriorityToVPR(const int priority) const
 {
    VPRThreadPriority vpr_prio;
    int min_prio, max_prio;
@@ -635,6 +636,7 @@ posixThreadPriorityToVPR(const int priority)
 }
 
 BaseThread::VPRThreadScope ThreadPosix::posixThreadScopeToVPR(const int scope)
+   const
 {
    VPRThreadScope vpr_scope;
 
@@ -670,6 +672,7 @@ BaseThread::VPRThreadScope ThreadPosix::posixThreadScopeToVPR(const int scope)
 }
 
 BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR(const int state)
+   const
 {
    VPRThreadState vpr_state;
 
