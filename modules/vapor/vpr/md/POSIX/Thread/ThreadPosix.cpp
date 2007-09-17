@@ -470,7 +470,6 @@ int ThreadPosix::getRunOn()
       if ( result == 0 )
       {
          const long cpu_count(sysconf(_SC_NPROCESSORS_CONF));
-         cpus.reserve(cpu_count);
 
          for ( int i = 0; i < cpu_count; ++i )
          {
