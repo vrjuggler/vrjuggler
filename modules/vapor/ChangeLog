@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-09-17 patrick  Added Linux-specific implementations of
+                    vpr::ThreadPosix::setRunOn() and
+                    vpr::ThreadPosix::getRunOn().
 2007-09-07 patrick  Set VPR_BASE_DIR automatically on all platforms.
 2007-09-06 patrick  Implemented stack trace printing on Mac OS X.
 
