@@ -162,7 +162,7 @@ def detectVisualStudioVersion(reattempt = False):
                os.environ['PATH'] = path_add + os.pathsep + os.getenv('PATH', '')
 
                # Try again to guess the Visual Studio version.
-               return detectVisualStudioVersion(True)               
+               return detectVisualStudioVersion(True)
 
          # If execution reaches this point, our attempts to guess the
          # location of a Visual Studio 7.x installation failed.
@@ -1107,10 +1107,10 @@ def smartCopy(srcfile, dst):
        Drop in replacement for shutil.copy2.
        srcfile - Full path to source file to copy.
        dst - Destination filename or directory.
-   """   
+   """
    if os.path.isdir(dst):
       dst = os.path.join(dst, os.path.basename(srcfile))
-        
+
    # Verify we need to copy and make sure to delete if needed
    if os.path.isfile(dst):
       stat_src = os.stat(srcfile)
@@ -1121,11 +1121,10 @@ def smartCopy(srcfile, dst):
          return   # File doesn't need to be copied
       #print "removing: ", dst
       os.remove(dst)
-   
+
    # Copy it
    shutil.copy2(srcfile, dst)
-   
-   
+
 def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
                disallowedFiles = None):
    #print "   %s ==> %s"%(startDir, destDir)
@@ -1789,7 +1788,7 @@ def installMsvcRT(prefix):
       dlls = glob.glob(os.path.join(sys_dir, 'msvc*.dll'))
 
       for d in dlls:
-         smartCopy(d, pj(destdir,d))         
+         smartCopy(d, pj(destdir, d))
 
       #smartCopy(d, pj(destdir,d))
       smartCopy(os.path.join(sys_dir, 'dbghelp.dll'), destdir)
