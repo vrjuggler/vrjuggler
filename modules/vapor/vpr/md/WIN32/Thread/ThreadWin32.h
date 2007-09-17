@@ -270,15 +270,19 @@ public:  // ----- Various other thread functions ------
     * @post The CPU affinity is set or an exception is thrown.
     *
     * @param cpu The CPU on which this thread will run exclusively. This value
-    *            is zero-based and therefore must be less than the number of
-    *            processors available on the computer.
+    *            is zero-based and therefore must be greater than 0 (zero) and
+    *            less than the number of processors available on the computer.
     *
     * @throw vpr::IllegalArgumentException
     *           Thrown if the thread spawned through the use of this object is
     *           not the thread from which this method was invoked.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if \p cpu is less than 0.
     * @throw vpr::Exception
     *           Thrown if the CPU affinity for the running thread could not
     *           be changed.
+    *
+    * @since 2.1.6
     */
    void setRunOn(const unsigned int cpu);
 
@@ -301,6 +305,8 @@ public:  // ----- Various other thread functions ------
     * @throw vpr::Exception
     *           Thrown if the CPU affinity for the running thread could not
     *           be queried.
+    *
+    * @since 2.1.6
     */
    std::vector<unsigned int> getRunOn() const;
 

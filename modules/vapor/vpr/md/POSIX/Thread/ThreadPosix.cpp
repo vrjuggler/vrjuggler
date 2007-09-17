@@ -382,10 +382,17 @@ void ThreadPosix::setPrio(VPRThreadPriority prio)
 #endif
 }
 
-void ThreadPosix::setRunOn(const unsigned int cpu)
+void ThreadPosix::setRunOn(const int cpu)
 {
    if ( ThreadPosix::self() == this )
    {
+      if ( cpu < 0 )
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Illegal CPU identifier " << cpu << " is less than 0";
+         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+      }
+
 #if defined(VPR_OS_IRIX)
       if ( mScope == VPR_GLOBAL_THREAD )
       {
@@ -402,7 +409,7 @@ void ThreadPosix::setRunOn(const unsigned int cpu)
       {
          cpu_set_t cpu_mask;
          CPU_ZERO(&cpu_mask);
-         CPU_SET(static_cast<int>(cpu), &cpu_mask);
+         CPU_SET(cpu, &cpu_mask);
          const int result = sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask);
 
          if ( result != 0 )

@@ -313,12 +313,14 @@ public:  // ----- Various other thread functions ------
     * @post The CPU affinity is set or an exception is thrown.
     *
     * @param cpu The CPU on which this thread will run exclusively. This value
-    *            is zero-based and therefore must be less than the number of
-    *            processors available on the computer.
+    *            is zero-based and therefore must be greater than 0 (zero) and
+    *            less than the number of processors available on the computer.
     *
     * @throw vpr::IllegalArgumentException
     *           Thrown if the thread spawned through the use of this object is
     *           not the thread from which this method was invoked.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if \p cpu is less than 0.
     * @throw vpr::IllegalArgumentException
     *           Thrown if this is not a system-scope (i.e., global) thread.
     * @throw vpr::Exception
@@ -327,7 +329,7 @@ public:  // ----- Various other thread functions ------
     *
     * @note Currently, this is only available on IRIX 6.5 and Linux.
     */
-   void setRunOn(const unsigned int cpu);
+   void setRunOn(const int cpu);
 
    /**
     * Gets the CPU affinity for this thread (the CPU on which this thread

@@ -305,12 +305,19 @@ void ThreadWin32::setPrio(const VPRThreadPriority prio)
    }
 }
 
-void ThreadWin32::setRunOn(const unsigned int cpu)
+void ThreadWin32::setRunOn(const int cpu)
 {
    // Even though we have easy access to mThreadHandle, we perform this test
    // to ensure semantic compatibility with vpr::ThreadPosix.
    if ( ThreadWin32::self() == this )
    {
+      if ( cpu < 0 )
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Illegal CPU identifier " << cpu << " is less than 0";
+         throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+      }
+
       // The value of cpu is zero-based, but the CPU identifier values from
       // Windows are one-based.
       DWORD_PTR result = SetThreadAffinityMask(mThreadHandle, 0x1 << cpu);

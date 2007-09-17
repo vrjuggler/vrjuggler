@@ -244,11 +244,67 @@ public:
     */
    void setPrio(const VPRThreadPriority prio);
 
-   void setRunOn(const unsigned int)
+   /**
+    * Sets the CPU affinity for this thread (the CPU on which this thread
+    * will exclusively run). This implementation does nothing.
+    *
+    * @pre The thread must have been set to be a system-scope thread. The
+    *      thread from which this method was invoked must be the same as the
+    *      thread spawned by this object.
+    * @post The CPU affinity is set or an exception is thrown.
+    *
+    * @param cpu The CPU on which this thread will run exclusively. This value
+    *            is zero-based and therefore must be greater than 0 (zero) and
+    *            less than the number of processors available on the computer.
+    *
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if the thread spawned through the use of this object is
+    *           not the thread from which this method was invoked.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if \p cpu is less than 0.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if this is not a system-scope (i.e., global) thread.
+    * @throw vpr::Exception
+    *           Thrown if the CPU affinity for the running thread could not
+    *           be changed.
+    *
+    * @note Currently, this method does nothing.
+    *
+    * @since 2.1.6
+    */
+   void setRunOn(const int)
    {
       /* Do nothing. */ ;
    }
 
+   /**
+    * Gets the CPU affinity for this thread (the CPU on which this thread
+    * exclusively runs). This implementation does nothing.
+    *
+    * @pre The thread must have been set to be a system-scope thread, and
+    *      a previous affinity must have been set using setRunOn(). The thread
+    *      from which this method was invoked must be the same as the thread
+    *      spawned by this object.
+    * @post The CPU affinity for this thread is returned to the caller.
+    *
+    * @return The CPU affinity for this thread (posisbly set by a previous
+    *         call to setRunOn()). This implementation always returns an
+    *         empty vector.
+    *
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if the thread spawned through the use of this object is
+    *           not the thread from which this method was invoked.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if this is not a system-scope (i.e., global) thread.
+    * @throw vpr::Exception
+    *           Thrown if the CPU affinity for the running thread could not
+    *           be queried.
+    *
+    * @note Currently, this method does nothing. It always returns an empty
+    *       vector.
+    *
+    * @since 2.1.6
+    */
    std::vector<unsigned int> getRunOn() const
    {
       return std::vector<unsigned int>();
