@@ -305,6 +305,76 @@ void ThreadWin32::setPrio(const VPRThreadPriority prio)
    }
 }
 
+void ThreadWin32::setRunOn(const unsigned int cpu)
+{
+   // Even though we have easy access to mThreadHandle, we perform this test
+   // to ensure semantic compatibility with vpr::ThreadPosix.
+   if ( ThreadWin32::self() == this )
+   {
+      // The value of cpu is zero-based, but the CPU identifier values from
+      // Windows are one-based.
+      DWORD_PTR result = SetThreadAffinityMask(mThreadHandle, 0x1 << cpu);
+
+      if ( result == 0 )
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Failed to set CPU affinity: "
+                    << vpr::Error::getCurrentErrorMsg();
+         throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+      }
+   }
+   else
+   {
+      throw vpr::IllegalArgumentException(
+         "CPU affinity can only be set for a thread object from its thread",
+         VPR_LOCATION
+      );
+   }
+}
+
+std::vector<unsigned int> ThreadWin32::getRunOn()
+{
+   std::vector<unsigned int> cpus;
+
+   if ( ThreadPosix::self() == this )
+   {
+      DWORD_PTR proc_affinity_mask;
+      DWORD_PTR sys_affinity_mask;
+
+      const BOOL result = GetProcessAffinityMask(mThreadHandle,
+                                                 &proc_affinity_mask,
+                                                 &sys_affinity_mask);
+
+      if ( result )
+      {
+         const size_t cpu_count(sizeof(DWORD_PTR) * 8);
+         cpus.reserve(cpu_count);
+
+         // Find the first CPU in proc_affinity_mask on which this thread is
+         // allowed to run.
+         for ( int i = 0; i < cpu_count; ++i )
+         {
+            if ( (0x1 << i) & proc_affinity_mask )
+            {
+               cpus.push_back(i);
+            }
+         }
+      }
+      else
+      {
+      }
+   }
+   else
+   {
+      throw vpr::IllegalArgumentException(
+         "CPU affinity can only be queired for a thread object from its thread",
+         VPR_LOCATION
+      );
+   }
+
+   return cpus;
+}
+
 Thread* ThreadWin32::self()
 {
    vprASSERT(statics.mStaticsInitialized == 1221 &&

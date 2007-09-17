@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdlib.h>
+#include <vector>
 #include <pthread.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -306,36 +307,55 @@ public:  // ----- Various other thread functions ------
     * Sets the CPU affinity for this thread (the CPU on which this thread
     * will exclusively run).
     *
-    * @pre The thread must have been set to be a system-scope thread.
-    * @post The CPU affinity is set or an error status is returned.
+    * @pre The thread must have been set to be a system-scope thread. The
+    *      thread from which this method was invoked must be the same as the
+    *      thread spawned by this object.
+    * @post The CPU affinity is set or an exception is thrown.
     *
-    * @param cpu The CPU on which this thread will run exclusively.
+    * @param cpu The CPU on which this thread will run exclusively. This value
+    *            is zero-based and therefore must be less than the number of
+    *            processors available on the computer.
     *
-    * @throw vpr::IllegalArgumentException is thrown if this is not a
-    *        system-scope (i.e., global) thread.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if the thread spawned through the use of this object is
+    *           not the thread from which this method was invoked.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if this is not a system-scope (i.e., global) thread.
+    * @throw vpr::Exception
+    *           Thrown if the CPU affinity for the running thread could not
+    *           be changed.
     *
-    * @note This is currently only available on IRIX 6.5 and is non-portable.
+    * @note Currently, this is only available on IRIX 6.5 and Linux.
     */
-   virtual void setRunOn(const int cpu);
+   virtual void setRunOn(const unsigned int cpu);
 
    /**
     * Gets the CPU affinity for this thread (the CPU on which this thread
     * exclusively runs).
     *
     * @pre The thread must have been set to be a system-scope thread, and
-    *      a previous affinity must have been set using setRunOn().
-    * @post The CPU affinity for this thread is stored in the cur_cpu
-    *       pointer.
+    *      a previous affinity must have been set using setRunOn(). The thread
+    *      from which this method was invoked must be the same as the thread
+    *      spawned by this object.
+    * @post The CPU affinity for this thread is returned to the caller.
     *
-    * @return The CPU affinity for this thread (set by a previous call to
-    *         setRunOn());
+    * @return The CPU affinity for this thread (posisbly set by a previous
+    *         call to setRunOn()).
     *
-    * @throw vpr::IllegalArgumentException is thrown if this is not a
-    *        system-scope (i.e., global) thread.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if the thread spawned through the use of this object is
+    *           not the thread from which this method was invoked.
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if this is not a system-scope (i.e., global) thread.
+    * @throw vpr::Exception
+    *           Thrown if the CPU affinity for the running thread could not
+    *           be queried.
     *
-    * @note This is currently only available on IRIX 6.5 and is non-portable.
+    * @note Currently, this is only available on IRIX 6.5 and Linux.
+    * @note The return value of this method was changed from int to
+    *       std::vector<unsigned int> in VPR 2.1.7.
     */
-   virtual int getRunOn();
+   virtual std::vector<unsigned int> getRunOn();
 
    /**
     * Yields execution of the calling thread to allow a different blocked

@@ -57,6 +57,7 @@
 // It is safe to include Debug.h in this file because Debug.h does not
 // include vpr/Thread/Thread.h or ThreadPosix.h.
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/Error.h>
 #include <vpr/Util/IllegalArgumentException.h>
 #include <vpr/Util/ResourceException.h>
 #include <vpr/Sync/DeadlockException.h>
@@ -381,46 +382,119 @@ void ThreadPosix::setPrio(VPRThreadPriority prio)
 #endif
 }
 
-void ThreadPosix::setRunOn(const int cpu)
+void ThreadPosix::setRunOn(const unsigned int cpu)
 {
-#ifdef VPR_OS_IRIX
-   if ( mScope == VPR_GLOBAL_THREAD )
+   if ( ThreadPosix::self() == this )
    {
-      pthread_setrunon_np(cpu);
+#if defined(VPR_OS_IRIX)
+      if ( mScope == VPR_GLOBAL_THREAD )
+      {
+         pthread_setrunon_np(cpu);
+      }
+      else
+      {
+         throw vpr::IllegalArgumentException(
+            "This thread is not a system-scope thread", VPR_LOCATION
+         );
+      }
+#elif defined(VPR_OS_Linux) && defined(CPU_SET)
+      if ( sysconf(_SC_NPROCESSORS_CONF) > cpu )
+      {
+         cpu_set_t cpu_mask;
+         CPU_ZERO(&cpu_mask);
+         CPU_SET(static_cast<int>(cpu), &cpu_mask);
+         const int result = sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask);
+
+         if ( result != 0 )
+         {
+            std::ostringstream msg_stream;
+            msg_stream << "Failed to set CPU affinity: "
+                       << vpr::Error::getCurrentErrorMsg();
+            throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+         }
+      }
+#else
+      boost::ignore_unused_variable_warning(cpu);
+      std::cerr << "vpr::ThreadPosix::setRunOn(): Not available on this "
+                << "operating system!\n";
+#endif
    }
    else
    {
       throw vpr::IllegalArgumentException(
-         "This thread is not a system-scope thread", VPR_LOCATION
+         "CPU affinity can only be set for a thread object from its thread",
+         VPR_LOCATION
       );
    }
-#else
-   boost::ignore_unused_variable_warning(cpu);
-   std::cerr << "vpr::ThreadPosix::setRunOn(): Not available on this system.\n";
-#endif
 }
 
-int ThreadPosix::getRunOn()
+std::vector<unsigned int> ThreadPosix::getRunOn()
 {
-#ifdef VPR_OS_IRIX
-   int cur_cpu;
+   std::vector<unsigned int> cpus;
 
-   if ( mScope == VPR_GLOBAL_THREAD )
+   if ( ThreadPosix::self() == this )
    {
-      pthread_getrunon_np(&cur_cpu);
+#if defined(VPR_OS_IRIX)
+      if ( mScope == VPR_GLOBAL_THREAD )
+      {
+         int cpu;
+         if ( pthread_getrunon_np(&cpu) == 0 )
+         {
+            cpus.push_back(cpu);
+         }
+         else
+         {
+            std::ostringstream msg_stream;
+            msg_stream << "Failed to query CPU affinity: "
+                       << Error::getCurrentErrorMsg();
+            throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+         }
+      }
+      else
+      {
+         throw vpr::IllegalArgumentException(
+            "This thread is not a system-scope thread", VPR_LOCATION
+         );
+      }
+#elif defined(VPR_OS_Linux)
+      cpu_set_t cpu_mask;
+      CPU_ZERO(&cpu_mask);
+      const int result = sched_getaffinity(0, sizeof(cpu_mask), &cpu_mask);
+
+      if ( result == 0 )
+      {
+         const long cpu_count(sysconf(_SC_NPROCESSORS_CONF));
+         cpus.reserve(cpu_count);
+
+         for ( int i = 0; i < cpu_count; ++i )
+         {
+            if ( CPU_ISSET(i, &cpu_mask) )
+            {
+               cpus.push_back(cpu);
+            }
+         }
+      }
+      else
+      {
+         std::ostringstream msg_stream;
+         msg_stream << "Failed to query CPU affinity: "
+                    << Error::getCurrentErrorMsg();
+         throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+      }
+#else
+      std::cerr << "vpr::ThreadPosix::getRunOn(): Not available on this "
+                << "operating system.\n";
+#endif
    }
    else
    {
       throw vpr::IllegalArgumentException(
-         "This thread is not a system-scope thread", VPR_LOCATION
+         "CPU affinity can only be queired for a thread object from its thread",
+         VPR_LOCATION
       );
    }
 
-   return cur_cpu;
-#else
-   std::cerr << "vpr::ThreadPosix::getRunOn(): Not available on this system.\n";
-   return 0;
-#endif
+   return cpus;
 }
 
 void ThreadPosix::kill(const int signum)

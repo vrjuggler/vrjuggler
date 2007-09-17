@@ -244,6 +244,16 @@ public:
     */
    virtual void setPrio(const VPRThreadPriority prio);
 
+   virtual void setRunOn(const unsigned int)
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual std::vector<unsigned int> getRunOn()
+   {
+      return std::vector<unsigned int>();
+   }
+
    /**
     * Sends the specified signal to this thread (not necessarily \c SIGKILL).
     *

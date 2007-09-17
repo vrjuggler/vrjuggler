@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <process.h>
+#include <vector>
 
 // To get the Win32 key stuff for storing self.
 #include <vpr/md/WIN32/Thread/ThreadKeyWin32.h>
@@ -259,6 +260,49 @@ public:  // ----- Various other thread functions ------
     * @param prio The new priority for this thread.
     */
    virtual void setPrio(const VPRThreadPriority prio);
+
+   /**
+    * Sets the CPU affinity for this thread (the CPU on which this thread
+    * will exclusively run).
+    *
+    * @pre The thread from which this method was invoked must be the same as
+    *      the thread spawned by this object.
+    * @post The CPU affinity is set or an exception is thrown.
+    *
+    * @param cpu The CPU on which this thread will run exclusively. This value
+    *            is zero-based and therefore must be less than the number of
+    *            processors available on the computer.
+    *
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if the thread spawned through the use of this object is
+    *           not the thread from which this method was invoked.
+    * @throw vpr::Exception
+    *           Thrown if the CPU affinity for the running thread could not
+    *           be changed.
+    */
+   void setRunOn(const unsigned int cpu);
+
+   /**
+    * Gets the CPU affinity for this thread (the CPU on which this thread
+    * exclusively runs).
+    *
+    * @pre The thread must have been set to be a system-scope thread, and
+    *      a previous affinity must have been set using setRunOn(). The thread
+    *      from which this method was invoked must be the same as the thread
+    *      spawned by this object.
+    * @post The CPU affinity for this thread is returned to the caller.
+    *
+    * @return The CPU affinity for this thread (possibly set by a previous
+    *         call to setRunOn()).
+    *
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if the thread spawned through the use of this object is
+    *           not the thread from which this method was invoked.
+    * @throw vpr::Exception
+    *           Thrown if the CPU affinity for the running thread could not
+    *           be queried.
+    */
+   std::vector<unsigned int> getRunOn();
 
    /**
     * Yields execution of the calling thread to allow a different blocked
