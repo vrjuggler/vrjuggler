@@ -40,7 +40,6 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SpeechRecogApp.exe"
 				LinkIncremental="2"
@@ -98,7 +97,6 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SpeechRecogApp.exe"
 				LinkIncremental="2"
@@ -157,7 +155,6 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/simpleApp.exe"
 				LinkIncremental="1"
