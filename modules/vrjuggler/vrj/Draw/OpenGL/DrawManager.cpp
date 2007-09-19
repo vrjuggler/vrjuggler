@@ -315,8 +315,11 @@ void DrawManager::addDisplay(DisplayPtr disp)
       {
          vrj::opengl::Pipe* new_pipe =
             new vrj::opengl::Pipe(pipes.size(), this, &mCreateWindowMutex);  // Create a new pipe to use
+         // The size of pipes right now tells us the newly created pipe's
+         // identifier.
+         const unsigned int pipe_id = pipes.size();
          pipes.push_back(new_pipe);                          // Add the pipe
-         new_pipe->start(getDrawThreadAffinity(pipe_num));   // Start the pipe running
+         new_pipe->start(getDrawThreadAffinity(pipe_id));    // Start the pipe running
                                                              // NOTE: Run pipe even if no windows.  Then it waits for windows.
       }
    }
