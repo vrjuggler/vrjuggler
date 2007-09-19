@@ -190,7 +190,7 @@ void Pipe::controlLoop(const int cpuAffinity)
 
    if ( cpuAffinity >= 0 )
    {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
          << "[vrj::opengl::Pipe::controlLoop()] Setting CPU affinity for "
          << "pipe " << mPipeNum << " to " << cpuAffinity << std::endl
          << vprDEBUG_FLUSH;
