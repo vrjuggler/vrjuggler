@@ -81,19 +81,37 @@ public:
     * Starts the pipe running.
     *
     * @pre The pipe should not have a thread of control yet.
-    * @post The pipe has it's own thread of control and is ready to operate
+    * @post The pipe has its own thread of control and is ready to operate
     *       The Thread of control is running controlLoop.
+    *
+    * @param cpuAffinity The CPU affinity to assign for the rendering thread
+    *                    spawned by this method. A value less than 0
+    *                    indicates that no CPU affinity will be assigned to
+    *                    the rendering thread.
+    *
     * @note The pipe does NOT have to have any windows in order to run
     *       that way we can add windows to pipes at run-time.
+    * @note The signature of this method changed in version 2.3.14 to take the
+    *       CPU affinity value.
     */
-   int start();
+   int start(const int cpuAffinity);
 
    /**
     * The main loop routine.
-    * -Checks for new windows <br>
-    * -renders all windows when triggered <br>
+    *  - Checks for new windows.
+    *  - Renders all windows when triggered.
+    *
+    * @param cpuAffinity The CPU affinity to assign for the rendering thread
+    *                    spawned by this method. A value less than 0
+    *                    indicates that no CPU affinity will be assigned to
+    *                    the rendering thread.
+    *
+    * @note The signature of this method changed in version 2.3.14 to take the
+    *       CPU affinity value.
+    *
+    * @see vpr::Thead::setRunOn()
     */
-   void controlLoop();
+   void controlLoop(const int cpuAffinity);
 
    /**
     * Stops the pipe.

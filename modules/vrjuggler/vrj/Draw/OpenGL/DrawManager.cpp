@@ -42,6 +42,7 @@
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
+#include <vrj/Draw/CpuAffinityFromEnv.h>
 
 #include <vrj/Draw/OpenGL/App.h>
 
@@ -73,7 +74,7 @@ DrawManager::DrawManager()
    , mRunning(false)
    , mControlThread(NULL)
 {
-   /* Do nothing. */ ;
+   setCpuAffinityStrategy(vrj::CpuAffinityFromEnv());
 }
 
 DrawManager::~DrawManager()
@@ -89,6 +90,12 @@ DrawManager::~DrawManager()
       delete mControlThread;
       mControlThread = NULL;
    }
+}
+
+void
+DrawManager::setCpuAffinityStrategy(const cpu_affinity_strategy_t& strategy)
+{
+   getDrawThreadAffinity = strategy;
 }
 
 // Sets the app the draw should interact with.
@@ -309,7 +316,7 @@ void DrawManager::addDisplay(DisplayPtr disp)
          vrj::opengl::Pipe* new_pipe =
             new vrj::opengl::Pipe(pipes.size(), this, &mCreateWindowMutex);  // Create a new pipe to use
          pipes.push_back(new_pipe);                          // Add the pipe
-         new_pipe->start();                                  // Start the pipe running
+         new_pipe->start(getDrawThreadAffinity(pipe_num));   // Start the pipe running
                                                              // NOTE: Run pipe even if no windows.  Then it waits for windows.
       }
    }

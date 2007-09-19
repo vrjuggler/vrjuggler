@@ -83,7 +83,7 @@ Pipe::~Pipe()
 }
 
 // Starts the pipe running.
-int Pipe::start()
+int Pipe::start(const int cpuAffinity)
 {
    vprASSERT(mThreadRunning == false);        // We should not be running yet
 
@@ -92,10 +92,12 @@ int Pipe::start()
    // Create a new thread to call the control loop
    try
    {
-      mActiveThread = new vpr::Thread(boost::bind(&Pipe::controlLoop, this));
+      // mActiveThread is assigned at the start of controlLoop().
+      vpr::Thread* thread =
+         new vpr::Thread(boost::bind(&Pipe::controlLoop, this, cpuAffinity));
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
          << "[vrj::opengl::Pipe::start()] Started control loop. "
-         << mActiveThread << std::endl << vprDEBUG_FLUSH;
+         << thread<< std::endl << vprDEBUG_FLUSH;
       started = 1;
    }
    catch (vpr::Exception& ex)
@@ -181,8 +183,31 @@ void Pipe::removeWindow(vrj::opengl::WindowPtr win)
 // - Swap all windows <br>
 // - Signal swap completed <br>
 //
-void Pipe::controlLoop()
+void Pipe::controlLoop(const int cpuAffinity)
 {
+   vprASSERT(NULL != vpr::Thread::self());
+   mActiveThread = vpr::Thread::self();
+
+   if ( cpuAffinity >= 0 )
+   {
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "[vrj::opengl::Pipe::controlLoop()] Setting CPU affinity for "
+         << "pipe " << mPipeNum << " to " << cpuAffinity << std::endl
+         << vprDEBUG_FLUSH;
+
+      try
+      {
+         mActiveThread->setRunOn(cpuAffinity);
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Failed to set draw thread affinity in vrj::opengl::Pipe:\n"
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
+   }
+
    mThreadRunning = true;     // We are running so set flag
    // Loop until flag set
    while ( ! mControlExit )

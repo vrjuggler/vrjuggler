@@ -31,6 +31,7 @@
 
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <boost/function.hpp>
 
 #include <vpr/vpr.h>
 //#include <vpr/Sync/CondVar.h>
@@ -88,6 +89,29 @@ class VJ_OGL_CLASS_API DrawManager
 public:
    friend class Pipe;
    friend class ContextDataBase;
+
+   typedef boost::function<int (const unsigned int)> cpu_affinity_strategy_t;
+
+   /**
+    * Changes the callable object used for determining the draw thread CPU
+    * affinity to use the given value. In order for this to have the
+    * desired effect, it must be called before any render threads have been
+    * started.
+    *
+    * @post \c getDrawThreadAffinity is assigned the value of \p strategy.
+    *
+    * @param strategy A callable (either a C function pointer, a value
+    *                 returned by boost::bind(), or an object whose class
+    *                 overloads operator()) that serves to map zero-based
+    *                 thread identifiers to zero-based CPU values in order
+    *                 to assign affinity.
+    *
+    * @see vpr::Thead::setRunOn()
+    * @see addDisplay()
+    *
+    * @since 2.3.14
+    */
+   void setCpuAffinityStrategy(const cpu_affinity_strategy_t& strategy);
 
    /** Starts the control loop. */
    virtual void start();
@@ -239,6 +263,8 @@ protected:
 
 private:
    DrawManager();
+
+   cpu_affinity_strategy_t getDrawThreadAffinity;
 
    vprSingletonHeader(DrawManager);
 };

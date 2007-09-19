@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-19-2007 patrick     Added draw thread CPU affinity capabilities through the
+                        new environment variable VJ_DRAW_THREAD_AFFINITY. This
+                        is currently used only by the OpenGL Draw Manager.
+                        NEW VERSION: 2.3.14
 Sep-09-2007 patrick     Added vrjuggler-direct3d fpc file.
 Sep-07-2007 dshipton    Added vrjuggler-opengl and vrjuggler-performer fpc
                         files for easier Draw Manager selection by application
