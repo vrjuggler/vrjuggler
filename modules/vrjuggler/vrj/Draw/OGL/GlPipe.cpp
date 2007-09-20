@@ -76,11 +76,8 @@ GlPipe::~GlPipe()
    }
 }
 
-/**
- * Starts the pipe running.
- * @post The pipe has it's own thread of control and is ready to operate.
- */
-int GlPipe::start()
+// Starts the pipe running.
+int GlPipe::start(const int cpuAffinity)
 {
    vprASSERT(mThreadRunning == false);        // We should not be running yet
 
@@ -89,9 +86,11 @@ int GlPipe::start()
    // Create a new thread to call the control loop
    try
    {
-      mActiveThread = new vpr::Thread(boost::bind(&GlPipe::controlLoop, this));
+      // mActiveThread is assigned at the start of controlLoop().
+      vpr::Thread* thread =
+         new vpr::Thread(boost::bind(&GlPipe::controlLoop, this, cpuAffinity));
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-         << "[vrj::GlPipe::start()] Started control loop. " << mActiveThread
+         << "[vrj::GlPipe::start()] Started control loop. " << thread
          << std::endl << vprDEBUG_FLUSH;
       started = 1;
    }
@@ -189,8 +188,38 @@ void GlPipe::removeWindow(GlWindowPtr win)
 // - Swap all windows <br>
 // - Signal swap completed <br>
 //
-void GlPipe::controlLoop()
+void GlPipe::controlLoop(const int cpuAffinity)
 {
+   vprASSERT(NULL != vpr::Thread::self());
+   mActiveThread = vpr::Thread::self();
+
+   if ( cpuAffinity >= 0 )
+   {
+      // On this branch, vpr::Thread::setRunOn() is only available with
+      // POSIX threads.
+#if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+         << "[vrj::GlPipe::controlLoop()] Setting CPU affinity for pipe "
+         << mPipeNum << " to " << cpuAffinity << std::endl << vprDEBUG_FLUSH;
+
+      try
+      {
+         mActiveThread->setRunOn(cpuAffinity);
+      }
+      catch (vpr::Exception& ex)
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": Failed to set draw thread affinity in vrj::GlPipe:\n"
+            << ex.what() << std::endl << vprDEBUG_FLUSH;
+      }
+#else
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+         << "Setting CPU affinity for vrj::GlPipe is not supported on this "
+         << "platform." << std::endl << vprDEBUG_FLUSH;
+#endif
+   }
+
    mThreadRunning = true;     // We are running so set flag
    // Loop until flag set
    while (!mControlExit)

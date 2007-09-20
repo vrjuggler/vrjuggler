@@ -41,7 +41,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GL_LIBRARY)
 
-SRCS=		GlApp.cpp			\
+SRCS=		CpuAffinityFromEnv.cpp		\
+		GlApp.cpp			\
 		GlBasicSimulator.cpp		\
 		GlDrawManager.cpp		\
 		GlDrawHeadFunctors.cpp		\

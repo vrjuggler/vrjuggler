@@ -29,6 +29,7 @@
 
 #include <vrj/Draw/OGL/Config.h>
 #include <vector>
+#include <boost/function.hpp>
 
 #include <vpr/vpr.h>
 //#include <vpr/Sync/CondVar.h>
@@ -156,6 +157,29 @@ public:
    //@}
 
 public:
+   typedef boost::function<int (const unsigned int)> cpu_affinity_strategy_t;
+
+   /**
+    * Changes the callable object used for determining the draw thread CPU
+    * affinity to use the given value. In order for this to have the
+    * desired effect, it must be called before any render threads have been
+    * started.
+    *
+    * @post \c getDrawThreadAffinity is assigned the value of \p strategy.
+    *
+    * @param strategy A callable (either a C function pointer, a value
+    *                 returned by boost::bind(), or an object whose class
+    *                 overloads operator()) that serves to map zero-based
+    *                 thread identifiers to zero-based CPU values in order
+    *                 to assign affinity.
+    *
+    * @see vpr::Thead::setRunOn()
+    * @see addDisplay()
+    *
+    * @since 2.2.1
+    */
+   void setCpuAffinityStrategy(const cpu_affinity_strategy_t& strategy);
+
    /**
     * Gets pointer to the current user data.  Should be used in the draw
     * function.
@@ -234,6 +258,8 @@ protected:
    {;}
 
    void operator=(const GlDrawManager&) {;}
+
+   cpu_affinity_strategy_t getDrawThreadAffinity;
 
    vprSingletonHeader(GlDrawManager);
 };

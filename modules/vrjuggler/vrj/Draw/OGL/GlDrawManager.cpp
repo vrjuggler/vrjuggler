@@ -49,6 +49,7 @@
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
+#include <vrj/Draw/OGL/CpuAffinityFromEnv.h>
 
 #include <gmtl/Vec.h>
 #include <gmtl/Output.h>
@@ -71,6 +72,7 @@ GlDrawManager::GlDrawManager()
    , mRunning(false)
    , mControlThread(NULL)
 {
+   setCpuAffinityStrategy(vrj::CpuAffinityFromEnv());
 }
 
 GlDrawManager::~GlDrawManager()
@@ -88,7 +90,7 @@ GlDrawManager::~GlDrawManager()
    }
 }
 
-/** Sets the app the draw should interact with. */
+// Sets the app the draw should interact with.
 void GlDrawManager::setApp(App* _app)
 {
    mApp = dynamic_cast<GlApp*>(_app);
@@ -316,8 +318,11 @@ void GlDrawManager::addDisplay(DisplayPtr disp)
       {
          GlPipe* new_pipe = new GlPipe(pipes.size(), this,
                                        &mCreateWindowMutex);  // Create a new pipe to use
+         // The size of pipes right now tells us the newly created pipe's
+         // identifier.
+         const unsigned int pipe_id = pipes.size();
          pipes.push_back(new_pipe);                          // Add the pipe
-         new_pipe->start();                                  // Start the pipe running
+         new_pipe->start(getDrawThreadAffinity(pipe_id));    // Start the pipe running
                                                              // NOTE: Run pipe even if no windows.  Then it waits for windows.
       }
    }
@@ -428,6 +433,12 @@ bool GlDrawManager::configCanHandle(jccl::ConfigElementPtr element)
 {
    boost::ignore_unused_variable_warning(element);
    return false;
+}
+
+void
+GlDrawManager::setCpuAffinityStrategy(const cpu_affinity_strategy_t& strategy)
+{
+   getDrawThreadAffinity = strategy;
 }
 
 GlUserData* GlDrawManager::currentUserData()
