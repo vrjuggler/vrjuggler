@@ -773,18 +773,21 @@ value</screen>
                   may be necessary to execute applications
                   successfully.</para>
 
-                  <para>On <productname
-                  class="registered">Windows</productname>, the Juggler DLLs
-                  (<filename>vpr-2_0.dll</filename>,
-                  <filename>jccl-1_2.dll</filename>,
-                  <filename>vrj-2_2.dll</filename>, etc.) determine on their
-                  own where they are installed when they are attached to the
-                  application process. As such, the <productname
-                  class="registered">Windows</productname> DLLs will
-                  automatically set the environment variable(s) that they need
-                  to function properly. If an environment variable is already
-                  set, then its setting will <emphasis>not</emphasis> be
-                  changed by the DLL when it is attached to the application
+                  <para>With the release of VR Juggler 2.2.1, it should not be
+                  necessary to set <envar>VJ_BASE_DIR</envar> on any platform
+                  in order to <emphasis>execute</emphasis> applications.
+                  Compiling applications, however, may require the use of
+                  <envar>VJ_BASE_DIR</envar>. This varies from application to
+                  application.</para>
+
+                  <para>The reduced need for <envar>VJ_BASE_DIR</envar> is
+                  possible because the Juggler shared libraries determine on
+                  their own where they are installed when they are attached to
+                  the application process. As such, they will automatically
+                  set the environment variable(s) that they need to function
+                  properly. If an environment variable is already set, then
+                  its setting will <emphasis>not</emphasis> be changed by the
+                  shared library when it is attached to the application
                   process.</para>
 
                   <tip>
@@ -873,6 +876,49 @@ value</screen>
                   installed. If the dependencies are bundled in the same tree
                   as VR Juggler, then this environment variable does not have
                   to be set.</para>
+               </listitem>
+            </varlistentry>
+
+            <varlistentry>
+               <term>VJ_DRAW_THREAD_AFFINITY</term>
+
+               <listitem>
+                  <para>VR Juggler 2.2.1 introduced the ability for Linux and
+                  IRIX users to direct processor affinity for render threads
+                  created by the OpenGL Draw Manager. The default way of doing
+                  this is to create a multi-pipe/multi-threaded configuration
+                  and then set the environment variable
+                  <envar>VJ_DRAW_THREAD_AFFINITY</envar> to be a
+                  space-separated list of integers identifying the processors
+                  in the machine. The optimal setting for this environment
+                  variable is likely to vary with hardware and with
+                  applications. If more render threads are created than there
+                  are processors available, the OpenGL Draw Manager starts
+                  over at the beginning of the processor ID list.</para>
+
+                  <tip>
+                     <para>With a multi-processor, multi-core computer, it
+                     will generally be best to separate rener threads by
+                     processor first and by core second. For example, on a
+                     dual processor, dual core machine, a setting of <quote>0
+                     2 1 3</quote> is likely to give good results. In this
+                     case, render thread 0 will be assigned to processor 0,
+                     render thread 1 to processor 2, and so on.</para>
+                  </tip>
+
+                  <note>
+                     <para>It is possible to use a value less than zero for a
+                     processor ID when setting this environment variable.
+                     Doing so will disable processor affinity for that
+                     particular rendering thread.</para>
+                  </note>
+
+                  <para>Be aware that the use of this environment variable is
+                  optional and that application programmers are free to define
+                  their own render thread affinity algorithm that may not use
+                  this environment variable at all. For more details on how to
+                  do this, refer to the VR Juggler <emphasis>Programmer's
+                  Guide</emphasis>.</para>
                </listitem>
             </varlistentry>
 
