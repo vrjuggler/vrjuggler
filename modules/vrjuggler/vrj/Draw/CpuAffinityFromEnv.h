@@ -81,7 +81,7 @@ private:
    std::vector<int> mCpuList;
 };
 
-} // end of opengl namespace
+} // end of vrj namespace
 
 
 #endif /* _VRJ_DRAW_CPU_AFFINITY_FROM_ENV_H_ */
