@@ -57,7 +57,8 @@ ifeq ($(PF_API), Y)
    SUBDIR+=	Pf
 endif
 
-SRCS=		DrawManager.cpp		\
+SRCS=		CpuAffinityFromEnv.cpp	\
+		DrawManager.cpp		\
 		DrawSimInterface.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
