@@ -197,6 +197,9 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\CameraProjection.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Draw\CpuAffinityFromEnv.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Display.cpp">
 			</File>
 			<File
@@ -274,6 +277,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\CameraProjectionPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Draw\CpuAffinityFromEnv.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Util\Debug.h">
