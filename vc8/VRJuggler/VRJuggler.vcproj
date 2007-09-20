@@ -564,10 +564,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vrjuggler\vrj\Draw\CpuAffinityFromEnv.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Display.cpp"
 				>
 			</File>
@@ -666,10 +662,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\CameraProjection.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vrjuggler\vrj\Draw\CpuAffinityFromEnv.h"
 				>
 			</File>
 			<File
