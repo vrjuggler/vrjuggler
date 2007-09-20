@@ -404,20 +404,26 @@ void ThreadPosix::setRunOn(const int cpu)
             "This thread is not a system-scope thread", VPR_LOCATION
          );
       }
-#elif defined(VPR_OS_Linux) && defined(CPU_SET)
+#elif defined(VPR_OS_Linux)
       if ( sysconf(_SC_NPROCESSORS_CONF) > cpu )
       {
-         cpu_set_t cpu_mask;
-         CPU_ZERO(&cpu_mask);
-         CPU_SET(cpu, &cpu_mask);
-         const int result = sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask);
+         const pid_t thread_id(syscall(__NR_gettid));
 
-         if ( result != 0 )
+         if ( thread_id )
          {
-            std::ostringstream msg_stream;
-            msg_stream << "Failed to set CPU affinity: "
-                       << vpr::Error::getCurrentErrorMsg();
-            throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+            cpu_set_t cpu_mask;
+            CPU_ZERO(&cpu_mask);
+            CPU_SET(cpu, &cpu_mask);
+            const int result = sched_setaffinity(thread_id, sizeof(cpu_mask),
+                                                 &cpu_mask);
+
+            if ( result != 0 )
+            {
+               std::ostringstream msg_stream;
+               msg_stream << "Failed to set CPU affinity: "
+                          << vpr::Error::getCurrentErrorMsg();
+               throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+            }
          }
       }
 #else
@@ -464,29 +470,35 @@ std::vector<unsigned int> ThreadPosix::getRunOn() const
          );
       }
 #elif defined(VPR_OS_Linux)
-      cpu_set_t cpu_mask;
-      CPU_ZERO(&cpu_mask);
-      const int result = sched_getaffinity(0, sizeof(cpu_mask), &cpu_mask);
+      const pid_t thread_id(syscall(__NR_gettid));
 
-      if ( result == 0 )
+      if ( thread_id )
       {
-         const long cpu_count(sysconf(_SC_NPROCESSORS_CONF));
-         cpus.reserve(cpu_count);
+         cpu_set_t cpu_mask;
+         CPU_ZERO(&cpu_mask);
+         const int result = sched_getaffinity(thread_id, sizeof(cpu_mask),
+                                              &cpu_mask);
 
-         for ( int i = 0; i < cpu_count; ++i )
+         if ( result == 0 )
          {
-            if ( CPU_ISSET(i, &cpu_mask) )
+            const long cpu_count(sysconf(_SC_NPROCESSORS_CONF));
+            cpus.reserve(cpu_count);
+
+            for ( int i = 0; i < cpu_count; ++i )
             {
-               cpus.push_back(i);
+               if ( CPU_ISSET(i, &cpu_mask) )
+               {
+                  cpus.push_back(i);
+               }
             }
          }
-      }
-      else
-      {
-         std::ostringstream msg_stream;
-         msg_stream << "Failed to query CPU affinity: "
-                    << Error::getCurrentErrorMsg();
-         throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+         else
+         {
+            std::ostringstream msg_stream;
+            msg_stream << "Failed to query CPU affinity: "
+                       << Error::getCurrentErrorMsg();
+            throw vpr::Exception(msg_stream.str(), VPR_LOCATION);
+         }
       }
 #else
       std::cerr << "vpr::ThreadPosix::getRunOn(): Not available on this "
