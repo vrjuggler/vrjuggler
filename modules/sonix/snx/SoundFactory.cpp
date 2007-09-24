@@ -44,7 +44,6 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
-#include <vpr/Util/FileUtils.h>
 #include <vpr/DynLoad/LibraryFinder.h>
 
 #include <snx/Util/Debug.h>
@@ -53,6 +52,8 @@
 
 #include <snx/SoundFactory.h> /* my header. */
 
+
+namespace fs = boost::filesystem;
 
 namespace snx
 {
@@ -81,12 +82,10 @@ vprSingletonImpLifetime(SoundFactory, 2);
 
 SoundFactory::SoundFactory()
 {
-   std::vector<std::string> search_paths;
-
    const std::string envvar("SNX_BASE_DIR");
-   std::string dummy_result;
+   std::string base_dir_env;
 
-   if ( ! vpr::System::getenv(envvar, dummy_result) )
+   if ( ! vpr::System::getenv(envvar, base_dir_env) )
    {
       vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
          << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -95,15 +94,16 @@ SoundFactory::SoundFactory()
          << "Sonix plug-in loading may fail.\n" << vprDEBUG_FLUSH;
    }
 
+   const fs::path snx_base_dir(base_dir_env, fs::native);
+
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
-   std::string snx_base_dir("${SNX_BASE_DIR}/lib32/");
+   const fs::path snx_lib_dir = snx_base_dir / "lib32";
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
       defined(VPR_OS_Linux) && defined(__x86_64__)
-   std::string snx_base_dir("${SNX_BASE_DIR}/lib64/");
+   const fs::path snx_lib_dir = snx_base_dir / "lib64";
 #else
-   std::string snx_base_dir("${SNX_BASE_DIR}/lib/");
+   const fs::path snx_lib_dir = snx_base_dir / "lib";
 #endif
-
 
 #if defined(VPR_OS_Windows)
    const std::string driver_ext("dll");
@@ -129,64 +129,70 @@ SoundFactory::SoundFactory()
       sonix_ver_str = SNX_VERSION_DOT;
    }
 
-   std::string sonix_subdir(sonix_subdir_base + std::string("-") +
-                             sonix_ver_str + "/plugins/");
+   fs::path sonix_subdir(
+      snx_lib_dir / (sonix_subdir_base + "-" + sonix_ver_str) / "plugins"
+   );
 
    // If versioning is not enabled, then the directory containing the
    // Sonix plug-ins will not incorporate version information.
 #else
-   std::string sonix_subdir(sonix_subdir_base + "/plugins/");
+   fs::path sonix_subdir(snx_lib_dir / sonix_subdir_base / "plugins");
 #endif
 
 #if defined(SNX_DEBUG)
 #if defined(_DEBUG)
-   std::string sonix_path(snx_base_dir + sonix_subdir + "dbgrt");
+   sonix_subdir /= "dbgrt";
 #else
-   std::string sonix_path(snx_base_dir + sonix_subdir + "dbg");
+   sonix_subdir /= "dbg";
 #endif
 #else
-   std::string sonix_path(snx_base_dir + sonix_subdir + "opt");
+   sonix_subdir /= "opt";
 #endif
 
-   search_paths.push_back(sonix_path);
+   std::vector<fs::path> search_paths;
+   search_paths.push_back(sonix_subdir);
 
-   search_paths.push_back("${HOME}/.sonix/plugins");
-
-   for (unsigned int x = 0; x < search_paths.size(); ++x)
+   std::string home_dir;
+   if ( vpr::System::getenv("HOME", home_dir) )
    {
-      search_paths[x] = vpr::replaceEnvVars(search_paths[x]);
-      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "Finding plugins in "
-                                          << search_paths[x] << std::endl
-                                          << vprDEBUG_FLUSH;
+      search_paths.push_back(
+         fs::path(home_dir, fs::native) / ".sonix" / "plugins"
+      );
+   }
+
+   typedef std::vector<fs::path>::iterator iter_type;
+   for ( iter_type p = search_paths.begin(); p != search_paths.end(); ++p )
+   {
+      const std::string cur_dir = (*p).native_directory_string();
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "Finding plug-ins in " << cur_dir
+                                          << std::endl << vprDEBUG_FLUSH;
 
       try
       {
-         boost::filesystem::path dirPath(search_paths[x], boost::filesystem::native);
-         if (boost::filesystem::exists(dirPath))
+         if ( fs::exists(*p) )
          {
-            vpr::LibraryFinder finder(search_paths[x], driver_ext);
+            vpr::LibraryFinder finder(cur_dir, driver_ext);
             vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-            this->loadPlugins( libs );
+            this->loadPlugins(libs);
 
 #ifdef SNX_DEBUG
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "filelist:\n"
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "Plug-in file list:\n"
                                                 << vprDEBUG_FLUSH;
             for ( unsigned int i = 0; i < libs.size(); ++i )
             {
-               vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << libs[i]
-                                                   << std::endl
-                                                   << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(snxDBG, vprDBG_CRITICAL_LVL) 
+                  << libs[i]->getName() << std::endl << vprDEBUG_FLUSH;
             }
 #endif
          }
          else
          {
             vprDEBUG(snxDBG, vprDBG_STATE_LVL)
-               << "The directory does not exist: '" << search_paths[x] << "'\n"
+               << "The directory does not exist: '" << cur_dir << "'\n"
                << vprDEBUG_FLUSH;
          }
       }
-      catch (boost::filesystem::filesystem_error& fsEx)
+      catch (fs::filesystem_error& fsEx)
       {
          vprDEBUG(snxDBG, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "ERROR:")
