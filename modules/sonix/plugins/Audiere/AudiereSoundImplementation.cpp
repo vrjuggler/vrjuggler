@@ -126,7 +126,7 @@ void AudiereSoundImplementation::trigger(const std::string& alias,
 
    snx::SoundInfo si = this->lookup(alias);
 
-   if((trackMap.count(alias) == 0) && (effectMap.count(alias) == 0))
+   if( mTrackMap.count(alias) == 0 && mEffectMap.count(alias) == 0 )
    {
       this->bind(alias);
    }
@@ -141,18 +141,18 @@ void AudiereSoundImplementation::trigger(const std::string& alias,
       {
          // Set audiere to loop indefinly if that is requested other wise play
          // only once.
-         if ( trackMap.count(alias) > 0 )
+         if ( mTrackMap.count(alias) > 0 )
          {
-            trackMap[alias]->setRepeat(looping == -1);
-            trackMap[alias]->play();
+            mTrackMap[alias]->setRepeat(looping == -1);
+            mTrackMap[alias]->play();
          }
       }
       else
       {
          // if the sound is already bound then play it.
-         if ( effectMap.count(alias) > 0 )
+         if ( mEffectMap.count(alias) > 0 )
          {
-            effectMap[alias]->play();
+            mEffectMap[alias]->play();
          }
       }
    }
@@ -168,16 +168,16 @@ bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 
    if ( si.streaming )
    {
-      if ( trackMap.count(alias) > 0 )
+      if ( mTrackMap.count(alias) > 0 )
       {
-         is_playing = trackMap[alias]->isPlaying();
+         is_playing = mTrackMap[alias]->isPlaying();
       }
    }
    else
    {
       is_playing = false;
       /*
-      if ( effectMap.count(alias) > 0 )
+      if ( mEffectMap.count(alias) > 0 )
       {
       }
       */
@@ -226,16 +226,16 @@ void AudiereSoundImplementation::stop( const std::string& alias )
 
    if ( this->lookup(alias).streaming )
    {
-      if ( trackMap.count(alias) > 0 )
+      if ( mTrackMap.count(alias) > 0 )
       {
-         trackMap[alias]->stop();
+         mTrackMap[alias]->stop();
       }
    }
    else
    {
-      if ( effectMap.count(alias) > 0 )
+      if ( mEffectMap.count(alias) > 0 )
       {
-         effectMap[alias]->stop();
+         mEffectMap[alias]->stop();
       }
    }
 }
@@ -323,16 +323,16 @@ void AudiereSoundImplementation::setVolume(const std::string& alias,
 
    if ( si.streaming )
    {
-      if ( trackMap.count(alias) > 0 )
+      if ( mTrackMap.count(alias) > 0 )
       {
-         trackMap[alias]->setVolume(amount);
+         mTrackMap[alias]->setVolume(amount);
       }
    }
    else
    {
-      if ( effectMap.count(alias) > 0 )
+      if ( mEffectMap.count(alias) > 0 )
       {
-         effectMap[alias]->setVolume(amount);
+         mEffectMap[alias]->setVolume(amount);
       }
    }
 }
@@ -443,7 +443,7 @@ void AudiereSoundImplementation::bind( const std::string& alias )
 
       if ( NULL != stream )
       {
-         trackMap[alias] = stream;
+         mTrackMap[alias] = stream;
       }
       else
       {
@@ -462,7 +462,7 @@ void AudiereSoundImplementation::bind( const std::string& alias )
 
       if ( NULL != effect )
       {
-         effectMap[alias] = effect;
+         mEffectMap[alias] = effect;
       }
       else
       {

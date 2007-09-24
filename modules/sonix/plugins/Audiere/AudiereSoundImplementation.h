@@ -280,8 +280,8 @@ private:
    audiere::RefPtr<audiere::OutputStream> mCurrentTrack;
    bool mIsPlaying;
 
-   std::map<std::string, audiere::OutputStreamPtr> trackMap;
-   std::map<std::string, audiere::SoundEffectPtr> effectMap;
+   std::map<std::string, audiere::OutputStreamPtr> mTrackMap;
+   std::map<std::string, audiere::SoundEffectPtr> mEffectMap;
 };
 
 } // end namespace
