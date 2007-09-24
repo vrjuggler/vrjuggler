@@ -1496,7 +1496,7 @@ def installSonix(prefix, buildDir):
 def installSonixPlugins(prefix, buildDir):
    printStatus("Installing Sonix plug-ins ...")
 
-   destdir = os.path.join(prefix, 'lib', 'snx', 'plugins')
+   destdir = os.path.join(prefix, 'lib', 'sonix', 'plugins')
    plugins = ['OpenAL', 'Audiere']
    for p in plugins:
       installLibs(os.path.join(buildDir, 'Sonix', p), destdir,
