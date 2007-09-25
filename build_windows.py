@@ -1180,7 +1180,7 @@ def installLibs(srcRoot, destdir,
                 buildPlatforms = ['Win32', 'x64'],
                 buildTypes = [('ReleaseDLL',), ('DebugDLL', 'debug'),
                               ('DebugRtDLL',)],
-                extensions = ['.dll', '.lib']):
+                extensions = ['.dll', '.lib', '.exp']):
    for p in buildPlatforms:
       for t in buildTypes:
          build_dir = t[0]
@@ -1407,7 +1407,7 @@ def installJCCLPlugins(prefix, buildDir):
 
    destdir = os.path.join(prefix, 'lib', 'jccl', 'plugins')
    srcroot = os.path.join(buildDir, 'JCCL', 'RTRC_Plugin_CXX')
-   installLibs(srcroot, destdir, extensions = ['.dll'])
+   installLibs(srcroot, destdir, extensions = ['.dll', '.exp'])
 
 def installJCCLJava(prefix, buildDir):
    srcdir = os.path.join(buildDir, 'JCCL_Java')
@@ -1502,7 +1502,7 @@ def installSonixPlugins(prefix, buildDir):
       installLibs(os.path.join(buildDir, 'Sonix', p), destdir,
                   buildTypes = [('ReleaseDLL', 'opt'), ('DebugDLL', 'dbg'),
                                 ('DebugRtDll', 'dbgrt')],
-                  extensions = ['.dll'])
+                  extensions = ['.dll', '.exp'])
 
 def installGadgeteer(prefix, buildDir):
    printStatus("Installing Gadgeteer headers, libraries, and samples ...")
@@ -1564,7 +1564,7 @@ def installGadgeteerDrivers(prefix, buildDir):
 
    for d in drivers:
       srcdir = os.path.join(srcroot, d)
-      installLibs(srcdir, destdir, extensions = ['.dll'])
+      installLibs(srcdir, destdir, extensions = ['.dll', '.exp'])
 
    if os.environ['FTD2XX_ROOT'] != "":
       if gBuild64:
@@ -1596,7 +1596,7 @@ def installGadgeteerPlugins(prefix, buildDir):
 
    for p in plugins:
       srcdir = os.path.join(srcroot, p)
-      installLibs(srcdir, destdir, extensions = ['.dll'])
+      installLibs(srcdir, destdir, extensions = ['.dll', '.exp'])
 
 def installVRJuggler(prefix, buildDir):
    printStatus("Installing VR Juggler headers, libraries, and samples ...")
@@ -1748,7 +1748,7 @@ def installVRJugglerPlugins(prefix, buildDir):
 
    destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'plugins')
    srcroot = os.path.join(buildDir, 'VRJugglerPlugins', 'Perf_Plugin_CXX')
-   installLibs(srcroot, destdir, extensions = ['.dll'])
+   installLibs(srcroot, destdir, extensions = ['.dll', '.exp'])
 
 def installVRJugglerPluginsJava(prefix, buildDir):
    srcdir = os.path.join(buildDir, 'VRJugglerPlugins', 'Perf_Plugin_Java')
