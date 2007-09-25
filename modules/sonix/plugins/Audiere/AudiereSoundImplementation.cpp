@@ -368,8 +368,8 @@ int AudiereSoundImplementation::startAPI()
 
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
          << clrOutNORM(clrYELLOW, "Audiere| NOTICE:")
-         << " Audiere API started: [dev=" << (int) mDev << "]\n"
-         << vprDEBUG_FLUSH;
+         << " Audiere API started: [dev=" << std::hex << mDev.get()
+         << std::dec << "]\n" << vprDEBUG_FLUSH;
    }
    else
    {
