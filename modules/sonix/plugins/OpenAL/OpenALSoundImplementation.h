@@ -260,7 +260,7 @@ public:
     *            graphics frame)
     * @input time elapsed since last frame
     */
-   virtual void step(const float& timeElapsed);
+   virtual void step(const float timeElapsed);
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
