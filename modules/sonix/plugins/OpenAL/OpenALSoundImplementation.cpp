@@ -115,6 +115,40 @@ SNX_PLUGIN_EXPORT(snx::ISoundImplementation*) newPlugin()
 #endif
 /////////////////////////
 
+namespace
+{
+
+std::string getAlErrorString(const ALenum errCode)
+{
+   std::string msg;
+
+   switch ( errCode )
+   {
+      case AL_NO_ERROR:
+         msg = "AL_NO_ERROR";
+         break;
+      case AL_INVALID_NAME:
+         msg = "AL_INVALID_NAME";
+         break;
+      case AL_INVALID_ENUM:
+         msg = "AL_INVALID_ENUM";
+         break;
+      case AL_INVALID_VALUE:
+         msg = "AL_INVALID_VALUE";
+         break;
+      case AL_INVALID_OPERATION:
+         msg = "AL_INVALID_OPERATION";
+         break;
+      case AL_OUT_OF_MEMORY:
+         msg = "AL_OUT_OF_MEMORY";
+         break;
+   }
+
+   return msg;
+}
+
+}
+
 namespace snx
 {
 #ifndef NO_SELF_REGISTER
@@ -696,28 +730,12 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+            vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
                << clrOutNORM(clrYELLOW, "ERROR:")
                << "Could not gen a buffer [err=" << err << "]\n"
                << vprDEBUG_FLUSH;
-            switch (err)
-            {
-               case AL_INVALID_VALUE:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-                     << clrOutNORM(clrYELLOW, "       invalid value < 0\n")
-                     << vprDEBUG_FLUSH;
-                  break;
-               case AL_OUT_OF_MEMORY:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-                     << clrOutNORM(clrYELLOW, "       out of memory\n")
-                     << vprDEBUG_FLUSH;
-                  break;
-               default:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-                     << clrOutNORM(clrYELLOW, "       unknown error\n")
-                     << vprDEBUG_FLUSH;
-                  break;
-            }
+            vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
+               << getAlErrorString(err) << std::endl << vprDEBUG_FLUSH;
          }
 
          // put the data into an OpenAL buffer
@@ -852,20 +870,26 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
    // if alias is bound, then unbind it...
    if (mBindLookup.count( alias ) > 0)
    {
-      int err = alGetError();
+      ALenum err = alGetError();
       alDeleteSources( 1, &mBindLookup[alias].source );
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-            << "ERROR: unbind() deleting source\n" << vprDEBUG_FLUSH;
+         vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+            << "ERROR: unbind() failed to delete source:\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
+            << getAlErrorString(err) << std::endl << vprDEBUG_FLUSH;
       }
       alDeleteBuffers( 1, &mBindLookup[alias].buffer );
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-            << "ERROR: unbind() deleting buffer\n" << vprDEBUG_FLUSH;
+         vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+            << "ERROR: unbind() failed to delete buffer buffer:\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
+            << getAlErrorString(err) << std::endl << vprDEBUG_FLUSH;
       }
       mBindLookup.erase( alias );
    }
