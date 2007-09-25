@@ -294,6 +294,12 @@ private:
       {
       }
 
+      ~AlSoundInfo()
+      {
+         source = 0;
+         buffer = 0;
+      }
+
       ALuint source, buffer;
       std::vector<unsigned char> data; // TODO: use the source snx::SoundInfo
                                        // instead of this separate copy of the
