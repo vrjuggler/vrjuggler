@@ -78,7 +78,7 @@ sonix::~sonix()
  *                 then nothing happens.
  * @semantics Triggers a sound
  */
-void sonix::trigger( const std::string& alias, const int& repeat )
+void sonix::trigger(const std::string& alias, const int repeat)
 {
    this->impl().trigger( alias, repeat );
 }
@@ -147,8 +147,8 @@ void sonix::setCutoff(const std::string& alias, float amount)
    this->impl().setCutoff( alias, amount );
 }
 
-void sonix::setPosition(const std::string& alias, const float& x,
-                        const float& y, const float& z)
+void sonix::setPosition(const std::string& alias, const float x,
+                        const float y, const float z)
 {
    this->impl().setPosition( alias, x, y, z );
 }
@@ -259,7 +259,7 @@ void sonix::remove(const std::string alias)
  *            graphics frame)
  * @input time elapsed since last frame
  */
-void sonix::step(const float& timeElapsed)
+void sonix::step(const float timeElapsed)
 {
    this->impl().step( timeElapsed );
 }

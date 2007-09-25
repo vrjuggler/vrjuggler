@@ -80,7 +80,7 @@ public:
     * @param alias Alias of the sound to trigger, and number of times to play:
     *              -1 is repeat infinitely.
     */
-   virtual void trigger( const std::string & alias, const int & repeat = 1 ) = 0;
+   virtual void trigger(const std::string& alias, const int repeat = 1) = 0;
 
    /**
     * Is the sound currently playing?
@@ -229,7 +229,7 @@ public:
     *
     * @param timeElapsed The time elapsed since the last sound frame.
     */
-   virtual void step( const float& timeElapsed ) = 0;
+   virtual void step(const float timeElapsed) = 0;
 
    /**
     * Clears all associations.

@@ -82,7 +82,7 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string & alias, const int & looping = 0 );
+   virtual void trigger(const std::string& alias, const int looping = 0);
 
    /**
      * is the sound currently playing?
@@ -221,7 +221,7 @@ public:
     * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
     * @input time elapsed since last frame
     */
-   virtual void step( const float & timeElapsed );
+   virtual void step(const float timeElapsed);
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

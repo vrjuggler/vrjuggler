@@ -122,7 +122,8 @@ namespace snx
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   void AudioWorksSoundImplementation::trigger( const std::string & alias, const int & looping )
+   void AudioWorksSoundImplementation::trigger(const std::string& alias,
+                                               const int looping)
    {
       snx::SoundImplementation::trigger( alias, looping );
 
@@ -699,7 +700,7 @@ namespace snx
     * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
     * @input time elapsed since last frame
     */
-   void AudioWorksSoundImplementation::step( const float & timeElapsed )
+   void AudioWorksSoundImplementation::step(const float timeElapsed)
    {
       if (this->isStarted() == true)
       {

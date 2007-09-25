@@ -104,7 +104,7 @@ public:
     * @param alias  Alias of the sound to trigger.
     * @param repeat The number of times to play.  Use -1 to repeat forever.
     */
-   virtual void trigger( const std::string & alias, const int & repeat = 1 )
+   virtual void trigger(const std::string& alias, const int repeat = 1)
    {
       vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
 
@@ -386,7 +386,7 @@ public:
     *
     * @param timeElapsed The time elapsed since the last sound frame.
     */
-   virtual void step( const float& timeElapsed )
+   virtual void step(const float timeElapsed)
    {
       boost::ignore_unused_variable_warning(timeElapsed);
    }

@@ -80,7 +80,7 @@ namespace snx
 snx::SoundFactoryReg<AudiereSoundImplementation> audiereRegistrator("audiere");
 #endif
 
-void AudiereSoundImplementation::step( const float & timeElapsed )
+void AudiereSoundImplementation::step(const float timeElapsed)
 {
    vprASSERT(mDev.get() != NULL &&
              "startAPI must be called prior to this function");
@@ -114,7 +114,7 @@ AudiereSoundImplementation::~AudiereSoundImplementation()
  * @semantics Triggers a sound
  */
 void AudiereSoundImplementation::trigger(const std::string& alias,
-                                         const int& looping)
+                                         const int looping)
 {
    vprASSERT(mDev.get() != NULL &&
              "startAPI must be called prior to this function");

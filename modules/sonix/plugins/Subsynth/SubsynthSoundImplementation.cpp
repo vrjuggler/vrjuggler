@@ -86,7 +86,7 @@ namespace snx
 snx::SoundFactoryReg<SubsynthSoundImplementation> subsynthRegistrator( "Subsynth" );
 #endif
 
-void SubsynthSoundImplementation::step( const float & timeElapsed )
+void SubsynthSoundImplementation::step(const float timeElapsed)
 {
    snx::SoundImplementation::step( timeElapsed );
 }
@@ -112,7 +112,8 @@ SubsynthSoundImplementation::~SubsynthSoundImplementation()
  * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
  * @semantics Triggers a sound
  */
-void SubsynthSoundImplementation::trigger( const std::string& alias, const int& looping )
+void SubsynthSoundImplementation::trigger(const std::string& alias,
+                                          const int looping)
 {
    // do nothing if not started.
    if (this->isStarted() == false) return;

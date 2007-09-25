@@ -131,7 +131,7 @@ namespace snx
        * @param repeat Number of times to play: -1 to repeat forever, 1
        *               (single shot) is default.
        */
-      virtual void trigger( const int& repeat = 1 )
+      virtual void trigger(const int repeat = 1)
       {
          sonix::instance()->trigger( mAlias, repeat );
       }
@@ -258,7 +258,7 @@ namespace snx
        * @param y The Y coordinate of the sound in 3D OpenGL coordinates.
        * @param z The Z coordinate of the sound in 3D OpenGL coordinates.
        */
-      virtual void setPosition( const float& x, const float& y, const float& z )
+      virtual void setPosition(const float x, const float y, const float z)
       {
          sonix::instance()->setPosition( mAlias, x, y, z );
       }

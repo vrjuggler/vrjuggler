@@ -97,7 +97,7 @@ public:
     * @param alias Alias of the sound to trigger, and number of times to play:
     *              -1 is repeat infinitely.
     */
-   virtual void trigger( const std::string & alias, const int & looping = 0 )
+   virtual void trigger(const std::string& alias, const int looping = 0)
    {
       snx::SoundImplementation::trigger( alias, looping );
       this->lookup( alias ).triggerOnNextBind = true;
@@ -282,7 +282,7 @@ public:
     *
     * @param timeElapsed The time elapsed since the last sound frame.
     */
-   virtual void step( const float & timeElapsed )
+   virtual void step(const float timeElapsed)
    {
       snx::SoundImplementation::step( timeElapsed );
       // do nothing

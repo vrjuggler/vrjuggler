@@ -88,7 +88,7 @@ public:
     *                 isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string& alias, const int& looping = 0);
+   virtual void trigger(const std::string& alias, const int looping = 0);
 
    /**
      * is the sound currently playing?
@@ -248,7 +248,7 @@ public:
     *            graphics frame)
     * @input time elapsed since last frame
     */
-   virtual void step( const float & timeElapsed );
+   virtual void step(const float timeElapsed);
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

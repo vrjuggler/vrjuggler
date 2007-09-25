@@ -81,7 +81,7 @@ public:
     * @param repeat The number of times to play.  Use -1 to repeat forever.
     *              -1 to repeat infinately, 1 (single shot) is default.
     */
-   void trigger(const std::string& alias, const int& repeat = 1);
+   void trigger(const std::string& alias, const int repeat = 1);
 
    /**
     * Is the named sound currently playing?
@@ -195,8 +195,8 @@ public:
     * @param y     The Y coordinate of the sound in 3D OpenGL coordinates.
     * @param z     The Z coordinate of the sound in 3D OpenGL coordinates.
     */
-   void setPosition(const std::string& alias, const float& x, const float& y,
-                    const float& z);
+   void setPosition(const std::string& alias, const float x, const float y,
+                    const float z);
 
    /**
     * Get sound's 3D position
@@ -282,7 +282,7 @@ public:
     *
     * @param timeElapsed Time elapsed since the last sound frame.
     */
-   void step(const float& timeElapsed);
+   void step(const float timeElapsed);
 
 protected:
    snx::ISoundImplementation& impl();

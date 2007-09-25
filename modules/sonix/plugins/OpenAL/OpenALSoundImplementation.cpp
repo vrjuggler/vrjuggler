@@ -177,7 +177,7 @@ OpenALSoundImplementation::~OpenALSoundImplementation()
  * @semantics Triggers a sound
  */
 void OpenALSoundImplementation::trigger(const std::string& alias,
-                                        const int& looping)
+                                        const int looping)
 {
    vprASSERT(mContextId != NULL && mDev != NULL &&
              "startAPI must be called prior to this function");
@@ -897,7 +897,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
    vprASSERT(mBindLookup.count(alias) == 0 && "unbind failed");
 }
 
-void OpenALSoundImplementation::step(const float& timeElapsed)
+void OpenALSoundImplementation::step(const float timeElapsed)
 {
    vprASSERT(mContextId != NULL && mDev != NULL &&
              "startAPI must be called prior to this function");
