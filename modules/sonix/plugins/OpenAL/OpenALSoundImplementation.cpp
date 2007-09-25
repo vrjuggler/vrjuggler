@@ -82,6 +82,14 @@
 #  define USE_ALUT_1_0
 #endif
 
+// On non-Windows platforms, the following symbols are defined through
+// detection tests performed by the configure script. On Windows, we have
+// to do it manually depending on whether we have ALUT 1.0 or newer.
+#if defined(VPR_OS_Windows) && defined(USE_ALUT_1_0)
+#  define HAVE_ALUT_GET_ERROR
+#  define HAVE_ALUT_INIT_WITHOUT_CONTEXT
+#endif
+
 /////////////////////////
 // plugin API:
 #ifdef NO_SELF_REGISTER
