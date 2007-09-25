@@ -60,7 +60,7 @@ Mutex  Debug::_inst_lock;
 // They are globals because I can't include their type in the vjDEBUG header file
 // If I did, then we could not output debug info in the Thread manager itself
 TSObjectProxy<std::vector<int> > gVprDebugCurColumn;       // What column to indent to
-TSObjectProxy<std::vector<color_out_t> > gVprDebugCurColor;        // What color to display "everything" in
+TSObjectProxy<std::vector<std::string> > gVprDebugCurColor;        // What color to display "everything" in
 
 // Register DEBUG categories
 /*
@@ -222,8 +222,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
       }
       else
       {
-         os << (*gVprDebugCurColor).back();
-         //os << clrSetBOLD((*gVprDebugCurColor).back());
+         os << clrSetBOLD((*gVprDebugCurColor).back());
       }
    }
 
@@ -502,7 +501,7 @@ void Debug::popThreadLocalColumn()
    }
 }
 
-void Debug::pushThreadLocalColor(const color_out_t& color)
+void Debug::pushThreadLocalColor(const std::string& color)
 {
    (*gVprDebugCurColor).push_back(color);
 }

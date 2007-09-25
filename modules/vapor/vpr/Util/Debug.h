@@ -72,7 +72,6 @@
 #define vprDBG_DETAILED_LVL 7
 #define vprDBG_HEX_LVL 8
 
-#ifndef VPR_OS_Windows
 // ANSI COLOR CONTROL CODES
 // TODO: Make the work for windows
 // 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
@@ -89,50 +88,14 @@
 #define clrCYAN "36"
 #define clrWHITE "37"
 
-#else
-
-#define clrNONE     FOREGROUND_RED|FOREGROUND_GREEN|FOREGROUND_BLUE
-#define clrBOLD     FOREGROUND_INTENSITY
-#define clrBLACK    FOREGROUND_RED|FOREGROUND_GREEN|FOREGROUND_BLUE
-#define clrRED      FOREGROUND_RED
-#define clrGREEN    FOREGROUND_GREEN
-#define clrYELLOW   FOREGROUND_GREEN|FOREGROUND_RED
-#define clrBLUE     FOREGROUND_BLUE
-#define clrMAGENTA  FOREGROUND_RED|FOREGROUND_BLUE
-#define clrCYAN     FOREGROUND_GREEN|FOREGROUND_BLUE
-#define clrWHITE    FOREGROUND_RED|FOREGROUND_GREEN|FOREGROUND_BLUE
-#endif
-
-namespace vpr
-{
 #ifdef VPR_OS_Windows
-   struct out_color
-   {
-      explicit out_color(const WORD attribute)
-         : mOutColor(attribute)
-      {;}
-      WORD mOutColor;
-   };
-
-   template <class _Elem, class _Traits>
-   std::basic_ostream<_Elem,_Traits>&  operator<<(std::basic_ostream<_Elem,_Traits>& i, out_color& c)
-   {
-       HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
-       SetConsoleTextAttribute(hStdout, c.mOutColor);
-       return i;
-   }
-   typedef out_color color_out_t;
-#else
-   typedef std::string color_out_t;
-#endif
-}
-
-#ifdef VPR_OS_Windows
-#  define clrSetNORM(color) vpr::out_color(color)
-#  define clrSetBOLD(color) vpr::out_color(color|clrBOLD)
-#  define clrRESET vpr::out_color(clrNONE)
-#  define clrOutBOLD(color,text) vpr::out_color(color) << text << clrRESET
-#  define clrOutNORM(color,text) vpr::out_color(color) << text << clrRESET
+#  define clrESC ""
+#  define clrCONTROL_CHARS(font, color) ""
+#  define clrSetNORM(color) ""
+#  define clrSetBOLD(color) ""
+#  define clrRESET ""
+#  define clrOutBOLD(color,text) text
+#  define clrOutNORM(color,text) text
 #else
 #  define clrESC char(27)
 #  define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
@@ -341,7 +304,7 @@ namespace vpr
       //@{
       void pushThreadLocalColumn(int column);
       void popThreadLocalColumn();
-      void pushThreadLocalColor(const color_out_t& color);
+      void pushThreadLocalColor(const std::string& color);
       void popThreadLocalColor();
       //@}
 
@@ -440,7 +403,7 @@ namespace vpr
     */
    struct DebugColorGuard
    {
-      DebugColorGuard(const color_out_t& color_val)
+      DebugColorGuard(const std::string& color_val)
       {
          vprDEBUG_PushTSColor(color_val);
       }
