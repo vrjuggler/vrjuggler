@@ -57,6 +57,11 @@ vprSingletonImp(sonix);
 // Destructor.
 sonix::~sonix()
 {
+   // XXX: The Audiere and OpenAL plug-ins exhibit crash-on-exit behavior
+   // when they attempt to clean themselves up. Why this happens is unclear,
+   // but having the following commented out avoids the crash problems. This
+   // definitely needs to be fixed. -PH 9/25/2007
+   /*
    // release the implementation
    if (mImplementation != NULL)
    {
@@ -68,6 +73,7 @@ sonix::~sonix()
       delete mImplementation;
       mImplementation = NULL;
    }
+   */
 }
 
 /**
