@@ -100,15 +100,6 @@ void SoundImplementation::unbindAll()
       //std::cout<<"DEBUG: loading alias: "<<(*it).first<<"\n"<<std::flush;
       this->unbind( (*it).first );
    }
-   /*
-   std::map< std::string, AlSoundInfo >::iterator it;
-   for( it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
-   {
-      this->unbind( (*it).first );
-   }
-
-   vprASSERT(mBindLookup.size() == 0 && "unbindAll failed");
-   */
 }
 
 } // End of snx namespace
