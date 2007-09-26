@@ -233,6 +233,9 @@
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\SimViewport.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Sound\SoundManager.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Sound\SoundManagerFactory.cpp">
 			</File>
 			<File

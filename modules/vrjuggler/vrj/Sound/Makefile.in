@@ -44,7 +44,8 @@ SUBOBJDIR=	$(VJ_LIBRARY)
 # Prefix for recursive stuff.
 DIRPRFX=	vrj/Sound/
 
-SRCS=		SoundManagerFactory.cpp	\
+SRCS=		SoundManager.cpp	\
+		SoundManagerFactory.cpp	\
 		SoundManagerSonix.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk

@@ -31,7 +31,6 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 
-#include <boost/concept_check.hpp>
 
 namespace vrj
 {
@@ -39,55 +38,47 @@ namespace vrj
     *
     * VR Juggler sound manager.
     */
-   class SoundManager : public jccl::ConfigElementHandler
+   class VJ_CLASS_API SoundManager : public jccl::ConfigElementHandler
    {
+   protected:
+      SoundManager();
+
    public:
+      virtual ~SoundManager();
+
       /**
        * Adds the element to the configuration.
        * @pre configCanHandle(element) == true
        */
-      virtual bool configAdd(jccl::ConfigElementPtr element)
-      {
-         boost::ignore_unused_variable_warning(element);
-         return false;
-      }
+      virtual bool configAdd(jccl::ConfigElementPtr element);
 
       /**
        * Removes the element from the current configuration.
        * @pre configCanHandle(element) == true
        */
-      virtual bool configRemove(jccl::ConfigElementPtr element)
-      {
-         boost::ignore_unused_variable_warning(element);
-         return false;
-      }
+      virtual bool configRemove(jccl::ConfigElementPtr element);
 
       /**
        * Can the handler handle the given element?
        * @return true if we can handle the element; false if not.
        */
-      virtual bool configCanHandle(jccl::ConfigElementPtr element)
-      {
-         boost::ignore_unused_variable_warning(element);
-         return false;
-      }
+      virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
-   public:
       /** Enables a frame to be drawn. */
-      virtual void update() {}
+      virtual void update();
 
       /**
        * Blocks until the end of the frame.
        * @post The frame has been rendered.
        */
-      virtual void sync() {}
+      virtual void sync();
 
       /**
        * Shuts down the sound API currently in use.
        *
        * @since 2.3.15
        */
-      virtual void closeAPI() {}
+      void closeAPI();
    };
 } // end namespace
 
