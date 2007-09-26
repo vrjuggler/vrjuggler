@@ -57,16 +57,9 @@ vprSingletonImp(sonix);
 // Destructor.
 sonix::~sonix()
 {
-   // release the implementation
-   if (mImplementation != NULL)
+   if ( NULL != mImplementation )
    {
-      // unload all sound data
-      mImplementation->unbindAll();
-
-      // shutdown old api if exists
-      mImplementation->shutdownAPI();
-      delete mImplementation;
-      mImplementation = NULL;
+      shutdownAPI();
    }
 }
 
@@ -227,6 +220,22 @@ void sonix::changeAPI(const std::string& apiName)
 
    // load all sound data
    mImplementation->bindAll();
+}
+
+// Destructor.
+void sonix::shutdownAPI()
+{
+   // release the implementation
+   if ( mImplementation != NULL )
+   {
+      // unload all sound data
+      mImplementation->unbindAll();
+
+      // shutdown old api if exists
+      mImplementation->shutdownAPI();
+      delete mImplementation;
+      mImplementation = NULL;
+   }
 }
 
 void sonix::configure(const snx::SoundAPIInfo& sai)

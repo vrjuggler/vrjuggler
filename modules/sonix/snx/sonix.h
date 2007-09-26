@@ -242,6 +242,16 @@ public:
    void changeAPI(const std::string& apiName);
 
    /**
+    * If there is a sound API currently active, its sounds are unbound, and
+    * it is told to shut itself down.
+    *
+    * @post \c mImplementation is NULL.
+    *
+    * @since 1.3.6
+    */
+   void shutdownAPI();
+
+   /**
     * Configures/reconfigures the sound API global settings.
     *
     * @param sai A description of the settings for this sound API.
