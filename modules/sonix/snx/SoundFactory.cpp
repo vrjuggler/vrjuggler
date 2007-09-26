@@ -94,16 +94,76 @@ SoundFactory::SoundFactory()
          << "Sonix plug-in loading may fail.\n" << vprDEBUG_FLUSH;
    }
 
-   const fs::path snx_base_dir(base_dir_env, fs::native);
+   std::vector<fs::path> search_paths;
+
+   try
+   {
+      const fs::path snx_base_dir(base_dir_env, fs::native);
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
-   const fs::path snx_lib_dir = snx_base_dir / "lib32";
+      const fs::path snx_lib_dir = snx_base_dir / "lib32";
 #elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
       defined(VPR_OS_Linux) && defined(__x86_64__)
-   const fs::path snx_lib_dir = snx_base_dir / "lib64";
+      const fs::path snx_lib_dir = snx_base_dir / "lib64";
 #else
-   const fs::path snx_lib_dir = snx_base_dir / "lib";
+      const fs::path snx_lib_dir = snx_base_dir / "lib";
 #endif
+
+      const std::string sonix_subdir_base("sonix");
+
+      // If versioning is enabled, then the name of the directory containing
+      // the Sonix plug-ins must contain version information.
+#if defined(SNX_USE_VERSIONING)
+      std::string sonix_ver_str;
+      const std::string sonix_version("SNX_VERSION");
+
+      // If $SNX_VERSION is set, use the value of that environment variable
+      // as the version component of the plug-in subdirectory name. Otherwise,
+      // use the compile-time value provided by SNX_VERSION_DOT.
+      if ( ! vpr::System::getenv(sonix_version, sonix_ver_str) )
+      {
+         sonix_ver_str = SNX_VERSION_DOT;
+      }
+
+      fs::path sonix_subdir(
+         snx_lib_dir / (sonix_subdir_base + "-" + sonix_ver_str) / "plugins"
+      );
+
+      // If versioning is not enabled, then the directory containing the
+      // Sonix plug-ins will not incorporate version information.
+#else
+      fs::path sonix_subdir(snx_lib_dir / sonix_subdir_base / "plugins");
+#endif
+
+#if defined(SNX_DEBUG)
+#if defined(_DEBUG)
+      sonix_subdir /= "dbgrt";
+#else
+      sonix_subdir /= "dbg";
+#endif
+#else
+      sonix_subdir /= "opt";
+#endif
+
+      search_paths.push_back(sonix_subdir);
+
+      std::string home_dir;
+      if ( vpr::System::getenv("HOME", home_dir) )
+      {
+         search_paths.push_back(
+            fs::path(home_dir, fs::native) / fs::path(".sonix", fs::native) /
+               "plugins"
+         );
+      }
+   }
+   catch (fs::filesystem_error& ex)
+   {
+      vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+         << clrOutNORM(clrRED, "WARNING")
+         << ": File system exception caught while constructing search "
+         << "path: " << std::endl << ex.what() << std::endl
+         << vprDEBUG_FLUSH;
+   }
 
 #if defined(VPR_OS_Windows)
    const std::string driver_ext("dll");
@@ -112,53 +172,6 @@ SoundFactory::SoundFactory()
 #else
    const std::string driver_ext("so");
 #endif
-
-   const std::string sonix_subdir_base("sonix");
-
-   // If versioning is enabled, then the name of the directory containing the
-   // Sonix plug-ins must contain version information.
-#if defined(SNX_USE_VERSIONING)
-   std::string sonix_ver_str;
-   const std::string sonix_version("SNX_VERSION");
-
-   // If $SNX_VERSION is set, use the value of that environment variable
-   // as the version component of the plug-in subdirectory name. Otherwise,
-   // use the compile-time value provided by SNX_VERSION_DOT.
-   if ( ! vpr::System::getenv(sonix_version, sonix_ver_str) )
-   {
-      sonix_ver_str = SNX_VERSION_DOT;
-   }
-
-   fs::path sonix_subdir(
-      snx_lib_dir / (sonix_subdir_base + "-" + sonix_ver_str) / "plugins"
-   );
-
-   // If versioning is not enabled, then the directory containing the
-   // Sonix plug-ins will not incorporate version information.
-#else
-   fs::path sonix_subdir(snx_lib_dir / sonix_subdir_base / "plugins");
-#endif
-
-#if defined(SNX_DEBUG)
-#if defined(_DEBUG)
-   sonix_subdir /= "dbgrt";
-#else
-   sonix_subdir /= "dbg";
-#endif
-#else
-   sonix_subdir /= "opt";
-#endif
-
-   std::vector<fs::path> search_paths;
-   search_paths.push_back(sonix_subdir);
-
-   std::string home_dir;
-   if ( vpr::System::getenv("HOME", home_dir) )
-   {
-      search_paths.push_back(
-         fs::path(home_dir, fs::native) / ".sonix" / "plugins"
-      );
-   }
 
    typedef std::vector<fs::path>::iterator iter_type;
    for ( iter_type p = search_paths.begin(); p != search_paths.end(); ++p )
