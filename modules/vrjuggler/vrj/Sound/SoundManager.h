@@ -81,6 +81,13 @@ namespace vrj
        * @post The frame has been rendered.
        */
       virtual void sync() {}
+
+      /**
+       * Shuts down the sound API currently in use.
+       *
+       * @since 2.3.15
+       */
+      virtual void closeAPI() {}
    };
 } // end namespace
 

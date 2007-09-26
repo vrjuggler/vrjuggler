@@ -70,6 +70,15 @@ namespace vrj
        */
       virtual void sync();
 
+      /**
+       * Tells Sonix to shut down the current sound API. Depending on what
+       * sound API is in use, this will cause sounds to stop playing and
+       * loaded resources to be released.
+       *
+       * @since 2.3.15
+       */
+      virtual void closeAPI();
+
    private:
       vpr::Interval mLastFrameTime;
    };

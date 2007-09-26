@@ -699,12 +699,21 @@ void Kernel::changeApplication(App* newApp)
 
    // XXX: TODO: Free resources (ie closeContext())
 
-   // If the new application is NULL OR
-   // we have an old draw manager and it is different from the new one, stop it.
-   if (NULL == newApp || NULL != mDrawManager && newApp->getDrawManager() != mDrawManager)
+   // If the new application is NULL OR we have an old Draw Manager that is
+   // different from the new one, then stop the current Draw Manager.
+   if ( NULL == newApp || NULL != mDrawManager &&
+        newApp->getDrawManager() != mDrawManager )
    {
       stopDrawManager();
       cfg_mgr->removeConfigElementHandler(mDrawManager);
+   }
+
+   // If the new application is NULL OR we have an old Sound Manager that is
+   // different from the new one, then stop the current Sound Manager.
+   if ( NULL == newApp || NULL != mSoundManager &&
+        newApp->getSoundManager() != mSoundManager )
+   {
+      stopSoundManager();
       cfg_mgr->removeConfigElementHandler(mSoundManager);
    }
 
@@ -730,15 +739,21 @@ void Kernel::changeApplication(App* newApp)
          vprASSERT(NULL != mDrawManager);
 
          mDrawManager = mApp->getDrawManager();             // Get the new draw manager
-         mSoundManager = mApp->getSoundManager();           // Get the new sound manager
          cfg_mgr->addConfigElementHandler(mDrawManager);    // Tell config manager about them
-         cfg_mgr->addConfigElementHandler(mSoundManager);   // Tell config manager about them
          startDrawManager(true);                      // Start the new one
       }
       else
       {
          startDrawManager(false);                     // Start new app
       }
+
+      if ( mApp->getSoundManager() != mSoundManager )
+      {
+         // Get the new sound manager and tell the Config Manager about it.
+         mSoundManager = mApp->getSoundManager();
+         cfg_mgr->addConfigElementHandler(mSoundManager);
+      }
+
       // Now handle configuration
       cfg_mgr->addConfigElementHandler(mApp);
       cfg_mgr->refreshPendingList();                  // New managers, so we may be able to handle config requests now
@@ -976,6 +991,15 @@ void Kernel::stopDrawManager()
       mDrawManager->closeAPI();
       mDrawManager = NULL;
       mDisplayManager->setDrawManager(NULL);
+   }
+}
+
+void Kernel::stopSoundManager()
+{
+   if ( NULL != mSoundManager )
+   {
+      mSoundManager->closeAPI();
+      mSoundManager = NULL;
    }
 }
 

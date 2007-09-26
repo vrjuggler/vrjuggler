@@ -211,4 +211,9 @@ namespace vrj
       // whatever...
    }
 
+   void SoundManagerSonix::closeAPI()
+   {
+      snx::sonix::instance()->shutdownAPI();
+   }
+
 } // end namespace

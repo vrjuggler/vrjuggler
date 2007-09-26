@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-26-2007 patrick     Fixed crash-on-exit problems with Sonix.
+                        NEW VERSION: 2.3.15
 Sep-19-2007 patrick     Added draw thread CPU affinity capabilities through the
                         new environment variable VJ_DRAW_THREAD_AFFINITY. This
                         is currently used only by the OpenGL Draw Manager.

@@ -177,7 +177,7 @@ JCCL_PATH_CXX([1.1.5], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([1.3.7], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
-SNX_PATH([1.1.4], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
+SNX_PATH([1.3.6], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
 VJ_GET_BOOST_LIB_SUFFIX_LIST([$dpp_boost_major], [$dpp_boost_minor],
                              [$BOOST_LIB_VERSION], [boost_suffixes])

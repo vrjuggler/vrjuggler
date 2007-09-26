@@ -396,6 +396,18 @@ protected:
    void stopDrawManager();
    //@}
 
+   /** @name Sound Manager Routines */
+   //@{
+   /**
+    * Stops the Sound Manager and closes its resources.
+    *
+    * @post \c mSoundManager is NULL.
+    *
+    * @since 2.3.15
+    */
+   void stopSoundManager();
+   //@}
+
 public:
    /** @name Global "get" interface */
    //@{
