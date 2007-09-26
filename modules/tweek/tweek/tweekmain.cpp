@@ -250,7 +250,15 @@ extern "C" void __attribute ((constructor)) tweekLibraryInit()
    }
    else
    {
-      base_dir = fs::path(env_dir, fs::native);
+      try
+      {
+         base_dir = fs::path(env_dir, fs::native);
+      }
+      catch (fs::filesystem_error& ex)
+      {
+         std::cerr << "Invalid path set in TWEEK_BASE_DIR environment "
+                   << "variable:\n" << ex.what() << std::endl;
+      }
    }
 
    if ( ! base_dir.empty() )
