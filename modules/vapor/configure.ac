@@ -539,7 +539,7 @@ AC_CHECK_HEADERS([hash_map ext/hash_map hash_map.h])
 AC_CHECK_HEADERS(hash_set ext/hash_set hash_set.h ext/numeric)
 DPP_LANG_RESTORE
 
-DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
+DPP_HAVE_BOOST([1.31.0], [/usr], , ,
                [AC_MSG_ERROR([*** Boost is required for VPR ***])])
 BOOST_VERSION_DOT="$dpp_boost_version"
 
