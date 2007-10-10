@@ -322,8 +322,11 @@ namespace gadget
          }
          catch (vpr::IOException&)
          {
-            // Should never happen since timeout is infinite
-            client_sock->close();
+            if ( client_sock->isOpen() )
+            {
+               client_sock->close();
+            }
+
             delete client_sock;
             client_sock = new vpr::SocketStream;
          }
