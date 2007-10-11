@@ -146,7 +146,7 @@ AC_DEFUN([TWEEK_PATH_CXX],
    else
       if ! (eval $FLAGPOLL $tweek_cxx_flagpoll_args --modversion >/dev/null 2>&1)
       then
-         AC_MSG_ERROR([*** Flagpoll has no valid Tweek configuration ***])
+         AC_MSG_WARN([*** Flagpoll has no valid Tweek C++ configuration ***])
          ifelse([$3], , :, [$3])
       else
          AC_MSG_CHECKING([whether Tweek C++ API is available])
@@ -224,7 +224,7 @@ AC_DEFUN([TWEEK_PATH_JAVA],
    else
       if ! (eval $FLAGPOLL $tweek_java_flagpoll_args --modversion >/dev/null 2>&1)
       then
-         AC_MSG_ERROR([*** Flagpoll has no valid Tweek configuration ***])
+         AC_MSG_WARN([*** Flagpoll has no valid Tweek Java configuration ***])
          ifelse([$3], , :, [$3])
       else
          AC_MSG_CHECKING([whether Tweek Java API is available])
