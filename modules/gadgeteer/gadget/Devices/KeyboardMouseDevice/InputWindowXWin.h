@@ -142,8 +142,12 @@ private:
 
    Window createWindow(Window parent, const unsigned int borderWidth);
 
-   void setHints(Window window, char*  window_name, char*  icon_name,
-                 char* class_name, char* class_type);
+   /**
+    * Sets basic window manager hints for this window.
+    */
+   void setHints(Window window, const std::string& windowName,
+                 const std::string& iconName, const std::string& className,
+                 const std::string& classType);
    //@}
 
 protected:

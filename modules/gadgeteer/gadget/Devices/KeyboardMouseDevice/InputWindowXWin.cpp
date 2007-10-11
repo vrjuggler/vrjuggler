@@ -338,8 +338,8 @@ bool InputWindowXWin::openLocalWindow()
    mXWindow = createWindow(DefaultRootWindow(mXDisplay), 1);
    createEmptyCursor(mXDisplay, mXWindow);
 
-   setHints(mXWindow, const_cast<char*>(mInstName.c_str()),
-            const_cast<char*>(mInstName.c_str()) , "VRJInputWindow", "VRJ Input Windows");
+   setHints(mXWindow, mInstName, mInstName, "VRJInputWindow",
+            "VR Juggler Input Windows");
 
    XSelectInput(mXDisplay, mXWindow, event_mask);
    XMapWindow(mXDisplay, mXWindow);
@@ -388,60 +388,67 @@ void InputWindowXWin::createEmptyCursor(Display* display, Window root)
    mEmptyCursorSet = true;
 }
 
-/* Sets basic window manager hints for a window. */
-void InputWindowXWin::setHints(Window window, char* window_name,
-                               char* icon_name, char* class_name,
-                               char* class_type)
+void InputWindowXWin::setHints(Window window, const std::string& windowName,
+                               const std::string& iconName,
+                               const std::string& className,
+                               const std::string& classType)
 {
-    XTextProperty  w_name;
-    XTextProperty  i_name;
-    XSizeHints     sizehints;
-    XWMHints       wmhints;
-    XClassHint     classhints;
-    int            status;
+   // NOTE: Below, the char* held by each of the std::string parameters to
+   // this method is assigned to a value in an X structure. This is done
+   // without copying the bytes; rather the pointer value is simply assigned.
+   // This is safe because the X functions that receive the structures make
+   // copies of char* input.
 
-    /*
-     * Generate window and icon names.
-     */
+   XTextProperty w_name;
+   XTextProperty i_name;
+   int status;
+
+   // Generate window and icon names.
+   char* window_name = const_cast<char*>(windowName.c_str());
    status = XStringListToTextProperty(&window_name, 1, &w_name);
 
    if (0 == status)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << "Error allocating XString\n" << vprDEBUG_FLUSH;
+         << "Error allocating XTextProperty for window name (" << windowName
+         << ")\n" << vprDEBUG_FLUSH;
    }
 
+   char* icon_name = const_cast<char*>(iconName.c_str());
    status = XStringListToTextProperty(&icon_name, 1, &i_name);
 
    if (0 == status)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << "Error allocating XString\n" << vprDEBUG_FLUSH;
+         << "Error allocating TextProperty for icon name (" << iconName
+         << ")\n" << vprDEBUG_FLUSH;
    }
 
-   sizehints.width       = mWidth;    /* -- Obsolete in R4 */
-   sizehints.height      = mHeight;   /* -- Obsolete in R4 */
-   sizehints.base_width  = mWidth;    /* -- New in R4 */
-   sizehints.base_height = mHeight;   /* -- New in R4 */
+   XSizeHints size_hints;
+   size_hints.width       = mWidth;    // -- Obsolete in R4
+   size_hints.height      = mHeight;   // -- Obsolete in R4
+   size_hints.base_width  = mWidth;    // -- New in R4
+   size_hints.base_height = mHeight;   // -- New in R4
 
-   /* Set up flags for all the fields we've filled in. */
-   sizehints.flags = USPosition | USSize | PBaseSize;
+   // Set up flags for all the fields we've filled in.
+   size_hints.flags = USPosition | USSize | PBaseSize;
 
-   /*   assume the window starts in "normal" (rather than
-    *    iconic) state and wants keyboard input.
-    */
-   wmhints.initial_state = NormalState;
-   wmhints.input         = True;
-   wmhints.flags         = StateHint | InputHint;
+   // Assume that the window starts in "normal" (rather than iconic) state and
+   // wants keyboard input.
+   XWMHints wm_hints;
+   wm_hints.initial_state = NormalState;
+   wm_hints.input         = True;
+   wm_hints.flags         = StateHint | InputHint;
 
    /* Fill in class name. */
-   classhints.res_name  = class_name;
-   classhints.res_class = class_type;
+   XClassHint class_hints;
+   class_hints.res_name  = const_cast<char*>(className.c_str());
+   class_hints.res_class = const_cast<char*>(classType.c_str());
 
-   XSetWMProperties(mXDisplay, window, &w_name, &i_name,
-                    //argv, argc, /* Note reversed order. */
-                    NULL, 0,
-                    &sizehints, &wmhints, &classhints);
+   char** argv(NULL);
+   int argc(0);
+   XSetWMProperties(mXDisplay, window, &w_name, &i_name, argv, argc,
+                    &size_hints, &wm_hints, &class_hints);
 
    XFree(w_name.value);
    XFree(i_name.value);
