@@ -339,7 +339,7 @@ bool InputWindowXWin::openLocalWindow()
    createEmptyCursor(mXDisplay, mXWindow);
 
    setHints(mXWindow, const_cast<char*>(mInstName.c_str()),
-            "VJm_keys" , "VJInputWindow", "VJInputD");
+            const_cast<char*>(mInstName.c_str()) , "VRJInputWindow", "VRJ Input Windows");
 
    XSelectInput(mXDisplay, mXWindow, event_mask);
    XMapWindow(mXDisplay, mXWindow);
