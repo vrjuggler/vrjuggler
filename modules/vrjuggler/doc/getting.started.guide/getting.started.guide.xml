@@ -734,8 +734,8 @@ value</screen>
 
                <listitem>
                   <para>The environment variable <envar>VJ_BASE_DIR</envar>
-                  plays identifiers where VR Juggler is installed. This
-                  information is used for the following purposes:</para>
+                  identifies where VR Juggler is installed. This information
+                  is used for the following purposes:</para>
 
                   <itemizedlist>
                      <listitem>
@@ -755,7 +755,7 @@ value</screen>
                         As of VR Juggler 2.2, this usage of
                         <envar>VJ_BASE_DIR</envar> has been diminished
                         greatly. The remainder of the description of
-                        <envar>Vj_BASE_DIR</envar> explains when it may need
+                        <envar>VJ_BASE_DIR</envar> explains when it may need
                         to be set and when the default will be more than
                         sufficient.</para>
                      </listitem>
@@ -820,13 +820,44 @@ value</screen>
                   Juggler base:</para>
 
                   <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
+               </listitem>
+            </varlistentry>
 
-                  <important>
-                     <para>When working from withing the build tree and using
-                     <filename>instlinks</filename>,
-                     <envar>VJ_BASE_DIR</envar> is
-                     <emphasis>required</emphasis>.</para>
-                  </important>
+            <varlistentry>
+               <term>VJ_DATA_DIR</term>
+
+               <listitem>
+                  <para>On non-<productname
+                  class="registered">Windows</productname> platforms, VR
+                  Juggler 2.2 and beyond used versioned directories to allow
+                  for parallel installations of different versions of VR
+                  Juggler. The directories that are versioned are those
+                  containing the header files (needed for compiling VR Juggler
+                  applications), those containing plug-ins, and those
+                  containing data files (needed for running VR Juggler
+                  applications) and sample programs. For example, we will
+                  refer later to the MPApp sample application. Its source code
+                  can be found in
+                  <filename>$VJ_BASE_DIR/share/vrjuggler-2.2/samples/OGL/simple/MPApp</filename>.
+                  The value of <envar>VJ_DATA_DIR</envar> for VR Juggler 2.2
+                  ought to be
+                  <filename>$VJ_BASE_DIR/share/vrjuggler-2.2</filename>. In VR
+                  Juggler configuration files, there is sometimes a need to
+                  refer to files in the VR Juggler data directories. In order
+                  to allow a configuration to be used with multiple VR Juggler
+                  versions (which may or may not be possible depending on the
+                  config elements in use) or between <productname
+                  class="registered">Windows</productname> and
+                  non-<productname class="registered">Windows</productname>
+                  platforms, users can reference the
+                  <envar>VJ_DATA_DIR</envar> environment variable.</para>
+
+                  <para>This environment variable is new in VR Juggler 2.2.1.
+                  If the environment variable is not set when an application
+                  is launched, it will be set automatically relative to the
+                  value of <envar>VJ_BASE_DIR</envar>. In general, users
+                  should not set <envar>VJ_DATA_DIR</envar> unless they know
+                  that the default value is inappropriate.</para>
                </listitem>
             </varlistentry>
 
@@ -938,7 +969,7 @@ value</screen>
                   way that the <envar>$PATH</envar> environment variable would
                   be set on all of these platforms. If not set, the default
                   search path for configuration files is
-                  <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
+                  <filename>$VJ_DATA_DIR/data/configFiles</filename>.</para>
 
                   <note>
                      <para>The configuration files are loaded by the module
@@ -965,8 +996,7 @@ value</screen>
                   be set on these platforms.</para>
 
                   <para>The default search path for configuration files is
-                  always
-                  <filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>.
+                  always <filename>$VJ_DATA_DIR/data/definitions</filename>.
                   Setting the environment variable
                   <envar>JCCL_DEFINITION_PATH</envar> appends directories to
                   the default search path. It is not possible to change the
@@ -1139,11 +1169,11 @@ value</screen>
 
          <para>Some sample applications designed for getting started with VR
          Juggler are found in
-         <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.
-         All of these applications were designed to be used as part of courses
-         teaching people how to write VR Juggler applications using OpenGL.
-         They contain clear comments explaining what the code is doing, and
-         they are intended to be as simple as possible. These tutorials are as
+         <filename>$VJ_DATA_DIR/samples/OGL/simple</filename>. All of these
+         applications were designed to be used as part of courses teaching
+         people how to write VR Juggler applications using OpenGL. They
+         contain clear comments explaining what the code is doing, and they
+         are intended to be as simple as possible. These tutorials are as
          follows:</para>
 
          <itemizedlist>
@@ -1195,10 +1225,10 @@ value</screen>
          <title>Advanced OpenGL Performer Applications</title>
 
          <para>Examples of OpenGL Performer applications can be found in
-         <filename>$VJ_BASE_DIR/share/vrjuggler/samples/Pf/advanced</filename>.
-         These are for more advanced developers who are familiar with
-         Performer and some of the more complicated aspects of VR Juggler.
-         There are two main programs to be found there:</para>
+         <filename>$VJ_DATA_DIR/samples/Pf/advanced</filename>. These are for
+         more advanced developers who are familiar with Performer and some of
+         the more complicated aspects of VR Juggler. There are two main
+         programs to be found there:</para>
 
          <itemizedlist>
             <listitem>
@@ -1229,7 +1259,7 @@ value</screen>
       seriously. You are now ready to compile and run VR Juggler applications,
       and that is the whole point, right? This chapter explains how to compile
       the applications provided in the directory
-      <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.</para>
+      <filename>$VJ_DATA_DIR/samples/OGL/simple</filename>.</para>
 
       <section>
          <title>Required Reading</title>
@@ -1261,23 +1291,22 @@ value</screen>
             <title>Compiling from the Command Line</title>
 
             <para>All the sample programs in
-            <filename>$VJ_BASE_DIR/share/vrjuggler/samples</filename> use the
-            same basic steps to compile unless otherwise noted. Always refer
-            to the top of the sample application's
-            <filename>Makefile</filename> for information that may be specific
-            to building that application. In general, though, all
-            applications' makefiles require the GNU version of the
+            <filename>$VJ_DATA_DIR/samples</filename> use the same basic steps
+            to compile unless otherwise noted. Always refer to the top of the
+            sample application's <filename>Makefile</filename> for information
+            that may be specific to building that application. In general,
+            though, all applications' makefiles require the GNU version of the
             <command>make</command>(1) utility, sometimes installed as
             <command>gmake</command>.</para>
 
             <para>The example used here will be the MPApp tutorial application
             found in
-            <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>.
-            It is an OpenGL-based application that will compile and run on all
+            <filename>$VJ_DATA_DIR/samples/OGL/simple/MPApp</filename>. It is
+            an OpenGL-based application that will compile and run on all
             platforms supported by VR Juggler. Begin by changing into the
             directory
-            <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>
-            in a command shell.</para>
+            <filename>$VJ_DATA_DIR/samples/OGL/simple/MPApp</filename> in a
+            command shell.</para>
 
             <para>To compile MPApp, simply enter the following:</para>
 
@@ -1409,17 +1438,16 @@ value</screen>
       be run in a simulator configuration or in a full-scale VR system with no
       modifications. What does change is the configuration files used when
       starting the program. In
-      <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you
-      can find many basic configuration files including those for running in
-      simulator using a mouse and keyboard to simulate VR input devices and
-      some example files based on those used for the VRAC C4 system. In the
-      directory, you will see some files with names containing
-      <quote>mixin</quote>. These are special files that provide a specific
-      capability not necessarily needed by all applications. They can be mixed
-      in (hence the name) with other configuration files as needed. The
-      configuration files found in the <filename>configFiles</filename>
-      directory will be referenced in the examples provided, so be sure you
-      know where they are.</para>
+      <filename>$VJ_DATA_DIR/data/configFiles</filename>, you can find many
+      basic configuration files including those for running in simulator using
+      a mouse and keyboard to simulate VR input devices and some example files
+      based on those used for the VRAC C4 system. In the directory, you will
+      see some files with names containing <quote>mixin</quote>. These are
+      special files that provide a specific capability not necessarily needed
+      by all applications. They can be mixed in (hence the name) with other
+      configuration files as needed. The configuration files found in the
+      <filename>configFiles</filename> directory will be referenced in the
+      examples provided, so be sure you know where they are.</para>
 
       <section id="section.required.reading">
          <title>Required Reading</title>
@@ -1748,9 +1776,8 @@ value</screen>
                files when the <literal>bundle</literal> target is built for
                any VR Juggler application whose build is based on Doozer 2.1.4
                and newer. For builds that are not using Doozer, see the files
-               in
-               <filename>$VJ_BASE_DIR/share/vrjuggler-2.2/data/bundle</filename>
-               for a starting point.</para>
+               in <filename>$VJ_DATA_DIR/data/bundle</filename> for a starting
+               point.</para>
 
                <para>The use of application bundles offers several different
                ways of launching applications. They are as follows:</para>
@@ -2296,7 +2323,7 @@ value</screen>
             numbers to actual hand positions is controlled by the
             <quote>training file</quote> for the simulated glove device. The
             default training file is
-            <filename>$VJ_BASE_DIR/share/vrjuggler/data/gesture/simpleSimGestures.dat</filename>.</para>
+            <filename>$VJ_DATA_DIR/data/gesture/simpleSimGestures.dat</filename>.</para>
          </section>
 
          <section>
@@ -2414,8 +2441,8 @@ value</screen>
             <title>Single Machine Configuration</title>
 
             <para>The example configuration files in the directory
-            <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>
-            modeled after those used for VRAC's Onyx-powered C4 system are as
+            <filename>$VJ_DATA_DIR/data/configFiles</filename> modeled after
+            those used for VRAC's Onyx-powered C4 system are as
             follows:</para>
 
             <itemizedlist>
