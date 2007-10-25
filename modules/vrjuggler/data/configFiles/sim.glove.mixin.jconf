@@ -28,7 +28,7 @@
                <key>MOUSE_BUT1</key>
             </key_modifier_pair>
          </key_presses>
-         <trained_filename>${VJ_BASE_DIR}/share/gadgeteer/data/gesture/simpleSimGestures.dat</trained_filename>
+         <trained_filename>${GADGET_DATA_DIR}/data/gesture/simpleSimGestures.dat</trained_filename>
          <glove_position>GlovePos Proxy</glove_position>
          <device_host />
       </simulated_glove_gesture>
