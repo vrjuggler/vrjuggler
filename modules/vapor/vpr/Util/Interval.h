@@ -348,9 +348,10 @@ public:
    float usecf() const
    {
 #ifdef VPR_OS_Windows
-      return ((vpr::Int64) mMicroSeconds);
+      // Using static_cast here silences a compiler warning.
+      return static_cast<float>(static_cast<vpr::Int64>(mMicroSeconds));
 #else
-      return (mMicroSeconds);
+      return mMicroSeconds;
 #endif
    }
    
@@ -370,9 +371,10 @@ public:
    double usecd() const
    {
 #ifdef VPR_OS_Windows
-      return ((vpr::Int64) mMicroSeconds);
+      // Using static_cast here silences a compiler warning.
+      return static_cast<double>(static_cast<vpr::Int64>(mMicroSeconds));
 #else
-      return (mMicroSeconds);
+      return mMicroSeconds;
 #endif
    }
 
