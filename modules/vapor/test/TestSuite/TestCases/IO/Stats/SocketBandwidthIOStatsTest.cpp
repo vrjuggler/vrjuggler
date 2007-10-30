@@ -94,7 +94,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor()
       {
          // Send a message
          CPPUNIT_ASSERT_NO_THROW_MESSAGE("Problem writing in acceptor",
-            sock->write(mMessageValue, mMessageLen, bytes_written));
+            bytes_written = sock->write(mMessageValue, mMessageLen));
          CPPUNIT_ASSERT((bytes_written == mMessageLen) && "Didn't send entire messag");
       }
 
@@ -160,7 +160,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_connector()
       for(int j=0;j<mNumItersB;j++)
       {
          CPPUNIT_ASSERT_NO_THROW_MESSAGE("Read failed",
-            con_sock.readn(data, mMessageLen, bytes_read));   // Recieve data
+            bytes_read = con_sock.readn(data, mMessageLen));   // Recieve data
          CPPUNIT_ASSERT((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
       }
 
