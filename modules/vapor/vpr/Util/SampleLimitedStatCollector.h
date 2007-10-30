@@ -103,15 +103,15 @@ public:
    }
 
    /** Return Mean (value/second). */
-   double getMean();
-   double getInstAverage();
-   double getSTA();
+   double getMean() const;
+   double getInstAverage() const;
+   double getSTA() const;
    double getMaxSTA() const
    {
       return mMaxSTA;
    }
 
-   void print(std::ostream& out);
+   void print(std::ostream& out) const;
 
 private:
    TYPE        mCurTotal;     /**< Running total of the data */
@@ -131,6 +131,7 @@ private:
 
 template <class TYPE, bool TimeBased>
 void SampleLimitedStatCollector<TYPE, TimeBased>::print(std::ostream& out)
+   const
 {
    out << "type: " << typeid(TYPE).name() << "   time based:"
        << (TimeBased ? "Y" : "N") << std::endl
@@ -144,10 +145,9 @@ void SampleLimitedStatCollector<TYPE, TimeBased>::print(std::ostream& out)
        << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2
        << std::endl
        << " --- data --- time --- " << std::endl;
-
-   for ( typename std::vector< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
-         i!= mSampleBuffer.end();
-         ++i )
+   typedef typename std::vector< std::pair<TYPE,vpr::Interval> >::const_iterator
+      iter_type;
+   for ( iter_type i = mSampleBuffer.begin(); i != mSampleBuffer.end(); ++i )
    {
       out << (*i).first << "   " << (*i).second.msec() << "ms\n";
    }
@@ -201,7 +201,7 @@ void SampleLimitedStatCollector<TYPE, TimeBased>::addSample(const TYPE sample)
 }
 
 template <class TYPE, bool TimeBased>
-double SampleLimitedStatCollector<TYPE, TimeBased>::getMean()
+double SampleLimitedStatCollector<TYPE, TimeBased>::getMean() const
 {
    if(0 == mCurTotal)
    {
@@ -230,7 +230,7 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getMean()
 }
 
 template <class TYPE, bool TimeBased>
-double SampleLimitedStatCollector<TYPE, TimeBased>::getInstAverage()
+double SampleLimitedStatCollector<TYPE, TimeBased>::getInstAverage() const
 {
    double inst_average(0.0);
 
@@ -263,7 +263,7 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getInstAverage()
 }
 
 template <class TYPE, bool TimeBased>
-double SampleLimitedStatCollector<TYPE, TimeBased>::getSTA()
+double SampleLimitedStatCollector<TYPE, TimeBased>::getSTA() const
 {
    // Compute -- STA BANDWIDTH
    double sta_value(0.0f);

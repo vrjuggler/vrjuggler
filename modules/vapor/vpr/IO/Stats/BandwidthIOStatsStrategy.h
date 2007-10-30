@@ -78,12 +78,12 @@ public:
                         const vpr::Interval& timeout);
    //@}
 
-   vpr::SampleLimitedStatCollector<vpr::Uint32, true>& readStats()
+   const vpr::SampleLimitedStatCollector<vpr::Uint32, true>& readStats() const
    {
       return mReadStats;
    }
 
-   vpr::SampleLimitedStatCollector<vpr::Uint32, true>& writeStats()
+   const vpr::SampleLimitedStatCollector<vpr::Uint32, true>& writeStats() const
    {
       return mWriteStats;
    }

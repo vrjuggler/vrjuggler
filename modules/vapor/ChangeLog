@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2007-10-30 patrick  Improved const correctness in the statistics collection
+                    classes vpr::BandwidthIOStatsStrategy and
+                    vpr::SampleLimitedStatCollector<T,bool>.
+                    NEW VERSION: 2.1.8
 2007-09-16 patrick  Removed polymorphism from vpr::BaseThread and vpr::Thread.
                     NEW VERSION: 2.1.7
 2007-09-16 patrick  Added vpr::ThreadWin32::setRunOn() and
