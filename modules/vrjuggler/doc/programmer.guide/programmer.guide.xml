@@ -11293,6 +11293,75 @@ public:
          even need to be aware of when writing VR software. These are
          important, interesting, and worthwhile topics nonetheless.</para>
 
+         <section>
+            <title>Customizing Render Thread Processor Affinity</title>
+
+            <para>VR Juggler 2.2.1 introduced the feature of adjustable render
+            thread processor affinity for Linux and IRIX users of the OpenGL
+            Draw Manager<footnote>
+                  <para>In VR Juggler 3.0, this capability is available to all
+                  Draw Managers, but only the OpenGL Draw Manager takes
+                  advantage. The Direct3D Draw Manager is not currently
+                  multi-threaded.</para>
+               </footnote>. The default mechanism for defining processor
+            affinity is based on an environment variable and the use of a
+            simple round-robin scheme for the case of having more graphics
+            pipes than processors. More tailored uses of render thread
+            processor affinity can be achieved by giving the OpenGL Draw
+            Manager a custom affinity assignment algorithm. That will be the
+            topic of this section.</para>
+
+            <para>The OpenGL Draw Manager class
+            <classname>vrj::opengl::DrawManager</classname> has a method named
+            <methodname>setCpuAffinityStrategy()</methodname> that takes as
+            its argument a callable object. This is encapsulated using a
+            Boost.Function object of type <type>boost::function&lt;int (const
+            unsigned int)&gt;</type>, which in English is a function that
+            takes a single constant unsigned integer (the pipe identifier) and
+            returns a signed integer (the processor identifier). Anything that
+            can be encapsulated by a Boost.Function object can be used. That
+            includes a pointer to a C function, a pointer to a static C++
+            class member function, a value returned by
+            <function>boost::bind()</function>, or an instance of a class that
+            overloads <methodname>operator()</methodname>. This usage
+            implements the Strategy Pattern where functionality is plugged in
+            at run time. The default behavior is to use an instance of
+            <classname>vrj::CpuAffinityFromEnv</classname>, assigned in the
+            <classname>vrj::opengl::DrawManager</classname>
+            constructor.</para>
+
+            <para>The job of this callable object is to map the pipe
+            identifier to the processor to which affinity will be assigned for
+            the render thread of the pipe. The processor identifier is a
+            signed integer so that a negative value can be used to indicate
+            that no affinity should be assigned for the render thread of the
+            pipe. The exact means by which it accomplishes this can vary, and
+            that is the power of the Strategy Pattern in this context.</para>
+
+            <para>To provide a customized processor affinity assignment
+            algorithm,
+            <methodname>vrj::opengl::DrawManager::setCpuAffinityStrategy()</methodname>
+            must be invoked at the correct time. The OpenGL Draw Manager uses
+            whatever affinity assignment algorithm it has as soon as it
+            determines that <classname>vrj::opengl::Pipe</classname> objects
+            need to be created. This is done as part of the VR Juggler
+            run-time reconfiguration process. Therefore, to guarantee that all
+            pipes use the customized algorithm,
+            <methodname>vrj::opengl::DrawManager::setCpuAffinityStrategy()</methodname>
+            must be called before calling
+            <methodname>vrj::Kernel::start()</methodname>, the method that
+            starts the VR Juggler kernel control loop. Since the kernel
+            control loop is normally started in the application
+            <function>main()</function> function, the most likely place for a
+            call to
+            <methodname>vrj::opengl::DrawManager::setCpuAffinityStrategy()</methodname>
+            is also in <function>main()</function>. Of course, this can vary
+            depending on how VR Juggler is being used, so the most important
+            thing to understand is that it must happen
+            <emphasis>before</emphasis>
+            <methodname>vrj::Kernel::start()</methodname> is called.</para>
+         </section>
+
          <section id="section.custom.delegate">
             <title>Making a Custom <classname>NSApplication</classname>
             Delegate on Mac OS X</title>
