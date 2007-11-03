@@ -11003,10 +11003,10 @@ public:
             <methodname>vrj::GlDrawManager::setCpuAffinityStrategy()</methodname>
             must be invoked at the correct time. The OpenGL Draw Manager uses
             whatever affinity assignment algorithm it has as soon as it
-            determines that vrj::GlPipe objects need to be created. This is
-            done as part of the VR Juggler run-time reconfiguration process.
-            Therefore, to guarantee that all pipes use the customized
-            algorithm,
+            determines that <classname>vrj::GlPipe</classname> objects need to
+            be created. This is done as part of the VR Juggler run-time
+            reconfiguration process. Therefore, to guarantee that all pipes
+            use the customized algorithm,
             <methodname>vrj::GlDrawManager::setCpuAffinityStrategy()</methodname>
             must be called before calling
             <methodname>vrj::Kernel::start()</methodname>, the method that
