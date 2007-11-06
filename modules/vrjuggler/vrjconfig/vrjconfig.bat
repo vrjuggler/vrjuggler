@@ -25,19 +25,36 @@ rem Boston, MA 02111-1307, USA.
 rem
 rem ************** <auto-copyright.pl END do not edit this line> **************
 
+rem Determine if either of the environment variables JAVA_HOME or JDK_HOME is
+rem set. Ultimately, our goal is to have a valid value for JAVA_HOME.
 IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
-IF "%JDK_HOME%" == "" GOTO JAVA_ERR
+IF "%JDK_HOME%" == "" GOTO JAVA_REG
 ECHO [NOTE] Setting JAVA_HOME to "%JDK_HOME%"
 set JAVA_HOME=%JDK_HOME%
 GOTO TEST_JAVA_EXIST
 
+rem Neither JAVA_HOME nor JDK_HOME is set, so try to find the Java
+rem installation path in the registry.
+:JAVA_REG
+rem Look for Java 1.5 first.
+FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Development Kit\1.5" /v JavaHome`) DO set JAVA_HOME=%%B
+IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
+rem Then try Java 1.6.
+FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Development Kit\1.6" /v JavaHome`) DO set JAVA_HOME=%%B
+IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
+
 :JAVA_ERR
+rem If we reached this point, we were not able to get a value for JAVA_HOME or
+rem JDK_HOME.
 ECHO [ERR] Neither JAVA_HOME nor JDK_HOME is set.  One of these environment
 ECHO [ERR] variables must be set to a valid Java 1.4 or newer installation
 ECHO [ERR] directory to run VRJConfig.
 GOTO ERREXIT
 
 :TEST_JAVA_EXIST
+rem Remove the trailing backslash from JAVA_HOME if it has one.
+IF "%JAVA_HOME:~-1%" == "\" set JAVA_HOME=%JAVA_HOME:~0,-1%
+
 IF EXIST "%JAVA_HOME%\bin\java.exe" GOTO TEST_VJ_BASE
 ECHO [ERR] %JAVA_HOME%\bin\java.exe does not exist, so VRJConfig cannot be
 ECHO [ERR] started.
