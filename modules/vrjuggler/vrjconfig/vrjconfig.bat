@@ -58,6 +58,7 @@ IF "%JAVA_HOME:~-1%" == "\" set JAVA_HOME=%JAVA_HOME:~0,-1%
 IF EXIST "%JAVA_HOME%\bin\java.exe" GOTO TEST_VJ_BASE
 ECHO [ERR] %JAVA_HOME%\bin\java.exe does not exist, so VRJConfig cannot be
 ECHO [ERR] started.
+GOTO ERREXIT
 
 :TEST_VJ_BASE
 IF NOT "%VJ_BASE_DIR%" == "" GOTO TEST_VJ_EXIST
