@@ -115,7 +115,7 @@ public:
 
    /**
     * Returns the format of the angles. 
-    * (0 == ISD_EULER; 1 == ISD_QUATERNION)
+    * (1 == ISD_EULER; 2 == ISD_QUATERNION)
     */
    int getAngleFormat(const unsigned int currentStation) const 
    {
@@ -139,15 +139,12 @@ public:
       return mConfigData[currentStation].GetInputs;
    }
 
-   /////////////
-   //
-   
    /**
     * Return if the Station is ON or OFF.
     */
    void setState(const unsigned int currentStation, const bool state)
    {
-      mConfigData[currentStation].State = state;
+      mConfigData[currentStation].State = (state ? TRUE : FALSE);
    }
 
    /**
@@ -186,8 +183,8 @@ public:
    }
 
    /**
-    * Returns the format of the angles. 
-    * (0 == ISD_EULER; 1 == ISD_QUATERNION)
+    * Sets the format of the angles. 
+    * (1 == ISD_EULER; 2 == ISD_QUATERNION)
     */
    void setAngleFormat(const unsigned int currentStation,
                        const int angleFormat)
@@ -196,12 +193,12 @@ public:
    }
 
    /**
-    * Return whether the station should send time stamps or not.
+    * Sets whether the station should send time stamps or not.
     */
    void setTimeStamped(const unsigned int currentStation,
                        const bool timeStamped)
    {
-      mConfigData[currentStation].TimeStamped = timeStamped;
+      mConfigData[currentStation].TimeStamped = (timeStamped ? TRUE : FALSE);
    }
 
    /**
@@ -210,7 +207,7 @@ public:
     */
    void setInputs(const unsigned int currentStation, const bool hasInputs)
    {
-      mConfigData[currentStation].GetInputs = hasInputs;
+      mConfigData[currentStation].GetInputs = (hasInputs ? TRUE : FALSE);
    }
 
    /**
@@ -269,9 +266,46 @@ public:
    /**
     * Save the current configuration state to the physical tracker device.
     */
-   void saveConfigState(const int d)
+   bool saveConfigState(const int d)
    {
-      ISD_SetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
+      if( ISD_SetStationConfig( mHandle, &mConfigData[d], d+1, (mVerbose ? TRUE : FALSE) ) )
+      {
+         return true;
+      }
+      return false;
+   }
+
+   /**
+    * Reset the tracking station's boresight.
+    */
+   bool resetStationBoresight(const int d)
+   {
+      if ( ISD_Boresight( mHandle, d+1, FALSE ) )
+      {
+         return true;
+      }
+      return false;
+   }
+
+   /**
+    * Sets the default coordinate system for the respective station.
+    */
+   void setDefaultCoordFrame(const unsigned int currentStation)
+   {
+       /* set frame to default */
+       mConfigData[currentStation].CoordFrame = ISD_DEFAULT_FRAME;
+   }
+
+   /**
+    * Check to see if we have new data for the i'th receiver.
+    */
+   bool hasData(const unsigned int i) const
+   {
+     if ( mData.Station[i].NewData )
+     {
+        return true;
+     }
+     return false;
    }
 
    /**
@@ -327,7 +361,7 @@ public:
     */
    float xQuat(const unsigned int i) const
    {
-      return mData.Station[i].Orientation[0];
+      return mData.Station[i].Orientation[1];
    }
 
    /**
@@ -335,7 +369,7 @@ public:
     */
    float yQuat(const unsigned int i) const
    {
-      return mData.Station[i].Orientation[1];
+      return mData.Station[i].Orientation[2];
    }
 
    /**
@@ -343,7 +377,7 @@ public:
     */
    float zQuat(const unsigned int i) const
    {
-      return mData.Station[i].Orientation[2];
+      return mData.Station[i].Orientation[3];
    }
 
    /**
@@ -351,7 +385,7 @@ public:
     */
    float wQuat(const unsigned int i) const
    {
-      return mData.Station[i].Orientation[3];
+      return mData.Station[i].Orientation[0];
    }
 
    /**

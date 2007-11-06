@@ -126,35 +126,21 @@ IntersenseAPI::~IntersenseAPI()
 // Main thread of control for this active object
 void IntersenseAPI::controlLoop()
 {
-   // Loop through and keep sampling until stopSampleing is called.
+   // Loop through and keep sampling until stopSampling is called.
    while(!mDone)
    {
       this->sample();
-      //TODO: Find a way to eliminate this sleep. If I rememeber correctly it
-      //      was added because the CPU was getting pegged too fast with samples
-      //      since there was no I/O wait because we are simply querying the
-      //      ISense library.
-      vpr::System::msleep(50);
+      //TODO: Find a way to eliminate this sleep. Currently, the CPU is
+      //      pegged aquiring samples since there was no I/O wait because
+      //      we are simply querying the ISense library.
+      //      Note: This sleep was 50ms but 10ms is more reasonable given
+      //      the records/sec IS-900 can return.
+      vpr::System::msleep(10);
    }
 }
 
 bool IntersenseAPI::startSampling()
 {
-   // Configure the stations used by the configuration
-   for( unsigned int i = 0; i < mStations.size(); ++i )
-   {
-      int station_index = mStations[i].stationIndex;
-
-      // Load the config state from the physical tracker
-      mTracker.loadConfigState(station_index);
-      mTracker.setState(station_index, mStations[i].enabled);
-      mTracker.setAngleFormat(station_index, ISD_EULER);
-      mTracker.setInputs(station_index,
-                         mStations[i].useDigital || mStations[i].useAnalog);
-      // Save the config state to the physical tracker.
-      mTracker.saveConfigState(station_index);
-   }
-
    // Ensure that we have not already started sampling.
    if (this->isActive() == true)
    {
@@ -183,6 +169,44 @@ bool IntersenseAPI::startSampling()
          << " [gadget::IntersenseAPI::startSampling()] mTracker.open() "
          << "failed to connect to tracker.\n" << vprDEBUG_FLUSH;
       return false;
+   }
+
+   // Configure the stations used by the configuration
+   for( unsigned int i = 0; i < mStations.size(); ++i )
+   {
+      int station_index = mStations[i].stationIndex;
+      // Reset any boresight being used by trackd or ICIDO
+      // This makes a call to the tracker and is not simply setting
+      // state on a var to configure the tracker with as done below.
+      mTracker.resetStationBoresight(station_index);
+      // Load the config state from the physical tracker
+      mTracker.loadConfigState(station_index);
+      mTracker.setState(station_index, mStations[i].enabled);
+      mTracker.setInputs(station_index,
+                         mStations[i].useDigital || mStations[i].useAnalog);
+      mTracker.setTimeStamped( station_index, false );
+      mTracker.setDefaultCoordFrame( station_index );
+
+      // Save the config state to the physical tracker.
+      if ( ! mTracker.saveConfigState(station_index) )
+      {
+         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED,"ERROR:")
+            << " [gadget::IntersenseAPI::startSampling()] mTracker.saveConfigState() "
+            << "failed to save config state to station " << i << ".\n"
+            << vprDEBUG_FLUSH;
+
+         mTracker.close();
+         return false;
+      }
+
+      //Try to get output in quat form otherwise fallback on euler angles
+      mTracker.setAngleFormat(station_index, ISD_QUATERNION);
+      if ( ! mTracker.saveConfigState(station_index) )
+      {
+         // Failed to set quaternion format which means it is set for euler
+         mTracker.setAngleFormat(station_index, ISD_EULER);
+      }
    }
 
    // Set flag that will later allow us to stop the control loop.
@@ -218,11 +242,43 @@ bool IntersenseAPI::sample()
       return false;
    }
 
+   // Check to see if we have new data to pull
+   if ( ! mTracker.updateData() )
+   {
+       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "[gadget::IntersenseAPI::sample()]")
+         << ": Could not read data from InterSense API driver!\n"
+         << vprDEBUG_FLUSH;
+      return false;
+   }
+
+
+// This is the some code for the beginnings of trying to eliminate 
+// the sleep in the control loop. Needs more testing.
+/*
+   bool has_new_data(false);
+   for ( unsigned int i = 0 ; i < mStations.size() ; ++i )
+   {
+      // Make sure station is enabled and tracker has updated data.
+      if( mStations[i].enabled && mTracker.hasData(mStations[i].stationIndex) )
+      {
+         has_new_data = true;
+         break;
+      }
+   }
+
+   // If there wasn't any new data then reliquish control to the cpu and return
+   if( ! has_new_data )
+   {
+      vpr::Thread::yield();
+      vpr::System::msleep(10);
+   }
+*/
+
    // Create the data buffers to put the new data into.
    std::vector<gadget::PositionData> cur_pos_samples(mStations.size());
    std::vector<gadget::DigitalData>  cur_digital_samples;
    std::vector<gadget::AnalogData>   cur_analog_samples;
-
 
    // get an initial timestamp for this entire sample. we'll copy it into
    // each PositionData for this sample.
@@ -231,31 +287,30 @@ bool IntersenseAPI::sample()
       cur_pos_samples[0].setTime();
    }
 
-   mTracker.updateData();
-
-   vpr::Thread::yield();
-
    for ( unsigned int i = 0 ; i < mStations.size() ; ++i )
    {
       // Get the station index for the given station.
       int stationIndex = mStations[i].stationIndex;
 
+
       // Set the time of each PositionData to match the first.
       cur_pos_samples[i].setTime( cur_pos_samples[0].getTime() );
 
+      // Don't process data from disabled stations
+      if( ! mStations[i].enabled )
+      {
+         continue;
+      }
+
+      gmtl::identity(cur_pos_samples[i].mPosData);
       // If the Intersense is returning data in Euler format. Otherwise we
       // assume that it is returning data in quaternion format.
       if ( mTracker.getAngleFormat(stationIndex) == ISD_EULER )
       {
-         gmtl::identity(cur_pos_samples[i].mPosData);
          gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad( mTracker.zRot( stationIndex ) ),
                                      gmtl::Math::deg2Rad( mTracker.yRot( stationIndex ) ),
                                      gmtl::Math::deg2Rad( mTracker.xRot( stationIndex ) ) );
          gmtl::setRot( cur_pos_samples[i].mPosData, euler );
-         gmtl::setTrans( cur_pos_samples[i].mPosData,
-                         gmtl::Vec3f(mTracker.xPos( stationIndex ),
-                                     mTracker.yPos( stationIndex ),
-                                     mTracker.zPos( stationIndex )) );
       }
       else
       {
@@ -263,8 +318,13 @@ bool IntersenseAPI::sample()
                                mTracker.yQuat( stationIndex ),
                                mTracker.zQuat( stationIndex ),
                                mTracker.wQuat( stationIndex ));
-         gmtl::set( cur_pos_samples[i].mPosData, quatValue );
+         gmtl::setRot( cur_pos_samples[i].mPosData, quatValue );
       }
+
+      gmtl::setTrans( cur_pos_samples[i].mPosData,
+                      gmtl::Vec3f(mTracker.xPos( stationIndex ),
+                                  mTracker.yPos( stationIndex ),
+                                  mTracker.zPos( stationIndex )) );
 
       // We start at the index of the first digital item (set in the config
       // files) and we copy the digital data from this station to the
@@ -298,7 +358,6 @@ bool IntersenseAPI::sample()
    addAnalogSample(cur_analog_samples);
    addDigitalSample(cur_digital_samples);
    addPositionSample(cur_pos_samples);
-
    return true;
 }
 
