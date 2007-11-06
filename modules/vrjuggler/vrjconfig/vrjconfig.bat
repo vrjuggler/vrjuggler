@@ -56,8 +56,8 @@ rem Remove the trailing backslash from JAVA_HOME if it has one.
 IF "%JAVA_HOME:~-1%" == "\" set JAVA_HOME=%JAVA_HOME:~0,-1%
 
 IF EXIST "%JAVA_HOME%\bin\java.exe" GOTO TEST_VJ_BASE
-ECHO [ERR] %JAVA_HOME%\bin\java.exe does not exist, so VRJConfig cannot be
-ECHO [ERR] started.
+ECHO [ERR] %JAVA_HOME%\bin\java.exe does not exist,
+ECHO [ERR] so VRJConfig cannot be started.
 GOTO ERREXIT
 
 :TEST_VJ_BASE
@@ -65,8 +65,7 @@ IF NOT "%VJ_BASE_DIR%" == "" GOTO TEST_VJ_EXIST
 set VJ_BASE_DIR=%~dp0..
 ECHO NOTE: VJ_BASE_DIR environment variable unset; defaulting to
 ECHO       %VJ_BASE_DIR%
-ECHO       If this is incorrect, see INSTALL.html and set the value
-ECHO       correctly.
+ECHO       If this is incorrect, see INSTALL.html and set the value correctly.
 
 :TEST_VJ_EXIST
 IF EXIST "%VJ_BASE_DIR%" GOTO TEST_TWEEK_BASE
