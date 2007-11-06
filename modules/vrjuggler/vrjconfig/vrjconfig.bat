@@ -88,5 +88,6 @@ GOTO DONE
 
 :ERREXIT
 ECHO [ERR] VRJConfig exiting due to previous errors.
+PAUSE
 
 :DONE
