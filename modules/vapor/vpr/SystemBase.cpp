@@ -68,6 +68,7 @@ extern "C"
 #  include <boost/format.hpp>
 #endif
 
+
 #if (! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
      ((__GNUC__ == 3 && __GNUC_MINOR__ >= 3) || __GNUC__ > 3)) || \
     (defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 810 && defined(__GNUC__))
@@ -221,7 +222,7 @@ std::string demangleTraceString(const std::string& traceLine)
 
    std::string::size_type start(std::string::npos), end(std::string::npos);
 
-#if defined(VPR_OS_Darwin)
+#if defined(VPR_OS_Darwin) && ! defined(HAVE_BACKTRACE)
    end = trace_line.find(":F(");
 
    // If trace_line does not contain ":F(", then we set the start to be either
@@ -247,7 +248,7 @@ std::string demangleTraceString(const std::string& traceLine)
    if(std::string::npos != end)
    {
       std::string::size_type assign_start, assign_end;
-#if defined(VPR_OS_Darwin)
+#if defined(VPR_OS_Darwin) && ! defined(HAVE_BACKTRACE)
       assign_start = start;
       assign_end   = end;
 #else
@@ -261,7 +262,7 @@ std::string demangleTraceString(const std::string& traceLine)
                                                 NULL, &status);
       if(0==status)
       {
-#if defined(VPR_OS_Darwin)
+#if defined(VPR_OS_Darwin) && ! defined(HAVE_BACKTRACE)
          trace_line = demangled_buf;
 #else
          trace_line.replace(start + 1, end - start - 1, demangled_buf);
@@ -295,7 +296,7 @@ std::string demangleTraceString(const std::string& traceLine)
 #endif
 }
 
-#if defined(VPR_OS_Darwin)
+#if defined(VPR_OS_Darwin) && ! defined(HAVE_BACKTRACE)
 struct CrawlFrame
 {
    unsigned int pc;
