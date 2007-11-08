@@ -985,7 +985,12 @@
    {
       NSNumber* screen_num =
          [[screen deviceDescription] objectForKey:@"NSScreeNumber"];
-      return reinterpret_cast<CGDirectDisplayID>([screen_num intValue]);
+
+      // NOTE: A C-style cast is being used here because this is Objective-C
+      // and because CGDirectDisplayID is defined differently on Mac OS X 10.5
+      // than on earlier platforms. A generic C-style cast captures that more
+      // easily than using an #ifdef.
+      return (CGDirectDisplayID) [screen_num longValue];
    }
    //@}
 @end
