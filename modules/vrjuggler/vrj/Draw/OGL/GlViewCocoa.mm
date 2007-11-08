@@ -80,7 +80,7 @@
          @throw ex;
       }
 
-      long renderer_id;
+      GLint renderer_id;
       [pixel_format getValues:&renderer_id
                  forAttribute:NSOpenGLPFARendererID
              forVirtualScreen:0];
