@@ -173,30 +173,36 @@ MIN_GMTL_VERSION='0.4.11'
 GMTL_PATH([$MIN_GMTL_VERSION], ,
           [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
 
-AC_PATH_XTRA
-
 gadget_use_x11='no'
 gadget_use_cocoa='no'
 
-if test "x$have_x" = "xyes" ; then
-   AH_TEMPLATE([GADGET_USE_X11], [Define if the X Window System will be used])
+AH_TEMPLATE([GADGET_USE_X11], [Define if the X Window System will be used])
 
-   if test "x$PLATFORM" = "xDarwin" ; then
-      if test "x$XWIN_UI" = "xyes" ; then
+if test "x$PLATFORM" = "xDarwin" ; then
+   if test "x$XWIN_UI" = "xyes" ; then
+      AC_PATH_XTRA
+
+      if test "x$have_x" = "xyes" ; then
          gadget_use_x11='yes'
          AC_DEFINE([GADGET_USE_X11],)
+      # If --enable-xwindows was passed on the command line but X11 was not
+      # found, then we have a problem.
       else
-         gadget_use_cocoa='yes'
-         AC_DEFINE([GADGET_USE_COCOA], , [Define if Cocoa will be used])
+         AC_MSG_ERROR([*** Use of the X Window System requested, but it was not found ***])
       fi
-   elif test "x$OS_TYPE" = "xUNIX" ; then
+   else
+      gadget_use_cocoa='yes'
+      AC_DEFINE([GADGET_USE_COCOA], , [Define if Cocoa will be used])
+   fi
+elif test "x$OS_TYPE" = "xUNIX" ; then
+   AC_PATH_XTRA
+
+   if test "x$have_x" = "xyes" ; then
       gadget_use_x11='yes'
       AC_DEFINE([GADGET_USE_X11],)
+   else
+      AC_MSG_ERROR([*** Use of the X Window System is required ***])
    fi
-# If --enable-xwindows was passed on the command line but X11 was not found,
-# then we have a problem.
-elif test "x$XWIN_UI" = "xyes" ; then
-   AC_MSG_ERROR([*** Use of the X Window System requested, but it was not found ***])
 fi
 
 # -----------------------------------------------------------------------------
