@@ -27,7 +27,6 @@
 #include <vrj/Draw/OpenGL/Config.h>
 
 #include <vpr/vpr.h>
-#include <vpr/Util/Debug.h>
 
 #if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
 #  include <OpenGL/gl.h>
@@ -35,16 +34,18 @@
 #  include <GL/gl.h>
 #endif
 
-#if !defined(WIN32) && !defined(VPR_OS_Darwin)
-#include <GL/glx.h>
+#if defined(VRJ_USE_X11)
+#  include <GL/glx.h>
 #endif
 
-#if defined(VPR_OS_Darwin)
-#include <mach-o/dyld.h>
-#elif !defined(WIN32)
-#include <dlfcn.h>
+// On Mac OS X 10.3 and older, use the less portable symbol lookup mechanism.
+#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR < 8
+#  include <mach-o/dyld.h>
+#elif ! defined(VPR_OS_Windows)
+#  include <dlfcn.h>
 #endif
 
+#include <vpr/Util/Debug.h>
 #include <vrj/Draw/OpenGL/ExtensionLoader.h>
 
 
@@ -59,7 +60,9 @@ ExtensionLoader::getFunctionByName(const char* name)
 {
    VoidExtFunc found_func(NULL);
 
-#if defined(VPR_OS_Darwin)
+   // On Mac OS X 10.3 and older, use the less portable symbol lookup
+   // mechanism.
+#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR < 8
    if ( NSIsSymbolNameDefined(name) )
    {
       NSSymbol symbol = NSLookupAndBindSymbol(name);
@@ -68,13 +71,14 @@ ExtensionLoader::getFunctionByName(const char* name)
          found_func = VoidExtFunc(NSAddressOfSymbol(symbol)); 
       }
    }
-#elif defined(WIN32)
+#elif defined(VPR_OS_Windows)
 
    found_func = (void(__cdecl*)(void)) wglGetProcAddress(name);
 
+   // On UNIX variants including Mac OS X 10.4 and newer, use dlopen(3).
 #elif defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX) || \
       defined(VPR_OS_Linux) || defined(VPR_OS_FreeBSD) || \
-      defined(VPR_OS_Solaris)
+      defined(VPR_OS_Solaris) || defined(VPR_OS_Darwin)
 
    // Workaround for multiple nVidia/Linux installation bugs, based on code in
    // OpenSG.
@@ -93,6 +97,8 @@ ExtensionLoader::getFunctionByName(const char* name)
       }
    }
 
+   // We only have glX*() functions when we are using X11.
+#if defined(VRJ_USE_X11)
    if (__GetProcAddress == NULL)
    {
       __GetProcAddress =
@@ -126,6 +132,7 @@ ExtensionLoader::getFunctionByName(const char* name)
             << vprDEBUG_FLUSH;
       }
    }
+#endif
 
    if ( __GetProcAddress != NULL )
    {
