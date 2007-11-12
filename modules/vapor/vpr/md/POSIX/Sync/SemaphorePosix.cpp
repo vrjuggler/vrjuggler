@@ -62,8 +62,14 @@ SemaphorePosix::SemaphorePosix(const int initialValue)
    // destructor.
    mSemaFile = mktemp(strdup("/tmp/vprsema.XXXXXX"));
 
+   // Reset the errno global variable because mktemp(3) should not have failed.
+   // This seems to be critical for getting proper behavior out of sem_open(3)
+   // on Darwin 9.x (Mac OS X 10.5).
+   errno = 0;
+
    // ----- Allocate the named semaphore ----- //
-   mSema = sem_open(mSemaFile, O_CREAT, 0600, initialValue);
+   // This sets the semaphore file permissions to 0600.
+   mSema = sem_open(mSemaFile, O_CREAT, S_IRUSR | S_IWUSR, initialValue);
 
    if ( mSema == (sem_t*) SEM_FAILED )
    {
