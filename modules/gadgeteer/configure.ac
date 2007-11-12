@@ -178,10 +178,10 @@ gadget_use_cocoa='no'
 
 AH_TEMPLATE([GADGET_USE_X11], [Define if the X Window System will be used])
 
+AC_PATH_XTRA
+
 if test "x$PLATFORM" = "xDarwin" ; then
    if test "x$XWIN_UI" = "xyes" ; then
-      AC_PATH_XTRA
-
       if test "x$have_x" = "xyes" ; then
          gadget_use_x11='yes'
          AC_DEFINE([GADGET_USE_X11],)
@@ -195,8 +195,6 @@ if test "x$PLATFORM" = "xDarwin" ; then
       AC_DEFINE([GADGET_USE_COCOA], , [Define if Cocoa will be used])
    fi
 elif test "x$OS_TYPE" = "xUNIX" ; then
-   AC_PATH_XTRA
-
    if test "x$have_x" = "xyes" ; then
       gadget_use_x11='yes'
       AC_DEFINE([GADGET_USE_X11],)
