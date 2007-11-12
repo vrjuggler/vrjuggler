@@ -46,6 +46,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <sstream>
 #include <cstring>
 #include <semaphore.h>
 #include <errno.h>
