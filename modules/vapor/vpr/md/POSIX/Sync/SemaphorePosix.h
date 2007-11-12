@@ -46,6 +46,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <cstring>
 #include <semaphore.h>
 #include <errno.h>
 #include <assert.h>
@@ -102,8 +103,11 @@ public:
     *       and is suspended until such time as it can be freed and allowed
     *       to acquire the semaphore itself.
     *
-    * @throw vpr::DeadlockException is thrown if the current thread has
-    *        already locked this semaphore.
+    * @throw vpr::DeadlockException
+    *           Thrown if the current thread has already locked this semaphore.
+    * @throw vpr::LockException
+    *           Thrown if the lock operation fails for reasons other than
+    *           deadlock and interruption of a system call.
     */
    void acquire()
    {
@@ -115,15 +119,19 @@ public:
       }
       while ( -1 == result && EINTR == errno );
 
-      if ( -1 == result && EDEADLK == errno )
+      if ( -1 == result )
       {
-         throw vpr::DeadlockException(
-            "Tried to lock semaphore twice in the same thread", VPR_LOCATION
-         );
-      }
+         if ( EDEADLK == errno )
+         {
+            throw vpr::DeadlockException(
+               "Tried to lock semaphore twice in the same thread", VPR_LOCATION
+            );
+         }
 
-      assert(result == 0);
-      boost::ignore_unused_variable_warning(result);
+         std::ostringstream msg_stream;
+         msg_stream << "Failed to lock semaphore: " << std::strerror(errno);
+         throw vpr::LockException(msg_stream.str(), VPR_LOCATION);
+      }
    }
 
    /**
