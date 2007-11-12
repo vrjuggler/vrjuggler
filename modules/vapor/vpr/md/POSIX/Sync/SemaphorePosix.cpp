@@ -63,7 +63,8 @@ SemaphorePosix::SemaphorePosix(const int initialValue)
    mSemaFile = mktemp(strdup("/tmp/vprsema.XXXXXX"));
 
    // ----- Allocate the named semaphore ----- //
-   mSema = sem_open(mSemaFile, O_CREAT, 0600, initialValue);
+   // This sets the semaphore file permissions to 0600.
+   mSema = sem_open(mSemaFile, O_CREAT, S_IRUSR | S_IWUSR, initialValue);
 
    if ( mSema == (sem_t*) SEM_FAILED )
    {
