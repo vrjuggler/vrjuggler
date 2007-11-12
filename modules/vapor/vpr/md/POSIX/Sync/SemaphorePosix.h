@@ -54,7 +54,7 @@
 
 #include <vpr/Sync/DeadlockException.h>
 
-#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 8
+#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 9
 #define VPR_USE_NAMED_SEMAPHORE 1
 #endif
 
