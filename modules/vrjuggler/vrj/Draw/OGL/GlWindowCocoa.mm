@@ -205,6 +205,7 @@ bool GlWindowCocoa::open()
                                           glWindow:this
                                             screen:screen
                                      inputHandling:handle_input];
+      mMainView = mGlView;
 
       // mCocoaWindow retains a refernece to mGlView, meaning that the
       // reference count on it is now two. We release our reference to mGlView
@@ -270,8 +271,10 @@ bool GlWindowCocoa::open()
          << exception_name << ": " << exception_reason << std::endl
          << vprDEBUG_FLUSH;
 
+      // We do not need to release mMainView here because it is the same as
+      // mGlView, and we did not retain an extra reference to it when
+      // mMainView was asssigned.
       [mGlView release];
-      [mMainView release];
       [mCocoaWindow release];
       [mRenderLock release];
 
