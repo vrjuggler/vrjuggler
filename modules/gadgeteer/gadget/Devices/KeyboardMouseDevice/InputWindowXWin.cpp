@@ -53,9 +53,9 @@ std::string InputWindowXWin::getElementType()
 
 bool InputWindowXWin::config(jccl::ConfigElementPtr e)
 {
-   unsigned required_definition_ver(1);
+   const unsigned required_definition_ver(1);
 
-   if (e->getVersion() < required_definition_ver)
+   if ( e->getVersion() < required_definition_ver )
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "ERROR")
@@ -101,7 +101,7 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
       << "gadget::InputWindowXWin: display_number: " << x_disp_num
       << std::endl << vprDEBUG_FLUSH;
 
-   if (NULL == disp_sys_elt.get())
+   if ( NULL == disp_sys_elt.get() )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CONFIG_LVL)
          << clrOutNORM(clrRED, "ERROR")
@@ -138,22 +138,25 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
       mXDisplayString = std::string("-1");
    }
 
-   if ((mXDisplayString.empty()) || (strcmp(mXDisplayString.c_str(), neg_one_STRING) == 0))    // Use display env
+   if ( mXDisplayString.empty() ||
+        strcmp(mXDisplayString.c_str(), neg_one_STRING) == 0 )
    {
+      // Use the value of the DISPLAY environment variable.
       const std::string DISPLAY_str("DISPLAY");
       vpr::System::getenv(DISPLAY_str, mXDisplayString);
    }
+
    return true;
 }
 
 bool InputWindowXWin::startSampling()
 {
-   if (mThread != NULL)
+   if ( NULL != mThread )
    {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR")
-         << ": gadget::InputWindowXWin: startSampling called, when already sampling.\n"
-         << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR")
+         << ": [gadget::InputWindowXWin::startSampling] "
+         << "Called when already sampling.\n" << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
 
@@ -183,7 +186,7 @@ bool InputWindowXWin::startSampling()
 bool InputWindowXWin::stopSampling()
 {
    // If there is a thread for us and we actually own the window
-   if (mThread != NULL)
+   if ( NULL != mThread )
    {
       mExitFlag = true;
 
@@ -205,16 +208,16 @@ bool InputWindowXWin::stopSampling()
 // Main thread of control for this active object
 void InputWindowXWin::controlLoop()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "gadget::InputWindowXWin::controlLoop: Thread started.\n"
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "[gadget::InputWindowXWin::controlLoop()] Thread started.\n"
       << vprDEBUG_FLUSH;
 
-   while (NULL == vpr::Thread::self())
+   while ( NULL == vpr::Thread::self() )
    {
       vpr::System::usleep(50);
-      vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL)
-         << "gadget::InputWindowXWin: Waiting for (thread::self() != NULL)\n"
-         << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "[gadget::InputWindowXWin::controlLoop()] "
+         << "Waiting for (thread::self() != NULL)\n" << vprDEBUG_FLUSH;
    }
    mThread = (vpr::Thread*) vpr::Thread::self();
 
@@ -227,24 +230,20 @@ void InputWindowXWin::controlLoop()
    // Sync up with window
    XSync(mXDisplay, 0);
 
-   // If we have initial locked, then we need to lock the system
-   if (mLockState == Lock_LockKey)      // Means that we are in the initially locked state
+   // If we have initial locked, then we need to lock the system.
+   if ( mLockState == Lock_LockKey )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-         << "gadget::InputWindowXWin::controlLoop: Mouse set to initial lock. Locking it now.\n"
-         << vprDEBUG_FLUSH;
-      lockMouse( NULL );                     // Lock the mouse
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "[gadget::InputWindowXWin::controlLoop()] "
+         << "Mouse set to initial lock. Locking it now.\n" << vprDEBUG_FLUSH;
+      lockMouse(NULL);                     // Lock the mouse
    }
 
    // Loop on updating
-   while (!mExitFlag)
+   while ( ! mExitFlag )
    {
       sample();
-      long usleep_time(1); // to be set...
-
-      usleep_time = mSleepTimeMS*1000;
-
-      vpr::System::usleep(usleep_time);
+      vpr::System::usleep(mSleepTimeMS * 1000);
    }
 
    XFlush(mXDisplay);
@@ -259,7 +258,6 @@ void InputWindowXWin::controlLoop()
    XCloseDisplay((::Display*) mXDisplay);
 }
 
-
 /*****************************************************************/
 /*****************************************************************/
 /***********************X WINDOW STUFF****************************/
@@ -268,37 +266,36 @@ void InputWindowXWin::controlLoop()
 // Open the X window to sample from
 bool InputWindowXWin::openLocalWindow()
 {
-   int i;
-
    mXDisplay = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
-   if (NULL == mXDisplay)
+   if ( NULL == mXDisplay )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          <<  clrOutNORM(clrRED, "ERROR")
          << ": [gadget::InputWindowXWin::openTheWindow()] "
          << "Failed to open display '" << mXDisplayString << "'" << std::endl
          << vprDEBUG_FLUSH;
-      return 0;
+      return false;
    }
 
    mScreen = DefaultScreen(mXDisplay);
 
-   XVisualInfo vTemplate, *vis_infos;
-   long vMask = VisualScreenMask;
-   vTemplate.screen = mScreen;
-   int nVisuals;
+   XVisualInfo vi_template;
+   vi_template.screen = mScreen;
+   int num_visuals(0);
 
-   vis_infos = XGetVisualInfo(mXDisplay, vMask, &vTemplate, &nVisuals);
+   XVisualInfo* vis_infos = XGetVisualInfo(mXDisplay, VisualScreenMask,
+                                           &vi_template, &num_visuals);
 
    // Verify that we got at least one visual from XGetVisualInfo(3).
-   if ( vis_infos != NULL && nVisuals >= 1 )
+   if ( vis_infos != NULL && num_visuals >= 1 )
    {
       XVisualInfo* p_visinfo;
+      int i;
 
       // Try to find a visual with color depth of at least 8 bits.  Having
       // such a visual ensures that the input windows at least have a
       // black background.
-      for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ )
+      for ( i = 0, p_visinfo = vis_infos; i < num_visuals; ++i, ++p_visinfo )
       {
          if ( p_visinfo->depth >= 8 )
          {
@@ -309,7 +306,7 @@ bool InputWindowXWin::openLocalWindow()
 
       // If we couldn't find a visual with at least 8-bit color, just use the
       // first one in the list.
-      if ( i == nVisuals )
+      if ( i == num_visuals )
       {
           mVisual = vis_infos;
       }
@@ -321,7 +318,7 @@ bool InputWindowXWin::openLocalWindow()
          <<  clrOutNORM(clrRED,"ERROR")
          << ": [gadget::InputWindowXWin::openTheWindow()] find visual failed"
          << std::endl << vprDEBUG_FLUSH;
-      return 0;
+      return false;
    }
 
    mSWA.colormap = XCreateColormap(mXDisplay,
@@ -353,7 +350,7 @@ bool InputWindowXWin::openLocalWindow()
 
    XFree(vis_infos);
 
-   return 1;
+   return true;
 }
 
 void InputWindowXWin::setupWindowWidthAndHeight()
@@ -407,7 +404,7 @@ void InputWindowXWin::setHints(Window window, const std::string& windowName,
    char* window_name = const_cast<char*>(windowName.c_str());
    status = XStringListToTextProperty(&window_name, 1, &w_name);
 
-   if (0 == status)
+   if ( 0 == status )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << "Error allocating XTextProperty for window name (" << windowName
@@ -417,7 +414,7 @@ void InputWindowXWin::setHints(Window window, const std::string& windowName,
    char* icon_name = const_cast<char*>(iconName.c_str());
    status = XStringListToTextProperty(&icon_name, 1, &i_name);
 
-   if (0 == status)
+   if ( 0 == status )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << "Error allocating TextProperty for icon name (" << iconName
