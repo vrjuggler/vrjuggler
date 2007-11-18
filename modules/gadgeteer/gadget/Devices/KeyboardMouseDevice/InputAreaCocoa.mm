@@ -131,26 +131,41 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
    const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
                                            fromView:nil];
    const NSPoint root_loc = [NSEvent mouseLocation];
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
-                                                       view_loc.x, view_loc.y,
-                                                       root_loc.x, root_loc.y,
-                                                       [event modifierFlags],
-                                                       [event timestamp]));
+
+   // The Cocoa coordinate frame has the origin in the lower left-hand corner
+   // just as we ought to want for mouse events, but for some reason, the other
+   // windowing systems put the origin in the upper left-hand corner. Hence,
+   // we have to transform the coordinate frame to be in the upper left-hand
+   // corner to be portable.
+   gadget::EventPtr mouse_event(
+      new gadget::MouseEvent(
+         type, button, view_loc.x, mHeight - view_loc.y, root_loc.x,
+         [[mCocoaWindow screen] frame].size.height - root_loc.y,
+         [event modifierFlags], [event timestamp]
+      )
+   );
    doAddEvent(mouse_event, button);
 }
-
 
 void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
 {
    const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
                                            fromView:nil];
    const NSPoint root_loc = [NSEvent mouseLocation];
-   gadget::EventPtr move_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
-                                                      gadget::NO_MBUTTON,
-                                                      view_loc.x, view_loc.y,
-                                                      root_loc.x, root_loc.y,
-                                                      [event modifierFlags],
-                                                      [event timestamp]));
+
+   // The Cocoa coordinate frame has the origin in the lower left-hand corner
+   // just as we ought to want for mouse events, but for some reason, the other
+   // windowing systems put the origin in the upper left-hand corner. Hence,
+   // we have to transform the coordinate frame to be in the upper left-hand
+   // corner to be portable.
+   gadget::EventPtr move_event(
+      new gadget::MouseEvent(
+         gadget::MouseMoveEvent, gadget::NO_MBUTTON, view_loc.x,
+         mHeight - view_loc.y, root_loc.x,
+         [[mCocoaWindow screen] frame].size.height - root_loc.y,
+         [event modifierFlags], [event timestamp]
+      )
+   );
 
    const float cur_x = root_loc.x;
    const float cur_y = root_loc.y;
