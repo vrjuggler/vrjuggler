@@ -71,6 +71,13 @@ protected:
    void unlockMouse(XEvent* ev = NULL);
    void updateOriginAndSize(unsigned int width, unsigned int height);
 
+   /**
+    * Returns the X11 window attributes for the root display.
+    *
+    * @since 1.3.16
+    */
+   const XWindowAttributes getDisplayAttributes() const;
+
 protected:
    /**
     * Handles any events in the system.

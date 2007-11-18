@@ -460,9 +460,7 @@ Window InputWindowXWin::createWindow(Window parent,
    Window window;
 
    // need screen size so we can convert origin from lower-left
-   XWindowAttributes winattrs;
-   XGetWindowAttributes(mXDisplay, RootWindow(mXDisplay, DefaultScreen(mXDisplay)),
-                        &winattrs);
+   const XWindowAttributes winattrs = getDisplayAttributes();
 
    // create it
    window = XCreateWindow(mXDisplay, parent, mX, winattrs.height - mY - mHeight,

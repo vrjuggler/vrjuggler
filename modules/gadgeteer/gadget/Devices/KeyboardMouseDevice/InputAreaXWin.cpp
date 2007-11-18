@@ -464,6 +464,16 @@ void InputAreaXWin::updateOriginAndSize(unsigned int width, unsigned int height)
    mHeight = height;
 }
 
+const XWindowAttributes InputAreaXWin::getDisplayAttributes() const
+{
+   XWindowAttributes win_attrs;
+   XGetWindowAttributes(mXDisplay,
+                        RootWindow(mXDisplay, DefaultScreen(mXDisplay)),
+                        &win_attrs);
+
+   return win_attrs;
+}
+
 void InputAreaXWin::addKeyEvent(const gadget::Keys key,
                                 const gadget::EventType type,
                                 XKeyEvent* event)
