@@ -500,15 +500,6 @@ Sonix Audiere Plug-in
 
 
 
-Sonix AudioWorks Plug-in
-
-
-*  Sonix
-
-*  AudioWorks
-
-
-
 Gadgeteer
 
  Gadgeteer handles all input devices that can be used by VR Juggler
@@ -758,12 +749,12 @@ Important
 
  By default, the configuration process will configure VR Juggler and all of
  its dependencies. This includes Sonix, which is an interesting special
- case. Sonix can make use of Audiere, OpenAL, or AudioWorks to add sound to
- VR Juggler applications. If none of those packages is found, Sonix will
- "stub out" its sound APIs. This means that Sonix and the VR Juggler Sound
- Manager can still be used in applications, but no audio will be heard at
- run time. See the section called "Sonix" for more information about how to
- configure Sonix to use Audiere, OpenAL, or AudioWorks.
+ case. Sonix can make use of Audiere or OpenAL to add sound to VR Juggler
+ applications. If none of those packages is found, Sonix will "stub out" its
+ sound APIs. This means that Sonix and the VR Juggler Sound Manager can still
+ be used in applications, but no audio will be heard at run time. See the
+ section called "Sonix" for more information about how to configure Sonix to
+ use Audiere or OpenAL.
 
  For example uses of configure.pl, take a look at the Wiki page relating to
  building from source (http://www.vrjuggler.org/twiki_public/bin/view/
@@ -817,13 +808,12 @@ Tips for Compiling Individual Tools in the Juggler Suite
 
 Sonix
 
- Sonix wraps other audio subsystems such as OpenAL (www.openal.org), Audiere
- (audiere.sf.net), or AudioWorks (multigen.com). At least one of these
- packages must be installed for use by Sonix in order to hear sounds in VR
- Juggler applications. Once you have all the necessary source code and
- third-party package installations, add one or more of the following options
- to your configure.pl command line to enable the appropriate audio
- subsystem:
+ Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or
+ Audiere (audiere.sf.net). At least one of these packages must be installed
+ for use by Sonix in order to hear sounds in VR Juggler applications. Once
+ you have all the necessary source code and third-party package
+ installations, add one or more of the following options to your
+ configure.pl command line to enable the appropriate audio subsystem:
 
 
 *  --enable-openal --with-openal=<OPENAL_PATH>: Enable the use of OpenAL and
@@ -834,18 +824,6 @@ Sonix
    and tell the build where Audiere is installed. The default search path is
    /usr/local.
 
-*  --enable-audioworks --with-audioworks=<AUDIOWORKS_PATH>: Enable the use
-   of AudioWorks and tell the build where AudioWorks is installed. The
-   default search path is /usr.
-
-
-
-Note
-
- AudioWorks and OpenAL cannot be compiled together. They depend on mutually
- exclusive VPR threading subsystems. Warnings will be printed by the Sonix
- configure script indicating this fact. OpenAL and Audiere can be compiled
- together, however.
 
 
 Tweek

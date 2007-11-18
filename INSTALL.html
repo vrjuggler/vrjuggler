@@ -1,6 +1,6 @@
 <html><head>
       <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Building and Installing the Juggler Project (Version 2.3)</title><link rel="stylesheet" href="base_style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.0"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 2.3)</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e32">Important Notes for IRIX Users</a></span></dt><dt><span class="section"><a href="#d0e116">Important Note for Windows Users</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e124">Build Tools</a></span></dt><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#section.cvs.access">How to Get the Juggler Suite from Subversion</a></span></dt><dt><span class="section"><a href="#d0e250">Downloading Third-Party Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e332">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e343">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler
+   <title>Building and Installing the Juggler Project (Version 2.3)</title><link rel="stylesheet" href="base_style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.73.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 2.3)</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e32">Important Notes for IRIX Users</a></span></dt><dt><span class="section"><a href="#d0e116">Important Note for Windows Users</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e124">Build Tools</a></span></dt><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#section.cvs.access">How to Get the Juggler Suite from Subversion</a></span></dt><dt><span class="section"><a href="#d0e250">Downloading Third-Party Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e332">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e343">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler
          Suite</a></span></dt></dl></dd></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e15"></a>Introduction</h2></div></div></div><p>You have downloaded the source code for Version 2.3 of the Juggler
       Project. This is the code that will become VR Juggler 3.0, and it is the
       code that is used to create the VR Juggler 3.0 pre-releases. Please be
@@ -215,35 +215,35 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
                live.</p><div class="itemizedlist"><ul type="disc"><li><p>Tweek Java API</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e463"></a>Sonix</h5></div></div></div><p>Sonix is an abstraction layer for positional sound
                software. Sonix itself cannot play audio, but it includes
                plug-ins based on popular interfaces for playing audio. Each
-               plug-in depends on a specific audio software library.</p><div class="itemizedlist"><ul type="disc"><li><p>VPR</p></li><li><p>GMTL 0.4.12</p></li></ul></div><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e475"></a>Sonix OpenAL Plug-in</h6></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Sonix</p></li><li><p>OpenAL</p></li><li><p>Free ALUT</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e488"></a>Sonix Audiere Plug-in</h6></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Sonix</p></li><li><p>Audiere</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e498"></a>Sonix AudioWorks Plug-in</h6></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Sonix</p></li><li><p>AudioWorks</p></li></ul></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e508"></a>Gadgeteer</h5></div></div></div><p>Gadgeteer handles all input devices that can be used by
-               VR Juggler applications.</p><div class="itemizedlist"><ul type="disc"><li><p>VPR</p></li><li><p>JCCL</p></li><li><p>GMTL 0.4.12</p></li><li><p>X Window System (non-Windows platforms)</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e526"></a>Gadgeteer Device Driver Plug-ins</h5></div></div></div><p>The device driver plug-ins for Gadgeteer are independent
+               plug-in depends on a specific audio software library.</p><div class="itemizedlist"><ul type="disc"><li><p>VPR</p></li><li><p>GMTL 0.4.12</p></li></ul></div><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e475"></a>Sonix OpenAL Plug-in</h6></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Sonix</p></li><li><p>OpenAL</p></li><li><p>Free ALUT</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e488"></a>Sonix Audiere Plug-in</h6></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Sonix</p></li><li><p>Audiere</p></li></ul></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e498"></a>Gadgeteer</h5></div></div></div><p>Gadgeteer handles all input devices that can be used by
+               VR Juggler applications.</p><div class="itemizedlist"><ul type="disc"><li><p>VPR</p></li><li><p>JCCL</p></li><li><p>GMTL 0.4.12</p></li><li><p>X Window System (non-Windows platforms)</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e516"></a>Gadgeteer Device Driver Plug-ins</h5></div></div></div><p>The device driver plug-ins for Gadgeteer are independent
                components that are discovered and used at run time based on
                the application configuration. Drivers with dependencies are
                optional.</p><div class="itemizedlist"><ul type="disc"><li><p>Gadgeteer</p></li><li><p>VRPN 07.03 for the VRPN driver plug-in</p></li><li><p>TrackD API 4 for the TrackD API driver
                      plug-in</p></li><li><p>Microsoft Speech API for the MS Speech API driver
-                     plug-in</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e544"></a>Gadgeteer Cluster Plug-ins</h5></div></div></div><p>The cluster plug-ins extend the functionality of the
-               clustering infrastructure built into Gadgeteer.</p><div class="itemizedlist"><ul type="disc"><li><p>Gadgeteer</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e553"></a>VR Juggler</h5></div></div></div><p>The VR Juggler module is the unifying piece that pulls
+                     plug-in</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e534"></a>Gadgeteer Cluster Plug-ins</h5></div></div></div><p>The cluster plug-ins extend the functionality of the
+               clustering infrastructure built into Gadgeteer.</p><div class="itemizedlist"><ul type="disc"><li><p>Gadgeteer</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e543"></a>VR Juggler</h5></div></div></div><p>The VR Juggler module is the unifying piece that pulls
                all the other Juggler modules together. It provides a virtual
                platform for VR application development. Real-time rendering is
                controlled by Draw Managers. The OpenGL Performer Draw Manager
                is optional.</p><div class="itemizedlist"><ul type="disc"><li><p>Gadgeteer</p></li><li><p>Sonix</p></li><li><p>OpenGL</p></li><li><p>OpenGL Performer for the
                      <span class="emphasis"><em>optional</em></span> OpenGL Performer Draw
-                     Manager</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e574"></a>VR Juggler Run-Time Performance Monitoring Plug-in
+                     Manager</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e564"></a>VR Juggler Run-Time Performance Monitoring Plug-in
                (C++)</h5></div></div></div><p>The C++ VR Juggler Run-Time Performance Monitoring
                Plug-in provides an optional extension to VR Juggler for remote
                visualization of performance metrics that are captured while
                running a VR Juggler application. Communication is performed
-               using the Tweek C++ API on top of CORBA.</p><div class="itemizedlist"><ul type="disc"><li><p>Tweek C++ API</p></li><li><p>VR Juggler</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e586"></a>VR Juggler Run-Time Performance Monitoring Plug-in
+               using the Tweek C++ API on top of CORBA.</p><div class="itemizedlist"><ul type="disc"><li><p>Tweek C++ API</p></li><li><p>VR Juggler</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e576"></a>VR Juggler Run-Time Performance Monitoring Plug-in
                (Java)</h5></div></div></div><p>The Java VR Juggler Run-Time Performance Monitoring
                Plug-in is an optional extension that provides the features
                needed for Java-based visualization of performance data
                collected while a VR Juggler application is running. This is
                another JavaBean handled by the Tweek JavaBean Loader, and it
                uses CORBA to communicate with the C++ VR Juggler Run-Time
-               Performance Monitoring Plug-in.</p><div class="itemizedlist"><ul type="disc"><li><p>JCCL Java API</p></li><li><p>JFreeChart (included with Juggler source)</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e598"></a>VRJConfig</h5></div></div></div><p>VRJConfig is the graphical editor for Juggler
+               Performance Monitoring Plug-in.</p><div class="itemizedlist"><ul type="disc"><li><p>JCCL Java API</p></li><li><p>JFreeChart (included with Juggler source)</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e588"></a>VRJConfig</h5></div></div></div><p>VRJConfig is the graphical editor for Juggler
                configurations. It is a JavaBean loaded by the Tweek JavaBean
                Loader, and it makes use of the editor Beans provided by the
-               JCCL Java API.</p><div class="itemizedlist"><ul type="disc"><li><p>JCCL Java API</p></li><li><p>JGraph (included with Juggler source)</p></li></ul></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e610"></a>Preparing Flagpoll</h4></div></div></div><p>The Flagpoll software has a default search path where it
+               JCCL Java API.</p><div class="itemizedlist"><ul type="disc"><li><p>JCCL Java API</p></li><li><p>JGraph (included with Juggler source)</p></li></ul></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e600"></a>Preparing Flagpoll</h4></div></div></div><p>The Flagpoll software has a default search path where it
             looks for <code class="filename">.pc</code> and <code class="filename">.fpc</code>
             package metadata files. It searchs
             <code class="filename">/usr/lib/pkgconfig</code>,
@@ -355,21 +355,21 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
                         <code class="option">--with-boost-includes=/home/user1/pkgs/boost/include/boost-1_34</code>
                         when running <span class="command"><strong>configure.pl</strong></span>.</p></div></li></ol></div><p>By default, the configuration process will configure VR
                Juggler and all of its dependencies. This includes Sonix, which
-               is an interesting special case. Sonix can make use of Audiere,
-               OpenAL, or AudioWorks to add sound to VR Juggler applications.
-               If none of those packages is found, Sonix will &#8220;<span class="quote">stub
-               out</span>&#8221; its sound APIs. This means that Sonix and the VR
-               Juggler Sound Manager can still be used in applications, but no
-               audio will be heard at run time. See <a class="xref" href="#sonix.compile.section" title="Sonix">the section called &#8220;Sonix&#8221;</a> for more information about
-               how to configure Sonix to use Audiere, OpenAL, or
-               AudioWorks.</p><p>For example uses of <span class="command"><strong>configure.pl</strong></span>, take
+               is an interesting special case. Sonix can make use of Audiere
+               or OpenAL to add sound to VR Juggler applications. If none of
+               those packages is found, Sonix will &#8220;<span class="quote">stub out</span>&#8221; its
+               sound APIs. This means that Sonix and the VR Juggler Sound
+               Manager can still be used in applications, but no audio will be
+               heard at run time. See <a class="xref" href="#sonix.compile.section" title="Sonix">the section called &#8220;Sonix&#8221;</a>
+               for more information about how to configure Sonix to use
+               Audiere or OpenAL.</p><p>For example uses of <span class="command"><strong>configure.pl</strong></span>, take
                a look at the Wiki page relating to building from source
                (<a class="ulink" href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).
                It is not a replacement for this document, but it shows how
                some members of the Juggler team configure VR Juggler. It also
                has information on more advanced uses of
                <span class="command"><strong>configure.pl</strong></span> that are beyond the scope of
-               this document.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e896"></a>Using Locally Installed Software</h5></div></div></div><p>As noted in <a class="xref" href="#source.code.section" title="Getting the Source Code and the Dependencies">the section called &#8220;Getting the Source Code and the Dependencies&#8221;</a>, VR
+               this document.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e886"></a>Using Locally Installed Software</h5></div></div></div><p>As noted in <a class="xref" href="#source.code.section" title="Getting the Source Code and the Dependencies">the section called &#8220;Getting the Source Code and the Dependencies&#8221;</a>, VR
                Juggler depends on several external software packages. As an
                example, consider the case where the Boost libraries are
                installed in <code class="filename">/home/user1/pkgs/boost</code> with
@@ -386,13 +386,12 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
          Suite</h3></div></div></div><p>In this section, we provide tips for ensuring that individual
          tools in the Juggler Suite are compiled correctly. For the most part,
          this duplicates information that can be found on the Wiki page
-         relating to building from source (<a class="ulink" href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="sonix.compile.section"></a>Sonix</h4></div></div></div><p>Sonix wraps other audio subsystems such as OpenAL (<a class="ulink" href="http://www.openal.org/" target="_top">www.openal.org</a>), Audiere
-            (<a class="ulink" href="http://audiere.sf.net/" target="_top">audiere.sf.net</a>), or
-            AudioWorks (<a class="ulink" href="http://www.multigen.com/" target="_top">multigen.com</a>). At least one
-            of these packages must be installed for use by Sonix in order to
-            hear sounds in VR Juggler applications. Once you have all the
-            necessary source code and third-party package installations, add
-            one or more of the following options to your
+         relating to building from source (<a class="ulink" href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="sonix.compile.section"></a>Sonix</h4></div></div></div><p>Sonix wraps other audio subsystems such as OpenAL (<a class="ulink" href="http://www.openal.org/" target="_top">www.openal.org</a>) or Audiere
+            (<a class="ulink" href="http://audiere.sf.net/" target="_top">audiere.sf.net</a>). At
+            least one of these packages must be installed for use by Sonix in
+            order to hear sounds in VR Juggler applications. Once you have all
+            the necessary source code and third-party package installations,
+            add one or more of the following options to your
             <span class="command"><strong>configure.pl</strong></span> command line to enable the
             appropriate audio subsystem:</p><div class="itemizedlist"><ul type="disc"><li><p><code class="option">--enable-openal
                   --with-openal=&lt;OPENAL_PATH&gt;</code>: Enable the use
@@ -402,15 +401,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
                   --with-audiere=&lt;AUDIERE_PATH&gt;</code>: Enable the use
                   of Audiere and tell the build where Audiere is installed.
                   The default search path is
-                  <code class="filename">/usr/local</code>.</p></li><li><p><code class="option">--enable-audioworks
-                  --with-audioworks=&lt;AUDIOWORKS_PATH&gt;</code>: Enable
-                  the use of AudioWorks and tell the build where AudioWorks is
-                  installed. The default search path is
-                  <code class="filename">/usr</code>.</p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>AudioWorks and OpenAL cannot be compiled together. They
-               depend on mutually exclusive VPR threading subsystems. Warnings
-               will be printed by the Sonix configure script indicating this
-               fact. OpenAL and Audiere can be compiled together,
-               however.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="tweek.build.section"></a>Tweek</h4></div></div></div><p>Tweek needs JDK 1.4 or newer and a C++ CORBA implementation.
+                  <code class="filename">/usr/local</code>.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="tweek.build.section"></a>Tweek</h4></div></div></div><p>Tweek needs JDK 1.4 or newer and a C++ CORBA implementation.
             Currently, we primarily use omniORB 4.0. Visit the <a class="ulink" href="http://omniorb.sourceforge.net/" target="_top">omniORB website</a> to
             download omniORB.</p><p>For the following steps, assume that you have omniORB
             installed in <code class="filename">&lt;OMNIORB_PATH&gt;</code>. Assuming

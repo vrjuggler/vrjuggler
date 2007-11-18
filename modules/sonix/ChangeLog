@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-18-2007 patrick     Removed the AudioWorks plug-in.
 Sep-26-2007 patrick     Added snx::sonix::shutdownAPI() so that user-level code
                         can control when the sound API is closed rather than
                         having it happen only in the snx::sonix destructor.

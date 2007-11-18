@@ -60,11 +60,6 @@ AC_ARG_ENABLE(subsynth,
               [  --enable-subsynth       Compile in Subsynth support     [default=yes]],
               [SUBSYNTH_ENABLED="$enableval"], [SUBSYNTH_ENABLED='yes'])
 
-# does the user want AudioWorks?
-AC_ARG_ENABLE(audioworks,
-              [  --enable-audioworks     Compile in AudioWorks support   [default=yes]],
-              [AUDIOWORKS_ENABLED="$enableval"], [AUDIOWORKS_ENABLED='yes'])
-
 # does the user want Audiere?
 AC_ARG_ENABLE(audiere,
               [  --enable-audiere        Compile in Audiere support      [default=yes]],
@@ -156,17 +151,6 @@ if test "x$BUILD_PLUGINS" = "xY" ; then
             [AC_MSG_WARN([*** Audiere plug-in cannot be built. ***])])
       else
          AC_MSG_WARN([*** Audiere connot be used with a VPR installation that ues SPROC threads. ***])
-      fi
-   fi
-
-   # Test for AudioWorks.
-   HAVE_AUDIOWORKS='N'
-   if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
-      if test "x$VPR_SUBSYSTEM" = "xSPROC"; then
-         DPP_HAVE_AUDIOWORKS([/usr], [HAVE_AUDIOWORKS='Y'],
-            [AC_MSG_WARN([*** AudioWorks plug-in cannot be built. ***])])
-      else
-         AC_MSG_WARN([*** AudioWorks cannot be used with a VPR installation that does not use SPROC threads. ***])
       fi
    fi
 
@@ -381,7 +365,6 @@ AC_SUBST(DSO_PLUGIN_PROF_DEPS)
 AC_SUBST(DSO_PLUGIN_PROF_DEP_FILES)
 
 AC_SUBST(HAVE_AUDIERE)
-AC_SUBST(HAVE_AUDIOWORKS)
 AC_SUBST(BUILD_OPENAL)
 AC_SUBST(HAVE_SUBSYNTH)
 

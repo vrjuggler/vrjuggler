@@ -638,20 +638,6 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
                      </listitem>
                   </itemizedlist>
                </section>
-
-               <section>
-                  <title>Sonix AudioWorks Plug-in</title>
-
-                  <itemizedlist>
-                     <listitem>
-                        <para>Sonix</para>
-                     </listitem>
-
-                     <listitem>
-                        <para>AudioWorks</para>
-                     </listitem>
-                  </itemizedlist>
-               </section>
             </section>
 
             <section>
@@ -1011,15 +997,14 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
                <para>By default, the configuration process will configure VR
                Juggler and all of its dependencies. This includes Sonix, which
-               is an interesting special case. Sonix can make use of Audiere,
-               OpenAL, or AudioWorks to add sound to VR Juggler applications.
-               If none of those packages is found, Sonix will <quote>stub
-               out</quote> its sound APIs. This means that Sonix and the VR
-               Juggler Sound Manager can still be used in applications, but no
-               audio will be heard at run time. See <xref
-               linkend="sonix.compile.section" /> for more information about
-               how to configure Sonix to use Audiere, OpenAL, or
-               AudioWorks.</para>
+               is an interesting special case. Sonix can make use of Audiere
+               or OpenAL to add sound to VR Juggler applications. If none of
+               those packages is found, Sonix will <quote>stub out</quote> its
+               sound APIs. This means that Sonix and the VR Juggler Sound
+               Manager can still be used in applications, but no audio will be
+               heard at run time. See <xref linkend="sonix.compile.section" />
+               for more information about how to configure Sonix to use
+               Audiere or OpenAL.</para>
 
                <para>For example uses of <command>configure.pl</command>, take
                a look at the Wiki page relating to building from source
@@ -1089,14 +1074,12 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
             <title>Sonix</title>
 
             <para>Sonix wraps other audio subsystems such as OpenAL (<ulink
-            url="http://www.openal.org/">www.openal.org</ulink>), Audiere
-            (<ulink url="http://audiere.sf.net/">audiere.sf.net</ulink>), or
-            AudioWorks (<ulink
-            url="http://www.multigen.com/">multigen.com</ulink>). At least one
-            of these packages must be installed for use by Sonix in order to
-            hear sounds in VR Juggler applications. Once you have all the
-            necessary source code and third-party package installations, add
-            one or more of the following options to your
+            url="http://www.openal.org/">www.openal.org</ulink>) or Audiere
+            (<ulink url="http://audiere.sf.net/">audiere.sf.net</ulink>). At
+            least one of these packages must be installed for use by Sonix in
+            order to hear sounds in VR Juggler applications. Once you have all
+            the necessary source code and third-party package installations,
+            add one or more of the following options to your
             <command>configure.pl</command> command line to enable the
             appropriate audio subsystem:</para>
 
@@ -1116,23 +1099,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
                   The default search path is
                   <filename>/usr/local</filename>.</para>
                </listitem>
-
-               <listitem>
-                  <para><option>--enable-audioworks
-                  --with-audioworks=&lt;AUDIOWORKS_PATH&gt;</option>: Enable
-                  the use of AudioWorks and tell the build where AudioWorks is
-                  installed. The default search path is
-                  <filename>/usr</filename>.</para>
-               </listitem>
             </itemizedlist>
-
-            <note>
-               <para>AudioWorks and OpenAL cannot be compiled together. They
-               depend on mutually exclusive VPR threading subsystems. Warnings
-               will be printed by the Sonix configure script indicating this
-               fact. OpenAL and Audiere can be compiled together,
-               however.</para>
-            </note>
          </section>
 
          <section id="tweek.build.section">
