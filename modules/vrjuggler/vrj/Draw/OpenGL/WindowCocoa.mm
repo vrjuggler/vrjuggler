@@ -104,8 +104,8 @@
    {
       // Inform our input area of the change in our bounds.
       NSRect b = [[aNotification object] frame];
-      mWindow->updateOriginSize(b.origin.x, b.origin.y, b.size.width,
-                                b.size.height);
+      mWindow->updateBounds(b.origin.x, b.origin.y, b.size.width,
+                            b.size.height);
    }
 @end
 
@@ -403,6 +403,14 @@ void WindowCocoa::acquireRenderLock()
 void WindowCocoa::releaseRenderLock()
 {
    [mRenderLock unlock];
+}
+
+void WindowCocoa::updateBounds(const float x, const float y, const float width,
+                               const float height)
+{
+   resize(width, height);                       // Input area update
+   updateOriginSize(x, y, width, height);       // Graphics window update
+   setDirtyViewport(true);                      // OpenGL viewport state
 }
 
 void WindowCocoa::setWindowOpen(const bool isOpen)

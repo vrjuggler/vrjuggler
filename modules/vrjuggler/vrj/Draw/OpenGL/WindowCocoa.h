@@ -87,6 +87,17 @@ public:
    }
 
    /**
+    * Updates the bounds of this window to be the given values.
+    *
+    * @see gadget::InputAreaCocoa::resize()
+    * @see vrj::opengl::Window::updateOriginSize()
+    *
+    * @since 2.3.16
+    */
+   void updateBounds(const float x, const float y, const float width,
+                     const float height);
+
+   /**
     * Informs this object that the NSWindow object that we created previously
     * has been closed by an external entity and hence deallocated. By invoking
     * this method with the \p isOpen parameter set to false, the caller is
