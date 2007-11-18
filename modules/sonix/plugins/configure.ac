@@ -378,7 +378,6 @@ AC_CONFIG_FILES([
    make.defs.mk
    plugin.defs.mk
    Audiere/Makefile
-   AudioWorks/Makefile
    OpenAL/Makefile
    Subsynth/Makefile
    ])

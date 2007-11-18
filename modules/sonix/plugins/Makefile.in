@@ -120,7 +120,6 @@ BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR=	Audiere		\
-	AudioWorks	\
 	OpenAL		\
 	Subsynth
 
