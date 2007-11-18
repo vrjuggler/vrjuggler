@@ -141,7 +141,6 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
 
 void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
 {
-   NSLog(@"mMainView = %@\n", mMainView);
    const NSPoint view_loc = [event locationInWindow];
    const NSPoint root_loc = [NSEvent mouseLocation];
    gadget::EventPtr move_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
