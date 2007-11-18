@@ -219,7 +219,7 @@ void InputWindowXWin::controlLoop()
          << "[gadget::InputWindowXWin::controlLoop()] "
          << "Waiting for (thread::self() != NULL)\n" << vprDEBUG_FLUSH;
    }
-   mThread = (vpr::Thread*) vpr::Thread::self();
+   mThread = vpr::Thread::self();
 
    // Open the local X window
    openLocalWindow();
@@ -255,7 +255,7 @@ void InputWindowXWin::controlLoop()
 
    // Exit, cleanup code
    XDestroyWindow(mXDisplay, mXWindow);
-   XCloseDisplay((::Display*) mXDisplay);
+   XCloseDisplay(mXDisplay);
 }
 
 /*****************************************************************/
