@@ -795,11 +795,12 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
 {
    int state = getModifierMask() | getButtonMask();
 
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
-                                                       GET_X_LPARAM(msg.lParam),
-                                                       GET_Y_LPARAM(msg.lParam),
-                                                       msg.pt.x, msg.pt.y,
-                                                       state, msg.time));
+   gadget::EventPtr mouse_event(
+      new gadget::MouseEvent(type, button, GET_X_LPARAM(msg.lParam),
+                             GET_Y_LPARAM(msg.lParam), msg.pt.x,
+                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y,
+                             state, msg.time)
+   );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
@@ -807,12 +808,13 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
 {
    int state = getModifierMask() | getButtonMask();
 
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
-                                                       gadget::NO_MBUTTON,
-                                                       GET_X_LPARAM(msg.lParam),
-                                                       GET_Y_LPARAM(msg.lParam),
-                                                       msg.pt.x, msg.pt.y,
-                                                       state, msg.time));
+   gadget::EventPtr mouse_event(
+      new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
+                             GET_X_LPARAM(msg.lParam),
+                             mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
+                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y,
+                             state, msg.time)
+   );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 

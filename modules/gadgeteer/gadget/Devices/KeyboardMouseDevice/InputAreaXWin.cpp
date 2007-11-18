@@ -502,13 +502,13 @@ void InputAreaXWin::addKeyEvent(const gadget::Keys key,
 
 void InputAreaXWin::addMouseMoveEvent(const XMotionEvent& event)
 {
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
-                                                       gadget::NO_MBUTTON,
-                                                       event.x, event.y,
-                                                       event.x_root,
-                                                       event.y_root,
-                                                       getMask(event.state),
-                                                       event.time));
+   const XWindowAttributes attrs = getDisplayAttributes();
+   gadget::EventPtr mouse_event(
+      new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
+                             event.x, mHeight - event.y, event.x_root,
+                             attrs.height - event.y_root,
+                             getMask(event.state), event.time)
+   );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
@@ -516,11 +516,12 @@ void InputAreaXWin::addMouseButtonEvent(const gadget::Keys button,
                                         const gadget::EventType type,
                                         const XButtonEvent& event)
 {
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button, event.x,
-                                                       event.y, event.x_root,
-                                                       event.y_root,
-                                                       getMask(event.state),
-                                                       event.time));
+   const XWindowAttributes attrs = getDisplayAttributes();
+   gadget::EventPtr mouse_event(
+      new gadget::MouseEvent(type, button, event.x, mHeight - event.y,
+                             event.x_root, attrs.height - event.y_root,
+                             getMask(event.state), event.time)
+   );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
