@@ -454,19 +454,15 @@ void InputWindowXWin::setHints(Window window, const std::string& windowName,
 Window InputWindowXWin::createWindow(Window parent,
                                      const unsigned int borderWidth)
 {
-   Window window;
-
    // need screen size so we can convert origin from lower-left
    const XWindowAttributes winattrs = getDisplayAttributes();
 
-   // create it
-   window = XCreateWindow(mXDisplay, parent, mX, winattrs.height - mY - mHeight,
-                          mWidth, mHeight, borderWidth, mVisual->depth,
-                          InputOutput, mVisual->visual,
-                          CWBackPixel | CWBorderPixel | CWColormap | CWEventMask,
-                          &mSWA);
-
-   return window;
+   // Create the window.
+   return XCreateWindow(mXDisplay, parent, mX, winattrs.height - mY - mHeight,
+                        mWidth, mHeight, borderWidth, mVisual->depth,
+                        InputOutput, mVisual->visual,
+                        CWBackPixel | CWBorderPixel | CWColormap | CWEventMask,
+                        &mSWA);
 }
 
 } // end namespace
