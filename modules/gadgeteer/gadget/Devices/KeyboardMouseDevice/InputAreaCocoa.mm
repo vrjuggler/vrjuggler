@@ -128,8 +128,7 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
                                          const gadget::EventType type,
                                          NSEvent* event)
 {
-   const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
-                                           fromView:nil];
+   const NSPoint view_loc = [event locationInWindow];
    const NSPoint root_loc = [NSEvent mouseLocation];
    gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
                                                        view_loc.x, view_loc.y,
@@ -142,8 +141,8 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
 
 void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
 {
-   const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
-                                           fromView:nil];
+   NSLog(@"mMainView = %@\n", mMainView);
+   const NSPoint view_loc = [event locationInWindow];
    const NSPoint root_loc = [NSEvent mouseLocation];
    gadget::EventPtr move_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
                                                       gadget::NO_MBUTTON,
@@ -209,12 +208,8 @@ void InputAreaCocoa::flagsChanged(NSEvent* event)
    mLastModifiers = cur_modifiers;
 }
 
-void InputAreaCocoa::updateOriginAndSize(const float x, const float y,
-                                         const float width,
-                                         const float height)
+void InputAreaCocoa::resize(const float width, const float height)
 {
-   mX      = x;
-   mY      = y;
    mWidth  = width;
    mHeight = height;
 }

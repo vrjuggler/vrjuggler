@@ -86,6 +86,18 @@ public:
    virtual void updateData();
 
    /**
+    * Updates the bounds of this window to be the given values.
+    *
+    * @post The origin and size of this window are set to the given values.
+    *
+    * @see gadget::InputAreaCocoa::resize()
+    *
+    * @since 1.3.15
+    */
+   void updateBounds(const float x, const float y, const float width,
+                     const float height);
+
+   /**
     * Informs this object that the NSWindow object that we created previously
     * has been closed by an external entity and hence deallocated. By invoking
     * this method with the \p isOpen parameter set to false, the caller is
@@ -115,6 +127,9 @@ private:
 
    unsigned int mScreen;
    bool mWindowOpen;    /**< Keeps track of NSWindow open/closed state */
+
+   float mX;            /**< Window origin X-coordinate */
+   float mY;            /**< Window origin Y-coordinate */
 };
 
 }

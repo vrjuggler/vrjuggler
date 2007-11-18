@@ -90,8 +90,8 @@
    {
       // Inform our input area of the change in our bounds.
       NSRect b = [[aNotification object] frame];
-      mWindow->updateOriginAndSize(b.origin.x, b.origin.y, b.size.width,
-                                   b.size.height);
+      mWindow->updateBounds(b.origin.x, b.origin.y, b.size.width,
+                            b.size.height);
    }
 
    /**
@@ -102,8 +102,8 @@
    {
       // Inform our input area of the change in our bounds.
       NSRect b = [[aNotification object] frame];
-      mWindow->updateOriginAndSize(b.origin.x, b.origin.y, b.size.width,
-                                   b.size.height);
+      mWindow->updateBounds(b.origin.x, b.origin.y, b.size.width,
+                            b.size.height);
    }
 @end
 
@@ -365,6 +365,14 @@ bool InputWindowCocoa::stopSampling()
 void InputWindowCocoa::updateData()
 {
    /* Do nothing. */ ;
+}
+
+void InputWindowCocoa::updateBounds(const float x, const float y,
+                                    const float width, const float height)
+{
+   mX = x;
+   mY = y;
+   resize(width, height);
 }
 
 void InputWindowCocoa::setWindowOpen(const bool isOpen)

@@ -165,8 +165,12 @@ public:
    void flagsChanged(NSEvent* event);
    //@}
 
-   void updateOriginAndSize(const float x, const float y, const float width,
-                            const float height);
+   /**
+    * Updates the size of this input area.
+    *
+    * @since 1.3.15
+    */
+   void resize(const float width, const float height);
 
 protected:
    /**
@@ -232,8 +236,6 @@ protected:
 
    /** @name Input Area Data */
    //@{
-   float mX;            /**< Input area origin X-coordinate */
-   float mY;            /**< Input area origin Y-coordinate */
    float mWidth;        /**< Input area width */
    float mHeight;       /**< Input area height */
 
