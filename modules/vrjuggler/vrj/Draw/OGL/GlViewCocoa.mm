@@ -132,9 +132,8 @@
       [self resetTrackingRect];
       [self clearTrackingRect];
 //      NSRect bounds = [self bounds];
-//      mVrjWindow->updateOriginSize(bounds.origin.x, bounds.origin.y,
-//                                   bounds.size.width, bounds.size.height);
-//      mVrjWindow->setDirtyViewport(true);
+//      mVrjWindow->updateBounds(bounds.origin.x, bounds.origin.y,
+//                               bounds.size.width, bounds.size.height);
    }
 */
    /** @name NSResponder overrides */
@@ -502,10 +501,9 @@
       [self resetTrackingRect];
 
       NSRect bounds = [self bounds];
-      mVrjWindow->updateOriginSize(bounds.origin.x, bounds.origin.y,
-                                   bounds.size.width, bounds.size.height);
+      mVrjWindow->updateBounds(bounds.origin.x, bounds.origin.y,
+                               bounds.size.width, bounds.size.height);
 //      mVrjWindow->releaseRenderLock();
-      mVrjWindow->setDirtyViewport(true);
    }
 
    /** @name Private Methods */

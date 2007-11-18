@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-18-2007 patrick     Cocoa OpenGL windows update their input area size
+                        correctly.
 Sep-19-2007 patrick     Added draw thread CPU affinity capabilities through the
                         new environment variable VJ_DRAW_THREAD_AFFINITY. This
                         is currently used only by the OpenGL Draw Manager.
