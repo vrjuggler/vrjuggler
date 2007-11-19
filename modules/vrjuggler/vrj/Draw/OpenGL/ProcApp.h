@@ -155,7 +155,7 @@ VJ_OGL_API(void) VRJSetIntraFrameMethod(vrj::opengl::ProcAppWrapper::callback_t 
 
 VJ_OGL_API(void) VRJSetPostFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJConfigure(int argc, char* argv[]);
+VJ_OGL_API(void) VRJConfigure(int& argc, char* argv[]);
 
 /** Start everything running */
 VJ_OGL_API(void) VRJProcRunSystem();

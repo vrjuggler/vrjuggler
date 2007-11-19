@@ -127,11 +127,11 @@ void VRJSetPostFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m)
    vrj::opengl::ProcAppWrapper::instance()->setPostFrameMethod(m);
 }
 
-void VRJConfigure(int argc, char* argv[])
+void VRJConfigure(int& argc, char* argv[])
 {
     // Allocate the kernel object and the application object
    vrj::Kernel* kernel = vrj::Kernel::instance();           // Get the kernel
-   
+
    // IF no args passed to the program
    //    Display usage information and exit
    if (argc <= 1)
@@ -143,6 +143,8 @@ void VRJConfigure(int argc, char* argv[])
       exit(1);
    }
 
+   kernel->init(argc, argv);
+   
    // Load any config files specified on the command line
    for( int i = 1; i < argc; ++i )
    {
