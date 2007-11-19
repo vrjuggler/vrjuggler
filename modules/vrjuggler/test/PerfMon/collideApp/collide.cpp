@@ -50,6 +50,8 @@ int main(int argc, char* argv[])
    }
 #endif
 
+   kernel->init(argc, argv);
+
    for (int i=1; i< argc; ++i)
    {
       kernel->loadConfigFile(argv[i]);

@@ -33,6 +33,8 @@ int main(int argc, char* argv[])
    vrj::Kernel* kernel     = vrj::Kernel::instance(); // Get the kernel
    NavGrabApp* application = new NavGrabApp(kernel); // Get app instance
 
+   kernel->init(argc, argv);
+
    // Load any config files specified on the command line
    for ( int i = 1; i < argc; ++i )
    {

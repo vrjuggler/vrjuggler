@@ -52,6 +52,8 @@ int main(int argc, char* argv[])
       exit(1);
    }
 
+   kernel->init(argc, argv);
+
    // Load any config files specified on the command line
    for( int i = 1; i < argc; ++i )
    {

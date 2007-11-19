@@ -38,6 +38,8 @@ int main(int argc, char* argv[])
 
    std::vector<std::string> model_files;
 
+   kernel->init(argc, argv);
+
    // Load any .jconf files specified on the command line.
    const std::string jconf_ext(".jconf");
    for ( int i = 1; i < argc; ++i )

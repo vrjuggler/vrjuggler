@@ -40,6 +40,8 @@ int main(int argc, char* argv[])
     }
 #endif
 
+    kernel->init(argc, argv);
+
     application->setModelFileName(std::string(argv[1]));
 
     // Load any config files specified on the command line

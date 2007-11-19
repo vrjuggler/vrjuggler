@@ -63,7 +63,9 @@ int main(int argc, char* argv[])
                 << "by VR Juggler config files." << std::endl;
       return 1;
    }
-   
+
+   kernel->init(argc, argv);
+
    std::string model_filename = argv[1];
    std::cout << "Will load: " << model_filename << std::endl;
 

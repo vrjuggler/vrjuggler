@@ -64,6 +64,8 @@ int main(int argc, char* argv[])
       return 2;
    }
 
+   kernel->init(argc, argv);
+
    // --- GET MODEL NAME --- //
    std::string model_filename = argv[1];
    std::cout << "Will load: " << model_filename << "\n" << std::flush;

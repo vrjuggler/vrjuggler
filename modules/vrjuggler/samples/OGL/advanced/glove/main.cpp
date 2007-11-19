@@ -40,6 +40,8 @@ int main(int argc, char* argv[])
    vrj::Kernel* kernel   = vrj::Kernel::instance(); // Get the kernel
    gloveApp* application = new gloveApp(kernel);    // Declare an instance of the app
 
+   kernel->init(argc, argv);
+
    // Load any config files specified on the command line
    for ( int i = 1; i < argc; ++i )
    {

@@ -70,6 +70,8 @@ int main(int argc, char* argv[])
       path = path + "/";
    }
 
+   kernel->init(argc, argv);
+
    std::cout << "Using path: " << argv[1] << std::endl << std::flush;
 
    application->setPath(path);

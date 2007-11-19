@@ -36,6 +36,8 @@ int main(int argc, char* argv[])
    // Load config information
    //kernel->loadConfigDefinitionFile(std::string("pfNavChunks.dsc"));
 
+   kernel->init(argc, argv);
+
    for ( int i = 1; i < argc; i++ )
    {
      kernel->loadConfigFile(argv[i]);
