@@ -224,11 +224,15 @@ gadget::Keys InputAreaCocoa::getButtonFromNum(const int buttonNum) const
       case 0:
          button = gadget::MBUTTON1;
          break;
+      // To be consistent with other windowing systems, we treat button 1 (the
+      // right button in AppKit's view) as button 3.
       case 1:
-         button = gadget::MBUTTON2;
-         break;
-      case 2:
          button = gadget::MBUTTON3;
+         break;
+      // We treat button 2 (the first "other" button for AppKit, which tends
+      // to be the middle button) as button 2.
+      case 2:
+         button = gadget::MBUTTON2;
          break;
       case 3:
          button = gadget::MBUTTON4;

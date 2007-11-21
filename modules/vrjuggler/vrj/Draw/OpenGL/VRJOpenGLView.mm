@@ -319,8 +319,7 @@
    {
       if ( mHandleInput )
       {
-         mVrjWindow->addMouseButtonEvent(gadget::MBUTTON1,
-                                         gadget::MouseButtonPressEvent,
+         mVrjWindow->addMouseButtonEvent(gadget::MouseButtonPressEvent,
                                          theEvent);
       }
       else
@@ -336,8 +335,7 @@
    {
       if ( mHandleInput )
       {
-         mVrjWindow->addMouseButtonEvent(gadget::MBUTTON1,
-                                         gadget::MouseButtonReleaseEvent,
+         mVrjWindow->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
                                          theEvent);
       }
       else
@@ -363,8 +361,7 @@
    {
       if ( mHandleInput )
       {
-         mVrjWindow->addMouseButtonEvent(gadget::MBUTTON2,
-                                         gadget::MouseButtonPressEvent,
+         mVrjWindow->addMouseButtonEvent(gadget::MouseButtonPressEvent,
                                          theEvent);
       }
       else
@@ -380,8 +377,7 @@
    {
       if ( mHandleInput )
       {
-         mVrjWindow->addMouseButtonEvent(gadget::MBUTTON2,
-                                         gadget::MouseButtonReleaseEvent,
+         mVrjWindow->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
                                          theEvent);
       }
       else

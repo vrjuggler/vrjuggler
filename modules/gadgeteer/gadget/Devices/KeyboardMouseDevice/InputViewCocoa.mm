@@ -168,8 +168,7 @@
     */
    -(void) mouseDown:(NSEvent*) theEvent
    {
-      mInputArea->addMouseButtonEvent(gadget::MBUTTON1,
-                                      gadget::MouseButtonPressEvent,
+      mInputArea->addMouseButtonEvent(gadget::MouseButtonPressEvent,
                                       theEvent);
    }
 
@@ -178,8 +177,7 @@
     */
    -(void) mouseUp:(NSEvent*) theEvent
    {
-      mInputArea->addMouseButtonEvent(gadget::MBUTTON1,
-                                      gadget::MouseButtonReleaseEvent,
+      mInputArea->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
                                       theEvent);
    }
 
@@ -196,8 +194,7 @@
     */
    -(void) rightMouseDown:(NSEvent*) theEvent
    {
-      mInputArea->addMouseButtonEvent(gadget::MBUTTON2,
-                                      gadget::MouseButtonPressEvent,
+      mInputArea->addMouseButtonEvent(gadget::MouseButtonPressEvent,
                                       theEvent);
    }
 
@@ -206,8 +203,7 @@
     */
    -(void) rightMouseUp:(NSEvent*) theEvent
    {
-      mInputArea->addMouseButtonEvent(gadget::MBUTTON2,
-                                      gadget::MouseButtonReleaseEvent,
+      mInputArea->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
                                       theEvent);
    }
 
