@@ -24,17 +24,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//----------------------------------------
-// Test Osg VR Juggler program
-//
-// main.cpp
-//----------------------------------------
-
 #include <cstdlib>
 #include <OsgNavGrab.h>
 
 // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
+
 
 int main(int argc, char* argv[])
 {
@@ -53,7 +48,7 @@ int main(int argc, char* argv[])
          << " modelname vrjconfigfile[0] vrjconfigfile[1] ... vrjconfigfile[n]\n"
          << std::endl << std::endl;
 
-      std::exit(1);
+      std::exit(EXIT_FAILURE);
    }
 
    kernel->init(argc, argv);
@@ -73,5 +68,5 @@ int main(int argc, char* argv[])
 
    delete application;
 
-   return 0;
+   return EXIT_SUCCESS;
 }

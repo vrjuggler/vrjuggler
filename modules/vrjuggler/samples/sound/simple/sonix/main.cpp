@@ -24,13 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//----------------------------------------
-// Test OpenGL VR Juggler program
-//
-// main.cpp
-//----------------------------------------
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <sonixApp.h>
 
       // --- Lib Stuff --- //
@@ -53,7 +48,7 @@ int main(int argc, char* argv[])
                 << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
                 << std::flush;
       std::cout << "\n\n" << std::flush;
-      exit(1);
+      std::exit(EXIT_FAILURE);
    }
 #endif
 
@@ -71,5 +66,5 @@ int main(int argc, char* argv[])
 
    delete application;
 
-   return 0;
+   return EXIT_SUCCESS;
 }

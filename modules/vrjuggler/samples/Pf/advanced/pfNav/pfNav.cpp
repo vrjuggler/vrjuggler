@@ -25,6 +25,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
+#include <cstdlib>
 #include <string>
 
 #include <gmtl/Vec.h>
@@ -32,6 +33,7 @@
  // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
 #include <simplePfNavApp.h>
+
 
 void usage(char** argv)
 {
@@ -61,7 +63,7 @@ int main(int argc, char* argv[])
       usage(argv);
       std::cout << "\n\n[ERROR!!!] you must supply a model database followed "
                 << "by VR Juggler config files." << std::endl;
-      return 1;
+      return EXIT_FAILURE;
    }
 
    kernel->init(argc, argv);
@@ -106,5 +108,5 @@ int main(int argc, char* argv[])
    // after this call to pfExit() will be executed.
    pfExit();
 
-   return 0;
+   return EXIT_SUCCESS;
 }

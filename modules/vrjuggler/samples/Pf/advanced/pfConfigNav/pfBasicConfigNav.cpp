@@ -24,9 +24,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <cstdlib>
+
  // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
 #include <pfBasicConfigNavApp.h>
+
 
 int main(int argc, char* argv[])
 {
@@ -40,7 +43,7 @@ int main(int argc, char* argv[])
 
    for ( int i = 1; i < argc; i++ )
    {
-     kernel->loadConfigFile(argv[i]);
+      kernel->loadConfigFile(argv[i]);
    }
 
    kernel->start();
@@ -54,5 +57,5 @@ int main(int argc, char* argv[])
    // after this call to pfExit() will be executed.
    pfExit();
 
-   return 0;
+   return EXIT_SUCCESS;
 }

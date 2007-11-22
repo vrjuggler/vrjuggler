@@ -24,6 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <cstdlib>
 #include <vrj/Kernel/Kernel.h>
 #include "NavGrabApp.h"
 
@@ -44,7 +45,9 @@ int main(int argc, char* argv[])
          application->initTesting();      // Initialize the testing
       }
       else
+      {
          kernel->loadConfigFile(argv[i]);
+      }
    }
 
    kernel->start();
@@ -59,5 +62,5 @@ int main(int argc, char* argv[])
 
    delete application;
 
-   return 0;
+   return EXIT_SUCCESS;
 }

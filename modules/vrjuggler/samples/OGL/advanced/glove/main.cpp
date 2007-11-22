@@ -24,11 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//----------------------------------------
-// Test OpenGL VR Juggler program
-//
-// main.cpp
-//----------------------------------------
+#include <cstdlib>
 #include <gloveApp.h>
 
       // --- Lib Stuff --- //
@@ -61,5 +57,5 @@ int main(int argc, char* argv[])
    // Destroy the application
    delete application;
 
-   return 0;
+   return EXIT_SUCCESS;
 }

@@ -24,11 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//----------------------------------------
-// Simple input sample application
-//
-// main.cpp
-//----------------------------------------
+#include <cstdlib>
 #include <simpleInput.h>
 
 // --- Lib Stuff --- //
@@ -50,7 +46,7 @@ int main(int argc, char* argv[])
    {
       std::cout << "\n\n";
       std::cout << "Usage: " << argv[0] << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]" << std::endl;
-      exit(1);
+      std::exit(EXIT_FAILURE);
    }
 #endif
 
@@ -74,5 +70,5 @@ int main(int argc, char* argv[])
    // Destroy the application
    delete application;
 
-   return 0;
+   return EXIT_SUCCESS;
 }

@@ -43,6 +43,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cstdlib>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
@@ -97,7 +98,7 @@ int main(int argc, char* argv[])
 #else
 #endif
 
-   return 0;
+   return EXIT_SUCCESS;
 }
 
 // --- Implementation methods ----- //

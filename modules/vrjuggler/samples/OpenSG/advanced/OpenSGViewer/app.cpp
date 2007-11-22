@@ -24,8 +24,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <cstdlib>
 #include <vrj/Kernel/Kernel.h>
 #include <OpenSGViewer.h>
+
 
 int main(int argc, char* argv[])
 {
@@ -36,7 +38,7 @@ int main(int argc, char* argv[])
     if ( argc <= 2 )
     {
       std::cout << "\n\nUsage: " << argv[0] << " modelname vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n" << std::flush;
-      exit(1);
+      std::exit(EXIT_FAILURE);
     }
 #endif
 
@@ -54,6 +56,6 @@ int main(int argc, char* argv[])
     kernel->setApplication(application);
     kernel->waitForKernelStop();
 
-    return 1;
+    return EXIT_SUCCESS;
 }
 

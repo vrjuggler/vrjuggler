@@ -24,11 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//----------------------------------------
-// Simple OpenGL sample application
-//
-// main.cpp
-//----------------------------------------
+#include <cstdlib>
 #include <simpleApp.h>
 
 // --- Lib Stuff --- //
@@ -50,7 +46,7 @@ int main(int argc, char* argv[])
    {
       std::cout << "\n\n";
       std::cout << "Usage: " << argv[0] << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]" << std::endl;
-      exit(1);
+      std::exit(EXIT_FAILURE);
    }
 #endif
 
@@ -73,5 +69,5 @@ int main(int argc, char* argv[])
 
    delete application;
 
-   return 0;
+   return EXIT_SUCCESS;
 }

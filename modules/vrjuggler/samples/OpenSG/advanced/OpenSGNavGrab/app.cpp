@@ -24,6 +24,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -67,5 +68,5 @@ int main(int argc, char* argv[])
 
    delete application;
 
-   return 0;
+   return EXIT_SUCCESS;
 }
