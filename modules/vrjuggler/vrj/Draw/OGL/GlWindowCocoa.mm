@@ -356,7 +356,7 @@ void GlWindowCocoa::configWindow(vrj::DisplayPtr displayWindow)
       mScreen = disp_sys_elt->getProperty<unsigned int>("pipes", screen_num);
 
       NSArray* screens = [NSScreen screens];
-      if ( mScreen >= [screens count] )
+      if ( mScreen < 0 || mScreen >= [screens count] )
       {
          mScreen = 0;
       }
