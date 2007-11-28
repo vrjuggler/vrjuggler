@@ -133,6 +133,7 @@ bool X_IST::startSampling()
       {
          mThread = new vpr::Thread(boost::bind(&X_IST::controlLoop, this));
          mActive = true;
+         started = true;
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
             << "[X-IST] X_IST is active" << std::endl << vprDEBUG_FLUSH;
       }
