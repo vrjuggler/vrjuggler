@@ -463,10 +463,18 @@ if test "$OS_TYPE" = "UNIX" ; then
         DYLIB_DEPS_VJ="$DYLIB_DEPS_VJ $osx_core_frameworks"
 
         if test "x$VRJ_USE_X11" = "xyes" ; then
+            # Deal with a bug in Mac OS X 10.5.0 and 10.5.1 (at lesat) when
+            # linking against the X11 libGL.dylib.
+            case $target_os in
+               darwin9*)
+                  gl_hack='-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib'
+                  ;;
+            esac
+
             CFLAGS="$CFLAGS $X_CFLAGS"
             CXXFLAGS="$CXXFLAGS $X_CFLAGS"
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_gl_frameworks"
-            DYLIB_PROF_DEPS_GL="$DYLIB_PROF_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_gl_frameworks"
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_gl_frameworks $gl_hack"
+            DYLIB_PROF_DEPS_GL="$DYLIB_PROF_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_gl_frameworks $gl_hack"
         else
             DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_gl_frameworks"
             DYLIB_PROF_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_gl_frameworks"
@@ -485,7 +493,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
             if test "x$VRJ_USE_X11" = "xyes" ; then
-                APP_EXTRA_LIBS_GL="-lGLU -lGL $osx_core_frameworks"
+                APP_EXTRA_LIBS_GL="-lGLU -lGL $osx_core_frameworks $gl_hack"
             else
                 APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $osx_core_frameworks"
             fi
