@@ -387,6 +387,11 @@ ifeq ($(ABI), Mach-O)
       CXXFLAGS+=	-arch i386 $(PLATFORM_SDK)
       LDOPTS+=		-arch i386 $(PLATFORM_SDK)
    endif
+   ifeq ($(ISA), x86_64)
+      CFLAGS+=		-arch x86_64 $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch x86_64 $(PLATFORM_SDK)
+      LDOPTS+=		-arch x86_64 $(PLATFORM_SDK)
+   endif
    ifeq ($(ISA), universal)
       CFLAGS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
 			$(PLATFORM_SDK)
