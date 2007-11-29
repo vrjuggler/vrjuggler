@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2006/12/31 16:55:00
-# Version:       1.41
+# Date modified: 2007/11/28 21:08:23
+# Version:       1.43
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.41 2006/12/31 16:55:00 patrickh Exp
+# common.defs.mk.in,v 1.43 2007/11/28 21:08:23 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
@@ -407,6 +407,48 @@ ifeq ($(ISA), mips4)
    CXXFLAGS+=	-mips4
    LDOPTS+=	-mips4
 endif
+
+# Using GCC.
+else
+
+ifeq ($(ABI), ELF)
+   ifeq ($(ISA), i386)
+      CFLAGS+=		-m32
+      CXXFLAGS+=	-m32
+      LDOPTS+=		-m32
+   endif
+   ifeq ($(ISA), x86_64)
+      CFLAGS+=		-m64
+      CXXFLAGS+=	-m64
+      LDOPTS+=		-m64
+   endif
+endif
+ifeq ($(ABI), Mach-O)
+   ifeq ($(ISA), powerpc)
+      CFLAGS+=		-arch ppc $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch ppc $(PLATFORM_SDK)
+      LDOPTS+=		-arch ppc $(PLATFORM_SDK)
+   endif
+   ifeq ($(ISA), i386)
+      CFLAGS+=		-arch i386 $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch i386 $(PLATFORM_SDK)
+      LDOPTS+=		-arch i386 $(PLATFORM_SDK)
+   endif
+   ifeq ($(ISA), x86_64)
+      CFLAGS+=		-arch x86_64 $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch x86_64 $(PLATFORM_SDK)
+      LDOPTS+=		-arch x86_64 $(PLATFORM_SDK)
+   endif
+   ifeq ($(ISA), universal)
+      CFLAGS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
+			$(PLATFORM_SDK)
+      CXXFLAGS+=	$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
+			$(PLATFORM_SDK)
+      LDOPTS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
+			$(PLATFORM_SDK)
+   endif
+endif
+
 endif
 
 @SET_MAKE@
