@@ -366,11 +366,6 @@ ifeq ($(ABI), ELF)
    endif
 endif
 ifeq ($(ABI), Mach-O)
-   ifeq ($(ISA), powerpc)
-      CFLAGS+=		-arch ppc $(PLATFORM_SDK)
-      CXXFLAGS+=	-arch ppc $(PLATFORM_SDK)
-      LDOPTS+=		-arch ppc $(PLATFORM_SDK)
-   endif
    ifeq ($(ISA), universal)
       CFLAGS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
 			$(PLATFORM_SDK)
@@ -378,11 +373,20 @@ ifeq ($(ABI), Mach-O)
 			$(PLATFORM_SDK)
       LDOPTS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
 			$(PLATFORM_SDK)
-   endif
    else
       CFLAGS+=		-arch $(ISA) $(PLATFORM_SDK)
       CXXFLAGS+=	-arch $(ISA) $(PLATFORM_SDK)
       LDOPTS+=		-arch $(ISA) $(PLATFORM_SDK)
+      ifeq ($(ISA), powerpc)
+         CFLAGS+=	-arch ppc $(PLATFORM_SDK)
+         CXXFLAGS+=	-arch ppc $(PLATFORM_SDK)
+         LDOPTS+=	-arch ppc $(PLATFORM_SDK)
+      else
+         CFLAGS+=	-arch $(ISA) $(PLATFORM_SDK)
+         CXXFLAGS+=	-arch $(ISA) $(PLATFORM_SDK)
+         LDOPTS+=	-arch $(ISA) $(PLATFORM_SDK)
+      endif
+   endif
 endif
 
 endif
