@@ -173,12 +173,12 @@ $(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJS) $(DYLIB_DEP_FILES)
 ifeq (@PLATFORM@, Darwin)
 ifeq ($(ISA), universal)
 	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
-            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+            ld -arch $$a -dynamic -r -d -bind_at_load -o		\
               $(subst .dylib,-$$a.lo,$@) $(OBJS) ;			\
          done
 	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
 else
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
+	ld -dynamic -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
 endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@) $(DYLIB_DEPS)
@@ -207,12 +207,12 @@ $(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJS) $(DYLIB_PROF_DEP_FILES)
 ifeq (@PLATFORM@, Darwin)
 ifeq ($(ISA), universal)
 	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
-            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+            ld -arch $$a -dynamic -r -d -bind_at_load -o		\
               $(subst .dylib,-$$a.lo,$@) $(OBJS) ;			\
          done
 	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
 else
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
+	ld -dynamic -r -d -bind_at_load -o $(subst .dylib,.lo,$@) $(OBJS)
 endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
           -Wl,-ldylib1.o $(LDOPTS) -o $@ $(subst .dylib,.lo,$@)		\

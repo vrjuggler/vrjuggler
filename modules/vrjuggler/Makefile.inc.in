@@ -209,12 +209,12 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEP_FILES_VJ)
 ifeq (@PLATFORM@, Darwin)
 ifeq ($(ISA), universal)
 	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
-            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+            ld -arch $$a -dynamic -r -d -bind_at_load -o		\
               $(subst .dylib,-$$a.lo,$@) $(OBJDIR)/*.$(OBJEXT) ;	\
          done
 	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
 else
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
+	ld -dynamic -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
@@ -250,12 +250,12 @@ $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_PROF_DEP_FILES_V
 ifeq (@PLATFORM@, Darwin)
 ifeq ($(ISA), universal)
 	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
-            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+            ld -arch $$a -dynamic -r -d -bind_at_load -o		\
               $(subst .dylib,-$$a.lo,$@) $(OBJDIR)/*.$(OBJEXT) ;	\
          done
 	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
 else
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
+	ld -dynamic -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
@@ -283,12 +283,12 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEP_FILES_GL)
 ifeq (@PLATFORM@, Darwin)
 ifeq ($(ISA), universal)
 	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
-            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+            ld -arch $$a -dynamic -r -d -bind_at_load -o		\
               $(subst .dylib,-$$a.lo,$@) $(OBJDIR)/*.$(OBJEXT) ;	\
          done
 	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
 else
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
+	ld -dynamic -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
@@ -316,12 +316,12 @@ $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT) $(DYLIB_PROF_DEP_FILES_G
 ifeq (@PLATFORM@, Darwin)
 ifeq ($(ISA), universal)
 	for a in $(UNIVERSAL_ARCH_LIST) ; do				\
-            ld -arch $$a -dynamic -m -r -d -bind_at_load -o		\
+            ld -arch $$a -dynamic -r -d -bind_at_load -o		\
               $(subst .dylib,-$$a.lo,$@) $(OBJDIR)/*.$(OBJEXT) ;	\
          done
 	lipo -create $(foreach arch,$(UNIVERSAL_ARCH_LIST),$(subst .dylib,-$(arch).lo,$@)) -output $(subst .dylib,.lo,$@)
 else
-	ld -dynamic -m -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
+	ld -dynamic -r -d -bind_at_load -o $(subst .dylib,.lo,$@)	\
           $(OBJDIR)/*.$(OBJEXT)
 endif
 	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
