@@ -382,16 +382,6 @@ ifeq ($(ABI), Mach-O)
       CXXFLAGS+=	-arch ppc $(PLATFORM_SDK)
       LDOPTS+=		-arch ppc $(PLATFORM_SDK)
    endif
-   ifeq ($(ISA), i386)
-      CFLAGS+=		-arch i386 $(PLATFORM_SDK)
-      CXXFLAGS+=	-arch i386 $(PLATFORM_SDK)
-      LDOPTS+=		-arch i386 $(PLATFORM_SDK)
-   endif
-   ifeq ($(ISA), x86_64)
-      CFLAGS+=		-arch x86_64 $(PLATFORM_SDK)
-      CXXFLAGS+=	-arch x86_64 $(PLATFORM_SDK)
-      LDOPTS+=		-arch x86_64 $(PLATFORM_SDK)
-   endif
    ifeq ($(ISA), universal)
       CFLAGS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
 			$(PLATFORM_SDK)
@@ -399,6 +389,10 @@ ifeq ($(ABI), Mach-O)
 			$(PLATFORM_SDK)
       LDOPTS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
 			$(PLATFORM_SDK)
+   else
+      CFLAGS+=		-arch $(ISA) $(PLATFORM_SDK)
+      CXXFLAGS+=	-arch $(ISA) $(PLATFORM_SDK)
+      LDOPTS+=		-arch $(ISA) $(PLATFORM_SDK)
    endif
 endif
 
