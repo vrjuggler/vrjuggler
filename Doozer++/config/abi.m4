@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2006/12/31 16:54:59
-dnl Version:       1.24
+dnl Date modified: 2007/11/28 21:08:23
+dnl Version:       1.26
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -60,6 +60,7 @@ dnl                      ELF_ALPHA (ELF/alpha)
 dnl                      HP (pa-risc)
 dnl                      DARWIN_PPC (Mach-O/PowerPC)
 dnl                      DARWIN_i386 (Mach-O/i386)
+dnl                      DARWIN_x86_64 (Mach-O/x86_64)
 dnl                      DARWIN_UNIVERSAL (Mach-O/universal)
 dnl
 dnl Variables defined:
@@ -79,7 +80,7 @@ dnl                           by universal binaries.
 dnl     DPP_ABI_TYPE        - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.24 2006/12/31 16:54:59 patrickh Exp
+dnl abi.m4,v 1.26 2007/11/28 21:08:23 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -152,10 +153,11 @@ AC_DEFUN([DPP_ABI_SETUP],
    dnl     HP64             - On HP-UX, use 64-bit PA-RISC binaries
    dnl     DARWIN_PPC       - On Darwin, use PowerPC binaries
    dnl     DARWIN_i386      - On Darwin, use i386 binaries
+   dnl     DARWIN_x86_64    - On Darwin, use AMD64/EM64T binaries
    dnl     DARWIN_UNIVERSAL - On Darwin, use Mach-O universal binaries
    dnl -----------------------------------------------------------------------
    AC_ARG_WITH(abi,
-               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|ELF_x86_64|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|DARWIN_PPC|DARWIN_i386|DARWIN_UNIVERSAL>
+               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|ELF_x86_64|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|DARWIN_PPC|DARWIN_i386|DARWIN_x86_64|DARWIN_UNIVERSAL>
                           Define the Application Binary
                           Interface to use],
                DPP_ABI_TYPE="$withval")
@@ -218,6 +220,9 @@ AC_DEFUN([DPP_ABI_SETUP],
          ;;
       xDARWIN_i386)
          DPP_ABI_CFG([Mach-O], [i386], , [-arch i386], [$osx_sdk_flags])
+         ;;
+      xDARWIN_x86_64)
+         DPP_ABI_CFG([Mach-O], [x86_64], , [-arch x86_64], [$osx_sdk_flags])
          ;;
       xDARWIN_UNIVERSAL)
          : ${UNIVERSAL_ARCH_LIST='ppc i386'}

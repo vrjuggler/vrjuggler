@@ -1,5 +1,7 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2007-05-30 patrickh     Added support for x86_64 binaries on Mac OS X.
+                        NEW VERSION: 2.1.12
 2007-05-30 patrickh     Added support for DragonFly (a fork of FreeBSD 4).
                         NEW VERSION: 2.1.11
 2006-12-19 patrickh     Fixed a serious bug in DPP_ABI_SETUP.

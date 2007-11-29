@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          general.m4,v
-dnl Date modified: 2007/05/30 22:37:11
-dnl Version:       1.95
+dnl Date modified: 2007/11/28 21:06:04
+dnl Version:       1.96
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -46,10 +46,10 @@ dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.95 2007/05/30 22:37:11 patrickh Exp
+dnl general.m4,v 1.96 2007/11/28 21:06:04 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 2.1.11)
+define(DPP_DPPVERSION, 2.1.12)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.
