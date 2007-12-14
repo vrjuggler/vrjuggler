@@ -7480,7 +7480,7 @@ public:
                <orderedlist>
                   <listitem>
                      <para><methodsynopsis>
-                           <type>vpr::ReturnStatus</type>
+                           <type>void</type>
 
                            <methodname>writeObject</methodname>
 
@@ -7494,7 +7494,7 @@ public:
 
                   <listitem>
                      <para><methodsynopsis>
-                           <type>vpr::ReturnStatus</type>
+                           <type>void</type>
 
                            <methodname>readObject</methodname>
 
@@ -7617,8 +7617,8 @@ public:
 class MyType : public vpr::SerializableObject
 {
 public:
-   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   void writeObject(vpr::ObjectWriter* writer);
+   void readObject(vpr::ObjectReader* reader);
    // Other public methods ...
 
 private:
@@ -7631,20 +7631,18 @@ private:
                <example id="example.implement.serialization">
                   <title>Serializing an Application-Specific Type</title>
 
-                  <programlisting>vpr::ReturnStatus MyType::writeObject(vpr::ObjectWriter* writer)
+                  <programlisting>void MyType::writeObject(vpr::ObjectWriter* writer)
 {
    writer-&gt;writeUint32(mIntData);
    writer-&gt;writeInt8(mByteData);
    writer-&gt;writeFloat(mFloatData);
-   return vpr::ReturnStatus();
 }
 
-vpr::ReturnStatus MyType::readObject(vpr::ObjectReader* reader)
+void MyType::readObject(vpr::ObjectReader* reader)
 {
    mIntData   = reader-&gt;readUint32();
    mByteData  = reader-&gt;readInt8();
    mFloatData = reader-&gt;readFloat();
-   return vpr::ReturnStatus();
 }</programlisting>
                </example>
 
@@ -7685,25 +7683,21 @@ private:
                   <programlisting>#include &lt;vpr/IO/SerializableObject.h&gt;
 
 template&lt;&gt;
-vpr::ReturnStatus
-vpr::SerializableObjectMixin&lt;SomeType&gt;::
+void vpr::SerializableObjectMixin&lt;SomeType&gt;::
    writeObject(vpr::ObjectWriter* writer)
 {
    writer-&gt;writeUint32(getIntData());
    writer-&gt;writeInt8(getByteData());
    write-&gt;writeFloat(getFloatData());
-   return vpr::ReturnStatus();
 }
 
 template&lt;&gt;
-vpr::ReturnStatus
-vpr::SerializableObjectMixin&lt;SomeType&gt;::
+void vpr::SerializableObjectMixin&lt;SomeType&gt;::
    readObject(vpr::ObjectReader* reader)
 {
    setIntData(reader-&gt;readUint32());
    setByteData(reader-&gt;readInt8());
    setFloatData(reader-&gt;readFloat());
-   return vpr::ReturnStatus();
 }</programlisting>
                </example>
 
