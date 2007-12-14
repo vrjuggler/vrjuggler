@@ -7707,7 +7707,6 @@ readObject(vpr::ObjectReader* reader)
    setIntData(reader-&gt;readUint32());
    setByteData(reader-&gt;readInt8());
    setFloatData(reader-&gt;readFloat());
-   return vpr::ReturnStatus();
 }</programlisting>
                </example>
 
