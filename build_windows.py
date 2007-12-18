@@ -279,6 +279,9 @@ def getDefaultVars(clVerMajor, clVerMinor):
    optional.append(BuildOption('FTD2XX_ROOT',
                                'FTD2XX SDK installation directory', '',
                                required = False))
+   optional.append(BuildOption('MOTION_NODE_SDK_ROOT',
+                               'MotionNode SDK installation directory', '',
+                               required = False))
    optional.append(BuildOption('DOOZER_ROOT',
                                'Doozer installation directory', '',
                                required = False))
@@ -1556,8 +1559,8 @@ def installGadgeteerDrivers(prefix, buildDir):
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'drivers')
    srcroot = os.path.join(buildDir, 'Gadgeteer')
 
-   drivers = ['DTrack', 'DataGlove', 'X-IST', 'DirectXJoystick', 'Ether24',
-              'Fastrak', 'Flock', 'IBox', 'IntersenseAPI', 'IS900',
+   drivers = ['DTrack', 'DataGlove', 'DirectXJoystick', 'Ether24', 'Fastrak',
+              'Flock', 'IBox', 'IntersenseAPI', 'IS900', 'MotionNode',
               'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove',
               'SerialEncoder', 'SpaceBall', 'TrackdAPI', 'VRPN', 'Wanda',
               'X-IST']
