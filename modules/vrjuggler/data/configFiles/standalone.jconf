@@ -673,6 +673,51 @@
       <keyboard_mouse_device name="Keyboard/Mouse Device" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
       </keyboard_mouse_device>
+      <simulated_analog_device name="Sim Analog 0" version="2">
+         <keyboard_mouse_proxy>Keyboard Proxy</keyboard_mouse_proxy>
+         <increment_keypress>
+            <key_modifier_pair name="Increment Keypress 0" version="1">
+               <modifier_key>KEY_NONE</modifier_key>
+               <key>KEY_Q</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <increment_keypress>
+            <key_modifier_pair name="Increment Keypress 1" version="1">
+               <modifier_key>KEY_NONE</modifier_key>
+               <key>KEY_W</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="Decrement Keypress 0" version="1">
+               <modifier_key>KEY_NONE</modifier_key>
+               <key>KEY_A</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="Decrement Keypress 1" version="1">
+               <modifier_key>KEY_NONE</modifier_key>
+               <key>KEY_S</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <delta>1.0</delta>
+         <min>0.0</min>
+         <max>1023.0</max>
+         <initial_value>512.0</initial_value>
+      </simulated_analog_device>
+      <analog_proxy name="AnalogProxy0" version="1">
+         <device>Sim Analog 0</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <analog_proxy name="AnalogProxy1" version="1">
+         <device>Sim Analog 0</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <alias name="VJAnalog0" version="1">
+         <proxy>AnalogProxy0</proxy>
+      </alias>
+      <alias name="VJAnalog1" version="1">
+         <proxy>AnalogProxy1</proxy>
+      </alias>
    </elements>
 </configuration>
 
