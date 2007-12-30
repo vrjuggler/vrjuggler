@@ -205,10 +205,7 @@ void DirectXJoystick::updateData()
       for ( unsigned int i = 0; i < mCurAxes.size(); ++i )
       {
          mCurAxes[i].setTime();
-
-         float norm_value;
-         normalizeMinToMax(mInputDrv.getAxisValue(i), norm_value);
-         mCurAxes[i].setAnalog(norm_value);
+         mCurAxes[i].setAnalog(mInputDrv.getAxisValue(i));
 
          // Check for axis buttons. If we have a mapping for axis #i, then we
          // map the value of the analog axis to two buttons (high and low). If

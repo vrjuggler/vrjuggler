@@ -247,9 +247,7 @@ void LinuxJoydev::updateData()
          vprASSERT(axis_number < mCurAxes.size() && "Axis out of range");
          vprASSERT(axis_number < mCurAxesRanges.size() && "Axis out of range");
 
-         float norm_value(0.0f);
-         normalizeMinToMax(cur_event.value, norm_value);
-         mCurAxes[axis_number] = norm_value;
+         mCurAxes[axis_number] = cur_event.value;
          mCurAxes[axis_number].setTime();
 
          // Check for axis buttons. If we have a mapping for axis_number,

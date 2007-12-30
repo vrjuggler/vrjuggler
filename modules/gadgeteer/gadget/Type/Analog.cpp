@@ -27,11 +27,15 @@
 #include <gadget/gadgetConfig.h>
 
 #include <boost/concept_check.hpp>
+
+#include <gmtl/Math.h>
+
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Debug.h>
-#include <gadget/Type/Analog.h>
+
 #include <gadget/Util/DeviceSerializationTokens.h>
+#include <gadget/Type/Analog.h>
 
 
 namespace gadget
@@ -228,42 +232,33 @@ const Analog::SampleBuffer_t::buffer_t& Analog::getAnalogDataBuffer()
 // Given a value that will range from [min() <= n <= max()].
 // This returns a value that is normalized to [0,1]
 // if n < mMin or n > mMax, then result = mMin or mMax respectively.
-void Analog::normalizeMinToMax(const float& plainJaneValue,
-                               float& normedFromMinToMax)
+float Analog::normalize(const float rawData) const
 {
-   float value = plainJaneValue;
+   float value(rawData);
 
-   // first clamp the value so that min<=value<=max
-   if ( value < mMin ) value = mMin;
-   if ( value > mMax ) value = mMax;
+   // First, clamp the value so that min <= value <= max.
+   const float min_value(getMin());
+   const float max_value(getMax());
+   gmtl::Math::clamp(value, min_value, max_value);
 
-   // slide everything to 0.0 (subtract all by mMin)
-   // Then divide by max to get normalized value
-   float tmax( mMax - mMin),
-         tvalue(value - mMin);
+   // Slide everything to 0.0 (subtract all by min_value), and then divide
+   // by max to get normalized value.
+   const float tmax(max_value - min_value);
+   const float tvalue(value - min_value);
 
-   // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
-   normedFromMinToMax = tvalue / tmax;
+   // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value
+   // will be value/tmax
+   return tvalue / tmax;
 }
 
-float Analog::getMin() const
+void Analog::setMin(const float minValue)
 {
-   return mMin;
+   mMin = minValue;
 }
 
-float Analog::getMax() const
+void Analog::setMax(const float maxValue)
 {
-   return mMax;
-}
-
-void Analog::setMin(float mIn)
-{
-   mMin = mIn;
-}
-
-void Analog::setMax(float mAx)
-{
-   mMax = mAx;
+   mMax = maxValue;
 }
 
 } // End of gadget namespace

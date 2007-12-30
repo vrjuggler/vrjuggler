@@ -329,14 +329,12 @@ bool Intersense::sample()
 
       if ( stations[i].useAnalog )
       {
-         float f;
          for ( int j = 0, k = min;
                j < MAX_ANALOG_CHANNELS && k < IS_ANALOG_NUM && k < num;
                ++j, ++k )
          {
-            Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
-            //mInput[progress].analog[k] = f;
-            cur_sample.analog[k] = f;
+            //mInput[progress].analog[k] = mTracker.analogData(stationIndex, j);
+            cur_sample.analog[k] = mTracker.analogData(stationIndex, j);
          }
       }
 

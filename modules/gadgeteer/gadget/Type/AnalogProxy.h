@@ -66,17 +66,39 @@ public:
 
    virtual ~AnalogProxy();
 
-   /** Updates the cached data copy from the device. */
+   /**
+    * Updates the cached data copy from the device and the normalized form of
+    * that data.
+    *
+    * @post \c mRawData holds the current raw data sample from the proxied
+    *       analog device. \c mData holds the current normalized data sample
+    *       from the proxied analog device.
+    */
    virtual void updateData();
 
    /** Returns the time of last update. */
    virtual vpr::Interval getTimeStamp() const;
 
    /**
-    * Gets the current analog data value.
-    * @return The analog data from the device.
+    * Gets the current normalized analog data value. This value will be in
+    * the range [0.0,1.0].
+    *
+    * @return The normalized analog data from the device.
     */
    float getData() const
+   {
+      return isStupefied() ? 0.0f : mData;
+   }
+
+   /**
+    * Gets the current raw analog data value. This is the value read direcctly
+    * from the device without perfomring any normalization.
+    *
+    * @return The raw analog data from the device.
+    *
+    * @since 1.3.18
+    */
+   float getRawData() const
    {
       const float analogDefault(0.0f);
       if(isStupefied())
@@ -85,7 +107,7 @@ public:
       }
       else
       {
-         return mData.getAnalog();
+         return mRawData.getAnalog();
       }
    }
 
@@ -117,7 +139,8 @@ public:
 
 private:
    int         mUnitNum;
-   AnalogData  mData;
+   AnalogData  mRawData;
+   float       mData;
 };
 
 } // End of gadget namespace

@@ -130,11 +130,7 @@ void TrackdController::updateData()
 
    for (int j=0;j<mTrackdController->numValuators();j++)
    {
-       // TrackdController doesn't have a sample, so we do
-       // normalization here...
-       float f;
-       this->normalizeMinToMax (mTrackdController->getValuator(j), f);
-       mCurValuators[j] = f;
+       mCurValuators[j] = mTrackdController->getValuator(j);
        mCurValuators[j].setTime();
    }
 

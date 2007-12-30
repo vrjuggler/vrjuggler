@@ -413,14 +413,12 @@ void DTrack::resize_curDigital(int n)
 void DTrack::resize_curAnalog(int n)
 {
 	int nsize = (int )curAnalog.size();
-	float fn;
 
 	if(n > nsize){
 		curAnalog.resize(n);
 
 		for(int i=nsize; i<n; i++){  // set default for new elements
-			this->normalizeMinToMax(0, fn);
-			curAnalog[i] = fn;
+			curAnalog[i] = 0.0f;
 			curAnalog[i].setTime();
 		}
 	}

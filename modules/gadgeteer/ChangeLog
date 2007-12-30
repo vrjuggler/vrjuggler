@@ -1,5 +1,13 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-30-2007 patrick     Moved analog data normalization to gadget::AnalogProxy
+                        so that analog device drivers need not perform any
+                        normalization of data read from the hardware. The raw,
+                        unormalized analog data can now be queried using
+                        gadget::AnalogProxy::getRawData(). The data returned by
+                        gadget::Analog::getAnalogDataBuffer() is no longer
+                        normalized.
+                        NEW VERSION: 1.3.18
 Dec-30-2007 patrick     Improved const correctness for most input-related
                         classes. This should not break any existing code, but
                         some code could reduce data copying by using const

@@ -202,17 +202,10 @@ bool IBox::sample()
       mButton[2] = mIBox->getButtonData(2);
       mButton[3] = mIBox->getButtonData(3);
 
-      // we really need to do normalization here instead of in getData.
-      // need this so we return consistent AnalogData. -cj
-      float f;
-      this->normalizeMinToMax( mIBox->getAnalogData(0), f );
-      mAnalog[0] = f;
-      this->normalizeMinToMax( mIBox->getAnalogData(1), f );
-      mAnalog[1] = f;
-      this->normalizeMinToMax( mIBox->getAnalogData(2), f );
-      mAnalog[2] = f;
-      this->normalizeMinToMax( mIBox->getAnalogData(3), f );
-      mAnalog[3] = f;
+      mAnalog[0] = mIBox->getAnalogData(0);
+      mAnalog[1] = mIBox->getAnalogData(1);
+      mAnalog[2] = mIBox->getAnalogData(2);
+      mAnalog[3] = mIBox->getAnalogData(3);
 
       mButton[0].setTime();
       mButton[1].setTime( mButton[0].getTime() );
