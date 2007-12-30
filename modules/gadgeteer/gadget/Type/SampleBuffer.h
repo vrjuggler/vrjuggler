@@ -24,16 +24,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _SAMPLE_BUFFER_H_
-#define _SAMPLE_BUFFER_H_
-
+#ifndef _GADGET_SAMPLE_BUFFER_H_
+#define _GADGET_SAMPLE_BUFFER_H_
 
 #include <gadget/gadgetConfig.h>
+
+#include <vector>
+#include <boost/noncopyable.hpp>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Sync/Mutex.h>
-#include <vector>
+
 
 namespace gadget
 {
@@ -59,7 +61,7 @@ namespace gadget
  *                        gets this large we will start throwing away old data.
  */
 template <class DATA_TYPE, unsigned MAX_BUFFER_SIZE=5000>
-class SampleBuffer
+class SampleBuffer : private boost::noncopyable
 {
 public:
    typedef std::vector< std::vector< DATA_TYPE > > buffer_t;
@@ -126,10 +128,6 @@ public:
    }
 
 protected:
-   // vpr::Mutex is not copyable, so neither are we.
-   SampleBuffer(const SampleBuffer& b) {;}
-   void operator=(const SampleBuffer& b) {;}
-
    buffer_t   mStableBuffer;
    buffer_t   mReadyBuffer;
 
