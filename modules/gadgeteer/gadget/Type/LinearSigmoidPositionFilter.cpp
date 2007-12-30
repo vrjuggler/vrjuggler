@@ -58,7 +58,8 @@ namespace gadget
 // If the scale factor is 0.0 or 1.0, then just return the matrix directly
 // Else, perform a quaternion slerp on the rotation and linear calculation
 // on position and return that matrix.
-gmtl::Matrix44f LinearSigmoidPositionFilter::getPos(const gmtl::Matrix44f newPos)
+const gmtl::Matrix44f LinearSigmoidPositionFilter::
+getPos(const gmtl::Matrix44f newPos) const
 {
    // If value is the same, then return immediately
    if(newPos == mLastReturnedPos)
@@ -134,7 +135,7 @@ gmtl::Matrix44f LinearSigmoidPositionFilter::getPos(const gmtl::Matrix44f newPos
    }
 }
 
-float LinearSigmoidPositionFilter::getScaleFactor(const float distance)
+float LinearSigmoidPositionFilter::getScaleFactor(const float distance) const
 {
    if(distance < mMinDist)
    {

@@ -82,7 +82,7 @@ public:
       return (isStupefied() ? 0 : mData.getDigital());
    }
 
-   CommandData* getCommandData()
+   const CommandData* getCommandData() const
    {
       return &mData;
    }
@@ -90,7 +90,7 @@ public:
    /**
     * Returns a pointer to the gadget::Command object that we are proxying.
     */
-   CommandPtr getCommandPtr()
+   const CommandPtr getCommandPtr() const
    {
       // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
       return (isStupefied() ? CommandPtr() : mTypedDevice);

@@ -69,7 +69,8 @@ public:
 
    virtual ~GloveProxy();
 
-   gmtl::Vec3f getTipVector(GloveData::GloveComponent component)
+   const gmtl::Vec3f getTipVector(const GloveData::GloveComponent component) 
+      const
    {
       if(isStupefied())
       {
@@ -81,7 +82,8 @@ public:
       }
    }
 
-   gmtl::Matrix44f getTipTransform( GloveData::GloveComponent component)
+   const gmtl::Matrix44f
+   getTipTransform(const GloveData::GloveComponent component) const
    {
       if(isStupefied())
       {
@@ -93,8 +95,10 @@ public:
       }
    }
   
-   gmtl::Matrix44f getJointTransform(GloveData::GloveComponent component,
-                                     GloveData::GloveJoint joint)
+   const gmtl::Matrix44f
+   getJointTransform(const GloveData::GloveComponent component,
+                     const GloveData::GloveJoint joint)
+      const
    {
       if(isStupefied())
       {
@@ -106,7 +110,7 @@ public:
       }
    }
 
-   GloveData getData()
+   const GloveData getData() const
    {
       if(isStupefied())
       {
@@ -122,7 +126,7 @@ public:
    vpr::Interval getTimeStamp() const;
 
    /** Returns a pointer to the device held by this proxy. */
-   GlovePtr getGlovePtr()
+   const GlovePtr getGlovePtr() const
    {
       if(isStupefied())
       {
@@ -135,12 +139,12 @@ public:
    }
 
    /** Returns the subUnit number that this proxy points to. */
-   int getUnit()
+   int getUnit() const
    {
       return mUnitNum;
    }
 
-   bool isVisible()
+   bool isVisible() const
    {
       return mVisible;
    }

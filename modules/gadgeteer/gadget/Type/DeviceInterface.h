@@ -75,7 +75,7 @@ public:
    virtual void refresh();
 
    /** Returns the name of the proxy. */
-   std::string getProxyName() const
+   const std::string& getProxyName() const
    {
       return mProxyName;
    }
@@ -160,7 +160,7 @@ public:
     *
     * @see init()
     */
-   boost::shared_ptr<PROXY_TYPE> operator->()
+   const boost::shared_ptr<PROXY_TYPE> operator->() const
    {
       return mTypeSpecificProxy;
    }
@@ -179,7 +179,7 @@ public:
    //@}
 
    /** Returns the underlying proxy to which we are connected. */
-   boost::shared_ptr<PROXY_TYPE> getProxy()
+   const boost::shared_ptr<PROXY_TYPE> getProxy() const
    {
       return mTypeSpecificProxy;
    }

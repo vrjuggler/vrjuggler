@@ -106,13 +106,24 @@ public:
    }
 
    void lock()
-   {  mLock.acquire(); }
+   {
+      mLock.acquire();
+   }
 
    void unlock()
-   {  mLock.release(); }
+   {
+      mLock.release();
+   }
 
    buffer_t& stableBuffer()
-   { return mStableBuffer; }
+   {
+      return mStableBuffer;
+   }
+
+   const buffer_t& stableBuffer() const
+   {
+      return mStableBuffer;
+   }
 
 protected:
    // vpr::Mutex is not copyable, so neither are we.

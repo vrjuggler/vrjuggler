@@ -45,9 +45,10 @@ StringPtr String::create()
 String::~String()
 {;}
 
-const StringData String::getStringData(int devNum)
+const StringData& String::getStringData(const int devNum) const
 {
-   SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
+   const SampleBuffer_t::buffer_t& stable_buffer =
+      mStringSamples.stableBuffer();
 
    if ( (!stable_buffer.empty()) &&
         (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range

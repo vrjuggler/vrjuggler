@@ -71,19 +71,19 @@ public:  // **** GET GESTURES **** //
     * Retuns the id of the named gesture.
     * @return -1 if the gesture name not found.
     */
-   virtual int getGestureIndex(std::string name) = 0;
+   virtual int getGestureIndex(const std::string& name) const = 0;
 
    /**
     * Gets the string name of the gesture.
     * If id is -1, then it returns the string name of the current gesture.
     */
-   virtual std::string getGestureString(int id) = 0;
+   virtual std::string getGestureString(const int id) const = 0;
 
    /**
     * Gets the current gesture.
     * @return id of current gesture.
     */
-   virtual int getGesture() = 0;
+   virtual int getGesture() const = 0;
 
 
 public:  // **** TRAINING **** //

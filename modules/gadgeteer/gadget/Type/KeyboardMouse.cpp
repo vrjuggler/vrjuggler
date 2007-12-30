@@ -148,7 +148,7 @@ void KeyboardMouse::readObject(vpr::ObjectReader* reader)
    mSyncTime.set(temp_sync, vpr::Interval::Base);
 }
 
-bool KeyboardMouse::modifierOnly(gadget::Keys modKey)
+bool KeyboardMouse::modifierOnly(gadget::Keys modKey) const
 {
    switch (modKey)
    {
@@ -166,7 +166,7 @@ bool KeyboardMouse::modifierOnly(gadget::Keys modKey)
    }
 }
 
-std::string KeyboardMouse::getKeyName(gadget::Keys keyId)
+const std::string KeyboardMouse::getKeyName(const gadget::Keys keyId) const
 {
    switch(keyId)
    {
@@ -333,7 +333,7 @@ std::string KeyboardMouse::getKeyName(gadget::Keys keyId)
    return std::string("Unrecognized key");
 }
 
-KeyboardMouse::EventQueue KeyboardMouse::getEventQueue()
+const KeyboardMouse::EventQueue KeyboardMouse::getEventQueue()
 {
    vpr::Guard<vpr::Mutex> guard(mCurEventQueueLock);
    return mCurEventQueue;

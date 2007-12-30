@@ -70,7 +70,7 @@ public:
     * Gets the current gesture.
     * @return id of current gesture.
     */
-   int getGesture()
+   int getGesture() const
    {
       const int defaultGesture(-1);
 
@@ -89,7 +89,7 @@ public:
     * @param name The string name of a gesture.
     * @return -1 if not found
     */
-   int getGestureIndex(std::string name)
+   int getGestureIndex(const std::string& name) const
    {
       const int defaultGestureIndex(-1);
       if(isStupefied())
@@ -107,7 +107,7 @@ public:
     * @return Name of gesture with the given id (gestureId).
     * @note if gestureId = -1, returns name of current gesture.
     */
-   std::string getGestureString(int gestureId = -1)
+   const std::string getGestureString(const int gestureId = -1)
    {
       if(isStupefied())
       {
@@ -123,7 +123,7 @@ public:
    vpr::Interval getTimeStamp() const;
 
    /** Returns a pointer to the device held by this proxy. */
-   GesturePtr getGesturePtr()
+   const GesturePtr getGesturePtr() const
    {
       if(isStupefied())
       {

@@ -182,7 +182,7 @@ void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)
 
 // Simply query all device constructors registered looking
 // for one that knows how to load the device
-bool DeviceFactory::recognizeDevice(jccl::ConfigElementPtr element)
+bool DeviceFactory::recognizeDevice(jccl::ConfigElementPtr element) const
 {
    return ! (findConstructor(element) == -1);
 }
@@ -208,7 +208,7 @@ Input* DeviceFactory::loadDevice(jccl::ConfigElementPtr element)
    return new_dev;
 }
 
-int DeviceFactory::findConstructor(jccl::ConfigElementPtr element)
+int DeviceFactory::findConstructor(jccl::ConfigElementPtr element) const
 {
    const std::string element_type(element->getID());
 

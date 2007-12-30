@@ -106,7 +106,7 @@ namespace gadget
       }
 
       /** Gets the name of the proxy. */
-      std::string getName() const
+      const std::string& getName() const
       {
          return mName;
       }

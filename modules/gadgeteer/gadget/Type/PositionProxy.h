@@ -99,10 +99,12 @@ public:
     *
     * @return The position of the device as a matrix.
     */
-   gmtl::Matrix44f getData(float scaleFactor = gadget::PositionUnitConversion::ConvertToFeet ) const;
+   const gmtl::Matrix44f
+   getData(const float scaleFactor = PositionUnitConversion::ConvertToFeet)
+      const;
    
    /** Gets the actual PositionData. */
-   PositionData* getPositionData()
+   const PositionData* getPositionData() const
    {
       return &mPositionData;
    }
@@ -114,7 +116,7 @@ public:
    }
 
    /// Returns a pointer to the gadget::Position object held by this proxy.
-   PositionPtr getPositionPtr()
+   const PositionPtr getPositionPtr() const
    {
       if(mStupefied || NULL == mTypedDevice.get())
       {

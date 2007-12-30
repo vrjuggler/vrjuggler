@@ -115,7 +115,7 @@ public:
     * Gets the interval that will be used for syncronization while only sharing
     * keyboard data across the cluster.
     */
-   vpr::Interval getSyncTime()
+   const vpr::Interval& getSyncTime() const
    {
       return mSyncTime;
    }
@@ -129,7 +129,7 @@ public:
     *
     * @return The number of times the key was pressed since last update.
     */
-   int keyPressed(gadget::Keys keyId)
+   int keyPressed(const gadget::Keys keyId) const
    {
       return mCurKeys[keyId];
    }
@@ -145,7 +145,7 @@ public:
     *
     * @return true if the given modifier key is the only modifier key pressed.
     */
-   bool modifierOnly(gadget::Keys modKey);
+   bool modifierOnly(const gadget::Keys modKey) const;
 
    /**
     * Returns the symbolic Gadgeteer name associated with keyId.  For example,
@@ -155,12 +155,12 @@ public:
     *
     * @return A string that is the symbolic name of the given key.
     */
-   std::string getKeyName(gadget::Keys keyId);
+   const std::string getKeyName(const gadget::Keys keyId) const;
 
    /**
-    * Returns a copy of the current queue of events for this device.
+    * Returns a \em copy of the current queue of events for this device.
     */
-   EventQueue getEventQueue();
+   const EventQueue getEventQueue();
 
    /**
     * Adds the given event object to the in-progress queue.

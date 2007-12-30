@@ -162,7 +162,7 @@ public:
     * This is the name given to the device in its config element (e.g.,
     * "MyFlockOfBirds", "The Ibox", etc.).
     */
-   std::string getInstanceName()
+   const std::string getInstanceName() const
    {
       if (mInstName.empty())
       {
@@ -206,7 +206,7 @@ public:
    }
 
    /** Is this input device active? */
-   bool isActive()
+   bool isActive() const
    {
       return mActive;
    }

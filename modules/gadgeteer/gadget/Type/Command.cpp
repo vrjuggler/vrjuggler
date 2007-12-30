@@ -45,9 +45,10 @@ CommandPtr Command::create()
    return CommandPtr(new Command());
 }
 
-const CommandData Command::getCommandData(int devNum)
+const CommandData Command::getCommandData(const int devNum) const
 {
-   SampleBuffer_t::buffer_t& stable_buffer = mCommandSamples.stableBuffer();
+   const SampleBuffer_t::buffer_t& stable_buffer =
+      mCommandSamples.stableBuffer();
 
    if ( (!stable_buffer.empty()) &&
         (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range

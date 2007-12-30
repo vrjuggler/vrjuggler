@@ -99,7 +99,7 @@ public:
     * @note If devNum is out of range, function will fail, possibly issuing
     *       an error to a log or console - but will not ASSERT.
     */
-   const CommandData getCommandData(int devNum = 0);
+   const CommandData getCommandData(const int devNum = 0) const;
 
    /**
     * Helper method to add a collection of command samples to the sample
@@ -134,7 +134,7 @@ public:
    /**
     * Returns the current stable sample buffers for this device.
     */
-   const SampleBuffer_t::buffer_t& getCommandDataBuffer()
+   const SampleBuffer_t::buffer_t& getCommandDataBuffer() const
    {
       return mCommandSamples.stableBuffer();
    }

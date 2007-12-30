@@ -205,7 +205,8 @@ void Glove::readObject(vpr::ObjectReader* reader)
  * Can be used for selection, etc.
  * Use getJointTransform to get the transformation matrix.
  */
-gmtl::Vec3f Glove::getTipVector(GloveData::GloveComponent component, int devNum)
+const gmtl::Vec3f Glove::
+getTipVector(const GloveData::GloveComponent component, const int devNum) const
 {
    gmtl::Vec3f y_axis(0.0f, 1.0f, 0.0f);
    gmtl::Vec3f ret_val(0.0f, 0.0f, 0.0f);
@@ -218,7 +219,9 @@ gmtl::Vec3f Glove::getTipVector(GloveData::GloveComponent component, int devNum)
  * Returns the transform matrix of the specified finger tip in world space
  * wTt = wTb bTj jTt
  */
-gmtl::Matrix44f Glove::getTipTransform(GloveData::GloveComponent component,int devNum)
+const gmtl::Matrix44f Glove::
+getTipTransform(const GloveData::GloveComponent component, const int devNum)
+   const
 {
    gmtl::Matrix44f worldTdij;
 
@@ -236,7 +239,10 @@ gmtl::Matrix44f Glove::getTipTransform(GloveData::GloveComponent component,int d
  * Returns the transform matrix of the specified joint in world space
  * wTj = wTb bTj
  */
-gmtl::Matrix44f Glove::getJointTransform(GloveData::GloveComponent component, GloveData::GloveJoint joint,int devNum)
+const gmtl::Matrix44f Glove::
+getJointTransform(const GloveData::GloveComponent component,
+                  const GloveData::GloveJoint joint, int devNum)
+   const
 {
    gmtl::Matrix44f result;           // The returned matrix.
    gmtl::Matrix44f baseTdij;         // Transform from base to dig coord system
@@ -263,7 +269,8 @@ gmtl::Matrix44f Glove::getJointTransform(GloveData::GloveComponent component, Gl
    }
 
    // Compute return value: result = TIPw = wTb bTd dTt
-   if(devNum<(int)mGlovePositions.size()){
+   if ( devNum < (int) mGlovePositions.size() )
+   {
       result=mGlovePositions[devNum]->getData();      // wTb
    }
    gmtl::postMult(result,baseTdij);                     // bTd
@@ -271,9 +278,10 @@ gmtl::Matrix44f Glove::getJointTransform(GloveData::GloveComponent component, Gl
    return result;
 }
 
-GloveData Glove::getGloveData(int devNum = 0)
+const GloveData Glove::getGloveData(const int devNum) const
 {
-   SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
+   const SampleBuffer_t::buffer_t& stable_buffer =
+      mGloveSamples.stableBuffer();
 
    if ( (!stable_buffer.empty()) && (stable_buffer.back().size() > (unsigned)devNum) )  // If have entry && devNum in range
    {
@@ -296,7 +304,9 @@ GloveData Glove::getGloveData(int devNum = 0)
 /**
  * Utility function to convert a 10 size vector of DigitalData to GloveData
  */
-std::vector<GloveData> Glove::getGloveDataFromDigitalData(const std::vector<DigitalData> &digitalData)
+const std::vector<GloveData> Glove::
+getGloveDataFromDigitalData(const std::vector<DigitalData> &digitalData)
+   const
 {
    assert(digitalData.size()>=10);
 

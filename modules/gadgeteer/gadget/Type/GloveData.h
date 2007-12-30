@@ -68,15 +68,20 @@ public:
    GloveData(const GloveData& data);
 
    /**
-    * Calulates all the xform matrices
-    * This is calculated based upon the angles in the data structure
+    * Calulates all the transformation matrices.
+    * This is calculated based upon the angles in the data structure.
+    *
+    * @post mTransforms is updated to reflect the current transformations.
     */
    int calcXforms();
 
    /**
     * Returns the transform matrix of the specified joint
     */
-   gmtl::Matrix44f getLocalTransformMatrix(GloveComponent component,GloveJoint joint) const
+   const gmtl::Matrix44f&
+      getLocalTransformMatrix(const GloveComponent component,
+                              const GloveJoint joint)
+      const
    {
       return mTransforms[component][joint];
    }

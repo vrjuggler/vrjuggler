@@ -61,7 +61,7 @@ public:
    }
 
    /** Return the last marked time using the vpr::Interval. */
-   vpr::Interval getTime() const
+   const vpr::Interval& getTime() const
    {
       return mTimeStamp;
    }

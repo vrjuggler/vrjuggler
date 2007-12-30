@@ -80,23 +80,29 @@ public:
     * Returns a vector ponting "out" of the component.
     * Can be used for selection, etc.
     */
-   gmtl::Vec3f getTipVector(GloveData::GloveComponent component, int devNum);
+   const gmtl::Vec3f getTipVector(const GloveData::GloveComponent component,
+                                  const int devNum)
+      const;
 
    /**
     * Return the transform matrix of the component tip of the specified
     * component.
     */
-   gmtl::Matrix44f getTipTransform(GloveData::GloveComponent component,
-                                   int devNum);
+   const gmtl::Matrix44f
+      getTipTransform(const GloveData::GloveComponent component,
+                      const int devNum)
+      const;
 
    /**
     * Returns the transform matrix of the specified joint in world space.
     */
-   gmtl::Matrix44f getJointTransform(GloveData::GloveComponent component,
-                                     GloveData::GloveJoint joint, int devNum);
+   const gmtl::Matrix44f
+      getJointTransform(const GloveData::GloveComponent component,
+                        const GloveData::GloveJoint joint, const int devNum)
+      const;
 
    /** Returns a copy of the glove data struct. */
-   GloveData getGloveData(int devNum);
+   const GloveData getGloveData(const int devNum) const;
    //@}
 
    /** @name Buffer functions */
@@ -127,7 +133,7 @@ public:
       mGloveSamples.swapBuffers();
    }
 
-   const SampleBuffer_t::buffer_t& getGloveDataBuffer()
+   const SampleBuffer_t::buffer_t& getGloveDataBuffer() const
    {
       return mGloveSamples.stableBuffer();
    }
@@ -158,7 +164,9 @@ public:
    virtual void readObject(vpr::ObjectReader* reader);
 
    /** Utility function to generate GloveData from DigitalData. */
-   std::vector<GloveData> getGloveDataFromDigitalData(const std::vector<DigitalData>& digitalData);
+   const std::vector<GloveData>
+      getGloveDataFromDigitalData(const std::vector<DigitalData>& digitalData)
+      const;
 
 protected:
    SampleBuffer_t  mGloveSamples;   /**< Glove samples */

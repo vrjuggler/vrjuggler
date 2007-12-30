@@ -144,7 +144,7 @@ const DigitalData SimGloveGesture::getDigitalData(int devNum)
  * Gets the current gesture.
  * @return id of current gesture
  */
-int SimGloveGesture::getGesture()
+int SimGloveGesture::getGesture() const
 { return mCurGesture; }
 
 /**

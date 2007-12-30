@@ -36,7 +36,7 @@ namespace gadget
  * @return (gestureId in range) - string desc of gesture
  * @return (gesture not in range) - empty string
  */
-std::string GloveGesture::getGestureString(int gestureId)
+std::string GloveGesture::getGestureString(const int gestureId) const
 {
    if(gestureId < 0)
       return getGestureString(this->getGesture());    // Get string of current gesture
@@ -133,7 +133,7 @@ void GloveGesture::saveFileHeader(std::ofstream& outFile)
 }
 
 /** Returns the gesture identifier of the gesture. */
-int GloveGesture::getGestureIndex(std::string gestureName)
+int GloveGesture::getGestureIndex(const std::string& gestureName) const
 {
    unsigned i = 0;
    int found = -1;

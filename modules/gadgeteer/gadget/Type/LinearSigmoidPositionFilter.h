@@ -53,22 +53,43 @@ public:
     * Gets the position to use>
     * @param newPos The new postion this frame of the physical device.
     */
-   gmtl::Matrix44f getPos(const gmtl::Matrix44f newPos);
+   const gmtl::Matrix44f getPos(const gmtl::Matrix44f& newPos) const;
 
    /**
     * Given a distance, return the scale factor based upon the minDist and
     * maxDist values.
     */
-   float getScaleFactor(const float distance);
+   float getScaleFactor(const float distance) const;
 
-   void setMinDist(float val) { mMinDist = val;}
-   float minDist() { return mMinDist;}
+   void setMinDist(const float val)
+   {
+      mMinDist = val;
+   }
 
-   void setMaxDist(float val) { mMaxDist = val;}
-   float maxDist() { return mMaxDist;}
+   float minDist() const
+   {
+      return mMinDist;
+   }
 
-   void setMaxThreshold(float val) { mMaxThreshold = val; }
-   float maxTheshold() { return mMaxThreshold; }
+   void setMaxDist(const float val)
+   {
+      mMaxDist = val;
+   }
+
+   float maxDist() const
+   {
+      return mMaxDist;
+   }
+
+   void setMaxThreshold(const float val)
+   {
+      mMaxThreshold = val;
+   }
+
+   float maxTheshold() const
+   {
+      return mMaxThreshold;
+   }
 
 private:
    gmtl::Matrix44f mLastReturnedPos;

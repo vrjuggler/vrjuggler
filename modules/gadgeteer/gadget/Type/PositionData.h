@@ -49,12 +49,12 @@ public:
       ;
    }
 
-   gmtl::Matrix44f getPosition() const
+   const gmtl::Matrix44f& getPosition() const
    {
       return mPosData;
    }
 
-   void setPosition(gmtl::Matrix44f posMatrix)
+   void setPosition(const gmtl::Matrix44f& posMatrix)
    {
       mPosData = posMatrix;
    }

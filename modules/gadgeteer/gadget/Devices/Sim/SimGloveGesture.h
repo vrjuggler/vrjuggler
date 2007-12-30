@@ -62,7 +62,7 @@ public:
     * Get the current gesture.
     * @return id of current gesture.
     */
-   virtual int getGesture();
+   virtual int getGesture() const;
 
    virtual const DigitalData getDigitalData(int devNum = 0);
 

@@ -68,7 +68,7 @@ public:
    /**
     * Returns a pointer to the gadget::KeyboardMouse object held by this proxy.
     */
-   KeyboardMousePtr getKeyboardMousePtr()
+   const KeyboardMousePtr getKeyboardMousePtr() const
    {
       if(isStupefied())
       {
@@ -94,7 +94,7 @@ public:
     *
     * @return true if the given modifier key is the only modifier key pressed.
     */
-   bool modifierOnly(gadget::Keys modKey)
+   bool modifierOnly(gadget::Keys modKey) const
    {
       if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {
@@ -115,7 +115,7 @@ public:
     *
     * @return The number of times the key was pressed since last update.
     */
-   int keyPressed(gadget::Keys keyId)
+   int keyPressed(gadget::Keys keyId) const
    {
       if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {
@@ -130,7 +130,7 @@ public:
    /**
     * Returns a copy of the current queue of events for the proxied device.
     */
-   KeyboardMouse::EventQueue getEventQueue()
+   const KeyboardMouse::EventQueue getEventQueue() const
    {
       if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {

@@ -99,7 +99,7 @@ public:
     * @note If devNum is out of range, function will fail, possibly issuing
     *       an error to a log or console - but will not ASSERT.
     */
-   const StringData getStringData(int devNum = 0);
+   const StringData& getStringData(const int devNum = 0) const;
 
    /**
     * Helper method to add a collection of string samples to the sample

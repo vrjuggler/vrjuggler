@@ -148,7 +148,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 }
 
 // Deprecated, don't use
-gmtl::Matrix44f PositionProxy::getData(float scaleFactor) const
+const gmtl::Matrix44f PositionProxy::getData(const float scaleFactor) const
 {
    gmtl::Matrix44f ret_mat;
 

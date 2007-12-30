@@ -86,7 +86,7 @@ public:
    /**
     * Gets the string data.
     */
-   std::string getData() const
+   const std::string getData() const
    {
       // If we're stupefied, return empty string.  Otherwise, return
       // the current string value.
@@ -94,7 +94,7 @@ public:
                             : mData.getString());
    }
 
-   StringData* getStringData()
+   const StringData* getStringData() const
    {
       return &mData;
    }
@@ -102,7 +102,7 @@ public:
    /**
     * Returns a pointer to the gadget::String object that we are proxying.
     */
-   StringPtr getStringPtr()
+   const StringPtr getStringPtr() const
    {
       // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
       return (isStupefied() ? StringPtr() : mTypedDevice);

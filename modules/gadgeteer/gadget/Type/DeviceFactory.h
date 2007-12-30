@@ -75,7 +75,7 @@ public:
     * @param element The element we are requesting about knowledge to create.
     * @return true if the factory knows how to create the device; false if not.
     */
-   bool recognizeDevice(jccl::ConfigElementPtr element);
+   bool recognizeDevice(jccl::ConfigElementPtr element) const;
 
    /**
     * Loads the specified device.
@@ -92,7 +92,7 @@ private:
     * @return -1 is returned if the constructor is not found.
     *         Otherwise, the index of the constructor is returned.
     */
-   int findConstructor(jccl::ConfigElementPtr element);
+   int findConstructor(jccl::ConfigElementPtr element) const;
 
    void debugDump();
 

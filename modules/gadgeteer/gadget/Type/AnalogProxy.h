@@ -90,9 +90,9 @@ public:
    }
 
    /** Returns a pointer to the gadget::Analog object that we are proxying. */
-   AnalogPtr getAnalogPtr()
+   const AnalogPtr getAnalogPtr() const
    {
-      if(isStupefied() || NULL == mTypedDevice.get())
+      if ( isStupefied() || NULL == mTypedDevice.get() )
       {
          return AnalogPtr();
       }

@@ -95,13 +95,13 @@ public:
                             : (gadget::Digital::State) mData.getDigital());
    }
 
-   DigitalData* getDigitalData()
+   const DigitalData* getDigitalData() const
    {
       return &mData;
    }
 
    /** Returns a pointer to the gadget::Digital object that we are proxying. */
-   DigitalPtr getDigitalPtr()
+   const DigitalPtr getDigitalPtr() const
    {
       // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
       return (isStupefied() ? DigitalPtr() : mTypedDevice);

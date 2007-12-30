@@ -62,7 +62,7 @@ public:
     * @return Name of gesture with the given id (gestureId).
     * @note if gestureId = -1, returns name of current gesture.
     */
-   virtual std::string getGestureString(int gestureId = -1);
+   virtual std::string getGestureString(const int gestureId) const;
 
    /**
     * Creates a new gesture.
@@ -101,11 +101,13 @@ public:
     * Returns the identifier of the string gesture.
     * @return -1 if not found.
     */
-   virtual int getGestureIndex(std::string gestureName);
+   virtual int getGestureIndex(const std::string& gestureName) const;
 
    /** Return the number of gestures in system. */
-   virtual int getNumGestures()
-   { return mGestureNames.size(); }
+   virtual int getNumGestures() const
+   {
+      return mGestureNames.size();
+   }
 
 protected:
    // mGestureNames and mGestureExamples MUST always be same size

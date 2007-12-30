@@ -94,11 +94,11 @@ public:
 
    virtual bool config(jccl::ConfigElementPtr e);
 
-
    /** Get positional data. */
-   PositionData getPositionData(int devNum = 0)
+   const PositionData& getPositionData(int devNum = 0) const
    {
-      SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
+      const SampleBuffer_t::buffer_t& stable_buffer =
+         mPosSamples.stableBuffer();
 
       if ((!stable_buffer.empty()) &&
           (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
@@ -174,7 +174,7 @@ public:
    /**
     * Returns the current stable sample buffers for this device.
     */
-   const SampleBuffer_t::buffer_t& getPositionDataBuffer()
+   const SampleBuffer_t::buffer_t& getPositionDataBuffer() const
    {
       return mPosSamples.stableBuffer();
    }
