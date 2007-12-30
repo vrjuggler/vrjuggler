@@ -53,9 +53,7 @@ class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
 protected:
    /** Constructs the proxy to point to the given gesture device. */
-   GestureProxy(const std::string& deviceName = "UnknownGesture")
-      : TypedProxy<Gesture>(deviceName)
-   {;}
+   GestureProxy(const std::string& deviceName = "UnknownGesture");
 
 public:
    /**
@@ -66,8 +64,7 @@ public:
     */
    static GestureProxyPtr create(const std::string& deviceName = "UnknownGesture");
 
-   virtual ~GestureProxy()
-   {;}
+   virtual ~GestureProxy();
 
    /**
     * Gets the current gesture.
@@ -123,12 +120,7 @@ public:
    }
 
    /** Returns time of last update. */
-   vpr::Interval getTimeStamp() const
-   {
-      // XXX: Broken for now, this is a case similar to the KeyboardMouse type in that
-      //      it does not point to one data element like digital, analog, and position.
-      return vpr::Interval();
-   }
+   vpr::Interval getTimeStamp() const;
 
    /** Returns a pointer to the device held by this proxy. */
    GesturePtr getGesturePtr()

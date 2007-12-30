@@ -50,16 +50,12 @@ namespace gadget
 class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
 protected:
-   /** @name Construction/Destruction */
-   //@{
    DigitalProxy(const std::string& deviceName = "UnknownDigital",
-                const int unitNum = -1) 
-      : TypedProxy<Digital>(deviceName)
-      , mUnitNum(unitNum)
-      , mData(0)
-   {;}
+                const int unitNum = -1);
 
 public:
+   /** @name Construction/Destruction */
+   //@{
    /**
     * Creates a DigitalProxy instance and returns it wrapped in a
     * DigitalProxyPtr object.
@@ -69,17 +65,13 @@ public:
    static DigitalProxyPtr create(const std::string& deviceName = "UnknownDigital",
                                  const int unitNum = -1);
 
-   virtual ~DigitalProxy()
-   {;}
+   virtual ~DigitalProxy();
    //@}
 
    virtual void updateData();
 
    /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const
-   {
-      return mData.getTime();
-   }
+   virtual vpr::Interval getTimeStamp() const;
 
    /**
     * Get the digital data.

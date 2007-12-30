@@ -66,10 +66,7 @@ class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 protected:
    PositionProxy(const std::string& deviceName = "UnknownPosition",
-      const int unitNum = -1)
-      : TypedProxy<Position>(deviceName)
-      , mUnitNum(unitNum)
-   {;}
+                 const int unitNum = -1);
 
 public:
    /**
@@ -90,10 +87,7 @@ public:
    virtual void updateData();
 
    /** Returns time of last update. */
-   virtual vpr::Interval getTimeStamp() const
-   {
-      return mPositionData.getTime();
-   }
+   virtual vpr::Interval getTimeStamp() const;
 
    /**
     * Gets the positional data within the device pointed to by this proxy as a

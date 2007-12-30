@@ -31,10 +31,24 @@
 
 namespace gadget
 {
+
+DigitalProxy::DigitalProxy(const std::string& deviceName, const int unitNum) 
+   : TypedProxy<Digital>(deviceName)
+   , mUnitNum(unitNum)
+   , mData(0)
+{
+   /* Do nothing. */ ;
+}
+
 DigitalProxyPtr DigitalProxy::create(const std::string& deviceName,
                                      const int unitNum)
 {
    return DigitalProxyPtr(new DigitalProxy(deviceName, unitNum));
+}
+
+DigitalProxy::~DigitalProxy()
+{
+   ;
 }
 
 std::string DigitalProxy::getElementType()
@@ -105,6 +119,11 @@ void DigitalProxy::updateData()
             mData = Digital::OFF;
       }
    }
+}
+
+vpr::Interval DigitalProxy::getTimeStamp() const
+{
+   return mData.getTime();
 }
 
 } // End of gadget namespace

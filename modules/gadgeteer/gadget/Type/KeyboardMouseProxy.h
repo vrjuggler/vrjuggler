@@ -52,8 +52,7 @@ namespace gadget
 class GADGET_CLASS_API KeyboardMouseProxy : public TypedProxy<KeyboardMouse>
 {
 protected:
-   KeyboardMouseProxy()
-   {;}
+   KeyboardMouseProxy();
 
 public:
    /**
@@ -63,6 +62,8 @@ public:
     * @since 1.3.7
     */
    static KeyboardMouseProxyPtr create();
+
+   virtual ~KeyboardMouseProxy();
 
    /**
     * Returns a pointer to the gadget::KeyboardMouse object held by this proxy.
@@ -80,17 +81,7 @@ public:
    }
 
    /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const
-   {
-      if ( isStupefied() || (NULL == mTypedDevice.get()) )
-      {
-         return vpr::Interval();
-      }
-      else
-      {
-         return mTypedDevice->getSyncTime();
-      }  
-   }
+   virtual vpr::Interval getTimeStamp() const;
 
    /**
     * Determines if the given modifier key is the only modifier pressed.

@@ -33,9 +33,31 @@
 namespace gadget
 {
 
+KeyboardMouseProxy::KeyboardMouseProxy()
+{
+   /* Do nothing. */ ;
+}
+
 KeyboardMouseProxyPtr KeyboardMouseProxy::create()
 {
    return KeyboardMouseProxyPtr(new KeyboardMouseProxy());
+}
+
+KeyboardMouseProxy::~KeyboardMouseProxy()
+{
+   /* Do nothing. */ ;
+}
+
+vpr::Interval KeyboardMouseProxy::getTimeStamp() const
+{
+   if ( isStupefied() || (NULL == mTypedDevice.get()) )
+   {
+      return vpr::Interval();
+   }
+   else
+   {
+      return mTypedDevice->getSyncTime();
+   }  
 }
 
 std::string KeyboardMouseProxy::getElementType()

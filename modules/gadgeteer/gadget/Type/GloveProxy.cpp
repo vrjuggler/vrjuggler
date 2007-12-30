@@ -33,10 +33,31 @@
 namespace gadget
 {
 
+GloveProxy::GloveProxy(const std::string& deviceName, const int unitNum)
+   : TypedProxy<Glove>(deviceName)
+   , mVisible(true)
+   , mUnitNum(unitNum)
+{
+   /* Do nothing. */ ;
+}
+
 GloveProxyPtr GloveProxy::create(const std::string& deviceName,
                                  const int unitNum)
 {
    return GloveProxyPtr(new GloveProxy(deviceName, unitNum));
+}
+
+GloveProxy::~GloveProxy()
+{
+   /* Do nothing. */ ;
+}
+
+vpr::Interval GloveProxy::getTimeStamp() const
+{
+   // XXX: Broken for now, this is a case similar to the KeyboardMouse type in
+   //      that it does not point to one data element like digital, analog,
+   //      and position.
+   return vpr::Interval();
 }
 
 std::string GloveProxy::getElementType()

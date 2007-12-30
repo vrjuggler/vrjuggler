@@ -32,10 +32,24 @@
 namespace gadget
 {
 
+CommandProxy::CommandProxy(const std::string& deviceName,
+                           const int unitNum)
+   : TypedProxy<Command>(deviceName)
+   , mUnitNum(unitNum)
+   , mData(0)
+{
+   /* Do nothing. */ ;
+}
+
 CommandProxyPtr CommandProxy::create(const std::string& deviceName,
                                      const int unitNum)
 {
    return CommandProxyPtr(new CommandProxy(deviceName, unitNum));
+}
+
+CommandProxy::~CommandProxy()
+{
+   /* Do nothing. */ ;
 }
 
 std::string CommandProxy::getElementType()
@@ -71,6 +85,11 @@ void CommandProxy::updateData()
       getProxiedInputDevice()->updateDataIfNeeded();
       mData = mTypedDevice->getCommandData(mUnitNum);
    }
+}
+
+vpr::Interval CommandProxy::getTimeStamp() const
+{
+   return mData.getTime();
 }
 
 } // End of gadget namespace

@@ -60,16 +60,12 @@ class GADGET_CLASS_API StringProxy
    : public TypedProxy<String>
 {
 protected:
-   /** @name Construction/Destruction */
-   //@{
    StringProxy(const std::string& deviceName = "UnknownString",
-               const int unitNum = -1)
-      : TypedProxy<String>(deviceName)
-      , mUnitNum(unitNum)
-      , mData("")
-   {;}
+               const int unitNum = -1);
 
 public:
+   /** @name Construction/Destruction */
+   //@{
    /**
     * Creates a StringProxy instance and returns it wrapped in a
     * StringProxyPtr object.
@@ -79,17 +75,13 @@ public:
    static StringProxyPtr create(const std::string deviceName = "UnknownString",
                                 const int unitNum = -1);
 
-   virtual ~StringProxy()
-   {;}
+   virtual ~StringProxy();
    //@}
 
    virtual void updateData();
 
    /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const
-   {
-      return mData.getTime();
-   }
+   virtual vpr::Interval getTimeStamp() const;
 
    /**
     * Gets the string data.

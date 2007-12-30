@@ -26,20 +26,49 @@
 
 #include <gadget/gadgetConfig.h>
 #include <jccl/Config/ConfigElement.h>
-#include <gadget/Util/Debug.h>
 #include <gadget/Type/AnalogProxy.h>
+
 
 namespace gadget
 {
+
+AnalogProxy::AnalogProxy(const std::string& deviceName, const int unitNum)
+   : TypedProxy<Analog>(deviceName)
+   , mUnitNum(unitNum)
+   , mData(-1.0f)
+{
+   /* Do nothing. */ ;
+}
+
 AnalogProxyPtr AnalogProxy::create(const std::string& deviceName,
                                    const int unitNum)
 {
    return AnalogProxyPtr(new AnalogProxy(deviceName, unitNum));
 }
 
+AnalogProxy::~AnalogProxy()
+{
+   /* Do nothing. */ ;
+}
+
+void AnalogProxy::updateData()
+{
+   if ( ! isStupefied() )
+   {
+      // Make sure dependencies are updated.
+      getProxiedInputDevice()->updateDataIfNeeded();
+      mData = mTypedDevice->getAnalogData(mUnitNum);
+   }
+}
+
 std::string AnalogProxy::getElementType()
 {
    return "analog_proxy";
+}
+
+vpr::Interval AnalogProxy::getTimeStamp() const
+{
+   return mData.getTime();
 }
 
 bool AnalogProxy::config(jccl::ConfigElementPtr element)

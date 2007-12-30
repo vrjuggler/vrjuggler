@@ -32,10 +32,23 @@
 namespace gadget
 {
 
+StringProxy::StringProxy(const std::string& deviceName, const int unitNum)
+   : TypedProxy<String>(deviceName)
+   , mUnitNum(unitNum)
+   , mData("")
+{
+   /* Do nothing. */ ;
+}
+
 StringProxyPtr StringProxy::create(const std::string deviceName,
                                    const int unitNum)
 {
    return StringProxyPtr(new StringProxy(deviceName, unitNum));
+}
+
+StringProxy::~StringProxy()
+{
+   /* Do nothing. */ ;
 }
 
 std::string StringProxy::getElementType()
@@ -74,6 +87,11 @@ void StringProxy::updateData()
       mData = mTypedDevice->getStringData(mUnitNum);
       std::string new_state = mData.getString();
    }
+}
+
+vpr::Interval StringProxy::getTimeStamp() const
+{
+   return mData.getTime();
 }
 
 } // End of gadget namespace

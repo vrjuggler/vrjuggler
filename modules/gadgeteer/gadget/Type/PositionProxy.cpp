@@ -45,6 +45,13 @@
 namespace gadget
 {
 
+PositionProxy::PositionProxy(const std::string& deviceName, const int unitNum)
+   : TypedProxy<Position>(deviceName)
+   , mUnitNum(unitNum)
+{
+   /* Do nothing. */ ;
+}
+
 PositionProxyPtr PositionProxy::create(const std::string& deviceName,
                                        const int unitNum)
 {
@@ -171,7 +178,6 @@ gmtl::Matrix44f PositionProxy::getData(float scaleFactor) const
    return ret_mat;
 }
 
-
 void PositionProxy::updateData()
 {
    if((!mStupefied) && (NULL != mTypedDevice.get()))
@@ -201,6 +207,11 @@ void PositionProxy::updateData()
       trans *= gadget::PositionUnitConversion::ConvertToFeet;  // Scale the translation and set the value again
       gmtl::setTrans(mPosMatrix_feet, trans);
    }
+}
+
+vpr::Interval PositionProxy::getTimeStamp() const
+{
+   return mPositionData.getTime();
 }
 
 } // End of gadget namespace

@@ -52,11 +52,7 @@ class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 protected:
    /** Constructor. */
    AnalogProxy(const std::string& deviceName = "UnknownAnalog",
-               const int unitNum = -1)
-      : TypedProxy<Analog>(deviceName)
-      , mUnitNum(unitNum)
-      , mData(-1.0f)
-   {;}
+               const int unitNum = -1);
 
 public:
    /**
@@ -68,25 +64,13 @@ public:
    static AnalogProxyPtr create(const std::string& deviceName = "UnknownAnalog",
                                 const int unitNum = -1);
 
-   virtual ~AnalogProxy()
-   {;}
+   virtual ~AnalogProxy();
 
    /** Updates the cached data copy from the device. */
-   virtual void updateData()
-   {
-      if(!isStupefied())
-      {
-         // Make sure dependencies are updated.
-         getProxiedInputDevice()->updateDataIfNeeded();
-         mData = mTypedDevice->getAnalogData(mUnitNum);
-      }
-   }
+   virtual void updateData();
 
    /** Returns the time of last update. */
-   virtual vpr::Interval getTimeStamp() const
-   {
-      return mData.getTime();
-   }
+   virtual vpr::Interval getTimeStamp() const;
 
    /**
     * Gets the current analog data value.

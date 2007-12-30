@@ -50,16 +50,12 @@ namespace gadget
 class GADGET_CLASS_API CommandProxy : public TypedProxy<Command>
 {
 protected:
-   /** @name Construction/Destruction */
-   //@{
    CommandProxy(const std::string& deviceName = "UnknownCommand",
-                const int unitNum = -1)
-      : TypedProxy<Command>(deviceName)
-      , mUnitNum(unitNum)
-      , mData(0)
-   {;}
+                const int unitNum = -1);
 
 public:
+   /** @name Construction/Destruction */
+   //@{
    /**
     * Creates a CommandProxy instance and returns it wrapped in a
     * CommandProxyPtr object.
@@ -69,17 +65,13 @@ public:
    static CommandProxyPtr create(const std::string& deviceName = "UnknownCommand",
                                  const int unitNum = -1);
 
-   virtual ~CommandProxy()
-   {;}
+   virtual ~CommandProxy();
    //@}
 
    virtual void updateData();
 
    /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const
-   {
-      return mData.getTime();
-   }
+   virtual vpr::Interval getTimeStamp() const;
 
    /**
     * Gets the command data.

@@ -55,12 +55,7 @@ protected:
     * number.
     */
    GloveProxy(const std::string& deviceName = "UnknownGlove",
-              const int unitNum = -1)
-      : TypedProxy<Glove>(deviceName)
-      , mUnitNum(unitNum)
-   {
-      mVisible = true;
-   }
+              const int unitNum = -1);
 
 public:
    /**
@@ -72,8 +67,7 @@ public:
    static GloveProxyPtr create(const std::string& deviceName = "UnknownGlove",
                                const int unitNum = -1);
 
-   virtual ~GloveProxy()
-   {}
+   virtual ~GloveProxy();
 
    gmtl::Vec3f getTipVector(GloveData::GloveComponent component)
    {
@@ -125,12 +119,7 @@ public:
    }
 
    /** Returns time of last update. */
-   vpr::Interval getTimeStamp() const
-   {
-      // XXX: Broken for now, this is a case similar to the KeyboardMouse type in that
-      //      it does not point to one data element like digital, analog, and position.
-      return vpr::Interval();
-   }
+   vpr::Interval getTimeStamp() const;
 
    /** Returns a pointer to the device held by this proxy. */
    GlovePtr getGlovePtr()
@@ -162,7 +151,7 @@ public:
 
 private:
    /** Should we be drawn on the screen? */
-   bool  mVisible;
+   bool mVisible;
 
    /** The sub-unit number to use in the device. */
    int mUnitNum;

@@ -47,15 +47,18 @@ namespace gadget
     */
    class GADGET_CLASS_API Proxy
    {
-   public:
+   protected:
       Proxy();
 
+   public:
       virtual ~Proxy();
 
       /**
        * Configures the proxy.
+       *
        * @post Proxy is configured (it is not registered yet though).
-       * @return success.
+       *
+       * @return \c true is always returned.
        */
       virtual bool config(jccl::ConfigElementPtr element);
 
@@ -65,10 +68,7 @@ namespace gadget
        */
       virtual bool refresh() = 0;
 
-      virtual void updateData()
-      {
-         ;
-      }
+      virtual void updateData();
 
       /**
        * @since 1.1.19
@@ -126,10 +126,7 @@ namespace gadget
        *
        * @note Renamed from isStupified() in version 0.92.1.
        */
-      virtual bool isStupefied() const
-      {
-         return mStupefied;
-      }
+      virtual bool isStupefied() const;
 
       /**
        * Sets the stupefication state of this proxy.

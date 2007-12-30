@@ -47,15 +47,20 @@ Proxy::~Proxy()
    ;
 }
 
-/**
- * Configures the proxy.
- * @post Proxy is configured (it is not registered yet though).
- * @return success.
- */
 bool Proxy::config(jccl::ConfigElementPtr element)
 {
    mName = element->getFullName();
    return true;
+}
+
+void Proxy::updateData()
+{
+   /* Do nothing. */ ;
+}
+
+bool Proxy::isStupefied() const
+{
+   return mStupefied;
 }
 
 } // end namespace
