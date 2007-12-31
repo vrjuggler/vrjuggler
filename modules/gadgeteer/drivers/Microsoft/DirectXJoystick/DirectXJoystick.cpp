@@ -205,7 +205,8 @@ void DirectXJoystick::updateData()
       for ( unsigned int i = 0; i < mCurAxes.size(); ++i )
       {
          mCurAxes[i].setTime();
-         mCurAxes[i].setAnalog(mInputDrv.getAxisValue(i));
+         const LONG cur_value(mInputDrv.getAxisValue(i));
+         mCurAxes[i].setAnalog(cur_value);
 
          // Check for axis buttons. If we have a mapping for axis #i, then we
          // map the value of the analog axis to two buttons (high and low). If
@@ -221,6 +222,9 @@ void DirectXJoystick::updateData()
                       "Virtual high button index out of range");
             vprASSERT(low_btn_index < mCurButtons.size() &&
                       "Virtual low button index out of range");
+
+            // Get a normalized form of cur_value for axis button handling.
+            const float norm_value(normalize(cur_value));
 
             // Record the high button as pressed and the low button as not
             // pressed.
