@@ -134,5 +134,5 @@ key_sym_2_0.xsl
    configuration files will continue to work with VR Juggler 2.0, and they
    will be ready for migration to VR Juggler 2.2 using VRJConfig.
 
-Patrick Hartling <patrick@infiscape.com>
+Patrick Hartling <patrick.hartling@priority5.com>
 $Id$
