@@ -43,7 +43,7 @@ class App;
  *
  * Abstract base class for API-specific Draw Manager.
  *
- * Concrete classes are resonsible for all rendering.
+ * Concrete classes are responsible for all rendering.
  *
  * @date 9-7-97
  */
@@ -92,10 +92,10 @@ public:
     */
    virtual void initAPI() = 0;
 
-   /** Callback when display is added to Display Manager. */
+   /** Callback invoked when display is added to the Display Manager. */
    virtual void addDisplay(DisplayPtr disp) = 0;
 
-   /** Callback when display is removed to Display Manager. */
+   /** Callback invoked when display is removed from the Display Manager. */
    virtual void removeDisplay(DisplayPtr disp) = 0;
 
    /**
