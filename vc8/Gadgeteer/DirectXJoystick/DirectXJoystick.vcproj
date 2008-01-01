@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr8.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +154,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr8.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -241,7 +241,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr8.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -329,7 +329,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr8.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -419,7 +419,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr8.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -512,7 +512,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr8.lib $(NOINHERIT)"
+				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
