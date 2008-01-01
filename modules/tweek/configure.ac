@@ -1,6 +1,6 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# VR Juggler is (C) Copyright 1998-2007 by Iowa State University
+# VR Juggler is (C) Copyright 1998-2008 by Iowa State University
 #
 # Original Authors:
 #   Allen Bierbaum, Christopher Just,
@@ -34,7 +34,7 @@
 AC_INIT([Tweek], [1.3], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([tweek/tweekDefines.h])
 AC_PREREQ([2.53])
-AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2007 by Iowa State University])
+AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2008 by Iowa State University])
 AC_CONFIG_SRCDIR([tweek/tweekConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])

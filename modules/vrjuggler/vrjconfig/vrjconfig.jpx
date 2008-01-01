@@ -36,7 +36,7 @@
   <property category="sys" name="CheckStable" value="1"/>
   <property category="sys" name="Company" value=""/>
   <property category="sys" name="CompanyLabel" value="Company:"/>
-  <property category="sys" name="Copyright" value="Copyright (c) 2002-2007"/>
+  <property category="sys" name="Copyright" value="Copyright (c) 2002-2008"/>
   <property category="sys" name="CopyrightLabel" value="Copyright:"/>
   <property category="sys" name="DefaultPath" value="."/>
   <property category="sys" name="Description" value=""/>
