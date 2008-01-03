@@ -41,6 +41,7 @@
 #import <AppKit/NSApplication.h>
 #import <OpenGL/GL.h>
 
+#include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Perf/ProfileManager.h>
 #include <jccl/Config/ConfigElement.h>
@@ -172,10 +173,14 @@ bool WindowCocoa::open()
       }
       else
       {
-         // XXX: Resizing VR Juggler OpenGL windows crashes the window server.
-//         style_mask = NSTitledWindowMask | NSResizableWindowMask |
-//                         NSMiniaturizableWindowMask;
+#if VPR_OS_RELEASE_MAJOR >= 9
+         style_mask = NSTitledWindowMask | NSResizableWindowMask |
+                         NSMiniaturizableWindowMask;
+#else
+         // Resizing VR Juggler OpenGL windows crashes the window server on
+         // Mac OS X 10.4 (Tiger).
          style_mask = NSTitledWindowMask | NSMiniaturizableWindowMask;
+#endif
       }
 
       NSRect content_rect = { {mOriginX, mOriginY},
