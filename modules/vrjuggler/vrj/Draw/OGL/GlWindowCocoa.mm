@@ -207,12 +207,6 @@ bool GlWindowCocoa::open()
                                      inputHandling:handle_input];
       mMainView = mGlView;
 
-      // mCocoaWindow retains a refernece to mGlView, meaning that the
-      // reference count on it is now two. We release our reference to mGlView
-      // later when we are done with it.
-      [mCocoaWindow setContentView:mGlView];
-      [mCocoaWindow setInitialFirstResponder:mGlView];
-
       // If the window is full screen, then it has to be at the shielding
       // window level.
       if ( mIsFullScreen )
@@ -258,6 +252,12 @@ bool GlWindowCocoa::open()
       {
          makeCurrent();
          // TODO: Add extension loading stuff.
+
+         // mCocoaWindow retains a refernece to mGlView, meaning that the
+         // reference count on it is now two. We release our reference to
+         // mGlView later when we are done with it.
+         [mCocoaWindow setContentView:mGlView];
+         [mCocoaWindow setInitialFirstResponder:mGlView];
       }
    }
    @catch (NSException* ex)
