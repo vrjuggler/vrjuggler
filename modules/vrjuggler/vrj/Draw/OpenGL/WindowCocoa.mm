@@ -332,9 +332,7 @@ bool WindowCocoa::makeCurrent()
       return false;
    }
 
-//   [mGlView lockFocus];
    [[mGlView openGLContext] makeCurrentContext];
-//   [mGlView unlockFocus];
 
    return true;
 }
