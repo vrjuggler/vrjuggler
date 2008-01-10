@@ -297,20 +297,23 @@ public:
     *                contents are to be stored.
     * @param length  The number of bytes to be read.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for reading.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for reading.
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::SocketException
+    *           Thrown if the socket is not connected.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
-                      const vpr::Interval& timeout = vpr::Interval::NoTimeout);
+                      const vpr::Interval& timeout);
 
    /**
     * Implementation of the readn() template method.  This reads exactly the
@@ -326,18 +329,20 @@ public:
     *                contents are to be stored.
     * @param length  The number of bytes to be read.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for reading.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for reading.
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if socket is not connected.
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::SocketException
+    *           Thrown if socket is not connected.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval& timeout = vpr::Interval::NoTimeout);
+                       const vpr::Interval& timeout);
 
    /**
     * Implementation of the write() template method.  This writes the buffer
@@ -345,30 +350,36 @@ public:
     *
     * @pre The socket is open for writing.
     * @post The given buffer is written to the I/O socket, and the number
-    *       of bytes written successfully is returned to the caller via the
-    *       \p bytesWritten parameter.
+    *       of bytes written successfully is returned to the caller.
     *
     * @param buffer  A pointer to the buffer to be written.
     * @param length  The length of the buffer.
     * @param timeout The maximum amount of time to wait for data to be
-    *                available for writing.  This argument is optional and
-    *                defaults to vpr::Interval::NoTimeout.
+    *                available for writing.
     *
     * @return The number of bytes written to the socket is returned.
     *
-    * @throws ConnectionResetException if connection is reset.
-    * @throws NoRouteToHostException if a route to host does not exist.
-    * @throws UnknownHostException if host does not exist.
-    * @throws IOException if network is down.
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::SocketException if the write operation failed.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::IOException
+    *           Thrown if the network is down.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if the write operation failed.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval& timeout = vpr::Interval::NoTimeout);
+                       const vpr::Interval& timeout);
 
    vpr::Uint32 availableBytes() const
    {
