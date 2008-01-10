@@ -80,7 +80,7 @@ SocketDatagramImplNSPR(const SocketDatagramImplNSPR& sock)
 vpr::Uint32 SocketDatagramImplNSPR::recvfrom(void* msg,
                                              const vpr::Uint32 length,
                                              vpr::InetAddr& from,
-                                             const vpr::Interval timeout)
+                                             const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes_read(0);
 
@@ -173,7 +173,7 @@ vpr::Uint32 SocketDatagramImplNSPR::recvfrom(void* msg,
 vpr::Uint32 SocketDatagramImplNSPR::sendto(const void* msg,
                                            const vpr::Uint32 length,
                                            const vpr::InetAddr& to,
-                                           const vpr::Interval timeout)
+                                           const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes_sent(0);
 

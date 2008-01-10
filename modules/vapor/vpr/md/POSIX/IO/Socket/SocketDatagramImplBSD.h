@@ -94,25 +94,44 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 recvfrom(void* msg, const vpr::Uint32 length,
-                        vpr::InetAddr& from,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                        vpr::InetAddr& from, const vpr::Interval& timeout);
 
    /**
     * Sends a message to the specified address.
     *
     * @return The number of bytes written to the socket is returned.
+    *
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::IOException
+    *           Thrown if the network is down.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the send
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the send could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if the send operation failed.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 sendto(const void* msg, const vpr::Uint32 length,
-                      const vpr::InetAddr& to,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                      const vpr::InetAddr& to, const vpr::Interval& timeout);
 };
 
 } // End of namespace
