@@ -42,7 +42,7 @@
 
 #include <vpr/IO/WouldBlockException.h>
 #include <vpr/IO/TimeoutException.h>
-#include <vpr/IO/Socket/SimpleAllocationStrategy.h>
+#include <vpr/IO/Socket/SimpleAllocationStrategies.h>
 #include <vpr/Util/Error.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
