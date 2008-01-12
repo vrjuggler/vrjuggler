@@ -53,6 +53,7 @@ SUBOBJDIR=	$(VPR_LIBRARY)
 SRCS=		ConnectionAbortedException.cpp	\
 		ConnectionRefusedException.cpp	\
 		ConnectionResetException.cpp	\
+		MaximumAllocationStrategy.cpp	\
 		NoPushWriter.cpp		\
 		NoRouteToHostException.cpp	\
 		SocketAcceptor.cpp		\
