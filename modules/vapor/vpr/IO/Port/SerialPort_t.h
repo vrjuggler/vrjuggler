@@ -771,9 +771,9 @@ public:
     * Enables or disables marking of bytes with parity errors or framing errors
     * (except BREAKs).  This is only active if input parity and framing error
     * reporting is enabled (see setInputParityCheck() for more information).
-    * The mark is the three-byte sequence \377 \0 X where X is the byte
-    * received in error.  If bit stripping is enabled, a valid \377 byte is
-    * passed as the two-byte sequence \377 \377.
+    * The mark is the three-byte sequence 0377 0 X where X is the byte
+    * received in error.  If bit stripping is enabled, a valid 0377 byte is
+    * passed as the two-byte sequence 0377 0377.
     *
     * @pre This serial port is open.
     * @post Bytes with an error are marked and passed on to the reader.
@@ -784,6 +784,8 @@ public:
     * @throws vpr::IOException if parity error marking state could not be set.
     *
     * @see setInputParityCheck
+    *
+    * @note 0377 == 0xFF == 255
     */
    void setParityErrorMarking(bool flag)
    {

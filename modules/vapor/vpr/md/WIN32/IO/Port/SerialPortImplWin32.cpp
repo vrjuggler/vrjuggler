@@ -729,9 +729,9 @@ void SerialPortImplWin32::setParityGeneration(bool enableParity)
 // Enable marking of bytes with parity errors or framing errors (except
 // BREAKs).  This is only active if input parity and framing error reporting
 // is enabled (see getInputParityCheckState() for more information).  The mark
-// is the three-byte sequence \377 \0 X where X is the byte received in error.
-// If bit stripping is enabled, a valid \377 byte is passed as the two-byte
-// sequence \377 \377.
+// is the three-byte sequence 0377 0 X where X is the byte received in error.
+// If bit stripping is enabled, a valid 0377 byte is passed as the two-byte
+// sequence 0377 0377.
 bool SerialPortImplWin32::getParityErrorMarkingState() const
 {
    return mParityMark;
