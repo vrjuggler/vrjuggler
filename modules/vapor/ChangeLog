@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2008-01-12 patrick  Extended vpr::SocketStream to support "corked" or no-push
+                    writing.
+                    NEW VERSION: 2.1.9
 2007-10-30 patrick  Improved const correctness in the statistics collection
                     classes vpr::BandwidthIOStatsStrategy and
                     vpr::SampleLimitedStatCollector<T,bool>.

@@ -47,6 +47,7 @@
 #include <netinet/ip.h>
 #include <errno.h>
 #include <boost/concept_check.hpp>
+#include <boost/static_assert.hpp>
 
 #include <vpr/IO/Socket/ConnectionResetException.h>
 #include <vpr/IO/Socket/ConnectionRefusedException.h>
@@ -62,6 +63,18 @@
 
 namespace
 {
+
+#if defined(HAVE_CORKABLE_TCP)
+#  if defined(TCP_CORK)
+const int VPR_TCP_CORK(TCP_CORK);
+#  elif defined(TCP_NOPUSH)
+const int VPR_TCP_CORK(TCP_NOPUSH);
+#  else
+// If HAVE_CORKABLE_TCP is defined, either TCP_CORK or TCP_NOPUSH must be
+// defined.
+BOOST_STATIC_ASSERT(false);
+#  endif
+#endif
 
 // Given an error number (or errno) build up an exception with the
 // correct type and error string and throw it.
@@ -665,6 +678,16 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
          opt_name  = TCP_MAXSEG;
          opt_size  = sizeof(opt_data.size);
          break;
+      case vpr::SocketOptions::NoPush:
+#if defined(HAVE_CORKABLE_TCP)
+         opt_level = IPPROTO_TCP;
+         opt_name  = VPR_TCP_CORK;
+         opt_size  = sizeof(int);
+#else
+         // Maybe this should be a compile-time assertion.
+         vprASSERT(false && "Should not have gotten here without TCP corking");
+#endif
+         break;
 
       // BSD specific
       case vpr::SocketOptions::Error:
@@ -735,6 +758,9 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
             break;
          case vpr::SocketOptions::NoDelay:
             data.no_delay = (opt_data.enabled != 0 ? true : false);
+            break;
+         case vpr::SocketOptions::NoPush:
+            data.no_push = (opt_data.enabled != 0 ? true : false);
             break;
          case vpr::SocketOptions::Broadcast:
             data.broadcast = (opt_data.enabled != 0 ? true : false);
@@ -903,6 +929,17 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
          opt_name      = TCP_MAXSEG;
          opt_data.size = data.max_segment;
          opt_size      = sizeof(size_t);
+         break;
+      case vpr::SocketOptions::NoPush:
+#if defined(HAVE_CORKABLE_TCP)
+         opt_level        = IPPROTO_TCP;
+         opt_name         = VPR_TCP_CORK;
+         opt_data.enabled = (data.no_push ? 1 : 0);
+         opt_size         = sizeof(int);
+#else
+         // Maybe this should be a compile-time assertion.
+         vprASSERT(false && "Should not have gotten here without TCP corking");
+#endif
          break;
 
       // Unsetable

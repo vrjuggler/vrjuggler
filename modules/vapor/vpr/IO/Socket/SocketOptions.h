@@ -71,6 +71,7 @@ namespace SocketOptions
       McastTimeToLive,  /**< Multicast time to live (TTL) option */
       McastLoopback,    /**< Multicast loopback option */
       NoDelay,          /**< TCP "no delay" option (Nagle Algorithm) */
+      NoPush,           /**< TCP "corking" option. @since 2.1.9 */
       MaxSegment,       /**< TCP maximum segment size option */
             /** Implementation specific */
       Error             /**< Current socket error */
@@ -108,6 +109,7 @@ namespace SocketOptions
       bool          reuse_addr;
       bool          keep_alive;
       bool          no_delay;
+      bool          no_push;            /**< @since 2.1.9 */
       bool          broadcast;
       size_t        max_segment;
       size_t        recv_buffer_size;

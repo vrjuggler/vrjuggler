@@ -86,12 +86,14 @@ public:
       setOption(vpr::SocketOptions::MaxSegment, option);
    }
 
+   /** @name Nagle Algorithm Control */
+   //@{
    /**
     * Gets the current no-delay status for this socket.  If no-delay is true,
-    * then the Nagel algorithm has been disabled.
+    * then the Nagle algorithm has been disabled.
     *
     * @return \c true is returned if the Nabel algorithm is \em not being used
-    *         to delay the transmission of TCP segments. Otherwise, the Nagel
+    *         to delay the transmission of TCP segments. Otherwise, the Nagle
     *         algorithm is delaying the transmission.
     */
    bool getNoDelay() const
@@ -104,7 +106,7 @@ public:
 
    /**
     * Sets the current no-delay status for this socket.  If no-delay is true,
-    * then the Nagel algorithm will be disabled.
+    * then the Nagle algorithm will be disabled.
     *
     * @param enableVal The Boolean enable/disable state for no-delay on this
     *                  socket.
@@ -115,6 +117,71 @@ public:
       option.no_delay = enableVal;
       setOption(vpr::SocketOptions::NoDelay, option);
    }
+   //@}
+
+   /** @name TCP Corking Interface */
+   //@{
+   /**
+    * Gets the state of the "no push" or "corking" for this socket. While a
+    * TCP socket is in the corked state, write operations are queued for
+    * later transmission when the socket is uncorked (that is, when the
+    * no-push state is disabled).
+    *
+    * @return true is returned if this socket is currently in the no-push
+    *         (corked) state. false is returned otherwise.
+    *
+    * @since 2.1.9
+    */
+   bool getNoPush() const;
+
+   /**
+    * Enables or disables the no-push (or "corked") state.
+    *
+    * @post If this socket was previously in the corked state and the value of
+    *       \p enableVal is false, then all queued buffer writes will be
+    *       performed.
+    *
+    * @param enableVal A boolean value indicating whether this socket should
+    *                  be in the no-push (corked) state.
+    *
+    * @since 2.1.9
+    */
+   void setNoPush(const bool enableVal);
+   //@}
+
+protected:
+   /** @name Socket Corking Interface */
+   //@{
+   /**
+    * Template method used to inform the platform-specific implementation when
+    * this socket is put into the no-push (corked) state. This method is only
+    * used for platforms that lack TCP corking as a socket option.
+    *
+    * @pre setNoPush() was invoked with the enable state value set to \c true.
+    *
+    * @see setNoPush()
+    *
+    * @since 2.1.9
+    */
+   virtual void cork() = 0;
+
+   /**
+    * Template method used to inform the platform-specific implementation when
+    * this socket is changed from the no-push (corked) state to the regular,
+    * "uncorked" state. This method is only used for platforms that lack TCP
+    * corking as a socket option.
+    *
+    * @pre setNoPush() was invoked with the enable state value set to \c false.
+    *
+    * @see setNoPush()
+    *
+    * @since 2.1.9
+    */
+   virtual void uncork() = 0;
+   //@}
+
+private:
+   bool mCorked;
 };
 
 } // End of vpr namespace

@@ -378,8 +378,8 @@ public:
     * @throw vpr::IOException
     *           Thrown if the file handle write operation failed.
     */
-   vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval& timeout);
+   virtual vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout);
 
    vpr::Uint32 availableBytes() const
    {
@@ -420,7 +420,7 @@ public:
     * @pre If mHandle is NULL, its memory has already been deleted.
     * @post The memory for mHandle is deleted.
     */
-   ~SocketImplBSD();
+   virtual ~SocketImplBSD();
 
 protected:
   /**

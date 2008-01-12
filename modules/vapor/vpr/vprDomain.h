@@ -36,6 +36,8 @@
 #ifndef _VPR_DOMAIN_H_
 #define _VPR_DOMAIN_H_
 
+#include <boost/function.hpp>
+
 // The following define "domains" supported by VPR.  These are used to
 // determine which platform specific headers should be included when
 // compiling.  See vpr/Thread/Thread.h for an example of these values are
@@ -144,6 +146,24 @@ namespace vpr
 #endif /* ifdef VPR_USE_NSPR */
 #endif /* ifdef VPR_SIMULATOR */
 
+   /**
+    * The type for strategies used to determine the amount of memory to
+    * allocate for the corking buffer. The first parameter is the current size
+    * of the corking buffer. The second is the necessary number of additional
+    * bytes. Upon initial allocation of the corking buffer (when
+    * vpr::SocketStream::cork() is invoked), the first value will be 0. The
+    * value returned is the number of bytes to (re)allocate for the corking
+    * buffer. If this value is less than or equal to the current buffer size,
+    * a vpr::Exception will be thrown by the code utilizing the allocation
+    * strategy.
+    *
+    * @see vpr::SocketStream_t::setCorkAllocStrategy()
+    * @see vpr::NoPushWriter
+    *
+    * @since 2.1.9
+    */
+   typedef boost::function<size_t (const size_t, const size_t)>
+      NoPushAllocStrategy;
 }
 
 // This is the threading (and synchronization) domain.  It defins the types

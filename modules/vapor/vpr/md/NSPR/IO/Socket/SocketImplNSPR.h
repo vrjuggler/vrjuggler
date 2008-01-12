@@ -398,8 +398,8 @@ public:
     * @throw vpr::IOException
     *           Thrown if the socket write operation failed.
     */
-   vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
-                       const vpr::Interval& timeout);
+   virtual vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
+                               const vpr::Interval& timeout);
 
    /**
     * Returns the number of bytes available to be read from this socket's
@@ -443,7 +443,7 @@ public:
     * @post Closes this socket and deallocates any resources associated with
     *       this socket.
     */
-   ~SocketImplNSPR();
+   virtual ~SocketImplNSPR();
 
 protected:
    /**

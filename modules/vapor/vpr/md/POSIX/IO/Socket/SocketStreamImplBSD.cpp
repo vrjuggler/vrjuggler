@@ -43,9 +43,10 @@
 #include <errno.h>
 
 #include <vpr/Util/Debug.h>
-#include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/IO/WouldBlockException.h>
+#include <vpr/IO/Socket/SimpleAllocationStrategies.h>
+#include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
 
 
 namespace vpr
@@ -57,6 +58,8 @@ namespace vpr
 
 SocketStreamImplBSD::SocketStreamImplBSD()
    : SocketImplBSD(vpr::SocketTypes::STREAM)
+   , mCorked(false)
+   , mCorkedWriter(doublingAllocationStrategy)
 {
    /* Do nothing. */ ;
 }
@@ -64,12 +67,16 @@ SocketStreamImplBSD::SocketStreamImplBSD()
 SocketStreamImplBSD::SocketStreamImplBSD(const InetAddr& localAddr,
                                          const InetAddr& remoteAddr)
    : SocketImplBSD(localAddr, remoteAddr, SocketTypes::STREAM)
+   , mCorked(false)
+   , mCorkedWriter(doublingAllocationStrategy)
 {
    /* Do nothing. */ ;
 }
 
 SocketStreamImplBSD::SocketStreamImplBSD(const SocketStreamImplBSD& sock)
    : SocketImplBSD(sock.mLocalAddr, sock.mRemoteAddr, SocketTypes::STREAM)
+   , mCorked(sock.mCorked)
+   , mCorkedWriter(sock.mCorkedWriter)
 {
    // mHandle is created in the base class constructor. Since we are creating
    // a copy we must clean up existing memory.
@@ -81,6 +88,11 @@ SocketStreamImplBSD::SocketStreamImplBSD(const SocketStreamImplBSD& sock)
 
    mHandle         = new FileHandleImplUNIX(sock.mHandle->getName());
    mHandle->mFdesc = sock.mHandle->mFdesc;
+}
+
+SocketStreamImplBSD::~SocketStreamImplBSD()
+{
+   /* Do nothing. */ ;
 }
 
 // Listen on the socket for incoming connection requests.
@@ -159,6 +171,54 @@ void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,
       sock.mConnectCalled = true;
       sock.mBlockingFixed = true;
    }
+}
+
+vpr::Uint32 SocketStreamImplBSD::write_i(const void* buffer,
+                                         const vpr::Uint32 length,
+                                         const vpr::Interval& timeout)
+{
+#if ! defined(HAVE_CORKABLE_TCP)
+   vpr::Uint32 written(0);
+
+   if ( mCorked )
+   {
+      written = mCorkedWriter.write(buffer, length);
+   }
+   else
+   {
+      written = SocketImplBSD::write_i(buffer, length, timeout);
+   }
+
+   return written;
+#else
+   return SocketImplBSD::write_i(buffer, length, timeout);
+#endif
+}
+
+void SocketStreamImplBSD::cork()
+{
+#if ! defined(HAVE_CORKABLE_TCP)
+   mCorked = true;
+#endif
+}
+
+void SocketStreamImplBSD::uncork()
+{
+#if ! defined(HAVE_CORKABLE_TCP)
+   if ( mCorked )
+   {
+      mCorked = false;
+
+      if ( mCorkedWriter.getBufferUse() > 0 )
+      {
+         SocketImplBSD::write_i(mCorkedWriter.getBuffer(),
+                                mCorkedWriter.getBufferUse(),
+                                vpr::Interval::NoTimeout);
+      }
+
+      mCorkedWriter.flush();
+   }
+#endif
 }
 
 } // End of vpr namespace

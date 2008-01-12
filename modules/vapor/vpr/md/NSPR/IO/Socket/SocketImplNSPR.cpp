@@ -687,6 +687,9 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
       case vpr::SocketOptions::MaxSegment:
          opt_data.option = PR_SockOpt_MaxSegment;
          break;
+      case vpr::SocketOptions::NoPush:
+         vprASSERT(false && "Should not have gotten here with NSPR sockets");
+         break;
       default:
          throw SocketException("Unsupported option passed to getOption().",
                                VPR_LOCATION);
@@ -767,6 +770,10 @@ void SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
                break;
             case vpr::SocketOptions::MaxSegment:
                data.max_segment = opt_data.value.max_segment;
+               break;
+            case vpr::SocketOptions::NoPush:
+               vprASSERT(false &&
+                         "Should not have gotten here with NSPR sockets");
                break;
             case vpr::SocketOptions::AddMember:
             case vpr::SocketOptions::DropMember:
@@ -884,6 +891,9 @@ void SocketImplNSPR::setOption(const vpr::SocketOptions::Types option,
       case vpr::SocketOptions::MaxSegment:
          opt_data.option            = PR_SockOpt_MaxSegment;
          opt_data.value.max_segment = data.max_segment;
+         break;
+      case vpr::SocketOptions::NoPush:
+         vprASSERT(false && "Should not have gotten here with NSPR sockets");
          break;
       default:
          throw SocketException("Unsupported option passed to setOption().",

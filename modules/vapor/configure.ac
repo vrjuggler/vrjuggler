@@ -476,6 +476,39 @@ if test "x$SUBSYSTEM" != "xNSPR" ; then
                         [ac_cv_have_sin_len='yes'],
                         [ac_cv_have_sin_len='no'])])
 
+    AC_CACHE_CHECK([for TCP_CORK], [ac_cv_has_tcp_cork],
+        [AC_TRY_COMPILE([
+#include <sys/types.h>
+#include <netinet/tcp.h>
+],
+                        [int cork = TCP_CORK; ],
+                        [ac_cv_has_tcp_cork='yes'],
+                        [ac_cv_has_tcp_cork='no'])])
+
+    AH_TEMPLATE([HAVE_CORKABLE_TCP],
+                [Define if TCP_CORK or TCP_NOPUSH is defined in netint/tcp.h])
+
+    # If TCP_CORK is not defined, check for TCP_NOPUSH.
+    if test "x$ac_cv_has_tcp_cork" = "xno" ; then
+       AC_CACHE_CHECK([for TCP_NOPUSH], [ac_cv_has_tcp_nopush],
+           [AC_TRY_COMPILE([
+#include <sys/types.h>
+#include <netinet/tcp.h>
+],
+                           [int np = TCP_NOPUSH; ],
+                           [ac_cv_has_tcp_nopush='yes'],
+                           [ac_cv_has_tcp_nopush='no'])])
+
+       # TCP_NOPUSH is defined.
+       if test "x$ac_cv_has_tcp_nopush" = "xyes" ; then
+           AC_DEFINE(HAVE_CORKABLE_TCP)
+       fi
+    # TCP_CORK is defined.
+    else
+        AC_DEFINE(HAVE_CORKABLE_TCP)
+    fi
+
+
     AH_TEMPLATE([HAVE_SIN_LEN], [Define if struct sockaddr_in has sin_len])
 
    if test "x$ac_cv_have_sin_len" = "xyes" ; then

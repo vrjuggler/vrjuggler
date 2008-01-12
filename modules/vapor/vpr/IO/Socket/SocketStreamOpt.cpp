@@ -42,6 +42,7 @@ namespace vpr
 {
 
 SocketStreamOpt::SocketStreamOpt()
+   : mCorked(false)
 {
    /* Do nothing. */ ;
 }
@@ -49,6 +50,43 @@ SocketStreamOpt::SocketStreamOpt()
 SocketStreamOpt::~SocketStreamOpt()
 {
    /* Do nothing. */ ;
+}
+
+bool SocketStreamOpt::getNoPush() const
+{
+#if defined(HAVE_CORKABLE_TCP)
+   vpr::SocketOptions::Data option;
+
+   getOption(vpr::SocketOptions::NoPush, option);
+   return option.no_push;
+#else
+   return mCorked;
+#endif
+}
+
+void SocketStreamOpt::setNoPush(const bool enableVal)
+{
+#if defined(HAVE_CORKABLE_TCP)
+   vpr::SocketOptions::Data option;
+   option.no_push = enableVal;
+   setOption(vpr::SocketOptions::NoPush, option);
+#else
+   if ( enableVal != mCorked )
+   {
+      // Changing from the uncorked state to the corked state.
+      if ( enableVal )
+      {
+         cork();
+      }
+      // Changing from the corked state to the uncorked state.
+      else
+      {
+         uncork();
+      }
+   }
+#endif
+
+   mCorked = enableVal;
 }
 
 }

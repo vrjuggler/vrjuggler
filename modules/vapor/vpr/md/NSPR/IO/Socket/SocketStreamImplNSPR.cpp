@@ -42,7 +42,9 @@
 
 #include <vpr/IO/WouldBlockException.h>
 #include <vpr/IO/TimeoutException.h>
+#include <vpr/IO/Socket/SimpleAllocationStrategy.h>
 #include <vpr/Util/Error.h>
+#include <vpr/Util/Debug.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 
@@ -59,6 +61,8 @@ namespace vpr
 // variables of the object.
 SocketStreamImplNSPR::SocketStreamImplNSPR()
    : SocketImplNSPR(vpr::SocketTypes::STREAM)
+   , mCorked(false)
+   , mCorkedWriter(doublingAllocationStrategy)
 {
    /* Do nothing. */ ;
 }
@@ -69,6 +73,8 @@ SocketStreamImplNSPR::SocketStreamImplNSPR()
 SocketStreamImplNSPR::SocketStreamImplNSPR(const vpr::InetAddr& localAddr,
                                            const vpr::InetAddr& remoteAddr)
    : SocketImplNSPR(localAddr, remoteAddr, vpr::SocketTypes::STREAM)
+   , mCorked(false)
+   , mCorkedWriter(doublingAllocationStrategy)
 {
    ;
 }
@@ -76,8 +82,15 @@ SocketStreamImplNSPR::SocketStreamImplNSPR(const vpr::InetAddr& localAddr,
 // XXX: We need to have a reference count here
 SocketStreamImplNSPR::SocketStreamImplNSPR(const SocketStreamImplNSPR& sock)
    : SocketImplNSPR(sock)
+   , mCorked(sock.mCorked)
+   , mCorkedWriter(sock.mCorkedWriter)
 {
    /* Just call base class */ ;
+}
+
+SocketStreamImplNSPR::~SocketStreamImplNSPR()
+{
+   /* Do nothing. */ ;
 }
 
 // Listen on the socket for incoming connection requests.
@@ -178,6 +191,46 @@ void SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
          sock.mBlocking = mBlocking;
          sock.mBlockingFixed = true;
       }
+   }
+}
+
+vpr::Uint32 SocketStreamImplNSPR::write_i(const void* buffer,
+                                          const vpr::Uint32 length,
+                                          const vpr::Interval& timeout)
+{
+   vpr::Uint32 written(0);
+
+   if ( mCorked )
+   {
+      written = mCorkedWriter.write(buffer, length);
+   }
+   else
+   {
+      written = SocketImplNSPR::write_i(buffer, length, timeout);
+   }
+
+   return written;
+}
+
+void SocketStreamImplNSPR::cork()
+{
+   mCorked = true;
+}
+
+void SocketStreamImplNSPR::uncork()
+{
+   if ( mCorked )
+   {
+      mCorked = false;
+
+      if ( mCorkedWriter.getBufferUse() > 0 )
+      {
+         SocketImplNSPR::write_i(mCorkedWriter.getBuffer(),
+                                 mCorkedWriter.getBufferUse(),
+                                 vpr::Interval::NoTimeout);
+      }
+
+      mCorkedWriter.flush();
    }
 }
 
