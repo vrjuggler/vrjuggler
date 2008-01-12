@@ -66,7 +66,8 @@ bool SocketStreamOpt::getNoPush() const
 
 void SocketStreamOpt::setNoPush(const bool enableVal)
 {
-#if defined(HAVE_CORKABLE_TCP)
+// NSPR sockets are not corkable, but the OS may still support TCP corking.
+#if defined(HAVE_CORKABLE_TCP) && VPR_IO_DOMAIN_INCLUDE != VPR_DOMAIN_NSPR
    vpr::SocketOptions::Data option;
    option.no_push = enableVal;
    setOption(vpr::SocketOptions::NoPush, option);
