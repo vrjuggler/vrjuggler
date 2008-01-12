@@ -688,6 +688,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoPushWriter.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp"
 				>
 			</File>
@@ -1061,6 +1065,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoPushWriter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.h"
 				>
 			</File>
@@ -1166,6 +1174,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\Signal.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SimpleAllocationStrategies.h"
 				>
 			</File>
 			<File

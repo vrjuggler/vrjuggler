@@ -290,6 +290,9 @@
 				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Io\Socket\NoPushWriter.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp">
 			</File>
 			<File
@@ -570,6 +573,9 @@
 				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Io\Socket\NoPushWriter.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.h">
 			</File>
 			<File
@@ -649,6 +655,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\Signal.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Io\Socket\SimpleAllocationStrategies.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Singleton.h">
