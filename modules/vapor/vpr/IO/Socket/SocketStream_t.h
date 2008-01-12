@@ -131,8 +131,8 @@ public:
     *
     * @param backlog The maximum length of th queue of pending connections.
     *
-    * @throws vpr::SocketException if the socket could not be put into
-    *         a listening state.
+    * @throw vpr::SocketException
+    *           Thrown if the socket could not be put into a listening state.
     */
    void listen(const int backlog = 5)
    {
@@ -152,12 +152,14 @@ public:
     * @param timeout The length of time to wait for the accept call to
     *                return.
     *
-    * @throws vpr::WouldBlockException if this is a non-blocking socket,
-    *         and there are no waiting connection requests.
-    * @throws vpr::TimeoutException if no connection requests arrived within
-    *         the given timeout period.
-    * @throws vpr::SocketException if the connection was not accepted because
-    *         of an error.
+    * @throw vpr::WouldBlockException
+    *           Thrown if this is a non-blocking socket, and there are no
+    *           waiting connection requests.
+    * @throw vpr::TimeoutException
+    *           Thrown if no connection requests arrived within the given
+    *           timeout period.
+    * @throw vpr::SocketException
+    *           Thrown if the connection was not accepted because of an error.
     *
     * @see open, bind, listen
     */
@@ -181,12 +183,14 @@ public:
     *                  This argument is optional and defaults to true.
     * @param backlog   The maximum length of the pending connection queue.
     *
-    * @throws vpr::WouldBlockException if this is a non-blocking socket,
-    *         and there are no waiting connection requests.
-    * @throws vpr::TimeoutException if no connection requests arrived within
-    *         the given timeout period.
-    * @throws vpr::SocketException if the connection was not accepted because
-    *         of an error.
+    * @throw vpr::WouldBlockException
+    *           Thrown if this is a non-blocking socket, and there are no
+    *           waiting connection requests.
+    * @throw vpr::TimeoutException
+    *           Thrown if no connection requests arrived within the given
+    *           timeout period.
+    * @throw vpr::SocketException
+    *           Thrown if the connection was not accepted because of an error.
     */
    void openServer(const bool reuseAddr = true,
                    const int backlog = 5)
@@ -220,7 +224,8 @@ protected:
    }
 
    /**
-    * @THROWS vpr::SocketException.
+    * @throw vpr::SocketException
+    *           Thrown if querying the indiccated option on this socket fails.
     */
    virtual void getOption(const vpr::SocketOptions::Types option,
                           struct vpr::SocketOptions::Data& data)
@@ -230,7 +235,8 @@ protected:
    }
 
    /**
-    * @THROWS vpr::SocketException.
+    * @throw vpr::SocketException
+    *           Thrown if setting the indicated option on this socket fails.
     */
    virtual void setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data)

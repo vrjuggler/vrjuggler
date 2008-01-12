@@ -47,6 +47,8 @@
 #  include <process.h>
 #endif
 
+#include <boost/concept_check.hpp>
+
 #include <prthread.h>
 #include <prtypes.h>
 
@@ -257,9 +259,9 @@ public:
     *
     * @note This operation is not currently supported by NSPR threads.
     */
-   virtual void kill(const int)
+   virtual void kill(const int signum)
    {
-      /* Do nothing. */ ;
+      boost::ignore_unused_variable_warning(signum);
    }
 
    /**
