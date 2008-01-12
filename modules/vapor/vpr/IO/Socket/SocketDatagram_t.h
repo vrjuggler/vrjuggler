@@ -127,7 +127,8 @@ public:
    /**
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter \p from.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    vpr::Uint32 recvfrom(void* msg, const vpr::Uint32 len,
                         vpr::InetAddr& from,
@@ -139,7 +140,8 @@ public:
    /**
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter \p from.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    vpr::Uint32 recvfrom(std::string& msg, const vpr::Uint32 len,
                         vpr::InetAddr& from,
@@ -154,7 +156,8 @@ public:
    /**
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter \p from.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    vpr::Uint32 recvfrom(std::vector<vpr::Uint8>& msg,
                         const vpr::Uint32 len, vpr::InetAddr& from,
@@ -174,7 +177,8 @@ public:
 
    /**
     * Sends a message to the designated recipient.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    vpr::Uint32 sendto(const void* msg, const vpr::Uint32 len,
                       const vpr::InetAddr& to,
@@ -185,7 +189,8 @@ public:
 
    /**
     * Sends a message to the designated recipient.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    vpr::Uint32 sendto(const std::string& msg, const vpr::Uint32 len,
                       const vpr::InetAddr& to,
@@ -197,7 +202,8 @@ public:
 
    /**
     * Sends a message to the designated recipient.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    vpr::Uint32 sendto(const std::vector<vpr::Uint8>& msg,
                       const vpr::Uint32 len, const vpr::InetAddr& to,
@@ -209,7 +215,8 @@ public:
 
 protected:
    /**
-    * @throws vpr::SocketException.
+    * @throw vpr::SocketException
+    *           Thrown if querying the indiccated option on this socket fails.
     */
    virtual void getOption(const vpr::SocketOptions::Types option,
                           struct vpr::SocketOptions::Data& data)
@@ -219,7 +226,8 @@ protected:
    }
 
    /**
-    * @throws vpr::SocketException.
+    * @throw vpr::SocketException
+    *           Thrown if setting the indicated option on this socket fails.
     */
    virtual void setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data)
