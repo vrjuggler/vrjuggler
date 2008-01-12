@@ -244,42 +244,6 @@ protected:
       mSocketStreamImpl->setOption(option, data);
    }
 
-   /** @name TCP Corking Interface Implementation */
-   //@{
-   void setCorkAllocStrategy(const NoPushStrategy& s)
-   {
-      mSocketStreamImpl->setCorkAllocStrategy(s);
-   }
-
-   /**
-    * Calls through to the cork() method of the internal stream socket
-    * implementation.
-    *
-    * @since 2.1.9
-    *
-    * @see vpr::SocketStreamImplBSD::cork()
-    * @see vpr::SocketStreamImplNSPR::cork()
-    */
-   virtual void cork()
-   {
-      mSocketStreamImpl->cork();
-   }
-
-   /**
-    * Calls through to the uncork() method of the internal stream socket
-    * implementation.
-    *
-    * @since 2.1.9
-    *
-    * @see vpr::SocketStreamImplBSD::uncork()
-    * @see vpr::SocketStreamImplNSPR::uncork()
-    */
-   virtual void uncork()
-   {
-      mSocketStreamImpl->uncork();
-   }
-   //@}
-
 // Put in back door for simulator
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
 public:
