@@ -236,8 +236,8 @@ public:
     * Changes the name extension applied when makeFullDSOName() constructs
     * the name of the shared library to load.
     *
-    * @parram nameExt The new name extension (such as "_x") that will be used
-    *                 by makeFullDSOName().
+    * @param nameExt The new name extension (such as "_x") that will be used
+    *                by makeFullDSOName().
     *
     * @since 2.1.2
     *

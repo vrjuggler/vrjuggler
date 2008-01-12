@@ -103,7 +103,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
    ThreadPosix(VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
-               size_t stack_size = 0);
+               size_t stackSize = 0);
 
    /**
     * Spawning constructor with argument.  This will start a new thread that

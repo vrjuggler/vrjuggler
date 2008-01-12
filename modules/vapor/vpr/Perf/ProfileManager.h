@@ -120,7 +120,7 @@ namespace vpr
       /** Prints the full profile tree. */
       static void printTree(bool forAllThreads = true);
 
-      /** @nameIterator handling. */
+      /** @name Iterator handling. */
       //@{
       /** Returns a new Iterator that is set to the root. */
       static ProfileIterator begin()

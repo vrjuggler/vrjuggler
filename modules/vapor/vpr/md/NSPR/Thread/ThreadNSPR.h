@@ -47,6 +47,8 @@
 #  include <process.h>
 #endif
 
+#include <boost/concept_check.hpp>
+
 #include <prthread.h>
 #include <prtypes.h>
 
@@ -272,9 +274,9 @@ public:
     *
     * @since 2.1.6
     */
-   void setRunOn(const int)
+   void setRunOn(const int cpu)
    {
-      /* Do nothing. */ ;
+      boost::ignore_unused_variable_warning(cpu);
    }
 
    /**
@@ -323,9 +325,9 @@ public:
     *
     * @note This operation is not currently supported by NSPR threads.
     */
-   void kill(const int)
+   void kill(const int signum)
    {
-      /* Do nothing. */ ;
+      boost::ignore_unused_variable_warning(signum);
    }
 
    /**

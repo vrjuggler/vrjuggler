@@ -46,6 +46,7 @@
 
 #include <process.h>
 #include <vector>
+#include <boost/concept_check.hpp>
 
 // To get the Win32 key stuff for storing self.
 #include <vpr/md/WIN32/Thread/ThreadKeyWin32.h>
@@ -100,7 +101,7 @@ public:
    ThreadWin32(VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                VPRThreadScope scope = VPR_GLOBAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
-               size_t stack_size = 0);
+               size_t stackSize = 0);
 
    /**
     * Spawning constructor with argument.  This will start a new thread that
@@ -330,8 +331,9 @@ public:  // ----- Various other thread functions ------
     *
     * @note This method does nothing. Use kill() instead.
     */
-   void kill(const int)
+   void kill(const int signum)
    {
+      boost::ignore_unused_variable_warning(signum);
       std::cerr << "vpr::ThreadWin32::kill() is not implemented!"
                 << std::endl;
    }
