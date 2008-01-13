@@ -206,6 +206,23 @@ public:
       this->listen(backlog);
    }
 
+   /**
+    * Changes the strategy used for determining hwo much memory to allocate
+    * for the corking buffer.
+    *
+    * @param strategy A callable object used to determine how much memory to
+    *                 allocate when the corking buffer needs to grow.
+    *
+    * @note This only has bearing on platforms (such as Windows) that do not
+    *       implement the no-push ("corking") option on TCP sockets.
+    *
+    * @since 2.1.9
+    */
+   void setCorkAllocStrategy(const NoPushAllocStrategy& s)
+   {
+      mSocketStreamImpl->setCorkAllocStrategy(s);
+   }
+
 protected:
    /**
     * Constructor.  Create a vpr::SocketStream object using the given
@@ -250,23 +267,6 @@ protected:
     * More about TCP corking can be found here: http://www.baus.net/on-tcp_cork
     */
    //@{
-   /**
-    * Changes the strategy used for determining hwo much memory to allocate
-    * for the corking buffer.
-    *
-    * @param strategy A callable object used to determine how much memory to
-    *                 allocate when the corking buffer needs to grow.
-    *
-    * @note This only has bearing on platforms (such as Windows) that do not
-    *       implement the no-push ("corking") option on TCP sockets.
-    *
-    * @since 2.1.9
-    */
-   void setCorkAllocStrategy(const NoPushAllocStrategy& s)
-   {
-      mSocketStreamImpl->setCorkAllocStrategy(s);
-   }
-
    /**
     * Calls through to the cork() method of the internal stream socket
     * implementation.
