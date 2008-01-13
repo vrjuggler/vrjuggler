@@ -45,7 +45,6 @@
 #include <vpr/IO/IOException.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Socket/SocketOptions.h>
-#include <vpr/IO/Socket/SocketIpOpt.h>
 
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Assert.h>
@@ -72,10 +71,14 @@ namespace vpr
  *
  * @see vpr::SocketStream_t, vpr::SocketDatagram_t, vpr::SocketImplNSPR,
  *      vpr::SocketImplBSD
+ *
+ * @note vpr::SocketBasicOpt and vpr::SocketIpOpt were folded into this class
+ *       in version 2.1.10. User-level code will most likely not be affected
+ *       by this difference.
  */
 //template<class RealSocketImpl, class IO_STATS_STRATEGY = NullIOStatsStrategy>
 template<class SockConfig_>
-class Socket_t : public vpr::BlockIO, public vpr::SocketIpOpt
+class Socket_t : public vpr::BlockIO
 {
 public:
    typedef SockConfig_                             Config;
@@ -596,6 +599,174 @@ public:
       mSocketImpl->setRemoteAddr(addr);
    }
 
+   /** @name Socket Options */
+   //@{
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   bool getKeepAlive() const
+   {
+      vpr::SocketOptions::Data option;
+
+      getOption(vpr::SocketOptions::KeepAlive, option);
+
+      return option.keep_alive;
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setKeepAlive(const bool enableVal)
+   {
+      vpr::SocketOptions::Data option;
+      option.keep_alive = enableVal;
+      setOption(vpr::SocketOptions::KeepAlive, option);
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void getLingerOnClose(bool& enabled, int& lingerSec) const
+   {
+      vpr::SocketOptions::Data opt;
+
+      getOption(vpr::SocketOptions::Linger, opt);
+
+      enabled   = opt.linger.enabled;
+      lingerSec = opt.linger.seconds;
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setLingerOnClose(const bool enableVal,
+                         const int lingerSec)
+   {
+      vpr::SocketOptions::Data opt;
+
+      opt.linger.enabled = enableVal;
+      opt.linger.seconds = lingerSec;
+
+      setOption(vpr::SocketOptions::Linger, opt);
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   size_t getRecvBufferSize() const
+   {
+      vpr::SocketOptions::Data opt;
+
+      getOption(vpr::SocketOptions::RecvBufferSize, opt);
+
+      return opt.recv_buffer_size;
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setRecvBufferSize(const Int32 size)
+   {
+      vpr::SocketOptions::Data opt;
+
+      opt.recv_buffer_size = size;
+
+      setOption(vpr::SocketOptions::RecvBufferSize, opt);
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   size_t getSendBufferSize() const
+   {
+      vpr::SocketOptions::Data opt;
+
+      getOption(vpr::SocketOptions::SendBufferSize, opt);
+
+      return opt.send_buffer_size;
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setSendBufferSize(const Int32 size)
+   {
+      vpr::SocketOptions::Data opt;
+
+      opt.send_buffer_size = size;
+
+      setOption(vpr::SocketOptions::SendBufferSize, opt);
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   bool getReuseAddr() const
+   {
+      vpr::SocketOptions::Data option;
+
+      getOption(vpr::SocketOptions::ReuseAddr, option);
+
+      return option.reuse_addr;
+   }
+
+   /**
+    * Enables reuse of the address that will be bound by the socket.
+    *
+    * @pre The socket has been opened, but bind() has not been called.
+    *
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setReuseAddr(const bool enableVal)
+   {
+      vpr::SocketOptions::Data option;
+      option.reuse_addr = enableVal;
+      setOption(vpr::SocketOptions::ReuseAddr, option);
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   vpr::SocketOptions::TypeOfService getTypeOfService() const
+   {
+      vpr::SocketOptions::Data option;
+
+      getOption(vpr::SocketOptions::IpTypeOfService, option);
+      return option.type_of_service;
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setTypeOfService(const vpr::SocketOptions::TypeOfService& tos)
+   {
+      vpr::SocketOptions::Data option;
+      option.type_of_service = tos;
+      setOption(vpr::SocketOptions::IpTypeOfService, option);
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   vpr::Int32 getTimeToLive() const
+   {
+      vpr::SocketOptions::Data option;
+
+      getOption(vpr::SocketOptions::IpTimeToLive, option);
+      return option.ip_ttl;
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setTimeToLive(const vpr::Int32 ttl)
+   {
+      vpr::SocketOptions::Data option;
+      option.ip_ttl = ttl;
+      setOption(vpr::SocketOptions::IpTimeToLive, option);
+   }
+   //@}
+
 protected:
    /**
     * Default constructor.  The socket address is set to "INADDRY_ANY", and
@@ -755,14 +926,36 @@ protected:
       return mSocketImpl->write_i(buffer, length, timeout);
    }
 
-   virtual void getOption(const vpr::SocketOptions::Types option,
-                          struct vpr::SocketOptions::Data& data) const
+   /**
+    * Retrieves the value for the given option as set on the socket.
+    *
+    * @param option The option to be queried.
+    * @param data   A data buffer that will be used to store the value of the
+    *               given option.
+    *
+    * @throw vpr::SocketException
+    *           Thrown if the value for the given option could not be
+    *           retrieved.
+    */
+   void getOption(const vpr::SocketOptions::Types option,
+                  struct vpr::SocketOptions::Data& data) const
    {
       mSocketImpl->getOption(option, data);
    }
 
-   virtual void setOption(const vpr::SocketOptions::Types option,
-                          const struct vpr::SocketOptions::Data& data)
+   /**
+    * Sets a value for the given option on the socket using the given data
+    * block.
+    *
+    * @param option The option whose value will be set.
+    * @param data   A data buffer containing the value to be used in setting
+    *               the socket option.
+    *
+    * @throw vpr::SocketException
+    *           Thrown if the value for the given option could not be set.
+    */
+   void setOption(const vpr::SocketOptions::Types option,
+                  const struct vpr::SocketOptions::Data& data)
    {
       mSocketImpl->setOption(option, data);
    }

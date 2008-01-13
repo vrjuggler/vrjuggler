@@ -39,7 +39,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/IO/Socket/SocketStreamOpt.h>
 #include <vpr/IO/Socket/Socket_t.h> /* base bridge class.. */
 
 #include <boost/smart_ptr.hpp>
@@ -57,11 +56,14 @@ namespace vpr
  *                      platform-specific socket implementation to use.
  *
  * @see vpr::SocketStreamImplNSPR, vpr::SocketStreamImplBSD
+ *
+ * @note vpr::SocketStreamOpt was folded into this class in version 2.1.10.
+ *       User-level code will most likely not be affected by this difference.
  */
 //template<class RealSocketStreamImpl, class RealSocketStreamImplParent, class IO_STATS_STRATEGY = NullIOStatsStrategy>
 //class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY>,
 template<class SocketConfig_>
-class SocketStream_t : public Socket_t<SocketConfig_>, public SocketStreamOpt
+class SocketStream_t : public Socket_t<SocketConfig_>
 {
 public:
    typedef SocketConfig_ Config;
@@ -107,7 +109,6 @@ public:
     */
    SocketStream_t(const SocketStream_t& sock)
       : Socket_t<SocketConfig_>()
-      , SocketStreamOpt()
       , mSocketStreamImpl(sock.mSocketStreamImpl)
    {
       this->mSocketImpl = mSocketStreamImpl;
@@ -206,6 +207,125 @@ public:
       this->listen(backlog);
    }
 
+   /** @name Socket Options */
+   //@{
+   /**
+    *
+    */
+   size_t getMaxSegmentSize() const
+   {
+      vpr::SocketOptions::Data option;
+
+      this->getOption(vpr::SocketOptions::MaxSegment, option);
+      return option.max_segment;
+   }
+
+   /**
+    *
+    */
+   void setMaxSegmentSize(const vpr::Int32 size)
+   {
+      vpr::SocketOptions::Data option;
+      option.max_segment = size;
+      this->setOption(vpr::SocketOptions::MaxSegment, option);
+   }
+
+   /** @name Nagle Algorithm Control */
+   //@{
+   /**
+    * Gets the current no-delay status for this socket.  If no-delay is true,
+    * then the Nagle algorithm has been disabled.
+    *
+    * @return \c true is returned if the Nabel algorithm is \em not being used
+    *         to delay the transmission of TCP segments. Otherwise, the Nagle
+    *         algorithm is delaying the transmission.
+    */
+   bool getNoDelay() const
+   {
+      vpr::SocketOptions::Data option;
+
+      this->getOption(vpr::SocketOptions::NoDelay, option);
+      return option.no_delay;
+   }
+
+   /**
+    * Sets the current no-delay status for this socket.  If no-delay is true,
+    * then the Nagle algorithm will be disabled.
+    *
+    * @param enableVal The Boolean enable/disable state for no-delay on this
+    *                  socket.
+    */
+   void setNoDelay(const bool enableVal)
+   {
+      vpr::SocketOptions::Data option;
+      option.no_delay = enableVal;
+      this->setOption(vpr::SocketOptions::NoDelay, option);
+   }
+   //@}
+
+   /** @name TCP Corking Interface */
+   //@{
+   /**
+    * Gets the state of the "no push" or "corking" for this socket. While a
+    * TCP socket is in the corked state, write operations are queued for
+    * later transmission when the socket is uncorked (that is, when the
+    * no-push state is disabled).
+    *
+    * @return true is returned if this socket is currently in the no-push
+    *         (corked) state. false is returned otherwise.
+    *
+    * @since 2.1.9
+    */
+   bool getNoPush() const
+   {
+#if defined(HAVE_CORKABLE_TCP)
+      vpr::SocketOptions::Data option;
+
+      this->getOption(vpr::SocketOptions::NoPush, option);
+      return option.no_push;
+#else
+      return mCorked;
+#endif
+   }
+
+   /**
+    * Enables or disables the no-push (or "corked") state.
+    *
+    * @post If this socket was previously in the corked state and the value of
+    *       \p enableVal is false, then all queued buffer writes will be
+    *       performed.
+    *
+    * @param enableVal A boolean value indicating whether this socket should
+    *                  be in the no-push (corked) state.
+    *
+    * @since 2.1.9
+    */
+   void setNoPush(const bool enableVal)
+   {
+// NSPR sockets are not corkable, but the OS may still support TCP corking.
+#if defined(HAVE_CORKABLE_TCP) && VPR_IO_DOMAIN_INCLUDE != VPR_DOMAIN_NSPR
+      vpr::SocketOptions::Data option;
+      option.no_push = enableVal;
+      this->setOption(vpr::SocketOptions::NoPush, option);
+#else
+      if ( enableVal != mCorked )
+      {
+         // Changing from the uncorked state to the corked state.
+         if ( enableVal )
+         {
+            mSocketStreamImpl->cork();
+         }
+         // Changing from the corked state to the uncorked state.
+         else
+         {
+            mSocketStreamImpl->uncork();
+         }
+      }
+#endif
+
+      mCorked = enableVal;
+   }
+
    /**
     * Changes the strategy used for determining hwo much memory to allocate
     * for the corking buffer.
@@ -222,6 +342,9 @@ public:
    {
       mSocketStreamImpl->setCorkAllocStrategy(s);
    }
+   //@}
+
+   //@}
 
 protected:
    /**
@@ -241,67 +364,20 @@ protected:
    }
 
    /**
-    * @throw vpr::SocketException
-    *           Thrown if querying the indiccated option on this socket fails.
-    */
-   virtual void getOption(const vpr::SocketOptions::Types option,
-                          struct vpr::SocketOptions::Data& data)
-      const
-   {
-      mSocketStreamImpl->getOption(option, data);
-   }
-
-   /**
-    * @throw vpr::SocketException
-    *           Thrown if setting the indicated option on this socket fails.
-    */
-   virtual void setOption(const vpr::SocketOptions::Types option,
-                          const struct vpr::SocketOptions::Data& data)
-   {
-      mSocketStreamImpl->setOption(option, data);
-   }
-
-   /**
     * @name TCP Corking Interface Implementation
     *
     * More about TCP corking can be found here: http://www.baus.net/on-tcp_cork
     */
    //@{
-   /**
-    * Calls through to the cork() method of the internal stream socket
-    * implementation.
-    *
-    * @since 2.1.9
-    *
-    * @see vpr::SocketStreamImplBSD::cork()
-    * @see vpr::SocketStreamImplNSPR::cork()
-    */
-   virtual void cork()
-   {
-      mSocketStreamImpl->cork();
-   }
-
-   /**
-    * Calls through to the uncork() method of the internal stream socket
-    * implementation.
-    *
-    * @since 2.1.9
-    *
-    * @see vpr::SocketStreamImplBSD::uncork()
-    * @see vpr::SocketStreamImplNSPR::uncork()
-    */
-   virtual void uncork()
-   {
-      mSocketStreamImpl->uncork();
-   }
-   //@}
-
 // Put in back door for simulator
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
 public:
 #endif
    /// Platform-specific stream socket implementation
    boost::shared_ptr<SocketStreamImpl> mSocketStreamImpl;
+
+private:
+   bool mCorked;
 };
 
 } // End of vpr namespace

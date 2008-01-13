@@ -58,9 +58,7 @@ SRCS=		ConnectionAbortedException.cpp	\
 		NoRouteToHostException.cpp	\
 		SocketAcceptor.cpp		\
 		SocketConnector.cpp		\
-		SocketDatagramOpt.cpp		\
 		SocketException.cpp		\
-		SocketStreamOpt.cpp		\
 		UnknownHostException.cpp
 
 include $(MKPATH)/dpp.obj.mk

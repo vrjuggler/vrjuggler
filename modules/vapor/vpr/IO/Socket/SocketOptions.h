@@ -124,47 +124,6 @@ namespace SocketOptions
    };
 }
 
-/** \class SocketOptionWrapper SocketOptions.h vpr/IO/Socket/SocketOptions.h
- *
- * Simple interface for setting and querying socket options.
- */
-class VPR_CLASS_API SocketOptionWrapper
-{
-public:
-   virtual ~SocketOptionWrapper()
-   {
-      /* Do nothing. */ ;
-   }
-
-protected:
-   /**
-    * Retrieves the value for the given option as set on the socket.
-    *
-    * @param option The option to be queried.
-    * @param data   A data buffer that will be used to store the value of the
-    *               given option.
-    *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be retrieved.
-    */
-   virtual void getOption(const vpr::SocketOptions::Types option,
-                          struct vpr::SocketOptions::Data& data) const = 0;
-
-   /**
-    * Sets a value for the given option on the socket using the given data
-    * block.
-    *
-    * @param option The option whose value will be set.
-    * @param data   A data buffer containing the value to be used in setting
-    *               the socket option.
-    *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be set.
-    */
-   virtual void setOption(const vpr::SocketOptions::Types option,
-                          const struct vpr::SocketOptions::Data& data) = 0;
-};
-
 } // End of vpr namespace
 
 

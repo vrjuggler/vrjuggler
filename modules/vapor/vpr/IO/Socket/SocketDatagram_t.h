@@ -40,7 +40,6 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/IO/Socket/Socket_t.h>
-#include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 #include <boost/smart_ptr.hpp>
 
@@ -57,11 +56,13 @@ namespace vpr
  *                      platform-specific socket implementation to use.
  *
  * @see vpr::SocketDatagramImplNSPR, vpr::SocketDatagramImplBSD
+ *
+ * @note vpr::SocketDatagramOpt was folded into this class in version 2.1.10.
+ *       User-level code will most likely not be affected by this difference.
  */
 template<class SocketConfig_>
 class SocketDatagram_t
    : public Socket_t<SocketConfig_>
-   , public SocketDatagramOpt
 {
 public:
    typedef SocketConfig_ Config;
@@ -72,7 +73,6 @@ public:
     */
    SocketDatagram_t()
       : Socket_t<Config>()
-      , SocketDatagramOpt()
       , mSocketDgramImpl()
    {
       mSocketDgramImpl =
@@ -95,7 +95,6 @@ public:
    SocketDatagram_t(const vpr::InetAddr& localAddr,
                     const vpr::InetAddr& remoteAddr)
       : Socket_t<Config>()
-      , SocketDatagramOpt()
    {
       mSocketDgramImpl =
          boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(localAddr,
@@ -110,7 +109,6 @@ public:
     */
    SocketDatagram_t(const SocketDatagram_t& sock)
       : Socket_t<Config>()
-      , SocketDatagramOpt()
       , mSocketDgramImpl(sock.mSocketDgramImpl)
    {
       Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
@@ -213,27 +211,112 @@ public:
       return sendto((const void*) &msg[0], len, to, timeout);
    }
 
-protected:
+   /** @name Socket Options */
+   //@{
    /**
-    * @throw vpr::SocketException
-    *           Thrown if querying the indiccated option on this socket fails.
+    * Gets the multicast interface for this datagram socket.
+    *
+    * @throw vpr::SocketException Thrown if the operation failed.
     */
-   virtual void getOption(const vpr::SocketOptions::Types option,
-                          struct vpr::SocketOptions::Data& data)
-      const
+   const vpr::InetAddr getMcastInterface() const
    {
-      return mSocketDgramImpl->getOption(option, data);
+      vpr::SocketOptions::Data option;
+
+      this->getOption(SocketOptions::McastInterface, option);
+      return option.mcast_if;
    }
 
    /**
-    * @throw vpr::SocketException
-    *           Thrown if setting the indicated option on this socket fails.
+    * Sets the multicast interface for this datagram socket.
+    *
+    * @throw vpr::SocketException Thrown if the operation failed.
     */
-   virtual void setOption(const vpr::SocketOptions::Types option,
-                          const struct vpr::SocketOptions::Data& data)
+   void setMcastInterface(const vpr::InetAddr& mcastIf)
    {
-      mSocketDgramImpl->setOption(option, data);
+      vpr::SocketOptions::Data option;
+      option.mcast_if = mcastIf;
+      this->setOption(SocketOptions::McastInterface, option);
    }
+
+   /**
+    * Gets the multicast time-to-live parameter for packets sent on this
+    * socket.
+    *
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   vpr::Uint8 getMcastTimeToLive() const
+   {
+      vpr::SocketOptions::Data option;
+
+      this->getOption(SocketOptions::McastTimeToLive, option);
+      return option.mcast_ttl;
+   }
+
+   /**
+    * Sets the multicast time-to-live parameter for packets sent on this
+    * socket.
+    *
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setMcastTimeToLive(const vpr::Uint8 ttl)
+   {
+      vpr::SocketOptions::Data option;
+      option.mcast_ttl = ttl;
+      this->setOption(SocketOptions::McastTimeToLive, option);
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   vpr::Uint8 getMcastLoopback() const
+   {
+      vpr::SocketOptions::Data option;
+
+      this->getOption(SocketOptions::McastLoopback, option);
+      return option.mcast_loopback;
+   }
+
+   /**
+    * @throw vpr::SocketException Thrown if the operation failed.
+    */
+   void setMcastLoopback(const vpr::Uint8 loop)
+   {
+      vpr::SocketOptions::Data option;
+      option.mcast_loopback = loop;
+      this->setOption(SocketOptions::McastLoopback, option);
+   }
+
+   /**
+    * @throw vpr::IOException Thrown if the operation failed.
+    */
+   void addMcastMember(const vpr::McastReq& request)
+   {
+      vpr::SocketOptions::Data option;
+      option.mcast_add_member = request;
+      this->setOption(SocketOptions::AddMember, option);
+   }
+
+   /**
+    * @throw vpr::IOException Thrown if the operation failed.
+    */
+   void dropMcastMember(const vpr::McastReq& request)
+   {
+      vpr::SocketOptions::Data option;
+      option.mcast_drop_member = request;
+      this->setOption(SocketOptions::DropMember, option);
+   }
+
+   /**
+    * @throw vpr::IOException Thrown if the operation failed.
+    * @since 1.1.17
+    */
+   void setBroadcast(const bool val)
+   {
+      vpr::SocketOptions::Data option;
+      option.broadcast = val;
+      this->setOption(SocketOptions::Broadcast, option);
+   }
+   //@}
 
 // Put in back door for simulator
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR

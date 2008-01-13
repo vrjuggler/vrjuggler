@@ -1,5 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2008-01-13 patrick  Folded vpr::SocketBasicOpt and vpr::SocketIpOpt into
+                    vpr::Socket_t<T>. Folded vpr::SocketStreamOpt into
+                    vpr::SocketStream_t<T>. Folded vpr::SocketDatagramOpt into
+                    vpr::SocketDatagram_t<T>. Removed vpr::SocketOptionWrapper.
+                    NEW VERSION: 2.1.10
 2008-01-12 patrick  Extended vpr::SocketStream to support "corked" or no-push
                     writing.
                     NEW VERSION: 2.1.9
