@@ -284,6 +284,9 @@
 				RelativePath="..\..\modules\vapor\vpr\Sync\LockException.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.cpp">
+			</File>
+			<File
 				RelativePath="..\..\external\md5-c\md5c.c">
 			</File>
 			<File
@@ -341,9 +344,6 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketDatagramImplNSPR.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagramOpt.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketException.cpp">
 			</File>
 			<File
@@ -351,9 +351,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketStreamImplNSPR.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStreamOpt.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\StreamLock.cpp">
@@ -561,6 +558,9 @@
 				RelativePath="..\..\modules\vapor\vpr\Sync\LockException.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\McastReq.h">
 			</File>
 			<File
@@ -672,9 +672,6 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketAcceptor.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketBasicOpt.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketConnector.h">
 			</File>
 			<File
@@ -687,16 +684,10 @@
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketDatagramImplNSPR.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagramOpt.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketException.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketImplNSPR.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketIpOpt.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketOptions.h">
@@ -709,9 +700,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketStreamImplNSPR.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStreamOpt.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketTypes.h">

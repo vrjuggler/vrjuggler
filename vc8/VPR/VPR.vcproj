@@ -680,6 +680,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\external\md5-c\md5c.c"
 				>
 			</File>
@@ -756,10 +760,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagramOpt.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketException.cpp"
 				>
 			</File>
@@ -769,10 +769,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketStreamImplNSPR.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStreamOpt.cpp"
 				>
 			</File>
 			<File
@@ -1061,6 +1057,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.h"
 				>
 			</File>
@@ -1197,10 +1197,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketBasicOpt.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketConnector.h"
 				>
 			</File>
@@ -1217,19 +1213,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketDatagramOpt.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketException.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketImplNSPR.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketIpOpt.h"
 				>
 			</File>
 			<File
@@ -1246,10 +1234,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketStreamImplNSPR.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\IO\Socket\SocketStreamOpt.h"
 				>
 			</File>
 			<File
