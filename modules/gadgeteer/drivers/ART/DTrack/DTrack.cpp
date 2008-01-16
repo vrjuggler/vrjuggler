@@ -1,5 +1,5 @@
 /* Gadgeteer Driver for 'A.R.T. DTrack' Tracker
- * Copyright (C) 2005-2007, Advanced Realtime Tracking GmbH
+ * Copyright (C) 2005-2008, Advanced Realtime Tracking GmbH
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +42,7 @@
 
 // some constants:
 
-#define VERSION_STRING   "DTrack Driver v0.2.0; (C) 2005-2007, Advanced Realtime Tracking GmbH"
+#define VERSION_STRING   "DTrack Driver v0.2.1; (C) 2005-2008, Advanced Realtime Tracking GmbH"
 
 #define BUTTONS_PER_FLYSTICK    8  // number of buttons per 'Flystick' (fixed)
 #define VALUATORS_PER_FLYSTICK  2  // number of valuators per 'Flystick' (fixed)
@@ -302,7 +302,7 @@ bool DTrack::sample()
 		for(j=0; j<nvt; j++){
 			id = j + i * VALUATORS_PER_FLYSTICK;  // VRJuggler id number
 			
-			curAnalog[id] = dat.joystick[j] / 2.0 + 0.5;  // normalizing
+			curAnalog[id] = dat.joystick[j];
 			curAnalog[id].setTime();
 		}
 	}
