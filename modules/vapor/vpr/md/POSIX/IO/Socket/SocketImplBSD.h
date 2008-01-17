@@ -211,7 +211,7 @@ public:
     *         in the given amount of time. This closes the socket before throw.
     * @throws vpr::SocketException if could not connect.
     */
-   void connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void connect(const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the status of a possibly connected socket.

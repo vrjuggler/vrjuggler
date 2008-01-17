@@ -320,7 +320,7 @@ void SocketImplBSD::bind()
 // socket, this makes the address given to the constructor the default
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
-void SocketImplBSD::connect(vpr::Interval timeout)
+void SocketImplBSD::connect(const vpr::Interval& timeout)
 {
    int status;
 

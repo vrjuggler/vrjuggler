@@ -111,7 +111,7 @@ void SocketStreamImplBSD::listen(const int backlog)
 
 // Accept an incoming connection request.
 void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,
-                                 vpr::Interval timeout)
+                                 const vpr::Interval& timeout)
 {
    int accept_sock;
    InetAddr addr;

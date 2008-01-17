@@ -267,7 +267,7 @@ public:
     *         timeout interval.
     * @throws vpr::SocketException if could not connect.
     */
-   void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   void connect(const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       mSocketImpl->connect(timeout);
    }
@@ -299,7 +299,7 @@ public:
     * @throws vpr::IOException if the read operation failed.
     */
    vpr::Uint32 recv(void* buffer, const vpr::Uint32 length,
-                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                    const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return read(buffer, length, timeout);
    }
@@ -331,7 +331,7 @@ public:
     * @throws vpr::IOException if the read operation failed.
     */
    vpr::Uint32 recv(std::string& buffer, const vpr::Uint32 length,
-                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                    const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return read(buffer, length, timeout);
    }
@@ -363,7 +363,7 @@ public:
     * @throws vpr::IOException if the read operation failed.
     */
    vpr::Uint32 recv(std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
-                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                    const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return read(buffer, length, timeout);
    }
@@ -393,7 +393,7 @@ public:
     * @throws vpr::IOException if an error ocured while reading.
     */
    vpr::Uint32 recvn(void* buffer, const vpr::Uint32 length,
-                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return readn(buffer, length, timeout);
    }
@@ -423,7 +423,7 @@ public:
     * @throws vpr::IOException if an error ocured while reading.
     */
    vpr::Uint32 recvn(std::string& buffer, const vpr::Uint32 length,
-                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return readn(buffer, length, timeout);
    }
@@ -453,7 +453,7 @@ public:
     * @throws vpr::IOException if an error ocured while reading.
     */
    vpr::Uint32 recvn(std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
-                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return readn(buffer, length, timeout);
    }
@@ -491,7 +491,7 @@ public:
     * @throws vpr::IOException if the file handle write operation failed.
     */
    vpr::Uint32 send(const void* buffer, const vpr::Uint32 length,
-                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                    const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return write(buffer, length, timeout);
    }
@@ -524,7 +524,7 @@ public:
     * @throws vpr::IOException if the file handle write operation failed.
     */
    vpr::Uint32 send(const std::string& buffer, const vpr::Uint32 length,
-                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                    const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       return write(buffer, length, timeout);
@@ -559,7 +559,7 @@ public:
     */
    vpr::Uint32 send(const std::vector<vpr::Uint8>& buffer,
                     const vpr::Uint32 length,
-                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                    const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       return write(buffer, length, timeout);
@@ -738,7 +738,7 @@ public:
    /**
     * @throw vpr::SocketException Thrown if the operation failed.
     */
-   void setTypeOfService(const vpr::SocketOptions::TypeOfService& tos)
+   void setTypeOfService(const vpr::SocketOptions::TypeOfService tos)
    {
       vpr::SocketOptions::Data option;
       option.type_of_service = tos;

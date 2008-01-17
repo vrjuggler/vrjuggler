@@ -133,7 +133,7 @@ public:
     * @see open, bind, listen
     */
    void accept(SocketStreamImplNSPR& sock,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout);
+               const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the write() template method. This writes the buffer

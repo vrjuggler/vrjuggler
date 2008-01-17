@@ -345,7 +345,7 @@ void SocketImplNSPR::setBlocking(bool blocking)
 // socket, this makes the address given to the constructor the default
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
-void SocketImplNSPR::connect(vpr::Interval timeout)
+void SocketImplNSPR::connect(const vpr::Interval& timeout)
 {
    vprASSERT(true == mOpen && "Trying to connect an un-opened socket");
    vprASSERT(mHandle != NULL && "Trying to connect with NULL handle");

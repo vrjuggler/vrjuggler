@@ -205,7 +205,7 @@ public:
     *                                 within the timeout interval.
     * @throw vpr::SocketException     If could not connect.
     */
-   void connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   void connect(const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the status of a possibly connected socket.

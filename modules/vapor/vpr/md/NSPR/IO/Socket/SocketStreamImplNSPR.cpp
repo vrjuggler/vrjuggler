@@ -124,7 +124,7 @@ void SocketStreamImplNSPR::listen(const int backlog)
 
 // Accept an incoming connection request.
 void SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
-                                  vpr::Interval timeout)
+                                  const vpr::Interval& timeout)
 {
    vpr::InetAddr addr;
 

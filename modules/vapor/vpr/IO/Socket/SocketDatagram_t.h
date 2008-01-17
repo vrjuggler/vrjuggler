@@ -130,7 +130,7 @@ public:
     */
    vpr::Uint32 recvfrom(void* msg, const vpr::Uint32 len,
                         vpr::InetAddr& from,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                        const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return mSocketDgramImpl->recvfrom(msg, len, from, timeout);
    }
@@ -143,7 +143,7 @@ public:
     */
    vpr::Uint32 recvfrom(std::string& msg, const vpr::Uint32 len,
                         vpr::InetAddr& from,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                        const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       msg.resize(len);
       memset(&msg[0], '\0', msg.size());
@@ -159,7 +159,7 @@ public:
     */
    vpr::Uint32 recvfrom(std::vector<vpr::Uint8>& msg,
                         const vpr::Uint32 len, vpr::InetAddr& from,
-                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                        const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       msg.resize(len);
 
@@ -180,7 +180,7 @@ public:
     */
    vpr::Uint32 sendto(const void* msg, const vpr::Uint32 len,
                       const vpr::InetAddr& to,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                      const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return mSocketDgramImpl->sendto(msg, len, to, timeout);
    }
@@ -192,7 +192,7 @@ public:
     */
    vpr::Uint32 sendto(const std::string& msg, const vpr::Uint32 len,
                       const vpr::InetAddr& to,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                      const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
       return sendto(msg.c_str(), len, to, timeout);
@@ -205,7 +205,7 @@ public:
     */
    vpr::Uint32 sendto(const std::vector<vpr::Uint8>& msg,
                       const vpr::Uint32 len, const vpr::InetAddr& to,
-                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+                      const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
       return sendto((const void*) &msg[0], len, to, timeout);

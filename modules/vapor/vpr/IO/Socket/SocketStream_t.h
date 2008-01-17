@@ -94,7 +94,8 @@ public:
     * @param remoteAddr A reference to a vpr::InetAddr object for the
     *                   remote socket address.
     */
-   SocketStream_t(vpr::InetAddr localAddr, vpr::InetAddr remoteAddr)
+   SocketStream_t(const vpr::InetAddr& localAddr,
+                  const vpr::InetAddr& remoteAddr)
    {
       mSocketStreamImpl =
          boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(localAddr,
@@ -165,7 +166,7 @@ public:
     * @see open, bind, listen
     */
    void accept(SocketStream_t& sock,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+               const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       mSocketStreamImpl->accept(*(sock.mSocketStreamImpl), timeout);
    }
