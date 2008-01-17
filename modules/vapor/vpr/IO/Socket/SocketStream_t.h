@@ -338,9 +338,9 @@ public:
     *
     * @since 2.1.9
     */
-   void setCorkAllocStrategy(const NoPushAllocStrategy& s)
+   void setCorkAllocStrategy(const NoPushAllocStrategy& strategy)
    {
-      mSocketStreamImpl->setCorkAllocStrategy(s);
+      mSocketStreamImpl->setCorkAllocStrategy(strategy);
    }
    //@}
 
