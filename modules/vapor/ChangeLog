@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2008-01-16 patrick  Added vpr::AveragingAllocationStrategy for use with
+                    vpr::NoPushWriter.
+                    NEW VERSION: 2.1.11
 2008-01-13 patrick  Folded vpr::SocketBasicOpt and vpr::SocketIpOpt into
                     vpr::Socket_t<T>. Folded vpr::SocketStreamOpt into
                     vpr::SocketStream_t<T>. Folded vpr::SocketDatagramOpt into

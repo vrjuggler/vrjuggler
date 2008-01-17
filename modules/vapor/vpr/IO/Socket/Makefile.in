@@ -50,7 +50,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		ConnectionAbortedException.cpp	\
+SRCS=		AveragingAllocationStrategy.cpp	\
+		ConnectionAbortedException.cpp	\
 		ConnectionRefusedException.cpp	\
 		ConnectionResetException.cpp	\
 		MaximumAllocationStrategy.cpp	\

@@ -191,6 +191,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\AveragingAllocationStrategy.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.cpp">
 			</File>
 			<File
@@ -410,6 +413,9 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\Socket\AveragingAllocationStrategy.h">
+			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Assert.h">
 			</File>
