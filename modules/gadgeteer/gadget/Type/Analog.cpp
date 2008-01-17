@@ -234,12 +234,10 @@ const Analog::SampleBuffer_t::buffer_t& Analog::getAnalogDataBuffer()
 // if n < mMin or n > mMax, then result = mMin or mMax respectively.
 float Analog::normalize(const float rawData) const
 {
-   float value(rawData);
-
-   // First, clamp the value so that min <= value <= max.
+   // First, clamp the raw data so that min <= value <= max.
    const float min_value(getMin());
    const float max_value(getMax());
-   gmtl::Math::clamp(value, min_value, max_value);
+   const float value(gmtl::Math::clamp(rawData, min_value, max_value));
 
    // Slide everything to 0.0 (subtract all by min_value), and then divide
    // by max to get normalized value.
