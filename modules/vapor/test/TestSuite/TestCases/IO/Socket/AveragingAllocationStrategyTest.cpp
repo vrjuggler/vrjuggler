@@ -36,13 +36,13 @@ void AveragingAllocationStrategyTest::testBasic()
 
    for ( unsigned int i = 0; i < inputs.size(); ++i )
    {
-      // Keep track of the current average of allocation sizes.
-      const size_t average(cur_total / (i + 1));
-
       // Get the allocation size for the case of a buffer that is currently
       // empty.
       const size_t result = s(0, inputs[i]);
       cur_total += result;
+
+      // Keep track of the current average of allocation sizes.
+      const size_t average(cur_total / (i + 1));
 
       // The allocation size for this strategy is the maximum of the requested
       // size and the current average.
@@ -68,7 +68,7 @@ void AveragingAllocationStrategyTest::testDefaultWindowSize()
    expected[8] = 12800;
    expected[9] = 25600;
 
-   size_t writes(1);
+   size_t writes(0);
 
    for ( unsigned int i = 0; i < 10; ++i, ++writes )
    {

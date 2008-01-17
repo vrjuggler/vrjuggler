@@ -49,12 +49,6 @@ inline T maxValue(const T v1, const T v2)
    return v1 > v2 ? v1 : v2;
 }
 
-template<typename T>
-inline T minValue(const T v1, const T v2)
-{
-   return v1 < v2 ? v1 : v2;
-}
-
 }
 
 namespace vpr
@@ -64,16 +58,10 @@ AveragingAllocationStrategy::
 AveragingAllocationStrategy(const size_type windowSize)
    : mWindowSize(windowSize)
    , mIndex(0)
-   // mAllocSizes is set to a fixed size so that it is not necessary to resize
-   // it as allocations occur, nor is it necessary to stop resizing it when
-   // the number of allocations eventually equals windowSize.
-   , mAllocSizes(windowSize, 0)
-   // mAllocOffset is initialized to 1 because we add it to
-   // mAllocSizes.begin() in order to compute the average of the allocations
-   // made. See computeAverage().
-   , mAllocOffset(1)
 {
-   /* Do nothing. */ ;
+   // Reserve the memory required for storing the sliding window of allocation
+   // sizes so that the buffer does not need to grow as we add values to it.
+   mAllocSizes.reserve(windowSize);
 }
 
 size_t AveragingAllocationStrategy::operator()(const size_t curBufferSize,
@@ -85,28 +73,37 @@ size_t AveragingAllocationStrategy::operator()(const size_t curBufferSize,
                                     computeAverage()));
 
    // Record the current amount allocated for future computations of the
-   // average allocation amount.
-   mAllocSizes[mIndex] = alloc_size;
-   mIndex = (mIndex + 1) % mWindowSize;
+   // average allocation amount. We accomplish this by first populating
+   // mAllocSizes until its size equals mWindowSize. After that, we just
+   // assign to the entry identified by mIndex.
+   if ( mAllocSizes.size() < mWindowSize )
+   {
+      mAllocSizes.push_back(alloc_size);
+   }
+   else
+   {
+      mAllocSizes[mIndex] = alloc_size;
+   }
 
-   // Incrementing mAllocOffset beyond mWindowSize eliminates the need for it.
-   // Perhaps there is a better way of keeping track of the number of
-   // allocation sizes stored in mAllocSizes.
-   ++mAllocOffset;
+   mIndex = (mIndex + 1) % mWindowSize;
 
    return alloc_size;
 }
 
 size_t AveragingAllocationStrategy::computeAverage() const
 {
-   // The smaller of mAllocOffset and mWindowSize provide the number of
-   // allocation sizes that have been stored in mAllocSizes.
-   const size_type count(minValue(mAllocOffset, mWindowSize));
-   const size_t sum = std::accumulate(mAllocSizes.begin(),
-                                      mAllocSizes.begin() + count, 0);
+   size_t average(0);
 
-   // Return the average allocation size.
-   return sum / count;
+   if ( ! mAllocSizes.empty() )
+   {
+      const size_t sum(std::accumulate(mAllocSizes.begin(),
+                                       mAllocSizes.end(), 0));
+
+      // Compute the average allocation size.
+      average = sum / mAllocSizes.size();
+   }
+
+   return average;
 }
 
 }

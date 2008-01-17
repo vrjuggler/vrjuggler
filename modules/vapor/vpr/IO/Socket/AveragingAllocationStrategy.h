@@ -99,7 +99,6 @@ private:
    //@{
    size_type           mIndex;
    std::vector<size_t> mAllocSizes;
-   size_type           mAllocOffset;
    //@}
 };
 
