@@ -298,8 +298,7 @@ public class BeanContainer
          push_observer.addBeanDeliverySubjectUpdateListener(this);
 
          // Attach our observer to the subject.
-         corbaService.registerObject(push_observer,
-                                     "TweekBeanPusher-" + corbaService.getNameServiceURI());
+         corbaService.registerObject(push_observer, "TweekBeanPusher");
          push_subject.attach(push_observer._this());
 
          // Synchronize with the subject's current state information.

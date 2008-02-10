@@ -132,17 +132,65 @@ public interface GlobalPreferencesService
 
    public boolean getLazyPanelBeanInstantiation();
 
-   public void setDefaultCorbaHost(String host);
+   /**
+    * This method was renamed from setDefaultCorbaHost() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultNamingServiceHost(String host);
 
-   public String getDefaultCorbaHost();
+   /**
+    * This method was renamed from getDefaultCorbaHost() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public String getDefaultNamingServiceHost();
 
-   public void setDefaultCorbaPort(int port);
+   /**
+    * This method was renamed from setDefaultCorbaPort() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultNamingServicePort(int port);
 
-   public int getDefaultCorbaPort();
+   /**
+    * This method was renamed from getDefaultCorbaPort() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public int getDefaultNamingServicePort();
 
    public void setDefaultIiopVersion(String version);
 
    public String getDefaultIiopVersion();
+
+   /**
+    * Sets the default ORB endpoint host address.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultOrbAddress(String addr);
+
+   /**
+    * Returns the default ORB endpoint host address.
+    *
+    * @since 1.3.4
+    */
+   public String getDefaultOrbAddress();
+
+   /**
+    * Sets the default ORB endpoint port number.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultOrbPort(int port);
+
+   /**
+    * Returns the deffault ORB endpoint port number.
+    *
+    * @since 1.3.4
+    */
+   public int getDefaultOrbPort();
 
    /**
     * Changes the default preferences file name to be the given name.

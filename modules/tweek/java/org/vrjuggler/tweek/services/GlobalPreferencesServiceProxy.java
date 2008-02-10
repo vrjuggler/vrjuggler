@@ -207,24 +207,44 @@ public class GlobalPreferencesServiceProxy
       return mPrefsService.getLazyPanelBeanInstantiation();
    }
 
-   public void setDefaultCorbaHost(String host)
+   /**
+    * This method was renamed from setDefaultCorbaHost() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultNamingServiceHost(String host)
    {
-      mPrefsService.setDefaultCorbaHost(host);
+      mPrefsService.setDefaultNamingServiceHost(host);
    }
 
-   public String getDefaultCorbaHost()
+   /**
+    * This method was renamed from getDefaultCorbaHost() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public String getDefaultNamingServiceHost()
    {
-      return mPrefsService.getDefaultCorbaHost();
+      return mPrefsService.getDefaultNamingServiceHost();
    }
 
-   public void setDefaultCorbaPort(int port)
+   /**
+    * This method was renamed from setDefaultCorbaPort() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultNamingServicePort(int port)
    {
-      mPrefsService.setDefaultCorbaPort(port);
+      mPrefsService.setDefaultNamingServicePort(port);
    }
 
-   public int getDefaultCorbaPort()
+   /**
+    * This method was renamed from getDefaultCorbaPort() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public int getDefaultNamingServicePort()
    {
-      return mPrefsService.getDefaultCorbaPort();
+      return mPrefsService.getDefaultNamingServicePort();
    }
 
    public void setDefaultIiopVersion(String version)
@@ -235,6 +255,46 @@ public class GlobalPreferencesServiceProxy
    public String getDefaultIiopVersion()
    {
       return mPrefsService.getDefaultIiopVersion();
+   }
+
+   /**
+    * Sets the default ORB endpoint host address.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultOrbAddress(String addr)
+   {
+      mPrefsService.setDefaultOrbAddress(addr);
+   }
+
+   /**
+    * Returns the default ORB endpoint host address.
+    *
+    * @since 1.3.4
+    */
+   public String getDefaultOrbAddress()
+   {
+      return mPrefsService.getDefaultOrbAddress();
+   }
+
+   /**
+    * Sets the default ORB endpoint port number.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultOrbPort(int port)
+   {
+      mPrefsService.setDefaultOrbPort(port);
+   }
+
+   /**
+    * Returns the deffault ORB endpoint port number.
+    *
+    * @since 1.3.4
+    */
+   public int getDefaultOrbPort()
+   {
+      return mPrefsService.getDefaultOrbPort();
    }
 
    /**

@@ -34,7 +34,6 @@
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
-#include <vpr/Util/GUID.h>
 
 #include <tweek/idl/Subject.h>
 #include <tweek/idl/SubjectManager.h>
@@ -136,11 +135,6 @@ public:
     */
    virtual char* getName() throw(CORBA::SystemException);
 
-   void setName(const std::string& name)
-   {
-      mName = name;
-   }
-
    /**
     * Assigns the given value for the application name informational item.
     * This can be used to provide remote users with an application-specific
@@ -179,11 +173,6 @@ public:
       mInfoMap[key] = value;
    }
 
-   const vpr::GUID& getGUID() const
-   {
-      return mGUID;
-   }
-
 protected:
    // Only this class can instantiate me.
    friend class tweek::CorbaManager;
@@ -192,12 +181,7 @@ protected:
     * Default constructor.  It is protected because only instances of
     * tweek::CorbaManager may create objects of this type.
     */
-   SubjectManagerImpl(const CorbaManager& corba_mgr)
-      : mCorbaMgr(corba_mgr), mGUID(), mName("")
-   {
-      mGUID.generate();
-      initInfoMap();
-   }
+   SubjectManagerImpl(const CorbaManager& corbaMgr, const std::string& name);
 
    // These two have to be here because Visual C++ will try to make them
    // exported public symbols.  This causes problems because copying
@@ -219,7 +203,6 @@ protected:
 
 private:
    const CorbaManager& mCorbaMgr;
-   vpr::GUID           mGUID;
    std::string         mName;
 
    typedef std::map<std::string, Subject_ptr> subject_map_t;

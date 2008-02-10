@@ -54,11 +54,6 @@ public class CommunicationEvent extends java.util.EventObject
       return type;
    }
 
-   public String getNameServiceURI ()
-   {
-      return corbaService.getNameServiceURI();
-   }
-
    public CorbaService getCorbaService ()
    {
       return corbaService;

@@ -1473,6 +1473,7 @@ AC_CONFIG_FILES([
    test/Makefile
    test/BeanDeliveryTest/Makefile
    test/CxxClient/Makefile
+   test/DirectConnectTestBean/Makefile
    test/FileOpenTestBean/Makefile
    test/NetworkTestBean/Makefile
    test/PrefsTestBean/Makefile

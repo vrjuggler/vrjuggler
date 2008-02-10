@@ -263,7 +263,7 @@ SubjectManager::SubjectManagerInfoList* SubjectManagerImpl::getInfo()
 char* SubjectManagerImpl::getName()
    throw(CORBA::SystemException)
 {
-   return CORBA::string_dup(mGUID.toString().c_str());
+   return CORBA::string_dup(mName.c_str());
 }
 
 void SubjectManagerImpl::initInfoMap()
@@ -291,6 +291,14 @@ void SubjectManagerImpl::initInfoMap()
    mInfoMap[APPNAME_KEY] = "unknown";
 }
 
+SubjectManagerImpl::SubjectManagerImpl(const CorbaManager& corbaMgr,
+                                       const std::string& name)
+   : mCorbaMgr(corbaMgr)
+   , mName(name)
+{
+   initInfoMap();
+}
+
 SubjectManagerImpl::SubjectManagerImpl(const SubjectManagerImpl& sm)
    :
 #if defined(TWEEK_USE_OMNIORB)
@@ -305,6 +313,7 @@ SubjectManagerImpl::SubjectManagerImpl(const SubjectManagerImpl& sm)
    , POA_tweek::SubjectManager(sm)
    , PortableServer::RefCountServantBase(sm)
    , mCorbaMgr(sm.mCorbaMgr)
+   , mName(sm.mName)
    , mInfoMap(sm.mInfoMap)
 {
    /* Do nothing. */ ;

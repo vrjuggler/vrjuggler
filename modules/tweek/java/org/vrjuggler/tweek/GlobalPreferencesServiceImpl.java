@@ -333,9 +333,14 @@ class GlobalPreferencesServiceImpl
       return lazyPanelBeanInstantiation;
    }
 
-   public void setDefaultCorbaHost(String host)
+   /**
+    * This method was renamed from setDefaultCorbaHost() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultNamingServiceHost(String host)
    {
-      defaultCorbaHost = host;
+      defaultNamingServiceHost = host;
 
       Element e = mPrefsDocRoot.getChild("corba");
 
@@ -345,17 +350,27 @@ class GlobalPreferencesServiceImpl
          mPrefsDocRoot.addContent(e);
       }
 
-      e.setAttribute("host", host);
+      e.setAttribute("nshost", host);
    }
 
-   public String getDefaultCorbaHost()
+   /**
+    * This method was renamed from getDefaultCorbaHost() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public String getDefaultNamingServiceHost()
    {
-      return defaultCorbaHost;
+      return defaultNamingServiceHost;
    }
 
-   public void setDefaultCorbaPort(int port)
+   /**
+    * This method was renamed from setDefaultCorbaPort() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultNamingServicePort(int port)
    {
-      defaultCorbaPort = port;
+      defaultNamingServicePort = port;
 
       Element e = mPrefsDocRoot.getChild("corba");
 
@@ -365,12 +380,17 @@ class GlobalPreferencesServiceImpl
          mPrefsDocRoot.addContent(e);
       }
 
-      e.setAttribute("port", String.valueOf(port));
+      e.setAttribute("nsport", String.valueOf(port));
    }
 
-   public int getDefaultCorbaPort()
+   /**
+    * This method was renamed from getDefaultCorbaPort() in version 1.3.4.
+    *
+    * @since 1.3.4
+    */
+   public int getDefaultNamingServicePort()
    {
-      return defaultCorbaPort;
+      return defaultNamingServicePort;
    }
 
    public void setDefaultIiopVersion(String version)
@@ -391,6 +411,66 @@ class GlobalPreferencesServiceImpl
    public String getDefaultIiopVersion()
    {
       return defaultIiopVersion;
+   }
+
+   /**
+    * Sets the default ORB endpoint host address.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultOrbAddress(String addr)
+   {
+      defaultOrbAddress = addr;
+
+      Element e = mPrefsDocRoot.getChild("corba");
+
+      if ( e == null )
+      {
+         e = new Element("corba");
+         mPrefsDocRoot.addContent(e);
+      }
+
+      e.setAttribute("orbaddr", addr);
+   }
+
+   /**
+    * Returns the default ORB endpoint host address.
+    *
+    * @since 1.3.4
+    */
+   public String getDefaultOrbAddress()
+   {
+      return defaultOrbAddress;
+   }
+
+   /**
+    * Sets the default ORB endpoint port number.
+    *
+    * @since 1.3.4
+    */
+   public void setDefaultOrbPort(int port)
+   {
+      defaultOrbPort = port;
+
+      Element e = mPrefsDocRoot.getChild("corba");
+
+      if ( e == null )
+      {
+         e = new Element("corba");
+         mPrefsDocRoot.addContent(e);
+      }
+
+      e.setAttribute("orbport", String.valueOf(port));
+   }
+
+   /**
+    * Returns the deffault ORB endpoint port number.
+    *
+    * @since 1.3.4
+    */
+   public int getDefaultOrbPort()
+   {
+      return defaultOrbPort;
    }
 
    /**
@@ -473,19 +553,31 @@ class GlobalPreferencesServiceImpl
             if ( corba_element != null )
             {
                // Read the preferred Naming Service host identifier.
-               Attribute corba_attr = corba_element.getAttribute("host");
+               Attribute corba_attr = corba_element.getAttribute("nshost");
+
+               // Check the "host" attribute for backwards compatibility.
+               if ( null == corba_attr )
+               {
+                  corba_attr = corba_element.getAttribute("host");
+               }
 
                if ( null != corba_attr )
                {
-                  defaultCorbaHost = corba_attr.getValue();
+                  defaultNamingServiceHost = corba_attr.getValue();
                }
 
                // Read the preferred Naming Service port number.
-               corba_attr = corba_element.getAttribute("port");
+               corba_attr = corba_element.getAttribute("nsport");
+
+               // Check the "port" attribute for backwards compatibility.
+               if ( null == corba_attr )
+               {
+                  corba_attr = corba_element.getAttribute("port");
+               }
 
                if ( null != corba_attr )
                {
-                  defaultCorbaPort = corba_attr.getIntValue();
+                  defaultNamingServicePort = corba_attr.getIntValue();
                }
 
                // Read the preferred IIOP version.
@@ -552,8 +644,12 @@ class GlobalPreferencesServiceImpl
          mPrefsDocRoot.addContent(lazyinst_element);
 
          Element corba_element = new Element("corba");
-         corba_element.setAttribute("host", defaultCorbaHost);
-         corba_element.setAttribute("port", String.valueOf(defaultCorbaPort));
+         corba_element.setAttribute("orbaddr", defaultOrbAddress);
+         corba_element.setAttribute("orbport",
+                                    String.valueOf(defaultOrbPort));
+         corba_element.setAttribute("nshost", defaultNamingServiceHost);
+         corba_element.setAttribute("nsport",
+                                    String.valueOf(defaultNamingServicePort));
          corba_element.setAttribute("iiop", defaultIiopVersion);
          mPrefsDocRoot.addContent(corba_element);
 
@@ -715,14 +811,17 @@ class GlobalPreferencesServiceImpl
 
    private Vector beanViewers = new Vector();
 
-   private int     userLevel        = 1;
-   private String  lookAndFeel      = javax.swing.UIManager.getSystemLookAndFeelClassName();
-   private String  beanViewer       = null;
-   private int     windowWidth      = 1024;
-   private int     windowHeight     = 768;
-   private String  chooserStartDir  = CWD_START;
+   private int     userLevel                  = 1;
+   private String  lookAndFeel                =
+      javax.swing.UIManager.getSystemLookAndFeelClassName();
+   private String  beanViewer                 = null;
+   private int     windowWidth                = 1024;
+   private int     windowHeight               = 768;
+   private String  chooserStartDir            = CWD_START;
    private boolean lazyPanelBeanInstantiation = true;
-   private String  defaultCorbaHost   = "";
-   private int     defaultCorbaPort   = 2809;
-   private String  defaultIiopVersion = "1.0";
+   private String  defaultNamingServiceHost   = "";
+   private int     defaultNamingServicePort   = 2809;
+   private String  defaultIiopVersion         = "1.0";
+   private String  defaultOrbAddress          = "";
+   private int     defaultOrbPort             = 12345;
 }

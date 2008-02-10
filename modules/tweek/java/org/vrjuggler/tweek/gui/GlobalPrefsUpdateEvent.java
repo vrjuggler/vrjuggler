@@ -34,16 +34,18 @@ import java.util.EventObject;
  */
 public class GlobalPrefsUpdateEvent extends EventObject
 {
-   public final static int ALL_SAVED            = -1;
-   public final static int USER_LEVEL           = 0;
-   public final static int LOOK_AND_FEEL        = 1;
-   public final static int BEAN_VIEWER          = 2;
-   public final static int WINDOW_SIZE          = 3;
-   public final static int CHOOSER_START_DIR    = 4;
-   public final static int CHOOSER_OPEN_STYLE   = 5;
-   public final static int DEFAULT_CORBA_HOST   = 6;
-   public final static int DEFAULT_CORBA_PORT   = 7;
-   public final static int DEFAULT_IIOP_VERSION = 8;
+   public final static int ALL_SAVED                   = -1;
+   public final static int USER_LEVEL                  = 0;
+   public final static int LOOK_AND_FEEL               = 1;
+   public final static int BEAN_VIEWER                 = 2;
+   public final static int WINDOW_SIZE                 = 3;
+   public final static int CHOOSER_START_DIR           = 4;
+   public final static int CHOOSER_OPEN_STYLE          = 5;
+   public final static int DEFAULT_NAMING_SERVICE_HOST = 6;
+   public final static int DEFAULT_NAMING_SERVICE_PORT = 7;
+   public final static int DEFAULT_IIOP_VERSION        = 8;
+   public final static int DEFAULT_ORB_ADDRESS         = 9;
+   public final static int DEFAULT_ORB_PORT            = 10;
 
    public GlobalPrefsUpdateEvent(Object source)
    {

@@ -105,6 +105,13 @@ public:
              const std::string& iiopVersion = std::string("1.0"));
 
    /**
+    * @since 1.3.4
+    */
+   bool initDirect(const std::string& localID, int& argc, char** argv,
+                   const std::string& listenAddress,
+                   const vpr::Uint16 listenPort);
+
+   /**
     * Shuts down the ORB and the POA (if they were successfully initialized).
     *
     * @post If the ORB and root POA were initialized successfully in init(),
@@ -177,14 +184,17 @@ public:
       return mBeanDeliverySubject;
    }
 
+private:
    /**
-    * Runs the server.  This should not be invoked by user code.  It is for
-    * use with the internally managed ORB thread.
+    * Runs the server.
     */
    void run();
 
-private:
-   bool createChildPOA(const std::string& localID);
+   bool createChildPOA(
+      const std::string& localID,
+      const PortableServer::IdUniquenessPolicyValue uniquePolicy,
+      const bool bidirectional
+   );
 
    std::string mAppName;
 
@@ -193,6 +203,7 @@ private:
    CORBA::ORB_var mORB;
    PortableServer::POA_var mRootPOA;
    PortableServer::POA_var mChildPOA;
+   PortableServer::POA_var mInsPOA;
    CosNaming::NamingContext_var mRootContext;
    CosNaming::NamingContext_var mLocalContext;
 

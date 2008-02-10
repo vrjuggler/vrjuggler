@@ -28,6 +28,7 @@ package org.vrjuggler.tweek.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.DocumentEvent;
@@ -35,7 +36,11 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
+import org.omg.CORBA.*;
+import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.*;
+
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.TweekBean;
 import org.vrjuggler.tweek.services.*;
@@ -47,13 +52,15 @@ import org.vrjuggler.tweek.text.MessageDocument;
 
 
 /**
- * A modal dialog box used to make a connection with a remote ORB.  The Tweek
- * CORBA Service created as a result of the connection is made available to
- * external code.
+ * A modal dialog box used to make a connection with a CORBA Naming Service
+ * instance. The Tweek CORBA Service created as a result of the connection is
+ * made available to external code.
+ *
+ * @note This class was renamed from ConnectionDialog in Tweek version 1.3.4.
  */
-public class ConnectionDialog extends JDialog
+public class NamingServiceConnectionDialog extends JDialog
 {
-   public ConnectionDialog(Frame owner, String title)
+   public NamingServiceConnectionDialog(Frame owner, String title)
    {
       super(owner, title);
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -77,8 +84,10 @@ public class ConnectionDialog extends JDialog
       {
          GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
 
-         mNSHostField.setText(prefs.getDefaultCorbaHost());
-         mNSPortField.setText(String.valueOf(prefs.getDefaultCorbaPort()));
+         mNSHostField.setText(prefs.getDefaultNamingServiceHost());
+         mNSPortField.setText(
+            String.valueOf(prefs.getDefaultNamingServicePort())
+         );
          mNSIiopVerField.setText(String.valueOf(prefs.getDefaultIiopVersion()));
       }
       // D'oh!  No defaults can be set.
@@ -322,28 +331,32 @@ public class ConnectionDialog extends JDialog
       // Commit the information provided by the user in the data entry fields.
       commitConnectInfo();
 
-      // Create a new CORBA service using the information provided by the user.
-      CorbaService new_orb = new CorbaService(this.getNameServiceHost(),
-                                              this.getNameServicePort(),
-                                              this.getNameServiceIiopVersion(),
-                                              this.getNamingSubcontext());
-
       try
       {
          // If we have the Tweek Environment Service, and we should, initialize
          // the new CORBA service with the command line arguments passed when
          // the Tweek GUI was started.
+         EnvironmentService env_service = new EnvironmentServiceProxy();
+
+         // Create a new CORBA service using the information provided by
+         // the user. This may throw several types of exceptions, all of
+         // which are handled below.
+         CorbaService svc =
+            new CorbaService(env_service.getCommandLineArgs());
+
          try
          {
-            EnvironmentService env_service = new EnvironmentServiceProxy();
-
-            // This may throw several types of exceptions, all of which are
-            // handled below.
-            new_orb.init(env_service.getCommandLineArgs());
+            NamingServiceHelper ns =
+               new NamingServiceHelper(svc.getORB(),
+                                       this.getNameServiceHost(),
+                                       this.getNameServicePort(),
+                                       this.getNameServiceIiopVersion(),
+                                       this.getNamingSubcontext());
 
             // We initialized the CorbaService object successfully and
             // connected to the remote Naming Service.
-            corbaService = new_orb;
+            corbaService = svc;
+            namingService = ns;
 
             // XXX: Should we allow the user to make multiple connections from
             // a single dialog box?  Probably not...
@@ -356,7 +369,7 @@ public class ConnectionDialog extends JDialog
             // Get the list of Subject Managers.  There had better be at least
             // one!  The list returned is guaranteed to contain valid references
             // at the time of construction.
-            java.util.Iterator i = new_orb.getSubjectManagerList().iterator();
+            Iterator i = getSubjectManagerList(ns).iterator();
             tweek.SubjectManager cur_mgr;
 
             while ( i.hasNext() )
@@ -407,31 +420,18 @@ public class ConnectionDialog extends JDialog
             // Subject Managers later.
             if ( answer == JOptionPane.NO_OPTION )
             {
-               corbaService = new_orb;
                mNSRefreshButton.setEnabled(true);
             }
             // If the user clicked "Yes," then ensure that the refresh button
             // is disabled until the next connection attempt.
             else
             {
+               corbaService.shutdown(true);
+               corbaService = null;
                mNSRefreshButton.setEnabled(false);
             }
          }
-         catch(org.omg.CORBA.ORBPackage.InvalidName poaNameEx)
-         {
-            JOptionPane.showConfirmDialog(this, poaNameEx.getMessage(),
-                                          "Root Portable Object Adapter Not Found",
-                                          JOptionPane.OK_OPTION,
-                                          JOptionPane.ERROR_MESSAGE);
-         }
-         catch(org.omg.PortableServer.POAManagerPackage.AdapterInactive poaEx)
-         {
-            JOptionPane.showConfirmDialog(this, poaEx.getMessage(),
-                                          "Root Portable Object Adapter Inactive",
-                                          JOptionPane.OK_OPTION,
-                                          JOptionPane.ERROR_MESSAGE);
-         }
-         catch(org.omg.CORBA.UserException userEx)
+         catch(UserException userEx)
          {
             JOptionPane.showConfirmDialog(this, userEx.getMessage(),
                                           "CORBA User Exception",
@@ -443,8 +443,23 @@ public class ConnectionDialog extends JDialog
             ex.printStackTrace();
          }
       }
+      catch (org.omg.CORBA.ORBPackage.InvalidName poaNameEx)
+      {
+         JOptionPane.showConfirmDialog(
+            this, poaNameEx.getMessage(),
+            "Root Portable Object Adapter Not Found", JOptionPane.OK_OPTION,
+            JOptionPane.ERROR_MESSAGE
+         );
+      }
+      catch (org.omg.PortableServer.POAManagerPackage.AdapterInactive poaEx)
+      {
+         JOptionPane.showConfirmDialog(
+            this, poaEx.getMessage(), "Root Portable Object Adapter Inactive",
+            JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE
+         );
+      }
       // Something went wrong with the CORBA service initialization.
-      catch (org.omg.CORBA.SystemException sys_ex)
+      catch (SystemException sys_ex)
       {
          // Make sure the connection button is enabled.  We do not know what
          // caused the connection to fail, but failure should not disallow any
@@ -471,7 +486,7 @@ public class ConnectionDialog extends JDialog
       // Get the list of Subject Managers.  There had better be at least
       // one!  The list returned is guaranteed to contain valid references
       // at the time of construction.
-      java.util.Iterator i = corbaService.getSubjectManagerList().iterator();
+      Iterator i = getSubjectManagerList(namingService).iterator();
       tweek.SubjectManager cur_mgr;
 
       while ( i.hasNext() )
@@ -482,6 +497,122 @@ public class ConnectionDialog extends JDialog
 
       mSubjectMgrList.setModel(mgr_list_model);
       mSubjectMgrList.invalidate();
+   }
+
+   /**
+    * Retrieves a reference to all the CORBA objects that implement the
+    * tweek.SubjectManager interface.
+    *
+    * NOTE: The implementation of this method is based on code found on page
+    *       806 of <i>Advanced CORBA Programming with C++</i>.
+    *
+    * @return A list containing zero or more tweek.SubjectManager objects.
+    *
+    * @since 1.3.4
+    */
+   private java.util.List getSubjectManagerList(NamingServiceHelper namingSvc)
+   {
+      ArrayList subj_mgrs = new ArrayList();
+
+      NamingContext local_context = namingSvc.getLocalContext();
+
+      if ( null != local_context )
+      {
+         int data_size = 100;
+
+         BindingListHolder     list_holder = new BindingListHolder();
+         BindingIteratorHolder iter_holder = new BindingIteratorHolder();
+
+         // Get the list of objects (of any type) bound in localContext.
+         local_context.list(data_size, list_holder, iter_holder);
+
+         // Using the returned list of objects, populate subj_mgrs with any
+         // objects that implement the tweek.SubjectManager interface.
+         addSubjectManagers(list_holder.value, subj_mgrs, local_context);
+
+         if ( null != iter_holder.value )
+         {
+            BindingIterator iter = iter_holder.value;
+
+            while ( iter.next_n(data_size, list_holder) )
+            {
+               addSubjectManagers(list_holder.value, subj_mgrs,
+                                  local_context);
+            }
+
+            iter.destroy();
+         }
+      }
+
+      return subj_mgrs;
+   }
+
+   /**
+    * Resolves all the CORBA objects implementing tweek.SubjectManager in
+    * bindingList and stores the resulting tweek.SubjectManager object(s) in
+    * mgrList. If bindingList contains no such objects, mgrList will not be
+    * modified. All references added to mgrList are guaranteed to refer to
+    * extant objects.
+    *
+    * @since 1.3.4
+    */
+   private void addSubjectManagers(Binding[] bindingList,
+                                   java.util.List mgrList,
+                                   NamingContext context)
+   {
+      Binding binding;
+
+      for ( int i = 0; i < bindingList.length; ++i )
+      {
+         binding = bindingList[i];
+
+         // We do not care about anything that is a naming context.
+         if ( BindingType.ncontext != binding.binding_type )
+         {
+            // Furthermore, we only care about SubjectManager instances.
+            if ( binding.binding_name[0].id.startsWith("SubjectManager") )
+            {
+               NameComponent name_comp[] = binding.binding_name;
+
+               try
+               {
+                  org.omg.CORBA.Object ref = context.resolve(name_comp);
+                  tweek.SubjectManager mgr =
+                     tweek.SubjectManagerHelper.narrow(ref);
+
+                  // Do not present invalid Subject Manager references to
+                  // the user. This little test is pretty sweet--I just
+                  // hope it's fast.
+                  try
+                  {
+                     if ( ! mgr._non_existent() )
+                     {
+                        mgrList.add(mgr);
+                     }
+                  }
+                  // CORBA system exceptions mean that the current Subject
+                  // Manager reference is not available, so we cannot add
+                  // it to mgrList.
+                  catch (org.omg.CORBA.SystemException ex)
+                  {
+                     // Ignore the exception.
+                  }
+               }
+               catch (InvalidName e)
+               {
+                  e.printStackTrace();
+               }
+               catch (CannotProceed e)
+               {
+                  e.printStackTrace();
+               }
+               catch (NotFound e)
+               {
+                  e.printStackTrace();
+               }
+            }
+         }
+      }
    }
 
    /**
@@ -632,7 +763,8 @@ public class ConnectionDialog extends JDialog
             mSubjectManager = mgr_wrapper.getSubjectManager();
 
             // Fill in the table model for the selected Subject Manager.
-            Object[] column_names = new Object[]{"Property", "Value"};
+            java.lang.Object[] column_names =
+               new java.lang.Object[]{"Property", "Value"};
             DefaultTableModel table_model = new DefaultTableModel();
             table_model.setColumnIdentifiers(column_names);
 
@@ -642,8 +774,10 @@ public class ConnectionDialog extends JDialog
 
                for ( int i = 0; i < subj_mgr_info.length; ++i )
                {
-                  table_model.addRow(new Object[]{subj_mgr_info[i].key,
-                                                  subj_mgr_info[i].value});
+                  table_model.addRow(
+                     new java.lang.Object[]{subj_mgr_info[i].key,
+                                            subj_mgr_info[i].value}
+                  );
                }
 
                mSubjectMgrInfo.setModel(table_model);
@@ -671,13 +805,97 @@ public class ConnectionDialog extends JDialog
       private JDialog mParentDialog = null;
    }
 
+   /**
+    * A helper class that wraps the use of the CORBA Naming Service.
+    *
+    * @since 1.3.4
+    */
+   private static class NamingServiceHelper
+   {
+      /**
+       * Creates a new instance of this class and initializes the URI that
+       * will be used to contact the CORBA Naming Service.
+       *
+       * @param nsHost       The hostname (or IP address) of the machine where
+       *                     the Naming Service is running.
+       * @param nsPort       The port number on which the Naming Service is
+       *                     listening.  Normally, this will be 2809.
+       * @param iiopVer      The version of IIOP to use when communicating
+       *                     with the Naming Service.  Common values are "1.0"
+       *                     and "1.2".
+       * @param subcontextId The identifier for the Naming subcontext.  This
+       *                     is currently unused.
+       *
+       * @throws org.omg.CosNaming.NamingContextPackage.NotFound
+       *                The requested naming context (the Tweek naming context
+       *                in this case) cannot be found in the CORBA Naming
+       *                Service.
+       * @throws org.omg.CosNaming.NamingContextPackage.CannotProceed
+       *                An operation cannot be performed on a specific naming
+       *                context--the Tweek naming context in this case.
+       * @throws org.omg.CosNaming.NamingContextPackage.InvalidName
+       *                An invalid (non-existant) name was requested from the
+       *                CORBA Naming Service.
+       */
+      public NamingServiceHelper(ORB orb, String nsHost, int nsPort,
+                                 String iiopVer, String subcontextId)
+         throws SystemException
+              , NotFound
+              , CannotProceed
+              , InvalidName
+      {
+         nameServiceHost    = nsHost;
+         nameServicePort    = nsPort;
+         nameServiceIiopVer = iiopVer;
+         namingSubcontext   = subcontextId;
+
+         String uri = "corbaloc:iiop:" + iiopVer + "@" + nsHost + ":" +
+                      nsPort + "/NameService";
+
+         //System.out.println("NamingServiceHelper URI: " + uri);
+
+         org.omg.CORBA.Object init_ref = null;
+
+         init_ref    = orb.string_to_object(uri);
+         rootContext = NamingContextHelper.narrow(init_ref);
+
+         if ( null != rootContext )
+         {
+            // XXX: Need to allow users to specify this through
+            // namingSubcontext.
+            NameComponent[] tweek_name_context = new NameComponent[1];
+            tweek_name_context[0] = new NameComponent("tweek", "context");
+            init_ref = rootContext.resolve(tweek_name_context);
+            localContext = NamingContextHelper.narrow(init_ref);
+         }
+         else
+         {
+            System.err.println("Failed to get root naming context!");
+         }
+      }
+
+      public NamingContext getLocalContext()
+      {
+         return localContext;
+      }
+
+      private String nameServiceHost    = null;
+      private int    nameServicePort    = 2809;
+      private String nameServiceIiopVer = "1.0";
+      private String namingSubcontext   = null;
+
+      private NamingContext rootContext  = null;
+      private NamingContext localContext = null;
+   }
+
    // Attributes that may be queried by the class that instantiated us.
-   private int          status;
-   private String       nameServiceHost        = null;
-   private int          nameServicePort        = 2809;
-   private String       nameServiceIiopVersion = "1.0";
-   private String       namingSubcontext       = null;
-   private CorbaService corbaService           = null;
+   private int                 status;
+   private String              nameServiceHost        = null;
+   private int                 nameServicePort        = 2809;
+   private String              nameServiceIiopVersion = "1.0";
+   private String              namingSubcontext       = null;
+   private CorbaService        corbaService           = null;
+   private NamingServiceHelper namingService          = null;
 
    // Internal-use properties.
    private tweek.SubjectManager mSubjectManager = null;

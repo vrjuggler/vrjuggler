@@ -55,15 +55,17 @@ public class PrefsDialog extends JDialog
 
       mPrefs = prefs;
 
-      userLevel          = mPrefs.getUserLevel();
-      lookAndFeel        = mPrefs.getLookAndFeel();
-      beanViewer         = mPrefs.getBeanViewer();
-      windowWidth        = mPrefs.getWindowWidth();
-      windowHeight       = mPrefs.getWindowHeight();
-      chooserStartDir    = mPrefs.getRawChooserStartDir();
-      defaultCorbaHost   = mPrefs.getDefaultCorbaHost();
-      defaultCorbaPort   = mPrefs.getDefaultCorbaPort();
-      defaultIiopVersion = mPrefs.getDefaultIiopVersion();
+      userLevel                = mPrefs.getUserLevel();
+      lookAndFeel              = mPrefs.getLookAndFeel();
+      beanViewer               = mPrefs.getBeanViewer();
+      windowWidth              = mPrefs.getWindowWidth();
+      windowHeight             = mPrefs.getWindowHeight();
+      chooserStartDir          = mPrefs.getRawChooserStartDir();
+      defaultNamingServiceHost = mPrefs.getDefaultNamingServiceHost();
+      defaultNamingServicePort = mPrefs.getDefaultNamingServicePort();
+      defaultIiopVersion       = mPrefs.getDefaultIiopVersion();
+      defaultOrbAddress        = mPrefs.getDefaultOrbAddress();
+      defaultOrbPort           = mPrefs.getDefaultOrbPort();
 
       try
       {
@@ -76,8 +78,8 @@ public class PrefsDialog extends JDialog
 
       this.configComboBoxes();
 
-      mCorbaHostField.setText(String.valueOf(defaultCorbaHost));
-      mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
+      mNSHostField.setText(String.valueOf(defaultNamingServiceHost));
+      mNSPortField.setText(String.valueOf(defaultNamingServicePort));
       mIiopVerField.setText(String.valueOf(defaultIiopVersion));
       mWindowWidthField.setText(String.valueOf(windowWidth));
       mWindowHeightField.setText(String.valueOf(windowHeight));
@@ -144,23 +146,33 @@ public class PrefsDialog extends JDialog
    }
 
    /**
-    * Returns the current default CORBA host choice.  This may be different
-    * than what is currently available through the Global Preferences Service,
-    * depending on whether or not the user has chosen to apply changes.
+    * Returns the current default CORBA Naming Service host choice. This may
+    * be different than what is currently available through the Global
+    * Preferences Service, depending on whether or not the user has chosen to
+    * apply changes.
+    *
+    * This method was renamed from getDefaultCorbaHost() in version 1.3.4.
+    *
+    * @since 1.3.4
     */
-   public String getDefaultCorbaHost()
+   public String getDefaultNamingServiceHost()
    {
-      return defaultCorbaHost;
+      return defaultNamingServiceHost;
    }
 
    /**
-    * Returns the current default CORBA port choice.  This may be different
-    * than what is currently available through the Global Preferences Service,
-    * depending on whether or not the user has chosen to apply changes.
+    * Returns the current default CORBA Naming Service port choice. This may
+    * be different than what is currently available through the Global
+    * Preferences Service, depending on whether or not the user has chosen to
+    * apply changes.
+    *
+    * This method was renamed from getDefaultCorbaPort() in version 1.3.4.
+    *
+    * @since 1.3.4
     */
-   public int getDefaultCorbaPort()
+   public int getDefaultNamingServicePort()
    {
-      return defaultCorbaPort;
+      return defaultNamingServicePort;
    }
 
    /**
@@ -171,6 +183,32 @@ public class PrefsDialog extends JDialog
    public String getDefaultIiopVersion()
    {
       return defaultIiopVersion;
+   }
+
+   /**
+    * Returns the current default CORBA ORB endpoint address choice. This may
+    * be different than what is currently available through the Global
+    * Preferences Service, depending on whether or not the user has chosen to
+    * apply changes.
+    *
+    * @since 1.3.4
+    */
+   public String getDefaultOrbAddress()
+   {
+      return defaultOrbAddress;
+   }
+
+   /**
+    * Returns the current default CORBA ORB endpoint port choice. This may
+    * be different than what is currently available through the Global
+    * Preferences Service, depending on whether or not the user has chosen to
+    * apply changes.
+    *
+    * @since 1.3.4
+    */
+   public int getDefaultOrbPort()
+   {
+      return defaultNamingServicePort;
    }
 
    /**
@@ -286,45 +324,65 @@ public class PrefsDialog extends JDialog
       mLafLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       mLafLabel.setLabelFor(mLafBox);
       mLafLabel.setText("Look and Feel");
-      mCorbaPortField.setMinimumSize(new Dimension(50, 17));
-      mCorbaPortField.setPreferredSize(new Dimension(50, 17));
-      mCorbaPortField.setToolTipText("The port number of the CORBA Naming Service");
-      mCorbaPortField.addFocusListener(new java.awt.event.FocusAdapter()
+      mNSPortField.setMinimumSize(new Dimension(50, 17));
+      mNSPortField.setPreferredSize(new Dimension(50, 17));
+      mNSPortField.setToolTipText("The port number of the CORBA Naming Service");
+      mNSPortField.addFocusListener(new java.awt.event.FocusAdapter()
       {
          public void focusLost(FocusEvent e)
          {
-            corbaPortFieldChanged();
+            namingServicePortFieldChanged();
          }
       });
-      mCorbaPortField.addActionListener(new java.awt.event.ActionListener()
+      mNSPortField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
-            corbaPortFieldChanged();
+            namingServicePortFieldChanged();
          }
       });
-      mCorbaPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mCorbaPortLabel.setLabelFor(mCorbaPortField);
-      mCorbaPortLabel.setText("Port Number");
+      mNSPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mNSPortLabel.setLabelFor(mNSPortField);
+      mNSPortLabel.setText("Naming Service Port Number");
+      mOrbPortField.setMinimumSize(new Dimension(50, 17));
+      mOrbPortField.setPreferredSize(new Dimension(50, 17));
+      mOrbPortField.setToolTipText("The port number of the CORBA endpoint");
+      mOrbPortField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            orbPortFieldChanged();
+         }
+      });
+      mOrbPortField.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            orbPortFieldChanged();
+         }
+      });
+      mOrbPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mOrbPortLabel.setLabelFor(mOrbPortField);
+      mOrbPortLabel.setText("Endpiont Port Number");
       mCorbaPanel.setLayout(mCorbaLayout);
-      mCorbaHostField.setToolTipText("The hostname for the CORBA Naming Service");
-      mCorbaHostField.addFocusListener(new java.awt.event.FocusAdapter()
+      mNSHostField.setToolTipText("The hostname for the CORBA Naming Service");
+      mNSHostField.addFocusListener(new java.awt.event.FocusAdapter()
       {
          public void focusLost(FocusEvent e)
          {
-            corbaHostFieldChanged();
+            namingServiceHostFieldChanged();
          }
       });
-      mCorbaHostField.addActionListener(new java.awt.event.ActionListener()
+      mNSHostField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
-            corbaHostFieldChanged();
+            namingServiceHostFieldChanged();
          }
       });
-      mCorbaHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mCorbaHostLabel.setLabelFor(mCorbaHostField);
-      mCorbaHostLabel.setText("Host Name");
+      mNSHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mNSHostLabel.setLabelFor(mNSHostField);
+      mNSHostLabel.setText("Naming Service Host Name");
       mIiopVerField.setMinimumSize(new Dimension(50, 17));
       mIiopVerField.setPreferredSize(new Dimension(50, 17));
       mIiopVerField.setToolTipText("The version number of the Internet Inter-ORB Protocol");
@@ -421,13 +479,13 @@ public class PrefsDialog extends JDialog
       mWinSizePanel.add(mWindowWidthField, null);
       mWinSizePanel.add(mWindowHeightField, null);
       mContentPane.add(mCorbaPanel,   "CORBA");
-      mCorbaPanel.add(mCorbaHostLabel,              new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+      mCorbaPanel.add(mNSHostLabel,              new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 40, 0));
-      mCorbaPanel.add(mCorbaHostField,              new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+      mCorbaPanel.add(mNSHostField,              new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 4), 0, 0));
-      mCorbaPanel.add(mCorbaPortLabel,                   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+      mCorbaPanel.add(mNSPortLabel,                   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(3, 0, 0, 2), 0, 0));
-      mCorbaPanel.add(mCorbaPortField,                   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+      mCorbaPanel.add(mNSPortField,                   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(3, 0, 0, 0), 0, 0));
       mCorbaPanel.add(mIiopVerLabel,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(3, 0, 0, 2), 0, 0));
@@ -584,9 +642,11 @@ public class PrefsDialog extends JDialog
       mPrefs.setWindowHeight(windowHeight);
       mPrefs.setChooserStartDir(chooserStartDir);
       mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
-      mPrefs.setDefaultCorbaHost(defaultCorbaHost);
-      mPrefs.setDefaultCorbaPort(defaultCorbaPort);
+      mPrefs.setDefaultNamingServiceHost(defaultNamingServiceHost);
+      mPrefs.setDefaultNamingServicePort(defaultNamingServicePort);
       mPrefs.setDefaultIiopVersion(defaultIiopVersion);
+      mPrefs.setDefaultOrbAddress(defaultOrbAddress);
+      mPrefs.setDefaultOrbPort(defaultOrbPort);
    }
 
    private void commitAndSave()
@@ -648,35 +708,39 @@ public class PrefsDialog extends JDialog
     * Action taken when the user changes the text field containing the default
     * CORBA port.  This validates the entered hostname.
     */
-   private void corbaHostFieldChanged()
+   private void namingServiceHostFieldChanged()
    {
-      defaultCorbaHost = mCorbaHostField.getText();
-      fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_CORBA_HOST);
+      defaultNamingServiceHost = mNSHostField.getText();
+      fireGlobalPrefsModified(
+         GlobalPrefsUpdateEvent.DEFAULT_NAMING_SERVICE_HOST
+      );
    }
 
    /**
     * Action taken when the user changes the text field containing the default
     * CORBA port.  This validates the entered port number.
     */
-   private void corbaPortFieldChanged()
+   private void namingServicePortFieldChanged()
    {
       try
       {
-         int port = Integer.parseInt(mCorbaPortField.getText());
+         int port = Integer.parseInt(mNSPortField.getText());
 
          if ( port > 0 && port < 65536 )
          {
-            defaultCorbaPort = port;
-            fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_CORBA_PORT);
+            defaultNamingServicePort = port;
+            fireGlobalPrefsModified(
+               GlobalPrefsUpdateEvent.DEFAULT_NAMING_SERVICE_PORT
+            );
          }
          else
          {
-            mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
+            mNSPortField.setText(String.valueOf(defaultNamingServicePort));
          }
       }
       catch (Exception ex)
       {
-         mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
+         mNSPortField.setText(String.valueOf(defaultNamingServicePort));
       }
    }
 
@@ -688,6 +752,42 @@ public class PrefsDialog extends JDialog
    {
       defaultIiopVersion = mIiopVerField.getText();
       fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_IIOP_VERSION);
+   }
+
+   /**
+    * Action taken when the user changes the text field containing the default
+    * CORBA port.  This validates the entered hostname.
+    */
+   private void orbAddressFieldChanged()
+   {
+      defaultOrbAddress = mOrbAddrField.getText();
+      fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_ORB_ADDRESS);
+   }
+
+   /**
+    * Action taken when the user changes the text field containing the default
+    * CORBA port.  This validates the entered port number.
+    */
+   private void orbPortFieldChanged()
+   {
+      try
+      {
+         int port = Integer.parseInt(mOrbPortField.getText());
+
+         if ( port > 0 && port < 65536 )
+         {
+            defaultOrbPort = port;
+            fireGlobalPrefsModified(GlobalPrefsUpdateEvent.DEFAULT_ORB_PORT);
+         }
+         else
+         {
+            mOrbPortField.setText(String.valueOf(defaultOrbPort));
+         }
+      }
+      catch (Exception ex)
+      {
+         mOrbPortField.setText(String.valueOf(defaultOrbPort));
+      }
    }
 
    /**
@@ -756,15 +856,18 @@ public class PrefsDialog extends JDialog
 
    private int status;
 
-   private int     userLevel          = 0;
-   private String  lookAndFeel        = null;
-   private String  beanViewer         = null;
-   private int     windowWidth        = 1024;
-   private int     windowHeight       = 768;
-   private String  chooserStartDir    = GlobalPreferencesService.DEFAULT_START;
-   private String  defaultCorbaHost   = "";
-   private int     defaultCorbaPort   = 0;
-   private String  defaultIiopVersion = "";
+   private int     userLevel               = 0;
+   private String  lookAndFeel             = null;
+   private String  beanViewer              = null;
+   private int     windowWidth             = 1024;
+   private int     windowHeight            = 768;
+   private String  chooserStartDir         =
+      GlobalPreferencesService.DEFAULT_START;
+   private String  defaultNamingServiceHost = "";
+   private int     defaultNamingServicePort = 0;
+   private String  defaultIiopVersion       = "";
+   private String  defaultOrbAddress        = "";
+   private int     defaultOrbPort           = 0;
 
    private GlobalPreferencesService mPrefs = null;
 
@@ -797,13 +900,17 @@ public class PrefsDialog extends JDialog
    private JPanel mGenConfigPanel = new JPanel();
    private JComboBox mLafBox = new JComboBox();
    private JLabel mLafLabel = new JLabel();
-   private JTextField mCorbaPortField = new JTextField();
-   private JLabel mCorbaPortLabel = new JLabel();
+   private JTextField mNSPortField = new JTextField();
+   private JLabel mNSPortLabel = new JLabel();
    private JTextField mIiopVerField = new JTextField();
    private JLabel mIiopVerLabel = new JLabel();
    private JPanel mCorbaPanel = new JPanel();
-   private JTextField mCorbaHostField = new JTextField();
-   private JLabel mCorbaHostLabel = new JLabel();
+   private JTextField mNSHostField = new JTextField();
+   private JLabel mNSHostLabel = new JLabel();
+   private JTextField mOrbAddrField = new JTextField();
+   private JLabel mOrbAddrLabel = new JLabel();
+   private JTextField mOrbPortField = new JTextField();
+   private JLabel mOrbPortLabel = new JLabel();
    private GridBagLayout mCorbaLayout = new GridBagLayout();
    private JLabel mWinSizeLabel = new JLabel();
    private JPanel mWinSizePanel = new JPanel();

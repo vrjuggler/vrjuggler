@@ -26,12 +26,15 @@
 
 #include <tweek/tweekConfig.h>
 
+#include <cstdlib>
+#include <cstring>
 #include <sstream>
 #include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/GUID.h>
 
 #include <tweek/Util/Version.h>
 #include <tweek/Util/Debug.h>
@@ -49,6 +52,9 @@ const std::string CorbaManager::DELIVERY_SUBJECT_NAME("TweekBeanPusher");
 CorbaManager::CorbaManager()
    : mAppName("unknown")
    , mOrbThread(NULL)
+   , mRootPOA(PortableServer::POA::_nil())
+   , mChildPOA(PortableServer::POA::_nil())
+   , mInsPOA(PortableServer::POA::_nil())
    , mSubjectManager(NULL)
    , mBeanDeliverySubject(NULL)
 {
@@ -98,7 +104,10 @@ bool CorbaManager::init(const std::string& localID, int& argc, char** argv,
          << "')\n" << vprDEBUG_FLUSH;
       mORB = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING);
 
-      status = createChildPOA(localID);
+      // We want to allow multiple IDs to the same object and retain the
+      // references.  The latter is required if we wish to do explict
+      // activation.
+      status = createChildPOA(localID, PortableServer::MULTIPLE_ID, false);
 
       try
       {
@@ -139,6 +148,142 @@ bool CorbaManager::init(const std::string& localID, int& argc, char** argv,
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Starting ORB thread\n"
                                                  << vprDEBUG_FLUSH;
       mOrbThread = new vpr::Thread(boost::bind(&CorbaManager::run, this));
+   }
+   catch (CORBA::SystemException& sysEx)
+   {
+      status = false;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught CORBA::SystemException during initialization\n"
+         << vprDEBUG_FLUSH;
+      printSystemException(sysEx, vprDBG_CRITICAL_LVL);
+   }
+   catch (CORBA::Exception&)
+   {
+      status = false;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught CORBA::Exception during initialization.\n"
+         << vprDEBUG_FLUSH;
+   }
+#ifdef OMNIORB_VER
+   catch (omniORB::fatalException& fe)
+   {
+      status = false;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught omniORB::fatalException:\n" << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "  file: " << fe.file() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "  line: " << fe.line() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "  mesg: " << fe.errmsg() << std::endl << vprDEBUG_FLUSH;
+   }
+#endif
+   catch (vpr::Exception& ex)
+   {
+      status = false;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught vpr::Exception during initialization.\n"
+         << ex.what() << vprDEBUG_FLUSH;
+   }
+   catch(...)
+   {
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught unknown exception during initialization." << std::endl
+         << vprDEBUG_FLUSH;
+   }
+
+   return status;
+}
+
+bool CorbaManager::initDirect(const std::string& localID, int& argc,
+                              char** argv, const std::string& listenAddr,
+                              const vpr::Uint16 listenPort)
+{
+   bool status(true);
+
+   // Retrieve the application name from argv if argv is non-NULL.
+   if ( NULL != argv )
+   {
+      mAppName = argv[0];
+   }
+
+   try
+   {
+      std::ostringstream end_point_stream;
+      end_point_stream << "giop:tcp:" << listenAddr << ":" << listenPort;
+
+      const char* options[][2] = {
+         { "endPoint", NULL },
+         { NULL, NULL }
+      };
+      options[0][1] = strdup(end_point_stream.str().c_str());
+
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CONFIG_LVL)
+         << "CORBA endpiont: '" << options[0][1] << "'\n" << vprDEBUG_FLUSH;
+
+      // Initialize the ORB.
+      vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
+         << "Initializing ORB (using init string '" << TWEEK_ORB_VER_STRING
+         << "')\n" << vprDEBUG_FLUSH;
+      mORB = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING, options);
+
+      // Yes, this could be done with a simple C-style cast, but the C++ cast
+      // operations exist for a reason.
+      std::free(reinterpret_cast<void*>(const_cast<char*>(options[0][1])));
+      options[0][1] = NULL;
+
+      status = createChildPOA(localID, PortableServer::UNIQUE_ID, true);
+
+#if defined(TWEEK_USE_OMNIORB)
+      if ( status )
+      {
+         CORBA::Object_var obj =
+            mORB->resolve_initial_references("omniINSPOA");
+
+         if ( ! CORBA::is_nil(obj) )
+         {
+            mInsPOA = PortableServer::POA::_narrow(obj);
+
+            if ( ! CORBA::is_nil(mInsPOA) )
+            {
+               // status has to be true to have reached this point.
+               mInsPOA->the_POAManager()->activate();
+
+               vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
+                  << "Starting ORB thread\n" << vprDEBUG_FLUSH;
+               mOrbThread = new vpr::Thread(boost::bind(&CorbaManager::run,
+                                                        this));
+            }
+            else
+            {
+               status = false;
+
+               vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+                  << "WARNING: Failed to narrow reference to omniORB INS POA.\n"
+                  << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+                  << "         Tweek CORBA services will not be available!\n"
+                  << vprDEBUG_FLUSH;
+            }
+         }
+         else
+         {
+            status = false;
+
+            vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+               << "WARNING: Failed to acquire reference to omniORB INS POA.\n"
+               << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+               << "         Tweek CORBA services will not be available!\n"
+               << vprDEBUG_FLUSH;
+         }
+      }
+#else
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRTICAL_LVL)
+         << "ERROR: Direct object connection support only works with omniORB\n"
+         << vprDEBUG_FLUSH;
+      status = false;
+#endif
    }
    catch (CORBA::SystemException& sysEx)
    {
@@ -261,14 +406,31 @@ void CorbaManager::shutdown(bool waitForCompletion)
 
 bool CorbaManager::createSubjectManager()
 {
-   vprASSERT(! CORBA::is_nil(mRootContext) && "No naming service available");
-   vprASSERT(! CORBA::is_nil(mLocalContext) && "No naming service available");
    bool status(true);
 
+   vprASSERT(mSubjectManager == NULL &&
+             "Subject Manager already exists for this CORBA Manager!");
+
+   const bool use_naming_service(CORBA::is_nil(mInsPOA));
    tweek::SubjectManager_var mgr_ptr;
 
-   vprASSERT(mSubjectManager == NULL && "Subject Manager already exists for this CORBA Manager!");
-   mSubjectManager = new SubjectManagerImpl(*this);
+   std::ostringstream id_stream;
+   id_stream << "SubjectManager";
+
+   // In the case that we do not have the omniORB INS POA, create a unique
+   // name for the Subject Manager servant.
+   if ( use_naming_service )
+   {
+      vprASSERT(! CORBA::is_nil(mRootContext) &&
+                "No naming service available");
+      vprASSERT(! CORBA::is_nil(mLocalContext) &&
+                "No naming service available");
+
+      vpr::GUID name_guid(vpr::GUID::generateTag);
+      id_stream << "." << name_guid;
+   }
+
+   mSubjectManager = new SubjectManagerImpl(*this, id_stream.str());
    mSubjectManager->setApplicationName(mAppName);
 
    // Try to activate the given servant with our child POA before anyone tries
@@ -293,85 +455,97 @@ bool CorbaManager::createSubjectManager()
          << vprDEBUG_FLUSH;
    }
 
-   // Only proceed if we were able to activate an object within the POA.  If
-   // we couldn't, there is no point in registering anything with the naming
-   // service.
+   // Only proceed if we were able to activate an object within the POA. If we
+   // couldn't, then there is no point in performing any further registration.
    if ( status )
    {
-      // Try to add the mgr_ptr reference to the bound references known to the
-      // naming service.
-      try
+      // If we do not have the omniORB INS POA, then we are registering the
+      // new Subject Manager servant with the CORBA Naming Service.
+      if ( use_naming_service )
       {
-         // Construct the SubjectManager's name using its GUID so that it is
-         // guaranteed to be unique.
-         std::string id_str("SubjectManager.");
-         id_str += mSubjectManager->getGUID().toString();
-         mSubjectManager->setName(id_str);
-
-         const char* kind = "Object";
-
-         vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
-            << "Subject Manager ID: " << id_str << std::endl << vprDEBUG_FLUSH;
-
-         // This gives us our reference from the POA to the servant that was
-         // registered above.  This does not perform object activation because
-         // the object was activated above.
-         mgr_ptr = mSubjectManager->_this();
-
-         vprASSERT(! CORBA::is_nil(mgr_ptr) && "CORBA object not activated in POA");
-
-         CosNaming::Name subj_mgr_name;
-         subj_mgr_name.length(1);
-         subj_mgr_name[0].id   = CORBA::string_dup(id_str.c_str());
-         subj_mgr_name[0].kind = CORBA::string_dup(kind);
-
-         // Bind the Subject Manager reference and activate the object within
-         // the POA.  If a Subject Manager is already bound, the exceptoin
-         // thrown prevents either operation from happening.  This is correct
-         // since we only want one Subject Manager per address space.
+         // Try to add the mgr_ptr reference to the bound references known to
+         // the Naming Service.
          try
          {
-            mLocalContext->bind(subj_mgr_name, mgr_ptr);
+            const char* kind = "Object";
 
-            // Now that everything is set up with the Subject Manager, we can
-            // register the one Subject that is always around: the default Bean
-            // Delivery Subject.  This Subject is available for easy delivery
-            // of new Beans to observers.
+            vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
+               << "Subject Manager ID: " << id_stream.str() << std::endl
+               << vprDEBUG_FLUSH;
+
+            // This gives us our reference from the POA to the servant that
+            // was registered above. This does not perform object activation
+            // because the object was activated above.
+            mgr_ptr = mSubjectManager->_this();
+
+            vprASSERT(! CORBA::is_nil(mgr_ptr) &&
+                      "CORBA object not activated in POA");
+
+            CosNaming::Name subj_mgr_name;
+            subj_mgr_name.length(1);
+            subj_mgr_name[0].id   = CORBA::string_dup(id_stream.str().c_str());
+            subj_mgr_name[0].kind = CORBA::string_dup(kind);
+
+            // Bind the Subject Manager reference and activate the object
+            // within the POA. If a Subject Manager is already bound, the
+            // exception thrown prevents either operation from happening. This
+            // is correct since we only want one Subject Manager per address
+            // space.
             try
             {
-               mBeanDeliverySubject = new BeanDeliverySubjectImpl();
-               mSubjectManager->registerSubject(mBeanDeliverySubject,
-                                                DELIVERY_SUBJECT_NAME.c_str());
+               mLocalContext->bind(subj_mgr_name, mgr_ptr);
             }
-            catch (...)
+            catch (CosNaming::NamingContext::AlreadyBound&)
             {
-               delete mBeanDeliverySubject;
-               mBeanDeliverySubject = NULL;
-               vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
-                  << clrOutNORM(clrYELLOW, "WARNING")
-                  << ": Failed to register Bean Delivery Subject\n"
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                  << "WARNING: Subject manager reference already bound!\n"
                   << vprDEBUG_FLUSH;
             }
          }
-         catch (CosNaming::NamingContext::AlreadyBound&)
+         catch (CORBA::COMM_FAILURE&)
          {
+            status = false;
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-               << "WARNING: Subject manager reference already bound!\n"
-               << vprDEBUG_FLUSH;
+               << "Unable to contact the naming service\n" << vprDEBUG_FLUSH;
+         }
+         catch (CORBA::SystemException&)
+         {
+            status = false;
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "Caught a CORBA::SystemException while using the naming service"
+               << std::endl << vprDEBUG_FLUSH;
          }
       }
-      catch (CORBA::COMM_FAILURE&)
+      // Create an identifier for the Subject Manager servant using its
+      // (non-unique) name and activate it within the omniORB INS POA.
+      else
       {
-         status = false;
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "Unable to contact the naming service\n" << vprDEBUG_FLUSH;
+         PortableServer::ObjectId_var subj_mgr_id =
+            PortableServer::string_to_ObjectId(id_stream.str().c_str());
+         mInsPOA->activate_object_with_id(subj_mgr_id, mSubjectManager);
       }
-      catch (CORBA::SystemException&)
+
+      // If things were set up successfully with the Subject Manager servant,
+      // we can register the one Subject that is always around: the default
+      // Bean Delivery Subject. This Subject is available for easy delivery of
+      // new Beans to observers.
+      if ( status )
       {
-         status = false;
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "Caught a CORBA::SystemException while using the naming service"
-            << std::endl << vprDEBUG_FLUSH;
+         try
+         {
+            mBeanDeliverySubject = new BeanDeliverySubjectImpl();
+            mSubjectManager->registerSubject(mBeanDeliverySubject,
+                                             DELIVERY_SUBJECT_NAME.c_str());
+         }
+         catch (...)
+         {
+            delete mBeanDeliverySubject;
+            mBeanDeliverySubject = NULL;
+            vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+               << clrOutNORM(clrYELLOW, "WARNING")
+               << ": Failed to register Bean Delivery Subject\n"
+               << vprDEBUG_FLUSH;
+         }
       }
    }
 
@@ -403,7 +577,10 @@ bool CorbaManager::destroySubjectManager()
 // Private methods.
 // ============================================================================
 
-bool CorbaManager::createChildPOA(const std::string& localID)
+bool CorbaManager::
+createChildPOA(const std::string& localID,
+               const PortableServer::IdUniquenessPolicyValue uniquePolicy,
+               const bool bidirectional)
 {
    bool status(true);
    CORBA::Object_var obj;
@@ -418,16 +595,22 @@ bool CorbaManager::createChildPOA(const std::string& localID)
 
    vprASSERT(! CORBA::is_nil(mRootPOA) && "Failed to get Root POA");
 
-   // We want to allow multiple IDs to the same object and retain the
-   // references.  The latter is required if we wish to do explict activation.
    PortableServer::IdUniquenessPolicy_var uniq_policy =
-      mRootPOA->create_id_uniqueness_policy(PortableServer::MULTIPLE_ID);
+      mRootPOA->create_id_uniqueness_policy(uniquePolicy);
    PortableServer::ServantRetentionPolicy_var retain_policy =
       mRootPOA->create_servant_retention_policy(PortableServer::RETAIN);
    PortableServer::ThreadPolicy_var thread_policy =
       mRootPOA->create_thread_policy(PortableServer::ORB_CTRL_MODEL);
 
-   policy_list.length(3);
+   if ( bidirectional )
+   {
+      policy_list.length(4);
+   }
+   else
+   {
+      policy_list.length(3);
+   }
+
    policy_list[0] =
       PortableServer::IdUniquenessPolicy::_duplicate(uniq_policy);
    policy_list[1] =
@@ -435,16 +618,25 @@ bool CorbaManager::createChildPOA(const std::string& localID)
    policy_list[2] =
       PortableServer::ThreadPolicy::_duplicate(thread_policy);
 
+   if ( bidirectional )
+   {
+      CORBA::Any a;
+      a <<= BiDirPolicy::BOTH;
+      policy_list[3] =
+         mORB->create_policy(BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, a);
+   }
+
    std::string poa_name = "tweek_" + localID;
+
+   PortableServer::POAManager_var pman = mRootPOA->the_POAManager();
+   pman->activate();
 
    try
    {
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
          << "Creating child of root POA named " << poa_name << std::endl
          << vprDEBUG_FLUSH;
-      mChildPOA = mRootPOA->create_POA(poa_name.c_str(),
-                                       PortableServer::POAManager::_nil(),
-                                       policy_list);
+      mChildPOA = mRootPOA->create_POA(poa_name.c_str(), pman, policy_list);
    }
    catch (PortableServer::POA::AdapterAlreadyExists&)
    {
@@ -471,9 +663,6 @@ void CorbaManager::run()
 {
    // NOTE: Do not put uses of vprDEBUG here. It can cause crashes on exit
    // as singletons are destroyed.
-   PortableServer::POAManager_var pman = mChildPOA->the_POAManager();
-
-   pman->activate();
    mORB->run();
 }
 

@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2008-02-09 patrick     Added the ability to make direct connections to a
+                       Subject Manager servant (that is, without involving the
+                       CORBA Naming Service).
+                       NEW VERSION: 1.3.4
 2007-09-04 patrick     Use new environment variable TWEEK_DATA_DIR as a way to
                        look up files in TWEEK_BASE_DIR/share/tweek.
                        NEW VERSION: 1.3.3

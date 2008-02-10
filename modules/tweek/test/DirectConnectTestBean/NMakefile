@@ -25,41 +25,43 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for tweek/test
-#
-# Generated for use on @PLATFORM@
+# Makefile for tweek/test/NetworkTest.  It requires nmake.
 # -----------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------
-# Build targets.
-# -----------------------------------------------------------------------------
-default: all
+BEAN=		NetworkTestBean
 
-SUBDIRS=	corba			\
-		BeanDeliveryTest	\
-		CxxClient		\
-		DirectConnectTestBean	\
-		FileOpenTestBean	\
-		NetworkTestBean		\
-		PrefsTestBean		\
-		TestBean
+JAVAC=		$(JAVA_HOME)\bin\javac
+JAR=		$(JAVA_HOME)\bin\jar
 
-all: $(SUBDIRS)
+CLASSPATH=	$(TWEEK_BASE_DIR)\share\tweek\java\Tweek.jar;$(TWEEK_BASE_DIR)\share\tweek\java\TweekNet.jar;$(TWEEK_BASE_DIR)\share\tweek\java\TweekEvents.jar
 
-$(SUBDIRS)::
-	cd $@ && $(MAKE) all
+IDL=		$(TWEEK_BASE_DIR)\bin\idl.bat
+IDL_OPTS=	
+IDL_INCLUDES=	-I$(TWEEK_BASE_DIR)\include
+IDL_DIR=	.
 
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
+networktest\SliderSubject.java: $(IDL_DIR)\SliderSubject.idl
+	$(IDL) $(IDL_OPTS) -noskel $(IDL_INCLUDES) $(IDL_DIR)\SliderSubject.idl
+
+networktest\WhiteboardSubject.java: $(IDL_DIR)\WhiteboardSubject.idl
+	$(IDL) $(IDL_OPTS) -noskel $(IDL_INCLUDES) $(IDL_DIR)\WhiteboardSubject.idl
+
+VPATH=		networktest;..\NetworkTestBean
+
+JAVA_OUTPUT=	networktest\SliderSubject.java		\
+		networktest\WhiteboardSubject.java
+
+all: $(JAVA_OUTPUT) classes $(BEAN).jar
+	copy $(BEAN).jar $(TWEEK_BASE_DIR)\share\tweek\beans
+	copy $(BEAN).xml $(TWEEK_BASE_DIR)\share\tweek\beans
+
+classes:
+	$(JAVAC) -classpath $(CLASSPATH) networktest\*.java
+
+$(BEAN).jar:
+	$(JAR) cvf $@ networktest\*.class
+
 clean:
-	@for dir in $(SUBDIRS) ; do			\
-            echo "==> Cleaning in $$dir"       ;	\
-            cd $$dir && $(MAKE) clean && cd .. ;	\
-        done
-
-clobber:
-	@for dir in $(SUBDIRS) ; do			\
-            echo "==> Cleaning in $$dir"         ;	\
-            cd $$dir && $(MAKE) clobber && cd .. ;	\
-        done
+	-del networktest\*.class
+	-del $(JAVA_OUTPUT)
+	-del $(BEAN).jar $(TWEEK_BASE_DIR)\share\tweek\$(BEAN).*

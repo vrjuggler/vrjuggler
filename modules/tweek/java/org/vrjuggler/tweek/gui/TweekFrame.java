@@ -848,17 +848,31 @@ public class TweekFrame
                                  prefs.getWindowHeight()));
       this.setTitle("Tweek JavaBean Loader");
 
-      // Define the Connect option in the Network menu.
-      mMenuNetConnect.setText("Connect to ORB ...");
-      mMenuNetConnect.setAccelerator(
+      // Define the "Connect to ORB" option in the Network menu.
+      mMenuDirectConnect.setText("Connect Directly to ORB ...");
+      mMenuDirectConnect.setAccelerator(
+         KeyStroke.getKeyStroke(KeyEvent.VK_D,
+                                shortcut_mask | KeyEvent.SHIFT_MASK, false)
+      );
+      mMenuDirectConnect.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+               directConnectAction(e);
+            }
+         });
+
+      // Define the "Connect to Naming Service" option in the Network menu.
+      mMenuNsConnect.setText("Connect to Naming Service ...");
+      mMenuNsConnect.setAccelerator(
          KeyStroke.getKeyStroke(KeyEvent.VK_C,
                                 shortcut_mask | KeyEvent.SHIFT_MASK, false)
       );
-      mMenuNetConnect.addActionListener(new ActionListener()
+      mMenuNsConnect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
-               networkConnectAction(e);
+               namingServiceConnectAction(e);
             }
          });
 
@@ -1128,7 +1142,8 @@ public class TweekFrame
 
       // Set up the Network menu.
       mMenuNetwork.setText("Network");
-      mMenuNetwork.add(mMenuNetConnect);
+      mMenuNetwork.add(mMenuDirectConnect);
+      mMenuNetwork.add(mMenuNsConnect);
       mMenuNetwork.add(mMenuNetDisconnect);
 
       // Set up the Beans menu.
@@ -1217,7 +1232,7 @@ public class TweekFrame
 
    private void setMnemonics()
    {
-      mMenuNetConnect.setMnemonic('C');
+      mMenuNsConnect.setMnemonic('C');
       mMenuNetDisconnect.setMnemonic('D');
       mMenuEditPrefsBean.setMnemonic('B');
       mMenuBeansLoad.setMnemonic('L');
@@ -1380,12 +1395,36 @@ public class TweekFrame
    /**
     * Network | Connect action performed.
     */
-   private void networkConnectAction (ActionEvent e)
+   private void directConnectAction(ActionEvent e)
    {
-      ConnectionDialog dialog = new ConnectionDialog(this, "ORB Connections");
+      DirectConnectionDialog dialog =
+         new DirectConnectionDialog(this, "ORB Connections");
       dialog.setVisible(true);
 
-      if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
+      if ( dialog.getStatus() == DirectConnectionDialog.OK_OPTION )
+      {
+         CorbaService corba_service = dialog.getCorbaService();
+
+         if ( null != corba_service &&
+              null != corba_service.getSubjectManager() )
+         {
+            mORBs.add(corba_service);
+            mBeanContainer.fireConnectionEvent(corba_service);
+            mMenuNetDisconnect.setEnabled(true);
+         }
+      }
+   }
+
+   /**
+    * Network | Connect to Naming Service action performed.
+    */
+   private void namingServiceConnectAction(ActionEvent e)
+   {
+      NamingServiceConnectionDialog dialog =
+         new NamingServiceConnectionDialog(this, "Naming Service Connections");
+      dialog.setVisible(true);
+
+      if ( dialog.getStatus() == NamingServiceConnectionDialog.OK_OPTION )
       {
          CorbaService corba_service = dialog.getCorbaService();
 
@@ -1654,7 +1693,8 @@ public class TweekFrame
    private JMenuItem mMenuEditPrefsGlobal = new JMenuItem();
    private JMenuItem mMenuEditPrefsBean   = new JMenuItem();
    private JMenu mMenuNetwork             = new JMenu();
-   private JMenuItem mMenuNetConnect      = new JMenuItem();
+   private JMenuItem mMenuDirectConnect   = new JMenuItem();
+   private JMenuItem mMenuNsConnect       = new JMenuItem();
    private JMenuItem mMenuNetDisconnect   = new JMenuItem();
    private JMenu mMenuBeans               = new JMenu();
    private JMenuItem mMenuBeansLoad       = new JMenuItem();

@@ -26,14 +26,9 @@
 
 package org.vrjuggler.tweek.net.corba;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAPackage.*;
-import org.omg.CosNaming.*;
-import org.omg.CosNaming.NamingContextPackage.*;
 
 
 /**
@@ -43,84 +38,42 @@ import org.omg.CosNaming.NamingContextPackage.*;
 public class CorbaService
 {
    /**
-    * Creates a new instance of this class and initializes the URI that will
-    * be used to contact the CORBA Naming Service.
-    *
-    * @param nsHost       The hostname (or IP address) of the machine where
-    *                     the Naming Service is running.
-    * @param nsPort       The port number on which the Naming Service is
-    *                     listening.  Normally, this will be 2809.
-    * @param iiopVer      The version of IIOP to use when communicating with
-    *                     the Naming Service.  Common values are "1.0" and
-    *                     "1.2".
-    * @param subcontextId The identifier for the Naming subcontext.  This is
-    *                     currently unused.
-    */
-   public CorbaService(String nsHost, int nsPort, String iiopVer,
-                       String subcontextId)
-   {
-      nameServiceHost    = nsHost;
-      nameServicePort    = nsPort;
-      nameServiceIiopVer = iiopVer;
-      namingSubcontext   = subcontextId;
-
-      nameServiceURI = "corbaloc:iiop:" + iiopVer + "@" + nsHost + ":" +
-                       nsPort + "/NameService";
-
-      System.out.println("nameServiceURI: " + nameServiceURI);
-   }
-
-   /**
-    * Initializes this ORB (the so-called "CORBA Service") by starting the
-    * ORB thread and making the initial connection to the CORBA Naming Service.
+    * Creates and initializes a new CORBA ORB and activates the root
+    * Portable Object Adapter (POA). The ORB itself runs in a thread that is
+    * managed by this object.
     *
     * @param args Command line arguments to be processed by the ORB.
     *
-    * @throws org.omg.SystemException A CORBA system error occurred.
-    * @throws org.omg.CosNaming.NamingContextPackage.NotFound The requested
-    *         naming context (the Tweek naming context in this case) cannot be
-    *         found in the CORBA Naming Service.
-    * @throws org.omg.CosNaming.NamingContextPackage.CannotProceed An operation
-    *         cannot be performed on a specific naming context--the Tweek
-    *         naming context in this case.
-    * @throws org.omg.CosNaming.NamingContextPackage.InvalidName An invalid
-    *         (non-existant) name was requested from the CORBA Naming Service.
-    * @throws org.omg.CORBA.ORBPackage.InvalidName The root Portable Object
-    *         Adapter (POA) could not be found.  CORBA objects cannot be
-    *         accessed.
-    * @throws org.omg.PortableServer.POAManagerPackage.AdapterInactive The
-    *         Portable Object Adapter (POA) is inactive and cannot be accessed.
+    * @throws org.omg.SystemException
+    *           A CORBA system error occurred.
+    * @throws org.omg.PortableServer.POAManagerPackage.AdapterInactive
+    *           The Portable Object Adapter (POA) is inactive and cannot be
+    *           accessed.
+    * @throws org.omg.CORBA.ORBPackage.InvalidName
+    *           The root Portable Object Adapter (POA) could not be found.
+    *           CORBA objects cannot be accessed.
     */
-   public void init(String[] args)
-      throws SystemException, NotFound, CannotProceed, InvalidName,
-             org.omg.CORBA.ORBPackage.InvalidName,
-             org.omg.PortableServer.POAManagerPackage.AdapterInactive
+   public CorbaService(String[] args)
+      throws SystemException
+           , org.omg.PortableServer.POAManagerPackage.AdapterInactive
+           , org.omg.CORBA.ORBPackage.InvalidName
    {
       mORB = ORB.init(args, null);
       mOrbThread = new OrbThread(mORB);
       mOrbThread.start();
 
-      mRootPoa = (POA) mORB.resolve_initial_references("RootPOA");
-      mRootPoa.the_POAManager().activate();
+      rootPOA = (POA) mORB.resolve_initial_references("RootPOA");
+      rootPOA.the_POAManager().activate();
+   }
 
-      org.omg.CORBA.Object init_ref = null;
+   public ORB getORB()
+   {
+      return mORB;
+   }
 
-      init_ref = mORB.string_to_object(nameServiceURI);
-      rootContext = NamingContextHelper.narrow(init_ref);
-
-      if (rootContext != null)
-      {
-         // XXX: Need to allow users to specify this through
-         // namingSubcontext.
-         NameComponent[] tweek_name_context = new NameComponent[1];
-         tweek_name_context[0] = new NameComponent("tweek", "context");
-         init_ref = rootContext.resolve(tweek_name_context);
-         localContext = NamingContextHelper.narrow(init_ref);
-      }
-      else
-      {
-         System.err.println("Failed to get root naming context!");
-      }
+   public POA getRootPOA()
+   {
+      return rootPOA;
    }
 
    /**
@@ -139,131 +92,10 @@ public class CorbaService
    {
       if ( mOrbThread != null && mORB != null )
       {
-         mRootPoa.destroy(true, wait_for_completion);
+         rootPOA.destroy(true, wait_for_completion);
          mORB.shutdown(wait_for_completion);
          mORB       = null;
          mOrbThread = null;
-      }
-   }
-
-   public String toString ()
-   {
-      return nameServiceHost + ":" + nameServicePort + "/" + namingSubcontext;
-   }
-
-   public String getNameServiceURI ()
-   {
-      return nameServiceURI;
-   }
-
-   public NamingContext getLocalContext ()
-   {
-      return localContext;
-   }
-
-   /**
-    * Retrieves a reference to all the CORBA objects that implement the
-    * tweek.SubjectManager interface.
-    *
-    * NOTE: The implementation of this method is based on code found on page
-    *       806 of <i>Advanced CORBA Programming with C++</i>.
-    *
-    * @return A list containing zero or more tweek.SubjectManager objects.
-    */
-   public List getSubjectManagerList()
-   {
-      ArrayList subj_mgrs = new ArrayList();
-
-      if ( null != localContext )
-      {
-         int data_size = 100;
-
-         BindingListHolder     list_holder = new BindingListHolder();
-         BindingIteratorHolder iter_holder = new BindingIteratorHolder();
-
-         // Get the list of objects (of any type) bound in localContext.
-         localContext.list(data_size, list_holder, iter_holder);
-
-         // Using the returned list of objects, populate subj_mgrs with any
-         // objects that implement the tweek.SubjectManager interface.
-         addSubjectManagers(list_holder.value, subj_mgrs);
-
-         if ( null != iter_holder.value )
-         {
-            BindingIterator iter = iter_holder.value;
-
-            while ( iter.next_n(data_size, list_holder) )
-            {
-               addSubjectManagers(list_holder.value, subj_mgrs);
-            }
-
-            iter.destroy();
-         }
-      }
-
-      return subj_mgrs;
-   }
-
-   /**
-    * Resolves all the CORBA objects implementing tweek.SubjectManager in
-    * bindingList and stores the resulting tweek.SubjectManager object(s) in
-    * mgrList.  If bindingList contains no such objects, mgrList will not be
-    * modified.  All references added to mgrList are guaranteed to refer to
-    * extant objects.
-    */
-   private void addSubjectManagers(Binding[] bindingList, List mgrList)
-   {
-      Binding binding;
-
-      for ( int i = 0; i < bindingList.length; ++i )
-      {
-         binding = bindingList[i];
-
-         // We do not care about anything that is a naming context.
-         if ( BindingType.ncontext != binding.binding_type )
-         {
-            // Furthermore, we only care about SubjectManager instances.
-            if ( binding.binding_name[0].id.startsWith("SubjectManager") )
-            {
-               NameComponent name_comp[] = binding.binding_name;
-
-               try
-               {
-                  org.omg.CORBA.Object ref = localContext.resolve(name_comp);
-                  tweek.SubjectManager mgr = tweek.SubjectManagerHelper.narrow(ref);
-
-                  // Do not present invalid Subject Manager references to the
-                  // user.  This little test is pretty sweet--I just hope it's
-                  // fast.
-                  try
-                  {
-                     if ( ! mgr._non_existent() )
-                     {
-                        mgrList.add(mgr);
-                     }
-                  }
-                  // CORBA system exceptions mean that the current Subject
-                  // Manager reference is not available, so we cannot add it
-                  // to mgrList.
-                  catch (org.omg.CORBA.SystemException ex)
-                  {
-                     // Ignore the exception.
-                  }
-               }
-               catch (InvalidName e)
-               {
-                  e.printStackTrace();
-               }
-               catch (CannotProceed e)
-               {
-                  e.printStackTrace();
-               }
-               catch (NotFound e)
-               {
-                  e.printStackTrace();
-               }
-            }
-         }
       }
    }
 
@@ -306,7 +138,7 @@ public class CorbaService
       // Get object reference from the servant.
       try
       {
-         obj_id = mRootPoa.activate_object(servant);
+         obj_id = rootPOA.activate_object(servant);
       }
       catch (ServantAlreadyActive ex)
       {
@@ -337,7 +169,7 @@ public class CorbaService
          // Deactivate the identified object within the root POA.
          try
          {
-            mRootPoa.deactivate_object(servant_id);
+            rootPOA.deactivate_object(servant_id);
          }
          catch (ObjectNotActive ex)
          {
@@ -374,19 +206,10 @@ public class CorbaService
       private ORB mORB = null;
    }
 
-   private String nameServiceHost    = null;
-   private int    nameServicePort    = 2809;
-   private String nameServiceIiopVer = "1.0";
-   private String nameServiceURI     = null;
-
-   private String namingSubcontext = null;
-
    private tweek.SubjectManager subjectManager = null;
 
-   private ORB           mORB         = null;
-   private POA           mRootPoa     = null;
-   private NamingContext rootContext  = null;
-   private NamingContext localContext = null;
+   private ORB mORB    = null;
+   private POA rootPOA = null;
 
    private OrbThread mOrbThread = null;
 }
