@@ -210,8 +210,12 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
 
    try
    {
-      std::ostringstream end_point_stream;
-
+      // Create a two-dimensional array of constant strings to be passed as
+      // the options to CORBA::ORB_init(). The first column is the property
+      // name, and the second is the property value. This will either contain
+      // one non-empty row (row 0) identifying the GIOP end point address
+      // ("endPoint"), or both rows will be empty. The last row has to have
+      // both columns set to NULL to denote the end of the option list.
       const char* options[2][2] = { { NULL, NULL }, { NULL, NULL } };
 
       // If endPointPort is 0, then we will fall back on OMNIORB_CONFIG to
@@ -244,6 +248,8 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
       // first row in the options table.
       else
       {
+         std::ostringstream end_point_stream;
+
          end_point_stream << "giop:tcp:" << endPointAddr << ":"
                           << endPointPort;
 
