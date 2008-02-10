@@ -299,24 +299,4 @@ SubjectManagerImpl::SubjectManagerImpl(const CorbaManager& corbaMgr,
    initInfoMap();
 }
 
-SubjectManagerImpl::SubjectManagerImpl(const SubjectManagerImpl& sm)
-   :
-#if defined(TWEEK_USE_OMNIORB)
-     omniServant(sm)
-   , tweek::_impl_SubjectManager(sm)
-   ,
-#elif defined(TWEEK_USE_TAO)
-     TAO_Abstract_ServantBase(sm)
-   ,
-#endif
-     PortableServer::ServantBase(sm)
-   , POA_tweek::SubjectManager(sm)
-   , PortableServer::RefCountServantBase(sm)
-   , mCorbaMgr(sm.mCorbaMgr)
-   , mName(sm.mName)
-   , mInfoMap(sm.mInfoMap)
-{
-   /* Do nothing. */ ;
-}
-
 } // End of tweek namespace

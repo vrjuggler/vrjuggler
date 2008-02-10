@@ -31,6 +31,8 @@
 
 #include <string>
 #include <map>
+#include <boost/noncopyable.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
@@ -55,7 +57,8 @@ class SubjectImpl;
  * management are hidden by this class.
  */
 class TWEEK_CLASS_API SubjectManagerImpl
-   : public POA_tweek::SubjectManager
+   : private boost::noncopyable
+   , public POA_tweek::SubjectManager
    , public PortableServer::RefCountServantBase
 {
 public:
@@ -182,16 +185,6 @@ protected:
     * tweek::CorbaManager may create objects of this type.
     */
    SubjectManagerImpl(const CorbaManager& corbaMgr, const std::string& name);
-
-   // These two have to be here because Visual C++ will try to make them
-   // exported public symbols.  This causes problems because copying
-   // vpr::Mutex objects is not allowed.
-   SubjectManagerImpl(const SubjectManagerImpl& sm);
-
-   void operator=(const SubjectManagerImpl&)
-   {
-      /* Do nothing. */ ;
-   }
 
    void storeSubject(Subject_ptr subject, const std::string& name);
 
