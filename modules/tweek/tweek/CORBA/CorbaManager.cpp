@@ -165,7 +165,7 @@ bool CorbaManager::init(const std::string& localID, int& argc, char** argv,
          << "Caught CORBA::Exception during initialization.\n"
          << vprDEBUG_FLUSH;
    }
-#ifdef OMNIORB_VER
+#if defined(TWEEK_USE_OMNIORB)
    catch (omniORB::fatalException& fe)
    {
       status = false;
@@ -222,7 +222,7 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
       // provide the GIOP end point setting.
       if ( endPointPort == 0 )
       {
-#ifdef OMNIORB_VER
+#if defined(TWEEK_USE_OMNIORB)
          std::string temp;
 
          // Test to determine whether the OMNIORB_CONFIG environment variable
@@ -345,7 +345,7 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
          << "Caught CORBA::Exception during initialization.\n"
          << vprDEBUG_FLUSH;
    }
-#ifdef OMNIORB_VER
+#if defined(TWEEK_USE_OMNIORB)
    catch (omniORB::fatalException& fe)
    {
       status = false;
