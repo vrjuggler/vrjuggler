@@ -677,25 +677,25 @@
          <keyboard_mouse_proxy>Keyboard Proxy</keyboard_mouse_proxy>
          <increment_keypress>
             <key_modifier_pair name="Increment Keypress 0" version="1">
-               <modifier_key>KEY_NONE</modifier_key>
+               <modifier_key>NONE</modifier_key>
                <key>KEY_Q</key>
             </key_modifier_pair>
          </increment_keypress>
          <increment_keypress>
             <key_modifier_pair name="Increment Keypress 1" version="1">
-               <modifier_key>KEY_NONE</modifier_key>
+               <modifier_key>NONE</modifier_key>
                <key>KEY_W</key>
             </key_modifier_pair>
          </increment_keypress>
          <decrement_keypress>
             <key_modifier_pair name="Decrement Keypress 0" version="1">
-               <modifier_key>KEY_NONE</modifier_key>
+               <modifier_key>NONE</modifier_key>
                <key>KEY_A</key>
             </key_modifier_pair>
          </decrement_keypress>
          <decrement_keypress>
             <key_modifier_pair name="Decrement Keypress 1" version="1">
-               <modifier_key>KEY_NONE</modifier_key>
+               <modifier_key>NONE</modifier_key>
                <key>KEY_S</key>
             </key_modifier_pair>
          </decrement_keypress>
