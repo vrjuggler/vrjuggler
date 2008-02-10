@@ -110,7 +110,8 @@ NetworkTestBean.jar: $(JAVA_CLASSES)
 
 install:
 	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/@TWEEK_SHARE_DIR@/beans
-	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/@TWEEK_SHARE_DIR@/beans
+	cp $(SHARED_SRCDIR)/NetworkTestBean.xml 			\
+           $(TWEEK_BASE_DIR)/@TWEEK_SHARE_DIR@/beans
 
 CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))		\
 		$(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))	\
