@@ -98,6 +98,21 @@ bool CorbaRemoteReconfig::configCanHandle(jccl::ConfigElementPtr element)
 
 bool CorbaRemoteReconfig::configAdd(jccl::ConfigElementPtr element)
 {
+   const unsigned int min_def_version(2);
+
+   if ( element->getVersion() < min_def_version )
+   {
+      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING") << ": Element named '"
+         << element->getName() << "'" << std::endl;
+      vprDEBUG_NEXTnl(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "is version " << element->getVersion()
+         << ", but we expect at least version " << min_def_version << ".\n";
+      vprDEBUG_NEXTnl(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "Default values will be used for some settings.\n"
+         << vprDEBUG_FLUSH;
+   }
+
    // If the ORB is already running, we need to shut it down first.  One big
    // reason for doing this is to release the resources (memory and so on)
    // allocated previously.
@@ -111,16 +126,10 @@ bool CorbaRemoteReconfig::configAdd(jccl::ConfigElementPtr element)
       stopCorba();
    }
 
-   const std::string ns_host =
-      element->getProperty<std::string>("naming_service_host");
-   const vpr::Uint16 ns_port =
-      element->getProperty<vpr::Uint16>("naming_service_port");
-   const std::string iiop_version =
-      element->getProperty<std::string>("iiop_version");
-
    // We'll ignore the return value for now.  startCorba() prints out enough
    // warning information on its own if something goes wrong.
-   this->startCorba(ns_host, ns_port, iiop_version);
+   this->startCorba(element->getProperty<std::string>("endpoint_addr"),
+                    element->getProperty<vpr::Uint16>("endpoint_port"));
 
    return true;
 }
@@ -193,9 +202,8 @@ void CorbaRemoteReconfig::disable()
    mEnabled = false;
 }
 
-bool CorbaRemoteReconfig::startCorba(const std::string& nsHost,
-                                     const vpr::Uint16 nsPort,
-                                     const std::string& iiopVer)
+bool CorbaRemoteReconfig::startCorba(const std::string& listenAddr,
+                                     const vpr::Uint16 listenPort)
 {
    // Create new CORBA Manager and initialize it.
    mCorbaManager = new tweek::CorbaManager;
@@ -207,10 +215,10 @@ bool CorbaRemoteReconfig::startCorba(const std::string& nsHost,
       int dummy_int(0);
 
       // Attempt to initialize the CORBA Manager.
-      bool status = mCorbaManager->init("corba_rtrc", dummy_int, NULL, nsHost,
-                                        nsPort, iiopVer);
+      bool status = mCorbaManager->initDirect("corba_rtrc", dummy_int, NULL,
+                                              listenAddr, listenPort);
 
-      // Test to see if init() succeeded.
+      // Test to see if initDirect() succeeded.
       if ( status )
       {
          try

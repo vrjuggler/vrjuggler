@@ -146,7 +146,7 @@ if test "x$test_tweek_cxx" = "xY" ; then
              test_tweek_cxx='N'])
 fi
 
-min_tweek_version='1.1.10'
+min_tweek_version='1.3.4'
 if test "x$test_tweek_cxx" = "xY" ; then
    TWEEK_PATH_CXX([$min_tweek_version], [HAVE_TWEEK_CXX='Y'],
       [AC_MSG_WARN([*** Tweek C++ API required for remote reconfig ***])

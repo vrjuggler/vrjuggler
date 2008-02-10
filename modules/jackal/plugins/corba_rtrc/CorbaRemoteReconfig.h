@@ -99,15 +99,14 @@ private:
     * Initializes and activates the local CORBA instance that we need for
     * handling remote reconfiguration requests.
     *
-    * @param nsHost  The name of the host computer where the CORBA Naming
-    *                Service is running.
-    * @param nsport  The port number on which the CORBA Naming Service is
-    *                listening for incoming connections.
-    * @param iiopVer The version of IIOP the Naming Service is using.  This
-    *                is normally 1.0 or 1.2.
+    * @param listenAddr The address to which the CORBA endpoint will be bound.
+    *                   Using an empty string will result in binding to the
+    *                   default interface.
+    * @param listenPort The port number for the CORBA endpoint. This must be
+    *                   a valid port number.
     */
-   bool startCorba(const std::string& nsHost, const vpr::Uint16 nsPort,
-                   const std::string& iiopVer);
+   bool startCorba(const std::string& listenAddr,
+                   const vpr::Uint16 listenPort);
 
    /**
     * Disables the local CORBA instance and releases the resources allocated

@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-09-2008 patrick     Changed the remote run-time reconfiguration plug-in to
+                        use a direct connection for Subject Manager access
+                        instead of going through the CORBA Naming Service.
+                        NEW VERSION: 1.3.5
 Sep-04-2007 patrick     Use new environment variable JCCL_DATA_DIR as a way to
                         look up files in JCCL_BASE_DIR/share/jccl.
                         NEW VERSION: 1.3.4
