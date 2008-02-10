@@ -173,7 +173,7 @@ BOOST_VERSION_DOT="$dpp_boost_version"
 # -----------------------------------------------------------------------------
 VPR_PATH([2.1.4], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 
-JCCL_PATH_CXX([1.1.5], ,
+JCCL_PATH_CXX([1.3.5], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([1.3.15], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])

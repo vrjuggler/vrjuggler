@@ -30,8 +30,8 @@
          </decrement_keypress>
          <delta>1.0</delta>
          <min>0.0</min>
-         <max>255.0</max>
-         <initial_value>0.0</initial_value>
+         <max>1023.0</max>
+         <initial_value>512.0</initial_value>
       </simulated_analog_device>
       <keyboard_mouse_device name="Sim Analog Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>

@@ -49,10 +49,9 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </input_window>
-      <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
-         <naming_service_host>localhost</naming_service_host>
-         <naming_service_port>2809</naming_service_port>
-         <iiop_version>1.0</iiop_version>
+      <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="2">
+         <endpoint_addr />
+         <endpoint_port>45876</endpoint_port>
       </corba_remote_reconfig>
    </elements>
 </configuration>

@@ -20,4 +20,41 @@
       </property>
       <upgrade_transform/>
    </definition_version>
+   <definition_version version="2" label="CORBA Remote Performance Monitoring">
+      <abstract>false</abstract>
+      <help/>
+      <parent/>
+      <category>/Config</category>
+      <property valuetype="string" variable="false" name="endpoint_addr">
+         <help>The network interface address on the local computer to which the CORBA endpoint will be bound. Using an empty string will bind to the default interface.</help>
+         <value label="Listen Address" defaultvalue=""/>
+      </property>
+      <property valuetype="integer" variable="false" name="endpoint_port">
+         <help>The listening port for the CORBA endpiont. This must be a valid port number, generally greater than 1000 and less than 65536.</help>
+         <value label="Listen Port Number" defaultvalue="45877"/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:corba_performance_monitor">
+               <xsl:element namespace="{$jconf}" name="corba_performance_monitor">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:element namespace="{$jconf}" name="endpoint_addr" />
+                  <xsl:element namespace="{$jconf}" name="endpoint_port">
+                     <xsl:text>45877</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>
