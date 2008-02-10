@@ -1133,25 +1133,66 @@ void CustomSubjectImpl::setValue(float v)
             not caught. Refer to a C++ reference for more information about
             exceptions and exception handling in C++.</para>
 
-            <para>The following example shows a <function>main()</function>
-            function for an application that performs all the Tweek
-            initialization steps. We separate the discussion into two parts:
-            one part for the CORBA Manager and one part for the Subject
-            Manager (discussed in the next section).</para>
+            <para>With Tweek 1.3.4 and newer, there are two ways to initialize
+            the CORBA Manager. The choice of which initialization approach to
+            use impacts how client-side code makes the connection to the
+            Subject Manager. The ways to initialize the CORBA Manager are as
+            follows:</para>
 
-            <example id="TweekApp.cpp.CORBA-Manager.example">
-               <title>TweekApp.cpp</title>
+            <orderedlist>
+               <listitem>
+                  <para>Initialize to use the CORBA Naming Service. This is
+                  the <quote>normal</quote> way that the Tweek CORBA Manager
+                  has been initialized since Tweek was first written. It is a
+                  perfectly valid way to use CORBA, although many people find
+                  the indirection introduced by the CORBA Naming Service (it
+                  runs as a separate process about which both the server side
+                  and the client side must have knowledge) to be a
+                  hassle.</para>
+               </listitem>
 
-               <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
+               <listitem>
+                  <para>Initialize to use direct connections to the Subject
+                  Manager. This capability, while not at all new to CORBA, is
+                  new in Tweek 1.3.4. Using this approach, there need not be a
+                  CORBA Naming Service at all. Instead, the client connects
+                  directly to the Subject Manager on the ORB endpoint using a
+                  <literal>corbaloc</literal> URI. The simplicity of this
+                  approach offers a key benefit over the use of the CORBA
+                  Naming Service. However, if there are multiple CORBA Manager
+                  instances running in a single memory space, each must have
+                  its endpoint port number set to a different value. Such a
+                  detail, while still critical in any event, would be hidden
+                  by the use of the CORBA Naming Service.</para>
+               </listitem>
+            </orderedlist>
+
+            <para>We next provide code examples of both ways to initialize the
+            Tweek CORBA Manager.</para>
+
+            <section>
+               <title>Connections Through the CORBA Naming Service</title>
+
+               <para>The following example shows a <function>main()</function>
+               function for an application that performs all the Tweek
+               initialization steps. We separate the discussion into two
+               parts: one part for the CORBA Manager and one part for the
+               Subject Manager (discussed in the next section).</para>
+
+               <example id="TweekApp.cpp.CORBA-Manager.naming.example">
+                  <title><filename>TweekApp.cpp</filename>: CORBA Naming
+                  Service Usage</title>
+
+                  <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
 #include &lt;vpr/Thread/Thread.h&gt;
 #include &lt;vpr/Util/Debug.h&gt;
 #include &lt;tweek/CORBA/CorbaManager.h&gt;                         <co
-                     id="TweekApp.cpp.includes.tweek"
-                     linkends="TweekApp.cpp.includes.co" />
+                        id="TweekApp.cpp.includes.tweek"
+                        linkends="TweekApp.cpp.includes.co" />
 
 #include &lt;CustomSubjectImpl.h&gt;                                <co
-                     id="TweekApp.cpp.includes.gen"
-                     linkends="TweekApp.cpp.includes.co" />
+                        id="TweekApp.cpp.includes.gen"
+                        linkends="TweekApp.cpp.includes.co" />
 
 /**
  * This application starts the CORBA server for the C++ side
@@ -1160,18 +1201,20 @@ void CustomSubjectImpl::setValue(float v)
 int main(int argc, char* argv[])
 {
    tweek::CorbaManager mgr;                                   <co
-                     id="TweekApp.cpp.corbamgr.decl"
-                     linkends="TweekApp.cpp.corbamgr.decl.co" />
+                        id="TweekApp.cpp.corbamgr.decl"
+                        linkends="TweekApp.cpp.corbamgr.decl.co" />
 
    // The first thing we have to do is initialize the Tweek
    // CORBA Manager.  If this fails, we're out of luck.
    try                                                        <co
-                     id="TweekApp.cpp.big-try-catch.try"
-                     linkends="TweekApp.cpp.big-try-catch.co" />
+                        id="TweekApp.cpp.big-try-catch.try"
+                        linkends="TweekApp.cpp.big-try-catch.co" />
    {
+      // Initialize the CORBA Manager to use the CORBA
+      // Naming Service to connect to the Subject Manager.
       if ( mgr.init("example", argc, argv) )                  <co
-                     id="TweekApp.cpp.corbamgr.init"
-                     linkends="TweekApp.cpp.corbamgr.init.co" />
+                        id="TweekApp.cpp.corbamgr.init"
+                        linkends="TweekApp.cpp.corbamgr.init.co" />
       {
          bool status(false);
 
@@ -1250,8 +1293,8 @@ int main(int argc, char* argv[])
       }
    }
    catch (...)                                               <co
-                     id="TweekApp.cpp.big-try-catch.catch"
-                     linkends="TweekApp.cpp.big-try-catch.co" />
+                        id="TweekApp.cpp.big-try-catch.catch"
+                        linkends="TweekApp.cpp.big-try-catch.co" />
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          &lt;&lt; "Caught an unknown exception!\n"
@@ -1264,55 +1307,209 @@ int main(int argc, char* argv[])
    return 0;
 }</programlisting>
 
-               <calloutlist>
-                  <callout arearefs="TweekApp.cpp.includes.tweek TweekApp.cpp.includes.gen"
-                           id="TweekApp.cpp.includes.co">
-                     <para>These two headers are typically needed. The first
-                     includes the declaration of the Tweek CORBA Manager, and
-                     the second is the subject implementation declaration,
-                     shown in <xref
-                     linkend="CustomSubjectImpl.h.example" />.</para>
-                  </callout>
+                  <calloutlist>
+                     <callout arearefs="TweekApp.cpp.includes.tweek TweekApp.cpp.includes.gen"
+                              id="TweekApp.cpp.includes.co">
+                        <para>These two headers are typically needed. The
+                        first includes the declaration of the Tweek CORBA
+                        Manager, and the second is the subject implementation
+                        declaration, shown in <xref
+                        linkend="CustomSubjectImpl.h.example" />.</para>
+                     </callout>
 
-                  <callout arearefs="TweekApp.cpp.corbamgr.decl"
-                           id="TweekApp.cpp.corbamgr.decl.co">
-                     <para>In order to use CORBA through Tweek, the CORBA
-                     Manager must be created and initialized. Any number of
-                     these may be created, but in general, only one is needed
-                     per application. Here, we declare an instance of
-                     <classname>tweek::CorbaManager</classname> on the
-                     stack.</para>
-                  </callout>
+                     <callout arearefs="TweekApp.cpp.corbamgr.decl"
+                              id="TweekApp.cpp.corbamgr.decl.co">
+                        <para>In order to use CORBA through Tweek, the CORBA
+                        Manager must be created and initialized. Any number of
+                        these may be created, but in general, only one is
+                        needed per application. Here, we declare an instance
+                        of <classname>tweek::CorbaManager</classname> on the
+                        stack.</para>
+                     </callout>
 
-                  <callout arearefs="TweekApp.cpp.corbamgr.init"
-                           id="TweekApp.cpp.corbamgr.init.co">
-                     <para>Next, we must initialize the CORBA Manager using
-                     the method
-                     <methodname>tweek::CorbaManager::init()</methodname>. The
-                     first argument provides a unique (ideally) identifier for
-                     the local Portable Object Adapter (POA). The second and
-                     third arguments are <varname>argc</varname> and
-                     <varname>argv</varname> respectively. They come in
-                     through the argument list of <function>main()</function>
-                     and represent the command-line arguments. Any arguments
-                     relevant to ORB initialization are removed from
-                     <varname>argv</varname>, and <varname>argc</varname> is
-                     decremented accordingly (it is passed by
-                     reference).</para>
-                  </callout>
+                     <callout arearefs="TweekApp.cpp.corbamgr.init"
+                              id="TweekApp.cpp.corbamgr.init.co">
+                        <para>Next, we must initialize the CORBA Manager using
+                        the method
+                        <methodname>tweek::CorbaManager::init()</methodname>.
+                        The first argument provides a unique (ideally)
+                        identifier for the local Portable Object Adapter
+                        (POA). The second and third arguments are
+                        <varname>argc</varname> and <varname>argv</varname>
+                        respectively. They come in through the argument list
+                        of <function>main()</function> and represent the
+                        command-line arguments. Any arguments relevant to ORB
+                        initialization are removed from
+                        <varname>argv</varname>, and <varname>argc</varname>
+                        is decremented accordingly (it is passed by
+                        reference).</para>
+                     </callout>
 
-                  <callout arearefs="TweekApp.cpp.big-try-catch.try TweekApp.cpp.big-try-catch.catch"
-                           id="TweekApp.cpp.big-try-catch.co">
-                     <para>To ensure that no exceptions go uncaught, we
-                     enclose the bulk of <function>main()</function> in a
-                     try/catch block that catches any exception. This is
-                     handled by the argument list passed to the catch block,
-                     <literal>(...)</literal>. This is the equivalent of
-                     catching <classname>java.lang.Exception</classname> in
-                     Java.</para>
-                  </callout>
-               </calloutlist>
-            </example>
+                     <callout arearefs="TweekApp.cpp.big-try-catch.try TweekApp.cpp.big-try-catch.catch"
+                              id="TweekApp.cpp.big-try-catch.co">
+                        <para>To ensure that no exceptions go uncaught, we
+                        enclose the bulk of <function>main()</function> in a
+                        try/catch block that catches any exception. This is
+                        handled by the argument list passed to the catch
+                        block, <literal>(...)</literal>. This is the
+                        equivalent of catching
+                        <classname>java.lang.Exception</classname> in
+                        Java.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+            </section>
+
+            <section>
+               <title>Direct Subject Manager Connections</title>
+
+               <para>Just as in the previous subsection, the following example
+               shows a <function>main()</function> function for an application
+               that performs all the Tweek initialization steps. The code is
+               nearly identical except for one key difference: we invoke
+               <methodname>tweek::CorbaManager::initDirect()</methodname>
+               instead of
+               <methodname>tweek::CorbaManager::init()</methodname>. See the
+               call-out after the example code for more details.</para>
+
+               <example id="TweekApp.cpp.CORBA-Manager.direct.example">
+                  <title><filename>TweekApp.cpp</filename>: Direct Object
+                  Connection</title>
+
+                  <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+#include &lt;vpr/Util/Debug.h&gt;
+#include &lt;tweek/CORBA/CorbaManager.h&gt;
+
+#include &lt;CustomSubjectImpl.h&gt;
+
+/**
+ * This application starts the CORBA server for the C++ side
+ * of the test.
+ */
+int main(int argc, char* argv[])
+{
+   tweek::CorbaManager mgr;
+
+   // The first thing we have to do is initialize the Tweek
+   // CORBA Manager.  If this fails, we're out of luck.
+   try
+   {
+      // Initialize the CORBA Manager to use a direct
+      // connection to the Subject Manager.  The ORB endpoint
+      // will be bound to port 12345 on the default network
+      // interface.
+      if ( mgr.initDirect("example", argc, argv, "", 12345) ) <co
+                        id="TweekApp.cpp.mgr.initDirect.gen"
+                        linkends="TweekApp.cpp.corbamgr.init.co" />
+      {
+         bool status(false);
+
+         // Once the CORBA Manager is initialized, we need
+         // to create a Subject Manager.  This will hold our
+         // CustomSubject object.
+         try
+         {
+            status = mgr.createSubjectManager();
+
+            // If we were able to create the Subject Manager,
+            // now we register our objects with it.
+            if ( status )
+            {
+               // First, create real instances of the C++
+               // object that will be the CORBA servant.  This
+               // must be allocated on the heap.
+               mymod::CustomubjectImpl* custom_subj =
+                  new mymod::CustomSubjectImpl();
+
+               // Now we try to register the subject and give
+               // it a symbolic, easy-to-remember name.
+               try
+               {
+                  mgr.getSubjectManager()-&gt;
+                     registerSubject(slider_subj, "CustomSubject");
+               }
+               catch (...)
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     &lt;&lt; "Failed to register subject\n"
+                     &lt;&lt; vprDEBUG_FLUSH;
+               }
+
+               // We are done with our pointer to the servant.
+               slider_subj-&gt;_remove_ref();
+            }
+         }
+         catch (CORBA::Exception&amp; ex)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Caught an unknown CORBA exception when "
+               &lt;&lt; "trying to register!\n" &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         if ( ! status )
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Failed to register Subject Manager instance\n"
+               &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         std::cout &lt;&lt; "Press 'x' to exit" &lt;&lt; std::endl;
+         char input;
+
+         // Loop forever so that we can act sort of like
+         // a server.
+         while ( 1 )
+         {
+            std::cin &gt;&gt; input;
+            if ( input == 'x' )
+            {
+               break;
+            }
+            else
+            {
+               vpr::System::msleep(100);
+            }
+         }
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            &lt;&lt; "CORBA failed to initialize\n"
+            &lt;&lt; vprDEBUG_FLUSH;
+      }
+   }
+   catch (...)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         &lt;&lt; "Caught an unknown exception!\n"
+         &lt;&lt; vprDEBUG_FLUSH;
+   }
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      &lt;&lt; "Exiting\n" &lt;&lt; vprDEBUG_FLUSH;
+
+   return 0;
+}</programlisting>
+
+                  <calloutlist>
+                     <callout arearefs="TweekApp.cpp.mgr.initDirect.gen"
+                              id="TweekApp.cpp.initDirect.co">
+                        <para>This is the only difference in the code with
+                        respect to the example shown in <xref
+                        linkend="TweekApp.cpp.CORBA-Manager.naming.example" />.
+                        Instead of using
+                        <methodname>tweek::CorbaManager::init()</methodname>,
+                        we call
+                        <methodname>tweek::CorbaManager::initDirect()</methodname>
+                        and provide the address and port number for the ORB
+                        endpoint. In this case, we have used an empty string
+                        for the endpoint address to indicate that we want to
+                        bind to the default network interface.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+            </section>
          </section>
 
          <section>
@@ -1354,8 +1551,18 @@ int main(int argc, char* argv[])
                Subject Manager using the CORBA Manager object created
                earlier.</para>
 
+               <note>
+                  <para>The example code shown below uses the CORBA Naming
+                  Service initialization approach for the CORBA Manager. It
+                  could just as easily use the direct object connection
+                  approach by invoking
+                  <methodname>tweek::CorbaManager::initDirect()</methodname>
+                  instead.</para>
+               </note>
+
                <example id="TweekApp.cpp.Subject-Manager.example">
-                  <title>TweekApp.cpp</title>
+                  <title><filename>TweekApp.cpp</filename>: Subject Manager
+                  Initialization</title>
 
                   <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
 #include &lt;vpr/Thread/Thread.h&gt;
@@ -1534,6 +1741,22 @@ int main(int argc, char* argv[])
                which was used in the preceding example. Some other methods
                that may be of interest to users are described in the following
                subsections.</para>
+
+               <sidebar>
+                  <para>The methods described below are used for adding
+                  information to the Subject Manager to help identify a
+                  specific Subject Manager instance when connecting a client
+                  application to the Subject Manager servant. This really only
+                  comes to bear when using the CORBA Naming Service as a site
+                  may have a single Naming Service running with which multiple
+                  Subject Manager servants may be registered simultaneously.
+                  In that event, the user of the client software would need a
+                  way to identify the Subject Manager servant of interest.
+                  When using direct Subject Manager connections instead of the
+                  Naming Service, there is no need to worry about this
+                  because, presumably, the user of the client software knows
+                  the ORB endpoint address of interest. </para>
+               </sidebar>
 
                <section>
                   <title><methodname>setApplicationName()</methodname></title>
