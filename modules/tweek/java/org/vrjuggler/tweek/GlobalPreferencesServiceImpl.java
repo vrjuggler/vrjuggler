@@ -414,7 +414,7 @@ class GlobalPreferencesServiceImpl
    }
 
    /**
-    * Sets the default ORB endpoint host address.
+    * Sets the default GIOP end point host address.
     *
     * @since 1.3.4
     */
@@ -434,7 +434,7 @@ class GlobalPreferencesServiceImpl
    }
 
    /**
-    * Returns the default ORB endpoint host address.
+    * Returns the default GIOP end point host address.
     *
     * @since 1.3.4
     */
@@ -444,7 +444,7 @@ class GlobalPreferencesServiceImpl
    }
 
    /**
-    * Sets the default ORB endpoint port number.
+    * Sets the default GIOP end point port number.
     *
     * @since 1.3.4
     */
@@ -464,7 +464,7 @@ class GlobalPreferencesServiceImpl
    }
 
    /**
-    * Returns the deffault ORB endpoint port number.
+    * Returns the deffault GIOP end point port number.
     *
     * @since 1.3.4
     */

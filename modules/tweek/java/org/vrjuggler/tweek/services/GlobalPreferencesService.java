@@ -165,28 +165,28 @@ public interface GlobalPreferencesService
    public String getDefaultIiopVersion();
 
    /**
-    * Sets the default ORB endpoint host address.
+    * Sets the default GIOP end point host address.
     *
     * @since 1.3.4
     */
    public void setDefaultOrbAddress(String addr);
 
    /**
-    * Returns the default ORB endpoint host address.
+    * Returns the default GIOP end point host address.
     *
     * @since 1.3.4
     */
    public String getDefaultOrbAddress();
 
    /**
-    * Sets the default ORB endpoint port number.
+    * Sets the default GIOP end point port number.
     *
     * @since 1.3.4
     */
    public void setDefaultOrbPort(int port);
 
    /**
-    * Returns the deffault ORB endpoint port number.
+    * Returns the deffault GIOP end point port number.
     *
     * @since 1.3.4
     */

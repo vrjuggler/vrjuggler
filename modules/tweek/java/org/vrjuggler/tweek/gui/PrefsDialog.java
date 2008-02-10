@@ -186,8 +186,8 @@ public class PrefsDialog extends JDialog
    }
 
    /**
-    * Returns the current default CORBA ORB endpoint address choice. This may
-    * be different than what is currently available through the Global
+    * Returns the current default CORBA GIOP end point address choice. This
+    * may be different than what is currently available through the Global
     * Preferences Service, depending on whether or not the user has chosen to
     * apply changes.
     *
@@ -199,7 +199,7 @@ public class PrefsDialog extends JDialog
    }
 
    /**
-    * Returns the current default CORBA ORB endpoint port choice. This may
+    * Returns the current default CORBA GIOP end point port choice. This may
     * be different than what is currently available through the Global
     * Preferences Service, depending on whether or not the user has chosen to
     * apply changes.
@@ -346,7 +346,7 @@ public class PrefsDialog extends JDialog
       mNSPortLabel.setText("Naming Service Port Number");
       mOrbPortField.setMinimumSize(new Dimension(50, 17));
       mOrbPortField.setPreferredSize(new Dimension(50, 17));
-      mOrbPortField.setToolTipText("The port number of the CORBA endpoint");
+      mOrbPortField.setToolTipText("The port number of the GIOP end point");
       mOrbPortField.addFocusListener(new java.awt.event.FocusAdapter()
       {
          public void focusLost(FocusEvent e)
