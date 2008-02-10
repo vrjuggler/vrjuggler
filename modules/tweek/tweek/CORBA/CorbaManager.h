@@ -126,40 +126,52 @@ public:
     * feature is only supported when using omniORB as the C++ CORBA
     * implementation.
     *
+    * If the port number passed in through \p endPointPort is 0, then we fall
+    * back on using the omniORB configuration file (as specified through the
+    * \c OMNIORB_CONFIG environment variable) to determine the GIOP end point
+    * address. In this way, users have the opportunity to customize the GIOP
+    * end point address with a great deal of flexibility.
+    *
     * @pre This CorbaManager object has not been initialized previously.
     *
-    * @param localID       A string providing a unique identifier for the
-    *                      local POA. When used, "tweek_" will be prepended
-    *                      to this value, but user-level code should generally
-    *                      not need to worry aubot that detail.
-    * @param argc          The size of the following argument vector. This
-    *                      will be modified if any elements are removed from
-    *                      argv.
-    * @param argv          The command-line arguments passed to the
-    *                      application. These may include parameters defining
-    *                      the ORB's behavior. Those recognized as ORB
-    *                      arguments are removed from the array leaving
-    *                      application parameters.
-    * @param listenAddress The network address on the local machine to which
-    *                      the ORB endpoint will be bound. If an empty string
-    *                      is used, the default network interface will be
-    *                      used. Typically, a non-empty address will be passed
-    *                      in for this parameter only on multi-homed machines
-    *                      when a specific network interface must be used for
-    *                      the ORB endpoint.
-    * @param listenPort    The port on which the ORB endpoint will listen for
-    *                      incoming connections. As with any port number, it
-    *                      must not be one that is currently in use by another
-    *                      listening socket.
+    * @param localID         A string providing a unique identifier for the
+    *                        local POA. When used, "tweek_" will be prepended
+    *                        to this value, but user-level code should
+    *                        generally not need to worry aubot that detail.
+    * @param argc            The size of the following argument vector. This
+    *                        will be modified if any elements are removed from
+    *                        argv.
+    * @param argv            The command-line arguments passed to the
+    *                        application. These may include parameters
+    *                        defining the ORB's behavior. Those recognized as
+    *                        ORB arguments are removed from the array leaving
+    *                        application parameters.
+    * @param endPointAddress The network address on the local machine to which
+    *                        the GIOP end point will be bound. If an empty
+    *                        string is used (which is the default value for
+    *                        this parameter), the default network interface
+    *                        will be used. Typically, a non-empty address will
+    *                        be passed in for this parameter only on
+    *                        multi-homed machines when a specific network
+    *                        interface must be used for the GIOP end point.
+    * @param endPointPort    The port on which the GIOP end point will listen
+    *                        for incoming connections. As with any port
+    *                        number, it must not be one that is currently in
+    *                        use by another listening socket. The default
+    *                        value for this parameter is 0, and if 0 is used
+    *                        as the value, then the GIOP end point will be set
+    *                        by looking to the omniORB configuration file.
     *
     * @return \c true is returned if initialization completes successfully.
-    *         Otherwise, \c false is returned.
+    *         Otherwise, \c false is returned. \c false will be returned if
+    *         the value of \p endPointPort is 0 set and the \c OMNIORB_CONFIG
+    *         environment variable is not set.
     *
     * @since 1.3.4
     */
    bool initDirect(const std::string& localID, int& argc, char** argv,
-                   const std::string& listenAddress,
-                   const vpr::Uint16 listenPort);
+                   const std::string& endPointAddress = "",
+                   const vpr::Uint16 endPointPort = 0);
 
    /**
     * Shuts down the ORB and the POA (if they were successfully initialized).

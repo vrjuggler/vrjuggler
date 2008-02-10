@@ -32,6 +32,7 @@
 #include <boost/bind.hpp>
 
 #include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/GUID.h>
@@ -196,8 +197,8 @@ bool CorbaManager::init(const std::string& localID, int& argc, char** argv,
 }
 
 bool CorbaManager::initDirect(const std::string& localID, int& argc,
-                              char** argv, const std::string& listenAddr,
-                              const vpr::Uint16 listenPort)
+                              char** argv, const std::string& endPointAddr,
+                              const vpr::Uint16 endPointPort)
 {
    bool status(true);
 
@@ -210,16 +211,49 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
    try
    {
       std::ostringstream end_point_stream;
-      end_point_stream << "giop:tcp:" << listenAddr << ":" << listenPort;
 
-      const char* options[][2] = {
-         { "endPoint", NULL },
-         { NULL, NULL }
-      };
-      options[0][1] = strdup(end_point_stream.str().c_str());
+      const char* options[2][2] = { { NULL, NULL }, { NULL, NULL } };
 
-      vprDEBUG(tweekDBG_CORBA, vprDBG_CONFIG_LVL)
-         << "CORBA endpiont: '" << options[0][1] << "'\n" << vprDEBUG_FLUSH;
+      // If endPointPort is 0, then we will fall back on OMNIORB_CONFIG to
+      // provide the GIOP end point setting.
+      if ( endPointPort == 0 )
+      {
+#ifdef OMNIORB_VER
+         std::string temp;
+
+         // Test to determine whether the OMNIORB_CONFIG environment variable
+         // is set.
+         if ( ! vpr::System::getenv("OMNIORB_CONFIG", temp) )
+         {
+            // If the user does not have the OMNIORB_CONFIG environment
+            // variable set, then we have no way to get the GIOP end point
+            // configured. As such, we have to return error status.
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD(clrRED, "ERROR")
+               << ": OMNIORB_CONFIG not set and no end point port specified!"
+               << std::endl;
+            vprDEBUG_NEXTnl(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "       Cannot bind CORBA Manager to a specific end point.\n"
+               << vprDEBUG_FLUSH;
+            return false;
+         }
+#endif
+      }
+      // With the end point address and port number set through the method
+      // parameters, we construct the endPoint string and assign it to the
+      // first row in the options table.
+      else
+      {
+         end_point_stream << "giop:tcp:" << endPointAddr << ":"
+                          << endPointPort;
+
+         options[0][0] = strdup("endPoint");
+         options[0][1] = strdup(end_point_stream.str().c_str());
+
+         vprDEBUG(tweekDBG_CORBA, vprDBG_CONFIG_LVL)
+            << "GIOP end piont: '" << options[0][1] << "'\n"
+            << vprDEBUG_FLUSH;
+      }
 
       // Initialize the ORB.
       vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
@@ -227,10 +261,15 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
          << "')\n" << vprDEBUG_FLUSH;
       mORB = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING, options);
 
-      // Yes, this could be done with a simple C-style cast, but the C++ cast
-      // operations exist for a reason.
-      std::free(reinterpret_cast<void*>(const_cast<char*>(options[0][1])));
-      options[0][1] = NULL;
+      if ( options[0][0] != NULL )
+      {
+         // Yes, each of these could be done with a simple C-style cast, but
+         // the C++ cast operations exist for a reason.
+         std::free(reinterpret_cast<void*>(const_cast<char*>(options[0][0])));
+         std::free(reinterpret_cast<void*>(const_cast<char*>(options[0][1])));
+         options[0][0] = NULL;
+         options[0][1] = NULL;
+      }
 
       status = createChildPOA(localID, PortableServer::UNIQUE_ID, true);
 

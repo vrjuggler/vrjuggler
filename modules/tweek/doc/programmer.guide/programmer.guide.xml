@@ -1154,14 +1154,14 @@ void CustomSubjectImpl::setValue(float v)
                <listitem>
                   <para>Initialize to use direct connections to the Subject
                   Manager. This capability, while not at all new to CORBA, is
-                  new in Tweek 1.3.4. Using this approach, there need not be a
+                  new in Tweek 1.3.5. Using this approach, there need not be a
                   CORBA Naming Service at all. Instead, the client connects
-                  directly to the Subject Manager on the ORB endpoint using a
-                  <literal>corbaloc</literal> URI. The simplicity of this
+                  directly to the Subject Manager on the GIOP end point using
+                  a <literal>corbaloc</literal> URI. The simplicity of this
                   approach offers a key benefit over the use of the CORBA
                   Naming Service. However, if there are multiple CORBA Manager
                   instances running in a single memory space, each must have
-                  its endpoint port number set to a different value. Such a
+                  its end point port number set to a different value. Such a
                   detail, while still critical in any event, would be hidden
                   by the use of the CORBA Naming Service.</para>
                </listitem>
@@ -1396,9 +1396,9 @@ int main(int argc, char* argv[])
    try
    {
       // Initialize the CORBA Manager to use a direct
-      // connection to the Subject Manager.  The ORB endpoint
-      // will be bound to port 12345 on the default network
-      // interface.
+      // connection to the Subject Manager.  The GIOP end
+      // point will be bound to port 12345 on the default
+      / network interface.
       if ( mgr.initDirect("example", argc, argv, "", 12345) ) <co
                         id="TweekApp.cpp.mgr.initDirect.gen"
                         linkends="TweekApp.cpp.corbamgr.init.co" />
@@ -1502,13 +1502,45 @@ int main(int argc, char* argv[])
                         <methodname>tweek::CorbaManager::init()</methodname>,
                         we call
                         <methodname>tweek::CorbaManager::initDirect()</methodname>
-                        and provide the address and port number for the ORB
-                        endpoint. In this case, we have used an empty string
-                        for the endpoint address to indicate that we want to
+                        and provide the address and port number for the GIOP
+                        end point. In this case, we have used an empty string
+                        for the end point address to indicate that we want to
                         bind to the default network interface.</para>
                      </callout>
                   </calloutlist>
                </example>
+
+               <para>The above example sets the GIOP end point address and
+               port number explicitly through the
+               <varname>endPointAddress</varname> and
+               <varname>endPointPort</varname> parameters of the
+               <methodname>tweek::CorbaManager::initDirect()</methodname>
+               method. These parameters, however, are optional. If
+               <varname>endPointPort</varname> is 0 (the default), then the
+               code falls back on expecting the user to have configured the
+               GIOP end point through an omniORB configuration file. In that
+               case, the configuration file must be identified through the
+               <envar>OMNIORB_CONFIG</envar> environment variable. Without
+               doing so, omniORB would use a randomly assigned free port for
+               the GIOP end point, and it would be difficult, though not
+               impossible, to make the direct connection. There is a lot of
+               flexibility offered in configuring the GIOP end point address
+               through the omniORB configuration file, and interested readers
+               are referred to the <ulink
+               url="http://omniorb.sourceforge.net/docs.html">omniORB 4.x
+               documentation</ulink> for more information. Furthermore, the
+               example <filename>omniORB4.cfg</filename> that comes with Tweek
+               includes a long explanation of how to configure the GIOP end
+               point address.</para>
+
+               <caution>
+                  <para>It is still possible to end up with no explicit GIOP
+                  end point address set when relying on
+                  <filename>omniORB4.cfg</filename>. If tne
+                  <literal>endPoint</literal> property is not assigned a
+                  value, then omniORB will still use the randomly assigned
+                  free port number for the end piont listening address.</para>
+               </caution>
             </section>
          </section>
 
@@ -1755,7 +1787,7 @@ int main(int argc, char* argv[])
                   When using direct Subject Manager connections instead of the
                   Naming Service, there is no need to worry about this
                   because, presumably, the user of the client software knows
-                  the ORB endpoint address of interest. </para>
+                  the GIOP end point address of interest.</para>
                </sidebar>
 
                <section>
