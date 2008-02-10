@@ -72,12 +72,17 @@ public:
    ~CorbaManager();
 
    /**
-    * Initializes the ORB and POA associated with this object.  A child POA of
-    * the root POA (RootPOA) is created, and all servants registered with this
-    * manager are activated within that child POA.
+    * Initializes the ORB and POA associated with this object for use with the
+    * CORBA Naming Service. A child POA of the root POA (RootPOA) is created,
+    * and all servants registered with this manager are activated within that
+    * child POA.
+    *
+    * @pre This CorbaManager object has not been initialized previously.
     *
     * @param localID     A string providing a unique identifier for the local
-    *                    POA.
+    *                    POA. When used, "tweek_" will be prepended to this
+    *                    value, but user-level code should generally not need
+    *                    to worry aubot that detail.
     * @param argc        The size of the following argument vector.  This will
     *                    be modified if any elements are removed from argv.
     * @param argv        The command-line arguments passed to the application.
@@ -98,6 +103,9 @@ public:
     * @param iiopVersion The version of IIOP to use when communicating with
     *                    the Naming Service.  Common values are "1.0" and
     *                    "1.2".  It defaults to "1.0".
+    *
+    * @return \c true is returned if initialization completes successfully.
+    *         Otherwise, \c false is returned.
     */
    bool init(const std::string& localID, int& argc, char** argv,
              const std::string& nsHost = std::string(""),
@@ -207,5 +215,6 @@ private:
 };
 
 } // End of tweek namespace
+
 
 #endif /* _TWEEK_CORBA_MANAGER_H_ */
