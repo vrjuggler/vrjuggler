@@ -64,7 +64,8 @@ EXTRA_DEFS+=		@UUID_DEFS@
 SUBDIR+=		uuid
 endif
 
-SRCS=		Debug.cpp			\
+SRCS=		BadCastException.cpp		\
+		Debug.cpp			\
 		Exception.cpp			\
 		FileUtils.cpp			\
 		GUID.cpp			\

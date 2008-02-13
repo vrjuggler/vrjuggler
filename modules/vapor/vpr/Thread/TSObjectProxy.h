@@ -38,12 +38,16 @@
 //#pragma once
 
 #include <vpr/vprConfig.h>
-#include <stdlib.h>
+
+#include <sstream>
+#include <cstdlib>
 #include <typeinfo>
+
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObject.h>
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/BadCastException.h>
 
 
 namespace vpr
@@ -104,11 +108,19 @@ public:
    ~TSObjectProxy()
    {;}
 
+   /**
+    * @throw vpr::BadCastException
+    *           Thrown when the cast from vpr::TSBaseObject* to T* fails.
+    */
    T* operator->()
    {
       return getSpecific();
    }
 
+   /**
+    * @throw vpr::BadCastException
+    *           Thrown when the cast from vpr::TSBaseObject* to T* fails.
+    */
    T& operator*()
    {
       return *getSpecific();
@@ -119,6 +131,9 @@ public:
     *
     * @note This should only be used by expert users.  It can cause MAJOR
     *       synchronization issues and even data corruption.
+    *
+    * @throw vpr::BadCastException
+    *           Thrown when the cast from vpr::TSBaseObject* to T* fails.
     */
    T* getObjPtrForThread(vpr::Thread* thread)
    {
@@ -135,6 +150,9 @@ private:
     * - Attempts a dynamic cast<br>
     *
     * @param reqThread Request for this specific thread.
+    *
+    * @throw vpr::BadCastException
+    *           Thrown when the cast from vpr::TSBaseObject* to T* fails.
     */
    T* getSpecific(vpr::Thread* reqThread = NULL)
    {
@@ -183,20 +201,18 @@ private:
       // --- Dynamic cast to "real" type wrapper
       TSObject<T>* real_object = dynamic_cast< TSObject<T>* >(object);
 
-      if(real_object == NULL)    // Failed cast
+      // If dynamic_cast fails, it means that "real" object was different type
+      // than the proxy.
+      if ( NULL == real_object )    // Failed cast
       {
-         std::cout << "Failed dynamic cast\n";
-         std::cout << "Have pointer of type: " << typeid(*object).name()
-                   << std::endl;
-         std::cout << "Want type: " << typeid(T).name() << std::endl;
+         std::ostringstream msg_stream;
+         msg_stream << "Failed dynamic_cast for thread-specific object:\n"
+                    << "\tA pointer of type " << typeid(*object).name()
+                    << " was found,\n"
+                    << "\tbut we wanted it to be of type "
+                    << typeid(T).name();
+         throw vpr::BadCastException(msg_stream.str(), VPR_LOCATION);
       }
-
-      // If fails, it means that "real" object was different type than the
-      // proxy.
-      // XXX: Throw an exception here instead of asserting.  With optimized
-      // code, a segmentation fault occurs for less-than-obvious reasons due
-      // to the smart pointer indirection.  -PH 7/13/2004
-      vprASSERT((real_object != NULL) && "Dynamic_cast of TS object failed");
 
       // Return the pointer.
       return real_object->getObject();

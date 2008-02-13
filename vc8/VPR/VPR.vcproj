@@ -560,6 +560,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\BadCastException.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.cpp"
 				>
 			</File>
@@ -866,6 +870,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\AutoLink.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Util\BadCastException.h"
 				>
 			</File>
 			<File
