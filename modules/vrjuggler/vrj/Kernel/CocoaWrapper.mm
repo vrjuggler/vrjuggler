@@ -206,9 +206,21 @@ void CocoaWrapper::threadStarted()
 
 void CocoaWrapper::threadEnded()
 {
-   NSAutoreleasePool* pool = *mThreadPool;
-   [pool release];
-   *mThreadPool = nil;
+   try
+   {
+      // XXX: Accessing the thread-specific data can fail in some cases. It is
+      // not clear to me why this can happen, but it seems to be tied to
+      // using remote run-time reconfiguration. It may be related to omniORB
+      // creating threads of its own, but I am not sure.  -PH 2/13/2008
+      NSAutoreleasePool* pool = *mThreadPool;
+      [pool release];
+      *mThreadPool = nil;
+   }
+   catch (vpr::BadCastException& ex)
+   {
+      std::cerr << "NOTE: Failed to release reference to NSAutoreleasePool:\n"
+                << ex.getExtendedDescription() << std::endl;
+   }
 }
 
 }
