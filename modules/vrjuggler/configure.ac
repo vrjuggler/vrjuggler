@@ -171,7 +171,7 @@ BOOST_VERSION_DOT="$dpp_boost_version"
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([2.1.4], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
+VPR_PATH([2.1.12], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 
 JCCL_PATH_CXX([1.3.5], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
