@@ -38,7 +38,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 
 
@@ -68,12 +68,7 @@ public:
     *             name of the library (e.g., "mylib.dll" or "libmylib.so").
     *             The name may be an absolute path or a relative path.
     */
-   LibraryUNIX(const std::string& name)
-      : mName(name)
-      , mLibrary(NULL)
-   {
-      ;
-   }
+   LibraryUNIX(const std::string& name);
 
    /**
     * Default constructor.  Using this constructor will prevent setting a
@@ -84,22 +79,12 @@ public:
     *
     * @see findSymbolAndLibrary, load
     */
-   LibraryUNIX()
-      : mName("")
-      , mLibrary(NULL)
-   {
-      ;
-   }
+   LibraryUNIX();
 
    /**
     * Copy constructor.
     */
-   LibraryUNIX(const LibraryUNIX& lib)
-      : mName("")
-      , mLibrary(NULL)
-   {
-      copy(lib);
-   }
+   LibraryUNIX(const LibraryUNIX& lib);
 
    /**
     * Unloads the library if one has been loaded.

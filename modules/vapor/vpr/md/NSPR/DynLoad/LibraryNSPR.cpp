@@ -35,7 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <sstream>
 
 #include <vpr/DynLoad/LibraryException.h>
@@ -48,6 +48,27 @@
 
 namespace vpr
 {
+
+LibraryNSPR::LibraryNSPR(const std::string& name)
+   : mName(name)
+   , mLibrary(NULL)
+{
+   ;
+}
+
+LibraryNSPR::LibraryNSPR()
+   : mName("")
+   , mLibrary(NULL)
+{
+   ;
+}
+
+LibraryNSPR::LibraryNSPR(const LibraryNSPR& lib)
+   : mName("")
+   , mLibrary(NULL)
+{
+   copy(lib);
+}
 
 LibraryNSPR::~LibraryNSPR()
 {

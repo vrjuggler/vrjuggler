@@ -36,7 +36,7 @@
 #include <vpr/vprConfig.h>
 
 #include <dlfcn.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <sstream>
 #include <boost/concept_check.hpp>
 
@@ -49,6 +49,27 @@
 
 namespace vpr
 {
+
+LibraryUNIX::LibraryUNIX(const std::string& name)
+   : mName(name)
+   , mLibrary(NULL)
+{
+   ;
+}
+
+LibraryUNIX::LibraryUNIX()
+   : mName("")
+   , mLibrary(NULL)
+{
+   ;
+}
+
+LibraryUNIX::LibraryUNIX(const LibraryUNIX& lib)
+   : mName("")
+   , mLibrary(NULL)
+{
+   copy(lib);
+}
 
 LibraryUNIX::~LibraryUNIX()
 {
