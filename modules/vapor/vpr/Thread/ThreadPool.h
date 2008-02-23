@@ -99,6 +99,23 @@ public:
       theThread->threadWait.release();     /* wake up sleeping process */
    }
 
+   /**
+    * Waits until all threads are done doing their work.
+    *
+    * @note This was renamed from \c barrier() in version 0.92.1 to deal with
+    *       a case where that name is a preprocessor macro.
+    *
+    * @since 0.92.1
+    */
+   void wait()
+   {
+      mFinishedLock.acquire();      // Get the lock that means threads done
+      mFinishedLock.release();      // Reset it to done
+   }
+
+   void printList() const;
+
+private:
    OneThread* addThread();
 
    /**
@@ -122,23 +139,6 @@ public:
     */
    OneThread* getThread();
 
-   /**
-    * Waits until all threads are done doing their work.
-    *
-    * @note This was renamed from \c barrier() in version 0.92.1 to deal with
-    *       a case where that name is a preprocessor macro.
-    *
-    * @since 0.92.1
-    */
-   void wait()
-   {
-      mFinishedLock.acquire();      // Get the lock that means threads done
-      mFinishedLock.release();      // Reset it to done
-   }
-
-   void printList() const;
-
-private:
    Semaphore mReadyThreads;    /**< Count represents threads ready to work */
    Mutex mListLock;            /**< Mutex control of threadList head */
    Mutex mWorkingCountLock;    /**< Mutex on thread count */
