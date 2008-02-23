@@ -491,7 +491,7 @@ bool SerialPortImplWin32::getBreakByteIgnoreState() const
 }
 
 // Enable ignoring of received BREAK bytes.
-void SerialPortImplWin32::setBreakByteIgnore(bool flag) throw(IOException)
+void SerialPortImplWin32::setBreakByteIgnore(bool flag)
 {
    /* XXX: Not implemented yet... */ ;
 }

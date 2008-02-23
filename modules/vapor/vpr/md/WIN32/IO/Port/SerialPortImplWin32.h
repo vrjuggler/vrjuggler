@@ -166,7 +166,7 @@ public:
     *
     * @throw vpr::IOException If the blocking mode could not be set.
     */
-   void setBlocking(bool flag) throw(IOException);
+   void setBlocking(bool flag);
 
    /**
     * Get the current blocking state for the serial port.
