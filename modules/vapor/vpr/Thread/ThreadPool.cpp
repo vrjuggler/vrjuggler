@@ -35,24 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <new>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <sys/types.h>
-
-#ifdef HAVE_UNISTD_H
-#  include <unistd.h>
-#endif
-
-#ifdef HAVE_SYS_TIME_H
-#  include <sys/time.h>
-#endif
-
-#ifndef VPR_OS_Windows
-#  include <sys/resource.h>
-#endif
-
+#include <cstdlib>
 #include <boost/bind.hpp>
 
 #include <vpr/Thread/ThreadPool.h>
