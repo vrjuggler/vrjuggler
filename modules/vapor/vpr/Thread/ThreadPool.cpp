@@ -67,14 +67,15 @@ namespace vpr
 // ---------------------------------------------------------------------------
 // Constructor.
 // ---------------------------------------------------------------------------
-ThreadPool::ThreadPool (int numToStartWith) : readyThreads(0)
+ThreadPool::ThreadPool(const int numToStartWith)
+   : readyThreads(0)
 {
    //DebugLock.acquire();
    vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
-      << "vprThreadPool::vprThreadPool: Entering.\n" << vprDEBUG_FLUSH;
+      << "[vpr::ThreadPool::ThreadPool()] Entering.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "\tvprThreadPool::vprThreadPool: Number threads: " << numToStartWith
-      << std::endl << vprDEBUG_FLUSH;
+      << "\tNumber of threads: " << numToStartWith << std::endl
+      << vprDEBUG_FLUSH;
    //DebugLock.release();
 
    listHead = NULL;
@@ -83,7 +84,7 @@ ThreadPool::ThreadPool (int numToStartWith) : readyThreads(0)
    finishedLock.release();         // Initialize if to threads being done
 
    //-- Start the initial # of threads ---//
-   for ( int index=0;index < numToStartWith;index++ )
+   for ( int index = 0; index < numToStartWith; ++index )
    {
       addThread();
    }
@@ -114,9 +115,9 @@ ThreadPool::~ThreadPool()
 void ThreadPool::threadLoop(OneThread* myThread)
 {
 //   DebugLock.acquire();
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << Thread::self()
-      << " vpr::ThreadPool::threadLoop: Entering."
-      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+      << "[vpr::ThreadPool::threadLoop()] Entering." << std::endl
+      << vprDEBUG_FLUSH;
 //      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << Thread::self()
 //      << " vpr::ThreadPool::threadLoop: theThreadAsVoid:"
 //      << theThreadAsVoid << endl << vprDEBUG_FLUSH;
@@ -136,7 +137,7 @@ void ThreadPool::threadLoop(OneThread* myThread)
       {
          finishedLock.acquire();       // Now there are threads working
       }
-      workingCount = workingCount + 1;    // Update thread count
+      ++workingCount;                  // Update thread count
       workingCountLock.release();
 
       // --- DO THE WORK --- //
@@ -144,7 +145,7 @@ void ThreadPool::threadLoop(OneThread* myThread)
 
       // --- PROCESS EXIT OVERHEAD --- //
       workingCountLock.acquire();     // Get access to the working count
-      workingCount = workingCount - 1;
+      --workingCount;
       if ( workingCount == 0 )
       {
          finishedLock.release();       // Now there are no threads working
@@ -157,7 +158,7 @@ void ThreadPool::threadLoop(OneThread* myThread)
 // Wait for work to do.  Put a vpr::OneThread structure on the ready list and
 // sleep on it.  Called by a child process when its work is done.
 // ---------------------------------------------------------------------------
-void ThreadPool::threadSleep (OneThread* theThread)
+void ThreadPool::threadSleep(OneThread* theThread)
 {
    listLock.acquire();               // acquire exclusive rights to threadList
    theThread->next = listHead;   // put self on head of the list
@@ -174,7 +175,7 @@ void ThreadPool::threadSleep (OneThread* theThread)
 // list, waiting if necessary.  Called by the master process as part of
 // dispatching a thread.
 // ---------------------------------------------------------------------------
-OneThread* ThreadPool::getThread ()
+OneThread* ThreadPool::getThread()
 {
    OneThread* theThread;
 
@@ -190,7 +191,7 @@ OneThread* ThreadPool::getThread ()
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-void ThreadPool::printList ()
+void ThreadPool::printList() const
 {
    OneThread* curThread = listHead;
    int counter = 0;
@@ -207,13 +208,13 @@ void ThreadPool::printList ()
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-OneThread* ThreadPool::addThread ()
+OneThread* ThreadPool::addThread()
 {
    static int numTimes = 0;
 //    DebugLock.acquire();
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << Thread::self()
-      << " vpr::ThreadPool::addThread: Entering: " << ++numTimes << std::endl
-      << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+      << "[vpr::ThreadPool::addThread()] Entering: " << ++numTimes
+      << std::endl << vprDEBUG_FLUSH;
 //    DebugLock.release();
 
    Guard<Mutex> guard(listLock);   // Protect the head
@@ -225,16 +226,16 @@ OneThread* ThreadPool::addThread ()
                                               newThread));
 
 //    DebugLock.acquire();
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << newThread->thread
-      << " vprThreadPool::addThread: List at end\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << newThread->thread << " [vprThreadPool::addThread()] List at end\n"
+      << vprDEBUG_FLUSH;
    printList();
 //    DebugLock.release();
 
    return listHead;
 }
 
-
-std::ostream& operator<< (std::ostream& outfile, vpr::OneThread& thread)
+std::ostream& operator<<(std::ostream& outfile, vpr::OneThread& thread)
 {
    outfile << thread.thread;
    return outfile;

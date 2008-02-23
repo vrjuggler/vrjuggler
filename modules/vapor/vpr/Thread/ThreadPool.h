@@ -38,6 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <iostream>
+
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Semaphore.h>
 
@@ -72,9 +74,7 @@ public:
    Semaphore threadWait;         //! thread waits for work here
 };
 
-
-std::ostream& operator<< (std::ostream&, vpr::OneThread&);
-
+VPR_API(std::ostream&) operator<<(std::ostream&, vpr::OneThread&);
 
 /** \class ThreadPool ThreadPool.h vpr/Thread/ThreadPool.h
  *
@@ -92,7 +92,7 @@ class ThreadPool
 {
 public:
    /** Constructor. */
-   ThreadPool(int numToStartWith = 1);
+   ThreadPool(const int numToStartWith = 1);
 
    ~ThreadPool();
 
@@ -145,7 +145,7 @@ public:
       finishedLock.release();      // Reset it to done
    }
 
-   void printList();
+   void printList() const;
 
 private:
    Semaphore readyThreads;    /**< Count represents threads ready to work */
