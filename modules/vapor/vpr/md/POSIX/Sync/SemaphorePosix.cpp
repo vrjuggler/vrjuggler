@@ -68,7 +68,7 @@ SemaphorePosix::SemaphorePosix(const int initialValue)
    // This sets the semaphore file permissions to 0600.
    mSema = sem_open(mSemaFile, O_CREAT, S_IRUSR | S_IWUSR, initialValue);
 
-   if ( mSema == (sem_t*) SEM_FAILED )
+   if ( mSema == reinterpret_cast<sem_t*>(SEM_FAILED) )
    {
       std::ostringstream msg_stream;
       msg_stream << "Named semaphore allocation failed: "
@@ -77,7 +77,7 @@ SemaphorePosix::SemaphorePosix(const int initialValue)
    }
 #else
    // ----- Allocate the unnamed semaphore ----- //
-   mSema = (sem_t*) std::malloc(sizeof(sem_t));
+   mSema = reinterpret_cast<sem_t*>(std::malloc(sizeof(sem_t)));
 
    if ( NULL == mSema )
    {
@@ -131,7 +131,7 @@ void SemaphorePosix::reset(const int val)
    // Now recreate it with the new value in val.
    mSema = sem_open(mSemaFile, O_CREAT, 0600, val);
 
-   if ( mSema == (sem_t*) SEM_FAILED )
+   if ( mSema == reinterpret_cast<sem_t*>(SEM_FAILED) )
    {
       std::ostringstream msg_stream;
       msg_stream << "Named semaphore re-allocation failed: "
