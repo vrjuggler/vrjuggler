@@ -41,6 +41,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <boost/noncopyable.hpp>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
@@ -49,7 +50,7 @@
 #include <vpr/Util/GUID.h>
 
 
-// Suggested use of val/debugLevel
+// Suggested use of val/ebugLevel
 //
 // 0 - Critical messages (always need to be seen)
 // 1 - Warnings and potential problems
@@ -210,7 +211,7 @@ namespace vpr
     *
     * Class to support debug output.
     */
-   class VPR_CLASS_API Debug
+   class VPR_CLASS_API Debug : private boost::noncopyable
    {
    protected:
       /**
@@ -219,20 +220,12 @@ namespace vpr
        */
       Debug();
 
-      // These two have to be here because Visual C++ will try to make them
-      // exported public symbols.  This causes problems because copying 
-      // vpr::Mutex objects is not allowed.
-      Debug(const Debug&) {;}
-      void operator= (const Debug&) {;}
-
       /** Initialize the system */
       void init();
 
    public:
 
-      ~Debug()
-      {
-      }
+      ~Debug();
 
       /**
        * This simultaneously sets the output stream type to
@@ -256,14 +249,14 @@ namespace vpr
       
       /** Gets the debug stream to use */
       std::ostream& getStream(const vpr::DebugCategory& cat, const int level,
-                              const bool show_thread_info = true,
-                              const bool use_indent = true, 
+                              const bool showThreadInfo = true,
+                              const bool useIndent = true, 
                               const int indentChange = 0,
                               const bool lockStream = true);
 
-      int getLevel()
+      int getLevel() const
       {
-         return debugLevel;
+         return mDebugLevel;
       }
 
       Mutex& debugLock()
@@ -300,7 +293,7 @@ namespace vpr
        * Columns and color.
        */
       //@{
-      void pushThreadLocalColumn(int column);
+      void pushThreadLocalColumn(const int column);
       void popThreadLocalColumn();
       void pushThreadLocalColor(const std::string& color);
       void popThreadLocalColor();
@@ -309,7 +302,7 @@ namespace vpr
       /** @name Debug accessors and manipulators */
       //@{
       /** Is debugging enabled? */
-      bool isDebugEnabled()
+      bool isDebugEnabled() const
       {
          return mDebugEnabled;
       }
@@ -328,7 +321,7 @@ namespace vpr
       //@}
 
       /** Dumps the current status to screen. */
-      void debugDump();
+      void debugDump() const;
 
       /** Decrements the level of indention. */
       void decrementIndentLevel();
@@ -337,9 +330,9 @@ namespace vpr
       void incrementIndentLevel();
 
    private:
-      bool mDebugEnabled;  /**< Is debug output enabled? */
-      int debugLevel;      /**< Debug level to use */
-      int indentLevel;     /**< Amount to indent */
+      bool mDebugEnabled;    /**< Is debug output enabled? */
+      int  mDebugLevel;      /**< Debug level to use */
+      int  mIndentLevel;     /**< Amount to indent */
 
       std::ofstream* mFile;     /**< File we are using for all output. */
 
@@ -349,19 +342,10 @@ namespace vpr
 
       Mutex mDebugLock;
 
-      struct CategoryInfo
+      struct VPR_CLASS_API CategoryInfo
       {
-         /*CategoryInfo()
-          : mName("un-named"), mPrefix("unset"), mAllowed(false)
-         {;}*/
-
          CategoryInfo(const std::string& name, const std::string& prefix,
-                      const bool allowed, const bool disallowed)
-            : mName(name)
-            , mPrefix(prefix)
-            , mAllowed(allowed)
-            , mDisallowed(disallowed)
-         {;}
+                      const bool allowed, const bool disallowed);
 
          std::string mName;         /**< What is the name of the category */
          std::string mPrefix;       /**< What is the prefix to output with the category */
