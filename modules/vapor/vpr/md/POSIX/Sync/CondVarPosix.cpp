@@ -189,4 +189,10 @@ bool CondVarPosix::wait(const vpr::Interval& timeToWait)
    return result;
 }
 
+void CondVarPosix::dump() const
+{
+   std::cerr << "------------- vpr::CondVarPosix::Dump ---------\n"
+             << "Not Implemented yet.\n";
+}
+
 } // End of vpr namespace

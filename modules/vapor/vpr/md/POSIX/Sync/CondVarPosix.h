@@ -257,11 +257,7 @@ public:
     * @post All important data and debugging information related to the
     *       condition variable and its mutex are dumped to stderr.
     */
-   void dump() const
-   {
-      std::cerr << "------------- vpr::CondVarPosix::Dump ---------\n"
-                << "Not Implemented yet.\n";
-   }
+   void dump() const;
 
 private:
    pthread_cond_t mCondVar;      /**< Condition variable */

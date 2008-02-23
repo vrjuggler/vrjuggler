@@ -45,12 +45,11 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
 #include <sstream>
 #include <cstring>
 #include <semaphore.h>
 #include <errno.h>
-#include <assert.h>
+#include <cassert>
 #include <boost/concept_check.hpp>
 #include <boost/noncopyable.hpp>
 
@@ -277,13 +276,7 @@ public:
     * @param message Message printed out before the output is dumped.
     */
    void dump(FILE* dest = stderr,
-             const char* message = "\n------ Semaphore Dump -----\n") const
-   {
-      int value;
-      sem_getvalue(mSema, &value);
-      fprintf(dest, "%s", message);
-      fprintf(dest, "Current semaphore value: %d", value);
-   }
+             const char* message = "\n------ Semaphore Dump -----\n") const;
 
 protected:
 #if ! defined(VPR_HAVE_UNNAMED_POSIX_SEMAPHORE)

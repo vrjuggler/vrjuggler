@@ -35,6 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstdio>
 #include <cstdlib>
 #include <sstream>
 #include <cstring>
@@ -151,6 +152,14 @@ void SemaphorePosix::reset(const int val)
       throw vpr::ResourceException(msg_stream.str(), VPR_LOCATION);
    }
 #endif
+}
+
+void SemaphorePosix::dump(FILE* dest, const char* message) const
+{
+   int value;
+   sem_getvalue(mSema, &value);
+   std::fprintf(dest, "%s", message);
+   std::fprintf(dest, "Current semaphore value: %d\n", value);
 }
 
 }
