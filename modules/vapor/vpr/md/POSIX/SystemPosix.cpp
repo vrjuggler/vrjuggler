@@ -71,33 +71,44 @@ int SystemPosix::msleep(vpr::Uint32 milli)
 vpr::Uint64 SystemPosix::Ntohll(vpr::Uint64 conversion)
 {
    vpr::Uint64 ret_val;
-   
-   if (isLittleEndian())
+
+   if ( isLittleEndian() )
    {
-      *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
-      *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
+         Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+         Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
    }
    else
    {
-      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
-      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+         Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1)  =
+         Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
    }
+
    return ret_val;
 }
 
 vpr::Uint64 SystemPosix::Htonll(vpr::Uint64 conversion)
 {
    vpr::Uint64 ret_val;
-   if (isLittleEndian())
+
+   if ( isLittleEndian() )
    {
-      *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
-      *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
+         Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+         Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
    }
    else
    {
-      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
-      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+         Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
+         Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
    }
+
    return ret_val;
 }
 

@@ -45,8 +45,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
 #include <string>
 #include <prtime.h>
 #include <prnetdb.h>
@@ -138,16 +137,22 @@ public:
    static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
-      if (isLittleEndian())
+
+      if ( isLittleEndian() )
       {
-         *((vpr::Uint32*)(&ret_val) + 1) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val))) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+         *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
+            Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+         *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+            Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
       }
       else
       {
-         *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+         *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+            Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+         *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1)  =
+            Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
       }
+
       return ret_val;
    }
    //@}
@@ -182,16 +187,22 @@ public:
    static vpr::Uint64 Htonll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
-      if (isLittleEndian())
+
+      if ( isLittleEndian() )
       {
-         *((vpr::Uint32*)(&ret_val) + 1) = SystemNSPR::Htonl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val))) = SystemNSPR::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+         *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
+            Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+         *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+            Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
       }
       else
       {
-         *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Htonl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+         *reinterpret_cast<vpr::Uint32*>(&ret_val) =
+            Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
+         *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
+            Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
       }
+
       return ret_val;
    }
    //@}
