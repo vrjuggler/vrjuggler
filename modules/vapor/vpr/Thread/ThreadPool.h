@@ -51,21 +51,12 @@ namespace vpr
  *
  * Helper class for vpr::ThreadPool.
  */
-class OneThread
+class VPR_CLASS_API OneThread
 {
 public:
-   OneThread()
-      : thread(NULL)
-      , next(NULL)
-      , threadWait(0)
-   {
-      /* Do nothing. */ ;
-   }
+   OneThread();
 
-   ~OneThread()
-   {
-      /* Do nothing. */ ;
-   }
+   ~OneThread();
 
 public:
    Thread* thread;               //! Handle of the thread process

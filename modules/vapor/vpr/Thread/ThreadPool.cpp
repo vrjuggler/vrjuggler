@@ -47,6 +47,19 @@
 namespace vpr
 {
 
+OneThread::OneThread()
+   : thread(NULL)
+   , next(NULL)
+   , threadWait(0)
+{
+   /* Do nothing. */ ;
+}
+
+OneThread::~OneThread()
+{
+   /* Do nothing. */ ;
+}
+
 // ---------------------------------------------------------------------------
 // Constructor.
 // ---------------------------------------------------------------------------
