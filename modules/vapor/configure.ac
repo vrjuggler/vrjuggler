@@ -299,8 +299,6 @@ VJ_LINKER_SETUP
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
-# The $USE_DYLD stuff is for Darwin.
-DPP_CHECK_DYNLOAD_LIB([USE_DYLD='N'], [USE_DYLD='Y'])
 DPP_HAVE_CPPUNIT([1.9.10])
 
 # Shared memory and synchronization primitives.
@@ -1077,7 +1075,6 @@ AC_SUBST(THREAD_SYS)
 AC_SUBST(HANDLE_ABS)
 AC_SUBST(SERIAL_PORT_ABS)
 AC_SUBST(SOCKET_ABS)
-AC_SUBST(USE_DYLD)
 
 AC_SUBST(CPPDOM_CXXFLAGS)
 AC_SUBST(CPPDOM_LIBS)
@@ -1135,8 +1132,6 @@ AC_CONFIG_FILES([
    make.defs.mk
    vpr/Makefile
    vpr/md/Makefile
-   vpr/md/DARWIN/Makefile
-   vpr/md/DARWIN/DynLoad/Makefile
    vpr/md/NSPR/Makefile
    vpr/md/NSPR/DynLoad/Makefile
    vpr/md/NSPR/IO/Makefile

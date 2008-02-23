@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2008-02-23 patrick  Removed vpr::LibraryDYLD, which means that Mac OS X 10.3 is
+                    no longer supported.
+                    NEW VERSION: 2.1.13
 2008-02-13 patrick  Changed vpr::TSObjectProxy<T> smart pointer interface to
                     throw an exception (of the new type vpr::BadCastException)
                     if the downcast part of the thread-specific data access
