@@ -51,9 +51,7 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifneq (@SUBSYSTEM@, NSPR)
-ifeq (@USE_DYLD@, N)
    SRCS=	LibraryUNIX.cpp
-endif
 endif
 
 include $(MKPATH)/dpp.obj.mk
