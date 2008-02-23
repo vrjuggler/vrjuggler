@@ -111,13 +111,7 @@ public:
    /**
     * Unloads the library if one has been loaded.
     */
-   ~LibraryDYLD()
-   {
-      if ( NULL != mLibrary )
-      {
-         unload();
-      }
-   }
+   ~LibraryDYLD();
 
    /**
     * Overlaoded assignment operator.
