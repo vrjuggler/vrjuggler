@@ -37,8 +37,7 @@
 
 #include <iostream>
 #include <sstream>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
 
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/Util/Debug.h>

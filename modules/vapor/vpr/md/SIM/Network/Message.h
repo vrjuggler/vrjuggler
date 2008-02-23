@@ -41,8 +41,8 @@
 #include <vector>
 #include <boost/smart_ptr.hpp>
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+//#include <cstring>
 #include <vpr/vpr.h>
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Assert.h>
@@ -80,8 +80,8 @@ public:
    {
       vpr::Uint8* start = (vpr::Uint8*) msg;
       mMsg = MessageDataPtr( new MessageDataType(start, start+msg_size));
-      //mMsg = malloc(msg_size);
-      //memcpy(mMsg, msg, msg_size);
+      //mMsg = std::malloc(msg_size);
+      //std::memcpy(mMsg, msg, msg_size);
    }
 
    /** Creates message by copying shared pointer to data buffer */

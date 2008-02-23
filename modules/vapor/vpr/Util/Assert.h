@@ -44,7 +44,7 @@
  * debugging is disabled, <code>vprASSERT</code> is a null operation.
  */
 #ifdef VPR_DEBUG
-#   include <assert.h>
+#   include <cassert>
 #   include <iostream>
 #   include <vpr/SystemBase.h>
 #   define vprASSERT(val) { if(!(val)) { std::cout << vpr::SystemBase::getCallStack(); assert((val)); } }

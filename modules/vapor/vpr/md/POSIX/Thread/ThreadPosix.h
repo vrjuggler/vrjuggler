@@ -44,7 +44,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <vector>
 #include <pthread.h>
 #include <sys/types.h>

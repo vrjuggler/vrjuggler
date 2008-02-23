@@ -45,7 +45,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <prlock.h>
 #include <boost/noncopyable.hpp>
 

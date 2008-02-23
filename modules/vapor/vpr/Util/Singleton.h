@@ -38,7 +38,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>

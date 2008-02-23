@@ -35,7 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <boost/concept_check.hpp>
 #include <boost/utility.hpp>
 #include <vpr/Util/Debug.h>

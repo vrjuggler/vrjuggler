@@ -35,8 +35,8 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <sys/utsname.h>
 
 #include <vpr/md/POSIX/SystemPosix.h>
@@ -117,7 +117,7 @@ bool SystemPosix::getenv(const std::string& name, std::string& result)
    char* val;
    bool status(false);
 
-   val = ::getenv(name.c_str());
+   val = std::getenv(name.c_str());
 
    if ( val != NULL )
    {
@@ -149,7 +149,7 @@ std::string SystemPosix::getHostname()
    if ( uname(&buffer) == 0 )
    {
       char* temp;
-      temp = strchr(buffer.nodename, '.');
+      temp = std::strchr(buffer.nodename, '.');
 
       // If the node name contains the full host, dots and all, truncate it
       // at the first dot.

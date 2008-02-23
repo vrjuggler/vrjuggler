@@ -38,8 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
-#include <math.h>
+#include <cstdlib>
+#include <cmath>
 #include <string>
 #include <deque>
 #include <vector>
@@ -151,7 +151,7 @@ public:
       double microsec = ((double) bits / mCapacity);
 
       // Round up since vpr::Interval objects deal in whole numbers.
-      double time = ceil(microsec);
+      double time = std::ceil(microsec);
 
       return vpr::Interval((vpr::Uint32) time, vpr::Interval::Usec);
    }

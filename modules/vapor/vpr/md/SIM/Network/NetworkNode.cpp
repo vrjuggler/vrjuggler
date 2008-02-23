@@ -35,7 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
@@ -74,7 +74,7 @@ NetworkNode::NetworkNode (const vpr::Uint32 index, const vpr::Uint8 type,
       next_dot = ip_str.find(".", cur_pos);
       cur_val  = ip_str.substr(cur_pos, next_dot - cur_pos);
 
-      ip_addr.bytes[i] = atoi(cur_val.c_str());
+      ip_addr.bytes[i] = std::atoi(cur_val.c_str());
 
       cur_pos = next_dot + 1;
    }
@@ -133,7 +133,9 @@ void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
    vpr::Uint32 port = sock->getLocalAddr().getPort();
    vprASSERT( mIpAddr == sock->getLocalAddr().getAddressValue() && "Trying to add socket to node of wrong ip addr");
    if(hasSocket(port, sock->getType()))
+   {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "NetworkNode::addSocket: Tried to overwrite existing socket: " << sock->getLocalAddr() << std::endl << vprDEBUG_FLUSH;
+   }
    vprASSERT(! hasSocket(port, sock->getType()) && "Tried to overwrite an existing socket");
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)

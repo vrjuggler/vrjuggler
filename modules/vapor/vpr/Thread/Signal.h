@@ -38,8 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
@@ -242,13 +242,13 @@ private:
    void init(vpr::SignalHandler_t handler, const sigset_t* mask,
              const int flags)
    {
-      memset(&mSA, '\0', sizeof(mSA));
+      std::memset(&mSA, '\0', sizeof(mSA));
       mSA.sa_handler = handler;
       mSA.sa_flags   = flags;
 
       if ( mask != NULL )
       {
-         memcpy(&mSA.sa_mask, mask, sizeof(sigset_t));
+         std::memcpy(&mSA.sa_mask, mask, sizeof(sigset_t));
       }
    }
 

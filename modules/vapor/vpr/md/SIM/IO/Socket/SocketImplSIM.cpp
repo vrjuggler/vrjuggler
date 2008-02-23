@@ -36,8 +36,8 @@
 #include <vpr/vprConfig.h>
 
 #include <iomanip>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
@@ -230,7 +230,7 @@ vpr::Uint32 SocketImplSIM::read_i(void* buffer, const vpr::Uint32 length,
          copy_len = (length > msg_size) ? msg_size : length;
 
          // Complete the read operation.
-         memcpy(buffer, message->getBody(), copy_len);
+         std::memcpy(buffer, message->getBody(), copy_len);
          bytes_read = copy_len;
 
          // If there was no resizing performed on the message (the resize value
