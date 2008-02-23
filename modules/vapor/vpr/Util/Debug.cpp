@@ -35,9 +35,11 @@
 
 #include <vpr/vprConfig.h>
 
+#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <boost/concept_check.hpp>
 
 #include <vpr/System.h>

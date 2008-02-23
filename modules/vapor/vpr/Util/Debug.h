@@ -39,8 +39,6 @@
 #include <vpr/vprConfig.h>
 
 #include <iostream>
-#include <stdlib.h>
-#include <vector>
 #include <string>
 #include <map>
 
@@ -350,8 +348,6 @@ namespace vpr
       bool  mUseThreadLocal;  /**< Whether to use thread local info or not */
 
       Mutex mDebugLock;
-
-      //std::vector<bool> mAllowedCategories;  /**< The categories we allow */
 
       struct CategoryInfo
       {
