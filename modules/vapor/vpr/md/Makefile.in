@@ -45,8 +45,7 @@ include @topdir@/make.defs.mk
 # Prefix for recursive stuff.
 DIRPRFX=	vpr/md/
 
-SUBDIR=		DARWIN	\
-		NSPR	\
+SUBDIR=		NSPR	\
 		POSIX	\
 		SIM	\
 		WIN32	\
