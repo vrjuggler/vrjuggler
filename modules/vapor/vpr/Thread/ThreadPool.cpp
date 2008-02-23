@@ -64,7 +64,7 @@ OneThread::~OneThread()
 // Constructor.
 // ---------------------------------------------------------------------------
 ThreadPool::ThreadPool(const int numToStartWith)
-   : readyThreads(0)
+   : mReadyThreads(0)
 {
    //DebugLock.acquire();
    vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
@@ -74,10 +74,10 @@ ThreadPool::ThreadPool(const int numToStartWith)
       << vprDEBUG_FLUSH;
    //DebugLock.release();
 
-   listHead = NULL;
-   workingCount = 0;
-   listLock.release();             // release threadList
-   finishedLock.release();         // Initialize if to threads being done
+   mListHead = NULL;
+   mWorkingCount = 0;
+   mListLock.release();             // release threadList
+   mFinishedLock.release();         // Initialize if to threads being done
 
    //-- Start the initial # of threads ---//
    for ( int index = 0; index < numToStartWith; ++index )
@@ -88,7 +88,7 @@ ThreadPool::ThreadPool(const int numToStartWith)
 
 ThreadPool::~ThreadPool()
 {
-   OneThread* cur_thread = listHead;
+   OneThread* cur_thread = mListHead;
    while ( cur_thread != NULL )
    {
       delete cur_thread->thread;
@@ -114,13 +114,13 @@ void ThreadPool::threadLoop(OneThread* myThread)
    vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
       << "[vpr::ThreadPool::threadLoop()] Entering." << std::endl
       << vprDEBUG_FLUSH;
-//      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << Thread::self()
-//      << " vpr::ThreadPool::threadLoop: theThreadAsVoid:"
+//      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+//      << "[vpr::ThreadPool::threadLoop()] theThreadAsVoid:"
 //      << theThreadAsVoid << endl << vprDEBUG_FLUSH;
 //   DebugLock.release();
 
-   listLock.acquire();
-   listLock.release();     // Do this to make sure addThread is done
+   mListLock.acquire();
+   mListLock.release();     // Do this to make sure addThread is done
 
    for ( ;; )
    {
@@ -128,25 +128,25 @@ void ThreadPool::threadLoop(OneThread* myThread)
       threadSleep(myThread);
       // ASSERT:  We now have work to do...
       // --- PROCESS ENTRY OVERHEAD --- //
-      workingCountLock.acquire();     // Get access to the working thread count
-      if ( workingCount == 0 )
+      mWorkingCountLock.acquire();     // Get access to the working thread count
+      if ( mWorkingCount == 0 )
       {
-         finishedLock.acquire();       // Now there are threads working
+         mFinishedLock.acquire();       // Now there are threads working
       }
-      ++workingCount;                  // Update thread count
-      workingCountLock.release();
+      ++mWorkingCount;                  // Update thread count
+      mWorkingCountLock.release();
 
       // --- DO THE WORK --- //
       myThread->functor();
 
       // --- PROCESS EXIT OVERHEAD --- //
-      workingCountLock.acquire();     // Get access to the working count
-      --workingCount;
-      if ( workingCount == 0 )
+      mWorkingCountLock.acquire();     // Get access to the working count
+      --mWorkingCount;
+      if ( mWorkingCount == 0 )
       {
-         finishedLock.release();       // Now there are no threads working
+         mFinishedLock.release();       // Now there are no threads working
       }
-      workingCountLock.release();
+      mWorkingCountLock.release();
    }
 }
 
@@ -156,12 +156,12 @@ void ThreadPool::threadLoop(OneThread* myThread)
 // ---------------------------------------------------------------------------
 void ThreadPool::threadSleep(OneThread* theThread)
 {
-   listLock.acquire();               // acquire exclusive rights to threadList
-   theThread->next = listHead;   // put self on head of the list
-   listHead = theThread;
-   listLock.release();               // release threadList
+   mListLock.acquire();              // acquire exclusive rights to threadList
+   theThread->next = mListHead;      // put self on head of the list
+   mListHead = theThread;
+   mListLock.release();              // release threadList
 
-   readyThreads.release();           // notify master, at least 1 on the list
+   mReadyThreads.release();          // notify master, at least 1 on the list
 
    theThread->threadWait.acquire();  // sleep until master needs/releases me
 }
@@ -173,32 +173,32 @@ void ThreadPool::threadSleep(OneThread* theThread)
 // ---------------------------------------------------------------------------
 OneThread* ThreadPool::getThread()
 {
-   OneThread* theThread;
+   OneThread* the_thread;
 
-   readyThreads.acquire();           // wait until at least 1 thread is free
+   mReadyThreads.acquire();        // wait until at least 1 thread is free
 
-   listLock.acquire();               // acquire exclusive rights to threadList
-   theThread = listHead;         // get address of first free OneThread
-   listHead = theThread->next;   // make next in list, the head of list
-   listLock.release();               // release threadList
+   mListLock.acquire();            // acquire exclusive rights to threadList
+   the_thread = mListHead;         // get address of first free OneThread
+   mListHead = the_thread->next;   // make next in list, the head of list
+   mListLock.release();            // release threadList
 
-   return theThread;
+   return the_thread;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 void ThreadPool::printList() const
 {
-   OneThread* curThread = listHead;
-   int counter = 0;
+   OneThread* cur_thread(mListHead);
+   int counter(0);
 
    std::cerr << "----- Thread List -----\n";
 
-   while ( curThread != NULL )
+   while ( cur_thread != NULL )
    {
       std::cerr << "Thread: " << counter++ << std::endl;
-      std::cerr << "\tpid: " << *curThread << std::endl;
-      curThread = curThread->next;
+      std::cerr << "\tpid: " << *cur_thread << std::endl;
+      cur_thread = cur_thread->next;
    }
 }
 
@@ -213,7 +213,7 @@ OneThread* ThreadPool::addThread()
       << std::endl << vprDEBUG_FLUSH;
 //    DebugLock.release();
 
-   Guard<Mutex> guard(listLock);   // Protect the head
+   Guard<Mutex> guard(mListLock);   // Protect the head
 
    //OneThread* newThread = new (this->getMyMemPool()->allocate(sizeof(OneThread))) OneThread;    // Used placement new
    OneThread* newThread = new OneThread;
@@ -228,7 +228,7 @@ OneThread* ThreadPool::addThread()
    printList();
 //    DebugLock.release();
 
-   return listHead;
+   return mListHead;
 }
 
 std::ostream& operator<<(std::ostream& outfile, vpr::OneThread& thread)

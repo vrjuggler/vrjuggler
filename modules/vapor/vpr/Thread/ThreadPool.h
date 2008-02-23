@@ -132,19 +132,19 @@ public:
     */
    void wait()
    {
-      finishedLock.acquire();      // Get the lock that means threads done
-      finishedLock.release();      // Reset it to done
+      mFinishedLock.acquire();      // Get the lock that means threads done
+      mFinishedLock.release();      // Reset it to done
    }
 
    void printList() const;
 
 private:
-   Semaphore readyThreads;    /**< Count represents threads ready to work */
-   Mutex listLock;            /**< Mutex control of threadList head */
-   Mutex workingCountLock;    /**< Mutex on thread count */
-   Mutex finishedLock;        /**< Lock for wether thread are finished, lock -> doing work */
-   OneThread* listHead;       /**< First ready vpr::OneThread */
-   volatile int workingCount; /**< Number of threads currently doing work */
+   Semaphore mReadyThreads;    /**< Count represents threads ready to work */
+   Mutex mListLock;            /**< Mutex control of threadList head */
+   Mutex mWorkingCountLock;    /**< Mutex on thread count */
+   Mutex mFinishedLock;        /**< Lock for wether thread are finished, lock -> doing work */
+   OneThread* mListHead;       /**< First ready vpr::OneThread */
+   volatile int mWorkingCount; /**< Number of threads currently doing work */
 };
 
 } // End of vpr namespace
