@@ -56,10 +56,6 @@
 
 #include <vpr/Sync/DeadlockException.h>
 
-#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 9
-#define VPR_USE_NAMED_SEMAPHORE 1
-#endif
-
 
 namespace vpr
 {
@@ -290,7 +286,7 @@ public:
    }
 
 protected:
-#ifdef VPR_USE_NAMED_SEMAPHORE
+#if ! defined(VPR_HAVE_UNNAMED_POSIX_SEMAPHORE)
    char* mSemaFile;
 #endif
    sem_t* mSema;   /**< Semaphore variable for the class. */
@@ -298,6 +294,5 @@ protected:
 
 } // End of vpr namespace
 
-#undef VPR_USE_NAMED_SEMAPHORE
 
 #endif  /* _VPR_SEMAPHORE_POSIX_H_ */

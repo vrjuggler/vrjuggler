@@ -45,17 +45,13 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/md/POSIX/Sync/SemaphorePosix.h>
 
-#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 9
-#define VPR_USE_NAMED_SEMAPHORE 1
-#endif
-
 
 namespace vpr
 {
 
 SemaphorePosix::SemaphorePosix(const int initialValue)
 {
-#ifdef VPR_USE_NAMED_SEMAPHORE
+#if ! defined(VPR_HAVE_UNNAMED_POSIX_SEMAPHORE)
    // Use strdup(3) here so that mktemp(3) can modify the memory.  Trying
    // to modify a constant string would be bad.
    // NOTE: The memory allocated by strdup(3) will be released in the
@@ -103,7 +99,7 @@ SemaphorePosix::SemaphorePosix(const int initialValue)
 SemaphorePosix::~SemaphorePosix()
 {
    // ---- Delete the semaphore --- //
-#ifdef VPR_USE_NAMED_SEMAPHORE
+#if ! defined(VPR_HAVE_UNNAMED_POSIX_SEMAPHORE)
    const int result = sem_close(mSema);
    vprASSERT(result == 0);
 
@@ -119,7 +115,7 @@ SemaphorePosix::~SemaphorePosix()
 
 void SemaphorePosix::reset(const int val)
 {
-#ifdef VPR_USE_NAMED_SEMAPHORE
+#if ! defined(VPR_HAVE_UNNAMED_POSIX_SEMAPHORE)
    // First deallocate the current semaphore.
    const int result = sem_close(mSema);
 

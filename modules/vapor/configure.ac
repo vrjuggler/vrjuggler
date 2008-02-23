@@ -341,6 +341,41 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
         AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
     fi
 
+    DPP_LANG_SAVE
+    DPP_LANG_C
+
+    vprsave_CFLAGS="$CFLAGS"
+    vprsave_LIBS="$LIBS"
+
+    CFLAGS="$CFLAGS $PTHREAD_ARG"
+    LIBS="$LIBS $PTHREAD_LIB"
+
+    # If the code below compiles, links, and returns 0, then we can use
+    # unnamed POSIX semaphores.
+    AC_CACHE_CHECK([for unnamed POSIX semaphore support],
+                   [ac_cv_has_unnamed_posix_semaphores],
+                   [AC_RUN_IFELSE([
+#include <semaphore.h>
+
+int main()
+{
+   sem_t sema;
+   return sem_init(&sema, 0, 1);
+}],
+                        [ac_cv_has_unnamed_posix_semaphores='yes'],
+                        [ac_cv_has_unnamed_posix_semaphores='no'])]
+                  )
+
+    if test "x$ac_cv_has_unnamed_posix_semaphores" = "xyes" ; then
+        AC_DEFINE(VPR_HAVE_UNNAMED_POSIX_SEMAPHORE, ,
+                  [Define if unnamed POSIX semaphores are available.])
+    fi
+
+    CFLAGS="$vprsave_CFLAGS"
+    LIBS="$vprsave_LIBS"
+
+    DPP_LANG_RESTORE
+
     # Do not define _POSIX_C_SOURCE here because it will cause problems when
     # compiling on IRIX.  Instead, define that in the source files where
     # appropriate.
