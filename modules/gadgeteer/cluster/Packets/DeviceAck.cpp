@@ -86,22 +86,19 @@ DeviceAck::~DeviceAck()
 
 void DeviceAck::serialize()
 {
-   // Clear the data stream.
+   // Clear data stream since header is at beginning
    mPacketWriter->getData()->clear();
-   mPacketWriter->setCurPos(0);
+   mPacketWriter->setCurPos( 0 );
 
-   // Serialize the header.
-   mHeader->serializeHeader();
-   
    // Serialize plugin GUID
    mPluginId.writeObject(mPacketWriter);
-   
+
    // Serialize Device GUID
    mId.writeObject(mPacketWriter);
-   
+
    // Serialize the Device Name
    mPacketWriter->writeString(mDeviceName);
-   
+
    // Serialize the Base Type of the acknowledged device
    mPacketWriter->writeString(mDeviceBaseType);
 
@@ -110,6 +107,9 @@ void DeviceAck::serialize()
 
    // Serialize the Ack boolean
    mPacketWriter->writeBool(mAck);
+
+   // Serialize the header.
+   mHeader->prependSerializedHeader(mPacketWriter);
 }
 
 void DeviceAck::parse()

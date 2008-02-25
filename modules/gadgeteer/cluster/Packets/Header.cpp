@@ -54,7 +54,7 @@ HeaderPtr Header::create(const vpr::Uint16 code, const vpr::Uint16 type,
    return HeaderPtr(new Header(code, type, length, frame));
 }
 
-void Header::readData(vpr::SocketStream* stream)
+void Header::readData(vpr::SocketStream* stream, bool dumpHeader)
 {
    vprASSERT( NULL != stream && "Can not create a Header using a NULL SocketStream" );
 
@@ -72,10 +72,10 @@ void Header::readData(vpr::SocketStream* stream)
    }
 
    vpr::Uint32 bytes_read;   
-   
+   std::vector<vpr::Uint8> header_data; 
    try
    {
-      bytes_read = stream->readn(mData, Header::RIM_PACKET_HEAD_SIZE);
+      bytes_read = stream->readn(header_data, Header::RIM_PACKET_HEAD_SIZE);
    }
    catch (vpr::IOException& ex)
    {
@@ -87,26 +87,47 @@ void Header::readData(vpr::SocketStream* stream)
    }
 
    vprASSERT( RIM_PACKET_HEAD_SIZE == bytes_read && "Header::Header() - Bytes read != RIM_PACKET_HEAD_SIZE" );
-   
-   parseHeader();
+
+   parseHeader(header_data);
+
+   if(dumpHeader)
+   {
+      std::cout << "Dumping Header(" << header_data.size() << " bytes): ";
+      for ( std::vector<vpr::Uint8>::const_iterator i = header_data.begin();
+            i != header_data.end(); i++ )
+      {
+         std::cout << (int)*i << " ";
+      }
+      std::cout << std::endl;
+   }
 }
 
-void Header::serializeHeader()
-{  
-   vpr::BufferObjectWriter writer(&mData);
-   writer.getData()->clear();
-   writer.setCurPos( 0 );
+void Header::prependSerializedHeader(vpr::BufferObjectWriter* packetWriter)
+{
+   // Set Packet length
+   setPacketLength( packetWriter->getData()->size() + RIM_PACKET_HEAD_SIZE );
+
+   std::vector<vpr::Uint8> header_data;
+   vpr::BufferObjectWriter writer( &header_data );
 
    // Serialize all header data.
    writer.writeUint16( mRIMCode );
    writer.writeUint16( mPacketType );
    writer.writeUint32( mFrame );
    writer.writeUint32( mPacketLength );
+
+   // Prepend header onto packets data
+   packetWriter->getData()->insert( packetWriter->getData()->begin(),
+                                   header_data.begin(),
+                                   header_data.end() );
+
+   packetWriter->setCurPos( getPacketLength() );
+
 }
 
-void Header::parseHeader()
+void Header::parseHeader(std::vector<vpr::Uint8>& headerData)
 {
-   vpr::BufferObjectReader reader( &mData );
+   vpr::BufferObjectReader reader( &headerData );
 
    // Parse the incoming data.
    mRIMCode = reader.readUint16();
@@ -124,36 +145,6 @@ void Header::parseHeader()
          
       throw cluster::ClusterException( "Header::parseHeader() - Invalid packet header!" );
    }
-}
-
-void Header::send(vpr::SocketStream* socket) const
-{
-   vprASSERT( NULL != socket && "Socket is NULL" );
-
-   // Send the header data.
-   try
-   {
-      socket->send(mData, RIM_PACKET_HEAD_SIZE);
-   }
-   catch (vpr::IOException& ex)
-   {
-      vprDEBUG( gadgetDBG_RIM, vprDBG_CRITICAL_LVL )
-         << "Header::send() - Failed to send header."
-         << ex.what()
-         << std::endl << vprDEBUG_FLUSH;
-      throw ex;
-   }
-}
-
-void Header::dump() const
-{
-   std::cout << "Dumping Header(" << mData.size() << " bytes): ";
-   for ( std::vector<vpr::Uint8>::const_iterator i = mData.begin();
-         i != mData.end(); i++ )
-   {
-      std::cout << (int)*i << " ";
-   }
-   std::cout << std::endl;
 }
 
 void Header::printData( const int debug_level ) const

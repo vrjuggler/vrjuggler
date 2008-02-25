@@ -303,6 +303,7 @@ void NetworkManager::update( const int temp)
    vpr::prof::start("ClusterManager::update()",10);
    setAllUpdated(false);
    size_t num_nodes = sendEndBlocks(temp);
+   uncorkNetwork();
    updateAllNodes(num_nodes);
    vpr::prof::stop();
 }
@@ -400,10 +401,9 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
    typedef std::vector<gadget::NodePtr>::iterator iter_t;
 
    vpr::prof::start("ClusterManager::updateAllNodes()",10);
+   std::vector<gadget::NodePtr> ready_nodes;
    while ( completed_nodes != numNodes )
    {
-      std::vector<gadget::NodePtr> ready_nodes;
-
       try
       {
          //ready_nodes = mReactor.getReadyNodes(vpr::Interval::NoTimeout);
@@ -519,7 +519,7 @@ bool NetworkManager::addNode(const std::string& name,
 {
    // -Create a new Node using the given information
    // -Add the new node to the NetworkManager
-   
+
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_CONFIG_LVL )
       << clrOutBOLD(clrBLUE,"[NetworkManager]")
       << " Adding node: " << name
@@ -527,7 +527,7 @@ bool NetworkManager::addNode(const std::string& name,
 
    NodePtr temp_node = Node::create(name, hostName, port, socketStream);
    mNodes.push_back( temp_node );
-   
+
    return true;
 }
 
@@ -671,6 +671,28 @@ void NetworkManager::sendToAll(cluster::PacketPtr packet)
       }
    }
 }
+
+void NetworkManager::corkNetwork()
+{
+   for (node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
+   {
+      (*itr)->setNoPush(true);
+      //(*itr)->setNoDelay(false);
+   }
+
+}
+
+void NetworkManager::uncorkNetwork()
+{
+   vpr::prof::start("ClusterManager::uncorkNetwork()",10);
+   for (node_list_t::iterator itr = mNodes.begin(); itr != mNodes.end(); itr++)
+   {
+      (*itr)->setNoPush(false);
+      //(*itr)->setNoDelay(true);
+   }
+   vpr::prof::stop();
+}
+
 
 bool NetworkManager::connectTo(NodePtr node)
 {

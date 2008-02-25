@@ -367,7 +367,7 @@ void ClusterManager::preDraw()
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
       << clrOutBOLD( clrCYAN,"[ClusterManager]" )
       << " preDraw" << std::endl << vprDEBUG_FLUSH;
-
+   getNetwork()->corkNetwork();
    for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
    {
       (*itr)->preDraw();
@@ -393,7 +393,7 @@ void ClusterManager::postPostFrame()
    vprDEBUG( gadgetDBG_NET_MGR, vprDBG_HVERB_LVL )
       << clrOutBOLD( clrCYAN,"[ClusterManager]" )
       << " postPostFrame" << std::endl << vprDEBUG_FLUSH;
-
+   getNetwork()->corkNetwork();
    for ( plugin_list_t::iterator itr = mPlugins.begin(); itr != mPlugins.end(); itr++ )
    {
       (*itr)->postPostFrame();

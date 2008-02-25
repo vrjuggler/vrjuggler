@@ -71,11 +71,11 @@ void ConfigPacket::serialize()
    mPacketWriter->getData()->clear();
    mPacketWriter->setCurPos(0);
 
-   // Serialize the header.
-   mHeader->serializeHeader();
-   
    mPacketWriter->writeString(mConfig);
    mPacketWriter->writeUint16(mType);
+
+   // Serialize the header.
+   mHeader->prependSerializedHeader(mPacketWriter);
 }
 
 void ConfigPacket::parse()

@@ -75,11 +75,12 @@ std::vector<gadget::NodePtr> Reactor::getReadyNodes(const vpr::Interval& timeout
    if ( num_events > 0 )
    {
       ready_nodes.reserve(num_events);
-
-      for ( vpr::Uint16 i = 0; i < mSelector.getNumHandles(); ++i )
+      vpr::Uint16 event_mask;
+      const vpr::Uint16 num_handles = mSelector.getNumHandles();
+      for ( vpr::Uint16 i = 0; i < num_handles; ++i )
       {
-         vpr::IOSys::Handle h         = mSelector.getHandle(i);
-         const vpr::Uint16 event_mask = mSelector.getOut(h);
+         vpr::IOSys::Handle h = mSelector.getHandle(i);
+         event_mask = mSelector.getOut(h);
 
          if ( 0 != event_mask )
          {

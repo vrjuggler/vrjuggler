@@ -77,16 +77,15 @@ EndBlock::~EndBlock()
  */
 void EndBlock::serialize()
 {
-   //mTempVar = Header::RIM_END_BLOCK;
-   // Clear the data stream.
+   // Clear data stream since header is at beginning
    mPacketWriter->getData()->clear();
-   mPacketWriter->setCurPos(0);
+   mPacketWriter->setCurPos( 0 );
 
-   // Serialize the header.
-   mHeader->serializeHeader();      
-   
    // Serialize the Temp Var
    mPacketWriter->writeUint16(mTempVar);
+
+   // Serialize the header.
+   mHeader->prependSerializedHeader(mPacketWriter);
 }
 
 /**

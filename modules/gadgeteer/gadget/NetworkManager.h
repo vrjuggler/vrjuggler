@@ -83,6 +83,17 @@ public:
 
    void update( const int temp);
    void barrier( bool master );
+   
+   /**
+    * Optimize network traffic by gathering write calls.
+    * uncorkNetwork() must be called once write calls are finished.
+    */
+   inline void corkNetwork();
+
+   /**
+    * Flush pending writes to the network.
+    */
+   inline void uncorkNetwork();
 
 private:
    size_t setAllUpdated( const bool updated );

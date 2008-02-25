@@ -119,6 +119,8 @@ public:
    {
       return mHostname;
    }
+    
+   void setNoDelay(bool enable);
 
    /**
     * Return the port number that we are connected to.
@@ -151,6 +153,8 @@ public:
    {
       return (CONNECTED == getStatus());
    }
+
+    void setNoPush(bool enable);
 
    /**
     * Set the current connection status to this machine.

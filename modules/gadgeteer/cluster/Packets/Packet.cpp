@@ -61,14 +61,6 @@ Packet::~Packet()
 
 void Packet::dump() const
 {
-   if (NULL != mHeader.get())
-   {
-      mHeader->dump();
-   }
-   else
-   {
-      std::cout << "Could not dump Header since it is NULL!" << std::endl;
-   }
    std::cout << "Dumping Packet(" << mData.size() << " bytes): ";
    for ( std::vector<vpr::Uint8>::const_iterator i = mData.begin();
          i!= mData.end(); i++ )

@@ -60,13 +60,6 @@ void ApplicationDataServer::serializeAndSend()
 {
    mDataPacket->serialize(*mApplicationData);
 
-   // We must update the size of the actual data that we are going to send
-   mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
-                                    + mDataPacket->getData().size());
-
-   // We must serialize the header again so that we can reset the size.
-   mDataPacket->getHeader()->serializeHeader();
-
    cluster::ClusterManager::instance()->getNetwork()->sendToAll(mDataPacket);
 }
 

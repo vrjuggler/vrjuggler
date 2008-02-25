@@ -110,25 +110,9 @@ public:
     * @throw vpr::IOException is thrown if an I/O error occurs when trying
     *        to read from \p stream.
     */
-   void readData(vpr::SocketStream* stream);
+   void readData(vpr::SocketStream* stream, bool dumpHeader=false);
 
-   void serializeHeader();
-
-   void parseHeader();
-
-   /**
-    * Writes the packet header data to the given socket.
-    *
-    * @pre \p socket is not NULL.
-    * @post The contents of \c mData (which is \c RIM_PACKET_HEADER_SIZE bytes
-    *       long) are written to \p socket.
-    *
-    * @throw cluster::ClusterException is thrown if the packet header cannot
-    *        be written to \p socket.
-    */
-   void send(vpr::SocketStream* socket) const;
-
-   void dump() const;
+   void prependSerializedHeader(vpr::BufferObjectWriter* writer);
 
    vpr::Uint16 getRIMCode() const
    {
@@ -157,7 +141,7 @@ public:
 
    void printData( const int debug_level ) const;
 protected:
-   std::vector<vpr::Uint8> mData;
+   void parseHeader(std::vector<vpr::Uint8>& headerData);
 
    vpr::Uint16 mRIMCode;
    vpr::Uint16 mPacketType;

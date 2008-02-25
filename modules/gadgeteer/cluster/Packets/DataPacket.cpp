@@ -76,20 +76,20 @@ DataPacket::~DataPacket()
 
 void DataPacket::serialize(vpr::SerializableObject& object)
 {
-   // Clear the data stream.
+   // Clear data stream since header is at beginning
    mPacketWriter->getData()->clear();
-   mPacketWriter->setCurPos(0);
+   mPacketWriter->setCurPos( 0 );
 
-   // Serialize the header.
-   mHeader->serializeHeader();
-   
    // Serialize plugin GUID.
    mPluginId.writeObject(mPacketWriter);
-   
+
    // Serialize device GUID.
    mObjectId.writeObject(mPacketWriter);
 
    object.writeObject(mPacketWriter);
+
+   // Serialize the header.
+   mHeader->prependSerializedHeader(mPacketWriter);
 }
 
 void DataPacket::parse()

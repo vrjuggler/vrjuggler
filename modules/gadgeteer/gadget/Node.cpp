@@ -159,44 +159,35 @@ void Node::setStatus(int connect)
    mStatus = connect;
 }
 
+void Node::setNoPush(bool enable)
+{
+  mSockStream->setNoPush(enable);
+}
+
+void Node::setNoDelay(bool enable)
+{
+   mSockStream->setNoDelay(enable);
+}
+
 bool Node::send(cluster::PacketPtr outPacket)
 {
    vprASSERT(NULL != outPacket.get() && "Can not send a NULL packet.");
 
    vpr::Guard<vpr::Mutex> guard(mSockWriteLock);
 
-   cluster::HeaderPtr header = outPacket->getHeader();
-
-   vprASSERT(NULL != header.get() && "Node::send() - Can't have a NULL header.");
    vprASSERT(NULL != mSockStream && "Node::send() - SocketStream can't be NULL");
 
    // -Send header data
    // -Send packet data
    try
    {
-      header->send(mSockStream);
+      mSockStream->send( outPacket->getData(),
+                         outPacket->getHeader()->getPacketLength());
    }
    catch (vpr::IOException&)
    {
       // TODO: setCause(ex)
-      throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
-   }
-
-   // Early out if we only have a header.
-   if(header->getPacketLength() == cluster::Header::RIM_PACKET_HEAD_SIZE)
-   {
-      return true;
-   }
-
-   try
-   {
-      mSockStream->send(outPacket->getData(),
-         header->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE);
-   }
-   catch (vpr::IOException&)
-   {
-      // TODO: setCause(ex)
-      throw cluster::ClusterException("Packet::recv() - Sending data packet failed!!");
+      throw cluster::ClusterException("Packet::send() - Sending Data failed!");
    }
 
    return true;
