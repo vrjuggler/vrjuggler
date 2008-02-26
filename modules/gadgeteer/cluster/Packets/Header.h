@@ -112,6 +112,9 @@ public:
     */
    void readData(vpr::SocketStream* stream, bool dumpHeader=false);
 
+   /**
+    * @since 1.3.19
+    */
    void prependSerializedHeader(vpr::BufferObjectWriter* writer);
 
    vpr::Uint16 getRIMCode() const
