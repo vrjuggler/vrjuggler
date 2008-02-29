@@ -40,7 +40,6 @@
 #include <vpr/IO/TimeoutException.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/Util/Error.h>
-#include <vpr/Util/Error.h>
 #include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
 
 
