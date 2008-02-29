@@ -1215,7 +1215,6 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
 
       mNumSensors = 0;
       mAddrToSensorIdMap.clear();
-      mAddrToSensorIdMap.resize(flock_number, -1);
 
       for ( std::vector<FBB::Device*>::iterator b = m_birds.begin();
             b != m_birds.end();
@@ -1273,6 +1272,8 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
             // after this point.
             cur_dev->addr = i + 1;
 
+            // If the device has a sensor, map its FBB address to a
+            // zero-based, sequential value.
             if ( cur_dev->has_sensor )
             {
                mAddrToSensorIdMap[cur_dev->addr] = mNumSensors;
