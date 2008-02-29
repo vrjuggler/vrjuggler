@@ -33,6 +33,15 @@
 #include <gmtl/Matrix.h>
 
 #include <vpr/vpr.h>
+
+// VPR_HAVE_HASH_MAP will be defined to 1 or 0 by vpr/vprConfig.h which is
+// included by vpr/vpr.h.
+#if VPR_HAVE_HASH_MAP
+#  include VPR_HASH_MAP_INCLUDE
+#else
+#  include <map>
+#endif
+
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/Socket.h>
 
@@ -1530,7 +1539,31 @@ private:
 
    std::vector<FBB::Device*> m_birds;   /**< Vector of all devices (birds)
                                              connected to the server chassis */
-   std::vector<int> mAddrToSensorIdMap;
+
+   /**
+    * Define the type for \c mAddrToSensorIdMap. We use an actual map here
+    * rather than, say, a vector because the range of FBB addresses is not
+    * necessarily [0,n] for n birds. Indeed, a case has been encountered where
+    * four birds have addresses 2, 3, 4, and 5. In that case, the size of the
+    * container would be 5 (the extra is to account for the ERT), but we would
+    * be trying to access (zero-based) index 5 as the largest rahter than
+    * index 4.
+    */
+#if VPR_HAVE_HASH_MAP
+#  if defined(_MSC_VER)
+   typedef stdext::hash_map<int, int> addr_sensor_map_t;
+#  else
+   typedef std::hash_map<int, int> addr_sensor_map_t;
+#  endif
+#else
+   typedef std::map<int, int> addr_sensor_map_t;
+#endif
+
+   /**
+    * Mapping of FBB address (which can be anything greater than or equal to
+    * zero) to a zero-based, sequential range of integer identifiers.
+    */
+   addr_sensor_map_t mAddrToSensorIdMap;
    std::vector<gmtl::Matrix44f> mSampleData;
 
    /** Expected units of position data.  Used for debugging. */
