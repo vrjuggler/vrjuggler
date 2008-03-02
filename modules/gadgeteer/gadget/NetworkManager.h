@@ -88,12 +88,12 @@ public:
     * Optimize network traffic by gathering write calls.
     * uncorkNetwork() must be called once write calls are finished.
     */
-   inline void corkNetwork();
+   void corkNetwork();
 
    /**
     * Flush pending writes to the network.
     */
-   inline void uncorkNetwork();
+   void uncorkNetwork();
 
 private:
    size_t setAllUpdated( const bool updated );
