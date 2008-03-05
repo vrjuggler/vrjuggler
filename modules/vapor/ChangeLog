@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+[2.0.1 released - 3.5.2008]====================================================
 2007-09-17 patrick  Added Linux-specific implementations of
                     vpr::ThreadPosix::setRunOn() and
                     vpr::ThreadPosix::getRunOn().
