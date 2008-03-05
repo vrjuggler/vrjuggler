@@ -36,7 +36,8 @@
 namespace vrj
 {
 
-/**
+/** \class CpuAffinityFromEnv CpuAffinityFromEnv.h vrj/Draw/CpuAffinityFromEnv.h
+ *
  * A CPU affinity functor intended for use with multi-threaded Draw Managers
  * that accept a strategy for determining the affinity for render threads.
  * This implementation examines an environment variable (the name of which is
