@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.2.1 released - 3.5.2008]====================================================
 Nov-18-2007 patrick     Cocoa OpenGL windows update their input area size
                         correctly.
 Sep-19-2007 patrick     Added draw thread CPU affinity capabilities through the
