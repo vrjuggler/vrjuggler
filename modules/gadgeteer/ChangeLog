@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.2.1 released - 3.5.2008]====================================================
+Feb-20-2008 patrick     Fixed a critical bug in the MotionStar driver.
 Sep-07-2007 patrick     Set GADGET_BASE_DIR automatically on all platforms. Use
                         the new environment variable GADGET_DATA_DIR as a way
                         to look up files in GADGET_BASE_DIR/share/gadgeteer.

@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.2.1 released - 3.5.2008]====================================================
 Sep-07-2007 patrick     Set SNX_BASE_DIR automatically on all platforms. Use
                         the new environment variable SNX_DATA_DIR as a way to
                         look up files in SNX_BASE_DIR/share/sonix.
