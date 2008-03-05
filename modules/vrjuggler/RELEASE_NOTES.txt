@@ -10,6 +10,22 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.2.1
+Released: March 5, 2008
+
+    This is a bug fix release relative to VR Juggler 2.2.0. It is binary
+    compatible with VR Juggler 2.2.0, and most users should not need to
+    recompile existing applications to take advantage of the improvements
+    in this release. The one exception is applications derived from
+    vrj::OsgApp. These must be recompiled in order to take advantage of the
+    bug fixes in that class.
+
+    The most important new feature in this release is the elimination of
+    the need to set VJ_BASE_DIR and related environment variables to execute
+    VR Juggler applications on any platform. VR Juggler 2.2.0 introduced
+    this capability on Windows, and this release broadens that to all other
+    platforms.
+
  Version: 2.2.0
 Released: August 14, 2007
 
