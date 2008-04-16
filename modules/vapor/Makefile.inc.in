@@ -372,6 +372,9 @@ install-flagpoll:
           $(topdir)/boost.fpc						\
           $(libdir)$(LIBBITSUF)/flagpoll/boost-$(BOOST_VERSION).$(ISA).fpc
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/boost_system.fpc					\
+          $(libdir)$(LIBBITSUF)/flagpoll/boost_system-$(BOOST_VERSION).$(ISA).fpc
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/boost_filesystem.fpc				\
           $(libdir)$(LIBBITSUF)/flagpoll/boost_filesystem-$(BOOST_VERSION).$(ISA).fpc
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\

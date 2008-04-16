@@ -132,6 +132,15 @@ fi
 # Define the binary format.
 DPP_ABI_SETUP
 
+AC_ARG_WITH([boost-system-lib],
+            [  --with-boost-system-lib=<LIB NAME>
+                          The name of the Boost.System
+                          (1.35 and newer) library
+                          suitable for the -l compiler
+                          option                          [default=Auto-detect]],
+            [given_boost_system_libname="$withval"],
+            [given_boost_system_libname=''])
+
 AC_ARG_WITH([boost-fs-lib],
             [  --with-boost-fs-lib=<LIB NAME>
                           The name of the Boost.Filesystem
@@ -674,6 +683,10 @@ fi
 VJ_GET_BOOST_LIB_SUFFIX_LIST([$dpp_boost_major], [$dpp_boost_minor],
                              [$BOOST_LIB_VERSION], [boost_suffixes])
 
+if test "x$given_boost_system_libname" != "x" ; then
+   boost_system_name="$given_boost_system_libname"
+fi
+
 if test "x$given_boost_fs_libname" != "x" ; then
    boost_fs_name="$given_boost_fs_libname"
 fi
@@ -700,7 +713,7 @@ fi
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-testBoostFilesystem ( )
+testBoostSystem ( )
 {
    libname="$1"
    orig_LIBS="$2"
@@ -708,6 +721,56 @@ testBoostFilesystem ( )
    # NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
    # are used together by AC_TRY_LINK().
    LIBS="-l$libname $orig_LIBS"
+
+   AC_MSG_CHECKING([for boost::system::error_code::clear() in $libname in $cur_boost_libdir])
+   AC_TRY_LINK([#include <boost/system/error_code.hpp>],
+               [boost::system::error_code ec; ec.clear();],
+               [vpr_have_boost_system='yes'], [vpr_have_boost_system='no'])
+   rm -rf ./ii_files
+   AC_MSG_RESULT([$vpr_have_boost_system])
+
+   LIBS="$orig_LIBS"
+}
+
+for l in $libdirs ; do
+   cur_boost_libdir="$BOOST_ROOT/$l"
+   LDFLAGS="-L$cur_boost_libdir $vprsave_LDFLAGS"
+
+   if test "x$boost_system_name" != "x" ; then
+      testBoostSystem $boost_system_name $vprsave_LIBS
+   else
+      # The extra empty string is to allow for no suffix to be used on the
+      # boost_system library name.
+      for s in $boost_suffixes "" ; do
+         cur_boost_system_name="boost_system$s"
+
+         testBoostSystem $cur_boost_system_name $vprsave_LIBS
+
+         if test "$vpr_have_boost_system" = "yes" ; then
+            boost_system_name="$cur_boost_system_name"
+            break
+         fi
+      done
+   fi
+
+   if test "$vpr_have_boost_system" = "yes" ; then
+      BOOST_LIBDIR="$cur_boost_libdir"
+      break
+   fi
+done
+
+if test "x$vpr_have_boost_system" = "xyes" ; then
+   BOOST_SYSTEM_LINK="-l$boost_system_name"
+fi
+
+testBoostFilesystem ( )
+{
+   libname="$1"
+   orig_LIBS="$2"
+
+   # NOTE: We do not need $ABI_FLAGS in $LDFLAGS since $CXXFLAGS and $LDFLAGS
+   # are used together by AC_TRY_LINK().
+   LIBS="-l$libname $BOOST_SYSTEM_LINK $orig_LIBS"
 
    AC_MSG_CHECKING([for boost::filesystem::exists() in $libname in $cur_boost_libdir])
    AC_TRY_LINK([#include <boost/filesystem/operations.hpp>],
@@ -966,12 +1029,8 @@ fi
 # alternative to using $srcdir.
 UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
-# Put together the basic information needed to compile VPR applicsignalsions.
-if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_signals_name.lib $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
-else
-    APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_signals_name -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
-fi
+# Put together the basic information needed to compile VPR applications.
+APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS $BOOST_SIGNALS_LINK $BOOST_FS_LINK $BOOST_SYSTEM_LINK $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 
 vpr_lib_name="vpr$LIBRARY_VERSION"
 vpr_prof_lib_name="vpr_p$LIBRARY_VERSION"
@@ -1132,10 +1191,9 @@ AC_SUBST(ABI_LIST)
 
 AC_SUBST(BOOST_VERSION_DOT)
 AC_SUBST(BOOST_LIBDIR)
+AC_SUBST(BOOST_SYSTEM_LINK)
 AC_SUBST(BOOST_FS_LINK)
-AC_SUBST(boost_fs_name)
 AC_SUBST(BOOST_SIGNALS_LINK)
-AC_SUBST(boost_signals_name)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
@@ -1157,6 +1215,7 @@ VJ_MTREE_LIB_GEN(VPR, mtree, $PLATFORM, $ISA)
 
 AC_CONFIG_FILES([
    boost.fpc
+   boost_system.fpc
    boost_filesystem.fpc
    boost_signals.fpc
    nspr.fpc
