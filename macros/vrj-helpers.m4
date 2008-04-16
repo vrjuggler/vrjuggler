@@ -393,7 +393,12 @@ AC_DEFUN([VJ_GET_BOOST_TOOLSET],
    # name as part of the library file name.
    if test "x$PLATFORM" = "xDarwin" ; then
       $3=''
-      $4=''
+
+      if test $vj_boost_major -eq 1 -a $vj_boost_minor -ge 34 ; then
+         $4='-mt'
+      else
+         $4=''
+      fi
    else
       # We can only use multi-threading versions of Boost libraries if we are
       # not using SPROC threads.  Boost does not support SPROC.
