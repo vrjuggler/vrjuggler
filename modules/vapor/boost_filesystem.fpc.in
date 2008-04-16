@@ -8,7 +8,7 @@ Description: The Boost.Filesystem Library provides portable facilities to query 
 URL: http://www.boost.org/libs/filesystem/doc/index.htm
 Version: @BOOST_VERSION_DOT@
 Provides: Boost.Filesystem boost.filesystem
-Requires: boost = @BOOST_VERSION_DOT@
+Requires: boost = @BOOST_VERSION_DOT@ boost.system = @BOOST_VERSION_DOT@
 Arch: @ISA@
 Cflags: @BOOST_INCLUDES@
 Libs: ${boost_ldflags}
