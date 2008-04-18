@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="full_position_transform_filter" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Full Position Transform Filter">
+      <abstract>false</abstract>
+      <help>Configure the full positional transformation matrix.  Applied as: Sensor_base&nbsp;=&nbsp;pre&nbsp;*&nbsp;Sensor&nbsp;*&nbsp;post. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s05.html"&gt;more on position transform filters&lt;/&gt;)</help>
+      <parent/>
+      <category>/Gadgeteer</category>
+      <property valuetype="float" variable="false" name="pre_xform">
+         <help>The pre-transformation 4x4 matrix in row-major form. The default value describes an identity matrix. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s05.html"&gt;more ...&lt;/&gt;)</help>
+         <value label="Pre-Transform (0,0)" defaultvalue="1.0"/>
+         <value label="Pre-Transform (0,1)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (0,2)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (0,3)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (1,0)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (1,1)" defaultvalue="1.0"/>
+         <value label="Pre-Transform (1,2)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (1,3)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (2,0)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (2,1)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (2,2)" defaultvalue="1.0"/>
+         <value label="Pre-Transform (2,3)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (3,0)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (3,1)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (3,2)" defaultvalue="0.0"/>
+         <value label="Pre-Transform (3,3)" defaultvalue="1.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="post_xform">
+         <help>The post-transformation 4x4 matrix in row-major form. The default value describes an identity matrix. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s05.html"&gt;more ...&lt;/&gt;)</help>
+         <value label="Post-Transform (0,0)" defaultvalue="1.0"/>
+         <value label="Post-Transform (0,1)" defaultvalue="0.0"/>
+         <value label="Post-Transform (0,2)" defaultvalue="0.0"/>
+         <value label="Post-Transform (0,3)" defaultvalue="0.0"/>
+         <value label="Post-Transform (1,0)" defaultvalue="0.0"/>
+         <value label="Post-Transform (1,1)" defaultvalue="1.0"/>
+         <value label="Post-Transform (1,2)" defaultvalue="0.0"/>
+         <value label="Post-Transform (1,3)" defaultvalue="0.0"/>
+         <value label="Post-Transform (2,0)" defaultvalue="0.0"/>
+         <value label="Post-Transform (2,1)" defaultvalue="0.0"/>
+         <value label="Post-Transform (2,2)" defaultvalue="1.0"/>
+         <value label="Post-Transform (2,3)" defaultvalue="0.0"/>
+         <value label="Post-Transform (3,0)" defaultvalue="0.0"/>
+         <value label="Post-Transform (3,1)" defaultvalue="0.0"/>
+         <value label="Post-Transform (3,2)" defaultvalue="0.0"/>
+         <value label="Post-Transform (3,3)" defaultvalue="1.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
