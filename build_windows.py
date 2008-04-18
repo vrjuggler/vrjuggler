@@ -708,7 +708,8 @@ def updateVersions(vcDir, options):
    vpr_module = JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
                               vpr_subst_vars,
                               [(r'vpr\vprParam.h',), ('vpr.fpc',),
-                               ('boost.fpc',), ('boost_filesystem.fpc',),
+                               ('boost.fpc',), ('boost_system.fpc',),
+                               ('boost_filesystem.fpc',),
                                ('boost_signals.fpc',),
                                (r'vpr\version.rc',
                                 os.path.join(gJugglerDir, 'version.rc.in'))])
