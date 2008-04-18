@@ -254,6 +254,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Filter\Position\FullPositionXformFilter.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\gadgetmain.cpp">
 			</File>
 			<File
@@ -523,6 +526,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Filter\Position\FullPositionXformFilter.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\gadgetConfig.h">
