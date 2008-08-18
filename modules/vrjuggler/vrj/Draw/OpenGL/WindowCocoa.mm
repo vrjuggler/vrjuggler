@@ -39,7 +39,7 @@
 #import <AppKit/NSOpenGLView.h>
 #import <AppKit/NSScreen.h>
 #import <AppKit/NSApplication.h>
-#import <OpenGL/GL.h>
+#import <OpenGL/gl.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
