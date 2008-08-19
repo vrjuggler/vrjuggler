@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2008-08-19 patrick  Added vpr::LibraryWin32 for use instead of vpr::LibraryNSPR
+                    on Windows.
+                    NEW VERSION: 2.1.14
 2008-02-23 patrick  Removed vpr::LibraryDYLD, which means that Mac OS X 10.3 is
                     no longer supported.
                     NEW VERSION: 2.1.13

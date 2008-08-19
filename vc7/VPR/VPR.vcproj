@@ -278,7 +278,7 @@
 				RelativePath="..\..\modules\vapor\vpr\DynLoad\LibraryLoader.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\DynLoad\LibraryNSPR.cpp">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\DynLoad\LibraryWin32.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\detail\LifetimeTracker.cpp">
@@ -558,7 +558,7 @@
 				RelativePath="..\..\modules\vapor\vpr\DynLoad\LibraryLoader.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\DynLoad\LibraryNSPR.h">
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\DynLoad\LibraryWin32.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\detail\LifetimeTracker.h">

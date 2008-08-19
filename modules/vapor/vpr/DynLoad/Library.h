@@ -49,7 +49,15 @@
 
 #include <boost/shared_ptr.hpp>
 
-#ifdef VPR_USE_NSPR
+#if defined(VPR_OS_Windows)
+#include <vpr/md/WIN32/DynLoad/LibraryWin32.h>
+
+namespace vpr
+{
+   typedef LibraryWin32 Library;
+}
+
+#elif defined(VPR_USE_NSPR)
 #include <vpr/md/NSPR/DynLoad/LibraryNSPR.h>
 
 namespace vpr
