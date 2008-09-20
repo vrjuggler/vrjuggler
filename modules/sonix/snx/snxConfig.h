@@ -69,8 +69,11 @@
 #endif
 
 #if defined(WIN32) || defined(WIN64)
+
+#ifndef WIN32_LEAN_AND_MEAN
 /* Exclude rarely-used stuff from Windows headers */
-#define WIN32_LEAN_AND_MEAN
+#   define WIN32_LEAN_AND_MEAN
+#endif
 
 /* identifier truncated to 255 characters in the debug information */
 #pragma warning(disable:4786)
