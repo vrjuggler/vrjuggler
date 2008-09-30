@@ -389,31 +389,32 @@ void WindowCocoa::configWindow(vrj::DisplayPtr displayWindow)
 void WindowCocoa::swapBuffers()
 {
    VPR_PROFILE_GUARD_HISTORY("WindowCocoa::swapBuffers", 10);
-   acquireRenderLock();
    vrj::opengl::Window::swapBuffers();
 
-//   [mGlView lockFocus];
+   //Swapbuffers is guarded by the render lock in vrj::opengl::Pipe::controlLoop
    [[mGlView openGLContext] flushBuffer];
-//   [mGlView unlockFocus];
-   releaseRenderLock();
 }
 
 void WindowCocoa::acquireRenderLock()
 {
-   [mRenderLock lock];
+   //TODO : Figure out what to do when we cannot lock focus on a context
+   //       See docs on NSView on the apple developer site for details
+   BOOL canDraw = [mGlView lockFocusIfCanDraw];
 }
 
 void WindowCocoa::releaseRenderLock()
 {
-   [mRenderLock unlock];
+    [mGlView unlockFocus];
 }
 
 void WindowCocoa::updateBounds(const float x, const float y, const float width,
                                const float height)
 {
+   acquireRenderLock();
    resize(width, height);                       // Input area update
    updateOriginSize(x, y, width, height);       // Graphics window update
    setDirtyViewport(true);                      // OpenGL viewport state
+   releaseRenderLock();
 }
 
 void WindowCocoa::setWindowOpen(const bool isOpen)

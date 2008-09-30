@@ -29,6 +29,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <vpr/Sync/Mutex.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 
 // Allow this header to be included by C++ and Objective-C++ code.
@@ -56,7 +57,7 @@ namespace gadget
  *
  * @see InputViewCocoa
  */
-class InputAreaCocoa : public gadget::InputArea
+class GADGET_CLASS_API InputAreaCocoa : public gadget::InputArea
 {
 public:
    InputAreaCocoa();

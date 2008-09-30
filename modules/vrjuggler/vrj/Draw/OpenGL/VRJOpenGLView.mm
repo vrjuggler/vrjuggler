@@ -113,6 +113,11 @@
          [[self openGLContext] setFullScreen];
       }
 
+     [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(surfaceNeedsUpdate:)
+                                           name:NSWindowDidChangeScreenNotification
+                                           object:self];
+
       return self;
    }
 
@@ -172,6 +177,31 @@
       return YES;
    }
 
+   - (void) surfaceNeedsUpdate:(NSNotification*)notification
+   {
+     /*std::cout << [[notification name] UTF8String ] << std::endl;
+     std::cout << [[self openGLContext] currentVirtualScreen ] << std::endl;
+     if ( [self lockFocusIfCanDraw] )//: [self openGLContext]] )
+     {
+        [self unlockFocus];
+     }
+     else*/
+     {
+       //[super update];
+       //mVrjWindow->acquireRenderLock();
+       mVrjWindow->setDirtyContext(true);
+       mVrjWindow->setDirtyViewport(true);
+       //mVrjWindow->releaseRenderLock();
+       [self resetCursorRects];
+     }
+   }
+   
+   - (void)update
+   {
+     [super update];
+     //This function calls glViewPort
+     ;//Do nothing because we may not have a context
+   }
    /**
     * Removes the tracking rectangle for this view (if it has one) before it
     * gets assigned to a new window.
@@ -213,6 +243,7 @@
       // its state.
       else
       {
+         mVrjWindow->acquireRenderLock();
          [NSOpenGLContext clearCurrentContext];
          [[self openGLContext] clearDrawable];
 
@@ -230,6 +261,9 @@
                   << vprDEBUG_FLUSH;
             }
          }
+         mVrjWindow->setDirtyContext(true);
+         mVrjWindow->setDirtyViewport(true);
+         mVrjWindow->releaseRenderLock();
       }
    }
 
@@ -309,7 +343,14 @@
     */
    -(void) mouseDragged:(NSEvent*) theEvent
    {
-      mVrjWindow->addMouseMoveEvent(theEvent);
+      if ( mHandleInput )
+      {
+         mVrjWindow->addMouseMoveEvent(theEvent);
+      }
+      else
+      {
+         [super mouseDragged:theEvent];
+      }
    }
 
    /**
@@ -491,7 +532,7 @@
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "VRJOpenGLView resetCursorRects" << std::endl << vprDEBUG_FLUSH;
-//      mVrjWindow->acquireRenderLock();
+      mVrjWindow->acquireRenderLock();
       [super resetCursorRects];
 
       // Clear the current tracking rectnagle and define a new one based on
@@ -501,7 +542,7 @@
       NSRect bounds = [self bounds];
       mVrjWindow->updateBounds(bounds.origin.x, bounds.origin.y,
                                bounds.size.width, bounds.size.height);
-//      mVrjWindow->releaseRenderLock();
+      mVrjWindow->releaseRenderLock();
    }
 
    /** @name Private Methods */

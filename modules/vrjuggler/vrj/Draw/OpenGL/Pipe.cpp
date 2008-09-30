@@ -48,6 +48,10 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Draw/OpenGL/SimInterface.h>
 
+#ifdef VPR_OS_Darwin
+#  include <vrj/Draw/OpenGL/WindowCocoa.h>
+#endif
+
 #include <vrj/Draw/OpenGL/Pipe.h>
 
 
@@ -239,10 +243,21 @@ void Pipe::controlLoop(const int cpuAffinity)
             // --- pipe PRE-draw function ---- //
             the_app->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
 
+#ifdef VPR_OS_Darwin
+        boost::shared_ptr<vrj::opengl::WindowCocoa> cocoa_window;
+#endif
             // Render the windows
             for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
             {
+
+#ifdef VPR_OS_Darwin
+               cocoa_window = boost::static_pointer_cast<vrj::opengl::WindowCocoa>(mOpenWins[winId]);
+               cocoa_window->acquireRenderLock();
+#endif
                renderWindow(mOpenWins[winId]);
+#ifdef VPR_OS_Darwin
+               cocoa_window->releaseRenderLock();
+#endif
             }
             mRenderCompleteSema.release();
          }
@@ -251,10 +266,20 @@ void Pipe::controlLoop(const int cpuAffinity)
          {
             mSwapTriggerSema.acquire();
 
-            // Swap all the windows
+#ifdef VPR_OS_Darwin
+         boost::shared_ptr<vrj::opengl::WindowCocoa> cocoa_window;
+#endif
+         // Swap all the windows
             for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
             {
+#ifdef VPR_OS_Darwin
+               cocoa_window = boost::static_pointer_cast<vrj::opengl::WindowCocoa>(mOpenWins[winId]);
+               cocoa_window->acquireRenderLock();
+#endif
                swapWindowBuffers(mOpenWins[winId]);
+#ifdef VPR_OS_Darwin
+               cocoa_window->releaseRenderLock();
+#endif
             }
 
             mSwapCompleteSema.release();
