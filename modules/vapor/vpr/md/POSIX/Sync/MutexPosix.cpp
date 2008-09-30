@@ -53,7 +53,7 @@ MutexPosix::MutexPosix()
 #ifndef VPR_DEBUG
    result = pthread_mutex_init(&mMutex, NULL);
 #else
-#ifdef VPR_OS_Linux
+#ifdef VPR_OS_Linux || VPR_OS_Darwin
    // If Linux and debug, then use error checking mutex
    pthread_mutexattr_t mutex_attr;
    pthread_mutexattr_init(&mutex_attr);

@@ -113,6 +113,20 @@ public:
             "Tried to lock mutex twice in the same thread", VPR_LOCATION
          );
       }
+      else if ( EINVAL == result )
+      {
+         throw vpr::LockException(
+            "Tried to lock a mutex that does not refer to a initialized mutex object.",
+            VPR_LOCATION
+         );
+      }
+      else if ( EAGAIN == result )
+      {
+         throw vpr::LockException(
+            "Tried to lock a mutex whose maximum number of recursive locks has been exceeded.",
+            VPR_LOCATION
+         );
+      }
 
       assert(result == 0);
       boost::ignore_unused_variable_warning(result);
