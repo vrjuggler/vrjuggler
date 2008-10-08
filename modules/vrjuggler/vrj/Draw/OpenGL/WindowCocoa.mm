@@ -208,6 +208,7 @@ bool WindowCocoa::open()
 
       [mCocoaWindow setTitle:mWindowName];
       [mCocoaWindow setPreservesContentDuringLiveResize:NO];
+      [mCocoaWindow setAutodisplay:NO];
 
       const BOOL handle_input = NULL != mKeyboardMouseDevice;
       mGlView = [[VRJOpenGLView alloc] initWithFrame:content_rect
@@ -404,7 +405,10 @@ void WindowCocoa::acquireRenderLock()
 
 void WindowCocoa::releaseRenderLock()
 {
-    [mGlView unlockFocus];
+    if ( [mGlView canDraw] )
+    {
+       [mGlView unlockFocus];
+    }
 }
 
 void WindowCocoa::updateBounds(const float x, const float y, const float width,
