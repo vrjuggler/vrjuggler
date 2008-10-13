@@ -543,7 +543,10 @@ if test "x$SUBSYSTEM" != "xNSPR" ; then
 
        # TCP_NOPUSH is defined.
        if test "x$ac_cv_has_tcp_nopush" = "xyes" ; then
-           AC_DEFINE(HAVE_CORKABLE_TCP)
+           # Darwin has a buggy nopush implementation
+           if test "x$PLATFORM" != "xDarwin" ; then
+               AC_DEFINE(HAVE_CORKABLE_TCP)
+           fi
        fi
     # TCP_CORK is defined.
     else
