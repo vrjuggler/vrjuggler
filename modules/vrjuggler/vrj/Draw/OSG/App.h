@@ -367,8 +367,12 @@ protected:
          mKernel->getUsers()[0]->getHeadPosProxy()->getTimeStamp().secd()
       );
       mFrameStamp->setReferenceTime(head_time);
-#if OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_MAJOR_VERSION >= 2
+
       // This is available in OSG 1.9 and newer.
+      // If OPENSCENEGRAPH_MAJOR_VERSION is defined, we know the version is
+      // greater than or equal to 2.0.
+#if defined(OPENSCENEGRAPH_MAJOR_VERSION) || \
+    OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_MAJOR_VERSION >= 2
       mFrameStamp->setSimulationTime(head_time);
 #endif
       
