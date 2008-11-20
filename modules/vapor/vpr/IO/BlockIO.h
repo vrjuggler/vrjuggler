@@ -38,6 +38,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstring>
 #include <vector>
 #include <string>
 
@@ -212,7 +213,7 @@ public:
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
       buffer.resize(length);
-      memset(&buffer[0], '\0', buffer.size());
+      std::memset(&buffer[0], '\0', buffer.size());
       return this->read(&buffer[0], buffer.size(), timeout);
    }
 
@@ -249,7 +250,7 @@ public:
 
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
-      memset(&buffer[0], '\0', buffer.size());
+      std::memset(&buffer[0], '\0', buffer.size());
 
       const vpr::Uint32 bytes = this->read(&buffer[0], buffer.size(), timeout);
 
@@ -318,7 +319,7 @@ public:
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
       buffer.resize(length);
-      memset(&buffer[0], '\0', buffer.size());
+      std::memset(&buffer[0], '\0', buffer.size());
       const vpr::Uint32 bytes = this->readn(&buffer[0], buffer.size(),
                                             timeout);
 
@@ -358,7 +359,7 @@ public:
       // buffer from the device.
 
       buffer.resize(length);
-      memset(&buffer[0], '\0', buffer.size());
+      std::memset(&buffer[0], '\0', buffer.size());
       const vpr::Uint32 bytes = this->readn(&buffer[0], buffer.size(),
                                             timeout);
 
