@@ -49,7 +49,7 @@ AC_DEFUN([VRJUGGLER_PATH],
     dnl not, take a guess.
     if test "x$vrj_meta_file" != "x" ; then
         vrj_meta_dir=`dirname $vrj_meta_file`
-        vrj_flagpoll_args="--extra-paths=$vrj_meta_dir vrj --from-file=$vrj_meta_file"
+        vrj_flagpoll_args="--extra-paths=$vrj_meta_dir vrjuggler --from-file=$vrj_meta_file"
     elif test -f "$instlinks/share/flagpoll/vrjuggler.fpc" ; then
         vrj_meta_dir="$instlinks/share/flagpoll"
         vrj_flagpoll_args="--extra-paths=$vrj_meta_dir vrjuggler --from-file=$vrj_meta_dir/vrjuggler.fpc"
