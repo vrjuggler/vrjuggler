@@ -43,7 +43,7 @@ namespace gadget
 
 Analog::Analog()
    : mMin(0.0f)
-   , mMax(0.0f)
+   , mMax(1.0f)
 {
    /* Do nothing. */ ;
 }
