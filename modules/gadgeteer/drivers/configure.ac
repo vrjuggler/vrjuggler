@@ -703,6 +703,7 @@ AC_CONFIG_FILES([
    3Dconnexion/SpaceBall/Makefile
    5DT/Makefile
    5DT/DataGlove/Makefile
+   5DT/DataGloveUltraWireless/Makefile
    ART/Makefile
    ART/DTrack/Makefile
    Ascension/Makefile

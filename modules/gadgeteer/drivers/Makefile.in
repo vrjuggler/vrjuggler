@@ -130,6 +130,7 @@ BUILD_PROF_CXX=	N
 # Subdirectories used for recursion through the source tree.
 SUBDIR=	3Dconnexion/SpaceBall		\
 	5DT/DataGlove			\
+	5DT/DataGloveUltraWireless		\
 	ART/DTrack 			\
 	Ascension/Flock 		\
 	Ascension/MotionStar		\
