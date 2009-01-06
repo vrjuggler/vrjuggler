@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="data_glove_ultra_wireless" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="5DT Data Glove Ultra Wireless">
+      <abstract>false</abstract>
+      <help>Configuration for a 5DT Data Glove Ultra Wireless device. This device makes use of 14 analog data sources for each port: Port A Glove (0-13) and Port B Glove (14-28): thumb mcp, thumb pip, thumb-index abduction, index mcp, index pip, index-middle abduction, middle mcp, middle pip, middle-ring abduction, ring mcp, ring pip, ring-pinky abduction, pinky mcp, pinky pip. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more on 5DT DataGlove&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <parent>analog_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>The serial port this device is connected to. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>The speed of the serial port. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Baud" defaultvalue="38400"/>
+         <enumeration editable="false">
+            <enum label="1200" value="1200"/>
+            <enum label="1800" value="1800"/>
+            <enum label="2400" value="2400"/>
+            <enum label="4800" value="4800"/>
+            <enum label="9600" value="9600"/>
+            <enum label="19200" value="19200"/>
+            <enum label="38400" value="38400"/>
+            <enum label="57600" value="57600"/>
+            <enum label="115200" value="115200"/>
+            <enum label="230400" value="230400"/>
+         </enumeration>
+      </property>
+      <property valuetype="float" variable="false" name="min">
+         <help>Ignored.</help>
+         <value label="Range Minimum (unused)" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>Ignored.</help>
+         <value label="Range Maximum (unused)" defaultvalue="1.0"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="port_a_enabled">
+         <help>Port A of the glove pack is connected to a glove.</help>
+         <value label="Port A Enabled" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="port_b_enabled">
+         <help>Port B of the glove pack is connected to a glove.</help>
+         <value label="Port B Enabled" defaultvalue="true"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
