@@ -25,6 +25,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/Devices/Sim/SimAnalog.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gmtl/Math.h>
 
 namespace gadget

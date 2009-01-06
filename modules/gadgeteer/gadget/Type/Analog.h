@@ -28,15 +28,15 @@
 #define _GADGET_ANALOG_H_
 
 #include <gadget/gadgetConfig.h>
+
 #include <vector>
 #include <boost/noncopyable.hpp>
 
 #include <vpr/IO/SerializableObject.h>
-#include <jccl/Config/ConfigElement.h>
-
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/AnalogData.h>
-#include <gadget/Type/AnalogPtr.h>
 #include <gadget/Type/SampleBuffer.h>
+#include <gadget/Type/AnalogPtr.h>
 
 
 namespace gadget

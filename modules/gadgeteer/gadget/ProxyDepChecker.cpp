@@ -34,6 +34,7 @@
 //#include <gadget/Type/EventWindowProxy.h>
 #include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/ProxyDepChecker.h>
+#include <jccl/Config/ConfigElement.h>
 
 namespace gadget
 {

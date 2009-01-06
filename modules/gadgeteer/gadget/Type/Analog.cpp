@@ -34,6 +34,8 @@
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Debug.h>
 
+#include <jccl/Config/ConfigElement.h>
+
 #include <gadget/Util/DeviceSerializationTokens.h>
 #include <gadget/Type/Analog.h>
 
