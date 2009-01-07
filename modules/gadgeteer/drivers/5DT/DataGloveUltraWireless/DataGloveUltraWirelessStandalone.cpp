@@ -286,11 +286,14 @@ bool DataGloveUltraWirelessStandalone::updateData()
    {
       readGloveData();
 
-      if( mPortAEnabled && ( mDataBuffer[3] == 2 || mDataBuffer[3] == 3 ) )
+      if( mDataBuffer[3] == 2 || mDataBuffer[3] == 3 )
       {
-         //std::cout << "A" << std::endl;
-         found_glove_a = true;
-         processGloveData(0);
+         if( mPortAEnabled )
+         {
+            //std::cout << "A" << std::endl;
+            found_glove_a = true;
+            processGloveData(0);
+         }
       }
       else
       {
