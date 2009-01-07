@@ -282,7 +282,7 @@ bool DataGloveUltraWirelessStandalone::updateData()
    }
    #endif
 
-   while( ! (found_glove_a && found_glove_b) )
+   while( ! found_glove_a  &&  ! found_glove_b )
    {
       readGloveData();
 
