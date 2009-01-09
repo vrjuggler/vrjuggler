@@ -217,22 +217,34 @@ void DataGloveUltraWirelessStandalone::processGloveData(unsigned int gloveNum)
          {
             if( reading > mGloveAMax[i] )
             {
-               mGloveAMax[i] = reading;
+               unsigned int new_max = reading - mGloveAMax[i];
+               new_max = (new_max * 0.6f) + mGloveAMax[i];
+               mGloveAMax[i] = new_max;
+               reading = new_max;
             }
             if( reading < mGloveAMin[i] )
             {
-               mGloveAMin[i] = reading;
+               unsigned int new_min = mGloveAMin[i] - reading;
+               new_min = mGloveAMin[i] - (new_min * 0.6f);
+               mGloveAMin[i] = new_min;
+               reading = new_min;
             }
          }
          else if( Port_B == gloveNum )
          {
             if( reading > mGloveBMax[i] )
             {
-               mGloveBMax[i] = reading;
+               unsigned int new_max = reading - mGloveBMax[i];
+               new_max = (new_max * 0.6f) + mGloveBMax[i];
+               mGloveBMax[i] = new_max;
+               reading = new_max;
             }
             if( reading < mGloveBMin[i] )
             {
-               mGloveBMin[i] = reading;
+               unsigned int new_min = mGloveBMin[i] - reading;
+               new_min = mGloveBMin[i] - (new_min * 0.6f);
+               mGloveBMin[i] = new_min;
+               reading = new_min;
             }
          }
       }
@@ -282,7 +294,7 @@ bool DataGloveUltraWirelessStandalone::updateData()
    }
    #endif
 
-   while( ! found_glove_a  &&  ! found_glove_b )
+   while( ! found_glove_a  ||  ! found_glove_b )
    {
       readGloveData();
 
