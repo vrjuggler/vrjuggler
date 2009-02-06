@@ -95,14 +95,15 @@ public:
    void acquire()
    {
       mCondVar->acquire();
-      PR_AtomicDecrement(&mValue);
 
-      // Block until mValue is greater than or equal to 0. (mValue is
-      // incremented through calls to release().)
-      while ( mValue < 0 )
+      // Block until mValue is greater than 0. (mValue is incremented through
+      // calls to release().)
+      while ( mValue <= 0 )
       {
          mCondVar->wait();
       }
+
+      PR_AtomicDecrement(&mValue);
       mCondVar->release();
    }
 
