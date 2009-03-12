@@ -372,7 +372,7 @@ protected:
       // If OPENSCENEGRAPH_MAJOR_VERSION is defined, we know the version is
       // greater than or equal to 2.0.
 #if defined(OPENSCENEGRAPH_MAJOR_VERSION) || \
-    OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_MAJOR_VERSION >= 2
+    OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_VERSION_MAJOR >= 2
       mFrameStamp->setSimulationTime(head_time);
 #endif
       
