@@ -797,7 +797,7 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
 
    gadget::EventPtr mouse_event(
       new gadget::MouseEvent(type, button, GET_X_LPARAM(msg.lParam),
-                             GET_Y_LPARAM(msg.lParam), msg.pt.x,
+                             mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
                              GetSystemMetrics(SM_CYSCREEN) - msg.pt.y,
                              state, msg.time)
    );
