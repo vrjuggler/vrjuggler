@@ -826,74 +826,77 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
    }
 
    // Update the mouse cursor locked state based on keyboard events.
-   switch ( event->type() )
+   if ( mAllowMouseLocking )
    {
-      case gadget::KeyPressEvent:
-         if ( key == gadget::KEY_ESC )
-         {
-            if ( mLockState != Unlocked )
+      switch ( event->type() )
+      {
+         case gadget::KeyPressEvent:
+            if ( key == gadget::KEY_ESC )
             {
-               mLockState = Unlocked;
+               if ( mLockState != Unlocked )
+               {
+                  mLockState = Unlocked;
+               }
             }
-         }
-         else if ( mLockState == Unlocked )
-         {
-            if ( key != mLockToggleKey && isModifier(key) )
+            else if ( mLockState == Unlocked )
             {
-               mLockState     = Lock_KeyDown;
-               mLockStoredKey = key;
+               if ( key != mLockToggleKey && isModifier(key) )
+               {
+                  mLockState     = Lock_KeyDown;
+                  mLockStoredKey = key;
 
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-                  << "[gadget::InputAreaCocoa] STATE switch: "
-                  << "Unlocked --> Lock_KeyDown\n" << vprDEBUG_FLUSH;
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                     << "[gadget::InputAreaCocoa] STATE switch: "
+                     << "Unlocked --> Lock_KeyDown\n" << vprDEBUG_FLUSH;
 
-               lockMouse();
+                  lockMouse();
+               }
+               else if ( key == mLockToggleKey )
+               {
+                  mLockState = Lock_LockKey;
+
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                     << "[gadget::InputAreaCocoa] STATE switch: "
+                     << "Unlocked --> Lock_LockKey\n" << vprDEBUG_FLUSH;
+
+                  lockMouse();
+               }
             }
-            else if ( key == mLockToggleKey )
+            // Switch the current locking state.
+            else if ( mLockState == Lock_KeyDown && key == mLockToggleKey )
             {
                mLockState = Lock_LockKey;
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "[gadget::InputAreaCocoa] STATE switch: "
+                  << "Lock_KeyDown --> Lock_LockKey\n" << vprDEBUG_FLUSH;
+
+            }
+            else if ( mLockState == Lock_LockKey && key == mLockToggleKey )
+            {
+               mLockState = Unlocked;
 
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
                   << "[gadget::InputAreaCocoa] STATE switch: "
-                  << "Unlocked --> Lock_LockKey\n" << vprDEBUG_FLUSH;
+                  << "Lock_LockKey --> Unlocked\n" << vprDEBUG_FLUSH;
 
-               lockMouse();
+               unlockMouse();
             }
-         }
-         // Switch the current locking state.
-         else if ( mLockState == Lock_KeyDown && key == mLockToggleKey )
-         {
-            mLockState = Lock_LockKey;
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "[gadget::InputAreaCocoa] STATE switch: "
-               << "Lock_KeyDown --> Lock_LockKey\n" << vprDEBUG_FLUSH;
+            break;
+         case gadget::KeyReleaseEvent:
+            if ( mLockState == Lock_KeyDown && key == mLockStoredKey )
+            {
+               mLockState = Unlocked;
 
-         }
-         else if ( mLockState == Lock_LockKey && key == mLockToggleKey )
-         {
-            mLockState = Unlocked;
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "[gadget::InputAreaCocoa] STATE switch: "
+                  << "Lock_KeyDown --> Unlocked\n" << vprDEBUG_FLUSH;
 
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "[gadget::InputAreaCocoa] STATE switch: "
-               << "Lock_LockKey --> Unlocked\n" << vprDEBUG_FLUSH;
-
-            unlockMouse();
-         }
-         break;
-      case gadget::KeyReleaseEvent:
-         if ( mLockState == Lock_KeyDown && key == mLockStoredKey )
-         {
-            mLockState = Unlocked;
-
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "[gadget::InputAreaCocoa] STATE switch: "
-               << "Lock_KeyDown --> Unlocked\n" << vprDEBUG_FLUSH;
-
-            unlockMouse();
-         }
-         break;
-      default:
-         break;
+               unlockMouse();
+            }
+            break;
+         default:
+            break;
+      }
    }
 }
 

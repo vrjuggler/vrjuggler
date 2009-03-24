@@ -28,7 +28,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="5">
+            <display_window name="SimWindow1" version="6">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -83,6 +83,7 @@
                   </simulator_viewport>
                </simulator_viewports>
                <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
@@ -100,7 +101,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="5">
+            <display_window name="SimWindow1" version="6">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -155,6 +156,7 @@
                   </simulator_viewport>
                </simulator_viewports>
                <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
@@ -172,7 +174,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="5">
+            <display_window name="SimWindow1" version="6">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -227,6 +229,7 @@
                   </simulator_viewport>
                </simulator_viewports>
                <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
@@ -244,7 +247,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="5">
+            <display_window name="SimWindow1" version="6">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -299,6 +302,7 @@
                   </simulator_viewport>
                </simulator_viewports>
                <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>

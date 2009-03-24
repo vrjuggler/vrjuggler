@@ -36,13 +36,14 @@
       <keyboard_mouse_device name="Sim Analog Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Sim Analog Input" version="1">
+      <input_window name="Sim Analog Input" version="2">
          <origin>870</origin>
          <origin>100</origin>
          <size>300</size>
          <size>100</size>
          <display_number>0</display_number>
          <keyboard_mouse_device_name>Sim Analog Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>

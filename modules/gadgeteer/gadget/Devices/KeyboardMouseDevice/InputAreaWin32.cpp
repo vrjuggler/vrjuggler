@@ -230,43 +230,46 @@ void InputAreaWin32::updKeys(const MSG& message)
             mKeyboardMouseDevice->mKeys[key] += repeat_count;
             mKeyboardMouseDevice->mRealkeys[key] += 1;
 
-            // Check for Escape from bad state
-            // this provides a sort of failsafe to
-            // get out of the locked state...
-            // @todo this is sort of hard coded, do we want it this way?
-            if ( key == gadget::KEY_ESC )
+            if ( mAllowMouseLocking )
             {
-               if ( mLockState != Unlocked )
+               // Check for Escape from bad state
+               // this provides a sort of failsafe to
+               // get out of the locked state...
+               // @todo this is sort of hard coded, do we want it this way?
+               if ( key == gadget::KEY_ESC )
+               {
+                  if ( mLockState != Unlocked )
+                  {
+                     mLockState = Unlocked;
+                     this->unlockMouse();
+                  }
+               }
+               else if ( mLockState == Unlocked )
+               {
+                  if ( key != mLockToggleKey &&
+                       (gadget::KEY_ALT == key || gadget::KEY_CTRL == key ||
+                        gadget::KEY_SHIFT == key) )
+                  {
+                     mLockState = Lock_KeyDown; // Switch state
+                     mLockStoredKey = key;      // Store the VJ key that is down
+                     this->lockMouse();
+                  }
+                  else if ( key == mLockToggleKey )
+                  {
+                     mLockState = Lock_LockKey;
+                     this->lockMouse();
+                  }
+               }
+               // Just switch the current locking state
+               else if ( mLockState == Lock_KeyDown && key == mLockToggleKey )
+               {
+                  mLockState = Lock_LockKey;
+               }
+               else if ( mLockState == Lock_LockKey && key == mLockToggleKey )
                {
                   mLockState = Unlocked;
                   this->unlockMouse();
                }
-            }
-            else if ( mLockState == Unlocked )
-            {
-               if ( (key != mLockToggleKey) &&
-                    ((gadget::KEY_ALT == key) || (gadget::KEY_CTRL == key) ||
-                     (gadget::KEY_SHIFT == key)) )
-               {
-                  mLockState = Lock_KeyDown;       // Switch state
-                  mLockStoredKey = key;         // Store the VJ key that is down
-                  this->lockMouse();
-               }
-               else if ( key == mLockToggleKey )
-               {
-                  mLockState = Lock_LockKey;
-                  this->lockMouse();
-               }
-            }
-            // Just switch the current locking state
-            else if ( (mLockState == Lock_KeyDown) && (key == mLockToggleKey) )
-            {
-               mLockState = Lock_LockKey;
-            }
-            else if ( (mLockState == Lock_LockKey) && (key == mLockToggleKey) )
-            {
-               mLockState = Unlocked;
-               this->unlockMouse();
             }
          }
          break;
@@ -288,7 +291,8 @@ void InputAreaWin32::updKeys(const MSG& message)
 
          // -- Update lock state -- //
          // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
-         if ( (mLockState == Lock_KeyDown) && (key == mLockStoredKey) )
+         if ( mAllowMouseLocking && mLockState == Lock_KeyDown &&
+              key == mLockStoredKey )
          {
             mLockState = Unlocked;
             this->unlockMouse();

@@ -38,7 +38,8 @@ namespace gadget
 {
 
 InputArea::InputArea()
-   : mLockState(Unlocked)
+   : mAllowMouseLocking(true)
+   , mLockState(Unlocked)
    , mLockStoredKey(-1)
    , mLockToggleKey(-1)
    , mMouseSensitivity(1.0f)
@@ -52,6 +53,7 @@ InputArea::InputArea()
 bool InputArea::config(jccl::ConfigElementPtr e)
 {
    // Get the lock information
+   mAllowMouseLocking = e->getProperty<bool>("allow_mouse_locking");
    mLockToggleKey = e->getProperty<int>("lock_key");
    bool start_locked = e->getProperty<bool>("start_locked");
 

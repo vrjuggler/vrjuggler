@@ -19,7 +19,48 @@
          <help>The number of the display on which the input window will be opened. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more input windows&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
          <value label="Display Number" defaultvalue="0"/>
       </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="2" label="Input Window">
+      <help>Configures a window that accepts keyboard and mouse events as input. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <parent>input_area</parent>
+      <category>/Devices</category>
+      <property valuetype="integer" variable="false" name="origin">
+         <help>Window origin (lower left is 0,0). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <value label="X" defaultvalue="0"/>
+         <value label="Y" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="size">
+         <help>The dimensions (width and height) of the window in pixels. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Width" defaultvalue="100"/>
+         <value label="Height" defaultvalue="100"/>
+      </property>
+      <property valuetype="integer" variable="false" name="display_number">
+         <help>The number of the display on which the input window will be opened. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more input windows&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html#section.display.manager"&gt;more on the Display Manager&lt;/a&gt;)</help>
+         <value label="Display Number" defaultvalue="0"/>
+      </property>
       <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:input_window">
+               <xsl:element namespace="{$jconf}" name="input_window">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="allow_mouse_locking">
+                     <xsl:text>true</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
 </definition>

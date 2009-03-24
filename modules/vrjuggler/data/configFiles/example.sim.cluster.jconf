@@ -77,13 +77,14 @@
       <keyboard_mouse_device name="Head Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Head Input Window" version="1">
+      <input_window name="Head Input Window" version="2">
          <origin>1200</origin>
          <origin>700</origin>
          <size>200</size>
          <size>100</size>
          <display_number>0</display_number>
          <keyboard_mouse_device_name>Head Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
@@ -91,13 +92,14 @@
       <keyboard_mouse_device name="Sim View Cameras Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Sim View Cameras Control" version="1">
+      <input_window name="Sim View Cameras Control" version="2">
          <origin>1200</origin>
          <origin>600</origin>
          <size>200</size>
          <size>100</size>
          <display_number>0</display_number>
          <keyboard_mouse_device_name>Sim View Cameras Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
@@ -557,13 +559,14 @@
       <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Wand Input Window" version="1">
+      <input_window name="Wand Input Window" version="2">
          <origin>1200</origin>
          <origin>400</origin>
          <size>200</size>
          <size>200</size>
          <display_number>-1</display_number>
          <keyboard_mouse_device_name>Wand Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_L</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
@@ -747,7 +750,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="5">
+            <display_window name="SimWindow1" version="6">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -802,13 +805,14 @@
                   </simulator_viewport>
                </simulator_viewports>
                <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <display_windows>
-            <display_window name="Left Surface" version="5">
+            <display_window name="Left Surface" version="6">
                <origin>600</origin>
                <origin>200</origin>
                <size>600</size>
@@ -864,6 +868,7 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
@@ -881,7 +886,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="Right Surface" version="5">
+            <display_window name="Right Surface" version="6">
                <origin>600</origin>
                <origin>200</origin>
                <size>600</size>
@@ -937,6 +942,7 @@
                   </surface_viewport>
                </surface_viewports>
                <keyboard_mouse_device_name />
+               <allow_mouse_locking>true</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>

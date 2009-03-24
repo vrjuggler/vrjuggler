@@ -5,13 +5,14 @@
       <keyboard_mouse_device name="Sim Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Sim Input" version="1">
+      <input_window name="Sim Input" version="2">
          <origin>870</origin>
          <origin>100</origin>
          <size>300</size>
          <size>800</size>
          <display_number>0</display_number>
          <keyboard_mouse_device_name>Sim Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
@@ -435,7 +436,7 @@
             </key_modifier_pair>
          </key_pair>
       </simulated_digital_device>
-      <display_window name="SimWindow" version="5">
+      <display_window name="SimWindow" version="6">
          <origin>50</origin>
          <origin>100</origin>
          <size>800</size>
@@ -490,6 +491,7 @@
             </simulator_viewport>
          </simulator_viewports>
          <keyboard_mouse_device_name />
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>

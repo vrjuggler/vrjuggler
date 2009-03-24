@@ -64,11 +64,12 @@ protected:
    /** Shortened form of the keyboard/mouse device registry type name. */
    typedef KeyboardMouseDevice::KeyboardMouseDeviceRegistry km_registry_t;
 
-   lockState    mLockState;       /**< The current state of locking. */
-   int          mLockStoredKey;   /**< The key that was pressed down. */
-   int          mLockToggleKey;   /**< The key that toggles the locking. */
-   float        mMouseSensitivity;
-   int          mSleepTimeMS;
+   bool      mAllowMouseLocking; /**< Flag allowing mouse locking. */
+   lockState mLockState;         /**< The current state of locking. */
+   int       mLockStoredKey;     /**< The key that was pressed down. */
+   int       mLockToggleKey;     /**< The key that toggles the locking. */
+   float     mMouseSensitivity;
+   int       mSleepTimeMS;
    
    KeyboardMouseDevice* mKeyboardMouseDevice;
 

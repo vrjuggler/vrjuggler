@@ -2,7 +2,7 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <display_window name="C6 Surfaces" version="5">
+      <display_window name="C6 Surfaces" version="6">
          <origin>50</origin>
          <origin>100</origin>
          <size>800</size>
@@ -183,6 +183,7 @@
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name />
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>

@@ -5,13 +5,14 @@
       <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Wand Input Window" version="1">
+      <input_window name="Wand Input Window" version="2">
          <origin>950</origin>
          <origin>500</origin>
          <size>200</size>
          <size>200</size>
          <display_number>0</display_number>
          <keyboard_mouse_device_name>Wand Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
@@ -19,13 +20,14 @@
       <keyboard_mouse_device name="Head Keyboard" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Head Input Window" version="1">
+      <input_window name="Head Input Window" version="2">
          <origin>950</origin>
          <origin>0</origin>
          <size>300</size>
          <size>100</size>
          <display_number>0</display_number>
          <keyboard_mouse_device_name>Head Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
@@ -33,13 +35,14 @@
       <keyboard_mouse_device name="Sim View Cameras Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Sim View Cameras Control" version="1">
+      <input_window name="Sim View Cameras Control" version="2">
          <origin>950</origin>
          <origin>175</origin>
          <size>300</size>
          <size>100</size>
          <display_number>0</display_number>
          <keyboard_mouse_device_name>Sim View Cameras Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
@@ -507,7 +510,7 @@
          <min>0.0</min>
          <max>255.0</max>
       </ibox>
-      <display_window name="big wall" version="5">
+      <display_window name="big wall" version="6">
          <origin>922</origin>
          <origin>768</origin>
          <size>1844</size>
@@ -563,6 +566,7 @@
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name />
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>

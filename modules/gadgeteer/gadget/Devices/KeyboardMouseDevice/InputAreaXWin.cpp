@@ -105,67 +105,74 @@ void InputAreaXWin::handleEvent(::XEvent& event)
             << vprDEBUG_FLUSH;
          addKeyEvent(vj_key, gadget::KeyPressEvent, &event.xkey);
 
-         // -- Update lock state -- //
-         // Any[key == ESC]/unlock(ifneeded) -> Unlocked
-         // Unlocked[key!=lockKey]/lockMouse -> lock_keydown
-         // Unlocked[key==lockKey]/lockMouse -> lock_keylock
-         // lock_keydown[key==lockKey] -> lock_keylock
-         // lock_keylock[key==lockKey] -> Unlocked
-         if (vj_key == gadget::KEY_ESC)       // Check for Escape from bad state
+         if ( mAllowMouseLocking )
          {
-            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-               << "gadget::InputAreaWin: Trying to ESCAPE from current state.\n"
-               << vprDEBUG_FLUSH;
-            if(mLockState != Unlocked)
+            // -- Update lock state -- //
+            // Any[key == ESC]/unlock(ifneeded) -> Unlocked
+            // Unlocked[key!=lockKey]/lockMouse -> lock_keydown
+            // Unlocked[key==lockKey]/lockMouse -> lock_keylock
+            // lock_keydown[key==lockKey] -> lock_keylock
+            // lock_keylock[key==lockKey] -> Unlocked
+
+            // Check for Escape from bad state
+            if ( vj_key == gadget::KEY_ESC )
             {
-               vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                  << "gadget::InputAreaXWin: STATE switch: <ESCAPE> --> Unlocked\n"
-                  << vprDEBUG_FLUSH;
-               mLockState = Unlocked;
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "[gadget::InputAreaWin]: Trying to ESCAPE from "
+                  << "current state.\n" << vprDEBUG_FLUSH;
+
+               if ( mLockState != Unlocked )
+               {
+                  vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                     << "[gadget::InputAreaXWin]: STATE switch: "
+                     << "<ESCAPE> --> Unlocked\n" << vprDEBUG_FLUSH;
+                  mLockState = Unlocked;
+               }
+               else
+               {
+                  vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                     << "[gadget::InputAreaXWin]: Already unlocked.  "
+                     << "Cannot ESCAPE." << vprDEBUG_FLUSH;
+               }
             }
-            else
+            else if ( mLockState == Unlocked )
             {
-               vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                  << "gadget::InputAreaXWin: Already unlocked.  Cannot ESCAPE."
-                  << vprDEBUG_FLUSH;
+               if ( vj_key != mLockToggleKey &&
+                    (gadget::KEY_ALT == vj_key || gadget::KEY_CTRL == vj_key ||
+                     gadget::KEY_SHIFT == vj_key) )
+               {
+                  mLockState = Lock_KeyDown;  // Switch state
+                  mLockStoredKey = vj_key;    // Store the Gadgeteer key that is down
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                     << "[gadget::InputAreaXWin]: STATE switch: "
+                     << "Unlocked --> Lock_KeyDown\n" << vprDEBUG_FLUSH;
+                  lockMouse(&event);
+               }
+               else if ( vj_key == mLockToggleKey )
+               {
+                  mLockState = Lock_LockKey;
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                     << "[gadget::InputAreaXWin]: STATE switch: "
+                     << "Unlocked --> Lock_LockKey\n" << vprDEBUG_FLUSH;
+                  lockMouse(&event);
+               }
             }
-         }
-         else if(mLockState == Unlocked)
-         {
-            if ( (vj_key != mLockToggleKey) &&
-                 ((gadget::KEY_ALT == vj_key) || (gadget::KEY_CTRL == vj_key) ||
-                  (gadget::KEY_SHIFT == vj_key)) )
-            {
-               mLockState = Lock_KeyDown;       // Switch state
-               mLockStoredKey = vj_key;         // Store the Gadgeteer key that is down
-               vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                  << "gadget::InputAreaXWin: STATE switch: Unlocked --> Lock_KeyDown\n"
-                  << vprDEBUG_FLUSH;
-               lockMouse(&event);
-            }
-            else if(vj_key == mLockToggleKey)
+            // Just switch the current locking state
+            else if ( mLockState == Lock_KeyDown && vj_key == mLockToggleKey )
             {
                mLockState = Lock_LockKey;
-               vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                  << "gadget::InputAreaXWin: STATE switch: Unlocked --> Lock_LockKey\n"
-                  << vprDEBUG_FLUSH;
-               lockMouse(&event);
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "[gadget::InputAreaXWin]: STATE switch: "
+                  << "Lock_KeyDown --> Lock_LockKey\n" << vprDEBUG_FLUSH;
             }
-         }
-         else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))     // Just switch the current locking state
-         {
-            mLockState = Lock_LockKey;
-            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-               << "gadget::InputAreaXWin: STATE switch: Lock_KeyDown --> Lock_LockKey\n"
-               << vprDEBUG_FLUSH;
-         }
-         else if((mLockState == Lock_LockKey) && (vj_key == mLockToggleKey))
-         {
-            mLockState = Unlocked;
-            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-               << "gadget::InputAreaXWin: STATE switch: Lock_LockKey --> Unlocked\n"
-               << vprDEBUG_FLUSH;
-            unlockMouse(&event);
+            else if ( mLockState == Lock_LockKey && vj_key == mLockToggleKey )
+            {
+               mLockState = Unlocked;
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "[gadget::InputAreaXWin]: STATE switch: "
+                  << "Lock_LockKey --> Unlocked\n" << vprDEBUG_FLUSH;
+               unlockMouse(&event);
+            }
          }
 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)    //vprDBG_HVERB_LVL
@@ -188,12 +195,13 @@ void InputAreaXWin::handleEvent(::XEvent& event)
 
          // -- Update lock state -- //
          // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
-         if((mLockState == Lock_KeyDown) && (vj_key == mLockStoredKey))
+         if ( mAllowMouseLocking && mLockState == Lock_KeyDown &&
+              vj_key == mLockStoredKey )
          {
             mLockState = Unlocked;
-            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-               << "gadget::InputAreaXWin: STATE switch: Lock_KeyDown --> Unlocked\n"
-               << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+               << "[gadget::InputAreaXWin]: STATE switch: "
+               << "Lock_KeyDown --> Unlocked\n" << vprDEBUG_FLUSH;
             unlockMouse(&event);
          }
 

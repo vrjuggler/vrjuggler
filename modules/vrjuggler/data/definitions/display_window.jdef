@@ -331,4 +331,86 @@
          </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
+   <definition_version version="6" label="Display Window">
+      <abstract>false</abstract>
+      <help>This is display window. It contains viewports. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s03.html"&gt;more on display windows&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s05.html"&gt;more on configuring keyboard/mouse input and displays&lt;/a&gt;)</help>
+      <parent>input_area</parent>
+      <category>/Display</category>
+      <property valuetype="integer" variable="false" name="origin">
+         <help>Window origin (lower left screen is 0,0). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="X" defaultvalue="0"/>
+         <value label="Y" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="size">
+         <help>Window dimensions. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Width" defaultvalue="200"/>
+         <value label="Height" defaultvalue="200"/>
+      </property>
+      <property valuetype="integer" variable="false" name="pipe">
+         <help>Graphics pipe. Zero-based reference to the display system configuration element. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Pipe" defaultvalue="0"/>
+      </property>
+      <property valuetype="configelement" variable="false" name="frame_buffer_config">
+         <help>Configuration of this display's frame buffer. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Frame Buffer Configuration"/>
+         <allowed_type>opengl_frame_buffer_config</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="stereo">
+         <help>Should this window render in stereo? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="In Stereo" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="border">
+         <help>Should the window have a border?</help>
+         <value label="Use border" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="hide_mouse">
+         <help>Should the mouse pointer be visible when within the boundaries of the display window?</help>
+         <value label="Hide Mouse Pointer" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="full_screen">
+         <help>Should the window be full screen?</help>
+         <value label="Full Screen Window" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="always_on_top">
+         <help>Should the window always be on top?</help>
+         <value label="Always On Top" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="active">
+         <help>Is the window supposed to be active? (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s03.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Use this window?" defaultvalue="true"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="simulator_viewports">
+         <help>The simulator viewports to put in this window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Contained Sim Viewport"/>
+         <allowed_type>simulator_viewport</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="surface_viewports">
+         <help>The surface viewports to put in this window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Contained Surface Viewport"/>
+         <allowed_type>surface_viewport</allowed_type>
+      </property>      
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:display_window">
+               <xsl:element namespace="{$jconf}" name="display_window">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">6</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="allow_mouse_locking">
+                     <xsl:text>true</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>

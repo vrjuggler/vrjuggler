@@ -84,13 +84,14 @@
       <keyboard_mouse_device name="Wand Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
       </keyboard_mouse_device>
-      <input_window name="Wand Input Window" version="1">
+      <input_window name="Wand Input Window" version="2">
          <origin>950</origin>
          <origin>350</origin>
          <size>200</size>
          <size>200</size>
          <display_number>-1</display_number>
          <keyboard_mouse_device_name>Wand Keyboard</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
          <lock_key>KEY_L</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
