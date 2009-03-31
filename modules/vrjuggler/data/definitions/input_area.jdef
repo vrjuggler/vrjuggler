@@ -89,7 +89,7 @@
          <value label="Keyboard/Mouse Input Handler"/>
          <allowed_type>keyboard_mouse_device</allowed_type>
       </property>
-      <property valuetype="bool" variable="false" name="allow_mouse_locking">
+      <property valuetype="boolean" variable="false" name="allow_mouse_locking">
          <help>Do we allow the mouse to be locked within the bounds of the window when the lock key is pressed or when a modifier key is pressed?</help>
          <value label="Allow Mouse Locking" defaultvalue="true"/>
       </property>
