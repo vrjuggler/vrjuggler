@@ -2,23 +2,15 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Base Simulator Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <cluster_manager name="Cluster Configuration" version="2">
+      <cluster_manager name="Cluster Configuration" version="3">
          <plugin>ApplicationDataManager</plugin>
          <plugin>RIMPlugin</plugin>
-         <plugin>StartBarrierPlugin</plugin>
-         <plugin>SwapLockTCPPlugin</plugin>
          <cluster_node>Node(ptah-1)</cluster_node>
          <cluster_node>Node(ptah-2)</cluster_node>
          <cluster_node>Node(ptah-3)</cluster_node>
          <cluster_node>Node(ptah-4)</cluster_node>
+         <use_software_swap_lock>true</use_software_swap_lock>
       </cluster_manager>
-      <swap_lock_tcp_plugin name="Swap Lock" version="1">
-         <sync_server>Node(ptah-1)</sync_server>
-         <listen_port>0</listen_port>
-      </swap_lock_tcp_plugin>
-      <start_barrier_plugin name="Start Barrier" version="1">
-         <start_master>Node(ptah-1)</start_master>
-      </start_barrier_plugin>
       <cluster_node name="Node(ptah-1)" version="1">
          <display_system>
             <display_system name="display_system 0" version="3">
@@ -35,7 +27,7 @@
                <size>600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
@@ -50,6 +42,10 @@
                      <accum_alpha_size>1</accum_alpha_size>
                      <num_sample_buffers>0</num_sample_buffers>
                      <num_samples>0</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -108,7 +104,7 @@
                <size>600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
@@ -123,6 +119,10 @@
                      <accum_alpha_size>1</accum_alpha_size>
                      <num_sample_buffers>0</num_sample_buffers>
                      <num_samples>0</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -181,7 +181,7 @@
                <size>600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
@@ -196,6 +196,10 @@
                      <accum_alpha_size>1</accum_alpha_size>
                      <num_sample_buffers>0</num_sample_buffers>
                      <num_samples>0</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
@@ -254,7 +258,7 @@
                <size>600</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                      <visual_id>-1</visual_id>
                      <red_size>1</red_size>
                      <green_size>1</green_size>
@@ -269,6 +273,10 @@
                      <accum_alpha_size>1</accum_alpha_size>
                      <num_sample_buffers>0</num_sample_buffers>
                      <num_samples>0</num_samples>
+                     <use_create_context_attribs>false</use_create_context_attribs>
+                     <gl_context_major_version>3</gl_context_major_version>
+                     <gl_context_minor_version>0</gl_context_minor_version>
+                     <gl_context_flags>0</gl_context_flags>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
