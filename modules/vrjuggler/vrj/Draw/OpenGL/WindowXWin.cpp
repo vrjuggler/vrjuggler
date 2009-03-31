@@ -69,6 +69,7 @@ WindowXWin::WindowXWin()
    : vrj::opengl::Window()
 //   , mXDisplay(NULL)
    , mVisualInfo(NULL)
+   , mFBConfig(NULL)
    , mGlxContext(NULL)
 //   , mXWindow(0)
    , mWindowName("")
@@ -134,8 +135,17 @@ bool WindowXWin::open()
    {
       screen = DefaultScreen(mXDisplay);
 
+      // get a GLXFBConfig*, which we'll need below
+      if ( (mFBConfig = getGlxFBConfig(mXDisplay, screen)) == NULL )
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED, "ERROR")
+            << ": Failed to get a GLX FBConfig!\n" << vprDEBUG_FLUSH;
+         throw glwinx_OpenFailureException();
+      }
+
       // get an XVisualInfo*, which we'll need below
-      if ( (mVisualInfo = getGlxVisInfo(mXDisplay, screen)) == NULL )
+      if ( (mVisualInfo = glXGetVisualFromFBConfig(mXDisplay, *mFBConfig)) == NULL )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "ERROR")
@@ -362,7 +372,7 @@ bool WindowXWin::open()
 
       /********************* OpenGL Context Stuff *********************/
 
-      mGlxContext = glXCreateContext(mXDisplay, mVisualInfo, NULL, True);
+      mGlxContext = createContext(mXDisplay, *mFBConfig, NULL, True);
       if ( NULL == mGlxContext )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -475,6 +485,11 @@ bool WindowXWin::close()
    {
       ::XFree(mVisualInfo);
       mVisualInfo = NULL;
+   }
+   if( mFBConfig )
+   {
+      ::XFree(mFBConfig);
+      mFBConfig = NULL;
    }
    if ( mXDisplay )
    {
@@ -601,7 +616,7 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
 /***********************************************************/
 /* private member functions.  these get profoundly painful */
 /***********************************************************/
-::XVisualInfo* WindowXWin::getGlxVisInfo(::Display *display, int screen)
+::GLXFBConfig* WindowXWin::getGlxFBConfig(::Display* display, int screen)
 {
    /* pre:  screen is a screen on the current XDisplay, and
     *       XDisplay is already defined and valid.
@@ -714,7 +729,47 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
             << "' cannot be opened" << std::endl << vprDEBUG_FLUSH;
       }
 
-      return vi;
+      // march through FB's to get matching visual
+      int nfbconfigs;
+      GLXFBConfig* fbconfigs = glXGetFBConfigs(display, screen, &nfbconfigs);
+      if ( NULL != fbconfigs )
+      {
+         int vis_id = 0;
+         for ( int i = 0; i < nfbconfigs; ++i )
+         {
+            glXGetFBConfigAttrib(display, fbconfigs[i], GLX_VISUAL_ID,
+                                 &vis_id);
+            if ( vis_id == visual_id )
+            {
+               return &fbconfigs[i];
+            }
+         }
+
+         // if we get here, there was no match
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to find matching GLX framebuffer config for visual ID "
+            << std::hex << visual_id << std::dec << std::endl
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "       Window '" << mVrjDisplay->getName()
+            << "' cannot be opened" << std::endl << vprDEBUG_FLUSH;
+
+         return NULL;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutBOLD(clrRED, "ERROR")
+            << ": Failed to get GLX framebuffer configs for visual ID "
+            << std::hex << visual_id << std::dec << std::endl
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "       Window '" << mVrjDisplay->getName()
+            << "' cannot be opened" << std::endl << vprDEBUG_FLUSH;
+      }
+
+      return fbconfigs;
    }
    else
    {
@@ -889,8 +944,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       // want to try setting alpha size to 0 (smallest possible, maybe 0)
       // which is required eg. for alpha on the indys.
       std::vector<int> viattrib;
-      viattrib.push_back(GLX_DOUBLEBUFFER);
-      viattrib.push_back(GLX_RGBA);
+      viattrib.push_back(GLX_DOUBLEBUFFER); viattrib.push_back(True);
+      // viattrib.push_back(GLX_RGBA);
       viattrib.push_back(GLX_DEPTH_SIZE); viattrib.push_back(db_size);
       viattrib.push_back(GLX_RED_SIZE); viattrib.push_back(red_size);
       viattrib.push_back(GLX_GREEN_SIZE); viattrib.push_back(green_size);
@@ -982,12 +1037,13 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       // Add terminator
       viattrib.push_back(None);
 
-      XVisualInfo* vi(NULL);
+      GLXFBConfig* fbc(NULL);
 
       // First, see if we can get exactly what we want.
-      if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+      int fbconfig_array_nelements;
+      if ( (fbc = glXChooseFBConfig(display, screen, &viattrib[0], &fbconfig_array_nelements)) != NULL )
       {
-         return vi;
+         return fbc; // return 0th element (i.e. the 'best' one)
       }
 
 #if HAVE_MULTISAMPLING
@@ -1033,11 +1089,12 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
                --num_samples;
                viattrib[multisamp_samples_attrib_index] = num_samples;
 
-               vi = glXChooseVisual(display, screen, &viattrib[0]);
+               fbc = glXChooseFBConfig(display, screen, &viattrib[0],
+                                       &fbconfig_array_nelements);
 
-               if ( NULL != vi )
+               if ( NULL != fbc )
                {
-                  return vi;
+                  return fbc;
                }
             }
 
@@ -1070,11 +1127,12 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
             --num_sample_bufs;
             viattrib[multisamp_buffers_attrib_index] = num_sample_bufs;
 
-            vi = glXChooseVisual(display, screen, &viattrib[0]);
+            fbc = glXChooseFBConfig(display, screen, &viattrib[0],
+                                    &fbconfig_array_nelements);
 
-            if ( NULL != vi )
+            if ( NULL != fbc )
             {
-               return vi;
+               return fbc;
             }
          }
          while ( num_sample_bufs >= 1 );
@@ -1092,11 +1150,11 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
          viattrib[multisamp_attrib_index + 2] = GLX_USE_GL;
          viattrib[multisamp_attrib_index + 3] = GLX_USE_GL;
 
-         vi = glXChooseVisual(display, screen, &viattrib[0]);
+         fbc = glXChooseFBConfig(display, screen, &viattrib[0], &fbconfig_array_nelements);
 
-         if ( NULL != vi )
+         if ( NULL != fbc )
          {
-            return vi;
+            return fbc;
          }
       }
 #endif
@@ -1108,18 +1166,18 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING") << ": Could not get an "
-            << "OpenGL visual for '" << mXDisplayName << "'\n";
+            << "OpenGL framebuffer config for '" << mXDisplayName << "'\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
             << "         with stereo rendering enabled; trying without.\n"
             << vprDEBUG_FLUSH;
          mInStereo = false;
 
-         // GLX_USE_GL will be ignored by glXChooseVisual(3).
+         // GLX_USE_GL will be ignored by glXChooseFBConfig
          viattrib[stereo_attrib_index] = GLX_USE_GL;
 
-         if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+         if ( (fbc = glXChooseFBConfig(display, screen, &viattrib[0], &fbconfig_array_nelements)) != NULL )
          {
-            return vi;
+            return fbc;
          }
 
          // Stereo must not have been the problem, re-enable it.
@@ -1134,7 +1192,7 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING") << ": Could not get an "
-            << "OpenGL visual for '" << mXDisplayName << "'\n";
+            << "OpenGL framebuffer config for '" << mXDisplayName << "'\n";
          vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
             << "         with accumulation buffer settings; trying without.\n"
             << vprDEBUG_FLUSH;
@@ -1146,9 +1204,9 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
 
          // XXX: If this fails, should we restore the accumulation buffer
          // settings?
-         if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+         if ( (fbc = glXChooseFBConfig(display, screen, &viattrib[0], &fbconfig_array_nelements)) != NULL )
          {
-            return vi;
+            return fbc;
          }
       }
 
@@ -1156,7 +1214,7 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       // Disabling the alpha channel may give us something usable.
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrYELLOW, "WARNING") << ": Could not get an OpenGL "
-         << "visual for '" << mXDisplayName << "'\n";
+         << "framebuffer config for '" << mXDisplayName << "'\n";
       vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "with a color buffer alpha channel; trying without.\n"
          << vprDEBUG_FLUSH;
@@ -1165,9 +1223,9 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       viattrib[alpha_attrib_index    ] = GLX_USE_GL;
       viattrib[alpha_attrib_index + 1] = GLX_USE_GL;
 
-      if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+      if ( (fbc = glXChooseFBConfig(display, screen, &viattrib[0], &fbconfig_array_nelements)) != NULL )
       {
-         return vi;
+         return fbc;
       }
    }
 
@@ -1200,6 +1258,77 @@ void WindowXWin::createEmptyCursor(::Display* display, ::Window root)
    XFreeGC(display,gc);
 
    mEmptyCursorSet = true;
+}
+
+GLXContext WindowXWin::createContext(::Display *dpy, GLXFBConfig fbc,
+                                     GLXContext shareList, Bool direct)
+
+{
+   jccl::ConfigElementPtr gl_fb_elt = mVrjDisplay->getGlFrameBufferConfig();
+
+   const bool use_create_context_attribs =
+      gl_fb_elt->getProperty<bool>("use_create_context_attribs");
+
+   if ( use_create_context_attribs )  // We want to try to use the ARB function
+   {
+      // First create a traditional context so we can get extensions
+      GLXContext context = glXCreateNewContext(dpy, fbc, GLX_RGBA_TYPE,
+                                               shareList, direct);
+
+      if ( NULL == context )
+      {
+          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+             << clrOutNORM(clrRED, "ERROR")
+             << ": [vrj::opengl::WindowXWin::createContext()] Couldn't create GlxContext for '"
+             << mXDisplayName << "'\n" << vprDEBUG_FLUSH;
+          throw glwinx_OpenFailureException();
+      }
+
+      // Make the original context current
+      glXMakeCurrent(dpy, mXWindow, context);
+
+      // load GLX extensions
+      mExtensions.registerExtensions();
+
+      // Delete the context
+      glXDestroyContext(dpy, context);
+
+      if ( mExtensions.hasCreateContextARB() )
+      {
+         // use environment variables to construct attribute array
+         int attribList[] = {
+            GLX_CONTEXT_MAJOR_VERSION_ARB,
+            gl_fb_elt->getProperty<int>("gl_context_major_version"),
+            GLX_CONTEXT_MINOR_VERSION_ARB,
+            gl_fb_elt->getProperty<int>("gl_context_minor_version"),
+            GLX_CONTEXT_FLAGS_ARB,
+            gl_fb_elt->getProperty<int>("gl_context_flags"),
+            0
+         };
+
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+            << "Creating GLX Context, attributes = {"
+            << attribList[0] << ", " << attribList[1] << ", "
+            << attribList[2] << ", " << attribList[3] << ", "
+            << attribList[4] << ", " << attribList[5] << ", "
+            << attribList[6] << "}"
+            <<  std::endl << vprDEBUG_FLUSH;
+
+         return mExtensions.glXCreateContextAttribsARB(dpy, fbc, shareList,
+                                                       direct, attribList);
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Could not detect GLX_ARB_create_context extension.\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Falling back on traditional glXCreateNewContext.\n"
+            << vprDEBUG_FLUSH;
+      }
+   }
+
+   return glXCreateNewContext(dpy, fbc, GLX_RGBA_TYPE, shareList, direct);
 }
 
 } // namespace gl

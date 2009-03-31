@@ -63,6 +63,9 @@ typedef BOOL (GLAPI * PFNWGLQUERYFRAMECOUNTNVPROC) (HDC hdc,
 
 typedef BOOL (GLAPI * PFNWGLRESETFRAMECOUNTNVPROC) (HDC hdc /*, int screen*/);
 
+// ARB Context Creation
+typedef HGLRC (GLAPI *PFNWGLCREATECONTEXTATTRIBSARBPROC) (HDC, HGLRC,
+                                                          const int*);
 
 struct ExtensionLoaderWGL::WglFuncs
 {
@@ -73,33 +76,49 @@ struct ExtensionLoaderWGL::WglFuncs
       , wglQueryMaxSwapGroupsNV(NULL)
       , wglQueryFrameCountNV(NULL)
       , wglResetFrameCountNV(NULL)
+      , wglCreateContextAttribsARB(NULL)
    {
       /* Do nothing. */ ;
    }
 
-   PFNWGLJOINSWAPGROUPNVPROC        wglJoinSwapGroupNV;
-   PFNWGLBINDSWAPBARRIERNVPROC      wglBindSwapBarrierNV;
-   PFNWGLQUERYSWAPGROUPNVPROC       wglQuerySwapGroupNV;
-   PFNWGLQUERYMAXSWAPGROUPSNVPROC   wglQueryMaxSwapGroupsNV;
-   PFNWGLQUERYFRAMECOUNTNVPROC      wglQueryFrameCountNV;
-   PFNWGLRESETFRAMECOUNTNVPROC      wglResetFrameCountNV;
+   PFNWGLJOINSWAPGROUPNVPROC         wglJoinSwapGroupNV;
+   PFNWGLBINDSWAPBARRIERNVPROC       wglBindSwapBarrierNV;
+   PFNWGLQUERYSWAPGROUPNVPROC        wglQuerySwapGroupNV;
+   PFNWGLQUERYMAXSWAPGROUPSNVPROC    wglQueryMaxSwapGroupsNV;
+   PFNWGLQUERYFRAMECOUNTNVPROC       wglQueryFrameCountNV;
+   PFNWGLRESETFRAMECOUNTNVPROC       wglResetFrameCountNV;
+   PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
 };
 
 ExtensionLoaderWGL::ExtensionLoaderWGL()
+   : mExtensionsRegistered(false)
 {
    mWglFuncs = boost::shared_ptr<WglFuncs>(new WglFuncs);
 }
 
 void ExtensionLoaderWGL::registerExtensions()
 {
-   vrj::opengl::ExtensionLoader::registerExtensions();
+   if(!mExtensionsRegistered)
+   {
+      vrj::opengl::ExtensionLoader::registerExtensions();
 
-   mWglFuncs->wglJoinSwapGroupNV       = (PFNWGLJOINSWAPGROUPNVPROC)       (getFunctionByName("wglJoinSwapGroupNV"));
-   mWglFuncs->wglBindSwapBarrierNV     = (PFNWGLBINDSWAPBARRIERNVPROC)     (getFunctionByName("wglBindSwapBarrierNV"));
-   mWglFuncs->wglQuerySwapGroupNV      = (PFNWGLQUERYSWAPGROUPNVPROC)      (getFunctionByName("wglQuerySwapGroupNV"));
-   mWglFuncs->wglQueryMaxSwapGroupsNV  = (PFNWGLQUERYMAXSWAPGROUPSNVPROC)  (getFunctionByName("wglQueryMaxSwapGroupsNV"));
-   mWglFuncs->wglQueryFrameCountNV     = (PFNWGLQUERYFRAMECOUNTNVPROC)     (getFunctionByName("wglQueryFrameCountNV"));
-   mWglFuncs->wglResetFrameCountNV     = (PFNWGLRESETFRAMECOUNTNVPROC)     (getFunctionByName("wglResetFrameCountNV"));
+      mWglFuncs->wglJoinSwapGroupNV =
+         (PFNWGLJOINSWAPGROUPNVPROC) getFunctionByName("wglJoinSwapGroupNV");
+      mWglFuncs->wglBindSwapBarrierNV =
+         (PFNWGLBINDSWAPBARRIERNVPROC) getFunctionByName("wglBindSwapBarrierNV");
+      mWglFuncs->wglQuerySwapGroupNV =
+         (PFNWGLQUERYSWAPGROUPNVPROC) getFunctionByName("wglQuerySwapGroupNV");
+      mWglFuncs->wglQueryMaxSwapGroupsNV =
+         (PFNWGLQUERYMAXSWAPGROUPSNVPROC) getFunctionByName("wglQueryMaxSwapGroupsNV");
+      mWglFuncs->wglQueryFrameCountNV =
+         (PFNWGLQUERYFRAMECOUNTNVPROC) getFunctionByName("wglQueryFrameCountNV");
+      mWglFuncs->wglResetFrameCountNV =
+         (PFNWGLRESETFRAMECOUNTNVPROC) getFunctionByName("wglResetFrameCountNV");
+      mWglFuncs->wglCreateContextAttribsARB =
+         (PFNWGLCREATECONTEXTATTRIBSARBPROC) getFunctionByName("wglCreateContextAttribsARB");
+       
+      mExtensionsRegistered = true;
+   }
 }
 
 // --- NVIDIA Swap Control methods --- //
@@ -151,6 +170,22 @@ BOOL ExtensionLoaderWGL::wglResetFrameCountNV(HDC hdc /*, int screen*/)
    vprASSERT(mWglFuncs->wglResetFrameCountNV != NULL &&
              "Attemped to call unsupported extension.");
    return mWglFuncs->wglResetFrameCountNV(hdc /*, screen*/);
+}
+
+// --- ARB Context Creation methods --- //
+bool ExtensionLoaderWGL::hasCreateContextARB()
+{
+   return (mWglFuncs->wglCreateContextAttribsARB != NULL);
+}
+
+HGLRC ExtensionLoaderWGL::wglCreateContextAttribsARB(HDC hdc,
+                                                     HGLRC hshareContext,
+                                                     const int* attribList)
+{
+   vprASSERT(mWglFuncs->wglCreateContextAttribsARB != NULL &&
+             "Attemped to call unsupported extension."); 
+   return mWglFuncs->wglCreateContextAttribsARB(hdc, hshareContext,
+                                                attribList);
 }
 
 }  // namespace opengl

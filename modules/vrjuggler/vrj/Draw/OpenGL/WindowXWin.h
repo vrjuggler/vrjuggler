@@ -104,6 +104,10 @@ public:
    void configWindow(vrj::DisplayPtr disp);   
 
 protected:
+   /** Create an OpenGL Context. */
+   GLXContext createContext(::Display *dpy, GLXFBConfig fbc,
+                            GLXContext shareList, Bool direct);
+
    /** Do any extra event processing needed. */
    virtual void processEvent(::XEvent event)
    {
@@ -121,7 +125,7 @@ protected:
       }
    }
 
-   XVisualInfo* getGlxVisInfo(::Display* display, int screen);
+   GLXFBConfig* getGlxFBConfig(::Display* display, int screen);
 
    /**
     * @pre  The window is an X11 window under display.
@@ -137,6 +141,7 @@ protected:
 private:
    //::Display*   mXDisplay;
    XVisualInfo* mVisualInfo;
+   GLXFBConfig* mFBConfig;
    GLXContext   mGlxContext;
    ExtensionLoaderGLX mExtensions;   /**< Extensions for this window. */
 

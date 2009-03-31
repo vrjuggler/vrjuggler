@@ -35,6 +35,16 @@
 
 #include <vrj/Draw/OpenGL/ExtensionLoader.h>
 
+// WGL Defines
+#define WGL_CONTEXT_MAJOR_VERSION_ARB		    0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB		    0x2092
+#define WGL_CONTEXT_LAYER_PLANE_ARB		        0x2093
+#define WGL_CONTEXT_FLAGS_ARB			        0x2094
+#define WGL_CONTEXT_DEBUG_BIT_ARB		        0x0001
+#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
+
+// New error returned by GetLastError
+#define	ERROR_INVALID_VERSION_ARB		        0x2095
 
 namespace vrj
 {
@@ -54,7 +64,7 @@ public:
    ExtensionLoaderWGL();
 
    /** Register common extensions that we may need to use. */
-   virtual void registerExtensions(); 
+   virtual void registerExtensions();
 
 public:
    /** @name NVidia swap control. */
@@ -77,8 +87,19 @@ public:
    BOOL wglResetFrameCountNV(HDC hdc /*, int screen*/);
    //@}
 
+   /** @name Context Creation/ */
+   //@{
+   
+   //** Return true if we have support for ARB context creation. */
+   bool hasCreateContextARB();
+
+   HGLRC wglCreateContextAttribsARB(HDC hdc, HGLRC hshareContext, const int *attribList);
+
+   //@}
+
 private:
    struct WglFuncs;
+   bool   mExtensionsRegistered;
 
    boost::shared_ptr<WglFuncs>   mWglFuncs;  /** Pimpl struct for holding typed functions. */
 };

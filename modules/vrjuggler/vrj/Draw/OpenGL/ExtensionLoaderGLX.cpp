@@ -57,6 +57,12 @@ typedef Bool (* PFNGLXQUERYFRAMECOUNTNVPROC) (::Display*, int, GLuint*);
 
 typedef Bool (* PFNGLXRESETFRAMECOUNTNVPROC) (::Display*, int);
 
+// ARB Context Creation
+typedef GLXContext (*PFNGLXCREATECONTEXTATTRIBSARBPROC) (::Display*,
+                                                         GLXFBConfig,
+                                                         GLXContext, Bool,
+                                                         const int*);
+
 struct ExtensionLoaderGLX::GlxFuncs
 {
    GlxFuncs()
@@ -66,33 +72,49 @@ struct ExtensionLoaderGLX::GlxFuncs
       , glXQueryMaxSwapGroupsNV(NULL)
       , glXQueryFrameCountNV(NULL)
       , glXResetFrameCountNV(NULL)
+      , glXCreateContextAttribsARB(NULL)
    {
       /* Do nothing. */ ;
    }
 
-   PFNGLXJOINSWAPGROUPNVPROC        glXJoinSwapGroupNV;
-   PFNGLXBINDSWAPBARRIERNVPROC      glXBindSwapBarrierNV;
-   PFNGLXQUERYSWAPGROUPNVPROC       glXQuerySwapGroupNV;
-   PFNGLXQUERYMAXSWAPGROUPSNVPROC   glXQueryMaxSwapGroupsNV;
-   PFNGLXQUERYFRAMECOUNTNVPROC      glXQueryFrameCountNV;
-   PFNGLXRESETFRAMECOUNTNVPROC      glXResetFrameCountNV;
+   PFNGLXJOINSWAPGROUPNVPROC         glXJoinSwapGroupNV;
+   PFNGLXBINDSWAPBARRIERNVPROC       glXBindSwapBarrierNV;
+   PFNGLXQUERYSWAPGROUPNVPROC        glXQuerySwapGroupNV;
+   PFNGLXQUERYMAXSWAPGROUPSNVPROC    glXQueryMaxSwapGroupsNV;
+   PFNGLXQUERYFRAMECOUNTNVPROC       glXQueryFrameCountNV;
+   PFNGLXRESETFRAMECOUNTNVPROC       glXResetFrameCountNV;
+   PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB;
 };
 
 ExtensionLoaderGLX::ExtensionLoaderGLX()
+   : mExtensionsRegistered(false)
 {
    mGlxFuncs = boost::shared_ptr<GlxFuncs>(new GlxFuncs);
 }
 
 void ExtensionLoaderGLX::registerExtensions()
 {
-   vrj::opengl::ExtensionLoader::registerExtensions();
-
-   mGlxFuncs->glXJoinSwapGroupNV       = (PFNGLXJOINSWAPGROUPNVPROC)       (getFunctionByName("glXJoinSwapGroupNV"));
-   mGlxFuncs->glXBindSwapBarrierNV     = (PFNGLXBINDSWAPBARRIERNVPROC)     (getFunctionByName("glXBindSwapBarrierNV"));
-   mGlxFuncs->glXQuerySwapGroupNV      = (PFNGLXQUERYSWAPGROUPNVPROC)      (getFunctionByName("glXQuerySwapGroupNV"));
-   mGlxFuncs->glXQueryMaxSwapGroupsNV  = (PFNGLXQUERYMAXSWAPGROUPSNVPROC)  (getFunctionByName("glXQueryMaxSwapGroupsNV"));
-   mGlxFuncs->glXQueryFrameCountNV     = (PFNGLXQUERYFRAMECOUNTNVPROC)     (getFunctionByName("glXQueryFrameCountNV"));
-   mGlxFuncs->glXResetFrameCountNV     = (PFNGLXRESETFRAMECOUNTNVPROC)     (getFunctionByName("glXResetFrameCountNV"));
+   if ( ! mExtensionsRegistered )
+   {
+      vrj::opengl::ExtensionLoader::registerExtensions();
+   
+      mGlxFuncs->glXJoinSwapGroupNV =
+         (PFNGLXJOINSWAPGROUPNVPROC) getFunctionByName("glXJoinSwapGroupNV");
+      mGlxFuncs->glXBindSwapBarrierNV =
+         (PFNGLXBINDSWAPBARRIERNVPROC) getFunctionByName("glXBindSwapBarrierNV");
+      mGlxFuncs->glXQuerySwapGroupNV =
+         (PFNGLXQUERYSWAPGROUPNVPROC) getFunctionByName("glXQuerySwapGroupNV");
+      mGlxFuncs->glXQueryMaxSwapGroupsNV  =
+         (PFNGLXQUERYMAXSWAPGROUPSNVPROC) getFunctionByName("glXQueryMaxSwapGroupsNV");
+      mGlxFuncs->glXQueryFrameCountNV =
+         (PFNGLXQUERYFRAMECOUNTNVPROC) getFunctionByName("glXQueryFrameCountNV");
+      mGlxFuncs->glXResetFrameCountNV =
+         (PFNGLXRESETFRAMECOUNTNVPROC) getFunctionByName("glXResetFrameCountNV");
+      mGlxFuncs->glXCreateContextAttribsARB =
+         (PFNGLXCREATECONTEXTATTRIBSARBPROC) getFunctionByName("glXCreateContextAttribsARB");
+         
+      mExtensionsRegistered = true;
+   }
 }
 
 // --- NVIDIA Swap Control methods --- //
@@ -150,6 +172,25 @@ Bool ExtensionLoaderGLX::glXResetFrameCountNV(::Display* dpy, int screen)
    vprASSERT(mGlxFuncs->glXResetFrameCountNV != NULL &&
              "Attemped to call unsupported extension.");
    return mGlxFuncs->glXResetFrameCountNV(dpy, screen);
+}
+
+// --- ARB Context Creation methods --- //
+bool ExtensionLoaderGLX::hasCreateContextARB()
+{
+  return (mGlxFuncs->glXCreateContextAttribsARB != NULL);
+}
+
+GLXContext
+ExtensionLoaderGLX::glXCreateContextAttribsARB(::Display *dpy, 
+                                               GLXFBConfig config,
+                                               GLXContext shareContext,
+                                               const Bool direct,
+                                               const int* attribList)
+{
+  vprASSERT(mGlxFuncs->glXCreateContextAttribsARB != NULL &&
+            "Attemped to call unsupported extension."); 
+  return mGlxFuncs->glXCreateContextAttribsARB(dpy, config, shareContext,
+                                               direct, attribList);
 }
 
 }  // namespace opengl

@@ -177,7 +177,7 @@ bool WindowWin32::open()
    }
 
    // Create the rendering context and make it current
-   mRenderContext = wglCreateContext(mDeviceContext);
+   mRenderContext = createContext(mDeviceContext);
 
    if ( NULL == mRenderContext )
    {
@@ -206,7 +206,7 @@ bool WindowWin32::open()
    // Register extensions in this window
    mExtensions.registerExtensions();
 
-     // Check on using swap group
+   // Check on using swap group
    jccl::ConfigElementPtr disp_sys_elt =
       DisplayManager::instance()->getDisplaySystemElement();
    bool use_swap_group = disp_sys_elt->getProperty<bool>("use_swap_group");
@@ -358,7 +358,7 @@ LRESULT WindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
          }
 
          // Create the rendering context and make it current
-         mRenderContext = wglCreateContext(mDeviceContext);
+         mRenderContext = createContext(mDeviceContext);
          wglMakeCurrent(mDeviceContext, mRenderContext);
          break;
 
@@ -686,6 +686,75 @@ void WindowWin32::sizeChanged(long width, long height)
 
    updateOriginSize(mOriginX, mOriginY, width, height);
    setDirtyViewport(true);
+}
+
+// Global context creator.
+HGLRC WindowWin32::createContext(HDC hdc)
+{
+   jccl::ConfigElementPtr gl_fb_elt = mVrjDisplay->getGlFrameBufferConfig();
+
+   const bool use_create_context_attribs =
+      gl_fb_elt->getProperty<bool>("use_create_context_attribs");
+
+   if ( use_create_context_attribs )  // We want to try to use the ARB function
+   {
+      // First create a traditional context so we can get extensions
+      HGLRC context = wglCreateContext(hdc);
+
+      if ( NULL == context )
+      {
+         DWORD error_code = GetLastError();
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "ERROR: [vrj::opengl::WindowWin32::createContext()] "
+            << "wglCreateContext() failed with error code " << error_code
+            << std::endl << vprDEBUG_FLUSH;
+         return NULL;
+      }
+
+      // Make the original context current
+      wglMakeCurrent(hdc, context);
+
+      // load WGL extensions
+      mExtensions.registerExtensions();
+
+      // Delete the context
+      wglDeleteContext(context);
+
+      if ( mExtensions.hasCreateContextARB() )
+      {
+         // use environment variables to construct attribute array
+         int attribList[] = {
+            WGL_CONTEXT_MAJOR_VERSION_ARB,
+            gl_fb_elt->getProperty<int>("gl_context_major_version"),
+            WGL_CONTEXT_MINOR_VERSION_ARB,
+            gl_fb_elt->getProperty<int>("gl_context_minor_version"),
+            WGL_CONTEXT_FLAGS_ARB,
+            gl_fb_elt->getProperty<int>("gl_context_flags"),
+            0
+         };
+
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+            << "Creating WGL Context, attributes = {"
+            << attribList[0] << ", " << attribList[1] << ", "
+            << attribList[2] << ", " << attribList[3] << ", "
+            << attribList[4] << ", " << attribList[5] << ", "
+            << attribList[6] << "}"
+            <<  std::endl << vprDEBUG_FLUSH;
+
+         return mExtensions.wglCreateContextAttribsARB(hdc, 0, attribList);
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Could not detect WGL_ARB_create_context extension.\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Falling back on traditional wglCreateContext.\n"
+            << vprDEBUG_FLUSH;
+      }
+   }
+
+   return wglCreateContext(hdc);
 }
 
 // Global Window event handler.

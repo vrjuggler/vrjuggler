@@ -9,7 +9,7 @@
          <size>480</size>
          <pipe>0</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                <visual_id>-1</visual_id>
                <red_size>1</red_size>
                <green_size>1</green_size>
@@ -24,6 +24,10 @@
                <accum_alpha_size>1</accum_alpha_size>
                <num_sample_buffers>0</num_sample_buffers>
                <num_samples>0</num_samples>
+               <use_create_context_attribs>false</use_create_context_attribs>
+               <gl_context_major_version>3</gl_context_major_version>
+               <gl_context_minor_version>0</gl_context_minor_version>
+               <gl_context_flags>0</gl_context_flags>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>
@@ -70,7 +74,7 @@
          <size>480</size>
          <pipe>0</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
                <visual_id>-1</visual_id>
                <red_size>1</red_size>
                <green_size>1</green_size>
@@ -85,6 +89,10 @@
                <accum_alpha_size>1</accum_alpha_size>
                <num_sample_buffers>0</num_sample_buffers>
                <num_samples>0</num_samples>
+               <use_create_context_attribs>false</use_create_context_attribs>
+               <gl_context_major_version>3</gl_context_major_version>
+               <gl_context_minor_version>0</gl_context_minor_version>
+               <gl_context_flags>0</gl_context_flags>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>

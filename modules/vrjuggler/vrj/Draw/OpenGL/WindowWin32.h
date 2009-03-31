@@ -131,6 +131,9 @@ private:
 
    void sizeChanged(long width, long height);
 
+   // Create an OpenGL Context
+   HGLRC createContext(HDC hdc);
+
    // Register the window class with windows
    static bool registerWindowClass();
    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam,
