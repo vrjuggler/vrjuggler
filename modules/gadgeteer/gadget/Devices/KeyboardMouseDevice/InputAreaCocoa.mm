@@ -121,7 +121,30 @@ void InputAreaCocoa::addModifierEvent(const gadget::Keys key,
 void InputAreaCocoa::addMouseButtonEvent(const gadget::EventType type,
                                          NSEvent* event)
 {
-   addMouseButtonEvent(getButtonFromNum([event buttonNumber]), type, event);
+   // If the user uses the scroll wheel then set the button output 
+   // appropriately. Notes on this can be found in the InputAreaWin32.cpp and
+   // InputAreaXWin.cpp
+   if ( [event type] == NSScrollWheel )
+   {
+      // A positive value in the Y delta indicates that the wheel was rotated
+      // backward. We interpret this as Button 4 to be consistent with the X
+      // Window System.
+      if ( [event deltaY] > 0.0f )
+      {
+         addMouseButtonEvent(gadget::MBUTTON4, type, event);
+      }
+      // A negative value in the Y delta indicates that the wheel was rotated
+      // forward. We interpret this as Button 5 to be consistent with the X
+      // Window System.
+      else
+      {
+         addMouseButtonEvent(gadget::MBUTTON5, type, event);
+      }
+   }
+   else
+   {
+      addMouseButtonEvent(getButtonFromNum([event buttonNumber]), type, event);
+   }
 }
 
 void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
