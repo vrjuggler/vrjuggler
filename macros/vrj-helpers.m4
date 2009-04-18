@@ -349,7 +349,15 @@ AC_DEFUN([VJ_GET_BOOST_TOOLSET],
          gcc_major=`echo $split_gcc_ver | awk '{ print $[1] }' -`
          gcc_minor=`echo $split_gcc_ver | awk '{ print $[2] }' -`
 
-         toolset="-gcc$gcc_major$gcc_minor"
+         if test "x$PLATFORM" = "xDarwin" ; then
+            if test $vj_boost_minor -ge 37 ; then
+               $3="-xgcc$gcc_major$gcc_minor"
+            else
+               $3=''
+            fi
+         else
+            toolset="-gcc$gcc_major$gcc_minor"
+         fi
       else
          toolset='-gcc'
       fi
@@ -392,8 +400,6 @@ AC_DEFUN([VJ_GET_BOOST_TOOLSET],
    # A correct installation of Boost on Darwin does not include the toolset
    # name as part of the library file name.
    if test "x$PLATFORM" = "xDarwin" ; then
-      $3=''
-
       if test $vj_boost_major -eq 1 -a $vj_boost_minor -ge 34 ; then
          $4='-mt'
       else
