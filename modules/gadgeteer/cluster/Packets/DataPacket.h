@@ -110,7 +110,7 @@ public:
    /**
     * Return the GUID of the object that we are sending raw data for.
     */
-   vpr::GUID getObjectId()
+   const vpr::GUID& getObjectId() const
    {
       return mObjectId;
    }

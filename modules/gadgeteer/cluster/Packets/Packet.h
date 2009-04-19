@@ -102,7 +102,7 @@ public:
    /**
     * Get the GUID of the Plugin that should handle this packet.
     */
-   vpr::GUID getPluginId() const
+   const vpr::GUID& getPluginId() const
    {
       return mPluginId;
    }
