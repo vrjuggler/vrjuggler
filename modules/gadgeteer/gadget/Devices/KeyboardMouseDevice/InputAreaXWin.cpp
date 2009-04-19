@@ -288,88 +288,49 @@ void InputAreaXWin::handleEvent(::XEvent& event)
       // in mRealkeys so that it will be remembered as being held down
       // untill a ButtonRelease event occurs.
       case ButtonPress:
-         switch ( event.xbutton.button )
-         {
-         case Button1:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON1] = 1;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON1] += 1;
-            addMouseButtonEvent(gadget::MBUTTON1,
-                                gadget::MouseButtonPressEvent,
-                                event.xbutton);
-            break;
-         case Button2:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON2] = 1;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON2] += 1;
-            addMouseButtonEvent(gadget::MBUTTON2,
-                                gadget::MouseButtonPressEvent,
-                                event.xbutton);
-            break;
-         case Button3:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON3] = 1;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON3] += 1;
-            addMouseButtonEvent(gadget::MBUTTON3,
-                                gadget::MouseButtonPressEvent,
-                                event.xbutton);
-            break;
-         case Button4:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 1;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON4] += 1;
-            addMouseButtonEvent(gadget::MBUTTON4,
-                                gadget::MouseButtonPressEvent,
-                                event.xbutton);
-            break;
-         case Button5:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 1;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON5] += 1;
-            addMouseButtonEvent(gadget::MBUTTON5,
-                                gadget::MouseButtonPressEvent,
-                                event.xbutton);
-            break;
-         }
-
-         break;
-
       // A mouse button was released.
       case ButtonRelease:
+         std::cout << "Button event" << std::endl;
+         // At the moment, mouse scrolling is hard-coded to use the following
+         // mapping:
+         //
+         //    X11 Button 4 --> Mouse scroll up
+         //    X11 Button 5 --> Mouse scroll down
+         //    X11 Button 6 --> Mouse scroll left
+         //    X11 Button 7 --> Mouse scroll right
+         //
+         // It is not known if this can be expressed in a more flexible
+         // manner.
          switch ( event.xbutton.button )
          {
-         case Button1:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON1] = 0;
-            addMouseButtonEvent(gadget::MBUTTON1,
-                                gadget::MouseButtonReleaseEvent,
-                                event.xbutton);
-            break;
-         case Button2:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON2] = 0;
-            addMouseButtonEvent(gadget::MBUTTON2,
-                                gadget::MouseButtonReleaseEvent,
-                                event.xbutton);
-            break;
-         case Button3:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON3] = 0;
-            addMouseButtonEvent(gadget::MBUTTON3,
-                                gadget::MouseButtonReleaseEvent,
-                                event.xbutton);
-            break;
-         case Button4:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 0;
-            addMouseButtonEvent(gadget::MBUTTON4,
-                                gadget::MouseButtonReleaseEvent,
-                                event.xbutton);
-            break;
-         case Button5:
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 0;
-            addMouseButtonEvent(gadget::MBUTTON5,
-                                gadget::MouseButtonReleaseEvent,
-                                event.xbutton);
-            break;
-         }
+            // Scrolling "buttons".
+            case Button4:
+            case Button5:
+            case 6:
+            case 7:
+               // Check for handling of the deprecated scrolling behavior.
+               if ( mKeyboardMouseDevice->useButtonsForScrolling() )
+               {
+                  handleMouseButtonEvent(event);
+               }
+               // Use the new scrolling behavior.
+               else
+               {
+                  handleMouseScrollEvent(event);
+               }
 
+               break;
+            // All other buttons.
+            default:
+               handleMouseButtonEvent(event);
+               break;
+         }
          break;
 
       // The windows size has changed
       case ConfigureNotify:
-            updateOriginAndSize(event.xconfigure.width, event.xconfigure.height);
+            updateOriginAndSize(event.xconfigure.width,
+                                event.xconfigure.height);
          break;
       }
 
@@ -514,7 +475,7 @@ void InputAreaXWin::addMouseMoveEvent(const XMotionEvent& event)
    gadget::EventPtr mouse_event(
       new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
                              event.x, mHeight - event.y, event.x_root,
-                             attrs.height - event.y_root,
+                             attrs.height - event.y_root, 0.0f, 0.0f,
                              getMask(event.state), event.time)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
@@ -528,7 +489,7 @@ void InputAreaXWin::addMouseButtonEvent(const gadget::Keys button,
    gadget::EventPtr mouse_event(
       new gadget::MouseEvent(type, button, event.x, mHeight - event.y,
                              event.x_root, attrs.height - event.y_root,
-                             getMask(event.state), event.time)
+                             0.0f, 0.0f, getMask(event.state), event.time)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
@@ -806,5 +767,146 @@ gadget::Keys InputAreaXWin::xKeyToKey(KeySym xKey)
    }
 }
 
+void InputAreaXWin::handleMouseButtonEvent(const XEvent& event)
+{
+   vprASSERT(event.type == ButtonPress || event.type == ButtonRelease);
+
+   gadget::Keys gadget_button;
+   switch ( event.xbutton.button )
+   {
+      case Button1:
+         gadget_button = gadget::MBUTTON1;
+         break;
+      case Button2:
+         gadget_button = gadget::MBUTTON2;
+         break;
+      case Button3:
+         gadget_button = gadget::MBUTTON3;
+         break;
+      case Button4:
+         gadget_button = gadget::MBUTTON4;
+         break;
+      case Button5:
+         gadget_button = gadget::MBUTTON5;
+         break;
+      case 6:
+         gadget_button = gadget::MBUTTON6;
+         break;
+      case 7:
+         gadget_button = gadget::MBUTTON7;
+         break;
+      case 8:
+         gadget_button = gadget::MBUTTON8;
+         break;
+      case 9:
+         gadget_button = gadget::MBUTTON9;
+         break;
+      default:
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "Unknown X11 mouse button number " << event.xbutton.button
+            << "! Please report this as a Gadgeteer bug.\n"
+            << vprDEBUG_FLUSH;
+         gadget_button = gadget::KEY_UNKNOWN;
+         break;
+   }
+
+   std::cout << "handleMouseButtonEvent(): gadget_button = " << gadget_button
+             << std::endl;
+   if ( gadget::KEY_UNKNOWN != gadget_button )
+   {
+      gadget::EventType gadget_event;
+
+      if ( ButtonPress == event.type )
+      {
+         gadget_event = gadget::MouseButtonPressEvent;
+         mKeyboardMouseDevice->mRealkeys[gadget_button] = 1;
+         mKeyboardMouseDevice->mKeys[gadget_button] += 1;
+      }
+      else
+      {
+         gadget_event = gadget::MouseButtonReleaseEvent;
+         mKeyboardMouseDevice->mRealkeys[gadget_button] = 0;
+      }
+
+      addMouseButtonEvent(gadget_button, gadget_event, event.xbutton);
+   }
+}
+
+void InputAreaXWin::handleMouseScrollEvent(const XEvent& event)
+{
+   vprASSERT(event.type == ButtonPress || event.type == ButtonRelease);
+
+   float delta_x(0.0f);
+   float delta_y(0.0f);
+
+   gadget::Keys scroll_key;
+
+   // At the moment, mouse scrolling is hard-coded to use the following
+   // mapping:
+   //
+   //    X11 Button 4 --> Mouse scroll up
+   //    X11 Button 5 --> Mouse scroll down
+   //    X11 Button 6 --> Mouse scroll left
+   //    X11 Button 7 --> Mouse scroll right
+   //
+   // This is different from other platforms where the scrolling is handled as
+   // a first class event type and then mapped back onto configured button
+   // presses. X11 does not have such an event type, and it is not known if
+   // scrolling has to be mapped to these button presses.
+   switch ( event.xbutton.button )
+   {
+      case Button4:
+         scroll_key = gadget::MOUSE_SCROLL_UP;
+         delta_y = 1.0f;
+         break;
+      case Button5:
+         scroll_key = gadget::MOUSE_SCROLL_DOWN;
+         delta_y = -1.0f;
+         break;
+      case 6:
+         scroll_key = gadget::MOUSE_SCROLL_LEFT;
+         delta_x = -1.0f;
+         break;
+      case 7:
+         scroll_key = gadget::MOUSE_SCROLL_RIGHT;
+         delta_x = 1.0f;
+         break;
+      default:
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "Unknown X11 mouse button number " << event.xbutton.button
+            << " used for scorlling! Please report this as a Gadgeteer bug.\n"
+            << vprDEBUG_FLUSH;
+         scroll_key = gadget::KEY_UNKNOWN;
+         break;
+   }
+
+   std::cout << "handleMouseScrollEvent(): scroll_key = " << scroll_key
+             << std::endl;
+   if ( gadget::KEY_UNKNOWN != scroll_key )
+   {
+      if ( ButtonPress == event.type )
+      {
+         mKeyboardMouseDevice->mRealkeys[scroll_key] = 1;
+         mKeyboardMouseDevice->mKeys[scroll_key] += 1;
+      }
+      else
+      {
+         mKeyboardMouseDevice->mRealkeys[scroll_key] = 0;
+      }
+
+      std::cout << "Adding scroll event to the queue" << std::endl;
+      const XWindowAttributes attrs(getDisplayAttributes());
+      gadget::EventPtr mouse_event(
+         new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
+                                event.xbutton.x, mHeight - event.xbutton.y,
+                                event.xbutton.x_root,
+                                attrs.height - event.xbutton.y_root,
+                                delta_x, delta_y,
+                                getMask(event.xbutton.state),
+                                event.xbutton.time)
+      );
+      mKeyboardMouseDevice->addEvent(mouse_event);
+   }
+}
 
 }

@@ -34,7 +34,8 @@ namespace gadget
 
 MouseEvent::MouseEvent(const gadget::EventType type, const gadget::Keys button,
                        const int x, const int y, const int globalX,
-                       const int globalY, const int state,
+                       const int globalY, const float scrollDeltaX,
+                       const float scrollDeltaY, const int state,
                        const unsigned long time)
    : gadget::Event(type, time)
    , mButton(button)
@@ -42,8 +43,11 @@ MouseEvent::MouseEvent(const gadget::EventType type, const gadget::Keys button,
    , mRelativeY(y)
    , mGlobalX(globalX)
    , mGlobalY(globalY)
+   , mScrollDeltaX(scrollDeltaX)
+   , mScrollDeltaY(scrollDeltaY)
    , mState(state)
 {
+   /* Do nothing. */ ;
 }
 
 MouseEvent::MouseEvent()
@@ -53,8 +57,11 @@ MouseEvent::MouseEvent()
    , mRelativeY(0)
    , mGlobalX(0)
    , mGlobalY(0)
+   , mScrollDeltaX(0.0f)
+   , mScrollDeltaY(0.0f)
    , mState(0)
 {
+   /* Do nothing. */ ;
 }
 
 // Serializes this event using the given ObjectWriter.
@@ -68,6 +75,8 @@ void MouseEvent::writeObject(vpr::ObjectWriter* writer)
    writer->writeUint32(mRelativeY);
    writer->writeUint32(mGlobalX);
    writer->writeUint32(mGlobalY);
+   writer->writeFloat(mScrollDeltaX);
+   writer->writeFloat(mScrollDeltaY);
    writer->writeUint32(mState);
 }
 
@@ -84,6 +93,8 @@ void MouseEvent::readObject(vpr::ObjectReader* reader)
    mRelativeY = reader->readUint32();
    mGlobalX = reader->readUint32();
    mGlobalY = reader->readUint32();
+   mScrollDeltaX = reader->readFloat();
+   mScrollDeltaY = reader->readFloat();
    mState = reader->readUint32();
 }
 

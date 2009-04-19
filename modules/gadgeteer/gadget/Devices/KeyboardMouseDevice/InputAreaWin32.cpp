@@ -354,66 +354,132 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "RightButtonUp\n" << vprDEBUG_FLUSH;
          break;
 
-      // Mouse wheel events are interpreted as the pressing and releasing of
-      // either Button 4 or Button 5. This is the behavior with the X Window
-      // System.
       case WM_MOUSEWHEEL:
-         // A positive value in the Z delta indicates that the wheel
-         // was rotated forward. We interpret this as Button 4 to be
-         // consistent with the X Window System.
-         if ( ((short) HIWORD(message.wParam)) > 0 )
+         // Check for handling of the deprecated scrolling behavior.
+         if ( mKeyboardDevice->useButtonsForScrolling() )
          {
+            // Mouse wheel events are interpreted as the pressing and
+            // releasing of either Button 4 or Button 5. This is the behavior
+            // with the X Window System.
+            gadget::Keys gadget_button;
+
+            // A positive value in the Z delta indicates that the wheel was
+            // rotated forward.
+            if ( GET_WHEEL_DELTA_WPARAM(message.wParam) > 0 )
+            {
+               gadget_button = mKeyboardMouseDevice->getScrollUpButton();
+            }
+            // A negative value in the Z delta indicates that the wheel was
+            // rotated backward.
+            else
+            {
+               gadget_button = mKeyboardMouseDevice->getScrollDownButton();
+            }
+
             // First, we treat this event as a mouse button press.
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 1;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON4] += 1;
+            mKeyboardMouseDevice->mRealkeys[gadget_button] = 1;
+            mKeyboardMouseDevice->mKeys[gadget_button] += 1;
 
-            addMouseButtonEvent(gadget::MBUTTON4,
-                                gadget::MouseButtonPressEvent, message);
+            addMouseButtonEvent(gadget_button, gadget::MouseButtonPressEvent,
+                                message);
 
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
-               << "Button 4 down (Scroll wheel forward)\n"
-               << vprDEBUG_FLUSH;
+            // Then we treat it as a mouse button release. Again, this is to
+            // be consistent with the behavior seen with X11.
+            mKeyboardMouseDevice->mRealkeys[gadget_button] = 0;
+            mKeyboardMouseDevice->mKeys[gadget_button] += 1;
 
-            // Then we treat it as a mouse button release. Again, this is
-            // to be consistent with the behavior seen with X11.
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON4] = 0;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON4] += 1;
-
-            addMouseButtonEvent(gadget::MBUTTON4,
-                                gadget::MouseButtonReleaseEvent, message);
-
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
-               << "Button 4 up\n" << vprDEBUG_FLUSH;
+            addMouseButtonEvent(gadget_button, gadget::MouseButtonReleaseEvent,
+                                message);
          }
-         // A negative value in the Z delta indicates that the wheel
-         // was rotated backward. We interpret this as Button 5 to be
-         // consistent with the X Window System.
+         // Use the new scrolling behavior.
          else
          {
-            // First, we treat this event as a mouse button press.
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 1;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON5] += 1;
+            const short delta(GET_WHEEL_DELTA_WPARAM(message.wParam));
 
-            addMouseButtonEvent(gadget::MBUTTON5,
-                                gadget::MouseButtonPressEvent, message);
+            gadget::Keys scroll_key = delta > 0 ? gadget::MOUSE_SCROLL_UP
+                                                : gadget::MOUSE_SCROLL_DOWN;
 
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
-               << "Button 5 down (Scroll wheel backward)\n"
-               << vprDEBUG_FLUSH;
+            // This is not how the wheel delta is supposed to be interpreted
+            // according to the API documentation. However, we are doing it
+            // this way to be consistent with Cocoa. See the following for
+            // more information:
+            //
+            // http://msdn.microsoft.com/en-us/library/ms645617(VS.85).aspx
+            const float delta_y(
+               static_cast<float>(delta) / static_cast<float>(WHEEL_DELTA)
+            );
 
-            // Then we treat it as a mouse button release. Again, this is
-            // to be consistent with the behavior seen with X11.
-            mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON5] = 0;
-            mKeyboardMouseDevice->mKeys[gadget::MBUTTON5] += 1;
+            mKeyboardMouseDevice->mRealkeys[scroll_key] = 1;
+            mKeyboardMouseDevice->mKeys[scroll_key] += 1;
 
-            addMouseButtonEvent(gadget::MBUTTON5,
-                                gadget::MouseButtonReleaseEvent, message);
-
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
-               << "Button 5 up\n" << vprDEBUG_FLUSH;
+            addMouseScrollEvent(0.0f, delta_y, message);
          }
 
          break;
+
+      case WM_MOUSEHWHEEL:
+         // Check for handling of the deprecated scrolling behavior.
+         if ( mKeyboardDevice->useButtonsForScrolling() )
+         {
+            // Mouse wheel events are interpreted as the pressing and
+            // releasing of either Button 4 or Button 5. This is the behavior
+            // with the X Window System.
+            gadget::Keys gadget_button;
+
+            // A positive value in the Z delta indicates that the wheel was
+            // rotated to the right.
+            if ( GET_WHEEL_DELTA_WPARAM(message.wParam) > 0 )
+            {
+               gadget_button = mKeyboardMouseDevice->getScrollRightButton();
+            }
+            // A negative value in the Z delta indicates that the wheel was
+            // rotated to the left.
+            else
+            {
+               gadget_button = mKeyboardMouseDevice->getScrollLeftButton();
+            }
+
+            // First, we treat this event as a mouse button press.
+            mKeyboardMouseDevice->mRealkeys[gadget_button] = 1;
+            mKeyboardMouseDevice->mKeys[gadget_button] += 1;
+
+            addMouseButtonEvent(gadget_button, gadget::MouseButtonPressEvent,
+                                message);
+
+            // Then we treat it as a mouse button release. Again, this is to
+            // be consistent with the behavior seen with X11.
+            mKeyboardMouseDevice->mRealkeys[gadget_button] = 0;
+            mKeyboardMouseDevice->mKeys[gadget_button] += 1;
+
+            addMouseButtonEvent(gadget_button, gadget::MouseButtonReleaseEvent,
+                                message);
+         }
+         // Use the new scrolling behavior.
+         else
+         {
+            const short delta(GET_WHEEL_DELTA_WPARAM(message.wParam));
+
+            gadget::Keys scroll_key = delta > 0 ? gadget::MOUSE_SCROLL_RIGHT
+                                                : gadget::MOUSE_SCROLL_LEFT;
+
+            // This is not how the wheel delta is supposed to be interpreted
+            // according to the API documentation. However, we are doing it
+            // this way to be consistent with Cocoa. See the following for
+            // more information:
+            //
+            // http://msdn.microsoft.com/en-us/library/ms645617(VS.85).aspx
+            const float delta_x(
+               static_cast<float>(delta) / static_cast<float>(WHEEL_DELTA)
+            );
+
+            mKeyboardMouseDevice->mRealkeys[scroll_key] = 1;
+            mKeyboardMouseDevice->mKeys[scroll_key] += 1;
+
+            addMouseScrollEvent(delta_x, 0.0f, message);
+         }
+
+         break;
+
 
          // mouse movement
       case WM_MOUSEMOVE:
@@ -802,8 +868,8 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
    gadget::EventPtr mouse_event(
       new gadget::MouseEvent(type, button, GET_X_LPARAM(msg.lParam),
                              mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
-                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y,
-                             state, msg.time)
+                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, 0.0f,
+                             0.0f, state, msg.time)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
@@ -816,8 +882,24 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
       new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
                              GET_X_LPARAM(msg.lParam),
                              mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
-                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y,
-                             state, msg.time)
+                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, 0.0f,
+                             0.0f, state, msg.time)
+   );
+   mKeyboardMouseDevice->addEvent(mouse_event);
+}
+
+void InputAreaWin32::addMouseScrollEvent(const float deltaX,
+                                         const float deltaY,
+                                         const MSG& message)
+{
+   int state = getModifierMask() | getButtonMask();
+
+   gadget::EventPtr mouse_event(
+      new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
+                             GET_X_LPARAM(msg.lParam),
+                             mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
+                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, deltaX,
+                             deltaY, state, msg.time)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }

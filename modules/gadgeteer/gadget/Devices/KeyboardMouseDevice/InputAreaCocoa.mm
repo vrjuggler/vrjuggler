@@ -122,23 +122,30 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::EventType type,
                                          NSEvent* event)
 {
    // If the user uses the scroll wheel then set the button output 
-   // appropriately. Notes on this can be found in the InputAreaWin32.cpp and
-   // InputAreaXWin.cpp
+   // appropriately. This behavior is deprecated.
    if ( [event type] == NSScrollWheel )
    {
-      // A positive value in the Y delta indicates that the wheel was rotated
-      // backward. We interpret this as Button 4 to be consistent with the X
-      // Window System.
+      vprASSERT(mKeyboardMouseDevice->useButtonsForScrolling());
+
       if ( [event deltaY] > 0.0f )
       {
-         addMouseButtonEvent(gadget::MBUTTON4, type, event);
+         addMouseButtonEvent(mKeyboardMouseDevice->getScrollUpButton(),
+                             type, event);
       }
-      // A negative value in the Y delta indicates that the wheel was rotated
-      // forward. We interpret this as Button 5 to be consistent with the X
-      // Window System.
+      else if ( [event deltaY] < 0.0f )
+      {
+         addMouseButtonEvent(mKeyboardMouseDevice->getScrollDownButton(),
+                             type, event);
+      }
+      else if ( [event deltaX] > 0.0f )
+      {
+         addMouseButtonEvent(mKeyboardMouseDevice->getScrollLeftButton(),
+                             type, event);
+      }
       else
       {
-         addMouseButtonEvent(gadget::MBUTTON5, type, event);
+         addMouseButtonEvent(mKeyboardMouseDevice->getScrollRightButton(),
+                             type, event);
       }
    }
    else
@@ -157,11 +164,11 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
    gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
                                                        view_loc.x, view_loc.y,
                                                        root_loc.x, root_loc.y,
+                                                       0.0f, 0.0f,
                                                        [event modifierFlags],
                                                        [event timestamp]));
    doAddEvent(mouse_event, button);
 }
-
 
 void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
 {
@@ -172,6 +179,7 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
                                                       gadget::NO_MBUTTON,
                                                       view_loc.x, view_loc.y,
                                                       root_loc.x, root_loc.y,
+                                                      0.0f, 0.0f,
                                                       [event modifierFlags],
                                                       [event timestamp]));
 
@@ -207,6 +215,71 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
    }
 
    mKeyboardMouseDevice->addEvent(move_event);
+}
+
+void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
+{
+   // Check for handling of the deprecated scrolling behavior.
+   if ( mKeyboardMouseDevice->useButtonsForScrolling() )
+   {
+      // Handling this as a press event and then as a release event is to be
+      // consistent with the X Window System.
+      addMouseButtonEvent(gadget::MouseButtonPressEvent, event);
+      addMouseButtonEvent(gadget::MouseButtonReleaseEvent, event);
+   }
+   // Use the new scrolling behavior.
+   else
+   {
+      const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
+                                              fromView:nil];
+      const NSPoint root_loc = [NSEvent mouseLocation];
+
+      // Note that the X delta value is negated. Treating values in the
+      // negative X axis as scrolling to the right seems counter-intuitive.
+      // By negating the value, we get a postive X delta for scrolling to the
+      // right and a negative X delta for scrolling to the left.
+      const float dx(-[event deltaX]);
+      const float dy([event deltaY]);
+
+      gadget::EventPtr scroll_event(
+         new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
+                                view_loc.x, view_loc.y, root_loc.x,
+                                root_loc.y, dx, dy, [event modifierFlags],
+                                [event timestamp])
+      );
+
+      // Hold the keys lock for only as long as we need it.
+      {
+         vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);
+
+         // Handle the deltas for the X and Y axes separately. A mouse with a
+         // roller ball can scroll in both axes simultaneously.
+
+         if ( dx > 0.0f )
+         {
+            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_RIGHT] +=
+               static_cast<int>(dx);
+         }
+         else if ( dx < 0.0f )
+         {
+            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_LEFT] +=
+               static_cast<int>(-dx);
+         }
+
+         if ( dy > 0.0f )
+         {
+            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_UP] +=
+               static_cast<int>(dy);
+         }
+         else if ( dy < 0.0f )
+         {
+            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_DOWN] +=
+               static_cast<int>(-dy);
+         }
+      }
+
+      mKeyboardMouseDevice->addEvent(scroll_event);
+   }
 }
 
 void InputAreaCocoa::flagsChanged(NSEvent* event)
@@ -268,6 +341,12 @@ gadget::Keys InputAreaCocoa::getButtonFromNum(const int buttonNum) const
          break;
       case 6:
          button = gadget::MBUTTON7;
+         break;
+      case 7:
+         button = gadget::MBUTTON8;
+         break;
+      case 8:
+         button = gadget::MBUTTON9;
          break;
    }
 

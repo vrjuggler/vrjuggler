@@ -32,6 +32,22 @@ namespace gadget
 {
 vprSingletonImp(KeyboardMouseDevice::KeyboardMouseDeviceRegistry);
 
+KeyboardMouseDevice::KeyboardMouseDevice()
+   : mMouseSensitivity(1.0f)
+   , mUseButtonsForScrolling(false)
+   , mScrollUpButton(gadget::KEY_NONE)
+   , mScrollDownButton(gadget::KEY_NONE)
+   , mScrollLeftButton(gadget::KEY_NONE)
+   , mScrollRightButton(gadget::KEY_NONE)
+{
+   /* Do nothing. */ ;
+}
+
+KeyboardMouseDevice::~KeyboardMouseDevice()
+{
+   stopSampling();
+}
+
 std::string KeyboardMouseDevice::getElementType()
 {
    return std::string("keyboard_mouse_device");
@@ -39,7 +55,7 @@ std::string KeyboardMouseDevice::getElementType()
 
 bool KeyboardMouseDevice::config(jccl::ConfigElementPtr e)
 {
-   unsigned required_definition_ver(1);
+   unsigned required_definition_ver(2);
 
    if(e->getVersion() < required_definition_ver)
    {
@@ -65,6 +81,28 @@ bool KeyboardMouseDevice::config(jccl::ConfigElementPtr e)
       mMouseSensitivity = 0.5;
    }
 
+   mUseButtonsForScrolling = e->getProperty<bool>("scroll_as_buttons");
+
+   if ( mUseButtonsForScrolling )
+   {
+      mScrollUpButton =
+         static_cast<gadget::Keys>(
+            e->getProperty<unsigned int>("scroll_up_button")
+         );
+      mScrollDownButton =
+         static_cast<gadget::Keys>(
+            e->getProperty<unsigned int>("scroll_down_button")
+         );
+      mScrollLeftButton =
+         static_cast<gadget::Keys>(
+            e->getProperty<unsigned int>("scroll_left_button")
+         );
+      mScrollRightButton =
+         static_cast<gadget::Keys>(
+            e->getProperty<unsigned int>("scroll_right_button")
+         );
+   }
+
    for ( int i = 0; i < gadget::LAST_KEY; ++i )
    {
       mRealkeys[i] = mKeys[i] = mCurKeys[i];
@@ -74,7 +112,9 @@ bool KeyboardMouseDevice::config(jccl::ConfigElementPtr e)
    event_source_info.mSourceName = e->getName();
    event_source_info.mKeyboardMouseDevice = this;
 
-   KeyboardMouseDeviceRegistry::instance()->addKeyboardMouseDevice(e->getName(), event_source_info);
+   KeyboardMouseDeviceRegistry::instance()->addKeyboardMouseDevice(
+      e->getName(), event_source_info
+   );
 
    return true;
 }

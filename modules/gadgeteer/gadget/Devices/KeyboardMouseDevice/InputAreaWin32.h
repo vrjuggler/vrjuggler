@@ -72,6 +72,26 @@ protected:
                                     const gadget::EventType& type,
                                     const MSG& message);
    virtual void addMouseMoveEvent(const MSG& message);
+
+   /**
+    * Adds a new mouse scroll event to the event queue for this input area.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param deltaX  The change in the X scrolling axis. A negative value
+    *                indicates scrolling left, and a positive value indicates
+    *                scrolling right.
+    * @param deltaY  The change in the Y scrolling axis. A positive value
+    *                indicates scrolling up, and a negative value indicates
+    *                scrolling down.
+    * @param message The message from the windowing system describing the
+    *                scroll event.
+    *
+    * @since 1.3.22
+    */
+   void addMouseScrollEvent(const float deltaX, const float deltaY,
+                            const MSG& message);
+
    int getModifierMask();
    int getButtonMask();
    static void doInternalError( const std::string& msg );

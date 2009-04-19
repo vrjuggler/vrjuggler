@@ -88,6 +88,31 @@ protected:
 
 private:
    /**
+    * Handles the interpretation of the given XEvent object as a mouse button
+    * press or release event.
+    *
+    * @post A new gadget::MouseEvent object is added to the keyboard/mouse
+    *       event queue with its type set to either
+    *       gadget::MouseButtonPressEvent (for an X11 ButtonPress event) or
+    *       gadget::MouseButtonReleaseEvent (for an X11 ButtonRelease event).
+    *
+    * @since 1.3.22
+    */
+   void handleMouseButtonEvent(const XEvent& event);
+
+   /**
+    * Handles the interpretation of the given XEvent object as a mouse scroll
+    * event.
+    *
+    * @post If the event is interpreted properly, a new gadget::MouseEvent
+    *       object is added to the keyboard/mouse event queue with its type
+    *       set to gadget::MouseScrollEvent.
+    *
+    * @since 1.3.22
+    */
+   void handleMouseScrollEvent(const XEvent& event);
+
+   /**
     * Adds a new key press/release event to the event queue for this window.
     *
     * @post A new event (gadget::KeyEvent) is added to the event queue.
@@ -149,7 +174,7 @@ protected:
 
    ::Display*           mXDisplay;
    ::Window             mXWindow;
-   
+
    unsigned int mWidth;          /**< Input area width */
    unsigned int mHeight;         /**< Input area height */
    bool         mBlocking;       /**< Are we using a display we manage ourselves (true) or a remote one (false). */

@@ -43,7 +43,8 @@ enum EventType
    KeyReleaseEvent         = 2,  /**< Key release event */
    MouseButtonPressEvent   = 3,  /**< Mouse button press event */
    MouseButtonReleaseEvent = 4,  /**< Mouse button release event */
-   MouseMoveEvent          = 5   /**< Mouse move event */
+   MouseMoveEvent          = 5,  /**< Mouse move event */
+   MouseScrollEvent        = 6   /**< Mouse scroll event */
 };
 
 /** \class Event Event.h gadget/Type/KeyboardMouse/Event.h

@@ -40,6 +40,7 @@ namespace gadget
 GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseButtonPressEvent );
 GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseButtonReleaseEvent );
 GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseMoveEvent );
+GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseScrollEvent );
 
 /** \class MouseEvent MouseEvent.h gadget/Type/KeyboardMouse/MouseEvent.h
  *
@@ -62,6 +63,12 @@ public:
     *                      window (i.e., the desktop).
     * @param globalY       The Y coordiante of the mouse relative to the root
     *                      window (i.e., the desktop).
+    * @param scrollDeltaX  The scroll delta in the X axis (left/right). A
+    *                      negative value indicates scrolling to the left, and
+    *                      a positive value indicates scrolling to the right.
+    * @param scrollDeltaY  The scroll delta in the Y axis (up/down). A
+    *                      negative value indicates scrolling down, and a
+    *                      positive value indicates scrolling up.
     * @param state         The mask of mouse buttons and any modifiers being
     *                      pressed.  This should be constructed using the
     *                      bitwise OR of gadget::ModifierMask and
@@ -76,6 +83,7 @@ public:
     */
    MouseEvent(const gadget::EventType type, const gadget::Keys button,
               const int x, const int y, const int globalX, const int globalY,
+              const float scrollDeltaX, const float scrollDeltaY,
               const int state, const unsigned long time);
 
    /**
@@ -99,6 +107,8 @@ public:
       return mButton;
    }
 
+   /** @name Mouse Position Information */
+   //@{
    /**
     * Returns the X coordinate of the mouse pointer relative to the window.
     */
@@ -132,6 +142,36 @@ public:
    {
       return mGlobalY;
    }
+   //@}
+
+   /** @name Scroll Deltas */
+   //@{
+   /**
+    * Returns the scroll delta in the X axis (right/left scrolling). A
+    * positive value indicates scrolling right, and a negative value indicates
+    * scrolling left. This value is only valid if type() returns
+    * gadget::MouseScrollEvent.
+    *
+    * @since 1.3.22
+    */
+   float getScrollDeltaX() const
+   {
+      return mScrollDeltaX;
+   }
+
+   /**
+    * Returns the scroll delta in the Y axis (up/down scrolling). A positive
+    * value indicates scrolling up, and a negative value indicates scrolling
+    * down. This value is only valid if type() returns
+    * gadget::MouseScrollEvent.
+    *
+    * @since 1.3.22
+    */
+   float getScrollDeltaY() const
+   {
+      return mScrollDeltaY;
+   }
+   //@}
 
    /**
     * Returns the state of the mouse buttons and keyboard modifier keys
@@ -169,6 +209,8 @@ private:
    int          mRelativeY;     /**< Relative Y position. */
    int          mGlobalX;       /**< Global X position. */
    int          mGlobalY;       /**< Global Y position. */
+   float        mScrollDeltaX;  /**< Scroll delta on X axis. */
+   float        mScrollDeltaY;  /**< Scroll delta on Y axis. */
    int          mState;         /**< Mouse button and modifier key state. */
 };
 

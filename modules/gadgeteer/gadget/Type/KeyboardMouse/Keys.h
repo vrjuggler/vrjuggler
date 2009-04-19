@@ -81,18 +81,25 @@ enum Keys
    KEY_ESC,
 
    // XXX: Mouse information probably shouldn't be here in the long term.
-   MOUSE_POSX,
-   MOUSE_NEGX,
-   MOUSE_POSY,
-   MOUSE_NEGY,
-   MBUTTON1,   /**< Mouse button 1. */
-   MBUTTON2,   /**< Mouse button 2. */
-   MBUTTON3,   /**< Mouse button 3. */
-   MBUTTON4,   /**< Mouse button 4. */
-   MBUTTON5,   /**< Mouse button 5. */
-   MBUTTON6,   /**< Mouse button 6. */
-   MBUTTON7,   /**< Mouse button 7. */
-   NO_MBUTTON, /**< No mouse button. */
+   MOUSE_POSX,          /**< Mouse movement in the positive X axis. */
+   MOUSE_NEGX,          /**< Mouse movement in the negative X axis. */
+   MOUSE_POSY,          /**< Mouse movement in the positive Y axis. */
+   MOUSE_NEGY,          /**< Mouse movement in the negative Y axis. */
+   MBUTTON1,            /**< Mouse button 1. */
+   MBUTTON2,            /**< Mouse button 2. */
+   MBUTTON3,            /**< Mouse button 3. */
+   MBUTTON4,            /**< Mouse button 4. */
+   MBUTTON5,            /**< Mouse button 5. */
+   MBUTTON6,            /**< Mouse button 6. */
+   MBUTTON7,            /**< Mouse button 7. */
+   MBUTTON8,            /**< Mouse button 8. */
+   MBUTTON9,            /**< Mouse button 9. */
+   NO_MBUTTON,          /**< No mouse button. */
+
+   MOUSE_SCROLL_UP,     /**< Mouse scroll up. */
+   MOUSE_SCROLL_DOWN,   /**< Mouse scroll down. */
+   MOUSE_SCROLL_LEFT,   /**< Mouse scroll left. */
+   MOUSE_SCROLL_RIGHT,  /**< Mouse scroll right. */
 
    KEY_TAB,
    KEY_BACKTAB,

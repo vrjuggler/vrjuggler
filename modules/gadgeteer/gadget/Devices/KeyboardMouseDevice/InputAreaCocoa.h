@@ -158,6 +158,18 @@ public:
    void addMouseMoveEvent(NSEvent* event);
 
    /**
+    * Adds a new mouse scroll event to the event queue for this input area.
+    *
+    * @post A new event (gadget::MouseEvent) is added to the event queue.
+    *
+    * @param event A pointer to the Cocoa event structure associated with the
+    *              mouse scroll event.
+    *
+    * @since 1.3.22
+    */
+   void addMouseScrollEvent(NSEvent* event);
+
+   /**
     * Transforms a change in the modifier flags into a key press or key
     * release event.
     *

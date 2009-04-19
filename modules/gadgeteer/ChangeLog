@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-19-2009 patrick     Added handling of mouse scroll events in the X and Y
+                        axes as first class mouse events. For the old behavior
+                        of treating them as button presses, recognizing left
+                        and right scrolling has been added.
+                        NEW VERSION: 1.3.22
 Mar-24-2009 patrick     Allow mouse locking in keyboard/mouse input areas to be
 		        disabled through the configuration.
                         NEW VERSION: 1.3.21
