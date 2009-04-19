@@ -74,8 +74,13 @@
       <alias name="VJKeyboard" version="1">
          <proxy>Main Sim Keyboard Proxy</proxy>
       </alias>
-      <keyboard_mouse_device name="Head Keyboard" version="1">
+      <keyboard_mouse_device name="Head Keyboard" version="2">
          <mouse_sensitivity>1.0</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
       </keyboard_mouse_device>
       <input_window name="Head Input Window" version="2">
          <origin>950</origin>
@@ -89,8 +94,13 @@
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
       </input_window>
-      <keyboard_mouse_device name="Sim View Cameras Keyboard" version="1">
+      <keyboard_mouse_device name="Sim View Cameras Keyboard" version="2">
          <mouse_sensitivity>2.0</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
       </keyboard_mouse_device>
       <input_window name="Sim View Cameras Control" version="2">
          <origin>950</origin>

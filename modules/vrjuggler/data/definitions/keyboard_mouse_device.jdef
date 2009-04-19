@@ -11,4 +11,100 @@
       </property>
       <upgrade_transform/>
    </definition_version>
+   <definition_version version="2" label="Keyboard/Mouse Input Handler">
+      <help>Configures an input handler that accepts keyboard and mouse events as input from the windowing system. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on keyboard/mouse input handlers&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <parent>input_device</parent>
+      <category>/Devices</category>
+      <property valuetype="float" variable="false" name="mouse_sensitivity">
+         <help>Mouse sensitivity. 1 is 1 keypress per pixel moved; 0.1 is 1 key for 10 pixels. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Mouse Sensitivity" defaultvalue="1.0"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="scroll_as_buttons">
+         <help>Identify whether mouse scroll events should be treated as button press/release events. Interpreting them as button events is the old way of doing things and should be avoided if possible. If and only if this property is set to true, then the following properties for scroll button interpretations are used. Setting this property to false (the default) indicates that the new scrolling interpretation should be used.</help>
+         <value label="Report Mouse Scrolling as Buttons" defaultvalue="false"/>
+      </property>
+      <property valuetype="integer" variable="false" name="scroll_up_button">
+         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll up events. This property is used on Windows and on Mac OS X with Cocoa.</help>
+         <value label="Scroll Up Button" defaultvalue="53"/>
+         <enumeration editable="false">
+            <enum label="MOUSE_BUT4" value="53"/>
+            <enum label="MOUSE_BUT5" value="54"/>
+            <enum label="MOUSE_BUT6" value="55"/>
+            <enum label="MOUSE_BUT7" value="56"/>
+            <enum label="MOUSE_BUT8" value="57"/>
+            <enum label="MOUSE_BUT9" value="58"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="scroll_down_button">
+         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll down events. This property is used on Windows and on Mac OS X with Cocoa.</help>
+         <value label="Scroll Up Button" defaultvalue="54"/>
+         <enumeration editable="false">
+            <enum label="MOUSE_BUT4" value="53"/>
+            <enum label="MOUSE_BUT5" value="54"/>
+            <enum label="MOUSE_BUT6" value="55"/>
+            <enum label="MOUSE_BUT7" value="56"/>
+            <enum label="MOUSE_BUT8" value="57"/>
+            <enum label="MOUSE_BUT9" value="58"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="scroll_left_button">
+         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll left events. This property is used on Windows and on Mac OS X with Cocoa.</help>
+         <value label="Scroll Up Button" defaultvalue="55"/>
+         <enumeration editable="false">
+            <enum label="MOUSE_BUT4" value="53"/>
+            <enum label="MOUSE_BUT5" value="54"/>
+            <enum label="MOUSE_BUT6" value="55"/>
+            <enum label="MOUSE_BUT7" value="56"/>
+            <enum label="MOUSE_BUT8" value="57"/>
+            <enum label="MOUSE_BUT9" value="58"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="scroll_right_button">
+         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll right events. This property is used on Windows and on Mac OS X with Cocoa.</help>
+         <value label="Scroll Up Button" defaultvalue="56"/>
+         <enumeration editable="false">
+            <enum label="MOUSE_BUT4" value="53"/>
+            <enum label="MOUSE_BUT5" value="54"/>
+            <enum label="MOUSE_BUT6" value="55"/>
+            <enum label="MOUSE_BUT7" value="56"/>
+            <enum label="MOUSE_BUT8" value="57"/>
+            <enum label="MOUSE_BUT9" value="58"/>
+         </enumeration>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:keyboard_mouse_device">
+               <xsl:element namespace="{$jconf}" name="keyboard_mouse_device">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="scroll_as_buttons">
+                     <xsl:text>false</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="scroll_up_button">
+                     <xsl:text>MOUSE_BUT4</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="scroll_down_button">
+                     <xsl:text>MOUSE_BUT5</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="scroll_left_button">
+                     <xsl:text>MOUSE_BUT6</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="scroll_right_button">
+                     <xsl:text>MOUSE_BUT7</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>

@@ -35,8 +35,13 @@
       <keyboard_mouse_proxy name="Main Sim Input Window" version="1">
          <device>Exit Keyboard</device>
       </keyboard_mouse_proxy>
-      <keyboard_mouse_device name="Exit Keyboard" version="1">
+      <keyboard_mouse_device name="Exit Keyboard" version="2">
          <mouse_sensitivity>1.0</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
       </keyboard_mouse_device>
       <input_window name="Exit Input Window" version="2">
          <origin>0</origin>

@@ -2,8 +2,13 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <keyboard_mouse_device name="Sim Keyboard" version="1">
+      <keyboard_mouse_device name="Sim Keyboard" version="2">
          <mouse_sensitivity>1.0</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
       </keyboard_mouse_device>
       <input_window name="Sim Input" version="2">
          <origin>870</origin>

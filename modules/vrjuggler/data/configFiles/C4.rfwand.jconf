@@ -44,8 +44,13 @@
          <device>SimWandButtons</device>
          <unit>5</unit>
       </digital_proxy>
-      <keyboard_mouse_device name="Wand Keyboard" version="1">
+      <keyboard_mouse_device name="Wand Keyboard" version="2">
          <mouse_sensitivity>0.02</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
       </keyboard_mouse_device>
       <input_window name="Wand Input Window" version="2">
          <origin>0</origin>

@@ -474,15 +474,9 @@
     */
    -(void) scrollWheel:(NSEvent*) theEvent
    {
-      // Mouse wheel events are interpreted as the pressing and releasing of
-      // either Button 4 or Button 5. This is the behavior with the X Window
-      // System.
       if ( mHandleInput )
       {
-         mVrjWindow->addMouseButtonEvent(gadget::MouseButtonPressEvent,
-                                         theEvent);
-         mVrjWindow->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
-                                         theEvent);
+         mVrjWindow->addMouseScrollEvent(theEvent);
       }
       else
       {
