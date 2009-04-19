@@ -68,7 +68,6 @@ protected:
    lockState mLockState;         /**< The current state of locking. */
    int       mLockStoredKey;     /**< The key that was pressed down. */
    int       mLockToggleKey;     /**< The key that toggles the locking. */
-   float     mMouseSensitivity;
    int       mSleepTimeMS;
    
    KeyboardMouseDevice* mKeyboardMouseDevice;
