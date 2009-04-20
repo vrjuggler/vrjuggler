@@ -356,7 +356,7 @@ void InputAreaWin32::updKeys(const MSG& message)
 
       case WM_MOUSEWHEEL:
          // Check for handling of the deprecated scrolling behavior.
-         if ( mKeyboardDevice->useButtonsForScrolling() )
+         if ( mKeyboardMouseDevice->useButtonsForScrolling() )
          {
             // Mouse wheel events are interpreted as the pressing and
             // releasing of either Button 4 or Button 5. This is the behavior
@@ -417,9 +417,11 @@ void InputAreaWin32::updKeys(const MSG& message)
 
          break;
 
+      // Horizontal scrolling requires Windows Vista (NT 6.0) or newer.
+#if _WIN32_WINNT >= 0x0600
       case WM_MOUSEHWHEEL:
          // Check for handling of the deprecated scrolling behavior.
-         if ( mKeyboardDevice->useButtonsForScrolling() )
+         if ( mKeyboardMouseDevice->useButtonsForScrolling() )
          {
             // Mouse wheel events are interpreted as the pressing and
             // releasing of either Button 4 or Button 5. This is the behavior
@@ -467,7 +469,7 @@ void InputAreaWin32::updKeys(const MSG& message)
             // this way to be consistent with Cocoa. See the following for
             // more information:
             //
-            // http://msdn.microsoft.com/en-us/library/ms645617(VS.85).aspx
+            // http://msdn.microsoft.com/en-us/library/ms645614(VS.85).aspx
             const float delta_x(
                static_cast<float>(delta) / static_cast<float>(WHEEL_DELTA)
             );
@@ -479,7 +481,7 @@ void InputAreaWin32::updKeys(const MSG& message)
          }
 
          break;
-
+#endif
 
          // mouse movement
       case WM_MOUSEMOVE:
@@ -890,7 +892,7 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
 
 void InputAreaWin32::addMouseScrollEvent(const float deltaX,
                                          const float deltaY,
-                                         const MSG& message)
+                                         const MSG& msg)
 {
    int state = getModifierMask() | getButtonMask();
 
