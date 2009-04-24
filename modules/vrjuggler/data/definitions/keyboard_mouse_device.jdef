@@ -37,7 +37,7 @@
       </property>
       <property valuetype="integer" variable="false" name="scroll_down_button">
          <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll down events. This property is used on Windows and on Mac OS X with Cocoa.</help>
-         <value label="Scroll Up Button" defaultvalue="54"/>
+         <value label="Scroll Down Button" defaultvalue="54"/>
          <enumeration editable="false">
             <enum label="MOUSE_BUT4" value="53"/>
             <enum label="MOUSE_BUT5" value="54"/>
@@ -48,8 +48,8 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="scroll_left_button">
-         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll left events. This property is used on Windows and on Mac OS X with Cocoa.</help>
-         <value label="Scroll Up Button" defaultvalue="55"/>
+         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll left events. This property is used on Windows Vista &amp; newer and on Mac OS X with Cocoa.</help>
+         <value label="Scroll Left Button" defaultvalue="55"/>
          <enumeration editable="false">
             <enum label="MOUSE_BUT4" value="53"/>
             <enum label="MOUSE_BUT5" value="54"/>
@@ -60,8 +60,8 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="scroll_right_button">
-         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll right events. This property is used on Windows and on Mac OS X with Cocoa.</help>
-         <value label="Scroll Up Button" defaultvalue="56"/>
+         <help>If mouse scroll events are treated as mouse buttons, then this property identifies which button is reported for scroll right events. This property is used on Windows Vista &amp; newer and on Mac OS X with Cocoa.</help>
+         <value label="Scroll Right Button" defaultvalue="56"/>
          <enumeration editable="false">
             <enum label="MOUSE_BUT4" value="53"/>
             <enum label="MOUSE_BUT5" value="54"/>
