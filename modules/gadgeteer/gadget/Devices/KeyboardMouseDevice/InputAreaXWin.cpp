@@ -290,7 +290,6 @@ void InputAreaXWin::handleEvent(::XEvent& event)
       case ButtonPress:
       // A mouse button was released.
       case ButtonRelease:
-         std::cout << "Button event" << std::endl;
          // At the moment, mouse scrolling is hard-coded to use the following
          // mapping:
          //
@@ -810,8 +809,6 @@ void InputAreaXWin::handleMouseButtonEvent(const XEvent& event)
          break;
    }
 
-   std::cout << "handleMouseButtonEvent(): gadget_button = " << gadget_button
-             << std::endl;
    if ( gadget::KEY_UNKNOWN != gadget_button )
    {
       gadget::EventType gadget_event;
@@ -880,8 +877,6 @@ void InputAreaXWin::handleMouseScrollEvent(const XEvent& event)
          break;
    }
 
-   std::cout << "handleMouseScrollEvent(): scroll_key = " << scroll_key
-             << std::endl;
    if ( gadget::KEY_UNKNOWN != scroll_key )
    {
       if ( ButtonPress == event.type )
@@ -894,7 +889,6 @@ void InputAreaXWin::handleMouseScrollEvent(const XEvent& event)
          mKeyboardMouseDevice->mRealkeys[scroll_key] = 0;
       }
 
-      std::cout << "Adding scroll event to the queue" << std::endl;
       const XWindowAttributes attrs(getDisplayAttributes());
       gadget::EventPtr mouse_event(
          new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
