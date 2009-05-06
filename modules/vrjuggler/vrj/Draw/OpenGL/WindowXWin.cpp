@@ -1022,11 +1022,12 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
       // Record the index for the stereo attribute using the current size of
       // the vector *before* the attribute is actually added.  If stereo is
       // not added, this variable will just be ignored.
-      const unsigned int stereo_attrib_index = viattrib.size();
+      const unsigned int stereo_attrib_index = viattrib.size() + 1;
 
       if ( mVrjDisplay->isStereoRequested() )
       {
          viattrib.push_back(GLX_STEREO);
+         viattrib.push_back(GL_TRUE);
          mInStereo = true;
       }
       else
@@ -1172,8 +1173,8 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
             << vprDEBUG_FLUSH;
          mInStereo = false;
 
-         // GLX_USE_GL will be ignored by glXChooseFBConfig
-         viattrib[stereo_attrib_index] = GLX_USE_GL;
+         // Explicitly set to false.
+         viattrib[stereo_attrib_index] = GL_FALSE;
 
          if ( (fbc = glXChooseFBConfig(display, screen, &viattrib[0], &fbconfig_array_nelements)) != NULL )
          {
@@ -1181,7 +1182,7 @@ const unsigned int VRJ_SAMPLES(GLX_SAMPLES_ARB);
          }
 
          // Stereo must not have been the problem, re-enable it.
-         viattrib[stereo_attrib_index] = GLX_STEREO;
+         viattrib[stereo_attrib_index] = GL_TRUE;
       }
 
       // If we reached this point, we still do not have a usable GLX visual.
