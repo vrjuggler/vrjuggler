@@ -186,10 +186,9 @@ bool DataGloveUltraWireless::sample()
       return false;
    }
 
-   std::vector<float> tmp_vec(28, 0.0f);
    mGlove.updateData();
    //std::cout << "going to copy data" <<std::endl;
-   mGlove.copyGloveData(tmp_vec);
+   const std::vector<float> tmp_vec = mGlove.getGloveData();
    //std::cout << "copied data: " << tmp_vec.size() << std::endl;
    //std::cout << "analog size: " << mAnalogData.size() << std::endl;
    std::vector<gadget::AnalogData>   cur_analog_samples;

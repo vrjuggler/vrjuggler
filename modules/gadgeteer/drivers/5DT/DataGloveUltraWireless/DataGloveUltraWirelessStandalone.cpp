@@ -30,6 +30,7 @@
 #include <iostream>        // for std::cout
 #include <fstream>         // for ifstream
 #include <string.h>
+#include <algorithm>
 
 #include <vpr/Util/Assert.h> // for vprASSERT
 
@@ -326,8 +327,13 @@ bool DataGloveUltraWirelessStandalone::updateData()
    return true;
 }
 
-void DataGloveUltraWirelessStandalone::copyGloveData(/*WIRELESS_GLOVE_PORT port,*/ std::vector<float>& data_buffer)
+const std::vector<float> DataGloveUltraWirelessStandalone::getGloveData(/*WIRELESS_GLOVE_PORT port,*/)
 {
+   std::vector<float> glove_data;
+
+   std::copy(mGloveAData.begin(), mGloveAData.end(), std::back_inserter(glove_data));
+   std::copy(mGloveBData.begin(), mGloveBData.end(), std::back_inserter(glove_data));
+#if 0
    for(unsigned int i = 0; i < mGloveAData.size(); ++i)
    {
       data_buffer[i] = mGloveAData[i];
@@ -336,8 +342,10 @@ void DataGloveUltraWirelessStandalone::copyGloveData(/*WIRELESS_GLOVE_PORT port,
    {
       data_buffer[i + 14] = mGloveBData[i];
    }
+#endif
    mGloveAData.clear();
    mGloveBData.clear();
+   return glove_data;
 }
 
 ///////////////////////////////////////////////////////////

@@ -64,7 +64,7 @@ public:
    bool updateData();
 
    /** Copies data from the Data Glove Ultra */
-   void copyGloveData(/*WIRELESS_GLOVE_PORT port,*/ std::vector<float>& data_buffer);
+   const std::vector<float> getGloveData(/*WIRELESS_GLOVE_PORT port,*/);
 
    bool isActive() { return mIsActive; }
 
