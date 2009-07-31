@@ -35,6 +35,8 @@
 namespace gadget
 {
 
+class InputArea;
+
 /** Possible event types. */
 enum EventType
 {
@@ -84,6 +86,17 @@ public:
       return mTime;
    }
 
+   /**
+    * Returns a const reference to the input area from which this event
+    * was generated.
+    *
+    * @since 1.3.23
+    */
+   const InputArea* getSource() const
+   {
+      return mSource;
+   }
+
    virtual ~Event()
    {
    }
@@ -118,13 +131,16 @@ protected:
     *             The time at which the event was processed is not an
     *             acceptable value.
     */
-   Event(const EventType type, const unsigned long time)
-      : mType(type), mTime(time)
+   Event(const EventType type, const unsigned long time, InputArea* source)
+      : mType(type)
+      , mTime(time)
+      , mSource(source)
    {
    }
 
-   EventType     mType; /**< The event type. */
-   unsigned long mTime; /**< Time at which the event occurred. */
+   EventType     mType;         /**< The event type. */
+   unsigned long mTime;         /**< Time at which the event occurred. */
+   InputArea*   mSource;        /**< The event source. */
 };
 
 }

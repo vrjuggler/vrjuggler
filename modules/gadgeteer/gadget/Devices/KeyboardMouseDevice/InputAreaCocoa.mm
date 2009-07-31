@@ -77,7 +77,8 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
       gadget::EventPtr key_event(new gadget::KeyEvent(type,
                                                       gadget::KEY_CAPS_LOCK,
                                                       getMask(modifiers),
-                                                      [event timestamp]));
+                                                      [event timestamp],
+                                                      this));
       doAddEvent(key_event, gadget::KEY_CAPS_LOCK);
    }
    else
@@ -99,7 +100,7 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
 
          gadget::EventPtr key_event(
             new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                                 [event timestamp],
+                                 [event timestamp], this,
                                  static_cast<char>(key_char), key_char)
          );
          doAddEvent(key_event, key);
@@ -113,7 +114,7 @@ void InputAreaCocoa::addModifierEvent(const gadget::Keys key,
 {
    gadget::EventPtr key_event(
       new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                           [event timestamp])
+                           [event timestamp], this)
    );
    doAddEvent(key_event, key);
 }
@@ -166,7 +167,8 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
                                                        root_loc.x, root_loc.y,
                                                        0.0f, 0.0f,
                                                        [event modifierFlags],
-                                                       [event timestamp]));
+                                                       [event timestamp],
+                                                       this));
    doAddEvent(mouse_event, button);
 }
 
@@ -181,7 +183,8 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
                                                       root_loc.x, root_loc.y,
                                                       0.0f, 0.0f,
                                                       [event modifierFlags],
-                                                      [event timestamp]));
+                                                      [event timestamp],
+                                                      this));
 
    const float cur_x = root_loc.x;
    const float cur_y = root_loc.y;
@@ -245,7 +248,7 @@ void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
          new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
                                 view_loc.x, view_loc.y, root_loc.x,
                                 root_loc.y, dx, dy, [event modifierFlags],
-                                [event timestamp])
+                                [event timestamp], this)
       );
 
       // Hold the keys lock for only as long as we need it.

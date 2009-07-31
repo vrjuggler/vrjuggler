@@ -463,8 +463,8 @@ void InputAreaXWin::addKeyEvent(const gadget::Keys key,
 
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key,
                                                    getMask(event->state),
-                                                   event->time, buffer[0],
-                                                   buffer[0]));
+                                                   event->time, this,
+                                                   buffer[0], buffer[0]));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 
@@ -475,7 +475,7 @@ void InputAreaXWin::addMouseMoveEvent(const XMotionEvent& event)
       new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
                              event.x, mHeight - event.y, event.x_root,
                              attrs.height - event.y_root, 0.0f, 0.0f,
-                             getMask(event.state), event.time)
+                             getMask(event.state), event.time, this)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
@@ -488,7 +488,8 @@ void InputAreaXWin::addMouseButtonEvent(const gadget::Keys button,
    gadget::EventPtr mouse_event(
       new gadget::MouseEvent(type, button, event.x, mHeight - event.y,
                              event.x_root, attrs.height - event.y_root,
-                             0.0f, 0.0f, getMask(event.state), event.time)
+                             0.0f, 0.0f, getMask(event.state), event.time,
+                             this)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
@@ -897,7 +898,7 @@ void InputAreaXWin::handleMouseScrollEvent(const XEvent& event)
                                 attrs.height - event.xbutton.y_root,
                                 delta_x, delta_y,
                                 getMask(event.xbutton.state),
-                                event.xbutton.time)
+                                event.xbutton.time, this)
       );
       mKeyboardMouseDevice->addEvent(mouse_event);
    }

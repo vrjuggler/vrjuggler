@@ -36,8 +36,9 @@ namespace gadget
 
 KeyEvent::KeyEvent(const gadget::EventType type, const gadget::Keys key,
                    const int mask, const unsigned long time,
-                   const char asciiKey, const wchar_t unicodeKey)
-   : gadget::Event(type, time)
+                   InputArea* source, const char asciiKey,
+                   const wchar_t unicodeKey)
+   : gadget::Event(type, time, source)
    , mKey(key)
    , mModifierMask(mask)
    , mAsciiKey(asciiKey)
@@ -47,7 +48,7 @@ KeyEvent::KeyEvent(const gadget::EventType type, const gadget::Keys key,
 }
 
 KeyEvent::KeyEvent() 
-   : gadget::Event(NoEvent, 0)
+   : gadget::Event(NoEvent, 0, NULL)
    , mKey(gadget::KEY_SPACE)
    , mModifierMask(0)
    , mAsciiKey(' ')

@@ -84,7 +84,7 @@ public:
    MouseEvent(const gadget::EventType type, const gadget::Keys button,
               const int x, const int y, const int globalX, const int globalY,
               const float scrollDeltaX, const float scrollDeltaY,
-              const int state, const unsigned long time);
+              const int state, const unsigned long time, InputArea* source);
 
    /**
     * Default constructor needed in order to use the templated EventFactory 

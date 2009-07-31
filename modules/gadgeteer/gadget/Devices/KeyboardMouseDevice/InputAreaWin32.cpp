@@ -851,7 +851,8 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
 
    // TODO: Deal with Unicode.
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, mask, msg.time,
-                                                   ascii_rep, ascii_rep));
+                                                   this, ascii_rep,
+                                                   ascii_rep));
    mKeyboardMouseDevice->addEvent(key_event);
 }
 
@@ -871,7 +872,7 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
       new gadget::MouseEvent(type, button, GET_X_LPARAM(msg.lParam),
                              mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
                              GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, 0.0f,
-                             0.0f, state, msg.time)
+                             0.0f, state, msg.time, this)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
@@ -885,7 +886,7 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
                              GET_X_LPARAM(msg.lParam),
                              mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
                              GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, 0.0f,
-                             0.0f, state, msg.time)
+                             0.0f, state, msg.time, this)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
@@ -901,7 +902,7 @@ void InputAreaWin32::addMouseScrollEvent(const float deltaX,
                              GET_X_LPARAM(msg.lParam),
                              mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
                              GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, deltaX,
-                             deltaY, state, msg.time)
+                             deltaY, state, msg.time, this)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }

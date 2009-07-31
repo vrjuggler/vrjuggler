@@ -36,8 +36,8 @@ MouseEvent::MouseEvent(const gadget::EventType type, const gadget::Keys button,
                        const int x, const int y, const int globalX,
                        const int globalY, const float scrollDeltaX,
                        const float scrollDeltaY, const int state,
-                       const unsigned long time)
-   : gadget::Event(type, time)
+                       const unsigned long time, InputArea* source)
+   : gadget::Event(type, time, source)
    , mButton(button)
    , mRelativeX(x)
    , mRelativeY(y)
@@ -51,7 +51,7 @@ MouseEvent::MouseEvent(const gadget::EventType type, const gadget::Keys button,
 }
 
 MouseEvent::MouseEvent()
-   : gadget::Event(NoEvent, 0)
+   : gadget::Event(NoEvent, 0, NULL)
    , mButton(gadget::NO_MBUTTON)
    , mRelativeX(0)
    , mRelativeY(0)
