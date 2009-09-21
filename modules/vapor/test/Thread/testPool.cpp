@@ -44,7 +44,6 @@
 
 #include <vpr/Sync/Mutex.h>
 //#include <vpr/Sync/Semaphore.h>
-//#include <vpr/Sync/Barrier.h>
 //#include <vpr/Sync/NullMutex.h>
 #include <vpr/Thread/ThreadPool.h>
 #include <vpr/Util/Debug.h>

@@ -568,10 +568,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\Sync\Barrier.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BaseIOStatsStrategy.cpp"
 				>
 			</File>
@@ -878,10 +874,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\Sync\Barrier.h"
 				>
 			</File>
 			<File

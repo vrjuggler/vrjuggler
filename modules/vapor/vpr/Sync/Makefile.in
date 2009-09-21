@@ -50,8 +50,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		Barrier.cpp		\
-		DeadlockException.cpp	\
+SRCS=		DeadlockException.cpp	\
 		LockException.cpp
 
 include $(MKPATH)/dpp.obj.mk

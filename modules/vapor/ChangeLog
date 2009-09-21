@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2009-09-21 patrick  Removed vpr::Barrier.
+                    NEW VERSION: 2.1.15
 2008-08-19 patrick  Added vpr::LibraryWin32 for use instead of vpr::LibraryNSPR
                     on Windows.
                     NEW VERSION: 2.1.14
