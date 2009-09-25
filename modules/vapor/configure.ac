@@ -981,11 +981,9 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CXXFLAGS="$CXXFLAGS -w2"
     BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -J4"
 elif test "x$PLATFORM" = "xDarwin" ; then
-    CFLAGS="$CFLAGS -Wno-long-double"
-    CXXFLAGS="$CXXFLAGS -Wno-long-double"
-
     changequote(<<, >>)
     vpr_gcc_major=`echo $dpp_gcc_ver | sed -e 's/^\([0-9]*\)\..*/\1/'`
+    vpr_gcc_minor=`echo $dpp_gcc_ver | sed -e 's/^[0-9]*\.\([0-9]*\).*/\1/'`
     changequote([, ])
 
     # GCC 4.0 in Darwin removed -fexport-coalesced.
@@ -994,7 +992,14 @@ elif test "x$PLATFORM" = "xDarwin" ; then
        CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
     fi
 
-    vpr_cxxflags="$vpr_cxxflags -Wno-long-double"
+    # Do not use -Wno-long-double with GCC 4.2.
+    if test $vpr_gcc_minor -lt 2 ; then
+       CFLAGS="$CFLAGS -Wno-long-double"
+       CXXFLAGS="$CXXFLAGS -Wno-long-double"
+
+       vpr_cxxflags="$vpr_cxxflags -Wno-long-double"
+    fi
+
     BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -Wl,-bind_at_load"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
