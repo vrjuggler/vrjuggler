@@ -141,7 +141,8 @@ def detectVisualStudioVersion(reattempt = False):
       if not reattempt:
          printStatus("Visual studio not in path, attempting to find...")
          # Common installation directories for Visual Studio.
-         vs_dirs = [r'C:\Program Files\Microsoft Visual Studio 8',
+         vs_dirs = [r'C:\Program Files\Microsoft Visual Studio 9.0', 
+                    r'C:\Program Files\Microsoft Visual Studio 8',
                     r'C:\Program Files\Microsoft Visual Studio .NET 2003'
                    ]
 
