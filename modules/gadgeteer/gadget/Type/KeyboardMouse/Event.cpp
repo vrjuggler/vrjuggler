@@ -34,6 +34,17 @@
 namespace gadget
 {
 
+Event::Event()
+   : mConsumed(false)
+{
+   /* Do nothing. */ ;
+}
+
+Event::~Event()
+{
+   /* Do nothing. */ ;
+}
+
 void Event::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint8(mType);

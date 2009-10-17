@@ -57,6 +57,10 @@ enum EventType
 class GADGET_CLASS_API Event : public vpr::SerializableObject
 {
 public:
+   Event();
+
+   virtual ~Event();
+
    /**
     * Returns the type of this event.  This can be used for dynamic casting
     * to more specific event types.
@@ -97,10 +101,6 @@ public:
       return mSource;
    }
 
-   virtual ~Event()
-   {
-   }
-
    /**
     * Serializes this object into the given object writer.
     *
@@ -119,6 +119,26 @@ public:
     * @throw vpr::IOException is thrown if de-serialization fails.
     */
    virtual void readObject(vpr::ObjectReader* reader);
+
+   /**
+    * Marks this event as being consumed.
+    *
+    * @since 1.1.24
+    */
+   void consume()
+   {
+      mConsumed = true;
+   }
+
+   /**
+    * Determines whether this event has been consumed already.
+    *
+    * @since 1.1.24
+    */
+   bool isConsumed() const
+   {
+      return mConsumed;
+   }
 
 protected:
    /**
@@ -140,7 +160,8 @@ protected:
 
    EventType     mType;         /**< The event type. */
    unsigned long mTime;         /**< Time at which the event occurred. */
-   InputArea*   mSource;        /**< The event source. */
+   InputArea*    mSource;       /**< The event source. */
+   bool          mConsumed;     /**< Consumed state. */
 };
 
 }
