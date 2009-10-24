@@ -37,6 +37,7 @@
 
 #include <vector>
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -471,10 +472,10 @@ void OpenALSoundImplementation::setVolume(const std::string& alias,
    snx::SoundImplementation::setVolume( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
-#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
-      alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
-#else
+#if defined(AL_GAIN_LINEAR_LOKI)
       alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
+#else
+      alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
 #endif
    }
 }
@@ -487,10 +488,10 @@ void OpenALSoundImplementation::setCutoff(const std::string& alias,
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
       // @todo: cutoff is not defined in openal, use gain instead... :(
-#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
-      alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
-#else
+#if defined(AL_GAIN_LINEAR_LOKI)
       alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
+#else
+      alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
 #endif
    }
 }
