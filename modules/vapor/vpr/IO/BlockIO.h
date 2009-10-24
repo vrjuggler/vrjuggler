@@ -41,6 +41,7 @@
 #include <cstring>
 #include <vector>
 #include <string>
+#include <cstring>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Interval.h>

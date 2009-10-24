@@ -38,6 +38,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <cstring>
 #include <vector>
 #include <boost/static_assert.hpp>
 #include <boost/concept_check.hpp>
