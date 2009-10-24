@@ -37,6 +37,7 @@
 
 #include <sstream>
 #include <vector>
+#include <cstring>
 
 #if defined(VPR_OS_Windows)
 #  include <winsock2.h>
