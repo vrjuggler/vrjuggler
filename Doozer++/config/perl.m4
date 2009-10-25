@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          perl.m4,v
-dnl Date modified: 2006/12/31 16:54:59
-dnl Version:       1.13
+dnl Date modified: 2008/01/01 15:29:20
+dnl Version:       1.14
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -47,7 +47,7 @@ dnl Variables defined:
 dnl     PERL - The full path to the Perl binary meeting the requirements.
 dnl ===========================================================================
 
-dnl perl.m4,v 1.13 2006/12/31 16:54:59 patrickh Exp
+dnl perl.m4,v 1.14 2008/01/01 15:29:20 patrickh Exp
 
 AC_DEFUN([DPP_EXTRACT_PERL_VER],
 [

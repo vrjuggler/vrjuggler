@@ -1,5 +1,7 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2009-10-25 patrickh     Added support for Mac OS X Snow Leopard.
+                        NEW VERSION: 2.1.13
 2007-05-30 patrickh     Added support for x86_64 binaries on Mac OS X.
                         NEW VERSION: 2.1.12
 2007-05-30 patrickh     Added support for DragonFly (a fork of FreeBSD 4).
