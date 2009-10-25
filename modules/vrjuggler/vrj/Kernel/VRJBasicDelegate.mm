@@ -61,12 +61,32 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
          NSString* app_dir = [paths objectAtIndex:0];
          NSString* vrj_app_dir =
             [app_dir stringByAppendingPathComponent:@"VR Juggler"];
-         [mgr createDirectoryAtPath:vrj_app_dir
-                         attributes:nil];
+#if VPR_OS_RELEASE_MAJOR < 9
+         BOOL created = [mgr createDirectoryAtPath:vrj_app_dir
+                                        attributes:nil];
+#else
+         NSError* error;
+         BOOL created =
+            [mgr       createDirectoryAtPath:vrj_app_dir
+                 withIntermediateDirectories:YES
+                                  attributes:nil
+                                       error:&error];
+#endif
 
-         mPrefsFileName =
-            [vrj_app_dir stringByAppendingPathComponent:@"prefs.plist"];
-         [mPrefsFileName retain];
+         if ( created )
+         {
+            mPrefsFileName =
+               [vrj_app_dir stringByAppendingPathComponent:@"prefs.plist"];
+            [mPrefsFileName retain];
+         }
+         else
+         {
+#if VPR_OS_RELEASE_MAJOR < 9
+            NSLog(@"Failed to create directory %@\n", vrj_app_dir);
+#else
+            NSLog(@"Failed to create directory %@: %@\n", vrj_app_dir, error);
+#endif
+         }
       }
 
       // If we were able to construct the path to the preferences file, then
@@ -221,7 +241,7 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
 
       // Update the submenu listing the recently opened configuration files
       // to include fileName.
-      const unsigned int index = [mRecentCfgFiles indexOfObject:fileName];
+      const NSUInteger index = [mRecentCfgFiles indexOfObject:fileName];
 
       if ( index != NSNotFound )
       {
