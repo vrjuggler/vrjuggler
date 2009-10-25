@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          cppunit.m4,v
-dnl Date modified: 2006/12/31 16:55:00
-dnl Version:       1.20
+dnl Date modified: 2008/01/01 15:29:21
+dnl Version:       1.21
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -50,7 +50,7 @@ dnl     CPPUNIT_EXTRA_LIBS - Extra libraries that are needed for linking
 dnl                          against the CppUnit library directory.
 dnl ===========================================================================
 
-dnl cppunit.m4,v 1.20 2006/12/31 16:55:00 patrickh Exp
+dnl cppunit.m4,v 1.21 2008/01/01 15:29:21 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has CppUnit installed.  This

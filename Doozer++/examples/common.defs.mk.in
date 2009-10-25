@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2007/11/28 21:08:23
-# Version:       1.43
+# Date modified: 2008/01/01 15:29:21
+# Version:       1.44
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.43 2007/11/28 21:08:23 patrickh Exp
+# common.defs.mk.in,v 1.44 2008/01/01 15:29:21 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          nspr.m4,v
-dnl Date modified: 2006/12/31 16:55:00
-dnl Version:       1.44
+dnl Date modified: 2008/01/01 15:29:21
+dnl Version:       1.45
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -85,7 +85,7 @@ dnl     PLC_LIB_STATIC        - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC       - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.44 2006/12/31 16:55:00 patrickh Exp
+dnl nspr.m4,v 1.45 2008/01/01 15:29:21 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.

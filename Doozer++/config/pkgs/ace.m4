@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          ace.m4,v
-dnl Date modified: 2006/12/31 16:55:00
-dnl Version:       1.18
+dnl Date modified: 2008/01/01 15:29:21
+dnl Version:       1.19
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -51,7 +51,7 @@ dnl     ACE_LDFLAGS  - The compiler argument to add the ACE library path and
 dnl                    libraries.
 dnl ===========================================================================
 
-dnl	ace.m4,v 1.18 2006/12/31 16:55:00 patrickh Exp
+dnl	ace.m4,v 1.19 2008/01/01 15:29:21 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Usage:

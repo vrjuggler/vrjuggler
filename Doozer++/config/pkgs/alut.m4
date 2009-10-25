@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          alut.m4,v
-dnl Date modified: 2006/12/31 16:55:00
-dnl Version:       1.3
+dnl Date modified: 2009/10/25 20:06:11
+dnl Version:       1.5
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -47,7 +47,7 @@ dnl                     this is the directory containing the OpenAL framework
 dnl                     (since OpenAL and ALUT are not separated).
 dnl ===========================================================================
 
-dnl alut.m4,v 1.3 2006/12/31 16:55:00 patrickh Exp
+dnl alut.m4,v 1.5 2009/10/25 20:06:11 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has ALUT installed.  This adds the
@@ -113,10 +113,10 @@ AC_DEFUN([DPP_HAVE_ALUT],
          CFLAGS="$CFLAGS $ABI_FLAGS"
          CPPFLAGS="$CPPFLAGS $AL_INCLUDES"
 
-         dnl On Mac OS X, the version of OpenAL available from Creative
-         dnl predates the separation of ALUT from OpenAL. As such, if OpenAL
-         dnl is available, then ALUT is available.
-         if test "x$PLATFORM" = "xDarwin" ; then
+         dnl On Mac OS X prior to 10.6 (Snow Leopard), the version of OpenAL
+         dnl available from Creative predates the separation of ALUT from
+         dnl OpenAL. As such, if OpenAL is available, then ALUT is available.
+         if test "x$PLATFORM" = "xDarwin" -a "$OS_REL_NUM_MAJOR" -lt 10 ; then
             ALUT="$OPENAL"
             ALUT_LIBDIR="$AL_LIBDIR"
             dpp_have_alut="$dpp_have_openal"
@@ -172,13 +172,13 @@ AC_DEFUN([DPP_HAVE_ALUT],
          dnl If ALUT API files were found, define this extra stuff that may be
          dnl helpful in some Makefiles.
          if test "x$dpp_have_alut" = "xyes" ; then
-            if test "x$PLATFORM" = "xDarwin" ; then
+            if test "x$PLATFORM" = "xDarwin" -a "$OS_REL_NUM_MAJOR" -lt 10 ; then
                LIBALUT=''
             else
                LIBALUT="-lalut"
             fi
 
-            if test "x$PLATFORM" != "xDarwin" ; then
+            if test "x$PLATFORM" != "xDarwin" -o "$OS_REL_NUM_MAJOR" -ge 10 ; then
                if test "x$ALUT_ROOT" != "x/usr" ; then
                   ALUT_INCLUDES="-I$ALUT_ROOT/include"
                   ALUT_LDFLAGS="-L$ALUT_ROOT/lib"

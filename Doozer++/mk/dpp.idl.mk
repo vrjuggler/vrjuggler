@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.idl.mk,v
-# Date modified: 2006/12/31 16:55:00
-# Version:       1.15
+# Date modified: 2008/01/01 15:29:21
+# Version:       1.16
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.idl.mk,v 1.15 2006/12/31 16:55:00 patrickh Exp
+# dpp.idl.mk,v 1.16 2008/01/01 15:29:21 patrickh Exp
 #
 # This file <dpp.idl.mk> handles compiling a CORBA IDL file into source files
 # for various languages using the appropriate IDL compiler.

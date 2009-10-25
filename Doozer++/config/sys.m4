@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2007 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2007/05/30 22:37:11
-dnl Version:       1.66
+dnl Date modified: 2009/10/25 19:30:51
+dnl Version:       1.68
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -59,7 +59,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.66 2007/05/30 22:37:11 patrickh Exp
+dnl sys.m4,v 1.68 2009/10/25 19:30:51 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -153,7 +153,11 @@ AC_DEFUN([DPP_SYSTEM_SETUP],
          dnl If no ABI has been set yet, default to Mach-O with whatever the
          dnl CPU architecture is.
          if test "x$ABI" = "x" ; then
-            DPP_ABI_CFG('Mach-O', $target_cpu)
+            if test $OS_REL_NUM_MAJOR -ge 10 ; then
+               DPP_ABI_CFG('Mach-O', 'x86_64')
+            else
+               DPP_ABI_CFG('Mach-O', $target_cpu)
+            fi
          fi
 
          PLATFORM='Darwin'
