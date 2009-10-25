@@ -234,7 +234,7 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
 
       // Update the submenu listing the recently opened configuration files
       // to include fileName.
-      const unsigned int index = [mRecentCfgFiles indexOfObject:fileName];
+      const NSUInteger index = [mRecentCfgFiles indexOfObject:fileName];
 
       if ( index != NSNotFound )
       {
