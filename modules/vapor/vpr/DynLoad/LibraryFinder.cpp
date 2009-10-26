@@ -35,6 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/version.hpp>
 
@@ -62,38 +63,23 @@ void LibraryFinder::rescan()
       {
 #if BOOST_VERSION < 103400
          // Ignore directories.  Normal files and symlinks are fine.
-         if ( ! fs::is_directory(*file) )
+         if ( ! fs::is_directory(*file) &&
+              boost::iends_with(file->leaf(), mLibExt) )
          {
-            // Construct a substring of file->leaf() that contains only the
-            // file extension.  We require that the file we will match have
-            // names that end with mLibExt.
-            const std::string::size_type pos = file->leaf().size() - mLibExt.size();
-            const std::string file_ext = file->leaf().substr(pos);
-
-            if ( file_ext == mLibExt )
-            {
-               mLibList.push_back(vpr::LibraryPtr(new vpr::Library(file->native_file_string())));
-            }
+            mLibList.push_back(
+               vpr::LibraryPtr(new vpr::Library(file->native_file_string()))
+            );
          }
 #else
          // Ignore directories.  Normal files and symlinks are fine.
-         if ( ! fs::is_directory(file->status()) )
+         if ( ! fs::is_directory(file->status()) &&
+              boost::iends_with(file->path().leaf(), mLibExt) )
          {
-            // Construct a substring of file->path.leaf() that contains only
-            // the file extension. We require that the file we will match have
-            // names that end with mLibExt.
-            const std::string::size_type pos =
-               file->path().leaf().size() - mLibExt.size();
-            const std::string file_ext = file->path().leaf().substr(pos);
-
-            if ( file_ext == mLibExt )
-            {
-               mLibList.push_back(
-                  vpr::LibraryPtr(
-                     new vpr::Library(file->path().native_file_string())
-                  )
-               );
-            }
+            mLibList.push_back(
+               vpr::LibraryPtr(
+                  new vpr::Library(file->path().native_file_string())
+               )
+            );
          }
 #endif
       }
