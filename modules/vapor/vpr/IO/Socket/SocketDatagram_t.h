@@ -39,9 +39,10 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/IO/Socket/Socket_t.h>
-
+#include <cstring>
 #include <boost/smart_ptr.hpp>
+
+#include <vpr/IO/Socket/Socket_t.h>
 
 
 namespace vpr
@@ -146,7 +147,7 @@ public:
                         const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       msg.resize(len);
-      memset(&msg[0], '\0', msg.size());
+      std::memset(&msg[0], '\0', msg.size());
 
       return recvfrom((void*) &msg[0], msg.size(), from, timeout);
    }
@@ -163,7 +164,7 @@ public:
    {
       msg.resize(len);
 
-      memset(&msg[0], '\0', msg.size());
+      std::memset(&msg[0], '\0', msg.size());
       const vpr::Uint32 bytes = recvfrom((void*) &msg[0], msg.size(), from,
                                          timeout);
 

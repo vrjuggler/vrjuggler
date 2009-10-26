@@ -322,14 +322,14 @@ public:
 inline vpr::Uint8 BufferObjectReader::readUint8()
 {
    vpr::Uint8 temp_data;
-   memcpy(&temp_data, readRaw(1), 1);
+   std::memcpy(&temp_data, readRaw(1), 1);
    return temp_data;
 }
 
 inline vpr::Uint16 BufferObjectReader::readUint16()
 {
    vpr::Uint16 nw_val;
-   memcpy(&nw_val, readRaw(2), 2);
+   std::memcpy(&nw_val, readRaw(2), 2);
 
    return vpr::System::Ntohs(nw_val);
 }
@@ -337,7 +337,7 @@ inline vpr::Uint16 BufferObjectReader::readUint16()
 inline vpr::Uint32 BufferObjectReader::readUint32()
 {
    vpr::Uint32 nw_val;
-   memcpy(&nw_val, readRaw(4), 4);
+   std::memcpy(&nw_val, readRaw(4), 4);
 
    return vpr::System::Ntohl(nw_val);
 }
@@ -345,7 +345,7 @@ inline vpr::Uint32 BufferObjectReader::readUint32()
 inline vpr::Uint64 BufferObjectReader::readUint64()
 {
    vpr::Uint64 nw_val;
-   memcpy(&nw_val, readRaw(8), 8);
+   std::memcpy(&nw_val, readRaw(8), 8);
    vpr::Uint64 h_val = vpr::System::Ntohll(nw_val);
 
    return h_val;
@@ -357,7 +357,7 @@ inline float BufferObjectReader::readFloat()
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
 
    vpr::Uint32 nw_val;
-   memcpy(&nw_val, readRaw(4), 4);
+   std::memcpy(&nw_val, readRaw(4), 4);
    vpr::Uint32 h_val = vpr::System::Ntohl(nw_val);
 
    return *((float*)&h_val);
@@ -369,7 +369,7 @@ inline double BufferObjectReader::readDouble()
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
 
    vpr::Uint64 nw_val;
-   memcpy(&nw_val, readRaw(8), 8);
+   std::memcpy(&nw_val, readRaw(8), 8);
    vpr::Uint64 h_val = vpr::System::Ntohll(nw_val);
    double d_val = *((double*)&h_val);
 

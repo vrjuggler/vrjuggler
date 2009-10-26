@@ -36,7 +36,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
-#include <string.h>
+#include <cstring>
 #include <sstream>
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -74,7 +74,7 @@ const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to 
 
 InetAddrBSD::InetAddrBSD()
 {
-   memset(&mAddr, 0, sizeof(mAddr));
+   std::memset(&mAddr, 0, sizeof(mAddr));
    setAddressValue(INADDR_ANY);
    setPort(0);
    setFamily(SocketTypes::INET);
@@ -305,7 +305,7 @@ std::string InetAddrBSD::getHostname() const
 #endif
 
    char addr[NI_MAXHOST];
-   memset((void*) &addr, 0, sizeof(addr));
+   std::memset((void*) &addr, 0, sizeof(addr));
 
    int result = getnameinfo((sockaddr*) &mAddr, salen, addr, sizeof(addr),
                             NULL, 0, NI_NAMEREQD);
@@ -368,8 +368,8 @@ bool InetAddrBSD::operator== (const InetAddrBSD& addr) const
 void InetAddrBSD::copyAddressValue(const char* addrValue)
 {
    vprASSERT(addrValue != NULL);
-   memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addrValue,
-          sizeof(mAddr.sin_addr.s_addr));
+   std::memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addrValue,
+               sizeof(mAddr.sin_addr.s_addr));
 }
 
 void InetAddrBSD::setAddressValue(const vpr::Uint32 addrValue)
@@ -389,7 +389,7 @@ size_t InetAddrBSD::addressSize() const
 
 void InetAddrBSD::setSockaddr(const struct sockaddr* addr)
 {
-   memcpy((void*) &mAddr, (void*) addr, sizeof(mAddr));
+   std::memcpy((void*) &mAddr, (void*) addr, sizeof(mAddr));
 }
 
 struct sockaddr_in InetAddrBSD::toSockaddrInet()
@@ -399,7 +399,7 @@ struct sockaddr_in InetAddrBSD::toSockaddrInet()
 
 void InetAddrBSD::copy(const InetAddrBSD& addr)
 {
-   memcpy((void*) &mAddr, (void*) &addr.mAddr, sizeof(mAddr));
+   std::memcpy((void*) &mAddr, (void*) &addr.mAddr, sizeof(mAddr));
 }
 
 /**
@@ -410,14 +410,14 @@ void InetAddrBSD::lookupAddress(const std::string& address)
    struct addrinfo* addrs;
 
    struct addrinfo hints;
-   memset((void*) &hints, 0, sizeof(hints));
+   std::memset((void*) &hints, 0, sizeof(hints));
    hints.ai_flags = AF_INET;
 
    int result = getaddrinfo(address.c_str(), NULL, &hints, &addrs);
 
    if ( result == 0 )
    {
-      memcpy((void*) &mAddr, addrs->ai_addr, addrs->ai_addrlen);
+      std::memcpy((void*) &mAddr, addrs->ai_addr, addrs->ai_addrlen);
       freeaddrinfo(addrs);
    }
    else
