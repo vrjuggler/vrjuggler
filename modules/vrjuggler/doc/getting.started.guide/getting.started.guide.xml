@@ -681,7 +681,7 @@ value</screen>
                   <para>To compile any of the sample applications, the
                   directory containing the Juggler <filename>.fpc</filename>
                   files for <ulink
-                  url="https://realityforge.vrsource.org/view/FlagPoll/WebHome">Flagpoll</ulink>
+                  url="http://code.google.com/p/flagpoll/">Flagpoll</ulink>
                   must be able to be found. By default, the
                   <command>flagpoll</command> utility searches
                   <filename>/usr/lib/flagpoll</filename>,
