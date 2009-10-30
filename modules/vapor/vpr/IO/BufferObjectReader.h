@@ -397,7 +397,7 @@ inline bool BufferObjectReader::readBool()
 
 inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
 {
-   if ( mCurHeadPos + len >= mData->size() )
+   if ( mCurHeadPos >= mData->size() )
    {
       throw EOFException("Attempted to read beyond data block", VPR_LOCATION);
    }
