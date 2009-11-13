@@ -1169,11 +1169,11 @@ int main(int argc, char* argv[])
                      id="TweekApp.cpp.big-try-catch.try"
                      linkends="TweekApp.cpp.big-try-catch.co" />
    {
-      if ( mgr.init("example", argc, argv).success() )        <co
+      if ( mgr.init("example", argc, argv) )                  <co
                      id="TweekApp.cpp.corbamgr.init"
                      linkends="TweekApp.cpp.corbamgr.init.co" />
       {
-         vpr::ReturnStatus status;
+         bool status(false);
 
          // Once the CORBA Manager is initialized, we need
          // to create a Subject Manager.  This will hold our
@@ -1184,7 +1184,7 @@ int main(int argc, char* argv[])
 
             // If we were able to create the Subject Manager,
             // now we register our objects with it.
-            if ( status.success() )
+            if ( status )
             {
                // First, create real instances of the C++
                // object that will be the CORBA servant.  This
@@ -1217,7 +1217,7 @@ int main(int argc, char* argv[])
                &lt;&lt; "trying to register!\n" &lt;&lt; vprDEBUG_FLUSH;
          }
 
-         if ( ! status.success() )
+         if ( ! status )
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                &lt;&lt; "Failed to register Subject Manager instance\n"
@@ -1376,9 +1376,9 @@ int main(int argc, char* argv[])
    // CORBA Manager.  If this fails, we're out of luck.
    try
    {
-      if ( mgr.init("corba_test", argc, argv).success() )
+      if ( mgr.init("corba_test", argc, argv) )
       {
-         vpr::ReturnStatus status;
+         bool status(false);
 
          // Once the CORBA Manager is initialized, we need to
          // create a Subject Manager.  This will hold our
@@ -1391,7 +1391,7 @@ int main(int argc, char* argv[])
 
             // If we were able to create the Subject Manager,
             // now we register our objects with it.
-            if ( status.success() )
+            if ( status )
             {
                // First, create real instances of the C++
                // object that will be the CORBA servant.  This
@@ -1430,7 +1430,7 @@ int main(int argc, char* argv[])
                &lt;&lt; vprDEBUG_FLUSH;
          }
 
-         if ( ! status.success() )
+         if ( ! status )
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                &lt;&lt; "Failed to register Subject Manager instance\n"
@@ -2400,11 +2400,11 @@ int main(int argc, char* argv[])
    // CORBA Manager.  If this fails, we're out of luck.
    try
    {
-      if ( mgr.init("corba_test", argc, argv).success() )     <co
+      if ( mgr.init("corba_test", argc, argv) )               <co
                         id="SliderSubjectApp.cpp.corbamgr.init"
                         linkends="SliderSubjectApp.cpp.corbamgr.co" />
       {
-         vpr::ReturnStatus status;
+         bool status(false);
 
          // Once the CORBA Manager is initialized, we need to
          // create a Subject Manager.  This will hold our
@@ -2417,7 +2417,7 @@ int main(int argc, char* argv[])
 
             // If we were able to create the Subject Manager,
             // now we register our objects with it.
-            if ( status.success() )
+            if ( status )
             {
                // First, create real instances of the C++
                // object that will be the CORBA servant.  This
@@ -2456,7 +2456,7 @@ int main(int argc, char* argv[])
                &lt;&lt; vprDEBUG_FLUSH;
          }
 
-         if ( ! status.success() )
+         if ( ! status )
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                &lt;&lt; "Failed to register Subject Manager instance\n"
@@ -4400,7 +4400,7 @@ void StringObserverImpl::update()
    try
    {
       // Attempt to initialize the CORBA Service.
-      if ( corba_service.init(argc, argv).success() )           <co
+      if ( corba_service.init(argc, argv) )                     <co
                         id="client.cpp.main.corba-service.init"
                         linkends="client.cpp.main.corba-service.init.co" />
       {
@@ -4984,7 +4984,8 @@ JAVA_SRCS=      networktest/NetworkTest.java                    \
                 networktest/WhiteboardSubjectHolder.java
 ALL_CLASSES=    networktest/*.class
 
-include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+DZR_BASE_DIR=   $(shell flagpoll doozer --get-prefix)
+include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
 
 CXX_GEN_DIR=            .
 CXX_IDL=                $(TWEEK_IDL_CXX)
@@ -5061,7 +5062,8 @@ NO_DEPEND=      YES
 JAVA_SRCS=      fileopentestbean/FileOpenTestBean.java
 ALL_CLASSES=    fileopentestbean/*.class
 
-include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+DZR_BASE_DIR=   $(shell flagpoll doozer --get-prefix)
+include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
 
 # --------------------------------------------------------------
 # Application build targets.

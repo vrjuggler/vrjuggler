@@ -38,7 +38,6 @@
 #endif
 
 #include <vpr/Thread/Thread.h>
-#include <vpr/Util/ReturnStatus.h>
 
 #include <tweek/CORBA/SubjectManagerImpl.h>
 
@@ -109,10 +108,10 @@ public:
     *                    the Naming Service.  Common values are "1.0" and
     *                    "1.2".  It defaults to "1.0".
     */
-   vpr::ReturnStatus init(const std::string& localId, int& argc, char** argv,
-                          const std::string& nsHost = std::string(""),
-                          const vpr::Uint16& nsPort = vpr::Uint16(2809),
-                          const std::string& iiopVersion = std::string("1.0"));
+   bool init(const std::string& localId, int& argc, char** argv,
+             const std::string& nsHost = std::string(""),
+             const vpr::Uint16& nsPort = vpr::Uint16(2809),
+             const std::string& iiopVersion = std::string("1.0"));
 
    /**
     * Shuts down the ORB and the POA (if they were successfully initialized).
@@ -141,7 +140,7 @@ public:
    /**
     * Binds the interface object.
     */
-   vpr::ReturnStatus createSubjectManager();
+   bool createSubjectManager();
 
    /**
     * Removes the Subject Manager created for use with this CORBA Manager
@@ -150,10 +149,10 @@ public:
     * All of this is done if and only if the Subject Manager was created
     * successfully in createSubjectManager().
     *
-    * @return vpr::ReturnStatus::Fail will be returned if the servant could not
-    *         be destroyed successfully.
+    * @return \c false will be returned if the servant could not be
+    *         destroyed successfully.
     */
-   vpr::ReturnStatus destroySubjectManager();
+   bool destroySubjectManager();
 
    /**
     * Returns this CORBA Manager's SubjectManagerImpl instance to the caller.
@@ -194,7 +193,7 @@ public:
    void run();
 
 private:
-   vpr::ReturnStatus createChildPOA(const std::string& local_id);
+   bool createChildPOA(const std::string& local_id);
 
    std::string mAppName;
 

@@ -36,9 +36,9 @@ int main (int argc, char* argv[])
 
    try
    {
-      if ( mgr.init("corba_test", argc, argv).success() )
+      if ( mgr.init("corba_test", argc, argv) )
       {
-         vpr::ReturnStatus status;
+         bool status(false);
 
          try
          {
@@ -51,7 +51,7 @@ int main (int argc, char* argv[])
                << "' when trying to register!\n" << vprDEBUG_FLUSH;
          }
 
-         if ( ! status.success() )
+         if ( ! status )
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "Failed to register Subject Manager instance\n"

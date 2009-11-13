@@ -46,9 +46,9 @@ int main (int argc, char* argv[])
    // If this fails, we're out of luck.
    try
    {
-      if ( mgr.init("delivery_test", argc, argv).success() )
+      if ( mgr.init("delivery_test", argc, argv) )
       {
-         vpr::ReturnStatus status;
+         bool status(false);
 
          // Once the CORBA Manager is initialized, we need to create the
          // Subject Manager.
@@ -58,7 +58,7 @@ int main (int argc, char* argv[])
 
             // If we were able to create the Subject Manager, now we register
             // our objects with it.
-            if ( status.success() )
+            if ( status )
             {
                tweek::BeanDeliverySubjectImpl* delivery_subject =
                   mgr.getBeanDeliverySubject();
@@ -96,7 +96,7 @@ int main (int argc, char* argv[])
                << "' when trying to register!\n" << vprDEBUG_FLUSH;
          }
 
-         if ( ! status.success() )
+         if ( ! status )
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "Failed to register Subject Manager instance\n"

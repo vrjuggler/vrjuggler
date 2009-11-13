@@ -96,10 +96,10 @@ void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
    storeSubject(subjectServant->_this(), name_str);
 }
 
-vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
-   throw(CORBA::SystemException)
+bool SubjectManagerImpl::unregisterSubject(const char* name)
+   throw (CORBA::SystemException)
 {
-   vpr::ReturnStatus status;
+   bool status(true);
    std::string name_str(name);
    vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
 
@@ -121,7 +121,7 @@ vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
          << clrOutBOLD(clrRED, "ERROR:")
          << " No subject registered under the name '" << name_str
          << "'\n" << vprDEBUG_FLUSH;
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
    }
 
    return status;

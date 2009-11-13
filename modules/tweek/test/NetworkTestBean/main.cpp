@@ -49,9 +49,9 @@ int main (int argc, char* argv[])
    // If this fails, we're out of luck.
    try
    {
-      if ( mgr.init("corba_test", argc, argv).success() )
+      if ( mgr.init("corba_test", argc, argv) )
       {
-         vpr::ReturnStatus status;
+         bool status(false);
 
          // Once the CORBA Manager is initialized, we need to create a
          // Subject Manager.  This will hold our SliderSubject and our
@@ -62,7 +62,7 @@ int main (int argc, char* argv[])
 
             // If we were able to create the Subject Manager, now we register
             // our objects with it.
-            if ( status.success() )
+            if ( status )
             {
                // Add a test informational item to the Subject Manager.
                mgr.getSubjectManager()->addInfoItem("My Value",
@@ -102,7 +102,7 @@ int main (int argc, char* argv[])
                << "' when trying to register!\n" << vprDEBUG_FLUSH;
          }
 
-         if ( ! status.success() )
+         if ( ! status )
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "Failed to register Subject Manager instance\n"

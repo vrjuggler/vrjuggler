@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
    try
    {
       // Attempt to initialize the CORBA Service.
-      if ( corba_service.init(argc, argv).success() )
+      if ( corba_service.init(argc, argv) )
       {
          // This will hold the reference to the Subject Manager we use.
          tweek::SubjectManager_var subj_mgr =

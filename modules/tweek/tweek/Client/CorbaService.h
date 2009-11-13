@@ -87,7 +87,7 @@ public:
       }
    }
 
-   vpr::ReturnStatus init(int& argc, char* argv[]);
+   bool init(int& argc, char* argv[]);
 
    /**
     * Shuts down the ORB and the POA (if they were successfully initialized).
@@ -189,7 +189,7 @@ public:
    void run();
 
 private:
-   vpr::ReturnStatus initRootPOA();
+   bool initRootPOA();
 
    /**
     * Resolves all the CORBA objects implementing tweek::SubjectManager in

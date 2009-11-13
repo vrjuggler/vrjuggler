@@ -69,12 +69,11 @@ CorbaManager::CorbaManager()
       << vprDEBUG_FLUSH;
 }
 
-vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
-                                     char** argv, const std::string& nsHost,
-                                     const vpr::Uint16& nsPort,
-                                     const std::string& iiopVersion)
+bool CorbaManager::init(const std::string& local_id, int& argc, char** argv,
+                        const std::string& nsHost, const vpr::Uint16& nsPort,
+                        const std::string& iiopVersion)
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
    // Retrieve the application name from argv if argv is non-NULL.
    if ( NULL != argv )
@@ -143,7 +142,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
    }
    catch (CORBA::SystemException& sysEx)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught CORBA::SystemException during initialization\n"
          << vprDEBUG_FLUSH;
@@ -151,7 +150,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
    }
    catch (CORBA::Exception&)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught CORBA::Exception during initialization.\n"
          << vprDEBUG_FLUSH;
@@ -159,7 +158,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 #ifdef OMNIORB_VER
    catch (omniORB::fatalException& fe)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught omniORB::fatalException:\n" << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
@@ -172,7 +171,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 #endif
    catch (vpr::Exception& ex)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught vpr::Exception during initialization.\n"
          << ex.what() << vprDEBUG_FLUSH;
@@ -260,11 +259,11 @@ void CorbaManager::shutdown(bool waitForCompletion)
    }
 }
 
-vpr::ReturnStatus CorbaManager::createSubjectManager()
+bool CorbaManager::createSubjectManager()
 {
    vprASSERT(! CORBA::is_nil(mRootContext) && "No naming service available");
    vprASSERT(! CORBA::is_nil(mLocalContext) && "No naming service available");
-   vpr::ReturnStatus status;
+   bool status(true);
 
    tweek::SubjectManager_var mgr_ptr;
 
@@ -290,7 +289,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
    catch (PortableServer::POA::WrongPolicy& policy_ex)
    {
       boost::ignore_unused_variable_warning(policy_ex);
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Invalid policy used when activating Subject Manager object\n"
          << vprDEBUG_FLUSH;
@@ -299,7 +298,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
    // Only proceed if we were able to activate an object within the POA.  If
    // we couldn't, there is no point in registering anything with the naming
    // service.
-   if ( status.success() )
+   if ( status )
    {
       // Try to add the mgr_ptr reference to the bound references known to the
       // naming service.
@@ -367,13 +366,13 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
       catch (CORBA::COMM_FAILURE& ex)
       {
          boost::ignore_unused_variable_warning(ex);
-         status.setCode(vpr::ReturnStatus::Fail);
+         status = false;
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Unable to contact the naming service\n" << vprDEBUG_FLUSH;
       }
       catch (CORBA::SystemException&)
       {
-         status.setCode(vpr::ReturnStatus::Fail);
+         status = false;
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Caught a CORBA::SystemException while using the naming service"
             << std::endl << vprDEBUG_FLUSH;
@@ -383,9 +382,9 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
    return status;
 }
 
-vpr::ReturnStatus CorbaManager::destroySubjectManager()
+bool CorbaManager::destroySubjectManager()
 {
-   vpr::ReturnStatus status;
+   bool status(false);
 
    // Only try to do destruction if there is a servant to destroy.
    if ( mSubjectManager != NULL )
@@ -395,7 +394,7 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
    }
    else
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
          << "WARNING: No Subject Manager servant to destroy!\n"
          << vprDEBUG_FLUSH;
@@ -408,9 +407,9 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager()
 // Private methods.
 // ============================================================================
 
-vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
+bool CorbaManager::createChildPOA(const std::string& local_id)
 {
-   vpr::ReturnStatus status;
+   bool status(true);
    CORBA::Object_var obj;
    CORBA::PolicyList policy_list;
 
@@ -454,7 +453,7 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    catch (PortableServer::POA::AdapterAlreadyExists& ex)
    {
       boost::ignore_unused_variable_warning(ex);
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Child POA named '" << poa_name << "' already exists!\n"
          << vprDEBUG_FLUSH;
@@ -462,7 +461,7 @@ vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
    catch (PortableServer::POA::InvalidPolicy& ex)
    {
       boost::ignore_unused_variable_warning(ex);
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "WARNING: Failed to set IdUniquenessPolicy for child POA\n"
          << vprDEBUG_FLUSH;

@@ -84,9 +84,9 @@ CorbaService::CorbaService(const std::string& nsHost, vpr::Uint16 nsPort,
       << vprDEBUG_FLUSH;
 }
 
-vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
+bool CorbaService::init(int& argc, char* argv[])
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
    try
    {
@@ -129,7 +129,7 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
    }
    catch (CORBA::SystemException& sysEx)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught CORBA::SystemException during initialization\n"
          << vprDEBUG_FLUSH;
@@ -137,7 +137,7 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
    }
    catch (CORBA::Exception&)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught CORBA::Exception during initialization.\n"
          << vprDEBUG_FLUSH;
@@ -145,7 +145,7 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
 #ifdef TWEEK_USE_OMNIORB
    catch (omniORB::fatalException& fe)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught omniORB::fatalException:\n" << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
@@ -158,7 +158,7 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
 #endif
    catch (vpr::Exception& ex)
    {
-      status.setCode(vpr::ReturnStatus::Fail);
+      status = false;
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught vpr::Exception during initialization.\n"
          << ex.what() << vprDEBUG_FLUSH;
@@ -273,9 +273,9 @@ void CorbaService::unregisterObject(PortableServer::ObjectId_var id)
 //   }
 }
 
-vpr::ReturnStatus CorbaService::initRootPOA()
+bool CorbaService::initRootPOA()
 {
-   vpr::ReturnStatus status;
+   bool status(true);
 
    CORBA::Object_var obj;
 

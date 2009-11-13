@@ -93,8 +93,7 @@ public:
     * @param name The symbolic name used to request a reference to the
     *             registered subject.
     */
-   vpr::ReturnStatus unregisterSubject(const char* name)
-      throw(CORBA::SystemException);
+   bool unregisterSubject(const char* name) throw (CORBA::SystemException);
 
    /**
     * Returns whether this Subject Manager contains the named subject.
