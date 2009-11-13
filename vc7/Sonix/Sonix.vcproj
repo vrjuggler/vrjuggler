@@ -189,6 +189,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\..\modules\sonix\sonix.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

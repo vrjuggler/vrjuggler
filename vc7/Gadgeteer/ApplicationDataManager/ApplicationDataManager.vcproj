@@ -145,6 +145,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\plugins\ApplicationDataManager\application_data_manager.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

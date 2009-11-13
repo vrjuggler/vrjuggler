@@ -223,6 +223,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj_ogl.rc">
+			</File>
+			<File
 				RelativePath=".\vrjuggler.ico">
 			</File>
 		</Filter>

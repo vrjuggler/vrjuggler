@@ -149,6 +149,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\..\..\modules\jackal\plugins\corba_rtrc\corba_rtrc.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

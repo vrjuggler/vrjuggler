@@ -149,6 +149,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\plugins\corba_perf_mon\corba_perf_mon.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

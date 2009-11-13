@@ -693,6 +693,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget.rc">
+			</File>
+			<File
 				RelativePath=".\gadgeteer.ico">
 			</File>
 		</Filter>

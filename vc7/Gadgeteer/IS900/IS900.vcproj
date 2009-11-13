@@ -176,6 +176,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IS900\is900.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

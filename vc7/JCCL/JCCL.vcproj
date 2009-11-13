@@ -234,6 +234,9 @@
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			<File
+				RelativePath="..\..\modules\jackal\jccl.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
