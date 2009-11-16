@@ -14,7 +14,7 @@
   <property category="sys" name="BraceStyle" value="1"/>
   <property category="sys" name="CheckStable" value="1"/>
   <property category="sys" name="Company" value="VRAC"/>
-  <property category="sys" name="Copyright" value="Copyright (c) 1998-2008"/>
+  <property category="sys" name="Copyright" value="Copyright (c) 1998-2009"/>
   <property category="sys" name="DefaultPath" value="."/>
   <property category="sys" name="Description" value=""/>
   <property category="sys" name="DocPath" value="doc"/>

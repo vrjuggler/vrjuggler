@@ -1,6 +1,6 @@
 # ********** <VRJ VNC auto-copyright.pl BEGIN do not edit this line> **********
 #
-# VRJ VNC is (C) Copyright 2003-2008 by Iowa State University
+# VRJ VNC is (C) Copyright 2003-2009 by Iowa State University
 #
 # Original Authors:
 #   Patrick Hartling, Allen Bierbaum

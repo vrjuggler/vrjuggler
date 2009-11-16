@@ -9,7 +9,7 @@ dnl ***************** <SNX heading END do not edit this line> *****************
 
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
 dnl
-dnl VR Juggler is (C) Copyright 1998-2008 by Iowa State University
+dnl VR Juggler is (C) Copyright 1998-2009 by Iowa State University
 dnl
 dnl Original Authors:
 dnl   Allen Bierbaum, Christopher Just,
