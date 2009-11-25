@@ -65,7 +65,7 @@ int main (int argc, char* argv[])
       sock.open();
       sock.bind();
 
-      char recv_buf[32];
+      char recv_buf[40];
       char send_buf[] = "Hello there!";
 
       // Loop forever reading messages from clients.

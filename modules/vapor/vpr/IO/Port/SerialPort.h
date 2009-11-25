@@ -53,7 +53,7 @@
 // Include the bridge class.
 #include <vpr/IO/Port/SerialPort_t.h>
 
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR || VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
 #  ifdef VPR_OS_Windows
 #     include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 #  else

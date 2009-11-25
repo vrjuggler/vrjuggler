@@ -51,6 +51,8 @@
 #  include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
 #  include <vpr/md/SIM/IO/Socket/InetAddrSIM.h>
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
+#  include <vpr/md/BOOST/IO/Socket/InetAddrBOOST.h>
 #endif
 
 #ifdef VPR_HASH_MAP_INCLUDE

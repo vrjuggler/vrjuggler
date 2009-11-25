@@ -47,6 +47,7 @@
 #define VPR_DOMAIN_POSIX      2
 #define VPR_DOMAIN_SIMULATOR  3
 #define VPR_DOMAIN_WIN32      4
+#define VPR_DOMAIN_BOOST      5
 
 // This is the VPR I/O domain.  It defines all the platform-independent types
 // used for doing I/O (sockets and serial ports mostly) in VPR.
@@ -90,30 +91,30 @@ namespace vpr
 
 #else /* ! ifdef VPR_SIMULATOR */
 
-#ifdef VPR_USE_NSPR
-#  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_NSPR
+#ifdef VPR_USE_BOOST
+#  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_BOOST
 
    /**
-    * Socket configuration for NSPR sockets.
+    * Socket configuration for BOOST sockets.
     */
    struct SocketConfiguration
    {
-      typedef class SocketImplNSPR           SocketImpl;
-      typedef class SocketDatagramImplNSPR   SocketDatagramImpl;
-      typedef class SocketStreamImplNSPR     SocketStreamImpl;
+      typedef class SocketImplBOOST           SocketImpl;
+      typedef class SocketDatagramImplBOOST   SocketDatagramImpl;
+      typedef class SocketStreamImplBOOST     SocketStreamImpl;
       typedef class NullIOStatsStrategy      SocketIOStatsStrategy;
    };
 
-   typedef class InetAddrNSPR InetAddr;
-   typedef class IOSysNSPR    IOSys;
+   typedef class InetAddrBOOST InetAddr;
+   typedef class IOSysBOOST    IOSys;
 
 #ifdef __SUNPRO_CC
    class Selector_t<class T>;
-   class SelectorImplNSPR;
+   class SelectorImpBOOST;
 
-   typedef Selector_t<SelectorImplNSPR> Selector;
+   typedef Selector_t<SelectorImplBOOST> Selector;
 #else
-   typedef class Selector_t<class SelectorImplNSPR> Selector;
+   typedef class Selector_t<class SelectorImplBOOST> Selector;
 #endif
 
 #  ifdef VPR_OS_Windows

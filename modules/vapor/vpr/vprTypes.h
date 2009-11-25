@@ -38,8 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
-#ifdef VPR_USE_NSPR
-#  include <vpr/md/NSPR/vprTypesNSPR.h>
+#ifdef VPR_USE_BOOST
+#  include <vpr/md/BOOST/vprTypesBOOST.h>
 #else
 namespace vpr
 {

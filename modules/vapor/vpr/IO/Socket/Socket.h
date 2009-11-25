@@ -54,6 +54,8 @@
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
 #include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
+#include <vpr/md/BOOST/IO/Socket/SocketImplBOOST.h>
 #endif
 
 namespace vpr

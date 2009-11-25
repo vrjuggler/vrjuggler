@@ -1164,7 +1164,7 @@ Kernel::Kernel()
    mClusterOptionDesc.add_options()
        ("vrjmaster", po::bool_switch(), "This node is the cluster master.")
        ("vrjslave", po::bool_switch(), "This node is a cluster slave.")
-       ("listen_port", po::value<int>(), "Port to listen on for incoming cluster connections.")
+       ("listen_port", po::value<vpr::Uint16>(), "Port to listen on for incoming cluster connections.")
    ;
    mConfigOptionDesc.add_options()
        ("jconf", po::value< std::vector<std::string> >()->composing(), "VR Juggler Configuration File")

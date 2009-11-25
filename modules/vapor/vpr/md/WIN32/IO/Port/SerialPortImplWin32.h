@@ -191,7 +191,13 @@ public:
          << "ERROR: Cannot get handle for Win32 file descriptor with NSPR!\n";
       return vpr::IOSys::NullHandle;
 #else
+#ifdef VPR_USE_BOOST
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "ERROR: Cannot get handle for Win32 file descriptor with BOOST!\n";
+      return vpr::IOSys::NullHandle;
+#else
       return mHandle;
+#endif
 #endif
    }
 
