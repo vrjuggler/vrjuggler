@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="display_window" default="dist" basedir=".">
+   <property name="srcdir" location="C:\src\VR Juggler\new-test\juggler\modules\vrjuggler\vrjconfig\customeditors\display_window" />
+   <property name="topdir" location="C:\src\VR Juggler\new-test\juggler\vc9\VRJConfig" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <path id="tweek.classpath">
+      <pathelement path="C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\Tweek.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekBeanDelivery.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekBeans.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekEvents.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekNet.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekServices.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\kunststoff-mod.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\ui.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\wizard.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\build\jdom.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jaxen-core.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jaxen-jdom.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\xerces.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\xml-apis.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\saxpath.jar" />
+      <pathelement path="" />
+   </path>
+
+   <path id="jccl.classpath">
+      <pathelement path="C:\src\VR Juggler\new-test\juggler\vc9\JCCL_Java\jccl_config.jar;C:\src\VR Juggler\new-test\juggler\vc9\JCCL_Java\jccl_editors.jar;C:\src\VR Juggler\new-test\juggler\vc9\JCCL_Java\RTRC_Plugin_Java\jccl_rtrc.jar" />
+   </path>
+
+   <path id="commoneditors.classpath">
+      <pathelement path="${topdir}/commoneditors/CommonEditors.jar" />
+   </path>
+
+   <path id="jgraph.classpath">
+      <pathelement path="C:\src\VR Juggler\new-test\juggler/external/jgraph/lib/jgraph.jar" />
+      <pathelement path="C:\src\VR Juggler\new-test\juggler/external/jgraph/lib/jgraphaddons.jar" />
+   </path>
+
+   <property name="tweek.classpath" refid="tweek.classpath" />
+   <property name="jccl.classpath" refid="jccl.classpath" />
+   <property name="table_layout_dir" value="C:\src\VR Juggler\new-test\juggler/external/TableLayout" />
+   <property name="jgraph.classpath" refid="jgraph.classpath" />
+   <property name="commoneditors.classpath" refid="commoneditors.classpath" />
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/**"/>
+         <classpath>
+            <pathelement path="${tweek.classpath}" />
+            <pathelement path="${jccl.classpath}" />
+            <pathelement path="${table_layout_dir}/TableLayout.jar" />
+            <pathelement path="${jgraph.classpath}" />
+            <pathelement path="${commoneditors.classpath}" />
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile">
+       <jar destfile="DisplayWindowEditor.jar" basedir=".">
+         <include name="org/**" />
+         <fileset dir="${srcdir}">
+            <include name="org/vrjuggler/vrjconfig/customeditors/display_window/images/*" />
+         </fileset>
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="DisplayWindowEditor.jar" failonerror="false" />
+   </target>
+</project>

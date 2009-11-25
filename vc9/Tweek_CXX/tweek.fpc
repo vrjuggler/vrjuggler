@@ -1,0 +1,71 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = 1.3.5
+
+ISA = 
+ABI = 
+MAJOR_VERSION = 1
+MINOR_VERSION = 3
+MICRO_VERSION = 5
+LIBBITSUF = 
+PLATFORM = Windows
+tweek_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+topdir = 
+data_subdir = share
+
+CXX_IDL_CMD = 
+tweek_idlflags_cxx = -bcxx -Wbh=.h,s=.cpp -I"$prefix\include"
+tweek_idl_inc_flag_cxx = 
+tweek_idlgendir_cxx = -C
+BUILD_CXX = N
+tweek_extra_cxxflags = 
+tweek_extra_include_dirs = 
+includedir = "${prefix}\include"
+tweek_cxxflags = /EHsc /GR
+tweek_share_dir = ${prefix}/
+static_begin = 
+static_end = 
+tweek_ldflags = /libpath:"$libdir"
+tweek_prof_libs = 
+tweek_libs = 
+tweek_extra_ldflags = 
+
+extra_libs = ${tweek_extra_ldflags}
+
+tweek_header_subdir = 
+tweek_data_subdir   = 
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+Name: Tweek
+Description: Tweek is a portable GUI for applications. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly.
+URL: http://www.vrjuggler.org/tweek/
+Version: ${tweek_version}
+Provides: tweek tweek-c++
+Requires:  vpr = 2.1.15
+Arch: ${ISA}
+Libs: ${tweek_ldflags} ${tweek_libs} ${extra_libs}
+Libs.private: 
+Cflags: ${tweek_cxxflags} ${tweek_extra_cxxflags} -I${includedir} ${tweek_extra_include_dirs}
+
+
+######################### Tweek-Specific Flagpoll Variables ###################
+
+cxx_api_available: ${BUILD_CXX}
+libs: ${libs} ${tweek_libs}
+extra_libs: ${extra_libs}
+static_libs: ${static_begin} ${libs} ${tweek_libs} ${static_end}
+profiled_libs: ${tweek_ldflags} ${tweek_prof_libs} ${extra_libs}
+profiled_static_libs: ${static_begin} ${tweek_prof_libs} ${static_end}
+cxx_idl: ${CXX_IDL_CMD}
+cxx_idlflags: ${tweek_idlflags_cxx}
+cxx_idlgendir: ${tweek_idlgendir_cxx}
+cxx_idlincflag: ${tweek_idl_inc_flag_cxx}
+
+tweek_app_defs_file: ${tweek_share_dir}/tweek.appdefs.mk
+
+tweek_header_subdir: ${tweek_header_subdir}
+tweek_data_subdir: ${tweek_data_subdir}

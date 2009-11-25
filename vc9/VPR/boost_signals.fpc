@@ -1,0 +1,14 @@
+# Private Variables
+prefix = ${fp_file_cwd}\..\..
+boost_ldflags = /libpath:"${prefix}\lib" 
+
+# Standard Flagpoll Variables
+Name: Boost.Signals
+Description: The Boost.Signals library is an implementation of a managed signals and slots system.
+URL: http://www.boost.org/doc/html/signals.html
+Version: 1.40
+Provides: Boost.Signals boost.signals
+Requires: boost = 1.40
+Arch: 
+Cflags: /I"${prefix}\include"
+Libs: ${boost_ldflags}

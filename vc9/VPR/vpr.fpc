@@ -1,0 +1,80 @@
+########################### Private Variables ############################
+prefix= ${fp_file_cwd}/../..
+exec_prefix = ${prefix}
+
+VERSION_DOT = 2.1.15
+
+ISA = 
+ABI = 
+SUBSYSTEM = NSPR
+MAJOR_VERSION = 2
+MINOR_VERSION = 1
+MICRO_VERSION = 15
+LIBBITSUF = 
+PLATFORM = Windows
+
+vpr_version = ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+
+ABI_FLAGS = 
+ABI_LIST = 
+PLATFORM_SDK = 
+target_cpu = 
+
+topdir = 
+data_subdir = share
+
+UNIX_VPRROOT_ABS = 
+UNIX_VPRROOT_ABS = 
+VPRROOT_ABS = 
+JUGGLERROOT_ABS = 
+
+APP_BASE_DIR = 
+APP_BASE_DIR_INST = 
+
+
+USE_GCC = no
+includedir = "${prefix}\include"
+libdir = ${exec_prefix}\lib
+
+subsystem_cxxflags = 
+subsystem_libs = libnspr4.lib libplc4.lib
+
+static_begin = 
+static_end = 
+
+vpr_cxxflags = /DBOOST_ALL_DYN_LINK /DCPPDOM_DYN_LINK /EHsc /GR
+
+vpr_ldflags = /libpath:"$libdir"
+vpr_libs =  
+vpr_prof_libs = 
+
+vpr_extra_cxxflags = 
+vpr_extra_include_dirs = 
+
+vpr_extra_ldflags = 
+
+extra_libs = ${vpr_extra_ldflags} ${subsystem_libs}
+extra_deps = 
+
+########################### Public Variables ############################
+
+######################### Standard Flagpoll Variables ###################
+Name: The VR Juggler Portable Runtime (VPR)
+Description: The VR Juggler Portable Runtime (VPR) provides an object-oriented operating system abstraction layer that allows for easy development of cross-platform C++ applications.
+URL: http://www.vrjuggler.org/vapor/
+Version: ${vpr_version}
+Provides: vpr VPR
+Requires: Boost.Signals = 1.40 Boost.Filesystem = 1.40 boost >= 1.40 cppdom = 1.0.0 ${extra_deps}
+Arch: ${ISA}
+Cflags: ${vpr_cxxflags} ${vpr_extra_cxxflags} ${subsystem_cxxflags} -I${includedir} ${ABI_FLAGS}
+Libs: ${vpr_ldflags} ${vpr_libs} ${extra_libs}
+Libs.private: 
+
+######################### Vapor Specific Flagpoll Variables ###################
+
+subsystem: ${SUBSYSTEM}
+libs: ${libs} ${vpr_libs}
+extra_libs : ${extra_libs}
+static_libs: ${static_begin} ${libs} ${vpr_libs} ${static_end}
+profiled_libs: ${libs} ${vpr_prof_libs}
+profiled_static_libs: ${static_begin} ${libs} ${vpr_prof_libs} ${static_end}

@@ -121,8 +121,10 @@ def detectVisualStudioVersion(reattempt = False):
          sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
       elif cl_major == 13 and cl_minor >= 10:
          vs_ver = '.NET 2003'
-      else:
+      elif cl_major == 14:
          vs_ver = '2005'
+      else:
+         vs_ver = '2008'
 
       printStatus("It appears that we will be using Visual Studio %s"%vs_ver)
       #printStatus("   compiler version: %s.%s"%(cl_major,cl_minor))
@@ -183,9 +185,12 @@ def chooseVisualStudioDir():
    # the vc7 subtree.
    if cl_ver_major == 13:
       vc_dir = 'vc7'
-   # Otherwise, we use the solution in the vc8 subtree.
-   else:
+   # For Visual Studio 2005, we use the solution in the vc8 subtree.
+   elif cl_ver_major == 14:
       vc_dir = 'vc8'
+   # Otherwise, we use the solution in the vc9 subtree.
+   else:
+      vc_dir = 'vc9'
 
    return (cl_ver_major, cl_ver_minor, vc_dir)
 

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tweek" default="dist" basedir=".">
+   <property name="srcdir" location="C:\src\VR Juggler\new-test\juggler\modules\tweek\java" />
+   <property name="topdir" location="C:\src\VR Juggler\new-test\juggler\vc9" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <property name="jdomdir" value="C:\src\VR Juggler\new-test\juggler/external/jdom" />
+   <property name="lafdir" value="C:\src\VR Juggler\new-test\juggler/external/swing-laf" />
+   <property name="kunststoff_srcdir" value="${lafdir}/kunststoff/sources" />
+
+   <path id="tweek.classpath">
+      <pathelement path="${jdomdir}/build/jdom.jar" />
+      <pathelement path="${jdomdir}/lib/jaxen-core.jar" />
+      <pathelement path="${jdomdir}/lib/jaxen-jdom.jar" />
+      <pathelement path="${jdomdir}/lib/saxpath.jar" />
+      <pathelement path="${jdomdir}/lib/xalan.jar" />
+      <pathelement path="${jdomdir}/lib/xerces.jar" />
+      <pathelement path="${jdomdir}/lib/xml-apis.jar" />
+      <pathelement path="" />
+      <pathelement path="${lafdir}/liquid/liquidlnf.jar" />
+      <pathelement path="${lafdir}/metouia/metouia.jar" />
+      <pathelement path="${lafdir}/jgoodies-looks/looks.jar" />
+   </path>
+
+   <property name="tweek.classpath" refid="tweek.classpath" />
+
+   <!-- Compile all java sources generated from IDL -->
+   <target name="compile_idl">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="." />
+         <include name="tweek/**" />
+         <classpath>
+            <pathelement path="" />
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Determine if the com.apple.eawt package is available. -->
+   <available classname="com.apple.eawt.Application" property="eawt.present" />
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${kunststoff_srcdir}" />
+         <include name="com/incors/plaf/**" />
+      </javac>
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/vrjuggler/tweek/**" />
+         <exclude unless="eawt.present" name="org/vrjuggler/tweek/mac/**" />
+         <classpath>
+            <pathelement path="${tweek.classpath}" />
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile_idl,compile">
+      <jar destfile="Tweek.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/*.class" />
+         <include name="org/vrjuggler/tweek/gui/**" />
+         <include if="eawt.present" name="org/vrjuggler/tweek/mac/**" />
+         <include name="org/vrjuggler/tweek/text/**" />
+         <fileset dir="${srcdir}"
+                  includes="org/vrjuggler/tweek/gui/*.gif" />
+         <fileset dir="${srcdir}"
+                  includes="org/vrjuggler/tweek/text/*.gif" />
+         <fileset dir="${srcdir}"
+                  includes="LICENSE-java-laf.txt" />
+      </jar>
+      <jar destfile="TweekBeans.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/beans/**" />
+      </jar>
+      <jar destfile="TweekEvents.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/event/**" />
+      </jar>
+      <jar destfile="TweekNet.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/net/**" />
+         <include name="tweek/**" />
+      </jar>
+      <jar destfile="TweekBeanDelivery.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/beandelivery/**" />
+      </jar>
+      <jar destfile="TweekServices.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/services/**" />
+      </jar>
+      <jar destfile="Viewers.jar" basedir=".">
+         <include name="org/vrjuggler/tweek/iconviewer/**" />
+         <include name="org/vrjuggler/tweek/treeviewer/**" />
+         <fileset dir="${srcdir}"
+                  includes="org/vrjuggler/tweek/iconviewer/*.gif" />
+         <fileset dir="${srcdir}"
+                  includes="LICENSE-java-laf.txt" />
+      </jar>
+      <jar destfile="kunststoff-mod.jar" basedir=".">
+         <include name="com/incors/plaf/**" />
+         <fileset dir="${kunststoff_srcdir}"
+                  includes="com/incors/plaf/kunststoff/icons/*.gif" />
+         <fileset dir="${kunststoff_srcdir}"
+                  includes="com/incors/plaf/kunststoff/mini/icons/*.gif" />
+         <fileset dir="${lafdir}/kunststoff"
+                  includes="license.txt" />
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="com" includes="**/*.class" />
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="Tweek.jar" failonerror="false" />
+      <delete file="TweekBeans.jar" failonerror="false" />
+      <delete file="TweekEvents.jar" failonerror="false" />
+      <delete file="TweekNet.jar" failonerror="false" />
+      <delete file="TweekServices.jar" failonerror="false" />
+      <delete file="Viewers.jar" failonerror="false" />
+      <delete file="kunststoff-mod.jar" failonerror="false" />
+   </target>
+</project>

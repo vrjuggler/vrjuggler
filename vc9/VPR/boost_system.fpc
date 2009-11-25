@@ -1,0 +1,14 @@
+# Private Variables
+prefix = ${fp_file_cwd}\..\..
+boost_ldflags = /libpath:"${prefix}\lib" 
+
+# Standard Flagpoll Variables
+Name: Boost.System
+Description: Operating system support, including the diagnostics support that will be part of the C++0x standard library.
+URL: http://www.boost.org/libs/system/doc/index.htm
+Version: 1.40
+Provides: Boost.System boost.system
+Requires: boost = 1.40
+Arch: 
+Cflags: /I"${prefix}\include"
+Libs: ${boost_ldflags}
