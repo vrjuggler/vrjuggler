@@ -1,0 +1,14 @@
+# Private Variables
+prefix = ${fp_file_cwd}\..\..
+boost_ldflags = /libpath:"${prefix}\lib" 
+
+# Standard Flagpoll Variables
+Name: Boost.program_options
+Description: The program_options library allows program developers to obtain program options, that is (name, value) pairs from the user, via conventional methods such as command line and config file.
+URL: http://www.boost.org/doc/html/program_options.html
+Version: 1.40
+Provides: Boost.program_options
+Requires: boost = 1.40
+Arch: 
+Cflags: /I"${prefix}\include"
+Libs: ${boost_ldflags}

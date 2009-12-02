@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jccl_config" default="dist" basedir=".">
+   <property name="srcdir" location="C:\src\VR Juggler\new-test\juggler\modules\jackal\config" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <path id="tweek.classpath">
+      <pathelement path="C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\Tweek.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekBeanDelivery.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekBeans.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekEvents.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekNet.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekServices.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\kunststoff-mod.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\ui.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\wizard.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\build\jdom.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jaxen-core.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jaxen-jdom.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\xerces.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\xml-apis.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\saxpath.jar" />
+   </path>
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/vrjuggler/jccl/config/**"/>
+         <classpath refid="tweek.classpath" />
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile">
+      <jar destfile="jccl_config.jar" basedir=".">
+         <include name="org/vrjuggler/jccl/config/**"/>
+         <fileset dir="${srcdir}" includes="org/vrjuggler/jccl/config/xslt/*.xsl" />
+         <fileset dir="${srcdir}" includes="org/vrjuggler/jccl/config/images/*" />
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="jccl_config.jar" failonerror="false" />
+   </target>
+</project>

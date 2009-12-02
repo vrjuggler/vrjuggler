@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="vrj_perf_mon" default="dist" basedir=".">
+   <property name="srcdir" location="C:\src\VR Juggler\new-test\juggler\modules\vrjuggler\plugins\corba_perf_mon" />
+   <property name="topdir" location="C:\src\VR Juggler\new-test\juggler\vc9" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <path id="vrj.classpath">
+      <pathelement path="C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\Tweek.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekBeanDelivery.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekBeans.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekEvents.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekNet.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\TweekServices.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\kunststoff-mod.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\ui.jar;C:\src\VR Juggler\new-test\juggler\vc9\Tweek_Java\wizard.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\build\jdom.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jaxen-core.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\jaxen-jdom.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\xerces.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\xml-apis.jar;C:\src\VR Juggler\new-test\juggler\external\jdom\lib\saxpath.jar" />
+      <pathelement path="C:\src\VR Juggler\new-test\juggler\vc9\JCCL_Java\jccl_config.jar;C:\src\VR Juggler\new-test\juggler\vc9\JCCL_Java\jccl_editors.jar;C:\src\VR Juggler\new-test\juggler\vc9\JCCL_Java\RTRC_Plugin_Java\jccl_rtrc.jar" />
+   </path>
+
+   <property name="vrj.classpath" refid="vrj.classpath" />
+   <property name="jfreechartdir" value="C:\src\VR Juggler\new-test\juggler/external/jfreechart" />
+
+   <!-- Compile all Java sources generated from IDL -->
+   <target name="compile_idl">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="." />
+         <include name="vrj/**" />
+         <classpath>
+            <pathelement path="${vrj.classpath}" />
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/vrjuggler/perfmon/**" />
+         <classpath>
+            <pathelement path="${vrj.classpath}" />
+            <pathelement path="." />
+            <pathelement path="${jfreechartdir}/jfreechart.jar" />
+            <pathelement path="${jfreechartdir}/jcommon.jar" />
+            <pathelement path="${jfreechartdir}/servlet.jar" />
+            <pathelement path="${jfreechartdir}/gnujaxp.jar" />
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile_idl,compile">
+      <jar destfile="PerformanceMonitor.jar" basedir=".">
+         <include name="org/vrjuggler/perfmon/*.class" />
+         <include name="vrj/*.class" />
+         <include name="vrj/PerformanceMonitorSubjectPackage/*.class" />
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="PerformanceMonitor.jar" failonerror="false" />
+   </target>
+</project>
