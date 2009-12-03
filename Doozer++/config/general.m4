@@ -1,30 +1,9 @@
-dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+dnl Distributed under the GNU Lesser General Public License 2.1.  (See
+dnl accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl
-dnl This library is free software; you can redistribute it and/or
-dnl modify it under the terms of the GNU Library General Public
-dnl License as published by the Free Software Foundation; either
-dnl version 2 of the License, or (at your option) any later version.
-dnl
-dnl This library is distributed in the hope that it will be useful,
-dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
-dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-dnl Library General Public License for more details.
-dnl
-dnl You should have received a copy of the GNU Library General Public
-dnl License along with this library; if not, write to the
-dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-dnl Boston, MA 02111-1307, USA.
-dnl
-dnl -----------------------------------------------------------------
-dnl File:          general.m4,v
-dnl Date modified: 2009/10/25 20:27:49
-dnl Version:       1.98
-dnl -----------------------------------------------------------------
-dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
 dnl General macros for use within Doozer++ and by some users constructing
@@ -46,10 +25,8 @@ dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.98 2009/10/25 20:27:49 patrickh Exp
-
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 2.1.13)
+define(DPP_DPPVERSION, 2.1.14)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.

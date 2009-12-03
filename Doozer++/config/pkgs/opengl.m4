@@ -1,9 +1,10 @@
-dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+dnl Distributed under the GNU Lesser General Public License 2.1.  (See
+dnl accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
+
 dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
 dnl
 dnl Original Authors:
@@ -25,13 +26,6 @@ dnl You should have received a copy of the GNU Library General Public
 dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
-dnl
-dnl -----------------------------------------------------------------
-dnl File:          opengl.m4,v
-dnl Date modified: 2008/01/01 15:29:21
-dnl Version:       1.35
-dnl -----------------------------------------------------------------
-dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
 dnl Find the target host's OpenGL installation if one exists.
@@ -57,8 +51,6 @@ dnl     GLU_LIB      - The OpenGL utilities library.
 dnl     OGL_INCLUDES - Extra include path for the OpenGL header directory.
 dnl     OGL_LDFLAGS  - Extra linker flags for the OpenGL library directory.
 dnl ===========================================================================
-
-dnl opengl.m4,v 1.35 2008/01/01 15:29:21 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenGL (or Mesa3D) installed.  This

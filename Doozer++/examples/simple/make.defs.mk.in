@@ -1,6 +1,11 @@
-# =============================================================================
-# make.defs.mk.in,v 1.2 2001/01/06 04:31:32 patrick Exp
+# Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+# Distributed under the GNU Lesser General Public License 2.1.  (See
+# accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 #
+# Original Author:
+#   Patrick Hartling
+
+# =============================================================================
 # This is an example file that defines variables that can be used by a whole
 # tree of makefiles.  The contents of this file are a subset of that found in
 # examples/common.defs.mk.in, and in a real project, this file would be much

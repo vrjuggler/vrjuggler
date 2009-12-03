@@ -1,34 +1,11 @@
-# ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2008 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+# Distributed under the GNU Lesser General Public License 2.1.  (See
+# accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 #
 # Original Author:
 #   Patrick Hartling
-#
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Library General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Library General Public License for more details.
-#
-# You should have received a copy of the GNU Library General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
-#
-# -----------------------------------------------------------------
-# File:          dpp.libs.mk,v
-# Date modified: 2008/01/01 15:29:21
-# Version:       1.19
-# -----------------------------------------------------------------
-# *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.mk,v 1.19 2008/01/01 15:29:21 patrickh Exp
-#
 # This file <dpp.libs.mk> defines many targets for use in compiling a software
 # library (or a set of libraries).  An including makefile can take advantage
 # of this file by extending its logic and using the provided targets
