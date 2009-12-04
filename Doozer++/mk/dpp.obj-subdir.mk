@@ -1,9 +1,10 @@
-# ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2008 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+# Distributed under the GNU Lesser General Public License 2.1.  (See
+# accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 #
 # Original Author:
 #   Patrick Hartling
-# -----------------------------------------------------------------------------
+
 # VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
 #
 # Original Authors:
@@ -25,17 +26,8 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-#
-# -----------------------------------------------------------------
-# File:          dpp.obj-subdir.mk,v
-# Date modified: 2008/01/01 15:29:22
-# Version:       1.21
-# -----------------------------------------------------------------
-# *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.obj-subdir.mk,v 1.21 2008/01/01 15:29:22 patrickh Exp
-#
 # This file <dpp.obj-subdir.mk> is intended to be used by makefiles that need
 # to build object files AND to recurse into subdirectories.  It defines
 # variables and targets that are common to all such makefiles.  It also

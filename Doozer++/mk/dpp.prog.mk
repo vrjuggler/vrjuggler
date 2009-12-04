@@ -1,9 +1,10 @@
-# ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2008 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+# Distributed under the GNU Lesser General Public License 2.1.  (See
+# accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 #
 # Original Author:
 #   Patrick Hartling
-# -----------------------------------------------------------------------------
+
 # VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
 #
 # Original Authors:
@@ -25,17 +26,8 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-#
-# -----------------------------------------------------------------
-# File:          dpp.prog.mk,v
-# Date modified: 2008/01/01 15:29:22
-# Version:       1.8
-# -----------------------------------------------------------------
-# *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.prog.mk,v 1.8 2008/01/01 15:29:22 patrickh Exp
-#
 # This file <dpp.prog.mk> is intended to be used by makefiles that need to
 # build programs.  It provides some handy targets and includes other .mk
 # files that are typically necessary for this process.

@@ -1,30 +1,9 @@
-dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2008 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+dnl Distributed under the GNU Lesser General Public License 2.1.  (See
+dnl accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl
-dnl This library is free software; you can redistribute it and/or
-dnl modify it under the terms of the GNU Library General Public
-dnl License as published by the Free Software Foundation; either
-dnl version 2 of the License, or (at your option) any later version.
-dnl
-dnl This library is distributed in the hope that it will be useful,
-dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
-dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-dnl Library General Public License for more details.
-dnl
-dnl You should have received a copy of the GNU Library General Public
-dnl License along with this library; if not, write to the
-dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-dnl Boston, MA 02111-1307, USA.
-dnl
-dnl -----------------------------------------------------------------
-dnl File:          compiler.m4,v
-dnl Date modified: 2008/01/01 15:29:20
-dnl Version:       1.49
-dnl -----------------------------------------------------------------
-dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
 dnl Determine which C and C++ compilers to use for compiling.  The
@@ -131,8 +110,6 @@ dnl Possible preprocssor symbols defined:
 dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
-
-dnl compiler.m4,v 1.49 2008/01/01 15:29:20 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for
@@ -1021,7 +998,19 @@ AC_DEFUN([DPP_PROG_CXX_PROF_PG],
    AC_SUBST(CXX_PROF_FLAGS)
 ])
 
-m4_define([AC_LANG(Objective-C)],
+m4_ifdef([AC_LANG(Objective C)], ,
+[m4_ifdef([AC_LANG_DEFINE],
+[AC_LANG_DEFINE(
+   [Objective C], [objc], [OBJC], [C],
+   [ac_ext=m
+   ac_cpp='$OBJCPP $CPPFLAGS'
+   ac_compile='$OBJC -c $OBJCFLAGS $CPPFLAGS conftest.$ac_ext >&AS_MESSAGE_LOG_FD'
+   ac_link='$OBJC -o conftest$ac_exeext $OBJCFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&AS_MESSAGE_LOG_FD'
+   ac_compiler_gnu=$ac_cv_objc_compiler_gnu
+   ]
+)],
+
+[m4_define([AC_LANG(Objective C)],
 [ac_ext=m
 ac_cpp='$OBJCCPP $OBJCPPFLAGS'
 ac_compile='$OBJC -c $OBJCFLAGS $OBJCPPFLAGS conftest.$ac_ext >&AS_MESSAGE_LOG_FD'
@@ -1029,31 +1018,18 @@ ac_link='$OBJC -o conftest$ac_exeext $OBJCFLAGS $OBJCPPFLAGS $LDFLAGS conftest.$
 ac_compiler_gnu=$ac_cv_objc_compiler_gnu
 ])
 
-m4_define([_AC_LANG_ABBREV(Objective-C)], [objc])
+m4_define([_AC_LANG_ABBREV(Objective C)], [objc])
 
-m4_define([_AC_LANG_PREFIX(Objective-C)], [OBJC])
+m4_define([_AC_LANG_PREFIX(Objective C)], [OBJC])
 
-m4_define([AC_LANG(Objective-C++)],
-[ac_ext=mm
-ac_cpp='$OBJCXXCPP $OBJCXXPPFLAGS'
-ac_compile='$OBJCXX -c $OBJCXXFLAGS $OBJCXXPPFLAGS conftest.$ac_ext >&AS_MESSAGE_LOG_FD'
-ac_link='$CXX -o conftest$ac_exeext $OBJCXXFLAGS $OBJCXXPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&AS_MESSAGE_LOG_FD'
-ac_compiler_gnu=$ac_cv_objcxx_compiler_gnu
+m4_copy([AC_LANG_SOURCE(C)], [AC_LANG_SOURCE(Objective C)])
+
+m4_copy([AC_LANG_PROGRAM(C)], [AC_LANG_PROGRAM(Objective C)])
+])
 ])
 
-m4_copy([AC_LANG_SOURCE(C)], [AC_LANG_SOURCE(Objective-C)])
-
-m4_copy([AC_LANG_PROGRAM(C)], [AC_LANG_PROGRAM(Objective-C)])
-
-m4_define([_AC_LANG_ABBREV(Objective-C++)], [objcxx])
-
-m4_define([_AC_LANG_PREFIX(Objective-C++)], [OBJCXX])
-
-m4_copy([AC_LANG_SOURCE(C)], [AC_LANG_SOURCE(Objective-C++)])
-
-m4_copy([AC_LANG_PROGRAM(C)], [AC_LANG_PROGRAM(Objective-C++)])
-
-m4_define([_AC_PROG_OBJC_G],
+m4_ifdef([AC_PROG_OBJC], ,
+[m4_define([_AC_PROG_OBJC_G],
 [ac_test_OBJCFLAGS=${OBJCFLAGS+set}
 ac_save_OBJCFLAGS=$OBJCFLAGS
 OBJCFLAGS="-g"
@@ -1076,6 +1052,7 @@ else
     OBJCFLAGS=
   fi
 fi[]dnl
+])
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -1103,6 +1080,8 @@ dnl     path                 - Extra path information for finding the
 dnl                            Objective-C compiler. This is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([DPP_PROG_OBJC],
+[
+m4_ifdef([AC_PROG_OBJC], [AC_PROG_OBJC],
 [
    dpp_save_OBJCFLAGS="$OBJCFLAGS"
    OBJCFLAGS="$OBJCFLAGS $2 $ABI_FLAGS"
@@ -1151,7 +1130,7 @@ AC_DEFUN([DPP_PROG_OBJC],
       fi
    fi
 
-   AC_LANG_PUSH([Objective-C])
+   AC_LANG_PUSH([Objective C])
 
    AC_CHECK_TOOL(OBJC, gcc)
    if test -z "$OBJC" ; then
@@ -1184,9 +1163,40 @@ dnl   AC_PROG_CPP
 
    OBJCFLAGS_DYNLIB="$OBJCFLAGS_DYNLIB -DPIC"
 
-   AC_LANG_POP([Objective-C])
+   AC_LANG_POP([Objective C])
 
    AC_SUBST(OBJCFLAGS_DYNLIB)
+])
+])
+
+m4_ifdef([AC_LANG(Objective C++)], ,
+[m4_ifdef([AC_LANG_DEFINE],
+[AC_LANG_DEFINE(
+   [Objective C++], [objcxx], [OBJCXX], [C],
+   [ac_ext=m
+   ac_cpp='$OBJCPP $CPPFLAGS'
+   ac_compile='$OBJC -c $OBJCFLAGS $CPPFLAGS conftest.$ac_ext >&AS_MESSAGE_LOG_FD'
+   ac_link='$OBJC -o conftest$ac_exeext $OBJCFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&AS_MESSAGE_LOG_FD'
+   ac_compiler_gnu=$ac_cv_objc_compiler_gnu
+   ]
+)],
+
+[m4_define([AC_LANG(Objective C++)],
+[ac_ext=mm
+ac_cpp='$OBJCXXCPP $OBJCXXPPFLAGS'
+ac_compile='$OBJCXX -c $OBJCXXFLAGS $OBJCXXPPFLAGS conftest.$ac_ext >&AS_MESSAGE_LOG_FD'
+ac_link='$CXX -o conftest$ac_exeext $OBJCXXFLAGS $OBJCXXPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&AS_MESSAGE_LOG_FD'
+ac_compiler_gnu=$ac_cv_objcxx_compiler_gnu
+])
+
+m4_define([_AC_LANG_ABBREV(Objective C++)], [objcxx])
+
+m4_define([_AC_LANG_PREFIX(Objective C++)], [OBJCXX])
+
+m4_copy([AC_LANG_SOURCE(C)], [AC_LANG_SOURCE(Objective C++)])
+
+m4_copy([AC_LANG_PROGRAM(C)], [AC_LANG_PROGRAM(Objective C++)])
+])
 ])
 
 m4_define([_AC_PROG_OBJCXX_G],
@@ -1287,7 +1297,7 @@ AC_DEFUN([DPP_PROG_OBJCXX],
       fi
    fi
 
-   AC_LANG_PUSH([Objective-C++])
+   AC_LANG_PUSH([Objective C++])
 
    AC_CHECK_TOOL(OBJCXX, gcc)
    if test -z "$OBJCXX" ; then
@@ -1320,7 +1330,7 @@ dnl   AC_PROG_CPP
 
    OBJCXXFLAGS_DYNLIB="$OBJCXXFLAGS_DYNLIB -DPIC"
 
-   AC_LANG_POP([Objective-C++])
+   AC_LANG_POP([Objective C++])
 
    AC_SUBST(OBJCXXFLAGS_DYNLIB)
 ])

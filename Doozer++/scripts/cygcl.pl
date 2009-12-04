@@ -20,7 +20,7 @@
 # 02111-1307, USA.
 
 #
-# cygcl.pl,v 1.4 2004/01/29 04:27:50 patrickh Exp
+# $Id$
 #
 
 use strict 'vars';
