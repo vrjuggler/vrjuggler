@@ -55,6 +55,8 @@ namespace vpr
  * to vpr::Selector.
  *
  * Implementation site of the vpr::Selector_t bridge.
+ *
+ * @since 2.1.16
  */
 class VPR_CLASS_API SelectorImplBOOST : public vpr::SelectorBase
 {
@@ -141,12 +143,12 @@ public:
     *                      vpr::Interval::NoWait effects a poll
     *                      on the registered handles and returns immediately.
     *
-    * @throws vpr::TimeoutException If no events were detected before the
-    *                               timeout expired or if
-    *                               vpr::Interval::NoWait was passed. In
-    *                               this case, \p numWithEvents should be
-    *                               checked for a value greater than 0.
-    * @throws vpr::IOException      If the select failed.
+    * @throw vpr::TimeoutException
+    *           Thrown if no events were detected before the timeout expired
+    *           or if vpr::Interval::NoWait was passed. In this case,
+    *           \p numWithEvents should be checked for a value greater than 0.
+    * @throw vpr::IOException
+    *           Thrown if the select failed.
     */
    void select(vpr::Uint16& numWithEvents,
                const vpr::Interval timeout = vpr::Interval::NoTimeout);

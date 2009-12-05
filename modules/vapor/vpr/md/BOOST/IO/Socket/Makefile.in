@@ -34,7 +34,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vapor/vpr/md/POSIX/IO/Socket.  It requires GNU make.
+# Makefile.in for vapor/vpr/md/BOOST/IO/Socket.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------

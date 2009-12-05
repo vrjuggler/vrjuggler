@@ -52,6 +52,8 @@ namespace vpr
  * Implementation class for datagram sockets using the BOOST sockets interface.
  * This is used in conjunction with vpr::SocketConfiguration to create the
  * BOOST implementation of the typedef vpr::SocketDatagram.
+ *
+ * @since 2.1.16
  */
 class VPR_CLASS_API SocketDatagramImplBOOST : public vpr::SocketImplBOOST
 {

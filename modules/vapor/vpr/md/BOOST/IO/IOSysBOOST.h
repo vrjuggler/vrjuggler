@@ -46,6 +46,8 @@ namespace vpr
 /** \class IOSysBOOST IOSysBOOST.h vpr/IO/IOSys.h
  *
  * Wrapper around BOOST file descriptors.  This is typedef'd to vpr::IOSys.
+ *
+ * @since 2.1.16
  */
 class VPR_CLASS_API IOSysBOOST
 {

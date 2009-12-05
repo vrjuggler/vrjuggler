@@ -85,9 +85,8 @@ public:
     * @post A new socket is created with its file handle stored in the
     *       mFdesc member variable.
     *
-    * @throws vpr::SocketException if the socket could not be opened.
-    * @throws vpr::IOException if the blocking state could not be set.
-    * @see FileHandleImplUNIX::setBlocking()
+    * @throw vpr::SocketException if the socket could not be opened.
+    * @throw vpr::IOException if the blocking state could not be set.
     */
    void open();
 
@@ -99,8 +98,7 @@ public:
     *       returned to the caller.
     *       The local tracking of connected state and bound status are reset.
     *
-    * @throws vpr::IOException if the socket could not be closed.
-    * @see FileHandleImplUNIX::close()
+    * @throw vpr::IOException if the socket could not be closed.
     */
    void close();
 
@@ -132,7 +130,7 @@ public:
     * @pre The socket is open, and \c mLocalAddr has been initialized properly.
     * @post The socket is bound to the address in \c mLocalAddr.
     *
-    * @throws vpr::SocketException if socket could not be bound.
+    * @throw vpr::SocketException if socket could not be bound.
     */
    void bind();
 
@@ -163,12 +161,12 @@ public:
     *                 configured to use blocking I/O.  A value of \c false
     *                 indicates that it will use non-blocking I/O.
     *
-    * @throws vpr::SocketException if trying to call after a clocking
-    *         call has already been made.
-    * @throws vpr::IOException if the blocking state could not be set.
+    * @throw vpr::SocketException if trying to call after a clocking
+    *        call has already been made.
+    * @throw vpr::IOException if the blocking state could not be set.
     *
-    * @see FileHandleImplUNIX::setBlocking()
-    * @see isOpen, open
+    * @see isOpen()
+    * @see open()
     */
    void setBlocking(bool blocking);
 
@@ -204,12 +202,17 @@ public:
     * @todo Make timeout value apply to blocking sockets (by making non-blocking
     *       for duration of connection).
     *
-    * @throws vpr::ConnectionResetException if connection is reset.
-    * @throws vpr::NoRouteToHostException if a route to host does not exist.
-    * @throws vpr::UnknownHostException if host does not exist.
-    * @throws vpr::TimeoutException if the connection could not be completed
-    *         in the given amount of time. This closes the socket before throw.
-    * @throws vpr::SocketException if could not connect.
+    * @throw vpr::ConnectionResetException
+    * 		Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    * 		Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    * 		Thrown if host does not exist.
+    * @throw vpr::TimeoutException
+    * 		Thrown if the connection could not be completed in the given
+    * 		amount of time. This closes the socket before throw.
+    * @throw vpr::SocketException
+    * 		Thrown if could not connect.
     */
    void connect(const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
@@ -252,10 +255,12 @@ public:
     * @post On successful completion, \c mLocalAddr is updated to use the given
     *       vpr::InetAddr object.
     *
-    * @throws vpr::SocketException if the local address could not be changed.
-    *         This occurs when this socket is already bound.
+    * @throw vpr::SocketException
+    * 		Thrown if the local address could not be changed. This occurs
+    * 		when this socket is already bound.
     *
-    * @see isBound, bind
+    * @see isBound()
+    * @see bind()
     */
    void setLocalAddr(const vpr::InetAddr& addr);
 
@@ -276,10 +281,12 @@ public:
     * @post On successful completion, \c mRemoteAddr is updated to use the
     *       given vpr::InetAddr object.
     *
-    * @throws vpr::SocketException if the remote address could not be changed
-    *         because the socket is already connected.
+    * @throw vpr::SocketException
+    * 		Thrown if the remote address could not be changed because the
+    * 		socket is already connected.
     *
-    * @see isConnected, connect
+    * @see isConnected()
+    * @see connect()
     */
    void setRemoteAddr(const vpr::InetAddr& addr);
 
@@ -389,8 +396,9 @@ public:
     * @param data   A data buffer that will be used to store the value of the
     *               given option.
     *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be retrieved.
+    * @throw vpr::SocketException
+    * 		Thrown if the value for the given option could not be
+    * 		retrieved.
     */
    void getLinger(struct vpr::SocketOptions::Data& data) const;
    void setLinger(struct vpr::SocketOptions::Data data);
@@ -427,8 +435,9 @@ public:
     * @param data   A data buffer that will be used to store the value of the
     *               given option.
     *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be retrieved.
+    * @throw vpr::SocketException
+    * 		Thrown if the value for the given option could not be
+    * 		retrieved.
     */
    void getOption(const vpr::SocketOptions::Types option,
                   struct vpr::SocketOptions::Data& data) const;
@@ -441,8 +450,8 @@ public:
     * @param data   A data buffer containing the value to be used in setting
     *               the socket option.
     *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be set.
+    * @throw vpr::SocketException
+    * 		Thrown if the value for the given option could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
                   const struct vpr::SocketOptions::Data& data);

@@ -63,6 +63,8 @@ struct InetAddrHash;
  *
  * Cross-platform abstraction to Internet address structures.  This is
  * typedef'd to vpr::InetAddr.
+ *
+ * @since 2.1.16
  */
 class VPR_CLASS_API InetAddrBOOST
 {
@@ -122,8 +124,6 @@ public:
     *
     * @return A vector containing vpr::InetAddr objects holding all the local
     *         IPv4 addresses for the local machine.
-    *
-    * @since 1.1.12
     */
    static std::vector<vpr::InetAddrBOOST>
       getAllLocalAddrs(const bool withLoopback = false,
@@ -269,14 +269,16 @@ public:
 
    /**
     * Returns the fully qualified hostname for this address.
-    * @throws UnknownHostException when host can not be found.
+    *
+    * @throw UnknownHostException when host can not be found.
     */
    std::string getHostname() const;
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
-    * @throws UnknownHostException when host can not be found.
+    *
+    * @throw UnknownHostException when host can not be found.
     */
    std::vector<std::string> getHostnames() const;
 

@@ -54,6 +54,8 @@ namespace vpr
  * vpr::SocketStream.
  *
  * @see vpr::NoPushWriter
+ *
+ * @since 2.1.16
  */
 class VPR_CLASS_API SocketStreamImplBOOST : public SocketImplBOOST
 {
@@ -108,8 +110,8 @@ public:
     *
     * @param backlog The maximum length of th queue of pending connections.
     *
-    * @throws vpr::SocketException if the socket could not be put into
-    *         a listening state.
+    * @throw vpr::SocketException
+    * 		Thrown if the socket could not be put into a listening state.
     */
    void listen(const int backlog = 5);
 
@@ -126,14 +128,18 @@ public:
     * @param timeout The length of time to wait for the accept call to
     *                return.
     *
-    * @throws vpr::WouldBlockException if this is a non-blocking socket,
-    *         and there are no waiting connection requests.
-    * @throws vpr::TimeoutException if no connection requests arrived within
-    *         the given timeout period.
-    * @throws vpr::SocketException if the connection was not accepted because
-    *         of an error.
+    * @throw vpr::WouldBlockException
+    * 		Thrown if this is a non-blocking socket, and there are no
+    * 		waiting connection requests.
+    * @throw vpr::TimeoutException
+    * 		Thrown if no connection requests arrived within the given
+    * 		timeout period.
+    * @throw vpr::SocketException
+    * 		Thrown if the connection was not accepted because of an error.
     *
-    * @see open, bind, listen
+    * @see open()
+    * @see bind()
+    * @see listen()
     */
    void accept(SocketStreamImplBOOST& sock,
                const vpr::Interval& timeout = vpr::Interval::NoTimeout);
@@ -183,8 +189,6 @@ public:
     *
     * @see cork()
     * @see vpr::NoPushWriter::write()
-    *
-    * @since 2.1.9
     */
    vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
                        const vpr::Interval& timeout);
@@ -206,8 +210,6 @@ public:
     *
     * @post For platforms that lack support for TCP corking as a socket
     *       option, \c mCorked is set to true.
-    *
-    * @since 2.1.9
     */
    void cork();
 
@@ -217,8 +219,6 @@ public:
     * @post For platforms that lack support for TCP corking as a socket
     *       option, \c mCorked is set to false and \c mCorkedWriter is
     *       flushed.
-    *
-    * @since 2.1.9
     */
    void uncork();
 
@@ -228,8 +228,6 @@ public:
     *
     * @param strategy A callable object used to determine how much memory to
     *                 allocate when the corking buffer needs to grow.
-    *
-    * @since 2.1.9
     */
    void setCorkAllocStrategy(const NoPushAllocStrategy& strategy)
    {
