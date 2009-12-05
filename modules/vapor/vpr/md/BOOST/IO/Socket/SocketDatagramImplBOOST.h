@@ -80,7 +80,8 @@ public:
     * @param remoteAddr The remote address for this socket.  This is used to
     *                   specify a default destination for all packets.
     */
-   SocketDatagramImplBOOST(const InetAddr& localAddr, const InetAddr& remoteAddr);
+   SocketDatagramImplBOOST(const InetAddr& localAddr,
+                           const InetAddr& remoteAddr);
 
    /**
     * Copy constructor.

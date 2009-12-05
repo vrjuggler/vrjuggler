@@ -56,8 +56,9 @@
 
 namespace vpr
 {
+
 std::vector<vpr::InetAddrBOOST> getIfAddrs(const bool withLoopback,
-                                         const bool withDown);
+                                           const bool withDown);
 
 const InetAddrBOOST InetAddrBOOST::AnyAddr;      // Default constructor defaults to ANY addr
 
@@ -122,7 +123,7 @@ void InetAddrBOOST::setAddress(const std::string& address)
 }
 
 void InetAddrBOOST::setAddress(const std::string& address,
-                             const Uint16 port)
+                               const Uint16 port)
 {
    if ( ! address.empty() )
    {
@@ -134,7 +135,7 @@ void InetAddrBOOST::setAddress(const std::string& address,
 }
 
 void InetAddrBOOST::setAddress(const vpr::Uint32 address,
-                             const vpr::Uint16 port)
+                               const vpr::Uint16 port)
 {
    setAddressValue(address);
    setPort(port);

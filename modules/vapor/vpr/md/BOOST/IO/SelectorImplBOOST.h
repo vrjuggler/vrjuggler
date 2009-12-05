@@ -149,7 +149,7 @@ public:
     * @throws vpr::IOException      If the select failed.
     */
    void select(vpr::Uint16& numWithEvents,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * For iteration over the registered handles.

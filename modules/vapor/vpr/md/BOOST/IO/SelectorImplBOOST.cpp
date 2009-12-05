@@ -116,7 +116,7 @@ vpr::Uint16 SelectorImplBOOST::getOut(const vpr::IOSys::Handle handle) const
 }
 
 void SelectorImplBOOST::select(vpr::Uint16& numWithEvents,
-                                          const vpr::Interval timeout)
+                               const vpr::Interval timeout)
 {
    std::vector<BOOSTPollDesc>::iterator i;
    numWithEvents = 0;

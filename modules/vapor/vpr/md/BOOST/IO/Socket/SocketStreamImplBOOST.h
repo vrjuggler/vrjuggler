@@ -85,7 +85,8 @@ public:
     * @param remoteAddr The remote address for this socket.  This is used to
     *                   specify the connection addres for this socket.
     */
-   SocketStreamImplBOOST(const InetAddr& localAddr, const InetAddr& remoteAddr);
+   SocketStreamImplBOOST(const InetAddr& localAddr,
+                         const InetAddr& remoteAddr);
 
    /**
     * Copy constructor.
@@ -241,7 +242,7 @@ private:
 
    NoPushWriter mCorkedWriter;
 
-   boost::asio::ip::tcp::acceptor * mAcceptor;
+   boost::asio::ip::tcp::acceptor* mAcceptor;
 };
 
 } // End of vpr namespace

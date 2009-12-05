@@ -67,13 +67,14 @@ SocketDatagramImplBOOST::SocketDatagramImplBOOST()
 }
 
 SocketDatagramImplBOOST::SocketDatagramImplBOOST(const InetAddr& localAddr,
-                                             const InetAddr& remoteAddr)
+                                                 const InetAddr& remoteAddr)
    : SocketImplBOOST(localAddr, remoteAddr, vpr::SocketTypes::DATAGRAM)
 {
    /* Do nothing. */ ;
 }
 
-SocketDatagramImplBOOST::SocketDatagramImplBOOST(const SocketDatagramImplBOOST& sock)
+SocketDatagramImplBOOST::
+SocketDatagramImplBOOST(const SocketDatagramImplBOOST& sock)
    : SocketImplBOOST(sock.mLocalAddr, sock.mRemoteAddr, SocketTypes::DATAGRAM)
 {
    mUdpSocket = sock.mUdpSocket;
@@ -84,14 +85,15 @@ SocketDatagramImplBOOST::SocketDatagramImplBOOST(const SocketDatagramImplBOOST& 
 }
 
 vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
-                                            const vpr::Uint32 length,
-                                            vpr::InetAddr& from,
-                                            const vpr::Interval& timeout)
+                                              const vpr::Uint32 length,
+                                              vpr::InetAddr& from,
+                                              const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes_read(0);
    boost::system::error_code ec;
 
-   bytes_read = mUdpSocket->receive_from(boost::asio::buffer(msg, length), from.mUdpAddr, 0, ec);
+   bytes_read = mUdpSocket->receive_from(boost::asio::buffer(msg, length),
+                                         from.mUdpAddr, 0, ec);
 
    if (ec)
    {

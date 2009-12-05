@@ -67,7 +67,7 @@ SocketStreamImplBOOST::SocketStreamImplBOOST()
 }
 
 SocketStreamImplBOOST::SocketStreamImplBOOST(const InetAddr& localAddr,
-                                         const InetAddr& remoteAddr)
+                                             const InetAddr& remoteAddr)
    : SocketImplBOOST(localAddr, remoteAddr, SocketTypes::STREAM)
    , mCorked(false)
    , mCorkedWriter(doublingAllocationStrategy)
@@ -116,7 +116,7 @@ void SocketStreamImplBOOST::listen(const int backlog)
 
 // Accept an incoming connection request.
 void SocketStreamImplBOOST::accept(SocketStreamImplBOOST& sock,
-                                 const vpr::Interval& timeout)
+                                   const vpr::Interval& timeout)
 {
    boost::system::error_code ec;
    InetAddr addr;
@@ -151,8 +151,8 @@ void SocketStreamImplBOOST::accept(SocketStreamImplBOOST& sock,
 }
 
 vpr::Uint32 SocketStreamImplBOOST::write_i(const void* buffer,
-                                         const vpr::Uint32 length,
-                                         const vpr::Interval& timeout)
+                                           const vpr::Uint32 length,
+                                           const vpr::Interval& timeout)
 {
    mInBlockingCall = true;
 #if ! defined(HAVE_CORKABLE_TCP)

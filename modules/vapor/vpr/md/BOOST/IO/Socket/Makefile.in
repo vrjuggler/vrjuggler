@@ -52,7 +52,7 @@ SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifneq (@SIMULATOR@, Y)
 ifeq (@SOCKET_ABS@, BOOST)
-   SRCS=	InetAddrBOOST.cpp			\
+   SRCS=	InetAddrBOOST.cpp		\
 		SocketDatagramImplBOOST.cpp	\
 		SocketImplBOOST.cpp		\
 		SocketStreamImplBOOST.cpp

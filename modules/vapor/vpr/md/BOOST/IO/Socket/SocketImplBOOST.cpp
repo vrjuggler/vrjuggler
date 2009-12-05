@@ -429,7 +429,7 @@ void SocketImplBOOST::setRemoteAddr(const InetAddr& addr)
 }
 
 vpr::Uint32 SocketImplBOOST::read_i(void* buffer, const vpr::Uint32 length,
-                                  const vpr::Interval& timeout)
+                                    const vpr::Interval& timeout)
 {
    boost::system::error_code ec;
    //boost::asio::buffer boostBuffer = boost::asio::buffer(buffer, length);
@@ -458,7 +458,7 @@ vpr::Uint32 SocketImplBOOST::read_i(void* buffer, const vpr::Uint32 length,
 }
 
 vpr::Uint32 SocketImplBOOST::readn_i(void* buffer, const vpr::Uint32 length,
-                                   const vpr::Interval& timeout)
+                                     const vpr::Interval& timeout)
 {
    boost::system::error_code ec;
    vpr::Uint32 bytes(0);
@@ -488,8 +488,8 @@ vpr::Uint32 SocketImplBOOST::readn_i(void* buffer, const vpr::Uint32 length,
 }
 
 vpr::Uint32 SocketImplBOOST::write_i(const void* buffer,
-                                   const vpr::Uint32 length,
-                                   const vpr::Interval& timeout)
+                                     const vpr::Uint32 length,
+                                     const vpr::Interval& timeout)
 {
    vpr::Uint32 bytes_written(0);
    mBlockingFixed = true;
@@ -553,7 +553,8 @@ void SocketImplBOOST::getLinger(struct vpr::SocketOptions::Data& data) const
 
 void SocketImplBOOST::setLinger(struct vpr::SocketOptions::Data data)
 {
-   boost::asio::socket_base::linger option(data.linger.enabled, data.linger.seconds);
+   boost::asio::socket_base::linger option(data.linger.enabled,
+                                           data.linger.seconds);
    boost::system::error_code ec;
 
    switch ( mType )
@@ -576,7 +577,8 @@ void SocketImplBOOST::setLinger(struct vpr::SocketOptions::Data data)
    }
 }
 
-void SocketImplBOOST::getReuseAddr(struct vpr::SocketOptions::Data& data) const
+void SocketImplBOOST::getReuseAddr(struct vpr::SocketOptions::Data& data)
+   const
 {
    boost::asio::socket_base::reuse_address option;
    boost::system::error_code ec;
@@ -631,7 +633,8 @@ void SocketImplBOOST::setReuseAddr(struct vpr::SocketOptions::Data data)
 }
 
 
-void SocketImplBOOST::getKeepAlive(struct vpr::SocketOptions::Data& data) const
+void SocketImplBOOST::getKeepAlive(struct vpr::SocketOptions::Data& data)
+   const
 {
    boost::asio::socket_base::keep_alive option;
    boost::system::error_code ec;
@@ -684,7 +687,8 @@ void SocketImplBOOST::setKeepAlive(struct vpr::SocketOptions::Data data)
    }
 }
 
-void SocketImplBOOST::getReceiveBufferSize(struct vpr::SocketOptions::Data& data) const
+void SocketImplBOOST::
+getReceiveBufferSize(struct vpr::SocketOptions::Data& data) const
 {
    boost::asio::socket_base::receive_buffer_size option;
    boost::system::error_code ec;
@@ -712,7 +716,8 @@ void SocketImplBOOST::getReceiveBufferSize(struct vpr::SocketOptions::Data& data
    }
 }
 
-void SocketImplBOOST::setReceiveBufferSize(struct vpr::SocketOptions::Data data)
+void
+SocketImplBOOST::setReceiveBufferSize(struct vpr::SocketOptions::Data data)
 {
    boost::asio::socket_base::receive_buffer_size option(data.recv_buffer_size);
    boost::system::error_code ec;
@@ -737,7 +742,8 @@ void SocketImplBOOST::setReceiveBufferSize(struct vpr::SocketOptions::Data data)
    }
 }
 
-void SocketImplBOOST::getSendBufferSize(struct vpr::SocketOptions::Data& data) const
+void SocketImplBOOST::getSendBufferSize(struct vpr::SocketOptions::Data& data)
+   const
 {
    boost::asio::socket_base::send_buffer_size option;
    boost::system::error_code ec;
@@ -950,7 +956,8 @@ void SocketImplBOOST::setMcastTTL(struct vpr::SocketOptions::Data data)
    }
 }
 
-void SocketImplBOOST::getMcastLoopback(struct vpr::SocketOptions::Data& data) const
+void SocketImplBOOST::getMcastLoopback(struct vpr::SocketOptions::Data& data)
+   const
 {
    boost::asio::ip::multicast::enable_loopback option;
    boost::system::error_code ec;
@@ -1200,7 +1207,7 @@ void SocketImplBOOST::setNoPush(struct vpr::SocketOptions::Data data)
 }
 
 void SocketImplBOOST::getOption(const vpr::SocketOptions::Types option,
-                              struct vpr::SocketOptions::Data& data) const
+                                struct vpr::SocketOptions::Data& data) const
 {  
    switch ( option )
    {
@@ -1373,8 +1380,8 @@ SocketImplBOOST::SocketImplBOOST(const vpr::SocketTypes::Type sockType)
 }
 
 SocketImplBOOST::SocketImplBOOST(const vpr::InetAddr& localAddr,
-                             const vpr::InetAddr& remoteAddr,
-                             const vpr::SocketTypes::Type sockType)
+                                 const vpr::InetAddr& remoteAddr,
+                                 const vpr::SocketTypes::Type sockType)
    : mOpenBlocking(true)
    , mBound(false)
    , mConnectCalled(false)
