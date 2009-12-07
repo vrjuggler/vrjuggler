@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - Intersense IS900"
 	ProjectGUID="{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8437}"
+	RootNamespace="Driver - Intersense IS900"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/IS900_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/IS900_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/IS900_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

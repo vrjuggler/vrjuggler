@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix-$(SNX_VERSION).dll"
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="2"
@@ -153,7 +153,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix_d-$(SNX_VERSION).dll"
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="2"
@@ -240,7 +240,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/sonix-$(SNX_VERSION).dll"
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="1"

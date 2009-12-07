@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
@@ -154,7 +154,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
@@ -242,7 +242,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="1"
@@ -702,10 +702,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\ObjectReader.cpp"
 				>
 			</File>
@@ -786,7 +782,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\SystemWin32.cpp"
 				>
 			</File>
 			<File
@@ -1079,10 +1075,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\NullMutex.h"
 				>
 			</File>
@@ -1267,7 +1259,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\SystemWin32.h"
 				>
 			</File>
 			<File

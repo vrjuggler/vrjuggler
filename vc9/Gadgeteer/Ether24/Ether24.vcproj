@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - Elexol Ether24"
 	ProjectGUID="{6090FE9C-7FD0-404E-B435-DB5FBCA66DCF}"
+	RootNamespace="Driver - Elexol Ether24"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -69,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/ElexolEther24_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -156,7 +157,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/ElexolEther24_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -246,7 +247,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/ElexolEther24_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

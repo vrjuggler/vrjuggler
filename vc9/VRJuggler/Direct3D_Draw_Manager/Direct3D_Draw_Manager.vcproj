@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="VR Juggler Direct3D Draw Manager"
 	ProjectGUID="{927ADA64-5D2E-4066-ABDA-3D65A9CF524B}"
+	RootNamespace="VR Juggler Direct3D Draw Manager"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -70,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib gdi32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d3d-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -158,7 +159,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib gdi32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d3d_d-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -248,7 +249,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib gdi32.lib d3dxof.lib dxguid.lib d3dx9d.lib d3d9.lib winmm.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d3d-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"

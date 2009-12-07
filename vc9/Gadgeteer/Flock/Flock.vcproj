@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - Ascension Flock of Birds"
 	ProjectGUID="{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
+	RootNamespace="Driver - Ascension Flock of Birds"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/Flock_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/Flock_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/Flock_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

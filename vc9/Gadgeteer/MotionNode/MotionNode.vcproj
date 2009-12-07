@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - MotionNode MotionNode"
 	ProjectGUID="{02A33E62-FE97-40FF-BEED-97B1FB185D59}"
+	RootNamespace="Driver - MotionNode MotionNode"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libMotionNodeSDK.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="libMotionNodeSDK.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/MotionNode_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libMotionNodeSDK.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="libMotionNodeSDK.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/MotionNode_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libMotionNodeSDK.lib libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="libMotionNodeSDK.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/MotionNode_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

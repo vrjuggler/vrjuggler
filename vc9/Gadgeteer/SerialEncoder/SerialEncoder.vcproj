@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - US Digital Serial Encoder"
 	ProjectGUID="{E72614B6-3DF7-4DFE-8E8D-29590C8AF70E}"
+	RootNamespace="Driver - US Digital Serial Encoder"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SerialEncoder_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SerialEncoder_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SerialEncoder_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

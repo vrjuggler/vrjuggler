@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - Microsoft Speech Recognition"
 	ProjectGUID="{F0298FAE-2D7F-43F0-919B-D0A0A9A1F94D}"
+	RootNamespace="Driver - Microsoft Speech Recognition"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/MSFTSpeechRecog_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/MSFTSpeechRecog_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/MSFTSpeechRecog_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

@@ -705,7 +705,8 @@ def updateVersions(vcDir, options):
    vpr_subst_vars['vpr_cxxflags'] = '/DBOOST_ALL_DYN_LINK /DCPPDOM_DYN_LINK /EHsc /GR'
    vpr_subst_vars['vpr_ldflags'] = r'/libpath:"$libdir"'
    vpr_subst_vars['vpr_libs'] = ''
-   vpr_subst_vars['subsystem_libs'] = 'libnspr4.lib libplc4.lib'
+   #vpr_subst_vars['subsystem_libs'] = 'libnspr4.lib libplc4.lib'
+   vpr_subst_vars['subsystem_libs'] = ''
    vpr_subst_vars['BOOST_ROOT'] = r'${fp_file_cwd}\..\..'
    vpr_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
    vpr_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'

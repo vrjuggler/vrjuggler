@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - 3Dconnexion SpaceBall"
 	ProjectGUID="{40450FA1-4F16-4498-AD30-7974FAF8D8C7}"
+	RootNamespace="Driver - 3Dconnexion SpaceBall"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SpaceBall_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SpaceBall_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/SpaceBall_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

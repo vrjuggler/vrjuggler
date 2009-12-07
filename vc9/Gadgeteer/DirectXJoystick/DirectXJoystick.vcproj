@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - Direct Input Joystick"
 	ProjectGUID="{77A5242E-C68D-4101-A105-7D4FBD43F489}"
+	RootNamespace="Driver - Direct Input Joystick"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
+				AdditionalDependencies="dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
+				AdditionalDependencies="dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
+				AdditionalDependencies="dxguid.lib dinput8.lib dxerr.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/DirectXJoystick_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Driver - noDNA X-IST Data Glove"
 	ProjectGUID="{D5860FFA-8786-41CF-9DA1-D5E87D8DECEE}"
+	RootNamespace="Driver - noDNA X-IST Data Glove"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="FTD2XX.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="FTD2XX.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/X-IST_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="FTD2XX.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="FTD2XX.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/X-IST_drv_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="FTD2XX.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="FTD2XX.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/X-IST_drv.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"

@@ -176,7 +176,7 @@ namespace vpr
 #  define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_WIN32
 
    typedef class ErrorImplWin32 Error;
-   typedef class SystemNSPR     System;
+   typedef class SystemWin32     System;
    typedef class CondVarWin32   CondVar;
    typedef class MutexWin32     Mutex;
    typedef class SemaphoreWin32 Semaphore;

@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Sonix Plug-in - OpenAL"
 	ProjectGUID="{B5B84219-04D9-41CE-BC53-FFF9F53EF7EE}"
+	RootNamespace="Sonix Plug-in - OpenAL"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -68,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenAL32.lib ALut.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenAL32.lib ALut.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/OpenALPlugin.dll"
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="1"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenAL32.lib ALut.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenAL32.lib ALut.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/OpenALPlugin.dll"
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="1"
@@ -243,7 +244,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenAL32.lib ALut.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="OpenAL32.lib ALut.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/OpenALPlugin.dll"
 				Version="$(SNX_VERSION_DOT)"
 				LinkIncremental="1"
