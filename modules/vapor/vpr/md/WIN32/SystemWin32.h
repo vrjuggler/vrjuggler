@@ -74,7 +74,7 @@ public:
     */
    static int usleep(vpr::Uint32 micro)
    {
-       return msleep(micro / 1000);
+      return msleep(micro / 1000);
    }
 
    /**
@@ -84,8 +84,8 @@ public:
     */
    static int msleep(vpr::Uint32 milli)
    {
-       ::Sleep(milli);
-       return(0);
+      ::Sleep(milli);
+      return 0;
    }
 
    /**
@@ -95,7 +95,7 @@ public:
     */
    static int sleep(vpr::Uint32 seconds)
    {
-       return msleep(seconds * 1000);
+      return msleep(seconds * 1000);
    }
 
    /**

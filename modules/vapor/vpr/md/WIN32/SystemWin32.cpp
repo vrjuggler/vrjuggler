@@ -42,9 +42,9 @@
 #include <vpr/md/WIN32/SystemWin32.h>
 
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
-    #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
+#  define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
 #else
-    #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
+#  define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
 
 namespace vpr
@@ -52,36 +52,36 @@ namespace vpr
 
 int SystemWin32::gettimeofday(vpr::TimeVal* tv, vpr::TimeZone* tz)
 {
-    FILETIME ft;
-    unsigned __int64 tmpres = 0;
-    static int tzflag;
+   FILETIME ft;
+   unsigned __int64 tmpres = 0;
+   static int tzflag;
 
-    if (NULL != tv)
-    {
-        GetSystemTimeAsFileTime(&ft);
+   if (NULL != tv)
+   {
+      GetSystemTimeAsFileTime(&ft);
 
-        tmpres |= ft.dwHighDateTime;
-        tmpres <<= 32;
-        tmpres |= ft.dwLowDateTime;
+      tmpres |= ft.dwHighDateTime;
+      tmpres <<= 32;
+      tmpres |= ft.dwLowDateTime;
 
-        tmpres /= 10;
-        tmpres -= DELTA_EPOCH_IN_MICROSECS;
-        tv->tv_sec = (long)(tmpres / 1000000UL);
-        tv->tv_usec = (long)(tmpres % 1000000UL);
-    }
+      tmpres /= 10;
+      tmpres -= DELTA_EPOCH_IN_MICROSECS;
+      tv->tv_sec = static_cast<long>(tmpres / 1000000UL);
+      tv->tv_usec = static_cast<long>(tmpres % 1000000UL);
+   }
 
-    if (NULL != tz)
-    {
-        if (!tzflag)
-        {
-            _tzset();
-            tzflag++;
-        }
-        tz->tv_minuteswest = _timezone / 60;
-        tz->tv_dsttime = _daylight;
-    }
+   if (NULL != tz)
+   {
+      if (! tzflag)
+      {
+         _tzset();
+         tzflag++;
+      }
+      tz->tv_minuteswest = _timezone / 60;
+      tz->tv_dsttime = _daylight;
+   }
 
-    return 0;
+   return 0;
 }
 
 vpr::Uint64 SystemWin32::Ntohll(vpr::Uint64 conversion)
@@ -161,9 +161,9 @@ bool SystemWin32::setenv(const std::string& name, const std::string& value)
 std::string SystemWin32::getHostname()
 {
    //struct utsname buffer;
-    char buffer[256];
+   char buffer[256];
 
-    if ( ::gethostname(buffer, 256) == 0 )
+   if ( ::gethostname(buffer, 256) == 0 )
    {
       char* temp;
       temp = std::strchr(buffer, '.');
