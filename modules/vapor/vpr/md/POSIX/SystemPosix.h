@@ -36,8 +36,7 @@
 /**
  * \file
  *
- * @note This file MUST be included by vpr/SystemBase.h, not the other way
- *       around.
+ * @note This file MUST be included by vpr/System.h, not the other way around.
  */
 
 #ifndef _VPR_SYSTEM_POSIX_H_
