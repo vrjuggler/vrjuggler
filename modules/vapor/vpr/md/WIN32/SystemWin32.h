@@ -61,6 +61,8 @@ namespace vpr
  *
  * Low-level operating system feature abstractions using Win32 functionality.
  * This is typedef'd to vpr::System.
+ *
+ * @since 2.1.17
  */
 class VPR_CLASS_API SystemWin32 : public SystemBase
 {

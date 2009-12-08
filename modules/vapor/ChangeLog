@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- --------- ----------------------------------------------------------
+2009-12-07 furlong.t Added vpr::SystemWin32 so that NSPR is no longer needed by
+                     the Windows version of Juggler.
+                     NEW VERSION: 2.1.17
 2009-11-25 furlong.t Added a socket abstraction layer based on Boost.Asio. This
                      serves as a replacement for NSPR on Windows.
                      NEW VERSION: 2.1.16
