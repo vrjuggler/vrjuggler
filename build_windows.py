@@ -1571,7 +1571,7 @@ def installGadgeteerDrivers(prefix, buildDir):
               'Flock', 'IBox', 'IntersenseAPI', 'IS900', 'MotionNode',
               'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove',
               'SerialEncoder', 'SpaceBall', 'TrackdAPI', 'VRPN', 'Wanda',
-              'X-IST']
+              'X-IST', 'OptiTrack']
 
    for d in drivers:
       srcdir = os.path.join(srcroot, d)

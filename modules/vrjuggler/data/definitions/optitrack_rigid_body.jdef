@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="optitrack_rigid_body" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="OptiTrack Rigid Body">
+      <abstract>false</abstract>
+      <help>Settings for an OptiTrack rigid body.</help>
+      <parent/>
+      <category>/Devices/Positional</category>
+      <property valuetype="integer" variable="false" name="body_index">
+         <help>The ID of the rigid body as defined on the NatNet server.</help>
+         <value label="Rigid Body ID" defaultvalue="0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

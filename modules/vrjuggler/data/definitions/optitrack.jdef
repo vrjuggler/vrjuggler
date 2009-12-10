@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="optitrack" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="OptiTrack">
+      <abstract>false</abstract>
+      <help>Configuration for OptiTrack client for NaturalPoint Network (NatNet) server.</help>
+      <parent>positional_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="server">
+         <help>The IP address of the NatNet server (optional).</help>
+         <value label="Server IP" defaultvalue=""/>
+      </property>
+      <property valuetype="configelement" variable="true" name="rigid_body">
+         <help>Rigid Body (6-DOF).</help>
+         <value label="Rigid Body"/>
+         <allowed_type>optitrack_rigid_body</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="marker">
+         <help>Marker (3-DOF).</help>
+         <value label="Marker"/>
+         <allowed_type>optitrack_marker</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
