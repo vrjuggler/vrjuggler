@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
@@ -132,7 +132,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -154,7 +154,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
@@ -218,7 +218,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -241,7 +241,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
@@ -306,7 +306,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -329,7 +329,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr_d-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="2"
@@ -395,7 +395,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -418,7 +418,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="1"
@@ -486,7 +486,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -509,7 +509,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib rpcrt4.lib $(NOINHERIT)"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
 				Version="$(VPR_VERSION_DOT)"
 				LinkIncremental="1"
@@ -636,11 +636,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\common\InetAddrHelpers.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\InetAddrBOOST.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\InetAddrNSPR.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\common\InetAddrHelpers.cpp"
 				>
 			</File>
 			<File
@@ -652,7 +652,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\IOSysBOOST.cpp"
 				>
 			</File>
 			<File
@@ -704,10 +704,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\ObjectReader.cpp"
 				>
 			</File>
@@ -736,7 +732,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\SelectorImplNSPR.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\SelectorImplBOOST.cpp"
 				>
 			</File>
 			<File
@@ -760,7 +756,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketDatagramImplNSPR.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketDatagramImplBOOST.cpp"
 				>
 			</File>
 			<File
@@ -768,11 +764,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketImplNSPR.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketImplBOOST.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketStreamImplNSPR.cpp"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketStreamImplBOOST.cpp"
 				>
 			</File>
 			<File
@@ -785,10 +781,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\SystemBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.cpp"
 				>
 			</File>
 			<File
@@ -993,7 +985,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\InetAddrNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\InetAddrBOOST.h"
 				>
 			</File>
 			<File
@@ -1017,7 +1009,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\IOSysNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\IOSysBOOST.h"
 				>
 			</File>
 			<File
@@ -1078,10 +1070,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\NSPRHelpers.h"
 				>
 			</File>
 			<File
@@ -1149,7 +1137,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\SelectorImplNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\SelectorImplBOOST.h"
 				>
 			</File>
 			<File
@@ -1217,7 +1205,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketDatagramImplNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketDatagramImplBOOST.h"
 				>
 			</File>
 			<File
@@ -1225,7 +1213,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketImplNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketImplBOOST.h"
 				>
 			</File>
 			<File
@@ -1241,7 +1229,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\IO\Socket\SocketStreamImplNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketStreamImplBOOST.h"
 				>
 			</File>
 			<File
@@ -1269,7 +1257,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\WIN32\SystemWin32.cpp"
 				>
 			</File>
 			<File
@@ -1345,11 +1333,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\vapor\vpr\vprTypes.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\vapor\vpr\md\NSPR\vprTypesNSPR.h"
+				RelativePath="..\..\modules\vapor\vpr\md\BOOST\vprTypesBOOST.h"
 				>
 			</File>
 			<File

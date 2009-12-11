@@ -116,7 +116,10 @@
 #define VPR_USE_WINTHREADS
 
 /* Define if using the Netscape Portable Runtime. */
-#define VPR_USE_NSPR 
+//#define VPR_USE_NSPR 
+
+/* Define if using boost. */
+#define VPR_USE_BOOST
 
 /* Define to unsigned int if the sigset_t type is not available. */
 #define sigset_t unsigned int

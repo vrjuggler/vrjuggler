@@ -46,7 +46,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -133,7 +133,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -155,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -219,7 +219,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -242,7 +242,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -307,7 +307,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -330,7 +330,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -396,7 +396,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -419,7 +419,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"
@@ -487,7 +487,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR=\&quot;share\\vrjuggler\&quot;;VJ_ROOT_DIR=\&quot;$(instprefix)\&quot;;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -510,7 +510,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"

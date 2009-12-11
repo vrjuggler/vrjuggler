@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -66,7 +66,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
@@ -131,7 +131,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -152,7 +152,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
@@ -216,7 +216,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -238,7 +238,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
@@ -303,7 +303,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;_CONSOLE;JUGGLER_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -325,7 +325,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek_d-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="2"
@@ -391,7 +391,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_TWEEK_BUILD_;JUGGLER_OPT;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_TWEEK_BUILD_;JUGGLER_OPT;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -414,7 +414,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="1"
@@ -482,7 +482,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_TWEEK_BUILD_;JUGGLER_OPT;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_TWEEK_BUILD_;JUGGLER_OPT;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -505,7 +505,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek-$(TWEEK_VERSION).dll"
 				Version="$(TWEEK_VERSION_DOT)"
 				LinkIncremental="1"

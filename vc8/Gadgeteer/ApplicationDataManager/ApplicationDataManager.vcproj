@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="Cluster Plug-in - Application Data Manager"
 	ProjectGUID="{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843D}"
+	RootNamespace="Cluster Plug-in - Application Data Manager"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -44,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -67,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/ApplicationDataManager.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -131,7 +132,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -154,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/ApplicationDataManager.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -217,7 +218,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -241,7 +242,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/ApplicationDataManager_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -305,7 +306,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -329,7 +330,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/ApplicationDataManager_d.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -394,7 +395,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -418,7 +419,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/ApplicationDataManager.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
@@ -486,7 +487,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_GADGET_CLUSTER_PLUGIN_BUILD_;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -510,7 +511,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/ApplicationDataManager.dll"
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="1"
