@@ -304,7 +304,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -326,7 +326,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl-$(JCCL_VERSION).dll"
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="2"
@@ -390,7 +390,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -413,7 +413,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl_d-$(JCCL_VERSION).dll"
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="2"
@@ -479,7 +479,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(NSPR_INCLUDES)&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JUGGLER_OPT;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JUGGLER_OPT;JCCL_ROOT_DIR=\&quot;$(instprefix)\&quot;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -502,7 +502,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/jccl-$(JCCL_VERSION).dll"
 				Version="$(JCCL_VERSION_DOT)"
 				LinkIncremental="0"

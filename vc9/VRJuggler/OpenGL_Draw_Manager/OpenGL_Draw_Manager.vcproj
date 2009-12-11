@@ -312,7 +312,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -335,7 +335,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -400,7 +400,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -424,7 +424,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl_d-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
@@ -491,7 +491,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_INCLUDES)&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
-				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT"
+				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -516,7 +516,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl-$(VRJ_VERSION).dll"
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="1"
