@@ -1,9 +1,0 @@
-// This file is a template processed by build_windows.py to generate a
-// per-module version.rc automatically. That generated file is then included
-// by each module's .rc file for embedding version information into the
-// compiled DLL. For example, see modules\vapor\vpr.rc.
-#pragma once
-
-#define VERSION_NUM     2,1,15,0
-#define VERSION_STR     "2.1.15.0"
-#define COPYRIGHT_STR   "Copyright  19982009"
