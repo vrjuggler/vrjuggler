@@ -116,11 +116,9 @@ def detectVisualStudioVersion(reattempt = False):
       cl_major = int(ver_string_match.group(2))
       cl_minor = int(ver_string_match.group(3))
 
-      if cl_major == 13 and cl_minor < 10:
-         printStatus("Visual Studio .NET 2002 is not supported")
+      if cl_major == 13:
+         printStatus("Visual Studio .NET 2003 and older are not supported")
          sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
-      elif cl_major == 13 and cl_minor >= 10:
-         vs_ver = '.NET 2003'
       elif cl_major == 14:
          vs_ver = '2005'
       else:
@@ -144,8 +142,7 @@ def detectVisualStudioVersion(reattempt = False):
          printStatus("Visual studio not in path, attempting to find...")
          # Common installation directories for Visual Studio.
          vs_dirs = [r'C:\Program Files\Microsoft Visual Studio 9.0', 
-                    r'C:\Program Files\Microsoft Visual Studio 8',
-                    r'C:\Program Files\Microsoft Visual Studio .NET 2003'
+                    r'C:\Program Files\Microsoft Visual Studio 8'
                    ]
 
          for d in vs_dirs:
@@ -181,10 +178,10 @@ def detectVisualStudioVersion(reattempt = False):
 def chooseVisualStudioDir():
    (cl_ver_major, cl_ver_minor) = detectVisualStudioVersion()
 
-   # For Visual Studio .NET 2003 (version 7.1), we will use the solution in
-   # the vc7 subtree.
+   # We do not support Visual Studio .NET 2003 (version 7.1) or older.
    if cl_ver_major == 13:
-      vc_dir = 'vc7'
+      print "ERROR: Visual C++ 7.1 and older are not supported!"
+      sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
    # For Visual Studio 2005, we use the solution in the vc8 subtree.
    elif cl_ver_major == 14:
       vc_dir = 'vc8'
@@ -2094,7 +2091,7 @@ class GuiFrontEnd:
 
       # HeaderFrame Innards
       self.mRoot.HeaderFrame.vjImage = \
-         Tkinter.PhotoImage(file = r"vc7\juggler-logo.gif", format = "gif")
+         Tkinter.PhotoImage(file = r"juggler-logo.gif", format = "gif")
       self.mRoot.HeaderFrame.Image = Tkinter.Label(self.mRoot.HeaderFrame,
                                                    image = self.mRoot.HeaderFrame.vjImage,
                                                    bg = self.JugglerYellow)
