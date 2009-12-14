@@ -738,11 +738,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\vc7\VRJuggler\OpenGL_Draw_Manager\vrjuggler.ico"
+				RelativePath="..\Direct3D_Draw_Manager\vrjuggler.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\vc7\VRJuggler\OpenGL_Draw_Manager\VRJuggler.rc"
+				RelativePath="..\Direct3D_Draw_Manager\VRJuggler.rc"
 				>
 			</File>
 		</Filter>

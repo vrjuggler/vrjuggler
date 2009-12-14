@@ -40,7 +40,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/pfConfigNav.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -103,7 +103,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/pfConfigNav.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -168,7 +168,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/pfConfigNav.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

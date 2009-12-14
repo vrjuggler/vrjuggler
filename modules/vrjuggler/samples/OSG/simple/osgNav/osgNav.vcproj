@@ -40,7 +40,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib osg.lib osgUtil.lib osgDB.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="comctl32.lib ws2_32.lib osg.lib osgUtil.lib osgDB.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/osgNav.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -103,7 +103,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib osgd.lib osgUtild.lib osgDBd.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="comctl32.lib ws2_32.lib osgd.lib osgUtild.lib osgDBd.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/osgNav.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -168,7 +168,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib osg.lib osgUtil.lib osgDB.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="comctl32.lib ws2_32.lib osg.lib osgUtil.lib osgDB.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/osgNav.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

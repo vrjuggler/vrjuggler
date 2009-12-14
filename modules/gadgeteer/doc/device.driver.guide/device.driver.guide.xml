@@ -2735,7 +2735,7 @@ include $(GADGET_BASE_DIR)/share/gadgeteer-$(GADGET_VERSION)/gadget.driver.mk</p
                                 Name="VCCustomBuildTool"/&gt;
                         &lt;Tool
                                 Name="VCLinkerTool"
-                                AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+                                AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
                                 OutputFile="$(OutDir)/button_drv_g.dll"
                                 LinkIncremental="1"
                                 AdditionalLibraryDirectories="&amp;quot;$(VJ_BASE_DIR)\lib&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\lib&amp;quot;"
@@ -2784,7 +2784,7 @@ include $(GADGET_BASE_DIR)/share/gadgeteer-$(GADGET_VERSION)/gadget.driver.mk</p
                                 Name="VCCustomBuildTool"/&gt;
                         &lt;Tool
                                 Name="VCLinkerTool"
-                                AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+                                AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
                                 OutputFile="$(OutDir)/button_drv_d.dll"
                                 LinkIncremental="1"
                                 AdditionalLibraryDirectories="&amp;quot;$(VJ_BASE_DIR)\lib&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\lib&amp;quot;"
@@ -2836,7 +2836,7 @@ include $(GADGET_BASE_DIR)/share/gadgeteer-$(GADGET_VERSION)/gadget.driver.mk</p
                                 Name="VCCustomBuildTool"/&gt;
                         &lt;Tool
                                 Name="VCLinkerTool"
-                                AdditionalDependencies="libnspr4.lib libplc4.lib ws2_32.lib $(NOINHERIT)"
+                                AdditionalDependencies="ws2_32.lib $(NOINHERIT)"
                                 OutputFile="$(OutDir)/button_drv.dll"
                                 LinkIncremental="1"
                                 AdditionalLibraryDirectories="&amp;quot;$(VJ_BASE_DIR)\lib&amp;quot;;&amp;quot;$(VJ_DEPS_DIR)\lib&amp;quot;"

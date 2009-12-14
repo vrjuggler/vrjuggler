@@ -1345,42 +1345,6 @@
 				RelativePath="..\..\vc7\Gadgeteer\gadgeteer.ico"
 				>
 			</File>
-			<File
-				RelativePath="..\..\vc7\Gadgeteer\Gadgeteer.rc"
-				>
-				<FileConfiguration
-					Name="DebugDLL|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DebugDLL|x64"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseDLL|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseDLL|x64"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

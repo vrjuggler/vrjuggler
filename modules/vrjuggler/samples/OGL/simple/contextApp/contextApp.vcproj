@@ -40,7 +40,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/contextApp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -103,7 +103,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/contextApp.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -167,7 +167,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				AdditionalDependencies="comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/contextApp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
