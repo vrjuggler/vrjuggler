@@ -46,6 +46,10 @@ InputArea::InputArea()
    , mKeyboardMouseDevice(NULL)
    , mKeyboardMouseDeviceName("")
 {
+}
+
+InputArea::~InputArea()
+{
    /* Do nothing. */ ;
 }
 

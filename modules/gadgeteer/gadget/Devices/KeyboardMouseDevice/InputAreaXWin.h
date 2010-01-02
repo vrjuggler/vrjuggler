@@ -50,21 +50,9 @@ namespace gadget
 class GADGET_CLASS_API InputAreaXWin : public InputArea
 {
 public:
-   InputAreaXWin() 
-      : mXDisplay(NULL)
-      , mWidth(0)
-      , mHeight(0)
-      , mEmptyCursorSet(false)
-      , mPrevX(0)
-      , mPrevY(0)
-   {
-      /* Do nothing. */ ;
-   }
+   InputAreaXWin();
 
-   virtual ~InputAreaXWin()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual ~InputAreaXWin();
 
    /** @name gadget::InputArea Interface Implementation */
    //@{

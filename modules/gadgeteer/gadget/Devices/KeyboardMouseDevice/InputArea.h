@@ -55,9 +55,8 @@ public:
 
    InputArea();
 
-   virtual ~InputArea()
-   {;}
-   
+   virtual ~InputArea();
+
    bool config(jccl::ConfigElementPtr e);
 
    /**

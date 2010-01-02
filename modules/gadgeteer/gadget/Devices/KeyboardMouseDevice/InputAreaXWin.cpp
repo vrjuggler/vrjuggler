@@ -39,6 +39,22 @@
 namespace gadget
 {
 
+InputAreaXWin::InputAreaXWin()
+   : mXDisplay(NULL)
+   , mWidth(0)
+   , mHeight(0)
+   , mEmptyCursorSet(false)
+   , mPrevX(0)
+   , mPrevY(0)
+{
+   /* Do nothing. */ ;
+}
+
+InputAreaXWin::~InputAreaXWin()
+{
+   /* Do nothing. */ ;
+}
+
 void InputAreaXWin::lockMouse()
 {
    lockMouse(NULL);
