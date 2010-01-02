@@ -60,6 +60,22 @@ public:
    
    bool config(jccl::ConfigElementPtr e);
 
+   /**
+    * Locks the mouse to the center of this input area.
+    *
+    * @see unlockMouse()
+    *
+    * @since 1.3.25
+    */
+   virtual void lockMouse() = 0;
+
+   /**
+    * Unlocks the mouse so that it can move again.
+    *
+    * @since 1.3.25
+    */
+   virtual void unlockMouse() = 0;
+
 protected:
    /** Shortened form of the keyboard/mouse device registry type name. */
    typedef KeyboardMouseDevice::KeyboardMouseDeviceRegistry km_registry_t;

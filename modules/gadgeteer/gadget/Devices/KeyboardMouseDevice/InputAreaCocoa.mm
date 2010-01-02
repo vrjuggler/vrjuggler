@@ -314,6 +314,17 @@ void InputAreaCocoa::resize(const float width, const float height)
    mHeight = height;
 }
 
+void InputAreaCocoa::lockMouse()
+{
+   warpCursorToCenter();
+   [NSCursor hide];
+}
+
+void InputAreaCocoa::unlockMouse()
+{
+   [NSCursor unhide];
+}
+
 gadget::Keys InputAreaCocoa::getButtonFromNum(const int buttonNum) const
 {
    gadget::Keys button(gadget::NO_MBUTTON);
@@ -392,17 +403,6 @@ void InputAreaCocoa::warpCursorToCenter()
         screen_frame.size.height - (frame.origin.y + frame.size.height / 2.0f)
       };
    CGWarpMouseCursorPosition(center_pt);
-}
-
-void InputAreaCocoa::lockMouse()
-{
-   warpCursorToCenter();
-   [NSCursor hide];
-}
-
-void InputAreaCocoa::unlockMouse()
-{
-   [NSCursor unhide];
 }
 
 int InputAreaCocoa::getMask(const unsigned int modifiers) const

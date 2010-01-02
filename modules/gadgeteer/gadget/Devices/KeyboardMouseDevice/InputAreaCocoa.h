@@ -62,7 +62,7 @@ class GADGET_CLASS_API InputAreaCocoa : public gadget::InputArea
 public:
    InputAreaCocoa();
 
-   ~InputAreaCocoa();
+   virtual ~InputAreaCocoa();
 
    /**
     * Returns the global lock used to ensure that windows are not opened
@@ -185,6 +185,25 @@ public:
     */
    void resize(const float width, const float height);
 
+   /** @name gadget::InputArea Interface Implementation */
+   //@{
+   /**
+    * Locks the mouse to the center of this input area.
+    *
+    * @see unlockMouse()
+    *
+    * @note This method was made public in version 1.3.25.
+    */
+   virtual void lockMouse();
+
+   /**
+    * Unlocks the mouse so that it can move again.
+    *
+    * @note This method was made public in version 1.3.25.
+    */
+   virtual void unlockMouse();
+   //@}
+
 protected:
    /**
     * Translates the mouse button number into a gadget::Keys value.
@@ -198,10 +217,6 @@ protected:
    gadget::Keys getKeyFromModifierMask(const unsigned int mask) const;
 
    void warpCursorToCenter();
-
-   void lockMouse();
-
-   void unlockMouse();
 
    /**
     * Constructs a windowing system-independent mask of modifier keys from the

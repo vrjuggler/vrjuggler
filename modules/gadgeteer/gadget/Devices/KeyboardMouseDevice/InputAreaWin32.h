@@ -51,7 +51,8 @@ class GADGET_CLASS_API InputAreaWin32 : public gadget::InputArea
 {
 public:
    InputAreaWin32();
-   ~InputAreaWin32();
+
+   virtual ~InputAreaWin32();
 
    /**
     * Handles any events in the system.
@@ -60,9 +61,26 @@ public:
    void handleEvents();
    void updKeys(const MSG& message);
 
+   /** @name gadget::InputArea Interface Implementation */
+   //@{
+   /**
+    * Locks the mouse to the center of this input area.
+    *
+    * @see unlockMouse()
+    *
+    * @note This method was made public in version 1.3.25.
+    */
+   virtual void lockMouse();
+
+   /**
+    * Unlocks the mouse so that it can move again.
+    *
+    * @note This method was made public in version 1.3.25.
+    */
+   virtual void unlockMouse();
+   //@}
+
 protected:
-   void lockMouse();
-   void unlockMouse();
    void resize(long width, long height);
    gadget::Keys VKKeyToKey(const int vkKey);
    char getAsciiKey(const int vkKey, const gadget::Keys key);

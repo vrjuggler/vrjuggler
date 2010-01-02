@@ -66,9 +66,30 @@ public:
       /* Do nothing. */ ;
    }
 
+   /** @name gadget::InputArea Interface Implementation */
+   //@{
+   /**
+    * Locks the mouse to the center of this input area.
+    *
+    * @see unlockMouse()
+    *
+    * @since 1.3.25
+    */
+   virtual void lockMouse();
+
+   /**
+    * Unlocks the mouse so that it can move again.
+    *
+    * @since 1.3.25
+    */
+   virtual void unlockMouse();
+   //@}
+
 protected:
-   void lockMouse(XEvent* ev = NULL);
-   void unlockMouse(XEvent* ev = NULL);
+   void lockMouse(XEvent* ev);
+
+   void unlockMouse(XEvent* ev);
+
    void updateOriginAndSize(unsigned int width, unsigned int height);
 
    /**

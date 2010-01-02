@@ -39,6 +39,16 @@
 namespace gadget
 {
 
+void InputAreaXWin::lockMouse()
+{
+   lockMouse(NULL);
+}
+
+void InputAreaXWin::unlockMouse()
+{
+   unlockMouse(NULL);
+}
+
 void InputAreaXWin::handleEvents()
 {
    ::XEvent event;
