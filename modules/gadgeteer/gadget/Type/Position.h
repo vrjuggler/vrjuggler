@@ -133,7 +133,7 @@ public:
     * @param posSample A vector of PositionData objects that represent the
     *                  newest samples taken.
     */
-   void addPositionSample(const std::vector<PositionData>& posSample);
+   void addPositionSample(std::vector< PositionData > posSample);
 
    /**
     * Swaps the positional data buffers.
