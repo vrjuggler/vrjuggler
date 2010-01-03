@@ -239,7 +239,7 @@ void Position::readObject(vpr::ObjectReader* reader)
    reader->endTag();
 }
 
-void Position::addPositionSample(std::vector< PositionData > posSample)
+void Position::addPositionSample(const std::vector<PositionData>& posSample)
 {
    // Apply all the positional filters
    for(std::vector<PositionFilter*>::iterator i = mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
