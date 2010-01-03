@@ -42,23 +42,59 @@ namespace gadget
 
 /** \class SampleBuffer SampleBuffer.h gadget/Type/SampleBuffer.h
  *
- * Buffer class for input data.
+ * Buffer class for data from input devices. Instances of this class store
+ * typed samples in a first-in, first-out (FIFO) queue with a maximum size.
+ * The most recent sample is always at the \em end of the queue.
  *
- * The SampleBuffer stores the readings from an input device.
+ * There are two buffers (each a vector of vectors of samples): the "ready"
+ * and the "stable" samples:
  *
- * It consists of two buffers (vectors of vectors of samples) that hold.
- * The "stable" samples and the "ready" samples.
+ *   -# Stable: Samples that the user-level code access. There is one entry
+ *              in this buffer for each frame of the application.
+ *   -# Ready:  Samples that have been completed and could be swapped over to
+ *              current.
  *
- * Stable - Samples that the application is actually looking at.
- * Ready  - Samples that have been completed and could be swapped over to
- *          current.
+ * The first index level of the stable vector of vectors is for each frame of
+ * the application. The Input Manager tells each device to swap its ready
+ * buffers into its stable buffers once per frame. Thus, for each frame, a new
+ * set of stable buffers is added for each device.
  *
- * ASSERTION: The buffers can be empty at the start, but after the first cycle
- *            (first time stable gets values) the Stable buffer must have at
- *            least one sample.
+ * The second index level of both buffers is for the collection of input units
+ * on a given device. For example, a three-button mouse without a scroll
+ * wheel or roller ball will have three digital input units (one for each
+ * button) and two analog input units (one for the X and one for the Y
+ * dimensions of movement).
  *
- * @param MAX_BUFFER_SIZE The maximum allowable size of the buffer.  After it
- *                        gets this large we will start throwing away old data.
+ * Thus, a basic mouse driver would utilize two instantiations of this type:
+ * gadget::SampleBuffer<gadget::DigitalData,5000> and
+ * gadget::SampleBuffer<gadget::AnalogData,5000> (assuming that the default
+ * maximum buffer size is used). Depending on the time of querying (and
+ * whether the device is properly producing input data) there would be between
+ * 0 and 5000 first-level indices for both sample buffer instances. The
+ * second-level vector would have exactly 3 indices of gadget::DigitalData
+ * objects and exactly 2 indices of gadget::AnalogData objects.
+ *
+ * As a simple example of how this type is used, see the methods
+ * gadget::Digital::addDigitalSample(), gadget::Digital::swapDigitalBuffers(),
+ * and gadget::Digital::getDigitalData(). The first two methods are invoked by
+ * all \em subclasses of gadget::Digital (drivers for devices that supply
+ * digital input). The third is used by gadget::DigtialProxy::updateData() to
+ * get the most recent stable samples for a given digital device unit.
+ *
+ * @note The buffers can be empty at the start, but after the first cycle
+ *       (first time stable gets values) the Stable buffer must have at least
+ *       one sample.
+ *
+ * @tparam DATA_TYPE       The type of the samples stored by the instanation
+ *                         of this template type.
+ * @tparam MAX_BUFFER_SIZE The maximum allowable size of the buffers. After
+ *                         the buffer reaches this size, old samples are
+ *                         discarded from the \em front of the queue.
+ *
+ * @see gadget::InputManager::updateAllProxies()
+ * @see gadget::Proxy::updateData()
+ * @see gadget::InputManager::updateAllDevices()
+ * @see gadget::Input::updateData()
  */
 template <class DATA_TYPE, unsigned MAX_BUFFER_SIZE=5000>
 class SampleBuffer : private boost::noncopyable
