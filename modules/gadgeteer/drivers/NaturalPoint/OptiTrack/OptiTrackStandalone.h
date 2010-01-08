@@ -2,6 +2,7 @@
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include "natnettypes.h"
+#include <map>
 
 #define PORT_MULTICASTGROUP		1001   
 #define MULTICAST_ADDRESS		"224.0.0.1"
@@ -45,7 +46,7 @@ public:
    OptiTrackStandalone();
    ~OptiTrackStandalone() {;}
 
-   bool open(std::string address);
+   bool open(int port);
    bool close();
 
    bool updateData();
@@ -89,11 +90,9 @@ public:
 
 private:
    void unpack(char * pData);
-   bool IPAddress_StringToAddr(char *szNameOrAddress, struct in_addr *Address);
-   int GetLocalIPAddresses(unsigned long Addresses[], int nMax);
 
    bool                 mActive;  /**< If the driver is active. */
-   SOCKET               mSocket;
+   vpr::SocketDatagram  *mSocket;
    vpr::InetAddr        mAddress; /**< Address of TrackingTools. */
    sFrameOfMocapData    mPacket;
    std::map<int, RigidBodyData> mRBMap;

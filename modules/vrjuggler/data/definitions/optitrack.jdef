@@ -22,4 +22,46 @@
       </property>
       <upgrade_transform/>
    </definition_version>
+   <definition_version version="2" label="OptiTrack">
+      <abstract>false</abstract>
+      <help>Configuration for OptiTrack client for NaturalPoint Network (NatNet) server.</help>
+      <parent>positional_device</parent>
+      <category>/Devices</category>
+      <property valuetype="integer" variable="false" name="port">
+         <help>The network port to bind to.</help>
+         <value label="Port" defaultvalue="1001"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="rigid_body">
+         <help>Rigid Body (6-DOF).</help>
+         <value label="Rigid Body"/>
+         <allowed_type>optitrack_rigid_body</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="marker">
+         <help>Marker (3-DOF).</help>
+         <value label="Marker"/>
+         <allowed_type>optitrack_marker</allowed_type>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+           
+            <xsl:template match="jconf:optitrack">
+               <xsl:element namespace="{$jconf}" name="optitrack">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./jconf:rigid_body"/>
+                  <xsl:copy-of select="./jconf:marker"/>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>

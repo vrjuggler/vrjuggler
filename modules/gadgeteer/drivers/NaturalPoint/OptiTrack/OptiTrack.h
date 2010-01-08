@@ -86,7 +86,7 @@ public:
 
 private:
    OptiTrackStandalone mTracker;    /**< The tracker class to read data from. */
-   std::string mServer;             /**< IP address of the server to connect to. */
+   int mPort;                       /**< Port to bind to. */
    bool mDone;                      /**< Boolean to control thread exit. */
    std::vector<int> mRigidBodyIDs;  /**< Rigid body IDs assigned by configuration. */
    std::vector<int> mMarkerIDs;     /**< Marker IDs assigned by configuration. */

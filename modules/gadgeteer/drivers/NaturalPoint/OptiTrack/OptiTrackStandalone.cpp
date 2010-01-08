@@ -1,6 +1,6 @@
 #include <drivers/NaturalPoint/OptiTrack/OptiTrackStandalone.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
+#include <vpr/vpr.h>
+#include <vpr/IO/Socket/SocketDatagram.h>
 
 OptiTrackStandalone::OptiTrackStandalone() :
    mActive(false)
@@ -8,40 +8,35 @@ OptiTrackStandalone::OptiTrackStandalone() :
 
 }
 
-bool OptiTrackStandalone::open(std::string address)
+bool OptiTrackStandalone::open(int port)
 {
    if (!mActive)
    {
-      // Winsock startup code
-      WSADATA WsaData; 
 
-      if (WSAStartup(0x202, &WsaData) == SOCKET_ERROR)
-      {
-         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrRED,"ERROR:")
-            << " gadget::OptiTrackStandalone::OptiTrackStandalone() WSAStartup "
-            << "failed!\n" << vprDEBUG_FLUSH;
-         WSACleanup();
-      }  
+      vpr::InetAddr myAddr, multiCastAddr;
       
-      in_addr myAddr, multiCastAddr;
-      GetLocalIPAddresses((unsigned long *)&myAddr, 1);
-      multiCastAddr.S_un.S_addr = inet_addr(MULTICAST_ADDRESS);
+      myAddr.setPort(port);
 
-      mSocket = socket(AF_INET, SOCK_DGRAM, 0);
+      multiCastAddr.setAddress(MULTICAST_ADDRESS);
+      multiCastAddr.setFamily(vpr::SocketTypes::INET);
 
-      struct sockaddr_in mySocketAddr;
-      memset(&mySocketAddr, 0, sizeof(mySocketAddr));
-      mySocketAddr.sin_family = AF_INET;
-      mySocketAddr.sin_port = htons(PORT_MULTICASTGROUP);
-      mySocketAddr.sin_addr = myAddr;
-      bind(mSocket, (struct sockaddr *)&mySocketAddr, sizeof(struct sockaddr));
+      vpr::McastReq multiCastReq = vpr::McastReq(multiCastAddr, myAddr);
 
-      // join multicat group
-      struct ip_mreq mreq;
-      mreq.imr_multiaddr = multiCastAddr;
-      mreq.imr_interface = myAddr;
-      setsockopt(mSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *)&mreq, sizeof(mreq));
+      mSocket = new vpr::SocketDatagram();
+      mSocket->setLocalAddr(myAddr);
+     
+      mSocket->open();    
+      mSocket->setMcastInterface(myAddr);
+      try
+      {
+         mSocket->bind();
+      }
+      catch (vpr::IOException&)
+      {
+         mActive = false;
+         return false;
+      }
+      mSocket->addMcastMember(multiCastReq);
 
       mActive = true;
       return true;
@@ -52,7 +47,8 @@ bool OptiTrackStandalone::open(std::string address)
 
 bool OptiTrackStandalone::close()
 {
-   closesocket(mSocket);
+   mSocket->close();
+   delete mSocket;
    mActive = false;
    return true;
 }
@@ -61,9 +57,9 @@ bool OptiTrackStandalone::updateData()
 {
    char szData[20000];
    int addrLen = sizeof(struct sockaddr);
-   sockaddr_in theirAddr;
+   vpr::InetAddr theirAddr;
 
-   recvfrom(mSocket, szData, sizeof(szData), 0, (sockaddr *)&theirAddr, &addrLen);
+   mSocket->recvfrom(szData, sizeof(szData), theirAddr);
    unpack(szData);
    return true;
 }
@@ -93,7 +89,7 @@ void OptiTrackStandalone::unpack(char * szData)
       for (int i = 0; i < mPacket.nMarkerSets; i++)
       {
          // Marker name
-         strcpy_s(mPacket.MocapData[i].szName, ptr);
+         strcpy(mPacket.MocapData[i].szName, ptr);
          int nDataBytes = (int) strlen(mPacket.MocapData[i].szName) + 1;
          ptr += nDataBytes;
 
@@ -173,8 +169,11 @@ void OptiTrackStandalone::unpack(char * szData)
          // associated marker sizes
          nBytes = nRigidMarkers*sizeof(float);
          ptr += nBytes;
-        }
-    }
+         
+         // Mean Marker Error
+         ptr += 4;
+      }
+   }
 }
 
 float OptiTrackStandalone::xMarkerPos(const int i)
@@ -234,72 +233,4 @@ float OptiTrackStandalone::zRBQuat(const int i)
 float OptiTrackStandalone::wRBQuat(const int i)
 {
    return mRBMap[i].mQW;
-}
-
-bool OptiTrackStandalone::IPAddress_StringToAddr(char *szNameOrAddress, struct in_addr *Address)
-{
-   int retVal;
-   struct sockaddr_in saGNI;
-   char hostName[256];
-   char servInfo[256];
-   u_short port;
-   port = 0;
-
-   // Set up sockaddr_in structure which is passed to the getnameinfo function
-   saGNI.sin_family = AF_INET;
-   saGNI.sin_addr.s_addr = inet_addr(szNameOrAddress);
-   saGNI.sin_port = htons(port);
-
-   // getnameinfo
-   if ((retVal = getnameinfo((SOCKADDR *)&saGNI, sizeof(sockaddr), hostName, 256, servInfo, 256, NI_NUMERICSERV)) != 0)
-   {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << " [OptiTrackStandalone::IPAddress_StringToAddr()] getnameinfo failed!\n"
-         << " Error code = " << WSAGetLastError() << "\n" << vprDEBUG_FLUSH;
-      return false;
-   }
-
-   Address->S_un.S_addr = saGNI.sin_addr.S_un.S_addr;
-
-   return true;
-}
-
-int OptiTrackStandalone::GetLocalIPAddresses(unsigned long Addresses[], int nMax)
-{
-   unsigned long  NameLength = 128;
-   char szMyName[1024];
-   struct addrinfo aiHints;
-   struct addrinfo *aiList = NULL;
-   struct sockaddr_in addr;
-   int retVal = 0;
-   char* port = "0";
-    
-   if (GetComputerName(szMyName, &NameLength) != TRUE)
-   {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << " [OptiTrackStandalone::GetLocalIPAddresses()] GetComputerName failed!\n"
-         << " Error code = " << WSAGetLastError() << "\n" << vprDEBUG_FLUSH; 
-      return 0;
-   }
-
-   memset(&aiHints, 0, sizeof(aiHints));
-   aiHints.ai_family = AF_INET;
-   aiHints.ai_socktype = SOCK_DGRAM;
-   aiHints.ai_protocol = IPPROTO_UDP;
-   if ((retVal = getaddrinfo(szMyName, port, &aiHints, &aiList)) != 0) 
-   {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << " [OptiTrackStandalone::GetLocalIPAddresses()] getaddrinfo failed!\n"
-         << " Error code = " << WSAGetLastError() << "\n" << vprDEBUG_FLUSH; 
-      return 0;
-   }
-
-   memcpy(&addr, aiList->ai_addr, aiList->ai_addrlen);
-   freeaddrinfo(aiList);
-   Addresses[0] = addr.sin_addr.S_un.S_addr;
-
-   return 1;
 }

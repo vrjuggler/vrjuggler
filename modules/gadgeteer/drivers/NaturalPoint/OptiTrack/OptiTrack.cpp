@@ -92,7 +92,7 @@ bool OptiTrack::config(jccl::ConfigElementPtr e)
    }
 
    // Get configuration attribute(s).
-   mServer = e->getProperty<std::string>("server");
+   mPort = e->getProperty<int>("port");
 
    // Fill vector with IDs of rigid bodies.
    mRigidBodyIDs.resize(e->getNum("rigid_body"));
@@ -159,7 +159,7 @@ bool OptiTrack::startSampling()
    }
 
    // Open the connection to the tracker
-   mTracker.open(mServer);
+   mTracker.open(mPort);
    if (!this->isActive())
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)

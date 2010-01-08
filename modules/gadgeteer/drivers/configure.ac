@@ -723,6 +723,8 @@ AC_CONFIG_FILES([
    Intersense/IntersenseAPI/Makefile
    Logitech/Makefile
    Logitech/ThreeDMouse/Makefile
+   NaturalPoint/Makefile
+   NaturalPoint/OptiTrack/Makefile
    Open/Makefile
    Open/DTK/Makefile
    Open/LinuxJoydev/Makefile
