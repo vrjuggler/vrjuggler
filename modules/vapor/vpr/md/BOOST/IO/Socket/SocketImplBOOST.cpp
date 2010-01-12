@@ -1119,29 +1119,7 @@ void SocketImplBOOST::setMcastDropMember(struct vpr::SocketOptions::Data data)
 
 void SocketImplBOOST::setMcastInterface(struct vpr::SocketOptions::Data data)
 {
-   boost::asio::ip::address local_addr =
-      boost::asio::ip::address::from_string(data.mcast_if.getAddressString());
-   boost::asio::ip::multicast::leave_group option(local_addr);
-   boost::system::error_code ec;
 
-   switch ( mType )
-   {
-   case vpr::SocketTypes::STREAM:
-      mTcpSocket->set_option(option, ec);
-      break;
-   case vpr::SocketTypes::DATAGRAM:
-      mUdpSocket->set_option(option, ec);
-      break;
-   }
-
-   if ( ec )
-   {
-      std::ostringstream msg_stream;
-      msg_stream << "[vpr::SocketImplBOOST::setOption()] ERROR: Could not set "
-                 << "socket option for socket " << getName() << ": "
-                 << strerror(errno);
-      throw SocketException(msg_stream.str(), VPR_LOCATION);
-   }
 }
 
 
