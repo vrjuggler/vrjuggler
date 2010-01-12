@@ -14,7 +14,7 @@ bool OptiTrackStandalone::open(int port)
    {
 
       vpr::InetAddr myAddr, multiCastAddr;
-      
+
       myAddr.setPort(port);
 
       multiCastAddr.setAddress(MULTICAST_ADDRESS);
@@ -56,7 +56,6 @@ bool OptiTrackStandalone::close()
 bool OptiTrackStandalone::updateData()
 {
    char szData[20000];
-   int addrLen = sizeof(struct sockaddr);
    vpr::InetAddr theirAddr;
 
    mSocket->recvfrom(szData, sizeof(szData), theirAddr);
