@@ -938,7 +938,7 @@ protected:
     *           retrieved.
     */
    void getOption(const vpr::SocketOptions::Types option,
-                  struct vpr::SocketOptions::Data& data) const
+                  vpr::SocketOptions::Data& data) const
    {
       mSocketImpl->getOption(option, data);
    }
@@ -955,7 +955,7 @@ protected:
     *           Thrown if the value for the given option could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
-                  const struct vpr::SocketOptions::Data& data)
+                  const vpr::SocketOptions::Data& data)
    {
       mSocketImpl->setOption(option, data);
    }
