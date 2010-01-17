@@ -325,7 +325,7 @@ protected:
     *
     * @param addr A pointer to a sockaddr struct containing a valid address.
     */
-   InetAddrBSD(const struct sockaddr* addr)
+   InetAddrBSD(const sockaddr* addr)
    {
       setSockaddr(addr);
    }
@@ -388,7 +388,7 @@ protected:
     * @param addr A pointer to the sockaddr object being used to initialize
     *             this object's address.
     */
-   void setSockaddr(const struct sockaddr* addr);
+   void setSockaddr(const sockaddr* addr);
 
    /**
     * Converts this object to a sockaddr_in struct.
@@ -397,7 +397,7 @@ protected:
     * @post A copy of a sockaddr_in struct equivalent to this object is
     *       returned to the caller.
     */
-   struct sockaddr_in toSockaddrInet();
+   sockaddr_in toSockaddrInet();
 
    /**
     * Makes a copy of the given vpr::InetAddrBSD object in this object.
@@ -421,7 +421,7 @@ protected:
     */
    void lookupAddress(const std::string& addr);
 
-   struct sockaddr_in mAddr;    /**< The Ineternet address structure */
+   sockaddr_in mAddr;    /**< The Ineternet address structure */
 };
 
 } // End of vpr namespace

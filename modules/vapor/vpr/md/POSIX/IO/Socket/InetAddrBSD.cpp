@@ -250,7 +250,7 @@ void InetAddrBSD::setFamily(const vpr::SocketTypes::Domain family)
          {
             std::ostringstream msg_stream;
             msg_stream << "Unknown socket family value "
-                       << (unsigned long) family;
+                       << static_cast<unsigned long>(family);
             throw IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
          }
          break;
@@ -288,8 +288,9 @@ std::string InetAddrBSD::getAddressString() const
 
    addr.value = mAddr.sin_addr.s_addr;
 
-   snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", (Uint8) addr.c[0],
-            (Uint8) addr.c[1], (Uint8) addr.c[2], (Uint8) addr.c[3]);
+   snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u",
+            static_cast<Uint8>(addr.c[0]), static_cast<Uint8>(addr.c[1]),
+            static_cast<Uint8>(addr.c[2]), static_cast<Uint8>(addr.c[3]));
    ip_str = ip_addr;
 
    return ip_str;
@@ -305,10 +306,10 @@ std::string InetAddrBSD::getHostname() const
 #endif
 
    char addr[NI_MAXHOST];
-   std::memset((void*) &addr, 0, sizeof(addr));
+   std::memset(static_cast<void*>(&addr), 0, sizeof(addr));
 
-   int result = getnameinfo((sockaddr*) &mAddr, salen, addr, sizeof(addr),
-                            NULL, 0, NI_NAMEREQD);
+   int result = getnameinfo(reinterpret_cast<const sockaddr*>(&mAddr), salen,
+                            addr, sizeof(addr), NULL, 0, NI_NAMEREQD);
 
    std::string hostname;
 
@@ -332,9 +333,9 @@ std::string InetAddrBSD::getHostname() const
 std::vector<std::string> InetAddrBSD::getHostnames() const
 {
    std::vector<std::string> names;
-   struct hostent* entry;
+   hostent* entry;
 
-   entry = gethostbyaddr((const char*) &mAddr.sin_addr,
+   entry = gethostbyaddr(reinterpret_cast<const char*>(&mAddr.sin_addr),
                          sizeof(mAddr.sin_addr), mAddr.sin_family);
 
    if ( NULL == entry )
@@ -368,7 +369,8 @@ bool InetAddrBSD::operator== (const InetAddrBSD& addr) const
 void InetAddrBSD::copyAddressValue(const char* addrValue)
 {
    vprASSERT(addrValue != NULL);
-   std::memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addrValue,
+   std::memcpy(static_cast<void*>(&mAddr.sin_addr.s_addr),
+               static_cast<const void*>(addrValue),
                sizeof(mAddr.sin_addr.s_addr));
 }
 
@@ -387,19 +389,21 @@ size_t InetAddrBSD::addressSize() const
    return sizeof(mAddr.sin_addr.s_addr);
 }
 
-void InetAddrBSD::setSockaddr(const struct sockaddr* addr)
+void InetAddrBSD::setSockaddr(const sockaddr* addr)
 {
-   std::memcpy((void*) &mAddr, (void*) addr, sizeof(mAddr));
+   std::memcpy(static_cast<void*>(&mAddr), static_cast<const void*>(addr),
+               sizeof(mAddr));
 }
 
-struct sockaddr_in InetAddrBSD::toSockaddrInet()
+sockaddr_in InetAddrBSD::toSockaddrInet()
 {
    return mAddr;
 }
 
 void InetAddrBSD::copy(const InetAddrBSD& addr)
 {
-   std::memcpy((void*) &mAddr, (void*) &addr.mAddr, sizeof(mAddr));
+   std::memcpy(static_cast<void*>(&mAddr),
+               static_cast<const void*>(&addr.mAddr), sizeof(mAddr));
 }
 
 /**
@@ -407,17 +411,18 @@ void InetAddrBSD::copy(const InetAddrBSD& addr)
  */
 void InetAddrBSD::lookupAddress(const std::string& address)
 {
-   struct addrinfo* addrs;
+   addrinfo* addrs;
 
-   struct addrinfo hints;
-   std::memset((void*) &hints, 0, sizeof(hints));
+   addrinfo hints;
+   std::memset(static_cast<void*>(&hints), 0, sizeof(hints));
    hints.ai_flags = AF_INET;
 
    int result = getaddrinfo(address.c_str(), NULL, &hints, &addrs);
 
    if ( result == 0 )
    {
-      std::memcpy((void*) &mAddr, addrs->ai_addr, addrs->ai_addrlen);
+      std::memcpy(static_cast<void*>(&mAddr), addrs->ai_addr,
+                  addrs->ai_addrlen);
       freeaddrinfo(addrs);
    }
    else

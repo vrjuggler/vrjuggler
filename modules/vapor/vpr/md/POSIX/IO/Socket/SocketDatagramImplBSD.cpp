@@ -110,7 +110,7 @@ vpr::Uint32 SocketDatagramImplBSD::recvfrom(void* msg,
 
    fromlen = from.size();
    bytes   = ::recvfrom(mHandle->mFdesc, msg, length, 0,
-                        (struct sockaddr*) &from.mAddr, &fromlen);
+                        reinterpret_cast<sockaddr*>(&from.mAddr), &fromlen);
 
    if ( bytes == -1 )
    {
@@ -160,7 +160,7 @@ vpr::Uint32 SocketDatagramImplBSD::sendto(const void* msg,
    mBlockingFixed = true;
 
    bytes = ::sendto(mHandle->mFdesc, msg, length, 0,
-                    (struct sockaddr*) &to.mAddr, to.size());
+                    reinterpret_cast<const sockaddr*>(&to.mAddr), to.size());
 
    if ( bytes == -1 )
    {

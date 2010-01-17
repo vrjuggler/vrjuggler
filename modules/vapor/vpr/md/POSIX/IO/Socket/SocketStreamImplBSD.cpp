@@ -132,7 +132,7 @@ void SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,
    // Accept an incoming connection request.
    addrlen = addr.size();
    accept_sock = ::accept(mHandle->mFdesc,
-                          (struct sockaddr*) &addr.mAddr, &addrlen);
+                          reinterpret_cast<sockaddr*>(&addr.mAddr), &addrlen);
 
    // If accept(2) failed, print an error message and return error stauts.
    if ( accept_sock == -1 )

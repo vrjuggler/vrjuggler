@@ -397,7 +397,7 @@ public:
     *         could not be retrieved.
     */
    void getOption(const vpr::SocketOptions::Types option,
-                  struct vpr::SocketOptions::Data& data) const;
+                  vpr::SocketOptions::Data& data) const;
 
    /**
     * Sets a value for the given option on the socket using the given data
@@ -411,7 +411,7 @@ public:
     *         could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
-                  const struct vpr::SocketOptions::Data& data);
+                  const vpr::SocketOptions::Data& data);
 
    /**
     * Destructor.  This releases the memory allocated for mHandle (if it is

@@ -299,7 +299,8 @@ void SocketImplBSD::bind()
    int status;
 
    // Bind the socket to the address in mLocalAddr.
-   status = ::bind(mHandle->mFdesc, (struct sockaddr*) &mLocalAddr.mAddr,
+   status = ::bind(mHandle->mFdesc,
+                   reinterpret_cast<sockaddr*>(&mLocalAddr.mAddr),
                    mLocalAddr.size());
 
    // If that fails, print an error and return error status.
@@ -326,7 +327,7 @@ void SocketImplBSD::connect(const vpr::Interval& timeout)
 
    // Attempt to connect to the address in mAddr.
    status = ::connect(mHandle->mFdesc,
-                      (struct sockaddr*) &mRemoteAddr.mAddr,
+                      reinterpret_cast<sockaddr*>(&mRemoteAddr.mAddr),
                       mRemoteAddr.size());
 
    // If connect(2) failed, print an error message explaining why and return
@@ -415,9 +416,9 @@ void SocketImplBSD::connect(const vpr::Interval& timeout)
 #else
       socklen_t namelen;
 #endif
-      struct sockaddr temp_addr;
+      sockaddr temp_addr;
 
-      namelen = sizeof(struct sockaddr);
+      namelen = sizeof(sockaddr);
       status  = getsockname(mHandle->mFdesc, &temp_addr, &namelen);
 
       if ( status == 0 )
@@ -573,18 +574,18 @@ vpr::Uint32 SocketImplBSD::write_i(const void* buffer,
  */
 union sockopt_data
 {
-   Int32          enabled;
-   size_t         size;
-   struct linger  linger_val;
-   struct ip_mreq mcast_req;
-   struct in_addr mcast_if;
-   Uint8          mcast_ttl;
-   Uint8          mcast_loop;
-   Int32          error;
+   Int32   enabled;
+   size_t  size;
+   linger  linger_val;
+   ip_mreq mcast_req;
+   in_addr mcast_if;
+   Uint8   mcast_ttl;
+   Uint8   mcast_loop;
+   Int32   error;
 };
 
 void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
-                              struct vpr::SocketOptions::Data& data) const
+                              vpr::SocketOptions::Data& data) const
 {
    int opt_name, opt_level, status;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
@@ -697,7 +698,7 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
    }
 
    status = getsockopt(mHandle->mFdesc, opt_level, opt_name,
-                       (void*) &opt_data, &opt_size);
+                       static_cast<void*>(&opt_data), &opt_size);
 
    if ( status == 0 )
    {
@@ -788,7 +789,7 @@ void SocketImplBSD::getOption(const vpr::SocketOptions::Types option,
 }
 
 void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
-                              const struct vpr::SocketOptions::Data& data)
+                              const vpr::SocketOptions::Data& data)
 {
    int opt_name, opt_level;
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
@@ -809,7 +810,7 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
          opt_name                     = SO_LINGER;
          opt_data.linger_val.l_onoff  = (data.linger.enabled ? 1 : 0);
          opt_data.linger_val.l_linger = data.linger.seconds;
-         opt_size                     = sizeof(struct linger);
+         opt_size                     = sizeof(linger);
          break;
       case vpr::SocketOptions::ReuseAddr:
          opt_level        = SOL_SOCKET;
@@ -887,7 +888,7 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
             data.mcast_add_member.getMulticastAddr().mAddr.sin_addr.s_addr;
          opt_data.mcast_req.imr_interface.s_addr =
             data.mcast_add_member.getInterfaceAddr().mAddr.sin_addr.s_addr;
-         opt_size  = sizeof(struct ip_mreq);
+         opt_size  = sizeof(ip_mreq);
          break;
       case vpr::SocketOptions::DropMember:
          opt_level = IPPROTO_IP;
@@ -896,13 +897,13 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
             data.mcast_drop_member.getMulticastAddr().getAddressValue();
          opt_data.mcast_req.imr_interface.s_addr =
             data.mcast_drop_member.getInterfaceAddr().getAddressValue();
-         opt_size  = sizeof(struct ip_mreq);
+         opt_size  = sizeof(ip_mreq);
          break;
       case vpr::SocketOptions::McastInterface:
          opt_level                = IPPROTO_IP;
          opt_name                 = IP_MULTICAST_IF;
          opt_data.mcast_if.s_addr = data.mcast_if.getAddressValue();
-         opt_size                 = sizeof(struct in_addr);
+         opt_size                 = sizeof(in_addr);
          break;
       case vpr::SocketOptions::McastTimeToLive:
          opt_level          = IPPROTO_IP;
