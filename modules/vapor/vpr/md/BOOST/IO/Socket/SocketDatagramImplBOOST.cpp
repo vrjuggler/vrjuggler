@@ -108,9 +108,9 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
 }
 
 vpr::Uint32 SocketDatagramImplBOOST::sendto(const void* msg,
-                                          const vpr::Uint32 length,
-                                          const vpr::InetAddr& to,
-                                          const vpr::Interval& timeout)
+                                            const vpr::Uint32 length,
+                                            const vpr::InetAddr& to,
+                                            const vpr::Interval& timeout)
 {
    boost::system::error_code ec;
    vpr::Uint32 bytes_sent(0);
