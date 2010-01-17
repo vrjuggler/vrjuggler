@@ -894,9 +894,9 @@ void SocketImplBSD::setOption(const vpr::SocketOptions::Types option,
          opt_level = IPPROTO_IP;
          opt_name  = IP_DROP_MEMBERSHIP;
          opt_data.mcast_req.imr_multiaddr.s_addr =
-            data.mcast_drop_member.getMulticastAddr().getAddressValue();
+            data.mcast_drop_member.getMulticastAddr().mAddr.sin_addr.s_addr;
          opt_data.mcast_req.imr_interface.s_addr =
-            data.mcast_drop_member.getInterfaceAddr().getAddressValue();
+            data.mcast_drop_member.getInterfaceAddr().mAddr.sin_addr.s_addr;
          opt_size  = sizeof(ip_mreq);
          break;
       case vpr::SocketOptions::McastInterface:
