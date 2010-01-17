@@ -335,13 +335,13 @@ void OpenALSoundImplementation::setAmbient(const std::string& alias,
       // if positional
       if (ambient == false)
       {
-         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, AL_TRUE );
+         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, AL_FALSE );
       }
       // if ambient
       else
       {
          float pos[3] = { 0, 0, 0 };
-         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, AL_FALSE );
+         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, AL_TRUE );
          alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
       }
    }
