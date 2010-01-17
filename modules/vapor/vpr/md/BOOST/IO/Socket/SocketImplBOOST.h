@@ -400,31 +400,31 @@ public:
     * 		Thrown if the value for the given option could not be
     * 		retrieved.
     */
-   void getLinger(struct vpr::SocketOptions::Data& data) const;
-   void setLinger(struct vpr::SocketOptions::Data data);
-   void getReuseAddr(struct vpr::SocketOptions::Data& data) const;
-   void setReuseAddr(struct vpr::SocketOptions::Data data);
-   void getKeepAlive(struct vpr::SocketOptions::Data& data) const;
-   void setKeepAlive(struct vpr::SocketOptions::Data data);
-   void getReceiveBufferSize(struct vpr::SocketOptions::Data& data) const;
-   void setReceiveBufferSize(struct vpr::SocketOptions::Data data);
-   void getSendBufferSize(struct vpr::SocketOptions::Data& data) const;
-   void setSendBufferSize(struct vpr::SocketOptions::Data data);
-   void getBroadcast(struct vpr::SocketOptions::Data& data) const;
-   void setBroadcast(struct vpr::SocketOptions::Data data);
-   void getUniTTL(struct vpr::SocketOptions::Data& data) const;
-   void setUniTTL(struct vpr::SocketOptions::Data data);
-   void getMcastTTL(struct vpr::SocketOptions::Data& data) const;
-   void setMcastTTL(struct vpr::SocketOptions::Data data);
-   void getMcastLoopback(struct vpr::SocketOptions::Data& data) const;
-   void setMcastLoopback(struct vpr::SocketOptions::Data data);
-   void getNoDelay(struct vpr::SocketOptions::Data& data) const;
-   void setNoDelay(struct vpr::SocketOptions::Data data);
-   void setMcastAddMember(struct vpr::SocketOptions::Data data);
-   void setMcastDropMember(struct vpr::SocketOptions::Data data);
-   void setMcastInterface(struct vpr::SocketOptions::Data data);
-   void getNoPush(struct vpr::SocketOptions::Data& data) const;
-   void setNoPush(struct vpr::SocketOptions::Data data);
+   void getLinger(vpr::SocketOptions::Data& data) const;
+   void setLinger(const vpr::SocketOptions::Data& data);
+   void getReuseAddr(vpr::SocketOptions::Data& data) const;
+   void setReuseAddr(const vpr::SocketOptions::Data& data);
+   void getKeepAlive(vpr::SocketOptions::Data& data) const;
+   void setKeepAlive(const vpr::SocketOptions::Data& data);
+   void getReceiveBufferSize(vpr::SocketOptions::Data& data) const;
+   void setReceiveBufferSize(const vpr::SocketOptions::Data& data);
+   void getSendBufferSize(vpr::SocketOptions::Data& data) const;
+   void setSendBufferSize(const vpr::SocketOptions::Data& data);
+   void getBroadcast(vpr::SocketOptions::Data& data) const;
+   void setBroadcast(const vpr::SocketOptions::Data& data);
+   void getUniTTL(vpr::SocketOptions::Data& data) const;
+   void setUniTTL(const vpr::SocketOptions::Data& data);
+   void getMcastTTL(vpr::SocketOptions::Data& data) const;
+   void setMcastTTL(const vpr::SocketOptions::Data& data);
+   void getMcastLoopback(vpr::SocketOptions::Data& data) const;
+   void setMcastLoopback(const vpr::SocketOptions::Data& data);
+   void getNoDelay(vpr::SocketOptions::Data& data) const;
+   void setNoDelay(const vpr::SocketOptions::Data& data);
+   void setMcastAddMember(const vpr::SocketOptions::Data& data);
+   void setMcastDropMember(const vpr::SocketOptions::Data& data);
+   void setMcastInterface(const vpr::SocketOptions::Data& data);
+   void getNoPush(vpr::SocketOptions::Data& data) const;
+   void setNoPush(const vpr::SocketOptions::Data& data);
 
 
 
@@ -440,7 +440,7 @@ public:
     * 		retrieved.
     */
    void getOption(const vpr::SocketOptions::Types option,
-                  struct vpr::SocketOptions::Data& data) const;
+                  vpr::SocketOptions::Data& data) const;
 
    /**
     * Sets a value for the given option on the socket using the given data
@@ -454,7 +454,7 @@ public:
     * 		Thrown if the value for the given option could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
-                  const struct vpr::SocketOptions::Data& data);
+                  const vpr::SocketOptions::Data& data);
 
    /**
     * Destructor.  This releases the memory allocated for mHandle (if it is
@@ -488,8 +488,8 @@ protected:
     * @param sockType   The type for this socket (stream, datagram, etc.).
     */
    SocketImplBOOST(const vpr::InetAddr& localAddr,
-                 const vpr::InetAddr& remoteAddr,
-                 const vpr::SocketTypes::Type sockType);
+                   const vpr::InetAddr& remoteAddr,
+                   const vpr::SocketTypes::Type sockType);
 
 protected:
    bool mBlocking;
