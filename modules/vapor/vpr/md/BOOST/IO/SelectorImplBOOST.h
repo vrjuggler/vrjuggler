@@ -76,7 +76,7 @@ public:
     * @return \c true is returned if the given handle is added
     *         successfully; \c false otherwise.
     */
-   bool addHandle(vpr::IOSys::Handle handle, vpr::Uint16 mask = 0);
+   bool addHandle(const vpr::IOSys::Handle handle, const vpr::Uint16 mask = 0);
 
    /**
     * Removes a handle from the selector.
@@ -89,7 +89,7 @@ public:
     * @return \c true is returned if the given handle is removed
     *         successfully; \c false otherwise.
     */
-   bool removeHandle(vpr::IOSys::Handle handle);
+   bool removeHandle(const vpr::IOSys::Handle handle);
 
    /**
     * Sets the event flags going in to the select to mask.
@@ -101,7 +101,7 @@ public:
     * @param mask   The mask used when checking for ready events on the given
     *               handle.
     */
-   bool setIn(vpr::IOSys::Handle handle, vpr::Uint16 mask);
+   bool setIn(const vpr::IOSys::Handle handle, const vpr::Uint16 mask);
 
    /**
     * Gets the current in-flag mask.
@@ -113,7 +113,7 @@ public:
     *
     * @return A bitmask value representing the "in flags" of \p handle.
     */
-   vpr::Uint16 getIn(vpr::IOSys::Handle handle);
+   vpr::Uint16 getIn(const vpr::IOSys::Handle handle);
 
    /**
     * Gets the current "out flag" mask after a call to select.
@@ -151,7 +151,7 @@ public:
     *           Thrown if the select failed.
     */
    void select(vpr::Uint16& numWithEvents,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout);
+               const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
    /**
     * For iteration over the registered handles.
@@ -173,7 +173,7 @@ public:
     * @return A vpr::IOSys::Handle object representing the registered handle
     *         at the given index.
     */
-   vpr::IOSys::Handle getHandle(vpr::Uint16 index) const
+   vpr::IOSys::Handle getHandle(const vpr::Uint16 index) const
    {
       return mPollDescs[index].fd;
    }
@@ -187,7 +187,7 @@ public:
     *         this selector.
     * @return \c false is returned if the handle has not been registered.
     */
-   bool containsHandle(vpr::IOSys::Handle handle)
+   bool containsHandle(const vpr::IOSys::Handle handle)
    {
       return (getHandle(handle) != mPollDescs.end());
    }

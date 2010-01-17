@@ -45,7 +45,8 @@
 namespace vpr
 {
 
-bool SelectorImplBOOST::addHandle(vpr::IOSys::Handle handle, vpr::Uint16 mask)
+bool SelectorImplBOOST::addHandle(const vpr::IOSys::Handle handle,
+                                  const vpr::Uint16 mask)
 {
    if ( getHandle(handle) != mPollDescs.end() )
    {
@@ -63,7 +64,7 @@ bool SelectorImplBOOST::addHandle(vpr::IOSys::Handle handle, vpr::Uint16 mask)
    return true;
 }
 
-bool SelectorImplBOOST::removeHandle(vpr::IOSys::Handle handle)
+bool SelectorImplBOOST::removeHandle(const vpr::IOSys::Handle handle)
 {
    std::vector<BOOSTPollDesc>::iterator i = getHandle(handle);
 
@@ -76,7 +77,8 @@ bool SelectorImplBOOST::removeHandle(vpr::IOSys::Handle handle)
    return true;
 }
 
-bool SelectorImplBOOST::setIn(vpr::IOSys::Handle handle, vpr::Uint16 mask)
+bool SelectorImplBOOST::setIn(const vpr::IOSys::Handle handle,
+                              const vpr::Uint16 mask)
 {
    std::vector<BOOSTPollDesc>::iterator i = getHandle(handle);
 
@@ -90,7 +92,7 @@ bool SelectorImplBOOST::setIn(vpr::IOSys::Handle handle, vpr::Uint16 mask)
    return true;
 }
 
-vpr::Uint16 SelectorImplBOOST::getIn(vpr::IOSys::Handle handle)
+vpr::Uint16 SelectorImplBOOST::getIn(const vpr::IOSys::Handle handle)
 {
    std::vector<BOOSTPollDesc>::iterator i = getHandle(handle);
 
@@ -116,7 +118,7 @@ vpr::Uint16 SelectorImplBOOST::getOut(const vpr::IOSys::Handle handle) const
 }
 
 void SelectorImplBOOST::select(vpr::Uint16& numWithEvents,
-                               const vpr::Interval timeout)
+                               const vpr::Interval& timeout)
 {
    std::vector<BOOSTPollDesc>::iterator i;
    numWithEvents = 0;
