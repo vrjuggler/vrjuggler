@@ -510,6 +510,7 @@ protected:
 
    vpr::SocketTypes::Type mType; /**< The type for this socket */
    vpr::SocketImplBOOST* mPeer;
+   vpr::Uint32 mBytesRead;
 
 };
 

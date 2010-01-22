@@ -51,6 +51,8 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/md/BOOST/IO/Socket/SocketDatagramImplBOOST.h>
+#include <boost/bind.hpp>
+#include <vpr/System.h>
 
 
 namespace vpr
@@ -84,27 +86,37 @@ SocketDatagramImplBOOST(const SocketDatagramImplBOOST& sock)
    //mIOService = sock.mIOService;
 }
 
+void SocketDatagramImplBOOST::set_result(boost::optional<boost::system::error_code>* a, boost::system::error_code b, std::size_t bytes)
+{
+   a->reset(b);
+   if (bytes != -1)
+      mBytesRead = bytes;
+}; 
+
 vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
                                               const vpr::Uint32 length,
                                               vpr::InetAddr& from,
                                               const vpr::Interval& timeout)
 {
-   vpr::Uint32 bytes_read(0);
-   boost::system::error_code ec;
+   mBytesRead = 0;
+   boost::optional<boost::system::error_code> timer_result;
+   boost::asio::deadline_timer timer(mUdpSocket->get_io_service());
+   timer.expires_from_now(boost::posix_time::microseconds(timeout.msec()));
+   timer.async_wait(boost::bind(&vpr::SocketDatagramImplBOOST::set_result, this, &timer_result, _1, -1));
 
-   bytes_read = mUdpSocket->receive_from(boost::asio::buffer(msg, length),
-                                         from.mUdpAddr, 0, ec);
+   boost::optional<boost::system::error_code> read_result;
+   mUdpSocket->async_receive_from(boost::asio::buffer(msg, length), from.mUdpAddr, boost::bind(&vpr::SocketDatagramImplBOOST::set_result, this, &read_result, _1, _2));
 
-   if (ec)
-   {
-      //TODO Handle error
+   mUdpSocket->get_io_service().reset();
+   while (mUdpSocket->io_service().run_one()) {
+      if (read_result)
+         timer.cancel();
+      else if (timer_result)
+         mUdpSocket->cancel();
+	  vpr::System::msleep(10);
    }
-   if (bytes_read == 0)
-   {
-       throw SocketException("Socket not connected.");
-   }
 
-   return bytes_read;
+   return mBytesRead;
 }
 
 vpr::Uint32 SocketDatagramImplBOOST::sendto(const void* msg,
