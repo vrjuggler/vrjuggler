@@ -1,6 +1,7 @@
 #include <drivers/NaturalPoint/OptiTrack/OptiTrackStandalone.h>
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
+#include <vpr/Util/Interval.h>
 
 OptiTrackStandalone::OptiTrackStandalone() :
    mActive(false)
@@ -57,10 +58,12 @@ bool OptiTrackStandalone::updateData()
 {
    char szData[20000];
    vpr::InetAddr theirAddr;
-   vpr::Interval timeout = vpr::Interval::Interval(1000000, vpr::Interval::Unit::Msec);
+   vpr::Interval timeout = vpr::Interval::Interval(1000000, vpr::Interval::Msec);
    vpr::Uint32 bytes = mSocket->recvfrom(szData, sizeof(szData), theirAddr, timeout);
    if (bytes > 0)
+   {
       unpack(szData);
+   }
    
    return true;
 }
