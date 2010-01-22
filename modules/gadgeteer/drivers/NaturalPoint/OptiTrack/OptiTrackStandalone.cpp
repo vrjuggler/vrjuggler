@@ -57,9 +57,11 @@ bool OptiTrackStandalone::updateData()
 {
    char szData[20000];
    vpr::InetAddr theirAddr;
-
-   mSocket->recvfrom(szData, sizeof(szData), theirAddr);
-   unpack(szData);
+   vpr::Interval timeout = vpr::Interval::Interval(1000000, vpr::Interval::Unit::Msec);
+   vpr::Uint32 bytes = mSocket->recvfrom(szData, sizeof(szData), theirAddr, timeout);
+   if (bytes > 0)
+      unpack(szData);
+   
    return true;
 }
 
