@@ -86,11 +86,15 @@ SocketDatagramImplBOOST(const SocketDatagramImplBOOST& sock)
    //mIOService = sock.mIOService;
 }
 
-void SocketDatagramImplBOOST::set_result(boost::optional<boost::system::error_code>* a, boost::system::error_code b, std::size_t bytes)
+void SocketDatagramImplBOOST::set_result(boost::optional<boost::system::error_code>* a,
+                                         boost::system::error_code b,
+                                         std::size_t bytes)
 {
    a->reset(b);
    if (bytes != -1)
+   {
       mBytesRead = bytes;
+   }
 }; 
 
 vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
@@ -110,10 +114,14 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
    mUdpSocket->get_io_service().reset();
    while (mUdpSocket->io_service().run_one()) {
       if (read_result)
+      {
          timer.cancel();
+      }
       else if (timer_result)
+      {
          mUdpSocket->cancel();
-	  vpr::System::msleep(10);
+      }
+      vpr::System::msleep(10);
    }
 
    return mBytesRead;

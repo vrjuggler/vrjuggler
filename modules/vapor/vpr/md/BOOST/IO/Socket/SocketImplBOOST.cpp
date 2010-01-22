@@ -1341,6 +1341,7 @@ SocketImplBOOST::SocketImplBOOST(const vpr::SocketTypes::Type sockType)
    , mBlockingFixed(false)
    , mType(sockType)
    , mInBlockingCall(false)
+   , mBytesRead(0)
 {
    switch ( mType )
    {
@@ -1364,6 +1365,7 @@ SocketImplBOOST::SocketImplBOOST(const vpr::InetAddr& localAddr,
    , mRemoteAddr(remoteAddr)
    , mType(sockType)
    , mInBlockingCall(false)
+   , mBytesRead(0)
 {
    switch ( mType )
    {
