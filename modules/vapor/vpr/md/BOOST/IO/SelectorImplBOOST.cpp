@@ -129,11 +129,11 @@ void SelectorImplBOOST::select(vpr::Uint16& numWithEvents,
    start.setNowReal();
    if ( timeout == vpr::Interval::NoWait )
    {
-      local_timeout.set(0, vpr::Interval::Unit::Sec);
+      local_timeout.set(0, vpr::Interval::Sec);
    }
    else if (timeout == vpr::Interval::NoTimeout)
    {
-      local_timeout.set(1000, vpr::Interval::Unit::Sec);
+      local_timeout.set(1000, vpr::Interval::Sec);
    }
    
    do

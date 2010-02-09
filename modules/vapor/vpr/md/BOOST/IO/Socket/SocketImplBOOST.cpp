@@ -172,6 +172,15 @@ vpr::Uint32 SocketImplBOOST::availableBytes() const
       case vpr::SocketTypes::DATAGRAM:
          return mUdpSocket->available();
          break;
+      default:
+      {
+         std::stringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
+            << "value: " << unsigned(mType);
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
+         return 0;
+         break;
+      }
    }
 }
 // Open the socket.  This creates a new socket using the domain and type

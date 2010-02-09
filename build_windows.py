@@ -236,9 +236,6 @@ def getDefaultVars(clVerMajor, clVerMinor):
    required.append(BuildOption('BOOST_INCLUDES',
                                'Directory containing the Boost C++ header tree',
                                ''))
-   required.append(BuildOption('NSPR_ROOT', 'NSPR installation directory', ''))
-   required.append(BuildOption('NSPR_INCLUDES', 'Directory containing nspr.h',
-                               ''))
    required.append(BuildOption('CPPDOM_ROOT', 'CppDOM installation directory',
                                ''))
    required.append(BuildOption('CPPDOM_INCLUDES',
@@ -323,12 +320,6 @@ def setVars(clVerMajor, clVerMinor):
            options.get('BOOST_INCLUDES', '') == '':
          boost_ver = result
          options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
-
-      # The following is a little hack to get a reasonable default set for
-      # the NSPR_INCLUDES variable before the user has to enter it manually.
-      if opt.envVar == 'NSPR_ROOT' and \
-         options.get('NSPR_INCLUDES', '') == '':
-         options['NSPR_INCLUDES'] = os.path.join(result, 'include')
 
       # The following is a little hack to get a reasonable default set for
       # the CPPDOM_INCLUDES variable before the user has to enter it manually.
@@ -650,7 +641,7 @@ def updateVersions(vcDir, options):
                continue
 
          version_number = '%03d%03d%03d' % (major, minor, patch)
-         version_string = "\"v%s '%s' (NSPR) %s %s\"" % \
+         version_string = "\"v%s '%s' (BOOST) %s %s\"" % \
                              (version, canon_name, branch, date)
 
          # Strip leading zeroes from version_number.  Is there an easier way
@@ -668,7 +659,7 @@ def updateVersions(vcDir, options):
          subst_vars['BUILD_VER_NUMBER']   = str(build)
          subst_vars['VER_STRING']         = version_string
          subst_vars['VERSION_DOT']        = '%d.%d.%d' % (major, minor, patch)
-         subst_vars['SUBSYSTEM']          = 'NSPR'
+         subst_vars['SUBSYSTEM']          = 'BOOST'
          subst_vars['PLATFORM']           = 'Windows'
          subst_vars['data_subdir']        = 'share'
          subst_vars['USE_GCC']            = 'no'
@@ -1807,7 +1798,6 @@ def installMsvcRT(prefix):
 
 def doDependencyInstall(prefix, buildDir):
    makeTree(prefix)
-   installNSPR(prefix)
    installCppDOM(prefix)
    installBoost(prefix, buildDir)
    installGMTL(prefix)
@@ -1853,10 +1843,6 @@ def simpleInstall(name, root, prefix, includeDir = None, libDir = 'lib',
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'share')
       installDir(srcdir, destdir)
-
-def installNSPR(prefix):
-   simpleInstall('NSPR headers and libraries', os.environ['NSPR_ROOT'],
-                 prefix, os.environ['NSPR_INCLUDES'])
 
 def installCppDOM(prefix):
    if gBuild64:
