@@ -30,6 +30,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <string>
+#include <boost/noncopyable.hpp>
 
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
@@ -42,7 +43,7 @@ namespace gadget
  *
  * Base class for window types that accept keyboard and mouse input.
  */
-class GADGET_CLASS_API InputArea
+class GADGET_CLASS_API InputArea : private boost::noncopyable
 {
 public:
    /** Enum to keep track of current lock state for state machine. */
@@ -53,12 +54,18 @@ public:
       Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
    };
 
+protected:
    InputArea();
 
+public:
    virtual ~InputArea();
 
+protected:
    bool config(jccl::ConfigElementPtr e);
 
+public:
+   /** @name Mouse Pointer Access */
+   //@{
    /**
     * Locks the mouse to the center of this input area.
     *
@@ -74,6 +81,7 @@ public:
     * @since 1.3.25
     */
    virtual void unlockMouse() = 0;
+   //@}
 
 protected:
    /** Shortened form of the keyboard/mouse device registry type name. */

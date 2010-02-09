@@ -49,9 +49,10 @@ namespace gadget
  */
 class GADGET_CLASS_API InputAreaWin32 : public gadget::InputArea
 {
-public:
+protected:
    InputAreaWin32();
 
+public:
    virtual ~InputAreaWin32();
 
    /**

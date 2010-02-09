@@ -49,9 +49,10 @@ namespace gadget
  */
 class GADGET_CLASS_API InputAreaXWin : public InputArea
 {
-public:
+protected:
    InputAreaXWin();
 
+public:
    virtual ~InputAreaXWin();
 
    /** @name gadget::InputArea Interface Implementation */

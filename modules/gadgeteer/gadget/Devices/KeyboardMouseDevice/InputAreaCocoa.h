@@ -59,9 +59,10 @@ namespace gadget
  */
 class GADGET_CLASS_API InputAreaCocoa : public gadget::InputArea
 {
-public:
+protected:
    InputAreaCocoa();
 
+public:
    virtual ~InputAreaCocoa();
 
    /**
