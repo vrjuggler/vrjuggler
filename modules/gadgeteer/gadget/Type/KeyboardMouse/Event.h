@@ -91,14 +91,25 @@ public:
    }
 
    /**
+    * Returns a mutable reference to the input area from which this event
+    * was generated.
+    *
+    * @since 1.3.26
+    */
+   InputArea& getSource()
+   {
+      return *mSource;
+   }
+
+   /**
     * Returns a const reference to the input area from which this event
     * was generated.
     *
-    * @since 1.3.23
+    * @since 1.3.26
     */
-   const InputArea* getSource() const
+   const InputArea& getSource() const
    {
-      return mSource;
+      return *mSource;
    }
 
    /**
