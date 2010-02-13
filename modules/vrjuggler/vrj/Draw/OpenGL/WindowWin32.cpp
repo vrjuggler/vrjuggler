@@ -100,8 +100,7 @@ bool WindowWin32::open()
    }
 
    HMODULE hMod = GetModuleHandle(NULL);
-   int root_height;
-
+  
    // OpenGL requires WS_CLIPCHILDREN and WS_CLIPSIBLINGS.
    DWORD style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
 
@@ -137,7 +136,7 @@ bool WindowWin32::open()
       ex_style = WS_EX_TOPMOST;
    }
 
-   root_height = GetSystemMetrics(SM_CYSCREEN);
+   int root_height = GetSystemMetrics(SM_CYSCREEN);
 
    // The desired client rectangle size (left, top, right, bottom).
    RECT rc = { 0, 0, mWindowWidth, mWindowHeight };
@@ -152,10 +151,23 @@ bool WindowWin32::open()
    // information.
    InputAreaWin32::resize(mWindowWidth, mWindowHeight);
 
+   int win32_y_origin = root_height - mOriginY - mWindowHeight;
+   if ( mHasBorder )
+   {
+      // Get the border height to calculate the window origin properly
+      // Height of the vertical border
+      int verical_border_height = GetSystemMetrics(SM_CYFRAME);
+      // Height of the caption/menu bar
+      int caption_border_height = GetSystemMetrics(SM_CYCAPTION);
+      win32_y_origin = win32_y_origin -
+         (2*verical_border_height) - caption_border_height;
+   }
+
    // Create the main application window
    mWinHandle = CreateWindowEx(ex_style, GL_WINDOW_WIN32_CLASSNAME,
-                               mWindowName.c_str(), style, mOriginX,
-                               root_height - mOriginY - mWindowHeight,
+                               mWindowName.c_str(), 
+                               style, mOriginX,
+                               win32_y_origin,
                                rc.right - rc.left, rc.bottom - rc.top,
                                NULL, NULL, hMod, NULL);
 
