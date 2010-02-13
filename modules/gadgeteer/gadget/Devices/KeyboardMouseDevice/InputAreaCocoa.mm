@@ -314,13 +314,13 @@ void InputAreaCocoa::resize(const float width, const float height)
    mHeight = height;
 }
 
-void InputAreaCocoa::lockMouse()
+void InputAreaCocoa::lockMouseInternal()
 {
    warpCursorToCenter();
    [NSCursor hide];
 }
 
-void InputAreaCocoa::unlockMouse()
+void InputAreaCocoa::unlockMouseInternal()
 {
    [NSCursor unhide];
 }
@@ -954,7 +954,7 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
                      << "[gadget::InputAreaCocoa] STATE switch: "
                      << "Unlocked --> Lock_KeyDown\n" << vprDEBUG_FLUSH;
 
-                  lockMouse();
+                  lockMouseInternal();
                }
                else if ( key == mLockToggleKey )
                {
@@ -964,7 +964,7 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
                      << "[gadget::InputAreaCocoa] STATE switch: "
                      << "Unlocked --> Lock_LockKey\n" << vprDEBUG_FLUSH;
 
-                  lockMouse();
+                  lockMouseInternal();
                }
             }
             // Switch the current locking state.
@@ -984,7 +984,7 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
                   << "[gadget::InputAreaCocoa] STATE switch: "
                   << "Lock_LockKey --> Unlocked\n" << vprDEBUG_FLUSH;
 
-               unlockMouse();
+               unlockMouseInternal();
             }
             break;
          case gadget::KeyReleaseEvent:
@@ -996,7 +996,7 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
                   << "[gadget::InputAreaCocoa] STATE switch: "
                   << "Lock_KeyDown --> Unlocked\n" << vprDEBUG_FLUSH;
 
-               unlockMouse();
+               unlockMouseInternal();
             }
             break;
          default:

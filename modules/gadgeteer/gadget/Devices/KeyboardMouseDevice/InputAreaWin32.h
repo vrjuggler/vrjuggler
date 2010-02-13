@@ -62,26 +62,26 @@ public:
    void handleEvents();
    void updKeys(const MSG& message);
 
+protected:
    /** @name gadget::InputArea Interface Implementation */
    //@{
    /**
     * Locks the mouse to the center of this input area.
     *
-    * @see unlockMouse()
+    * @see unlockMouseInternal()
     *
-    * @note This method was made public in version 1.3.25.
+    * @note Renamed from lockMouse() in version 1.3.27.
     */
-   virtual void lockMouse();
+   virtual void lockMouseInternal();
 
    /**
     * Unlocks the mouse so that it can move again.
     *
-    * @note This method was made public in version 1.3.25.
+    * @note Renamed from unlockMouse() in version 1.3.27.
     */
-   virtual void unlockMouse();
+   virtual void unlockMouseInternal();
    //@}
 
-protected:
    void resize(long width, long height);
    gadget::Keys VKKeyToKey(const int vkKey);
    char getAsciiKey(const int vkKey, const gadget::Keys key);

@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-13-2010 patrick     Fixed mouse lock state tracking in input areas. The
+                        pure virtual methods in gadget::InputArea are now
+                        named lockMouseInternal() and unlockMouseInternal().
+                        NEW VERSION: 1.3.27
 Feb-08-2010 patrick     Changed gadget::Event::getSource() to return a
                         reference instead of a pointer. Added a non-const
                         overload of same.

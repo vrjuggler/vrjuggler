@@ -170,7 +170,7 @@ void InputAreaWin32::updKeys(const MSG& message)
             // and was previously locked...
             if ( Unlocked != mLockState )
             {
-               this->lockMouse();
+               lockMouseInternal();
             }
          }
          // if was deactivated and minimized
@@ -183,7 +183,7 @@ void InputAreaWin32::updKeys(const MSG& message)
             {
                // we will leave mLockState in the locked state so ACTIVATE
                // puts it back.
-               this->unlockMouse();
+               unlockMouseInternal();
             }
          }
          break;
@@ -195,7 +195,7 @@ void InputAreaWin32::updKeys(const MSG& message)
          {
             // we will leave mLockState in the locked state so ACTIVATE puts
             // it back.
-            this->unlockMouse();
+            unlockMouseInternal();
          }
          break;
 
@@ -241,7 +241,7 @@ void InputAreaWin32::updKeys(const MSG& message)
                   if ( mLockState != Unlocked )
                   {
                      mLockState = Unlocked;
-                     this->unlockMouse();
+                     unlockMouseInternal();
                   }
                }
                else if ( mLockState == Unlocked )
@@ -252,12 +252,12 @@ void InputAreaWin32::updKeys(const MSG& message)
                   {
                      mLockState = Lock_KeyDown; // Switch state
                      mLockStoredKey = key;      // Store the VJ key that is down
-                     this->lockMouse();
+                     lockMouseInternal();
                   }
                   else if ( key == mLockToggleKey )
                   {
                      mLockState = Lock_LockKey;
-                     this->lockMouse();
+                     lockMouseInternal();
                   }
                }
                // Just switch the current locking state
@@ -268,7 +268,7 @@ void InputAreaWin32::updKeys(const MSG& message)
                else if ( mLockState == Lock_LockKey && key == mLockToggleKey )
                {
                   mLockState = Unlocked;
-                  this->unlockMouse();
+                  unlockMouseInternal();
                }
             }
          }
@@ -295,7 +295,7 @@ void InputAreaWin32::updKeys(const MSG& message)
               key == mLockStoredKey )
          {
             mLockState = Unlocked;
-            this->unlockMouse();
+            unlockMouseInternal();
          }
          break;
 
@@ -557,7 +557,7 @@ void InputAreaWin32::updKeys(const MSG& message)
    } // end of switch...
 }
 
-void InputAreaWin32::lockMouse()
+void InputAreaWin32::lockMouseInternal()
 {
    // Center the mouse
    int win_center_x(mWidth / 2), win_center_y(mHeight / 2);
@@ -573,7 +573,7 @@ void InputAreaWin32::lockMouse()
    HWND previous_capture = ::SetCapture(mWinHandle);
 }
 
-void InputAreaWin32::unlockMouse()
+void InputAreaWin32::unlockMouseInternal()
 {
    BOOL result = ::ReleaseCapture();
 }

@@ -55,12 +55,12 @@ InputAreaXWin::~InputAreaXWin()
    /* Do nothing. */ ;
 }
 
-void InputAreaXWin::lockMouse()
+void InputAreaXWin::lockMouseInternal()
 {
    lockMouse(NULL);
 }
 
-void InputAreaXWin::unlockMouse()
+void InputAreaXWin::unlockMouseInternal()
 {
    unlockMouse(NULL);
 }

@@ -44,13 +44,25 @@ InputArea::InputArea()
    , mLockToggleKey(-1)
    , mSleepTimeMS(0)
    , mKeyboardMouseDevice(NULL)
-   , mKeyboardMouseDeviceName("")
 {
+   /* Do nothing. */ ;
 }
 
 InputArea::~InputArea()
 {
    /* Do nothing. */ ;
+}
+
+void InputArea::lockMouse()
+{
+   mLockState = Lock_API;
+   lockMouseInternal();
+}
+
+void InputArea::unlockMouse()
+{
+   mLockState = Unlocked;
+   unlockMouseInternal();
 }
 
 bool InputArea::config(jccl::ConfigElementPtr e)

@@ -186,6 +186,7 @@ public:
     */
    void resize(const float width, const float height);
 
+protected:
    /** @name gadget::InputArea Interface Implementation */
    //@{
    /**
@@ -193,19 +194,18 @@ public:
     *
     * @see unlockMouse()
     *
-    * @note This method was made public in version 1.3.25.
+    * @note Renamed from lockMouse() in version 1.3.27.
     */
-   virtual void lockMouse();
+   virtual void lockMouseInternal();
 
    /**
     * Unlocks the mouse so that it can move again.
     *
-    * @note This method was made public in version 1.3.25.
+    * @note Renamed from unlockMouse() in version 1.3.27.
     */
-   virtual void unlockMouse();
+   virtual void unlockMouseInternal();
    //@}
 
-protected:
    /**
     * Translates the mouse button number into a gadget::Keys value.
     */

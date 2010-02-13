@@ -51,7 +51,8 @@ public:
    {
       Unlocked,     /**< The mouse is free. */
       Lock_LockKey, /**< The mouse is locked due to lock toggle key press. */
-      Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
+      Lock_KeyDown, /**< The mouse is locked due to a key being held down. */
+      Lock_API      /**< The mouse is locked due to an API call. */
    };
 
 protected:
@@ -60,30 +61,52 @@ protected:
 public:
    virtual ~InputArea();
 
-protected:
-   bool config(jccl::ConfigElementPtr e);
-
 public:
    /** @name Mouse Pointer Access */
    //@{
    /**
     * Locks the mouse to the center of this input area.
     *
+    * @post \c mLockState is \c Lock_API
+    *
     * @see unlockMouse()
     *
     * @since 1.3.25
     */
-   virtual void lockMouse() = 0;
+   void lockMouse();
 
    /**
     * Unlocks the mouse so that it can move again.
     *
+    * @post \c mLockState is \c Unlocked
+    *
     * @since 1.3.25
     */
-   virtual void unlockMouse() = 0;
+   void unlockMouse();
    //@}
 
 protected:
+   bool config(jccl::ConfigElementPtr e);
+
+   /** @name Mouse Pointer Locking Template Methods */
+   //@{
+   /**
+    * The template method that performs the real mouse locking specific to
+    * the host window system.
+    *
+    * @since 1.3.27
+    */
+   virtual void lockMouseInternal() = 0;
+
+   /**
+    * The template method that performs the real mouse unlocking specific to
+    * the host window system.
+    *
+    * @since 1.3.27
+    */
+   virtual void unlockMouseInternal() = 0;
+   //@}
+
    /** Shortened form of the keyboard/mouse device registry type name. */
    typedef KeyboardMouseDevice::KeyboardMouseDeviceRegistry km_registry_t;
 

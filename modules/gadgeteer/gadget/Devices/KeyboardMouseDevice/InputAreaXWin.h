@@ -55,6 +55,7 @@ protected:
 public:
    virtual ~InputAreaXWin();
 
+protected:
    /** @name gadget::InputArea Interface Implementation */
    //@{
    /**
@@ -62,19 +63,18 @@ public:
     *
     * @see unlockMouse()
     *
-    * @since 1.3.25
+    * @since 1.3.27
     */
-   virtual void lockMouse();
+   virtual void lockMouseInternal();
 
    /**
     * Unlocks the mouse so that it can move again.
     *
-    * @since 1.3.25
+    * @since 1.3.27
     */
-   virtual void unlockMouse();
+   virtual void unlockMouseInternal();
    //@}
 
-protected:
    void lockMouse(XEvent* ev);
 
    void unlockMouse(XEvent* ev);
