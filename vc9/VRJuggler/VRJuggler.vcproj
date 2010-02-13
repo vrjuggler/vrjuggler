@@ -74,7 +74,7 @@
 				Version="$(VRJ_VERSION_DOT)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=";&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\Gadgeteer\$(OutDir)&quot;;&quot;..\Sonix\$(OutDir)&quot;"
-				GenerateDebugInformation="false"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/vrj-$(VRJ_VERSION).pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"

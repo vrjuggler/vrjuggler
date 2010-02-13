@@ -74,7 +74,7 @@
 				Version="$(GADGET_VERSION_DOT)"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories=";&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;..\JCCL\$(OutDir)&quot;;&quot;..\VPR\$(OutDir)&quot;"
-				GenerateDebugInformation="false"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/gadget-$(GADGET_VERSION).pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"

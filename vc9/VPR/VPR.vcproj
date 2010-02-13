@@ -74,13 +74,97 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;"
 				ModuleDefinitionFile=""
-				GenerateDebugInformation="false"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/vpr-$(VPR_VERSION).pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/vpr-$(VPR_VERSION).lib"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugDLL|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
+				MinimalRebuild="false"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="false"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4290;4312"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
+				Version="$(VPR_VERSION_DOT)"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/vpr-$(VPR_VERSION).pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/vpr-$(VPR_VERSION).lib"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -167,6 +251,91 @@
 				DataExecutionPrevention="0"
 				ImportLibrary="$(OutDir)/vpr_d-$(VPR_VERSION).lib"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugRtDLL|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
+				MinimalRebuild="false"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="false"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4290;4312"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/vpr_d-$(VPR_VERSION).dll"
+				Version="$(VPR_VERSION_DOT)"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/vpr_d-$(VPR_VERSION).pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/vpr_d-$(VPR_VERSION).lib"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -280,181 +449,6 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="DebugDLL|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TargetEnvironment="3"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
-				MinimalRebuild="false"
-				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="2"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="1"
-				DisableSpecificWarnings="4244;4251;4275;4290;4312"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vpr-$(VPR_VERSION).dll"
-				Version="$(VPR_VERSION_DOT)"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;"
-				ModuleDefinitionFile=""
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/vpr-$(VPR_VERSION).pdb"
-				SubSystem="1"
-				ImportLibrary="$(OutDir)/vpr-$(VPR_VERSION).lib"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="DebugRtDLL|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TargetEnvironment="3"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
-				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
-				MinimalRebuild="false"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				BufferSecurityCheck="false"
-				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="2"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="1"
-				DisableSpecificWarnings="4244;4251;4275;4290;4312"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib dbghelp.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/vpr_d-$(VPR_VERSION).dll"
-				Version="$(VPR_VERSION_DOT)"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib64&quot;;"
-				ModuleDefinitionFile=""
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/vpr_d-$(VPR_VERSION).pdb"
-				SubSystem="1"
-				ImportLibrary="$(OutDir)/vpr_d-$(VPR_VERSION).lib"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="ReleaseDLL|x64"
 			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
@@ -537,9 +531,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
