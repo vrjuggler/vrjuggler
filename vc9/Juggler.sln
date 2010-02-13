@@ -287,6 +287,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - NaturalPoint OptiT
 		{5A96B2F8-7000-4988-AFD5-E85181B52BCF} = {5A96B2F8-7000-4988-AFD5-E85181B52BCF}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - 5DT DataGloveUltraWireless", "Gadgeteer\DataGloveUltraWireless\DataGloveUltraWireless.vcproj", "{9026DAC8-5459-447A-AC10-1117D0C2109A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DebugDLL|Win32 = DebugDLL|Win32
@@ -813,6 +815,18 @@ Global
 		{C06178AE-ACE5-4F24-B8F8-7EE7E564BD1F}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
 		{C06178AE-ACE5-4F24-B8F8-7EE7E564BD1F}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
 		{C06178AE-ACE5-4F24-B8F8-7EE7E564BD1F}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugDLL|x64.ActiveCfg = DebugDLL|x64
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugDLL|x64.Build.0 = DebugDLL|x64
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugRtDll|Win32.ActiveCfg = DebugRtDLL|Win32
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugRtDll|Win32.Build.0 = DebugRtDLL|Win32
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugRtDll|x64.ActiveCfg = DebugRtDLL|x64
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.DebugRtDll|x64.Build.0 = DebugRtDLL|x64
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
+		{9026DAC8-5459-447A-AC10-1117D0C2109A}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
