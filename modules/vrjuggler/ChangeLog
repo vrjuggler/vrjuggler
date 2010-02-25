@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-25-2010 patrick     Added vrj::osg::AppViewer, a VR Juggler application
+                        class that interacts with osgViewer.
+                        Submitted by Christian Noon.
+                        NEW VERSION: 2.3.19
 Apr-19-2009 patrick     Updated for Gadgeteer 1.3.22.
                         NEW VERSION: 2.3.18
 Mar-31-2009 patrick     Added support for creating OpenGL 3.0 contexts using
