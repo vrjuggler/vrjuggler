@@ -63,10 +63,6 @@ namespace osg
  * class from which OSG-based application classes should be derived.  It makes
  * use of the OpenGL Draw Manager.
  *
- * @note This class makes use of gadget::PositionInterface internally and
- *       requires that a proxy or proxy alias named "VJHead" is defined in
- *       the VR Juggler configuration.
- *
  * @note This class was renamed from vrj::OsgApp in VR Juggler 2.3.11.
  *
  * @see vrj::opengl::App
@@ -375,7 +371,7 @@ protected:
     OSG_VERSION_MAJOR == 1 && OSG_VERSION_MINOR > 2 || OSG_VERSION_MAJOR >= 2
       mFrameStamp->setSimulationTime(head_time);
 #endif
-      
+
       // Set up the time and frame number so time-dependent things (animations,
       // particle system) function correctly.
       // XXX: This may not be necessary.
@@ -386,7 +382,7 @@ protected:
       // equivalent to calling osgUtil::SceneView::update() but does not
       // require access to the context-specific osgUtil::SceneView instance.
       getScene()->accept(*mUpdateVisitor);
-      
+
       // NOTE: This comment was taken from osgUtil::SceneView::update():
       // Now force a recompute of the bounding volume while we are still in
       // the read/write app phase, this should prevent the need to recompute
