@@ -247,10 +247,10 @@ namespace vpr
 namespace prof
 {
 #if defined(DISABLE_VPR_PROFILE)
-   inline void start(const char* name) {;}
-   inline void start(const char* name, unsigned int histSize) {;}
-   inline void next(const char* name) {;}
-   inline void next(const char* name, unsigned int histSize) {;}
+   inline void start(const char*) {;}
+   inline void start(const char*, unsigned int) {;}
+   inline void next(const char*) {;}
+   inline void next(const char*, unsigned int) {;}
    inline void stop() {;}
    inline void printTree() {;}
 #else
