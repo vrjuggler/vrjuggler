@@ -172,7 +172,7 @@ void SerialPortImplWin32::close()
 
 void SerialPortImplWin32::setBlocking(bool blocking)
 {
-   if ( ! mOpen )
+   if ( mOpen )
    {
       std::stringstream msg_stream;
       msg_stream << "Enabling blocking mode after port open is unsupported "
