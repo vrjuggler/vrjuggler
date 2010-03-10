@@ -46,6 +46,7 @@
 #include <osg/Matrix>
 #include <osg/Transform>
 #include <osg/Group>
+#include <osg/Camera>
 
 #include <osgUtil/SceneView>
 #include <osgUtil/UpdateVisitor>
@@ -212,6 +213,18 @@ public:
 
       // Needed for stereo to work.
       newSceneViewer->setDrawBufferValue(GL_NONE);
+
+      // Additional camera setup for OSG versions newer than 2.9.5.
+#if OPENSCENEGRAPH_MAJOR_VERSION > 2    ||      \
+    (OPENSCENEGRAPH_MAJOR_VERSION == 2  &&      \
+     (OPENSCENEGRAPH_MINOR_VERSION > 9  ||      \
+      OPENSCENEGRAPH_MINOR_VERSION == 9 &&      \
+      OPENSCENEGRAPH_PATCH_VERSION > 5))
+      newSceneViewer->getCamera()->setInheritanceMask( 
+         newSceneViewer->getCamera()->getInheritanceMask() | 
+         osg::CullSettings::DRAW_BUFFER
+      );
+#endif
    }
 
    /**
