@@ -877,7 +877,7 @@ _vpr_save_CPPFLAGS="$CPPFLAGS"
 _vpr_save_LDFLAGS="$LDFLAGS"
 
 AM_PATH_FLAGPOLL([0.9.1], ,
-   [AC_MSG_ERROR([*** Flagpoll (https://realityforge.vrsource.org/view/FlagPoll/WebHome) is required to build Juggler ***])])
+   [AC_MSG_ERROR([*** Flagpoll (http://code.google.com/p/flagpoll/) is required to build Juggler ***])])
 
 if ! (eval $FLAGPOLL cppdom --modversion >/dev/null 2>&1) ; then
    AC_MSG_ERROR([*** Flagpoll does not have a valid CppDOM configuration ***])
