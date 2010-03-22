@@ -38,6 +38,7 @@
 #include <vpr/md/BOOST/IO/SelectorImplBOOST.h>
 #include <vpr/md/BOOST/IO/Socket/SocketImplBOOST.h>
 #include <vpr/IO/TimeoutException.h>
+#include <vpr/Thread/Thread.h>
 
 #include <vpr/System.h>
 
@@ -173,7 +174,8 @@ void SelectorImplBOOST::select(vpr::Uint16& numWithEvents,
       {
          break;
       }
-      vpr::System::msleep(10); //Don't busy-wait
+      
+	  vpr::Thread::yield();
    }
    while ((now.usec() - start.usec()) < local_timeout.usec());
    
