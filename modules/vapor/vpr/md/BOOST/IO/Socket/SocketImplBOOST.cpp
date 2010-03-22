@@ -223,13 +223,16 @@ void SocketImplBOOST::open()
 
 void SocketImplBOOST::close()
 {
+   /*
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
-         mTcpSocket->close();
+		 if (mTcpSocket->is_open())
+		   mTcpSocket->close();
          break;
       case vpr::SocketTypes::DATAGRAM:
-         mUdpSocket->close();
+		 if (mUdpSocket->is_open())
+           mUdpSocket->close();
          break;
       case vpr::SocketTypes::RAW:
          throw SocketException("RAW socket type not supported.", VPR_LOCATION);
@@ -243,6 +246,7 @@ void SocketImplBOOST::close()
             break;
          }
    }
+   */
 
    // Reset the local state tracking to initial state
    // since we are not connected or bound any more.
@@ -1328,6 +1332,7 @@ void SocketImplBOOST::setOption(const vpr::SocketOptions::Types option,
 
 SocketImplBOOST::~SocketImplBOOST()
 {
+   this->close();
    switch ( mType )
    {
    case vpr::SocketTypes::STREAM:
