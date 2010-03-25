@@ -82,6 +82,7 @@ protected:
    virtual void unlockMouseInternal();
    //@}
 
+   void clipCursorArea();
    void resize(long width, long height);
    gadget::Keys VKKeyToKey(const int vkKey);
    char getAsciiKey(const int vkKey, const gadget::Keys key);
@@ -90,7 +91,8 @@ protected:
    virtual void addMouseButtonEvent(const gadget::Keys& button,
                                     const gadget::EventType& type,
                                     const MSG& message);
-   virtual void addMouseMoveEvent(const MSG& message);
+   virtual void addMouseMoveEvent(const float deltaX, const float deltaY,
+                                  const MSG& message);
 
    /**
     * Adds a new mouse scroll event to the event queue for this input area.
@@ -123,6 +125,8 @@ protected:
    vpr::Mutex   mKeysLock;      /**< Must hold this lock when accessing mKeys */
    int          mPrevX;         /**< Previous mouse location X-coordinate */
    int          mPrevY;         /**< Previous mouse location Y-coordinate */
+   int          mLockXCenter;
+   int          mLockYCenter;
 };
 
 } // end namespace gadget

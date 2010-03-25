@@ -301,6 +301,8 @@ void InputAreaWin32::updKeys(const MSG& message)
 
          // press...
       case WM_LBUTTONDOWN:
+         ::SetCapture(mWinHandle);
+         clipCursorArea();
          mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON1] = 1;
          mKeyboardMouseDevice->mKeys[gadget::MBUTTON1] += 1;
 
@@ -310,6 +312,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "LeftButtonDown\n" << vprDEBUG_FLUSH;
          break;
       case WM_MBUTTONDOWN:
+         ::SetCapture(mWinHandle);
+         clipCursorArea();
          mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON2] = 1;
          mKeyboardMouseDevice->mKeys[gadget::MBUTTON2] += 1;
 
@@ -319,6 +323,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "MiddleButtonDown\n" << vprDEBUG_FLUSH;
          break;
       case WM_RBUTTONDOWN:
+         ::SetCapture(mWinHandle);
+         clipCursorArea();
          mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON3] = 1;
          mKeyboardMouseDevice->mKeys[gadget::MBUTTON3] += 1;
 
@@ -330,6 +336,8 @@ void InputAreaWin32::updKeys(const MSG& message)
 
          // release...
       case WM_LBUTTONUP:
+         ::ReleaseCapture();
+         ::ClipCursor(NULL);
          mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON1] = 0;
 
          addMouseButtonEvent(gadget::MBUTTON1,
@@ -338,6 +346,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "LeftButtonUp\n" << vprDEBUG_FLUSH;
          break;
       case WM_MBUTTONUP:
+         ::ReleaseCapture();
+         ::ClipCursor(NULL);
          mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON2] = 0;
 
          addMouseButtonEvent(gadget::MBUTTON2,
@@ -346,6 +356,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "MiddleButtonUp\n" << vprDEBUG_FLUSH;
          break;
       case WM_RBUTTONUP:
+         ::ReleaseCapture();
+         ::ClipCursor(NULL);
          mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON3] = 0;
 
          addMouseButtonEvent(gadget::MBUTTON3,
@@ -486,10 +498,6 @@ void InputAreaWin32::updKeys(const MSG& message)
          // mouse movement
       case WM_MOUSEMOVE:
          {
-            addMouseMoveEvent(message);
-
-            int win_center_x(mWidth / 2), win_center_y(mHeight / 2);
-
             int cur_x, cur_y, dx, dy;
 
             // Determine how far the mouse pointer moved since the last event.
@@ -512,6 +520,9 @@ void InputAreaWin32::updKeys(const MSG& message)
             }
             else
             {
+               int win_center_x(mLockXCenter);
+               int win_center_y(mLockYCenter);
+
                dx = cur_x - win_center_x; // Base delta off of center of window
                dy = cur_y - win_center_y;
                mPrevX = win_center_x;    // Must do this so if state changes, we have accurate dx,dy next time
@@ -552,6 +563,11 @@ void InputAreaWin32::updKeys(const MSG& message)
             {
                mKeyboardMouseDevice->mKeys[gadget::MOUSE_NEGY] += -dy;    // Negative movement in the y direction.
             }
+
+            // dy has to be negated to change y origin from top to bottom.
+            // This is for consistency to make mouse origin in lower left
+            // corner.
+            addMouseMoveEvent(dx, -dy, message);
          }
          break;
    } // end of switch...
@@ -559,23 +575,58 @@ void InputAreaWin32::updKeys(const MSG& message)
 
 void InputAreaWin32::lockMouseInternal()
 {
-   // Center the mouse
-   int win_center_x(mWidth / 2), win_center_y(mHeight / 2);
-
-   // convert windows coords to screen coords.
    ::POINT pt;
-   pt.x = win_center_x;
-   pt.y = win_center_y;
-   ::ClientToScreen(mWinHandle, &pt);
-   ::SetCursorPos(pt.x, pt.y);
+   ::GetCursorPos(&pt);
+   ::ScreenToClient(mWinHandle, &pt);
+   mLockXCenter = pt.x;
+   mLockYCenter = pt.y;
 
    // capture the mouse for this window...
    HWND previous_capture = ::SetCapture(mWinHandle);
+
+   while (ShowCursor(FALSE) > -1)
+   {
+      ;
+   }
 }
 
 void InputAreaWin32::unlockMouseInternal()
 {
-   BOOL result = ::ReleaseCapture();
+   ::ReleaseCapture();
+   
+   while (ShowCursor(TRUE) < 0)
+   {
+      ;
+   }
+}
+
+void InputAreaWin32::clipCursorArea()
+{
+   RECT rcClient;       // client area rectangle 
+   POINT ptClientUL;    // client upper left corner 
+   POINT ptClientLR;    // client lower right corner 
+
+   // Retrieve the screen coordinates of the client area, 
+   // and convert them into client coordinates. 
+   ::GetClientRect(mWinHandle, &rcClient); 
+   ptClientUL.x = rcClient.left; 
+   ptClientUL.y = rcClient.top; 
+
+   // Add one to the right and bottom sides, because the 
+   // coordinates retrieved by GetClientRect do not 
+   // include the far left and lowermost pixels. 
+   ptClientLR.x = rcClient.right + 1; 
+   ptClientLR.y = rcClient.bottom + 1; 
+   ::ClientToScreen(mWinHandle, &ptClientUL); 
+   ::ClientToScreen(mWinHandle, &ptClientLR); 
+
+   // Copy the client coordinates of the client area 
+   // to the rcClient structure. Confine the mouse cursor 
+   // to the client area by passing the rcClient structure 
+   // to the ClipCursor function. 
+   ::SetRect(&rcClient, ptClientUL.x, ptClientUL.y, ptClientLR.x,
+             ptClientLR.y); 
+   ::ClipCursor(&rcClient); 
 }
 
 gadget::Keys InputAreaWin32::VKKeyToKey(const int vkKey)
@@ -877,7 +928,8 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
-void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
+void InputAreaWin32::addMouseMoveEvent(const float deltaX, const float deltaY,
+                                       const MSG& msg)
 {
    int state = getModifierMask() | getButtonMask();
 
@@ -885,8 +937,8 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
       new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
                              GET_X_LPARAM(msg.lParam),
                              mHeight - GET_Y_LPARAM(msg.lParam), msg.pt.x,
-                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, 0.0f,
-                             0.0f, state, msg.time, this)
+                             GetSystemMetrics(SM_CYSCREEN) - msg.pt.y, deltaX,
+                             deltaY, state, msg.time, this)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
