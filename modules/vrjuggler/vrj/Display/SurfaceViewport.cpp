@@ -174,18 +174,8 @@ void SurfaceViewport::updateProjections(const float positionScale)
    const gmtl::Matrix44f cur_head_pos(
       mUser->getHeadPosProxy()->getData(positionScale)
    );
-   /*
-   Coord  head_coord(cur_head_pos);       // Create a user readable version
-
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "vjDisplay::updateProjections: Getting head position" << std::endl
-      << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:"
-                        << head_coord.orient << std::endl << vprDEBUG_FLUSH;
-                        */
 
    // Compute location of left and right eyes
-   //float interocularDist = 2.75f/12.0f;
    float interocular_dist = mUser->getInterocularDistance();
    interocular_dist *= positionScale;              // Scale eye separation
 
