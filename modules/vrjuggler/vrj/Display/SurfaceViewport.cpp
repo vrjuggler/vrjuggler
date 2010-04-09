@@ -170,10 +170,10 @@ bool SurfaceViewport::config(jccl::ConfigElementPtr element)
 
 void SurfaceViewport::updateProjections(const float positionScale)
 {
-   gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
-
    // -- Calculate Eye Positions -- //
-   gmtl::Matrix44f cur_head_pos = mUser->getHeadPosProxy()->getData(positionScale);
+   const gmtl::Matrix44f cur_head_pos(
+      mUser->getHeadPosProxy()->getData(positionScale)
+   );
    /*
    Coord  head_coord(cur_head_pos);       // Create a user readable version
 
@@ -188,13 +188,29 @@ void SurfaceViewport::updateProjections(const float positionScale)
    //float interocularDist = 2.75f/12.0f;
    float interocular_dist = mUser->getInterocularDistance();
    interocular_dist *= positionScale;              // Scale eye separation
-   float eye_offset = interocular_dist/2.0f;      // Distance to move eye
 
-   left_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f( -eye_offset, 0, 0));
-   right_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(eye_offset, 0, 0));
+   // Distance to move eye.
+   const float eye_offset(interocular_dist * 0.5f);
 
-   mLeftProj->calcViewMatrix(left_eye_pos, positionScale);
-   mRightProj->calcViewMatrix(right_eye_pos, positionScale);
+   // NOTE: Eye coord system is -z forward, x-right, y-up
+
+   if (Viewport::LEFT_EYE == mView || Viewport::STEREO == mView)
+   {
+      const gmtl::Matrix44f left_eye_pos(
+         cur_head_pos *
+            gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-eye_offset, 0, 0))
+      );
+      mLeftProj->calcViewMatrix(left_eye_pos, positionScale);
+   }
+
+   if (Viewport::RIGHT_EYE == mView || Viewport::STEREO == mView)
+   {
+      const gmtl::Matrix44f right_eye_pos(
+         cur_head_pos * 
+            gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(eye_offset, 0, 0))
+      );
+      mRightProj->calcViewMatrix(right_eye_pos, positionScale);
+   }
 }
 
 std::ostream& SurfaceViewport::outStream(std::ostream& out,
