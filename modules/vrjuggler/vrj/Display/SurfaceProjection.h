@@ -89,6 +89,15 @@ public:
     */
    void validateCorners();
 
+   /**
+    * Changes the corners originally specified whn created.
+    * An exception of type vrj::InvalidSurfaceException is thrown.
+    */
+   void updateCorners(const gmtl::Point3f& llCorner,
+                      const gmtl::Point3f& lrCorner,
+                      const gmtl::Point3f& urCorner,
+                      const gmtl::Point3f& ulCorner);
+
    /** Configures the projection using the given element. */
    virtual void config(jccl::ConfigElementPtr element);
 

@@ -390,8 +390,17 @@ LRESULT WindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
       case WM_SIZE:
          // Call our function which modifies the clipping
          // volume and viewport
-         sizeChanged(LOWORD(lParam), HIWORD(lParam));
+
          InputAreaWin32::resize(LOWORD(lParam), HIWORD(lParam));
+
+         RECT rect;
+         GetWindowRect(hWnd, &rect);
+         originAndSizeChanged(rect.left, rect.top, LOWORD(lParam), HIWORD(lParam));
+         break;
+      
+         // --- Window is moved. --- //
+      case WM_MOVE:
+         originChanged(LOWORD(lParam), HIWORD(lParam));
          break;
 
          // The painting function.  This message sent by Windows
@@ -698,6 +707,56 @@ void WindowWin32::sizeChanged(long width, long height)
 
    updateOriginSize(mOriginX, mOriginY, width, height);
    setDirtyViewport(true);
+}
+
+void WindowWin32::originChanged(long xorigin, long yorigin)
+{
+   if ( xorigin < 0 )
+   {
+      xorigin = 0;
+   }
+
+   if ( yorigin < 0 )
+   {
+     yorigin = 0;
+   }
+
+   int root_height = GetSystemMetrics(SM_CYSCREEN);  
+   int juggler_y_origin = root_height - mWindowHeight - yorigin;
+
+   updateOriginSize(xorigin, juggler_y_origin, mWindowWidth, mWindowHeight);
+   setDirtyViewport(true);
+}
+
+void WindowWin32::originAndSizeChanged(long xorigin, long yorigin, 
+                                       long width, long height)
+{
+   if ( xorigin < 0 )
+   {
+      xorigin = 0;
+   }
+
+   if ( yorigin < 0 )
+   {
+      yorigin = 0;
+   }
+
+   // Make sure we don't have window of 1 size (divide by zero would follow).
+   if ( width == 0 )
+   {
+      width = 1;
+   }
+
+   if ( height == 0 )
+   {
+      height = 1;
+   }
+
+  int root_height = GetSystemMetrics(SM_CYSCREEN);  
+  int juggler_y_origin = root_height - mWindowHeight - yorigin;
+
+  updateOriginSize(xorigin, juggler_y_origin, width, height);
+  setDirtyViewport(true);
 }
 
 // Global context creator.

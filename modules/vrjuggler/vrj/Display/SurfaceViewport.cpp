@@ -43,7 +43,7 @@
 #include <vrj/Display/TrackedSurfaceProjection.h>
 #include <vrj/Display/DisplayExceptions.h>
 #include <vrj/Display/SurfaceViewport.h>
-
+#include <vrj/Display/Display.h>
 
 namespace vrj
 {
@@ -93,6 +93,8 @@ bool SurfaceViewport::config(jccl::ConfigElementPtr element)
    mULCorner.set(element->getProperty<float>("upper_left_corner", 0),
                  element->getProperty<float>("upper_left_corner", 1),
                  element->getProperty<float>("upper_left_corner", 2));
+   
+   mCornerUpdateMode = static_cast<CornerUpdateMode>(element->getProperty<int>("auto_corner_update", 0));
 
    // Calculate the rotation and the pts
 //   calculateSurfaceRotation();
@@ -203,6 +205,96 @@ void SurfaceViewport::updateProjections(const float positionScale)
    }
 }
 
+void SurfaceViewport::computePixelTransforms()
+{
+   // Update viewport location & dimensions in pixels
+   computePixelOriginAndSize();
+   
+   // Get horizontal and vertical vectors using corner points
+   mHDirection = mLRCorner - mLLCorner;
+   mVDirection = mULCorner - mLLCorner;
+  
+   // Use width & height to compute scale
+   mPixelsPerUnitX = mVpWidth / gmtl::length(mHDirection);
+   mPixelsPerUnitY = mVpHeight / gmtl::length(mVDirection);
+   
+   // Normalize the direction vectors
+   gmtl::normalize(mHDirection);
+   gmtl::normalize(mVDirection);
+   
+   // Compute the 3Space locations of the zero pixel locations
+   mInterceptH = 
+     mLLCorner - mHDirection * ( mVpOriginX / mPixelsPerUnitX );
+   mInterceptV = 
+     mLLCorner - mVDirection * ( mVpOriginY / mPixelsPerUnitY );
+}
+
+void SurfaceViewport::updateCorners()
+{
+   switch (mCornerUpdateMode)
+   {
+      case NO_UPDATE:
+         return;
+      case RESIZE_ONLY:
+      {
+         float vp_pixel_width, vp_pixel_height;
+         float x_expand, y_expand;
+
+         // Save previous width & height for computing delta
+         vp_pixel_width = mVpWidth;
+         vp_pixel_height = mVpHeight;
+
+         // Update viewport location & dimensions in pixels
+         computePixelOriginAndSize();
+      
+         // Compute expansion amounts
+         gmtl::Vec3f h_expand = 
+            mHDirection * 0.5f * 
+            (mVpWidth - vp_pixel_width) / mPixelsPerUnitX;
+         gmtl::Vec3f v_expand = 
+            mVDirection * 0.5f * 
+            (mVpHeight - vp_pixel_height) / mPixelsPerUnitY;
+
+         // Expand or contract about the center
+         mLLCorner = mLLCorner - h_expand - v_expand;
+         mLRCorner = mLRCorner + h_expand - v_expand;
+         mULCorner = mULCorner - h_expand + v_expand;
+         mURCorner = mURCorner + h_expand + v_expand;
+
+         break;
+      }
+      case RESIZE_AND_MOVE:
+         // Update viewport location & dimensions in pixels
+         computePixelOriginAndSize();
+
+         // Use slope/intercept to move the corners
+         mLLCorner = mInterceptH + 
+                     mHDirection * (mVpOriginX / mPixelsPerUnitX) + 
+                     mVDirection * (mVpOriginY / mPixelsPerUnitY);
+         mLRCorner = mLLCorner + mHDirection * (mVpWidth / mPixelsPerUnitX);
+         mULCorner = mLLCorner + mVDirection * (mVpHeight / mPixelsPerUnitY);
+         mURCorner = mLRCorner + mVDirection * (mVpHeight / mPixelsPerUnitY);
+         break;
+      default:
+        return;
+   }
+
+   // Apply this update to the projections
+   SurfaceProjection *lproj = 
+     dynamic_cast<SurfaceProjection *>(mLeftProj.get());
+   if ( lproj != NULL)
+   {
+      lproj->updateCorners(mLLCorner, mLRCorner, mURCorner, mULCorner);
+   }
+
+   SurfaceProjection *rproj = 
+     dynamic_cast<SurfaceProjection *>(mRightProj.get());
+   if ( rproj != NULL)
+   {
+      rproj->updateCorners(mLLCorner, mLRCorner, mURCorner, mULCorner);
+   }
+}
+
 std::ostream& SurfaceViewport::outStream(std::ostream& out,
                                          const unsigned int indentLevel)
 {
@@ -230,6 +322,22 @@ std::ostream& SurfaceViewport::outStream(std::ostream& out,
    }
 
    return out;
+}
+
+void SurfaceViewport::computePixelOriginAndSize()
+{
+   // Get window location & dimensions
+   int win_origin_x, win_origin_y, win_width, win_height;
+   getDisplay()->getOriginAndSize(win_origin_x, win_origin_y,
+                                  win_width, win_height);
+
+   // Compute viewport location & dimensions in pixels
+   mVpOriginX = static_cast<float>(win_origin_x) + 
+     mXorigin * static_cast<float>(win_width);
+   mVpOriginY = static_cast<float>(win_origin_y) +
+     mYorigin * static_cast<float>(win_height);
+   mVpWidth = static_cast<float>(win_width) * mXsize;
+   mVpHeight = static_cast<float>(win_height) * mYsize;
 }
 
 }

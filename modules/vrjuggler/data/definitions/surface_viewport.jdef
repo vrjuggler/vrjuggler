@@ -189,4 +189,104 @@
          </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
+   <definition_version version="3" label="Surface Viewport">
+      <abstract>false</abstract>
+      <help>This viewport displays a surface onto which images are projected. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html"&gt;more on viewports&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;)</help>
+      <parent/>
+      <category>/Display</category>
+      <property valuetype="float" variable="false" name="origin">
+         <help>Viewport origin.  The lower left corner is (0.0,0.0), and the placement must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
+         <value label="X" defaultvalue="0.0"/>
+         <value label="Y" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="size">
+         <help>Viewport size.  The size must be within the range [0.0,1.0]. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html#section.viewports.multiple"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Width" defaultvalue="1.0"/>
+         <value label="Height" defaultvalue="1.0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="view">
+         <help>Which eye will be rendered by the Draw Manager's rendering thread for the containing display window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="View" defaultvalue="1"/>
+         <enumeration editable="false">
+            <enum label="Left Eye" value="1"/>
+            <enum label="Right Eye" value="2"/>
+            <enum label="Stereo" value="3"/>
+         </enumeration>
+      </property>
+      <property valuetype="float" variable="false" name="lower_left_corner">
+         <help>The location of the lower left corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <value label="X" defaultvalue="0.0"/>
+         <value label="Y" defaultvalue="0.0"/>
+         <value label="Z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="lower_right_corner">
+         <help>The location of the lower right corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <value label="X" defaultvalue="0.0"/>
+         <value label="Y" defaultvalue="0.0"/>
+         <value label="Z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="upper_right_corner">
+         <help>The location of the upper right corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <value label="X" defaultvalue="0.0"/>
+         <value label="Y" defaultvalue="0.0"/>
+         <value label="Z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="upper_left_corner">
+         <help>The location of the upper left corner of the projection surface in meters. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html#section.viewports.surface"&gt;more ...&lt;/a&gt;)</help>
+         <value label="X" defaultvalue="0.0"/>
+         <value label="Y" defaultvalue="0.0"/>
+         <value label="Z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="user">
+         <help>This is the user for whom this viewport is drawing. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="User"/>
+         <allowed_type>user</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="active">
+         <help>Is the viewport active?</help>
+         <value label="Use this viewport?" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="tracked">
+         <help>Is this a tracked surface?  This is only to be used for surfaces that have a tracker and can move (HMD eyes, for example).</help>
+         <value label="Is Tracked" defaultvalue="false"/>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="tracker_proxy">
+         <help>The tracker proxy that tracks the screen's reference frame (usually for the eyes of head-mounted displays). This should always be false for surfaces that are fixed in place. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s06.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Tracker Proxy"/>
+         <allowed_type>position_proxy</allowed_type>
+      </property>
+      <property valuetype="integer" variable="false" name="auto_corner_update">
+         <help>How will the corner locations update based on window move and resize?  This applies to untracked surfaces where the initial window is sizable (Use Border is true).</help>
+         <value label="Auto Corner Update" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="No Update" value="0"/>
+            <enum label="Resize Only" value="1"/>
+            <enum label="Resize and Move" value="2"/>
+         </enumeration>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+               <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:surface_viewport">
+               <xsl:element namespace="{$jconf}" name="surface_viewport">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">3</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="auto_corner_update">
+                     <xsl:text>0</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>

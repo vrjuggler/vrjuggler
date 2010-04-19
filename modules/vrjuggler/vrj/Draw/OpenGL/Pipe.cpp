@@ -418,6 +418,7 @@ void Pipe::renderWindow(vrj::opengl::WindowPtr win)
 {
    float vp_ox, vp_oy, vp_sx, vp_sy;        // Viewport origin and size
    Viewport::View  view;                    // The view for the active viewport
+   bool vp_dirty;                           // True if viewport is dirty
 
    vrj::opengl::App* the_app = mGlDrawManager->getApp(); // Get application for easy access
    DisplayPtr the_display = win->getDisplay();   // Get the display for easy access
@@ -440,7 +441,8 @@ void Pipe::renderWindow(vrj::opengl::WindowPtr win)
  
 
    // VIEWPORT cleaning
-   if (win->hasDirtyViewport())
+   vp_dirty = win->hasDirtyViewport();
+   if (vp_dirty)
    {
       win->updateViewport();
    }
@@ -535,6 +537,14 @@ void Pipe::renderWindow(vrj::opengl::WindowPtr win)
                      boost::dynamic_pointer_cast<vrj::opengl::SimInterface>(
                         sim_vp->getDrawSimInterface()
                      );
+               }
+            }
+            else if ( vp_dirty && viewport->isSurface() )
+            {
+               SurfaceViewport *surf_vp = dynamic_cast<SurfaceViewport *>(viewport.get());
+               if( surf_vp != NULL )
+               {
+                  surf_vp->updateCorners();
                }
             }
 

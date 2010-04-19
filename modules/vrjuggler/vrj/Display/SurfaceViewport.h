@@ -52,6 +52,13 @@ protected:
    SurfaceViewport();
 
 public:
+   enum CornerUpdateMode
+   {
+      NO_UPDATE = 0,
+      RESIZE_ONLY,
+      RESIZE_AND_MOVE
+   };
+
    /**
     * Creates a SurfaceViewport instance and returns it wrapped in a
     * ViewportPtr object.
@@ -86,6 +93,12 @@ public:
       ur = mURCorner;
       ul = mULCorner;
    }
+  
+   /** Compute values that can convert screen info to corner updates. */
+   void computePixelTransforms();
+   
+   /** Update corners using current Display data. */
+   void updateCorners();
 
    virtual std::ostream& outStream(std::ostream& out,
                                    const unsigned int indentLevel = 0);
@@ -107,6 +120,26 @@ protected:
    bool           mTracked;            /**< Is this surface tracked? */
    std::string    mTrackerProxyName;   /**< If tracked, what is the name of the tracker */
    //@}
+
+   /**
+    * @name Pixel-to-Physical conversion info
+    * Deal with resize of surface viewports.
+    */
+   //@{
+   gmtl::Vec3f mHDirection;
+   gmtl::Vec3f mVDirection;
+   float mPixelsPerUnitX;
+   float mPixelsPerUnitY;
+   gmtl::Point3f mInterceptH;
+   gmtl::Point3f mInterceptV;
+   float mVpOriginX;
+   float mVpOriginY;
+   float mVpWidth;
+   float mVpHeight;
+   CornerUpdateMode mCornerUpdateMode;
+   //@{
+
+   void computePixelOriginAndSize();
 };
 
 }

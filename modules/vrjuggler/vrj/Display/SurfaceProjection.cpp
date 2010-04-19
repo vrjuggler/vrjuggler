@@ -91,6 +91,19 @@ void SurfaceProjection::validateCorners()
    }
 }
 
+void SurfaceProjection::updateCorners(const gmtl::Point3f& llCorner,
+                                      const gmtl::Point3f& lrCorner,
+                                      const gmtl::Point3f& urCorner,
+                                      const gmtl::Point3f& ulCorner)
+{
+   mLLCorner = llCorner;
+   mLRCorner = lrCorner;
+   mURCorner = urCorner;
+   mULCorner = ulCorner;
+
+   validateCorners();
+}
+
 // Just call the base class constructor
 void SurfaceProjection::config(jccl::ConfigElementPtr element)
 {
@@ -166,7 +179,7 @@ void SurfaceProjection::calcViewFrustum(const gmtl::Matrix44f& eyePos,
    const float n_eye_to_top    = eye_to_top * near_dist_front;
    const float n_eye_to_bottom = eye_to_bottom * near_dist_front;
 
-   // Set frustum and calulcate the matrix.
+   // Set frustum and calculate the matrix.
    mFrustum.set(-n_eye_to_left, n_eye_to_right, -n_eye_to_bottom,
                 n_eye_to_top, near_dist, far_dist);
 

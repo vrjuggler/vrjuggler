@@ -85,7 +85,6 @@ void Display::setOriginAndSize(const int originX, const int originY,
    }
 }
 
-
 void Display::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);
@@ -190,9 +189,15 @@ void Display::configViewports(jccl::ConfigElementPtr element)
          element->getProperty<jccl::ConfigElementPtr>("surface_viewports", i);
       ViewportPtr surf_vp = SurfaceViewport::create();
       surf_vp->setDisplay(shared_from_this());
-
+      
       if ( surf_vp->config(vp_elt) )
       {
+         SurfaceViewport *surf_vp_ptr = dynamic_cast<SurfaceViewport *>(surf_vp.get());
+         if( surf_vp_ptr != NULL )
+         {
+           surf_vp_ptr->computePixelTransforms();
+         }
+  
          mViewports.push_back(surf_vp);
       }
       else
