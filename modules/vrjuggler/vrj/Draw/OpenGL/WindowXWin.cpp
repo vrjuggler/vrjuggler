@@ -583,8 +583,8 @@ void WindowXWin::checkEvents()
          switch ( event.type )
          {
             case ConfigureNotify:
-               updateOriginSize(vrj::opengl::Window::mOriginX,
-                                vrj::opengl::Window::mOriginY,
+               updateOriginSize(event.xconfigure.x,
+                                event.xconfigure.y,
                                 event.xconfigure.width,
                                 event.xconfigure.height);
                vrj::opengl::Window::setDirtyViewport(true);
