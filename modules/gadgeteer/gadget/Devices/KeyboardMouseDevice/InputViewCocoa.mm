@@ -106,7 +106,7 @@
    -(void) viewDidMoveToWindow
    {
       [super viewDidMoveToWindow];
-      [self resetTrackingRect];
+      [[self window] invalidateCursorRectsForView:self];
 
       // If this view was moved to a new window, determine if the mouse is
       // currently within the bounds of this view. If it is, then we post a

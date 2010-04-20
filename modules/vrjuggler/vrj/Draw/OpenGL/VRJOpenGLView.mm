@@ -113,10 +113,12 @@
          [[self openGLContext] setFullScreen];
       }
 
-     [[NSNotificationCenter defaultCenter] addObserver:self
+      [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(surfaceNeedsUpdate:)
                                            name:NSWindowDidChangeScreenNotification
                                            object:self];
+
+      [[self window] setAcceptsMouseMovedEvents:mHandleInput];
 
       return self;
    }
@@ -129,19 +131,19 @@
 
    -(void) reshape
    {
-   }
-/*
-   -(void) reshape
-   {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "VRJOpenGLView reshape" << std::endl << vprDEBUG_FLUSH;
-      [self resetTrackingRect];
-      [self clearTrackingRect];
-//      NSRect bounds = [self bounds];
-//      mVrjWindow->updateBounds(bounds.origin.x, bounds.origin.y,
-//                               bounds.size.width, bounds.size.height);
+      //We do not need to call these methods since we only care that this info
+      //is updated after the resize event. This is handled in the
+      //viewDidEndLiveResize method. Technically I think all of this code 
+      //could be moved to the viewDidEndLiveResize method.
+      //[[self window] invalidateCursorRectsForView:self];
+      //[self resetTrackingRect];
+      NSRect bounds = [self bounds];
+      mVrjWindow->updateBounds(bounds.origin.x, bounds.origin.y,
+                               bounds.size.width, bounds.size.height);
    }
-*/
+
    /** @name NSResponder overrides */
    //@{
    /**
@@ -192,7 +194,7 @@
        mVrjWindow->setDirtyContext(true);
        mVrjWindow->setDirtyViewport(true);
        //mVrjWindow->releaseRenderLock();
-       [self resetCursorRects];
+       [[self window] invalidateCursorRectsForView:self];
      }
    }
    
@@ -221,7 +223,7 @@
    -(void) viewDidMoveToWindow
    {
       [super viewDidMoveToWindow];
-      [self resetTrackingRect];
+      [[self window] invalidateCursorRectsForView:self];
 
       // If this view was moved to a new window, determine if the mouse is
       // currently within the bounds of this view. If it is, then we post a
@@ -533,7 +535,8 @@
    /**
     * Invoked whenever the window containing this view is moved or resized.
     * The job of this method is to update the tracking rectangle for this
-    * view.
+    * view. This method should not be called from VR Juggler code. See
+    * the documentation for NSView resetCursorRects.
     */
    -(void) resetCursorRects
    {
