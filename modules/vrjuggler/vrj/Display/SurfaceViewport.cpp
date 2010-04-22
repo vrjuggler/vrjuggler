@@ -222,11 +222,11 @@ void SurfaceViewport::computePixelTransforms()
    gmtl::normalize(mHDirection);
    gmtl::normalize(mVDirection);
    
-   // Compute the 3Space locations of the zero pixel locations
-   mInterceptH = 
-     mLLCorner - mHDirection * ( mVpOriginX / mPixelsPerUnitX );
-   mInterceptV = 
-     mLLCorner - mVDirection * ( mVpOriginY / mPixelsPerUnitY );
+   // Compute the 3Space location of the screen origin
+   mIntercept = 
+      mLLCorner - 
+         mHDirection * ( mVpOriginX / mPixelsPerUnitX ) -
+         mVDirection * ( mVpOriginY / mPixelsPerUnitY );
 }
 
 void SurfaceViewport::updateCorners()
@@ -268,12 +268,13 @@ void SurfaceViewport::updateCorners()
          computePixelOriginAndSize();
 
          // Use slope/intercept to move the corners
-         mLLCorner = mInterceptH + 
+         mLLCorner = mIntercept + 
                      mHDirection * (mVpOriginX / mPixelsPerUnitX) + 
                      mVDirection * (mVpOriginY / mPixelsPerUnitY);
          mLRCorner = mLLCorner + mHDirection * (mVpWidth / mPixelsPerUnitX);
          mULCorner = mLLCorner + mVDirection * (mVpHeight / mPixelsPerUnitY);
          mURCorner = mLRCorner + mVDirection * (mVpHeight / mPixelsPerUnitY);
+         
          break;
       default:
         return;

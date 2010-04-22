@@ -180,14 +180,13 @@ bool WindowXWin::open()
       w_attrib.border_pixel = 0x0;
 
       // get screen dimensions for translating window origin.
-      ::XWindowAttributes winattrs;
       ::XGetWindowAttributes(mXDisplay, RootWindow(mXDisplay, screen),
-                             &winattrs);
+                             &mWinAttrs);
 
       // create window
       mXWindow = ::XCreateWindow(mXDisplay, RootWindow(mXDisplay, screen),
                                  mOriginX,
-                                 winattrs.height - mOriginY - mWindowHeight,
+                                 mWinAttrs.height - mOriginY - mWindowHeight,
                                  mWindowWidth, mWindowHeight, 0,
                                  mVisualInfo->depth, InputOutput,
                                  mVisualInfo->visual,
@@ -584,9 +583,8 @@ void WindowXWin::checkEvents()
          {
             case ConfigureNotify:
                updateOriginSize(event.xconfigure.x,
-                                event.xconfigure.y,
-                                event.xconfigure.width,
-                                event.xconfigure.height);
+                  mWinAttrs.height - mWindowHeight - event.xconfigure.y,
+                     event.xconfigure.width, event.xconfigure.height);
                vrj::opengl::Window::setDirtyViewport(true);
                break;
 

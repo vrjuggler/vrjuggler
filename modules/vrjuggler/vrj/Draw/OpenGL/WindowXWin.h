@@ -115,8 +115,8 @@ protected:
       {
          case ConfigureNotify:
             updateOriginSize(event.xconfigure.x,
-                             event.xconfigure.y,
-                             event.xconfigure.width, event.xconfigure.height);
+               mWinAttrs.height - mWindowHeight - event.xconfigure.y,
+                  event.xconfigure.width, event.xconfigure.height);
             vrj::opengl::Window::setDirtyViewport(true);
             break;
 
@@ -146,6 +146,7 @@ private:
    ExtensionLoaderGLX mExtensions;   /**< Extensions for this window. */
 
    //::Window     mXWindow;
+   XWindowAttributes mWinAttrs;
    std::string  mWindowName;
    int          mPipe;
    std::string  mXDisplayName;       /**<  Name of the x display to use */

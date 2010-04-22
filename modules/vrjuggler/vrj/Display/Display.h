@@ -163,7 +163,7 @@ public:
    void getOriginAndSize(int& originX, int& originY, int& width, int& height)
       const
    {
-      vprASSERT(mOriginX != -1);     // Make sure we have been configured
+      vprASSERT(mWidth != -1);     // Make sure we have been configured
       originX = mOriginX;
       originY = mOriginY;
       width   = mWidth;

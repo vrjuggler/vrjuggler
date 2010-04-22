@@ -130,8 +130,7 @@ protected:
    gmtl::Vec3f mVDirection;
    float mPixelsPerUnitX;
    float mPixelsPerUnitY;
-   gmtl::Point3f mInterceptH;
-   gmtl::Point3f mInterceptV;
+   gmtl::Point3f mIntercept;
    float mVpOriginX;
    float mVpOriginY;
    float mVpWidth;
