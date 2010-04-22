@@ -192,11 +192,9 @@ void Display::configViewports(jccl::ConfigElementPtr element)
       
       if ( surf_vp->config(vp_elt) )
       {
-         SurfaceViewport *surf_vp_ptr = dynamic_cast<SurfaceViewport *>(surf_vp.get());
-         if( surf_vp_ptr != NULL )
-         {
-           surf_vp_ptr->computePixelTransforms();
-         }
+         SurfaceViewportPtr surf_vp_ptr = 
+           boost::static_pointer_cast<SurfaceViewport>(surf_vp);
+         surf_vp_ptr->computePixelTransforms();
   
          mViewports.push_back(surf_vp);
       }

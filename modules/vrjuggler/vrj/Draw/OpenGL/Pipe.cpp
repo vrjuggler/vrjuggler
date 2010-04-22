@@ -522,57 +522,49 @@ void Pipe::renderWindow(vrj::opengl::WindowPtr win)
          mGlDrawManager->currentUserData()->setViewport(viewport);              // Set the viewport
 
          // ---- SURFACE & Simulator --- //
-         // if (viewport->isSurface())
+         vrj::opengl::SimInterfacePtr draw_sim_i;
+         
+         // Note: static casts below could fail if type enum does not 
+         // match the type of the cast.
+         if (viewport->isSimulator())
          {
-            vrj::opengl::SimInterfacePtr draw_sim_i;
+            SimViewportPtr sim_vp =
+               boost::static_pointer_cast<SimViewport>(viewport);
+            draw_sim_i =
+               boost::dynamic_pointer_cast<vrj::opengl::SimInterface>(
+                  sim_vp->getDrawSimInterface());
+         }
+         else if ( vp_dirty && viewport->isSurface() )
+         {
+            SurfaceViewportPtr surf_vp = 
+              boost::static_pointer_cast<SurfaceViewport>(viewport);
+            surf_vp->updateCorners();
+         }
 
-            if (viewport->isSimulator())
+         if ((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE
+         {
+            win->setViewBuffer(Viewport::LEFT_EYE);
+            win->setProjection(viewport->getLeftProj());
+            mGlDrawManager->currentUserData()->setProjection(viewport->getLeftProj());
+
+            the_app->draw();
+
+            if ( NULL != draw_sim_i.get() )
             {
-               SimViewportPtr sim_vp =
-                  boost::dynamic_pointer_cast<SimViewport>(viewport);
-               vprASSERT(NULL != sim_vp.get());
-               if (NULL != sim_vp.get())
-               {
-                  draw_sim_i =
-                     boost::dynamic_pointer_cast<vrj::opengl::SimInterface>(
-                        sim_vp->getDrawSimInterface()
-                     );
-               }
+               draw_sim_i->draw(scale_factor);
             }
-            else if ( vp_dirty && viewport->isSurface() )
+         }
+         if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
+         {
+            win->setViewBuffer(Viewport::RIGHT_EYE);
+            win->setProjection(viewport->getRightProj());
+            mGlDrawManager->currentUserData()->setProjection(viewport->getRightProj());
+
+            the_app->draw();
+
+            if ( NULL != draw_sim_i.get() )
             {
-               SurfaceViewport *surf_vp = dynamic_cast<SurfaceViewport *>(viewport.get());
-               if( surf_vp != NULL )
-               {
-                  surf_vp->updateCorners();
-               }
-            }
-
-            if ((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE
-            {
-               win->setViewBuffer(Viewport::LEFT_EYE);
-               win->setProjection(viewport->getLeftProj());
-               mGlDrawManager->currentUserData()->setProjection(viewport->getLeftProj());
-
-               the_app->draw();
-
-               if ( NULL != draw_sim_i.get() )
-               {
-                  draw_sim_i->draw(scale_factor);
-               }
-            }
-            if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
-            {
-               win->setViewBuffer(Viewport::RIGHT_EYE);
-               win->setProjection(viewport->getRightProj());
-               mGlDrawManager->currentUserData()->setProjection(viewport->getRightProj());
-
-               the_app->draw();
-
-               if ( NULL != draw_sim_i.get() )
-               {
-                  draw_sim_i->draw(scale_factor);
-               }
+               draw_sim_i->draw(scale_factor);
             }
          }
       }  // should viewport be rendered

@@ -280,16 +280,18 @@ void SurfaceViewport::updateCorners()
    }
 
    // Apply this update to the projections
-   SurfaceProjection *lproj = 
-     dynamic_cast<SurfaceProjection *>(mLeftProj.get());
-   if ( lproj != NULL)
+   SurfaceProjectionPtr lproj = 
+     boost::dynamic_pointer_cast<SurfaceProjection>(mLeftProj);
+   vprASSERT(NULL != lproj.get());
+   if (NULL != lproj.get())
    {
       lproj->updateCorners(mLLCorner, mLRCorner, mURCorner, mULCorner);
    }
 
-   SurfaceProjection *rproj = 
-     dynamic_cast<SurfaceProjection *>(mRightProj.get());
-   if ( rproj != NULL)
+   SurfaceProjectionPtr rproj = 
+     boost::dynamic_pointer_cast<SurfaceProjection>(mRightProj);
+   vprASSERT(NULL != rproj.get());
+   if (NULL != rproj.get())
    {
       rproj->updateCorners(mLLCorner, mLRCorner, mURCorner, mULCorner);
    }
