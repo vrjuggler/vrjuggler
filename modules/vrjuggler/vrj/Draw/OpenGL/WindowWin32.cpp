@@ -391,7 +391,7 @@ LRESULT WindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
          {
             // Call our function which modifies the clipping
             // volume and viewport
-
+            
             InputAreaWin32::resize(LOWORD(lParam), HIWORD(lParam));
 
             RECT rect;
@@ -405,10 +405,10 @@ LRESULT WindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
          {
             RECT rect;
             GetWindowRect(hWnd, &rect);
-            originChanged(rect.left, rect.top);
+            originAndSizeChanged(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
          }
          break;
-
+         
          // The painting function.  This message sent by Windows
          // whenever the screen needs updating.
       case WM_PAINT:
@@ -697,43 +697,16 @@ bool WindowWin32::setPixelFormat(HDC hDC)
    return true;
 }
 
-// The user has changed the size of the window
-void WindowWin32::sizeChanged(long width, long height)
-{
-   // Make sure we don't have window of 1 size (divide by zero would follow).
-   if ( width == 0 )
-   {
-      width = 1;
-   }
-
-   if ( height == 0 )
-   {
-      height = 1;
-   }
-
-   updateOriginSize(mOriginX, mOriginY, width, height);
-   setDirtyViewport(true);
-}
-
-void WindowWin32::originChanged(long xorigin, long yorigin)
-{
-   int root_height = GetSystemMetrics(SM_CYSCREEN);  
-   int juggler_y_origin = root_height - mWindowHeight - yorigin;
-
-   updateOriginSize(xorigin, juggler_y_origin, mWindowWidth, mWindowHeight);
-   setDirtyViewport(true);
-}
-
 void WindowWin32::originAndSizeChanged(long xorigin, long yorigin, 
                                        long width, long height)
 {
    // Make sure we don't have window of 0 size (divide by zero would follow).
-   if ( width == 0 )
+   if ( width <= 0 )
    {
       width = 1;
    }
 
-   if ( height == 0 )
+   if ( height <= 0 )
    {
       height = 1;
    }

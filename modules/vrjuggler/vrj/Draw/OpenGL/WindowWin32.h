@@ -129,10 +129,6 @@ private:
     */
    bool setPixelFormat(HDC hDC);
 
-   void sizeChanged(long width, long height);
-
-   void originChanged(long xorigin, long yorigin);
-
    void originAndSizeChanged(long xorigin, long yorigin, 
                              long width, long height);
 
