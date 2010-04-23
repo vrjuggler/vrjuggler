@@ -578,19 +578,7 @@ void WindowXWin::checkEvents()
       while( XPending(mXDisplay))
       {
          XNextEvent(mXDisplay,&event);
-
-         switch ( event.type )
-         {
-            case ConfigureNotify:
-               updateOriginSize(event.xconfigure.x,
-                  mWinAttrs.height - mWindowHeight - event.xconfigure.y,
-                     event.xconfigure.width, event.xconfigure.height);
-               vrj::opengl::Window::setDirtyViewport(true);
-               break;
-
-            default:
-               break;
-         }
+         processEvent(event);
       }
    }
 }
