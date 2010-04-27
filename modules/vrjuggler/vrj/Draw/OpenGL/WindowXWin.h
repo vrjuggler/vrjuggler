@@ -111,6 +111,11 @@ protected:
    /** Do any extra event processing needed. */
    virtual void processEvent(::XEvent event)
    {
+      // Note: the first ConfigureNotify event after opening a window may 
+      // contain an incorrect y position.  This causes a visual jump during
+      // move or resize if auto corner update is enabled for any contained 
+      // surface viewports.  To fix, we may need a different event mask on
+      // window creation and a corresponding handler below.
       switch ( event.type )
       {
          case ConfigureNotify:
