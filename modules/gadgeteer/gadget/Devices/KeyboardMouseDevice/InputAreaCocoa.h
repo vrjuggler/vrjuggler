@@ -254,6 +254,12 @@ protected:
    void doAddEvent(gadget::EventPtr event, const gadget::Keys key);
 
    /**
+    * Clips the cursor so that when the mouse is being dragged that the mouse
+    * stays within the given input area.
+    */
+   void clipCursorArea();
+
+   /**
     * A global lock used to ensure that no windows are opened until the
     * application has entered its run loop in the primordial thread. This
     * allows windows to be opened from a thread other than the non-primoardial
@@ -272,6 +278,8 @@ protected:
 
    NSWindow* mCocoaWindow;      /**< The window for this input area. */
    NSView*   mMainView;         /**< The window's view. */
+   unsigned int mLockXCenter;   /**< The mouse X location used for locking. */
+   unsigned int mLockYCenter;   /**< The mouse Y location used for locking. */
    //@}
 };
 

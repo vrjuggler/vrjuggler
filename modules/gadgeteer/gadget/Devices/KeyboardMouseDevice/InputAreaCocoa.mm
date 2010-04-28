@@ -186,15 +186,21 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
                                                       [event timestamp],
                                                       this));
 
-   const float cur_x = root_loc.x;
-   const float cur_y = root_loc.y;
-
    const float dx = [event deltaX];
    const float dy = [event deltaY];
 
    if ( mLockState != Unlocked )
    {
       warpCursorToCenter();
+   }
+
+   NSEventType mouse_event_type = [event type];
+   if ( mouse_event_type == NSLeftMouseDragged  ||  
+        mouse_event_type == NSRightMouseDragged ||
+        mouse_event_type == NSOtherMouseDragged )
+   {
+       // Clip the cursor area whenever the mouse button is down and dragging.
+       clipCursorArea();
    }
 
    vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);
@@ -316,7 +322,10 @@ void InputAreaCocoa::resize(const float width, const float height)
 
 void InputAreaCocoa::lockMouseInternal()
 {
-   warpCursorToCenter();
+   NSPoint lock_center = [mCocoaWindow mouseLocationOutsideOfEventStream];
+   mLockXCenter = lock_center.x;
+   mLockYCenter = lock_center.y;
+
    [NSCursor hide];
 }
 
@@ -399,8 +408,8 @@ void InputAreaCocoa::warpCursorToCenter()
 
    // Apparently Core Graphics uses a different coordinate frame than Cocoa.
    CGPoint center_pt =
-      { frame.origin.x + frame.size.width / 2.0f,
-        screen_frame.size.height - (frame.origin.y + frame.size.height / 2.0f)
+      { frame.origin.x + mLockXCenter,
+        screen_frame.size.height - (frame.origin.y + mLockYCenter)
       };
    CGWarpMouseCursorPosition(center_pt);
 }
@@ -1003,6 +1012,35 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
             break;
       }
    }
+}
+
+void InputAreaCocoa::clipCursorArea()
+{
+    const NSPoint mouse_loc = [mCocoaWindow mouseLocationOutsideOfEventStream];
+    NSRect bounds = [mMainView bounds];
+    bounds.origin.x += 1;
+    bounds.origin.y += 1;
+    bounds.size.width -= 2;
+    bounds.size.height -= 2;
+
+    // Subtract one from the bounds and add one to the origin so that the rect
+    // is smaller than the window so that we can acurrately detect when
+    // the mouse is about to the leave the tracking area. This is to mimic
+    // the functionality in X11 and Win32.
+    if (! [mMainView mouse:mouse_loc inRect:bounds])
+    {
+        // Place cursor at the edge of the bounds.
+        NSRect frame = [mCocoaWindow frame];
+        NSRect screen_frame = [[mCocoaWindow screen] frame];
+         
+        // Apparently Core Graphics uses a different coordinate frame than
+        // Cocoa.
+        CGPoint center_pt =
+           { frame.origin.x + (mouse_loc.x - 1),
+             screen_frame.size.height - (frame.origin.y + (mouse_loc.y - 1))
+           };
+        CGWarpMouseCursorPosition(center_pt);
+     }
 }
 
 }
