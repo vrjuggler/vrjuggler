@@ -243,8 +243,6 @@ void InputAreaXWin::handleEvent(::XEvent& event)
       // moved since the last time anything was read.
       case MotionNotify:
          {
-            int win_center_x(mWidth/2), win_center_y(mHeight/2);
-
             int cur_x, cur_y, dx, dy;
 
             // Determine how far the mouse pointer moved since the last event.
@@ -268,6 +266,8 @@ void InputAreaXWin::handleEvent(::XEvent& event)
             }
             else
             {
+               int win_center_x(mLockXCenter), win_center_y(mLockYCenter);
+
                dx = cur_x - win_center_x; // Base delta off of center of window
                dy = cur_y - win_center_y;
                mPrevX = win_center_x;     // Must do this so if state changes, we have accurate dx,dy next time
@@ -375,11 +375,19 @@ void InputAreaXWin::lockMouse(XEvent* ev)
    {
       display = ((XAnyEvent*)ev)->display;
       window = ((XAnyEvent*)ev)->window;
+      //lockMouse is only called from the KeyPress event
+      //therefore we do not need to worry about the MotionNotify event
+      mLockXCenter = ev->xbutton.x;
+      mLockYCenter = ev->xbutton.y;
    }
    else
    {
       display = mXDisplay;
       window = mXWindow;
+      //If we do not have an event (i.e. called from the users code) then
+      //set the lock center based on the last good previous mouse position.
+      mLockXCenter = mPrevX;
+      mLockYCenter = mPrevY;
    }
 
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
@@ -391,8 +399,7 @@ void InputAreaXWin::lockMouse(XEvent* ev)
    }
 
    // Center the mouse
-   int win_center_x(mWidth/2), win_center_y(mHeight/2);
-   XWarpPointer(display, None, window, 0,0, 0,0, win_center_x, win_center_y);
+   XWarpPointer(display, None, window, 0,0, 0,0, mLockXCenter, mLockYCenter);
 
    // Grab the keyboard input so that holding down a key works even
    // if the window loses focus.  While the keyboard is grabbed,
@@ -409,7 +416,7 @@ void InputAreaXWin::lockMouse(XEvent* ev)
                 PointerMotionMask | ButtonMotionMask;
 
    XGrabPointer(display, window, True, event_mask, GrabModeAsync,
-                GrabModeAsync, None, None, CurrentTime);
+                GrabModeAsync, window, None, CurrentTime);
 
    vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "lock finished.\n" << vprDEBUG_FLUSH;
@@ -839,17 +846,30 @@ void InputAreaXWin::handleMouseButtonEvent(const XEvent& event)
    if ( gadget::KEY_UNKNOWN != gadget_button )
    {
       gadget::EventType gadget_event;
-
+      Display* display = ((XAnyEvent*)(&event))->display;
+      Window window = ((XAnyEvent*)(&event))->window;
+      
       if ( ButtonPress == event.type )
       {
          gadget_event = gadget::MouseButtonPressEvent;
          mKeyboardMouseDevice->mRealkeys[gadget_button] = 1;
          mKeyboardMouseDevice->mKeys[gadget_button] += 1;
+
+         unsigned int event_mask;
+         event_mask = ButtonPressMask | ButtonReleaseMask |
+            PointerMotionMask | ButtonMotionMask | 
+            Button1MotionMask| Button2MotionMask| Button3MotionMask;
+
+         XGrabPointer(display, window, True, event_mask, GrabModeAsync,
+            GrabModeAsync, window, None, CurrentTime);
+
       }
       else
       {
          gadget_event = gadget::MouseButtonReleaseEvent;
          mKeyboardMouseDevice->mRealkeys[gadget_button] = 0;
+
+         XUngrabPointer(display, CurrentTime);
       }
 
       addMouseButtonEvent(gadget_button, gadget_event, event.xbutton);
