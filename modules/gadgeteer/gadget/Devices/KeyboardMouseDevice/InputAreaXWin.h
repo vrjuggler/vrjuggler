@@ -192,8 +192,6 @@ protected:
    bool         mEmptyCursorSet; /**< If true, then empty cursor has been created. */
    int          mPrevX;          /**< Previous mouse location X-coordinate */
    int          mPrevY;          /**< Previous mouse location Y-coordinate */
-   unsigned int mLockXCenter;   /**< The mouse X location used for locking. */
-   unsigned int mLockYCenter;   /**< The mouse Y location used for locking. */
 
 };
 

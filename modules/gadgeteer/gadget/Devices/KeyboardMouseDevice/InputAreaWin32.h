@@ -125,8 +125,6 @@ protected:
    vpr::Mutex   mKeysLock;      /**< Must hold this lock when accessing mKeys */
    int          mPrevX;         /**< Previous mouse location X-coordinate */
    int          mPrevY;         /**< Previous mouse location Y-coordinate */
-   int          mLockXCenter;
-   int          mLockYCenter;
 };
 
 } // end namespace gadget

@@ -278,8 +278,6 @@ protected:
 
    NSWindow* mCocoaWindow;      /**< The window for this input area. */
    NSView*   mMainView;         /**< The window's view. */
-   unsigned int mLockXCenter;   /**< The mouse X location used for locking. */
-   unsigned int mLockYCenter;   /**< The mouse Y location used for locking. */
    //@}
 };
 

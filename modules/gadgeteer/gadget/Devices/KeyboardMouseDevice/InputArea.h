@@ -115,6 +115,9 @@ protected:
    int       mLockStoredKey;     /**< The key that was pressed down. */
    int       mLockToggleKey;     /**< The key that toggles the locking. */
    int       mSleepTimeMS;
+
+   unsigned int mLockXCenter;   /**< The mouse X location used for locking. */
+   unsigned int mLockYCenter;   /**< The mouse Y location used for locking. */
    
    KeyboardMouseDevice* mKeyboardMouseDevice;
 
