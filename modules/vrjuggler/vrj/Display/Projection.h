@@ -34,6 +34,7 @@
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
+#include <gmtl/Point.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
 
@@ -111,7 +112,7 @@ public:
     * @pre eyePos is scaled by position scale factor.  scaleFactor is the
     *      scale currently used.
     */
-   virtual void calcViewMatrix(const gmtl::Matrix44f& eyePos,
+   virtual void calcViewMatrix(const gmtl::Point3f& eyePos,
                                const float scaleFactor) = 0;
 
    /**
