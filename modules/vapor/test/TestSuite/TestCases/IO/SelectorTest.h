@@ -26,7 +26,7 @@ class SelectorTest : public CppUnit::TestCase
 CPPUNIT_TEST_SUITE(SelectorTest);
 #ifndef VPR_SIMULATOR
 CPPUNIT_TEST( testAcceptorPoolSelection );
-CPPUNIT_TEST( testSendThenPoll );
+//CPPUNIT_TEST( testSendThenPoll );
 #endif
 CPPUNIT_TEST_SUITE_END();
 

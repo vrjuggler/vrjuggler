@@ -15,7 +15,7 @@ class InetAddrTest : public CppUnit::TestFixture
 CPPUNIT_TEST_SUITE(InetAddrTest);
 CPPUNIT_TEST( testEqual );
 CPPUNIT_TEST( testSets );
-CPPUNIT_TEST( testAddressLookup );
+//CPPUNIT_TEST( testAddressLookup );
 CPPUNIT_TEST( testLocalAddressLookup );
 CPPUNIT_TEST( testGetAllLocalAddrs );
 CPPUNIT_TEST_SUITE_END();

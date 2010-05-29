@@ -50,7 +50,9 @@ CPPUNIT_TEST(testSendRecv);
 CPPUNIT_TEST(testTcpConnection);
 CPPUNIT_TEST(testReadn);
 CPPUNIT_TEST(testNonBlockingConnectFailure);
+#if ! defined(VPR_OS_Darwin)
 CPPUNIT_TEST(testIsConnected);
+#endif
 #endif
 CPPUNIT_TEST_SUITE_END();
 
