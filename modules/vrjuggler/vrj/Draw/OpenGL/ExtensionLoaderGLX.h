@@ -35,15 +35,21 @@
 #include <vrj/Draw/OpenGL/ExtensionLoader.h>
 
 // GLX Defines
-#define GLX_CONTEXT_MAJOR_VERSION_ARB		0x2091
-#define GLX_CONTEXT_MINOR_VERSION_ARB		0x2092
-#define GLX_CONTEXT_LAYER_PLANE_ARB		0x2093
-#define GLX_CONTEXT_FLAGS_ARB			0x2094
-#define GLX_CONTEXT_DEBUG_BIT_ARB		0x0001
-#define GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
+#define GLX_CONTEXT_MAJOR_VERSION_ARB                   0x2091
+#define GLX_CONTEXT_MINOR_VERSION_ARB                   0x2092
+#define GLX_CONTEXT_LAYER_PLANE_ARB                     0x2093
+#define GLX_CONTEXT_FLAGS_ARB                           0x2094
+
+#if ! defined(GLX_CONTEXT_DEBUG_BIT_ARB)
+#  define GLX_CONTEXT_DEBUG_BIT_ARB			0x0001
+#endif
+
+#if ! defined(GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB)
+#  define GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
+#endif
 
 // New error returned by GetLastError
-#define	ERROR_INVALID_VERSION_ARB		0x2095
+#define ERROR_INVALID_VERSION_ARB               	0x2095
 
 namespace vrj
 {

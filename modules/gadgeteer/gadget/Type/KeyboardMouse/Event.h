@@ -65,7 +65,7 @@ public:
     * Returns the type of this event.  This can be used for dynamic casting
     * to more specific event types.
     */
-   const EventType type() const
+   EventType type() const
    {
       return mType;
    }
@@ -85,7 +85,7 @@ public:
    /**
     * Returns the time at which the event occurred.
     */
-   const unsigned long time() const
+   unsigned long time() const
    {
       return mTime;
    }

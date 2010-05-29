@@ -209,14 +209,14 @@ bool WindowXWin::open()
        * for the resource cruft that'll get rid of the borders).
        */
       classhint = ::XAllocClassHint();
-      classhint->res_name = (char*)mWindowName.c_str();
-      classhint->res_class = "VRJ GLX";
+      classhint->res_name = strdup(mWindowName.c_str());
+      classhint->res_class = strdup("VRJ GLX");
       //XSetClassHint(mXDisplay, mXWindow, classhint);
 
       // InSoc makes things simple
       // X makes things complicated
       ::XTextProperty w_name;
-      ::XStringListToTextProperty(&(classhint->res_name), 1, &w_name);
+      ::XStringListToTextProperty(&classhint->res_name, 1, &w_name);
 
       /* guarantee window position */
       sizehints = XAllocSizeHints();
@@ -225,6 +225,8 @@ bool WindowXWin::open()
       ::XSetWMProperties(mXDisplay, mXWindow, &w_name, &w_name,
                          NULL, 0, sizehints, NULL, classhint);
 
+      std::free(classhint->res_name);
+      std::free(classhint->res_class);
       ::XFree(w_name.value);
       ::XFree(classhint);
       ::XFree(sizehints);
