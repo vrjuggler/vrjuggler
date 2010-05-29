@@ -477,7 +477,7 @@ void InputAreaXWin::addKeyEvent(const gadget::Keys key,
    XLookupString(event, buffer, buffer_size, &key_sym, &cs);
 
 #ifdef GADGET_DEBUG
-   buffer[buffer_size] = '\0';
+   buffer[buffer_size - 1] = '\0';
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
       << "InputAreaXWin::addKeyEvent(): Key string from event '"
       << buffer << "'\n" << vprDEBUG_FLUSH;
