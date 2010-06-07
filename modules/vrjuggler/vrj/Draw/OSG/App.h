@@ -362,10 +362,11 @@ protected:
     *
     * @note This function also takes care of time-based features in the scene
     *       graph.
+    * @note This method was made virtual in 2.3.20.
     *
     * @since 2.1.9
     */
-   void update()
+   virtual void update()
    {
       ++mFrameNumber;
 
@@ -402,6 +403,17 @@ protected:
       // the bounding volumes from within the cull traversal which may be
       // multi-threaded.
       getScene()->getBound();
+   }
+
+   /**
+    * Returns a reference to the internal osg::FrameStamp object used by this
+    * class.
+    *
+    * @since 2.3.20
+    */
+   ::osg::ref_ptr< ::osg::FrameStamp > getFrameStamp()
+   {
+      return mFrameStamp;
    }
 
    vrj::opengl::ContextData< ::osg::ref_ptr<osgUtil::SceneView> > sceneViewer;
