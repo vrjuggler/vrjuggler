@@ -70,7 +70,7 @@ bool DataGloveUltraWireless::config(jccl::ConfigElementPtr e)
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "*** DataGloveUltraWireless::config() ***" << std::endl << vprDEBUG_FLUSH;
 
-   if(! (Input::config(e) && Analog::config(e)) )
+   if(! (Input::config(e) && Analog::config(e) && Command::config(e) ) )
    {
       return false;
    }
@@ -80,6 +80,9 @@ bool DataGloveUltraWireless::config(jccl::ConfigElementPtr e)
    mPortAEnabled = e->getProperty<bool>("port_a_enabled");
    mPortBEnabled = e->getProperty<bool>("port_b_enabled");
 
+   mGlove.setGestureThresholds(
+      e->getProperty<float>("gesture_upper_threshold"),
+      e->getProperty<float>("gesture_lower_threshold") );
 
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
    return true;
@@ -176,21 +179,30 @@ void DataGloveUltraWireless::controlLoop()
    while( !mDone )
    {
       sample();
+
+      vpr::System::msleep(10);
    }
+
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "[DataGloveUltraWireless] Exited control thread\n"
+         << vprDEBUG_FLUSH;
 }
 
 bool DataGloveUltraWireless::sample()
-{
+{ 
    if( !isActive() )
    {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "[DataGloveUltraWireless] not active\n"
+         << vprDEBUG_FLUSH;
       return false;
    }
 
    mGlove.updateData();
-   //std::cout << "going to copy data" <<std::endl;
+   
+   // Analog (flex) data
    const std::vector<float> tmp_vec = mGlove.getGloveData();
-   //std::cout << "copied data: " << tmp_vec.size() << std::endl;
-   //std::cout << "analog size: " << mAnalogData.size() << std::endl;
+
    std::vector<gadget::AnalogData>   cur_analog_samples;
    for(unsigned int i = 0; i < tmp_vec.size(); ++i)
    {
@@ -198,8 +210,22 @@ bool DataGloveUltraWireless::sample()
       new_analog.setTime();
       cur_analog_samples.push_back(new_analog);
    }
-   //std::cout << "going to add the sample!" << std::endl;
+
    addAnalogSample(cur_analog_samples);
+
+   // Command (gesture) data
+   std::vector<gadget::CommandData>   cur_command_samples;
+
+   CommandData gesture_port_a(mGlove.getGloveAGesture());
+   gesture_port_a.setTime();
+   cur_command_samples.push_back(gesture_port_a);
+
+   CommandData gesture_port_b(mGlove.getGloveBGesture());
+   gesture_port_b.setTime();
+   cur_command_samples.push_back(gesture_port_b);
+
+   addCommandSample(cur_command_samples);
+
    return true;
 }
 
@@ -208,8 +234,8 @@ void DataGloveUltraWireless::updateData()
    if(isActive())
    {
       swapAnalogBuffers();
+      swapCommandBuffers();
    }
-//  mDigitalSamples.swapBuffers();
 }
 
 bool DataGloveUltraWireless::stopSampling()

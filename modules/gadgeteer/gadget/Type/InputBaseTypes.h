@@ -76,6 +76,7 @@ typedef InputMixer< InputMixer<SimInput, Input>, Position> siminput_input_positi
 typedef InputMixer< InputMixer<SimInput, Input>, Digital> siminput_input_digital;
 typedef InputMixer< InputMixer<SimInput, Input>, Analog> siminput_input_analog;
 typedef InputMixer< InputMixer< InputMixer<SimInput,Input>, Digital>, Glove> siminput_input_digital_glove_t;
+typedef InputMixer< InputMixer<Input, Command>, Analog> input_command_analog_t;
 //@}
 
 } // end namespace

@@ -48,14 +48,19 @@ public:
 
    /** Default constructor. */
    DataGloveUltraWirelessStandalone()
-      : mIsActive(false)
+      : mIsActive(false),
+        mGestureUpperThresh(0.65f),
+        mGestureLowerThresh(0.35f),
+        mGloveAGesture(-1),
+        mGloveBGesture(-1)
    {;}
 
    /** Default destructor. */
    ~DataGloveUltraWirelessStandalone();
 
    /** Connects to the Data Glove Ultra */
-   bool open( const std::string& tty_port, int baud_rate, bool port_a, bool port_b );
+   bool open( const std::string& tty_port, int baud_rate, 
+              bool port_a, bool port_b );
 
    /** Closes connection to the Data Glove Ultra */
    void close();
@@ -68,10 +73,30 @@ public:
 
    bool isActive() { return mIsActive; }
 
+   /** Sets upper & lower thresholds for gesture detection */
+   void setGestureThresholds(float gesture_upper_thresh, float gesture_lower_thresh);
+   
+   /** Returns current gesture integer (refer to 5DT documentation for meaning)
+     * or -1 for glove on Port A
+     */
+   const int getGloveAGesture()
+   {
+      return mGloveAGesture;
+   }
+   
+   /** Returns current gesture integer (refer to 5DT documentation for meaning)
+     * or -1 for glove on Port B
+     */
+   const int getGloveBGesture()
+   {
+      return mGloveBGesture;
+   }
+
 protected:
 
    void readGloveData();
    void processGloveData(unsigned int gloveNum);
+   int computeGesture(const std::vector<float> &record);
 
    // Port pointer
    vpr::SerialPort     *mPort;
@@ -88,12 +113,17 @@ protected:
    std::vector<float>   mGloveBData;
    vpr::Uint16          mGloveAID;
    vpr::Uint16          mGloveBID;
+   int                  mGloveAGesture;
+   int                  mGloveBGesture;
 
    unsigned int  mGloveAMin[14];
    unsigned int  mGloveAMax[14];
    unsigned int  mGloveBMin[14];
    unsigned int  mGloveBMax[14];
    bool          mIsActive;
+
+   float mGestureUpperThresh;
+   float mGestureLowerThresh;
 
 };
 

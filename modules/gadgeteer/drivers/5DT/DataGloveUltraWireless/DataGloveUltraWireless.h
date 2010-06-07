@@ -32,6 +32,7 @@
 #include <gadget/Type/InputBaseTypes.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Analog.h>
+#include <gadget/Type/Command.h>
 
 #include <drivers/5DT/DataGloveUltraWireless/DataGloveUltraWirelessStandalone.h>
 
@@ -51,7 +52,7 @@ namespace gadget
  * @date 06-15-08
  */
 
-class DataGloveUltraWireless : public input_analog_t
+class DataGloveUltraWireless : public input_command_analog_t
 {
 public:
    /** Construct */

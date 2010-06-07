@@ -36,6 +36,61 @@
 
 #include <drivers/5DT/DataGloveUltraWireless/DataGloveUltraWirelessStandalone.h>
 
+// Constants
+#define INDEX_FINGER_BIT  0x01
+#define MIDDLE_FINGER_BIT 0x02
+#define RING_FINGER_BIT   0x04
+#define LITTLE_FINGER_BIT 0x08
+
+#define JOINT_OPEN 1
+#define JOINT_CLOSED 0
+#define JOINT_UNDEFINED -1
+
+///////////////////////////////////////////////////////////
+// Static Methods
+///////////////////////////////////////////////////////////
+
+// Return joint state for a single value with thresholds
+int getSensorState(const float value, 
+                   const float upper_thresh, 
+                   const float lower_thresh)
+{
+   if(value > upper_thresh)
+   {
+      return JOINT_CLOSED;
+   }
+   else if(value < lower_thresh)
+   {
+      return JOINT_OPEN;
+   }
+
+   return JOINT_UNDEFINED;
+}
+
+// Return joint state from 2 sensor states
+int getJointState(const int sensor1_state, const int sensor2_state)
+{
+   // Logic:
+   // If both are undefined, joint is undefined
+   // If either is closed, joint is closed (closed takes precedence)
+   // If none are closed but either is open, joint is open
+   
+   if( sensor1_state == JOINT_UNDEFINED && sensor2_state == JOINT_UNDEFINED )
+   {
+      return JOINT_UNDEFINED;
+   }
+   else if( sensor1_state == JOINT_CLOSED || sensor2_state == JOINT_CLOSED )
+   {
+      return JOINT_CLOSED;
+   }
+   else if( sensor1_state == JOINT_OPEN || sensor2_state == JOINT_OPEN )
+   {
+      return JOINT_OPEN;
+   }
+
+   return JOINT_UNDEFINED; // undefined if the code gets to here
+}
+
 ///////////////////////////////////////////////////////////
 // Public Methods
 ///////////////////////////////////////////////////////////
@@ -46,7 +101,8 @@ DataGloveUltraWirelessStandalone::~DataGloveUltraWirelessStandalone()
    close();
 }
 
-bool DataGloveUltraWirelessStandalone::open(const std::string& tty_port, int baud_rate, bool port_a, bool port_b)
+bool DataGloveUltraWirelessStandalone::open
+   (const std::string& tty_port, int baud_rate, bool port_a, bool port_b)
 {
    mStartCalibration = true;
    mPortAEnabled = port_a;
@@ -91,6 +147,8 @@ bool DataGloveUltraWirelessStandalone::open(const std::string& tty_port, int bau
 
 void DataGloveUltraWirelessStandalone::close()
 {
+   std::cout << "[DataGloveUltraWireless] closing" << std::endl;
+
    mIsActive = false;
    if ( mPort != NULL )
    {
@@ -98,58 +156,82 @@ void DataGloveUltraWirelessStandalone::close()
       delete mPort;
       mPort = NULL;
    }
+
+   std::cout << "[DataGloveUltraWireless] closed" << std::endl;
 }
 
-#if 0
-int generate_gestures(float motion1/*Index flexure*/, float motion2/*Middle flexure*/, float motion3/*Ring flexure*/, float motion4/*Pinky flexure*/)
+// Take in vector of calibrated values & return gesture integer
+int DataGloveUltraWirelessStandalone::computeGesture(const std::vector<float> &record)
 {
-   // motion>0.5 --> flexed 
-   // motion<0.5 --> unflexed
+   // Define a threshold for considering a joint to be flexed
+   float upper_thresh = mGestureUpperThresh;
+   float lower_thresh = mGestureLowerThresh;
 
-   // motion1 - Index finger
-   // motion2 - Middle finger
-   // motion3 - Ring finger
-   // motion4 - Pinky finger
-   
-   // If anyone wants to add new gestures, it is welcome to do so.
-   if (motion1>0.5 && motion2>0.5 && motion3>0.5 && motion4>0.35) {
-      return 0;
-   } else if (motion1<0.5 && motion2>0.5 && motion3>0.5 && motion4>0.35) {
-      return 1;
-   } else if (motion1>0.5 && motion2<0.5 && motion3>0.5 && motion4>0.35) {
-      return 2;
-   } else if (motion1<0.5 && motion2<0.5 && motion3>0.5 && motion4>0.35) {
-      return 3;
-   } else if (motion1>0.5 && motion2<0.5 && motion3<0.5 && motion4>0.35) {
-      return 4;
-   } else if (motion1<0.5 && motion2>0.5 && motion3<0.5 && motion4>0.35) {
-      return 5;
-   } else if (motion1>0.5 && motion2<0.5 && motion3<0.5 && motion4>0.35) {
-      return 6;
-   } else if (motion1<0.5 && motion2<0.5 && motion3<0.5 && motion4>0.35) {
-      return 7;
-   } else if (motion1>0.5 && motion2>0.5 && motion3>0.5 && motion4<0.35) {
-      return 8;
-   } else if (motion1<0.5 && motion2<0.5 && motion3>0.5 && motion4<0.35) {
-      return 9;
-   } else if (motion1>0.5 && motion2<0.5 && motion3>0.5 && motion4<0.35) {
-      return 10;
-   } else if (motion1<0.5 && motion2<0.5 && motion3>0.5 && motion4<0.35) {
-      return 11;
-   } else if (motion1>0.5 && motion2>0.5 && motion3<0.5 && motion4<0.35) {
-      return 12;
-   } else if (motion1<0.5 && motion2>0.5 && motion3<0.5 && motion4<0.35) {
-      return 13;
-   } else if (motion1>0.5 && motion2<0.5 && motion3<0.5 && motion4<0.35) {
-      return 14;
-   } else if (motion1<0.5 && motion2<0.5 && motion3<0.5 && motion4<0.35) {
-      return 15;
-   } else {
-      return 16;
+   // Init gesture value
+   int gesture = 0;
+
+   // Compute gesture from sensor values, or return -1 if 
+   // any fingers are undefined
+   int joint_state;
+
+   // Index finger
+   joint_state =
+      getJointState(getSensorState(record[3], upper_thresh, lower_thresh),
+                    getSensorState(record[4], upper_thresh, lower_thresh));
+
+   if( joint_state == JOINT_UNDEFINED )
+   {
+      return -1;
+   }
+   else if( joint_state == JOINT_OPEN )
+   {
+      gesture |= INDEX_FINGER_BIT;
    }
 
+   // Middle finger
+   joint_state =
+      getJointState(getSensorState(record[6], upper_thresh, lower_thresh),
+                    getSensorState(record[7], upper_thresh, lower_thresh));
+
+   if( joint_state == JOINT_UNDEFINED )
+   {
+      return -1;
+   }
+   else if( joint_state == JOINT_OPEN )
+   {
+      gesture |= MIDDLE_FINGER_BIT;
+   }
+
+   // Ring finger
+   joint_state =
+      getJointState(getSensorState(record[9], upper_thresh, lower_thresh),
+                    getSensorState(record[10], upper_thresh, lower_thresh));
+
+   if( joint_state == JOINT_UNDEFINED )
+   {
+      return -1;
+   }
+   else if( joint_state == JOINT_OPEN )
+   {
+      gesture |= RING_FINGER_BIT;
+   }
+
+   // Little finger
+   joint_state =
+      getJointState(getSensorState(record[12], upper_thresh, lower_thresh),
+                    getSensorState(record[13], upper_thresh, lower_thresh));
+
+   if( joint_state == JOINT_UNDEFINED )
+   {
+      return -1;
+   }
+   else if( joint_state == JOINT_OPEN )
+   {
+      gesture |= LITTLE_FINGER_BIT;
+   }
+
+   return gesture;
 }
-#endif
 
 void DataGloveUltraWirelessStandalone::readGloveData()
 {
@@ -191,6 +273,7 @@ void DataGloveUltraWirelessStandalone::processGloveData(unsigned int gloveNum)
    const unsigned int Port_B = 1;
    const unsigned int offset = 6; // Start of first record
    unsigned int reading = 0;
+   float scaled_reading;
 
    for( unsigned int i = 0; i < 14; i++ )
    {
@@ -218,58 +301,59 @@ void DataGloveUltraWirelessStandalone::processGloveData(unsigned int gloveNum)
          {
             if( reading > mGloveAMax[i] )
             {
-               unsigned int new_max = reading - mGloveAMax[i];
-               new_max = (new_max * 0.6f) + mGloveAMax[i];
-               mGloveAMax[i] = new_max;
-               reading = new_max;
+               mGloveAMax[i] = reading;
             }
-            if( reading < mGloveAMin[i] )
+            else if( reading < mGloveAMin[i] )
             {
-               unsigned int new_min = mGloveAMin[i] - reading;
-               new_min = mGloveAMin[i] - (new_min * 0.6f);
-               mGloveAMin[i] = new_min;
-               reading = new_min;
+               mGloveAMin[i] = reading;
             }
          }
          else if( Port_B == gloveNum )
          {
             if( reading > mGloveBMax[i] )
             {
-               unsigned int new_max = reading - mGloveBMax[i];
-               new_max = (new_max * 0.6f) + mGloveBMax[i];
-               mGloveBMax[i] = new_max;
-               reading = new_max;
+               mGloveBMax[i] = reading;
             }
-            if( reading < mGloveBMin[i] )
+            else if( reading < mGloveBMin[i] )
             {
-               unsigned int new_min = mGloveBMin[i] - reading;
-               new_min = mGloveBMin[i] - (new_min * 0.6f);
-               mGloveBMin[i] = new_min;
-               reading = new_min;
+               mGloveBMin[i] = reading;
             }
          }
       }
 
+      // Calibrate: scale the reading to between 0 and 1
       if( Port_A == gloveNum )
       {
-         // Auto Calibrate
-         float top_div = (reading - mGloveAMin[i]);
-         float bottom_div = (mGloveAMax[i] - mGloveAMin[i]);
-         float new_reading = (top_div / bottom_div);
-         mGloveAData.push_back(new_reading);
-         //std::cout << new_reading << " ";
+         scaled_reading =
+            (float) (reading - mGloveAMin[i]) /
+            (float) (mGloveAMax[i] - mGloveAMin[i]);
+         mGloveAData.push_back(scaled_reading);
+         //std::cout << scaled_reading << " ";
          //std::cout << reading << " ";
       }
       else if( Port_B == gloveNum )
       {
-         // Auto Calibrate
-         float top_div = (reading - mGloveBMin[i]);
-         float bottom_div = (mGloveBMax[i] - mGloveBMin[i]);
-         float new_reading = (top_div / bottom_div);
-         mGloveBData.push_back(new_reading);
-         //std::cout << new_reading << " ";
+         scaled_reading =
+            (float) (reading - mGloveBMin[i]) /
+            (float) (mGloveBMax[i] - mGloveBMin[i]);
+         mGloveBData.push_back(scaled_reading);
+         //std::cout << scaled_reading << " ";
          //std::cout << reading << " ";
       }
+      //std::cout << std::endl;
+   }
+
+   if ( Port_A == gloveNum )
+   {
+      mGloveAGesture = computeGesture(mGloveAData);
+      //std::cout << "Port A Gesture = " 
+      //          << mGloveAGesture << std::endl;
+   }
+   else if ( Port_B == gloveNum )
+   {
+      mGloveBGesture = computeGesture(mGloveBData);
+      //std::cout << "Port B Gesture = " 
+      //          << mGloveBGesture << std::endl;
    }
 }
 
@@ -278,22 +362,11 @@ bool DataGloveUltraWirelessStandalone::updateData()
 {
    bool found_glove_a = !mPortAEnabled;
    bool found_glove_b = !mPortBEnabled;
+
    // Read a glove
    // ID glove
    // go through that glove
    // read another if needed
-   #if 0
-   std::cout << "going to read some gloves!" << std::endl;
-   if( found_glove_a )
-   {
-      std::cout << "Don't need glove a" << std::endl;
-   }
-
-   if( found_glove_b )
-   {
-      std::cout << "Don't need glove b" << std::endl;
-   }
-   #endif
 
    while( ! found_glove_a  ||  ! found_glove_b )
    {
@@ -303,7 +376,6 @@ bool DataGloveUltraWirelessStandalone::updateData()
       {
          if( mPortAEnabled )
          {
-            //std::cout << "A" << std::endl;
             found_glove_a = true;
             processGloveData(0);
          }
@@ -312,7 +384,6 @@ bool DataGloveUltraWirelessStandalone::updateData()
       {
          if( mPortBEnabled )
          {
-            //std::cout << "B" << std::endl;
             found_glove_b = true;
             processGloveData(1);
          }
@@ -322,7 +393,6 @@ bool DataGloveUltraWirelessStandalone::updateData()
    }
 
    mStartCalibration = false;
-   //std::cout << std::endl;
 
    return true;
 }
@@ -346,6 +416,13 @@ const std::vector<float> DataGloveUltraWirelessStandalone::getGloveData(/*WIRELE
    mGloveAData.clear();
    mGloveBData.clear();
    return glove_data;
+}
+
+void DataGloveUltraWirelessStandalone::setGestureThresholds
+   (float gesture_upper_thresh, float gesture_lower_thresh)
+{
+   mGestureUpperThresh = gesture_upper_thresh;
+   mGestureLowerThresh = gesture_lower_thresh;
 }
 
 ///////////////////////////////////////////////////////////

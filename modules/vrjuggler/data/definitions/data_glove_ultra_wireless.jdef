@@ -27,6 +27,50 @@
          </enumeration>
       </property>
       <property valuetype="float" variable="false" name="min">
+         <help>Minimum joint flex value (should be 0.0).</help>
+         <value label="Range Minimum" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>Maximum joint flex value (should be 1.0).</help>
+         <value label="Range Maximum" defaultvalue="1.0"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="port_a_enabled">
+         <help>Port A of the glove pack is connected to a glove.</help>
+         <value label="Port A Enabled" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="port_b_enabled">
+         <help>Port B of the glove pack is connected to a glove.</help>
+         <value label="Port B Enabled" defaultvalue="true"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="2" label="5DT Data Glove Ultra Wireless">
+      <abstract>false</abstract>
+      <help>Configuration for a 5DT Data Glove Ultra Wireless device. This device makes use of 14 analog data sources for each port: Port A Glove (0-13) and Port B Glove (14-28): thumb mcp, thumb pip, thumb-index abduction, index mcp, index pip, index-middle abduction, middle mcp, middle pip, middle-ring abduction, ring mcp, ring pip, ring-pinky abduction, pinky mcp, pinky pip. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more on 5DT DataGlove&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <parent>analog_device</parent>
+      <parent>command_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>The serial port this device is connected to. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>The speed of the serial port. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Baud" defaultvalue="115200"/>
+         <enumeration editable="false">
+            <enum label="1200" value="1200"/>
+            <enum label="1800" value="1800"/>
+            <enum label="2400" value="2400"/>
+            <enum label="4800" value="4800"/>
+            <enum label="9600" value="9600"/>
+            <enum label="19200" value="19200"/>
+            <enum label="38400" value="38400"/>
+            <enum label="57600" value="57600"/>
+            <enum label="115200" value="115200"/>
+            <enum label="230400" value="230400"/>
+         </enumeration>
+      </property>
+      <property valuetype="float" variable="false" name="min">
          <help>Ignored.</help>
          <value label="Range Minimum (unused)" defaultvalue="0.0"/>
       </property>
@@ -42,6 +86,44 @@
          <help>Port B of the glove pack is connected to a glove.</help>
          <value label="Port B Enabled" defaultvalue="true"/>
       </property>
-      <upgrade_transform/>
+      <property valuetype="float" variable="false" name="gesture_upper_threshold">
+         <help>Calibrated joint flex values greater than this threshold are considered "closed".</help>
+         <value label="Gesture Detection Upper Threshold" defaultvalue="0.65"/>
+      </property>
+      <property valuetype="float" variable="false" name="gesture_lower_threshold">
+         <help>Calibrated joint flex values less than this threshold are considered "open".</help>
+         <value label="Gesture Detection Lower Threshold" defaultvalue="0.35"/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+           
+            <xsl:template match="jconf:data_glove_ultra_wireless">
+               <xsl:element namespace="{$jconf}" name="data_glove_ultra_wireless">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./jconf:port"/>
+                  <xsl:copy-of select="./jconf:baud"/>
+                  <xsl:copy-of select="./jconf:min"/>
+                  <xsl:copy-of select="./jconf:max"/>
+                  <xsl:copy-of select="./jconf:port_a_enabled"/>
+                  <xsl:copy-of select="./jconf:port_b_enabled"/>
+                  <xsl:element namespace="{$jconf}" name="gesture_upper_threshold">
+                     <xsl:text>0.65</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="gesture_lower_threshold">
+                     <xsl:text>0.35</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
    </definition_version>
 </definition>
