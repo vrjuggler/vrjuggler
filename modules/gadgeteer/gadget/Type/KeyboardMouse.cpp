@@ -153,13 +153,15 @@ bool KeyboardMouse::modifierOnly(gadget::Keys modKey) const
    switch (modKey)
    {
       case gadget::KEY_NONE:
-         return (!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
+         return (!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT] && !mCurKeys[gadget::KEY_COMMAND]);
       case gadget::KEY_SHIFT:
-         return (mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
+         return (mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT] && !mCurKeys[gadget::KEY_COMMAND]);
       case gadget::KEY_CTRL:
-         return (!mCurKeys[gadget::KEY_SHIFT] && mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
+         return (!mCurKeys[gadget::KEY_SHIFT] && mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT] && !mCurKeys[gadget::KEY_COMMAND]);
       case gadget::KEY_ALT:
-         return (!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && mCurKeys[gadget::KEY_ALT]);
+         return (!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && mCurKeys[gadget::KEY_ALT] && !mCurKeys[gadget::KEY_COMMAND]);
+       case gadget::KEY_COMMAND:
+           return (!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT] && mCurKeys[gadget::KEY_COMMAND]);
       default:
          vprASSERT(false);
          return 0;
