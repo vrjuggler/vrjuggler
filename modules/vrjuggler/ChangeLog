@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-07-2010 patrick     Added vrj::osg::AppPager, a VR Juggler application
+                        class that interacts with osgDB::DatabasePager.
+                        Submitted by Lucie Lemonnier.
+                        NEW VERSION: 2.3.20
 Feb-25-2010 patrick     Added vrj::osg::AppViewer, a VR Juggler application
                         class that interacts with osgViewer.
                         Submitted by Christian Noon.
