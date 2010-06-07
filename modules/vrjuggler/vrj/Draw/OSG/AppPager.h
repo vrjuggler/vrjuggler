@@ -68,8 +68,6 @@ public:
    {
       vrj::osg::App::configSceneView(newSceneViewer);
 
-      newSceneViewer->setFrameStamp(mFrameStamp);
-
       newSceneViewer->getCullVisitor()->setDatabaseRequestHandler(mDatabasePager);
       mDatabasePager->setCompileGLObjectsForContextID(
          newSceneViewer->getState()->getContextID(), true
