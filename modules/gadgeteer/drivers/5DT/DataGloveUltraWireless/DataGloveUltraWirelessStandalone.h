@@ -47,13 +47,7 @@ public:
 
 
    /** Default constructor. */
-   DataGloveUltraWirelessStandalone()
-      : mIsActive(false),
-        mGestureUpperThresh(0.65f),
-        mGestureLowerThresh(0.35f),
-        mGloveAGesture(-1),
-        mGloveBGesture(-1)
-   {;}
+   DataGloveUltraWirelessStandalone();
 
    /** Default destructor. */
    ~DataGloveUltraWirelessStandalone();
@@ -92,19 +86,26 @@ public:
       return mGloveBGesture;
    }
 
+   /** Enable/Disable automatic reset of min/max based on gestures */
+   void setAutoRangeReset(bool value)
+   {
+      mAutoResetEnabled = value;
+   }
+
 protected:
 
    void readGloveData();
    void processGloveData(unsigned int gloveNum);
    int computeGesture(const std::vector<float> &record);
+   void updateMinMax(const unsigned int reading,
+                     unsigned int &min,
+                     unsigned int &max); 
 
    // Port pointer
    vpr::SerialPort     *mPort;
 
    std::vector<vpr::Uint8>    mReadBuffer;
    std::vector<vpr::Uint16>   mDataBuffer;
-
-   bool  mStartCalibration;
 
    bool  mPortAEnabled;
    bool  mPortBEnabled;
@@ -125,6 +126,11 @@ protected:
    float mGestureUpperThresh;
    float mGestureLowerThresh;
 
+   bool mAutoResetEnabled;
+   bool mResetMinA;
+   bool mResetMaxA;
+   bool mResetMinB;
+   bool mResetMaxB;
 };
 
 #endif

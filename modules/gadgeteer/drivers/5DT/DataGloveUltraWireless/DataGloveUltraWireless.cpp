@@ -84,6 +84,9 @@ bool DataGloveUltraWireless::config(jccl::ConfigElementPtr e)
       e->getProperty<float>("gesture_upper_threshold"),
       e->getProperty<float>("gesture_lower_threshold") );
 
+   mGlove.setAutoRangeReset(
+      e->getProperty<bool>("auto_range_reset") );
+
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
    return true;
 }

@@ -94,6 +94,10 @@
          <help>Calibrated joint flex values less than this threshold are considered "open".</help>
          <value label="Gesture Detection Lower Threshold" defaultvalue="0.35"/>
       </property>
+      <property valuetype="boolean" variable="false" name="auto_range_reset">
+         <help>Set to true to reset minimum and maximum joint values on all-open and all-closed gestures.</help>
+         <value label="Auto Range Reset" defaultvalue="true"/>
+      </property>
       <upgrade_transform>
          <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
@@ -120,6 +124,9 @@
                   </xsl:element>
                   <xsl:element namespace="{$jconf}" name="gesture_lower_threshold">
                      <xsl:text>0.35</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="auto_range_reset">
+                     <xsl:text>true</xsl:text>
                   </xsl:element>
                </xsl:element>
             </xsl:template>

@@ -74,7 +74,7 @@ int getJointState(const int sensor1_state, const int sensor2_state)
    // If both are undefined, joint is undefined
    // If either is closed, joint is closed (closed takes precedence)
    // If none are closed but either is open, joint is open
-   
+
    if( sensor1_state == JOINT_UNDEFINED && sensor2_state == JOINT_UNDEFINED )
    {
       return JOINT_UNDEFINED;
@@ -95,6 +95,30 @@ int getJointState(const int sensor1_state, const int sensor2_state)
 // Public Methods
 ///////////////////////////////////////////////////////////
 
+// Constructor
+DataGloveUltraWirelessStandalone::DataGloveUltraWirelessStandalone()
+   : mIsActive(false),
+     mGestureUpperThresh(0.65f),
+     mGestureLowerThresh(0.35f),
+     mGloveAGesture(-1),
+     mGloveBGesture(-1),
+     mAutoResetEnabled(true),
+     mResetMinA(false),
+     mResetMaxA(false),
+     mResetMinB(false),
+     mResetMaxB(false)
+{
+   // Initialize min/max values to the opposite of where they will likely be
+   for(int i = 0; i < 14; i++)
+   {
+      mGloveAMin[i] = UINT_MAX;
+      mGloveAMax[i] = 0;
+
+      mGloveBMin[i] = UINT_MAX;
+      mGloveBMax[i] = 0;
+   }
+}
+
 // Destructor
 DataGloveUltraWirelessStandalone::~DataGloveUltraWirelessStandalone()
 {
@@ -104,7 +128,6 @@ DataGloveUltraWirelessStandalone::~DataGloveUltraWirelessStandalone()
 bool DataGloveUltraWirelessStandalone::open
    (const std::string& tty_port, int baud_rate, bool port_a, bool port_b)
 {
-   mStartCalibration = true;
    mPortAEnabled = port_a;
    mPortBEnabled = port_b;
 
@@ -267,6 +290,22 @@ void DataGloveUltraWirelessStandalone::readGloveData()
    }
 }
 
+void DataGloveUltraWirelessStandalone::updateMinMax(
+   const unsigned int reading,
+   unsigned int &min,
+   unsigned int &max)
+{
+   if( reading > max )
+   {
+      max = reading;
+   }
+
+   if( reading < min )
+   {
+      min = reading;
+   }
+}
+
 void DataGloveUltraWirelessStandalone::processGloveData(unsigned int gloveNum)
 {
    const unsigned int Port_A = 0;
@@ -282,43 +321,34 @@ void DataGloveUltraWirelessStandalone::processGloveData(unsigned int gloveNum)
                   ( ( ( mDataBuffer[cur_index + 1] & 0x000f) << 4) & 0x00f0) |
                   ( ( ( mDataBuffer[cur_index + 2] & 0x000f) << 0) & 0x000f) );
 
-      if( mStartCalibration )
+      // Update minimum & maximum
+      if( Port_A == gloveNum )
       {
-         if( Port_A == gloveNum )
+         if( mResetMinA )
          {
             mGloveAMin[i] = reading;
+         }
+
+         if( mResetMaxA )
+         {
             mGloveAMax[i] = reading;
          }
-         else if( Port_B == gloveNum )
+
+         updateMinMax(reading, mGloveAMin[i], mGloveAMax[i]);
+      }
+      else if( Port_B == gloveNum )
+      {
+         if( mResetMinB )
          {
             mGloveBMin[i] = reading;
+         }
+
+         if( mResetMaxB )
+         {
             mGloveBMax[i] = reading;
          }
-      }
-      else
-      {
-         if( Port_A == gloveNum )
-         {
-            if( reading > mGloveAMax[i] )
-            {
-               mGloveAMax[i] = reading;
-            }
-            else if( reading < mGloveAMin[i] )
-            {
-               mGloveAMin[i] = reading;
-            }
-         }
-         else if( Port_B == gloveNum )
-         {
-            if( reading > mGloveBMax[i] )
-            {
-               mGloveBMax[i] = reading;
-            }
-            else if( reading < mGloveBMin[i] )
-            {
-               mGloveBMin[i] = reading;
-            }
-         }
+
+         updateMinMax(reading, mGloveBMin[i], mGloveBMax[i]);
       }
 
       // Calibrate: scale the reading to between 0 and 1
@@ -343,6 +373,7 @@ void DataGloveUltraWirelessStandalone::processGloveData(unsigned int gloveNum)
       //std::cout << std::endl;
    }
 
+   // Compute gestures
    if ( Port_A == gloveNum )
    {
       mGloveAGesture = computeGesture(mGloveAData);
@@ -354,6 +385,38 @@ void DataGloveUltraWirelessStandalone::processGloveData(unsigned int gloveNum)
       mGloveBGesture = computeGesture(mGloveBData);
       //std::cout << "Port B Gesture = " 
       //          << mGloveBGesture << std::endl;
+   }
+
+   // Reset ranges on all-open & all-closed gestures
+   if(mAutoResetEnabled)
+   {
+      mResetMinA = false;
+      mResetMaxA = false;
+      mResetMinB = false;
+      mResetMaxB = false;
+
+      if ( Port_A == gloveNum )
+      {
+         if( mGloveAGesture == 0 )
+         {
+            mResetMinA = true;
+         }
+         else if( mGloveAGesture == 15 )
+         {
+            mResetMaxA = true;
+         }
+      }
+      else if ( Port_B == gloveNum )
+      {
+         if( mGloveBGesture == 0 )
+         {
+            mResetMinB = true;
+         }
+         else if( mGloveBGesture == 15 )
+         {
+            mResetMaxB = true;
+         }
+      }
    }
 }
 
@@ -391,8 +454,6 @@ bool DataGloveUltraWirelessStandalone::updateData()
       mDataBuffer.clear();
       mReadBuffer.clear();
    }
-
-   mStartCalibration = false;
 
    return true;
 }
