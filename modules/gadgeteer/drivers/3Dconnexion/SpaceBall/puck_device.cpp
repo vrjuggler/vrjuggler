@@ -38,7 +38,6 @@
 # include <io.h>
 #else                 /*  ! defined (WIN32) && ! defined (WIN64)    */
 # include <ctype.h>
-# include <stropts.h>		                 // for ioctl
 # include <unistd.h>
 # include <sys/time.h>
 # if defined(VPR_OS_Linux) || defined(linux_x86_64)

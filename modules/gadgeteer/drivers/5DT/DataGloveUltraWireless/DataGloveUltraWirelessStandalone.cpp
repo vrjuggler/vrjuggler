@@ -27,6 +27,7 @@
 #include <string.h>        // for strcpy();
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>        // for UINT_MAX
 #include <iostream>        // for std::cout
 #include <fstream>         // for ifstream
 #include <string.h>
