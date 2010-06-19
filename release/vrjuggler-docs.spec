@@ -6,20 +6,20 @@
 #    http://www.vrjuggler.org/view/Juggler/WritingDocumentationUsingDocBook
 
 %define name vrjuggler-docs
-%define global_version 2.3.11
+%define global_version 2.3.22
 %define global_release 1
 %define srcdir vrjuggler-%{global_version}-%{global_release}-src
 %define file_name %{srcdir}.tar.bz2
 
-%define vpr_version 2.1.4
+%define vpr_version 2.1.18
 %define vpr_release %{global_release}
-%define tweek_version 1.3.2
+%define tweek_version 1.3.6
 %define tweek_release %{global_release}
-%define jccl_version 1.3.3
+%define jccl_version 1.3.6
 %define jccl_release %{global_release}
-%define sonix_version 1.3.2
+%define sonix_version 1.3.7
 %define sonix_release %{global_release}
-%define gadgeteer_version 1.3.13
+%define gadgeteer_version 1.3.32
 %define gadgeteer_release %{global_release}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}

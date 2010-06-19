@@ -18,18 +18,18 @@
 # are detected automatically. They must be installed in /usr in order to be
 # detected correctly.
 %define name vrjuggler
-%define global_version 2.3.11
+%define global_version 2.3.22
 %define global_release 1
 
-%define vpr_version 2.1.4
+%define vpr_version 2.1.18
 %define vpr_release %{global_release}%{?dist}
-%define tweek_version 1.3.2
+%define tweek_version 1.3.6
 %define tweek_release %{global_release}%{?dist}
-%define jccl_version 1.3.3
+%define jccl_version 1.3.6
 %define jccl_release %{global_release}%{?dist}
-%define sonix_version 1.3.2
+%define sonix_version 1.3.7
 %define sonix_release %{global_release}%{?dist}
-%define gadgeteer_version 1.3.13
+%define gadgeteer_version 1.3.32
 %define gadgeteer_release %{global_release}%{?dist}
 %define gadgeteer_dataglove_release %{global_release}%{?dist}
 %define gadgeteer_dtrack_release %{global_release}%{?dist}
