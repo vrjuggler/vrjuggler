@@ -99,6 +99,9 @@ void SimAnalog::updateData()
 {
    //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimAnalog::updateData()\n"<< vprDEBUG_FLUSH;
 
+   // Make an list of the data that will be normalized
+   std::vector<AnalogData> norm_data(mAnaData.size());
+
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); ++i)
    {
@@ -128,10 +131,17 @@ void SimAnalog::updateData()
       // Clamp to the min/max range
       mAnaData[i].setAnalog(gmtl::Math::clamp(mAnaData[i].getAnalog(),
                                               getMin(), getMax()));
+
+      float normalized_value;
+      normalizeMinToMax(mAnaData[i].getAnalog(), normalized_value);
+
+      // Set the normalized data
+      norm_data[i] = normalized_value;
+      norm_data[i].setTime(mKeyboardMouse->getTimeStamp());
    }
 
    // Locks and then swaps the indices.
-   addAnalogSample(mAnaData);
+   addAnalogSample(norm_data);
    swapAnalogBuffers();
 }
 

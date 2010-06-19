@@ -35,8 +35,7 @@ namespace gadget
 AnalogProxy::AnalogProxy(const std::string& deviceName, const int unitNum)
    : TypedProxy<Analog>(deviceName)
    , mUnitNum(unitNum)
-   , mRawData(-1.0f)
-   , mData(0.0f)
+   , mData(-1.0f)
 {
    /* Do nothing. */ ;
 }
@@ -58,9 +57,7 @@ void AnalogProxy::updateData()
    {
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
-
-      mRawData = mTypedDevice->getAnalogData(mUnitNum);
-      mData    = mTypedDevice->normalize(mRawData.getAnalog());
+      mData = mTypedDevice->getAnalogData(mUnitNum);
    }
 }
 
@@ -71,7 +68,7 @@ std::string AnalogProxy::getElementType()
 
 vpr::Interval AnalogProxy::getTimeStamp() const
 {
-   return mRawData.getTime();
+   return mData.getTime();
 }
 
 bool AnalogProxy::config(jccl::ConfigElementPtr element)

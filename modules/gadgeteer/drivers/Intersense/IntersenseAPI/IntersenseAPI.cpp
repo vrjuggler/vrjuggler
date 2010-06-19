@@ -343,9 +343,11 @@ bool IntersenseAPI::sample()
       // Analog works the same as the digital
       if (mStations[i].useAnalog)
       {
+         float f;
          for ( int j = 0; j < mStations[i].ana_num; ++j )
          {
-            AnalogData new_analog(mTracker.analogData(stationIndex, j));
+            Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
+            AnalogData new_analog(f);
             new_analog.setTime();
             cur_analog_samples.push_back(new_analog);
          }

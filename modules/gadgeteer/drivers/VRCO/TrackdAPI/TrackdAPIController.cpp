@@ -134,7 +134,11 @@ void TrackdAPIController::updateData()
 
    for (int j=0;j<mControllerReader->trackdGetNumberOfValuators();j++)
    {
-       mCurValuators[j] = mControllerReader->trackdGetValuator(j);
+       // TrackdController doesn't have a sample, so we do
+       // normalization here...
+       float f;
+       this->normalizeMinToMax (mControllerReader->trackdGetValuator(j), f);
+       mCurValuators[j] = f;
        mCurValuators[j].setTime();
    }
 

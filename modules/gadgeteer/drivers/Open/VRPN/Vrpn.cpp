@@ -613,7 +613,9 @@ void Vrpn::analogChange(const vrpn_ANALOGCB& b)
          << "Analog #" << i << " value " << b.channel[i] << std::endl
          << vprDEBUG_FLUSH;
 
-      mAnalogs[i] = b.channel[i];
+      float value(0.0f);
+      normalizeMinToMax(b.channel[i], value);
+      mAnalogs[i] = value;
    }
 }
 

@@ -164,7 +164,10 @@ bool PuckDevice::sample()
 	analogData submit(6);
 	for (unsigned int i = 0; i < _axes.size(); i++)
 	{
-	    submit[i] = _axes[i].getAnalog();
+	    float normalize;
+	    float value = _axes[i].getAnalog();
+	    gadget::Analog::normalizeMinToMax(value, normalize);
+	    submit[i] = normalize;
 	}
 	gadget::Analog::addAnalogSample(submit);
 	return true;
@@ -193,7 +196,10 @@ void PuckDevice::initBuffers()
 {
     for (unsigned int i = 0; i < _axes.size(); i++)
     {
-	_axes[i] = 0.0f;
+	float normalize;
+	float value = 0;
+	gadget::Analog::normalizeMinToMax(value, normalize);
+	_axes[i] = normalize;
     }
     for (unsigned int i = 0; i < _buttons.size(); i++)
 	_buttons[i] = 0;

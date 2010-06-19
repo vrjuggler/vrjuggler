@@ -173,8 +173,13 @@ bool Wanda::sample()
       // Get an initial timestamp for the entire sample. We will copy it into
       // each sample buffer later.
       analog_samples[0].setTime();
-      analog_samples[0].setAnalog(mWanda.getXAxis());
-      analog_samples[1].setAnalog(mWanda.getYAxis());
+
+      float x_axis, y_axis;
+      normalizeMinToMax(mWanda.getXAxis(), x_axis);
+      normalizeMinToMax(mWanda.getYAxis(), y_axis);
+
+      analog_samples[0].setAnalog(x_axis);
+      analog_samples[1].setAnalog(y_axis);
       analog_samples[1].setTime(analog_samples[0].getTime());
 
       for ( size_t i = 0; i < 3; ++i )

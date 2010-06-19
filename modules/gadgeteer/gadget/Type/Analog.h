@@ -56,15 +56,6 @@ const unsigned short MSG_DATA_ANALOG = 421;
  * received analog data.  This is similar to the additions made by
  * gadget::Position and gadget::Digital.
  *
- * @note To specify the min/max values for an anlog device, the required "min"
- *       and "max" properties of a config elment type derived from "analog"
- *       must be set. By default (i.e., if these values do not appear), "min"
- *       and "max" are set to 0.0f and 1.0f respectively.
- *
- * @note For version 1.3.18 and newer, data normalization is performed in
- *       gadget::AnalogProxy::updateData(). Analog device driver authors no
- *       longer need to perform data normalization.
- *
  * @see Input, InputMixer
  */
 class GADGET_CLASS_API Analog
@@ -130,6 +121,19 @@ public:
     * @post Returns a value that ranges from 0.0f to 1.0f.
     *
     * @param devNum Device unit number to access.
+    *
+    * @note For example, if you are sampling a potentiometer, and it returns
+    *       reading from 0, 255.  This function will normalize those values
+    *       (using Analog::normalizeMinToMax()).  For another example, if
+    *       your potentiometer's turn radius is limited mechanically to return,
+    *       say, the values 176 to 200 (yes this is really low res), this
+    *       function will still return 0.0f to 1.0f.
+    * @note To specify these min/max values, you must set in your Analog (or
+    *       analog device) config file the field "min" and "max".  By default
+    *       (if these values do not appear), "min" and "max" are set to 0.0f
+    *       and 1.0f respectivly.
+    * @note TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your
+    *       data using Analog::normalizeMinToMax().
     */
    AnalogData getAnalogData(int devNum = 0);
 
@@ -165,56 +169,29 @@ public:
       return std::string("Analog");
    }
 
+protected:
    /**
-    * Given a value that will range from [min() <= n <= max()], this returns
-    * a value that is normalized to the range [0,1].
-    *
-    * @param rawData A non-normalized data value read from this analog device.
-    *
-    * @return The normalized form of \p rawData in the range [0,1].
-    *
-    * @note This method was renamed from normalizeMinToMax() (a protected
-    *       method) in version 1.3.18. Analog device drivers are no longer
-    *       responsible for normalizing data. Instead, that operation is
-    *       performed "on demand" either by a method such as
-    *       gadget::AnalogProxy::updateData() or as desired by user-level code
-    *       that retrieves the full analog sample buffer collection.
-    *
-    * @since 1.3.18
-    *
-    * @see getMin()
-    * @see setMin()
-    * @see getMax()
-    * @see setMax()
-    * @see getAnalogDataBuffer()
+    * Given a value that will range from [min() <= n <= max()].
+    * This returns a value that is normalized to [0,1]
     */
-   float normalize(const float rawData) const;
-
-   /**
-    * @name Data Bounds Interface
-    *
-    * These methods can be used for data normalization.
-    */
-   //@{
-   float getMin() const
-   {
-      return mMin;
-   }
-
-   float getMax() const
-   {
-      return mMax;
-   }
-   //@}
+   void normalizeMinToMax(const float& plainJaneValue,
+                          float& normedFromMinToMax);
 
 protected:
-   void setMin(const float minValue);
-   void setMax(const float maxValue);
+   /**
+    * Gets the minimum "real" data value (real == from hardware).
+    * This value is used to normalize the return value of getAnalogData.
+    * @note this function is not needed by an application author.
+    */
+   float getMin() const;
+   float getMax() const;
+   void setMin(float mIn);
+   void setMax(float mAx);
 
 private:
-   float mMin;
-   float mMax;
+   float mMin, mMax;
 
+private:
    SampleBuffer_t    mAnalogSamples;  /**< Position samples */
    AnalogData        mDefaultValue;   /**< Default analog value to return */
 };

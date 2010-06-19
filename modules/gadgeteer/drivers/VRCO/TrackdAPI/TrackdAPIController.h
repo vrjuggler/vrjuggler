@@ -118,6 +118,17 @@ public:
     *  Gee, that's ambiguous especially on a discrete system such as a digital computer....
     *
     * @pre give the device number you wish to access.
+    * @post returns a value that ranges from 0.0f to 1.0f
+    * @note for example, if you are sampling a potentiometer, and it returns reading from
+    *        0, 255 - this function will normalize those values (using Analog::normalizeMinToMax())
+    *        for another example, if your potentiometer's turn radius is limited mechanically to return
+    *        say, the values 176 to 200 (yes this is really low res), this function will still return
+    *        0.0f to 1.0f.
+    * @note to specify these min/max values, you must set in your Analog (or analog device) config
+    *        file the field "min" and "max".  By default (if these values do not appear),
+    *        "min" and "max" are set to 0.0f and 1.0f respectivly.
+    * @note TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
+    *        Analog::normalizeMinToMax()
     */
    virtual AnalogData* getAnalogData(int devNum=0)
    {

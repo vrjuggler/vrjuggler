@@ -247,7 +247,9 @@ void LinuxJoydev::updateData()
          vprASSERT(axis_number < mCurAxes.size() && "Axis out of range");
          vprASSERT(axis_number < mCurAxesRanges.size() && "Axis out of range");
 
-         mCurAxes[axis_number] = cur_event.value;
+         float norm_value(0.0f);
+         normalizeMinToMax(cur_event.value, norm_value);
+         mCurAxes[axis_number] = norm_value;
          mCurAxes[axis_number].setTime();
 
          // Check for axis buttons. If we have a mapping for axis_number,
@@ -265,10 +267,6 @@ void LinuxJoydev::updateData()
                       "Virtual high button index out of range");
             vprASSERT(low_btn_index < mCurButtons.size() &&
                       "Virtual low button index out of range");
-
-            // Get a normalized form of the current value for axis button
-            // handling.
-            const float norm_value(normalize(cur_event.value));
 
             // Record the high button as pressed and the low button as not
             // pressed.
