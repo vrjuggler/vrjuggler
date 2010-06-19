@@ -5,7 +5,7 @@
 
 DIE=0
 
-: ${DPP_PATH=../../../Doozer++}
+: ${DPP_PATH=../../../dpp}
 : ${MACRO_PATH=../../../macros}
 : ${GGT_MACRO_PATH=../../../external/macros}
 

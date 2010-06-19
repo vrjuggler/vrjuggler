@@ -5,7 +5,7 @@
 
 DIE=0
 
-: ${DPP_PATH=../../Doozer++}
+: ${DPP_PATH=../../dpp}
 : ${MACRO_PATH=../../macros}
 
 if [ -n "$DPP_PATH" ]; then

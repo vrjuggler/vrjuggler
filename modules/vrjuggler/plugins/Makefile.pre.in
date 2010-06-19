@@ -36,8 +36,8 @@ CFG_SHELL=	@CFG_SHELL@
 DEPS=		vapor tweek jackal sonix gadgeteer vrjuggler
 VERSION_FILES=	$(foreach dep,$(DEPS),$(srcdir)/../../$(dep)/VERSION)
 
-DPP_CFG_DIR=	$(top_srcdir)/Doozer++/config
-DPP_PKG_DIR=	$(top_srcdir)/Doozer++/config/pkgs
+DPP_CFG_DIR=	$(top_srcdir)/dpp/config
+DPP_PKG_DIR=	$(top_srcdir)/dpp/config/pkgs
 VJ_M4_DIR=	$(top_srcdir)/macros
 EXT_M4_DIR=	$(top_srcdir)/external/macros
 

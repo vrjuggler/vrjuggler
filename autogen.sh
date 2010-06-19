@@ -5,7 +5,7 @@
 
 DIE=0
 
-: ${DPP_PATH=`pwd`/Doozer++}
+: ${DPP_PATH=`pwd`/dpp}
 : ${MACRO_PATH=`pwd`/macros}
 : ${GGT_MACRO_PATH=`pwd`/external/macros}
 
