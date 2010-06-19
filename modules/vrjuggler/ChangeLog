@@ -1,5 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.2.2 released - 6.19.2010]===================================================
+Mar-03-2010 patrick      For OSG versions newer than 2.9.5, the osg::Camera
+                         class requires using an OpenGL draw buffer value other
+                         than GL_NONE.
+                         Submitted by Doug McCorkle and Kristopher Blom.
+
 [2.2.1 released - 3.5.2008]====================================================
 Nov-18-2007 patrick     Cocoa OpenGL windows update their input area size
                         correctly.

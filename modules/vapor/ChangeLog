@@ -1,5 +1,12 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+[2.0.2 released - 6.19.2010]===================================================
+2010-03-06 patrick  Fixed GCC 4.2 build problems on Mac OS X.
+2009-10-24 patrick  Fixed build failures on Linux.
+                    Submitted by Ryan Pavlik.
+2008-14-15 patrick  Handle Boost 1.35 where the new library Boost.System is a
+                    dependency of Boost.Filesystem.
+
 [2.0.1 released - 3.5.2008]====================================================
 2007-09-17 patrick  Added Linux-specific implementations of
                     vpr::ThreadPosix::setRunOn() and

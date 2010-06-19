@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.2.2 released - 6.10.2010]===================================================
+
 [1.2.1 released - 3.5.2008]====================================================
 Feb-20-2008 patrick     Fixed a critical bug in the MotionStar driver.
 Sep-07-2007 patrick     Set GADGET_BASE_DIR automatically on all platforms. Use

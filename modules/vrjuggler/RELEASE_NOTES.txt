@@ -10,6 +10,19 @@ For all versions:
 
 ===============================================================================
 
+ Version: 2.2.2
+Released: June 19, 2010
+
+    This is a bug fix release relative to VR Juggler 2.2.1. It is binary
+    compatible with VR Juggler 2.2.0 & 2.2.1, and most users should not need
+    to recompile existing applications to take advantage of the improvements
+    in this release. The one exception is applications derived from
+    vrj::OsgApp. These must be recompiled in order to take advantage of the
+    bug fixes in that class.
+
+    OpenAL directional audio support has been fixed, and numerous build fixes
+    for recent Linux and Mac OS X releases have been applied.
+
  Version: 2.2.1
 Released: March 5, 2008
 
