@@ -617,18 +617,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfApp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfDrawManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfUtil.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\SimInterface.h"
 				>
 			</File>

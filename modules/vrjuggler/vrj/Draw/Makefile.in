@@ -49,8 +49,7 @@ SUBDIR=		OSG		\
 
 # Subdirectories to compile.
 ifeq ($(GL_API), Y)
-   SUBDIR+=	OpenGL		\
-		OGL
+   SUBDIR+=	OpenGL
 endif
 
 ifeq ($(PF_API), Y)

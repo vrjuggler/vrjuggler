@@ -665,34 +665,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlApp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlContextData.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlDrawManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlProcApp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlUserData.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindow.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OGL\GlWindowPtr.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Pipe.h"
 				>
 			</File>
