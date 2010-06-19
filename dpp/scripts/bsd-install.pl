@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2010 by Iowa State University
 # Distributed under the GNU Lesser General Public License 2.1.  (See
 # accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 #

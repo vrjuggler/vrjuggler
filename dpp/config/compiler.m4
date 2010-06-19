@@ -1,4 +1,4 @@
-dnl Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2010 by Iowa State University
 dnl Distributed under the GNU Lesser General Public License 2.1.  (See
 dnl accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 dnl
@@ -571,16 +571,16 @@ dnl            _LD_REGOPTS='-check_registry $(DSOREGFILE)'
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl Check for the existence and usability of a C compiler (or the given C
-dnl compiler if one is specified) and how to run its preprocessor.  A
-dnl platform-specific hint for the C compiler can be given by setting a value
-dnl for the variable $CC_<PLATFORM> (e.g., $CC_Linux).  A value for the
-dnl C-compiler argument overrides any hint given, however.  A list of
-dnl fallbacks can be provided by setting a value for the variable
-dnl $CC_FALLBACKS.  This must be in the format of an sh list.
+dnl Check for the existence of a C compiler (or the given C compiler if one is
+dnl specified) and how to run its preprocessor.  A platform-specific hint for
+dnl the C compiler can be given by setting a value for the variable
+dnl $CC_<PLATFORM> (e.g., $CC_Linux).  A value for the C-compiler argument
+dnl overrides any hint given, however.  A list of fallbacks can be provided by
+dnl setting a value for the variable $CC_FALLBACKS.  This must be in the
+dnl format of an sh list.
 dnl
 dnl Usage:
-dnl     DPP_PROG_CC([C-compiler [, extra-flags [, action-if-not-found [, path ]]]])
+dnl     DPP_CHECK_CC_FALLBACKS([C-compiler [, extra-flags [, action-if-not-found [, path ]]]])
 dnl
 dnl Arguments:
 dnl     C-compiler          - Force the check to look for this C compiler.
@@ -592,7 +592,7 @@ dnl                           found or does not work.  This is optional.
 dnl     path                - Extra path information for finding the C
 dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([DPP_PROG_CC],
+AC_DEFUN([DPP_CHECK_CC_FALLBACKS],
 [
    dpp_save_CFLAGS="$CFLAGS"
    CFLAGS="$CFLAGS $2 $ABI_FLAGS"
@@ -638,8 +638,20 @@ AC_DEFUN([DPP_PROG_CC],
          fi
       fi
    fi
+])
 
-   AC_PROG_CC
+dnl ---------------------------------------------------------------------------
+dnl Check for the existence and usability of a C compiler (or the given C
+dnl compiler if one is specified) and how to run its preprocessor. Use
+dnl DPP_CHECK_CC_FALLBACKS to customize this detection before calling this
+dnl macro.
+dnl
+dnl Usage:
+dnl     DPP_PROG_CC
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([DPP_PROG_CC],
+[
+   AC_REQUIRE([AC_PROG_CC])
    AC_PROG_CPP
    DPP_C_COMPILER_INTEL
 
@@ -798,13 +810,13 @@ AC_DEFUN([DPP_GET_EXT],
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl Check for the existence and usability of a C++ compiler (or the given C++
-dnl compiler if one is specified) and how to run its preprocessor.  A
-dnl platform-specific hint for the C++ compiler can be given by setting a
-dnl value for the variable $CXX_<PLATFORM> (e.g., $CXX_Linux).  A value for
-dnl the C++-compiler argument overrides any hint given, however.  A list of
-dnl fallbacks can be provided by setting a value for the variable
-dnl $CXX_FALLBACKS.  This must be in the format of an sh list.
+dnl Check for the existence of a C++ compiler (or the given C++ compiler if
+dnl one is specified) and how to run its preprocessor.  A platform-specific
+dnl hint for the C++ compiler can be given by setting a value for the variable
+dnl $CXX_<PLATFORM> (e.g., $CXX_Linux).  A value for the C++-compiler argument
+dnl overrides any hint given, however.  A list of fallbacks can be provided by
+dnl setting a value for the variable $CXX_FALLBACKS.  This must be in the
+dnl format of an sh list.
 dnl
 dnl Usage:
 dnl     DPP_PROG_CXX([C++-compiler [, extra-flags [, action-if-not-found [, path]]]])
@@ -819,7 +831,7 @@ dnl                           found or does not work.  This is optional.
 dnl     path                - Extra path information for finding the C++
 dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN([DPP_PROG_CXX],
+AC_DEFUN([DPP_CHECK_CXX_FALLBACKS],
 [
    dpp_save_CXXFLAGS="$CXXFLAGS"
    CXXFLAGS="$CXXFLAGS $2 $ABI_FLAGS"
@@ -866,8 +878,20 @@ AC_DEFUN([DPP_PROG_CXX],
          fi
       fi
    fi
+])
 
-   AC_PROG_CXX
+dnl ---------------------------------------------------------------------------
+dnl Check for the existence and usability of a C++ compiler (or the given C++
+dnl compiler if one is specified) and how to run its preprocessor. Use
+dnl DPP_CHECK_CXX_FALLBACKS to customize this detection before calling this
+dnl macro.
+dnl
+dnl Usage:
+dnl     DPP_PROG_CXX
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([DPP_PROG_CXX],
+[
+   AC_REQUIRE([AC_PROG_CXX])
    AC_PROG_CXXCPP
    DPP_CXX_COMPILER_INTEL
 
