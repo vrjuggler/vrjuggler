@@ -33,8 +33,9 @@ namespace gadget
 
 /** Default Constructor */
 SimAnalog::SimAnalog()
-   : mAnaStep(0.0f)
+   : mAnaStep     (0.0f)
    , mInitialValue(0.0f)
+   , mAutoReturn  (false)
 {
    //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimAnalog::SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
@@ -89,6 +90,8 @@ bool SimAnalog::config(jccl::ConfigElementPtr element)
       mAnaData[i].setAnalog(mInitialValue);
    }
 
+   mAutoReturn = element->getProperty<bool>("auto_return");
+
    return true;
 }
 
@@ -99,11 +102,28 @@ void SimAnalog::updateData()
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); ++i)
    {
+      int upPressed   = checkKeyPair(mSimKeysUp[i]);
+      int downPressed = checkKeyPair(mSimKeysDown[i]);
+
       mAnaData[i].setTime();
-      mAnaData[i].setAnalog(mAnaData[i].getAnalog()
-                                + (float)checkKeyPair(mSimKeysUp[i]) * mAnaStep);
-      mAnaData[i].setAnalog(mAnaData[i].getAnalog()
-                                - (float)checkKeyPair(mSimKeysDown[i]) * mAnaStep);
+      mAnaData[i].setAnalog(mAnaData[i].getAnalog() + upPressed   * mAnaStep);
+      mAnaData[i].setAnalog(mAnaData[i].getAnalog() - downPressed * mAnaStep);
+
+      if(mAutoReturn == true && upPressed == 0 && downPressed == 0)
+      {
+         if(mAnaData[i].getAnalog() >= mInitialValue + mAnaStep)
+         {
+            mAnaData[i].setAnalog(mAnaData[i].getAnalog() - mAnaStep);
+         }
+         else if(mAnaData[i].getAnalog() <= mInitialValue - mAnaStep )
+         {
+            mAnaData[i].setAnalog(mAnaData[i].getAnalog() + mAnaStep);
+         }
+         else
+         {
+            mAnaData[i].setAnalog(mInitialValue);
+         }
+      }
 
       // Clamp to the min/max range
       mAnaData[i].setAnalog(gmtl::Math::clamp(mAnaData[i].getAnalog(),

@@ -682,7 +682,7 @@
          <scroll_left_button>MOUSE_BUT6</scroll_left_button>
          <scroll_right_button>MOUSE_BUT7</scroll_right_button>
       </keyboard_mouse_device>
-      <simulated_analog_device name="Sim Analog 0" version="2">
+      <simulated_analog_device name="Sim Analog 0" version="3">
          <keyboard_mouse_proxy>Keyboard Proxy</keyboard_mouse_proxy>
          <increment_keypress>
             <key_modifier_pair name="Increment Keypress 0" version="1">
@@ -712,6 +712,7 @@
          <min>0.0</min>
          <max>1023.0</max>
          <initial_value>512.0</initial_value>
+         <auto_return>false</auto_return>
       </simulated_analog_device>
       <analog_proxy name="AnalogProxy0" version="1">
          <device>Sim Analog 0</device>

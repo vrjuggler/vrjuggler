@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-19-2010 patrick     Added an "auto-return" feature to simulated analog
+                        devices.
+                        Submitted by Carsten Neumann.
+                        NEW VERSION: 2.3.21
 Jun-07-2010 patrick     Added vrj::osg::AppPager, a VR Juggler application
                         class that interacts with osgDB::DatabasePager.
                         Submitted by Lucie Lemonnier.

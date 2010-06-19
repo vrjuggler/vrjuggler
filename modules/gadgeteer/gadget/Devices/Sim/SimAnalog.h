@@ -103,6 +103,7 @@ private:
    std::vector<KeyModPair>    mSimKeysDown;  /**< The keys to press for moving analog up */
    float                      mAnaStep;      /**< The analog step size */
    float                      mInitialValue; /**< The inital value for all inputs */
+   bool                       mAutoReturn;   /**< Return to initial value when no key is pressed */
 };
 
 } // End of gadget namespace

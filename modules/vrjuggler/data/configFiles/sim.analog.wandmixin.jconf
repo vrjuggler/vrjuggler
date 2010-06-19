@@ -10,7 +10,7 @@
          <device>SimAnalogDevice</device>
          <unit>1</unit>
       </analog_proxy>
-      <simulated_analog_device name="SimAnalogDevice" version="2">
+      <simulated_analog_device name="SimAnalogDevice" version="3">
          <keyboard_mouse_proxy>Wand Keyboard Proxy</keyboard_mouse_proxy>
          <increment_keypress>
             <key_modifier_pair name="Increment Keypress 0" version="1">
@@ -64,6 +64,7 @@
          <min>0.0</min>
          <max>255.0</max>
          <initial_value>0.0</initial_value>
+         <auto_return>false</auto_return>
       </simulated_analog_device>
       <alias name="VJAnalog0" version="1">
          <proxy>AnaProxy 0</proxy>
