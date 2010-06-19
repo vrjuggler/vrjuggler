@@ -79,12 +79,12 @@
 #define PACKAGE_NAME "Gadgeteer"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Gadgeteer 1.3"
+#define PACKAGE_STRING "Gadgeteer 2.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gadgeteer"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.3"
+#define PACKAGE_VERSION "2.1"
 
 #endif /* _GADGET_DEFINES_H_ */

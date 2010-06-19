@@ -1,0 +1,91 @@
+DATE        AUTHOR      CHANGE
+----------- ----------- -------------------------------------------------------
+Jun-19-2010 patrick     Added an "auto-return" feature to simulated analog
+                        devices.
+                        Submitted by Carsten Neumann.
+                        NEW VERSION: 2.3.21
+Jun-07-2010 patrick     Added vrj::osg::AppPager, a VR Juggler application
+                        class that interacts with osgDB::DatabasePager.
+                        Submitted by Lucie Lemonnier.
+                        NEW VERSION: 2.3.20
+Feb-25-2010 patrick     Added vrj::osg::AppViewer, a VR Juggler application
+                        class that interacts with osgViewer.
+                        Submitted by Christian Noon.
+                        NEW VERSION: 2.3.19
+Apr-19-2009 patrick     Updated for Gadgeteer 1.3.22.
+                        NEW VERSION: 2.3.18
+Mar-31-2009 patrick     Added support for creating OpenGL 3.0 contexts using
+                        GLX and WGL. Submitted by Todd Furlong.
+                        NEW VERSION: 2.3.17
+Nov-18-2007 patrick     Updated for Gadgeteer 1.3.15. Now, Cocoa OpenGL windows
+                        update their input area size correctly.
+                        NEW VERSION: 2.3.16
+Sep-26-2007 patrick     Fixed crash-on-exit problems with Sonix.
+                        NEW VERSION: 2.3.15
+Sep-19-2007 patrick     Added draw thread CPU affinity capabilities through the
+                        new environment variable VJ_DRAW_THREAD_AFFINITY. This
+                        is currently used only by the OpenGL Draw Manager.
+                        NEW VERSION: 2.3.14
+Sep-09-2007 patrick     Added vrjuggler-direct3d fpc file.
+Sep-07-2007 dshipton    Added vrjuggler-opengl and vrjuggler-performer fpc
+                        files for easier Draw Manager selection by application
+                        builds.
+Sep-04-2007 patrick     Use new environment variable VJ_DATA_DIR as a way to
+                        look up files in VJ_BASE_DIR/share/vrjuggler.
+                        NEW VERSION: 2.3.13
+Sep-04-2007 patrick     Set VJ_BASE_DIR automatically on all platforms.
+Aug-25-2007 patrick     Changed the return type of the virtual method
+                        vrj::osg::App::getSceneViewDefaults() from
+                        osgUtil::SceneView::Options to unsigned int to fix
+                        compile errors.
+                        NEW VERSION: 2.3.12
+Jul-08-2007 patrick     Code in the Draw Manager implementations is now in a
+                        namespace specific to each implementation, and the
+                        classes contained therein no longer have the Draw
+                        Manager abbreviation at the start of their name. The
+                        namespaces are vrj::opengl (vrj/Draw/OpenGL), vrj::osg
+                        (vrj/Draw/OSG), vrj::opensg (vrj/Draw/OpenSG), vrj::pf
+                        (vrj/Draw/Pf), and vrj::direct3d (vrj/Draw/Performer).
+                        NEW VERSION: 2.3.11
+Jul-08-2007 patrick     Debug-enabled code linked against the release runtime
+                        on Windows is now named the same as optimized code.
+                        The debug DLLs are installed in the "debug"
+                        subdirectory. On non-Windows platforms, debug-enabled
+                        plug-ins no longer use the "_d" name variation and are
+                        installed in the "debug" subdirectory.
+                        NEW VERSION: 2.3.10
+Jun-26-2007 patrick     Changed the preprocessor identification of debug versus
+                        optimized to look for VJ_DEBUG or JUGGLER_DEBUG
+                        instead of _DEBUG (and VJ_OPT or JUGGLER_OPT instead
+                        of _OPT).
+                        NEW VERSION: 2.3.9
+May-14-2007 patrick     Finished making vrj::OpenSGApp work with both OpenSG
+                        1.x and 2.0.
+                        NEW VERSION: 2.3.8
+May-11-2007 patrick     Made the data member of vrj::Frustum private and added
+                        vrj::Frustum::getValues() as the accessor for that
+                        data.
+                        NEW VERSION: 2.3.7
+May-06-2007 patrick     Exposed VRJBasicDelegate so that user-level code can
+                        derive from it to customize response to Cocoa events.
+                        NEW VERSION: 2.3.6
+May-04-2007 patrick     Added lighting code to vrj::GlBasicSimulator so that
+                        OSG and OpenSG application objects do not have to
+                        include that code themselves just so that the simulator
+                        renders nicely.
+                        NEW VERSION: 2.3.5
+May-01-2007 patrick     Handle vrj::Projection instances (and subclasses
+                        thereof) as shared pointers.
+                        NEW VERSION: 2.3.4
+May-01-2007 patrick     Handle vrj::Viewport instances (and subclasses thereof)
+                        as shared pointers.
+                        NEW VERSION: 2.3.3
+Apr-30-2007 patrick     Handle vrj::User instances as shared pointers.
+                        NEW VERSION: 2.3.2
+Apr-29-2007 patrick     Renamed the x11_pipes property of the display_system
+                        config element to pipes.
+                        NEW VERSION: 2.3.1
+Apr-26-2007 patrick     Improved OSG scene view lighting for subclasses of
+                        vrj::OsgApp. Submitted by Doug McCorkle.
+Apr-18-2007 patrick     VR Juggler 2.2 branch created.
+                        NEW VERSION: 2.3.0

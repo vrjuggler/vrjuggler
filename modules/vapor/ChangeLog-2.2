@@ -1,0 +1,75 @@
+DATE       AUTHOR   CHANGE
+---------- --------- ----------------------------------------------------------
+2009-12-07 furlong.t Added vpr::SystemWin32 so that NSPR is no longer needed by
+                     the Windows version of Juggler.
+                     NEW VERSION: 2.1.17
+2009-11-25 furlong.t Added a socket abstraction layer based on Boost.Asio. This
+                     serves as a replacement for NSPR on Windows.
+                     NEW VERSION: 2.1.16
+2009-09-21 patrick   Removed vpr::Barrier.
+                     NEW VERSION: 2.1.15
+2008-08-19 patrick   Added vpr::LibraryWin32 for use instead of
+                     vpr::LibraryNSPR on Windows.
+                     NEW VERSION: 2.1.14
+2008-02-23 patrick   Removed vpr::LibraryDYLD, which means that Mac OS X 10.3
+                     is no longer supported.
+                     NEW VERSION: 2.1.13
+2008-02-13 patrick   Changed vpr::TSObjectProxy<T> smart pointer interface to
+                     throw an exception (of the new type vpr::BadCastException)
+                     if the downcast part of the thread-specific data access
+                     fails.
+                     NEW VERSION: 2.1.12
+2008-01-16 patrick   Added vpr::AveragingAllocationStrategy for use with
+                     vpr::NoPushWriter.
+                     NEW VERSION: 2.1.11
+2008-01-13 patrick   Folded vpr::SocketBasicOpt and vpr::SocketIpOpt into
+                     vpr::Socket_t<T>. Folded vpr::SocketStreamOpt into
+                     vpr::SocketStream_t<T>. Folded vpr::SocketDatagramOpt
+                     into vpr::SocketDatagram_t<T>.
+                     Removed vpr::SocketOptionWrapper.
+                     NEW VERSION: 2.1.10
+2008-01-12 patrick   Extended vpr::SocketStream to support "corked" or no-push
+                     writing.
+                     NEW VERSION: 2.1.9
+2007-10-30 patrick   Improved const correctness in the statistics collection
+                     classes vpr::BandwidthIOStatsStrategy and
+                     vpr::SampleLimitedStatCollector<T,bool>.
+                     NEW VERSION: 2.1.8
+2007-09-16 patrick   Removed polymorphism from vpr::BaseThread and vpr::Thread.
+                     NEW VERSION: 2.1.7
+2007-09-16 patrick   Added vpr::ThreadWin32::setRunOn() and
+                     vpr::ThreadWin32::getRunOn(). Added Linux-specific
+                     implementations of vpr::ThreadPosix::setRunOn() and
+                     vpr::ThreadPosix::getRunOn(). Changed
+                     vpr::Thread::getRunOn() so that it now returns
+                     std::vector<unsigned int>.
+                     NEW VERSION: 2.1.6
+2007-09-06 patrick   Implemented stack trace printing on Mac OS X.
+2007-09-04 patrick   Set VPR_BASE_DIR automatically on all platforms.
+2007-08-21 patrick   Removed support for SPROC.
+                     NEW VERSION: 2.1.5
+2007-07-24 aronb     vpr::Library::findSymbol() throws vpr::LibraryException
+                     if the library has not been loaded.
+2007-07-08 patrick   Debug-enabled code linked against the release runtime on
+                     Windows is now named the same as optimized code. The
+                     debug DLLs are installed in the "debug" subdirectory.
+                     vpr::LibraryLoader no longer looks for plug-ins with the
+                     "_g" name variation by default.
+                     NEW VERSION: 2.1.4
+2007-06-26 patrick   Changed the preprocessor identification of debug versus
+                     optimized to look for VPR_DEBUG or JUGGLER_DEBUG instead
+                     of _DEBUG (and VPR_OPT or JUGGLER_OPT instead of _OPT).
+                     NEW VERSION: 2.1.3
+2007-06-26 patrick   Allow user-level code to customize the DSO name extension
+                     used to distinguish between build variants through the
+                     new function vpr::LibraryLoader::setDSONameExt().
+                     NEW VERSION: 2.1.2
+2007-05-23 patrick   Cleaned up internal handling of vpr::Interval objects in
+                     read/write methods of I/O classes. The public read/write
+                     methods in vpr::BlockIO now take vpr::Interval objectcs by
+                     const reference.
+                     NEW VERSION: 2.1.1
+2007-05-23 aronb     Changed the default socket statistics collection strategy
+                     to NullIOStatsStrategy.
+2007-04-18 patrick   VR Juggler 2.2 branch created.
+                     NEW VERSION: 2.1.0

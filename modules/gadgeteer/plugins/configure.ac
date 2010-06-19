@@ -31,7 +31,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([Gadgeteer Plugins], [1.3], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Gadgeteer Plugins], [2.1], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2010 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])

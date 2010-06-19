@@ -3,23 +3,21 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Building and Installing the Juggler Project (Version 2.3)</title>
+    <title>Building and Installing the Juggler Project (Version 3.1)</title>
 
     <authorgroup>
       <author>
         <othername>The Juggler Team</othername>
       </author>
     </authorgroup>
-
-    <pubdate>$Date$</pubdate>
   </articleinfo>
 
   <section>
     <title>Introduction</title>
 
-    <para>You have downloaded the source code for Version 2.3 of the Juggler
-    Project. This is the code that will become VR Juggler 3.0, and it is the
-    code that is used to create the VR Juggler 3.0 pre-releases. Please be
+    <para>You have downloaded the source code for Version 3.1 of the Juggler
+    Project. This is the code that will become VR Juggler 3.2, and it is the
+    code that is used to create the VR Juggler 3.1 pre-releases. Please be
     aware that this code represents a work in progress, and if you acquired it
     directly from Subversion rather than using a pre-packaged source code
     snapshot, the code may have bugs affecting compilation and
@@ -947,7 +945,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
               when you must tell the module configure scripts where all the
               package dependencies are found.</para>
 
-              <screen>../configure.pl --prefix=$HOME/vrjuggler-3.0 --with-java-orb=JDK</screen>
+              <screen>../configure.pl --prefix=$HOME/vrjuggler-3.1 --with-java-orb=JDK</screen>
 
               <important>
                 <para>You will probably have to specify the path to your local

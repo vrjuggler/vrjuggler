@@ -6,32 +6,32 @@
 #    http://www.vrjuggler.org/view/Juggler/WritingDocumentationUsingDocBook
 
 %define name vrjuggler-docs
-%define global_version 2.3.11
+%define global_version 3.1.0
 %define global_release 1
 %define srcdir vrjuggler-%{global_version}-%{global_release}-src
 %define file_name %{srcdir}.tar.bz2
 
-%define vpr_version 2.1.4
+%define vpr_version 2.3.0
 %define vpr_release %{global_release}
-%define tweek_version 1.3.2
+%define tweek_version 1.5.0
 %define tweek_release %{global_release}
-%define jccl_version 1.3.3
+%define jccl_version 1.5.0
 %define jccl_release %{global_release}
-%define sonix_version 1.3.2
+%define sonix_version 1.5.0
 %define sonix_release %{global_release}
-%define gadgeteer_version 1.3.13
+%define gadgeteer_version 2.1.0
 %define gadgeteer_release %{global_release}
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}
 
 %define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
 
-%define vpr_version_dist 2.1
-%define tweek_version_dist 1.3
-%define jccl_version_dist 1.3
-%define sonix_version_dist 1.3
-%define gadgeteer_version_dist 1.3
-%define vrjuggler_version_dist 2.3
+%define vpr_version_dist 2.3
+%define tweek_version_dist 1.5
+%define jccl_version_dist 1.5
+%define sonix_version_dist 1.5
+%define gadgeteer_version_dist 2.1
+%define vrjuggler_version_dist 3.1
 
 Name: vrjuggler-docs
 Summary: Documentation for VR Juggler, the virtual platform for VR application development
@@ -254,6 +254,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Jun 19 2010 Patrick Hartling <patrick@priority5.com> 3.1.0-1
+- Roll versions after VR Juggler 3.0 branch creation.
+
 * Wed Apr 18 2007 Patrick Hartling <patrick@infiscape.com> 2.3.0-1
 - Roll versions after VR Juggler 2.2 branch creation.
 

@@ -1,0 +1,27 @@
+DATE       AUTHOR      CHANGE
+---------- ----------- --------------------------------------------------------
+2008-02-09 patrick     Allow the GIOP end point to be configured using an
+                       omniORB configuration.
+                       NEW VERSION: 1.3.5
+2008-02-09 patrick     Added the ability to make direct connections to a
+                       Subject Manager servant (that is, without involving the
+                       CORBA Naming Service). This is achieved by using
+                       tweek::CorbaManager::initDirect() to set the GIOP end
+                       point address.
+                       NEW VERSION: 1.3.4
+2007-09-04 patrick     Use new environment variable TWEEK_DATA_DIR as a way to
+                       look up files in TWEEK_BASE_DIR/share/tweek.
+                       NEW VERSION: 1.3.3
+2007-09-04 patrick     Set TWEEK_BASE_DIR automatically on all platforms.
+2007-07-08 patrick     Debug-enabled code linked against the release runtime
+                       on Windows is now named the same as optimized code.
+                       The debug DLLs are installed in the "debug"
+                       subdirectory.
+                       NEW VERSION: 1.3.2
+2007-06-26 patrick     Changed the preprocessor identification of debug versus
+                       optimized to look for TWEEK_DEBUG or JUGGLER_DEBUG
+                       instead of _DEBUG (and TWEEK_OPT or JUGGLER_OPT instead
+                       of _OPT).
+                       NEW VERSION: 1.3.1
+2007-04-18 patrick     VR Juggler 2.2 branch created.
+                       NEW VERSION: 1.3.0
