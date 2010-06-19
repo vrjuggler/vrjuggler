@@ -59,10 +59,10 @@ topdir=			@topdir@
 top_srcdir=		@top_srcdir@
 
 ANT=			@ANT@
-DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
+DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/dpp/scripts
 MAKEFLAGS+=		--no-print-directory
 MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
-MKPATH=			$(JUGGLERROOT_ABS)/Doozer++/mk
+MKPATH=			$(JUGGLERROOT_ABS)/dpp/mk
 RM_LN=			@RM_LN@
 WARNS=			2
 VJROOT_ABS=		@VJROOT_ABS@
