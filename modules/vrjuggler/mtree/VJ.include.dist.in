@@ -37,8 +37,6 @@
             Display
             ..
             Draw
-                OGL
-                ..
                 OSG
                 ..
                 OpenGL
