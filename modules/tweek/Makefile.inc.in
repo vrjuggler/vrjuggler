@@ -119,7 +119,7 @@ TWEEK_PROF_LIB_DYNAMIC=		$(call make_dynamic_prof,$(TWEEK_LIBRARY))
 # Version information.
 PARAM_HEADER=	tweek/tweekParam.h
 BRANCH=		trunk
-CANON_NAME=	Two-Face
+CANON_NAME=	Bean
 VER_ARGS=	-f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -n "$(CANON_NAME)"				\
 		-d "`date '+%b %e, %Y %H:%M:%S'`"

@@ -125,7 +125,7 @@ JCCL_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(JCCL_LIBRARY))
 # Version information.
 PARAM_HEADER=	common/jccl/jcclParam.h
 BRANCH=		trunk
-CANON_NAME=	Bane
+CANON_NAME=	Fly Molo
 VER_ARGS=	-f $(JCCLROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -n "$(CANON_NAME)"				\
 		-d "`date '+%b %e, %Y %H:%M:%S'`"

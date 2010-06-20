@@ -120,7 +120,7 @@ GADGET_PROF_LIB_DYNAMIC=	$(call make_dynamic_prof,$(GADGET_LIBRARY))
 # Version information.
 PARAM_HEADER=	gadget/gadgetParam.h
 BRANCH=		trunk
-CANON_NAME=	Gearhead
+CANON_NAME=	Petra
 VER_ARGS=	-f $(GADGETROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -n "$(CANON_NAME)"				\
 		-d "`date '+%b %e, %Y %H:%M:%S'`"
