@@ -288,6 +288,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - NaturalPoint OptiT
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - 5DT DataGloveUltraWireless", "Gadgeteer\DataGloveUltraWireless\DataGloveUltraWireless.vcproj", "{9026DAC8-5459-447A-AC10-1117D0C2109A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1AAD8712-09DC-4957-8594-AF5A49BAB4E1} = {1AAD8712-09DC-4957-8594-AF5A49BAB4E1}
+		{00C860E8-6CC8-4638-B5D1-8E5C5A34C425} = {00C860E8-6CC8-4638-B5D1-8E5C5A34C425}
+		{5A96B2F8-7000-4988-AFD5-E85181B52BCF} = {5A96B2F8-7000-4988-AFD5-E85181B52BCF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
