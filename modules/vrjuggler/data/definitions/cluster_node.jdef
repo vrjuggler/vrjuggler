@@ -17,8 +17,8 @@
          <allowed_type>display_window</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="listen_port">
-         <help>Port on which the Remote Input Manager listens for incoming cluster connections. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
-         <value label="Listen Port" defaultvalue="0"/>
+         <help>Port on which this cluster node listens for incoming cluster connections from the master node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Listen Port" defaultvalue="12599"/>
       </property>
       <property valuetype="string" variable="false" name="host_name">
          <help>Host name for this specific cluster node. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch04.html#section.cluster.nodes"&gt;more ...&lt;/a&gt;)</help>
