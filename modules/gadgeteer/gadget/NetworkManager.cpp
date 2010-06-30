@@ -438,7 +438,7 @@ void NetworkManager::updateAllNodes( const size_t numNodes )
                cluster::PacketPtr temp_packet = (*i)->recvPacket();
 
                // Print Packet Information
-               temp_packet->printData(vprDBG_CONFIG_LVL);
+               temp_packet->printData(vprDBG_VERB_LVL);
 
                // Handle the packet correctly
                handlePacket(temp_packet, *i);
