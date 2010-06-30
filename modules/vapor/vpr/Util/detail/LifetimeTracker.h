@@ -71,6 +71,7 @@ namespace vpr
         {
             static void Delete(T* pObj)
             {
+/*
 #if defined(__GNUC__)
                const char* mangled_name(typeid(T).name());
                int status;
@@ -92,6 +93,7 @@ namespace vpr
                std::cout << "Deleter<T>::Delete() for " << typeid(T).name()
                          << std::endl;
 #endif
+*/
                delete pObj;
             }
         };
