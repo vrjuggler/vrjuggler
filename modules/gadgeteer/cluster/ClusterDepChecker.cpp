@@ -93,7 +93,8 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
    */
    else
    {
-      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL ) << "ERROR, Something is seriously wrong, we should never get here\n"
+      vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+         << "ERROR, Something is seriously wrong, we should never get here\n"
          << vprDEBUG_FLUSH;
       return true;
    }
