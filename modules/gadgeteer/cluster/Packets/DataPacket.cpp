@@ -25,7 +25,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <boost/concept_check.hpp>
 #include <gadget/Util/Debug.h>
 
 #include <cluster/Packets/DataPacket.h>
@@ -107,11 +106,6 @@ void DataPacket::parse()
 
 void DataPacket::printData(int debugLevel) const
 {
-   // NOTE: This should be removed if any of the below code ever puts
-   // debugLevel to use.
-   
-   boost::ignore_unused_variable_warning(debugLevel);
-   
    vprDEBUG_BEGIN(gadgetDBG_RIM,debugLevel) 
       <<  clrOutBOLD(clrYELLOW,"==== Device Data Packet ====\n") << vprDEBUG_FLUSH;
    
