@@ -54,6 +54,20 @@
       return [self initWithFrame:frameRect];
    }
 
+   /** @name NSView overrides */
+   //@{
+   /**
+    * Indicates whether this view should accept the first mouse press
+    * in the containing window.
+    *
+    * @return YES is always returned.
+    */
+   -(BOOL) acceptsFirstMouse:(NSEvent*) theEvent
+   {
+      return YES;
+   }
+   //@}
+
    /** @name NSResponder overrides */
    //@{
    /**
