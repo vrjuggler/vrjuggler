@@ -213,15 +213,11 @@ public:
     */
    void reset(const int val);
 
-   //---------------------------------------------------------
-   //: Dump the semaphore debug stuff and current state.
-   //---------------------------------------------------------
+   /**
+    * Dumps the semaphore debug stuff and current state.
+    */
    void dump(FILE* dest = stderr,
-             const char* message = "\n------ Semaphore Dump -----\n") const
-   {
-      std::cout << "vpr::SemaphoreWin32::dump()\nNot implemented on Win32"
-                << std::endl;
-   }
+             const char* message = "\n------ Semaphore Dump -----\n") const;
 
 protected:
    HANDLE mSema;

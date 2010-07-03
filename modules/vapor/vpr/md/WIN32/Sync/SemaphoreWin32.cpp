@@ -83,4 +83,10 @@ void SemaphoreWin32::reset(const int val)
    }
 }
 
+void SemaphoreWin32::dump(FILE*, const char*) const
+{
+   std::cout << "vpr::SemaphoreWin32::dump()\nNot implemented on Win32"
+             << std::endl;
+}
+
 } // End of vpr namespace
