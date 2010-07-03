@@ -265,7 +265,7 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
       try
       {
          Wizard wizard = WizardLoader.loadWizard(
-            "${VJ_BASE_DIR}/share/vrjuggler/beans/wizards/NewDeviceWizard.jar"
+            "${VJ_BASE_DIR}/${VJ_DATA_DIR}/beans/wizards/NewDeviceWizard.jar"
          );
 
          wizard.setMap(mWhiteBoard);
