@@ -129,6 +129,8 @@
       [super dealloc];
    }
 
+   /** @name NSView overrides */
+   //@{
    -(void) reshape
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
@@ -143,6 +145,18 @@
       mVrjWindow->updateBounds(bounds.origin.x, bounds.origin.y,
                                bounds.size.width, bounds.size.height);
    }
+
+   /**
+    * Indicates whether this view should accept the first mouse press
+    * in the containing window.
+    *
+    * @return YES is always returned.
+    */
+   -(BOOL) acceptsFirstMouse:(NSEvent*) theEvent
+   {
+      return YES;
+   }
+   //@}
 
    /** @name NSResponder overrides */
    //@{
@@ -595,6 +609,7 @@
                                   assumeInside:NO];
       }
    }
+
 
    /**
     * Attempts to create an NSOpenGLPixelFormat object meeting the
