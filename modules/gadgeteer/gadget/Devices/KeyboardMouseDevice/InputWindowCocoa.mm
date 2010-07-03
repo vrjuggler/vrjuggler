@@ -271,50 +271,8 @@ bool InputWindowCocoa::startSampling()
       [mCocoaWindow setInitialFirstResponder:mMainView];
 
       // The reference count for each of mCocoaWindow and mMainView is 1.
-
-      // If the application run loop is already running, then we can go ahead
-      // and open the window now.
-      if ( [NSApp isRunning] )
-      {
-         finishOpen();
-         started = true;
-      }
-      // If the run loop is not yet running, then we have to delay opening the
-      // window until it is. In this case, we are assuming that sWinOpenLock
-      // is held by an object in the primordial thread that will eventually
-      // start the application run loop.
-      // TODO: See if there is a cleaner way of doing this by somehow queuing
-      // up window opening or something so that it happens as soon as it can
-      // once the run loop starts.
-      else
-      {
-         try
-         {
-            mThread =
-               new vpr::Thread(boost::bind(&InputWindowCocoa::waitAndOpen,
-                                           this));
-            started = true;
-         }
-         // If we cannot spawn the thread that waits to open the window, then
-         // we cannot open this window.
-         catch (vpr::Exception& ex)
-         {
-            [mCocoaWindow release];
-
-            mMainView    = nil;
-            mCocoaWindow = nil;
-
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << clrOutBOLD(clrRED, "ERROR")
-               << ": Failed to spawn thread for opening Cocoa input window!\n"
-               << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << ex.what() << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << "Window named " << mKeyboardMouseDeviceName
-               << " will not be opened." << std::endl;
-         }
-      }
+      finishOpen();
+      started = true;
    }
    @catch (NSException* ex)
    {

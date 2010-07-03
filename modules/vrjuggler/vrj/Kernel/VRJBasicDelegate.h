@@ -68,6 +68,33 @@
     * vrj::Kernel::loadConfigFile().
     */
    -(void) kernelLoadConfigFile:(NSString*) fileName;
+   
+   /**
+    * This is called before the main thread enters the blocking loop and is 
+    * called after the Kernel has fully initialized.
+    *
+    * @since 3.1.1
+    */
+   -(void) preRun;
+  
+   /**
+    * This is called every event loop in the run method and is used to process
+    * the event queue from Cocoa.
+    *
+    * @since 3.1.1
+    */
+   -(void) runLoop;
+ 
+   /**
+    * This is called to get the next event to process in -runLoop. This
+    * implementation uses a call that is known to work well with VR Juggler.
+    * It can be overridden to customize the event acquisition, or it can be
+    * called by an override of -runLoop to get the event for custom
+    * handling.
+    *
+    * @since 3.1.1
+    */
+   -(NSEvent*) getNextEvent;
 @end
 
 extern NSString* VRJMaxRecentFiles;

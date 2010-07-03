@@ -80,7 +80,7 @@ private:
    vpr::TSObjectProxy<NSAutoreleasePool*> mThreadPool;
    //@}
 
-//   bool mRunning;
+   bool mRunning;
 };
 
 }

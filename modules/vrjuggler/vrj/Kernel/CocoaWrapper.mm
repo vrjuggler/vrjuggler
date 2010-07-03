@@ -40,11 +40,14 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
+
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 
 #import <vrj/Kernel/VRJBasicDelegate.h>
 #include <vrj/Kernel/CocoaWrapper.h>
 
+#include <jccl/RTRC/ConfigManager.h>
 
 @interface VRJDummyThread : NSObject
    +(void) run:(id) obj;
@@ -62,7 +65,7 @@ namespace vrj
 
 CocoaWrapper::CocoaWrapper()
    : mMainPool(nil)
-//   , mRunning(false)
+   , mRunning(false)
 {
    mMainPool = [[NSAutoreleasePool alloc] init];
 
@@ -84,7 +87,17 @@ CocoaWrapper::CocoaWrapper()
                             toTarget:[VRJDummyThread class]
                           withObject:nil];
    assert([NSThread isMultiThreaded]);
-
+    
+    // If the user wants to use a different NSApplication than the default one
+    // look it up in the Info.plist file for this app bundle.
+    NSDictionary* info_dictionary = [[NSBundle mainBundle] infoDictionary];
+    Class principal_class = 
+        NSClassFromString([info_dictionary objectForKey:@"NSPrincipalClass"]);
+    if (principal_class != nil)
+    {
+        NSApplication* the_application = [principal_class sharedApplication];
+    }
+    
    NSApplication* app = [NSApplication sharedApplication];
 
    // Load the NIB file from our bundle.
@@ -149,53 +162,63 @@ CocoaWrapper::~CocoaWrapper()
 
 void CocoaWrapper::run()
 {
+   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
    NSApplication* app = [NSApplication sharedApplication];
-/*
+
+   [pool drain];
+
+   NSLog(@"NSApp in CocoaWrapper::run : %@", NSApp);
+
+   // We must block here until the kernel thread has been initialized so that
+   // we can let Cocoa know that all windows have been created.
+   while (! jccl::ConfigManager::instance()->isPendingStale())
+   {
+      vpr::System::msleep( 200 );  // tenth-second delay
+   }
+
+   [[app delegate] preRun];
+
    // NOTE: The following is an attempt to reconstruct the NSApplication run
    // method. This approach would be preferred over sending the run message to
    // app because the default behavior of the NSApplication run method keeps
    // it from ever returning.
+   pool = [[NSAutoreleasePool alloc] init];
+
+   // Call this now that we know all windows managed by VR Juggler have been
+   // created and that any Application specific Cocoa objects have been created
+   // in the preRun delegate call.
    [app finishLaunching];
+
+   [pool drain];
+
    mRunning = true;
-   NSEvent* event = [app nextEventMatchingMask:NSAnyEventMask
-                                     untilDate:[NSDate distantFuture]
-                                        inMode:NSDefaultRunLoopMode
-                                       dequeue:YES];
+
+   pool = [[NSAutoreleasePool alloc] init];
 
    // Ensure that the VR Juggler application becomes focused even if it is
    // executed directly from within its bundle.
    [app activateIgnoringOtherApps:YES];
 
-   NSDate* date = [NSDate date];
+   [pool drain];
 
-   while ( mRunning )
+   while (mRunning)
    {
-      if ( event != nil )
-      {
-         [app sendEvent:event];
-      }
+      pool = [[NSAutoreleasePool alloc] init];
 
-      date = [date addTimeInterval:0.5];
-      event = [app nextEventMatchingMask:NSAnyEventMask
-                               untilDate:date
-                                  inMode:NSDefaultRunLoopMode
-                                 dequeue:YES];
+      [[app delegate] runLoop];
+        
+      [app updateWindows];
+
+      [pool drain];
    }
 
    NSLog(@"CocoaWrapper::run returning\n");
-*/
-   // Ensure that the VR Juggler application becomes focused even if it is
-   // executed directly from within its bundle.
-   [app activateIgnoringOtherApps:YES];
-
-   // This never returns.
-   [app run];
 }
 
 void CocoaWrapper::stop()
 {
-//   mRunning = false;
-   [[NSApplication sharedApplication] terminate:nil];
+   mRunning = false;
 }
 
 void CocoaWrapper::threadStarted()

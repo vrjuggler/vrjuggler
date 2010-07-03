@@ -309,4 +309,22 @@ NSString* VRJRecentCfgFiles = @"VRJRecentCfgFiles";
       [doc_ctrl clearRecentDocuments:sender];
       [mRecentCfgFiles removeAllObjects];
    }
+
+   -(void) preRun
+   {
+      /* Do nothing. */ ;
+   }
+
+   -(void) runLoop
+   {
+      [NSApp sendEvent:[self getNextEvent]];
+   }
+
+   -(NSEvent*) getNextEvent
+   {
+      return [NSApp nextEventMatchingMask:NSAnyEventMask
+                                untilDate:[NSDate distantFuture]
+                                   inMode:NSDefaultRunLoopMode
+                                  dequeue:YES];
+   }
 @end

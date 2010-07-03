@@ -208,7 +208,7 @@ bool WindowCocoa::open()
 
       [mCocoaWindow setTitle:mWindowName];
       [mCocoaWindow setPreservesContentDuringLiveResize:NO];
-      [mCocoaWindow setAutodisplay:NO];
+      [mCocoaWindow setAutodisplay:YES];
 
       const BOOL handle_input = NULL != mKeyboardMouseDevice;
       mGlView = [[VRJOpenGLView alloc] initWithFrame:content_rect
@@ -231,44 +231,16 @@ bool WindowCocoa::open()
          [mCocoaWindow setLevel:NSScreenSaverWindowLevel - 1];
       }
 
-      if ( [NSApp isRunning] )
-      {
-         finishOpen();
-         opened = true;
-      }
-      else
-      {
-         try
-         {
-            mThread = new vpr::Thread(boost::bind(&WindowCocoa::waitAndOpen,
-                                                  this));
-            opened = true;
-         }
-         catch (vpr::Exception& ex)
-         {
-            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-               << clrOutBOLD(clrRED, "ERROR")
-               << ": Failed to spawn thread for opening Cocoa OpenGL window!\n"
-               << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-               << ex.what() << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-               << "Window named " << [mWindowName UTF8String]
-               << " will not be opened." << std::endl;
-         }
-      }
-
-      if ( opened )
-      {
-         makeCurrent();
-         // TODO: Add extension loading stuff.
-
-         // mCocoaWindow retains a refernece to mGlView, meaning that the
-         // reference count on it is now two. We release our reference to
-         // mGlView later when we are done with it.
-         [mCocoaWindow setContentView:mGlView];
-         [mCocoaWindow setInitialFirstResponder:mGlView];
-      }
+      // mCocoaWindow retains a refernece to mGlView, meaning that the
+      // reference count on it is now two. We release our reference to
+      // mGlView later when we are done with it.
+      [mCocoaWindow setContentView:mGlView];
+      [mCocoaWindow setInitialFirstResponder:mGlView];
+       
+      finishOpen();
+      opened = true;
+      makeCurrent();
+      // TODO: Add extension loading stuff.
    }
    @catch (NSException* ex)
    {
@@ -424,10 +396,6 @@ void WindowCocoa::updateBounds(const float x, const float y, const float width,
 void WindowCocoa::setWindowOpen(const bool isOpen)
 {
    mWindowIsOpen = isOpen;
-
-   // It might not be a bad idea to set mCocoaWindow to nil here to avoid
-   // crashes later if we should try to deliver a message to a deallocated
-   // object.
 }
 
 void WindowCocoa::waitAndOpen()
@@ -443,6 +411,8 @@ void WindowCocoa::finishOpen()
    // This causes the window to be opened.
    [mCocoaWindow makeKeyAndOrderFront:nil];
 
+   [mGlView setNeedsDisplay:YES];
+    
    mWindowIsOpen = true;
 }
 
