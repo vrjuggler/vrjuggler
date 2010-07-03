@@ -90,7 +90,7 @@ public class CreateClusteredSimDevicesStep
    private transient CreateClusteredSimDevicesPanel cwp;
    private String mFileSourceName = new String("DefaultFileSource");
    private String mConfigFilePath =
-       new String("${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/");
+       new String("${VJ_BASE_DIR}/${VJ_DATA_DIR}/data/configFiles/");
    private String mHeadEventWindowName = "Head Event Window";
    private String mSimViewEventWindowName = "Sim View Cameras Control";
    private String mWandEventWindowName = "Wand Event Window";
