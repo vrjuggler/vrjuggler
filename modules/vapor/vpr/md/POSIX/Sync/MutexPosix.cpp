@@ -50,19 +50,19 @@ MutexPosix::MutexPosix()
    int result(0);
 
    // Initialize the mutex.
-#ifndef VPR_DEBUG
+#if ! defined(VPR_DEBUG)
    result = pthread_mutex_init(&mMutex, NULL);
 #else
-#ifdef VPR_OS_Linux || VPR_OS_Darwin
+#  if defined(VPR_OS_Linux)
    // If Linux and debug, then use error checking mutex
    pthread_mutexattr_t mutex_attr;
    pthread_mutexattr_init(&mutex_attr);
    pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_ERRORCHECK_NP);
    result = pthread_mutex_init(&mMutex, &mutex_attr);
    pthread_mutexattr_destroy(&mutex_attr);
-#else
+#  else
    result = pthread_mutex_init(&mMutex, NULL);
-#endif
+#  endif
 #endif
 
    if ( result != 0 )
