@@ -87,7 +87,9 @@ dnl                      argument is optional.
 dnl     ISA            - The instruction set architecture for the target CPU.
 dnl                      This argument is optional.
 dnl     library-suffix - The bit-width suffix for the library directory tied
-dnl                      to the ABI. This argument is optional.
+dnl                      to the ABI. This argument is optional. If the
+dnl                      variable $LIBBITSUF already has a value, then the
+dnl                      parameter supplied to this macro is ignored.
 dnl     extra-flags    - Extra compiler flags related to the ABI and ISA.
 dnl                      This argument is optional.
 dnl     platform-sdk   - Yet more compler flags related to the ABI and ISA.
@@ -100,7 +102,7 @@ AC_DEFUN([DPP_ABI_CFG],
 [
    ABI=$1
    ISA=$2
-   LIBBITSUF=$3
+   : ${LIBBITSUF:=$3}
    ABI_FLAGS="$4 $5"
    _EXTRA_FLAGS="$4 $5"
    PLATFORM_SDK=$5
@@ -165,11 +167,6 @@ AC_DEFUN([DPP_ABI_SETUP],
       changequote([, ])
       osx_sdk_flags="-isysroot $osx_platform_sdk -mmacosx-version-min=$min_osx_ver"
    fi
-
-   dnl Set default values for these before checking $DPP_ABI_TYPE.
-   dnl Currently, these are for non-IRIX platforms.
-   ABI=''
-   LIBBITSUF=''
 
    dnl Based on the value of $abi_type, set $ABI for later use and the
    dnl Makefile substitution variables $LIBBITSUF and $ISA.

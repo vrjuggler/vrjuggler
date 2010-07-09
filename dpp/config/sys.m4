@@ -235,15 +235,26 @@ AC_DEFUN([DPP_SYSTEM_SETUP],
          dnl If no ABI has been set yet, default to ELF with whatever the
          dnl CPU architecture is.
          if test "x$ABI" = "x" ; then
+            if test -r '/etc/lsb-release' ; then
+               dpp_using_debian=1
+            else
+               dpp_using_debian=0
+            fi
+
             case $target_cpu in
                x86_64)
-                  DPP_ABI_CFG('ELF', "$target_cpu", '64')
+                  dpp_libbitsuf='64'
+                  if test $dpp_using_debian -eq 1 ; then
+                     dpp_libbitsuf=''
+                  fi
                   ;;
                *)
-                  DPP_ABI_CFG('ELF', "$target_cpu")
+                  dpp_libbitsuf=''
                   ;;
+
             esac
 
+            DPP_ABI_CFG('ELF', "$target_cpu", "$dpp_libbitsuf")
          fi
 
          case $target_cpu in
