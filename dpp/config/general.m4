@@ -26,7 +26,7 @@ dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 2.2.0)
+define(DPP_DPPVERSION, 2.2.1)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.

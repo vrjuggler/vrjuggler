@@ -1,5 +1,9 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2010-07-08 patrickh     Do not set $LIBBITSUF if it already has a value. This
+                        allows easy overriding from the execution environment.
+                        NEW VERSION: 2.2.1
+2010-07-08 patrickh     Do not use lib64 by default on Debian/Ubuntu x86_64.
 2010-05-29 patrickh     Fixed compatibility with Autoconf 2.64 and newer. This
                         required splitting the functionality of the macros
                         DPP_PROG_CC and DPP_PROG_CXX into
