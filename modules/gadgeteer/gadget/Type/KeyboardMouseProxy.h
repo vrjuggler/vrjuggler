@@ -51,6 +51,10 @@ namespace gadget
  */
 class GADGET_CLASS_API KeyboardMouseProxy : public TypedProxy<KeyboardMouse>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<KeyboardMouse> base_type;
+
 protected:
    KeyboardMouseProxy();
 
@@ -65,23 +69,8 @@ public:
 
    virtual ~KeyboardMouseProxy();
 
-   /**
-    * Returns a pointer to the gadget::KeyboardMouse object held by this proxy.
-    */
-   const KeyboardMousePtr getKeyboardMousePtr() const
-   {
-      if(isStupefied())
-      {
-         return KeyboardMousePtr();
-      }
-      else
-      {
-         return mTypedDevice;
-      }
-   }
-
    /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const;
+   const vpr::Interval& getTimeStamp() const;
 
    /**
     * Determines if the given modifier key is the only modifier pressed.
@@ -129,17 +118,12 @@ public:
 
    /**
     * Returns a copy of the current queue of events for the proxied device.
+    *
+    * @note As of Gadgeteer 2.1.1, this is an alias for getData().
     */
    const KeyboardMouse::EventQueue getEventQueue() const
    {
-      if ( isStupefied() || (NULL == mTypedDevice.get()) )
-      {
-         return KeyboardMouse::EventQueue();
-      }
-      else
-      {
-         return mTypedDevice->getEventQueue();
-      }
+      return getData();
    }
 
    static std::string getElementType();

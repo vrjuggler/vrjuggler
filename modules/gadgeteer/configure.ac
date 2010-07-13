@@ -161,7 +161,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-MIN_VPR_VERSION='2.1.4'
+MIN_VPR_VERSION='2.3.1'
 VPR_PATH([$MIN_VPR_VERSION], ,
          [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 #VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`

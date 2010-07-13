@@ -26,7 +26,10 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <algorithm>
+#include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/IO/ObjectWriter.h>
@@ -45,7 +48,7 @@ namespace gadget
 
 KeyboardMouse::KeyboardMouse()
 {
-   for ( int i = 0; i < gadget::LAST_KEY; ++i )
+   for (int i = 0; i < gadget::LAST_KEY; ++i)
    {
       mCurKeys[i] = 0;
    }
@@ -74,22 +77,22 @@ void KeyboardMouse::writeObject(vpr::ObjectWriter* writer)
 
    // Write Current Keys to a stream using the given ObjectWriter
    writer->writeUint16(gadget::LAST_KEY);
-   for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
+   for (unsigned int i = 0; i < gadget::LAST_KEY; ++i)
    {
       writer->writeUint32(mCurKeys[i]);
    }
 
+   const EventQueue& cur_queue(mCurEventQueue.getValue());
+
    // Write Events to a stream using the given ObjectWriter
-   writer->writeUint16(mCurEventQueue.size());
+   writer->writeUint16(cur_queue.size());
 
    // Lock the Queue of current events to serialize
    vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
 
    // Serialize all events.
-   for(unsigned i = 0; i<mCurEventQueue.size(); ++i)
-   {
-      mCurEventQueue[i]->writeObject(writer);
-   }
+   std::for_each(cur_queue.begin(), cur_queue.end(),
+                 boost::bind(&Event::writeObject, _1, writer));
 }
 
 /**
@@ -115,13 +118,13 @@ void KeyboardMouse::readObject(vpr::ObjectReader* reader)
 
    vprASSERT(gadget::LAST_KEY == num_keys && "[KeyboardMouse::readObject()] Different number of keys.");
 
-   for ( unsigned int i = 0; i < num_keys; ++i )
+   for (unsigned int i = 0; i < num_keys; ++i)
    {
       mCurKeys[i] = reader->readUint32();
    }
 
    // Read all events using the given ObjectReader
-   unsigned num_events = reader->readUint16();
+   unsigned short num_events = reader->readUint16();
 
    // -For each event
    //   -Read the event type
@@ -230,7 +233,14 @@ const std::string KeyboardMouse::getKeyName(const gadget::Keys keyId) const
       case gadget::MBUTTON5: return std::string("MBUTTON5");
       case gadget::MBUTTON6: return std::string("MBUTTON5");
       case gadget::MBUTTON7: return std::string("MBUTTON7");
+      case gadget::MBUTTON8: return std::string("MBUTTON8");
+      case gadget::MBUTTON9: return std::string("MBUTTON9");
       case gadget::NO_MBUTTON: return std::string("NO_MBUTTON");
+
+      case gadget::MOUSE_SCROLL_UP: return std::string("MOUSE_SCROLL_UP");
+      case gadget::MOUSE_SCROLL_DOWN: return std::string("MOUSE_SCROLL_DOWN");
+      case gadget::MOUSE_SCROLL_LEFT: return std::string("MOUSE_SCROLL_LEFT");
+      case gadget::MOUSE_SCROLL_RIGHT: return std::string("MOUSE_SCROLL_RIGHT");
 
       case gadget::KEY_TAB          : return std::string("KEY_TAB");
       case gadget::KEY_BACKTAB      : return std::string("KEY_BACKTAB");
@@ -338,13 +348,13 @@ const std::string KeyboardMouse::getKeyName(const gadget::Keys keyId) const
 const KeyboardMouse::EventQueue KeyboardMouse::getEventQueue()
 {
    vpr::Guard<vpr::Mutex> guard(mCurEventQueueLock);
-   return mCurEventQueue;
+   return mCurEventQueue.getValue();
 }
 
 void KeyboardMouse::addEvent(gadget::EventPtr e)
 {
    vpr::Guard<vpr::Mutex> guard(mWorkingEventQueueLock);
-   mWorkingEventQueue.push_back(e);
+   mWorkingEventQueue.editValue().push_back(e);
 }
 
 void KeyboardMouse::updateEventQueue()
@@ -357,7 +367,7 @@ void KeyboardMouse::updateEventQueue()
       mCurEventQueue = mWorkingEventQueue;
    }
 
-   mWorkingEventQueue.clear();      // Clear old queue
+   mWorkingEventQueue.editValue().clear();      // Clear old queue
 }
 
 } // End of gadget namespcae

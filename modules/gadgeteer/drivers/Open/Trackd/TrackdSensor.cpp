@@ -105,7 +105,7 @@ std::string TrackdSensor::getElementType()
 
     for(int i=0;i<mTrackdSensors->numSensors();i++)
     {
-       mCurSensorValues[i].mPosData = mTrackdSensors->getSensorPos(i);
+       mCurSensorValues[i].setValue(mTrackdSensors->getSensorPos(i));
        mCurSensorValues[i].setTime();
     }
 

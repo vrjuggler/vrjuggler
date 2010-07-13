@@ -141,20 +141,19 @@ bool PositionXformFilter::config(jccl::ConfigElementPtr e)
 // Update all the position samples by xforming them by the transform matrix
 void PositionXformFilter::apply(std::vector< PositionData >& posSample)
 {
-   gmtl::Matrix44f* cur_mat(NULL);
-
-   for(std::vector<PositionData>::iterator i=posSample.begin(); i != posSample.end(); ++i)
+   typedef std::vector<PositionData>::iterator iter_type;
+   for (iter_type i = posSample.begin(); i != posSample.end(); ++i)
    {                               
-      cur_mat = &((*i).mPosData);
+      gmtl::Matrix44f& cur_mat((*i).editValue());
 
-      gmtl::postMult(*cur_mat, mPostXform);           // POST xform: cur = cur*postTrans*postRot
+      gmtl::postMult(cur_mat, mPostXform); // POST xform: cur = cur*postTrans*postRot
 
-      gmtl::Vec3f trans;                              // SCALE:
-      gmtl::setTrans(trans, *cur_mat);                // Get the translational vector
-      trans *= mScaleValue;                           // Scale the translation and set the value again
-      gmtl::setTrans(*cur_mat, trans);
+      gmtl::Vec3f trans;                   // SCALE:
+      gmtl::setTrans(trans, cur_mat);      // Get the translational vector
+      trans *= mScaleValue;                // Scale the translation and set the value again
+      gmtl::setTrans(cur_mat, trans);
 
-      gmtl::preMult(*cur_mat, mPreXform);        // PRE: S_world = wMs * S_sensor       
+      gmtl::preMult(cur_mat, mPreXform);   // PRE: S_world = wMs * S_sensor
    }
 }
 

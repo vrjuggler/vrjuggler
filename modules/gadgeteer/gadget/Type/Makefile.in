@@ -61,6 +61,7 @@ SRCS=		Analog.cpp			\
 		GloveGesture.cpp		\
 		GloveProxy.cpp			\
 		Input.cpp			\
+		InputData.cpp			\
 		KeyboardMouse.cpp		\
 		KeyboardMouseProxy.cpp		\
 		Position.cpp			\

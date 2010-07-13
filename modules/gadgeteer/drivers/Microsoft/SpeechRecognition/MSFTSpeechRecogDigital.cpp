@@ -152,7 +152,7 @@ bool MSFTSpeechRecogDigital::sample()
    std::vector< DigitalData > temp;
    int SpeechManagerStringState( mSpeechManager->getIntegerState(this) );
 
-   mLastSampleToggle.setDigital( SpeechManagerStringState );
+   mLastSampleToggle.setValue(SpeechManagerStringState);
    temp.push_back( mLastSampleToggle );
 
    addCommandSample(temp);

@@ -80,11 +80,6 @@ DTK::DTK()
    port = NULL;
 }
 
-char* DTK::getDeviceName()
-{
-   return "vjDTK";
-}
-
 std::string DTK::getElementType()
 {
    return "dtk";

@@ -680,6 +680,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\InputLogger.cpp"
 				>
 			</File>
@@ -882,6 +886,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Command.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\CommandData.h"
 				>
 			</File>
 			<File

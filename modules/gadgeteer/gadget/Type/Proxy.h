@@ -31,12 +31,16 @@
 
 #include <typeinfo>
 
+#include <vpr/Util/Interval.h>
+
+#include <jccl/Config/ConfigElement.h>
+
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
-#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Util/Debug.h>
-#include <vpr/Util/Interval.h>
 #include <gadget/Type/ProxyPtr.h>
+#include <gadget/Type/DeviceTraits.h>
+
 
 namespace gadget
 {
@@ -143,7 +147,7 @@ namespace gadget
       }
 
       /** Returns the time of last update. */
-      virtual vpr::Interval getTimeStamp() const = 0;
+      virtual const vpr::Interval& getTimeStamp() const = 0;
 
    protected:
       std::string mName;         /**< The name of the proxy */
@@ -155,31 +159,169 @@ namespace gadget
     *
     * Proxy for specific device types.
     */
-   template <class DEV_TYPE>
+   template<typename DeviceType>
    class TypedProxy : public Proxy
    {
    public:
-      TypedProxy(const std::string& deviceName = "Unknown")
+      /**
+       * Type Declarations
+       *
+       * @since 2.1.1
+       */
+      //@{
+      typedef DeviceType                                   device_type;
+      typedef boost::shared_ptr<DeviceType>                device_ptr_type;
+      typedef typename DeviceTraits<DeviceType>::data_type device_data_type;
+      typedef typename device_data_type::data_type         raw_data_type;
+      //@}
+
+   protected:
+      TypedProxy(const std::string& deviceName = "Unknown",
+                 const int unitNum = -1)
          : mDeviceName(deviceName)
-         , mTypedDevice()
+         , mUnit(unitNum)
       {
-         ;
+         /* Do nothing. */ ;
       }
+
+   public:
+      virtual ~TypedProxy()
+      {
+         /* Do nothing. */ ;
+      }
+
+      /** @name gadget::Proxy Interface Implementation */
+      //@{
+      /**
+       * Configures this typed proxy.
+       *
+       * @pre The config definition for \p element has a property named \c unit
+       *      of type int and a propety named \c device of type string.
+       * @post \c mUnit is set to the value of the \c unit property, and
+       *       \c mDeviceName is set to the value of the \c device property.
+       *       If the device identified in the configuration has been
+       *       configured, then \c mTypedDevice points to that object.
+       *
+       * @return \c true is returned if this typed proxy is configured
+       *         successfully; \c false is returned otherwise.
+       *
+       * @since 2.1.1
+       */
+      bool config(jccl::ConfigElementPtr element)
+      {
+         vpr::DebugOutputGuard dbg_output(
+            gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+            "----------- configuring TYPED PROXY -----------------\n",
+            "----------- exit: configuring typed proxy -----------\n"
+         );
+
+         //vprASSERT(element->getID() == getElementType());
+
+         if (! Proxy::config(element))
+         {
+            return false;
+         }
+
+         mUnit = element->getProperty<int>("unit");
+         mDeviceName = element->getProperty<std::string>("device");
+
+         refresh();
+         return true;
+      }
+
+      /**
+       * Refreshes the proxy. This attempts to lookup the device that we are
+       * proxying. If the lookup fails, then we become stupefied. If not, then
+       * the proxy is pointed at this potentially new device.
+       */
+      virtual bool refresh()
+      {
+         InputPtr input_dev = InputManager::instance()->getDevice(mDeviceName);
+
+         if (NULL == input_dev.get())       // Not found, so stupefy
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+               << "[gadget::TypedProxy::refresh()] Could not find device '"
+               << mDeviceName << "' pointed to by '" << mName << "'"
+               << std::endl << vprDEBUG_FLUSH;
+            stupefy(true);
+         }
+         else
+         {
+            device_ptr_type typed_dev(
+               boost::dynamic_pointer_cast<DeviceType>(input_dev)
+            );
+
+            if (NULL == typed_dev.get())
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << "[gadget::TypedProxy::refresh()] Device "
+                  << mDeviceName << " was of wrong type "
+                  << typeid(input_dev).name() << std::endl << vprDEBUG_FLUSH;
+
+               stupefy(true);
+               return false;
+            }
+
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+               << "   Proxy '" << mName << "' configured" << std::endl
+               << vprDEBUG_FLUSH;
+
+            mTypedDevice = typed_dev;    // Set the proxy
+            stupefy(false);
+         }
+
+         return true;
+      }
+
+      /**
+       * Returns the proxied input device if this proxy is not stupefied. If
+       * this proxy is stupefied or has no proxied input device, then a NULL
+       * pointer is returned. This method is part of the gadget::Proxy
+       * interface.
+       *
+       * @return If this proxy is not stupefied, a gadget::InputPtr is
+       *         returned that points to proxied input device object. NULL is
+       *         returned if this proxy is stupefied or has no input device
+       *         associated with it.
+       *
+       * @see getTypedInputDevice()
+       */
+      virtual InputPtr getProxiedInputDevice()
+      {
+         if (NULL == mTypedDevice.get() || mStupefied)
+         {
+            return InputPtr();
+         }
+
+         InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
+         vprASSERT((NULL != ret_val.get()) && "Cross-cast failed.");
+         return ret_val;
+      }
+
+      /** Returns the time of the last update. */
+      virtual const vpr::Interval& getTimeStamp() const
+      {
+         return mData.getTime();
+      }
+      //@}
 
       /**
        * Sets the proxy to point to the given type-specific device.
        *
-       * @pre devPtr must be a valid device of type DEV_TYPE.
+       * @pre \p devPtr must be a valid device of the type identified by
+       *      \p devName.
        * @post The proxy now references the given device.  The device name we
        *       are proxying is set to devPtr->getInstanceName().
        *
        * @param devName The name of the device at which we are pointing.
        * @param devPtr  Pointer to the device.
        */
-      virtual void set(const std::string& devName, boost::shared_ptr<DEV_TYPE> devPtr)
+      virtual void set(const std::string& devName,
+                       const device_ptr_type& devPtr)
       {
          mTypedDevice = devPtr;
-         if(NULL != mTypedDevice.get())
+         if (NULL != mTypedDevice.get())
          {
             mDeviceName = devName;
             stupefy(false);
@@ -190,65 +332,76 @@ namespace gadget
          }
       }
 
-      /**
-       * Refreshes the proxy.  This attempts to lookup the device that we are
-       * proxying.  If the lookup fails, then we become stupefied.  If not,
-       * then the proxy is pointed at this potentially new device.
-       */
-      virtual bool refresh()
-      {
-         InputPtr input_dev = InputManager::instance()->getDevice(mDeviceName);
-
-         if ( NULL == input_dev.get() )       // Not found, so stupefy
-         {
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "[gadget::TypedProxy::refresh()] Could not find device '"
-               << mDeviceName << "' pointed to by '" << mName << "'"
-               << std::endl << vprDEBUG_FLUSH;
-            stupefy(true);
-         }
-         else
-         {
-            boost::shared_ptr<DEV_TYPE> typed_dev = boost::dynamic_pointer_cast<DEV_TYPE>(input_dev);
-            if ( NULL == typed_dev.get() )
-            {
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << "[gadget::TypedProxy::config()] Device was of wrong type: "
-                  << mDeviceName << " it was type:" << typeid(input_dev).name()
-                  << std::endl << vprDEBUG_FLUSH;
-               stupefy(true);
-               return false;
-            }
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "   Proxy '" << mName << "' configured" << std::endl
-               << vprDEBUG_FLUSH;
-            mTypedDevice = typed_dev;    // Set the proxy
-            stupefy(false);
-         }
-         return true;
-      }
-
       /** Returns the name of the device that we are proxying. */
-      virtual std::string getDeviceName() const
+      const std::string& getDeviceName() const
       {
          return mDeviceName;
       }
 
-      virtual InputPtr getProxiedInputDevice()
+      /**
+       * Returns the proxied input device if this proxy is not stupefied.
+       *
+       * @since 2.1.1
+       */
+      device_ptr_type getTypedInputDevice() const
       {
-         if((NULL == mTypedDevice.get()) || (mStupefied))
-         {
-            return InputPtr();
-         }
-
-         InputPtr ret_val = boost::dynamic_pointer_cast<Input>(mTypedDevice);
-         vprASSERT((NULL != ret_val.get()) && "Cross-cast failed.");
-         return ret_val;
+         return mStupefied ? device_ptr_type() : mTypedDevice;
       }
 
+      /**
+       * Returns the unit index into the string speech recognition device from
+       * which this proxy is reading data.
+       *
+       * @note Prior to Gadgeteer 2.1.1, every subclass of this class defined
+       *       this method.
+       *
+       * @since 2.1.1
+       */
+      int getUnit() const
+      {
+         return mUnit;
+      }
+
+      /** @name Data Access */
+      //@{
+      /**
+       * Returns the most current data for the input device proxied by this
+       * object. The return type of this method depends on the type of the
+       * device that is proxied. If this proxy is stupefied, then a
+       * default-constructed value of type raw_data_type is returned to the
+       * caller.
+       *
+       * @note Prior to Gadgeteer 2.1.1, most subclasses of this class defined
+       *       this method.
+       *
+       * @since 2.1.1
+       */
+      virtual const raw_data_type getData() const
+      {
+         return isStupefied() ? raw_data_type() : mData.getValue();
+      }
+
+      /**
+       * Returns a const reference to the internal "raw" data of this proxy.
+       *
+       * @note Prior to Gadgeteer 2.1.1, most subclasses of this class defined
+       *       a method similar to this one that returned a \em pointer to the
+       *       device-specific internal data object. Those methods had names
+       *       such as getPositionData() or getStringData().
+       *
+       * @since 2.1.1
+       */
+      const device_data_type& getRawData() const
+      {
+         return mData;
+      }
+      //@}
+
    protected:
-      std::string                    mDeviceName;   /**< Name of the device to link up with */
-      boost::shared_ptr<DEV_TYPE>    mTypedDevice;  /**< The device (type-specific pointer) */
+      std::string      mDeviceName;   /**< Name of the device to link up with */
+      device_ptr_type  mTypedDevice;  /**< The device (type-specific pointer) */
+      int              mUnit;
+      device_data_type mData;
    };
 
 } // end namespace

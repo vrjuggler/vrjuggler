@@ -226,24 +226,24 @@ bool OptiTrack::sample()
    for (i = 0 ; i < mRigidBodyIDs.size(); ++i)
    {
       // Get the station index for the given station.
-      int index = mRigidBodyIDs[i];
+      const int index = mRigidBodyIDs[i];
 
       // Set the time of each PositionData to match the first.
       current_samples[i].setTime(current_samples[0].getTime());
 
-      gmtl::identity(current_samples[i].mPosData);
+      gmtl::Matrix44f& pos_data(current_samples[i].editValue());
+      gmtl::identity(pos_data);
 
       gmtl::Quatf quat(mTracker.xRBQuat(index),
                        mTracker.yRBQuat(index),
                        mTracker.zRBQuat(index),
                        mTracker.wRBQuat(index));
       
-      current_samples[i].mPosData = gmtl::makeRot<gmtl::Matrix44f>(quat);
+      pos_data = gmtl::makeRot<gmtl::Matrix44f>(quat);
 
-      gmtl::setTrans(current_samples[i].mPosData,
-                     gmtl::Vec3f(mTracker.xRBPos(index),
-                                 mTracker.yRBPos(index),
-                                 mTracker.zRBPos(index)));
+      gmtl::setTrans(pos_data, gmtl::Vec3f(mTracker.xRBPos(index),
+                                           mTracker.yRBPos(index),
+                                           mTracker.zRBPos(index)));
    }
     
    // Fill in marker data.  Note: this assumes that the IDs do not overlap with rigid bodies.  
@@ -251,17 +251,18 @@ bool OptiTrack::sample()
    for (i = mRigidBodyIDs.size(); i < (mMarkerIDs.size() + mRigidBodyIDs.size()); ++i)
    {
       // Get the station index for the given station.
-      int index = mMarkerIDs[i];
+      const int index = mMarkerIDs[i];
 
       // Set the time of each PositionData to match the first.
       current_samples[i].setTime( current_samples[0].getTime() );
 
-      gmtl::identity(current_samples[i].mPosData);
+      gmtl::Matrix44f& pos_data(current_samples[i].editValue());
+      gmtl::identity(pos_data);
 
-      gmtl::setTrans( current_samples[i].mPosData,
-                      gmtl::Vec3f(mTracker.xMarkerPos( index ),
-                                  mTracker.yMarkerPos( index ),
-                                  mTracker.zMarkerPos( index )) );
+      gmtl::setTrans(pos_data,
+                     gmtl::Vec3f(mTracker.xMarkerPos(index),
+                                 mTracker.yMarkerPos(index),
+                                 mTracker.zMarkerPos(index)));
    }
 
    // Lock and then swap the buffers.

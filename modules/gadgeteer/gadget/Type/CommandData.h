@@ -24,19 +24,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_DIGITAL_DATA_H_
-#define _GADGET_DIGITAL_DATA_H_
+#ifndef _GADGET_COMMAND_DATA_H_
+#define _GADGET_COMMAND_DATA_H_
 
 #include <gadget/Type/DeviceData.h>
-//#include <gadget/Type/DigitalState.h>
 
 namespace gadget 
 {
 
-typedef DeviceData<int> DigitalData;
-//typedef DeviceData<gadget::DigitalState> DigitalData;
+typedef DeviceData<int> CommandData;
 
 } // namespace gadget
 
 
-#endif /* _GADGET_DIGITAL_DATA_H_ */
+#endif /* _GADGET_COMMAND_DATA_H_ */

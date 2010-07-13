@@ -13,25 +13,25 @@ class RigidBodyData
 {
 public:
    RigidBodyData()
+      : mX(0.0f)
+      , mY(0.0f)
+      , mZ(0.0f)
+      , mQX(0.0f)
+      , mQY(0.0f)
+      , mQZ(0.0f)
+      , mQW(0.0f)
    {
-      mX = 0.0f;
-      mY = 0.0f;
-      mZ = 0.0f;
-      mQX = 0.0f;
-      mQY = 0.0f;
-      mQZ = 0.0f;
-      mQW = 0.0f;
    }
 
-   RigidBodyData(float x, float y, float z, float qx, float qy, float qz, float qw)
+   RigidBodyData(float, float, float, float, float, float, float)
+      : mX(0.0f)
+      , mY(0.0f)
+      , mZ(0.0f)
+      , mQX(0.0f)
+      , mQY(0.0f)
+      , mQZ(0.0f)
+      , mQW(0.0f)
    {
-      mX = 0.0f;
-      mY = 0.0f;
-      mZ = 0.0f;
-      mQX = 0.0f;
-      mQY = 0.0f;
-      mQZ = 0.0f;
-      mQW = 0.0f;
    }
 
    ~RigidBodyData() {;}

@@ -51,6 +51,10 @@ namespace gadget
  */
 class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<Gesture> base_type;
+
 protected:
    /** Constructs the proxy to point to the given gesture device. */
    GestureProxy(const std::string& deviceName = "UnknownGesture");
@@ -72,16 +76,7 @@ public:
     */
    int getGesture() const
    {
-      const int defaultGesture(-1);
-
-      if(isStupefied())
-      {
-         return defaultGesture;
-      }
-      else
-      {
-         return mTypedDevice->getGesture();
-      }
+      return isStupefied() ? -1 : mTypedDevice->getGesture();
    }
 
    /**
@@ -91,15 +86,7 @@ public:
     */
    int getGestureIndex(const std::string& name) const
    {
-      const int defaultGestureIndex(-1);
-      if(isStupefied())
-      {
-         return defaultGestureIndex;
-      }
-      else
-      {
-         return mTypedDevice->getGestureIndex(name);
-      }
+      return isStupefied() ? -1 : mTypedDevice->getGestureIndex(name);
    }
 
    /**
@@ -109,31 +96,10 @@ public:
     */
    const std::string getGestureString(const int gestureId = -1)
    {
-      if(isStupefied())
-      {
-         return std::string("");
-      }
-      else
-      {
-         return mTypedDevice->getGestureString(gestureId);
-      }
+      return isStupefied() ? "" : mTypedDevice->getGestureString(gestureId);
    }
 
-   /** Returns time of last update. */
-   vpr::Interval getTimeStamp() const;
-
-   /** Returns a pointer to the device held by this proxy. */
-   const GesturePtr getGesturePtr() const
-   {
-      if(isStupefied())
-      {
-         return GesturePtr();
-      }
-      else
-      {
-         return mTypedDevice;
-      }
-   }
+   virtual const vpr::Interval& getTimeStamp() const;
 
    static std::string getElementType();
 

@@ -108,7 +108,7 @@ namespace gadget
     for(int i=0;i<mTrackerReader->trackdGetNumberOfSensors();i++)
     {
        cur_samples[i].setTime(cur_samples[0].getTime());
-       cur_samples[i].mPosData = getSensorPos(i);
+       cur_samples[i].setValue(getSensorPos(i));
     }
 
     // Update the data buffer

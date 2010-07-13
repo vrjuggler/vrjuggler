@@ -173,13 +173,13 @@ bool Wanda::sample()
       // Get an initial timestamp for the entire sample. We will copy it into
       // each sample buffer later.
       analog_samples[0].setTime();
-      analog_samples[0].setAnalog(mWanda.getXAxis());
-      analog_samples[1].setAnalog(mWanda.getYAxis());
+      analog_samples[0].setValue(mWanda.getXAxis());
+      analog_samples[1].setValue(mWanda.getYAxis());
       analog_samples[1].setTime(analog_samples[0].getTime());
 
       for ( size_t i = 0; i < 3; ++i )
       {
-         digital_samples[i].setDigital(mWanda.getButton(i));
+         digital_samples[i].setValue(mWanda.getButton(i));
          digital_samples[i].setTime(analog_samples[0].getTime());
       }
 

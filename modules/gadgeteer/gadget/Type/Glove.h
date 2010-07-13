@@ -28,15 +28,21 @@
 #define _GADGET_GLOVE_H_
 
 #include <gadget/gadgetConfig.h>
+
 #include <boost/noncopyable.hpp>
+#include <boost/concept_check.hpp>
+
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+
+#include <vpr/IO/SerializableObject.h>
+
+#include <jccl/Config/ConfigElementPtr.h>
+
 #include <gadget/Type/GloveData.h>
 #include <gadget/Type/DigitalData.h> /* For getGloveDataFromDigitalData */
 #include <gadget/Type/SampleBuffer.h>
-#include <gadget/Type/PositionInterface.h>
-#include <boost/concept_check.hpp>
-#include <gmtl/Vec.h>
-#include <gmtl/Matrix.h>
-#include <vpr/IO/SerializableObject.h>
+#include <gadget/Type/DeviceInterface.h>
 #include <gadget/Type/GlovePtr.h>
 
 namespace gadget
@@ -115,7 +121,7 @@ public:
     * @post Sample is added to the buffers and the local filters are run on
     *       that sample.
     */
-   void addGloveSample(const std::vector< GloveData >& gloveSample)
+   void addGloveSample(const std::vector<GloveData>& gloveSample)
    {
       // Locks and then swaps the indices.
       mGloveSamples.lock();

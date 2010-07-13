@@ -223,14 +223,14 @@ bool Flock::sample()
    vpr::Thread::yield();
 
    // For each bird
-   for (unsigned i=0; i < mFlockOfBirds.getNumSensors(); ++i)
+   for (unsigned int i =0; i < mFlockOfBirds.getNumSensors(); ++i)
    {
       // Transforms between the cord frames
       gmtl::Matrix44f transmitter_T_reciever = mFlockOfBirds.getSensorPosition(i);
 
       // Set timestamp & Store the corrected xform back into buffer.
-      cur_samples[i].mPosData = transmitter_T_reciever;
-      cur_samples[i].setTime (cur_samples[0].getTime());
+      cur_samples[i].setValue(transmitter_T_reciever);
+      cur_samples[i].setTime(cur_samples[0].getTime());
    }
 
    // Add data sample

@@ -33,9 +33,7 @@ namespace gadget
 {
 
 StringProxy::StringProxy(const std::string& deviceName, const int unitNum)
-   : TypedProxy<String>(deviceName)
-   , mUnitNum(unitNum)
-   , mData("")
+   : base_type(deviceName, unitNum)
 {
    /* Do nothing. */ ;
 }
@@ -56,42 +54,8 @@ std::string StringProxy::getElementType()
    return "string_proxy";
 }
 
-bool StringProxy::config(jccl::ConfigElementPtr element)
-{
-vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                              std::string("----------- configuring STRING PROXY -----------------\n"),
-                              std::string("----------- exit: configuring string proxy -----------\n"));
-
-   vprASSERT(element->getID() == getElementType());
-
-   if( ! Proxy::config(element) )
-   {
-      return false;
-   }
-
-   mUnitNum = element->getProperty<int>("unit");
-   mDeviceName = element->getProperty<std::string>("device");
-
-   refresh();
-   return true;
-}
-
 void StringProxy::updateData()
 {
-   if (!isStupefied())
-   {
-      // Make sure dependencies are updated.
-      getProxiedInputDevice()->updateDataIfNeeded();
-
-      std::string old_state = mData.getString();
-      mData = mTypedDevice->getStringData(mUnitNum);
-      std::string new_state = mData.getString();
-   }
-}
-
-vpr::Interval StringProxy::getTimeStamp() const
-{
-   return mData.getTime();
 }
 
 } // End of gadget namespace

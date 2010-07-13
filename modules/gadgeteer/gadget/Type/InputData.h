@@ -39,14 +39,11 @@ namespace gadget
  * This provides all input data with a standard timestamping system used to
  * calculate input latency.
  */
-class InputData 
+class GADGET_CLASS_API InputData 
 {
 public:
    /** Constructor. */
-   InputData()
-   {
-      ;
-   }
+   InputData();
 
    /** Record the current time using the vpr::Interval. */
    void setTime() 
@@ -67,12 +64,17 @@ public:
    }
 
 protected:
-
    void copy(const InputData& id) 
    {
       mTimeStamp = id.mTimeStamp;
    }
 
+   bool isEqual(const InputData& id) const
+   {
+      return mTimeStamp == id.mTimeStamp;
+   }
+
+private:
    vpr::Interval mTimeStamp;
 }; // class InputData
 

@@ -34,19 +34,22 @@
 #define _GADGET_POSPROXY_H_
 
 #include <gadget/gadgetConfig.h>
-#include <vector>
-#include <math.h>
 
-#include <gadget/Type/Position.h>
+#include <cmath>
+#include <vector>
+#include <boost/shared_ptr.hpp>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Output.h>
+
 #include <gadget/Type/Proxy.h>
+#include <gadget/Type/Position.h>
 #include <gadget/Filter/Position/PositionFilter.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/PositionProxyPtr.h>
 
-#include <gmtl/Matrix.h>
-#include <gmtl/MatrixOps.h>
-#include <gmtl/Output.h>
 
 namespace gadget
 {
@@ -64,6 +67,10 @@ namespace gadget
  */
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<Position> base_type;
+
 protected:
    PositionProxy(const std::string& deviceName = "UnknownPosition",
                  const int unitNum = -1);
@@ -86,59 +93,36 @@ public:
     */
    virtual void updateData();
 
-   /** Returns time of last update. */
-   virtual vpr::Interval getTimeStamp() const;
-
    /**
     * Gets the positional data within the device pointed to by this proxy as a
-    * matrix.  For example, getData(3.28f) will return a matrix in feet.
-    *
-    * @param scaleFactor Factor to convert from meters to the desired units.
-    *                    This paramter is optional, and it defaults to the
-    *                    conversion from meters to feet.
+    * matrix using feet as the units.
     *
     * @return The position of the device as a matrix.
     */
-   const gmtl::Matrix44f
-   getData(const float scaleFactor = PositionUnitConversion::ConvertToFeet)
-      const;
+   virtual const gmtl::Matrix44f getData() const
+   {
+      return getData(PositionUnitConversion::ConvertToFeet);
+   }
+
+   /**
+    * Gets the positional data within the device pointed to by this proxy as a
+    * matrix. For example, getData(3.28f) will return a matrix in feet.
+    *
+    * @param scaleFactor Factor to convert from meters to the desired units.
+    *
+    * @return The position of the device as a matrix.
+    */
+   const gmtl::Matrix44f getData(const float scaleFactor) const;
    
-   /** Gets the actual PositionData. */
-   const PositionData* getPositionData() const
-   {
-      return &mPositionData;
-   }
-
-   /// Returns this device's subunit number.
-   int getUnit() const
-   {
-      return mUnitNum;
-   }
-
-   /// Returns a pointer to the gadget::Position object held by this proxy.
-   const PositionPtr getPositionPtr() const
-   {
-      if(mStupefied || NULL == mTypedDevice.get())
-      {
-         return PositionPtr();
-      }
-      else
-      {
-         return mTypedDevice;
-      }
-   }
-
    static std::string getElementType();
 
    bool config(jccl::ConfigElementPtr element);
 
 private:
-   PositionData      mPositionData;
-   int               mUnitNum;
-
    gmtl::Matrix44f   mPosMatrix_feet;                 /**< Cached version of data in feet */
 
-   std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
+   typedef boost::shared_ptr<PositionFilter> PositionFilterPtr;
+   std::vector<PositionFilterPtr> mPositionFilters;   /**< The active filters that are to be used */
 };
 
 } // End of gadget namespace

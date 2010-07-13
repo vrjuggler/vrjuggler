@@ -91,19 +91,19 @@ void String::writeObject(vpr::ObjectWriter* writer)
    if ( !stable_buffer.empty() )
    {
       mStringSamples.lock();
-      for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
+      for (unsigned int j = 0; j < stable_buffer.size(); ++j)                               // For each vector in the stable buffer
       {
          writer->beginTag(gadget::tokens::BufferSampleTag);
          writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());                           // Write the # of StringDatas in the vector
          writer->endAttribute();
-         for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each StringData in the vector
+         for (unsigned int i = 0; i < stable_buffer[j].size(); ++i)                         // For each StringData in the vector
          {
             writer->beginTag(gadget::tokens::StringValue);
             writer->beginAttribute(gadget::tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
-            writer->writeString(stable_buffer[j][i].getString());  // Write String Data(std::string)
+            writer->writeString(stable_buffer[j][i].getValue());  // Write String Data(std::string)
             writer->endTag();
          }
          writer->endTag();
@@ -129,40 +129,41 @@ void String::readObject(vpr::ObjectReader* reader)
    vprASSERT(temp==MSG_DATA_STRING && "[Remote Input Manager]Not String Data");
    boost::ignore_unused_variable_warning(temp);
 
-   std::vector<StringData> dataSample;
+   std::vector<StringData> data_sapmle;
 
-   unsigned numStringDatas;
+   unsigned int num_string_values;
    std::string value;
-   vpr::Uint64 timeStamp;
+   vpr::Uint64 time_stamp;
    StringData temp_string_data;
 
    reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-      unsigned numVectors = reader->readUint16();
+      const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
    mStringSamples.lock();
-   for ( unsigned i=0;i<numVectors;i++ )
+   for ( unsigned int i = 0; i < num_vectors; ++i)
    {
       reader->beginTag(gadget::tokens::BufferSampleTag);
       reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-         numStringDatas = reader->readUint16();
+         num_string_values = reader->readUint16();
       reader->endAttribute();
 
-      dataSample.clear();
-      for ( unsigned j=0;j<numStringDatas;j++ )
+      data_sapmle.clear();
+      for (unsigned int j = 0; j < num_string_values; ++j)
       {
          reader->beginTag(gadget::tokens::StringValue);
          reader->beginAttribute(gadget::tokens::TimeStamp);
-            timeStamp = reader->readUint64();    // read Time Stamp vpr::Uint64
+            time_stamp = reader->readUint64();    // read Time Stamp vpr::Uint64
          reader->endAttribute();
          value = reader->readString();           // read String Data(std::string)
          reader->endTag();
 
-         temp_string_data.setString(value);
-         temp_string_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
-         dataSample.push_back(temp_string_data);
+         temp_string_data.setValue(value);
+         temp_string_data.setTime(vpr::Interval(time_stamp + delta,
+                                  vpr::Interval::Usec));
+         data_sapmle.push_back(temp_string_data);
       }
-      mStringSamples.addSample(dataSample);
+      mStringSamples.addSample(data_sapmle);
       reader->endTag();
    }
    mStringSamples.unlock();

@@ -142,21 +142,24 @@ void Position::writeObject(vpr::ObjectWriter* writer)
    if ( !stable_buffer.empty() )
    {
       mPosSamples.lock();
-      for ( unsigned j=0;j<stable_buffer.size();j++ )
+      for (unsigned int j = 0; j < stable_buffer.size(); ++j)
       {
          writer->beginTag(gadget::tokens::BufferSampleTag);
          writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());            // Number of pos values for this entry
          writer->endAttribute();
 
-         for ( unsigned i=0;i<stable_buffer[j].size();i++ )       // For each pos value
+         for (unsigned int i = 0; i < stable_buffer[j].size(); ++i)  // For each pos value
          {
-            gmtl::Matrix44f* PosMatrix = &(stable_buffer[j][i].mPosData);
-            const float* pos_data = PosMatrix->getData();
+            gmtl::Matrix44f& pos_matrix = stable_buffer[j][i].editValue();
+            const float* pos_data = pos_matrix.getData();
 
             writer->beginTag(gadget::tokens::PosValue);
-            for ( int n=0;n<16;n++ )
-            {  writer->writeFloat(pos_data[n]); }
+            // TODO: Loop unrolling could be beneficial here.
+            for (unsigned int n = 0; n < 16; ++n)
+            {
+               writer->writeFloat(pos_data[n]);
+            }
 
             writer->beginAttribute(gadget::tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
@@ -169,8 +172,12 @@ void Position::writeObject(vpr::ObjectWriter* writer)
    }
    else       // No data or request out of range, return default value
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Position::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Warning: Position::writeObject: Stable buffer is empty. If "
+         << "this is not the first write, then this is a problem.\n"
+         << vprDEBUG_FLUSH;
    }
+
    writer->endTag();
 }
 
@@ -190,50 +197,58 @@ void Position::readObject(vpr::ObjectReader* reader)
    vprASSERT(temp==MSG_DATA_POS && "[Remote Input Manager]Not Positional Data");
    boost::ignore_unused_variable_warning(temp);
 
-   std::vector<PositionData> dataSample;
+   std::vector<PositionData> data_sample;
 
-   unsigned numPosDatas;
-   vpr::Uint64 timeStamp;
+   unsigned int num_pos_values;
+   vpr::Uint64 time_stamp;
    PositionData temp_pos_data;
    float pos_data[16];
-   gmtl::Matrix44f PosMatrix;
+   gmtl::Matrix44f pos_matrix;
 
    reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-      unsigned numVectors = reader->readUint16();
+      const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
    mPosSamples.lock();
-   for ( unsigned i=0;i<numVectors;i++ )
+   for (unsigned int i = 0; i < num_vectors; ++i)
    {
       reader->beginTag(gadget::tokens::BufferSampleTag);
       reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-         numPosDatas = reader->readUint16();
+         num_pos_values = reader->readUint16();
       reader->endAttribute();
 
-      dataSample.clear();
+      data_sample.clear();
 
-      for ( unsigned j=0;j<numPosDatas;j++ )
+      for (unsigned int j = 0; j < num_pos_values; ++j)
       {
          reader->beginTag(gadget::tokens::PosValue);
-         //NOTE: This uses the value 16 because we are using a 4x4 matrix
-         //for the position dataAt this point there is not a good
-         //way to get the row and column value of any given size matrix
-         for ( unsigned n=0;n<16;n++ )
-         { pos_data[n] = reader->readFloat(); }
-         PosMatrix.set(pos_data);
+
+         // NOTE: This uses the value 16 because we are using a 4x4 matrix
+         // for the position dataAt this point there is not a good
+         // way to get the row and column value of any given size matrix
+         // TODO: Loop unrolling could be beneficial here.
+         for (unsigned int n = 0; n < 16; ++n)
+         {
+            pos_data[n] = reader->readFloat();
+         }
+
+         pos_matrix.set(pos_data);
 
          reader->beginAttribute(gadget::tokens::TimeStamp);
-            timeStamp = reader->readUint64();
+            time_stamp = reader->readUint64();
          reader->endAttribute();
          reader->endTag();
 
-         temp_pos_data.setPosition(PosMatrix);
-         temp_pos_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
-         dataSample.push_back(temp_pos_data);
+         temp_pos_data.setValue(pos_matrix);
+         temp_pos_data.setTime(vpr::Interval(time_stamp + delta,
+                                             vpr::Interval::Usec));
+         data_sample.push_back(temp_pos_data);
       }
-      mPosSamples.addSample(dataSample);
+
+      mPosSamples.addSample(data_sample);
       reader->endTag();
    }
+
    mPosSamples.unlock();
    swapPositionBuffers();
    reader->endTag();

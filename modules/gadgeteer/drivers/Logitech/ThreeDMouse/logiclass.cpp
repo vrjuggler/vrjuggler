@@ -430,9 +430,9 @@ int ThreeDMouse::getRecord(gadget::PositionData* data)
    printf("%d bytes read...", num_read);
 #endif
 
-   ThreeDMouse::eulerToAbsolute(record, data->mPosData);
+   ThreeDMouse::eulerToAbsolute(record, data->editValue());
 
-   return(0);
+   return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////

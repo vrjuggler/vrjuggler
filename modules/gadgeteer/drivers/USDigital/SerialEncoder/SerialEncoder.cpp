@@ -110,8 +110,7 @@ bool SerialEncoder::sample()
    std::vector<gadget::PositionData> positionSample(1);
 
    positionSample[0].setTime();
-
-   positionSample[0].mPosData = mSerialEncoder->getSample();
+   positionSample[0].setValue(mSerialEncoder->getSample());
 
    addPositionSample(positionSample);
 

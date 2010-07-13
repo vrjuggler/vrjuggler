@@ -24,19 +24,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_DIGITAL_DATA_H_
-#define _GADGET_DIGITAL_DATA_H_
+#ifndef _GADGET_KEYBOARD_MOUSE_DATA_H_
+#define _GADGET_KEYBOARD_MOUSE_DATA_H_
+
+#include <vector>
 
 #include <gadget/Type/DeviceData.h>
-//#include <gadget/Type/DigitalState.h>
+#include <gadget/Type/KeyboardMouse/EventPtr.h>
+
 
 namespace gadget 
 {
 
-typedef DeviceData<int> DigitalData;
-//typedef DeviceData<gadget::DigitalState> DigitalData;
+typedef DeviceData<std::vector<gadget::EventPtr> > KeyboardMouseData;
 
 } // namespace gadget
 
 
-#endif /* _GADGET_DIGITAL_DATA_H_ */
+#endif /* _GADGET_KEYBOARD_MOUSE_DATA_H_ */

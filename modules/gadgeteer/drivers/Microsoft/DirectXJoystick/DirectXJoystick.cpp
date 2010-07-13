@@ -198,7 +198,7 @@ void DirectXJoystick::updateData()
       // value includes any axis buttons that were configured.
       for ( unsigned int i = 0; i < mInputDrv.getNumButtons(); ++i )
       {
-         mCurButtons[i].setDigital(mInputDrv.getButtonValue(i));
+         mCurButtons[i].setValue(mInputDrv.getButtonValue(i));
          mCurButtons[i].setTime();
       }
 
@@ -206,7 +206,7 @@ void DirectXJoystick::updateData()
       {
          mCurAxes[i].setTime();
          const LONG cur_value(mInputDrv.getAxisValue(i));
-         mCurAxes[i].setAnalog(cur_value);
+         mCurAxes[i].setValue(cur_value);
 
          // Check for axis buttons. If we have a mapping for axis #i, then we
          // map the value of the analog axis to two buttons (high and low). If

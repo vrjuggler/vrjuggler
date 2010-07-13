@@ -84,24 +84,25 @@ bool SimPosition::config(jccl::ConfigElementPtr element)
    float y_rot = element->getProperty<float>("initial_rotation",1);
    float z_rot = element->getProperty<float>("initial_rotation",2);
 
-   gmtl::identity( mPos.mPosData );
+   gmtl::Matrix44f& pos_data(mPos.editValue());
 
-   if((x_pos != 0.0f) || (y_pos != 0.0f) || (z_pos != 0.0f))
+   if (x_pos != 0.0f || y_pos != 0.0f || z_pos != 0.0f)
    {
-      gmtl::setTrans( mPos.mPosData, gmtl::Vec3f(x_pos, y_pos, z_pos));
+      gmtl::setTrans(pos_data, gmtl::Vec3f(x_pos, y_pos, z_pos));
    }
-   if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
+
+   if (x_rot != 0.0f || y_rot != 0.0f || z_rot != 0.0f)
    {
-      gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(x_rot),
-                                  gmtl::Math::deg2Rad(y_rot),
-                                  gmtl::Math::deg2Rad(z_rot) );
-      gmtl::postMult( mPos.mPosData, gmtl::makeRot<gmtl::Matrix44f>(euler) );
+      gmtl::EulerAngleXYZf euler(gmtl::Math::deg2Rad(x_rot),
+                                 gmtl::Math::deg2Rad(y_rot),
+                                 gmtl::Math::deg2Rad(z_rot));
+      gmtl::postMult(pos_data, gmtl::makeRot<gmtl::Matrix44f>(euler));
    }
+
    mPos.setTime();
 
    return true;
 }
-
 
 void SimPosition::updateData()
 {
@@ -198,12 +199,12 @@ void SimPosition::moveDir(const float amt, const gmtl::Vec3f dir)
    {
       if(mTransCoordSystem == LOCAL)
       {
-         gmtl::postMult(mPos.mPosData,
+         gmtl::postMult(mPos.editValue(),
                         gmtl::makeTrans<gmtl::Matrix44f>(move_vector));
       }
       else
       {
-         gmtl::preMult(mPos.mPosData,
+         gmtl::preMult(mPos.editValue(),
                        gmtl::makeTrans<gmtl::Matrix44f>(move_vector));
       }
    }
@@ -247,20 +248,22 @@ void SimPosition::rotAxis(const float amt, const gmtl::Vec3f& rotAxis)
 
    gmtl::Matrix44f delta_rot( gmtl::makeRot<gmtl::Matrix44f>( axisAngle ) );   // make delta rot
 
+   gmtl::Matrix44f& pos_data(mPos.editValue());
+
    if(mRotCoordSystem == LOCAL)
    {
-      gmtl::postMult(mPos.mPosData, delta_rot);
+      gmtl::postMult(pos_data, delta_rot);
    }
    else
    {
       // Get the translation and rotation seperated
       // Make new matrix with Trans*DeltaRot*Rot
-      gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(mPos.mPosData));          // Get translation
+      gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(pos_data));          // Get translation
       gmtl::Matrix44f trans_mat(gmtl::makeTrans<gmtl::Matrix44f>( trans_vec ));   // Make trans matrix
-      gmtl::Matrix44f rot_mat(mPos.mPosData);
+      gmtl::Matrix44f rot_mat(pos_data);
 
       gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f,0.0f,0.0f));  // Clear out trans
-      mPos.mPosData = trans_mat * delta_rot * rot_mat;
+      pos_data = trans_mat * delta_rot * rot_mat;
       /*
       gmtl::setTrans(*m, gmtl::Vec3f(0,0,0));      // Get to rotation only
       gmtl::preMult(*m, delta_rot);

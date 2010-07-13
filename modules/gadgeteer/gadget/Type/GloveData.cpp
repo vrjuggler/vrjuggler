@@ -39,39 +39,22 @@
 namespace gadget
 {
 
-GloveData::GloveData() : gadget::InputData()
+GloveData::GloveData()
 {
+   typedef GloveValues::angles_type angles_type;
+
    // Zero out the mAngles
-   for(int i=0;i<NUM_COMPONENTS;i++)
+   angles_type& angles(editValue().mAngles);
+   for (angles_type::iterator i = angles.begin(); i != angles.end(); ++i)
    {
-      for(int j=0;j<NUM_JOINTS;j++)
+      typedef GloveValues::angular_joints_type::iterator iter_type;
+      for (iter_type j = (*i).begin(); j != (*i).end(); ++j)
       {
-         mAngles[i][j] = 0;
+         *j = 0.0f;
       }
    }
 
    // Matrixes are already identities
-}
-
-GloveData::GloveData(const GloveData& data) : gadget::InputData(data)
-{
-   int i;
-
-   for (i=0;i<NUM_COMPONENTS;i++)
-   {
-      for(int j=0;j<NUM_JOINTS;j++)
-      {
-         mAngles[i][j] = data.mAngles[i][j];
-      }
-   }
-
-   for(i=0;i<NUM_COMPONENTS;i++)
-   {
-      for(int j=0;j<NUM_JOINTS-1;j++)
-      {
-         mTransforms[i][j] = data.mTransforms[i][j];
-      }
-   }
 }
 
 /**
@@ -82,12 +65,12 @@ GloveData::GloveData(const GloveData& data) : gadget::InputData(data)
  * The thumb is a complete fudge.
  * Wrist is not being done at all
  */
-int GloveData::calcXforms()
+bool GloveData::calcXforms()
 {
-   gmtl::Vec3f xAxis(1.0f, 0.0f, 0.0f);
-   gmtl::Vec3f yAxis(0.0f, 1.0f, 0.0f);
-   gmtl::Vec3f zAxis(0.0f, 0.0f, 1.0f);
-   const float toMeters(1.0f/PositionUnitConversion::ConvertToInches);
+   gmtl::Vec3f x_axis(1.0f, 0.0f, 0.0f);
+   gmtl::Vec3f y_axis(0.0f, 1.0f, 0.0f);
+   gmtl::Vec3f z_axis(0.0f, 0.0f, 1.0f);
+   const float to_meters(1.0f / PositionUnitConversion::ConvertToInches);
    gmtl::Vec3f dims[NUM_COMPONENTS][NUM_JOINTS];
    
    // DIJ+1 = Length distal
@@ -98,90 +81,131 @@ int GloveData::calcXforms()
    // TODO: Do this once at startup, since it doesn't change.
    // And this really should be part of the Glove, so you can specify the dimension of a hand in the config file
 
-   dims[THUMB][DIJ+1] = yAxis * (toMeters * 0.5f);
-   dims[THUMB][DIJ] = yAxis * (toMeters * 0.5f);
-   dims[THUMB][PIJ] = yAxis * (toMeters * 0.5f);
-   dims[THUMB][MPJ] = xAxis * (toMeters * -0.5f);
+   dims[THUMB][DIJ + 1] = y_axis * (to_meters * 0.5f);
+   dims[THUMB][DIJ] = y_axis * (to_meters * 0.5f);
+   dims[THUMB][PIJ] = y_axis * (to_meters * 0.5f);
+   dims[THUMB][MPJ] = x_axis * (to_meters * -0.5f);
 
-   dims[INDEX][DIJ+1] = yAxis * (toMeters * 0.5f);
-   dims[INDEX][DIJ] = yAxis * (toMeters * 1.0f);
-   dims[INDEX][PIJ] = yAxis * (toMeters * 1.3f);
-   dims[INDEX][MPJ] = (yAxis * (toMeters * 1.7f)) + (toMeters * xAxis * -0.4f);
+   dims[INDEX][DIJ + 1] = y_axis * (to_meters * 0.5f);
+   dims[INDEX][DIJ] = y_axis * (to_meters * 1.0f);
+   dims[INDEX][PIJ] = y_axis * (to_meters * 1.3f);
+   dims[INDEX][MPJ] = (y_axis * (to_meters * 1.7f)) +
+                        (to_meters * x_axis * -0.4f);
 
-   dims[MIDDLE][DIJ+1] = yAxis * (toMeters * 0.5f);
-   dims[MIDDLE][DIJ] = yAxis * (toMeters * 1.1f);
-   dims[MIDDLE][PIJ] = yAxis * (toMeters * 1.4f);
-   dims[MIDDLE][MPJ] = (yAxis * (toMeters * 1.8f)) + (toMeters * xAxis * 0.0f);
+   dims[MIDDLE][DIJ + 1] = y_axis * (to_meters * 0.5f);
+   dims[MIDDLE][DIJ] = y_axis * (to_meters * 1.1f);
+   dims[MIDDLE][PIJ] = y_axis * (to_meters * 1.4f);
+   dims[MIDDLE][MPJ] = (y_axis * (to_meters * 1.8f)) +
+                        (to_meters * x_axis * 0.0f);
 
-   dims[RING][DIJ+1] = yAxis * (toMeters * 0.4f);
-   dims[RING][DIJ] = yAxis * (toMeters * 1.0f);
-   dims[RING][PIJ] = yAxis * (toMeters * 1.1f);
-   dims[RING][MPJ] = (yAxis * (toMeters * 1.7f)) + (toMeters * xAxis * 0.4f);
+   dims[RING][DIJ + 1] = y_axis * (to_meters * 0.4f);
+   dims[RING][DIJ] = y_axis * (to_meters * 1.0f);
+   dims[RING][PIJ] = y_axis * (to_meters * 1.1f);
+   dims[RING][MPJ] = (y_axis * (to_meters * 1.7f)) +
+                        (to_meters * x_axis * 0.4f);
 
-   dims[PINKY][DIJ+1] = yAxis * (toMeters * 0.3f);
-   dims[PINKY][DIJ] = yAxis * (toMeters * 1.0f);
-   dims[PINKY][PIJ] = yAxis * (toMeters * 0.85f);
-   dims[PINKY][MPJ] = (yAxis * (toMeters * 1.6f)) + (toMeters * xAxis * 0.7f);
+   dims[PINKY][DIJ + 1] = y_axis * (to_meters * 0.3f);
+   dims[PINKY][DIJ] = y_axis * (to_meters * 1.0f);
+   dims[PINKY][PIJ] = y_axis * (to_meters * 0.85f);
+   dims[PINKY][MPJ] = (y_axis * (to_meters * 1.6f)) +
+                        (to_meters * x_axis * 0.7f);
 
    // ----------------------- //
    // ----- XFORMS ---------- //
    // ----------------------- //
 
+   GloveValues::xform_type& xforms(editValue().mTransforms);
+   GloveValues::angles_type& angles(editValue().mAngles);
+
    // THUMB
-   gmtl::setRot(mTransforms[THUMB][DIJ], gmtl::AxisAnglef( mAngles[THUMB][DIJ], xAxis ) );
-   gmtl::preMult(mTransforms[THUMB][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][DIJ]));
-   gmtl::setRot(mTransforms[THUMB][PIJ], gmtl::AxisAnglef( mAngles[THUMB][PIJ], xAxis ) );
-   gmtl::preMult(mTransforms[THUMB][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][PIJ]));
-   gmtl::setRot(mTransforms[THUMB][MPJ], gmtl::AxisAnglef( gmtl::Math::PI_OVER_4, zAxis ) );
-   gmtl::preMult(mTransforms[THUMB][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][MPJ]));
+   gmtl::setRot(xforms[THUMB][DIJ],
+                gmtl::AxisAnglef(angles[THUMB][DIJ], x_axis));
+   gmtl::preMult(xforms[THUMB][DIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][DIJ]));
+   gmtl::setRot(xforms[THUMB][PIJ],
+                gmtl::AxisAnglef(angles[THUMB][PIJ], x_axis));
+   gmtl::preMult(xforms[THUMB][PIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][PIJ]));
+   gmtl::setRot(xforms[THUMB][MPJ],
+                gmtl::AxisAnglef(gmtl::Math::PI_OVER_4, z_axis));
+   gmtl::preMult(xforms[THUMB][MPJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][MPJ]));
    
-// Do we need to rotate this by the mAngles too?
-// gmtl::setRot(mTransforms[THUMB][MPJ], gmtl::AxisAnglef( mAngles[THUMB][MPJ], xAxis ) );
-// gmtl::preMult(mTransforms[THUMB][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][MPJ]));
+// Do we need to rotate this by the angles too?
+// gmtl::setRot(xforms[THUMB][MPJ], gmtl::AxisAnglef(angles[THUMB][MPJ], x_axis));
+// gmtl::preMult(xforms[THUMB][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][MPJ]));
 
    // INDEX
-   gmtl::setRot(mTransforms[INDEX][DIJ], gmtl::AxisAnglef( mAngles[INDEX][DIJ], xAxis ) );
-   gmtl::preMult(mTransforms[INDEX][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][DIJ]));
-   gmtl::setRot(mTransforms[INDEX][PIJ], gmtl::AxisAnglef( mAngles[INDEX][PIJ], xAxis ) );
-   gmtl::preMult(mTransforms[INDEX][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][PIJ]));
-   gmtl::setRot(mTransforms[INDEX][MPJ], gmtl::AxisAnglef( mAngles[INDEX][MPJ], xAxis ) );
-   gmtl::preMult(mTransforms[INDEX][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][MPJ]));
+   gmtl::setRot(xforms[INDEX][DIJ],
+                gmtl::AxisAnglef(angles[INDEX][DIJ], x_axis));
+   gmtl::preMult(xforms[INDEX][DIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][DIJ]));
+   gmtl::setRot(xforms[INDEX][PIJ],
+                gmtl::AxisAnglef(angles[INDEX][PIJ], x_axis));
+   gmtl::preMult(xforms[INDEX][PIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][PIJ]));
+   gmtl::setRot(xforms[INDEX][MPJ],
+                gmtl::AxisAnglef(angles[INDEX][MPJ], x_axis));
+   gmtl::preMult(xforms[INDEX][MPJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][MPJ]));
 
    // MIDDLE
-   gmtl::setRot(mTransforms[MIDDLE][DIJ], gmtl::AxisAnglef( mAngles[MIDDLE][DIJ], xAxis ) );
-   gmtl::preMult(mTransforms[MIDDLE][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][DIJ]));
-   gmtl::setRot(mTransforms[MIDDLE][PIJ], gmtl::AxisAnglef( mAngles[MIDDLE][PIJ], xAxis ) );
-   gmtl::preMult(mTransforms[MIDDLE][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][PIJ]));
-   gmtl::setRot(mTransforms[MIDDLE][MPJ], gmtl::AxisAnglef( mAngles[MIDDLE][MPJ], xAxis ) );
-   gmtl::preMult(mTransforms[MIDDLE][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][MPJ]));
+   gmtl::setRot(xforms[MIDDLE][DIJ],
+                gmtl::AxisAnglef(angles[MIDDLE][DIJ], x_axis));
+   gmtl::preMult(xforms[MIDDLE][DIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][DIJ]));
+   gmtl::setRot(xforms[MIDDLE][PIJ],
+                gmtl::AxisAnglef(angles[MIDDLE][PIJ], x_axis));
+   gmtl::preMult(xforms[MIDDLE][PIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][PIJ]));
+   gmtl::setRot(xforms[MIDDLE][MPJ],
+                gmtl::AxisAnglef(angles[MIDDLE][MPJ], x_axis));
+   gmtl::preMult(xforms[MIDDLE][MPJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][MPJ]));
 
    // RING
-   gmtl::setRot(mTransforms[RING][DIJ], gmtl::AxisAnglef( mAngles[RING][DIJ], xAxis ) );
-   gmtl::preMult(mTransforms[RING][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][DIJ]));
-   gmtl::setRot(mTransforms[RING][PIJ], gmtl::AxisAnglef( mAngles[RING][PIJ], xAxis ) );
-   gmtl::preMult(mTransforms[RING][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][PIJ]));
-   gmtl::setRot(mTransforms[RING][MPJ], gmtl::AxisAnglef( mAngles[RING][MPJ], xAxis ) );
-   gmtl::preMult(mTransforms[RING][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][MPJ]));
+   gmtl::setRot(xforms[RING][DIJ],
+                gmtl::AxisAnglef(angles[RING][DIJ], x_axis));
+   gmtl::preMult(xforms[RING][DIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][DIJ]));
+   gmtl::setRot(xforms[RING][PIJ],
+                gmtl::AxisAnglef(angles[RING][PIJ], x_axis));
+   gmtl::preMult(xforms[RING][PIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][PIJ]));
+   gmtl::setRot(xforms[RING][MPJ],
+                gmtl::AxisAnglef(angles[RING][MPJ], x_axis));
+   gmtl::preMult(xforms[RING][MPJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][MPJ]));
 
    // PINKY
-   gmtl::setRot(mTransforms[PINKY][DIJ], gmtl::AxisAnglef( mAngles[PINKY][DIJ], xAxis ) );
-   gmtl::preMult(mTransforms[PINKY][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][DIJ]));
-   gmtl::setRot(mTransforms[PINKY][PIJ], gmtl::AxisAnglef( mAngles[PINKY][PIJ], xAxis ) );
-   gmtl::preMult(mTransforms[PINKY][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][PIJ]));
-   gmtl::setRot(mTransforms[PINKY][MPJ], gmtl::AxisAnglef( mAngles[PINKY][MPJ], xAxis ) );
-   gmtl::preMult(mTransforms[PINKY][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][MPJ]));
+   gmtl::setRot(xforms[PINKY][DIJ],
+                gmtl::AxisAnglef(angles[PINKY][DIJ], x_axis));
+   gmtl::preMult(xforms[PINKY][DIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][DIJ]));
+   gmtl::setRot(xforms[PINKY][PIJ],
+                gmtl::AxisAnglef(angles[PINKY][PIJ], x_axis));
+   gmtl::preMult(xforms[PINKY][PIJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][PIJ]));
+   gmtl::setRot(xforms[PINKY][MPJ],
+                gmtl::AxisAnglef(angles[PINKY][MPJ], x_axis));
+   gmtl::preMult(xforms[PINKY][MPJ],
+                 gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][MPJ]));
 
-   return 1;
+   return true;
 }
 
 // Output the mAngles to a single line
 std::ostream& GloveData::outputAngles(std::ostream& out) const
 {
-   for(int i=0;i<NUM_COMPONENTS;i++)
+   typedef GloveValues::angles_type angles_type;
+
+   const angles_type& angles(getValue().mAngles);
+   for (angles_type::const_iterator i = angles.begin(); i != angles.end(); ++i)
    {
-      for(int j=0;j<NUM_JOINTS;j++)
+      typedef GloveValues::angular_joints_type::const_iterator iter_type;
+      for (iter_type j = (*i).begin(); j != (*i).end(); ++j)
       {
-         out << mAngles[i][j] << " ";
+         out << *j << " ";
       }
    }
 
@@ -191,11 +215,15 @@ std::ostream& GloveData::outputAngles(std::ostream& out) const
 // Input the mAngles from one single line
 std::istream& GloveData::inputAngles(std::istream& in)
 {
-   for(int i=0;i<NUM_COMPONENTS;i++)
+   typedef GloveValues::angles_type angles_type;
+
+   angles_type& angles(editValue().mAngles);
+   for (angles_type::iterator i = angles.begin(); i != angles.end(); ++i)
    {
-      for(int j=0;j<NUM_JOINTS;j++)
+      typedef GloveValues::angular_joints_type::iterator iter_type;
+      for (iter_type j = (*i).begin(); j != (*i).end(); ++j)
       {
-         in >> mAngles[i][j];
+         in >> *j;
       }
    }
 

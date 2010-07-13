@@ -1,4 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2010-07-12 patrick     Added gadget::DeviceTraits<T> and gadget::DeviceData<T>.
+                       Refactored gadget::TypedProxy<T> so that every proxy
+                       type has a (virtual) getData() method that returns the
+                       data specific to its device type.
+                       NEW VERSION: 2.1.1
 2010-06-19 patrick     VR Juggler 3.0 branch created.
                        NEW VERSION: 2.1.0

@@ -391,8 +391,8 @@ bool MotionStar::sample()
             for ( unsigned int i = 0; i < mMotionStar.getNumSensors(); ++i )
             {
                // Get the index to the current read buffer
-               cur_samples[i].setTime( cur_samples[0].getTime() );
-               cur_samples[i].mPosData = mMotionStar.getDeviceData(i);
+               cur_samples[i].setTime(cur_samples[0].getTime());
+               cur_samples[i].setValue(mMotionStar.getDeviceData(i));
             }
          }
 

@@ -79,9 +79,6 @@ public:
    /** Updates the sampled data. */
    void updateData();
 
-   /** Returns the device name. */
-   char* getDeviceName();
-
    /** Returns what chunk type is associated with this class. */
    static std::string getElementType();
 

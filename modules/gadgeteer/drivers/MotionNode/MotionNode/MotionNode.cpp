@@ -175,7 +175,7 @@ bool MotionNode::sample()
         std::vector<float> q = itr->second.getQuaternion(false);
 
         gmtl::Quatf quatValue(q[1], q[2], q[3], q[0]);
-        gmtl::set(sample[index].mPosData, quatValue);
+        gmtl::set(sample[index].editValue(), quatValue);
 
         index++;
       }

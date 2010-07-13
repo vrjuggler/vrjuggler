@@ -29,7 +29,11 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <string>
+#include <vector>
+#include <boost/concept_check.hpp>
 #include <boost/noncopyable.hpp>
+
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Interval.h>
@@ -37,11 +41,9 @@
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 #include <gadget/Type/KeyboardMouse/EventPtr.h>
+#include <gadget/Type/KeyboardMouseData.h>
 #include <gadget/Type/KeyboardMousePtr.h>
 
-#include <boost/concept_check.hpp>
-#include <string>
-#include <vector>
 
 namespace gadget
 {
@@ -60,10 +62,10 @@ const unsigned short MSG_DATA_EVENT_WINDOW = 420;
  */
 class GADGET_CLASS_API KeyboardMouse
    : public vpr::SerializableObject
-   , boost::noncopyable
+   , private boost::noncopyable
 {
 public:
-   typedef std::vector<gadget::EventPtr> EventQueue;
+   typedef KeyboardMouseData::data_type EventQueue;
 
 protected:
    KeyboardMouse();
@@ -184,10 +186,11 @@ protected:
     */
    void updateEventQueue();
 
-   EventQueue mCurEventQueue;     /**< Queue of events returned to users. */
+   /** Queue of events returned to users. */
+   KeyboardMouseData mCurEventQueue;
    vpr::Mutex mCurEventQueueLock;
 
-   EventQueue mWorkingEventQueue; /**< In-progress queue of events. */
+   KeyboardMouseData mWorkingEventQueue; /**< In-progress queue of events. */
    vpr::Mutex mWorkingEventQueueLock;
 
    // We have to create a Interval that the user can use across the cluster to

@@ -80,12 +80,6 @@ public:
    /** Kills the sample thread. */
    virtual bool stopSampling();
 
-   /** Device's config element name (match the definition). */
-   virtual char* getDeviceName()
-   {
-      return "Fastrak";
-   }
-
 private:
    void controlLoop();
 

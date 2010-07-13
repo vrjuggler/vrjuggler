@@ -33,9 +33,7 @@ namespace gadget
 {
 
 DigitalProxy::DigitalProxy(const std::string& deviceName, const int unitNum) 
-   : TypedProxy<Digital>(deviceName)
-   , mUnitNum(unitNum)
-   , mData(0)
+   : base_type(deviceName, unitNum)
 {
    /* Do nothing. */ ;
 }
@@ -56,74 +54,43 @@ std::string DigitalProxy::getElementType()
    return "digital_proxy";
 }
 
-bool DigitalProxy::config(jccl::ConfigElementPtr element)
-{
-vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                              std::string("----------- configuring DIGITAL PROXY -----------------\n"),
-                              std::string("----------- exit: configuring digital proxy -----------\n"));
-
-   vprASSERT(element->getID() == getElementType());
-
-   if( ! Proxy::config(element) )
-   {
-      return false;
-   }
-
-   mUnitNum = element->getProperty<int>("unit");
-   mDeviceName = element->getProperty<std::string>("device");
-
-   refresh();
-   return true;
-}
-
-
-
 void DigitalProxy::updateData()
 {
-   if (!isStupefied())
+   if (! isStupefied())
    {
-      int old_state = mData.getDigital();
+      const int old_state(mData.getValue());
 
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
 
-      mData = mTypedDevice->getDigitalData(mUnitNum);
-      int new_state = mData.getDigital();
+      mData = mTypedDevice->getDigitalData(mUnit);
+      const int new_state(mData.getValue());
 
       if (Digital::OFF == old_state)
       {
-         if (new_state)     // Button now pressed
-            mData = Digital::TOGGLE_ON;
-         else              // Button now released
-            mData = Digital::OFF;
+         // Digital::TOGGLE_ON -> Button now pressed
+         // Digital::OFF       -> Button still released
+         mData = new_state ? Digital::TOGGLE_ON : Digital::OFF;
       }
       else if (Digital::ON == old_state)
       {
-         if (new_state)     // Button now pressed
-            mData = Digital::ON;
-         else              // Button now released
-            mData = Digital::TOGGLE_OFF;
+         // Digital::ON         -> Button still pressed
+         // Digital::TOGGLE_OFF -> Button now released
+         mData = new_state ? Digital::ON : Digital::TOGGLE_OFF;
       }
       else if (Digital::TOGGLE_ON == old_state)
       {
-         if (new_state)     // Button now pressed
-            mData = Digital::ON;
-         else              // Button now released
-            mData = Digital::TOGGLE_OFF;
+         // Digital::ON         -> Button still pressed
+         // Digital::TOGGLE_OFF -> Button now released
+         mData = new_state ? Digital::ON : Digital::TOGGLE_OFF;
       }
       else if (Digital::TOGGLE_OFF == old_state)
       {
-         if (new_state)     // Button now pressed
-            mData = Digital::TOGGLE_ON;
-         else              // Button now released
-            mData = Digital::OFF;
+         // Digital::TOGGLE_ON -> Button now pressed
+         // Digital::OFF       -> Button still released
+         mData = new_state ? Digital::TOGGLE_ON : Digital::OFF;
       }
    }
-}
-
-vpr::Interval DigitalProxy::getTimeStamp() const
-{
-   return mData.getTime();
 }
 
 } // End of gadget namespace

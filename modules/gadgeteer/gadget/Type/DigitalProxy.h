@@ -49,6 +49,10 @@ namespace gadget
  */
 class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<Digital> base_type;
+
 protected:
    DigitalProxy(const std::string& deviceName = "UnknownDigital",
                 const int unitNum = -1);
@@ -70,9 +74,6 @@ public:
 
    virtual void updateData();
 
-   /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const;
-
    /**
     * Get the digital data.
     * Digital::OFF: Button not pressed, and was not pressed last update either.<br>
@@ -87,47 +88,17 @@ public:
     *       will result in a one update lag in detecting the button not being
     *       pressed.
     */
+   /*
    gadget::Digital::State getData() const
    {
       // If we're stupefied, return gadget::Digital::OFF.  Otherwise, return
       // the current digital value.
-      return (isStupefied() ? Digital::OFF
-                            : (gadget::Digital::State) mData.getDigital());
+      return isStupefied() ? Digital::OFF
+                           : static_cast<gadget::Digital::State>(mData.getValue());
    }
-
-   const DigitalData* getDigitalData() const
-   {
-      return &mData;
-   }
-
-   /** Returns a pointer to the gadget::Digital object that we are proxying. */
-   const DigitalPtr getDigitalPtr() const
-   {
-      // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
-      return (isStupefied() ? DigitalPtr() : mTypedDevice);
-   }
-
-   /**
-    * Returns the unit index into the digital device from which this proxy
-    * is reading data.
-    */
-   int getUnit() const
-   {
-      return mUnitNum;
-   }
+   */
 
    static std::string getElementType();
-
-   bool config(jccl::ConfigElementPtr element);
-
-private:
-   int mUnitNum;     /**<  The sub-unit of the device we are working with */
-
-   /**
-    * Copy of the digital data we are dealing with.
-    * @see getData()
-    */
-   DigitalData mData;
 };
 
 } // End of gadget namespace

@@ -59,6 +59,10 @@ namespace gadget
 class GADGET_CLASS_API StringProxy
    : public TypedProxy<String>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<String> base_type;
+
 protected:
    StringProxy(const std::string& deviceName = "UnknownString",
                const int unitNum = -1);
@@ -80,55 +84,7 @@ public:
 
    virtual void updateData();
 
-   /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const;
-
-   /**
-    * Gets the string data.
-    */
-   const std::string getData() const
-   {
-      // If we're stupefied, return empty string.  Otherwise, return
-      // the current string value.
-      return (isStupefied() ? ""
-                            : mData.getString());
-   }
-
-   const StringData* getStringData() const
-   {
-      return &mData;
-   }
-
-   /**
-    * Returns a pointer to the gadget::String object that we are proxying.
-    */
-   const StringPtr getStringPtr() const
-   {
-      // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
-      return (isStupefied() ? StringPtr() : mTypedDevice);
-   }
-
-   /**
-    * Returns the unit index into the string speech recognition device from
-    * which this proxy is reading data.
-    */
-   int getUnit() const
-   {
-      return mUnitNum;
-   }
-
    static std::string getElementType();
-
-   bool config(jccl::ConfigElementPtr element);
-
-private:
-   int mUnitNum;     /**<  The sub-unit of the device we are working with */
-
-   /**
-    * Copy of the digital data we are dealing with.
-    * @see getData()
-    */
-   StringData mData;
 };
 
 } // End of gadget namespace

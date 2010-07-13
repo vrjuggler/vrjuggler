@@ -61,8 +61,11 @@ void SimRelativePosition::updateData()
    mBaseFrame->updateDataIfNeeded();
    mRelativePos->updateDataIfNeeded();
 
-   gmtl::mult( mPos.mPosData, mBaseFrame->getData(gadget::PositionUnitConversion::ConvertToMeters), 
-                              mRelativePos->getData(gadget::PositionUnitConversion::ConvertToMeters) );
+   gmtl::mult(
+      mPos.editValue(),
+      mBaseFrame->getData(gadget::PositionUnitConversion::ConvertToMeters), 
+      mRelativePos->getData(gadget::PositionUnitConversion::ConvertToMeters)
+   );
 
    // NOTE: This is a little bit of an overkill, but it works and it allows for the
    //       buffering that could be needed in multi-threaded cases

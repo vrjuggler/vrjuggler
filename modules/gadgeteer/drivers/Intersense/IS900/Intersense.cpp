@@ -280,29 +280,30 @@ bool Intersense::sample()
    {
       //int index = getStationIndex(i,progress);
 
-      const int stationIndex(stations[i].stationIndex);
+      const int station_index(stations[i].stationIndex);
+      gmtl::Matrix44f& pos_data(cur_pos_samples[i].editValue());
 
-      if ( mTracker.rAngleFormat(stationIndex) == ISD_EULER )
+      if ( mTracker.rAngleFormat(station_index) == ISD_EULER )
       {
-         gmtl::identity(cur_pos_samples[i].mPosData);
+         gmtl::identity(pos_data);
          gmtl::EulerAngleZYXf euler(
-            gmtl::Math::deg2Rad(mTracker.zRot(stationIndex)),
-            gmtl::Math::deg2Rad(mTracker.yRot(stationIndex)),
-            gmtl::Math::deg2Rad(mTracker.xRot(stationIndex))
+            gmtl::Math::deg2Rad(mTracker.zRot(station_index)),
+            gmtl::Math::deg2Rad(mTracker.yRot(station_index)),
+            gmtl::Math::deg2Rad(mTracker.xRot(station_index))
          );
-         gmtl::setRot(cur_pos_samples[i].mPosData, euler);
-         gmtl::setTrans(cur_pos_samples[i].mPosData,
-                        gmtl::Vec3f(mTracker.xPos(stationIndex),
-                                    mTracker.yPos(stationIndex),
-                                    mTracker.zPos(stationIndex)));
+         gmtl::setRot(pos_data, euler);
+         gmtl::setTrans(pos_data,
+                        gmtl::Vec3f(mTracker.xPos(station_index),
+                                    mTracker.yPos(station_index),
+                                    mTracker.zPos(station_index)));
       }
       else
       {
-         gmtl::Quatf quatValue(mTracker.xQuat(stationIndex),
-                               mTracker.yQuat(stationIndex),
-                               mTracker.zQuat(stationIndex),
-                               mTracker.wQuat(stationIndex));
-         gmtl::set(cur_pos_samples[i].mPosData, quatValue);
+         gmtl::Quatf quatValue(mTracker.xQuat(station_index),
+                               mTracker.yQuat(station_index),
+                               mTracker.zQuat(station_index),
+                               mTracker.wQuat(station_index));
+         gmtl::set(pos_data, quatValue);
       }
 
       cur_pos_samples[i].setTime(cur_pos_samples[0].getTime());
@@ -318,8 +319,8 @@ bool Intersense::sample()
                j < MAX_NUM_BUTTONS && k < IS_BUTTON_NUM && k < num;
                ++j, ++k )
          {
-            //mInput[progress].digital[k] = mTracker.buttonState(stationIndex, j);
-            cur_sample.digital[k] = mTracker.buttonState(stationIndex, j);
+            //mInput[progress].digital[k] = mTracker.buttonState(station_index, j);
+            cur_sample.digital[k] = mTracker.buttonState(station_index, j);
          }
       }
 
@@ -333,8 +334,8 @@ bool Intersense::sample()
                j < MAX_ANALOG_CHANNELS && k < IS_ANALOG_NUM && k < num;
                ++j, ++k )
          {
-            //mInput[progress].analog[k] = mTracker.analogData(stationIndex, j);
-            cur_sample.analog[k] = mTracker.analogData(stationIndex, j);
+            //mInput[progress].analog[k] = mTracker.analogData(station_index, j);
+            cur_sample.analog[k] = mTracker.analogData(station_index, j);
          }
       }
 

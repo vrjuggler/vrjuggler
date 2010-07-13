@@ -27,79 +27,14 @@
 #ifndef _GADGET_STRING_DATA_H_
 #define _GADGET_STRING_DATA_H_
 
-#include <stdlib.h>
 #include <string>
 
-#include <gadget/Type/InputData.h>
+#include <gadget/Type/DeviceData.h>
 
 namespace gadget
 {
 
-/** \class StringData StringData.h gadget/Type/StringData.h
- *
- * InputData subclass for string data.
- */
-class StringData : public InputData
-{
-   // Hack around a GCC 3.3 bug on Mac OS X 10.3 that shows up with
-   // boost::is_polymorphic.
-#if defined(__MACH__) && defined(__APPLE_CC__) && defined(__GNUC__) && \
-    __GNUC__ == 3 && __GNUC_MINOR__ == 3
-   bool dummy_;
-#endif
-
-public:
-   /** Constructor. */
-   StringData()
-      : InputData()
-      , mStringData("")
-   {
-      ;
-   }
-
-   StringData(const std::string& s)
-      : InputData()
-      , mStringData(s)
-   {
-      ;
-   }
-
-   const std::string& getString() const
-   {
-      return mStringData;
-   }
-
-   void setString(const std::string& s)
-   {
-      mStringData = s;
-   }
-
-   StringData& operator= (const StringData& pd)
-   {
-      InputData::copy (pd);
-      mStringData = pd.mStringData;
-      return *this;
-   }
-
-   StringData& operator= (const std::string& data)
-   {
-      mStringData = data;
-      return *this;
-   }
-
-   bool operator== (const StringData& o) const
-   {
-      return mStringData == o.mStringData && mTimeStamp == o.mTimeStamp;
-   }
-
-   bool operator!= (const StringData& o) const
-   {
-      return ! (*this == o);
-   }
-
-protected:
-   std::string mStringData;
-}; // class StringData
+typedef DeviceData<std::string> StringData;
 
 } // namespace gadget
 

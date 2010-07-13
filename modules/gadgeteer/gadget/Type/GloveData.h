@@ -24,16 +24,63 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_GLOVEDATA_H
-#define _GADGET_GLOVEDATA_H
+#ifndef _GADGET_GLOVE_DATA_H_
+#define _GADGET_GLOVE_DATA_H_
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/InputData.h>
+
+#include <boost/array.hpp>
 #include <gmtl/Matrix.h>
+
+#include <gadget/Type/DeviceData.h>
 
 
 namespace gadget
 {
+
+/** \struct GloveValues GloveData.h gadget/Type/GloveData.h
+ *
+ * @since 2.1.1
+ */
+struct GloveValues
+{
+   enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };
+
+   enum GloveJoint
+   {
+      MPJ = 0,
+      PIJ = 1,
+      DIJ = 2,
+      ABDUCT = 3,
+      YAW = 0,
+      PITCH = 1
+   };
+
+   enum GloveComponent
+   {
+      THUMB = 0,
+      INDEX = 1,
+      MIDDLE = 2,
+      RING = 3,
+      PINKY = 4,
+      WRIST = 5
+   };
+
+   typedef boost::array<float, NUM_JOINTS> angular_joints_type;
+   typedef boost::array<angular_joints_type, NUM_COMPONENTS> angles_type;
+
+   angles_type mAngles;
+
+   typedef boost::array<gmtl::Matrix44f, NUM_JOINTS - 1> xform_joints_type;
+   typedef boost::array<xform_joints_type, NUM_COMPONENTS> xform_type;
+
+   /**
+    * These are the xforms from TO the coord system of the given joint.
+    * Ex: xforms[0] ==> <br>
+    *     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
+    */
+   xform_type mTransforms;
+};
 
 /** \class GloveData GloveData.h gadget/Type/GloveData.h
  *
@@ -54,7 +101,7 @@ namespace gadget
  *
  * @note More docs needed here.
  */
-class GADGET_CLASS_API GloveData : public InputData
+class GADGET_CLASS_API GloveData : public DeviceData<GloveValues>
 {
 public:
    enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };
@@ -65,25 +112,24 @@ public:
 
    GloveData();
 
-   GloveData(const GloveData& data);
-
    /**
     * Calulates all the transformation matrices.
     * This is calculated based upon the angles in the data structure.
     *
-    * @post mTransforms is updated to reflect the current transformations.
+    * @post mValue.mTransforms is updated to reflect the current
+    *       transformations.
     */
-   int calcXforms();
+   bool calcXforms();
 
    /**
-    * Returns the transform matrix of the specified joint
+    * Returns the transform matrix of the specified joint.
     */
    const gmtl::Matrix44f&
       getLocalTransformMatrix(const GloveComponent component,
                               const GloveJoint joint)
       const
    {
-      return mTransforms[component][joint];
+      return getValue().mTransforms[component][joint];
    }
    
    /**
@@ -92,18 +138,9 @@ public:
     */
    std::ostream& outputAngles(std::ostream& out) const;
    std::istream& inputAngles(std::istream& in);
-
-public:
-   float mAngles[NUM_COMPONENTS][NUM_JOINTS];
-
-   /**
-    * These are the xforms from TO the coord system of the given joint.
-    * Ex: xforms[0] ==> <br>
-    *     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
-    */
-   gmtl::Matrix44f mTransforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
 }; // class GloveData
 
 } // namespace gadget
 
-#endif
+
+#endif /* _GADGET_GLOVE_DATA_H_ */

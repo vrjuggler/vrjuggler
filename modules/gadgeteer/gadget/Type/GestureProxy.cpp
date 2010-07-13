@@ -34,7 +34,7 @@ namespace gadget
 {
 
 GestureProxy::GestureProxy(const std::string& deviceName)
-   : TypedProxy<Gesture>(deviceName)
+   : base_type(deviceName)
 {
    /* Do nothing. */ ;
 }
@@ -49,12 +49,12 @@ GestureProxy::~GestureProxy()
    /* Do nothing. */ ;
 }
 
-vpr::Interval GestureProxy::getTimeStamp() const
+const vpr::Interval& GestureProxy::getTimeStamp() const
 {
    // XXX: Broken for now, this is a case similar to the KeyboardMouse type in
    //      that it does not point to one data element like digital, analog,
    //      and position.
-   return vpr::Interval();
+   return vpr::Interval::NullInterval;
 }
 
 std::string GestureProxy::getElementType()
@@ -70,7 +70,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    vprASSERT(element->getID() == getElementType());
 
-   if ( ! Proxy::config(element) )
+   // We do not call TypedProxy::config() because we are explicitly overriding
+   // its behavior.
+   if (! Proxy::config(element))
    {
       return false;
    }

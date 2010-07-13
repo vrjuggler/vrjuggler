@@ -87,7 +87,7 @@ bool SimAnalog::config(jccl::ConfigElementPtr element)
    mAnaData = std::vector<AnalogData>(num_pairs);
    for (size_t i=0; i<num_pairs; ++i)
    {
-      mAnaData[i].setAnalog(mInitialValue);
+      mAnaData[i].setValue(mInitialValue);
    }
 
    mAutoReturn = element->getProperty<bool>("auto_return");
@@ -106,27 +106,27 @@ void SimAnalog::updateData()
       int downPressed = checkKeyPair(mSimKeysDown[i]);
 
       mAnaData[i].setTime();
-      mAnaData[i].setAnalog(mAnaData[i].getAnalog() + upPressed   * mAnaStep);
-      mAnaData[i].setAnalog(mAnaData[i].getAnalog() - downPressed * mAnaStep);
+      mAnaData[i].setValue(mAnaData[i].getValue() + upPressed   * mAnaStep);
+      mAnaData[i].setValue(mAnaData[i].getValue() - downPressed * mAnaStep);
 
-      if(mAutoReturn == true && upPressed == 0 && downPressed == 0)
+      if (mAutoReturn == true && upPressed == 0 && downPressed == 0)
       {
-         if(mAnaData[i].getAnalog() >= mInitialValue + mAnaStep)
+         if (mAnaData[i].getValue() >= mInitialValue + mAnaStep)
          {
-            mAnaData[i].setAnalog(mAnaData[i].getAnalog() - mAnaStep);
+            mAnaData[i].setValue(mAnaData[i].getValue() - mAnaStep);
          }
-         else if(mAnaData[i].getAnalog() <= mInitialValue - mAnaStep )
+         else if (mAnaData[i].getValue() <= mInitialValue - mAnaStep )
          {
-            mAnaData[i].setAnalog(mAnaData[i].getAnalog() + mAnaStep);
+            mAnaData[i].setValue(mAnaData[i].getValue() + mAnaStep);
          }
          else
          {
-            mAnaData[i].setAnalog(mInitialValue);
+            mAnaData[i].setValue(mInitialValue);
          }
       }
 
       // Clamp to the min/max range
-      mAnaData[i].setAnalog(gmtl::Math::clamp(mAnaData[i].getAnalog(),
+      mAnaData[i].setValue(gmtl::Math::clamp(mAnaData[i].getValue(),
                                               getMin(), getMax()));
    }
 

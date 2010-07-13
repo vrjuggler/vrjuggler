@@ -49,6 +49,10 @@ namespace gadget
  */
 class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<Analog> base_type;
+
 protected:
    /** Constructor. */
    AnalogProxy(const std::string& deviceName = "UnknownAnalog",
@@ -70,14 +74,11 @@ public:
     * Updates the cached data copy from the device and the normalized form of
     * that data.
     *
-    * @post \c mRawData holds the current raw data sample from the proxied
+    * @post \c mData holds the current raw data sample from the proxied
     *       analog device. \c mData holds the current normalized data sample
     *       from the proxied analog device.
     */
    virtual void updateData();
-
-   /** Returns the time of last update. */
-   virtual vpr::Interval getTimeStamp() const;
 
    /**
     * Gets the current normalized analog data value. This value will be in
@@ -85,62 +86,15 @@ public:
     *
     * @return The normalized analog data from the device.
     */
-   float getData() const
+   const float getData() const
    {
-      return isStupefied() ? 0.0f : mData;
-   }
-
-   /**
-    * Gets the current raw analog data value. This is the value read direcctly
-    * from the device without perfomring any normalization.
-    *
-    * @return The raw analog data from the device.
-    *
-    * @since 1.3.18
-    */
-   float getRawData() const
-   {
-      const float analogDefault(0.0f);
-      if(isStupefied())
-      {
-         return analogDefault;
-      }
-      else
-      {
-         return mRawData.getAnalog();
-      }
-   }
-
-   /** Returns a pointer to the gadget::Analog object that we are proxying. */
-   const AnalogPtr getAnalogPtr() const
-   {
-      if ( isStupefied() || NULL == mTypedDevice.get() )
-      {
-         return AnalogPtr();
-      }
-      else
-      {
-         return mTypedDevice;
-      }
-   }
-
-   /**
-    * Returns the unit index into the analog device from which this proxy
-    * is reading data.
-    */
-   int getUnit() const
-   {
-      return mUnitNum;
+      return isStupefied() ? 0.0f : mNormalizedData;
    }
 
    static std::string getElementType();
 
-   bool config(jccl::ConfigElementPtr element);
-
 private:
-   int         mUnitNum;
-   AnalogData  mRawData;
-   float       mData;
+   float mNormalizedData;
 };
 
 } // End of gadget namespace

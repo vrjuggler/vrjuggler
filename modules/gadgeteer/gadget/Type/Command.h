@@ -36,7 +36,7 @@
 #include <vpr/IO/SerializableObject.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/CommandPtr.h>
-#include <gadget/Type/DigitalData.h>
+#include <gadget/Type/CommandData.h>
 #include <gadget/Type/SampleBuffer.h>
 #include <gadget/Util/DeviceSerializationTokens.h>
 
@@ -45,8 +45,6 @@ namespace gadget
 {
 
 const unsigned short MSG_DATA_COMMAND = 423;
-
-typedef DigitalData CommandData;
 
 /** \class Command Command.h gadget/Type/Command.h
  *

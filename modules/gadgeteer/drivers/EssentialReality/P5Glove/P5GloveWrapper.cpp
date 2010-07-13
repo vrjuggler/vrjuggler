@@ -38,8 +38,11 @@
 #include <vpr/System.h>
 
 #include <jccl/Config/ConfigElement.h>
-#include <gadget/Type/DeviceConstructor.h>
 #include <gadget/gadgetParam.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Type/PositionData.h>
+
 #include <drivers/EssentialReality/P5Glove/P5GloveStandalone.h> /* standalone dataglove driver */
 #include <drivers/EssentialReality/P5Glove/P5GloveWrapper.h> /* Gadgeteer dataglove driver */
 
@@ -214,7 +217,7 @@ bool P5GloveWrapper::sample()
                                     static_cast<float>(rec.position[2]));
       gmtl::Matrix44f position = gmtl::makeTrans<gmtl::Matrix44f>(translation);
       position = position * gmtl::make<gmtl::Matrix44f>(rotation);
-      mPositionP5[0].mPosData = position; 
+      mPositionP5[0].setValue(position);
       addPositionSample(mPositionP5);
       swapPositionBuffers();
    }

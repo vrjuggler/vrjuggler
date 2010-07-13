@@ -106,7 +106,7 @@ void Command::writeObject(vpr::ObjectWriter* writer)
             writer->beginAttribute(gadget::tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
-            writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Command Data(int)
+            writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getValue());  // Write Command Data(int)
             writer->endTag();
          }
          writer->endTag();
@@ -132,40 +132,41 @@ void Command::readObject(vpr::ObjectReader* reader)
    vprASSERT(temp==MSG_DATA_COMMAND && "[Remote Input Manager]Not Command Data");
    boost::ignore_unused_variable_warning(temp);
 
-   std::vector<CommandData> dataSample;
+   std::vector<CommandData> data_sample;
 
-   unsigned numCommandDatas;
+   unsigned int num_command_values;
    vpr::Uint32 value;
-   vpr::Uint64 timeStamp;
+   vpr::Uint64 time_stamp;
    CommandData temp_command_data;
 
    reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-      unsigned numVectors = reader->readUint16();
+      const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
    mCommandSamples.lock();
-   for ( unsigned i = 0; i < numVectors; ++i )
+   for (unsigned int i = 0; i < num_vectors; ++i)
    {
       reader->beginTag(gadget::tokens::BufferSampleTag);
       reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-         numCommandDatas = reader->readUint16();
+         num_command_values = reader->readUint16();
       reader->endAttribute();
 
-      dataSample.clear();
-      for ( unsigned j = 0; j < numCommandDatas; ++j )
+      data_sample.clear();
+      for (unsigned int j = 0; j < num_command_values; ++j)
       {
          reader->beginTag(gadget::tokens::DigitalValue);
          reader->beginAttribute(gadget::tokens::TimeStamp);
-            timeStamp = reader->readUint64();    // read Time Stamp vpr::Uint64
+            time_stamp = reader->readUint64();    // read Time Stamp vpr::Uint64
          reader->endAttribute();
          value = reader->readUint32();           // read Command Data(int)
          reader->endTag();
 
-         temp_command_data.setDigital(value);
-         temp_command_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
-         dataSample.push_back(temp_command_data);
+         temp_command_data.setValue(value);
+         temp_command_data.setTime(vpr::Interval(time_stamp + delta,
+                                   vpr::Interval::Usec));
+         data_sample.push_back(temp_command_data);
       }
-      mCommandSamples.addSample(dataSample);
+      mCommandSamples.addSample(data_sample);
       reader->endTag();
    }
    mCommandSamples.unlock();

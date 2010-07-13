@@ -33,12 +33,10 @@ namespace gadget
 {
 
 AnalogProxy::AnalogProxy(const std::string& deviceName, const int unitNum)
-   : TypedProxy<Analog>(deviceName)
-   , mUnitNum(unitNum)
-   , mRawData(-1.0f)
-   , mData(0.0f)
+   : base_type(deviceName, unitNum)
+   , mNormalizedData(0.0f)
 {
-   /* Do nothing. */ ;
+   mData = -1.0f;
 }
 
 AnalogProxyPtr AnalogProxy::create(const std::string& deviceName,
@@ -59,39 +57,14 @@ void AnalogProxy::updateData()
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
 
-      mRawData = mTypedDevice->getAnalogData(mUnitNum);
-      mData    = mTypedDevice->normalize(mRawData.getAnalog());
+      mData = mTypedDevice->getAnalogData(mUnit);
+      mNormalizedData = mTypedDevice->normalize(mData.getValue());
    }
 }
 
 std::string AnalogProxy::getElementType()
 {
    return "analog_proxy";
-}
-
-vpr::Interval AnalogProxy::getTimeStamp() const
-{
-   return mRawData.getTime();
-}
-
-bool AnalogProxy::config(jccl::ConfigElementPtr element)
-{
-vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                                 std::string("----------- configuring ANALOG PROXY -----------------\n"),
-                                 std::string("----------- exit: configuring analog proxy -----------\n"));
-   vprASSERT(element->getID() == getElementType());
-
-   if ( ! Proxy::config(element) )
-   {
-      return false;
-   }
-
-   mUnitNum = element->getProperty<int>("unit");
-   mDeviceName = element->getProperty<std::string>("device");
-
-   refresh();     // Refresh the device now that we have something to point at
-
-   return true;
 }
 
 } // End of gadget namespace

@@ -178,7 +178,7 @@ bool Fastrak::sample()
          // Transforms between the cord frames
          gmtl::Matrix44f transmitter_T_reciever = mFastrak.getStationPosition(i+1);
          cur_pos_samples[i].setTime(cur_pos_samples[0].getTime());
-         cur_pos_samples[i].mPosData = transmitter_T_reciever;
+         cur_pos_samples[i].setValue(transmitter_T_reciever);
       }
 
       addPositionSample(cur_pos_samples);

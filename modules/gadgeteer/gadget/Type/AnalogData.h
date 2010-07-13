@@ -27,83 +27,12 @@
 #ifndef _GADGET_ANALOG_DATA_H_
 #define _GADGET_ANALOG_DATA_H_
 
-#include <gadget/Type/InputData.h>
+#include <gadget/Type/DeviceData.h>
 
 namespace gadget
 {
 
-/** \class AnalogData AnalogData.h gadget/Type/AnalogData.h
- *
- * InputData subclass for analog data.
- */
-class AnalogData : public InputData
-{
-   // Hack around a GCC 3.3 bug on Mac OS X 10.3 that shows up with
-   // boost::is_polymorphic.
-#if defined(__MACH__) && defined(__APPLE_CC__) && defined(__GNUC__) && \
-    __GNUC__ == 3 && __GNUC_MINOR__ == 3
-   bool dummy_;
-#endif
-
-public:
-   /** Constructor. */
-   AnalogData ()
-      : InputData()
-      , mAnalogData(0.0f)
-   {
-      ;
-   }
-
-   AnalogData(float f)
-      : InputData()
-      , mAnalogData(f)
-   {
-      ;
-   }
-
-   float getAnalog() const
-   {
-      return mAnalogData;
-   }
-
-   void setAnalog(const float f)
-   {
-      mAnalogData = f;
-   }
-
-   AnalogData& operator= (const AnalogData& pd)
-   {
-      InputData::copy (pd);
-      mAnalogData = pd.mAnalogData;
-      return *this;
-   }
-
-   AnalogData& operator= (const float f)
-   {
-      mAnalogData = f;
-      return *this;
-   }
-
-   bool operator== (const AnalogData& o) const
-   {
-      return mAnalogData == o.mAnalogData && mTimeStamp == o.mTimeStamp;
-   }
-
-   bool operator!= (const AnalogData& o) const
-   {
-      return ! (*this == o);
-   }
-
-/*
-   operator float() const
-   {
-      return mAnalogData;
-   }
-*/
-
-protected:
-   float mAnalogData;
-}; // class AnalogData
+typedef DeviceData<float> AnalogData;
 
 } // namespace gadget
 

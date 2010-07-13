@@ -25,6 +25,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
+#include <algorithm>
+#include <boost/bind.hpp>
+
 #include <jccl/Config/ConfigElement.h>
 
 //#include <gadget/Type/PositionFilter.h>
@@ -46,8 +50,7 @@ namespace gadget
 {
 
 PositionProxy::PositionProxy(const std::string& deviceName, const int unitNum)
-   : TypedProxy<Position>(deviceName)
-   , mUnitNum(unitNum)
+   : base_type(deviceName, unitNum)
 {
    /* Do nothing. */ ;
 }
@@ -60,16 +63,6 @@ PositionProxyPtr PositionProxy::create(const std::string& deviceName,
 
 PositionProxy::~PositionProxy()
 {
-   typedef std::vector<PositionFilter*>::iterator iter_type;
-   for ( iter_type itr = mPositionFilters.begin(); itr != mPositionFilters.end(); ++itr )
-   {
-      if (NULL != *itr)
-      {
-         delete *itr;
-         *itr = NULL;
-      }
-   }
-   mPositionFilters.clear();
 }
 
 std::string PositionProxy::getElementType()
@@ -84,16 +77,13 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("\n"));
    vprASSERT(element->getID() == getElementType());
 
-   if ( ! Proxy::config(element) )
+   if (! base_type::config(element))
    {
       return false;
    }
 
-   mUnitNum = element->getProperty<int>("unit");
-   mDeviceName = element->getProperty<std::string>("device");
-
    // --- Configure filters --- //
-   unsigned num_filters = element->getNum("position_filters");
+   const unsigned int num_filters = element->getNum("position_filters");
 
    vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
                         std::string("PositionProxy::config: ") +
@@ -101,23 +91,29 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                            element->getID() + std::string("\n"),
                         std::string("PositionProxy::config: done.\n") );
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Num filters: " << num_filters
+                                         << std::endl << vprDEBUG_FLUSH;
 
    jccl::ConfigElementPtr cur_filter;
-   PositionFilter* new_filter(NULL);
+   PositionFilterPtr new_filter;
 
-   for(unsigned i=0;i<num_filters;++i)
+   for (unsigned int i = 0; i < num_filters; ++i)
    {
-      cur_filter = element->getProperty<jccl::ConfigElementPtr>("position_filters",i);
+      cur_filter =
+         element->getProperty<jccl::ConfigElementPtr>("position_filters", i);
       vprASSERT(cur_filter.get() != NULL);
 
-      std::string filter_id = cur_filter->getID();
+      const std::string filter_id = cur_filter->getID();
       vprDEBUG( vprDBG_ALL, vprDBG_VERB_LVL)
          << "   Filter [" << i << "]: Type:" << filter_id << std::endl
          << vprDEBUG_FLUSH;
 
-      new_filter = PositionFilterFactory::instance()->createObject(filter_id);
-      if(new_filter != NULL)
+      new_filter =
+         PositionFilterPtr(
+            PositionFilterFactory::instance()->createObject(filter_id)
+         );
+
+      if (NULL != new_filter.get())
       {
          if (new_filter->config(cur_filter))
          {
@@ -131,13 +127,13 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                << "be loaded.\n"
                << vprDEBUG_FLUSH;
 
-            delete new_filter;
-            new_filter = NULL;
+            new_filter.reset();
          }
       }
       else
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "   NULL Filter!!!"
+                                               << std::endl << vprDEBUG_FLUSH;
       }
    }  // if have filters
 
@@ -152,23 +148,23 @@ const gmtl::Matrix44f PositionProxy::getData(const float scaleFactor) const
 {
    gmtl::Matrix44f ret_mat;
 
-   if(mStupefied)
+   if (mStupefied)
    {
-      //gmtl::identity(mPositionData.mPosData);
-      //ret_mat = mPositionData.mPosData;
+      //gmtl::identity(mData.editValue());
+      //ret_mat = mData.getValue();
       gmtl::identity(ret_mat);
    }
-   else if(gmtl::Math::isEqual(scaleFactor, 1.0f, 0.01f))
+   else if (gmtl::Math::isEqual(scaleFactor, 1.0f, 0.01f))
    {
-      ret_mat = mPositionData.mPosData;
+      ret_mat = mData.getValue();
    }
-   else if(gmtl::Math::isEqual(scaleFactor, gadget::PositionUnitConversion::ConvertToFeet, 0.01f))
+   else if (gmtl::Math::isEqual(scaleFactor, gadget::PositionUnitConversion::ConvertToFeet, 0.01f))
    {
       ret_mat = mPosMatrix_feet;
    }
    else  // Convert using scale factor
    {
-      ret_mat = mPositionData.getPosition();
+      ret_mat = mData.getValue();
       gmtl::Vec3f trans;
       gmtl::setTrans(trans, ret_mat);           // Get the translational vector
       trans *= scaleFactor;                     // Scale the translation and set the value again
@@ -180,38 +176,31 @@ const gmtl::Matrix44f PositionProxy::getData(const float scaleFactor) const
 
 void PositionProxy::updateData()
 {
-   if((!mStupefied) && (NULL != mTypedDevice.get()))
+   if (! mStupefied && NULL != mTypedDevice.get())
    {
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
 
-      mPositionData = (mTypedDevice->getPositionData(mUnitNum));
+      mData = mTypedDevice->getPositionData(mUnit);
 
       // Create a vector to hold all 1 of our position data samples.
-      std::vector<PositionData> temp_sample(1, mPositionData);
+      std::vector<PositionData> temp_sample(1, mData);
 
       // Apply all the positional filters
-      for(std::vector<PositionFilter*>::iterator i = mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
-      {
-          (*i)->apply(temp_sample);
-      }
+      std::for_each(mPositionFilters.begin(), mPositionFilters.end(),
+                    boost::bind(&PositionFilter::apply, _1, temp_sample));
 
       // Now that the filters have been applied to our sample, copy it back
-      // over to mPositionData.
-      mPositionData = temp_sample[0];
+      // over to mData.
+      mData = temp_sample[0];
 
       // --- CACHE FEET Scaling ---- //
-      mPosMatrix_feet = mPositionData.getPosition();
+      mPosMatrix_feet = mData.getValue();
       gmtl::Vec3f trans;                                       // SCALE: to feet
       gmtl::setTrans(trans, mPosMatrix_feet);                  // Get the translational vector
       trans *= gadget::PositionUnitConversion::ConvertToFeet;  // Scale the translation and set the value again
       gmtl::setTrans(mPosMatrix_feet, trans);
    }
-}
-
-vpr::Interval PositionProxy::getTimeStamp() const
-{
-   return mPositionData.getTime();
 }
 
 } // End of gadget namespace

@@ -49,6 +49,10 @@ namespace gadget
  */
 class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<Glove> base_type;
+
 protected:
    /**
     * Constructs the proxy to point to the given glove device and sub-unit
@@ -72,27 +76,15 @@ public:
    const gmtl::Vec3f getTipVector(const GloveData::GloveComponent component) 
       const
    {
-      if(isStupefied())
-      {
-         return gmtl::Vec3f(0,0,0);
-      }
-      else
-      {
-         return mTypedDevice->getTipVector(component,mUnitNum);
-      }
+      return isStupefied() ? gmtl::Vec3f(0.0f, 0.0f, 0.0f)
+                           : mTypedDevice->getTipVector(component, mUnit);
    }
 
    const gmtl::Matrix44f
    getTipTransform(const GloveData::GloveComponent component) const
    {
-      if(isStupefied())
-      {
-         return gmtl::Matrix44f();
-      }
-      else
-      {
-         return mTypedDevice->getTipTransform(component,mUnitNum);
-      }
+      return isStupefied() ? gmtl::Matrix44f()
+                           : mTypedDevice->getTipTransform(component, mUnit);
    }
   
    const gmtl::Matrix44f
@@ -100,49 +92,19 @@ public:
                      const GloveData::GloveJoint joint)
       const
    {
-      if(isStupefied())
-      {
-         return gmtl::Matrix44f();
-      }
-      else
-      {
-         return mTypedDevice->getJointTransform(component, joint, mUnitNum);
-      }
+      return isStupefied() ? gmtl::Matrix44f()
+                           : mTypedDevice->getJointTransform(component, joint,
+                                                             mUnit);
    }
 
-   const GloveData getData() const
+   virtual const GloveValues getData() const
    {
-      if(isStupefied())
-      {
-         return GloveData();
-      }
-      else
-      {
-         return mTypedDevice->getGloveData(mUnitNum);
-      }
+      return isStupefied() ? GloveValues()
+                           : mTypedDevice->getGloveData(mUnit).getValue();
    }
 
    /** Returns time of last update. */
-   vpr::Interval getTimeStamp() const;
-
-   /** Returns a pointer to the device held by this proxy. */
-   const GlovePtr getGlovePtr() const
-   {
-      if(isStupefied())
-      {
-         return GlovePtr();
-      }
-      else
-      {
-         return mTypedDevice;
-      }
-   }
-
-   /** Returns the subUnit number that this proxy points to. */
-   int getUnit() const
-   {
-      return mUnitNum;
-   }
+   const vpr::Interval& getTimeStamp() const;
 
    bool isVisible() const
    {
@@ -151,14 +113,9 @@ public:
 
    static std::string getElementType();
 
-   bool config(jccl::ConfigElementPtr element);
-
 private:
    /** Should we be drawn on the screen? */
    bool mVisible;
-
-   /** The sub-unit number to use in the device. */
-   int mUnitNum;
 };
 
 } // End of gadget namespace

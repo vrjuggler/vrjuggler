@@ -272,7 +272,7 @@ bool DTrack::sample()
 		dtrack_flystick_type dat = standalone->get_flystick(i);
 		
 		if(dat.quality >= 0){  // check if Flystick position is tracked
-			curPosition[i].mPosData = getpos(dat);
+			curPosition[i].setValue(getpos(dat));
 			curPosition[i].setTime();
 		}                      // otherwise keep last valid position
 
@@ -315,7 +315,7 @@ bool DTrack::sample()
 		if(dat.quality >= 0){  // check if position is tracked
 			id = i + num_flystick;  // VRJuggler id number
 			
-			curPosition[id].mPosData = getpos(dat);
+			curPosition[id].setValue(getpos(dat));
 			curPosition[id].setTime();
 		}                      // otherwise keep last valid position
 
@@ -343,7 +343,7 @@ bool DTrack::sample()
 		if(dat.quality >= 0){  // check if position is tracked
 			id = i + num_flystick + num_meatool;  // VRJuggler id number
 
-			curPosition[id].mPosData = getpos(dat);
+			curPosition[id].setValue(getpos(dat));
 			curPosition[id].setTime();
 		}                      // otherwise keep last valid position
 	}
@@ -384,7 +384,7 @@ void DTrack::resize_curPosition(int n)
 		curPosition.resize(n);
 
 		for(int i=nsize; i<n; i++){  // set default for new elements
-			curPosition[i].mPosData = getpos_default();
+			curPosition[i].setValue(getpos_default());
 			curPosition[i].setTime();
 		}
 	}

@@ -49,6 +49,10 @@ namespace gadget
  */
 class GADGET_CLASS_API CommandProxy : public TypedProxy<Command>
 {
+public:
+   /** @since 2.1.1 */
+   typedef TypedProxy<Command> base_type;
+
 protected:
    CommandProxy(const std::string& deviceName = "UnknownCommand",
                 const int unitNum = -1);
@@ -70,53 +74,7 @@ public:
 
    virtual void updateData();
 
-   /** Returns the time of the last update. */
-   virtual vpr::Interval getTimeStamp() const;
-
-   /**
-    * Gets the command data.
-    */
-   int getData() const
-   {
-      // If we're stupefied, return 0, return the current command value.
-      return (isStupefied() ? 0 : mData.getDigital());
-   }
-
-   const CommandData* getCommandData() const
-   {
-      return &mData;
-   }
-
-   /**
-    * Returns a pointer to the gadget::Command object that we are proxying.
-    */
-   const CommandPtr getCommandPtr() const
-   {
-      // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.
-      return (isStupefied() ? CommandPtr() : mTypedDevice);
-   }
-
-   /**
-    * Returns the unit index into the string speech recognition device from
-    * which this proxy is reading data.
-    */
-   int getUnit() const
-   {
-      return mUnitNum;
-   }
-
    static std::string getElementType();
-
-   bool config(jccl::ConfigElementPtr element);
-
-private:
-   int mUnitNum;     /**<  The sub-unit of the device we are working with */
-
-   /**
-    * Copy of the digital data we are dealing with.
-    * @see getData()
-    */
-   CommandData mData;
 };
 
 } // End of gadget namespace

@@ -302,29 +302,33 @@ bool IntersenseAPI::sample()
          continue;
       }
 
-      gmtl::identity(cur_pos_samples[i].mPosData);
+      gmtl::Matrix44f& pos_data(cur_pos_samples[i].editValue());
+      gmtl::identity(pos_data);
+
       // If the Intersense is returning data in Euler format. Otherwise we
       // assume that it is returning data in quaternion format.
       if ( mTracker.getAngleFormat(stationIndex) == ISD_EULER )
       {
-         gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad( mTracker.zRot( stationIndex ) ),
-                                     gmtl::Math::deg2Rad( mTracker.yRot( stationIndex ) ),
-                                     gmtl::Math::deg2Rad( mTracker.xRot( stationIndex ) ) );
-         gmtl::setRot( cur_pos_samples[i].mPosData, euler );
+         gmtl::EulerAngleZYXf euler(
+            gmtl::Math::deg2Rad(mTracker.zRot(stationIndex)),
+            gmtl::Math::deg2Rad(mTracker.yRot(stationIndex)),
+            gmtl::Math::deg2Rad(mTracker.xRot(stationIndex))
+         );
+         gmtl::setRot(pos_data, euler);
       }
       else
       {
-         gmtl::Quatf quatValue(mTracker.xQuat( stationIndex ),
-                               mTracker.yQuat( stationIndex ),
-                               mTracker.zQuat( stationIndex ),
-                               mTracker.wQuat( stationIndex ));
-         gmtl::setRot( cur_pos_samples[i].mPosData, quatValue );
+         gmtl::Quatf quatValue(mTracker.xQuat(stationIndex),
+                               mTracker.yQuat(stationIndex),
+                               mTracker.zQuat(stationIndex),
+                               mTracker.wQuat(stationIndex));
+         gmtl::setRot(pos_data, quatValue);
       }
 
-      gmtl::setTrans( cur_pos_samples[i].mPosData,
-                      gmtl::Vec3f(mTracker.xPos( stationIndex ),
-                                  mTracker.yPos( stationIndex ),
-                                  mTracker.zPos( stationIndex )) );
+      gmtl::setTrans(pos_data,
+                     gmtl::Vec3f(mTracker.xPos(stationIndex),
+                                 mTracker.yPos(stationIndex),
+                                 mTracker.zPos(stationIndex)));
 
       // We start at the index of the first digital item (set in the config
       // files) and we copy the digital data from this station to the

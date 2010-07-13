@@ -48,11 +48,11 @@ KeyboardMouseProxy::~KeyboardMouseProxy()
    /* Do nothing. */ ;
 }
 
-vpr::Interval KeyboardMouseProxy::getTimeStamp() const
+const vpr::Interval& KeyboardMouseProxy::getTimeStamp() const
 {
-   if ( isStupefied() || (NULL == mTypedDevice.get()) )
+   if (isStupefied() || NULL == mTypedDevice.get())
    {
-      return vpr::Interval();
+      return vpr::Interval::NullInterval;
    }
    else
    {
@@ -72,7 +72,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("\n"));
    vprASSERT(element->getID() == getElementType());
 
-   if( ! Proxy::config(element) )
+   // We do not call TypedProxy::config() because we are explicitly overriding
+   // its behavior.
+   if (! Proxy::config(element))
    {
       return false;
    }

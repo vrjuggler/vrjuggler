@@ -34,9 +34,7 @@ namespace gadget
 
 CommandProxy::CommandProxy(const std::string& deviceName,
                            const int unitNum)
-   : TypedProxy<Command>(deviceName)
-   , mUnitNum(unitNum)
-   , mData(0)
+   : base_type(deviceName, unitNum)
 {
    /* Do nothing. */ ;
 }
@@ -57,39 +55,14 @@ std::string CommandProxy::getElementType()
    return "command_proxy";
 }
 
-bool CommandProxy::config(jccl::ConfigElementPtr element)
-{
-vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                              std::string("----------- configuring COMMAND PROXY -----------------\n"),
-                              std::string("----------- exit: configuring command proxy -----------\n"));
-
-   vprASSERT(element->getID() == getElementType());
-
-   if( ! Proxy::config(element) )
-   {
-      return false;
-   }
-
-   mUnitNum = element->getProperty<int>("unit");
-   mDeviceName = element->getProperty<std::string>("device");
-
-   refresh();
-   return true;
-}
-
 void CommandProxy::updateData()
 {
    if (!isStupefied())
    {
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
-      mData = mTypedDevice->getCommandData(mUnitNum);
+      mData = mTypedDevice->getCommandData(mUnit);
    }
-}
-
-vpr::Interval CommandProxy::getTimeStamp() const
-{
-   return mData.getTime();
 }
 
 } // End of gadget namespace

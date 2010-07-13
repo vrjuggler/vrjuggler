@@ -94,22 +94,22 @@ void Digital::writeObject(vpr::ObjectWriter* writer)
       writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
    writer->endAttribute();
 
-   if ( !stable_buffer.empty() )
+   if (! stable_buffer.empty())
    {
       mDigitalSamples.lock();
-      for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
+      for (unsigned int j = 0; j < stable_buffer.size(); ++j)                               // For each vector in the stable buffer
       {
          writer->beginTag(gadget::tokens::BufferSampleTag);
          writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
          writer->endAttribute();
-         for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
+         for (unsigned int i = 0; i < stable_buffer[j].size(); ++i)                         // For each DigitalData in the vector
          {
             writer->beginTag(gadget::tokens::DigitalValue);
             writer->beginAttribute(gadget::tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
-            writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Digital Data(int)
+            writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getValue());  // Write Digital Data(int)
             writer->endTag();
          }
          writer->endTag();
@@ -136,41 +136,42 @@ void Digital::readObject(vpr::ObjectReader* reader)
    vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
    boost::ignore_unused_variable_warning(temp);
 
-   std::vector<DigitalData> dataSample;
+   std::vector<DigitalData> data_sample;
 
-   unsigned numDigitalDatas;
+   unsigned int num_digital_values;
    vpr::Uint32 value;
-   vpr::Uint64 timeStamp;
+   vpr::Uint64 time_stamp;
    DigitalData temp_digital_data;
 
    reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-      unsigned numVectors = reader->readUint16();
+      const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
-   //std::cout << "Stable Digital Buffer Size: "  << numVectors << std::endl;
+   //std::cout << "Stable Digital Buffer Size: "  << num_vectors << std::endl;
    mDigitalSamples.lock();
-   for ( unsigned i=0;i<numVectors;i++ )
+   for (unsigned int i = 0; i < num_vectors; ++i)
    {
       reader->beginTag(gadget::tokens::BufferSampleTag);
       reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-         numDigitalDatas = reader->readUint16();
+         num_digital_values = reader->readUint16();
       reader->endAttribute();
 
-      dataSample.clear();
-      for ( unsigned j=0;j<numDigitalDatas;j++ )
+      data_sample.clear();
+      for (unsigned int j = 0; j < num_digital_values; ++j)
       {
          reader->beginTag(gadget::tokens::DigitalValue);
          reader->beginAttribute(gadget::tokens::TimeStamp);
-            timeStamp = reader->readUint64();    // read Time Stamp vpr::Uint64
+            time_stamp = reader->readUint64();   // read Time Stamp vpr::Uint64
          reader->endAttribute();
          value = reader->readUint32();           // read Digital Data(int)
          reader->endTag();
 
-         temp_digital_data.setDigital(value);
-         temp_digital_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
-         dataSample.push_back(temp_digital_data);
+         temp_digital_data.setValue(value);
+         temp_digital_data.setTime(vpr::Interval(time_stamp + delta,
+                                   vpr::Interval::Usec));
+         data_sample.push_back(temp_digital_data);
       }
-      mDigitalSamples.addSample(dataSample);
+      mDigitalSamples.addSample(data_sample);
       reader->endTag();
    }
    mDigitalSamples.unlock();

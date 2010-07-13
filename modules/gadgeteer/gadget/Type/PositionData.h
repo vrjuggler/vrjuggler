@@ -27,58 +27,16 @@
 #ifndef _GADGET_POSITION_DATA_H_
 #define _GADGET_POSITION_DATA_H_
 
-#include <gadget/Type/InputData.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
+
+#include <gadget/Type/DeviceData.h>
 
 
 namespace gadget
 {
 
-/** \class PositionData PositionData.h gadget/Type/PositionData.h
- *
- * InputData subclass for positional data.
- */
-class PositionData : public InputData
-{
-public:
-   /** Constructor. */
-   PositionData()
-      : InputData()
-   {
-      ;
-   }
-
-   const gmtl::Matrix44f& getPosition() const
-   {
-      return mPosData;
-   }
-
-   void setPosition(const gmtl::Matrix44f& posMatrix)
-   {
-      mPosData = posMatrix;
-   }
-
-   PositionData& operator= (const PositionData& pd)
-   {
-      InputData::copy (pd);
-      mPosData = pd.mPosData;
-      return *this;
-   }
-
-   bool operator== (const PositionData& o) const
-   {
-      return mPosData == o.mPosData && mTimeStamp == o.mTimeStamp;
-   }
-
-   bool operator!= (const PositionData& o) const
-   {
-      return ! (*this == o);
-   }
-
-public:
-   gmtl::Matrix44f mPosData;
-}; // class PositionData
+typedef DeviceData<gmtl::Matrix44f> PositionData;
 
 } // namespace gadget
 

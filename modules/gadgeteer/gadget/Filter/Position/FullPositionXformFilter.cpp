@@ -117,11 +117,12 @@ void FullPositionXformFilter::apply(std::vector<PositionData>& posSamples)
    typedef std::vector<PositionData>::iterator iter_type;
    for ( iter_type i = posSamples.begin(); i != posSamples.end(); ++i )
    {
+      gmtl::Matrix44f& pos_data((*i).editValue());
       // POST xform: cur = cur * postTrans * postRot
-      gmtl::postMult((*i).mPosData, mPostXform);
+      gmtl::postMult(pos_data, mPostXform);
 
       // PRE: S_world = wMs * S_sensor
-      gmtl::preMult((*i).mPosData, mPreXform);
+      gmtl::preMult(pos_data, mPreXform);
    }
 }
 
