@@ -405,7 +405,8 @@ LRESULT WindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
          {
             RECT rect;
             GetWindowRect(hWnd, &rect);
-            originAndSizeChanged(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+            //Since we are not resizing we can use the current window size values
+            originAndSizeChanged(rect.left, rect.top, mWindowWidth, mWindowHeight);
          }
          break;
          
@@ -711,8 +712,20 @@ void WindowWin32::originAndSizeChanged(long xorigin, long yorigin,
       height = 1;
    }
 
-  int root_height = GetSystemMetrics(SM_CYSCREEN);  
-  int juggler_y_origin = root_height - mWindowHeight - yorigin;
+  int root_height = GetSystemMetrics(SM_CYSCREEN); 
+  int juggler_y_origin = root_height - height - yorigin;
+  if ( mHasBorder )
+  {
+     // Get the border height to calculate the window origin properly
+     // Height of the vertical border
+     int verical_border_height = GetSystemMetrics(SM_CYFRAME);
+     // Height of the caption/menu bar
+     int caption_border_height = GetSystemMetrics(SM_CYCAPTION);
+     //int horizontal_border_width = GetSystemMetrics(SM_CXFRAME);
+     //int client_area_width = rect.left - rect.right - (2*horizontal_border_width);
+     juggler_y_origin = juggler_y_origin -
+         (2*verical_border_height) - caption_border_height;
+  }
 
   updateOriginSize(xorigin, juggler_y_origin, width, height);
   setDirtyViewport(true);
