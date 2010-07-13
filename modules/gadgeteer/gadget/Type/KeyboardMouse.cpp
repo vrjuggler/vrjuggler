@@ -230,7 +230,14 @@ const std::string KeyboardMouse::getKeyName(const gadget::Keys keyId) const
       case gadget::MBUTTON5: return std::string("MBUTTON5");
       case gadget::MBUTTON6: return std::string("MBUTTON5");
       case gadget::MBUTTON7: return std::string("MBUTTON7");
+      case gadget::MBUTTON8: return std::string("MBUTTON8");
+      case gadget::MBUTTON9: return std::string("MBUTTON9");
       case gadget::NO_MBUTTON: return std::string("NO_MBUTTON");
+
+      case gadget::MOUSE_SCROLL_UP: return std::string("MOUSE_SCROLL_UP");
+      case gadget::MOUSE_SCROLL_DOWN: return std::string("MOUSE_SCROLL_DOWN");
+      case gadget::MOUSE_SCROLL_LEFT: return std::string("MOUSE_SCROLL_LEFT");
+      case gadget::MOUSE_SCROLL_RIGHT: return std::string("MOUSE_SCROLL_RIGHT");
 
       case gadget::KEY_TAB          : return std::string("KEY_TAB");
       case gadget::KEY_BACKTAB      : return std::string("KEY_BACKTAB");
