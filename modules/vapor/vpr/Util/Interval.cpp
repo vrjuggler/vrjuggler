@@ -58,12 +58,13 @@
 #include <vpr/System.h>
 
 
-const vpr::Interval vpr::Interval::NoWait(0,vpr::Interval::Base);
-const vpr::Interval vpr::Interval::NoTimeout(0xffffffffUL, vpr::Interval::Base);
-const vpr::Interval vpr::Interval::HalfPeriod((0xffffffffUL/2), vpr::Interval::Base);
-
 namespace vpr
 {
+
+const Interval Interval::NullInterval;
+const Interval Interval::NoWait(0, Interval::Base);
+const Interval Interval::NoTimeout(0xffffffffUL, Interval::Base);
+const Interval Interval::HalfPeriod((0xffffffffUL / 2), Interval::Base);
 
    // Simulator-only version of vpr::Interval::setNow().
 #ifdef VPR_SIMULATOR

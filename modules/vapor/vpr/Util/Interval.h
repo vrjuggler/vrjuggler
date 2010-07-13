@@ -74,6 +74,13 @@ public:
    static const Interval NoTimeout;  /**< Wait indefinitely */
    static const Interval HalfPeriod; /**< Half of the roll-over period */
 
+   /**
+    * The null time interval.
+    *
+    * @since 2.3.1
+    */
+   static const Interval NullInterval;
+
 public:
    /**
     * Default constructor sets the internal timer to 0.
