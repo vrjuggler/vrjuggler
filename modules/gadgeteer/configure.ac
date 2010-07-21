@@ -161,7 +161,7 @@ VJ_LINKER_SETUP
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-MIN_VPR_VERSION='2.3.1'
+MIN_VPR_VERSION='2.3.2'
 VPR_PATH([$MIN_VPR_VERSION], ,
          [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 #VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
@@ -507,6 +507,8 @@ AC_CONFIG_FILES([
    gadget/Devices/Makefile
    gadget/Devices/KeyboardMouseDevice/Makefile
    gadget/Devices/Sim/Makefile
+   gadget/Event/Makefile
+   gadget/Event/KeyboardMouse/Makefile
    gadget/Filter/Makefile
    gadget/Filter/Position/Makefile
    gadget/Type/Makefile

@@ -30,7 +30,7 @@
 #include <vector>
 
 #include <gadget/Type/DeviceData.h>
-#include <gadget/Type/KeyboardMouse/EventPtr.h>
+#include <gadget/Event/EventPtr.h>
 
 
 namespace gadget 

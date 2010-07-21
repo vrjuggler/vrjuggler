@@ -32,6 +32,7 @@
 #include <map>
 #include <vector>
 #include <boost/smart_ptr.hpp>
+#include <boost/noncopyable.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/DynLoad/Library.h>
@@ -41,6 +42,7 @@
 #include <gadget/InputLoggerPtr.h>
 #include <gadget/Type/InputPtr.h>
 #include <gadget/Type/ProxyPtr.h>
+#include <gadget/InputHandlerPtr.h>
 
 
 namespace gadget
@@ -63,7 +65,9 @@ class DeviceFactory;
  * set up by config elements and should be accessed by number, rather than by
  * name (for speed reasons).
  */
-class GADGET_CLASS_API InputManager : public jccl::ConfigElementHandler
+class GADGET_CLASS_API InputManager
+   : public jccl::ConfigElementHandler
+   , private boost::noncopyable
 {
    vprSingletonHeader( InputManager );    // Make it a singleton
 
@@ -79,26 +83,12 @@ protected:
     */
    virtual ~InputManager();
 
-   /** Constructor is hidden, so no copying is allowed. */
-   InputManager(const gadget::InputManager& obj)
-      : jccl::ConfigElementHandler(obj)
-   {
-      /* Do nothing. */ ;
-   }
-
-   void operator=(const gadget::InputManager&)
-   {
-      /* Do nothing. */ ;
-   }
-
 public:
    friend GADGET_API(std::ostream&) operator<<(std::ostream& out,
                                                InputManager& iMgr);
 
-      //------------------------//
-      //       CONFIG API       //
-      //------------------------//
-
+   /** @name Configuration Interface */
+   //@{
    /**
     * Adds the element to the configuration.
     * @pre configCanHandle(element) == true
@@ -130,6 +120,7 @@ public:
     * @return true if the device was configured and added.
     */
    bool configureDevice(jccl::ConfigElementPtr element);
+   //@}
 
    /**
     * Shuts down all devices and proxies.
@@ -156,11 +147,8 @@ private:
    /** Configure the InputManager with an input manager element. */
    bool configureInputManager(jccl::ConfigElementPtr element);
 
-
 public:
-   /**
-    * @name Device API.
-    */
+   /** @name Device API */
    //@{
    /**
     * @since 1.1.19
@@ -230,11 +218,7 @@ public:
    bool removeDevice(const InputPtr devPtr);
    //@}
 
-public:
-
-   /**
-    * @name Proxy API.
-    */
+   /** @name Proxy API */
    //@{
    /**
     * Adds the given gadget::Proxy object to the proxy table.
@@ -262,7 +246,12 @@ public:
    void refreshAllProxies();
    //@}
 
-protected:
+   InputHandlerPtr getInputHandler()
+   {
+      return mInputHandler;
+   }
+
+private:
    bool removeProxy(const std::string& proxyName);
    bool removeProxy(jccl::ConfigElementPtr element);
 
@@ -273,7 +262,7 @@ public:
    /* friends */
    friend class InputLogger;  /**< Make input logger a friend */
 
-protected:
+private:
    std::vector<vpr::LibraryPtr> mLoadedDrivers;
 
    typedef std::map<std::string, InputPtr> tDevTableType;
@@ -294,6 +283,8 @@ protected:
    jccl::ConfigElementPtr mDisplaySystemElement; /**< Config element for the displaySystem */
 
    gadget::InputLoggerPtr mInputLogger;          /**< The input logger for the system. Constructed on demand. */
+
+   InputHandlerPtr mInputHandler;
 
 private:
    /** Function to configure the proxy Alias array. */

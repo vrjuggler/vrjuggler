@@ -28,7 +28,8 @@
 
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
 
 
 namespace gadget

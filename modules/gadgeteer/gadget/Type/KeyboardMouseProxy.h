@@ -31,8 +31,7 @@
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/KeyboardMouse.h>
 //#include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
-#include <gadget/Type/KeyboardMouse/EventPtr.h>
+#include <gadget/Event/Event.h>
 #include <gadget/Type/KeyboardMouseProxyPtr.h>
 
 namespace gadget

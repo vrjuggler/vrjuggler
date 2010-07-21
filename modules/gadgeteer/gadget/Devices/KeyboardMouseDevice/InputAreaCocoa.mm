@@ -37,8 +37,8 @@
 #import <AppKit/NSView.h>
 #import <AppKit/NSWindow.h>
 
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Util/Debug.h>
 
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>

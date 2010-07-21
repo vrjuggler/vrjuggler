@@ -34,7 +34,6 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/KeyboardMouse.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
 

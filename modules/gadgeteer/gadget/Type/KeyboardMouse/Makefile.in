@@ -41,9 +41,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
-SRCS=		Event.cpp	\
-		KeyEvent.cpp	\
-		MouseEvent.cpp
+SRCS=		
 
 include $(MKPATH)/dpp.obj.mk
 

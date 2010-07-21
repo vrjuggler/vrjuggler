@@ -556,6 +556,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\AbstractEventInterface.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Analog.cpp"
 				>
 			</File>
@@ -632,7 +636,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.cpp"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\Event.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventGenerator.cpp"
 				>
 			</File>
 			<File
@@ -704,15 +712,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouseEventInterface.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.cpp"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEvent.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.cpp"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEvent.cpp"
 				>
 			</File>
 			<File
@@ -825,6 +837,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\AbstractEventInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Analog.h"
 				>
 			</File>
@@ -854,6 +870,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\BaseTypeFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\BasicEventGenerator.h"
 				>
 			</File>
 			<File
@@ -1001,6 +1021,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\Event.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.h"
 				>
 			</File>
@@ -1009,7 +1033,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventGenerator.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventGeneratorPtr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventInterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventPtr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventTags.h"
 				>
 			</File>
 			<File
@@ -1101,6 +1145,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\InputHandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\InputHandlerPtr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\InputLogger.h"
 				>
 			</File>
@@ -1133,6 +1185,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouseEventInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseInterface.h"
 				>
 			</File>
@@ -1149,7 +1205,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEvent.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEventPtr.h"
 				>
 			</File>
 			<File
@@ -1161,7 +1225,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEvent.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEventPtr.h"
 				>
 			</File>
 			<File
@@ -1266,6 +1338,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\ProxyPtr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\ProxyTraits.h"
 				>
 			</File>
 			<File

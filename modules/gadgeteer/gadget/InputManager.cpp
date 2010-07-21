@@ -43,6 +43,7 @@
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <cluster/ClusterManager.h>
+#include <gadget/gadgetParam.h>
 #include <gadget/InputLogger.h>
 #include <gadget/ProxyFactory.h>
 #include <gadget/Type/BaseTypeFactory.h>
@@ -52,8 +53,8 @@
 #include <gadget/Util/Debug.h>
 #include <gadget/Util/PluginVersionException.h>
 #include <gadget/Util/PathHelpers.h>
-#include <gadget/gadgetParam.h>
-
+#include <gadget/Event/AbstractEventInterface.h>
+#include <gadget/InputHandler.h>
 #include <gadget/InputManager.h>
 
 
@@ -71,6 +72,7 @@ static bool recognizeProxyAlias(jccl::ConfigElementPtr element);
  * InputManager Constructor
  */
 InputManager::InputManager()
+   : mInputHandler(InputHandler::create())
 {
 }
 
@@ -272,12 +274,14 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;
    }
 
-   if(ret_val)
+   if (ret_val)
    {
       resetAllDevicesAndProxies();
       updateAllDevices();                             // Update all the input data
       updateAllProxies();                             // Update all the input data
       BaseDeviceInterface::refreshAllInterfaces();    // Refresh all the device interface handles
+      AbstractEventInterface::refreshAllInterfaces(); // Refresh all the event interface handles
+
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "Updated all devices" << std::endl << vprDEBUG_FLUSH;
    }
@@ -329,12 +333,14 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       ret_val = false;
    }
 
-   if(ret_val)
+   if (ret_val)
    {
       resetAllDevicesAndProxies();
       updateAllDevices();                             // Update all the input data
       updateAllProxies();                             // Update all the input data
-      BaseDeviceInterface::refreshAllInterfaces();      // Refresh all the device interface handles
+      BaseDeviceInterface::refreshAllInterfaces();    // Refresh all the device interface handles
+      AbstractEventInterface::refreshAllInterfaces(); // Refresh all the event interface handles
+
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
          << "InputManager::configRemove(): Updated all data" << std::endl
          << vprDEBUG_FLUSH;

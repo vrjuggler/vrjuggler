@@ -24,17 +24,24 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEY_EVENT_PTR_H_
-#define _GADGET_KEY_EVENT_PTR_H_
+#ifndef _GADGET_KEY_EVENT_PTR_COMPAT_H_
+#define _GADGET_KEY_EVENT_PTR_COMPAT_H_
 
-#include <boost/smart_ptr.hpp>
+/**
+ * \file
+ *
+ * This file is for backwards compatibility with VR Juggler 3.x code. New
+ * code should not include this header and should use
+ * gadget/Event/KeyboardMouse/KeyEventPtr.h.
+ *
+ * @deprecated This file has been deprecated in favor of
+ *             gadget/Event/KeyboardMouse/KeyEventPtr.h.
+ */
 
+#if defined(__GNUC__)
+#warning "This header is deprecated. Use gadget/Event/KeyboardMouse/KeyEventPtr.h instead."
+#endif
 
-namespace gadget
-{
-   class KeyEvent;
-   typedef boost::shared_ptr<KeyEvent> KeyEventPtr;
-} // End of gadget namespace
+#include <gadget/Event/KeyboardMouse/KeyEventPtr.h>
 
-
-#endif /* _GADGET_KEY_EVENT_PTR_H_ */
+#endif /* _GADGET_KEY_EVENT_PTR_COMPAT_H_ */

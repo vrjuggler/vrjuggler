@@ -24,24 +24,38 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEY_EVENT_COMPAT_H_
-#define _GADGET_KEY_EVENT_COMPAT_H_
+#ifndef _GADGET_PROXY_TRAITS_H_
+#define _GADGET_PROXY_TRAITS_H_
 
-/**
- * \file
+#include <gadget/gadgetConfig.h>
+
+
+namespace gadget
+{
+
+/** \struct ProxyTraits ProxyTraits.h gadget/Type/ProxyTraits.h
  *
- * This file is for backwards compatibility with VR Juggler 3.x code. New
- * code should not include this header and should use
- * gadget/Event/KeyboardMouse/KeyEvent.h.
+ * The input device proxy traits template type. As all built in device proxy
+ * types use gadget::TypedProxy, there should not be a need to specialize this
+ * type any further. However, that option exists for atypical cases should
+ * they arise.
  *
- * @deprecated This file has been deprecated in favor of
- *             gadget/Event/KeyboardMouse/KeyEvent.h.
+ * @see gadget::TypedProxy
+ *
+ * @since 2.1.2
  */
+template<typename T>
+struct ProxyTraits
+{
+   typedef T                                     proxy_type;
+   typedef boost::shared_ptr<proxy_type>         proxy_ptr_type;
+   typedef typename proxy_type::device_type      device_type;
+   typedef typename proxy_type::device_ptr_type  device_ptr_type;
+   typedef typename proxy_type::device_data_type device_data_type;
+   typedef typename proxy_type::raw_data_type    raw_data_type;
+};
 
-#if defined(__GNUC__)
-#warning "This header is deprecated. Use gadget/Event/KeyboardMouse/KeyEvent.h instead."
-#endif
+}
 
-#include <gadget/Event/KeyboardMouse/KeyEvent.h>
 
-#endif /* _GADGET_KEY_EVENT_COMPAT_H_ */
+#endif /* _GADGET_PROXY_TRAITS_H_ */

@@ -36,11 +36,12 @@
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Assert.h>
 
-#include <gadget/Type/KeyboardMouse.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Event/Event.h>
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Type/KeyboardMouse/EventFactory.h>
+
+#include <gadget/Type/KeyboardMouse.h>
 
 
 namespace gadget
@@ -114,17 +115,17 @@ void KeyboardMouse::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 temp_sync = reader->readUint64();
 
    // Read Current Keys using the given ObjectReader
-   unsigned int num_keys = reader->readUint16();
+   const unsigned short num_keys(reader->readUint16());
 
    vprASSERT(gadget::LAST_KEY == num_keys && "[KeyboardMouse::readObject()] Different number of keys.");
 
-   for (unsigned int i = 0; i < num_keys; ++i)
+   for (unsigned short i = 0; i < num_keys; ++i)
    {
       mCurKeys[i] = reader->readUint32();
    }
 
    // Read all events using the given ObjectReader
-   unsigned short num_events = reader->readUint16();
+   const unsigned short num_events(reader->readUint16());
 
    // -For each event
    //   -Read the event type
@@ -133,7 +134,7 @@ void KeyboardMouse::readObject(vpr::ObjectReader* reader)
    //   -Load all necissary data into event using the given ObjectReader
    //   -Add the new event to the working event queue
    //  -Update the event queue, which swaps the working and current queues
-   for (unsigned i = 0; i < num_events; ++i )
+   for (unsigned short i = 0; i < num_events; ++i)
    {
       EventType event_type = (EventType)reader->readUint16();
       EventPtr temp_event(EventFactory::instance()->createObject(event_type));
@@ -355,6 +356,7 @@ void KeyboardMouse::addEvent(gadget::EventPtr e)
 {
    vpr::Guard<vpr::Mutex> guard(mWorkingEventQueueLock);
    mWorkingEventQueue.editValue().push_back(e);
+   mEventAdded(e);
 }
 
 void KeyboardMouse::updateEventQueue()

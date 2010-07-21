@@ -31,16 +31,17 @@
 
 #include <string>
 #include <vector>
-#include <boost/concept_check.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/signal.hpp>
 
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Interval.h>
+#include <vpr/Util/SignalProxy.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <gadget/Event/EventPtr.h>
 #include <gadget/Type/KeyboardMouse/Keys.h>
-#include <gadget/Type/KeyboardMouse/EventPtr.h>
 #include <gadget/Type/KeyboardMouseData.h>
 #include <gadget/Type/KeyboardMousePtr.h>
 
@@ -66,6 +67,8 @@ class GADGET_CLASS_API KeyboardMouse
 {
 public:
    typedef KeyboardMouseData::data_type EventQueue;
+   //typedef boost::signal<void (const KeyboardMouseData&)> add_signal_t;
+   typedef boost::signal<void (const EventPtr&)> add_signal_t;
 
 protected:
    KeyboardMouse();
@@ -107,9 +110,8 @@ public:
     */
    virtual void readObject(vpr::ObjectReader* reader);
 
-   virtual bool config(jccl::ConfigElementPtr element)
+   virtual bool config(jccl::ConfigElementPtr)
    {
-      boost::ignore_unused_variable_warning(element);
       return true;
    }
 
@@ -169,6 +171,11 @@ public:
     */
    void addEvent(gadget::EventPtr e);
 
+   vpr::SignalProxy<add_signal_t> eventAdded()
+   {
+      return mEventAdded;
+   }
+
 protected:
    /**
     * (0,*): Copy of keys for this frame that the user reads from between
@@ -185,6 +192,8 @@ protected:
     *       invocation.  mWorkingEventQueue is emptied.
     */
    void updateEventQueue();
+
+   add_signal_t mEventAdded;
 
    /** Queue of events returned to users. */
    KeyboardMouseData mCurEventQueue;

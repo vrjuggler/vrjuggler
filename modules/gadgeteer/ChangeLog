@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2010-07-20 patrick     Added gadget::ProxyTraits<T> and the event interface
+                       core architecture. Only immediate event delivery is
+                       implemented so far.
+                       NEW VERSION: 2.1.2
 2010-07-12 patrick     Added gadget::DeviceTraits<T> and gadget::DeviceData<T>.
                        Refactored gadget::TypedProxy<T> so that every proxy
                        type has a (virtual) getData() method that returns the

@@ -25,41 +25,30 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Event.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
 default: all
 
-# Include common definitions.
+# Include common definitions
 include @topdir@/make.defs.mk
 
-includedir=		@includedir@/gadget
-srcdir=			@srcdir@
-top_srcdir=		@top_srcdir@
-INSTALL=		@INSTALL@
-SUBOBJDIR=		$(GADGET_LIBRARY)
+includedir=	@includedir@/gadget/Event
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(GADGET_LIBRARY)
 
-# Prefix for recursive stuff.
-DIRPRFX=	gadget/
+DIRPRFX=	gadget/Event/
 
-# Subdirectories to compile.
-SUBDIR=		Devices			\
-		Event			\
-		Filter			\
-		Type			\
-		Util
+SUBDIR=		KeyboardMouse
 
-SRCS=		InputHandler.cpp		\
-		InputLogger.cpp			\
-		InputManager.cpp		\
-		NetworkManager.cpp		\
-		Node.cpp			\
-		ProxyDepChecker.cpp		\
-		ProxyFactory.cpp		\
-		Reactor.cpp			\
-		gadgetmain.cpp
+SRCS=		AbstractEventInterface.cpp	\
+		Event.cpp			\
+		EventGenerator.cpp		\
+		KeyboardMouseEventInterface.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

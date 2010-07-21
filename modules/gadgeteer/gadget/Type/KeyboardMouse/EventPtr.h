@@ -24,17 +24,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_EVENT_PTR_H_
-#define _GADGET_EVENT_PTR_H_
+#ifndef _GADGET_EVENT_PTR_COMPAT_H_
+#define _GADGET_EVENT_PTR_COMPAT_H_
 
-#include <boost/smart_ptr.hpp>
+/**
+ * \file
+ *
+ * This file is for backwards compatibility with VR Juggler 3.x code. New
+ * code should not include this header and should use gadget/Event/EventPtr.h.
+ *
+ * @deprecated This file has been deprecated in favor of
+ *             gadget/Event/EventPtr.h.
+ */
 
+#if defined(__GNUC__)
+#warning "This header is deprecated. Use gadget/Event/EventPtr.h instead."
+#endif
 
-namespace gadget
-{
-   class Event;
-   typedef boost::shared_ptr<Event> EventPtr;
-} // End of gadget namespace
+#include <gadget/Event/EventPtr.h>
 
-
-#endif /* _GADGET_EVENT_PTR_H_ */
+#endif /* _GADGET_EVENT_PTR_COMPAT_H_ */

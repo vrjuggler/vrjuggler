@@ -30,6 +30,8 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vpr/Sync/Mutex.h>
+
+#include <gadget/Event/Event.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 
 // Allow this header to be included by C++ and Objective-C++ code.

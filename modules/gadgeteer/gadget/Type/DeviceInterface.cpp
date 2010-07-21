@@ -24,9 +24,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iomanip>
-
 #include <gadget/gadgetConfig.h>
+
+#include <iomanip>
+#include <algorithm>
+#include <boost/bind.hpp>
+
 #include <gadget/Type/DeviceInterface.h>
 #include <gadget/InputManager.h>
 #include <gadget/Type/Proxy.h>
@@ -48,7 +51,6 @@ BaseDeviceInterface::~BaseDeviceInterface()
    // Remove it from the list of active interfaces.
    BaseDeviceInterface::removeDevInterface(this);
 }
-
 
 BaseDeviceInterface::BaseDeviceInterface(const BaseDeviceInterface& other)
    : mProxyPtr(other.mProxyPtr)
@@ -144,11 +146,8 @@ void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
 
 void BaseDeviceInterface::refreshAllInterfaces()
 {
-   for ( unsigned int i = 0; i < mAllocatedDevices.size(); ++i )
-   {
-      BaseDeviceInterface* dev = mAllocatedDevices[i];
-      dev->refresh();
-   }
+   std::for_each(mAllocatedDevices.begin(), mAllocatedDevices.end(),
+                 boost::bind(&BaseDeviceInterface::refresh, _1));
 }
 
 std::vector<BaseDeviceInterface*> BaseDeviceInterface::mAllocatedDevices;
