@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2010-07-20 patrick     Added vpr::SignalProxy<T>.
+                       NEW VERSION: 2.3.2
 2010-07-12 patrick     Added vpr::Interval::NullInterval.
                        NEW VERSION: 2.3.1
 2010-06-19 patrick     VR Juggler 3.0 branch created.
