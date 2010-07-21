@@ -170,8 +170,9 @@ namespace gadget
        */
       //@{
       typedef DeviceType                                   device_type;
-      typedef boost::shared_ptr<DeviceType>                device_ptr_type;
-      typedef typename DeviceTraits<DeviceType>::data_type device_data_type;
+      typedef DeviceTraits<DeviceType>                     device_traits_type;
+      typedef typename device_traits_type::device_ptr_type device_ptr_type;
+      typedef typename device_traits_type::data_type       device_data_type;
       typedef typename device_data_type::data_type         raw_data_type;
       //@}
 

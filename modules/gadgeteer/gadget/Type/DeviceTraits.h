@@ -29,6 +29,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/shared_ptr.hpp>
+
 #include <gadget/Type/AnalogData.h>
 #include <gadget/Type/CommandData.h>
 #include <gadget/Type/DigitalData.h>
@@ -36,17 +38,12 @@
 #include <gadget/Type/KeyboardMouseData.h>
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/StringData.h>
-//#include <gadget/Type/KeyboardMouse.h>
 
 
 namespace gadget
 {
 
-/**
- * @name Device Traits
- *
- * @since 2.1.1
- */
+/** @name Device Traits */
 //@{
 /** \struct DeviceTraits DeviceTraits.h gadget/Type/DeviceTraits.h
  *
@@ -54,15 +51,18 @@ namespace gadget
  * device type.
  *
  * @see gadget::TypedProxy
+ *
+ * @since 2.1.1
  */
 template<typename T> struct DeviceTraits;
 
-#define DECLARE_DEVICE_TRAITS(DevType)          \
-   template<>                                   \
-   struct DeviceTraits<class DevType>           \
-   {                                            \
-      typedef DevType device_type;              \
-      typedef DevType ## Data data_type;        \
+#define DECLARE_DEVICE_TRAITS(DevType)                          \
+   template<>                                                   \
+   struct DeviceTraits<class DevType>                           \
+   {                                                            \
+      typedef DevType device_type;                              \
+      typedef boost::shared_ptr<device_type> device_ptr_type;   \
+      typedef DevType ## Data data_type;                        \
    };
 
 DECLARE_DEVICE_TRAITS(Analog)
@@ -78,8 +78,9 @@ DECLARE_DEVICE_TRAITS(String)
 template<>
 struct DeviceTraits<class Gesture>
 {
-   typedef Gesture         device_type;
-   typedef DeviceData<int> data_type;
+   typedef Gesture                    device_type;
+   typedef boost::shared_ptr<Gesture> device_ptr_type;
+   typedef DeviceData<int>            data_type;
 };
 //@}
 
