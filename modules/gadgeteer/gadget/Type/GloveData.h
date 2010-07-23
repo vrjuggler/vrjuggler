@@ -80,6 +80,13 @@ struct GloveValues
     *     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
     */
    xform_type mTransforms;
+
+   bool operator==(const GloveValues& rhs) const;
+
+   bool operator!=(const GloveValues& rhs) const
+   {
+	   return ! (*this == rhs);
+   }
 };
 
 /** \class GloveData GloveData.h gadget/Type/GloveData.h

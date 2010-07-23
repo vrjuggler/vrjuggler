@@ -874,7 +874,7 @@ char InputAreaWin32::getAsciiKey(const int vkKey, const gadget::Keys key)
 }
 
 void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
-                                 const gadget::EventType& type,
+                                 const gadget::EventType type,
                                  const MSG& msg)
 {
    // Windows reports multiple key-down events when a modifier key is held
@@ -914,7 +914,7 @@ void InputAreaWin32::resize(long width, long height)
 }
 
 void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
-                                         const gadget::EventType& type,
+                                         const gadget::EventType type,
                                          const MSG& msg)
 {
    int state = getModifierMask() | getButtonMask();

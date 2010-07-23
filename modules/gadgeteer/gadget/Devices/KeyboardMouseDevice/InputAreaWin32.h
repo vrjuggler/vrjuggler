@@ -33,6 +33,7 @@
 
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 #include <gadget/Type/KeyboardMouse/Keys.h>
+#include <gadget/Event/Event.h>
 
 
 namespace gadget
@@ -87,9 +88,9 @@ protected:
    gadget::Keys VKKeyToKey(const int vkKey);
    char getAsciiKey(const int vkKey, const gadget::Keys key);
    virtual void addKeyEvent(const gadget::Keys& key,
-                            const gadget::EventType& type, const MSG& message);
+                            const gadget::EventType type, const MSG& message);
    virtual void addMouseButtonEvent(const gadget::Keys& button,
-                                    const gadget::EventType& type,
+                                    const gadget::EventType type,
                                     const MSG& message);
    virtual void addMouseMoveEvent(const float deltaX, const float deltaY,
                                   const MSG& message);

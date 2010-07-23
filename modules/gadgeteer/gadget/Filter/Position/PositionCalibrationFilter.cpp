@@ -269,13 +269,13 @@ namespace gadget
          // and since rotation matrices are orthogonal,
          // inverse(R) = transpose(R), so...
          // transpose(R) * Tr = T
-         gmtl::Matrix44f rotation(itr->getPosition());
+         gmtl::Matrix44f rotation(itr->getValue());
          rotation[0][3] = 0;
          rotation[1][3] = 0;
          rotation[2][3] = 0;
          rotation[3][3] = 1;
          
-         gmtl::Matrix44f translation = gmtl::transpose(rotation) * itr->getPosition();
+         gmtl::Matrix44f translation = gmtl::transpose(rotation) * itr->getValue();
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "[PositionCalibrationFilter::apply()] Received tracked "
             << "position\n" << translation << "\n"
@@ -329,7 +329,7 @@ namespace gadget
             << vprDEBUG_FLUSH;
 
          // Rebuild the position sample (transformation matrix).
-         itr->setPosition(rotation * new_translation);
+         itr->setValue(rotation * new_translation);
       }
    }
 }

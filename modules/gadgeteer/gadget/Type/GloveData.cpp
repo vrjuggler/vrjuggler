@@ -24,6 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#define _SCL_SECURE_NO_WARNINGS 1
+
 #include <gadget/gadgetConfig.h>
 
 #include <gmtl/AxisAngle.h>
@@ -38,6 +40,12 @@
 
 namespace gadget
 {
+
+bool GloveValues::operator==(const GloveValues& rhs) const
+{
+   return mAngles == rhs.mAngles         &&
+          mTransforms == rhs.mTransforms;
+}
 
 GloveData::GloveData()
 {
