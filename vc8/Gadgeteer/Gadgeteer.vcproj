@@ -692,6 +692,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\InputHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\InputLogger.cpp"
 				>
 			</File>
