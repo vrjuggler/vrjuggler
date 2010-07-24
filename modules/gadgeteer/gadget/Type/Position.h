@@ -38,14 +38,17 @@
 #include <typeinfo>
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <boost/signal.hpp>
+
+#include <gmtl/Matrix.h>
+
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/SignalProxy.h>
+#include <vpr/IO/SerializableObject.h>
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/SampleBuffer.h>
-
-#include <gmtl/Matrix.h>
-#include <vpr/Util/Debug.h>
-#include <vpr/IO/SerializableObject.h>
 #include <gadget/Type/PositionPtr.h>
 
 
@@ -75,6 +78,7 @@ class GADGET_CLASS_API Position
 {
 public:
    typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
+   typedef boost::signal<void (const gmtl::Matrix44f&)> add_signal_t;
 
 protected:
    /** Constructor */
@@ -133,7 +137,7 @@ public:
     * @param posSample A vector of PositionData objects that represent the
     *                  newest samples taken.
     */
-   void addPositionSample(std::vector< PositionData > posSample);
+   void addPositionSample(std::vector<PositionData> posSample);
 
    /**
     * Swaps the positional data buffers.
@@ -179,10 +183,20 @@ public:
       return mPosSamples.stableBuffer();
    }
 
+   /**
+    * @since 2.1.4
+    */
+   vpr::SignalProxy<add_signal_t> dataAdded()
+   {
+      return mDataAdded;
+   }
+
 protected:
    PositionData      mDefaultValue;   /**< Default positional value to return */
 
 private:
+   add_signal_t mDataAdded;
+
    std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
    SampleBuffer_t                mPosSamples;         /**< Position samples */
 };

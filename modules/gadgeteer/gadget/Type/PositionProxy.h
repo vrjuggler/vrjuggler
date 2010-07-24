@@ -94,6 +94,16 @@ public:
    virtual void updateData();
 
    /**
+    * Applies the position filters configured for use by this object to the
+    * given data.
+    *
+    * @return The transformed position data is returned.
+    *
+    * @since 2.1.4
+    */
+   const PositionData applyFilters(const PositionData& posData) const;
+
+   /**
     * Gets the positional data within the device pointed to by this proxy as a
     * matrix using feet as the units.
     *
@@ -113,7 +123,19 @@ public:
     * @return The position of the device as a matrix.
     */
    const gmtl::Matrix44f getData(const float scaleFactor) const;
-   
+
+   /**
+    * Applies the given scale factor to the given transformation matrix.
+    *
+    * @param xform       The source transformation matrix.
+    * @param scaleFactor The scale factor to apply.
+    * @param result      Storage for the transformed matrix.
+    *
+    * @since 2.1.4
+    */
+   void applyScaleFactor(const gmtl::Matrix44f& xform, const float scaleFactor,
+                         gmtl::Matrix44f& result) const;
+
    static std::string getElementType();
 
    bool config(jccl::ConfigElementPtr element);

@@ -254,12 +254,20 @@ void Position::readObject(vpr::ObjectReader* reader)
    reader->endTag();
 }
 
-void Position::addPositionSample(std::vector< PositionData > posSample)
+void Position::addPositionSample(std::vector<PositionData> posSample)
 {
    // Apply all the positional filters
-   for(std::vector<PositionFilter*>::iterator i = mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
+   typedef std::vector<PositionFilter*>::iterator iter_type;
+   for (iter_type i = mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
    {
       (*i)->apply(posSample);
+   }
+
+   // Emit the data added signal for each value in the given sample.
+   typedef std::vector<PositionData>::iterator data_iter_type;
+   for (data_iter_type i = posSample.begin(); i != posSample.end(); ++i)
+   {
+      mDataAdded((*i).getValue());
    }
 
    // Locks and then swaps the indices.

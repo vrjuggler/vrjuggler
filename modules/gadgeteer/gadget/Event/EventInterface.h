@@ -129,6 +129,15 @@ struct RegistrationTypeChooser
 
 /** \class EventInterface EventInterface.h gadget/Event/EventInterface.h
  *
+ * @tparam ProxyType     The type of proxy to be used by this EventInterface
+ *                       type instantiation.
+ * @tparam GeneratorType The event generator type.
+ * @tparam DataType      The "raw" data type returned by the associated device
+ *                       proxy type. For example, it is the return type of
+ *                       gadget::TypedProxy<ProxyType>::getData(). This
+ *                       template paramter is optional, and it defaults to
+ *                       gadget::ProxyTraits<ProxyType>::raw_data_type.
+ *
  * @since 2.1.2
  */
 template<typename ProxyType

@@ -95,11 +95,11 @@ protected:
 
 }
 
-template<typename CollectorTag, typename DataType>
+template<typename CollectionTag, typename DataType>
 struct CollectionTypeChooser
 {
    typedef typename boost::mpl::eval_if<
-         boost::is_same<CollectorTag, event::all_events_tag>,
+         boost::is_same<CollectionTag, event::all_events_tag>,
          boost::mpl::identity<event::AllEventsCollector<DataType> >,
          boost::mpl::identity<event::LastEventCollector<DataType> >
       >::type type;
@@ -110,12 +110,12 @@ struct CollectionTypeChooser
  * @since 2.1.2
  */
 template<typename ProxyType
-       , typename CollectorTag
+       , typename CollectionTag
        , typename GenerationTag
        , typename DataType = typename ProxyTraits<ProxyType>::raw_data_type>
 class BasicEventGenerator
    : public EventGenerator
-   , protected CollectionTypeChooser<CollectorTag, DataType>::type
+   , protected CollectionTypeChooser<CollectionTag, DataType>::type
 {
 public:
    /** @name Type Declarations */
@@ -158,7 +158,7 @@ public:
       // to prevent a circlar reference between this object and the proxied
       // device.
       mDevConn =
-         device->eventAdded().connect(
+         device->dataAdded().connect(
             boost::bind(&BasicEventGenerator::onEventAdded, this, _1)
          );
 
@@ -205,6 +205,14 @@ protected:
       {
          addEvent(data);
       }
+   }
+
+   /**
+    * @since 2.1.4
+    */
+   const proxy_ptr_type& getProxy() const
+   {
+      return mProxy;
    }
 
 private:

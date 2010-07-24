@@ -67,7 +67,6 @@ class GADGET_CLASS_API KeyboardMouse
 {
 public:
    typedef KeyboardMouseData::data_type EventQueue;
-   //typedef boost::signal<void (const KeyboardMouseData&)> add_signal_t;
    typedef boost::signal<void (const EventPtr&)> add_signal_t;
 
 protected:
@@ -171,9 +170,12 @@ public:
     */
    void addEvent(gadget::EventPtr e);
 
-   vpr::SignalProxy<add_signal_t> eventAdded()
+   /**
+    * @since 2.1.4
+    */
+   vpr::SignalProxy<add_signal_t> dataAdded()
    {
-      return mEventAdded;
+      return mDataAdded;
    }
 
 protected:
@@ -193,7 +195,7 @@ protected:
     */
    void updateEventQueue();
 
-   add_signal_t mEventAdded;
+   add_signal_t mDataAdded;
 
    /** Queue of events returned to users. */
    KeyboardMouseData mCurEventQueue;

@@ -356,7 +356,7 @@ void KeyboardMouse::addEvent(gadget::EventPtr e)
 {
    vpr::Guard<vpr::Mutex> guard(mWorkingEventQueueLock);
    mWorkingEventQueue.editValue().push_back(e);
-   mEventAdded(e);
+   mDataAdded(e);
 }
 
 void KeyboardMouse::updateEventQueue()

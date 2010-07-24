@@ -28,12 +28,7 @@
 
 #include <algorithm>
 #include <boost/bind.hpp>
-
-#include <jccl/Config/ConfigElement.h>
-
-//#include <gadget/Type/PositionFilter.h>
-//#include <gadget/Type/LinearSigmoidPositionFilter.h>
-#include <gadget/Util/Debug.h>
+#include <boost/ref.hpp>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -41,6 +36,9 @@
 #include <gmtl/Generate.h>
 #include <gmtl/EulerAngle.h>
 
+#include <jccl/Config/ConfigElement.h>
+
+#include <gadget/Util/Debug.h>
 #include <gadget/Filter/Position/PositionFilter.h>
 #include <gadget/Filter/Position/PositionFilterFactory.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
@@ -148,30 +146,36 @@ const gmtl::Matrix44f PositionProxy::getData(const float scaleFactor) const
 {
    gmtl::Matrix44f ret_mat;
 
-   if (mStupefied)
+   if (! mStupefied)
    {
-      //gmtl::identity(mData.editValue());
-      //ret_mat = mData.getValue();
-      gmtl::identity(ret_mat);
-   }
-   else if (gmtl::Math::isEqual(scaleFactor, 1.0f, 0.01f))
-   {
-      ret_mat = mData.getValue();
-   }
-   else if (gmtl::Math::isEqual(scaleFactor, gadget::PositionUnitConversion::ConvertToFeet, 0.01f))
-   {
-      ret_mat = mPosMatrix_feet;
-   }
-   else  // Convert using scale factor
-   {
-      ret_mat = mData.getValue();
-      gmtl::Vec3f trans;
-      gmtl::setTrans(trans, ret_mat);           // Get the translational vector
-      trans *= scaleFactor;                     // Scale the translation and set the value again
-      gmtl::setTrans(ret_mat, trans);
+      if (gmtl::Math::isEqual(scaleFactor, gadget::PositionUnitConversion::ConvertToFeet, 0.01f))
+      {
+         ret_mat = mPosMatrix_feet;
+      }
+      else  // Convert using scale factor
+      {
+         applyScaleFactor(mData.getValue(), scaleFactor, ret_mat);
+      }
    }
 
    return ret_mat;
+}
+
+void PositionProxy::applyScaleFactor(const gmtl::Matrix44f& xform,
+                                     const float scaleFactor,
+                                     gmtl::Matrix44f& result) const
+{
+   if (gmtl::Math::isEqual(scaleFactor, 1.0f, 0.01f))
+   {
+      result = xform;
+   }
+   else
+   {
+      gmtl::Vec3f trans;
+      gmtl::setTrans(trans, xform);     // Get the translational vector
+      trans *= scaleFactor;             // Scale the translation
+      gmtl::setTrans(result, trans);    // Store the result
+   }
 }
 
 void PositionProxy::updateData()
@@ -181,18 +185,8 @@ void PositionProxy::updateData()
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
 
-      mData = mTypedDevice->getPositionData(mUnit);
-
-      // Create a vector to hold all 1 of our position data samples.
-      std::vector<PositionData> temp_sample(1, mData);
-
-      // Apply all the positional filters
-      std::for_each(mPositionFilters.begin(), mPositionFilters.end(),
-                    boost::bind(&PositionFilter::apply, _1, temp_sample));
-
-      // Now that the filters have been applied to our sample, copy it back
-      // over to mData.
-      mData = temp_sample[0];
+      // Applly the filters to our sample and store it in mData.
+      mData = applyFilters(mTypedDevice->getPositionData(mUnit).getValue());
 
       // --- CACHE FEET Scaling ---- //
       mPosMatrix_feet = mData.getValue();
@@ -201,6 +195,21 @@ void PositionProxy::updateData()
       trans *= gadget::PositionUnitConversion::ConvertToFeet;  // Scale the translation and set the value again
       gmtl::setTrans(mPosMatrix_feet, trans);
    }
+}
+
+const PositionData
+PositionProxy::applyFilters(const PositionData& posData) const
+{
+   // Create a vector to hold all 1 of our position data samples.
+   std::vector<PositionData> temp_sample(1, posData);
+
+   // Apply all the positional filters.
+   std::for_each(mPositionFilters.begin(), mPositionFilters.end(),
+                 boost::bind(&PositionFilter::apply, _1,
+                             boost::ref(temp_sample)));
+
+   // Now that the filters have been applied to our sample, return it.
+   return temp_sample[0];
 }
 
 } // End of gadget namespace

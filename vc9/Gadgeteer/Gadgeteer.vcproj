@@ -1286,6 +1286,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\PositionEventInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Filter\Position\PositionFilter.h"
 				>
 			</File>
