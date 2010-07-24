@@ -78,7 +78,7 @@ public:
    template<typename TYPE>
    TYPE getAttrib(const std::string& name)
    {
-      TYPE ret_val;     // Construct default return value
+      TYPE ret_val = TYPE();     // Construct default return value
       if(attribExists(name))
       {
          boost::any any_val = mAttribMap[name];
