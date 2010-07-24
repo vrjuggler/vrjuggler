@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2010-07-24 patrick     Implemented synchronized eevnt delivery.
+                       NEW VERSION: 2.1.3
 2010-07-20 patrick     Added gadget::ProxyTraits<T> and the event interface
                        core architecture. Only immediate event delivery is
                        implemented so far.

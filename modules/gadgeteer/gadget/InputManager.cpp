@@ -574,7 +574,6 @@ void InputManager::updateAllProxies()
    }
 }
 
-
 /**
  * Call UpdateData() on all the devices and transform proxies.
  */
@@ -590,9 +589,14 @@ void InputManager::updateAllDevices()
 
    // Update Logger - Done here so that device can be "rewritten" by logger
    //                 before rim or proxies get their hands on the data
-   if(mInputLogger.get() != NULL)
+   if (mInputLogger.get() != NULL)
    {
       mInputLogger->process();
+   }
+
+   if (mInputHandler.get() != NULL)
+   {
+      mInputHandler->sync();
    }
 }
 
