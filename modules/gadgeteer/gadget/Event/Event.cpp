@@ -25,10 +25,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <vpr/System.h>   /* XXX: Why is this needed? */
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
+#include <gadget/Event/Event.h>
 
 
 namespace gadget
