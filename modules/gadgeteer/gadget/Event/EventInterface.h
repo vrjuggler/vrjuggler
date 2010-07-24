@@ -36,6 +36,7 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/bind/apply.hpp>
+#include <boost/ref.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -275,7 +276,7 @@ protected:
    void onEventAdded(const raw_data_type& data)
    {
       std::for_each(mCallbacks.begin(), mCallbacks.end(),
-                    boost::bind(boost::apply<void>(), _1, data));
+                    boost::bind(boost::apply<void>(), _1, boost::ref(data)));
    }
 
 private:
