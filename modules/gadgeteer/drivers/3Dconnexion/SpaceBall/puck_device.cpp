@@ -164,7 +164,7 @@ bool PuckDevice::sample()
 	analogData submit(6);
 	for (unsigned int i = 0; i < _axes.size(); i++)
 	{
-	    submit[i] = _axes[i].getAnalog();
+	    submit[i] = _axes[i].getValue();
 	}
 	gadget::Analog::addAnalogSample(submit);
 	return true;
