@@ -386,7 +386,7 @@ void SocketTest::differentAddressOpenBindCloseTest()
       //  malloc: *** error for object 0x1: Non-aligned pointer being freed
       local_addr.setAddress("localhost", port);
 #else
-      CPPUNIT_ASSERT_NO_THROW(local_addr.setAddress(addr, port));
+      CPPUNIT_ASSERT_NO_THROW(local_addr.setAddress("localhost", port));
 #endif
 
       vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );
