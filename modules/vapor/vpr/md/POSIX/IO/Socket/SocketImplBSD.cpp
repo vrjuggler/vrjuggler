@@ -164,7 +164,9 @@ void SocketImplBSD::open()
       throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
 
-   int domain, type, sock;
+   int domain(-1);
+   int type;
+   int sock;
 
    switch ( mLocalAddr.getFamily() )
    {
@@ -199,7 +201,6 @@ void SocketImplBSD::open()
          break;
       default:
       {
-         domain = -1;
          std::ostringstream msg_stream;
          msg_stream << "[vpr::SocketImplBSD::open()] ERROR: Unknown socket "
                     << "domain value "
