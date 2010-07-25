@@ -29,7 +29,15 @@
 
 #include <gadget/gadgetConfig.h>
 
-#ifdef VPR_HASH_MAP_INCLUDE
+#include <boost/version.hpp>
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+#  include <tr1/unordered_map>
+#elif defined(_MSC_VER) && _MSC_VER >= 1500
+#  include <unordered_map>
+#elif BOOST_VERSION >= 103600
+#  include <boost/unordered_map.hpp>
+#elif defined(VPR_HASH_MAP_INCLUDE)
 #  include VPR_HASH_MAP_INCLUDE
 #else
 #  include <map>
@@ -254,8 +262,17 @@ private:
    node_list_t                  mNodes;         /**< List of nodes in network. */
    vpr::InetAddr                mListenAddr;    /**< Address to listen for incoming connections on. */
 
-#ifdef VPR_HASH_MAP_INCLUDE
-   typedef std::hash_map<vpr::GUID, PacketHandlerPtr, vpr::GUID::hash> packet_handler_map_t;
+#if defined(__GNUC__) && __GNUC__ >= 4 || defined(_MSC_VER) && _MSC_VER >= 1500
+   typedef std::tr1::unordered_map<vpr::GUID
+                                , PacketHandlerPtr
+                                , vpr::GUID::hash> packet_handler_map_t;
+#elif BOOST_VERSION >= 103600
+   typedef boost::unordered_map<vpr::GUID
+                              , PacketHandlerPtr
+                              , vpr::GUID::hash> packet_handler_map_t;
+#elif defined(VPR_HASH_MAP_INCLUDE)
+   typedef std::hash_map<vpr::GUID, PacketHandlerPtr, vpr::GUID::hash>
+      packet_handler_map_t;
 #else
    typedef std::map<vpr::GUID, PacketHandlerPtr> packet_handler_map_t;
 #endif
