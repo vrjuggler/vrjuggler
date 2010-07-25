@@ -32,6 +32,7 @@
 #include <X11/Xlib.h>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
+#include <gadget/Event/Event.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
 
 
