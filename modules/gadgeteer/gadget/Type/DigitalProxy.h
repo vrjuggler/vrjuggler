@@ -74,30 +74,6 @@ public:
 
    virtual void updateData();
 
-   /**
-    * Get the digital data.
-    * Digital::OFF: Button not pressed, and was not pressed last update either.<br>
-    * Digital::ON: Button on, and was on last frame as well.<br>
-    * Digital::TOGGLE_ON: Button was off, now it is on.<br>
-    * Digital::TOGGLE_OFF: Button was on, now it is going off.<br>
-    *
-    * The identifiers are defined so that a simple test for non-zero means the
-    * button is pressed in some way.
-    *
-    * @note Because of how TOGGLE_OFF is defined, testing for non-zero
-    *       will result in a one update lag in detecting the button not being
-    *       pressed.
-    */
-   /*
-   gadget::Digital::State getData() const
-   {
-      // If we're stupefied, return gadget::Digital::OFF.  Otherwise, return
-      // the current digital value.
-      return isStupefied() ? Digital::OFF
-                           : static_cast<gadget::Digital::State>(mData.getValue());
-   }
-   */
-
    static std::string getElementType();
 };
 

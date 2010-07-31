@@ -28,13 +28,29 @@
 #define _GADGET_DIGITAL_DATA_H_
 
 #include <gadget/Type/DeviceData.h>
-//#include <gadget/Type/DigitalState.h>
 
 namespace gadget 
 {
 
-typedef DeviceData<int> DigitalData;
-//typedef DeviceData<gadget::DigitalState> DigitalData;
+/**
+ * Enum for the state of the digital buttons.
+ *
+ * @since 2.1.5
+ */
+struct DigitalState
+{
+   enum State
+   {
+      OFF        = 0,   /**< Device is in the "off" state. */
+      ON         = 1,   /**< Device is in the "on" state. */
+      TOGGLE_ON  = 2,   /**< Device was in the "off" state and has changed to
+                             "on" since the last frame. */
+      TOGGLE_OFF = 3    /**< Device was in the "on" state and has changed to
+                             "off" since the last frame. */
+   };
+};
+
+typedef DeviceData<gadget::DigitalState::State> DigitalData;
 
 } // namespace gadget
 

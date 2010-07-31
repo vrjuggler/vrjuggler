@@ -25,6 +25,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
+#include <algorithm>
+#include <boost/bind.hpp>
+
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
@@ -83,29 +87,21 @@ void SimDigitalGlove::updateData()
    std::vector<DigitalData> digital_sample(10);
 
    // -- Update digital data --- //
-   for (unsigned int i = 0; i < mSimKeys.size(); i++)
+   for (unsigned int i = 0; i < mSimKeys.size(); ++i)
    {
-      if (checkKeyPair( mSimKeys[i] ))             // If keys pressed
-      {
-         digital_sample[i] = 1;
-      }
-      else
-      {
-         digital_sample[i] = 0;
-      }
+      // ON if keys pressed, OFF otherwise.
+      digital_sample[i] = checkKeyPair(mSimKeys[i]) ? DigitalState::ON
+                                                    : DigitalState::OFF;
    }
 
    addDigitalSample(digital_sample);
    swapDigitalBuffers();
 
    std::vector<GloveData> glove_sample = getGloveDataFromDigitalData(digital_sample);
-   vpr::Interval time_stamp = mKeyboardMouse->getTimeStamp();
+   const vpr::Interval time_stamp(mKeyboardMouse->getTimeStamp());
 
-   for (std::vector<GloveData>::iterator itr = glove_sample.begin() ;
-        itr != glove_sample.end() ; itr++)
-   {
-      (*itr).setTime(time_stamp);
-   }
+   std::for_each(glove_sample.begin(), glove_sample.end(),
+                 boost::bind(&GloveData::setTime, _1, time_stamp));
 
    addGloveSample(glove_sample);
    swapGloveBuffers();

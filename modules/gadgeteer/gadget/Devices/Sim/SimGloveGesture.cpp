@@ -123,18 +123,22 @@ const DigitalData SimGloveGesture::getDigitalData(int devNum)
    {
       case 0:
          //open
-         mDigitalData = openLookupTable[devNum];
+         mDigitalData =
+            static_cast<DigitalState::State>(openLookupTable[devNum]);
          break;
       case 1:
          //closed
-         mDigitalData = closedLookupTable[devNum];
+         mDigitalData =
+            static_cast<DigitalState::State>(closedLookupTable[devNum]);
          break;
       case 2:
          // pointing
-         mDigitalData = pointingLookupTable[devNum];
+         mDigitalData =
+            static_cast<DigitalState::State>(pointingLookupTable[devNum]);
          break;
       default:
-         mDigitalData = openLookupTable[devNum];
+         mDigitalData =
+            static_cast<DigitalState::State>(openLookupTable[devNum]);
          break;
    }
    return mDigitalData;

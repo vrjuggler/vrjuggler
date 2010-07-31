@@ -80,18 +80,13 @@ void SimDigital::updateData()
    std::vector<DigitalData>  digital_data_sample(mSimKeys.size());   // The digital data that makes up the sample
 
    // -- Update digital data --- //
-   for (unsigned int i = 0; i < mSimKeys.size(); i++)
+   for (unsigned int i = 0; i < mSimKeys.size(); ++i)
    {
       // Set the time for the digital data to the KeyboardMouse timestamp
       digital_data_sample[i].setTime(mKeyboardMouse->getTimeStamp());
-      if(checkKeyPair(mSimKeys[i]))             // If keys pressed
-      {
-         digital_data_sample[i] = 1;
-      }
-      else
-      {
-         digital_data_sample[i] = 0;
-      }
+      // ON if keys pressed, OFF otherwise.
+      digital_data_sample[i] = checkKeyPair(mSimKeys[i]) ? DigitalState::ON
+                                                         : DigitalState::OFF;
    }
 
    // Add a sample

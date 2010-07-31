@@ -30,7 +30,6 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vector>
-#include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
 #include <boost/noncopyable.hpp>
 
 #include <vpr/IO/SerializableObject.h>
@@ -38,6 +37,7 @@
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
 #include <gadget/Type/DigitalPtr.h>
+
 
 namespace gadget
 {
@@ -47,38 +47,32 @@ const unsigned short MSG_DATA_DIGITAL = 420;
 /** \class Digital Digital.h gadget/Type/Digital.h
  *
  * Digital is the abstract base class from which devices with digital data
- * derive (through gadget::InputMixer).  This is in addition to
- * gadget::Input.  gadget::Input provides pure virtual function constraints
- * in the following functions: startSampling(), stopSampling(), sample(),
- * and updateData().
+ * derive (through gadget::InputMixer). This is in addition to gadget::Input.
+ * gadget::Input provides pure virtual function constraints in the following
+ * functions: startSampling(), stopSampling(), sample(), and updateData().
  *
  * gadget::Digital adds the function getDigitalData() for retreiving the
- * received digital data.  This is similar to the additions made by
+ * received digital data. This is similar to the additions made by
  * gadget::Position and gadget::Analog.
  *
- * @see Input, InputMixer
+ * @see Input
+ * @see InputMixer
  */
 class GADGET_CLASS_API Digital
    : public vpr::SerializableObject
-   , boost::noncopyable
+   , protected DigitalState
+   , private boost::noncopyable
 {
 public:
    typedef gadget::SampleBuffer<DigitalData> SampleBuffer_t;
 
-public:
-   /**
-    * Enum for the state of the digital buttons.
-    * Used in DigitalProxy.
-    */
-   enum State
-   {
-      OFF = 0,       /**< Device is in the "off" state. */
-      ON = 1,        /**< Device is in the "on" state. */
-      TOGGLE_ON = 2, /**< Device was in the "off" state and has changed to
-                          "on" since the last frame. */
-      TOGGLE_OFF = 3 /**< Device was in the "on" state and has changed to
-                          "off" since the last frame. */
-   };
+   /** @name Compatibility */
+   //@{
+   using DigitalState::OFF;
+   using DigitalState::ON;
+   using DigitalState::TOGGLE_ON;
+   using DigitalState::TOGGLE_OFF;
+   //@}
 
 protected:
    /* Constructor/Destructors */
@@ -95,9 +89,8 @@ public:
 
    virtual ~Digital();
 
-   virtual bool config(jccl::ConfigElementPtr e)
+   virtual bool config(jccl::ConfigElementPtr)
    {
-      boost::ignore_unused_variable_warning(e);
       return true;
    }
 
@@ -122,7 +115,7 @@ public:
     * @param digSample A vector of DigitalData objects that represent the
     *                  newest samples taken.
     */
-   void addDigitalSample(const std::vector< DigitalData >& digSample)
+   void addDigitalSample(const std::vector<DigitalData>& digSample)
    {
       // Locks and then swaps the indices.
       mDigitalSamples.lock();

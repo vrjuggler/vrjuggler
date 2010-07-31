@@ -58,37 +58,36 @@ void DigitalProxy::updateData()
 {
    if (! isStupefied())
    {
-      const int old_state(mData.getValue());
+      const DigitalState::State old_state(mData.getValue());
 
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
 
       mData = mTypedDevice->getDigitalData(mUnit);
-      const int new_state(mData.getValue());
+      const DigitalState::State new_state(mData.getValue());
 
-      if (Digital::OFF == old_state)
+      switch (old_state)
       {
-         // Digital::TOGGLE_ON -> Button now pressed
-         // Digital::OFF       -> Button still released
-         mData = new_state ? Digital::TOGGLE_ON : Digital::OFF;
-      }
-      else if (Digital::ON == old_state)
-      {
-         // Digital::ON         -> Button still pressed
-         // Digital::TOGGLE_OFF -> Button now released
-         mData = new_state ? Digital::ON : Digital::TOGGLE_OFF;
-      }
-      else if (Digital::TOGGLE_ON == old_state)
-      {
-         // Digital::ON         -> Button still pressed
-         // Digital::TOGGLE_OFF -> Button now released
-         mData = new_state ? Digital::ON : Digital::TOGGLE_OFF;
-      }
-      else if (Digital::TOGGLE_OFF == old_state)
-      {
-         // Digital::TOGGLE_ON -> Button now pressed
-         // Digital::OFF       -> Button still released
-         mData = new_state ? Digital::TOGGLE_ON : Digital::OFF;
+         case DigitalState::OFF:
+            // Digital::TOGGLE_ON -> Button now pressed
+            // Digital::OFF       -> Button still released
+            mData = new_state ? DigitalState::TOGGLE_ON : DigitalState::OFF;
+            break;
+         case DigitalState::ON:
+            // Digital::ON         -> Button still pressed
+            // Digital::TOGGLE_OFF -> Button now released
+            mData = new_state ? DigitalState::ON : DigitalState::TOGGLE_OFF;
+            break;
+         case DigitalState::TOGGLE_ON:
+            // Digital::ON         -> Button still pressed
+            // Digital::TOGGLE_OFF -> Button now released
+            mData = new_state ? DigitalState::ON : DigitalState::TOGGLE_OFF;
+            break;
+         case DigitalState::TOGGLE_OFF:
+            // Digital::TOGGLE_ON -> Button now pressed
+            // Digital::OFF       -> Button still released
+            mData = new_state ? DigitalState::TOGGLE_ON : DigitalState::OFF;
+            break;
       }
    }
 }

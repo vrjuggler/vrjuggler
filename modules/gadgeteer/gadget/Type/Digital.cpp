@@ -166,7 +166,7 @@ void Digital::readObject(vpr::ObjectReader* reader)
          value = reader->readUint32();           // read Digital Data(int)
          reader->endTag();
 
-         temp_digital_data.setValue(value);
+         temp_digital_data.setValue(static_cast<DigitalState::State>(value));
          temp_digital_data.setTime(vpr::Interval(time_stamp + delta,
                                    vpr::Interval::Usec));
          data_sample.push_back(temp_digital_data);

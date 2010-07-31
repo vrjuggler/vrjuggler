@@ -138,8 +138,12 @@ void InputLogger::process()
    // Get state of control keys
    // Note, because of how this is called this sees the state one frame late
    // ie. If toggle on is true here it is NOT true in the data being saved
-   const bool start_stop_triggered(mStartStopButton->getData() == Digital::TOGGLE_ON);
-   const bool stamp_triggered(mStampButton->getData() == Digital::TOGGLE_ON);
+   const bool start_stop_triggered(
+      mStartStopButton->getData() == DigitalState::TOGGLE_ON
+   );
+   const bool stamp_triggered(
+      mStampButton->getData() == DigitalState::TOGGLE_ON
+   );
 
    if(0 == mSleepFramesLeft)
    {
