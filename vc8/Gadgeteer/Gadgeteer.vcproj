@@ -716,10 +716,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouseEventInterface.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.cpp"
 				>
 			</File>
@@ -881,6 +877,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\ClickAnalyzer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterDelta.h"
 				>
 			</File>
@@ -997,7 +997,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\DigitalEventInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\DigitalInterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\DigitalMultiClickEventInterface.h"
 				>
 			</File>
 			<File
@@ -1245,6 +1253,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\MouseMultiClickEventInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\NetworkManager.h"
 				>
 			</File>
@@ -1358,6 +1370,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\SampleBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\SampleHandler.h"
 				>
 			</File>
 			<File

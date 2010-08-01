@@ -24,31 +24,51 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/Event/KeyboardMouseEventInterface.h>
+#ifndef _GADGET_KEYBOARD_MOUSE_SAMPLE_HANDLER_H_
+#define _GADGET_KEYBOARD_MOUSE_SAMPLE_HANDLER_H_
+
+#include <gadget/gadgetConfig.h>
+
+#include <gadget/Event/EventPtr.h>
 
 
 namespace gadget
 {
 
-DoubleClickEventGenerator::DoubleClickEventGenerator()
+namespace event
 {
+
+namespace kbd
+{
+
+/** \struct KeyboardEventSampleHandler KeyboardEventSampleHandler.h gadget/Event/KeyboardEventSampleHandler.h
+ *
+ * A handler of samples collected by gadget::KeyboardMouse instances. This
+ * device type is quite different than any other Gadgeteer device type in
+ * that its proxy type is \em designed to return a collection of samples
+ * rather than only the most recent. This influences how the device type
+ * itself collect samples, thus necessitating this alternative to
+ * gadget::DefaultSampleHandler<T>.
+ *
+ * @since 2.1.6
+ */
+struct SampleHandler
+{
+   typedef EventPtr sample_type;
+   typedef EventPtr raw_data_type;
+
+   static const raw_data_type& getData(const raw_data_type& sample,
+                                       const unsigned int)
+   {
+      return sample;
+   }
+};
+
 }
 
-DoubleClickEventGeneratorPtr DoubleClickEventGenerator::create()
-{
-   return DoubleClickEventGeneratorPtr(new DoubleClickEventGenerator());
 }
 
-void DoubleClickEventGenerator::onEventAdded(const raw_data_type& data)
-{
-}
-/*
-DoubleClickEventInterface::DoubleClickEventInterface()
-{
 }
 
-DoubleClickEventInterface::~DoubleClickEventInterface()
-{
-}
-*/
-}
+
+#endif /* _GADGET_KEYBOARD_MOUSE_SAMPLE_HANDLER_H_ */

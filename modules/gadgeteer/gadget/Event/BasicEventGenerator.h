@@ -105,6 +105,26 @@ struct CollectionTypeChooser
       >::type type;
 };
 
+/**
+ * The default handler of device samples. This will work for any device type
+ * that uses std::vector<gadget::DeviceData<T> > to record samples.
+ *
+ * @since 2.1.6
+ */
+template<typename ProxyType>
+struct DefaultSampleHandler
+{
+   typedef typename ProxyTraits<ProxyType>::device_data_type device_data_type;
+   typedef std::vector<device_data_type>                     sample_type;
+   typedef typename ProxyTraits<ProxyType>::raw_data_type    raw_data_type;
+
+   static const raw_data_type& getData(const sample_type& samples,
+                                       const unsigned int unit)
+   {
+      return samples[unit].getValue();
+   }
+};
+
 /** \class BasicEventGenerator BasicEventGenerator.h gadget/Event/BasicEventGenerator.h
  *
  * @since 2.1.2
@@ -112,21 +132,25 @@ struct CollectionTypeChooser
 template<typename ProxyType
        , typename CollectionTag
        , typename GenerationTag
-       , typename DataType = typename ProxyTraits<ProxyType>::raw_data_type>
+       , typename SampleHandler = DefaultSampleHandler<ProxyType>
+       >
 class BasicEventGenerator
    : public EventGenerator
-   , protected CollectionTypeChooser<CollectionTag, DataType>::type
+   , protected CollectionTypeChooser<CollectionTag
+                                   , typename SampleHandler::raw_data_type
+                                   >::type
 {
 public:
    /** @name Type Declarations */
    //@{
-   typedef GenerationTag                              tag;
-   typedef ProxyType                                  proxy_type;
-   typedef ProxyTraits<ProxyType>                     proxy_traits_type;
-   typedef typename proxy_traits_type::proxy_ptr_type proxy_ptr_type;
-   typedef typename proxy_traits_type::device_type    device_type;
-   typedef boost::shared_ptr<device_type>             device_ptr_type;
-   typedef DataType                                   raw_data_type;
+   typedef GenerationTag                                tag;
+   typedef ProxyType                                    proxy_type;
+   typedef ProxyTraits<ProxyType>                       proxy_traits_type;
+   typedef typename proxy_traits_type::proxy_ptr_type   proxy_ptr_type;
+   typedef typename proxy_traits_type::device_type      device_type;
+   typedef typename proxy_traits_type::device_ptr_type  device_ptr_type;
+   typedef typename SampleHandler::sample_type          sample_type;
+   typedef typename SampleHandler::raw_data_type        raw_data_type;
 
    typedef boost::function<void (const raw_data_type&)> callback_type;
    //@}
@@ -159,7 +183,7 @@ public:
       // device.
       mDevConn =
          device->dataAdded().connect(
-            boost::bind(&BasicEventGenerator::onEventAdded, this, _1)
+            boost::bind(&BasicEventGenerator::onSamplesAdded, this, _1)
          );
 
       EventGeneratorPtr self(shared_from_this());
@@ -192,7 +216,12 @@ protected:
    static const bool sEmitsImmediately =
       boost::is_same<GenerationTag, event::immediate_tag>::value;
 
-   virtual void onEventAdded(const raw_data_type& data)
+   void onSamplesAdded(const sample_type& sample)
+   {
+      onDataAdded(SampleHandler::getData(sample, mProxy->getUnit()));
+   }
+
+   virtual void onDataAdded(const raw_data_type& data)
    {
       if (sEmitsImmediately)
       {

@@ -81,6 +81,17 @@ const DigitalData Digital::getDigitalData(int devNum)
    }
 }
 
+void Digital::addDigitalSample(const std::vector<DigitalData>& digSample)
+{
+   // Emit the data added signal for the given sample.
+   mDataAdded(digSample);
+
+   // Locks and then swaps the indices.
+   mDigitalSamples.lock();
+   mDigitalSamples.addSample(digSample);
+   mDigitalSamples.unlock();
+}
+
 void Digital::writeObject(vpr::ObjectWriter* writer)
 {
    writer->beginTag(Digital::getInputTypeName());

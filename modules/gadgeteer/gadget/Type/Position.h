@@ -78,7 +78,7 @@ class GADGET_CLASS_API Position
 {
 public:
    typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
-   typedef boost::signal<void (const gmtl::Matrix44f&)> add_signal_t;
+   typedef boost::signal<void (const std::vector<PositionData>&)> add_signal_t;
 
 protected:
    /** Constructor */

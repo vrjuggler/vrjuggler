@@ -132,7 +132,16 @@ struct RegistrationTypeChooser
  *
  * @tparam ProxyType     The type of proxy to be used by this EventInterface
  *                       type instantiation.
- * @tparam GeneratorType The event generator type.
+ * @tparam GeneratorType The event generator type. This is used to determine
+ *                       how to register this interface with the central
+ *                       input handler. This type must declare a type \c tag
+ *                       that is one of gadget::event::immediate_tag (events
+ *                       are generated as soon as the data added signal is
+ *                       emitted by the device), gadget::event::periodic_tag
+ *                       (events are generated once per iteration of the
+ *                       input handler's thread), or
+ *                       gadget::event::synchronized_tag (events are generated
+ *                       once per iteration of the frame loop).
  * @tparam DataType      The "raw" data type returned by the associated device
  *                       proxy type. For example, it is the return type of
  *                       gadget::TypedProxy<ProxyType>::getData(). This
@@ -141,9 +150,7 @@ struct RegistrationTypeChooser
  *
  * @since 2.1.2
  */
-template<typename ProxyType
-       , typename GeneratorType
-       , typename DataType = typename ProxyTraits<ProxyType>::raw_data_type>
+template<typename ProxyType, typename GeneratorType>
 class EventInterface
    : public AbstractEventInterface
    , protected RegistrationTypeChooser<GeneratorType>::type
@@ -156,7 +163,7 @@ public:
    typedef ProxyTraits<ProxyType>                       proxy_traits_type;
    typedef typename proxy_traits_type::device_type      device_type;
    typedef typename proxy_traits_type::device_data_type device_data_type;
-   typedef DataType                                     raw_data_type;
+   typedef typename GeneratorType::raw_data_type        raw_data_type;
    typedef GeneratorType                                generator_type;
    //@}
 
@@ -220,6 +227,8 @@ public:
       return mEventGenerator;
    }
 
+   /** @name Callback Management */
+   //@{
    EventInterface& addCallback(const callback_type& callback)
    {
       mCallbacks.push_back(callback);
@@ -230,6 +239,7 @@ public:
    {
       return addCallback(callback);
    }
+   //@}
 
 protected:
    void setProxy(const proxy_ptr_type& proxy)
@@ -263,7 +273,7 @@ protected:
       boost::shared_ptr<generator_type> generator(generator_type::create());
       generator->init(proxy);
       generator->setCallback(
-         boost::bind(&EventInterface::onEventAdded, this, _1)
+         boost::bind(&EventInterface::onDataAdded, this, _1)
       );
 
       return generator;
@@ -273,7 +283,7 @@ protected:
     * Invokes every registered callback using the given device data as the
     * callback argument.
     */
-   void onEventAdded(const raw_data_type& data)
+   void onDataAdded(const raw_data_type& data)
    {
       std::for_each(mCallbacks.begin(), mCallbacks.end(),
                     boost::bind(boost::apply<void>(), _1, boost::ref(data)));

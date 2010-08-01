@@ -91,7 +91,7 @@ protected:
       (boost::is_same<typename base_type::raw_data_type, gmtl::Matrix44f>::value)
    );
 
-   void onEventAdded(const gmtl::Matrix44f& data)
+   void onDataAdded(const gmtl::Matrix44f& data)
    {
       // Apply the proxy's position filters to the given data.
       PositionData pos_data(data);
@@ -103,7 +103,7 @@ protected:
       proxy->applyScaleFactor(pos_data.getValue(), mScaleFactor, result);
 
       // Store or emit the result.
-      this->base_type::onEventAdded(result);
+      this->base_type::onDataAdded(result);
    }
 
 private:

@@ -263,12 +263,8 @@ void Position::addPositionSample(std::vector<PositionData> posSample)
       (*i)->apply(posSample);
    }
 
-   // Emit the data added signal for each value in the given sample.
-   typedef std::vector<PositionData>::iterator data_iter_type;
-   for (data_iter_type i = posSample.begin(); i != posSample.end(); ++i)
-   {
-      mDataAdded((*i).getValue());
-   }
+   // Emit the data added signal for the given sample.
+   mDataAdded(posSample);
 
    // Locks and then swaps the indices.
    mPosSamples.lock();

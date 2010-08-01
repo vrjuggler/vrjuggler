@@ -47,8 +47,7 @@ SUBDIR=		KeyboardMouse
 
 SRCS=		AbstractEventInterface.cpp	\
 		Event.cpp			\
-		EventGenerator.cpp		\
-		KeyboardMouseEventInterface.cpp
+		EventGenerator.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

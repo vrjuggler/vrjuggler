@@ -1,5 +1,13 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2010-08-01 patrick     Added gadget::DigitalEventInterface,
+                       gadget::MouseMultiClickEventInterface and
+                       gadget::DigitalMultiClickEventInterface.
+                       NEW VERSION: 2.1.6
+2010-07-31 patrick     Changed gadget::Digital to use
+                       gadget::DeviceData<gadget::DigitalState::State>
+                       instead of gadget::DeviceData<int>.
+                       NEW VERSION: 2.1.5
 2010-07-24 patrick     Added gadget::PositionEventInterface<C,G>.
                        NEW VERSION: 2.1.4
 2010-07-24 patrick     Implemented synchronized eevnt delivery.

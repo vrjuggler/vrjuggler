@@ -31,9 +31,13 @@
 
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <boost/signal.hpp>
 
+#include <vpr/Util/SignalProxy.h>
 #include <vpr/IO/SerializableObject.h>
+
 #include <jccl/Config/ConfigElementPtr.h>
+
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
 #include <gadget/Type/DigitalPtr.h>
@@ -65,6 +69,7 @@ class GADGET_CLASS_API Digital
 {
 public:
    typedef gadget::SampleBuffer<DigitalData> SampleBuffer_t;
+   typedef boost::signal<void (const std::vector<DigitalData>&)> add_signal_t;
 
    /** @name Compatibility */
    //@{
@@ -115,13 +120,7 @@ public:
     * @param digSample A vector of DigitalData objects that represent the
     *                  newest samples taken.
     */
-   void addDigitalSample(const std::vector<DigitalData>& digSample)
-   {
-      // Locks and then swaps the indices.
-      mDigitalSamples.lock();
-      mDigitalSamples.addSample(digSample);
-      mDigitalSamples.unlock();
-   }
+   void addDigitalSample(const std::vector<DigitalData>& digSample);
 
    /**
     * Swaps the digital data buffers.
@@ -168,7 +167,17 @@ public:
     */
    virtual void readObject(vpr::ObjectReader* reader);
 
+   /**
+    * @since 2.1.6
+    */
+   vpr::SignalProxy<add_signal_t> dataAdded()
+   {
+      return mDataAdded;
+   }
+
 private:
+   add_signal_t mDataAdded;
+
    SampleBuffer_t    mDigitalSamples; /**< Digital samples */
    DigitalData       mDefaultValue;   /**< Default digital value to return */
 };
