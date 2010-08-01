@@ -202,9 +202,9 @@ bool P5GloveWrapper::sample()
       swapAnalogBuffers();
 
 // Then, we define the buttons of the glove
-      mDigitalP5[0] = rec.buttonA;
-      mDigitalP5[1] = rec.buttonB;
-      mDigitalP5[2] = rec.buttonC;
+      mDigitalP5[0] = static_cast<DigitalState::State>(rec.buttonA);
+      mDigitalP5[1] = static_cast<DigitalState::State>(rec.buttonB);
+      mDigitalP5[2] = static_cast<DigitalState::State>(rec.buttonC);
       addDigitalSample(mDigitalP5);
       swapDigitalBuffers();
 

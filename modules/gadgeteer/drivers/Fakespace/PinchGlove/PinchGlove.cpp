@@ -146,7 +146,7 @@ bool PinchGlove::startSampling()
          // We want to add an open hand sample first because the pinch glove
          // will not return data until there is a pinch. And until then, the
          // hand will be open.
-         std::vector<DigitalData> digital_sample(10, 0);
+         std::vector<DigitalData> digital_sample(10, DigitalState::OFF);
          addDigitalSample(digital_sample);
          std::vector<GloveData> gloveData =
             getGloveDataFromDigitalData(digital_sample);
@@ -187,6 +187,14 @@ void PinchGlove::controlLoop()
    }
 }
 
+struct ToDigitalState
+{
+   DigitalState::State operator()(const int input)
+   {
+      return static_cast<DigitalState::State>(input);
+   }
+};
+
 bool PinchGlove::sample()
 {
    // Create a vector of DigitalData's to hold our sample.
@@ -205,8 +213,9 @@ bool PinchGlove::sample()
    if ( mGlove->sample(data, timestamp) )
    {
       // Copy the data into a new digital sample.
-      std::copy(data.begin(), data.end(), digital_sample.begin());
-      
+      ToDigitalState to_dig;
+      std::transform(data.begin(), data.end(), digital_sample.begin(), to_dig);
+
       // Add a new digital sample to the buffer.
       addDigitalSample(digital_sample);
 

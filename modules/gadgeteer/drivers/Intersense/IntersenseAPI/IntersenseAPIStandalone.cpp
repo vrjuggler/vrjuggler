@@ -188,14 +188,15 @@ bool IntersenseAPIStandalone::updateData()
    return false;
 }
 
-int IntersenseAPIStandalone::buttonState(const unsigned int i,
-                                         const unsigned int f)
+gadget::DigitalState::State
+IntersenseAPIStandalone::buttonState(const unsigned int i,
+                                     const unsigned int f)
 {
    if (f < ISD_MAX_BUTTONS && i < ISD_MAX_STATIONS)
    {
-      return mData.Station[i].ButtonState[f];
+      return static_cast<gadget::DigitalState::State>(mData.Station[i].ButtonState[f]);
    }
-   return 0;
+   return gadget::DigitalState::OFF;
 }
 
 

@@ -197,10 +197,10 @@ bool IBox::sample()
       mIBox->sendCommand(0,4,0);
       mIBox->checkForPacket();
 
-      mButton[0] = mIBox->getButtonData(0);
-      mButton[1] = mIBox->getButtonData(1);
-      mButton[2] = mIBox->getButtonData(2);
-      mButton[3] = mIBox->getButtonData(3);
+      mButton[0] = static_cast<DigitalState::State>(mIBox->getButtonData(0));
+      mButton[1] = static_cast<DigitalState::State>(mIBox->getButtonData(1));
+      mButton[2] = static_cast<DigitalState::State>(mIBox->getButtonData(2));
+      mButton[3] = static_cast<DigitalState::State>(mIBox->getButtonData(3));
 
       mAnalog[0] = mIBox->getAnalogData(0);
       mAnalog[1] = mIBox->getAnalogData(1);

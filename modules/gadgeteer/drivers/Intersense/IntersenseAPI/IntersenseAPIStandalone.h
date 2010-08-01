@@ -31,6 +31,8 @@
 
 #include <drivers/Intersense/IntersenseAPI/isense/isense.h>
 
+#include <gadget/Type/DigitalData.h>
+
 
 class IntersenseAPIStandalone
 {
@@ -38,7 +40,6 @@ public:
    IntersenseAPIStandalone()
       : mActive(false)
       , mHandle(-1)
-      , mPort("")
       , mVerbose(false) 
    {;}
 
@@ -63,7 +64,7 @@ public:
       mVerbose = verb;
    }
    
-   const std::string getPort() const
+   const std::string& getPort() const
    {
       return mPort;
    }
@@ -396,7 +397,8 @@ public:
       return mData.Station[i].TimeStamp;
    }
 
-   int buttonState(const unsigned int i, const unsigned int f);
+   gadget::DigitalState::State buttonState(const unsigned int i,
+                                           const unsigned int f);
 
    int analogData(const unsigned int i, const unsigned int j);
 

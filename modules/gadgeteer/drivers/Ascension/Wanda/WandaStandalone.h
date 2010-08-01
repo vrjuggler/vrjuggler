@@ -35,6 +35,8 @@
 #include <vpr/vprDomain.h>
 #include <vpr/Util/Interval.h>
 
+#include <gadget/Type/DigitalData.h>
+
 
 namespace wanda
 {
@@ -120,13 +122,13 @@ public:
     * @param buttonNum The integer identifier of the button whose state will
     *                  be returned.
     *
-    * @return If button \p buttonNum is pressed, then 1 is returned;
-    *         otherwise, 0 is returned.
+    * @return If button \p buttonNum is pressed, then gadget::DigitalState::ON
+    *         is returned; otherwise, gadget::DigitalState::OFF is returned.
     *
     * @throw wanda::InvalidBUttonException is thrown if \p buttonNum is not a
     *        valid button identifier for this device.
     */
-   vpr::Int8 getButton(const size_t buttonNum) const;
+   gadget::DigitalState::State getButton(const size_t buttonNum) const;
 
    /**
     * Returns the current value of the X-axis data. This value is always in
@@ -192,7 +194,9 @@ private:
 
    /** @name Input State */
    //@{
-   std::vector<vpr::Uint8> mButtons; /**< The state of the digital buttons */
+   /** The state of the digital buttons. */
+   std::vector<gadget::DigitalState::State> mButtons;
+
    float                   mXAxis;   /**< The current X-axis value */
    float                   mYAxis;   /**< The current Y-axis value */
    //@}

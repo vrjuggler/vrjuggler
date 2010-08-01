@@ -69,7 +69,7 @@ WandaStandalone::WandaStandalone(const std::string& portName)
    , mPort(NULL)
    , mRunning(false)
    , mTimeout(20, vpr::Interval::Msec)
-   , mButtons(3, 0)
+   , mButtons(3, gadget::DigitalState::OFF)
    , mXAxis(0)
    , mYAxis(0)
 {
@@ -265,8 +265,10 @@ void WandaStandalone::sample()
    // is Button 2. We will not reinterpret that state here. Instead, we follow
    // the serial mouse protocol and leave it up to the user to set up the
    // digital proxies as desired.
-   mButtons[0] = (mDataBuffer[0] & BUTTON0_MASK) ? 1 : 0;
-   mButtons[2] = (mDataBuffer[0] & BUTTON2_MASK) ? 1 : 0;
+   mButtons[0] = (mDataBuffer[0] & BUTTON0_MASK) ? gadget::DigitalState::ON
+                                                 : gadget::DigitalState::OFF;
+   mButtons[2] = (mDataBuffer[0] & BUTTON2_MASK) ? gadget::DigitalState::ON
+                                                 : gadget::DigitalState::OFF;
 
    // Discard the current three-byte packet.
    mDataBuffer.pop_front();
@@ -277,12 +279,13 @@ void WandaStandalone::sample()
    // packet, then it is the byte for the middle button.
    if ( ! mDataBuffer.empty() && ! (mDataBuffer[0] & SYNC_MASK) )
    {
-      mButtons[1] = (mDataBuffer[0] != 0) ? 1 : 0;
+      mButtons[1] = (mDataBuffer[0] != 0) ? gadget::DigitalState::ON
+                                          : gadget::DigitalState::OFF;
       mDataBuffer.pop_front();
    }
    else
    {
-      mButtons[1] = 0;
+      mButtons[1] = gadget::DigitalState::OFF;
    }
 }
 
@@ -302,7 +305,8 @@ void WandaStandalone::stop()
    }
 }
 
-vpr::Int8 WandaStandalone::getButton(const size_t buttonNum) const
+gadget::DigitalState::State
+WandaStandalone::getButton(const size_t buttonNum) const
 {
    if ( buttonNum > mButtons.size() )
    {

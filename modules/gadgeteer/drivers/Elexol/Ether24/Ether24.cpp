@@ -299,7 +299,11 @@ bool Ether24::sample()
    {
       for (unsigned int j = 0 ; j < 8 ; j++)
       {
-         cur_digital_samples.push_back(DigitalData(port_values[i] & (1<<j)));
+         cur_digital_samples.push_back(
+            DigitalData(
+               static_cast<DigitalState::State>(port_values[i] & (1 << j))
+            )
+         );
       }
    }
 

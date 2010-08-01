@@ -287,7 +287,8 @@ bool DTrack::sample()
 		for(j=0; j<nbt; j++){
 			id = j + i * BUTTONS_PER_FLYSTICK;  // VRJuggler id number
 			
-			curDigital[id] = dat.button[j];
+			curDigital[id] =
+                           static_cast<DigitalState::State>(dat.button[j]);
 			curDigital[id].setTime();
 		}
 		
@@ -330,7 +331,8 @@ bool DTrack::sample()
 		for(j=0; j<nbt; j++){
 			id = j + i * BUTTONS_PER_MEATOOL + num_flystick * BUTTONS_PER_FLYSTICK;  // VRJuggler id number
 			
-			curDigital[id] = dat.button[j];
+			curDigital[id] =
+                           static_cast<DigitalState::State>(dat.button[j]);
 			curDigital[id].setTime();
 		}
 	}
@@ -401,7 +403,7 @@ void DTrack::resize_curDigital(int n)
 		curDigital.resize(n);
 
 		for(int i=nsize; i<n; i++){  // set default for new elements
-			curDigital[i] = 0;
+			curDigital[i] = gadget::DigitalState::OFF;
 			curDigital[i].setTime();
 		}
 	}
