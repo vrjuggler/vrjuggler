@@ -705,6 +705,7 @@ gadget::Keys InputAreaXWin::xKeyToKey(KeySym xKey)
 #endif
    case XK_BackSpace    : return gadget::KEY_BACKSPACE;
    case XK_Return       : return gadget::KEY_RETURN;
+   case XK_KP_Enter     : return gadget::KEY_RETURN;
    case XK_Insert       : return gadget::KEY_INSERT;
    case XK_Delete       : return gadget::KEY_DELETE;
    case XK_Pause        : return gadget::KEY_PAUSE;
