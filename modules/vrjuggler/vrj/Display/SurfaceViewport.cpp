@@ -260,6 +260,35 @@ void SurfaceViewport::updateCorners()
 
          break;
       }
+      case RESIZE_WIDTH_ONLY:
+      {
+         float vp_pixel_width, vp_pixel_height;
+
+         // Save previous width & height for computing delta
+         vp_pixel_width = mVpWidth;
+         vp_pixel_height = mVpHeight;
+
+         // Update viewport location & dimensions in pixels
+         computePixelOriginAndSize();
+
+         // Correct width for change in Height.
+         vp_pixel_width = mVpHeight / vp_pixel_height * vp_pixel_width;
+         gmtl::Vec3f vec = mLRCorner - mLLCorner;
+         mPixelsPerUnitX = vp_pixel_width / gmtl::length(vec);
+
+         // Compute expansion amounts
+         gmtl::Vec3f h_expand =
+            mHDirection * 0.5f *
+            (mVpWidth - vp_pixel_width) / mPixelsPerUnitX;
+
+         // Expand or contract about the center
+         mLLCorner = mLLCorner - h_expand;
+         mLRCorner = mLRCorner + h_expand;
+         mULCorner = mULCorner - h_expand;
+         mURCorner = mURCorner + h_expand;
+
+         break;
+      }
       case RESIZE_AND_MOVE:
          // Update viewport location & dimensions in pixels
          computePixelOriginAndSize();
