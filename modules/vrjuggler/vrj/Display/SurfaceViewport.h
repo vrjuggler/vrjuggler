@@ -56,7 +56,8 @@ public:
    {
       NO_UPDATE = 0,
       RESIZE_ONLY,
-      RESIZE_AND_MOVE
+      RESIZE_AND_MOVE,
+      RESIZE_WIDTH_ONLY
    };
 
    /**

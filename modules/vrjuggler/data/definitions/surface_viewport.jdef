@@ -262,6 +262,7 @@
             <enum label="No Update" value="0"/>
             <enum label="Resize Only" value="1"/>
             <enum label="Resize and Move" value="2"/>
+	    <enum label="Resize Width Only" value="3"/>
          </enumeration>
       </property>
       <upgrade_transform>
