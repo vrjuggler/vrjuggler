@@ -236,7 +236,6 @@ void SurfaceViewport::updateCorners()
       case RESIZE_ONLY:
       {
          float vp_pixel_width, vp_pixel_height;
-         float x_expand, y_expand;
 
          // Save previous width & height for computing delta
          vp_pixel_width = mVpWidth;
