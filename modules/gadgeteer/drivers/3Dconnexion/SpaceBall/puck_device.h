@@ -107,6 +107,9 @@ class basePuck
     /// Write out the settings
     virtual void writeSettings() = 0;
 
+    /// return true if a relative system is to be used.
+    virtual bool useRelative() { return false; }
+
     /** Called upon a port read, this method should handle filling the
     *** data structures sent in to it.
     *** @return 1 if digital data changed, 2 if analog data changed,
@@ -303,6 +306,7 @@ class basePuckUSB : public basePuck
     //@{
     int DIGITAL_CODE;
     int ANALOG_CODE;
+    int SYNC_CODE;
     int USB_BUTTON_1;
     int USB_BUTTON_2;
     int USB_BUTTON_3;
@@ -563,6 +567,8 @@ class spaceTraveler : public basePuckUSB
     *** @param ana Data structure into which to place the result
     */
     virtual int processBuffer(analogData &ana, digitalData &dig);
+    /// Using a relative System.
+    virtual bool useRelative() { return true; }
 
   protected:
     /// Write out the settings
@@ -834,6 +840,10 @@ class PuckDevice : public gadget::input_digital_analog_t
     *** @return 1 if success, else 0
     */
     virtual bool sample();
+    /** Function accesses and internally stores device state.
+    *** @return 1 if success, else 0
+    */
+    virtual bool sampleRel();
     /** Device driver stops sampling, kill thread.
     *** @return 1 if success, else 0
     */
@@ -869,16 +879,22 @@ class PuckDevice : public gadget::input_digital_analog_t
     //----------------------------------------
     ///
     void controlLoop();
+    ///
+    void controlLoopRel();
     /// Initialize the analog and digital buffers
     void initBuffers();
     /// Digital data to be sent to gadget classes
     digitalData _buttons;
     /// Analog data to be sent to gadget classes
     analogData _axes;
+    ///
+    int _axesCount[6];
     /// Ptr. to specific device class
     basePuck *_puck;
     ///
     bool _running;
+    ///
+    int _updateCount;
 
 };
 //@}
