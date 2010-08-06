@@ -31,8 +31,8 @@
 #include <X11/keysym.h>
 
 #include <gadget/Util/Debug.h>
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 
 
@@ -114,8 +114,8 @@ void InputAreaXWin::handleEvent(::XEvent& event)
    KeySym key;
    gadget::Keys vj_key;          // The key in vj space
 
-      switch (event.type)
-      {
+   switch (event.type)
+   {
       // A KeyPress event occurred.  Flag the key that was pressed (as a
       // Gadgeteer key) as being pressed and grab the keyboard.
       case KeyPress:
@@ -266,7 +266,8 @@ void InputAreaXWin::handleEvent(::XEvent& event)
             }
             else
             {
-               int win_center_x(mLockXCenter), win_center_y(mLockYCenter);
+               const int win_center_x(mLockXCenter);
+               const int win_center_y(mLockYCenter);
 
                dx = cur_x - win_center_x; // Base delta off of center of window
                dy = cur_y - win_center_y;
@@ -352,15 +353,14 @@ void InputAreaXWin::handleEvent(::XEvent& event)
          }
          break;
 
-      // The windows size has changed
+      // The window's size has changed.
       case ConfigureNotify:
-            updateOriginAndSize(event.xconfigure.width,
-                                event.xconfigure.height);
+         updateOriginAndSize(event.xconfigure.width, event.xconfigure.height);
          break;
-      }
+   }
 
-      // Let any other event watchers process their events
-      this->processEvent(event);
+   // Let any other event watchers process their events
+   this->processEvent(event);
 }
 
 // Called when locking states
@@ -375,8 +375,8 @@ void InputAreaXWin::lockMouse(XEvent* ev)
    {
       display = ((XAnyEvent*)ev)->display;
       window = ((XAnyEvent*)ev)->window;
-      //lockMouse is only called from the KeyPress event
-      //therefore we do not need to worry about the MotionNotify event
+      // lockMouse is only called from the KeyPress event.
+      // Therefore we do not need to worry about the MotionNotify event.
       mLockXCenter = ev->xbutton.x;
       mLockYCenter = ev->xbutton.y;
    }
@@ -384,8 +384,8 @@ void InputAreaXWin::lockMouse(XEvent* ev)
    {
       display = mXDisplay;
       window = mXWindow;
-      //If we do not have an event (i.e. called from the users code) then
-      //set the lock center based on the last good previous mouse position.
+      // If we do not have an event (i.e. called from the users code) then
+      // set the lock center based on the last good previous mouse position.
       mLockXCenter = mPrevX;
       mLockYCenter = mPrevY;
    }
