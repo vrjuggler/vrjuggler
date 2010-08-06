@@ -141,6 +141,9 @@ bool WindowWin32::open()
    // The desired client rectangle size (left, top, right, bottom).
    RECT rc = { 0, 0, mWindowWidth, mWindowHeight };
 
+   mLockXCenter = mWindowWidth / 2;
+   mLockYCenter = mWindowHeight / 2;
+
    if ( ! AdjustWindowRect(&rc, style, false) )
    {
       doInternalError("Failed to adjust window rectangle");

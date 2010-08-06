@@ -133,6 +133,9 @@ bool WindowXWin::open()
    // Try initializing the window
    try
    {
+      mLockXCenter = mWindowWidth / 2;
+      mLockYCenter = mWindowHeight / 2;
+
       screen = DefaultScreen(mXDisplay);
 
       // get a GLXFBConfig*, which we'll need below

@@ -166,6 +166,9 @@ bool InputWindowCocoa::config(jccl::ConfigElementPtr e)
       mHeight = 400.0f;
    }
 
+   mLockXCenter = mWidth / 2;
+   mLockYCenter = mHeight / 2;
+
    mX = e->getProperty<float>("origin", 0);
    mY = e->getProperty<float>("origin", 1);
 
