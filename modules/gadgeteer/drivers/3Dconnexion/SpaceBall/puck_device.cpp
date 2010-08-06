@@ -92,6 +92,12 @@ void PuckDevice::controlLoop()
     }
 }
 
+void PuckDevice::controlLoopRel()
+{
+    while (1)
+	sampleRel();
+}
+
 string PuckDevice::getElementType() 
 {
    return string( "puck_device" );
@@ -122,17 +128,20 @@ bool PuckDevice::startSampling()
 
     try
     {
-        mThread = new vpr::Thread(boost::bind(&PuckDevice::controlLoop, this));
+	if (_puck->useRelative())
+	    mThread = new vpr::Thread(boost::bind(&PuckDevice::controlLoopRel, this));
+	else
+	    mThread = new vpr::Thread(boost::bind(&PuckDevice::controlLoop, this));
         started = true;
     }
     catch (vpr::Exception& ex)
     {
         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-           << clrOutBOLD(clrRED, "ERROR")
-           << ": Failed to spawn thread for 3DConnexion puck_device driver!\n"
-           << vprDEBUG_FLUSH;
+	    << clrOutBOLD(clrRED, "ERROR")
+	    << ": Failed to spawn thread for 3DConnexion puck_device driver!\n"
+	    << vprDEBUG_FLUSH;
         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-           << ex.what() << std::endl << vprDEBUG_FLUSH;
+	    << ex.what() << std::endl << vprDEBUG_FLUSH;
         _running = false;	
     }
 
@@ -182,11 +191,69 @@ bool PuckDevice::sample()
     return false;
 }
 
+bool PuckDevice::sampleRel()
+{
+    if (!_puck || !_running) return false;
+    analogData localAxes(6);
+    int result = _puck->processBuffer(localAxes, _buttons);
+    if (result & 0x02)
+	// analog data changed
+    {
+	for (int i = 0 ; i < 6 ; i++)
+	{
+	    if (localAxes[i].getAnalog() != 0.0f)
+	    {
+		float value;
+		float normalize;
+		value = localAxes[i].getAnalog();
+		gadget::Analog::normalizeMinToMax(value, normalize);
+		_axes[i] = _axes[i].getAnalog() + normalize;
+		_axesCount[i]++;
+	    }
+	}
+
+	return true;
+    }
+    else if (result & 0x01)
+	// digital data changed
+    {
+	gadget::Digital::addDigitalSample(_buttons);
+	return true;
+    }
+    // else no data changed
+    return false;
+}
 
 void PuckDevice::updateData()
 {
     if (_running)
     {
+	if (_puck->useRelative())
+	{
+	    if (_updateCount > 3 ||
+		_axesCount[0] >= 2 ||
+		_axesCount[1] >= 2 ||
+		_axesCount[2] >= 2 ||
+		_axesCount[3] >= 2 ||
+		_axesCount[4] >= 2 ||
+		_axesCount[5] >= 2)
+	    {
+		analogData submit(6);
+		for (int i = 0 ; i < 6 ; i++)
+		{
+		    if (_axesCount[i] > 0)
+			submit[i] = _axes[i].getAnalog() / _axesCount[i];
+		    else
+			submit[i] = 0.5f;
+		    // cout << _axes[i].getAnalog() << " / " << _axesCount[i] << " = " << submit[i].getAnalog() << endl;
+		    _axes[i] = 0.0f;
+		    _axesCount[i] = 0;
+		}
+		_updateCount = 0;
+		gadget::Analog::addAnalogSample(submit);
+	    }
+	    _updateCount++;
+	}
 	gadget::Analog::swapAnalogBuffers();
 	gadget::Digital::swapDigitalBuffers();
     }
@@ -200,9 +267,12 @@ void PuckDevice::initBuffers()
 	float value = 0;
 	gadget::Analog::normalizeMinToMax(value, normalize);
 	_axes[i] = normalize;
+	_axesCount[i] = 0;
     }
     for (unsigned int i = 0; i < _buttons.size(); i++)
 	_buttons[i] = 0;
+
+    _updateCount = 0;
 
     gadget::Digital::addDigitalSample(_buttons);
     gadget::Analog::addAnalogSample(_axes);
@@ -1232,6 +1302,7 @@ void spaceTraveler::init(const string devName, const string port)
 #if defined(VPR_OS_Linux) || defined(linux_x86_64)
     DIGITAL_CODE = EV_KEY;
     ANALOG_CODE = EV_REL;
+    SYNC_CODE = EV_SYN;
 #endif              /* defined(VPR_OS_Linux) || defined(linux_x86_64) */
     USB_BUTTON_1 = 256;
     USB_BUTTON_2 = 257;
@@ -1388,44 +1459,8 @@ bool spaceTraveler::processAnalogData(int buffer[], analogData &ana)
     }
     else return false;
     
-    // autozero
-    if (_autozero)
-    {
-	if (_analogCache[localIndex] == _nullVal)
-	{			// cache original
-	    _zeroValues[localIndex] = value;
-	}
-	value -= _zeroValues[localIndex];
-    }
-
-    // step function
-    int absolute = abs(value);
-    int sign = value < 0 ? -1 : 1;
-    float step1 = 0.25f; float step2 = 0.15f; float step3 = 0.05f;
-    int cutoff1 = static_cast<int>(_zeroRadius * step1);
-    int cutoff2 = static_cast<int>(_zeroRadius * step2);
-    int cutoff3 = static_cast<int>(_zeroRadius * step3);
-    
-    if (     absolute < _zeroRadius - cutoff1)
-	value = 0;
-    else if (absolute < _zeroRadius - cutoff2)
-	value = static_cast<int>(_zeroRadius * step1) * sign;
-    else if (absolute < _zeroRadius - cutoff3)
-	value = static_cast<int>(_zeroRadius * step2) * sign;
-    else if (absolute < _zeroRadius + cutoff3)
-	value = static_cast<int>(_zeroRadius * step3) * sign;
-    
-    
-    if (value == _analogCache[localIndex])
-    {				// data unchanged
-	return false;
-    }
-    else
-    {				// report new value
-	ana[localIndex] = value;
-	_analogCache[localIndex] = value;
-	return true;
-    }
+    ana[localIndex] = value;
+    return true;
 }
 
 void spaceTraveler::writeSettings()
