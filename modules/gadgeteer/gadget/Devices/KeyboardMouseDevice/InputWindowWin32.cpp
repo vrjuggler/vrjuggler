@@ -89,8 +89,17 @@ bool InputWindowWin32::config(jccl::ConfigElementPtr e)
    mHeight = e->getProperty<int>("size", 1);
 
    // Sanity checks.
-   if (mWidth == 0) mWidth = 400;
-   if (mHeight == 0) mHeight = 400;
+   if (0 == mWidth)
+   {
+      mWidth = 400;
+   }
+   if (0 == mHeight)
+   {
+      mHeight = 400;
+   }
+
+   mLockXCenter = mWidth / 2;
+   mLockYCenter = mHeight / 2;
 
    mX = e->getProperty<int>("origin", 0);
    mY = e->getProperty<int>("origin", 1);

@@ -89,6 +89,9 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
       mHeight = 400;
    }
 
+   mLockXCenter = mWidth / 2;
+   mLockYCenter = mHeight / 2;
+
    mX = e->getProperty<int>("origin", 0);
    mY = e->getProperty<int>("origin", 1);
 

@@ -164,6 +164,9 @@ bool WindowCocoa::open()
    {
       unsigned int style_mask(0);
 
+      mLockXCenter = mWindowWidth / 2;
+      mLockYCenter = mWindowHeight / 2;
+
       // If the window is borderless, set up the style mask to reflect that.
       // If the window is to be full screen, then we force it to be
       // borderless. This is to make Aqua happy.
