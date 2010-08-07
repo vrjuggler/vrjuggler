@@ -838,6 +838,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\AnalogEventInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\AnalogInterface.h"
 				>
 			</File>
@@ -903,6 +907,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\CommandData.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\CommandEventInterface.h"
 				>
 			</File>
 			<File
@@ -1411,6 +1419,10 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\StringData.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\StringEventInterface.h"
 				>
 			</File>
 			<File

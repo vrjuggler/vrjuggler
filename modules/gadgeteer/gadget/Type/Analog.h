@@ -31,9 +31,13 @@
 
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <boost/signal.hpp>
 
+#include <vpr/Util/SignalProxy.h>
 #include <vpr/IO/SerializableObject.h>
+
 #include <jccl/Config/ConfigElementPtr.h>
+
 #include <gadget/Type/AnalogData.h>
 #include <gadget/Type/SampleBuffer.h>
 #include <gadget/Type/AnalogPtr.h>
@@ -69,10 +73,11 @@ const unsigned short MSG_DATA_ANALOG = 421;
  */
 class GADGET_CLASS_API Analog
    : public vpr::SerializableObject
-   , boost::noncopyable
+   , private boost::noncopyable
 {
 public:
    typedef SampleBuffer<AnalogData> SampleBuffer_t;
+   typedef boost::signal<void (const std::vector<AnalogData>&)> add_signal_t;
 
 protected:
    /**
@@ -207,11 +212,21 @@ public:
    }
    //@}
 
+   /**
+    * @since 2.1.6
+    */
+   vpr::SignalProxy<add_signal_t> dataAdded()
+   {
+      return mDataAdded;
+   }
+
 protected:
    void setMin(const float minValue);
    void setMax(const float maxValue);
 
 private:
+   add_signal_t mDataAdded;
+
    float mMin;
    float mMax;
 

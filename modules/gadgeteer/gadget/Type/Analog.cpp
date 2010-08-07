@@ -216,6 +216,9 @@ AnalogData Analog::getAnalogData(int devNum)
 
 void Analog::addAnalogSample(const std::vector<AnalogData>& anaSample)
 {
+   // Emit the data added signal for the given sample.
+   mDataAdded(anaSample);
+
    // Locks and then swaps the indices.
    mAnalogSamples.lock();
    mAnalogSamples.addSample(anaSample);

@@ -25,10 +25,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
 #include <boost/concept_check.hpp>
+
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/Debug.h>
+
+#include <gadget/Util/DeviceSerializationTokens.h>
 #include <gadget/Type/String.h>
 
 namespace gadget
@@ -74,6 +78,17 @@ const StringData& String::getStringData(const int devNum) const
       }
       return mDefaultValue;
    }
+}
+
+void String::addStringSample(const std::vector<StringData>& stringSample)
+{
+   // Emit the data added signal for the given sample.
+   mDataAdded(stringSample);
+
+   // Locks and then swaps the indices.
+   mStringSamples.lock();
+   mStringSamples.addSample(stringSample);
+   mStringSamples.unlock();
 }
 
 void String::writeObject(vpr::ObjectWriter* writer)

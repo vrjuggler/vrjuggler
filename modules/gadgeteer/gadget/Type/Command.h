@@ -29,12 +29,15 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
-#include <boost/noncopyable.hpp>
 #include <vector>
+#include <boost/noncopyable.hpp>
+#include <boost/signal.hpp>
 
+#include <vpr/Util/SignalProxy.h>
 #include <vpr/IO/SerializableObject.h>
+
 #include <jccl/Config/ConfigElementPtr.h>
+
 #include <gadget/Type/CommandPtr.h>
 #include <gadget/Type/CommandData.h>
 #include <gadget/Type/SampleBuffer.h>
@@ -63,10 +66,11 @@ const unsigned short MSG_DATA_COMMAND = 423;
  */
 class GADGET_CLASS_API Command
    : public vpr::SerializableObject
-   , boost::noncopyable
+   , private boost::noncopyable
 {
 public:
    typedef SampleBuffer<CommandData> SampleBuffer_t;
+   typedef boost::signal<void (const std::vector<CommandData>&)> add_signal_t;
 
 protected:
    /* Constructor/Destructors */
@@ -83,9 +87,8 @@ public:
 
    virtual ~Command();
 
-   virtual bool config(jccl::ConfigElementPtr e)
+   virtual bool config(jccl::ConfigElementPtr)
    {
-      boost::ignore_unused_variable_warning(e);
       return true;
    }
 
@@ -106,16 +109,10 @@ public:
     *
     * @post The given command samples are added to the buffers.
     *
-    * @param digSample A vector of CommandData objects that represent the
+    * @param cmdSample A vector of CommandData objects that represent the
     *                  newest samples taken.
     */
-   void addCommandSample(const std::vector< CommandData >& digSample)
-   {
-      // Locks and then swaps the indices.
-      mCommandSamples.lock();
-      mCommandSamples.addSample(digSample);
-      mCommandSamples.unlock();
-   }
+   void addCommandSample(const std::vector<CommandData>& cmdSample);
 
    /**
     * Swaps the command data buffers.
@@ -162,7 +159,17 @@ public:
     */
    virtual void readObject(vpr::ObjectReader* reader);
 
+   /**
+    * @since 2.1.7
+    */
+   vpr::SignalProxy<add_signal_t> dataAdded()
+   {
+      return mDataAdded;
+   }
+
 private:
+   add_signal_t mDataAdded;
+
    SampleBuffer_t mCommandSamples; /**< Command samples */
    CommandData    mDefaultValue;   /**< Default command value to return */
 };

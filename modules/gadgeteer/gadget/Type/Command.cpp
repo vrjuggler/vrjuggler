@@ -76,6 +76,17 @@ const CommandData Command::getCommandData(const int devNum) const
    }
 }
 
+void Command::addCommandSample(const std::vector<CommandData>& cmdSample)
+{
+   // Emit the data added signal for the given sample.
+   mDataAdded(cmdSample);
+
+   // Locks and then swaps the indices.
+   mCommandSamples.lock();
+   mCommandSamples.addSample(cmdSample);
+   mCommandSamples.unlock();
+}
+
 void Command::writeObject(vpr::ObjectWriter* writer)
 {
    writer->beginTag(Command::getInputTypeName());

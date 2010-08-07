@@ -28,16 +28,20 @@
 #define _GADGET_STRING_H_
 
 #include <gadget/gadgetConfig.h>
+
+#include <vector>
 #include <boost/noncopyable.hpp>
+#include <boost/signal.hpp>
+
+#include <vpr/Util/SignalProxy.h>
 #include <vpr/IO/SerializableObject.h>
+
 #include <jccl/Config/ConfigElementPtr.h>
+
 #include <gadget/Type/SampleBuffer.h>
 #include <gadget/Type/StringData.h>
 #include <gadget/Type/StringPtr.h>
-#include <gadget/Util/DeviceSerializationTokens.h>
 
-#include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
-#include <vector>
 
 namespace gadget
 {
@@ -72,6 +76,7 @@ class GADGET_CLASS_API String
 {
 public:
    typedef SampleBuffer<StringData> SampleBuffer_t;
+   typedef boost::signal<void (const std::vector<StringData>&)> add_signal_t;
 
 public:
    /* Constructor/Destructors */
@@ -87,9 +92,8 @@ public:
 
    virtual ~String();
 
-   virtual bool config(jccl::ConfigElementPtr e)
+   virtual bool config(jccl::ConfigElementPtr)
    {
-      boost::ignore_unused_variable_warning(e);
       return true;
    }
 
@@ -111,13 +115,7 @@ public:
     * @param stringSample A vector of StringData objects that represent the
     *                     newest samples taken.
     */
-   void addStringSample(const std::vector< StringData >& stringSample)
-   {
-      // Locks and then swaps the indices.
-      mStringSamples.lock();
-      mStringSamples.addSample(stringSample);
-      mStringSamples.unlock();
-   }
+   void addStringSample(const std::vector<StringData>& stringSample);
 
    /**
     * Swaps the string data buffers.
@@ -161,7 +159,17 @@ public:
     */
    virtual void readObject(vpr::ObjectReader* reader);
 
+   /**
+    * @since 2.1.7
+    */
+   vpr::SignalProxy<add_signal_t> dataAdded()
+   {
+      return mDataAdded;
+   }
+
 private:
+   add_signal_t mDataAdded;
+
    SampleBuffer_t mStringSamples;  /**< String samples */
    StringData     mDefaultValue;   /**< Default String value to return */
 };

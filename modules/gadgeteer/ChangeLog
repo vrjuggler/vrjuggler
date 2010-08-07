@@ -1,8 +1,12 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2010-08-01 patrick     Added gadget::DigitalEventInterface,
-                       gadget::MouseMultiClickEventInterface and
-                       gadget::DigitalMultiClickEventInterface.
+2010-08-07 patrick     Added gadget::AnalogEventInterface<C,G>,
+                       gadget::CommandEventInterface<C,G> and
+                       gadget::StringEventInterface<C,G>.
+                       NEW VERSION: 2.1.7
+2010-08-01 patrick     Added gadget::DigitalEventInterface<C,G>,
+                       gadget::MouseMultiClickEventInterface<C,G> and
+                       gadget::DigitalMultiClickEventInterface<C,G>.
                        NEW VERSION: 2.1.6
 2010-07-31 patrick     Changed gadget::Digital to use
                        gadget::DeviceData<gadget::DigitalState::State>
