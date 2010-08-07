@@ -989,6 +989,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\DeviceTraits.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Digital.h"
 				>
 			</File>
@@ -1057,11 +1061,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventPtr.h"
 				>
 			</File>
 			<File
@@ -1217,15 +1221,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEvent.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEvent.h"
 				>
 			</File>
 			<File
@@ -1233,11 +1233,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Keys.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEventPtr.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEvent.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Keys.h"
 				>
 			</File>
 			<File
@@ -1245,11 +1245,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEvent.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEventPtr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEventPtr.h"
 				>
 			</File>
 			<File
