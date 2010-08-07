@@ -394,7 +394,7 @@ bool Vrpn::sample()
          gmtl::setRot(pos, mQuats[i]);
          gmtl::setTrans(pos, mPositions[i]);
 
-         positions[i].setPosition(pos);
+         positions[i].setValue(pos);
          positions[i].setTime();
       }
 
@@ -591,7 +591,7 @@ void Vrpn::buttonChange(const vrpn_BUTTONCB& b)
       << "Button #" << b.button << " state " << b.state << std::endl
       << vprDEBUG_FLUSH;
 
-   mButtons[b.button] = b.state;
+   mButtons[b.button] = static_cast<DigitalState::State>(b.state);
 }
 
 void Vrpn::analogChange(const vrpn_ANALOGCB& b)

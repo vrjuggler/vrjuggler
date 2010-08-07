@@ -320,7 +320,8 @@ bool Intersense::sample()
                ++j, ++k )
          {
             //mInput[progress].digital[k] = mTracker.buttonState(station_index, j);
-            cur_sample.digital[k] = mTracker.buttonState(station_index, j);
+			 cur_sample.digital[k] =
+                static_cast<DigitalState::State>(mTracker.buttonState(station_index, j));
          }
       }
 
