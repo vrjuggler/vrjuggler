@@ -121,7 +121,7 @@ protected:
  * Input base type factory.
  */
 class GADGET_CLASS_API BaseTypeFactory :
-   public gadget::Factory<Input, std::string>
+   public Factory<Input, std::string>
 {
 public:
    vprSingletonHeaderWithInitFunc(BaseTypeFactory, hackLoadKnownDevices);

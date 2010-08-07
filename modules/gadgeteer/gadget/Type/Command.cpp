@@ -80,13 +80,13 @@ void Command::writeObject(vpr::ObjectWriter* writer)
 {
    writer->beginTag(Command::getInputTypeName());
    SampleBuffer_t::buffer_t& stable_buffer = mCommandSamples.stableBuffer();
-   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+   writer->beginAttribute(tokens::DataTypeAttrib);
       // Write out the data type so that we can assert if reading in wrong
       // place.
       writer->writeUint16(MSG_DATA_COMMAND);
    writer->endAttribute();
 
-   writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   writer->beginAttribute(tokens::SampleBufferLenAttrib);
       // Write the # of vectors in the stable buffer.
       writer->writeUint16(stable_buffer.size());
    writer->endAttribute();
@@ -96,14 +96,14 @@ void Command::writeObject(vpr::ObjectWriter* writer)
       mCommandSamples.lock();
       for ( unsigned j = 0; j < stable_buffer.size(); ++j )                               // For each vector in the stable buffer
       {
-         writer->beginTag(gadget::tokens::BufferSampleTag);
-         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         writer->beginTag(tokens::BufferSampleTag);
+         writer->beginAttribute(tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());                           // Write the # of CommandDatas in the vector
          writer->endAttribute();
          for ( unsigned i = 0; i < stable_buffer[j].size(); ++i )                         // For each CommandData in the vector
          {
-            writer->beginTag(gadget::tokens::DigitalValue);
-            writer->beginAttribute(gadget::tokens::TimeStamp);
+            writer->beginTag(tokens::DigitalValue);
+            writer->beginAttribute(tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
             writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getValue());  // Write Command Data(int)
@@ -123,7 +123,7 @@ void Command::readObject(vpr::ObjectReader* reader)
 
       // ASSERT if this data is really not Command Data
    reader->beginTag(Command::getInputTypeName());
-   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+   reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
@@ -139,23 +139,23 @@ void Command::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 time_stamp;
    CommandData temp_command_data;
 
-   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   reader->beginAttribute(tokens::SampleBufferLenAttrib);
       const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
    mCommandSamples.lock();
    for (unsigned int i = 0; i < num_vectors; ++i)
    {
-      reader->beginTag(gadget::tokens::BufferSampleTag);
-      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+      reader->beginTag(tokens::BufferSampleTag);
+      reader->beginAttribute(tokens::BufferSampleLenAttrib);
          num_command_values = reader->readUint16();
       reader->endAttribute();
 
       data_sample.clear();
       for (unsigned int j = 0; j < num_command_values; ++j)
       {
-         reader->beginTag(gadget::tokens::DigitalValue);
-         reader->beginAttribute(gadget::tokens::TimeStamp);
+         reader->beginTag(tokens::DigitalValue);
+         reader->beginAttribute(tokens::TimeStamp);
             time_stamp = reader->readUint64();    // read Time Stamp vpr::Uint64
          reader->endAttribute();
          value = reader->readUint32();           // read Command Data(int)

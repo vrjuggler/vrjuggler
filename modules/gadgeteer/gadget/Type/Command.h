@@ -66,7 +66,7 @@ class GADGET_CLASS_API Command
    , boost::noncopyable
 {
 public:
-   typedef gadget::SampleBuffer<CommandData> SampleBuffer_t;
+   typedef SampleBuffer<CommandData> SampleBuffer_t;
 
 protected:
    /* Constructor/Destructors */

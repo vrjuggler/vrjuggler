@@ -49,7 +49,7 @@ template <class DEV>
 class DeviceConstructor : public DeviceConstructorBase
 {
 public:
-   DeviceConstructor(gadget::InputManager* inputMgr)
+   DeviceConstructor(InputManager* inputMgr)
    {
       vprASSERT(DeviceFactory::instance() != NULL);
       vprASSERT(inputMgr != NULL);

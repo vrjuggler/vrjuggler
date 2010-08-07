@@ -148,7 +148,7 @@ const gmtl::Matrix44f PositionProxy::getData(const float scaleFactor) const
 
    if (! mStupefied)
    {
-      if (gmtl::Math::isEqual(scaleFactor, gadget::PositionUnitConversion::ConvertToFeet, 0.01f))
+      if (gmtl::Math::isEqual(scaleFactor, PositionUnitConversion::ConvertToFeet, 0.01f))
       {
          ret_mat = mPosMatrix_feet;
       }
@@ -192,7 +192,7 @@ void PositionProxy::updateData()
       mPosMatrix_feet = mData.getValue();
       gmtl::Vec3f trans;                                       // SCALE: to feet
       gmtl::setTrans(trans, mPosMatrix_feet);                  // Get the translational vector
-      trans *= gadget::PositionUnitConversion::ConvertToFeet;  // Scale the translation and set the value again
+      trans *= PositionUnitConversion::ConvertToFeet;          // Scale the translation and set the value again
       gmtl::setTrans(mPosMatrix_feet, trans);
    }
 }

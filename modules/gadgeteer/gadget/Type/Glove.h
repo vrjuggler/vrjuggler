@@ -61,7 +61,7 @@ class GADGET_CLASS_API Glove
    , boost::noncopyable
 {
 public:
-   typedef gadget::SampleBuffer<GloveData> SampleBuffer_t;
+   typedef SampleBuffer<GloveData> SampleBuffer_t;
 
 protected:
    Glove();

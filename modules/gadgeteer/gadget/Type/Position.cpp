@@ -131,11 +131,11 @@ void Position::writeObject(vpr::ObjectWriter* writer)
    SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
 
    writer->beginTag(Position::getInputTypeName());
-   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+   writer->beginAttribute(tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_POS);                               // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
 
-   writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   writer->beginAttribute(tokens::SampleBufferLenAttrib);
       writer->writeUint16(stable_buffer.size());         // Write the size of the stable buffer
    writer->endAttribute();
 
@@ -144,8 +144,8 @@ void Position::writeObject(vpr::ObjectWriter* writer)
       mPosSamples.lock();
       for (unsigned int j = 0; j < stable_buffer.size(); ++j)
       {
-         writer->beginTag(gadget::tokens::BufferSampleTag);
-         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         writer->beginTag(tokens::BufferSampleTag);
+         writer->beginAttribute(tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());            // Number of pos values for this entry
          writer->endAttribute();
 
@@ -154,14 +154,14 @@ void Position::writeObject(vpr::ObjectWriter* writer)
             gmtl::Matrix44f& pos_matrix = stable_buffer[j][i].editValue();
             const float* pos_data = pos_matrix.getData();
 
-            writer->beginTag(gadget::tokens::PosValue);
+            writer->beginTag(tokens::PosValue);
             // TODO: Loop unrolling could be beneficial here.
             for (unsigned int n = 0; n < 16; ++n)
             {
                writer->writeFloat(pos_data[n]);
             }
 
-            writer->beginAttribute(gadget::tokens::TimeStamp);
+            writer->beginAttribute(tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
             writer->endTag();
@@ -188,7 +188,7 @@ void Position::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
    reader->beginTag(Position::getInputTypeName());
-   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+   reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
@@ -205,15 +205,15 @@ void Position::readObject(vpr::ObjectReader* reader)
    float pos_data[16];
    gmtl::Matrix44f pos_matrix;
 
-   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   reader->beginAttribute(tokens::SampleBufferLenAttrib);
       const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
    mPosSamples.lock();
    for (unsigned int i = 0; i < num_vectors; ++i)
    {
-      reader->beginTag(gadget::tokens::BufferSampleTag);
-      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+      reader->beginTag(tokens::BufferSampleTag);
+      reader->beginAttribute(tokens::BufferSampleLenAttrib);
          num_pos_values = reader->readUint16();
       reader->endAttribute();
 
@@ -221,7 +221,7 @@ void Position::readObject(vpr::ObjectReader* reader)
 
       for (unsigned int j = 0; j < num_pos_values; ++j)
       {
-         reader->beginTag(gadget::tokens::PosValue);
+         reader->beginTag(tokens::PosValue);
 
          // NOTE: This uses the value 16 because we are using a 4x4 matrix
          // for the position dataAt this point there is not a good
@@ -234,7 +234,7 @@ void Position::readObject(vpr::ObjectReader* reader)
 
          pos_matrix.set(pos_data);
 
-         reader->beginAttribute(gadget::tokens::TimeStamp);
+         reader->beginAttribute(tokens::TimeStamp);
             time_stamp = reader->readUint64();
          reader->endAttribute();
          reader->endTag();

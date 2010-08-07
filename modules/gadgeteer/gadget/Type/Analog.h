@@ -72,7 +72,7 @@ class GADGET_CLASS_API Analog
    , boost::noncopyable
 {
 public:
-   typedef gadget::SampleBuffer<AnalogData> SampleBuffer_t;
+   typedef SampleBuffer<AnalogData> SampleBuffer_t;
 
 protected:
    /**

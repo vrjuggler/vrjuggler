@@ -58,7 +58,7 @@ namespace gadget
 #define GADGET_REGISTER_BASE_TYPE_CREATOR(BaseType)                             \
 InputPtr input_ ## BaseType = BaseType::MixedPlaceholderType::create();         \
 const bool reg_ctr_ ## BaseType =                                               \
-   gadget::BaseTypeFactory::instance()->                                        \
+   BaseTypeFactory::instance()->                                        \
       registerCreator(input_ ## BaseType->getInputTypeName(),                   \
                       BaseType::MixedPlaceholderType::create);                  \
    boost::ignore_unused_variable_warning(reg_ctr_ ## BaseType);

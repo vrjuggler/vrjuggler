@@ -50,7 +50,7 @@ struct DigitalState
    };
 };
 
-typedef DeviceData<gadget::DigitalState::State> DigitalData;
+typedef DeviceData<DigitalState::State> DigitalData;
 
 } // namespace gadget
 

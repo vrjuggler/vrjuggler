@@ -91,11 +91,11 @@ void Glove::writeObject(vpr::ObjectWriter* writer)
    SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
 
    writer->beginTag(Glove::getInputTypeName());
-   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+   writer->beginAttribute(tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_GLOVE);                               // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
 
-   writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   writer->beginAttribute(tokens::SampleBufferLenAttrib);
       writer->writeUint16(stable_buffer.size());         // Write the size of the stable buffer
    writer->endAttribute();
 
@@ -104,14 +104,14 @@ void Glove::writeObject(vpr::ObjectWriter* writer)
       mGloveSamples.lock();
       for (unsigned int j = 0; j < stable_buffer.size(); ++j)
       {
-         writer->beginTag(gadget::tokens::BufferSampleTag);
-         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         writer->beginTag(tokens::BufferSampleTag);
+         writer->beginAttribute(tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());            // Number of glove values for this entry
          writer->endAttribute();
 
          for (unsigned int i = 0; i < stable_buffer[j].size(); ++i)  // For each glove value
          {
-            writer->beginTag(gadget::tokens::GloveValue);
+            writer->beginTag(tokens::GloveValue);
 
             // TODO: If we switch the GloveData to only work with Matrix4x4s,
             // then change this.
@@ -132,7 +132,7 @@ void Glove::writeObject(vpr::ObjectWriter* writer)
                }
             }
 
-            writer->beginAttribute(gadget::tokens::TimeStamp);
+            writer->beginAttribute(tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
             writer->endTag();
@@ -154,7 +154,7 @@ void Glove::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
    reader->beginTag(Glove::getInputTypeName());
-   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+   reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
@@ -169,15 +169,15 @@ void Glove::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 timeStamp;
    GloveData glove_data;
 
-   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   reader->beginAttribute(tokens::SampleBufferLenAttrib);
       const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
    mGloveSamples.lock();
    for (unsigned int i = 0; i < num_vectors; ++i)
    {
-      reader->beginTag(gadget::tokens::BufferSampleTag);
-      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+      reader->beginTag(tokens::BufferSampleTag);
+      reader->beginAttribute(tokens::BufferSampleLenAttrib);
          num_glove_values = reader->readUint16();
       reader->endAttribute();
 
@@ -185,7 +185,7 @@ void Glove::readObject(vpr::ObjectReader* reader)
 
       for (unsigned int j = 0; j < num_glove_values; ++j)
       {
-         reader->beginTag(gadget::tokens::GloveValue);
+         reader->beginTag(tokens::GloveValue);
 
          typedef GloveValues::angles_type angles_type;
          angles_type& angles(glove_data.editValue().mAngles);
@@ -205,7 +205,7 @@ void Glove::readObject(vpr::ObjectReader* reader)
             }
          }
 
-         reader->beginAttribute(gadget::tokens::TimeStamp);
+         reader->beginAttribute(tokens::TimeStamp);
             timeStamp = reader->readUint64();
          reader->endAttribute();
          reader->endTag();

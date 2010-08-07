@@ -80,11 +80,11 @@ void String::writeObject(vpr::ObjectWriter* writer)
 {
    writer->beginTag(String::getInputTypeName());
    SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
-   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+   writer->beginAttribute(tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_STRING);                               // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
 
-   writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   writer->beginAttribute(tokens::SampleBufferLenAttrib);
       writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
    writer->endAttribute();
 
@@ -93,14 +93,14 @@ void String::writeObject(vpr::ObjectWriter* writer)
       mStringSamples.lock();
       for (unsigned int j = 0; j < stable_buffer.size(); ++j)                               // For each vector in the stable buffer
       {
-         writer->beginTag(gadget::tokens::BufferSampleTag);
-         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         writer->beginTag(tokens::BufferSampleTag);
+         writer->beginAttribute(tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());                           // Write the # of StringDatas in the vector
          writer->endAttribute();
          for (unsigned int i = 0; i < stable_buffer[j].size(); ++i)                         // For each StringData in the vector
          {
-            writer->beginTag(gadget::tokens::StringValue);
-            writer->beginAttribute(gadget::tokens::TimeStamp);
+            writer->beginTag(tokens::StringValue);
+            writer->beginAttribute(tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
             writer->writeString(stable_buffer[j][i].getValue());  // Write String Data(std::string)
@@ -120,7 +120,7 @@ void String::readObject(vpr::ObjectReader* reader)
 
       // ASSERT if this data is really not String Data
    reader->beginTag(String::getInputTypeName());
-   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+   reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
@@ -136,23 +136,23 @@ void String::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 time_stamp;
    StringData temp_string_data;
 
-   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   reader->beginAttribute(tokens::SampleBufferLenAttrib);
       const unsigned int num_vectors(reader->readUint16());
    reader->endAttribute();
 
    mStringSamples.lock();
    for ( unsigned int i = 0; i < num_vectors; ++i)
    {
-      reader->beginTag(gadget::tokens::BufferSampleTag);
-      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+      reader->beginTag(tokens::BufferSampleTag);
+      reader->beginAttribute(tokens::BufferSampleLenAttrib);
          num_string_values = reader->readUint16();
       reader->endAttribute();
 
       data_sapmle.clear();
       for (unsigned int j = 0; j < num_string_values; ++j)
       {
-         reader->beginTag(gadget::tokens::StringValue);
-         reader->beginAttribute(gadget::tokens::TimeStamp);
+         reader->beginTag(tokens::StringValue);
+         reader->beginAttribute(tokens::TimeStamp);
             time_stamp = reader->readUint64();    // read Time Stamp vpr::Uint64
          reader->endAttribute();
          value = reader->readString();           // read String Data(std::string)

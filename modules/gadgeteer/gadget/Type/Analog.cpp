@@ -66,26 +66,26 @@ void Analog::writeObject(vpr::ObjectWriter* writer)
 
    SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
    writer->beginTag(Analog::getInputTypeName());
-   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+   writer->beginAttribute(tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_ANALOG);                                   // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
 
    if ( !stable_buffer.empty() )
    {
       mAnalogSamples.lock();
-      writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+      writer->beginAttribute(tokens::SampleBufferLenAttrib);
          writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
       writer->endAttribute();
       for (unsigned int j = 0; j < stable_buffer.size(); ++j)                   // For each vector in the stable buffer
       {
-         writer->beginTag(gadget::tokens::BufferSampleTag);
-         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         writer->beginTag(tokens::BufferSampleTag);
+         writer->beginAttribute(tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());                     // Write the # of AnalogDatas in the vector
          writer->endAttribute();
          for (unsigned int i = 0; i < stable_buffer[j].size(); ++i)           // For each AnalogData in the vector
          {
-            writer->beginTag(gadget::tokens::AnalogValue);
-            writer->beginAttribute(gadget::tokens::TimeStamp);
+            writer->beginTag(tokens::AnalogValue);
+            writer->beginAttribute(tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());        // Write Time Stamp vpr::Uint64
             writer->endAttribute();
             writer->writeFloat(stable_buffer[j][i].getValue());               // Write Analog Data(int)
@@ -97,8 +97,8 @@ void Analog::writeObject(vpr::ObjectWriter* writer)
    }
    else        // No data or request out of range, return default value
    {
-      writer->beginTag(gadget::tokens::BufferSampleTag);
-         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+      writer->beginTag(tokens::BufferSampleTag);
+         writer->beginAttribute(tokens::BufferSampleLenAttrib);
             writer->writeUint16(0);
          writer->endAttribute();
       writer->endTag();
@@ -116,7 +116,7 @@ void Analog::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
    reader->beginTag(Analog::getInputTypeName());
-   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+   reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
@@ -132,15 +132,15 @@ void Analog::readObject(vpr::ObjectReader* reader)
    float value;
    vpr::Uint64 time_stamp;
    AnalogData temp_analog_data;
-   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+   reader->beginAttribute(tokens::SampleBufferLenAttrib);
       const unsigned int num_vectors = reader->readUint16();
    reader->endAttribute();
 
    mAnalogSamples.lock();
    for (unsigned int i = 0; i < num_vectors; ++i)
    {
-      reader->beginTag(gadget::tokens::BufferSampleTag);
-      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+      reader->beginTag(tokens::BufferSampleTag);
+      reader->beginAttribute(tokens::BufferSampleLenAttrib);
          num_analog_values = reader->readUint16();
       reader->endAttribute();
 
@@ -148,8 +148,8 @@ void Analog::readObject(vpr::ObjectReader* reader)
 
       for (unsigned int j = 0; j < num_analog_values; ++j)
       {
-         reader->beginTag(gadget::tokens::AnalogValue);
-         reader->beginAttribute(gadget::tokens::TimeStamp);
+         reader->beginTag(tokens::AnalogValue);
+         reader->beginAttribute(tokens::TimeStamp);
             time_stamp = reader->readUint64(); // Write Time Stamp vpr::Uint64
          reader->endAttribute();
          value = reader->readFloat();       // Write Analog Data(int)

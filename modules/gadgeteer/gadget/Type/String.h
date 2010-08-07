@@ -71,7 +71,7 @@ class GADGET_CLASS_API String
    , boost::noncopyable
 {
 public:
-   typedef gadget::SampleBuffer<StringData> SampleBuffer_t;
+   typedef SampleBuffer<StringData> SampleBuffer_t;
 
 public:
    /* Constructor/Destructors */

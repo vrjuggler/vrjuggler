@@ -36,7 +36,7 @@
 namespace gadget 
 {
 
-typedef DeviceData<std::vector<gadget::EventPtr> > KeyboardMouseData;
+typedef DeviceData<std::vector<EventPtr> > KeyboardMouseData;
 
 } // namespace gadget
 

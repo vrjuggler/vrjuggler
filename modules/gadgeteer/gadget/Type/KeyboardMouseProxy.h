@@ -82,7 +82,7 @@ public:
     *
     * @return true if the given modifier key is the only modifier key pressed.
     */
-   bool modifierOnly(gadget::Keys modKey) const
+   bool modifierOnly(const Keys modKey) const
    {
       if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {
@@ -103,7 +103,7 @@ public:
     *
     * @return The number of times the key was pressed since last update.
     */
-   int keyPressed(gadget::Keys keyId) const
+   int keyPressed(const Keys keyId) const
    {
       if ( isStupefied() || (NULL == mTypedDevice.get()) )
       {

@@ -91,7 +91,7 @@ DeviceFactory::~DeviceFactory()
  */
 void DeviceFactory::loadKnownDevices()
 {
-   gadget::InputManager* input_mgr = gadget::InputManager::instance();
+   InputManager* input_mgr = InputManager::instance();
 
 #ifdef STATIC_DRIVERS
 

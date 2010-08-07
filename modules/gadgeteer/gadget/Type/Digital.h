@@ -68,7 +68,7 @@ class GADGET_CLASS_API Digital
    , private boost::noncopyable
 {
 public:
-   typedef gadget::SampleBuffer<DigitalData> SampleBuffer_t;
+   typedef SampleBuffer<DigitalData> SampleBuffer_t;
    typedef boost::signal<void (const std::vector<DigitalData>&)> add_signal_t;
 
    /** @name Compatibility */
