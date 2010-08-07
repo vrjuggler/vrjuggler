@@ -57,8 +57,9 @@ namespace gadget
 template<typename T> struct DeviceTraits;
 
 #define DECLARE_DEVICE_TRAITS(DevType)                          \
+   class DevType;                                               \
    template<>                                                   \
-   struct DeviceTraits<class DevType>                           \
+   struct DeviceTraits<DevType>                                 \
    {                                                            \
       typedef DevType device_type;                              \
       typedef boost::shared_ptr<device_type> device_ptr_type;   \
