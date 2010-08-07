@@ -48,7 +48,6 @@ int main (int argc, char* argv[])
    try
    {
       port->open();
-      unsigned char read_buffer[27];
       //int val;
 
       std::cerr << "Port opened\n";
