@@ -38,12 +38,34 @@
 namespace gadget
 {
 
-typedef EventInterface<KeyboardMouseProxy
-                     , BasicEventGenerator<KeyboardMouseProxy
-                                         , event::all_events_tag
-                                         , event::immediate_tag
-                                         , event::kbd::SampleHandler>
-                     > KeyboardMouseEventInterface;
+/** \class KeyboardMouseEventInterface KeyboardMouseEventInterface.h gadget/Event/KeyboardMouseEventInterface.h
+ *
+ * The event interface for gadget::KeyboardMouseProxy objects.
+ *
+ * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
+ *                       the event generator created by this object. This must
+ *                       be a valid collection tag in order for the code to
+ *                       compile. This template paramter is optional, and it
+ *                       defaults to gadget::event::all_events_tag.
+ * @tparam GenerationTag A tag specifying how events will be emitted by the
+ *                       event generator created by this object. This must be
+ *                       a valid generation tag in order for the code to
+ *                       compile. This template paramter is optional, and it
+ *                       defaults to gadget::event::immediate_tag.
+ *
+ * @since 2.1.8
+ */
+template<typename CollectionTag = event::all_events_tag
+       , typename GenerationTag = event::immediate_tag>
+class KeyboardMouseEventInterface
+   : public EventInterface<KeyboardMouseProxy
+                         , BasicEventGenerator<KeyboardMouseProxy
+                                             , CollectionTag
+                                             , GenerationTag
+                                             , event::kbd::SampleHandler>
+                         >
+{
+};
 
 }
 

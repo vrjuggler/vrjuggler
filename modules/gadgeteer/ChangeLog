@@ -1,5 +1,11 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2010-08-07 patrick     Changed gadget::KeyboardMouseEventInterface to be a
+                       class template to follow the model of all the other
+                       event interface types. Its default collection tag is
+                       still gadget::event::all_events_tag, and its default
+                       generation tag is still gadget::event::immediate_tag.
+                       NEW VERSION: 2.1.8
 2010-08-07 patrick     Added gadget::AnalogEventInterface<C,G>,
                        gadget::CommandEventInterface<C,G> and
                        gadget::StringEventInterface<C,G>.
