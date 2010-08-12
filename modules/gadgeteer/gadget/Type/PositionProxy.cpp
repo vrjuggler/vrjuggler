@@ -186,7 +186,7 @@ void PositionProxy::updateData()
       getProxiedInputDevice()->updateDataIfNeeded();
 
       // Applly the filters to our sample and store it in mData.
-      mData = applyFilters(mTypedDevice->getPositionData(mUnit).getValue());
+      mData = applyFilters(mTypedDevice->getPositionData(mUnit));
 
       // --- CACHE FEET Scaling ---- //
       mPosMatrix_feet = mData.getValue();
