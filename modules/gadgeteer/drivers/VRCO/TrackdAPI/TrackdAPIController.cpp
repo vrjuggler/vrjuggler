@@ -128,7 +128,8 @@ void TrackdAPIController::updateData()
 
    for (int i=0;i<mControllerReader->trackdGetNumberOfButtons();i++)
    {
-      mCurButtons[i] = mControllerReader->trackdGetButton(i);
+      mCurButtons[i] =
+         static_cast<DigitalState::State>(mControllerReader->trackdGetButton(i));
       mCurButtons[i].setTime();
    }
 

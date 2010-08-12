@@ -124,7 +124,8 @@ void TrackdController::updateData()
 
    for (int i=0;i<mTrackdController->numButtons();i++)
    {
-      mCurButtons[i] = mTrackdController->getButton(i);
+      mCurButtons[i] =
+         static_cast<DigitalState::State>(mTrackdController->getButton(i));
       mCurButtons[i].setTime();
    }
 

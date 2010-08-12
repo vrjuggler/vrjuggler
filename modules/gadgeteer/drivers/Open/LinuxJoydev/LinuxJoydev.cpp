@@ -236,7 +236,9 @@ void LinuxJoydev::updateData()
          //          << cur_event.value << std::endl;
          const unsigned int btn_number(cur_event.number);
          vprASSERT(btn_number < mCurButtons.size() && "Button out of range");
-         mCurButtons[btn_number] = cur_event.value;         // Assign the new button value (0,1)
+         // Assign the new button value (0,1)
+         mCurButtons[btn_number] =
+            static_cast<DigitalState::State>(cur_event.value);
          mCurButtons[btn_number].setTime();                 // Set timestamp to now
       }
       else if(cur_event.type & JS_EVENT_AXIS)
@@ -274,21 +276,21 @@ void LinuxJoydev::updateData()
             // pressed.
             if ( norm_value > 0.5f )
             {
-               mCurButtons[low_btn_index]  = 0;
-               mCurButtons[high_btn_index] = 1;
+               mCurButtons[low_btn_index]  = DigitalState::OFF;
+               mCurButtons[high_btn_index] = DigitalState::ON;
             }
             // Record the high button as not pressed and the low button as
             // pressed.
             else if ( norm_value < 0.5f )
             {
-               mCurButtons[low_btn_index]  = 1;
-               mCurButtons[high_btn_index] = 0;
+               mCurButtons[low_btn_index]  = DigitalState::ON;
+               mCurButtons[high_btn_index] = DigitalState::OFF;
             }
             // Record both buttons as not pressed.
             else
             {
-               mCurButtons[low_btn_index]  = 0;
-               mCurButtons[high_btn_index] = 0;
+               mCurButtons[low_btn_index]  = DigitalState::OFF;
+               mCurButtons[high_btn_index] = DigitalState::OFF;
             }
 
             mCurButtons[low_btn_index].setTime();
