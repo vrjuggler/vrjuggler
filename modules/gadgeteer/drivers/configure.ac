@@ -70,7 +70,7 @@ AC_ARG_WITH(dtk,
             [  --with-dtk=<PATH>       DTK installation],
             _with_dtk="$withval", _with_dtk='no')
 
-#Build the VRPN wrapper using the VRPN installation found at the given path.
+# Build the VRPN wrapper using the VRPN installation found at the given path.
 # There is default path.
 AC_ARG_WITH(vrpn, [  --with-vrpn=<PATH>      VRPN installation],
             _with_vrpn="$withval", _with_vrpn='no')
@@ -309,17 +309,22 @@ if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
         HAVE_DTK='N'
 
         # Determine if the installed DTK library is usable.
-        AC_CACHE_CHECK(for dtkMath_matrixPrint in -ldtk,
-            ac_cv_dtkMath_matrixPrint_in_dtk,
-            AC_TRY_LINK([
+        AC_CACHE_CHECK([for dtkMath_matrixPrint in -ldtk],
+            [gadget_cv_dtkMath_matrixPrint_in_dtk],
+            [AC_LINK_IFELSE(
+                 [AC_LANG_PROGRAM([
 #include <dtk.h>
-void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
-                        [ dtkMath_matrixPrint(0, 0); ],
-                        [ ac_cv_dtkMath_matrixPrint_in_dtk='yes'
-                          rm -rf ./ii_files ],
-                        ac_cv_dtkMath_matrixPrint_in_dtk='no'))
+void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m);
+],
+                     [dtkMath_matrixPrint(0, 0);],
+                 )],
+                 [gadget_cv_dtkMath_matrixPrint_in_dtk='yes'
+                  rm -rf ./ii_files ],
+                 [gadget_cv_dtkMath_matrixPrint_in_dtk='no']
+            )]
+        )
 
-        if test "x$ac_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
+        if test "x$gadget_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
             HAVE_DTK='Y'
             DTK_INCLUDES=`$DTK_CONFIG --include`
             DTK_LDFLAGS=`$DTK_CONFIG --libs $bits`
@@ -404,16 +409,20 @@ if test "x${_with_vrpn}" != "xno" ; then
 
    # Try to link
    AC_CACHE_CHECK([for vrpn_Button_Remote in -lvrpn],
-                  [ac_cv_vrpn_Button_Remote_in_vrpn],
-                  [AC_TRY_LINK([
+                  [gadget_cv_vrpn_Button_Remote_in_vrpn],
+                  [AC_LINK_IFELSE(
+                     [AC_LANG_PROGRAM([
 #include <vrpn_Button.h>
-],
-                     [vrpn_Button_Remote* b = new vrpn_Button_Remote("");],
-                     [ac_cv_vrpn_Button_Remote_in_vrpn='yes'
-                       rm -rf ./ii_files ],
-                     [ac_cv_vrpn_Button_Remote_in_vrpn='no'])])
+                        ],
+                        [vrpn_Button_Remote* b = new vrpn_Button_Remote("");]
+                     )],
+                     [gadget_cv_vrpn_Button_Remote_in_vrpn='yes'
+                      rm -rf ./ii_files ],
+                     [gadget_cv_vrpn_Button_Remote_in_vrpn='no']
+                  )]
+   )
 
-   vj_have_vrpn="$ac_cv_vrpn_Button_Remote_in_vrpn"
+   vj_have_vrpn="$gadget_cv_vrpn_Button_Remote_in_vrpn"
 
    CPPFLAGS="${_vjsave_CPPFLAGS}"
 
