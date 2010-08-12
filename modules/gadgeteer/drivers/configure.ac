@@ -411,8 +411,9 @@ if test "x${_with_vrpn}" != "xno" ; then
    AC_CACHE_CHECK([for vrpn_Button_Remote in -lvrpn],
                   [gadget_cv_vrpn_Button_Remote_in_vrpn],
                   [AC_LINK_IFELSE(
-                     [AC_LANG_PROGRAM(
-                        [#include <vrpn_Button.h>],
+                     [AC_LANG_PROGRAM([
+#include <vrpn_Button.h>
+                        ],
                         [vrpn_Button_Remote* b = new vrpn_Button_Remote("");]
                      )],
                      [gadget_cv_vrpn_Button_Remote_in_vrpn='yes'
