@@ -568,18 +568,23 @@ setup_omniORB_cxx ( )
 
       AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
          [tweek_cv_CORBA__ORB_init_in_omniORB],
-         [AC_TRY_LINK([
+         [AC_LINK_IFELSE(
+            [AC_LANG_PROGRAM([
 #include <omniORB$OMNI_VER/CORBA.h>
 
 int omni_main_i(int argc, char** const argv)
 {
    CORBA::ORB_init(argc, argv, "omniORB$OMNI_VER");
    return 0;
-}],
-                     [omni_main_i(0, NULL);],
-                     [ tweek_cv_CORBA__ORB_init_in_omniORB='yes'
-                       rm -rf ./ii_files ],
-                     [tweek_cv_CORBA__ORB_init_in_omniORB='no'])])
+}
+               ],
+               [[omni_main_i(0, NULL);]]
+            )],
+            [tweek_cv_CORBA__ORB_init_in_omniORB='yes'
+             rm -rf ./ii_files ],
+            [tweek_cv_CORBA__ORB_init_in_omniORB='no']
+         )]
+      )
 
       # We're done testing things now, so we can restore the original flags.
       CFLAGS="$tweek_save_CFLAGS"
@@ -734,7 +739,8 @@ setup_TAO ( )
 
       AC_CACHE_CHECK([for CORBA::ORB_init in -lTAO],
          [tweek_cv_CORBA__ORB_init_in_TAO],
-         [AC_TRY_LINK([
+         [AC_LINK_IFELSE(
+            [AC_LANG_PROGRAM([
 #include <tao/corba.h>
 
 int tao_main_i(int argc, char** const argv)
@@ -742,10 +748,13 @@ int tao_main_i(int argc, char** const argv)
    CORBA::ORB_init(argc, argv, "TAO");
    return 0;
 }],
-                     [omni_main_i(0, NULL);],
-                     [ tweek_cv_CORBA__ORB_init_in_TAO='yes'
-                       rm -rf ./ii_files ],
-                     [tweek_cv_CORBA__ORB_init_in_TAO='no'])])
+               [omni_main_i(0, NULL);],
+            )],
+            [tweek_cv_CORBA__ORB_init_in_TAO='yes'
+             rm -rf ./ii_files],
+            [tweek_cv_CORBA__ORB_init_in_TAO='no']
+         )]
+      )
 
       # We're done testing things now, so we can restore the original flags.
       CFLAGS="$tweek_save_CFLAGS"
