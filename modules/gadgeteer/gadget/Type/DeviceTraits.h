@@ -74,10 +74,12 @@ DECLARE_DEVICE_TRAITS(KeyboardMouse)
 DECLARE_DEVICE_TRAITS(Position)
 DECLARE_DEVICE_TRAITS(String)
 
+class Gesture;
+
 // XXX: This is not correct. gadget::Gesture does not currently use any
 // instantiation of gadget::DeviceData<T> for data handling.
 template<>
-struct DeviceTraits<class Gesture>
+struct DeviceTraits<Gesture>
 {
    typedef Gesture                    device_type;
    typedef boost::shared_ptr<Gesture> device_ptr_type;
