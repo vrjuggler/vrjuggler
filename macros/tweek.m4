@@ -77,7 +77,7 @@ AC_DEFUN([_TWEEK_PATH_SETUP],
         tweek_python_flagpoll_args="tweek-python"
     fi
 
-    AM_PATH_FLAGPOLL([0.9.1], ,
+    AM_PATH_FLAGPOLL([0.9.4], ,
                      [AC_MSG_ERROR(*** Flagpoll required for Tweek flags ***)])
 
     dnl Do a sanity check to ensure that $FLAGPOLL actually works.

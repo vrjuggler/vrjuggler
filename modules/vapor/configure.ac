@@ -876,7 +876,7 @@ _vpr_save_CXXFLAGS="$CXXFLAGS"
 _vpr_save_CPPFLAGS="$CPPFLAGS"
 _vpr_save_LDFLAGS="$LDFLAGS"
 
-AM_PATH_FLAGPOLL([0.9.1], ,
+AM_PATH_FLAGPOLL([0.9.4], ,
    [AC_MSG_ERROR([*** Flagpoll (http://code.google.com/p/flagpoll/) is required to build Juggler ***])])
 
 if ! (eval $FLAGPOLL cppdom --modversion >/dev/null 2>&1) ; then
