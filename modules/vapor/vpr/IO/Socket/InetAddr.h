@@ -55,10 +55,6 @@
 #  include <vpr/md/BOOST/IO/Socket/InetAddrBOOST.h>
 #endif
 
-#ifdef VPR_HASH_MAP_INCLUDE
-#  include VPR_HASH_MAP_INCLUDE
-#endif
-
 namespace vpr
 {
 
