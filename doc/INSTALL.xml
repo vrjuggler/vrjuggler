@@ -276,7 +276,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       you can execute the following command from a shell to get the code from
       our Subversion repository:</para>
 
-      <screen>svn co http://vrjuggler.googlecode.com/svn/juggler/trunk/ juggler
+      <screen>svn co http://vrjuggler.googlecode.com/svn/juggler/trunk juggler
 </screen>
     </section>
 
