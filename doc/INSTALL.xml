@@ -43,6 +43,18 @@
     Wiki page merely provides informal, extra information.</para>
 
     <section>
+      <title>Important Note for Windows Users</title>
+
+      <para>VR Juggler 3.0 and newer use a lot of C++ features not supported
+      by Visual Studio 6.0. Microsoft <ulink
+      url="http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q243/4/51.asp&amp;NoWebContent=1">acknowledges</ulink>
+      the issues concerning noncompliance to the C++ Standard with Visual
+      Studio 6.0. Furthermore, workarounds for Visual C++ 7.0 (.NET 2002) and
+      7.1 (.NET 2003) bugs have been removed. Therefore, we require the use of
+      Visual Studio 8.0 (2005) or newer to compile the source code.</para>
+    </section>
+
+    <section>
       <title>Important Notes for IRIX Users</title>
 
       <para>Despite our best efforts, there are some issues related to
@@ -120,18 +132,6 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
         <command>configure.pl</command> (described later), use the option
         <option>--with-gcc</option>.</para>
       </section>
-    </section>
-
-    <section>
-      <title>Important Note for Windows Users</title>
-
-      <para>VR Juggler 1.1 and newer use a lot of C++ features not supported
-      by Visual Studio 6.0. Microsoft <ulink
-      url="http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q243/4/51.asp&amp;NoWebContent=1">acknowledges</ulink>
-      the issues concerning noncompliance to the C++ Standard with Visual
-      Studio 6.0, and it appears that they have no plans to fix these
-      problems. Therefore, we require the use of Visual Studio 7.1 (.NET 2003)
-      or newer to compile the source code.</para>
     </section>
   </section>
 
