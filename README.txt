@@ -242,8 +242,8 @@ VRJConfig
  The back-end is much more extensible. It allows users to write plug-in
  editors to simplify complex editing tasks. User-defined configuration
  elements can be handled in a much more dynamic manner as well. No
- modification of VR Juggler or JCCL "system" files must be made to get
- user-defined elements into the editor.
+ modification of VR Juggler or JCCL &#8220;system&#8221; files must be made
+ to get user-defined elements into the editor.
 
  VRJConfig is itself a JavaBean that is loaded into the Tweek Java GUI.
  VRJConfig uses JavaBeans internally to facilitate user extensions. All in
