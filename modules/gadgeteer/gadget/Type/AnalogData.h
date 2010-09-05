@@ -61,15 +61,48 @@ public:
       ;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    float getAnalog() const
    {
       return mAnalogData;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    void setAnalog(const float f)
    {
       mAnalogData = f;
    }
+
+   /**
+    * @name Forward Compatibility
+    *
+    * These methods are for forward compatibility with gadget::DigitalData<T>,
+    * a type that will be used as a replacement for gadget::AnalogData in the
+    * next major release of Gadgeteer.
+    */
+   //@{
+   /**
+    * @since 2.0.0
+    */
+   float getValue() const
+   {
+      return getAnalog();
+   }
+
+   /**
+    * @since 2.0.0
+    */
+   void setValue(const float f)
+   {
+      setAnalog(f);
+   }
+   //@}
 
    AnalogData& operator= (const AnalogData& pd)
    {

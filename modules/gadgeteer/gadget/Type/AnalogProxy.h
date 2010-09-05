@@ -89,7 +89,12 @@ public:
       }
    }
 
-   /** Returns a pointer to the gadget::Analog object that we are proxying. */
+   /**
+    * Returns a pointer to the gadget::Analog object that we are proxying.
+    *
+    * @deprecated Use getTypedInputDevice() for forward compatibility with the
+    *             next major release of Gadgeteer.
+    */
    const AnalogPtr getAnalogPtr() const
    {
       if ( isStupefied() || NULL == mTypedDevice.get() )

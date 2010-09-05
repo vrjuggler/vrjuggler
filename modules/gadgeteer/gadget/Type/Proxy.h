@@ -159,6 +159,9 @@ namespace gadget
    class TypedProxy : public Proxy
    {
    public:
+      /** @since 2.0.0 */
+      typedef boost::shared_ptr<DEV_TYPE> device_ptr_type;
+
       TypedProxy(const std::string& deviceName = "Unknown")
          : mDeviceName(deviceName)
          , mTypedDevice()
@@ -176,7 +179,7 @@ namespace gadget
        * @param devName The name of the device at which we are pointing.
        * @param devPtr  Pointer to the device.
        */
-      virtual void set(const std::string& devName, boost::shared_ptr<DEV_TYPE> devPtr)
+      virtual void set(const std::string& devName, device_ptr_type devPtr)
       {
          mTypedDevice = devPtr;
          if(NULL != mTypedDevice.get())
@@ -209,7 +212,10 @@ namespace gadget
          }
          else
          {
-            boost::shared_ptr<DEV_TYPE> typed_dev = boost::dynamic_pointer_cast<DEV_TYPE>(input_dev);
+            device_ptr_type typed_dev(
+               boost::dynamic_pointer_cast<DEV_TYPE>(input_dev)
+            );
+
             if ( NULL == typed_dev.get() )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
@@ -236,7 +242,7 @@ namespace gadget
 
       virtual InputPtr getProxiedInputDevice()
       {
-         if((NULL == mTypedDevice.get()) || (mStupefied))
+         if (NULL == mTypedDevice.get() || mStupefied)
          {
             return InputPtr();
          }
@@ -246,9 +252,19 @@ namespace gadget
          return ret_val;
       }
 
+      /**
+       * Returns the proxied input device if this proxy is not stupefied.
+       *
+       * @since 2.0.0
+       */
+      const device_ptr_type getTypedInputDevice() const
+      {
+         return mStupefied ? device_ptr_type() : mTypedDevice;
+      }
+
    protected:
-      std::string                    mDeviceName;   /**< Name of the device to link up with */
-      boost::shared_ptr<DEV_TYPE>    mTypedDevice;  /**< The device (type-specific pointer) */
+      std::string     mDeviceName;   /**< Name of the device to link up with */
+      device_ptr_type mTypedDevice;  /**< The device (type-specific pointer) */
    };
 
 } // end namespace

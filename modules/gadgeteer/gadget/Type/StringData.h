@@ -64,15 +64,48 @@ public:
       ;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    const std::string& getString() const
    {
       return mStringData;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    void setString(const std::string& s)
    {
       mStringData = s;
    }
+
+   /**
+    * @name Forward Compatibility
+    *
+    * These methods are for forward compatibility with gadget::DigitalData<T>,
+    * a type that will be used as a replacement for gadget::StringData in the
+    * next major release of Gadgeteer.
+    */
+   //@{
+   /**
+    * @since 2.0.0
+    */
+   const std::string& getValue() const
+   {
+      return getString();
+   }
+
+   /**
+    * @since 2.0.0
+    */
+   void setValue(const std::string& s)
+   {
+      setString(s);
+   }
+   //@}
 
    StringData& operator= (const StringData& pd)
    {

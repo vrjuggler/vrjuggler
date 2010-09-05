@@ -122,7 +122,12 @@ public:
    /** Returns time of last update. */
    vpr::Interval getTimeStamp() const;
 
-   /** Returns a pointer to the device held by this proxy. */
+   /**
+    * Returns a pointer to the device held by this proxy.
+    *
+    * @deprecated Use getTypedInputDevice() for forward compatibility with the
+    *             next major release of Gadgeteer.
+    */
    const GesturePtr getGesturePtr() const
    {
       if(isStupefied())

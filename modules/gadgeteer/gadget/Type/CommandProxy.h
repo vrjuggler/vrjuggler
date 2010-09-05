@@ -89,6 +89,9 @@ public:
 
    /**
     * Returns a pointer to the gadget::Command object that we are proxying.
+    *
+    * @deprecated Use getTypedInputDevice() for forward compatibility with the
+    *             next major release of Gadgeteer.
     */
    const CommandPtr getCommandPtr() const
    {

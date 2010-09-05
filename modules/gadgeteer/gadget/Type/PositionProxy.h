@@ -115,7 +115,12 @@ public:
       return mUnitNum;
    }
 
-   /// Returns a pointer to the gadget::Position object held by this proxy.
+   /**
+    * Returns a pointer to the gadget::Position object held by this proxy.
+    *
+    * @deprecated Use getTypedInputDevice() for forward compatibility with the
+    *             next major release of Gadgeteer.
+    */
    const PositionPtr getPositionPtr() const
    {
       if(mStupefied || NULL == mTypedDevice.get())

@@ -100,7 +100,12 @@ public:
       return &mData;
    }
 
-   /** Returns a pointer to the gadget::Digital object that we are proxying. */
+   /**
+    * Returns a pointer to the gadget::Digital object that we are proxying.
+    *
+    * @deprecated Use getTypedInputDevice() for forward compatibility with the
+    *             next major release of Gadgeteer.
+    */
    const DigitalPtr getDigitalPtr() const
    {
       // If we're stupefied, return NULL.  Otherwise, return mTypedDevice.

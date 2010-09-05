@@ -101,6 +101,9 @@ public:
 
    /**
     * Returns a pointer to the gadget::String object that we are proxying.
+    *
+    * @deprecated Use getTypedInputDevice() for forward compatibility with the
+    *             next major release of Gadgeteer.
     */
    const StringPtr getStringPtr() const
    {

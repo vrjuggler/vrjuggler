@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-05-2010 patrick     Added forward compatibility interfaces for device
+                        data types and gadget::TypedProxy<T>.
 Jun-19-2010 patrick     Reverted the change to gadgt::AnalogProxy that allowed
                         access to the raw device data. This change broke the
                         use of analog devices in a cluster configuration.

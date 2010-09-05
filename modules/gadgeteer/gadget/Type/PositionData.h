@@ -49,15 +49,48 @@ public:
       ;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    const gmtl::Matrix44f& getPosition() const
    {
       return mPosData;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    void setPosition(const gmtl::Matrix44f& posMatrix)
    {
       mPosData = posMatrix;
    }
+
+   /**
+    * @name Forward Compatibility
+    *
+    * These methods are for forward compatibility with gadget::DigitalData<T>,
+    * a type that will be used as a replacement for gadget::PositionData in
+    * the next major release of Gadgeteer.
+    */
+   //@{
+   /**
+    * @since 2.0.0
+    */
+   const gmtl::Matrix44f& getValue() const
+   {
+      return getPosition();
+   }
+
+   /**
+    * @since 2.0.0
+    */
+   void setValue(const gmtl::Matrix44f& posMatrix)
+   {
+      setPosition(posMatrix);
+   }
+   //@}
 
    PositionData& operator= (const PositionData& pd)
    {

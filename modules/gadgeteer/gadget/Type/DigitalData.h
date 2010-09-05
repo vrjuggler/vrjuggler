@@ -61,15 +61,48 @@ public:
       ;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    int getDigital() const
    {
       return mDigitalData;
    }
 
+   /**
+    * @deprecated Use getValue() for forward compatibility with the next major
+    *             relesae of Gadgeteer.
+    */
    void setDigital(const int d)
    {
       mDigitalData = d;
    }
+
+   /**
+    * @name Forward Compatibility
+    *
+    * These methods are for forward compatibility with gadget::DigitalData<T>,
+    * a type that will be used as a replacement for gadget::DigitalData in the
+    * next major release of Gadgeteer.
+    */
+   //@{
+   /**
+    * @since 2.0.0
+    */
+   int getValue() const
+   {
+      return getDigital();
+   }
+
+   /**
+    * @since 2.0.0
+    */
+   void setValue(const int d)
+   {
+      setDigital(d);
+   }
+   //@}
 
    DigitalData& operator= (const DigitalData& pd)
    {

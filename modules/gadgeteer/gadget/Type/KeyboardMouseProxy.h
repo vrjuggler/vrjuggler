@@ -67,6 +67,9 @@ public:
 
    /**
     * Returns a pointer to the gadget::KeyboardMouse object held by this proxy.
+    *
+    * @deprecated Use getTypedInputDevice() for forward compatibility with the
+    *             next major release of Gadgeteer.
     */
    const KeyboardMousePtr getKeyboardMousePtr() const
    {
