@@ -30,13 +30,22 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <boost/version.hpp>
+
 #include <gmtl/Matrix.h>
 
 #include <vpr/vpr.h>
 
+#if defined(__GNUC__) && __GNUC__ >= 4
+#  include <tr1/unordered_map>
+#elif defined(_MSC_VER) && _MSC_VER >= 1500
+#  include <unordered_map>
+#elif BOOST_VERSION >= 103600
+#  include <boost/unordered_map.hpp>
+
 // VPR_HAVE_HASH_MAP will be defined to 1 or 0 by vpr/vprConfig.h which is
 // included by vpr/vpr.h.
-#if VPR_HAVE_HASH_MAP
+#elif VPR_HAVE_HASH_MAP
 #  include VPR_HASH_MAP_INCLUDE
 #else
 #  include <map>
@@ -1549,12 +1558,12 @@ private:
     * be trying to access (zero-based) index 5 as the largest rahter than
     * index 4.
     */
-#if VPR_HAVE_HASH_MAP
-#  if defined(_MSC_VER)
-   typedef stdext::hash_map<int, int> addr_sensor_map_t;
-#  else
+#if defined(__GNUC__) && __GNUC__ >= 4 || defined(_MSC_VER) && _MSC_VER >= 1500
+   typedef std::tr1::unordered_map<int, int> addr_sensor_map_t;
+#elif BOOST_VERSION >= 103600
+   typedef boost::unordered_map<int, int> addr_sensor_map_t;
+#elif defined(VPR_HASH_MAP_INCLUDE)
    typedef std::hash_map<int, int> addr_sensor_map_t;
-#  endif
 #else
    typedef std::map<int, int> addr_sensor_map_t;
 #endif

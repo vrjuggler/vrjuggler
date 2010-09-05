@@ -28,19 +28,31 @@
 #define _CLUSTER_APPLICATION_DATA_MANAGER_H
 
 #include <cluster/PluginConfig.h>
+
+#include <list>
 #include <boost/noncopyable.hpp>
+#include <boost/version.hpp>
+
+#include <vpr/vpr.h>
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+#  include <tr1/unordered_map>
+#elif defined(_MSC_VER) && _MSC_VER >= 1500
+#  include <unordered_map>
+#elif BOOST_VERSION >= 103600
+#  include <boost/unordered_map.hpp>
+#elif defined(VPR_HASH_MAP_INCLUDE)
+#  include VPR_HASH_MAP_INCLUDE
+#else
+#  include <map>
+#endif
+
 #include <vpr/Util/GUID.h>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <cluster/ClusterPlugin.h>
 #include <plugins/ApplicationDataManager/ApplicationDataServerPtr.h>
 #include <gadget/NodePtr.h>
 
-#include <list>
-#ifdef VPR_HASH_MAP_INCLUDE
-#  include VPR_HASH_MAP_INCLUDE
-#else
-#  include <map>
-#endif
 
 namespace cluster
 {
@@ -141,7 +153,21 @@ public:
    static const vpr::GUID                          mPluginGUID;
 
 private:
-#ifdef VPR_HASH_MAP_INCLUDE
+#if defined(__GNUC__) && __GNUC__ >= 4 || defined(_MSC_VER) && _MSC_VER >= 1500
+   typedef std::tr1::unordered_map<vpr::GUID
+                                , ApplicationData*
+                                , vpr::GUID::hash> object_map_t;
+   typedef std::tr1::unordered_map<vpr::GUID
+                                , ApplicationDataServerPtr
+                                , vpr::GUID::hash> server_map_t;
+#elif BOOST_VERSION >= 103600
+   typedef boost::unordered_map<vpr::GUID
+                              , ApplicationData*
+                              , vpr::GUID::hash> object_map_t;
+   typedef boost::unordered_map<vpr::GUID
+                              , ApplicationDataServerPtr
+                              , vpr::GUID::hash> server_map_t;
+#elif defined(VPR_HASH_MAP_INCLUDE)
    typedef std::hash_map<vpr::GUID, ApplicationData*, vpr::GUID::hash> object_map_t;
    typedef std::hash_map<vpr::GUID, ApplicationDataServerPtr, vpr::GUID::hash>  server_map_t;
 #else
