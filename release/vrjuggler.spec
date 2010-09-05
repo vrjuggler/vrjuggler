@@ -18,18 +18,18 @@
 # are detected automatically. They must be installed in /usr in order to be
 # detected correctly.
 %define name vrjuggler
-%define global_version 2.3.22
-%define global_release 1
+%define global_version 3.0.0
+%define global_release 0
 
-%define vpr_version 2.1.18
+%define vpr_version 2.2.0
 %define vpr_release %{global_release}%{?dist}
-%define tweek_version 1.3.6
+%define tweek_version 1.4.0
 %define tweek_release %{global_release}%{?dist}
-%define jccl_version 1.3.6
+%define jccl_version 1.4.0
 %define jccl_release %{global_release}%{?dist}
-%define sonix_version 1.3.7
+%define sonix_version 1.4.0
 %define sonix_release %{global_release}%{?dist}
-%define gadgeteer_version 1.3.32
+%define gadgeteer_version 1.4.0
 %define gadgeteer_release %{global_release}%{?dist}
 %define gadgeteer_dataglove_release %{global_release}%{?dist}
 %define gadgeteer_dtrack_release %{global_release}%{?dist}
@@ -1372,6 +1372,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sun Sep 05 2010 Patrick Hartling <patrick.hartling at gmail dot com> 3.0.0-0
+- VR Juggler 3.0 release candidate.
+
 * Thu Aug 09 2007 Patrick Hartling <patrick at infiscape dot com>
 - Package Gadgeteer drivers and plug-ins individually.
 
@@ -1379,7 +1382,7 @@ rm -rf %{buildroot}
 - Improve Java version requirement.
 - Add jccl-rtrc-plugin-java as a requirement for vrjconfig.
 
-* Wed Apr 18 2007 Patrick Hartling <patrick@infiscape.com> 2.3.0-1
+* Wed Apr 18 2007 Patrick Hartling <patrick at infiscape dot com> 2.3.0-1
 - Roll versions after VR Juggler 2.2 branch creation.
 
 * Thu Mar 15 2007 Patrick Hartling <patrick at infiscape dot com>

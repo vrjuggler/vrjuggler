@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[3.0.0 RC 1 released - 9.5.2010]===============================================
+
+[3.0 beta 1 released - 6.19.2010]==============================================
 Jun-19-2010 patrick     Added an "auto-return" feature to simulated analog
                         devices.
                         Submitted by Carsten Neumann.
