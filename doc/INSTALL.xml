@@ -3,7 +3,7 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Building and Installing the Juggler Project (Version 2.3)</title>
+    <title>Building and Installing the Juggler Project (Version 3.0)</title>
 
     <authorgroup>
       <author>
@@ -17,15 +17,8 @@
   <section>
     <title>Introduction</title>
 
-    <para>You have downloaded the source code for Version 2.3 of the Juggler
-    Project. This is the code that will become VR Juggler 3.0, and it is the
-    code that is used to create the VR Juggler 3.0 pre-releases. Please be
-    aware that this code represents a work in progress, and if you acquired it
-    directly from Subversion rather than using a pre-packaged source code
-    snapshot, the code may have bugs affecting compilation and
-    execution.</para>
-
-    <para>This document explains how to build the modules of the Juggler
+    <para>You have downloaded the source code for Version 3.0 of the Juggler
+    Project. This document explains how to build the modules of the Juggler
     Project from the source code. We begin by explaining some issues related
     to specific operating systems. We then explain how to get the source code
     from our Subversion repository. (Those users who downloaded a pre-packaged
