@@ -68,48 +68,66 @@ int SystemPosix::msleep(vpr::Uint32 milli)
    return SystemPosix::usleep((milli % 1000) * 1000);
 }
 
+union uint64_holder
+{
+   vpr::Uint64 uint64_value;
+   struct
+   {
+      vpr::Uint32 uint32_low_value;
+      vpr::Uint32 uint32_high_value;
+   } struct_value;
+};
+
 vpr::Uint64 SystemPosix::Ntohll(vpr::Uint64 conversion)
 {
-   vpr::Uint64 ret_val;
+   uint64_holder input;
+   uint64_holder output;
+
+   input.uint64_value  = conversion;
+   output.uint64_value = 0;
 
    if ( isLittleEndian() )
    {
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
-         Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      output.struct_value.uint32_high_value =
+         Ntohl(input.struct_value.uint32_low_value);
+      output.struct_value.uint32_low_value =
+         Ntohl(input.struct_value.uint32_high_value);
    }
    else
    {
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1)  =
-         Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      output.struct_value.uint32_low_value =
+         Ntohl(input.struct_value.uint32_low_value);
+      output.struct_value.uint32_high_value =
+         Ntohl(input.struct_value.uint32_high_value);
    }
 
-   return ret_val;
+   return output.uint64_value;
 }
 
 vpr::Uint64 SystemPosix::Htonll(vpr::Uint64 conversion)
 {
-   vpr::Uint64 ret_val;
+   uint64_holder input;
+   uint64_holder output;
+
+   input.uint64_value  = conversion;
+   output.uint64_value = 0;
 
    if ( isLittleEndian() )
    {
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
-         Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      output.struct_value.uint32_high_value =
+         Htonl(input.struct_value.uint32_low_value);
+      output.struct_value.uint32_low_value =
+         Htonl(input.struct_value.uint32_high_value);
    }
    else
    {
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
-         Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      output.struct_value.uint32_low_value =
+         Htonl(input.struct_value.uint32_low_value);
+      output.struct_value.uint32_high_value =
+         Htonl(input.struct_value.uint32_high_value);
    }
 
-   return ret_val;
+   return output.uint64_value;
 }
 
 bool SystemPosix::getenv(const std::string& name, std::string& result)

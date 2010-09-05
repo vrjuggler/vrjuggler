@@ -127,7 +127,7 @@ std::vector<vpr::InetAddr> getIfAddrs(const bool withLoopback,
 
          // If the inerface is down and the caller asked to exclude down
          // interfaces, skip this one.
-         if ( a->ifa_flags & IFF_UP == 0 && ! withDown )
+         if ( (a->ifa_flags & IFF_UP) == 0 && ! withDown )
          {
             continue;
          }
