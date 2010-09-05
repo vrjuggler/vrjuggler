@@ -164,7 +164,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
     <para>In this section, we explain how to get the Juggler Project source
     code and the dependencies required to build Juggler. There are two ways to
     get the source code: from a pre-packaged source release archive or from
-    the Subversion repository on RealityForge. If you got the code from a
+    the Subversion repository on Google Code. If you got the code from a
     pre-packaged source archive, that code is a complete
     <quote>snapshot</quote> of the Subversion repository at the time of
     release. It contains all dependencies that would otherwise have been
@@ -276,7 +276,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       you can execute the following command from a shell to get the code from
       our Subversion repository:</para>
 
-      <screen>svn co https://realityforge.vrsource.org/svn/vrjuggler/juggler/trunk juggler
+      <screen>svn co http://vrjuggler.googlecode.com/svn/juggler/trunk/ juggler
 </screen>
     </section>
 
