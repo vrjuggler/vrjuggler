@@ -68,7 +68,7 @@ AC_DEFUN([SNX_PATH],
         sonix_flagpoll_args="sonix"
     fi
 
-    AM_PATH_FLAGPOLL([0.9.1], ,
+    AM_PATH_FLAGPOLL([0.9.4], ,
                      [AC_MSG_ERROR(*** Flagpoll required for Sonix flags ***)])
     min_sonix_version=ifelse([$1], ,0.0.1,[$1])
 
