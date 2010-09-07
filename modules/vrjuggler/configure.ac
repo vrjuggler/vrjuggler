@@ -31,7 +31,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([VR Juggler], [2.3], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([VR Juggler], [3.0], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([vrj/vrjDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2010 by Iowa State University])
@@ -389,8 +389,8 @@ VJ_VERSION_GROK(VERSION)
 # naming. Unstable builds use all three version numbers; stable builds use
 # only the major and minor version numbers.
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
-   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
-   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}"
 
    HEADER_VERSION="vrjuggler-$VERSION_DOT"
    CLOSE_HEADER_VERSION='..'

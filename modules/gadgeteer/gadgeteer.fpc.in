@@ -56,7 +56,7 @@ Description: Gadgeteer is a device management system. It handles the configurati
 URL: http://www.vrjuggler.org/gadgeteer/
 Version: ${gadget_version}
 Provides: gadgeteer
-Requires: jccl = @JCCL_VERSION@ vpr = @VPR_VERSION@ gmtl >= @MIN_GMTL_VERSION@
+Requires: jccl >= 1.4 jccl < 1.5 vpr >= 2.2 vpr < 2.3 gmtl >= @MIN_GMTL_VERSION@
 Arch: ${ISA}
 Cflags: ${gadget_cxxflags} ${gadget_extra_cxxflags} -I${includedir}
 Libs: ${gadget_ldflags} ${gadget_libs} ${extra_libs}

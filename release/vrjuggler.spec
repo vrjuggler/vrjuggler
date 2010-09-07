@@ -56,13 +56,12 @@
 %define vrjuggler_version %{global_version}
 %define vrjuggler_release %{global_release}%{?dist}
 
-# Change these to drop the patch number for the stable release.
-%define vpr_version_dist %{vpr_version}
-%define tweek_version_dist %{tweek_version}
-%define jccl_version_dist %{jccl_version}
-%define sonix_version_dist %{sonix_version}
-%define gadgeteer_version_dist %{gadgeteer_version}
-%define vrjuggler_version_dist %{vrjuggler_version}
+%define vpr_version_dist 2.2
+%define tweek_version_dist 1.4
+%define jccl_version_dist 1.4
+%define sonix_version_dist 1.4
+%define gadgeteer_version_dist 2.0
+%define vrjuggler_version_dist 3.0
 
 %define have_java %(if [ -x $JDK_HOME/bin/javac ] ; then echo 1; else echo 0; fi)
 

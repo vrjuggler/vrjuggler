@@ -31,7 +31,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([Tweek], [1.3], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Tweek], [1.4], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([tweek/tweekDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2010 by Iowa State University])
@@ -1107,8 +1107,8 @@ VJ_VERSION_GROK(VERSION)
 # naming. Unstable builds use all three version numbers; stable builds use
 # only the major and minor version numbers.
 if test "x$ENABLE_VERSIONING" = "xyes" ; then
-   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION"
-   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}_${MICRO_VERSION}"
+   VERSION_DOT="$MAJOR_VERSION.$MINOR_VERSION"
+   VERSION_UNDERSCORE="${MAJOR_VERSION}_${MINOR_VERSION}"
 
    HEADER_VERSION="tweek-$VERSION_DOT"
    CLOSE_HEADER_VERSION='..'
