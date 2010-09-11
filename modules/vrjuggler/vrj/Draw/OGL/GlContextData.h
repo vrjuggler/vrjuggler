@@ -48,7 +48,8 @@
 namespace vrj
 {
 
-/**
+/** \class GlContextData GlContextData.h vrj/Draw/OGL/GlContextData.h
+ *
  * Backwards compatibility type declaration for vrj::opengl::ContextData.
  *
  * @since 2.3.11

@@ -41,7 +41,11 @@ class NSAutoreleasePool;
 namespace vrj
 {
 
-/**
+/** \class CocoaWrapper CocoaWrapper.h vrj/Kernel/CocoaWrapper.h
+ *
+ * This class provides a bridge between the VR Juggler kernel and the
+ * execution environment required by NSApplication.
+ *
  * @since 2.1.21
  */
 class CocoaWrapper

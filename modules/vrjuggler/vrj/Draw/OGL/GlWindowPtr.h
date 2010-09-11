@@ -35,7 +35,7 @@
  * vrj/Draw/OpenGL/GlWindowPtr.h.
  *
  * @deprecated This file has been deprecated in favor of
- *             vrj/Draw/OpenGL/GlWindowPtr.h.
+ *             vrj/Draw/OpenGL/WindowPtr.h.
  */
 
 #if defined(__GNUC__)
