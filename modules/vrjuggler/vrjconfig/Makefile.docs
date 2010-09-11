@@ -65,8 +65,8 @@ docs:
           -header "<p><b>$(APP_NAME)</b><br>v$(PROJECT_NUMBER)</p>"	\
           -bottom "<font size=1>Copyright &copy; 1998&ndash;2010 Iowa State University. All rights reserved.</font>" \
           -link "http://java.sun.com/j2se/1.5.0/docs/api/"		\
-          -link "http://developer.vrjuggler.org/docs/tweek/1.5/programmer.reference.java" \
-          -link "http://developer.vrjuggler.org/docs/jccl/1.5/programmer.reference.java" \
+          -link "http://developer.vrjuggler.org/docs/tweek/$(TWEEK_VERSION)/programmer.reference.java" \
+          -link "http://developer.vrjuggler.org/docs/jccl/$(JCCL_VERSION)/programmer.reference.java" \
           -link "http://www.jdom.org/docs/apidocs/" 			\
           -link "http://www.jgraph.com/doc/jgraph/" 			\
           $(DOC_PKGS)
