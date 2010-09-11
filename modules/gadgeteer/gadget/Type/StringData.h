@@ -66,7 +66,7 @@ public:
 
    /**
     * @deprecated Use getValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    const std::string& getString() const
    {
@@ -75,7 +75,7 @@ public:
 
    /**
     * @deprecated Use setValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    void setString(const std::string& s)
    {

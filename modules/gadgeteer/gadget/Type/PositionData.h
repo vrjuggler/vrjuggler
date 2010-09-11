@@ -51,7 +51,7 @@ public:
 
    /**
     * @deprecated Use getValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    const gmtl::Matrix44f& getPosition() const
    {
@@ -60,7 +60,7 @@ public:
 
    /**
     * @deprecated Use setValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    void setPosition(const gmtl::Matrix44f& posMatrix)
    {

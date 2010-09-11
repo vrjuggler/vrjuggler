@@ -63,7 +63,7 @@ public:
 
    /**
     * @deprecated Use getValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    int getDigital() const
    {
@@ -72,7 +72,7 @@ public:
 
    /**
     * @deprecated Use setValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    void setDigital(const int d)
    {

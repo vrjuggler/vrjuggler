@@ -63,7 +63,7 @@ public:
 
    /**
     * @deprecated Use getValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    float getAnalog() const
    {
@@ -72,7 +72,7 @@ public:
 
    /**
     * @deprecated Use setValue() for forward compatibility with the next major
-    *             relesae of Gadgeteer.
+    *             release of Gadgeteer.
     */
    void setAnalog(const float f)
    {
