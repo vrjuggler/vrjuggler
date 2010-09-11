@@ -74,7 +74,7 @@ public:
    }
 
    /**
-    * @deprecated Use getValue() for forward compatibility with the next major
+    * @deprecated Use setValue() for forward compatibility with the next major
     *             relesae of Gadgeteer.
     */
    void setString(const std::string& s)
