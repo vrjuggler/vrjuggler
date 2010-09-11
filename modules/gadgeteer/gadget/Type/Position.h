@@ -147,6 +147,11 @@ public:
       mPosSamples.swapBuffers();
    }
 
+   /**
+    * Returns the Input type name used to map into the BaseTypeFactory. In a 
+    * device driver, do not override this method unless the device driver is
+    * also going to be implementing a new core Input device type.
+    */
    virtual std::string getInputTypeName()
    {
       return std::string("Position");
