@@ -342,9 +342,9 @@ namespace gadget
       /**
        * Returns the proxied input device if this proxy is not stupefied.
        *
-       * @since 2.1.1
+       * @since 2.0.0
        */
-      device_ptr_type getTypedInputDevice() const
+      const device_ptr_type getTypedInputDevice() const
       {
          return mStupefied ? device_ptr_type() : mTypedDevice;
       }
