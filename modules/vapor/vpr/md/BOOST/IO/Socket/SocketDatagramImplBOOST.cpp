@@ -121,7 +121,6 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
       {
          mUdpSocket->cancel();
       }
-      vpr::System::msleep(10);
    }
 
    return mBytesRead;
