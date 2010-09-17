@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- --------- ----------------------------------------------------------
+2010-09-17 patrick   Fixed socket shutdown on Windows.
+
+[2.2.0 RC 1 released - 9.5.2010]===============================================
+
 2009-12-07 furlong.t Added vpr::SystemWin32 so that NSPR is no longer needed by
                      the Windows version of Juggler.
                      NEW VERSION: 2.1.17

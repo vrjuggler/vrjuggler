@@ -223,16 +223,21 @@ void SocketImplBOOST::open()
 
 void SocketImplBOOST::close()
 {
-   /*
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
 		 if (mTcpSocket->is_open())
-		   mTcpSocket->close();
+		 {
+			mTcpSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+		    mTcpSocket->close();
+		 }
          break;
       case vpr::SocketTypes::DATAGRAM:
 		 if (mUdpSocket->is_open())
-           mUdpSocket->close();
+		 {
+			mUdpSocket->shutdown(boost::asio::ip::udp::socket::shutdown_both);
+            mUdpSocket->close();
+		 }
          break;
       case vpr::SocketTypes::RAW:
          throw SocketException("RAW socket type not supported.", VPR_LOCATION);
@@ -246,7 +251,6 @@ void SocketImplBOOST::close()
             break;
          }
    }
-   */
 
    // Reset the local state tracking to initial state
    // since we are not connected or bound any more.
