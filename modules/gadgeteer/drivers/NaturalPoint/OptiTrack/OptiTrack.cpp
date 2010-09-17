@@ -132,8 +132,8 @@ void OptiTrack::controlLoop()
    {
       this->sample();
 
-      // Note: might need a sleep here if CPU is high
-      //vpr::System::msleep(10);
+      // Limit sampling to 100 Hz to match output from hardware
+      vpr::System::msleep(10);
    }
 }
 
@@ -204,14 +204,20 @@ bool OptiTrack::sample()
    }
 
    // Check to see if we have new data to pull
-   if (!mTracker.updateData())
+   bool receivedData = false;
+   while (mTracker.updateData())
+   {
+	  receivedData = true;
+   }
+   
+   /*if (!receivedData)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "[gadget::OptiTrack::sample()]")
          << ": Could not read data from OptiTrack driver!\n"
          << vprDEBUG_FLUSH;
       return false;
-   }
+   }*/
 
    // Create the data buffers to put the new data into.
    std::vector<gadget::PositionData> current_samples(mRigidBodyIDs.size() + mMarkerIDs.size());
