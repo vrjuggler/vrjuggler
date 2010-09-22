@@ -126,6 +126,38 @@ bool Position::config(jccl::ConfigElementPtr e)
    return true;
 }
 
+const PositionData& Position::getPositionData(int devNum) const
+{
+   const SampleBuffer_t::buffer_t& stable_buffer(mPosSamples.stableBuffer());
+
+   // If have entry && devNum in range
+   if (! stable_buffer.empty() &&
+       stable_buffer.back().size() > static_cast<unsigned int>(devNum))
+   {
+      return stable_buffer.back()[devNum];
+   }
+   // No data or request out of range, return default value
+   else
+   {
+      if (stable_buffer.empty())
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "WARNING: [gadget::Position::getPositionData()] "
+            << "Stable buffer is empty.  If this is not the first "
+            << "read, then this is a problem.\n" << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "WARNING: [gadget::Position::getPositionData()] "
+            << "Requested devNum is not in the range available.  "
+            << "May have configuration error\n" << vprDEBUG_FLUSH;
+      }
+
+      return mDefaultValue;
+   }
+}
+
 void Position::writeObject(vpr::ObjectWriter* writer)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
@@ -173,14 +205,13 @@ void Position::writeObject(vpr::ObjectWriter* writer)
    else       // No data or request out of range, return default value
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Warning: Position::writeObject: Stable buffer is empty. If "
-         << "this is not the first write, then this is a problem.\n"
-         << vprDEBUG_FLUSH;
+         << "WARNING: [gadget::Position::writeObject()] "
+         << "Stable buffer is empty.  If this is not the first "
+         << "read, then this is a problem.\n" << vprDEBUG_FLUSH;
    }
 
    writer->endTag();
 }
-
 
 void Position::readObject(vpr::ObjectReader* reader)
 {
