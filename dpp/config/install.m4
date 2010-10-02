@@ -196,8 +196,12 @@ AC_DEFUN([DPP_PROG_INSTALL],
    dnl Allow the calling code to prevent the use of the Doozer++ BSD
    dnl install(1) work-alike.
    if test "x$1" != "xno" ; then
-      dnl The Doozer++ BSD install(1) script requires Perl 5.004 or newer.
-      if test "x$PERL" != "xno" -o "x$PERL" != "x" ; then
+      dnl The Doozer++ BSD install(1) script requires Perl 5.004 or newer
+      dnl (ca 1997). If PERL5 is set, then we assume that it is new enough.
+      if test "x$PERL5" != "x" -a "x$PERL5" != "xno" ; then
+         INSTALL='\$(PERL5) \$(DPP_SCRIPTDIR)/bsd-install.pl'
+         USE_DPP_BSD_INSTALL='yes'
+      elif test "x$PERL" != "xno" -o "x$PERL" != "x" ; then
          if test $PERL_MAJOR_VER -ge 5 -a $PERL_MINOR_VER -ge 4 ; then
             INSTALL='\$(PERL) \$(DPP_SCRIPTDIR)/bsd-install.pl'
             USE_DPP_BSD_INSTALL='yes'

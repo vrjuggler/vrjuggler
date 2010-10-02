@@ -38,7 +38,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2010 by Iowa State University])
 AC_CONFIG_SRCDIR([vrj/vrjConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.2])
+DPP_PREREQ([2.2.2])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -144,8 +144,9 @@ DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***)
 DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> ***))
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
-DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
-AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
+DPP_HAVE_PERL5( , , [AC_MSG_ERROR([*** Perl is required ***])])
+AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree],
+              [\$(PERL5) \$(scriptdir)/mtree.pl])
 
 DPP_HAVE_GNU_MAKE([3.78], ,
     [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])

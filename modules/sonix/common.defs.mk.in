@@ -1,34 +1,11 @@
-# ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2010 by Iowa State University
+# Distributed under the GNU Lesser General Public License 2.1.  (See
+# accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 #
 # Original Author:
 #   Patrick Hartling
-#
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Library General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Library General Public License for more details.
-#
-# You should have received a copy of the GNU Library General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
-#
-# -----------------------------------------------------------------
-# File:          common.defs.mk.in,v
-# Date modified: 2003/06/27 22:50:32
-# Version:       1.30.2.7
-# -----------------------------------------------------------------
-# *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.30.2.7 2003/06/27 22:50:32 patrickh Exp
-#
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
 # with Doozer++ as a means for users to get quick, effortless access to all
@@ -43,93 +20,125 @@
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
-# bindir          - Path to bin directory containing executables (usually
-#                   $(exec_prefix)/bin).
-# datadir         - Path to a directory generally sharing platform-independent
-#                   data (usually $(prefix)/share).
-# exec_prefix     - Path to base directory where executables will be (usually
-#                   $(prefix)).
-# libdir          - Path to directory containing shared and static libraries
-#                   (usually $(exec_prefix)/lib).
-# libexecdir      - Path to libexec directory that generally contains
-#                   executables not called directly by users (usually
-#                   $(exec_prefix)/libexec).
-# prefix          - Base path used for installation and other things.
-# sbindir         - Path to sbin directory containing executables (usually
-#                   $(exec_prefix)/sbin).
-# sysconfdir      - System configuration directory (usually $(prefix)/etc).
-# topdir          - The top of the build tree.
+# bindir             - Path to bin directory containing executables (usually
+#                      $(exec_prefix)/bin).
+# datadir            - Path to a directory generally sharing
+#                      platform-independent data (usually $(prefix)/share).
+# exec_prefix        - Path to base directory where executables will be
+#                      (usually $(prefix)).
+# libdir             - Path to directory containing shared and static libraries
+#                      (usually $(exec_prefix)/lib).
+# libexecdir         - Path to libexec directory that generally contains
+#                      executables not called directly by users (usually
+#                      $(exec_prefix)/libexec).
+# prefix             - Base path used for installation and other things.
+# sbindir            - Path to sbin directory containing executables (usually
+#                      $(exec_prefix)/sbin).
+# sysconfdir         - System configuration directory (usually $(prefix)/etc).
+# topdir             - The top of the build tree.
 #
-# AR              - Path to ar(1) (or equivalent program).
-# ARFLAGS         - Flags for $(AR).
-# CC              - Path to C compiler.
-# CXX             - Path to C++ compiler.
-# CPP             - Command for invoking the C preprocessor.
-# CXXCPP          - Command for invoking the C preprocessor used by the C++
-#                   compiler.
-# CFLAGS          - Flags for $(CC).
-# CFLAGS_DYLINB   - Special flags used only when building dynamically linked
-#                   libraries with the C compiler.
-# CC_PROF_FLAGS   - Flag(s) to enable compiling profiled C objects.
-# CPPFLAGS        - Flags for $(CPP) and $(CXXCPP).
-# CXXFLAGS        - Flags for $(CXX).
-# CXXFLAGS_DYLINB - Special flags used only when building dynamically linked
-#                   libraries with the C++ compiler.
-# CXX_PROF_FLAGS  - Flag(s) to enable compiling profiled C++ objects.
-# C_DLL           - Command for linking a DLL from C object files.
-# CXX_DLL         - Command for linking a DLL from C++ object files.
-# C_PLUGIN        - Command for linking a plug-in from C object files.
-# CXX_PLUGIN      - Command for linking a plug-in from C++ object files.
-# DEFS            - Command-line preprocessor definitions (-Dvariable=value).
-# DEP_GEN_FLAG    - Flag passed to the compiler to generate dependencies.
-# DEPEND_FLAGS    - Flags passed to makedepend(1) (or equivalent program for
-#                   generating dependencies).
-# DEPEND_EXTRAS   - Flags not recognized by makedepend(1) that may be
-#                   necessary in $(CFLAGS) or $(CXXFLAGS).
-# OWNER_NAME      - The name of the user that will own the files.
-# GROUP_NAME      - The name of the group that will own the files.
-# FILE_PERMS      - Normal file permissions.
-# EXEC_PERMS      - Executable file permissions.
-# DIR_PERMS       - Directory permissions.
-# DYLIB_NAME_FLAG - Flag passed to the linker to name a dynamic library.
-# EXEEXT          - Suffix for executable file names (e.g., ".exe" or nothing).
-# EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
-# INCLUDES        - Additions to the include path (-I/path/to/include).
-# JCPS            - The Java classpath separator character for this platform.
-# JAR             - Command for creating Java JAR files.
-# JAVA            - The java command.
-# JAVAC           - Java compiler.
-# JAVADOC         - Java documentation generator.
-# JAVAH           - javah utility.
-# JAVAP           - javap utility.
-# JDK_HOME        - Base Java installation directory.
-# JNI_INC         - The include paths necessary for JNI.
-# JNI_LIB         - The library which needs to be statically linked for JNI.
-# LD              - Path to ld(1) (or equivalent program).
-# LDFLAGS         - Flags for $(LD).
-# LDOPTS          - Extra, often platform-specific, options for the linker.
-# LDOPTS_DBG      - Extra, often platform-specific, debugging options for the
-#                   linker.
-# LDOPTS_OPT      - Extra, often platform-specific, optimization options for
-#                   the linker.
-# LDOPTS_PROF     - Extra, often platform-specific, profiling options for the
-#                   linker.
-# LIBS            - Extra external libraries needed at link time.
-# LN_S            - Working 'ln -s' command.
-# MAKEDEPEND      - The makedepend(1) program (if needed).
-# MKPATH          - Path to shared dpp.*.mk file directory.
-# OBJEXT          - Suffix for object file names (e.g., "o" or "obj").
-# OBJ_BUILD_FLAG  - Flag passed to the compiler to create an object file.
-# OBJ_NAME_FLAG   - Flag passed to the compiler to name an object file.
-# OBJDIR          - Path to the directory where the object files will be built.
-# OS_TYPE         - Type of the target operating system (UNIX or Win32).
-# PERL            - Path to Perl 5 binary.
-# RANLIB          - Path to ranlib(1) binary if it is available.  ':'
-#                   otherwise.
-# RMIC            - Java RMI compiler utility.
+# AR                 - Path to ar(1) (or equivalent program).
+# ARFLAGS            - Flags for $(AR).
+# CC                 - Path to C compiler.
+# CXX                - Path to C++ compiler.
+# CPP                - Command for invoking the C preprocessor.
+# CXXCPP             - Command for invoking the C preprocessor used by the C++
+#                      compiler.
+# CFLAGS             - Flags for $(CC).
+# CFLAGS_DYNLIB      - Special flags used only when building dynamically linked
+#                      libraries with the C compiler.
+# CC_PROF_FLAGS      - Flag(s) to enable compiling profiled C object files.
+# CPPFLAGS           - Flags for $(CPP) and $(CXXCPP).
+# CXXFLAGS           - Flags for $(CXX).
+# CXXFLAGS_DYNLIB    - Special flags used only when building dynamically linked
+#                      libraries with the C++ compiler.
+# CXX_PROF_FLAGS     - Flag(s) to enable compiling profiled C++ object files.
+# C_DLL              - Command for linking a DLL from C object files.
+# CXX_DLL            - Command for linking a DLL from C++ object files.
+# C_PLUGIN           - Command for linking a plug-in from C object files.
+# CXX_PLUGIN         - Command for linking a plug-in from C++ object files.
+# DEFS               - Command-line preprocessor definitions
+#                      (-Dvariable=value).
+# DEP_GEN_FLAG       - Flag passed to the compiler to generate dependencies.
+# DEPEND_FLAGS       - Flags passed to makedepend(1) (or equivalent program for
+#                      generating dependencies).
+# DEPEND_EXTRAS      - Flags not recognized by makedepend(1) that may be
+#                      necessary in $(CFLAGS) or $(CXXFLAGS).
+# OWNER_NAME         - The name of the user that will own the files.
+# GROUP_NAME         - The name of the group that will own the files.
+# FILE_PERMS         - Normal file permissions.
+# EXEC_PERMS         - Executable file permissions.
+# DIR_PERMS          - Directory permissions.
+# DYLIB_NAME_FLAG    - Flag passed to the linker to name a dynamic library.
+# EXEEXT             - Suffix for executable file names (e.g., ".exe" or
+#                      nothing).
+# EXE_NAME_FLAG      - Flag passed to the linker to name an executable file.
+# INCLUDES           - Additions to the include path (-I/path/to/include).
+# JCPS               - The Java classpath separator character for this
+#                      platform.
+# JAR                - Command for creating Java JAR files.
+# JAVA               - The java command.
+# JAVAC              - Java compiler.
+# JAVADOC            - Java documentation generator.
+# JAVAH              - javah utility.
+# JAVAP              - javap utility.
+# JDK_HOME           - Base Java installation directory.
+# JNI_INC            - The include paths necessary for JNI.
+# JNI_LDFLAGS        - The linker flags providing paths and other information
+#                      for linking JNI code.
+# JNI_LIB            - The library which needs to be linked for JNI code.
+# LD                 - Path to ld(1) (or equivalent program).
+# LDFLAGS            - Flags for $(LD).
+# LDOPTS             - Extra, often platform-specific, options for the linker.
+# LDOPTS_DBG         - Extra, often platform-specific, debugging options for
+#                      the linker.
+# LDOPTS_OPT         - Extra, often platform-specific, optimization options for
+#                      the linker.
+# LDOPTS_PROF        - Extra, often platform-specific, profiling options for
+#                      the linker.
+# LIBS               - Extra external libraries needed at link time.
+# LN_S               - Working 'ln -s' command.
+# MAKEDEPEND         - The makedepend(1) program (if needed).
+# MKPATH             - Path to shared dpp.*.mk file directory.
+# OBJC               - Path to Objective-C compiler.
+# OBJCXX             - Path to Objective-C++ compiler.
+# OBJCCPP            - Command for invoking the C preprocessor used by the
+#                      Objective-C compiler.
+# OBJCXXCPP          - Command for invoking the C preprocessor used by the
+#                      Objective-C++ compiler.
+# OBJCFLAGS          - Flags for $(OBJC).
+# OBJCFLAGS_DYNLIB   - Special flags used only when building dynamically linked
+#                      libraries with the Objective-C compiler.
+# OBJC_PROF_FLAGS    - Flag(s) to enable compiling profiled Objective-C+=
+#                      object files.
+# OBJCXXFLAGS        - Flags for $(OBJCXX).
+# OBJXXCFLAGS_DYNLIB - Special flags used only when building dynamically linked
+#                      libraries with the Objective-C++ compiler.
+# OBJCXX_PROF_FLAGS  - Flag(s) to enable compiling profiled Objective-C object
+#                      files.
+# OBJC_DLL           - Command for linking a DLL from Objective-C object files.
+# OBJCXX_DLL         - Command for linking a DLL from Objective-C++ object
+#                      files.
+# OBJC_PLUGIN        - Command for linking a plug-in from Objective-C object
+#                      files.
+# OBJCXX_PLUGIN      - Command for linking a plug-in from Objective-C++ object
+#                      files.
+# OBJEXT             - Suffix for object file names (e.g., "o" or "obj").
+# OBJ_BUILD_FLAG     - Flag passed to the compiler to create an object file.
+# OBJ_NAME_FLAG      - Flag passed to the compiler to name an object file.
+# OBJDIR             - Path to the directory where the object files will be
+#                      built.
+# OS_TYPE            - Type of the target operating system (UNIX or Win32).
+# PERL               - Path to Perl binary.
+# PERL5              - Path to Perl 5 binary.
+# RANLIB             - Path to ranlib(1) binary if it is available.  ':'
+#                      otherwise.
+# RMIC               - Java RMI compiler utility.
 #
-# C_WARNS_LEVEL_[0-5]   - Warning levels for C code.
-# CXX_WARNS_LEVEL_[0-5] - Warning levels for C++ code.
+# C_WARNS_LEVEL_[0-5]      - Warning levels for C code.
+# CXX_WARNS_LEVEL_[0-5]    - Warning levels for C++ code.
+# OBJC_WARNS_LEVEL_[0-5]   - Warning levels for Objective-C code.
+# OBJCXX_WARNS_LEVEL_[0-5] - Warning levels for Objective-C++ code.
 #
 # USE_MAKEDEPEND      - Tell the dependency-generation code whether to use
 #                       makedepend(1).  The value will be either 'Y' or 'N'.
@@ -138,6 +147,8 @@
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
+# OBJC_COMPILE    - Command for compiling Objective-C code.
+# OBJCXX_COMPILE  - Command for compiling Objective-C++ code.
 #
 # ABI             - Application Binary Interface type.  This may be used for
 #                   other binary types when supported by the operating system
@@ -201,6 +212,7 @@ JAVAH=			@JAVAH@
 JAVAP=			@JAVAP@
 JDK_HOME=		@JDK_HOME@
 JNI_INC=		@JNI_INC@
+JNI_LDFLAGS=		@JNI_LDFLAGS@
 JNI_LIB=		@JNI_LIB@
 LD=			@LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
 LDFLAGS=		@LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
@@ -213,17 +225,33 @@ LIBS=			@LIBS@ $(EXTRA_LIBS)
 LN_S=			@LN_S@
 MAKEDEPEND=		@MAKEDEPEND@
 MKPATH?=		
+OBJC=			@OBJC@
+OBJCFLAGS=		@CFLAGS@ $(OPTIMIZER) $(EXTRA_OBJCFLAGS)
+OBJCFLAGS_DYNLIB=	@OBJCFLAGS_DYNLIB@
+OBJC_DLL=		@OBJC_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+OBJC_PLUGIN=		@OBJC_PLUGIN@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+OBJC_PROF_FLAGS=	@OBJC_PROF_FLAGS@
+OBJCPP=			@OBJCPP@
+OBJCXX=			@OBJCXX@
+OBJCXXFLAGS=		@OBJCXXFLAGS@ $(OPTIMIZER) $(EXTRA_OBJCXXFLAGS)
+OBJCXXFLAGS_DYNLIB=	@OBJCXXFLAGS_DYNLIB@
+OBJCXX_DLL=		@OBJCXX_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+OBJCXX_PLUGIN=		@OBJCXX_PLUGIN@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+OBJCXX_PROF_FLAGS=	@OBJCXX_PROF_FLAGS@
+OBJCXXCPP=		@OBJCXXCPP@
 OBJEXT=			@OBJEXT@
 OBJ_BUILD_FLAG=		@OBJ_BUILD_FLAG@
 OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
 OS_TYPE=		@OS_TYPE@
 PLATFORM_SDK=		@PLATFORM_SDK@
 PERL=			@PERL@
+PERL5=			@PERL5@
 RANLIB=			@RANLIB@
 RMIC=			@RMIC@
 UNIVERSAL_ARCH_LIST=	@UNIVERSAL_ARCH_LIST@
 
-# Warning levels for C and C++ needed by dpp.obj-common.mk.
+# Warning levels for C, C++, Objective-C, and Objective-C++ needed by
+# dpp.obj-common.mk.
 C_WARNS_LEVEL_0=	@C_WARNS_LEVEL_0@
 C_WARNS_LEVEL_1=	@C_WARNS_LEVEL_1@
 C_WARNS_LEVEL_2=	@C_WARNS_LEVEL_2@
@@ -236,6 +264,18 @@ CXX_WARNS_LEVEL_2=	@CXX_WARNS_LEVEL_2@
 CXX_WARNS_LEVEL_3=	@CXX_WARNS_LEVEL_3@
 CXX_WARNS_LEVEL_4=	@CXX_WARNS_LEVEL_4@
 CXX_WARNS_LEVEL_5=	@CXX_WARNS_LEVEL_5@
+OBJC_WARNS_LEVEL_0=	@OBJC_WARNS_LEVEL_0@
+OBJC_WARNS_LEVEL_1=	@OBJC_WARNS_LEVEL_1@
+OBJC_WARNS_LEVEL_2=	@OBJC_WARNS_LEVEL_2@
+OBJC_WARNS_LEVEL_3=	@OBJC_WARNS_LEVEL_3@
+OBJC_WARNS_LEVEL_4=	@OBJC_WARNS_LEVEL_4@
+OBJC_WARNS_LEVEL_5=	@OBJC_WARNS_LEVEL_5@
+OBJCXX_WARNS_LEVEL_0=	@OBJCXX_WARNS_LEVEL_0@
+OBJCXX_WARNS_LEVEL_1=	@OBJCXX_WARNS_LEVEL_1@
+OBJCXX_WARNS_LEVEL_2=	@OBJCXX_WARNS_LEVEL_2@
+OBJCXX_WARNS_LEVEL_3=	@OBJCXX_WARNS_LEVEL_3@
+OBJCXX_WARNS_LEVEL_4=	@OBJCXX_WARNS_LEVEL_4@
+OBJCXX_WARNS_LEVEL_5=	@OBJCXX_WARNS_LEVEL_5@
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE=		@DSOREGFILE@
@@ -267,6 +307,10 @@ C_COMPILE=		$(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
 			$(CFLAGS) $(C_WARN_FLAGS)
 CXX_COMPILE=		$(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
 			$(CXXFLAGS) $(CXX_WARN_FLAGS)
+OBJC_COMPILE=		$(OBJC) $(DEFS) $(INCLUDES) $(CPPFLAGS)		\
+			$(OBJCFLAGS) $(OBJC_WARN_FLAGS)
+OBJCXX_COMPILE=		$(OBJCXX) $(DEFS) $(INCLUDES) $(CPPFLAGS)	\
+			$(OBJCXXFLAGS) $(OBJCXX_WARN_FLAGS)
 
 # -----------------------------------------------------------------------------
 # Platform- and binary-specific options.  The assignments preceding the

@@ -38,7 +38,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2010 by Iowa State University])
 AC_CONFIG_SRCDIR([tweek/tweekConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([2.1.2])
+DPP_PREREQ([2.2.2])
 DPP_INIT
 
 DPP_GEN_RECONFIG
@@ -376,8 +376,9 @@ DPP_CXX_EXCEPTIONS(AC_MSG_ERROR(*** Tweek requires C++ exception support ***))
 DPP_CXX_HAVE_STD
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
-DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
-AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
+DPP_HAVE_PERL5( , , [AC_MSG_ERROR([*** Perl is required ***])])
+AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree],
+              [\$(PERL5) \$(scriptdir)/mtree.pl])
 DPP_HAVE_GNU_MAKE([3.78], ,
    [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])

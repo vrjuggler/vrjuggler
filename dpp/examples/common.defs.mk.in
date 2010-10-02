@@ -129,7 +129,8 @@
 # OBJDIR             - Path to the directory where the object files will be
 #                      built.
 # OS_TYPE            - Type of the target operating system (UNIX or Win32).
-# PERL               - Path to Perl 5 binary.
+# PERL               - Path to Perl binary.
+# PERL5              - Path to Perl 5 binary.
 # RANLIB             - Path to ranlib(1) binary if it is available.  ':'
 #                      otherwise.
 # RMIC               - Java RMI compiler utility.
@@ -186,6 +187,7 @@ CFLAGS=			@CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
 CFLAGS_DYNLIB=		@CFLAGS_DYNLIB@
 CC_PROF_FLAGS=		@CC_PROF_FLAGS@
 CPPFLAGS=		@CPPFLAGS@ $(EXTRA_CPPFLAGS)
+CXXFLAGS=		@CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
 CXXFLAGS_DYNLIB=	@CXXFLAGS_DYNLIB@
 CXX_PROF_FLAGS= 	@CXX_PROF_FLAGS@
 C_DLL=			@C_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
@@ -235,15 +237,18 @@ OBJCXXFLAGS=		@OBJCXXFLAGS@ $(OPTIMIZER) $(EXTRA_OBJCXXFLAGS)
 OBJCXXFLAGS_DYNLIB=	@OBJCXXFLAGS_DYNLIB@
 OBJCXX_DLL=		@OBJCXX_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
 OBJCXX_PLUGIN=		@OBJCXX_PLUGIN@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
-OBJCXX_PROF_FLAGS= 	@OBJCXX_PROF_FLAGS@
+OBJCXX_PROF_FLAGS=	@OBJCXX_PROF_FLAGS@
 OBJCXXCPP=		@OBJCXXCPP@
 OBJEXT=			@OBJEXT@
 OBJ_BUILD_FLAG=		@OBJ_BUILD_FLAG@
 OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
 OS_TYPE=		@OS_TYPE@
+PLATFORM_SDK=		@PLATFORM_SDK@
 PERL=			@PERL@
+PERL5=			@PERL5@
 RANLIB=			@RANLIB@
 RMIC=			@RMIC@
+UNIVERSAL_ARCH_LIST=	@UNIVERSAL_ARCH_LIST@
 
 # Warning levels for C, C++, Objective-C, and Objective-C++ needed by
 # dpp.obj-common.mk.
@@ -334,6 +339,10 @@ ifdef dppABI
       ABI=	ELF
       ISA=	i386
    endif
+   ifeq ($(dppABI), ELF_x86_64)
+      ABI=	ELF
+      ISA=	x86_64
+   endif
    ifeq ($(dppABI), MACINTOSH_PPC)
       ABI=	MAC
       ISA=	powerpc
@@ -347,6 +356,7 @@ endif
 ABI_LIST=	@ABI_LIST@
 PLATFORM=	@PLATFORM@
 
+# Not using GCC.
 ifneq ($(findstring gcc, $(CC)), gcc)
 ifeq ($(ABI), N32)
    ARFLAGS:=	-n32 $(ARFLAGS)
@@ -401,21 +411,6 @@ ifeq ($(ABI), ELF)
    endif
 endif
 ifeq ($(ABI), Mach-O)
-   ifeq ($(ISA), powerpc)
-      CFLAGS+=		-arch ppc $(PLATFORM_SDK)
-      CXXFLAGS+=	-arch ppc $(PLATFORM_SDK)
-      LDOPTS+=		-arch ppc $(PLATFORM_SDK)
-   endif
-   ifeq ($(ISA), i386)
-      CFLAGS+=		-arch i386 $(PLATFORM_SDK)
-      CXXFLAGS+=	-arch i386 $(PLATFORM_SDK)
-      LDOPTS+=		-arch i386 $(PLATFORM_SDK)
-   endif
-   ifeq ($(ISA), x86_64)
-      CFLAGS+=		-arch x86_64 $(PLATFORM_SDK)
-      CXXFLAGS+=	-arch x86_64 $(PLATFORM_SDK)
-      LDOPTS+=		-arch x86_64 $(PLATFORM_SDK)
-   endif
    ifeq ($(ISA), universal)
       CFLAGS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
 			$(PLATFORM_SDK)
@@ -423,6 +418,16 @@ ifeq ($(ABI), Mach-O)
 			$(PLATFORM_SDK)
       LDOPTS+=		$(foreach arch,$(UNIVERSAL_ARCH_LIST),-arch $(arch)) \
 			$(PLATFORM_SDK)
+   else
+      ifeq ($(ISA), powerpc)
+         CFLAGS+=	-arch ppc $(PLATFORM_SDK)
+         CXXFLAGS+=	-arch ppc $(PLATFORM_SDK)
+         LDOPTS+=	-arch ppc $(PLATFORM_SDK)
+      else
+         CFLAGS+=	-arch $(ISA) $(PLATFORM_SDK)
+         CXXFLAGS+=	-arch $(ISA) $(PLATFORM_SDK)
+         LDOPTS+=	-arch $(ISA) $(PLATFORM_SDK)
+      endif
    endif
 endif
 
