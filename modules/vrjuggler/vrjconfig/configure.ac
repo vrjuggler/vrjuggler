@@ -37,7 +37,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2010 by Iowa State University])
 AC_CONFIG_SRCDIR([VRJConfig.xml])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../../share/config])
-DPP_PREREQ([1.99.17])
+DPP_PREREQ([2.2.2])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -105,7 +105,7 @@ fi
 ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
-DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
+DPP_HAVE_PERL5( , , [AC_MSG_ERROR([*** Perl is required ***])])
 
 DPP_HAVE_GNU_MAKE([3.78], ,
     [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
