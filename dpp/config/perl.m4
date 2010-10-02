@@ -31,14 +31,16 @@ dnl ===========================================================================
 dnl Perl-related macros.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
-dnl     DPP_PERL_VER - Find a version of Perl that is at least the given
-dnl                    version number.
+dnl     DPP_PERL_VER   - Find a version of Perl that is at least the given
+dnl                      version number.
+dnl     DPP_HAVE_PERL5 - Find a usable Perl 5 interpreter.
 dnl
 dnl Command-line options added:
 dnl     --with-perl
 dnl
 dnl Variables defined:
-dnl     PERL - The full path to the Perl binary meeting the requirements.
+dnl     PERL  - The full path to the Perl binary meeting the requirements.
+dnl     PERL5 - The full path to the Perl 5 binary.
 dnl ===========================================================================
 
 AC_DEFUN([DPP_EXTRACT_PERL_VER],
@@ -62,13 +64,16 @@ dnl Find a version of Perl that is at least the given version number.
 dnl Substitution is performed on the variable $PERL.
 dnl
 dnl Usage:
-dnl     DPP_PERL_VER(version, alternate-path)
+dnl     DPP_PERL_VER(version, alternate-path [, action-if-found [, action-if-not-found ]])
 dnl
 dnl Arguments:
 dnl     version        - Minimum required Perl version.
 dnl     alternate-path - Alternate path(s) to check for the Perl installation.
 dnl                      For more than one path value, the path list should be
 dnl                      space-separated.
+dnl
+dnl Limitations:
+dnl     This macro does not correctly detect Perl versions newer than 5.10.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([DPP_PERL_VER],
 [
@@ -131,4 +136,78 @@ AC_DEFUN([DPP_PERL_VER],
    fi
 
    AC_SUBST(PERL)
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Find a version of Perl that is at least the given version number.
+dnl Substitution is performed on the variable $PERL.
+dnl
+dnl Usage:
+dnl     DPP_HAVE_PERL5(alternate-path [, action-if-found [, actoin-if-not-found ]])
+dnl
+dnl Arguments:
+dnl     alternate-path      - Alternate path(s) to check for the Perl
+dnl                           installation. For more than one path value, the
+dnl                           path list should be space-separated.
+dnl     action-if-found     - The action to take if a working Perl 5
+dnl                           interpreter is found. This is optional.
+dnl     action-if-not-found - The action to take if a Perl 5 interpreter
+dnl                           cannot be found or does not work. This is
+dnl                           optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([DPP_HAVE_PERL5],
+[
+   dnl Specify a directory containing a working Perl 5.004 (or newer) binary.
+   dnl There is no default since standard locations are always available.
+   AC_ARG_WITH(perl,
+               [  --with-perl=<PATH>      Directory containing Perl $1
+                          or newer binary                 [No default]],
+               dpp_user_perl_path="$withval")
+
+   chkPerl5 ( ) {
+      if test -x "${1}" ; then
+         changequote(<<, >>)
+         dpp_perl_version=`${1} -v | grep -i "this is perl" | sed -e 's/.*v\(.\)\..*/\1/'`
+         changequote([, ])
+
+         if test "x$dpp_perl_version" = "x5" ; then
+            retval=0
+         else
+            retval=1
+         fi
+      else
+         retval=1
+      fi
+
+      echo $retval
+   }
+
+   dpp_perl_path='$2 /usr/local/bin /usr/bin C:/Perl/bin'
+
+   dnl If $dpp_user_perl_path has a value, prepend that on $dpp_perl_path so
+   dnl that it will be checked before the standard places.
+   if test "x$dpp_user_perl_path" != "x" ; then
+      dpp_perl_path="$dpp_user_perl_path $dpp_perl_path"
+   fi
+
+   AC_CACHE_CHECK([for Perl 5], [dpp_cv_usable_perl5],
+      [ dpp_cv_usable_perl5='no' ;
+        for dpp_dir in $dpp_perl_path ; do
+           if eval "test \"`chkPerl5 $dpp_dir/perl`\" -eq 0" ; then
+              dpp_cv_usable_perl5="$dpp_dir/perl"
+              break
+           fi
+        done
+      ])
+
+   PERL5="$dpp_cv_usable_perl5"
+
+   if test "x$PERL" = "xno" ; then
+      ifelse([$3], , :, [$3])
+   else
+      ifelse([$2], , :, [$2])
+   fi
+
+   AC_SUBST(PERL)
+   AC_SUBST(PERL5)
 ])

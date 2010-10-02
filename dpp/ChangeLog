@@ -1,5 +1,7 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2010-10-02 patrickh     Added DPP_HAVE_PERL5.
+                        NEW VERSION: 2.2.2
 2010-07-08 patrickh     Do not set $LIBBITSUF if it already has a value. This
                         allows easy overriding from the execution environment.
                         NEW VERSION: 2.2.1
