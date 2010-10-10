@@ -261,27 +261,35 @@ inline void AppViewer::contextInit()
    // --- Create new context specific osgViewer::Viewer for rendering -- //
 
    // Create the osgViewer instance
-   ::osg::ref_ptr<osgViewer::Viewer> contextViewer = new osgViewer::Viewer;
-   contextViewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+   ::osg::ref_ptr<osgViewer::Viewer> context_viewer = new osgViewer::Viewer;
+   context_viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 
    // Set up osgViewer::GraphicsWindowEmbedded for this context
    ::osg::ref_ptr< ::osg::GraphicsContext::Traits > traits =
       new ::osg::GraphicsContext::Traits;
    ::osg::ref_ptr<osgViewer::GraphicsWindowEmbedded> graphicsWindow =
       new osgViewer::GraphicsWindowEmbedded(traits.get());
-   contextViewer->getCamera()->setGraphicsContext(graphicsWindow.get());
+   context_viewer->getCamera()->setGraphicsContext(graphicsWindow.get());
 
    // Set the unique context id
    const unsigned int unique_context_id =
       vrj::opengl::DrawManager::instance()->getCurrentContext();
-   contextViewer->getCamera()->getGraphicsContext()->getState()->setContextID(unique_context_id);
+   context_viewer->getCamera()->getGraphicsContext()->getState()->setContextID(unique_context_id);
+
+   // This will prevent OpenSceneGraph from clearing the color buffer and the
+   // the depth buffer, as, in VR Juggler, glClear(GL_COLOR_BUFFER_BIT) is
+   // done in bufferPreDraw() and glClear(GL_DEPTH_BUFFER_BIT) is done in
+   // draw() method.
+   context_viewer->getCamera()->setClearMask(
+      ~(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+   );
 
    // Add the tree to the scene viewer and set properties
    vpr::Guard<vpr::Mutex> sv_guard(mSceneViewLock);
-   contextViewer->setSceneData(getScene());
+   context_viewer->setSceneData(getScene());
 
    // Keep our pointer around to the context viewer for rendering purposes
-   (*mContextViewer) = contextViewer;
+   *mContextViewer = context_viewer;
 }
 
 inline void AppViewer::draw()
@@ -290,19 +298,18 @@ inline void AppViewer::draw()
    glClear(GL_DEPTH_BUFFER_BIT);
 
    // Grab the context specific osgViewer
-   ::osg::ref_ptr<osgViewer::Viewer> contextViewer;
-   contextViewer = (*mContextViewer);
-   vprASSERT(contextViewer.get() != NULL);
+   ::osg::ref_ptr<osgViewer::Viewer> context_viewer = *mContextViewer;
+   vprASSERT(context_viewer.get() != NULL);
 
    // Must force the updateTraversal in the draw method for terrain database
    // paging to work correctly for each context.
    const double head_time(
       mKernel->getUsers()[0]->getHeadPosProxy()->getTimeStamp().secd()
    );
-   contextViewer->advance(head_time);
-   if (! contextViewer->done())
+   context_viewer->advance(head_time);
+   if (! context_viewer->done())
    {
-      contextViewer->updateTraversal();
+      context_viewer->updateTraversal();
    }
 
    // Grab the OpenGL Draw Manager that we are rendering for.
@@ -334,12 +341,12 @@ inline void AppViewer::draw()
    );
 
    // Set the actual viewport
-   contextViewer->getCamera()->setViewport(ll_x, ll_y, x_size, y_size);
+   context_viewer->getCamera()->setViewport(ll_x, ll_y, x_size, y_size);
 
    // Set the frustrum
    vrj::ProjectionPtr project = user_data->getProjection();
    vrj::Frustum frustum = project->getFrustum();
-   contextViewer->getCamera()->setProjectionMatrixAsFrustum(
+   context_viewer->getCamera()->setProjectionMatrixAsFrustum(
       frustum[vrj::Frustum::VJ_LEFT],
       frustum[vrj::Frustum::VJ_RIGHT],
       frustum[vrj::Frustum::VJ_BOTTOM],
@@ -349,12 +356,12 @@ inline void AppViewer::draw()
    );
 
    // Set the view matrix
-   contextViewer->getCamera()->setViewMatrix(
+   context_viewer->getCamera()->setViewMatrix(
       ::osg::Matrix(project->getViewMatrix().mData)
    );
 
    // Use the osgViewer to handle all culling and drawing
-   contextViewer->renderingTraversals();
+   context_viewer->renderingTraversals();
 }
 
 } // End of osg namespace

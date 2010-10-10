@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-10-2010 patrick     vrj::osg::AppViewer now sets flags on the camera held
+                        by the context-specific osgViewer::Viewer object so
+                        that the camera does not clear the color buffer or the
+                        depth buffer itself.
+
 [3.0.0 RC 1 released - 9.5.2010]===============================================
 
 [3.0 beta 1 released - 6.19.2010]==============================================
