@@ -261,24 +261,32 @@ inline void AppViewer::contextInit()
    // --- Create new context specific osgViewer::Viewer for rendering -- //
 
    // Create the osgViewer instance
-   ::osg::ref_ptr<osgViewer::Viewer> contextViewer = new osgViewer::Viewer;
-   contextViewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+   ::osg::ref_ptr<osgViewer::Viewer> context_viewer = new osgViewer::Viewer;
+   context_viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 
    // Set up osgViewer::GraphicsWindowEmbedded for this context
    ::osg::ref_ptr< ::osg::GraphicsContext::Traits > traits =
       new ::osg::GraphicsContext::Traits;
    ::osg::ref_ptr<osgViewer::GraphicsWindowEmbedded> graphicsWindow =
       new osgViewer::GraphicsWindowEmbedded(traits.get());
-   contextViewer->getCamera()->setGraphicsContext(graphicsWindow.get());
+   context_viewer->getCamera()->setGraphicsContext(graphicsWindow.get());
 
    // Set the unique context id
    const unsigned int unique_context_id =
       vrj::opengl::DrawManager::instance()->getCurrentContext();
-   contextViewer->getCamera()->getGraphicsContext()->getState()->setContextID(unique_context_id);
+   context_viewer->getCamera()->getGraphicsContext()->getState()->setContextID(unique_context_id);
+
+   // This will prevent OpenSceneGraph from clearing the color buffer and the
+   // the depth buffer, as, in VR Juggler, glClear(GL_COLOR_BUFFER_BIT) is
+   // done in bufferPreDraw() and glClear(GL_DEPTH_BUFFER_BIT) is done in
+   // draw() method.
+   context_viewer->getCamera()->setClearMask(
+      ~(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+   );
 
    // Add the tree to the scene viewer and set properties
    vpr::Guard<vpr::Mutex> sv_guard(mSceneViewLock);
-   contextViewer->setSceneData(getScene());
+   context_viewer->setSceneData(getScene());
 
    // Keep our pointer around to the context viewer for rendering purposes
    (*mContextViewer) = contextViewer;
