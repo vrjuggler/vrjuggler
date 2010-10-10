@@ -289,7 +289,7 @@ inline void AppViewer::contextInit()
    context_viewer->setSceneData(getScene());
 
    // Keep our pointer around to the context viewer for rendering purposes
-   (*mContextViewer) = contextViewer;
+   *mContextViewer = context_viewer;
 }
 
 inline void AppViewer::draw()
@@ -298,19 +298,18 @@ inline void AppViewer::draw()
    glClear(GL_DEPTH_BUFFER_BIT);
 
    // Grab the context specific osgViewer
-   ::osg::ref_ptr<osgViewer::Viewer> contextViewer;
-   contextViewer = (*mContextViewer);
-   vprASSERT(contextViewer.get() != NULL);
+   ::osg::ref_ptr<osgViewer::Viewer> context_viewer = *mContextViewer;
+   vprASSERT(context_viewer.get() != NULL);
 
    // Must force the updateTraversal in the draw method for terrain database
    // paging to work correctly for each context.
    const double head_time(
       mKernel->getUsers()[0]->getHeadPosProxy()->getTimeStamp().secd()
    );
-   contextViewer->advance(head_time);
-   if (! contextViewer->done())
+   context_viewer->advance(head_time);
+   if (! context_viewer->done())
    {
-      contextViewer->updateTraversal();
+      context_viewer->updateTraversal();
    }
 
    // Grab the OpenGL Draw Manager that we are rendering for.
@@ -342,12 +341,12 @@ inline void AppViewer::draw()
    );
 
    // Set the actual viewport
-   contextViewer->getCamera()->setViewport(ll_x, ll_y, x_size, y_size);
+   context_viewer->getCamera()->setViewport(ll_x, ll_y, x_size, y_size);
 
    // Set the frustrum
    vrj::ProjectionPtr project = user_data->getProjection();
    vrj::Frustum frustum = project->getFrustum();
-   contextViewer->getCamera()->setProjectionMatrixAsFrustum(
+   context_viewer->getCamera()->setProjectionMatrixAsFrustum(
       frustum[vrj::Frustum::VJ_LEFT],
       frustum[vrj::Frustum::VJ_RIGHT],
       frustum[vrj::Frustum::VJ_BOTTOM],
@@ -357,12 +356,12 @@ inline void AppViewer::draw()
    );
 
    // Set the view matrix
-   contextViewer->getCamera()->setViewMatrix(
+   context_viewer->getCamera()->setViewMatrix(
       ::osg::Matrix(project->getViewMatrix().mData)
    );
 
    // Use the osgViewer to handle all culling and drawing
-   contextViewer->renderingTraversals();
+   context_viewer->renderingTraversals();
 }
 
 } // End of osg namespace
