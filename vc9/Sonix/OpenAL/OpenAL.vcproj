@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
+				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(OPENAL_ROOT)\include\AL&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_SNX_PLUGIN_BUILD_;NO_SELF_REGISTER;$(HAVE_AL_AL_H);$(HAVE_AL_ALUT_H)"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -131,7 +131,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
+				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(OPENAL_ROOT)\include\AL&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_SNX_PLUGIN_BUILD_;NO_SELF_REGISTER;$(HAVE_AL_AL_H);$(HAVE_AL_ALUT_H);_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -214,7 +214,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
+				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(OPENAL_ROOT)\include\AL&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_SNX_PLUGIN_BUILD_;NO_SELF_REGISTER;$(HAVE_AL_AL_H);$(HAVE_AL_ALUT_H)"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -301,7 +301,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
+				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(OPENAL_ROOT)\include\AL&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_SNX_PLUGIN_BUILD_;NO_SELF_REGISTER;$(HAVE_AL_AL_H);$(HAVE_AL_ALUT_H);_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -387,7 +387,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
+				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(OPENAL_ROOT)\include\AL&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN32;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_SNX_PLUGIN_BUILD_;NO_SELF_REGISTER;$(HAVE_AL_AL_H);$(HAVE_AL_ALUT_H)"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -479,7 +479,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
+				AdditionalIncludeDirectories="&quot;$(OPENAL_ROOT)\include&quot;;&quot;$(OPENAL_ROOT)\include\AL&quot;;&quot;$(ALUT_ROOT)\include&quot;;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;&quot;$(GMTL_INCLUDES)&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\sonix;..\..\..\modules\sonix\plugins"
 				PreprocessorDefinitions="BOOST_ALL_DYN_LINK;WIN64;JUGGLER_OPT;NDEBUG;_CONSOLE;_USRDLL;_SNX_PLUGIN_BUILD_;NO_SELF_REGISTER;$(HAVE_AL_AL_H);$(HAVE_AL_ALUT_H);_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				MinimalRebuild="false"
