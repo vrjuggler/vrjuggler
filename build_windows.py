@@ -421,7 +421,8 @@ def postProcessOptions(options):
       else:
          subdir = 'Win32'
 
-      lib_dirs = [os.path.join(os.environ['OPENAL_ROOT'], 'libs'),
+      lib_dirs = [os.path.join(os.environ['OPENAL_ROOT'], 'lib'),
+                  os.path.join(os.environ['OPENAL_ROOT'], 'libs'),
                   os.path.join(os.environ['OPENAL_ROOT'], 'libs', subdir)]
 
       for l in lib_dirs:
