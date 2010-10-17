@@ -276,6 +276,7 @@ AC_SUBST(DSO_PLUGIN_PROF_DEP_FILES)
 AC_CONFIG_FILES([
    ApplicationDataManager/Makefile
    common.defs.mk
+   EventPlugin/Makefile
    gadget.plugin.mk
    make.defs.mk
    Makefile
