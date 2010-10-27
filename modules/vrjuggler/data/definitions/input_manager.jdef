@@ -45,6 +45,7 @@
             <enum label="LinuxJoydev_drv" value="LinuxJoydev_drv"/>
             <enum label="MSFTSpeechRecog_drv" value="MSFTSpeechRecog_drv"/>
             <enum label="MotionStar_drv" value="MotionStar_drv"/>
+            <enum label="Optitrack_drv" value="Optitrack_drv"/>
             <enum label="P5Glove_drv" value="P5Glove_drv"/>
             <enum label="PinchGlove_drv" value="PinchGlove_drv"/>
             <enum label="SerialEncoder_drv" value="SerialEncoder_drv"/>
