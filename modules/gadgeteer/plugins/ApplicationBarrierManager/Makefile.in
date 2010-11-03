@@ -25,34 +25,43 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/test/Cluster
+# Makefile.in for gadgeteer/plugins/ApplicaionBarrierManager.  It requires
+# GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-APPS=	applicationData \
-	applicationBarrier
-
-# -----------------------------------------------------------------------------
-# Build targets.
-# -----------------------------------------------------------------------------
 default: all
 
-# The 'bundle' target is only for use on Mac OS X with Cocoa.
-all bundle:
-	@for app in $(APPS) ; do		\
-            cd $$app && $(MAKE) $@ || exit 1 ;	\
-            cd .. ;				\
-         done
+# Include common definitions.
+include @topdir@/make.defs.mk
 
-$(APPS):
-	cd $@ && $(MAKE)
+PLUGIN_NAME=	ApplicationBarrierManager
+
+includedir=	@includedir@/plugins/ApplicationBarrierManager
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+
+INSTALL_FILES=	$(srcdir)/ApplicationBarrier.h		\
+		$(srcdir)/ApplicationBarrierManager.h	\
+		$(srcdir)/ApplicationBarrierServer.h	\
+		$(srcdir)/ApplicationBarrierServerPtr.h
+		
+SUBOBJDIR=	$(PLUGIN_NAME)
+C_AFTERBUILD=	plugin-dso
+
+SRCS=		ApplicationBarrierManager.cpp   \
+		ApplicationBarrierServer.cpp
+
+include $(MKPATH)/dpp.obj.mk
+include @topdir@/plugin.defs.mk
 
 # -----------------------------------------------------------------------------
-# Clean-up.
+# Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
-clean clobber:
-	@for app in $(APPS) ; do		\
-            cd $$app && $(MAKE) $@ || exit 1 ;	\
-            cd .. ;				\
-        done
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+   -include $(DEPEND_FILES)
+endif
+endif

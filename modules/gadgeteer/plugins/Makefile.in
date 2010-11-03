@@ -129,8 +129,9 @@ BUILD_PROF_CXX=	N
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR=	ApplicationDataManager		\
-	EventPlugin		\
-	RIMPlugin
+	RIMPlugin			\
+	ApplicationBarrierManager	\
+	EventPlugin
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 

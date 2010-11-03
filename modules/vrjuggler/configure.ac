@@ -882,6 +882,7 @@ AC_CONFIG_FILES([
    test/Makefile 
    test/Cluster/Makefile
    test/Cluster/applicationData/Makefile
+   test/Cluster/applicationBarrier/Makefile
    test/Draw/Makefile
    test/Draw/OGL/Makefile
    test/Draw/OGL/analog/Makefile

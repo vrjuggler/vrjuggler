@@ -294,6 +294,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - 5DT DataGloveUltra
 		{5A96B2F8-7000-4988-AFD5-E85181B52BCF} = {5A96B2F8-7000-4988-AFD5-E85181B52BCF}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cluster Plug-in - Application Barrier Manager", "Gadgeteer\ApplicationBarrierManager\ApplicationBarrierManager.vcproj", "{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DebugDLL|Win32 = DebugDLL|Win32
@@ -832,6 +834,16 @@ Global
 		{9026DAC8-5459-447A-AC10-1117D0C2109A}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
 		{9026DAC8-5459-447A-AC10-1117D0C2109A}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
 		{9026DAC8-5459-447A-AC10-1117D0C2109A}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.DebugDLL|x64.ActiveCfg = DebugDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.DebugRtDll|Win32.ActiveCfg = DebugRtDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.DebugRtDll|Win32.Build.0 = DebugRtDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.DebugRtDll|x64.ActiveCfg = DebugRtDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
+		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
