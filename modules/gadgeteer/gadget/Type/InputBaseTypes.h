@@ -19,14 +19,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date: 2006-12-09 13:42:12 -0600 (Sat, 09 Dec 2006) $
- * Version:       $Revision: 19596 $
- * -----------------------------------------------------------------
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
