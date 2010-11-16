@@ -24,8 +24,8 @@ dnl Library General Public License for more details.
 dnl
 dnl You should have received a copy of the GNU Library General Public
 dnl License along with this library; if not, write to the
-dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-dnl Boston, MA 02111-1307, USA.
+dnl Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+dnl Boston, MA 02110-1301, USA.
 
 dnl ===========================================================================
 dnl Define macros useful when working in a Win32/DOS-based environment.
