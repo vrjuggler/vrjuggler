@@ -135,12 +135,21 @@
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "VRJOpenGLView reshape" << std::endl << vprDEBUG_FLUSH;
-      //We do not need to call these methods since we only care that this info
-      //is updated after the resize event. This is handled in the
-      //viewDidEndLiveResize method. Technically I think all of this code 
-      //could be moved to the viewDidEndLiveResize method.
+
+      // We do not need to call these methods since we only care that this
+      // info is updated after the resize event. This is handled in the
+      // viewDidEndLiveResize method. Technically I think all of this code 
+      // could be moved to the viewDidEndLiveResize method.
       //[[self window] invalidateCursorRectsForView:self];
       //[self resetTrackingRect];
+
+      if (! mVrjWindow->isOpen())
+      {
+         // This method is called during shutdown which can result in 
+         // the window being modified while it is being closed.
+         return;
+      }
+
       NSRect bounds = [self bounds];
       mVrjWindow->updateBounds(bounds.origin.x, bounds.origin.y,
                                bounds.size.width, bounds.size.height);
@@ -259,6 +268,11 @@
       // its state.
       else
       {
+         if (! mVrjWindow->isOpen())
+         {
+            return;
+         }
+
          mVrjWindow->acquireRenderLock();
          [NSOpenGLContext clearCurrentContext];
          [[self openGLContext] clearDrawable];
