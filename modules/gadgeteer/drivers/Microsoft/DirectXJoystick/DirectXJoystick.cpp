@@ -198,7 +198,10 @@ void DirectXJoystick::updateData()
       // value includes any axis buttons that were configured.
       for ( unsigned int i = 0; i < mInputDrv.getNumButtons(); ++i )
       {
-         mCurButtons[i].setValue(mInputDrv.getButtonValue(i));
+         mCurButtons[i].setValue(
+            mInputDrv.getButtonValue(i) ? gadget::DigitalState::ON
+                                        : gadget::DigitalState::OFF
+         );
          mCurButtons[i].setTime();
       }
 
@@ -230,21 +233,21 @@ void DirectXJoystick::updateData()
             // pressed.
             if ( norm_value > 0.5f )
             {
-               mCurButtons[low_btn_index]  = 0;
-               mCurButtons[high_btn_index] = 1;
+               mCurButtons[low_btn_index]  = gadget::DigitalState::OFF;
+               mCurButtons[high_btn_index] = gadget::DigitalState::ON;
             }
             // Record the high button as not pressed and the low button as
             // pressed.
             else if ( norm_value < 0.5f )
             {
-               mCurButtons[low_btn_index]  = 1;
-               mCurButtons[high_btn_index] = 0;
+               mCurButtons[low_btn_index]  = gadget::DigitalState::ON;
+               mCurButtons[high_btn_index] = gadget::DigitalState::OFF;
             }
             // Record both buttons as not pressed.
             else
             {
-               mCurButtons[low_btn_index]  = 0;
-               mCurButtons[high_btn_index] = 0;
+               mCurButtons[low_btn_index]  = gadget::DigitalState::OFF;
+               mCurButtons[high_btn_index] = gadget::DigitalState::OFF;
             }
 
             mCurButtons[low_btn_index].setTime();
