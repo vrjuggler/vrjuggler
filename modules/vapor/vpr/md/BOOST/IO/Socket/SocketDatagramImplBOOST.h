@@ -43,6 +43,7 @@
 #include <vpr/IO/Socket/SocketException.h>
 #include <vpr/md/BOOST/IO/Socket/SocketImplBOOST.h>
 
+#include <boost/optional.hpp>
 
 namespace vpr
 {
