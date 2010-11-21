@@ -19,10 +19,11 @@
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #define PF_C_API 1
 
 #include <vrj/Draw/Pf/Config.h>
