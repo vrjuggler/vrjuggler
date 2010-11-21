@@ -408,7 +408,7 @@ void WindowCocoa::acquireRenderLock()
 
 void WindowCocoa::releaseRenderLock()
 {
-    if ( [mGlView canDraw] )
+    if ([mGlView canDraw] && [NSView focusView] == mGlView)
     {
        [mGlView unlockFocus];
     }
