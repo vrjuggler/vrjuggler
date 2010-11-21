@@ -1912,7 +1912,7 @@ def installOpenAL(prefix):
       destdir = os.path.join(prefix, 'bin')
 
       # OpenAL 1.0 and 1.1 put the redistributable DLL in different places.
-      dll_dirs = [os.path.join(srcdir, 'dll')]
+      dll_dirs = [os.path.join(srcdir, 'bin'), os.path.join(srcdir, 'lib'), os.path.join(srcdir, 'dll')]
 
       sysroot = os.environ['SystemRoot']
 
@@ -1935,9 +1935,12 @@ def installOpenAL(prefix):
       printStatus("Installing ALUT DLL")
       destdir = os.path.join(prefix, 'bin')
 
-      alut_dll = os.path.join(srcdir, 'lib', 'alut.dll')
-      if os.path.exists(alut_dll):
-         smartCopy(alut_dll, destdir)
+      alut_dll_dirs = [os.path.join(srcdir, 'lib'), os.path.join(srcdir, 'bin')]
+      for d in alut_dll_dirs:
+        alut_dll = os.path.join(d, 'alut.dll')
+        if os.path.exists(alut_dll):
+          smartCopy(alut_dll, destdir)
+          break
 
 def installOmniORB(prefix):
    root = os.getenv('OMNIORB_ROOT', '')
