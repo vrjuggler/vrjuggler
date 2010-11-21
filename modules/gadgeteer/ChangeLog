@@ -2,6 +2,9 @@ DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
 2010-11-03 furlong.t   Added a barrier cluster plugin for general application
                        use.
+                       NEW VERSION: 2.1.10
+2010-10-17 aronb       Add a cluster plug-in that allows users to register
+                       callbacks for asynchronous events.
                        NEW VERSION: 2.1.9
 2010-08-07 patrick     Changed gadget::KeyboardMouseEventInterface to be a
                        class template to follow the model of all the other
