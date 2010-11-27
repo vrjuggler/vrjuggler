@@ -19,7 +19,7 @@
 # detected correctly.
 %define name vrjuggler
 %define global_version 3.0.0
-%define global_release 0
+%define global_release 1
 
 %define vpr_version 2.2.0
 %define vpr_release %{global_release}%{?dist}
@@ -1371,6 +1371,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Nov 27 2010 Patrick Hartling <patrick.hartling at gmail dot com> 3.0.0-1
+- VR Juggler 3.0.0 release.
+
 * Sun Sep 05 2010 Patrick Hartling <patrick.hartling at gmail dot com> 3.0.0-0
 - VR Juggler 3.0 release candidate.
 

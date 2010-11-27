@@ -10,14 +10,88 @@ For all versions:
 
 ===============================================================================
 
- Version: 2.1.9
-Released: June 19, 2006
+ Version: 3.0.0
+Released: November 27, 2010
 
-    Required application and configuration changes for upgrading from
-    releases prior to 2.0.2 and 2.1.9:
+   NOTE: Flagpoll 0.9.4 or newer is required to build this VR Juggler release
+         from source code. Version 0.9.1 was the previous minimum required
+         version, but recent bug fixes in Flagpoll pertain to ensuring that
+         VR Juggler can be built correctly on Mac OS X in all circumstances.
 
-        * Subclasses of vrj::OsgApp that override latePreFrame() must call
-          up to vrj::OsgApp::latePreFrame() as the last step of the override
-          implementation.
+   VR Juggler 3.0 represents the culmination of three years of development and
+   testing, and as a result, this is probably the most well tested VR Juggler
+   version yet. A great deal of care was taken to ensure that this would be a
+   solid release because of its significance. Specifically, VR Juggler 3.0 has
+   a totally redesigned cluster infrastructure.
+
+   The new cluster infrastructure is based on a formal client/server model
+   rather than the peer-to-peer approach with an ad hoc server used by VR
+   Juggler 2.x. The new architecture is vastly more scalable and more
+   performant. It should also prove easier to configure in at least two ways.
+   First, the server node distributes configuration information to clients
+   rather than requiring users to maintain per-machine configuration
+   arrangements. Second, it is no longer necessary to identify which cluster
+   node is hosting a device because all devices have to be hosted by the
+   server.
+
+   Highlights of VR Juggler 3.0 include the following:
+
+      * Support for OpenGL 3.0 contexts.
+      * NSPR is no longer a dependency on Windows. Boost.Asio is now used for
+        networking, and that means that Boost 1.35.0 is the minimum required
+        version of Boost on Windows. Using 1.40.0 or newer is highly
+        recommended. For 64-bit Windows builds, 1.40.0 is the minimum
+        required version.
+      * Use of a CORBA Naming Service by Tweek is now optional as direct
+        connections to Subject Manager servants are now supported.
+      * VRJConfig now uses a direct connection to the configuration subject
+        manager, thus making dynamic run-time reconfiguration easier to
+        utilize.
+      * Use of reference counted memory (through boost::shared_ptr<T>) has
+        been expanded to help protect against dangling references and memory
+        leaks. This pertains mostly to input device objects and input proxy
+        objects.
+      * Simulated analog devices now have an optional "auto-return" feature
+        that can be enabled through the configuration.
+      * Mouse locking use and behavior within keyboard/mouse input areas
+        (i.e., windows) is now more configurable, and it can be controlled by
+        application code when necessary.
+      * Two new Open Scene Graph application object types have been added:
+        vrj::osg::AppViewer and vrj::osg::AppPager. See the documentation for
+        the respective classes for more details.
+      * The OpenSG application object class, vrj::opensg::App, support both
+        OpenSG 1.8 and 2.0. The decision about which API to use is made at
+        compile time.
+      * Many improvements have been made to the use of Cocoa on Mac OS X.
+
+   There are some "breaking" changes relative to VR Juggler 2.x of which
+   application programmers need to be aware. They include the following:
+
+      * The X,Y position for mouse events is now reported using a lower
+        left-hand corner origin to match the window positioning convention
+        of Juggler.
+      * Mouse scroll events in the X and Y axes are now treated as first class
+        mouse events rather than pretending that they are button presses.
+      * Classes for each Draw Manager implementation now use distinct C++
+        namespaces. Backward compatibility typedefs have been included to aid
+        with migrating code.
+
+   Finally, this release marks the first time that support for legacy features
+   has been removed. The following may be of interest to users with old
+   equipment or operating systems:
+
+      * Support for SPROC threads on IRIX has been removed.
+      * Support for Mac OS X 10.3 has been removed. 10.4 (Tiger) is now the
+        minimum required version.
+      * Support for AudioWorks has been removed.
+      * Support for Visual C++ 7.1 (.NET 2003) has been dropped.
+        Visual C++ 8.0 (2005) is the minimum supported version now.
+
+   As usual, there are changes to configuration files required to take
+   advantage of new features. For details in migrating applications and
+   configurations from VR Juggler 2.2 to 3.0, please see the migration page
+   on the wiki:
+
+      http://code.google.com/p/vrjuggler/wiki/MigratingToVrjThree
 
 ===============================================================================
