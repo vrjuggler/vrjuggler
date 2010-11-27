@@ -1,6 +1,6 @@
 <html><head>
       <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Building and Installing the Juggler Project (Version 3.1)</title><link rel="stylesheet" href="base_style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Building and Installing the Juggler Project (Version 3.1)"><div class="titlepage"><div><div><h2 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 3.1)</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e32">Important Note for Windows Users</a></span></dt><dt><span class="section"><a href="#d0e40">Important Notes for IRIX Users</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e124">Build Tools</a></span></dt><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#section.cvs.access">How to Get the Juggler Suite from Subversion</a></span></dt><dt><span class="section"><a href="#d0e250">Downloading Third-Party Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e332">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e343">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler Suite</a></span></dt></dl></dd></dl></div><div class="section" title="Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e15"></a>Introduction</h2></div></div></div><p>You have downloaded the source code for Version 3.1 of the Juggler
+   <title>Building and Installing the Juggler Project (Version 3.1)</title><link rel="stylesheet" type="text/css" href="base_style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.0"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Building and Installing the Juggler Project (Version 3.1)"><div class="titlepage"><div><div><h2 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 3.1)</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e32">Important Note for Windows Users</a></span></dt><dt><span class="section"><a href="#d0e40">Important Notes for IRIX Users</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e124">Build Tools</a></span></dt><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#section.cvs.access">How to Get the Juggler Suite from Subversion</a></span></dt><dt><span class="section"><a href="#d0e250">Downloading Third-Party Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e332">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e343">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler Suite</a></span></dt></dl></dd></dl></div><div class="section" title="Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e15"></a>Introduction</h2></div></div></div><p>You have downloaded the source code for Version 3.1 of the Juggler
     Project. This is the code that will become VR Juggler 3.2, and it is the
     code that is used to create the VR Juggler 3.1 pre-releases. Please be
     aware that this code represents a work in progress, and if you acquired it
@@ -10,7 +10,7 @@
     Project from the source code. We begin by explaining some issues related
     to specific operating systems. We then explain how to get the source code
     from our Subversion repository. (Those users who downloaded a pre-packaged
-    source release can skip ahead to <a class="xref" href="#using.configure.pl" title="Using configure.pl">the section called &#8220;Using <span class="command"><strong>configure.pl</strong></span>&#8221;</a>).
+    source release can skip ahead to <a class="xref" href="#using.configure.pl" title="Using configure.pl">Using <span class="command"><strong>configure.pl</strong></span></a>).
     We conclude with instructions on how to build VR Juggler and its
     individual components.</p><p>Before reading further, we recommend that readers take a look at the
     Wiki page relating to building from source (<a class="ulink" href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).
@@ -91,7 +91,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
         paradigms. GMTL must be installed for use with VR Juggler.</p></li></ul></div><p>The following lists <span class="emphasis"><em>semi-optional</em></span>
     packages:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>NSPR (<a class="ulink" href="http://www.mozilla.org/projects/nspr/" target="_top">http://www.mozilla.org/projects/nspr/</a>):
         The Netscape Portable Runtime, which can be used by VPR for threading
-        and sockets (required on Win32 and Solaris).</p></li><li class="listitem"><p>Java Developer Kit (<a class="ulink" href="http://java.sun.com/" target="_top">http://java.sun.com/</a>): The J2SE SDK
+        and sockets (required on Solaris).</p></li><li class="listitem"><p>Java Developer Kit (<a class="ulink" href="http://java.sun.com/" target="_top">http://java.sun.com/</a>): The J2SE SDK
         (or JDK) is used to compile all the Java code used in the Juggler
         Project. Without it, none of the Java code can be built. We require
         version 1.4 or newer. The Java Standard Edition (J2SE) can be
@@ -109,7 +109,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
         of extensions to CppUnit. An extended version of the CppUnit source
         that includes these extensions can be acquired from the Juggler
         Subversion repository in the module <code class="literal">cppunit</code>. Refer
-        to <a class="xref" href="#section.cvs.access" title="How to Get the Juggler Suite from Subversion">the section called &#8220;How to Get the Juggler Suite from Subversion&#8221;</a> for instructions about
+        to <a class="xref" href="#section.cvs.access" title="How to Get the Juggler Suite from Subversion">How to Get the Juggler Suite from Subversion</a> for instructions about
         accessing the Juggler Subversion repository.</p></li></ul></div><p>The third-party dependencies must be downloaded from the sites
     listed above and installed manually. You may also have to compile one or
     more of the packages if binary distributions are not available. Which
@@ -140,9 +140,9 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
         Note that you need SCons (<a class="ulink" href="http://scons.sourceforge.net/" target="_top">http://scons.sourceforge.net/</a>)
         to build and install GMTL.</p></div><div class="section" title="Netscape Portable Runtime (NSPR)"><div class="titlepage"><div><div><h4 class="title"><a name="d0e300"></a>Netscape Portable Runtime (NSPR)</h4></div></div></div><p>Our operating system abstraction, VPR, can make use of NSPR for
         operating system primitives. On some platforms (IRIX, FreeBSD, Linux,
-        Mac OS X), the use of NSPR is strictly optional. On others (Win32,
-        HP-UX, and Solaris), it is required. Based on your local system, you
-        should decide whether you need NSPR. Binary versions of NSPR can be
+        Mac OS X), the use of NSPR is strictly optional. On others (HP-UX and
+        Solaris), it is required. Based on your local system, you should
+        decide whether you need NSPR. Binary versions of NSPR can be
         downloaded from <a class="ulink" href="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases" target="_top">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</a>.
         At this time, we recommend the use of version 4.2 or newer.</p></div><div class="section" title="Java Developer Kit (also called the J2SE SDK)"><div class="titlepage"><div><div><h4 class="title"><a name="d0e308"></a>Java Developer Kit (also called the J2SE SDK)</h4></div></div></div><p>We make use of the Java programming language in addition to C++.
         Java is used exclusively for GUIs such as Tweek and VRJConfig (which
@@ -173,7 +173,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
         version for each dependency, and where appropriate, we note which
         dependencies are optional.</p><div class="section" title="VPR"><div class="titlepage"><div><div><h5 class="title"><a name="d0e364"></a>VPR</h5></div></div></div><p>VPR provides a cross-platform, object-oriented operating
           system abstraction. It is the foundation for all other Juggler
-          modules.</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>CppDOM 0.6.6</p></li><li class="listitem"><p>Boost headers and Boost.Filesystem 1.31.0</p></li><li class="listitem"><p>NSPR (Windows, Solaris, and HP-UX only) 4.4</p></li></ul></div></div><div class="section" title="Tweek C++ API"><div class="titlepage"><div><div><h5 class="title"><a name="d0e379"></a>Tweek C++ API</h5></div></div></div><p>Tweek implements a distributed model/view/controller system on
+          modules.</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>CppDOM 0.6.6</p></li><li class="listitem"><p>Boost headers and Boost.Filesystem 1.31.0</p></li><li class="listitem"><p>NSPR (Solaris and HP-UX only) 4.4</p></li></ul></div></div><div class="section" title="Tweek C++ API"><div class="titlepage"><div><div><h5 class="title"><a name="d0e379"></a>Tweek C++ API</h5></div></div></div><p>Tweek implements a distributed model/view/controller system on
           top of CORBA. The Tweek C++ API provides the C++ component of that
           system. Code written on top of the Tweek C++ API normally acts as
           the model piece of the distributed model/view/controller
@@ -276,7 +276,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
         is determined by whether the dependency is considered to be a
         fundamental part of the operating system installation (such as OpenGL)
         or if it is an <span class="quote">&#8220;<span class="quote">add-on</span>&#8221;</span> package (such as Boost, GMTL,
-        CppDOM, or omniORB).</p><div class="sidebar"><p class="title"><b></b></p><p>The distinction between <code class="filename">/usr/local</code> and
+        CppDOM, or omniORB).</p><div class="sidebar"><div class="titlepage"></div><p>The distinction between <code class="filename">/usr/local</code> and
           <code class="filename">/usr</code> is complicated by the fact that most Linux
           distributions have <span class="emphasis"><em>everything</em></span> installed in
           <code class="filename">/usr</code>. While Linux may be popular, it should not
@@ -334,13 +334,13 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
           to add sound to VR Juggler applications. If none of those packages
           is found, Sonix will <span class="quote">&#8220;<span class="quote">stub out</span>&#8221;</span> its sound APIs. This
           means that Sonix and the VR Juggler Sound Manager can still be used
-          in applications, but no audio will be heard at run time. See <a class="xref" href="#sonix.compile.section" title="Sonix">the section called &#8220;Sonix&#8221;</a> for more information about how to
+          in applications, but no audio will be heard at run time. See <a class="xref" href="#sonix.compile.section" title="Sonix">Sonix</a> for more information about how to
           configure Sonix to use Audiere or OpenAL.</p><p>For example uses of <span class="command"><strong>configure.pl</strong></span>, take a
           look at the Wiki page relating to building from source (<a class="ulink" href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromSvn</a>).
           It is not a replacement for this document, but it shows how some
           members of the Juggler team configure VR Juggler. It also has
           information on more advanced uses of <span class="command"><strong>configure.pl</strong></span>
-          that are beyond the scope of this document.</p></div><div class="section" title="Using Locally Installed Software"><div class="titlepage"><div><div><h5 class="title"><a name="d0e886"></a>Using Locally Installed Software</h5></div></div></div><p>As noted in <a class="xref" href="#source.code.section" title="Getting the Source Code and the Dependencies">the section called &#8220;Getting the Source Code and the Dependencies&#8221;</a>, VR Juggler
+          that are beyond the scope of this document.</p></div><div class="section" title="Using Locally Installed Software"><div class="titlepage"><div><div><h5 class="title"><a name="d0e886"></a>Using Locally Installed Software</h5></div></div></div><p>As noted in <a class="xref" href="#source.code.section" title="Getting the Source Code and the Dependencies">Getting the Source Code and the Dependencies</a>, VR Juggler
           depends on several external software packages. As an example,
           consider the case where the Boost libraries are installed in
           <code class="filename">/home/user1/pkgs/boost</code> with the headers in

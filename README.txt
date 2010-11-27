@@ -100,14 +100,14 @@ Description
  VPR itself contains a great deal of platform-specific code. It categorizes
  this code into subsystems, and various subsystems may be chosen depending
  upon the target platform and target threading system. For example, on IRIX,
- there are three possible subsystems: POSIX and Netscape Portable Runtime
- (NSPR). Win32, on the other hand, only uses the NSPR subsystem. The
- subsystems are:
+ there are two possible subsystems: POSIX and Netscape Portable Runtime
+ (NSPR). For Windows, on the other hand, VPR uses native WIndows threading
+ and serial ports with socket I/O based on Boost.Asio. The subsystems are:
 
 
 *  POSIX (UNIX-based platforms only)
 
-*  NSPR (all platforms, required on Win32 and Mac OS X)
+*  NSPR (all platforms, required on Solaris)
 
 
  Because VPR is the foundation for all the other modules, it is important to
@@ -118,17 +118,11 @@ Description
  compatibility issues with software outside the Juggler Project? In most
  cases, however, the choice is straightforward. Indeed, IRIX is the only
  platform that presents any real issues. In particular, the use of OpenGL
- Performer from SGI raises important compatibility concerns. SPROC threads
- are the only threads that are stable with OpenGL Performer (on IRIX). POSIX
- threads will work, but applications may sometimes crash on startup. As of
- this writing, OpenGL Performer does not work at all with NSPR. Other
- software may pose similar problems, and it is important to know the needs
- of other tools when configuring VPR.
-
- On platforms other than IRIX, the choice is relatively simple. If NSPR is
- available, its use is recommended. If NSPR is not available, POSIX threads
- is the next logical choice--at least on UNIX-based platforms. On Win32 and
- Mac OS X, NSPR is required.
+ Performer from SGI raises important compatibility concerns. POSIX threads
+ will work, but applications may sometimes crash on startup. As of this
+ writing, OpenGL Performer does not work at all with NSPR. Other software
+ may pose similar problems, and it is important to know the needs of other
+ tools when configuring VPR.
 
  As mentioned above, all the other modules depend on VPR, so it must be
  compiled before anything else. For more information on compiling VPR, refer

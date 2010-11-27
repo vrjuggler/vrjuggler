@@ -53,9 +53,8 @@ Introduction
  the source code. We begin by explaining some issues related to specific
  operating systems. We then explain how to get the source code from our
  Subversion repository. (Those users who downloaded a pre-packaged source
- release can skip ahead to the section called "Using configure.pl"). We
- conclude with instructions on how to build VR Juggler and its individual
- components.
+ release can skip ahead to Using configure.pl). We conclude with
+ instructions on how to build VR Juggler and its individual components.
 
  Before reading further, we recommend that readers take a look at the Wiki
  page relating to building from source (http://www.vrjuggler.org/
@@ -200,7 +199,7 @@ Getting the Source Code and the Dependencies
 
 *  NSPR (http://www.mozilla.org/projects/nspr/): The Netscape Portable
    Runtime, which can be used by VPR for threading and sockets (required on
-   Win32 and Solaris).
+   Solaris).
 
 *  Java Developer Kit (http://java.sun.com/): The J2SE SDK (or JDK) is used
    to compile all the Java code used in the Juggler Project. Without it,
@@ -227,9 +226,8 @@ Getting the Source Code and the Dependencies
    C++. The Juggler C++ test suties make use of extensions to CppUnit. An
    extended version of the CppUnit source that includes these extensions can
    be acquired from the Juggler Subversion repository in the module cppunit.
-   Refer to the section called "How to Get the Juggler Suite from
-   Subversion" for instructions about accessing the Juggler Subversion
-   repository.
+   Refer to How to Get the Juggler Suite from Subversion for instructions
+   about accessing the Juggler Subversion repository.
 
 
  The third-party dependencies must be downloaded from the sites listed above
@@ -295,8 +293,8 @@ Netscape Portable Runtime (NSPR)
 
  Our operating system abstraction, VPR, can make use of NSPR for operating
  system primitives. On some platforms (IRIX, FreeBSD, Linux, Mac OS X), the
- use of NSPR is strictly optional. On others (Win32, HP-UX, and Solaris), it
- is required. Based on your local system, you should decide whether you need
+ use of NSPR is strictly optional. On others (HP-UX and Solaris), it is
+ required. Based on your local system, you should decide whether you need
  NSPR. Binary versions of NSPR can be downloaded from ftp://ftp.mozilla.org/
  pub/mozilla.org/nspr/releases. At this time, we recommend the use of
  version 4.2 or newer.
@@ -368,7 +366,7 @@ VPR
 
 *  Boost headers and Boost.Filesystem 1.31.0
 
-*  NSPR (Windows, Solaris, and HP-UX only) 4.4
+*  NSPR (Solaris and HP-UX only) 4.4
 
 
 
@@ -678,8 +676,7 @@ Using configure.pl
 
  In the base juggler source directory, we have a "global" configure script
  written in Perl called configure.pl. To get the command-line options for
- this script, use one of the following (the second being much more
- detailed):
+ this script, use one of the following (the second being much more detailed):
 
 
   ./configure.pl --help
@@ -707,8 +704,8 @@ Important
  source tree. The same holds for the individual autogen.sh scripts in the
  various modules, should you need to run one individually.
 
- configure.pl can run in a unique "build" directory or in the directory
- where it resides. Here is how we (the Juggler Team) have been using it:
+ configure.pl can run in a unique "build" directory or in the directory where
+ it resides. Here is how we (the Juggler Team) have been using it:
 
 
   1.  Make a directory for compiling. There are many good reasons to do this
@@ -754,8 +751,8 @@ Important
  applications. If none of those packages is found, Sonix will "stub out"
  its sound APIs. This means that Sonix and the VR Juggler Sound Manager can
  still be used in applications, but no audio will be heard at run time. See
- the section called "Sonix" for more information about how to configure
- Sonix to use Audiere or OpenAL.
+ Sonix for more information about how to configure Sonix to use Audiere or
+ OpenAL.
 
  For example uses of configure.pl, take a look at the Wiki page relating to
  building from source (http://www.vrjuggler.org/twiki_public/bin/view/
@@ -767,11 +764,11 @@ Important
 
 Using Locally Installed Software
 
- As noted in the section called "Getting the Source Code and the
- Dependencies", VR Juggler depends on several external software
- packages. As an example, consider the case where the Boost libraries are
- installed in /home/user1/pkgs/boost with the headers in /home/user1/pkgs/
- boost/include. To use this installation, run configure.pl as follows:
+ As noted in Getting the Source Code and the Dependencies, VR Juggler
+ depends on several external software packages. As an example, consider the
+ case where the Boost libraries are installed in /home/user1/pkgs/boost with
+ the headers in /home/user1/pkgs/boost/include. To use this installation,
+ run configure.pl as follows:
 
 
   ../configure.pl --with-boost=/home/user1/pkgs/boost
