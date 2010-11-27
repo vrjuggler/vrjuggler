@@ -206,7 +206,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
         <para>NSPR (<ulink
         url="http://www.mozilla.org/projects/nspr/">http://www.mozilla.org/projects/nspr/</ulink>):
         The Netscape Portable Runtime, which can be used by VPR for threading
-        and sockets (required on Win32 and Solaris).</para>
+        and sockets (required on Solaris).</para>
       </listitem>
 
       <listitem>
@@ -336,9 +336,9 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
         <para>Our operating system abstraction, VPR, can make use of NSPR for
         operating system primitives. On some platforms (IRIX, FreeBSD, Linux,
-        Mac OS X), the use of NSPR is strictly optional. On others (Win32,
-        HP-UX, and Solaris), it is required. Based on your local system, you
-        should decide whether you need NSPR. Binary versions of NSPR can be
+        Mac OS X), the use of NSPR is strictly optional. On others (HP-UX and
+        Solaris), it is required. Based on your local system, you should
+        decide whether you need NSPR. Binary versions of NSPR can be
         downloaded from <ulink
         url="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</ulink>.
         At this time, we recommend the use of version 4.2 or newer.</para>
@@ -429,7 +429,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
             </listitem>
 
             <listitem>
-              <para>NSPR (Windows, Solaris, and HP-UX only) 4.4</para>
+              <para>NSPR (Solaris and HP-UX only) 4.4</para>
             </listitem>
           </itemizedlist>
         </section>
