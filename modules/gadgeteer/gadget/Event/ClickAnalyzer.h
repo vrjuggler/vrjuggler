@@ -81,7 +81,7 @@ struct EventComparator
    {
       allEquivalent = allEquivalent && button == event.button &&
                          x == event.x && y == event.y;
-      maxClickDiff  = std::max(maxClickDiff, event.time - lastClickTime);
+      maxClickDiff  = std::max<float>(maxClickDiff, event.time - lastClickTime);
       lastClickTime = event.time;
    }
 
