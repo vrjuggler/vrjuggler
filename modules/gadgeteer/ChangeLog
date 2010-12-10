@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2010-12-09 patrick     Changed the multi-click time to be an unsigned long
+                       measured in milliseconds.
+                       NEW VERSION: 2.1.11
 2010-11-03 furlong.t   Added a barrier cluster plugin for general application
                        use.
                        NEW VERSION: 2.1.10

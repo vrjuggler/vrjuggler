@@ -158,14 +158,14 @@ public:
    /**
     * Constructor.
     *
-    * @param clickTime The maximum time (measured in seconds) allowed between
-    *                  sequential clicks for the click events to be treated as
-    *                  a single multi-click event. This parameter is optional,
-    *                  and it defaults to 10 milliseconds.
+    * @param clickTime The maximum time (measured in milliseconds) allowed
+    *                  between sequential clicks for the click events to be
+    *                  treated as a single multi-click event. This parameter
+    *                  is optional, and it defaults to 10 milliseconds.
     *
     * @see setClickTime()
     */
-   MouseMultiClickEventInterface(const float clickTime = 0.01f)
+   MouseMultiClickEventInterface(const unsigned long clickTime = 10)
       : mClickTime(clickTime)
    {
       /* Do nothing. */ ;
@@ -183,11 +183,11 @@ public:
     *      yet. Setting this value after the event generator has been
     *      created will not influence the event creation.
     *
-    * @param clickTime The maximum time (measured in seconds) allowed between
-    *                  sequential clicks for the click events to be treated as
-    *                  a single multi-click event.
+    * @param clickTime The maximum time (measured in milliseconds) allowed
+    *                  between sequential clicks for the click events to be
+    *                  treated as a single multi-click event.
     */
-   void setClickTime(const float clickTime)
+   void setClickTime(const unsigned long clickTime)
    {
       mClickTime = clickTime;
    }
@@ -210,7 +210,7 @@ protected:
    }
 
 private:
-   float mClickTime;    /**< Maximum click time */
+   unsigned long mClickTime;    /**< Maximum click time (milliseconds) */
 };
 
 }

@@ -33,7 +33,7 @@ struct ClickEvent
       /* Do nothing. */ ;
    }
 
-   explicit ClickEvent(const float time_)
+   explicit ClickEvent(const unsigned long time_)
       : button(KEY_NONE)
       , x(0)
       , y(0)
@@ -43,7 +43,7 @@ struct ClickEvent
    }
 
    ClickEvent(const gadget::Keys button, const int x_, const int y_,
-              const float time_)
+              const unsigned long time_)
       : x(x_)
       , y(y_)
       , time(time_)
@@ -54,7 +54,7 @@ struct ClickEvent
    gadget::Keys button;
    int x;
    int y;
-   float time;
+   unsigned long time;  /**< Event time, measured in milliseconds */
 };
 
 namespace detail
@@ -81,7 +81,8 @@ struct EventComparator
    {
       allEquivalent = allEquivalent && button == event.button &&
                          x == event.x && y == event.y;
-      maxClickDiff  = std::max<float>(maxClickDiff, event.time - lastClickTime);
+      maxClickDiff  =
+         std::max<unsigned long>(maxClickDiff, event.time - lastClickTime);
       lastClickTime = event.time;
    }
 
@@ -91,9 +92,9 @@ struct EventComparator
 
    /** @name Comparison Results */
    //@{
-   bool  allEquivalent;
-   float lastClickTime;
-   float maxClickDiff;
+   bool          allEquivalent;
+   unsigned long lastClickTime; /**< Time of last click event (milliseconds) */
+   unsigned long maxClickDiff;  /**< Maximum click delta (milliseconds) */
    //@}
 };
 
@@ -158,7 +159,7 @@ public:
       }
    }
 
-   void setClickTime(const float clickTime)
+   void setClickTime(const unsigned long clickTime)
    {
       mClickTime = clickTime;
    }
@@ -179,7 +180,7 @@ protected:
 private:
    static const unsigned int sClickCount = ClickCount;
 
-   float mClickTime;
+   unsigned long mClickTime;
    std::vector<event::ClickEvent> mEvents;
 };
 
