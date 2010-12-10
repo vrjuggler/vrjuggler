@@ -165,7 +165,7 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
    gadget::EventPtr mouse_event(
       new gadget::MouseEvent(type, button, view_loc.x, view_loc.y,
                              root_loc.x, root_loc.y, 0.0f, 0.0f,
-                             [event modifierFlags],
+                             getMask([event modifierFlags]),
                              AbsoluteToDuration(UpTime()), this)
    );
    doAddEvent(mouse_event, button);
@@ -179,7 +179,7 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
    gadget::EventPtr move_event(
       new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
                              view_loc.x, view_loc.y, root_loc.x, root_loc.y,
-                             0.0f, 0.0f, [event modifierFlags],
+                             0.0f, 0.0f, getMask([event modifierFlags]),
                              AbsoluteToDuration(UpTime()), this)
    );
 
@@ -249,7 +249,8 @@ void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
       gadget::EventPtr scroll_event(
          new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
                                 view_loc.x, view_loc.y, root_loc.x,
-                                root_loc.y, dx, dy, [event modifierFlags],
+                                root_loc.y, dx, dy,
+                                getMask([event modifierFlags]),
                                 AbsoluteToDuration(UpTime()), this)
       );
 
