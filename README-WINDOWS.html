@@ -140,21 +140,6 @@ The required environment variables are as follows:
     minor version number.  For example, if you are compiling against Boost
     1.31.2, this environment variable would be set to <tt>1_31</tt>.
   </dd>
-  <dt><tt>NSPR_ROOT</tt></dt>
-  <dd>
-    The root directory of an installed copy of
-    <a href="http://www.mozilla.org/projects/nspr/">NSPR</a> 4.2 or newer.
-    This must contain a directory named <tt>lib</tt> and a directory
-    named <tt>include</tt>.
-  </dd>
-  <dt><tt>NSPR_INCLUDES</tt></dt>
-  <dd>
-    The directory containing the root of the NSPR header tree. For some NSPR
-    installations, the NSPR headers are in a subdirectory of
-    <tt>%NSPR_ROOT%\include</tt> named <tt>nspr</tt>. In that case, this
-    environment variable must be set to <tt>%NSPR_ROOT%\include\nspr</tt>.
-    Otherwise, it should be set to <tt>%NSPR_ROOT%\include</tt>.
-  </dd>
   <dt><tt>CPPDOM_ROOT</tt></dt>
   <dd>
     The root directory of an installed copy of
@@ -355,13 +340,12 @@ go through the full process of installing everything that was compiled.
 
 <p>
 After VR Juggler is installed, you will be given the option to install
-VR Juggler's C++ dependencies.  This includes NSPR, CppDOM, Boost, GMTL,
-and any optional packages that were available for compiling additional
-features.  If you answer "yes" to this question, the dependencies will
-be installed to a location of your choice (which can be the same as the
-VR Juggler installation directory).  This gives you a convenient,
-single location for referencing all dependencies from application project
-files.
+VR Juggler's C++ dependencies.  This includes CppDOM, Boost, GMTL, and any
+optional packages that were available for compiling additional features.  If
+you answer "yes" to this question, the dependencies will be installed to a
+location of your choice (which can be the same as the VR Juggler installation
+directory).  This gives you a convenient, single location for referencing all
+dependencies from application project files.
 </p>
 
 <blockquote>
