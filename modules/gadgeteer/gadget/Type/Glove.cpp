@@ -114,7 +114,7 @@ void Glove::writeObject(vpr::ObjectWriter* writer)
             {
                for(unsigned joint=0;joint<GloveData::NUM_JOINTS;joint++)
                {
-                  float value=stable_buffer[j][i].mAngles[GloveData::NUM_COMPONENTS][GloveData::NUM_JOINTS];
+                  float value=stable_buffer[j][i].mAngles[component][joint];
                   writer->writeFloat(value);
                }
             }
