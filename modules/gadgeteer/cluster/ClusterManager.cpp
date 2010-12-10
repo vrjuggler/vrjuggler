@@ -756,7 +756,7 @@ struct ElementTypePred
       return elm->getID() == mType;
    }
 
-   const std::string& mType;
+   const std::string mType;
 };
 
 void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type)
