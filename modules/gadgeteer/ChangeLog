@@ -1,5 +1,14 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-10-2010 patrick     Changed keyboard and mouse event time stamps for Cocoa
+                        to be measured in milliseconds to match X11 and Win32.
+                        Submitted by Doug McCorkle.
+Dec-09-2010 patrick     Fixed serialization of gadget::Glove angle values.
+                        Submitted by Carsten Neumann.
+Dec-09-2010 patrick     Fixed problems with shutdown of the VRPN driver.
+                        Submitted by Carsten Neumann.
+
+[2.0.0 released - 11.27.2010]==================================================
 Sep-05-2010 patrick     Added forward compatibility interfaces for device
                         data types and gadget::TypedProxy<T>.
 Jun-19-2010 patrick     Reverted the change to gadgt::AnalogProxy that allowed
