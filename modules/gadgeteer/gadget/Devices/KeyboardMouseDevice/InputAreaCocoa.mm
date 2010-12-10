@@ -74,11 +74,11 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
    // stateful button on the keyboard.
    if ( modifiers & NSAlphaShiftKeyMask )
    {
-      gadget::EventPtr key_event(new gadget::KeyEvent(type,
-                                                      gadget::KEY_CAPS_LOCK,
-                                                      getMask(modifiers),
-                                                      [event timestamp],
-                                                      this));
+      gadget::EventPtr key_event(
+         new gadget::KeyEvent(type, gadget::KEY_CAPS_LOCK,
+                              getMask(modifiers),
+                              AbsoluteToDuration(UpTime()), this)
+      );
       doAddEvent(key_event, gadget::KEY_CAPS_LOCK);
    }
    else
@@ -97,10 +97,10 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
          const unichar key_char = [key_chars characterAtIndex:0];
          const gadget::Keys key = vKeyToKey(key_char, [event keyCode],
                                             modifiers);
-
+          
          gadget::EventPtr key_event(
             new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                                 [event timestamp], this,
+                                 AbsoluteToDuration(UpTime()), this,
                                  static_cast<char>(key_char), key_char)
          );
          doAddEvent(key_event, key);
@@ -114,7 +114,7 @@ void InputAreaCocoa::addModifierEvent(const gadget::Keys key,
 {
    gadget::EventPtr key_event(
       new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                           [event timestamp], this)
+                           AbsoluteToDuration(UpTime()), this)
    );
    doAddEvent(key_event, key);
 }
@@ -162,13 +162,12 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
    const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
                                            fromView:nil];
    const NSPoint root_loc = [NSEvent mouseLocation];
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
-                                                       view_loc.x, view_loc.y,
-                                                       root_loc.x, root_loc.y,
-                                                       0.0f, 0.0f,
-                                                       [event modifierFlags],
-                                                       [event timestamp],
-                                                       this));
+   gadget::EventPtr mouse_event(
+      new gadget::MouseEvent(type, button, view_loc.x, view_loc.y,
+                             root_loc.x, root_loc.y, 0.0f, 0.0f,
+                             getMask([event modifierFlags]),
+                             AbsoluteToDuration(UpTime()), this)
+   );
    doAddEvent(mouse_event, button);
 }
 
@@ -177,14 +176,12 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
    const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
                                            fromView:nil];
    const NSPoint root_loc = [NSEvent mouseLocation];
-   gadget::EventPtr move_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
-                                                      gadget::NO_MBUTTON,
-                                                      view_loc.x, view_loc.y,
-                                                      root_loc.x, root_loc.y,
-                                                      0.0f, 0.0f,
-                                                      [event modifierFlags],
-                                                      [event timestamp],
-                                                      this));
+   gadget::EventPtr move_event(
+      new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
+                             view_loc.x, view_loc.y, root_loc.x, root_loc.y,
+                             0.0f, 0.0f, getMask([event modifierFlags]),
+                             AbsoluteToDuration(UpTime()), this)
+   );
 
    const float dx = [event deltaX];
    const float dy = [event deltaY];
@@ -249,12 +246,12 @@ void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
       // right and a negative X delta for scrolling to the left.
       const float dx(-[event deltaX]);
       const float dy([event deltaY]);
-
       gadget::EventPtr scroll_event(
          new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
                                 view_loc.x, view_loc.y, root_loc.x,
-                                root_loc.y, dx, dy, [event modifierFlags],
-                                [event timestamp], this)
+                                root_loc.y, dx, dy,
+                                getMask([event modifierFlags]),
+                                AbsoluteToDuration(UpTime()), this)
       );
 
       // Hold the keys lock for only as long as we need it.
