@@ -246,18 +246,32 @@ inline void BufferObjectWriter::writeFloat(float val)
 {
    // We are writing the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
-   vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*) &val));
+   union
+   {
+     float       floatVal;
+     vpr::Uint32 intVal;
+   } data;
 
-   writeRaw((vpr::Uint8*) &nw_val, 4);
+   data.floatVal = val;
+   data.intVal   = vpr::System::Htonl(data.intVal);
+
+   writeRaw((vpr::Uint8*) &data.intVal, 4);
 }
 
 inline void BufferObjectWriter::writeDouble(double val)
 {
    // We are writing the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
-   vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*) &val));
+   union
+   {
+     double      doubleVal;
+     vpr::Uint64 intVal;
+   } data;
 
-   writeRaw((vpr::Uint8*) &nw_val, 8);
+   data.doubleVal = val;
+   data.intVal    = vpr::System::Htonll(data.intVal);
+
+   writeRaw((vpr::Uint8*) &data.intVal, 8);
 }
 
 inline void BufferObjectWriter::writeString(std::string val)
