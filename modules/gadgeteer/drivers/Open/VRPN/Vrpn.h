@@ -132,9 +132,12 @@ public:
    static std::string getElementType();
 
 private:
-   void registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
-                                       vrpn_MESSAGEHANDLER dropHandler,
-                                       vrpn_MESSAGEHANDLER lastDropHandler);
+   void registerConnectionDropHandlers  (vrpn_BaseClass* vrpnObj,
+                                         vrpn_MESSAGEHANDLER dropHandler,
+                                         vrpn_MESSAGEHANDLER lastDropHandler);
+   void unregisterConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
+                                         vrpn_MESSAGEHANDLER dropHandler,
+                                         vrpn_MESSAGEHANDLER lastDropHandler);
 
    void unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
                                         const vrpn_int32 type,

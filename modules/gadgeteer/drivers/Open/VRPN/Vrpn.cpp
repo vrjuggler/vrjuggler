@@ -461,7 +461,8 @@ void Vrpn::registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
 
    if ( -1 != dropped_conn_type )
    {
-      conn->register_handler(dropped_conn_type, dropHandler, (void*) this);
+      conn->register_handler(dropped_conn_type, dropHandler,
+                             static_cast<void *>(this));
    }
 
    const vrpn_int32 dropped_last_conn_type =
@@ -470,7 +471,32 @@ void Vrpn::registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
    if ( -1 != dropped_last_conn_type )
    {
       conn->register_handler(dropped_last_conn_type, lastDropHandler,
-                             (void*) this);
+                             static_cast<void *>(this));
+   }
+}
+
+void Vrpn::unregisterConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
+                                            vrpn_MESSAGEHANDLER dropHandler,
+                                            vrpn_MESSAGEHANDLER lastDropHandler)
+{
+   vrpn_Connection* conn = vrpnObj->connectionPtr();
+
+   const vrpn_int32 dropped_conn_type =
+      conn->register_message_type(vrpn_dropped_connection);
+
+   if ( -1 != dropped_conn_type )
+   {
+      conn->unregister_handler(dropped_conn_type, dropHandler,
+                               static_cast<void *>(this));
+   }
+
+   const vrpn_int32 dropped_last_conn_type =
+      conn->register_message_type(vrpn_dropped_last_connection);
+
+   if ( -1 != dropped_last_conn_type )
+   {
+      conn->unregister_handler(dropped_last_conn_type, lastDropHandler,
+                               static_cast<void *>(this));
    }
 }
 
@@ -479,7 +505,7 @@ void Vrpn::unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
                                            vrpn_MESSAGEHANDLER handler)
 {
    vrpn_Connection* conn = vrpnObj->connectionPtr();
-   conn->unregister_handler(type, handler, (void*) this);
+   conn->unregister_handler(type, handler, static_cast<void *>(this));
 }
 
 void Vrpn::readLoop()
@@ -487,34 +513,34 @@ void Vrpn::readLoop()
    if ( mTrackerNumber > 0 )
    {
       mTrackerHandle = new vrpn_Tracker_Remote(mTrackerServer.c_str());
-      mTrackerHandle->register_change_handler((void*) this,
-                                              handleTrackerChange);
+      mTrackerHandle->register_change_handler(static_cast<void *>(this),
+                                              &handleTrackerChange);
       mTrackerChangeHandlerRegistered = true;
       registerConnectionDropHandlers(mTrackerHandle,
-                                     handleTrackerConnectionDropped,
-                                     handleLastTrackerConnectionDropped);
+                                     &handleTrackerConnectionDropped,
+                                     &handleLastTrackerConnectionDropped);
    }
 
    if ( mButtonNumber > 0 )
    {
       mButtonHandle = new vrpn_Button_Remote(mButtonServer.c_str());
-      mButtonHandle->register_change_handler((void*) this,
-                                             handleButtonChange);
+      mButtonHandle->register_change_handler(static_cast<void *>(this),
+                                             &handleButtonChange);
       mButtonChangeHandlerRegistered = true;
       registerConnectionDropHandlers(mButtonHandle,
-                                     handleButtonConnectionDropped,
-                                     handleLastButtonConnectionDropped);
+                                     &handleButtonConnectionDropped,
+                                     &handleLastButtonConnectionDropped);
    }
 
    if ( mAnalogNumber > 0 )
    {
       mAnalogHandle = new vrpn_Analog_Remote(mAnalogServer.c_str());
-      mAnalogHandle->register_change_handler((void*) this,
-                                             handleAnalogChange);
+      mAnalogHandle->register_change_handler(static_cast<void *>(this),
+                                             &handleAnalogChange);
       mAnalogChangeHandlerRegistered = true;
       registerConnectionDropHandlers(mAnalogHandle,
-                                     handleAnalogConnectionDropped,
-                                     handleLastAnalogConnectionDropped);
+                                     &handleAnalogConnectionDropped,
+                                     &handleLastAnalogConnectionDropped);
    }
 
    // loop through  and keep sampling
@@ -543,6 +569,63 @@ void Vrpn::readLoop()
       }
 
       vpr::Thread::yield();
+   }
+
+   if ( mTrackerNumber > 0 )
+   {
+      mTrackerNumber = 0;
+
+      if ( mTrackerChangeHandlerRegistered )
+      {
+         mTrackerHandle->unregister_change_handler(static_cast<void *>(this),
+                                                   &handleTrackerChange      );
+         mTrackerChangeHandlerRegistered = false;
+      }
+
+      unregisterConnectionDropHandlers(mTrackerHandle,
+                                       &handleTrackerConnectionDropped,
+                                       &handleLastTrackerConnectionDropped);
+
+      delete mTrackerHandle;
+      mTrackerHandle = NULL;
+   }
+
+   if ( mButtonNumber > 0 )
+   {
+      mButtonNumber = 0;
+
+      if ( mButtonChangeHandlerRegistered )
+      {
+         mButtonHandle->unregister_change_handler(static_cast<void *>(this),
+                                                  &handleButtonChange      );
+         mButtonChangeHandlerRegistered = false;
+      }
+
+      unregisterConnectionDropHandlers(mButtonHandle,
+                                       &handleButtonConnectionDropped,
+                                       &handleLastButtonConnectionDropped);
+
+      delete mButtonHandle;
+      mButtonHandle = NULL;
+   }
+
+   if ( mAnalogNumber > 0 )
+   {
+      mAnalogNumber = 0;
+
+      if ( mAnalogChangeHandlerRegistered )
+      {
+         mAnalogHandle->unregister_change_handler(static_cast<void *>(this),
+                                                  &handleAnalogChange      );
+         mAnalogChangeHandlerRegistered = false;
+      }
+
+      unregisterConnectionDropHandlers(mAnalogHandle,
+                                       &handleAnalogConnectionDropped,
+                                       &handleLastAnalogConnectionDropped);
+
+      delete mAnalogHandle;
+      mAnalogHandle = NULL;
    }
 }
 
@@ -627,8 +710,8 @@ void Vrpn::trackerConnectionDropped(const vrpn_int32 type,
 
    if ( mTrackerChangeHandlerRegistered )
    {
-      mTrackerHandle->unregister_change_handler((void*) this,
-                                                handleTrackerChange);
+      mTrackerHandle->unregister_change_handler(static_cast<void *>(this),
+                                                &handleTrackerChange);
       mTrackerChangeHandlerRegistered = false;
    }
 
@@ -649,8 +732,8 @@ void Vrpn::buttonConnectionDropped(const vrpn_int32 type,
 
    if ( mButtonChangeHandlerRegistered )
    {
-      mButtonHandle->unregister_change_handler((void*) this,
-                                               handleButtonChange);
+      mButtonHandle->unregister_change_handler(static_cast<void *>(this),
+                                               &handleButtonChange);
       mButtonChangeHandlerRegistered = false;
    }
 
@@ -671,8 +754,8 @@ void Vrpn::analogConnectionDropped(const vrpn_int32 type,
 
    if ( mAnalogChangeHandlerRegistered )
    {
-      mAnalogHandle->unregister_change_handler((void*) this,
-                                               handleAnalogChange);
+      mAnalogHandle->unregister_change_handler(static_cast<void *>(this),
+                                               &handleAnalogChange);
       mAnalogChangeHandlerRegistered = false;
    }
 
