@@ -355,25 +355,32 @@ inline float BufferObjectReader::readFloat()
 {
    // We are reading the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
+   union
+   {
+     float       floatVal;
+     vpr::Uint32 intVal;
+   } data;
 
-   vpr::Uint32 nw_val;
-   std::memcpy(&nw_val, readRaw(4), 4);
-   vpr::Uint32 h_val = vpr::System::Ntohl(nw_val);
+   std::memcpy(&data.intVal, readRaw(4), 4);
+   data.intVal = vpr::System::Ntohl(data.intVal);
 
-   return *((float*)&h_val);
+   return data.floatVal;
 }
 
 inline double BufferObjectReader::readDouble()
 {
    // We are reading the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
+   union
+   {
+     double      doubleVal;
+     vpr::Uint64 intVal;
+   } data;
 
-   vpr::Uint64 nw_val;
-   std::memcpy(&nw_val, readRaw(8), 8);
-   vpr::Uint64 h_val = vpr::System::Ntohll(nw_val);
-   double d_val = *((double*)&h_val);
+   std::memcpy(&data.intVal, readRaw(4), 4);
+   data.intVal = vpr::System::Ntohl(data.intVal);
 
-   return d_val;
+   return data.doubleVal;
 }
 
 inline std::string BufferObjectReader::readString()
