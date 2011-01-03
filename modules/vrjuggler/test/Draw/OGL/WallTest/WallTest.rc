@@ -81,7 +81,7 @@ BEGIN
             VALUE "FileDescription", "VR Juggler Wall Test"
             VALUE "FileVersion", "2.0.0.0"
             VALUE "InternalName", "Wall Test"
-            VALUE "LegalCopyright", "Copyright © 1998–2010"
+            VALUE "LegalCopyright", "Copyright © 1998–2011"
             VALUE "OriginalFilename", "WallTest.exe"
             VALUE "ProductName", "VR Juggler Wall Test"
             VALUE "ProductVersion", "2.0.0.0"

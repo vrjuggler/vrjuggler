@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>JavaApplicationStub</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Tweek JavaBean Loader v1.3.0. Copyright &#x00A9; 1998&#x2013;2010 Iowa State University</string>
+	<string>Tweek JavaBean Loader v1.3.0. Copyright &#x00A9; 1998&#x2013;2011 Iowa State University</string>
 	<key>CFBundleIconFile</key>
 	<string>tweek.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>

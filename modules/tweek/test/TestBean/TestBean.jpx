@@ -7,7 +7,7 @@
   <property category="sys" name="BraceStyle" value="1" />
   <property category="sys" name="CheckStable" value="1" />
   <property category="sys" name="Company" value="VRAC" />
-  <property category="sys" name="Copyright" value="Copyright (c) 1998-2010" />
+  <property category="sys" name="Copyright" value="Copyright (c) 1998-2011" />
   <property category="sys" name="Description" value="" />
   <property category="sys" name="DocPath" value="doc" />
   <property category="sys" name="EventMatch" value="false" />
