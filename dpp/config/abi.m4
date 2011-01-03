@@ -1,4 +1,4 @@
-dnl Doozer++ is (C) Copyright 2000-2009 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2010 by Iowa State University
 dnl Distributed under the GNU Lesser General Public License 2.1.  (See
 dnl accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 dnl
