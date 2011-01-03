@@ -72,7 +72,7 @@ Important Note for Windows Users
  Studio 6.0. Microsoft acknowledges the issues concerning noncompliance to
  the C++ Standard with Visual Studio 6.0. Furthermore, workarounds for
  Visual C++ 7.0 (.NET 2002) and 7.1 (.NET 2003) bugs have been removed.
- Therefore, we require the use of Visual Studio 8.0 (2005) or newer to
+ Therefore, we require the use of Visual Studio 9.0 (2008) or newer to
  compile the source code.
 
 

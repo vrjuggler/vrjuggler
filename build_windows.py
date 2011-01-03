@@ -116,13 +116,13 @@ def detectVisualStudioVersion(reattempt = False):
       cl_major = int(ver_string_match.group(2))
       cl_minor = int(ver_string_match.group(3))
 
-      if cl_major == 13:
-         printStatus("Visual Studio .NET 2003 and older are not supported")
+      if cl_major <= 14:
+         printStatus("Visual Studio 2005 and older are not supported")
          sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
       elif cl_major == 14:
-         vs_ver = '2005'
-      else:
          vs_ver = '2008'
+      else:
+         vs_ver = '2010'
 
       printStatus("It appears that we will be using Visual Studio %s"%vs_ver)
       #printStatus("   compiler version: %s.%s"%(cl_major,cl_minor))
@@ -178,16 +178,16 @@ def detectVisualStudioVersion(reattempt = False):
 def chooseVisualStudioDir():
    (cl_ver_major, cl_ver_minor) = detectVisualStudioVersion()
 
-   # We do not support Visual Studio .NET 2003 (version 7.1) or older.
-   if cl_ver_major == 13:
-      print "ERROR: Visual C++ 7.1 and older are not supported!"
+   # We do not support Visual Studio 2005 (version 8.0) or older.
+   if cl_ver_major <= 14:
+      print "ERROR: Visual C++ 8.0 and older are not supported!"
       sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
-   # For Visual Studio 2005, we use the solution in the vc8 subtree.
-   elif cl_ver_major == 14:
-      vc_dir = 'vc8'
+   # For Visual Studio 2008, we use the solution in the vc9 subtree.
+   elif cl_ver_major == 15:
+      vc_dir = 'vc9'
    # Otherwise, we use the solution in the vc9 subtree.
    else:
-      vc_dir = 'vc9'
+      vc_dir = 'vc10'
 
    return (cl_ver_major, cl_ver_minor, vc_dir)
 
