@@ -98,7 +98,7 @@ protected:
 
    /** @name ClickAnalyzer Interface Overrides */
    //@{
-   virtual void clickGenerated(const event::ClickEvent& clickEvent)
+   virtual void clickGenerated(const event::ClickEvent&)
    {
       // Store or emit the result.
       this->base_type::onDataAdded(mLastEvent);
