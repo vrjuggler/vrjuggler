@@ -42,9 +42,10 @@ struct ClickEvent
       /* Do nothing. */ ;
    }
 
-   ClickEvent(const gadget::Keys button, const int x_, const int y_,
+   ClickEvent(const gadget::Keys button_, const int x_, const int y_,
               const unsigned long time_)
-      : x(x_)
+      : button(button_)
+      , x(x_)
       , y(y_)
       , time(time_)
    {
