@@ -63,13 +63,18 @@
       mVrjWindow        = window;
       mFullScreen       = display->isFullScreen();
       mDisplayID        = [self getDisplayID:screen];
+#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050
+      mOrigDisplayMode  = CGDisplayCopyDisplayMode(mDisplayID);
+#else
       mOrigDisplayMode  = (NSDictionary*) CGDisplayCurrentMode(mDisplayID);
+#endif
       mHandleInput      = handleInput;
       mShouldHideCursor = display->shouldHideMouse();
       mTrackingRect     = 0;
 
+#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1050
       [mOrigDisplayMode retain];
-
+#endif
       NSOpenGLPixelFormat* pixel_format = [self createPixelFormat];
 
       if ( pixel_format == nil )
@@ -125,7 +130,14 @@
 
    -(void) dealloc
    {
+#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050
+      CGDisplayModeRelease(mOrigDisplayMode);
+#else
+      // Per these docs a dictionary for a DisplayMode is not supposed
+      // to be released. Since we call retain we do need to release a ref count.
+      // http://developer.apple.com/library/mac/#documentation/GraphicsImaging/Reference/Quartz_Services_Ref/DeprecationAppendix/AppendixADeprecatedAPI.html%23//apple_ref/c/func/CGDisplayCurrentMode
       [mOrigDisplayMode release];
+#endif
       [super dealloc];
    }
 
@@ -279,8 +291,12 @@
 
          if ( mFullScreen )
          {
+#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050
+            CGDisplaySetDisplayMode(mDisplayID, mOrigDisplayMode, NULL);
+#else
             CGDisplaySwitchToMode(mDisplayID,
                                   (CFDictionaryRef) mOrigDisplayMode);
+#endif
             CGDisplayErr err = CGDisplayRelease(mDisplayID);
 
             if ( err != CGDisplayNoErr )
