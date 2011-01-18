@@ -118,8 +118,8 @@ struct DefaultSampleHandler
    typedef std::vector<device_data_type>                     sample_type;
    typedef typename ProxyTraits<ProxyType>::raw_data_type    raw_data_type;
 
-   static const raw_data_type& getData(const sample_type& samples,
-                                       const unsigned int unit)
+   const raw_data_type& getData(const sample_type& samples,
+                                const unsigned int unit)
    {
       return samples[unit].getValue();
    }
@@ -218,7 +218,7 @@ protected:
 
    void onSamplesAdded(const sample_type& sample)
    {
-      onDataAdded(SampleHandler::getData(sample, mProxy->getUnit()));
+      onDataAdded(mSampleHandler.getData(sample, mProxy->getUnit()));
    }
 
    virtual void onDataAdded(const raw_data_type& data)
@@ -245,6 +245,7 @@ protected:
    }
 
 private:
+   SampleHandler mSampleHandler;
    proxy_ptr_type mProxy;
    boost::signals::connection mDevConn;
 

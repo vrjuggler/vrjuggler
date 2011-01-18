@@ -57,8 +57,8 @@ struct SampleHandler
    typedef EventPtr sample_type;
    typedef EventPtr raw_data_type;
 
-   static const raw_data_type& getData(const raw_data_type& sample,
-                                       const unsigned int)
+   const raw_data_type& getData(const raw_data_type& sample,
+                                const unsigned int)
    {
       return sample;
    }
