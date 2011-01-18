@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-01-17 patrick     gadget::DigitalEventInterface now generates events with
+                       the appropriate state when the associated digital device
+                       unit is toggled on and off.
+                       NEW VERSION: 2.1.13
 2011-01-17 patrick     gadget::BasicEventGenerator instances now create an
                        instance of their sample handler so that the sample
                        handler's can track state.

@@ -46,6 +46,7 @@ DIRPRFX=	gadget/Event/
 SUBDIR=		KeyboardMouse
 
 SRCS=		AbstractEventInterface.cpp	\
+		DigitalEventInterface.cpp	\
 		Event.cpp			\
 		EventGenerator.cpp
 

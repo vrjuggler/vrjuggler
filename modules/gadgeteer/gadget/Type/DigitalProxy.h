@@ -74,6 +74,9 @@ public:
 
    virtual void updateData();
 
+   static DigitalState::State getNextState(const DigitalState::State prevState,
+                                           const DigitalState::State curState);
+
    static std::string getElementType();
 };
 

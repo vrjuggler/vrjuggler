@@ -37,6 +37,36 @@
 namespace gadget
 {
 
+namespace event
+{
+
+/** \class DigitalSampleHandler DigitalEventInterface.h gadget/Event/DigitalEventInterface.h
+ *
+ * This is a sample handler for gadget::DigitalProxy objects that tracks the
+ * state of a digital device unit in order that events can be emitted for
+ * the toggling of a digital device's state.
+ *
+ * @since 2.1.13
+ */
+class GADGET_CLASS_API DigitalSampleHandler
+{
+public:
+   typedef ProxyTraits<DigitalProxy>     device_type;
+   typedef device_type::device_data_type device_data_type;
+   typedef std::vector<device_data_type> sample_type;
+   typedef device_type::raw_data_type    raw_data_type;
+
+   DigitalSampleHandler();
+
+   DigitalState::State getData(const sample_type& samples,
+                               const unsigned int unit);
+
+private:
+   DigitalState::State mCurState;
+};
+
+}
+
 /** \class DigitalEventInterface DigitalEventInterface.h gadget/Event/DigitalEventInterface.h
  *
  * The event interface for gadget::DigitalProxy objects.
@@ -60,7 +90,8 @@ class DigitalEventInterface
    : public EventInterface<DigitalProxy
                          , BasicEventGenerator<DigitalProxy
                                              , CollectionTag
-                                             , GenerationTag>
+                                             , GenerationTag
+                                             , event::DigitalSampleHandler>
                          >
 {
 };

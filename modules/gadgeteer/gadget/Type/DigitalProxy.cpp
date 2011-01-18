@@ -63,33 +63,42 @@ void DigitalProxy::updateData()
       // Make sure dependencies are updated.
       getProxiedInputDevice()->updateDataIfNeeded();
 
-      mData = mTypedDevice->getDigitalData(mUnit);
-      const DigitalState::State new_state(mData.getValue());
-
-      switch (old_state)
-      {
-         case DigitalState::OFF:
-            // Digital::TOGGLE_ON -> Button now pressed
-            // Digital::OFF       -> Button still released
-            mData = new_state ? DigitalState::TOGGLE_ON : DigitalState::OFF;
-            break;
-         case DigitalState::ON:
-            // Digital::ON         -> Button still pressed
-            // Digital::TOGGLE_OFF -> Button now released
-            mData = new_state ? DigitalState::ON : DigitalState::TOGGLE_OFF;
-            break;
-         case DigitalState::TOGGLE_ON:
-            // Digital::ON         -> Button still pressed
-            // Digital::TOGGLE_OFF -> Button now released
-            mData = new_state ? DigitalState::ON : DigitalState::TOGGLE_OFF;
-            break;
-         case DigitalState::TOGGLE_OFF:
-            // Digital::TOGGLE_ON -> Button now pressed
-            // Digital::OFF       -> Button still released
-            mData = new_state ? DigitalState::TOGGLE_ON : DigitalState::OFF;
-            break;
-      }
+      mData = getNextState(old_state,
+                           mTypedDevice->getDigitalData(mUnit).getValue());
    }
+}
+
+DigitalState::State
+DigitalProxy::getNextState(const DigitalState::State prevState,
+                           const DigitalState::State curState)
+{
+   DigitalState::State next_state(DigitalState::OFF);
+
+   switch (prevState)
+   {
+      case DigitalState::OFF:
+         // Digital::TOGGLE_ON -> Button now pressed
+         // Digital::OFF       -> Button still released
+         next_state = curState ? DigitalState::TOGGLE_ON : DigitalState::OFF;
+         break;
+      case DigitalState::ON:
+         // Digital::ON         -> Button still pressed
+         // Digital::TOGGLE_OFF -> Button now released
+         next_state = curState ? DigitalState::ON : DigitalState::TOGGLE_OFF;
+         break;
+      case DigitalState::TOGGLE_ON:
+         // Digital::ON         -> Button still pressed
+         // Digital::TOGGLE_OFF -> Button now released
+         next_state = curState ? DigitalState::ON : DigitalState::TOGGLE_OFF;
+         break;
+      case DigitalState::TOGGLE_OFF:
+         // Digital::TOGGLE_ON -> Button now pressed
+         // Digital::OFF       -> Button still released
+         next_state = curState ? DigitalState::TOGGLE_ON : DigitalState::OFF;
+         break;
+   }
+
+   return next_state;
 }
 
 } // End of gadget namespace

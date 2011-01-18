@@ -617,6 +617,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\DigitalEventInterface.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\DigitalProxy.cpp"
 				>
 			</File>
