@@ -84,7 +84,7 @@ protected:
       // as a click.
       if (DigitalState::OFF == data && DigitalState::ON == mLastState)
       {
-         const event::ClickEvent click_event(vpr::Interval::now().secf());
+         const event::ClickEvent click_event(vpr::Interval::now().msec());
          this->addClickEvent(click_event);
       }
 
