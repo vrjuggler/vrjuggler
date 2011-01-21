@@ -73,7 +73,7 @@ public:
 
 protected:
    BOOST_STATIC_ASSERT(
-      (boost::is_same<typename base_type::raw_data_type, Digital::State>::value)
+      (boost::is_same<typename base_type::raw_data_type, DigitalState::State>::value)
    );
 
    /** @name BasicEventGenerator Interface Overrides */
