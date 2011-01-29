@@ -2354,6 +2354,8 @@ class GuiFrontEnd:
          result_dir = tkFileDialog.askdirectory(title = optionIndex,
                                                 initialdir = initialDir)
          if result_dir != '':
+            # Normalize directory (on windows it will also set slashes right).
+            result_dir = os.path.normpath(result_dir)
             self.mTkOptions[optionIndex].set(result_dir)
 
       return lambda: clearAndGet(self, optionIndex, initialDir)
