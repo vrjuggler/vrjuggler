@@ -50,7 +50,7 @@ namespace gadget
 NSConditionLock* InputAreaCocoa::sWinOpenLock = [[NSConditionLock alloc] init];
 
 InputAreaCocoa::InputAreaCocoa()
-   : gadget::InputArea()
+   : InputArea()
    , mWidth(0)
    , mHeight(0)
    , mLastModifiers(0)
@@ -65,7 +65,7 @@ InputAreaCocoa::~InputAreaCocoa()
    /* Do nothing. */ ;
 }
 
-void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
+void InputAreaCocoa::addKeyEvent(const EventType type, NSEvent* event)
 {
    const unsigned int modifiers = [event modifierFlags];
 
@@ -74,12 +74,9 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
    // stateful button on the keyboard.
    if ( modifiers & NSAlphaShiftKeyMask )
    {
-      gadget::EventPtr key_event(
-         new gadget::KeyEvent(type, gadget::KEY_CAPS_LOCK,
-                              getMask(modifiers),
-                              AbsoluteToDuration(UpTime()), this)
-      );
-      doAddEvent(key_event, gadget::KEY_CAPS_LOCK);
+      EventPtr key_event(new KeyEvent(type, KEY_CAPS_LOCK, getMask(modifiers),
+                                      AbsoluteToDuration(UpTime()), this));
+      doAddEvent(key_event, KEY_CAPS_LOCK);
    }
    else
    {
@@ -95,32 +92,27 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
          }
 
          const unichar key_char = [key_chars characterAtIndex:0];
-         const gadget::Keys key = vKeyToKey(key_char, [event keyCode],
-                                            modifiers);
+         const Keys key = vKeyToKey(key_char, [event keyCode], modifiers);
 
-         gadget::EventPtr key_event(
-            new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                                 AbsoluteToDuration(UpTime()), this,
-                                 static_cast<char>(key_char), key_char)
-         );
+         EventPtr key_event(new KeyEvent(type, key,
+                                         getMask([event modifierFlags]),
+                                         AbsoluteToDuration(UpTime()), this,
+                                         static_cast<char>(key_char),
+                                         key_char));
          doAddEvent(key_event, key);
       }
    }
 }
 
-void InputAreaCocoa::addModifierEvent(const gadget::Keys key,
-                                      const gadget::EventType type,
+void InputAreaCocoa::addModifierEvent(const Keys key, const EventType type,
                                       NSEvent* event)
 {
-   gadget::EventPtr key_event(
-      new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                           AbsoluteToDuration(UpTime()), this)
-   );
+   EventPtr key_event(new KeyEvent(type, key, getMask([event modifierFlags]),
+                                   AbsoluteToDuration(UpTime()), this));
    doAddEvent(key_event, key);
 }
 
-void InputAreaCocoa::addMouseButtonEvent(const gadget::EventType type,
-                                         NSEvent* event)
+void InputAreaCocoa::addMouseButtonEvent(const EventType type, NSEvent* event)
 {
    // If the user uses the scroll wheel then set the button output
    // appropriately. This behavior is deprecated.
@@ -155,19 +147,16 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::EventType type,
    }
 }
 
-void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
-                                         const gadget::EventType type,
-                                         NSEvent* event)
+void InputAreaCocoa::addMouseButtonEvent(const Keys button,
+                                         const EventType type, NSEvent* event)
 {
    const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
                                            fromView:nil];
    const NSPoint root_loc = [NSEvent mouseLocation];
-   gadget::EventPtr mouse_event(
-      new gadget::MouseEvent(type, button, view_loc.x, view_loc.y,
-                             root_loc.x, root_loc.y, 0.0f, 0.0f,
-                             getMask([event modifierFlags]),
-                             AbsoluteToDuration(UpTime()), this)
-   );
+   EventPtr mouse_event(new MouseEvent(type, button, view_loc.x, view_loc.y,
+                                       root_loc.x, root_loc.y, 0.0f, 0.0f,
+                                       getMask([event modifierFlags]),
+                                       AbsoluteToDuration(UpTime()), this));
    doAddEvent(mouse_event, button);
 }
 
@@ -176,12 +165,11 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
    const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
                                            fromView:nil];
    const NSPoint root_loc = [NSEvent mouseLocation];
-   gadget::EventPtr move_event(
-      new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
-                             view_loc.x, view_loc.y, root_loc.x, root_loc.y,
-                             0.0f, 0.0f, getMask([event modifierFlags]),
-                             AbsoluteToDuration(UpTime()), this)
-   );
+   EventPtr move_event(new MouseEvent(MouseMoveEvent, NO_MBUTTON, view_loc.x,
+                                      view_loc.y, root_loc.x, root_loc.y,
+                                      0.0f, 0.0f,
+                                      getMask([event modifierFlags]),
+                                      AbsoluteToDuration(UpTime()), this));
 
    const float dx = [event deltaX];
    const float dy = [event deltaY];
@@ -204,20 +192,20 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
 
    if ( dx > 0 )
    {
-      mKeyboardMouseDevice->mKeys[gadget::MOUSE_POSX] += dx;
+      mKeyboardMouseDevice->mKeys[MOUSE_POSX] += dx;
    }
    else
    {
-      mKeyboardMouseDevice->mKeys[gadget::MOUSE_NEGX] += -dx;
+      mKeyboardMouseDevice->mKeys[MOUSE_NEGX] += -dx;
    }
 
    if ( dy > 0 )
    {
-      mKeyboardMouseDevice->mKeys[gadget::MOUSE_POSY] += dy;
+      mKeyboardMouseDevice->mKeys[MOUSE_POSY] += dy;
    }
    else
    {
-      mKeyboardMouseDevice->mKeys[gadget::MOUSE_NEGY] += -dy;
+      mKeyboardMouseDevice->mKeys[MOUSE_NEGY] += -dy;
    }
 
    mKeyboardMouseDevice->addEvent(move_event);
@@ -230,8 +218,8 @@ void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
    {
       // Handling this as a press event and then as a release event is to be
       // consistent with the X Window System.
-      addMouseButtonEvent(gadget::MouseButtonPressEvent, event);
-      addMouseButtonEvent(gadget::MouseButtonReleaseEvent, event);
+      addMouseButtonEvent(MouseButtonPressEvent, event);
+      addMouseButtonEvent(MouseButtonReleaseEvent, event);
    }
    // Use the new scrolling behavior.
    else
@@ -246,13 +234,11 @@ void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
       // right and a negative X delta for scrolling to the left.
       const float dx(-[event deltaX]);
       const float dy([event deltaY]);
-      gadget::EventPtr scroll_event(
-         new gadget::MouseEvent(gadget::MouseScrollEvent, gadget::NO_MBUTTON,
-                                view_loc.x, view_loc.y, root_loc.x,
-                                root_loc.y, dx, dy,
-                                getMask([event modifierFlags]),
-                                AbsoluteToDuration(UpTime()), this)
-      );
+      EventPtr scroll_event(new MouseEvent(MouseScrollEvent, NO_MBUTTON,
+                                           view_loc.x, view_loc.y, root_loc.x,
+                                           root_loc.y, dx, dy,
+                                           getMask([event modifierFlags]),
+                                           AbsoluteToDuration(UpTime()), this));
 
       // Hold the keys lock for only as long as we need it.
       {
@@ -263,23 +249,23 @@ void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
 
          if ( dx > 0.0f )
          {
-            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_RIGHT] +=
+            mKeyboardMouseDevice->mKeys[MOUSE_SCROLL_RIGHT] +=
                static_cast<int>(dx);
          }
          else if ( dx < 0.0f )
          {
-            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_LEFT] +=
+            mKeyboardMouseDevice->mKeys[MOUSE_SCROLL_LEFT] +=
                static_cast<int>(-dx);
          }
 
          if ( dy > 0.0f )
          {
-            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_UP] +=
+            mKeyboardMouseDevice->mKeys[MOUSE_SCROLL_UP] +=
                static_cast<int>(dy);
          }
          else if ( dy < 0.0f )
          {
-            mKeyboardMouseDevice->mKeys[gadget::MOUSE_SCROLL_DOWN] +=
+            mKeyboardMouseDevice->mKeys[MOUSE_SCROLL_DOWN] +=
                static_cast<int>(-dy);
          }
       }
@@ -299,13 +285,13 @@ void InputAreaCocoa::flagsChanged(NSEvent* event)
 
    if ( new_modifiers != 0 )
    {
-      addModifierEvent(getKeyFromModifierMask(new_modifiers),
-                       gadget::KeyPressEvent, event);
+      addModifierEvent(getKeyFromModifierMask(new_modifiers), KeyPressEvent,
+                       event);
    }
    else if ( old_modifiers != 0 )
    {
-      addModifierEvent(getKeyFromModifierMask(old_modifiers),
-                       gadget::KeyReleaseEvent, event);
+      addModifierEvent(getKeyFromModifierMask(old_modifiers), KeyReleaseEvent,
+                       event);
    }
 
    mLastModifiers = cur_modifiers;
@@ -331,68 +317,67 @@ void InputAreaCocoa::unlockMouseInternal()
    [NSCursor unhide];
 }
 
-gadget::Keys InputAreaCocoa::getButtonFromNum(const int buttonNum) const
+Keys InputAreaCocoa::getButtonFromNum(const int buttonNum) const
 {
-   gadget::Keys button(gadget::NO_MBUTTON);
+   Keys button(NO_MBUTTON);
 
    switch ( buttonNum )
    {
       case 0:
-         button = gadget::MBUTTON1;
+         button = MBUTTON1;
          break;
       // To be consistent with other windowing systems, we treat button 1 (the
       // right button in AppKit's view) as button 3.
       case 1:
-         button = gadget::MBUTTON3;
+         button = MBUTTON3;
          break;
       // We treat button 2 (the first "other" button for AppKit, which tends
       // to be the middle button) as button 2.
       case 2:
-         button = gadget::MBUTTON2;
+         button = MBUTTON2;
          break;
       case 3:
-         button = gadget::MBUTTON4;
+         button = MBUTTON4;
          break;
       case 4:
-         button = gadget::MBUTTON5;
+         button = MBUTTON5;
          break;
       case 5:
-         button = gadget::MBUTTON6;
+         button = MBUTTON6;
          break;
       case 6:
-         button = gadget::MBUTTON7;
+         button = MBUTTON7;
          break;
       case 7:
-         button = gadget::MBUTTON8;
+         button = MBUTTON8;
          break;
       case 8:
-         button = gadget::MBUTTON9;
+         button = MBUTTON9;
          break;
    }
 
    return button;
 }
 
-gadget::Keys InputAreaCocoa::getKeyFromModifierMask(const unsigned int mask)
-   const
+Keys InputAreaCocoa::getKeyFromModifierMask(const unsigned int mask) const
 {
-   gadget::Keys key(gadget::KEY_NONE);
+   Keys key(KEY_NONE);
 
    if ( mask & NSCommandKeyMask )
    {
-      key = gadget::KEY_COMMAND;
+      key = KEY_COMMAND;
    }
    else if ( mask & NSAlternateKeyMask )
    {
-      key = gadget::KEY_ALT;
+      key = KEY_ALT;
    }
    else if ( mask & NSControlKeyMask )
    {
-      key = gadget::KEY_CTRL;
+      key = KEY_CTRL;
    }
    else if ( mask & NSShiftKeyMask )
    {
-      key = gadget::KEY_SHIFT;
+      key = KEY_SHIFT;
    }
 
    return key;
@@ -417,493 +402,493 @@ int InputAreaCocoa::getMask(const unsigned int modifiers) const
 
    if ( modifiers & NSShiftKeyMask )
    {
-      mask |= gadget::SHIFT_MASK;
+      mask |= SHIFT_MASK;
    }
 
    if ( modifiers & NSControlKeyMask )
    {
-      mask |= gadget::CTRL_MASK;
+      mask |= CTRL_MASK;
    }
 
    if ( modifiers & NSAlternateKeyMask )
    {
-      mask |= gadget::ALT_MASK;
+      mask |= ALT_MASK;
    }
 
    if ( modifiers & NSCommandKeyMask )
    {
-      mask |= gadget::KEY_COMMAND;
+      mask |= KEY_COMMAND;
    }
 
-   if ( mKeyboardMouseDevice->mKeys[gadget::MBUTTON1] )
+   if ( mKeyboardMouseDevice->mKeys[MBUTTON1] )
    {
-      mask |= gadget::BUTTON1_MASK;
+      mask |= BUTTON1_MASK;
    }
 
-   if ( mKeyboardMouseDevice->mKeys[gadget::MBUTTON2] )
+   if ( mKeyboardMouseDevice->mKeys[MBUTTON2] )
    {
-      mask |= gadget::BUTTON2_MASK;
+      mask |= BUTTON2_MASK;
    }
 
-   if ( mKeyboardMouseDevice->mKeys[gadget::MBUTTON3] )
+   if ( mKeyboardMouseDevice->mKeys[MBUTTON3] )
    {
-      mask |= gadget::BUTTON3_MASK;
+      mask |= BUTTON3_MASK;
    }
 
-   if ( mKeyboardMouseDevice->mKeys[gadget::MBUTTON4] )
+   if ( mKeyboardMouseDevice->mKeys[MBUTTON4] )
    {
-      mask |= gadget::BUTTON4_MASK;
+      mask |= BUTTON4_MASK;
    }
 
-   if ( mKeyboardMouseDevice->mKeys[gadget::MBUTTON5] )
+   if ( mKeyboardMouseDevice->mKeys[MBUTTON5] )
    {
-      mask |= gadget::BUTTON5_MASK;
+      mask |= BUTTON5_MASK;
    }
 
-   if ( mKeyboardMouseDevice->mKeys[gadget::MBUTTON6] )
+   if ( mKeyboardMouseDevice->mKeys[MBUTTON6] )
    {
-      mask |= gadget::BUTTON6_MASK;
+      mask |= BUTTON6_MASK;
    }
 
-   if ( mKeyboardMouseDevice->mKeys[gadget::MBUTTON7] )
+   if ( mKeyboardMouseDevice->mKeys[MBUTTON7] )
    {
-      mask |= gadget::BUTTON7_MASK;
+      mask |= BUTTON7_MASK;
    }
 
    return mask;
 }
 
-bool InputAreaCocoa::isModifier(const gadget::Keys key) const
+bool InputAreaCocoa::isModifier(const Keys key) const
 {
-   return key == gadget::KEY_ALT || key == gadget::KEY_CTRL ||
-          key == gadget::KEY_SHIFT || key == gadget::KEY_COMMAND;
+   return key == KEY_ALT || key == KEY_CTRL ||
+          key == KEY_SHIFT || key == KEY_COMMAND;
 }
 
 // XXX: This method implementation is pretty lame.
-gadget::Keys InputAreaCocoa::vKeyToKey(const unsigned short keyChar,
-                                       const unsigned short keyCode,
-                                       const unsigned int modifiers)
+Keys InputAreaCocoa::vKeyToKey(const unsigned short keyChar,
+                               const unsigned short keyCode,
+                               const unsigned int modifiers)
 {
-   gadget::Keys key;
+   Keys key;
 
    // XXX: Where are the constants for these? Magic numbers are bad.
    switch ( keyCode )
    {
       case 76:
-         key = gadget::KEY_ENTER;
+         key = KEY_ENTER;
          break;
       case 53:
-         key = gadget::KEY_ESC;
+         key = KEY_ESC;
          break;
       case 51:
-         key = gadget::KEY_BACKSPACE;
+         key = KEY_BACKSPACE;
          break;
       case 48:
          if ( modifiers & NSShiftKeyMask )
          {
-            key = gadget::KEY_BACKTAB;
+            key = KEY_BACKTAB;
          }
          else
          {
-            key = gadget::KEY_TAB;
+            key = KEY_TAB;
          }
          break;
       case 36:
-         key = gadget::KEY_RETURN;
+         key = KEY_RETURN;
          break;
       default:
-         key = gadget::KEY_NONE;
+         key = KEY_NONE;
          break;
    }
 
-   if ( gadget::KEY_NONE == key )
+   if ( KEY_NONE == key )
    {
       switch ( keyChar )
       {
          case NSUpArrowFunctionKey:
-            key = gadget::KEY_UP;
+            key = KEY_UP;
             break;
          case NSDownArrowFunctionKey:
-            key = gadget::KEY_DOWN;
+            key = KEY_DOWN;
             break;
          case NSLeftArrowFunctionKey:
-            key = gadget::KEY_LEFT;
+            key = KEY_LEFT;
             break;
          case NSRightArrowFunctionKey:
-            key = gadget::KEY_RIGHT;
+            key = KEY_RIGHT;
             break;
          case NSF1FunctionKey:
-            key = gadget::KEY_F1;
+            key = KEY_F1;
             break;
          case NSF2FunctionKey:
-            key = gadget::KEY_F2;
+            key = KEY_F2;
             break;
          case NSF3FunctionKey:
-            key = gadget::KEY_F3;
+            key = KEY_F3;
             break;
          case NSF4FunctionKey:
-            key = gadget::KEY_F4;
+            key = KEY_F4;
             break;
          case NSF5FunctionKey:
-            key = gadget::KEY_F5;
+            key = KEY_F5;
             break;
          case NSF6FunctionKey:
-            key = gadget::KEY_F6;
+            key = KEY_F6;
             break;
          case NSF7FunctionKey:
-            key = gadget::KEY_F7;
+            key = KEY_F7;
             break;
          case NSF8FunctionKey:
-            key = gadget::KEY_F8;
+            key = KEY_F8;
             break;
          case NSF9FunctionKey:
-            key = gadget::KEY_F9;
+            key = KEY_F9;
             break;
          case NSF10FunctionKey:
-            key = gadget::KEY_F10;
+            key = KEY_F10;
             break;
          case NSF11FunctionKey:
-            key = gadget::KEY_F11;
+            key = KEY_F11;
             break;
          case NSF12FunctionKey:
-            key = gadget::KEY_F12;
+            key = KEY_F12;
             break;
          case NSF13FunctionKey:
-            key = gadget::KEY_F13;
+            key = KEY_F13;
             break;
          case NSF14FunctionKey:
-            key = gadget::KEY_F14;
+            key = KEY_F14;
             break;
          case NSF15FunctionKey:
-            key = gadget::KEY_F15;
+            key = KEY_F15;
             break;
          case NSF16FunctionKey:
-            key = gadget::KEY_F16;
+            key = KEY_F16;
             break;
          case NSF17FunctionKey:
-            key = gadget::KEY_F17;
+            key = KEY_F17;
             break;
          case NSF18FunctionKey:
-            key = gadget::KEY_F18;
+            key = KEY_F18;
             break;
          case NSF19FunctionKey:
-            key = gadget::KEY_F19;
+            key = KEY_F19;
             break;
          case NSF20FunctionKey:
-            key = gadget::KEY_F20;
+            key = KEY_F20;
             break;
          case NSF21FunctionKey:
-            key = gadget::KEY_F21;
+            key = KEY_F21;
             break;
          case NSF22FunctionKey:
-            key = gadget::KEY_F22;
+            key = KEY_F22;
             break;
          case NSF23FunctionKey:
-            key = gadget::KEY_F23;
+            key = KEY_F23;
             break;
          case NSF24FunctionKey:
-            key = gadget::KEY_F24;
+            key = KEY_F24;
             break;
          case NSF25FunctionKey:
-            key = gadget::KEY_F25;
+            key = KEY_F25;
             break;
          case NSF26FunctionKey:
-            key = gadget::KEY_F26;
+            key = KEY_F26;
             break;
          case NSF27FunctionKey:
-            key = gadget::KEY_F27;
+            key = KEY_F27;
             break;
          case NSF28FunctionKey:
-            key = gadget::KEY_F28;
+            key = KEY_F28;
             break;
          case NSF29FunctionKey:
-            key = gadget::KEY_F29;
+            key = KEY_F29;
             break;
          case NSF30FunctionKey:
-            key = gadget::KEY_F30;
+            key = KEY_F30;
             break;
          case NSF31FunctionKey:
-            key = gadget::KEY_F31;
+            key = KEY_F31;
             break;
          case NSF32FunctionKey:
-            key = gadget::KEY_F32;
+            key = KEY_F32;
             break;
          case NSF33FunctionKey:
-            key = gadget::KEY_F33;
+            key = KEY_F33;
             break;
          case NSF34FunctionKey:
-            key = gadget::KEY_F34;
+            key = KEY_F34;
             break;
          case NSF35FunctionKey:
-            key = gadget::KEY_F35;
+            key = KEY_F35;
             break;
          case NSInsertFunctionKey:
-            key = gadget::KEY_INSERT;
+            key = KEY_INSERT;
             break;
          case NSDeleteFunctionKey:
-            key = gadget::KEY_DELETE;
+            key = KEY_DELETE;
             break;
          case NSHomeFunctionKey:
          case NSBeginFunctionKey:
-            key = gadget::KEY_HOME;
+            key = KEY_HOME;
             break;
          case NSEndFunctionKey:
-            key = gadget::KEY_END;
+            key = KEY_END;
             break;
          case NSPageUpFunctionKey:
-            key = gadget::KEY_PRIOR;
+            key = KEY_PRIOR;
             break;
          case NSPageDownFunctionKey:
-            key = gadget::KEY_NEXT;
+            key = KEY_NEXT;
             break;
          case NSPrintScreenFunctionKey:
          case NSPrintFunctionKey:
-            key = gadget::KEY_PRINT;
+            key = KEY_PRINT;
             break;
          //case :
-         //   key = gadget::KEY_NUM_LOCK;
+         //   key = KEY_NUM_LOCK;
          //   break;
          case NSScrollLockFunctionKey:
-            key = gadget::KEY_SCROLL_LOCK;
+            key = KEY_SCROLL_LOCK;
             break;
          case NSPauseFunctionKey:
-            key = gadget::KEY_PAUSE;
+            key = KEY_PAUSE;
             break;
          case NSSysReqFunctionKey:
-            key = gadget::KEY_SYSREQ;
+            key = KEY_SYSREQ;
             break;
          case NSHelpFunctionKey:
-            key = gadget::KEY_HELP;
+            key = KEY_HELP;
             break;
          case ' ':
-            key = gadget::KEY_SPACE;
+            key = KEY_SPACE;
             break;
          case '!':
-            key = gadget::KEY_EXCLAM;
+            key = KEY_EXCLAM;
             break;
          case '@':
-            key = gadget::KEY_AT;
+            key = KEY_AT;
             break;
          case '"':
-            key = gadget::KEY_QUOTE_DBL;
+            key = KEY_QUOTE_DBL;
             break;
          case '\'':
-            key = gadget::KEY_APOSTROPHE;
+            key = KEY_APOSTROPHE;
             break;
          case '#':
-            key = gadget::KEY_NUMBER_SIGN;
+            key = KEY_NUMBER_SIGN;
             break;
          case '$':
-            key = gadget::KEY_DOLLAR;
+            key = KEY_DOLLAR;
             break;
          case '^':
-            key = gadget::KEY_ASCII_CIRCUM;
+            key = KEY_ASCII_CIRCUM;
             break;
          case '%':
-            key = gadget::KEY_PERCENT;
+            key = KEY_PERCENT;
             break;
          case '*':
-            key = gadget::KEY_ASTERISK;
+            key = KEY_ASTERISK;
             break;
          case '(':
-            key = gadget::KEY_PAREN_LEFT;
+            key = KEY_PAREN_LEFT;
             break;
          case ')':
-            key = gadget::KEY_PAREN_RIGHT;
+            key = KEY_PAREN_RIGHT;
             break;
          case '+':
-            key = gadget::KEY_PLUS;
+            key = KEY_PLUS;
             break;
          case ',':
-            key = gadget::KEY_COMMA;
+            key = KEY_COMMA;
             break;
          case '-':
-            key = gadget::KEY_MINUS;
+            key = KEY_MINUS;
             break;
          case '.':
-            key = gadget::KEY_PERIOD;
+            key = KEY_PERIOD;
             break;
          case '/':
-            key = gadget::KEY_SLASH;
+            key = KEY_SLASH;
             break;
          case ':':
-            key = gadget::KEY_COLON;
+            key = KEY_COLON;
             break;
          case ';':
-            key = gadget::KEY_SEMICOLON;
+            key = KEY_SEMICOLON;
             break;
          case '<':
-            key = gadget::KEY_LESS;
+            key = KEY_LESS;
             break;
          case '>':
-            key = gadget::KEY_GREATER;
+            key = KEY_GREATER;
             break;
          case '=':
-            key = gadget::KEY_EQUAL;
+            key = KEY_EQUAL;
             break;
          case '?':
-            key = gadget::KEY_QUESTION;
+            key = KEY_QUESTION;
             break;
          case '[':
-            key = gadget::KEY_BRACKET_LEFT;
+            key = KEY_BRACKET_LEFT;
             break;
          case ']':
-            key = gadget::KEY_BRACKET_RIGHT;
+            key = KEY_BRACKET_RIGHT;
             break;
          case '\\':
-            key = gadget::KEY_BACKSLASH;
+            key = KEY_BACKSLASH;
             break;
          case '_':
-            key = gadget::KEY_UNDERSCORE;
+            key = KEY_UNDERSCORE;
             break;
          case '{':
-            key = gadget::KEY_BRACE_LEFT;
+            key = KEY_BRACE_LEFT;
             break;
          case '}':
-            key = gadget::KEY_BRACE_RIGHT;
+            key = KEY_BRACE_RIGHT;
             break;
          case '|':
-            key = gadget::KEY_BAR;
+            key = KEY_BAR;
             break;
          case '~':
-            key = gadget::KEY_ASCII_TILDE;
+            key = KEY_ASCII_TILDE;
             break;
          case 'a':
          case 'A':
-            key = gadget::KEY_A;
+            key = KEY_A;
             break;
          case 'b':
          case 'B':
-            key = gadget::KEY_B;
+            key = KEY_B;
             break;
          case 'c':
          case 'C':
-            key = gadget::KEY_C;
+            key = KEY_C;
             break;
          case 'd':
          case 'D':
-            key = gadget::KEY_D;
+            key = KEY_D;
             break;
          case 'e':
          case 'E':
-            key = gadget::KEY_E;
+            key = KEY_E;
             break;
          case 'f':
          case 'F':
-            key = gadget::KEY_F;
+            key = KEY_F;
             break;
          case 'g':
          case 'G':
-            key = gadget::KEY_G;
+            key = KEY_G;
             break;
          case 'h':
          case 'H':
-            key = gadget::KEY_H;
+            key = KEY_H;
             break;
          case 'i':
          case 'I':
-            key = gadget::KEY_I;
+            key = KEY_I;
             break;
          case 'j':
          case 'J':
-            key = gadget::KEY_J;
+            key = KEY_J;
             break;
          case 'k':
          case 'K':
-            key = gadget::KEY_K;
+            key = KEY_K;
             break;
          case 'l':
          case 'L':
-            key = gadget::KEY_L;
+            key = KEY_L;
             break;
          case 'm':
          case 'M':
-            key = gadget::KEY_M;
+            key = KEY_M;
             break;
          case 'n':
          case 'N':
-            key = gadget::KEY_N;
+            key = KEY_N;
             break;
          case 'o':
          case 'O':
-            key = gadget::KEY_O;
+            key = KEY_O;
             break;
          case 'p':
          case 'P':
-            key = gadget::KEY_P;
+            key = KEY_P;
             break;
          case 'q':
          case 'Q':
-            key = gadget::KEY_Q;
+            key = KEY_Q;
             break;
          case 'r':
          case 'R':
-            key = gadget::KEY_R;
+            key = KEY_R;
             break;
          case 's':
          case 'S':
-            key = gadget::KEY_S;
+            key = KEY_S;
             break;
          case 't':
          case 'T':
-            key = gadget::KEY_T;
+            key = KEY_T;
             break;
          case 'u':
          case 'U':
-            key = gadget::KEY_U;
+            key = KEY_U;
             break;
          case 'v':
          case 'V':
-            key = gadget::KEY_V;
+            key = KEY_V;
             break;
          case 'w':
          case 'W':
-            key = gadget::KEY_W;
+            key = KEY_W;
             break;
          case 'x':
          case 'X':
-            key = gadget::KEY_X;
+            key = KEY_X;
             break;
          case 'y':
          case 'Y':
-            key = gadget::KEY_Y;
+            key = KEY_Y;
             break;
          case 'z':
          case 'Z':
-            key = gadget::KEY_Z;
+            key = KEY_Z;
             break;
          case '0':
-            key = gadget::KEY_0;
+            key = KEY_0;
             break;
          case '1':
-            key = gadget::KEY_1;
+            key = KEY_1;
             break;
          case '2':
-            key = gadget::KEY_2;
+            key = KEY_2;
             break;
          case '3':
-            key = gadget::KEY_3;
+            key = KEY_3;
             break;
          case '4':
-            key = gadget::KEY_4;
+            key = KEY_4;
             break;
          case '5':
-            key = gadget::KEY_5;
+            key = KEY_5;
             break;
          case '6':
-            key = gadget::KEY_6;
+            key = KEY_6;
             break;
          case '7':
-            key = gadget::KEY_7;
+            key = KEY_7;
             break;
          case '8':
-            key = gadget::KEY_8;
+            key = KEY_8;
             break;
          case '9':
-            key = gadget::KEY_9;
+            key = KEY_9;
             break;
          default:
-            key = gadget::KEY_NONE;
+            key = KEY_NONE;
             break;
       }
    }
@@ -911,8 +896,8 @@ gadget::Keys InputAreaCocoa::vKeyToKey(const unsigned short keyChar,
    return key;
 }
 
-void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
-                                const gadget::Keys key)
+void InputAreaCocoa::doAddEvent(EventPtr event,
+                                const Keys key)
 {
    // Hold the keys lock for only as long as we need it.
    {
@@ -920,13 +905,13 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
 
       switch ( event->type() )
       {
-         case gadget::KeyPressEvent:
-         case gadget::MouseButtonPressEvent:
+         case KeyPressEvent:
+         case MouseButtonPressEvent:
             mKeyboardMouseDevice->mRealkeys[key] = 1;
             mKeyboardMouseDevice->mKeys[key] += 1;
             break;
-         case gadget::KeyReleaseEvent:
-         case gadget::MouseButtonReleaseEvent:
+         case KeyReleaseEvent:
+         case MouseButtonReleaseEvent:
             mKeyboardMouseDevice->mRealkeys[key] = 0;
             break;
          default:
@@ -941,8 +926,8 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
    {
       switch ( event->type() )
       {
-         case gadget::KeyPressEvent:
-            if ( key == gadget::KEY_ESC )
+         case KeyPressEvent:
+            if ( key == KEY_ESC )
             {
                if ( mLockState != Unlocked )
                {
@@ -993,7 +978,7 @@ void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
                unlockMouseInternal();
             }
             break;
-         case gadget::KeyReleaseEvent:
+         case KeyReleaseEvent:
             if ( mLockState == Lock_KeyDown && key == mLockStoredKey )
             {
                mLockState = Unlocked;

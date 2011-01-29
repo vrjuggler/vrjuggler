@@ -59,7 +59,7 @@ namespace gadget
  *
  * @see InputViewCocoa
  */
-class GADGET_CLASS_API InputAreaCocoa : public gadget::InputArea
+class GADGET_CLASS_API InputAreaCocoa : public InputArea
 {
 protected:
    InputAreaCocoa();
@@ -103,7 +103,7 @@ public:
     * @param event A pointer to the Cocoa event structure associated with the
     *              key event.
     */
-   void addKeyEvent(const gadget::EventType type, NSEvent* event);
+   void addKeyEvent(const EventType type, NSEvent* event);
 
    /**
     * Adds a new modifier key press/release event to the event queue for this
@@ -118,8 +118,7 @@ public:
     * @param event A pointer to the Cocoa event structure associated with the
     *              key event.
     */
-   void addModifierEvent(const gadget::Keys key, const gadget::EventType type,
-                         NSEvent* event);
+   void addModifierEvent(const Keys key, const EventType type, NSEvent* event);
 
    /**
     * Adds a new mouse motion event to the event queue for this input area.
@@ -133,7 +132,7 @@ public:
     * @param event A pointer to the Cocoa event structure associated with the
     *              button event.
     */
-   void addMouseButtonEvent(const gadget::EventType type, NSEvent* event);
+   void addMouseButtonEvent(const EventType type, NSEvent* event);
 
    /**
     * Adds a new mouse motion event to the event queue for this input area.
@@ -146,8 +145,8 @@ public:
     * @param event  A pointer to the Cocoa event structure associated with the
     *               button event.
     */
-   void addMouseButtonEvent(const gadget::Keys button,
-                            const gadget::EventType type, NSEvent* event);
+   void addMouseButtonEvent(const Keys button, const EventType type,
+                            NSEvent* event);
 
    /**
     * Adds a new mouse button press/release event to the event queue for this
@@ -211,13 +210,13 @@ protected:
    /**
     * Translates the mouse button number into a gadget::Keys value.
     */
-   gadget::Keys getButtonFromNum(const int buttonNum) const;
+   Keys getButtonFromNum(const int buttonNum) const;
 
    /**
     * Converts \p mask into the gadget::Keys corresponding value. The value of
     * \p mask must be a mask value.
     */
-   gadget::Keys getKeyFromModifierMask(const unsigned int mask) const;
+   Keys getKeyFromModifierMask(const unsigned int mask) const;
 
    void warpCursorToCenter();
 
@@ -230,7 +229,7 @@ protected:
     */
    int getMask(const unsigned int modifiers) const;
 
-   bool isModifier(const gadget::Keys key) const;
+   bool isModifier(const Keys key) const;
 
    /**
     * Converts Cocoa virtual key to gadget::Keys value.
@@ -239,9 +238,8 @@ protected:
     *
     * @note Keypad keys are transformed ONLY to number keys.
     */
-   gadget::Keys vKeyToKey(const unsigned short keyChar,
-                          const unsigned short keyCode,
-                          const unsigned int modifiers);
+   Keys vKeyToKey(const unsigned short keyChar, const unsigned short keyCode,
+                  const unsigned int modifiers);
 
    /**
     * Adds the given event to the keyboard/mouse event queue. Press and
@@ -253,7 +251,7 @@ protected:
     *       gadget::MouseButtonReleaseEvent, then the identified key has its
     *       state in \c mKeyboardMouseDevice updated accordingly.
     */
-   void doAddEvent(gadget::EventPtr event, const gadget::Keys key);
+   void doAddEvent(EventPtr event, const Keys key);
 
    /**
     * Clips the cursor so that when the mouse is being dragged that the mouse
