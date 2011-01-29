@@ -289,7 +289,7 @@ public:
     *
     * @param filename The name of the configuration file to load.
     */
-   void loadConfigFile(std::string filename);
+   void loadConfigFile(const std::string& filename);
 
    /**
     * Scans the given directory (or directories) for .jdef files and loads all

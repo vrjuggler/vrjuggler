@@ -899,7 +899,7 @@ bool Kernel::removeUser(jccl::ConfigElementPtr element)
 }
 
 // --- STARTUP ROUTINES --- //
-void Kernel::loadConfigFile(std::string filename)
+void Kernel::loadConfigFile(const std::string& filename)
 {
    if (mClusterSlave)
    {
