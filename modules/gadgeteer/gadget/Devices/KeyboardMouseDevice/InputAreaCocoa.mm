@@ -97,7 +97,7 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
          const unichar key_char = [key_chars characterAtIndex:0];
          const gadget::Keys key = vKeyToKey(key_char, [event keyCode],
                                             modifiers);
-          
+
          gadget::EventPtr key_event(
             new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
                                  AbsoluteToDuration(UpTime()), this,
@@ -122,7 +122,7 @@ void InputAreaCocoa::addModifierEvent(const gadget::Keys key,
 void InputAreaCocoa::addMouseButtonEvent(const gadget::EventType type,
                                          NSEvent* event)
 {
-   // If the user uses the scroll wheel then set the button output 
+   // If the user uses the scroll wheel then set the button output
    // appropriately. This behavior is deprecated.
    if ( [event type] == NSScrollWheel )
    {
@@ -192,7 +192,7 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
    }
 
    NSEventType mouse_event_type = [event type];
-   if ( mouse_event_type == NSLeftMouseDragged  ||  
+   if ( mouse_event_type == NSLeftMouseDragged  ||
         mouse_event_type == NSRightMouseDragged ||
         mouse_event_type == NSOtherMouseDragged )
    {
@@ -910,7 +910,7 @@ gadget::Keys InputAreaCocoa::vKeyToKey(const unsigned short keyChar,
 
    return key;
 }
- 
+
 void InputAreaCocoa::doAddEvent(gadget::EventPtr event,
                                 const gadget::Keys key)
 {
@@ -1029,7 +1029,7 @@ void InputAreaCocoa::clipCursorArea()
         // Place cursor at the edge of the bounds.
         NSRect frame = [mCocoaWindow frame];
         NSRect screen_frame = [[mCocoaWindow screen] frame];
-         
+
         // Apparently Core Graphics uses a different coordinate frame than
         // Cocoa.
         CGPoint center_pt =
