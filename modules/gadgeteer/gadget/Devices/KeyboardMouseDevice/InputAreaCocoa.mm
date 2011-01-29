@@ -74,6 +74,7 @@ void InputAreaCocoa::addKeyEvent(const EventType type, NSEvent* event)
    // stateful button on the keyboard.
    if ( modifiers & NSAlphaShiftKeyMask )
    {
+      storeEventKey(type, KEY_CAPS_LOCK);
       EventPtr key_event(new KeyEvent(type, KEY_CAPS_LOCK, getMask(modifiers),
                                       AbsoluteToDuration(UpTime()), this));
       doAddEvent(key_event, KEY_CAPS_LOCK);
@@ -94,6 +95,7 @@ void InputAreaCocoa::addKeyEvent(const EventType type, NSEvent* event)
          const unichar key_char = [key_chars characterAtIndex:0];
          const Keys key = vKeyToKey(key_char, [event keyCode], modifiers);
 
+         storeEventKey(type, key);
          EventPtr key_event(new KeyEvent(type, key,
                                          getMask([event modifierFlags]),
                                          AbsoluteToDuration(UpTime()), this,
@@ -107,6 +109,7 @@ void InputAreaCocoa::addKeyEvent(const EventType type, NSEvent* event)
 void InputAreaCocoa::addModifierEvent(const Keys key, const EventType type,
                                       NSEvent* event)
 {
+   storeEventKey(type, key);
    EventPtr key_event(new KeyEvent(type, key, getMask([event modifierFlags]),
                                    AbsoluteToDuration(UpTime()), this));
    doAddEvent(key_event, key);
@@ -153,6 +156,8 @@ void InputAreaCocoa::addMouseButtonEvent(const Keys button,
    const NSPoint view_loc = [mMainView convertPoint:[event locationInWindow]
                                            fromView:nil];
    const NSPoint root_loc = [NSEvent mouseLocation];
+
+   storeEventKey(type, button);
    EventPtr mouse_event(new MouseEvent(type, button, view_loc.x, view_loc.y,
                                        root_loc.x, root_loc.y, 0.0f, 0.0f,
                                        getMask([event modifierFlags]),
@@ -419,6 +424,10 @@ int InputAreaCocoa::getMask(const unsigned int modifiers) const
    {
       mask |= KEY_COMMAND;
    }
+
+   // XXX: mKeyboardMouseDevice->mKeysLock is not held here! This may not
+   // really matter for Cocoa since all event handling has to be done in the
+   // primordial thread.
 
    if ( mKeyboardMouseDevice->mKeys[MBUTTON1] )
    {
@@ -896,30 +905,29 @@ Keys InputAreaCocoa::vKeyToKey(const unsigned short keyChar,
    return key;
 }
 
-void InputAreaCocoa::doAddEvent(EventPtr event,
-                                const Keys key)
+void InputAreaCocoa::storeEventKey(const EventType eventType, const Keys key)
 {
-   // Hold the keys lock for only as long as we need it.
+   vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);
+
+   switch (eventType)
    {
-      vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);
-
-      switch ( event->type() )
-      {
-         case KeyPressEvent:
-         case MouseButtonPressEvent:
-            mKeyboardMouseDevice->mRealkeys[key] = 1;
-            mKeyboardMouseDevice->mKeys[key] += 1;
-            break;
-         case KeyReleaseEvent:
-         case MouseButtonReleaseEvent:
-            mKeyboardMouseDevice->mRealkeys[key] = 0;
-            break;
-         default:
-            break;
-      }
-
-      mKeyboardMouseDevice->addEvent(event);
+      case KeyPressEvent:
+      case MouseButtonPressEvent:
+         mKeyboardMouseDevice->mRealkeys[key] = 1;
+         mKeyboardMouseDevice->mKeys[key] += 1;
+         break;
+      case KeyReleaseEvent:
+      case MouseButtonReleaseEvent:
+         mKeyboardMouseDevice->mRealkeys[key] = 0;
+         break;
+      default:
+         break;
    }
+}
+
+void InputAreaCocoa::doAddEvent(EventPtr event, const Keys key)
+{
+   mKeyboardMouseDevice->addEvent(event);
 
    // Update the mouse cursor locked state based on keyboard events.
    if ( mAllowMouseLocking )

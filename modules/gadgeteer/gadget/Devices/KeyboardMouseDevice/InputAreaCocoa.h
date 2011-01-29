@@ -242,14 +242,23 @@ protected:
                   const unsigned int modifiers);
 
    /**
-    * Adds the given event to the keyboard/mouse event queue. Press and
-    * release state changes for keys and mouse buttons are recorded in
-    * \c mKeyboardMouseDevice->mRealkeys and \c mKeyboardMouseDevice->mKeys.
+    * Press and release state changes for keys and mouse buttons are recorded
+    * in \c mKeyboardMouseDevice->mRealkeys and \c mKeyboardMouseDevice->mKeys.
     *
     * @post If the event type is gadget::KeyPressEvent,
     *       gadget::KeyReleaseEvent, gadget::MouseButtonPressEvent, or
     *       gadget::MouseButtonReleaseEvent, then the identified key has its
     *       state in \c mKeyboardMouseDevice updated accordingly.
+    */
+   void storeEventKey(const EventType eventType, const Keys key);
+
+   /**
+    * Adds the given event to the keyboard/mouse event queue.
+    *
+    * @pre \p key has been stored in \c mKeyboardMouseDevice (use
+    *      storeEventKey() to do this).
+    *
+    * @see storeEventKey()
     */
    void doAddEvent(EventPtr event, const Keys key);
 

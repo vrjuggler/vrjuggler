@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-01-29 patrick     Fixed a bug in Cocoa keyboard/mouse event handling where
+                       where the mask for mouse events could be computed
+                       incorrectly.
 2011-01-17 patrick     gadget::DigitalEventInterface now generates events with
                        the appropriate state when the associated digital device
                        unit is toggled on and off.
