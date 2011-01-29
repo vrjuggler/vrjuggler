@@ -901,15 +901,29 @@ bool Kernel::removeUser(jccl::ConfigElementPtr element)
 // --- STARTUP ROUTINES --- //
 void Kernel::loadConfigFile(std::string filename)
 {
-   vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL)
-      << "Loading config file: " << filename << std::endl << vprDEBUG_FLUSH;
+   if (mClusterSlave)
+   {
+      vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrYELLOW, "WARNING:")
+         << "[vrj::Kernel::loadConfigFile()] Told to load file '"
+         << filename << "', but this node is clustered and not the "
+         << "master node!\n"
+         << "Since VR Juggler 2.3/3.0, cluster masters are the only "
+         << "ones where config files must be loaded." << std::endl
+         << vprDEBUG_FLUSH;
+      return;
+   }
+
+   vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+      << "Loading config file '" << filename << "'" << std::endl
+      << vprDEBUG_FLUSH;
 
    // We can allocate this on the stack because the config elements get
    // copied into a new PendingConfigElement from the configuration.
    jccl::Configuration cfg;
 
    // ------- OPEN Program specified Config file ------ //
-   if(filename.empty())   // We have a filename
+   if (filename.empty())   // We have a filename
    {
       return;
    }
@@ -917,9 +931,10 @@ void Kernel::loadConfigFile(std::string filename)
    bool cfg_load_success = cfg.load(filename);
    if (!cfg_load_success)
    {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-         << "vrj::Kernel::loadConfigFile: Failed to load file: "
-         << filename << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR:")
+         << "[vrj::Kernel::loadConfigFile()] Failed to load file "
+         << filename << "'" << std::endl << vprDEBUG_FLUSH;
       exit(1);
    }
 

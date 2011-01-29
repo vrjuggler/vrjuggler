@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-29-2011 patrick     vrj::Kernel::loadConfigFile() now ignores config files
+                        given on cluster slave nodes.
+
 [3.0.0 released - 11.27.2010]==================================================
 Oct-10-2010 patrick     vrj::osg::AppViewer now sets flags on the camera held
                         by the context-specific osgViewer::Viewer object so
