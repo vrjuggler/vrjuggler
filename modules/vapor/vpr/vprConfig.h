@@ -119,11 +119,11 @@ namespace std
 }
 
 /*
- * Visual C++ 8.0 and beyond have non-standard STL stuff in the stdext
- * namespace. The code below works around that behavior by bringing the
- * stdext namespace into the std namespace.
+ * Visual C++ 8.0 and 9.0 have non-standard STL stuff in the stdext namespace.
+ * The code below works around that behavior by bringing the stdext namespace
+ * into the std namespace.
  */
-#elif defined(_MSC_VER) && _MSC_VER >= 1400
+#elif defined(_MSC_VER) && (_MSC_VER == 1400 || _MSC_VER == 1500)
 namespace std
 {
    using namespace stdext;
