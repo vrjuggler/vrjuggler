@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-06-2011 patrick     An assertion has been added to
+                        vrj::Kernel::init(const boost::program_options::variables_map&)
+                        to help clarify that the use of
+                        vrj::Kernel::getClusterOptions() is a precondition.
 Jan-29-2011 patrick     vrj::Kernel::loadConfigFile() now ignores config files
                         given on cluster slave nodes.
 

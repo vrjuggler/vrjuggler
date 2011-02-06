@@ -104,17 +104,39 @@ public:
       sUseCocoaWrapper = useWrapper;
    }
 
+   /** @name Core Program Options */
+   //@{
    /**
-    * Get program options description for VR Juggler.
+    * Get general program options description for VR Juggler.
     *
     * @since 2.3
     */
    boost::program_options::options_description& getGeneralOptions();
-   boost::program_options::options_description& getClusterOptions();
-   boost::program_options::options_description& getConfigOptions();
 
    /**
-    * Parse command line arguments.
+    * Get cluster launch program options descriptions for VR Juggler.
+    *
+    * @since 2.3
+    */
+   boost::program_options::options_description& getClusterOptions();
+
+   /**
+    * Get configuration file program options descriptions for VR Juggler.
+    *
+    * @since 2.3
+    */
+   boost::program_options::options_description& getConfigOptions();
+   //@}
+
+   /**
+    * Parse command line arguments. This is for the simple case of the
+    * application main() function passing in the \p argc and \p argv
+    * options supplied by the operating system. For more sophisticated use,
+    * handle command line options using Boost.program_options and pass the
+    * resulting boost::program_options::variables_map object in to the other
+    * overload of this method.
+    *
+    * @see init(const boost::program_options::variables_map&)
     *
     * @since 2.3
     */
@@ -122,6 +144,13 @@ public:
 
    /**
     * Initialize kernel with given variables.
+    *
+    * @pre \p vm was initialized with an options descritiption composed with
+    *      the results of at least getGeneralOptions() and getCluterOptions().
+    *
+    * @see getGeneralOptions()
+    * @see getClusterOptions()
+    * @see getConfigOptions()
     *
     * @since 2.3
     */
