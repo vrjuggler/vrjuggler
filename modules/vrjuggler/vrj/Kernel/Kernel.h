@@ -145,8 +145,8 @@ public:
     *                    is that only arguments that are custom to the
     *                    application are left in the array after calling
     *                    this method.
-    * @param parserStyle This flag is used to influence how
-    *                    Boost.program_options parses the valus in \p argv.
+    * @param parserStyle This parameter is used to influence how
+    *                    Boost.program_options parses the values in \p argv.
     *                    The default value is 0, which indicates that the
     *                    default command line parser style should be used.
     *
