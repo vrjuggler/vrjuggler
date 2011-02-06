@@ -609,6 +609,11 @@
     */
    -(void) clearTrackingRect
    {
+      if (! mVrjWindow->isOpen())
+      {
+         return;
+      }
+       
       if ( [self window] && mTrackingRect > 0 )
       {
          [self removeTrackingRect:mTrackingRect];
