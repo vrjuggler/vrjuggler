@@ -136,11 +136,50 @@ public:
     * resulting boost::program_options::variables_map object in to the other
     * overload of this method.
     *
+    * @param argc The number of values in the \p argv array. This value is
+    *             decremented for each value in \p argv that is consumed by
+    *             this method.
+    * @param argv An array of strings that represent the program command line
+    *             options. Each value in this array that is consumed by this
+    *             method is removed. The result is that only arguments that
+    *             are custom to the application are left in the array after
+    *             calling this method.
+    *
+    * @note This calls init(int&, char*[], parserStyle) with \p parserStyle
+    *       set to 0. This indicates that the default Boost.program_options
+    *       command line parser style should be used.
+    *
     * @see init(const boost::program_options::variables_map&)
     *
     * @since 2.3
     */
    bool init(int& argc, char* argv[]);
+
+   /**
+    * Parse command line arguments. This is for the simple case of the
+    * application main() function passing in the \p argc and \p argv
+    * options supplied by the operating system. For more sophisticated use,
+    * handle command line options using Boost.program_options and pass the
+    * resulting boost::program_options::variables_map object in to the other
+    * overload of this method.
+    *
+    * @param argc        The number of values in the \p argv array. This
+    *                    value is decremented for each value in \p argv that
+    *                    is consumed by this method.
+    * @param argv        An array of strings that represent the program
+    *                    command line options. Each value in this array that
+    *                    is consumed by this method is removed. The result
+    *                    is that only arguments that are custom to the
+    *                    application are left in the array after calling
+    *                    this method.
+    * @param parserStyle This parameter is used to influence how
+    *                    Boost.program_options parses the values in \p argv.
+    *
+    * @see init(const boost::program_options::variables_map&)
+    *
+    * @since 3.0.1
+    */
+   bool init(int& argc, char* argv[], const int parserStyle);
 
    /**
     * Initialize kernel with given variables.

@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-06-2011 patrick     Another vrj::Kernel::init() overload has been added.
+                        This version accepts an int parameter, parserStyle,
+                        that allows the application main() function to
+                        influence the Boost.program_options command line parser
+                        style.
 Feb-06-2011 patrick     An assertion has been added to
                         vrj::Kernel::init(const boost::program_options::variables_map&)
                         to help clarify that the use of

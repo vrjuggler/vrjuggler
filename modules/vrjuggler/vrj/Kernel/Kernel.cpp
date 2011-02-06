@@ -112,6 +112,11 @@ po::options_description& Kernel::getConfigOptions()
 
 bool Kernel::init(int& argc, char* argv[])
 {
+   return init(argc, argv, 0);
+}
+
+bool Kernel::init(int& argc, char* argv[], const int parserStyle)
+{
 #if BOOST_VERSION <= 103200
    int processed_count(0);
    std::vector<char*> processed_args;
@@ -230,17 +235,21 @@ bool Kernel::init(int& argc, char* argv[])
    //po::options_description& config_desc = getConfigOptions();
    //all_options.add(config_desc);
 
-   // Construct a parser and do the actuall parsing.
+   // Construct a parser and do the actual parsing.
    po::command_line_parser parser(argc, argv);
-   po::parsed_options parsed = parser.options(all_options).allow_unregistered().run();
+   parser.style(parserStyle);
+   po::parsed_options parsed =
+      parser.options(all_options).allow_unregistered().run();
 
    // Keep track of the options that we actually use.
-   // XXX: This is only needed because of a bug in versions of boost.program_options < 1.34
-   //      where calling po::store(parsed_options, variable_map) throws an exception when
+   // XXX: This is only needed because of a bug in versions of
+   //      Boost.program_options < 1.34 where calling
+   //      po::store(parsed_options, variable_map) throws an exception when
    //      calling find() on a unrecognized option.
    po::parsed_options used_options(&all_options);
 
-   // Keep track of the tokens that we use so that we know to remove them from argv.
+   // Keep track of the tokens that we use so that we know to remove them from
+   // argv.
    std::vector<std::string> used_tokens;
    for (unsigned int i = 0; i < parsed.options.size(); i++)
    {
@@ -257,15 +266,20 @@ bool Kernel::init(int& argc, char* argv[])
 
    // Keep track of the "new" end of the argv array.
    char** new_end = argv+argc;
-   for (std::vector<std::string>::const_iterator itr = used_tokens.begin(); itr != used_tokens.end(); itr++)
+   typedef std::vector<std::string>::const_iterator iter_type;
+   for (iter_type itr = used_tokens.begin(); itr != used_tokens.end(); ++itr)
    {
       // Don't remove help arguments.
       if (0 == strcmp((*itr).c_str(), "-h") ||
           0 == strcmp((*itr).c_str(), "--help"))
-      { continue; }
+      {
+         continue;
+      }
 
       // Remove the token from argv if we used it.
-      boost::function<bool (char *)> remove_equal = boost::bind(std::equal_to<int>(), 0, boost::bind(strcmp, (*itr).c_str(), _1));
+      boost::function<bool (char *)> remove_equal =
+         boost::bind(std::equal_to<int>(), 0,
+                     boost::bind(strcmp, (*itr).c_str(), _1));
       new_end = std::remove_if(argv, argv + argc, remove_equal);
    }
 
