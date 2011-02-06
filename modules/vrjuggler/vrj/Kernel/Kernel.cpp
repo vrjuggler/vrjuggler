@@ -288,6 +288,9 @@ bool Kernel::init(int& argc, char* argv[])
 
 bool Kernel::init(const po::variables_map& vm)
 {
+   assert(vm.count("vrjmaster") == 1 && "See getClusterOptions()");
+   assert(vm.count("vrjslave") == 1 && "See getClusterOptions()");
+
    bool cluster_master = vm["vrjmaster"].as<bool>();
    bool cluster_slave = vm["vrjslave"].as<bool>();
    if (cluster_master && cluster_slave)
