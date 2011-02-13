@@ -2553,7 +2553,7 @@ def main():
             configs.append(a)
          else:
             print "Unrecognized build configuration %s!" % a
-            print "Valid build configurations: %s" % gValidBuildConfigs.join(", ")
+            print "Valid build configurations: %s" % ", ".join(gValidBuildConfigs)
             sys.exit(EXIT_STATUS_INVALID_ARGUMENT)
       elif o == "--64":
          gBuild64 = True
@@ -2598,7 +2598,7 @@ def main():
                for config in configs:
                   #cmd = [devenv_cmd, solution_file, "/Build", "%s|%s" % (config, arch)]
                   cmd = [msbuild_cmd, solution_file, "/p:Configuration=%s" % config]
-                  print "Launching %s" % cmd.join(" ")
+                  print "Launching %s" % " ".join(cmd)
                   subprocess.call(cmd)
             else:
                status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
@@ -2665,7 +2665,7 @@ def usage():
    print "                         in the given configuration (may be"
    print "                         passed multiple times for more than one"
    print "                         config) - Valid configs:"
-   print "                         %s" % gValidBuildConfigs.join(", ")
+   print "                         %s" % ", ".join(gValidBuildConfigs)
    print "--install                Automatically install VR Juggler."
    print "--install-deps           Automatically install VR Juggler dependencies."
    #print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, 'options.cache' if it exists, or the file given by the -o option.  Only used in command line mode."
