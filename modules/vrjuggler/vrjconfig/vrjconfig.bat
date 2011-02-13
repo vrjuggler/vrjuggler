@@ -36,11 +36,21 @@ GOTO TEST_JAVA_EXIST
 rem Neither JAVA_HOME nor JDK_HOME is set, so try to find the Java
 rem installation path in the registry.
 :JAVA_REG
-rem Look for Java 1.5 first.
-FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Development Kit\1.5" /v JavaHome`) DO set JAVA_HOME=%%B
+
+rem Look for JRE 1.6 first.
+FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Runtime Environment\1.6" /v JavaHome`) DO set JAVA_HOME=%%B
 IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
-rem Then try Java 1.6.
+
+rem Then try JRE 1.5.
+FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Runtime Environment\1.5" /v JavaHome`) DO set JAVA_HOME=%%B
+IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
+
+rem Look for JDK 1.6 first.
 FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Development Kit\1.6" /v JavaHome`) DO set JAVA_HOME=%%B
+IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
+
+rem Then try JDK 1.5.
+FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Development Kit\1.5" /v JavaHome`) DO set JAVA_HOME=%%B
 IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
 
 :JAVA_ERR
