@@ -268,14 +268,16 @@ public:
 
    /**
     * Returns the fully qualified hostname for this address.
-    * @throws UnknownHostException when host can not be found.
+    *
+    * @throw vpr::UnknownHostException Thrown when host can not be found.
     */
    std::string getHostname() const;
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
-    * @throws UnknownHostException when host can not be found.
+    *
+    * @throw vpr::UnknownHostException Thrown when host can not be found.
     */
    std::vector<std::string> getHostnames() const;
 

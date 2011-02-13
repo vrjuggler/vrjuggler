@@ -98,7 +98,7 @@ public:
     *       returned to the caller.  If this socket is closed, \c mOpen is set
     *       to \c false.
     *
-    * @throws vpr::IOException If this socket could not be closed.
+    * @throw vpr::IOException Thrown if this socket could not be closed.
     */
    void close();
 
@@ -132,7 +132,7 @@ public:
     * @pre The socket is open, and mLocalAddr has been initialized properly.
     * @post The socket is bound to the address in mLocalAddr.
     *
-    * @throws vpr::SocketException If this socket could not be bound.
+    * @throw vpr::SocketException Thrown if this socket could not be bound.
     */
    void bind();
 
@@ -284,8 +284,9 @@ public:
     * @post On successful completion, \c mRemoteAddr is updated to use the
     *       given vpr::InetAddr object.
     *
-    * @throws vpr::SocketException If the remote address could not be changed
-    *                              because the socket is already connected.
+    * @throw vpr::SocketException
+    *           Thrown if the remote address could not be changed because the
+    *           socket is already connected.
     *
     * @see isConnected, connect
     */
@@ -431,8 +432,8 @@ public:
     * @param data   A data buffer containing the value to be used in setting
     *               this socket option.
     *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be set.
+    * @throw vpr::SocketException
+    *           Thrown if the value for the given option could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
                   const vpr::SocketOptions::Data& data);

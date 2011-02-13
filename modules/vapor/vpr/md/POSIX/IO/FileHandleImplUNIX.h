@@ -106,9 +106,11 @@ public:
     *       returned to the caller.  If the file is opened, mOpen is set to
     *       true.
     *
-    * @throws vpr::WouldBlockException if the file handle is in non-blocking
-    *         mode and could not be opened yet.
-    * @throws vpr::IOException if the file handle could not be opened.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file handle is in non-blocking mode and could
+    *           not be opened yet.
+    * @throw vpr::IOException
+    *           Thrown if the file handle could not be opened.
     */
    void open();
 
@@ -120,7 +122,7 @@ public:
     *       returned to the caller.  If the file is closed, mOpen is set to
     *       false.
     *
-    * @throws vpr::IOException if the file handle could not be closed.
+    * @throw vpr::IOException Thrown if the file handle could not be closed.
     */
    void close();
 
@@ -149,7 +151,7 @@ public:
     *                 blocking I/O.  A value of false indicates that it will
     *                 use non-blocking I/O.
     *
-    * @throws vpr::IOException if the blocking mode could not be set.
+    * @throw vpr::IOException Thrown if the blocking mode could not be set.
     */
    void setBlocking(bool blocking);
 
@@ -215,8 +217,8 @@ public:
     *             append mode for writing.  A value of false indicates that
     *             it will not.
     *
-    * @throws vpr::IOException if the write mode could not be changed
-    *         for some reason.
+    * @throw vpr::IOException
+    *           Thrown if the write mode could not be changed for some reason.
     */
    void setAppend(bool flag);
 
@@ -231,8 +233,8 @@ public:
     *             used.  A value of false indicates that asynchronous writes
     *             will be used.
     *
-    * @throws vpr::IOException if the write mode could not be changed
-    *         for some reason.
+    * @throw vpr::IOException
+    *           Thrown if the write mode could not be changed for some reason.
     */
    void setSynchronousWrite(bool flag);
 
@@ -280,7 +282,7 @@ public:
     *
     * @return The read bufer size is returned to the caller.
     *
-    * @throws vpr::IOException if read buffer size could not be found.
+    * @throw vpr::IOException Thrown if read buffer size could not be found.
     */
    vpr::Int32 getReadBufferSize() const;
 
@@ -303,11 +305,13 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
                       const vpr::Interval& timeout = vpr::Interval::NoTimeout);
@@ -331,9 +335,11 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
                        const vpr::Interval& timeout = vpr::Interval::NoTimeout);
@@ -354,11 +360,14 @@ public:
     *
     * @return The number of bytes written to the device is returned.
     *
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the write operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the write operation failed.
     */
    vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
                        const vpr::Interval& timeout = vpr::Interval::NoTimeout);
@@ -388,7 +397,7 @@ protected:
     *
     * @return A value larger than -1 is returned giving the current flags for
     *         the file handle.
-    * @return -1 is returned if the current flags could not be requested.
+    *         -1 is returned if the current flags could not be requested.
     */
    int getFlags() const;
 
@@ -400,7 +409,7 @@ protected:
     *       value.
     *
     * @return 0 is returned if the flags were updated successfully.
-    * @return -1 is returned if the current flags could not be overwritten.
+    *         -1 is returned if the current flags could not be overwritten.
     */
    int setFlags(const int flags);
 
@@ -408,7 +417,7 @@ protected:
     * Tests if the file handle is ready for reading within the timeout
     * period.
     *
-    * @throws IOException if error occured while querying read state.
+    * @throw vpr::IOException Thrown if error occured while querying read state.
     */
    bool isReadable(const vpr::Interval timeout) const;
 

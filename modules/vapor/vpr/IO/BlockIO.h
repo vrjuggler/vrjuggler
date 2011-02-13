@@ -83,9 +83,11 @@ public:
     *       is returned to the caller.  If the I/O device is opened, \c mOpen
     *       is set to true.
     *
-    * @throws vpr::WouldBlockException if the file handle is in non-blocking
-    *         mode and could not be opened yet.
-    * @throws vpr::IOException if the file handle could not be opened.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file handle is in non-blocking mode and could
+    *           not be opened yet.
+    * @throw vpr::IOException
+    *           Thrown if the file handle could not be opened.
     */
    virtual void open() = 0;
 
@@ -97,7 +99,7 @@ public:
     *       is returned to the caller.  If the I/O device is closed,
     *       \c mOpen is set to false.
     *
-    * @throws vpr::IOException if the file handle could not be closed.
+    * @throw vpr::IOException Thrown if the file handle could not be closed.
     */
    virtual void close() = 0;
 
@@ -107,8 +109,7 @@ public:
     * @pre None.
     * @post The boolean value in \c mOpen is returned to the caller.
     *
-    * @return \c true is returned if the device is open;
-    *         \c false otherwise.
+    * @return \c true is returned if the device is open; \c false otherwise.
     */
    virtual bool isOpen() const
    {
@@ -126,7 +127,7 @@ public:
     * @param blocking A true value puts the I/O device into blocking mode.
     *                 A false value puts it into non-blocking mode.
     *
-    * @throws vpr::IOException if the blocking mode could not be set.
+    * @throw vpr::IOException Thrown if the blocking mode could not be set.
     */
    virtual void setBlocking(bool blocking) = 0;
 
@@ -171,11 +172,14 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 read(void* buffer, const vpr::Uint32 length,
                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -202,11 +206,13 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Trown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 read(std::string& buffer, const vpr::Uint32 length,
                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -237,11 +243,13 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Trown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 read(std::vector<vpr::Uint8>& buffer,
                     const vpr::Uint32 length,
@@ -281,9 +289,11 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 readn(void* buffer, const vpr::Uint32 length,
                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -310,9 +320,11 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 readn(std::string& buffer, const vpr::Uint32 length,
                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -348,9 +360,11 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 readn(std::vector<vpr::Uint8>& buffer,
                      const vpr::Uint32 length,
@@ -390,11 +404,14 @@ public:
     *
     * @return The number of bytes written to the device is returned.
     *
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 write(const void* buffer, const vpr::Uint32 length,
                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -418,11 +435,14 @@ public:
     *
     * @return The number of bytes written to the device is returned.
     *
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 write(const std::string& buffer, const vpr::Uint32 length,
                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -447,11 +467,14 @@ public:
     *
     * @return The number of bytes written to the device is returned.
     *
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 write(const std::vector<vpr::Uint8>& buffer,
                      const vpr::Uint32 length,
@@ -472,8 +495,7 @@ public:
     *                vpr::Interval::NoWait which will simply poll the device
     *                and return immediately.
     *
-    * @return \c true is returned if reading will block;
-    *         \c false otherwise.
+    * @return \c true is returned if reading will block; \c false otherwise.
     */
    bool isReadBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
 
@@ -488,8 +510,7 @@ public:
     *                vpr::Interval::NoWait which will simply poll the device
     *                and return immediately.
     *
-    * @return \c true is returned if writing will block;
-    *         \c false otherwise.
+    * @return \c true is returned if writing will block; \c false otherwise.
     */
    bool isWriteBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
 
@@ -547,21 +568,24 @@ protected:
 
    /**
     * Read strategy.
-    * @throws vpr::IOException if the read operation failed.
+    *
+    * @throw vpr::IOException Thrown if the read operation failed.
     */
    virtual vpr::Uint32 read_s(void* buffer, const vpr::Uint32 length,
                               const vpr::Interval& timeout);
 
    /**
     * Read strategy.
-    * @throws vpr::IOException if the read operation failed.
+    *
+    * @throw vpr::IOException Thrown if the read operation failed.
     */
    virtual vpr::Uint32 readn_s(void* buffer, const vpr::Uint32 length,
                                const vpr::Interval& timeout);
 
    /**
     * Write strategy.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    virtual vpr::Uint32 write_s(const void* buffer, const vpr::Uint32 length,
                                const vpr::Interval& timeout);
@@ -584,11 +608,14 @@ protected:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    virtual vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
                               const vpr::Interval& timeout) = 0;
@@ -611,9 +638,11 @@ protected:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    virtual vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
                                const vpr::Interval& timeout) = 0;
@@ -633,11 +662,14 @@ protected:
     *
     * @return The number of bytes written to the device is returned.
     *
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    virtual vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
                                const vpr::Interval& timeout) = 0;

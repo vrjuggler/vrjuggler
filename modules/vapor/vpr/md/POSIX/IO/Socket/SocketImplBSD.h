@@ -82,8 +82,11 @@ public:
     * @post A new socket is created with its file handle stored in the
     *       mFdesc member variable.
     *
-    * @throws vpr::SocketException if the socket could not be opened.
-    * @throws vpr::IOException if the blocking state could not be set.
+    * @throw vpr::SocketException
+    *           Thrown if the socket could not be opened.
+    * @throw vpr::IOException
+    *           Thrown if the blocking state could not be set.
+    *
     * @see FileHandleImplUNIX::setBlocking()
     */
    void open();
@@ -96,7 +99,8 @@ public:
     *       returned to the caller.
     *       The local tracking of connected state and bound status are reset.
     *
-    * @throws vpr::IOException if the socket could not be closed.
+    * @throw vpr::IOException Thrown if the socket could not be closed.
+    *
     * @see FileHandleImplUNIX::close()
     */
    void close();
@@ -132,7 +136,7 @@ public:
     * @pre The socket is open, and \c mLocalAddr has been initialized properly.
     * @post The socket is bound to the address in \c mLocalAddr.
     *
-    * @throws vpr::SocketException if socket could not be bound.
+    * @throw vpr::SocketException Thrown if socket could not be bound.
     */
    void bind();
 
@@ -163,9 +167,11 @@ public:
     *                 configured to use blocking I/O.  A value of \c false
     *                 indicates that it will use non-blocking I/O.
     *
-    * @throws vpr::SocketException if trying to call after a clocking
-    *         call has already been made.
-    * @throws vpr::IOException if the blocking state could not be set.
+    * @throw vpr::SocketException
+    *           Thrown if trying to call after a clocking call has already
+    *           been made.
+    * @throw vpr::IOException
+    *           Thrown if the blocking state could not be set.
     *
     * @see FileHandleImplUNIX::setBlocking()
     * @see isOpen, open
@@ -200,16 +206,23 @@ public:
     *         default destination for all packets is now \c mLocalAddr.
     *       non-blocking: A connection has been started and may have completed
     *         or caused an error.
-    * @note timeout value does not affect blocking socket connects.
-    * @todo Make timeout value apply to blocking sockets (by making non-blocking
-    *       for duration of connection).
     *
-    * @throws vpr::ConnectionResetException if connection is reset.
-    * @throws vpr::NoRouteToHostException if a route to host does not exist.
-    * @throws vpr::UnknownHostException if host does not exist.
-    * @throws vpr::TimeoutException if the connection could not be completed
-    *         in the given amount of time. This closes the socket before throw.
-    * @throws vpr::SocketException if could not connect.
+    * @note timeout value does not affect blocking socket connects.
+    *
+    * @todo Make timeout value apply to blocking sockets (by making
+    *       non-blocking for duration of connection).
+    *
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::TimeoutException
+    *           Thrown if the connection could not be completed in the given
+    *           amount of time. This closes the socket before throw.
+    * @throw vpr::SocketException
+    *           Thrown if could not connect.
     */
    void connect(const vpr::Interval& timeout = vpr::Interval::NoTimeout);
 
@@ -219,7 +232,7 @@ public:
     * @pre This socket is opened and has been connected to a peer.
     *
     * @return \c true is returned if this socket is still connected.
-    * @return \c false is returned if this socket is not currently connected.
+    *         \c false is returned if this socket is not currently connected.
     */
    bool isConnected() const;
 
@@ -252,8 +265,9 @@ public:
     * @post On successful completion, \c mLocalAddr is updated to use the given
     *       vpr::InetAddr object.
     *
-    * @throws vpr::SocketException if the local address could not be changed.
-    *         This occurs when this socket is already bound.
+    * @throw vpr::SocketException
+    *           Thrown if the local address could not be changed. This occurs
+    *           when this socket is already bound.
     *
     * @see isBound, bind
     */
@@ -276,8 +290,9 @@ public:
     * @post On successful completion, \c mRemoteAddr is updated to use the
     *       given vpr::InetAddr object.
     *
-    * @throws vpr::SocketException if the remote address could not be changed
-    *         because the socket is already connected.
+    * @throw vpr::SocketException
+    *           Thrown if the remote address could not be changed because the
+    *           socket is already connected.
     *
     * @see isConnected, connect
     */
@@ -393,8 +408,9 @@ public:
     * @param data   A data buffer that will be used to store the value of the
     *               given option.
     *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be retrieved.
+    * @throw vpr::SocketException
+    *           Thrown if the value for the given option could not be
+    *           retrieved.
     */
    void getOption(const vpr::SocketOptions::Types option,
                   vpr::SocketOptions::Data& data) const;
@@ -407,8 +423,8 @@ public:
     * @param data   A data buffer containing the value to be used in setting
     *               the socket option.
     *
-    * @throws vpr::SocketException if the value for the given option
-    *         could not be set.
+    * @throw vpr::SocketException
+    *           Thrown if the value for the given option could not be set.
     */
    void setOption(const vpr::SocketOptions::Types option,
                   const vpr::SocketOptions::Data& data);
@@ -430,7 +446,7 @@ protected:
     * @post The member variables are initialized accordingly to reasonable
     *       defaults.
     *
-    * @param sockType    The type for this socket (stream, datagram, etc.).
+    * @param sockType The type for this socket (stream, datagram, etc.).
     */
    SocketImplBSD(const vpr::SocketTypes::Type sockType);
 

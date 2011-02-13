@@ -67,9 +67,7 @@ public:
 public:
    GUID(const GenerateTag& tag);
 
-   /** Destructor.
-    * @throws nothing
-    */
+   /** Destructor. */
    virtual ~GUID()
    {
       /* Do nothing. */ ;
@@ -92,18 +90,24 @@ public:
       bool ret_val(false);
 
       if (mGuid.packed.l0 < r.mGuid.packed.l0)
-      {  ret_val = true; }
-      else if(mGuid.packed.l0 == r.mGuid.packed.l0)
       {
-         if(mGuid.packed.l1 < r.mGuid.packed.l1)
-         {  ret_val = true; }
-         else if(mGuid.packed.l1 == r.mGuid.packed.l1)
+         ret_val = true;
+      }
+      else if (mGuid.packed.l0 == r.mGuid.packed.l0)
+      {
+         if (mGuid.packed.l1 < r.mGuid.packed.l1)
          {
-            if(mGuid.packed.l2 < r.mGuid.packed.l2)
-            {  ret_val = true; }
-            else if(mGuid.packed.l2 == r.mGuid.packed.l2)
+            ret_val = true;
+         }
+         else if (mGuid.packed.l1 == r.mGuid.packed.l1)
+         {
+            if (mGuid.packed.l2 < r.mGuid.packed.l2)
             {
-               if(mGuid.packed.l3 < r.mGuid.packed.l3)
+               ret_val = true;
+            }
+            else if (mGuid.packed.l2 == r.mGuid.packed.l2)
+            {
+               if (mGuid.packed.l3 < r.mGuid.packed.l3)
                {
                   ret_val = true;
                }
@@ -180,11 +184,18 @@ public:
    void generate();
    void generate(const GUID& nsGuid, const std::string& name);
 
-   /** @name Reader/Writer methods
-    * @throws vpr::IOException if the operation failed.
+   /**
+    * @name Reader/Writer methods
     */
    //@{
+   /**
+    * @throw vpr::IOException Thrown if the operation failed.
+    */
    virtual void writeObject(vpr::ObjectWriter* writer);
+
+   /**
+    * @throw vpr::IOException Thrown if the operation failed.
+    */
    virtual void readObject(vpr::ObjectReader* reader);
    //@}
 
@@ -226,11 +237,11 @@ public:
 
    static const vpr::GUID NullGUID;
    
-
-   /** Hash trait/functor for vpr::GUID.
-   * - Implements interface needed for MS Compilers and all standard compilant STLs (stlport, sgi)
-   * This can be used with std::hash_map and friends.
-   */
+   /**
+    * Hash trait/functor for vpr::GUID.
+    * Implements interface needed for MS Compilers and all standard compilant
+    * STLs (stlport, sgi). This can be used with std::hash_map and friends.
+    */
    struct hash
    {
       enum
@@ -238,11 +249,13 @@ public:
          bucket_size = 4,
          min_buckets = 8
       };
+
       size_t operator() (const vpr::GUID& guid) const
       {
          return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 +
                 guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
       }
+
       bool operator()(const vpr::GUID& guid1, const vpr::GUID& guid2) const
       { 
          return (guid1 < guid2);

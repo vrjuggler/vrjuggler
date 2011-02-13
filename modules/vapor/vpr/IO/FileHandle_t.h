@@ -113,9 +113,11 @@ public:
     *       returned to the caller.  If opened successfully, this file is
     *       ready for use.
     *
-    * @throws vpr::WouldBlockException if the file handle is in non-blocking
-    *         mode and could not be opened yet.
-    * @throws vpr::IOException if the file handle could not be opened.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file handle is in non-blocking mode and could
+    *           not be opened yet.
+    * @throw vpr::IOException
+    *           Thrown if the file handle could not be opened.
     */
    virtual void open()
    {
@@ -130,7 +132,7 @@ public:
     * @post An attempt is made to close the file.  The resulting status is
     *       returned to the caller.
     *
-    * @throws vpr::IOException if the file handle could not be closed.
+    * @throw vpr::IOException Thrown if the file handle could not be closed.
     */
    virtual void close()
    {
@@ -144,7 +146,7 @@ public:
     * @pre The file handle is open.
     * @post Processes may block when accessing the file.
     *
-    * @throws vpr::IOException if the blocking mode could not be set.
+    * @throw vpr::IOException Thrown if the blocking mode could not be set.
     */
    virtual void setBlocking(bool blocking)
    {
@@ -230,8 +232,8 @@ public:
     * @param flag A value of true indicates that the file should be in append
     *             mode.  A value of false indicates that it should not.
     *
-    * @throws vpr::IOException if the write mode could not be changed
-    *         for some reason.
+    * @throw vpr::IOException
+    *           Thrown if the write mode could not be changed for some reason.
     */
    void setAppend(bool flag)
    {
@@ -249,8 +251,8 @@ public:
     *             synchronous writes.  A value of false indicates that it
     *             should use asynchronous writes.
     *
-    * @throws vpr::IOException if the write mode could not be changed
-    *         for some reason.
+    * @throw vpr::IOException
+    *           Thrown if the write mode could not be changed for some reason.
     */
    void setSynchronousWrite(bool flag)
    {
@@ -322,11 +324,14 @@ protected:
     * @param timeout   The amount of time to wait before returning to the
     *                  caller.
     *
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    void read_i(void* buffer, const vpr::Uint32 length,
                vpr::Uint32& bytesRead, const vpr::Interval& timeout)
@@ -353,9 +358,11 @@ protected:
     * @param timeout   The amount of time to wait before returning to the
     *                  caller.
     *
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    void readn_i(void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesRead, const vpr::Interval& timeout)
@@ -379,11 +386,14 @@ protected:
     * @param timeout      The amount of time to wait before returning to the
     *                     caller.
     *
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the write operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the write operation failed.
     */
    void write_i(const void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytesWritten, const vpr::Interval& timeout)

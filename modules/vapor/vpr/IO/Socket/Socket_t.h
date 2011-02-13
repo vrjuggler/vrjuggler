@@ -109,7 +109,8 @@ public:
     *       returned to the caller.  If the socket is opened, \c mOpen is set
     *       to true.
     *
-    * @throws vpr::IOException if the socket could not be opened.
+    * @throw vpr::IOException Thrown if the socket could not be opened.
+    *
     * @see FileHandleImplUNIX::open()
     */
    void open()
@@ -125,7 +126,8 @@ public:
     *       is returned to the caller.  If the socket is closed, \c mOpen
     *       is set to false.
     *
-    * @throws vpr::IOException if the socke could not be closed.
+    * @throw vpr::IOException Thrown if the socke could not be closed.
+    *
     * @see FileHandleImplUNIX::close()
     */
    void close()
@@ -140,8 +142,7 @@ public:
     * @post The boolean value giving the open state is returned to the
     *       caller.
     *
-    * @return true is returned if this socket is open;
-    *         false otherwise.
+    * @return \c true is returned if this socket is open; \c false otherwise.
     */
    bool isOpen() const
    {
@@ -154,8 +155,7 @@ public:
     * @pre None.
     * @post The boolean value giving the bound state is returned
     *
-    * @return true is returned if this socket is bound;
-    *         false otherwise.
+    * @return \c true is returned if this socket is bound; \c false otherwise.
     */
    bool isBound() const
    {
@@ -166,9 +166,8 @@ public:
     * Gets the status of a possibly connected socket.
     *
     * @return \c true is returned if this socket is connected to a remote
-    *         address.
-    * @return \c false is returned if this socket is not currently connected
-    *         (the other wise may have disconnected).
+    *         address. \c false is returned if this socket is not currently
+    *         connected (the other wise may have disconnected).
     */
    bool isConnected() const
    {
@@ -202,12 +201,15 @@ public:
     *                 configure to use blocking I/O.  A value of false
     *                 indicates that it should use non-blocking I/O.
     *
-    * @throws vpr::SocketException if trying to call after a clocking
-    *         call has already been made.
-    * @throws vpr::IOException if the blocking state could not be set.
+    * @throw vpr::SocketException
+    *           Thrown if trying to call after a clocking call has already
+    *           been made.
+    * @throw vpr::IOException
+    *           Thrown if the blocking state could not be set.
     *
     * @see FileHandleImplUNIX::setBlocking()
-    * @see isOpen, open
+    * @see isOpen
+    * @see open
     */
    void setBlocking(bool blocking)
    {
@@ -234,7 +236,7 @@ public:
     * @pre The socket is open.
     * @post The socket is bound to the address defined in the constructor.
     *
-    * @throws vpr::SocketException if socket could not be bound.
+    * @throw vpr::SocketException Thrown if socket could not be bound.
     */
    void bind()
    {
@@ -257,15 +259,22 @@ public:
     *       communication has been established.  For a datagram socket, the
     *       default destination for all packets is now \c mLocalAddr.
     *
-    * @throws ConnectionResetException if connection is reset.
-    * @throws NoRouteToHostException if a route to host does not exist.
-    * @throws UnknownHostException if host does not exist.
-    * @throws IOException if network is down.
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::SocketException if could not connect.
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::IOException
+    *           Thrown if network is down.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if could not connect.
     */
    void connect(const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
@@ -291,12 +300,15 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::SocketException
+    *           Thrown if the socket is not connected.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 recv(void* buffer, const vpr::Uint32 length,
                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -323,12 +335,15 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::SocketException
+    *           Thrown if the socket is not connected.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 recv(std::string& buffer, const vpr::Uint32 length,
                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -355,12 +370,15 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::SocketException
+    *           Thrown if the socket is not connected.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    vpr::Uint32 recv(std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -387,10 +405,13 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if socket is not connected.
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::SocketException
+    *           Thrown if socket is not connected.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 recvn(void* buffer, const vpr::Uint32 length,
                      const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -417,10 +438,13 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if socket is not connected.
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::SocketException
+    *           Thrown if socket is not connected.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 recvn(std::string& buffer, const vpr::Uint32 length,
                      const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -447,10 +471,13 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if socket is not connected.
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::SocketException
+    *           Thrown if socket is not connected.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    vpr::Uint32 recvn(std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
                      const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -471,24 +498,32 @@ public:
     * @post The given buffer is written to the socket, and the number of bytes
     *       written successfully is returned to the caller.
     *
-    * @param buffer       A pointer to the buffer to be written.
-    * @param length       The length of the buffer.
-    * @param timeout      The maximum amount of time to wait for data to be
-    *                     available for writing.  This argument is optional
-    *                     and defaults to vpr::Interval::NoTimeout.
+    * @param buffer  A pointer to the buffer to be written.
+    * @param length  The length of the buffer.
+    * @param timeout The maximum amount of time to wait for data to be
+    *                available for writing.  This argument is optional and
+    *                defaults to vpr::Interval::NoTimeout.
     *
     * @return The number of bytes written to the socket is returned.
     *
-    * @throws ConnectionResetException if connection is reset.
-    * @throws NoRouteToHostException if a route to host does not exist.
-    * @throws UnknownHostException if host does not exist.
-    * @throws IOException if network is down.
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::SocketException if the write operation failed.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::IOException
+    *           Thrown if network is down.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if the write operation failed.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 send(const void* buffer, const vpr::Uint32 length,
                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -512,16 +547,24 @@ public:
     *
     * @return The number of bytes written to the socket is returned.
     *
-    * @throws ConnectionResetException if connection is reset.
-    * @throws NoRouteToHostException if a route to host does not exist.
-    * @throws UnknownHostException if host does not exist.
-    * @throws IOException if network is down.
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::SocketException if the write operation failed.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::IOException
+    *           Thrown if network is down.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if the write operation failed.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 send(const std::string& buffer, const vpr::Uint32 length,
                     const vpr::Interval& timeout = vpr::Interval::NoTimeout)
@@ -546,16 +589,24 @@ public:
     *
     * @return The number of bytes written to the socket is returned.
     *
-    * @throws ConnectionResetException if connection is reset.
-    * @throws NoRouteToHostException if a route to host does not exist.
-    * @throws UnknownHostException if host does not exist.
-    * @throws IOException if network is down.
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::SocketException if the write operation failed.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::IOException
+    *           Thrown if network is down.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if the write operation failed.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    vpr::Uint32 send(const std::vector<vpr::Uint8>& buffer,
                     const vpr::Uint32 length,
@@ -853,12 +904,15 @@ protected:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if the socket is not connected.
-    * @throws vpr::WouldBlockException if the file is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::SocketException
+    *           Thrown if the socket is not connected.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the file is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     */
    virtual vpr::Uint32 read_i(void* buffer, const vpr::Uint32 length,
                               const vpr::Interval& timeout)
@@ -885,10 +939,13 @@ protected:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::SocketException if socket is not connected.
-    * @throws vpr::EOFException if end of file or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::SocketException
+    *           Thrown if socket is not connected.
+    * @throw vpr::EOFException
+    *           Thrown if end of file or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     */
    virtual vpr::Uint32 readn_i(void* buffer, const vpr::Uint32 length,
                                const vpr::Interval& timeout)
@@ -909,16 +966,24 @@ protected:
     * @param timeout The maximum amount of time to wait for data to be
     *                available for writing.
     *
-    * @throws ConnectionResetException if connection is reset.
-    * @throws NoRouteToHostException if a route to host does not exist.
-    * @throws UnknownHostException if host does not exist.
-    * @throws IOException if network is down.
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::SocketException if the write operation failed.
-    * @throws vpr::IOException if the file handle write operation failed.
+    * @throw vpr::ConnectionResetException
+    *           Thrown if connection is reset.
+    * @throw vpr::NoRouteToHostException
+    *           Thrown if a route to host does not exist.
+    * @throw vpr::UnknownHostException
+    *           Thrown if host does not exist.
+    * @throw vpr::IOException
+    *           Thrown if network is down.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::SocketException
+    *           Thrown if the write operation failed.
+    * @throw vpr::IOException
+    *           Thrown if the file handle write operation failed.
     */
    virtual vpr::Uint32 write_i(const void* buffer, const vpr::Uint32 length,
                                const vpr::Interval& timeout)
@@ -960,10 +1025,6 @@ protected:
       mSocketImpl->setOption(option, data);
    }
 
-// Put in back door for simulator
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-public:
-#endif
    /// Platform-specific socket implementation object
    boost::shared_ptr<SocketImpl> mSocketImpl;
 };

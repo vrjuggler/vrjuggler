@@ -126,12 +126,14 @@ public:
     *                request.  This argument is optional and default to
     *                vpr::Interval::NoTimeout.
     *
-    * @throws vpr::WouldBlockException if this is a non-blocking socket,
-    *         and there are no waiting connection requests.
-    * @throws vpr::TimeoutException if no connection requests arrived within
-    *         the given timeout period.
-    * @throws vpr::SocketException if the connection was not accepted because
-    *         of an error.
+    * @throw vpr::WouldBlockException
+    *           Thrown if this is a non-blocking socket, and there are no
+    *           waiting connection requests.
+    * @throw vpr::TimeoutException
+    *           Thrown if no connection requests arrived within the given
+    *           timeout period.
+    * @throw vpr::SocketException
+    *           Thrown if the connection was not accepted because of an error.
     */
    void accept(vpr::SocketStream& sock,
                vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -143,7 +145,8 @@ public:
 
    /**
     * Closes the accepting socket.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    void close()
    {

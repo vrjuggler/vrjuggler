@@ -99,8 +99,8 @@ public:
    /**
     * Starts a new section/element of name \p tagName.
     *
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void beginTag(const std::string& tagName)
    {
@@ -110,8 +110,8 @@ public:
    /**
     * Ends the most recently named tag.
     *
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void endTag()
    {
@@ -121,8 +121,8 @@ public:
    /**
     * Starts an attribute of the name \p attributeName.
     *
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void beginAttribute(const std::string& attributeName)
    {
@@ -132,8 +132,8 @@ public:
    /**
     * Ends the most recently named attribute.
     *
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void endAttribute()
    {
@@ -143,58 +143,60 @@ public:
 
    /**
     * Writes out the single byte.
+    *
     * @post data = old(data)+val, \c mCurHeadPos advanced 1.
     *
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeUint8(vpr::Uint8 val);
 
    /**
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeUint16(vpr::Uint16 val);
 
    /**
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeUint32(vpr::Uint32 val);
 
    /**
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeUint64(vpr::Uint64 val);
 
    /**
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeFloat(float val);
 
    /**
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeDouble(double val);
 
    /**
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeString(std::string val);
 
    /**
-    * @throw IOException If I/O errors occur while writing to the underlying
-    *                    data source.
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
     */
    virtual void writeBool(bool val);
 
    /**
     * Writes raw data of length \p len.
-    * @throws vpr::IOException if the operation failed.
+    *
+    * @throw vpr::IOException Thrown if the operation failed.
     */
    inline void writeRaw(vpr::Uint8* data,
                         const unsigned int len = 1);
@@ -211,7 +213,8 @@ private:
    }
 
 public:
-   bool                       mOwnDataBuffer;      /**< If true we allocated the data buffer and should delete it. */
+   /** If true we allocated the data buffer and should delete it. */
+   bool                       mOwnDataBuffer;
    std::vector<vpr::Uint8>*   mData;
    unsigned int               mCurHeadPos;
 };

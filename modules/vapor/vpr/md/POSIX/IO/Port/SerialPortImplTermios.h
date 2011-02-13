@@ -142,9 +142,11 @@ public:
     *       port's flags are initaialized to 0.  The resulting status is
     *       returned to the caller.
     *
-    * @throws vpr::WouldBlockException if the serial port is in non-blocking
-    *         mode and could not be opened yet.
-    * @throws vpr::IOException if the serial port could not be opened.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the serial port is in non-blocking mode and could
+    *           not be opened yet.
+    * @throw vpr::IOException
+    *           Thrown if the serial port could not be opened.
     *
     * @see vpr::FileHandleImplUNIX::open()
     */
@@ -158,7 +160,7 @@ public:
     *       port's flags are initaialized to 0.  The resulting status is
     *       returned to the caller.
     *
-    * @throws vpr::IOException if all attributes could not be cleared.
+    * @throw vpr::IOException Thrown if all attributes could not be cleared.
     */
    void clearAll();
 
@@ -169,7 +171,8 @@ public:
     * @post An attempt is made to close the port.  The resulting status is
     *       returned to the caller.
     *
-    * @throws vpr::IOException if the file handle could not be closed.
+    * @throw vpr::IOException Thrown if the file handle could not be closed.
+    *
     * @see vpr::FileHandleImplUNIX::close()
     */
    void close()
@@ -190,7 +193,8 @@ public:
     *                 blocking I/O.  A value of false indicates that this port
     *                 will use non-blocking I/O.
     *
-    * @throws vpr::IOException if the blocking mode could not be set.
+    * @throw vpr::IOException Thrown if the blocking mode could not be set.
+    *
     * @see vpr::FileHandleImplUNIX::setBlocking()
     */
    void setBlocking(bool blocking)
@@ -304,7 +308,7 @@ public:
     *
     * @return The minimum buffer size is returned.
     *
-    * @throws vpr::IOException if the buffer size could not be retrieved.
+    * @throw vpr::IOException Thrown if the buffer size could not be retrieved.
     *
     * @see getTimeout
     */
@@ -321,7 +325,8 @@ public:
     *       updated and success is returned.  Otherwise, a failure status is
     *       returned.
     *
-    * @throws vpr::IOException if the buffer size could not be set successfully.
+    * @throw vpr::IOException
+    *           Thrown if the buffer size could not be set successfully.
     *
     * @see setTimeout
     */
@@ -336,7 +341,7 @@ public:
     *
     * @return The timout value is returned.
     *
-    * @throws vpr::IOException if the timeout could not be retrieved.
+    * @throw vpr::IOException Thrown if the timeout could not be retrieved.
     *
     * @see Refer to page 353 of <I>Advanced Programming in the UNIX
     *      Environment</I> for more details.
@@ -353,7 +358,8 @@ public:
     *
     * @param timeout The new timeout value measured in tenths of a second.
     *
-    * @throws vpr::IOException if the timeout could not be set successfully.
+    * @throw vpr::IOException
+    *           Thrown if the timeout could not be set successfully.
     *
     * @see Refer to page 353 of <I>Advanced Programming in the UNIX
     *      Environment</I> for more details.
@@ -369,7 +375,7 @@ public:
     * @return A vpr::SerialTypes::CharacterSizeOption value is returned to
     *         indicate the character size.
     *
-    * @throws vpr::IOException if the character size could be retrieved.
+    * @throw vpr::IOException Thrown if the character size could be retrieved.
     */
    vpr::SerialTypes::CharacterSizeOption getCharacterSize() const;
 
@@ -383,7 +389,7 @@ public:
     *
     * @param bpb The new character size.
     *
-    * @throws vpr::IOexception if character size could not be set.
+    * @throw vpr::IOexception Thrown if character size could not be set.
     */
    void setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb);
 
@@ -394,9 +400,10 @@ public:
     * @post The read state (either enabled or disabled) is returne to the
     *       caller.
     *
-    * @return true is returned if bytes can be read from the device.  false is
-    *         returned otherwise.
-    * @throws vpr::IOException if read state could not be retrieved.
+    * @return \c true is returned if bytes can be read from the device.
+    *         \c false is returned otherwise.
+    *
+    * @throw vpr::IOException Thrown if read state could not be retrieved.
     */
    bool getReadState() const;
 
@@ -409,7 +416,7 @@ public:
     * @param flag A value of true indicates that reading will be allowed.
     *             A value of false prevents reading from the port.
     *
-    * @throws vpr::IOException if read state could not be set.
+    * @throw vpr::IOException Thrown if read state could not be set.
     */
    void setRead(bool flag);
 
@@ -421,10 +428,11 @@ public:
     * @post The local attach state is returned to the caller.
     *
     * @return \c true is returned if the device is attached locally.
-    * @return \c false is returned if the device is not attached locally, and
+    *         \c false is returned if the device is not attached locally, and
     *         opening the device will usually block until there is a response.
     *
-    * @throws vpr::IOException if local attach state could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if local attach state could not be retrieved.
     */
    bool getLocalAttachState() const;
 
@@ -436,7 +444,7 @@ public:
     *
     * @param flag A value of true enables local attachment.
     *
-    * @throws vpr::IOException if local attach state could not be set.
+    * @throw vpr::IOException Thrown if local attach state could not be set.
     */
    void setLocalAttach(bool flag);
 
@@ -448,7 +456,7 @@ public:
     *
     * @return The number of stop bits currently in use is returned.
     *
-    * @throws vpr::IOException if stop bits could not be retrieved.
+    * @throw vpr::IOException Thrown if stop bits could not be retrieved.
     */
    vpr::Uint8 getStopBits() const;
 
@@ -461,7 +469,7 @@ public:
     *
     * @param num_bits The number of stop bits to use.
     *
-    * @throws vpr::IOException if stop bits could not be set.
+    * @throw vpr::IOException Thrown if stop bits could not be set.
     */
    void setStopBits(const Uint8 num_bits);
 
@@ -478,8 +486,9 @@ public:
     * @post The current state of canonical input is returnd to the caller.
     *
     * @return \c true is returned if canonical input is enabled.
-    * @return \c false is returned otherwise.
-    * @throws vpr::IOException if canonical state could not be retrieved.
+    *         \c false is returned otherwise.
+    *
+    * @throw vpr::IOException Thrown if canonical state could not be retrieved.
     */
    bool getCanonicalState() const;
 
@@ -493,7 +502,7 @@ public:
     * @param flag A value of true enables canonical input.  Passing false
     *             disables canonical input.
     *
-    * @throws vpr::IOException if canonical state could not be set.
+    * @throw vpr::IOException Thrown if canonical state could not be set.
     *
     * @see getCanonicalState
     */
@@ -506,9 +515,10 @@ public:
     * @pre This serial port is open.
     * @post The erroneous byte ignore state is returned to the caller.
     *
-    * @return \c true is returned if bad bytes are ignored.
-    * @return \c false is returned otherwise.
-    * @throws vpr::IOException if bad byte ignore state could not
+    * @return \c true is returned if bad bytes are ignored. \c false is
+    *         returned otherwise.
+    *
+    * @throw vpr::IOException Thrown if bad byte ignore state could not
     *         be retrieved.
     */
    bool getBadByteIgnoreState() const;
@@ -523,7 +533,7 @@ public:
     * @param flag A value of true enables ignoring of bad bytes.  Passing false
     *             disables bad byte ignoring.
     *
-    * @throws vpr::IOException if bad bytes ignore could not be set.
+    * @throw vpr::IOException Thrown if bad bytes ignore could not be set.
     */
    void setBadByteIgnore(bool flag);
 
@@ -534,10 +544,10 @@ public:
     * @post The BREAK byte ignore state is returned to the caller.
     *
     * @return \c true is returned if bad bytes are ignored.
-    * @return \c false is retunred otherwise.
+    *         \c false is retunred otherwise.
     *
-    * @throws vpr::IOException if break byte ignore state could not
-    *         be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if break byte ignore state could not be retrieved.
     */
    bool getBreakByteIgnoreState() const;
 
@@ -550,7 +560,8 @@ public:
     * @param flag A value of true enables ignoring of BREAK bytes.  Passing
     *             false disables BREAK byte ignoring.
     *
-    * @throws vpr::IOException if break byte ignore state could not be set.
+    * @throw vpr::IOException
+    *           Thrown if break byte ignore state could not be set.
     */
    void setBreakByteIgnore(bool flag);
 
@@ -561,10 +572,10 @@ public:
     * @post The state of input parity checking is returned to the caller.
     *
     * @return \c true is returned if input parity checking is enabled
-    * @return \c false is returned otherwise.
+    *         \c false is returned otherwise.
     *
-    * @throws vpr::IOException if input parity check state
-    *         could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if input parity check state could not be retrieved.
     */
    bool getInputParityCheckState() const;
 
@@ -577,7 +588,8 @@ public:
     * @param flag A value of true enables input parity checking.  Passing
     *             false disables input parity checking.
     *
-    * @throws vpr::IOException if input parity check state could not be set.
+    * @throw vpr::IOException
+    *           Thrown if input parity check state could not be set.
     */
    void setInputParityCheck(bool flag);
 
@@ -589,8 +601,9 @@ public:
     * @post The current bit stripping state is returned to the caller.
     *
     * @return \c true is returned if input bytes are stripped to seven bits.
-    * @return \c false is returned if input bytes are not stripped.
-    * @throws vpr::IOException if bit strip state could not be retrieved.
+    *         \c false is returned if input bytes are not stripped.
+    *
+    * @throw vpr::IOException Thrown if bit strip state could not be retrieved.
     */
    bool getBitStripState() const;
 
@@ -603,7 +616,7 @@ public:
     * @param flag A value of true enables input byte stripping.  Passing
     *             false disables input byte stripping.
     *
-    * @throws vpr::IOException if bit strip state could not be set.
+    * @throw vpr::IOException Thrown if bit strip state could not be set.
     */
    void setBitStripping(bool flag);
 
@@ -620,9 +633,10 @@ public:
     *        caller.
     *
     * @return \c true is returned if start-stop input control is enabled.
-    * @return \c false is returned otherwise.
-    * @throws vpr::IOException if start-stop input state could not
-    *         be retrieved.
+    *         \c false is returned otherwise.
+    *
+    * @throw vpr::IOException
+    *           Thrown if start-stop input state could not be retrieved.
     */
    bool getStartStopInputState() const;
 
@@ -636,7 +650,8 @@ public:
     * @param flag A value of true enables start-stop input control.  A value
     *             of false disables it.
     *
-    * @throws vpr::IOException if start-stop input state could not be set.
+    * @throw vpr::IOException
+    *           Thrown if start-stop input state could not be set.
     *
     * @see getStartStopInputState
     */
@@ -653,9 +668,10 @@ public:
     *        the caller.
     *
     * @return \c true is returned if start-stop output control is enabled;
-    * @return \c false is returned otherwise.
-    * @throws vpr::IOException if start-stop output state could not
-    *         be retrieved.
+    *         \c false is returned otherwise.
+    *
+    * @throw vpr::IOException
+    *           Thrown if start-stop output state could not be retrieved.
     */
    bool getStartStopOutputState() const;
 
@@ -669,7 +685,8 @@ public:
     * @param flag A value of true enables start-stop output control.  A value
     *             of false disables it.
     *
-    * @throws vpr::IOException if start-stop output state could not be set.
+    * @throw vpr::IOException
+    *           Thrown if start-stop output state could not be set.
     *
     * @see getStartStopOutputState
     */
@@ -685,10 +702,11 @@ public:
     *
     * @return \c true is returned if parity generation and checking are enabled
     *         for outgoing and incoming bytes respectively.
-    * @return \c false is returned if parity generation and checking are
+    *         \c false is returned if parity generation and checking are
     *         disabled.
-    * @throws vpr::IOException if parity generation state could not
-    *         be retrieved.
+    *
+    * @throw vpr::IOException
+    *           Thrown if parity generation state could not be retrieved.
     */
    bool getParityGenerationState() const;
 
@@ -702,7 +720,8 @@ public:
     * @param flag A value of true enables parity generation.  A value of
     *             false disables it.
     *
-    * @throws vpr::IOException if partiy generation state could not be set.
+    * @throw vpr::IOException
+    *           Thrown if partiy generation state could not be set.
     */
    void setParityGeneration(bool flag);
 
@@ -712,9 +731,10 @@ public:
     * @pre This serial port is open.
     *
     * @return \c true is returned if parity error marking is enabled.
-    * @return \c false is returned if parity error masking is disabled.
-    * @throws vpr::IOException if parity error marking state
-    *         could not be retrieved.
+    *         \c false is returned if parity error masking is disabled.
+    *
+    * @throw vpr::IOException
+    *           Thrown if parity error marking state could not be retrieved.
     */
    bool getParityErrorMarkingState() const;
 
@@ -732,7 +752,8 @@ public:
     * @param flag A value of true enables parity error marking.  A value of
     *             false disables it.
     *
-    * @throws vpr::IOException if parity error marking state could not be set.
+    * @throw vpr::IOException
+    *           Thrown if parity error marking state could not be set.
     *
     * @see setInputParityCheck
     *
@@ -759,7 +780,7 @@ public:
     *
     * @param type The type of parity to use.
     *
-    * @throws vpr::IOException if parity could not be set.
+    * @throw vpr::IOException Thrown if parity could not be set.
     */
    void setParity(const vpr::SerialTypes::ParityType& type);
 
@@ -771,7 +792,8 @@ public:
     *
     * @return The current input baud setting is returned.
     *
-    * @throws vpr::IOException if input baud setting could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if input baud setting could not be retrieved.
     */
    vpr::Uint32 getInputBaudRate() const;
 
@@ -783,7 +805,7 @@ public:
     *
     * @param rate The new input baud setting.
     *
-    * @throws vpr::IOException if input baud setting could not be set.
+    * @throw vpr::IOException Thrown if input baud setting could not be set.
     */
    void setInputBaudRate(const vpr::Uint32& rate);
 
@@ -795,7 +817,8 @@ public:
     *
     * @return The current output baud setting is returned.
     *
-    * @throws vpr::IOException if ouput baud setting could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if ouput baud setting could not be retrieved.
     */
    vpr::Uint32 getOutputBaudRate() const;
 
@@ -807,7 +830,7 @@ public:
     *
     * @param rate The new output baud setting.
     *
-    * @throws vpr::IOException if ouput baud setting could not be set.
+    * @throw vpr::IOException Thrown if ouput baud setting could not be set.
     */
    void setOutputBaudRate(const vpr::Uint32& rate);
 
@@ -817,7 +840,7 @@ public:
     * @pre This serial port is open.
     * @post All output is transmitted.
     *
-    * @throws vpr::IOException if failed to drain output.
+    * @throw vpr::IOException Thrown if failed to drain output.
     */
    void drainOutput();
 
@@ -842,10 +865,11 @@ public:
     *
     * @pre This serial port is open.
     *
-    * @return true is returned if hardware flow control is enabled.
-    *         false is returned otherwise.
-    * @throws vpr::IOException if hardware flow control state
-    *         could not be retrieved.
+    * @return \c true is returned if hardware flow control is enabled.
+    *         \c false is returned otherwise.
+    *
+    * @throw vpr::IOException
+    *           Thrown if hardware flow control state could not be retrieved.
     *
     * @see controlFlow
     */
@@ -861,7 +885,8 @@ public:
     * @post If suppported by the operating system, hardware flow control is
     *       enabled.
     *
-    * @throws vpr::IOException if hardware flow control state could not be set.
+    * @throw vpr::IOException
+    *           Thrown if hardware flow control state could not be set.
     *
     * @see controlFlow
     */
@@ -879,7 +904,7 @@ public:
     *
     * @param queue The queue (or queues) to be flushed.
     *
-    * @throws vpr::IOException if queue could not be flushed.
+    * @throw vpr::IOException Thrown if queue could not be flushed.
     */
    void flushQueue(vpr::SerialTypes::FlushQueueOption queue);
 
@@ -896,7 +921,7 @@ public:
     * @param duration The length of time to send a zero bit stream to the
     *                  serial device.
     *
-    * @throws vpr::IOException if break could not be sent.
+    * @throw vpr::IOException Thrown if break could not be sent.
     */
    void sendBreak(const vpr::Int32 duration);
 
@@ -906,7 +931,8 @@ public:
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported.
     *
-    * @throws vpr::IOException if carrier detect state could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if carrier detect state could not be retrieved.
     */
    int getCarrierDetect() const;
 
@@ -916,7 +942,8 @@ public:
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported.
     *
-    * @throws vpr::IOException if data set ready state could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if data set ready state could not be retrieved.
     */
    int getDataSetReady() const;
 
@@ -926,7 +953,8 @@ public:
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported.
     *
-    * @throws vpr::IOException if clear to send state could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if clear to send state could not be retrieved.
     */
    int getClearToSend() const;
 
@@ -936,7 +964,8 @@ public:
     * @return May be platform dependent, but will at least be as follows.
     *         0 - not high, 1 - high, -1 - Not supported.
     *
-    * @throws vpr::IOException if ring indicator state could not be retrieved.
+    * @throw vpr::IOException
+    *           Thrown if ring indicator state could not be retrieved.
     */
    int getRingIndicator() const;
 
@@ -979,11 +1008,13 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::WouldBlockException if the port is in non-blocking mode,
-    *         and there is no data to read.
-    * @throws vpr::TimeoutException if the read could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the read operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the port is in non-blocking mode, and there is no
+    *           data to read.
+    * @throw vpr::TimeoutException
+    *           Thrown if the read could not begin within the timeout interval.
+    * @throw vpr::IOException
+    *           Thrown if the read operation failed.
     *
     * @see vpr::FileHandleImplUNIX::read_i()
     */
@@ -1013,9 +1044,11 @@ public:
     *
     * @return The number of bytes read into the buffer is returned.
     *
-    * @throws vpr::EOFException if end of port or end of stream has been
-    *         reached unexpectedly during input.
-    * @throws vpr::IOException if an error ocured while reading.
+    * @throw vpr::EOFException
+    *           Thrown if end of port or end of stream has been reached
+    *           unexpectedly during input.
+    * @throw vpr::IOException
+    *           Thrown if an error ocured while reading.
     *
     * @see vpr::FileHandleImplUNIX::readn_i()
     */
@@ -1042,11 +1075,14 @@ public:
     *
     * @return The number of bytes written to the device is returned.
     *
-    * @throws vpr::WouldBlockException if the handle is in non-blocking mode,
-    *         and the write operation could not be completed.
-    * @throws vpr::TimeoutException if the write could not begin within the
-    *         timeout interval.
-    * @throws vpr::IOException if the write operation failed.
+    * @throw vpr::WouldBlockException
+    *           Thrown if the handle is in non-blocking mode, and the write
+    *           operation could not be completed.
+    * @throw vpr::TimeoutException
+    *           Thrown if the write could not begin within the timeout
+    *           interval.
+    * @throw vpr::IOException
+    *           Thrown if the write operation failed.
     *
     * @see vpr::FileHandleImplUNIX::write_i()
     */
@@ -1073,21 +1109,23 @@ protected:
    /**
     * Sets the control character at the given index to the given value.
     *
-    * @throws vpr::IOException if index is too large for control character array.
+    * @throw vpr::IOException
+    *           Thrown if index is too large for control character array.
     */
    void setControlCharacter(const vpr::Uint32 index, const vpr::Uint8 value);
 
    /**
     * Gets the value of the control character at the given index.
     *
-    * @throws vpr::IOException if index is too large for control character array.
+    * @throw vpr::IOException
+    *           Thrown if index is too large for control character array.
     */
    vpr::Uint8 getControlCharacter(const vpr::Uint32 index) const;
 
    /**
     * Gets the termios structure for this serial port handle.
     *
-    * @throws vpr::IOException if error occured while getting attributes.
+    * @throw vpr::IOException Thrown if error occured while getting attributes.
     */
    void getAttrs(struct termios* term) const;
 
@@ -1096,7 +1134,7 @@ protected:
     * termios structure.  If it fails, the given error message will be
     * printed.
     *
-    * @throws vpr::IOException if error occured while setting attributes.
+    * @throw vpr::IOException Thrown if error occured while setting attributes.
     */
    void setAttrs(struct termios* term, const char* errMsg,
                  const bool printSysErr = true);
@@ -1106,7 +1144,7 @@ protected:
     * termios structure.  If it fails, the given error message will be
     * printed.
     *
-    * @throws vpr::IOException if error occured while setting attributes.
+    * @throw vpr::IOException Thrown if error occured while setting attributes.
     */
    void setAttrs(struct termios* term, const std::string& errMsg,
                  const bool printSysErr = true);
@@ -1114,7 +1152,7 @@ protected:
    /**
     * Gets the value (either on or off) for the named bit.
     *
-    * @throws vpr::IOException if named bit could now be retrieved.
+    * @throw vpr::IOException Thrown if named bit could now be retrieved.
     */
    bool getBit(const tcflag_t bit, TermFlag flag) const;
 
@@ -1122,22 +1160,25 @@ protected:
     * Attempts to enable or disable the named bit.  If it fails, the given
     * error message is printed.
     *
-    * @throws vpr::IOException if error occured while attempting
-    *         to set the named bit.
+    * @throw vpr::IOException
+    *           Thrown if error occured while attempting to set the named bit.
     */
    void setBit(const tcflag_t bit, TermFlag flag,
                bool enable, const std::string& errMsg,
                const bool printSysErr = true);
 
-   /** Helper for setting line status flags
-    * @throws vpr::IOException if error occured when setting
-    *         line flag.
+   /**
+    * Helper for setting line status flags
+    *
+    * @throw vpr::IOException Thrown if error occured when setting line flag.
     */
    void setLineFlag(Uint16 flag, bool val);
 
-   /** Helper for getting lines status flags
-    * @throws vpr::IOException if error occured when retrieving
-    *         line flag.
+   /**
+    * Helper for getting lines status flags
+    *
+    * @throw vpr::IOException
+    *           Thrown if error occured when retrieving line flag.
     */
    bool getLineFlag(Uint16 flag) const;
 

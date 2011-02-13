@@ -107,13 +107,12 @@ public:
     * @param timeout       The number of milliseconds to select for
     *                      (passing vpr::Interval::NoWait means don't wait).
     *
-    *
-    * @throws vpr::TimeoutException If no events were detected before the
-    *                               timeout expired or if
-    *                               vpr::Interval::NoWait was passed. In
-    *                               this case, \p numWithEvents should be
-    *                               checked for a value greater than 0.
-    * @throws vpr::IOException      If the select failed.
+    * @throw vpr::TimeoutException
+    *           Thrown if no events were detected before the timeout expired
+    *           or if vpr::Interval::NoWait was passed. In this case,
+    *           \p numWithEvents should be checked for a value greater than 0.
+    * @throw vpr::IOException
+    *           Thrown if the select failed.
     */
    void select(vpr::Uint16& numWithEvents,
                const vpr::Interval& timeout = vpr::Interval::NoTimeout);

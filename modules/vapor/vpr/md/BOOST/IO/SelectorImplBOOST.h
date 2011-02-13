@@ -51,7 +51,7 @@ namespace vpr
 
 /** \class SelectorImplBOOST SelectorImplBOOST.h vpr/IO/Selector.h
  *
- * Implementation of a selector for simulated sockets.  This is typedef'd
+ * Implementation of a selector for Boost.Asio sockets.  This is typedef'd
  * to vpr::Selector.
  *
  * Implementation site of the vpr::Selector_t bridge.
