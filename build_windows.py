@@ -122,9 +122,13 @@ def detectVisualStudioVersion(reattempt = False):
       if cl_major <= 14:
          printStatus("Visual Studio 2005 and older are not supported")
          sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
-      elif cl_major == 14:
+      elif cl_major == 15:
          vs_ver = '2008'
+      elif cl_major == 16:
+         vs_ver = '2010'
       else:
+         printStatus("Warning: unrecognized compiler version %s.%s, will treat it like VS2010"
+                     % (cl_major, cl_minor))
          vs_ver = '2010'
 
       printStatus("It appears that we will be using Visual Studio %s"%vs_ver)
@@ -180,6 +184,7 @@ def detectVisualStudioVersion(reattempt = False):
 
 def chooseVisualStudioDir():
    (cl_ver_major, cl_ver_minor) = detectVisualStudioVersion()
+   needs_upgrade = False
 
    # We do not support Visual Studio 2005 (version 8.0) or older.
    if cl_ver_major <= 14:
@@ -192,7 +197,10 @@ def chooseVisualStudioDir():
    else:
       vc_dir = 'vc10'
 
-   return (cl_ver_major, cl_ver_minor, vc_dir)
+   if cl_ver_major > 16:
+      # Will need to upgrade the solution
+      needs_upgrade = True
+   return (cl_ver_major, cl_ver_minor, vc_dir, needs_upgrade)
 
 def printStatus(msg):
    '''
@@ -2017,7 +2025,7 @@ class GuiFrontEnd:
       global printStatus
       printStatus = self.printMessage
 
-      (cl_ver_major, cl_ver_minor, vc_dir) = chooseVisualStudioDir()
+      (cl_ver_major, cl_ver_minor, vc_dir, self.mNeedsUpgrade) = chooseVisualStudioDir()
       required, optional, options = getDefaultVars(cl_ver_major, cl_ver_minor)
       self.mOptions   = options
       self.mTkOptions = {}
@@ -2577,7 +2585,7 @@ def main():
    # If Tkinter is not available or the user disabled the Tk frontend, use
    # the text-based interface.
    if not gHaveTk or disable_tk:
-      (cl_ver_major, cl_ver_minor, vc_dir) = chooseVisualStudioDir()
+      (cl_ver_major, cl_ver_minor, vc_dir, needs_upgrade) = chooseVisualStudioDir()
       options = setVars(cl_ver_major, cl_ver_minor)
       updateVersions(vc_dir, options)
       generateAntBuildFiles(vc_dir)
@@ -2595,6 +2603,9 @@ def main():
                   arch = 'x64'
                else:
                   arch = 'Win32'
+               if needs_upgrade:
+                  print "Upgrading solution and project files..."
+                  subprocess.call([devenv_cmd, solution_file, "/upgrade"])
                for config in configs:
                   #cmd = [devenv_cmd, solution_file, "/Build", "%s|%s" % (config, arch)]
                   cmd = [msbuild_cmd, solution_file, "/p:Configuration=%s" % config]
