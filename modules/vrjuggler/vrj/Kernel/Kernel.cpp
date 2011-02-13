@@ -50,6 +50,7 @@
 #include <vpr/System.h>
 #include <vpr/Util/Version.h>
 #include <vpr/Util/FileUtils.h>
+#include <vpr/Util/IllegalArgumentException.h>
 #include <vpr/Perf/ProfileManager.h>
 
 #include <gadget/Util/Version.h>
@@ -302,8 +303,21 @@ bool Kernel::init(int& argc, char* argv[], const int parserStyle)
 
 bool Kernel::init(const po::variables_map& vm)
 {
-   assert(vm.count("vrjmaster") == 1 && "See getClusterOptions()");
-   assert(vm.count("vrjslave") == 1 && "See getClusterOptions()");
+   if (vm.count("vrjmaster") != 1)
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Variables map has no 'vrjmaster' entry! "
+                 << "See vrj::Kernel::getClusterOptions().";
+      throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+   }
+
+   if (vm.count("vrjslave") != 1)
+   {
+      std::ostringstream msg_stream;
+      msg_stream << "Variables map has no 'vrjslave' entry! "
+                 << "See vrj::Kernel::getClusterOptions().";
+      throw vpr::IllegalArgumentException(msg_stream.str(), VPR_LOCATION);
+   }
 
    bool cluster_master = vm["vrjmaster"].as<bool>();
    bool cluster_slave = vm["vrjslave"].as<bool>();

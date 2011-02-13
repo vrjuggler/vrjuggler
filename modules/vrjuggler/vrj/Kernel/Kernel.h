@@ -191,6 +191,9 @@ public:
     * @see getClusterOptions()
     * @see getConfigOptions()
     *
+    * @throw vpr::IllegalArgumentException
+    *           Thrown if either "vrjmaster" or "vrjslave" is not in \p vm.
+    *
     * @since 2.3
     */
    bool init(const boost::program_options::variables_map& vm);
