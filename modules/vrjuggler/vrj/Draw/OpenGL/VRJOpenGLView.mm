@@ -218,6 +218,17 @@
       return YES;
    }
 
+   /**
+    * Indeicates whether we will completely cover the frame rectangle when 
+    * drawing itself. Overriden from NSView.
+    *
+    * @return \c YES is always returned.
+    */
+   -(BOOL) isOpaque
+   {
+      return YES; 
+   }
+
    - (void) surfaceNeedsUpdate:(NSNotification*)notification
    {
      /*std::cout << [[notification name] UTF8String ] << std::endl;
