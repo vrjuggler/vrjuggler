@@ -130,6 +130,10 @@
 
    -(void) dealloc
    {
+      mHandleInput = NO;
+      // http://developer.apple.com/library/mac/#qa/qa2004/qa1353.html
+      [[NSNotificationCenter defaultCenter] removeObserver:self];
+
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050
       CGDisplayModeRelease(mOrigDisplayMode);
 #else
@@ -379,7 +383,14 @@
     */
    -(void) mouseMoved:(NSEvent*) theEvent
    {
-      mVrjWindow->addMouseMoveEvent(theEvent);
+      if ( mHandleInput )
+      {
+         mVrjWindow->addMouseMoveEvent(theEvent);
+      }
+      else
+      {
+         [super mouseMoved:theEvent];
+      }
    }
 
    /**
@@ -438,7 +449,14 @@
     */
    -(void) rightMouseDragged:(NSEvent*) theEvent
    {
-      mVrjWindow->addMouseMoveEvent(theEvent);
+      if ( mHandleInput )
+      {
+         mVrjWindow->addMouseMoveEvent(theEvent);
+      }
+      else
+      {
+         [super rightMouseDragged:theEvent];
+      }
    }
 
    /**
@@ -480,7 +498,14 @@
     */
    -(void) otherMouseDragged:(NSEvent*) theEvent
    {
-      mVrjWindow->addMouseMoveEvent(theEvent);
+      if ( mHandleInput )
+      {
+         mVrjWindow->addMouseMoveEvent(theEvent);
+      }
+      else
+      {
+         [super otherMouseDragged:theEvent];
+      }
    }
 
    /**
