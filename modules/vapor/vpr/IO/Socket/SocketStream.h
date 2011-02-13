@@ -55,8 +55,6 @@
 #include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#include <vpr/md/SIM/IO/Socket/SocketStreamImplSIM.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
 #include <vpr/md/BOOST/IO/Socket/SocketStreamImplBOOST.h>
 #endif

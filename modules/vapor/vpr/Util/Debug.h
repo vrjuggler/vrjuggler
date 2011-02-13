@@ -421,7 +421,6 @@ namespace vpr
 // GUID, Name, Prefix
 const vpr::DebugCategory vprDBG_ALL(vpr::GUID("660b4b06-1f5b-4e4b-abb8-d44229ce1319"), "DBG_ALL", "DBG:");
 const vpr::DebugCategory vprDBG_ERROR(vpr::GUID("b081eb68-0a61-4a65-a0a1-dd3ccc90a82b"), "DBG_ERROR", "ERR:");   /* Error output */
-const vpr::DebugCategory vprDBG_SIM(vpr::GUID("64872313-a5b7-4d1d-b7a3-5f269b4adde4"), "DBG_SIM", "SIM:");   /* Sim output */
 const vpr::DebugCategory vprDBG_VPR(vpr::GUID("28648014-ec63-4707-90e3-76a3ea450036"), "DBG_VPR", "VPR:");
 
 #endif

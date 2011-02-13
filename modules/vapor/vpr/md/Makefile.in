@@ -47,7 +47,6 @@ DIRPRFX=	vpr/md/
 
 SUBDIR=		NSPR	\
 		POSIX	\
-		SIM	\
 		WIN32	\
 		common
 

@@ -73,7 +73,6 @@ as to avoid any initialization order dependencies.
 
 vprREGISTER_DBG_CATEGORY(vprDBG_ALL, DBG_ALL, "DBG:");
 vprREGISTER_DBG_CATEGORY(vprDBG_ERROR, DBG_ERROR, "ERR:");
-vprREGISTER_DBG_CATEGORY(vprDBG_SIM, DBG_SIM, "I'm a little simulator:");
 vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 */
 
@@ -178,7 +177,6 @@ void Debug::init()
    /*
    addCategory(vprDBG_ALL, "DBG_ALL", "DBG:");
    addCategory(vprDBG_ERROR, "DBG_ERROR", "ERR:");
-   addCategory(vprDBG_SIM, "DBG_SIM", "I'm a little simulator:");
    addCategory(vprDBG_VPR, "DBG_VPR", "VPR:");
    */
 }

@@ -50,8 +50,6 @@
 #   include <vpr/md/NSPR/IO/IOSysNSPR.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/IOSysUnix.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#   include <vpr/md/SIM/IO/IOSysSIM.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
 #   include <vpr/md/BOOST/IO/IOSysBOOST.h>
 #endif

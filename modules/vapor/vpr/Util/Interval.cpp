@@ -50,10 +50,6 @@
 #  include <prinrval.h>
 #endif
 
-#ifdef VPR_SIMULATOR
-#  include <vpr/md/SIM/Controller.h>
-#endif
-
 #include <vpr/Util/Interval.h>
 #include <vpr/System.h>
 
@@ -66,18 +62,10 @@ const Interval Interval::NoWait(0, Interval::Base);
 const Interval Interval::NoTimeout(0xffffffffUL, Interval::Base);
 const Interval Interval::HalfPeriod((0xffffffffUL / 2), Interval::Base);
 
-   // Simulator-only version of vpr::Interval::setNow().
-#ifdef VPR_SIMULATOR
-void Interval::setNow()
-{
-   mMicroSeconds = vpr::sim::Controller::instance()->getClock().getCurrentTime().getBaseVal();
-}
-#else
 void Interval::setNow()
 {
    setNowReal();
 }
-#endif /* ifdef VPR_SIMULATOR */
 
 //
 // Real implementation of setNow that uses the real clock time from the system

@@ -45,9 +45,8 @@
 #define VPR_DOMAIN_NONE       0
 #define VPR_DOMAIN_NSPR       1
 #define VPR_DOMAIN_POSIX      2
-#define VPR_DOMAIN_SIMULATOR  3
-#define VPR_DOMAIN_WIN32      4
-#define VPR_DOMAIN_BOOST      5
+#define VPR_DOMAIN_WIN32      3
+#define VPR_DOMAIN_BOOST      4
 
 // This is the VPR I/O domain.  It defines all the platform-independent types
 // used for doing I/O (sockets and serial ports mostly) in VPR.
@@ -57,39 +56,6 @@ namespace vpr
    template<class> class SerialPort_t;
 
    template<class BASE_ONE, class BASE_TWO> class IOStatsStrategyAdapter;
-
-#ifdef VPR_SIMULATOR
-#  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_SIMULATOR
-
-   /** \struct SocketConfiguration vprDomain.h vpr/vprDomain.h
-    *
-    * Socket configuration for simulator sockets.
-    */
-   struct SocketConfiguration
-   {
-      typedef class SocketImplSIM           SocketImpl;
-      typedef class SocketDatagramImplSIM   SocketDatagramImpl;
-      typedef class SocketStreamImplSIM     SocketStreamImpl;
-      typedef class NullIOStatsStrategy     SocketIOStatsStrategy;
-   };
-
-   typedef class InetAddrSIM InetAddr;
-   typedef class IOSysSIM    IOSys;
-
-   typedef class Selector_t<class SelectorImplSIM> Selector;
-
-   /* Don't allow serial ports in simulator for now.
-   * This is because IOSys is of the wrong type and there is
-   * not an easy fix for this right now.
-   */
-
-//#  ifdef VPR_OS_Windows
-//      typedef SerialPort_t<class SerialPortImplWin32>   SerialPort;
-//#  else
-//      typedef SerialPort_t<class SerialPortImplTermios> SerialPort;
-//#  endif  /* VPR_OS_Windows */
-
-#else /* ! ifdef VPR_SIMULATOR */
 
 #ifdef VPR_USE_BOOST
 #  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_BOOST
@@ -145,7 +111,6 @@ namespace vpr
    typedef class SerialPort_t<class SerialPortImplTermios> SerialPort;
 
 #endif /* ifdef VPR_USE_NSPR */
-#endif /* ifdef VPR_SIMULATOR */
 
    /**
     * The type for strategies used to determine the amount of memory to

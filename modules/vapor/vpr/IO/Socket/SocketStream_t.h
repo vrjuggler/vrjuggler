@@ -364,21 +364,18 @@ protected:
       this->mSocketImpl = mSocketStreamImpl;
    }
 
+   /// Platform-specific stream socket implementation
+   boost::shared_ptr<SocketStreamImpl> mSocketStreamImpl;
+
+private:
    /**
     * @name TCP Corking Interface Implementation
     *
     * More about TCP corking can be found here: http://www.baus.net/on-tcp_cork
     */
    //@{
-// Put in back door for simulator
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-public:
-#endif
-   /// Platform-specific stream socket implementation
-   boost::shared_ptr<SocketStreamImpl> mSocketStreamImpl;
-
-private:
    bool mCorked;
+   //@}
 };
 
 } // End of vpr namespace

@@ -45,15 +45,14 @@
 
 #include <vpr/vprConfig.h>
 
-#ifndef VPR_SIMULATOR
-
 #include <vpr/IO/Port/Port.h>
 #include <vpr/IO/Port/SerialTypes.h>
 
 // Include the bridge class.
 #include <vpr/IO/Port/SerialPort_t.h>
 
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR || VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR || \
+    VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
 #  ifdef VPR_OS_Windows
 #     include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 #  else
@@ -62,7 +61,5 @@
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #  include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 #endif
-
-#endif /* ifndef VPR_SIMULATOR */
 
 #endif  /* _VPR_SERIAL_PORT_H_ */

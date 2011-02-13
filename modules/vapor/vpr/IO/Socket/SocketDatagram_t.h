@@ -319,10 +319,6 @@ public:
    }
    //@}
 
-// Put in back door for simulator
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-public:
-#endif
    /// Platform-specific datagram socket implementation object
    boost::shared_ptr<SocketDatagramImpl> mSocketDgramImpl;
 };

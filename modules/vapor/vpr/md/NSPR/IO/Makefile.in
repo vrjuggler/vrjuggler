@@ -55,11 +55,9 @@ DIRPRFX=	vpr/md/NSPR/IO/
 
 SUBDIR=		Socket
 
-ifneq (@SIMULATOR@, Y)
 ifeq (@SUBSYSTEM@, NSPR)
    SRCS=	IOSysNSPR.cpp		\
 		SelectorImplNSPR.cpp
-endif
 endif
 
 include $(MKPATH)/dpp.obj-subdir.mk

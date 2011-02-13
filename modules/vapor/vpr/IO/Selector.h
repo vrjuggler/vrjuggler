@@ -53,8 +53,6 @@
 #   include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/SelectorImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#   include <vpr/md/SIM/IO/SelectorImplSIM.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_BOOST
 #   include <vpr/md/BOOST/IO/SelectorImplBOOST.h>
 #endif

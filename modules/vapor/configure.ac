@@ -98,10 +98,6 @@ AC_ARG_ENABLE([versioning],
               [  --disable-versioning    Disable all versioning capabilities],
               [ENABLE_VERSIONING="$enableval"], [ENABLE_VERSIONING='yes'])
 
-AC_ARG_ENABLE([simulator],
-              [  --enable-simulator      Compile simulated sockets layer ],
-              [SIMULATOR="$enableval"], [SIMULATOR='no'])
-
 # Rudimentary spell checking based on the first letter in the $SUBSYSTEM name.
 case $SUBSYSTEM in
     P*)
@@ -121,13 +117,6 @@ DPP_ENABLE_NSPR_THREADS(no)
 # NOTE: This is not fully implemented yet for any platform, but it is
 # partially usable on Windows.
 DPP_WITH_GCC(no)
-
-if test "x$SIMULATOR" != "xno" ; then
-    SIMULATOR='Y'
-    AC_DEFINE(VPR_SIMULATOR, , [Define if VPR simulated sockets will be used.])
-else
-    SIMULATOR='N'
-fi
 
 # Define the binary format.
 DPP_ABI_SETUP
@@ -1170,7 +1159,6 @@ AC_SUBST(DATA_VERSION)
 AC_SUBST(CPPDOM_VERSION)
 
 AC_SUBST(SUBSYSTEM)
-AC_SUBST(SIMULATOR)
 AC_SUBST(SEMAPHORE_SYS)
 AC_SUBST(SHMEM_SYS)
 AC_SUBST(MUTEX_SYS)
@@ -1250,10 +1238,6 @@ AC_CONFIG_FILES([
    vpr/md/POSIX/Sync/Makefile
    vpr/md/POSIX/Thread/Makefile
    vpr/md/POSIX/Util/Makefile
-   vpr/md/SIM/Makefile
-   vpr/md/SIM/IO/Makefile
-   vpr/md/SIM/IO/Socket/Makefile
-   vpr/md/SIM/Network/Makefile
    vpr/md/WIN32/Makefile
    vpr/md/WIN32/IO/Makefile
    vpr/md/WIN32/IO/Port/Makefile
@@ -1281,7 +1265,6 @@ AC_CONFIG_FILES([
    test/TestSuite/TestCases/IO/Port/Makefile
    test/TestSuite/TestCases/IO/Socket/Makefile
    test/TestSuite/TestCases/IO/Stats/Makefile
-   test/TestSuite/TestCases/Simulator/Makefile
    test/TestSuite/TestCases/Socket/Makefile
    test/TestSuite/TestCases/Thread/Makefile
    test/TestSuite/TestCases/Util/Makefile
