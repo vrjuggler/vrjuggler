@@ -77,7 +77,7 @@
 #endif
       NSOpenGLPixelFormat* pixel_format = [self createPixelFormat];
 
-      if ( pixel_format == nil )
+      if (pixel_format == nil)
       {
          NSException* ex =
             [NSException exceptionWithName:@"PixelFormatCreationException"
@@ -100,11 +100,11 @@
       [pixel_format release];
       pixel_format = nil;
 
-      if ( self && mFullScreen )
+      if (self && mFullScreen)
       {
          CGDisplayErr err = CGDisplayCapture(mDisplayID);
 
-         if ( err != CGDisplayNoErr )
+         if (err != CGDisplayNoErr)
          {
             NSException* ex =
                [NSException exceptionWithName:@"DisplayCaptureException"
@@ -119,9 +119,9 @@
       }
 
       [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(surfaceNeedsUpdate:)
-                                           name:NSWindowDidChangeScreenNotification
-                                           object:self];
+                                               selector:@selector(surfaceNeedsUpdate:)
+                                                   name:NSWindowDidChangeScreenNotification
+                                                 object:self];
 
       [[self window] setAcceptsMouseMovedEvents:mHandleInput];
 
@@ -229,15 +229,17 @@
       return YES; 
    }
 
-   - (void) surfaceNeedsUpdate:(NSNotification*)notification
+   -(void) surfaceNeedsUpdate:(NSNotification*) notification
    {
-     /*std::cout << [[notification name] UTF8String ] << std::endl;
+     /*
+     std::cout << [[notification name] UTF8String ] << std::endl;
      std::cout << [[self openGLContext] currentVirtualScreen ] << std::endl;
-     if ( [self lockFocusIfCanDraw] )//: [self openGLContext]] )
+     if ([self lockFocusIfCanDraw] )//: [self openGLContext]])
      {
         [self unlockFocus];
      }
-     else*/
+     else
+     */
      {
        //[super update];
        //mVrjWindow->acquireRenderLock();
@@ -248,12 +250,13 @@
      }
    }
    
-   - (void)update
+   -(void) update
    {
-     [super update];
-     //This function calls glViewPort
-     ;//Do nothing because we may not have a context
+      [super update];
+      // This function calls glViewPort
+      // Do nothing because we may not have a context
    }
+
    /**
     * Removes the tracking rectangle for this view (if it has one) before it
     * gets assigned to a new window.
@@ -280,13 +283,13 @@
       // fake mouseEntered event to inform this view that the mouse is within
       // it. Without this, the user would have to move the mouse out of the
       // window and back in to get the mouseEntered event to be posted.
-      if ( [self window] )
+      if ([self window])
       {
          const NSPoint mouse_loc =
             [[self window] mouseLocationOutsideOfEventStream];
          const NSRect bounds = [self bounds];
 
-         if ( [self mouse:mouse_loc inRect:bounds] )
+         if ([self mouse:mouse_loc inRect:bounds])
          {
             [self mouseEntered:nil];
          }
@@ -304,7 +307,7 @@
          [NSOpenGLContext clearCurrentContext];
          [[self openGLContext] clearDrawable];
 
-         if ( mFullScreen )
+         if (mFullScreen)
          {
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050
             CGDisplaySetDisplayMode(mDisplayID, mOrigDisplayMode, NULL);
@@ -314,7 +317,7 @@
 #endif
             CGDisplayErr err = CGDisplayRelease(mDisplayID);
 
-            if ( err != CGDisplayNoErr )
+            if (err != CGDisplayNoErr)
             {
                vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                   << "VRJOpenGLView failed to release display "
@@ -322,6 +325,7 @@
                   << vprDEBUG_FLUSH;
             }
          }
+
          mVrjWindow->setDirtyContext(true);
          mVrjWindow->setDirtyViewport(true);
          mVrjWindow->releaseRenderLock();
@@ -338,7 +342,7 @@
 
       [super viewWillStartLiveResize];
 
-      if ( mShouldHideCursor )
+      if (mShouldHideCursor)
       {
          [NSCursor unhide];
       }
@@ -361,7 +365,7 @@
    {
       [[self window] setAcceptsMouseMovedEvents:mHandleInput];
 
-      if ( mShouldHideCursor )
+      if (mShouldHideCursor)
       {
          [NSCursor hide];
       }
@@ -375,12 +379,12 @@
     */
    -(void) mouseExited:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          [[self window] setAcceptsMouseMovedEvents:NO];
       }
 
-      if ( mShouldHideCursor )
+      if (mShouldHideCursor)
       {
          [NSCursor unhide];
       }
@@ -394,7 +398,7 @@
     */
    -(void) mouseMoved:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseMoveEvent(theEvent);
       }
@@ -411,7 +415,7 @@
     */
    -(void) mouseDragged:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseMoveEvent(theEvent);
       }
@@ -426,7 +430,7 @@
     */
    -(void) mouseDown:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseButtonEvent(gadget::MouseButtonPressEvent,
                                          theEvent);
@@ -442,7 +446,7 @@
     */
    -(void) mouseUp:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
                                          theEvent);
@@ -460,7 +464,7 @@
     */
    -(void) rightMouseDragged:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseMoveEvent(theEvent);
       }
@@ -475,7 +479,7 @@
     */
    -(void) rightMouseDown:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseButtonEvent(gadget::MouseButtonPressEvent,
                                          theEvent);
@@ -491,7 +495,7 @@
     */
    -(void) rightMouseUp:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
                                          theEvent);
@@ -509,7 +513,7 @@
     */
    -(void) otherMouseDragged:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseMoveEvent(theEvent);
       }
@@ -524,7 +528,7 @@
     */
    -(void) otherMouseDown:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseButtonEvent(gadget::MouseButtonPressEvent,
                                          theEvent);
@@ -540,7 +544,7 @@
     */
    -(void) otherMouseUp:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseButtonEvent(gadget::MouseButtonReleaseEvent,
                                          theEvent);
@@ -556,7 +560,7 @@
     */
    -(void) scrollWheel:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addMouseScrollEvent(theEvent);
       }
@@ -571,7 +575,7 @@
     */
    -(void) keyDown:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addKeyEvent(gadget::KeyPressEvent, theEvent);
       }
@@ -586,7 +590,7 @@
     */
    -(void) keyUp:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->addKeyEvent(gadget::KeyReleaseEvent, theEvent);
       }
@@ -601,7 +605,7 @@
     */
    -(void) flagsChanged:(NSEvent*) theEvent
    {
-      if ( mHandleInput )
+      if (mHandleInput)
       {
          mVrjWindow->flagsChanged(theEvent);
       }
@@ -650,7 +654,7 @@
          return;
       }
        
-      if ( [self window] && mTrackingRect > 0 )
+      if ([self window] && mTrackingRect > 0)
       {
          [self removeTrackingRect:mTrackingRect];
          mTrackingRect = 0;
@@ -672,7 +676,7 @@
       // handling input, then we create a tracking rectangle that is the size
       // of this view. Then, the NSResponder overrides of -mouseEntered: and
       // -mouseExited: will be invoked.
-      if ( mShouldHideCursor || mHandleInput )
+      if (mShouldHideCursor || mHandleInput)
       {
          mTrackingRect = [self addTrackingRect:[self visibleRect]
                                          owner:self
@@ -693,17 +697,24 @@
       jccl::ConfigElementPtr gl_fb_elt = display->getGlFrameBufferConfig();
 
       int visual_id(-1);
-      int red_size(1), green_size(1), blue_size(1), alpha_size(1), db_size(1),
-          accum_red_size(1), accum_green_size(1), accum_blue_size(1),
-          accum_alpha_size(1), stencil_size(1);
+      int red_size(1);
+      int green_size(1);
+      int blue_size(1);
+      int alpha_size(1);
+      int db_size(1);
+      int accum_red_size(1);
+      int accum_green_size(1);
+      int accum_blue_size(1);
+      int accum_alpha_size(1);
+      int stencil_size(1);
       int num_aux_bufs(0);
       bool enable_multisamp(false);
       int num_sample_bufs(1);
       int num_samples(2);
 
-      if ( gl_fb_elt.get() != NULL )
+      if (gl_fb_elt.get() != NULL)
       {
-         if ( gl_fb_elt->getVersion() < 3 )
+         if (gl_fb_elt->getVersion() < 3)
          {
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
@@ -736,7 +747,7 @@
          enable_multisamp = num_sample_bufs > 0;
       }
 
-      if ( red_size < 0 )
+      if (red_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -745,7 +756,7 @@
          red_size = 1;
       }
 
-      if ( green_size < 0 )
+      if (green_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -754,7 +765,7 @@
          green_size = 1;
       }
 
-      if ( blue_size < 0 )
+      if (blue_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -763,7 +774,7 @@
          blue_size = 1;
       }
 
-      if ( alpha_size < 0 )
+      if (alpha_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -772,7 +783,7 @@
          alpha_size = 1;
       }
 
-      if ( num_aux_bufs < 0 )
+      if (num_aux_bufs < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -781,7 +792,7 @@
          num_aux_bufs = 0;
       }
 
-      if ( db_size < 0 )
+      if (db_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -790,7 +801,7 @@
          db_size = 1;
       }
 
-      if ( stencil_size < 0 )
+      if (stencil_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -799,7 +810,7 @@
          stencil_size = 1;
       }
 
-      if ( accum_red_size < 0 )
+      if (accum_red_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -808,7 +819,7 @@
          accum_red_size = 1;
       }
 
-      if ( accum_green_size < 0 )
+      if (accum_green_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -817,7 +828,7 @@
          accum_green_size = 1;
       }
 
-      if ( accum_blue_size < 0 )
+      if (accum_blue_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -826,7 +837,7 @@
          accum_blue_size = 1;
       }
 
-      if ( accum_alpha_size < 0 )
+      if (accum_alpha_size < 0)
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
@@ -837,7 +848,7 @@
 
       std::vector<NSOpenGLPixelFormatAttribute> attr_vec;
 
-      if ( mFullScreen )
+      if (mFullScreen)
       {
          attr_vec.push_back(NSOpenGLPFAFullScreen);
          attr_vec.push_back(NSOpenGLPFAScreenMask);
@@ -857,7 +868,9 @@
       attr_vec.push_back(NSOpenGLPFAAccelerated);
       attr_vec.push_back(NSOpenGLPFAColorSize);
       attr_vec.push_back(
-         static_cast<NSOpenGLPixelFormatAttribute>(red_size + green_size + blue_size)
+         static_cast<NSOpenGLPixelFormatAttribute>(
+            red_size + green_size + blue_size
+         )
       );
 
       const unsigned int alpha_attrib_index = attr_vec.size();
@@ -878,15 +891,15 @@
       const unsigned int accum_attrib_index = attr_vec.size();
       attr_vec.push_back(NSOpenGLPFAAccumSize);
       attr_vec.push_back(
-         static_cast<NSOpenGLPixelFormatAttribute>(accum_red_size +
-                                                      accum_green_size +
-                                                      accum_blue_size)
+         static_cast<NSOpenGLPixelFormatAttribute>(
+            accum_red_size + accum_green_size + accum_blue_size
+         )
       );
       // What about accum_alpha_size?
 
       const unsigned int stereo_attrib_index = attr_vec.size();
       const bool want_stereo(display->isStereoRequested());
-      if ( want_stereo )
+      if (want_stereo)
       {
          attr_vec.push_back(NSOpenGLPFAStereo);
          mVrjWindow->setInStereo(true);
@@ -902,9 +915,9 @@
       const unsigned int multisamp_samples_attrib_index =
          multisamp_attrib_index + 3;
 
-      if ( enable_multisamp )
+      if (enable_multisamp)
       {
-         if ( num_sample_bufs < 0 )
+         if (num_sample_bufs < 0)
          {
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING")
@@ -913,7 +926,7 @@
             num_sample_bufs = 1;
          }
 
-         if ( num_samples < 0 )
+         if (num_samples < 0)
          {
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING")
@@ -944,10 +957,10 @@
       NSOpenGLPixelFormat* pixel_format =
          [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
-      if ( pixel_format == nil )
+      if (pixel_format == nil)
       {
          // Try reducing or disabling multisampling if it was enabled.
-         if ( enable_multisamp )
+         if (enable_multisamp)
          {
             const int orig_num_samples(num_samples);
 
@@ -966,7 +979,7 @@
             do
             {
                // We do not want to have zero samples per buffer.
-               while ( num_samples > 1 )
+               while (num_samples > 1)
                {
                   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
                      << clrOutBOLD(clrYELLOW, "WARNING")
@@ -990,7 +1003,7 @@
                   NSOpenGLPixelFormat* pixel_format =
                      [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
-                  if ( pixel_format != nil )
+                  if (pixel_format != nil)
                   {
                      return pixel_format;
                   }
@@ -998,7 +1011,7 @@
 
                // If we are currently trying only one sample buffer, then we
                // are done trying to back off the multisampling requirements.
-               if ( num_sample_bufs == 1 )
+               if (num_sample_bufs == 1)
                {
                   break;
                }
@@ -1030,12 +1043,12 @@
                NSOpenGLPixelFormat* pixel_format =
                   [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
-               if ( pixel_format != nil )
+               if (pixel_format != nil)
                {
                   return pixel_format;
                }
             }
-            while ( num_sample_bufs >= 1 );
+            while (num_sample_bufs >= 1);
 
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING")
@@ -1061,13 +1074,13 @@
             NSOpenGLPixelFormat* pixel_format =
                [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
-            if ( pixel_format != nil )
+            if (pixel_format != nil)
             {
                return pixel_format;
             }
          }
 
-         if ( want_stereo )
+         if (want_stereo)
          {
             vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
                << "WARNING: Could not get a valid pixel format" << std::endl;
@@ -1082,7 +1095,7 @@
             pixel_format =
                [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
-            if ( pixel_format != nil )
+            if (pixel_format != nil)
             {
                return pixel_format;
             }
@@ -1105,7 +1118,7 @@
 
          pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
-         if ( pixel_format != nil )
+         if (pixel_format != nil)
          {
             return pixel_format;
          }
