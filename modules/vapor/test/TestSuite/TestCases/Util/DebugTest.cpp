@@ -22,7 +22,6 @@ namespace vprTest
    {
       vprDEBUG(vprDBG_ALL,   vprDBG_CRITICAL_LVL) << " Test output for vprDBG_ALL \n" << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << " Test output for vprDBG_ERROR \n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_SIM,   vprDBG_CRITICAL_LVL) << " Test output for vprDBG_SIM \n" << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_VPR,   vprDBG_CRITICAL_LVL) << " Test output for vprDBG_VPR \n" << vprDEBUG_FLUSH;
    }
       

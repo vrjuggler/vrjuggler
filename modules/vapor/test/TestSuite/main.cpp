@@ -25,26 +25,12 @@
 
 #include <cppunit/extensions/MetricRegistry.h>
 
-#ifdef VPR_SIMULATOR
-#  include <vpr/md/SIM/Controller.h>
-#endif
-
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
 
 //#define vprtest_RANDOM_SEED 1
 
-#ifdef VPR_SIMULATOR
-static void run ()
-{
-   while ( true )
-   {
-      vpr::sim::Controller::instance()->processNextEvent();
-      vpr::Thread::yield();
-   }
-}
-#endif
 
 int main (int argc, char **argv)
 {
@@ -75,12 +61,6 @@ int main (int argc, char **argv)
 #endif
    srand(random_seed);
 
-#ifdef VPR_SIMULATOR       // ------ CONFIGURE SIM NETWORK ------ //
-   std::string path_base(GRAPH_PATH);
-   vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test/TestSuite/test_network.vsn"));
-   vpr::Thread sim_thread(run);
-#endif
-
    // -------- CONFIGURE METRIC REGISTRY ------- //
    CppUnit::MetricRegistry* metric_reg = CppUnit::MetricRegistry::instance();
    std::string metric_prefix;    // Prefix for all metric labels (mode/hostname)
@@ -96,9 +76,6 @@ int main (int argc, char **argv)
 #endif
 #ifdef _OPT
    metric_prefix += "Opt/";
-#endif
-#ifdef VPR_SIMULATOR
-   metric_prefix += "Sim/";
 #endif
 
    std::cout << "Setting up metrics for host: " << host_name << std::endl;

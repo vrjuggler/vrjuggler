@@ -46,7 +46,6 @@ DIRPRFX=	TestCases/
 SUBDIR=		DynLoad		\
 		IO		\
 		Perf		\
-		Simulator	\
 		Socket		\
 		Thread		\
 		Util

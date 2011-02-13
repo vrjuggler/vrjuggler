@@ -40,10 +40,7 @@ include @topdir@/test/TestSuite/test.defs.mk
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 
-# No serial ports with sim sockets.
-ifneq (@SIMULATOR@, Y)
-   SRCS=	SerialPortTest.cpp
-endif
+SRCS=		SerialPortTest.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

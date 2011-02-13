@@ -24,10 +24,8 @@ namespace vprTest
 class SocketConnectorAcceptorTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SocketConnectorAcceptorTest);
-#ifndef VPR_SIMULATOR
 CPPUNIT_TEST( testAcceptorConstruction );
 CPPUNIT_TEST( testSpawnedAcceptor );
-#endif
 CPPUNIT_TEST_SUITE_END();
 
 public:

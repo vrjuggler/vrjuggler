@@ -96,14 +96,6 @@
                         Util
                         ..
                     ..
-                    SIM
-                        IO
-                            Socket
-                            ..
-                        ..
-                        Network
-                        ..
-                    ..
                     WIN32
                         IO
                             Port

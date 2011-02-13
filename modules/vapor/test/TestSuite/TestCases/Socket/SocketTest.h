@@ -34,9 +34,6 @@ namespace vprTest
 class SocketTest : public CppUnit::TestCase
 {
 CPPUNIT_TEST_SUITE(SocketTest);
-// None of these tests can be used with the simulator because they all
-// expect blocking sockets.
-#ifndef VPR_SIMULATOR
 CPPUNIT_TEST(testOpenClose);
 CPPUNIT_TEST(sameAddressOpenBindCloseTest);
 CPPUNIT_TEST(sameAddressOpenBindDestructTest);
@@ -52,7 +49,6 @@ CPPUNIT_TEST(testReadn);
 CPPUNIT_TEST(testNonBlockingConnectFailure);
 #if ! defined(VPR_OS_Darwin)
 CPPUNIT_TEST(testIsConnected);
-#endif
 #endif
 CPPUNIT_TEST_SUITE_END();
 
