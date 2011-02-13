@@ -243,6 +243,12 @@ bool WindowCocoa::open()
       finishOpen();
       opened = true;
       makeCurrent();
+      
+      // We will decrement the reference count of mGlView so that mCocoaWindow
+      // will have complete ownership of the NSOpenGLView memory.
+      // http://developer.apple.com/library/mac/#documentation/cocoa/reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html
+      [mGlView release];
+
       // TODO: Add extension loading stuff.
    }
    @catch (NSException* ex)
@@ -282,11 +288,14 @@ bool WindowCocoa::close()
       mWindowIsOpen = false;
    }
 
-   [mGlView release];
+   // http://developer.apple.com/library/mac/#documentation/cocoa/Conceptual/AppArchitecture/Tasks/GracefulAppTermination.html%23//apple_ref/doc/uid/20001280
+   [mCocoaWindow setDelegate:nil];
+   [mCocoaWindow makeFirstResponder:nil];
+   [mCocoaWindow setContentView:nil];
 
+   mCocoaWindow = nil;
    mGlView      = nil;
    mMainView    = nil;
-   mCocoaWindow = nil;
    mVrjDisplay  = vrj::DisplayPtr();
 
    [mRenderLock release];
