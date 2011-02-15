@@ -41,12 +41,12 @@ rem Look for JRE 1.6 first.
 FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Runtime Environment\1.6" /v JavaHome`) DO set JAVA_HOME=%%B
 IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
 
-rem Then try JRE 1.5.
-FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Runtime Environment\1.5" /v JavaHome`) DO set JAVA_HOME=%%B
-IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
-
 rem Look for JDK 1.6 first.
 FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Development Kit\1.6" /v JavaHome`) DO set JAVA_HOME=%%B
+IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
+
+rem Then try JRE 1.5.
+FOR /F "usebackq tokens=2* delims=	 " %%A IN (`reg query "HKLM\SOFTWARE\JavaSoft\Java Runtime Environment\1.5" /v JavaHome`) DO set JAVA_HOME=%%B
 IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
 
 rem Then try JDK 1.5.
@@ -57,8 +57,8 @@ IF NOT "%JAVA_HOME%" == "" GOTO TEST_JAVA_EXIST
 rem If we reached this point, we were not able to get a value for JAVA_HOME or
 rem JDK_HOME.
 ECHO [ERR] Neither JAVA_HOME nor JDK_HOME is set.  One of these environment
-ECHO [ERR] variables must be set to a valid Java 1.4 or newer installation
-ECHO [ERR] directory to run VRJConfig.
+ECHO [ERR] variables must be set to a valid Java installation directory in
+ECHO [ERR] order to run VRJConfig.
 GOTO ERREXIT
 
 :TEST_JAVA_EXIST
