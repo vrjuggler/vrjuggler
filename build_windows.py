@@ -2531,43 +2531,48 @@ def getMSBuild():
 
    return msbuild_cmd
 
-def doMSVCUpgrade(devenv_cmd, vc_dir, solution_file):
+def doMSVCUpgrade(devenvCmd, vcDir, solutionFile):
    
-   import msvcFixConversion
+   import msvcconv
 
    print "Upgrading solution and project files..."
-   projDir = os.path.join(gJugglerDir, vc_dir)
-   origProjects = []
-   for root, dirnames, filenames in os.walk(projDir):
+   proj_dir = os.path.join(gJugglerDir, vcDir)
+   #orig_projects = []
+
+   for root, dirnames, filenames in os.walk(proj_dir):
       for filename in fnmatch.filter(filenames, '*.vcproj'):
-         origName = os.path.join(root, filename)
-         convertedName = os.path.join(root, filename).replace(".vcproj", ".vcxproj")
-         convertedShortName = filename[:].replace(".vcproj", ".vcxproj")
-         if os.path.exists(convertedName):
+         orig_name = os.path.join(root, filename)
+         converted_name = os.path.join(root, filename).replace(".vcproj", ".vcxproj")
+         converted_short_name = filename[:].replace(".vcproj", ".vcxproj")
+
+         if os.path.exists(converted_name):
             mtime = os.path.getmtime
             # Test to see if we should regenerate
-            if mtime(origName) > mtime(convertedName):
-               print "\nDeleting outdated %s" % convertedShortName
+            if mtime(orig_name) > mtime(converted_name):
+               print "\nDeleting outdated %s" % converted_short_name
                try:
                   os.remove(os.path.join(root, filename).replace(".vcproj", ".vcxproj"))
-               except OSError, osEx:
-                  print osEx
-         if not os.path.exists(convertedName):
-            print "\nCreating %s by conversion..." % convertedShortName
+               except OSError, ex:
+                  print ex
+
+         if not os.path.exists(converted_name):
+            print "\nCreating %s by conversion..." % converted_short_name
             # Get rid of .vcxproj.filters file if it exists
             try:            
                os.remove(os.path.join(root, filename).replace(".vcproj", ".vcxproj.filters"))
-            except OSError, osEx:
+            except OSError, ex:
                pass
-            subprocess.call([devenv_cmd, origName, "/upgrade"])
-         project = msvcFixConversion.ProjectFile(convertedName)
+            subprocess.call([devenvCmd, orig_name, "/upgrade"])
+
+         project = msvcFixConversion.ProjectFile(converted_name)
          project.parseAndFix()
+
          if project.getChangesMade():
-            print "%s - Fixed target names following conversion" % convertedShortName
+            print "%s - Fixed target names following conversion" % converted_short_name
             project.write()
 
    # Finally upgrade solution if needed
-   subprocess.call([devenv_cmd, solution_file, "/upgrade"])
+   subprocess.call([devenvCmd, solutionFile, "/upgrade"])
 
 def main():
    disable_tk = False
@@ -2640,7 +2645,7 @@ def main():
             devenv_cmd    = getVSCmd()
             msbuild_cmd   = getMSBuild()
             solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir,
-                                           'Juggler.sln')            
+                                                 'Juggler.sln')            
             if needs_upgrade:
                doMSVCUpgrade(devenv_cmd, vc_dir, solution_file)
             
