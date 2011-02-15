@@ -28,6 +28,7 @@
 
 import glob
 import os, os.path
+import fnmatch
 import re
 import shutil
 import sys
@@ -2529,6 +2530,45 @@ def getMSBuild():
                                          'msbuild.exe')
 
    return msbuild_cmd
+
+def doMSVCUpgrade(devenv_cmd, vc_dir, solution_file):
+   
+   import msvcFixConversion
+
+   print "Upgrading solution and project files..."
+   projDir = os.path.join(gJugglerDir, vc_dir)
+   origProjects = []
+   for root, dirnames, filenames in os.walk(projDir):
+      for filename in fnmatch.filter(filenames, '*.vcproj'):
+         origName = os.path.join(root, filename)
+         convertedName = os.path.join(root, filename).replace(".vcproj", ".vcxproj")
+         convertedShortName = filename[:].replace(".vcproj", ".vcxproj")
+         if os.path.exists(convertedName):
+            mtime = os.path.getmtime
+            # Test to see if we should regenerate
+            if mtime(origName) > mtime(convertedName):
+               print "\nDeleting outdated %s" % convertedShortName
+               try:
+                  os.remove(os.path.join(root, filename).replace(".vcproj", ".vcxproj"))
+               except OSError, osEx:
+                  print osEx
+         if not os.path.exists(convertedName):
+            print "\nCreating %s by conversion..." % convertedShortName
+            # Get rid of .vcxproj.filters file if it exists
+            try:            
+               os.remove(os.path.join(root, filename).replace(".vcproj", ".vcxproj.filters"))
+            except OSError, osEx:
+               pass
+            subprocess.call([devenv_cmd, origName, "/upgrade"])
+         project = msvcFixConversion.ProjectFile(convertedName)
+         project.parseAndFix()
+         if project.getChangesMade():
+            print "%s - Fixed target names following conversion" % convertedShortName
+            project.write()
+
+   # Finally upgrade solution if needed
+   subprocess.call([devenv_cmd, solution_file, "/upgrade"])
+
 def main():
    disable_tk = False
    configs = []
@@ -2538,7 +2578,7 @@ def main():
                                          ["64", "nogui", "nobuild", "auto",
                                           "b", "build=", "install",
                                           "install-deps", "options-file=",
-                                          "help"])
+                                          "jobs=", "help"])
    except getopt.GetoptError:
       usage()
       sys.exit(EXIT_STATUS_INVALID_ARGUMENT)
@@ -2546,6 +2586,7 @@ def main():
    skip_vs = False
    install = None
    installDeps = None
+   numJobs = 1
 
    global gOptionsFileName
    global gBuild64
@@ -2554,6 +2595,8 @@ def main():
       print "Parsing o='%s' a='%s'" % (o, a)
       if o in ("-c","--nogui"):
          disable_tk = True
+      elif o in ("--jobs="):
+         numJobs = a         
       elif o in ("-b","--build"):
          if a in gValidBuildConfigs:
             print "Will build unattended in %s mode" % a
@@ -2597,18 +2640,20 @@ def main():
             devenv_cmd    = getVSCmd()
             msbuild_cmd   = getMSBuild()
             solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir,
-                                           'Juggler.sln')
+                                           'Juggler.sln')            
+            if needs_upgrade:
+               doMSVCUpgrade(devenv_cmd, vc_dir, solution_file)
+            
             if gUnattended:
                if gBuild64:
                   arch = 'x64'
                else:
                   arch = 'Win32'
-               if needs_upgrade:
-                  print "Upgrading solution and project files..."
-                  subprocess.call([devenv_cmd, solution_file, "/upgrade"])
                for config in configs:
                   #cmd = [devenv_cmd, solution_file, "/Build", "%s|%s" % (config, arch)]
                   cmd = [msbuild_cmd, solution_file, "/p:Configuration=%s" % config]
+                  if not numJobs == 1:
+                     cmd.append("/maxcpucount:%s" % numJobs)
                   print "Launching %s" % " ".join(cmd)
                   subprocess.call(cmd)
             else:
@@ -2677,6 +2722,7 @@ def usage():
    print "                         passed multiple times for more than one"
    print "                         config) - Valid configs:"
    print "                         %s" % ", ".join(gValidBuildConfigs)
+   print "--jobs=NUMJOBS           Build in parallel on up to NUMJOBS CPUs"
    print "--install                Automatically install VR Juggler."
    print "--install-deps           Automatically install VR Juggler dependencies."
    #print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, 'options.cache' if it exists, or the file given by the -o option.  Only used in command line mode."
