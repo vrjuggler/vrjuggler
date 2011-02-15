@@ -33,8 +33,10 @@
 
 #if defined(__OBJC__)
 @class NSAutoreleasePool;
+@class VRJBasicDelegate;
 #else
 class NSAutoreleasePool;
+class VRJBasicDelegate;
 #endif
 
 
@@ -85,6 +87,8 @@ private:
    //@}
 
    bool mRunning;
+   
+   VRJBasicDelegate* mVRJDelegate;
 };
 
 }

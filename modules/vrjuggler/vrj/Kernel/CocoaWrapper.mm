@@ -149,6 +149,8 @@ CocoaWrapper::CocoaWrapper()
    [main_controller setLoadConfigs:load_cfg_files];
 
    [app setDelegate:main_controller];
+   
+   mVRJDelegate = main_controller;
 }
 
 CocoaWrapper::~CocoaWrapper()
@@ -158,6 +160,7 @@ CocoaWrapper::~CocoaWrapper()
 
    [mMainPool release];
    mMainPool = nil;
+   mVRJDelegate = nil;
 }
 
 void CocoaWrapper::run()
@@ -177,7 +180,7 @@ void CocoaWrapper::run()
       vpr::System::msleep( 200 );  // tenth-second delay
    }
 
-   [[app delegate] preRun];
+   [mVRJDelegate preRun];
 
    // NOTE: The following is an attempt to reconstruct the NSApplication run
    // method. This approach would be preferred over sending the run message to
@@ -206,7 +209,7 @@ void CocoaWrapper::run()
    {
       pool = [[NSAutoreleasePool alloc] init];
 
-      [[app delegate] runLoop];
+      [mVRJDelegate runLoop];
         
       [app updateWindows];
 
