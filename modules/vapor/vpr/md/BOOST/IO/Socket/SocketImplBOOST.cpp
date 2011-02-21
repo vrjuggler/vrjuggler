@@ -152,13 +152,13 @@ bool SocketImplBOOST::isOpen() const
          throw SocketException("RAW socket type not supported.", VPR_LOCATION);
          break;
       default:
-         {
-            std::stringstream msg_stream;
-            msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
-                       << "value: " << unsigned(mType);
-            throw SocketException(msg_stream.str(), VPR_LOCATION);
-            break;
-         }
+      {
+         std::stringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
+                    << "value: " << unsigned(mType);
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
+         break;
+      }
    }
 }
 
@@ -183,6 +183,7 @@ vpr::Uint32 SocketImplBOOST::availableBytes() const
       }
    }
 }
+
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
 void SocketImplBOOST::open()
@@ -202,13 +203,13 @@ void SocketImplBOOST::open()
          throw SocketException("RAW socket type not supported.", VPR_LOCATION);
          break;
       default:
-         {
-            std::stringstream msg_stream;
-            msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
-                       << "value: " << unsigned(mType);
-            throw SocketException(msg_stream.str(), VPR_LOCATION);
-            break;
-         }
+      {
+         std::stringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
+                    << "value: " << unsigned(mType);
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
+         break;
+      }
    }
 
    if (ec)
@@ -217,6 +218,7 @@ void SocketImplBOOST::open()
       msg_stream << "[vpr::SocketImplBOOST] ERROR: Unable to open socket ";
       throw SocketException(msg_stream.str(), VPR_LOCATION);
    }
+
    mOpen = true;
    setBlocking(mOpenBlocking);
 }
@@ -226,30 +228,30 @@ void SocketImplBOOST::close()
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
-		 if (mTcpSocket->is_open())
-		 {
-			mTcpSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-		    mTcpSocket->close();
-		 }
+         if (mTcpSocket->is_open())
+         {
+            mTcpSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+            mTcpSocket->close();
+         }
          break;
       case vpr::SocketTypes::DATAGRAM:
-		 if (mUdpSocket->is_open())
-		 {
-			mUdpSocket->shutdown(boost::asio::ip::udp::socket::shutdown_both);
+         if (mUdpSocket->is_open())
+         {
+            mUdpSocket->shutdown(boost::asio::ip::udp::socket::shutdown_both);
             mUdpSocket->close();
-		 }
+         }
          break;
       case vpr::SocketTypes::RAW:
          throw SocketException("RAW socket type not supported.", VPR_LOCATION);
          break;
       default:
-         {
-            std::stringstream msg_stream;
-            msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
-                       << "value: " << unsigned(mType);
-            throw SocketException(msg_stream.str(), VPR_LOCATION);
-            break;
-         }
+      {
+         std::stringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
+                    << "value: " << unsigned(mType);
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
+         break;
+      }
    }
 
    // Reset the local state tracking to initial state
@@ -286,16 +288,17 @@ void SocketImplBOOST::setBlocking(bool blocking)
             mUdpSocket->io_control(command, ec);
             break;
          case vpr::SocketTypes::RAW:
-            throw SocketException("RAW socket type not supported.", VPR_LOCATION);
+            throw SocketException("RAW socket type not supported.",
+                                  VPR_LOCATION);
             break;
          default:
-            {
-               std::stringstream msg_stream;
-               msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
-                          << "value: " << unsigned(mType);
-               throw SocketException(msg_stream.str(), VPR_LOCATION);
-               break;
-            }  
+         {
+            std::stringstream msg_stream;
+            msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
+                       << "value: " << unsigned(mType);
+            throw SocketException(msg_stream.str(), VPR_LOCATION);
+            break;
+         }
       }
    }
 }
@@ -304,7 +307,7 @@ void SocketImplBOOST::setBlocking(bool blocking)
 void SocketImplBOOST::bind()
 {
    boost::system::error_code ec;
-   
+
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
@@ -331,7 +334,7 @@ void SocketImplBOOST::bind()
    {
       std::ostringstream ex_text;
       ex_text << "[vpr::SocketImplBOOST::bind()] " << " addr: ["
-         << mLocalAddr.mTcpAddr << "] ";
+              << mLocalAddr.mTcpAddr << "] ";
       buildAndThrowException(ex_text.str(), VPR_LOCATION);
    }
    else
@@ -347,7 +350,7 @@ void SocketImplBOOST::bind()
 void SocketImplBOOST::connect(const vpr::Interval& timeout)
 {
    boost::system::error_code ec;
-   
+
    // Attempt to connect to the address in mAddr.
    switch (mType)
    {
@@ -453,7 +456,7 @@ vpr::Uint32 SocketImplBOOST::read_i(void* buffer, const vpr::Uint32 length,
    vpr::Uint32 bytes(0);
    mBlockingFixed = true;
    mInBlockingCall = true;
-   
+
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
@@ -469,7 +472,7 @@ vpr::Uint32 SocketImplBOOST::read_i(void* buffer, const vpr::Uint32 length,
       throw ConnectionResetException("Socket disconnected cleanly.",
                                      VPR_LOCATION);
    }
-   
+
    mInBlockingCall = false;
    return bytes;
 }
@@ -481,7 +484,7 @@ vpr::Uint32 SocketImplBOOST::readn_i(void* buffer, const vpr::Uint32 length,
    vpr::Uint32 bytes(0);
    mBlockingFixed = true;
    mInBlockingCall = true;
-   
+
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
@@ -525,14 +528,15 @@ vpr::Uint32 SocketImplBOOST::write_i(const void* buffer,
          throw SocketException("RAW socket type not supported.", VPR_LOCATION);
          break;
       default:
-         {
-            std::stringstream msg_stream;
-            msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
-                       << "value: " << unsigned(mType);
-            throw SocketException(msg_stream.str(), VPR_LOCATION);
-            break;
-         }
+      {
+         std::stringstream msg_stream;
+         msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
+                    << "value: " << unsigned(mType);
+         throw SocketException(msg_stream.str(), VPR_LOCATION);
+         break;
+      }
    }
+
    bytes_written = sent;
    mInBlockingCall = false;
    return bytes_written;
