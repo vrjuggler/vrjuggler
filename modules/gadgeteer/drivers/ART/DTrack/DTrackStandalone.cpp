@@ -287,11 +287,17 @@ bool DTrackStandalone::receive(void)
 		}
 		catch (vpr::TimeoutException&)
 		{
+			vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+				<< "[DTrackStandalone] timeout reading from UDP"
+				<< std::endl << vprDEBUG_FLUSH;
 			set_timeout();
 			return false;
 		}
 		catch (vpr::IOException&)
 		{
+			vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+				<< "[DTrackStandalone] UDP error" << std::endl
+				<< vprDEBUG_FLUSH;
 			set_udperror();
 			return false;
 		}
