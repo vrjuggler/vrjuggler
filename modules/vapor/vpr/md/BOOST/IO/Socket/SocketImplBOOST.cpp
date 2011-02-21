@@ -107,7 +107,7 @@ void buildAndThrowException(const std::string& prefix,
    else if ( EHOSTUNREACH == error_number )
    {
       std::ostringstream msg_stream;
-      msg_stream << prefix << "No route to hose: " << err_string;
+      msg_stream << prefix << "No route to host: " << err_string;
       throw vpr::NoRouteToHostException(msg_stream.str(), location);
    }
    else if ( ENETDOWN == error_number )
