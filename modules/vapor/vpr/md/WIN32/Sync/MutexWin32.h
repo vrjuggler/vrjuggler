@@ -203,7 +203,7 @@ public:
    {
       const BOOL result = ReleaseMutex(mMutex);
 
-      if ( result != TRUE )
+      if (! result)
       {
          throw vpr::LockException(
             "Tried to release a mutex that this thread does not own",
