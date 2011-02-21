@@ -137,7 +137,9 @@ public:
    vpr::Uint32 sendto(const void* msg, const vpr::Uint32 length,
                       const vpr::InetAddr& to, const vpr::Interval& timeout);
 
-   void set_result(boost::optional<boost::system::error_code>* a, boost::system::error_code b, std::size_t bytes);
+private:
+   void setResult(boost::optional<boost::system::error_code>* a,
+                  const boost::system::error_code b, const std::size_t bytes);
 };
 
 } // End of namespace

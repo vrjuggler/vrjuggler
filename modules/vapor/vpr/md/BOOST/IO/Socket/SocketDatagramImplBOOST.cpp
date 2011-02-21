@@ -63,14 +63,14 @@ namespace vpr
 // ============================================================================
 
 SocketDatagramImplBOOST::SocketDatagramImplBOOST()
-   : SocketImplBOOST(vpr::SocketTypes::DATAGRAM)
+   : SocketImplBOOST(SocketTypes::DATAGRAM)
 {
    /* Do nothing. */ ;
 }
 
 SocketDatagramImplBOOST::SocketDatagramImplBOOST(const InetAddr& localAddr,
                                                  const InetAddr& remoteAddr)
-   : SocketImplBOOST(localAddr, remoteAddr, vpr::SocketTypes::DATAGRAM)
+   : SocketImplBOOST(localAddr, remoteAddr, SocketTypes::DATAGRAM)
 {
    /* Do nothing. */ ;
 }
@@ -86,34 +86,33 @@ SocketDatagramImplBOOST(const SocketDatagramImplBOOST& sock)
    //mIOService = sock.mIOService;
 }
 
-void SocketDatagramImplBOOST::set_result(boost::optional<boost::system::error_code>* a,
-                                         boost::system::error_code b,
-                                         std::size_t bytes)
-{
-   a->reset(b);
-   if (bytes != -1)
-   {
-      mBytesRead = bytes;
-   }
-}; 
-
 vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
                                               const vpr::Uint32 length,
                                               vpr::InetAddr& from,
                                               const vpr::Interval& timeout)
 {
    mBytesRead = 0;
+
+   // NOTE: It appears that binding the address of a stack variable
+   // (timer_result) to an asynchronous callback functor works here because
+   // the I/O service is being pumped by this method.
    boost::optional<boost::system::error_code> timer_result;
    boost::asio::deadline_timer timer(mUdpSocket->get_io_service());
    timer.expires_from_now(boost::posix_time::microseconds(timeout.msec()));
-   timer.async_wait(boost::bind(&vpr::SocketDatagramImplBOOST::set_result, this, &timer_result, _1, -1));
+   timer.async_wait(boost::bind(&SocketDatagramImplBOOST::setResult, this,
+                                &timer_result, _1, -1));
 
+   // Same situation for read_result.
    boost::optional<boost::system::error_code> read_result;
-   mUdpSocket->async_receive_from(boost::asio::buffer(msg, length), from.mUdpAddr, boost::bind(&vpr::SocketDatagramImplBOOST::set_result, this, &read_result, _1, _2));
+   mUdpSocket->async_receive_from(boost::asio::buffer(msg, length),
+                                  from.mUdpAddr,
+                                  boost::bind(&SocketDatagramImplBOOST::setResult,
+                                              this, &read_result, _1, _2));
    mUdpSocket->get_io_service().reset();
    static bool cancel_supported(true);
 
-   while (mUdpSocket->io_service().run_one()) {
+   while (mUdpSocket->io_service().run_one())
+   {
       if (read_result)
       {
          timer.cancel();
@@ -135,7 +134,7 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
                cancel_supported = false;
             }
          }
-       
+
          if (! cancel_supported)
          {
             const bool was_bound(isBound());
@@ -163,7 +162,8 @@ vpr::Uint32 SocketDatagramImplBOOST::sendto(const void* msg,
    boost::system::error_code ec;
    vpr::Uint32 bytes_sent(0);
 
-   bytes_sent = mUdpSocket->send_to(boost::asio::buffer(msg, length),to.mUdpAddr, 0, ec);
+   bytes_sent = mUdpSocket->send_to(boost::asio::buffer(msg, length),
+                                    to.mUdpAddr, 0, ec);
 
    if (ec)
    {
@@ -171,6 +171,17 @@ vpr::Uint32 SocketDatagramImplBOOST::sendto(const void* msg,
    }
 
    return bytes_sent;
+}
+
+void SocketDatagramImplBOOST::
+setResult(boost::optional<boost::system::error_code>* a,
+          const boost::system::error_code b, const std::size_t bytes)
+{
+   a->reset(b);
+   if (bytes != -1)
+   {
+      mBytesRead = bytes;
+   }
 }
 
 } // End of vpr namespace
