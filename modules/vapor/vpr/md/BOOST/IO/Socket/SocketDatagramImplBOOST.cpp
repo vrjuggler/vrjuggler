@@ -110,8 +110,9 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
 
    boost::optional<boost::system::error_code> read_result;
    mUdpSocket->async_receive_from(boost::asio::buffer(msg, length), from.mUdpAddr, boost::bind(&vpr::SocketDatagramImplBOOST::set_result, this, &read_result, _1, _2));
-
    mUdpSocket->get_io_service().reset();
+   static bool cancel_supported(true);
+
    while (mUdpSocket->io_service().run_one()) {
       if (read_result)
       {
@@ -119,7 +120,35 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
       }
       else if (timer_result)
       {
-         mUdpSocket->cancel();
+         if (cancel_supported)
+         {
+            try
+            {
+               mUdpSocket->cancel();
+            }
+            catch (std::exception & ex)
+            {
+               vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+                  << "[SocketDatagramImplBOOST] caught an exception "
+                     < "cancelling UDP socket, switching to pre-Vista mode..."
+                  << std::endl << vprDEBUG_FLUSH;
+               cancel_supported = false;
+            }
+         }
+       
+         if (! cancel_supported)
+         {
+            const bool was_bound(isBound());
+            this->close();
+            this->open();
+
+            if (was_bound)
+            {
+               this->bind();
+            }
+         }
+
+         throw TimeoutException("recvfrom operation timed out", VPR_LOCATION);
       }
    }
 

@@ -1,5 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- --------- ----------------------------------------------------------
+2011-02-21 patrick   Fixed UDP recvfrom() timeout handling on Windows XP.
+                     Submitted by Ryan Pavlik.
+
+[2.2.0 released - 11.27.2010]==================================================
+
 2010-09-17 patrick   Fixed socket shutdown on Windows.
 
 [2.2.0 RC 1 released - 9.5.2010]===============================================
