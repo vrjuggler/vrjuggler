@@ -120,10 +120,10 @@ bool DTrack::config(jccl::ConfigElementPtr e)
 	server_name= e->getProperty<std::string>("server_name");
 	command_port = e->getProperty<int>("command_port");
 
-	vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+	vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
 		<< "[DTrack] " << VERSION_STRING << std::endl << vprDEBUG_FLUSH;
 
-	vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
+	vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
 		<< "[DTrack] configuration: receive port = " << receive_port
 		<< " command server = " << server_name << ":" << command_port
 		<< std::endl << vprDEBUG_FLUSH;
@@ -132,6 +132,10 @@ bool DTrack::config(jccl::ConfigElementPtr e)
 	if(server_name.length() == 0 || command_port == 0){
 		use_commands = false;
 	}
+	vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+		<< "[DTrack] configuration: use_command = "
+		<< std::boolalpha << use_commands << std::noboolalpha
+		<< std::endl << vprDEBUG_FLUSH;
 
 	return true;
 }
@@ -149,6 +153,9 @@ bool DTrack::startSampling()
 	}
 
 	// initialize standalone driver:
+	vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+		<< "[DTrack] Initializing standalone driver..." 
+		<< std::endl << vprDEBUG_FLUSH;
 
 	if(use_commands){
 		standalone = new DTrackStandalone(receive_port, server_name.c_str(), command_port);
@@ -201,7 +208,7 @@ bool DTrack::stopSampling()
 	thrRunning = false;
 
 	if(thrThread != NULL){
-		thrThread->kill();  // Not guaranteed to work on all platforms
+		//thrThread->kill();  // Not guaranteed to work on all platforms
 		thrThread->join();
 
 		delete thrThread;
@@ -258,9 +265,18 @@ bool DTrack::sample()
 		return false;
 	}
 
+	static int known_num_body = 0;
 	num_body = standalone->get_num_body();
 	num_flystick = standalone->get_num_flystick();
 	num_meatool = standalone->get_num_meatool();
+	
+	if (known_num_body != num_body) {
+		vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+			<< "[DTrack] Change in the number of known bodies - "
+			<< "was " << known_num_body << ", now is " << num_body
+			<< std::endl << vprDEBUG_FLUSH;
+		known_num_body = num_body;
+	}
 	
 	resize_curPosition(num_flystick + num_meatool + num_body);
 	resize_curDigital(num_flystick * BUTTONS_PER_FLYSTICK + num_meatool * BUTTONS_PER_MEATOOL);
