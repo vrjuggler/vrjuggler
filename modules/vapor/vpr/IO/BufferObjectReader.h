@@ -378,7 +378,7 @@ inline double BufferObjectReader::readDouble()
      vpr::Uint64 intVal;
    } data;
 
-   std::memcpy(&data.intVal, readRaw(4), 4);
+   std::memcpy(&data.intVal, readRaw(8), 8);
    data.intVal = vpr::System::Ntohl(data.intVal);
 
    return data.doubleVal;
