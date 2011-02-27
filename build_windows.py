@@ -51,6 +51,8 @@ gJugglerDir        = os.path.dirname(os.path.abspath(sys.argv[0]))
 gOptionsFileName   = "options.cache"
 gBuild64           = False
 gUnattended        = False
+gJobLimit          = None
+gInstallDebug      = False
 gValidBuildConfigs = ("ReleaseDLL", "DebugDLL", "DebugRtDll")
 
 gJdomJars = [
@@ -125,8 +127,6 @@ def detectVisualStudioVersion(reattempt = False):
          sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
       elif cl_major == 15:
          vs_ver = '2008'
-      elif cl_major == 16:
-         vs_ver = '2010'
       else:
          printStatus("Warning: unrecognized compiler version %s.%s, will treat it like VS2010"
                      % (cl_major, cl_minor))
@@ -191,14 +191,11 @@ def chooseVisualStudioDir():
    if cl_ver_major <= 14:
       print "ERROR: Visual C++ 8.0 and older are not supported!"
       sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
-   # For Visual Studio 2008, we use the solution in the vc9 subtree.
-   elif cl_ver_major == 15:
-      vc_dir = 'vc9'
    # Otherwise, we use the solution in the vc9 subtree.
    else:
-      vc_dir = 'vc10'
+      vc_dir = 'vc9'
 
-   if cl_ver_major > 16:
+   if cl_ver_major > 15:
       # Will need to upgrade the solution
       needs_upgrade = True
    return (cl_ver_major, cl_ver_minor, vc_dir, needs_upgrade)
@@ -1168,7 +1165,8 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
    # caller from having to add these repeatedly.
    disallowedExts.append('.ilk')
    disallowedExts.append('.ncb')
-   disallowedExts.append('.pdb')
+   if not gInstallDebug:
+      disallowedExts.append('.pdb')
    disallowedExts.append('.suo')
 
    skip_dirs = ['.svn', 'CVS', 'autom4te.cache']
@@ -1606,7 +1604,7 @@ def installGadgeteerPlugins(prefix, buildDir):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'plugins',
                           'ApplicationDataManager')
    installDir(srcdir, destdir, ['.h'])
-   
+
    destdir = os.path.join(prefix, 'include', 'plugins',
                           'ApplicationBarrierManager')
    srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'plugins',
@@ -2485,7 +2483,7 @@ def getVSCmd():
    devenv_cmd = None
    # devenv is used by the full version of Visual Studio. VCExpress is the
    # launch command used by Visual C++ Express Edition.
-   cmds = ['devenv.com', 'devenv.exe', 'VCExpress.exe']
+   cmds = ['devenv.exe', 'VCExpress.exe']
 
    for p in os.getenv('PATH', '').split(os.pathsep):
 #      print "Searching in", p
@@ -2531,14 +2529,12 @@ def getMSBuild():
 
    return msbuild_cmd
 
-def doMSVCUpgrade(devenvCmd, vcDir, solutionFile):
+def doMSVCUpgrade(devenv_cmd, vc_dir, solution_file):
    
    import msvcconv
 
    print "Upgrading solution and project files..."
-   proj_dir = os.path.join(gJugglerDir, vcDir)
-   #orig_projects = []
-
+   proj_dir = os.path.join(gJugglerDir, vc_dir)
    for root, dirnames, filenames in os.walk(proj_dir):
       for filename in fnmatch.filter(filenames, '*.vcproj'):
          orig_name = os.path.join(root, filename)
@@ -2562,9 +2558,9 @@ def doMSVCUpgrade(devenvCmd, vcDir, solutionFile):
                os.remove(os.path.join(root, filename).replace(".vcproj", ".vcxproj.filters"))
             except OSError, ex:
                pass
-            subprocess.call([devenvCmd, orig_name, "/upgrade"])
+            subprocess.call([devenv_cmd, orig_name, "/upgrade"])
 
-         project = msvcFixConversion.ProjectFile(converted_name)
+         project = msvcconv.ProjectFile(converted_name)
          project.parseAndFix()
 
          if project.getChangesMade():
@@ -2572,18 +2568,36 @@ def doMSVCUpgrade(devenvCmd, vcDir, solutionFile):
             project.write()
 
    # Finally upgrade solution if needed
-   subprocess.call([devenvCmd, solutionFile, "/upgrade"])
+   subprocess.call([devenv_cmd, solution_file, "/upgrade"])
 
+def getBuildCommand(msbuild_cmd, solution_file, config):
+   #if gBuild64:
+   #   arch = 'x64'
+   #else:
+   #   arch = 'Win32'
+   cmd = [msbuild_cmd, solution_file, "/p:Configuration=%s" % config]
+   if gJobLimit == None:
+      cmd.append("/m")
+   else:
+      cmd.append("/maxcpucount:%s" % gJobLimit)
+   cmd.append("/p:BuildInParallel=true")
+   return cmd
+
+def getIDECommand(devenv_cmd, solution_file):
+   cmd = [devenv_cmd, solution_file]
+   return cmd
+   
 def main():
    disable_tk = False
    configs = []
 
    try:
       cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cano:h",
-                                         ["64", "nogui", "nobuild", "auto",
+                                         ["64", "nogui", "nobuild", "a", "auto",
                                           "b", "build=", "install",
-                                          "install-deps", "options-file=",
-                                          "jobs=", "help"])
+                                          "install-deps", "install-debug",
+                                          "options-file=", "jobs=",
+                                          "help"])
    except getopt.GetoptError:
       usage()
       sys.exit(EXIT_STATUS_INVALID_ARGUMENT)
@@ -2596,16 +2610,16 @@ def main():
    global gOptionsFileName
    global gBuild64
    global gUnattended
+   global gJobLimit
+   global gInstallDebug
    for o, a in cmd_opts:
-      print "Parsing o='%s' a='%s'" % (o, a)
       if o in ("-c","--nogui"):
          disable_tk = True
       elif o in ("--jobs="):
-         numJobs = a         
+         gJobLimit = a         
       elif o in ("-b","--build"):
          if a in gValidBuildConfigs:
-            print "Will build unattended in %s mode" % a
-            gUnattended = True
+            print "Will build in %s mode" % a
             configs.append(a)
          else:
             print "Unrecognized build configuration %s!" % a
@@ -2617,6 +2631,11 @@ def main():
          install = True
       elif o == "--install-deps":
          installDeps = True
+      elif o == "--install-debug":
+         gInstallDebug = True
+      elif o in ("-a", "--auto"):
+         disable_tk = True
+         gUnattended = True;
       elif o in ("-o", "--options-file"):
          gOptionsFileName = a
 
@@ -2645,66 +2664,58 @@ def main():
             devenv_cmd    = getVSCmd()
             msbuild_cmd   = getMSBuild()
             solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir,
-                                                 'Juggler.sln')            
+                                                 'Juggler.sln')      
             if needs_upgrade:
                doMSVCUpgrade(devenv_cmd, vc_dir, solution_file)
             
-            if gUnattended:
-               if gBuild64:
-                  arch = 'x64'
-               else:
-                  arch = 'Win32'
+            if len(configs) > 0:
                for config in configs:
-                  #cmd = [devenv_cmd, solution_file, "/Build", "%s|%s" % (config, arch)]
-                  cmd = [msbuild_cmd, solution_file, "/p:Configuration=%s" % config]
-                  if not numJobs == 1:
-                     cmd.append("/maxcpucount:%s" % numJobs)
+                  cmd = getBuildCommand(msbuild_cmd, solution_file, config)
                   print "Launching %s" % " ".join(cmd)
                   subprocess.call(cmd)
             else:
-               status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
+               cmd = getIDECommand(devenv_cmd, solution_file)
+               print "Launching %s" % " ".join(cmd)
+               subprocess.call(cmd)
 
-            if status == 0:
-               if gUnattended:
-                  if install == True:
-                     print "Automatically proceeding with VR Juggler installation..."
-                     proceed = 'y'
-                  else:
-                     print "--install not specified, skipping VR Juggler installation..."
-                     proceed = 'n'
-               else:
-                  if install == True:
-                     print "Proceeding with VR Juggler installation..."
-                     proceed = 'y'
-                  else:
-                     print "Proceed with VR Juggler installation [y]: ",
-                     proceed = sys.stdin.readline().strip(" \n")
+         if gUnattended:
+            if install == True:
+               print "Automatically proceeding with VR Juggler installation..."
+               proceed = 'y'
+            else:
+               print "--install not specified, skipping VR Juggler installation..."
+               proceed = 'n'
+         else:
+            if install == True:
+               print "Proceeding with VR Juggler installation..."
+               proceed = 'y'
+            else:
+               print "Proceed with VR Juggler installation [y]: ",
+               proceed = sys.stdin.readline().strip(" \n")
 
-               if proceed == '' or proceed.lower().startswith('y'):
-                  doInstall(options['prefix'],
-                            os.path.join(gJugglerDir, vc_dir))
+         if not (proceed == '' or proceed.lower().startswith('y')):
+            sys.exit(EXIT_STATUS_SUCCESS)
+         doInstall(options['prefix'],
+                   os.path.join(gJugglerDir, vc_dir))
 
-                  if gUnattended:
-                     if installDeps == True:
-                        print "Automatically proceeding with VR Juggler dependency installation..."
-                        proceed = 'y'
-                     else:
-                        print "--install-deps not specified, skipping VR Juggler dependency installation..."
-                        proceed = 'n'
-                  else:
-                     if installDeps == True:
-                        print "Proceeding with VR Juggler dependency installation..."
-                        proceed = 'y'
-                     else:
-                        print "Proceed with VR Juggler dependency installation [y]: ",
-                        proceed = sys.stdin.readline().strip(" \n")
-                    
-                     if proceed == '' or proceed.lower().startswith('y'):
-                        doDependencyInstall(options['deps-prefix'],
-                                            os.path.join(gJugglerDir, vc_dir))
-      except OSError, osEx:
-         print "Could not execute %s: %s" % (devenv_cmd, osEx)
-         sys.exit(EXIT_STATUS_MSVS_START_ERROR)
+         if gUnattended:
+            if installDeps == True:
+               print "Automatically proceeding with VR Juggler dependency installation..."
+               proceed = 'y'
+            else:
+               print "--install-deps not specified, skipping VR Juggler dependency installation..."
+               proceed = 'n'
+         else:
+            if installDeps == True:
+               print "Proceeding with VR Juggler dependency installation..."
+               proceed = 'y'
+            else:
+               print "Proceed with VR Juggler dependency installation [y]: ",
+               proceed = sys.stdin.readline().strip(" \n")
+              
+         if proceed == '' or proceed.lower().startswith('y'):
+               doDependencyInstall(options['deps-prefix'],
+                                   os.path.join(gJugglerDir, vc_dir))
       except subprocess.CalledProcessError, cpErr:
          print "Could not execute: %s" % cpErr
          sys.exit(EXIT_STATUS_MSVS_START_ERROR)         
@@ -2727,11 +2738,13 @@ def usage():
    print "                         passed multiple times for more than one"
    print "                         config) - Valid configs:"
    print "                         %s" % ", ".join(gValidBuildConfigs)
-   print "--jobs=NUMJOBS           Build in parallel on up to NUMJOBS CPUs"
+   print "-n, --nobuild            Skip launching Visual Studio or the build tool."
+   print "--jobs=NUMJOBS           Do not create more than NUMJOBS parallel processes"
    print "--install                Automatically install VR Juggler."
    print "--install-deps           Automatically install VR Juggler dependencies."
-   #print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, 'options.cache' if it exists, or the file given by the -o option.  Only used in command line mode."
-   print "-o, --options-file=FILE  Uses FILE to Load/Save Options."
+   print "--install-debug          Don't automatically skip installing pdb files."
+   print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, or the options file if it exists. Implies -c"
+   print "-o, --options-file=FILE  Uses FILE to Load/Save Options (defaults to options.cache)."
    print "-h, --help               Print this usage text and quit."
 
 if __name__ == '__main__':
