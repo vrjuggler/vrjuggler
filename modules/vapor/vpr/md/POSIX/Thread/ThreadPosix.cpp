@@ -538,12 +538,13 @@ void ThreadPosix::kill(const int signum)
 
 Thread* ThreadPosix::self()
 {
-   vprASSERT((statics.mStaticsInitialized==1221) && "Trying to call vpr::ThreadPosix::self before statics are initialized. Don't do that");
+   vprASSERT((statics.mStaticsInitialized==1221) &&
+             "Trying to call vpr::ThreadPosix::self before statics are initialized. Don't do that!");
 
-   Thread* my_thread;
-   threadIdKey().getspecific((void**)&my_thread);
+   void* my_thread(NULL);
+   threadIdKey().getspecific(&my_thread);
 
-   return my_thread;
+   return reinterpret_cast<Thread*>(my_thread);
 }
 
 // Provides a way of printing the process ID neatly.
