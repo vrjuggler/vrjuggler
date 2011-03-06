@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-06-2011 patrick     Fixed gadget::MouseEvent generation to include the
+                        pressed (released) mouse button for X11 mouse button
+                        press (release) events.
+                        Submitted by Doug McCorkle.
 Dec-10-2010 patrick     Changed keyboard and mouse event time stamps for Cocoa
                         to be measured in milliseconds to match X11 and Win32.
                         Submitted by Doug McCorkle.

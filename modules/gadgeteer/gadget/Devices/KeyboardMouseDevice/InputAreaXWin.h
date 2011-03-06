@@ -170,6 +170,18 @@ private:
    int getMask(const int state);
 
    /**
+    * Constructs a windowing system-independent mask of mouse buttons from 
+    * the given X11 button state value.
+    *
+    * @param state An integer value from the X Window System that gives the
+    *              current state of depressed mouse buttons.
+    *
+    * @note There is currently an assumption that exactly one button is in
+    *       the pressed state.
+    */
+   int getButtonMask(const int state);
+    
+   /**
     * Converts X Window key to gadget::Keys value.
     * @note Keypad keys are transformed ONLY to number keys.
     */

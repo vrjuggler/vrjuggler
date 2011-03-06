@@ -518,11 +518,15 @@ void InputAreaXWin::addMouseButtonEvent(const gadget::Keys button,
                                         const XButtonEvent& event)
 {
    const XWindowAttributes attrs = getDisplayAttributes();
+
+   // On mouse button press/release events it seems that the button
+   // is not included in the event.state variable so we will include
+   // it through the event.button variable.
+   const int button_mask = getButtonMask(event.button) | getMask(event.state);
    gadget::EventPtr mouse_event(
       new gadget::MouseEvent(type, button, event.x, mHeight - event.y,
                              event.x_root, attrs.height - event.y_root,
-                             0.0f, 0.0f, getMask(event.state), event.time,
-                             this)
+                             0.0f, 0.0f, button_mask, event.time, this)
    );
    mKeyboardMouseDevice->addEvent(mouse_event);
 }
@@ -592,6 +596,34 @@ int InputAreaXWin::getMask(const int state)
    if ( state & Button5Mask )
    {
       mask |= gadget::BUTTON5_MASK;
+   }
+
+   return mask;
+}
+
+int InputAreaXWin::getButtonMask(const int state)
+{
+   int mask(0);
+
+   if (state == Button1)
+   {
+      mask = gadget::BUTTON1_MASK;
+   }
+   else if (state == Button2)
+   {
+      mask = gadget::BUTTON2_MASK;
+   }
+   else if (state == Button3)
+   {
+      mask = gadget::BUTTON3_MASK;
+   }
+   else if (state == Button4)
+   {
+      mask = gadget::BUTTON4_MASK;
+   }
+   else if (state == Button5)
+   {
+      mask = gadget::BUTTON5_MASK;
    }
 
    return mask;
