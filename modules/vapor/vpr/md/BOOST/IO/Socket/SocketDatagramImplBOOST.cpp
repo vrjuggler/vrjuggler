@@ -129,7 +129,7 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
             {
                vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
                   << "[SocketDatagramImplBOOST] caught an exception "
-                     < "cancelling UDP socket, switching to pre-Vista mode..."
+                  << "cancelling UDP socket, switching to pre-Vista mode..."
                   << std::endl << vprDEBUG_FLUSH;
                cancel_supported = false;
             }
