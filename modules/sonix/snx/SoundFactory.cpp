@@ -176,7 +176,14 @@ SoundFactory::SoundFactory()
    typedef std::vector<fs::path>::iterator iter_type;
    for ( iter_type p = search_paths.begin(); p != search_paths.end(); ++p )
    {
-      const std::string cur_dir = (*p).native_directory_string();
+      const std::string cur_dir(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         (*p).string()
+#else
+         (*p).native_directory_string()
+#endif
+      );
+
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "Finding plug-ins in " << cur_dir
                                           << std::endl << vprDEBUG_FLUSH;
 

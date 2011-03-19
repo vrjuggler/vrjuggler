@@ -55,30 +55,40 @@ void LibraryFinder::rescan()
    // vpr::Library to be invoked.
    mLibList.clear();
 
-   if ( fs::is_directory(mLibDir) )
+   if (fs::is_directory(mLibDir))
    {
       fs::directory_iterator end_itr;
 
-      for ( fs::directory_iterator file(mLibDir); file != end_itr; ++file )
+      // Ignore directories.  Normal files and symlinks are fine.
+      for (fs::directory_iterator file(mLibDir); file != end_itr; ++file)
       {
+// Boost.Filesystem v1
 #if BOOST_VERSION < 103400
-         // Ignore directories.  Normal files and symlinks are fine.
-         if ( ! fs::is_directory(*file) &&
-              boost::iends_with(file->leaf(), mLibExt) )
+         if (! fs::is_directory(*file) &&
+             boost::iends_with(file->leaf(), mLibExt))
          {
             mLibList.push_back(
                vpr::LibraryPtr(new vpr::Library(file->native_file_string()))
             );
          }
-#else
-         // Ignore directories.  Normal files and symlinks are fine.
-         if ( ! fs::is_directory(file->status()) &&
-              boost::iends_with(file->path().leaf(), mLibExt) )
+// Boost.Filesystem v2
+#elif BOOST_VERSION < 104600
+         if (! fs::is_directory(file->status()) &&
+             boost::iends_with(file->path().leaf(), mLibExt))
          {
             mLibList.push_back(
                vpr::LibraryPtr(
                   new vpr::Library(file->path().native_file_string())
                )
+            );
+         }
+// Boost.Filesystem v3
+#else
+         if (! fs::is_directory(file->status()) &&
+             boost::iends_with(file->path().filename().string(), mLibExt))
+         {
+            mLibList.push_back(
+               vpr::LibraryPtr(new vpr::Library(file->path().string()))
             );
          }
 #endif
@@ -87,7 +97,12 @@ void LibraryFinder::rescan()
    else
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR") << ": " << mLibDir.native_file_string()
+         << clrOutNORM(clrRED, "ERROR") << ": "
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         << mLibDir.string()
+#else
+         << mLibDir.native_file_string()
+#endif
          << " is not a directory\n" << vprDEBUG_FLUSH;
    }
 }

@@ -85,7 +85,11 @@ std::string ParseUtil::expandFileName(const std::string& name,
       }
    }
 
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+   return fname_path.string();
+#else
    return fname_path.native_file_string();
+#endif
 }
 
 void ParseUtil::setCfgSearchPath(const std::string& path)
@@ -107,14 +111,23 @@ bool ParseUtil::findFileUsingPath(const std::string& fileName,
 
       vprDEBUG(jcclDBG_CONFIG, vprDBG_HVERB_LVL)
          << "[jccl::ParseUtil::findFileUsingPath()] Attempting to open file '"
-         << full_path.native_file_string() << "'\n" << vprDEBUG_FLUSH;
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         << full_path.string()
+#else
+         << full_path.native_file_string()
+#endif
+         << "'\n" << vprDEBUG_FLUSH;
 
       try
       {
          if ( fs::exists(full_path) && ! fs::is_directory(full_path) )
          {
             status = true;
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+            absoluteFile = full_path.string();
+#else
             absoluteFile = full_path.native_file_string();
+#endif
             break;
          }
       }

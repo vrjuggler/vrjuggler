@@ -150,15 +150,18 @@ namespace jccl
                {
                   try
                   {
+// Boost.Filesystem v1
 #if BOOST_VERSION < 103400
                      // Ignore directories
                      if (!fs::is_directory(*file))
                      {
-                        const std::string file_name = file->leaf();
-                        const std::string::size_type result =
-                           file_name.rfind(".");
+                        const std::string file_name(file->leaf());
+                        const std::string::size_type result(
+                           file_name.rfind(".")
+                        );
 
-                        if(result != std::string::npos && file_name.substr(result) == def_ext)
+                        if (result != std::string::npos &&
+                            file_name.substr(result) == def_ext)
                         {
                            vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
                               << "Loading '" << file->native_file_string()
@@ -166,38 +169,54 @@ namespace jccl
                            loadDef(file->native_file_string());
                         }
                      }
-#else
+#else /* Boost.Filesystem v2 or v3 */
                      // Ignore directories
-                     if ( ! fs::is_directory(file->status()) )
+                     if (! fs::is_directory(file->status()))
                      {
-                        const std::string file_name = file->path().leaf();
-                        const std::string::size_type result =
-                           file_name.rfind(".");
+                        const std::string file_name(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                           file->path().filename().string()
+#else
+                           file->path().leaf()
+#endif
+                        );
+                        const std::string::size_type result(
+                           file_name.rfind(".")
+                        );
 
-                        if ( result != std::string::npos &&
-                             file_name.substr(result) == def_ext )
+                        if (result != std::string::npos &&
+                            file_name.substr(result) == def_ext)
                         {
+                           const std::string def_file(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                              file->path().string()
+#else
+                              file->path().native_file_string()
+#endif
+                           );
                            vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
-                              << "Loading '"
-                              << file->path().native_file_string() << "'\n"
+                              << "Loading '" << def_file << "'\n"
                               << vprDEBUG_FLUSH;
-                           loadDef(file->path().native_file_string());
+                           loadDef(def_file);
                         }
                      }
-#endif
+#endif  /* Boost.Filesystem v2 or v3 */
                   }
                   catch (fs::filesystem_error& err)
                   {
-#if BOOST_VERSION < 103400
-                     vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
-                        << "Failed to read '" << file->native_file_string()
-                        << "': " << err.what() << std::endl << vprDEBUG_FLUSH;
-#else
                      vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
                         << "Failed to read '"
-                        << file->path().native_file_string() << "': "
-                        << err.what() << std::endl << vprDEBUG_FLUSH;
+// Boost.Filesystem v1
+#if BOOST_VERSION < 103400
+                        << file->native_file_string()
+// Boost.Filesystem v2
+#elif BOOST_VERSION < 104600
+                        << file->path().native_file_string()
+// Boost.Filesystem v3
+#else
+                        << file->path().string()
 #endif
+                        << "': " << err.what() << std::endl << vprDEBUG_FLUSH;
                   }
                }
             }

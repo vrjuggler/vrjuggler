@@ -90,8 +90,15 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                   // <base_dir>\lib\debug.
                   base_dir = base_dir.branch_path();
 #endif
-                  const std::string base_dir_str =
-                     base_dir.native_directory_string();
+
+                  const std::string base_dir_str(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     base_dir.string()
+#else
+                     base_dir.native_directory_string()
+#endif
+                  );
+
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   _putenv_s("VPR_BASE_DIR", base_dir_str.c_str());
 #else

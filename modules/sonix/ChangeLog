@@ -1,4 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-03-19 patrick     Added support for Boost.Filesystem v3.
+                       Submitted by Doug McCorkle.
+                       NEW VERSION: 1.5.1
 2010-06-19 patrick     VR Juggler 3.0 branch created.
                        NEW VERSION: 1.5.0

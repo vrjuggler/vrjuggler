@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-03-19 patrick     Added support for Boost.Filesystem v3.
+                       Submitted by Doug McCorkle.
+                       NEW VERSION: 3.1.3
 2011-02-06 patrick     vrj::Kernel::init(int&, char*[]) has a new optional
                        parameter that allows the Boost.program_options command 
                        line parser style to be changed by the application

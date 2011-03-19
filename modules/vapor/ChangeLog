@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-03-19 patrick     Added support for Boost.Filesystem v3.
+                       Submitted by Doug McCorkle.
+                       NEW VERSION: 2.3.4
 2011-02-13 patrick     Removed the simulated sockets code.
                        NEW VERSION: 2.3.3
 2010-07-20 patrick     Added vpr::SignalProxy<T>.
