@@ -30,7 +30,6 @@
 #include <gadget/gadgetConfig.h>
 
 #include <typeinfo>
-#include <boost/optional.hpp>
 
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
@@ -261,42 +260,6 @@ namespace gadget
       const device_ptr_type getTypedInputDevice() const
       {
          return mStupefied ? device_ptr_type() : mTypedDevice;
-      }
-
-      /**
-       * Sets the proxy to point to the given type-specific device.
-       *
-       * @pre \p devPtr must be a valid device of the type identified by
-       *      \p devName.
-       * @post The proxy now references the given device.  The device name we
-       *       are proxying is set to devPtr->getInstanceName().
-       *
-       * @param devName The name of the device at which we are pointing.
-       * @param devPtr  Pointer to the device.
-       * @param unitNum Integer to index the unit on the device.
-       *
-       * @since 2.0.1
-       *
-       * @note This method was back-ported from Gadgeteer 2.1. It is here to
-       *       facilitate forward compatibility with Gadgeteer 2.2. In
-       *       Gadgeteer 2.1/2.2, there is just one set() method where the
-       *       \p unitNum parameter is optional.
-       */
-      void set(const std::string& devName, const device_ptr_type& devPtr,
-               const int unitNum)
-      {
-         mTypedDevice = devPtr;
-         if (NULL != mTypedDevice.get())
-         {
-            mDeviceName = devName;
-            mUnit       = unitNum;
-
-            stupefy(false);
-         }
-         else
-         {
-            vprASSERT(false && "Tried to set proxy to NULL device");
-         }
       }
 
    protected:
