@@ -747,8 +747,12 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
          << "[gadget::InputManager::configureInputManager()] Appending "
          << "default search path '"
-         << default_search_dir.native_directory_string() << "'\n"
-         << vprDEBUG_FLUSH;
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         << default_search_dir.string()
+#else
+         << default_search_dir.native_directory_string()
+#endif
+         << "'\n" << vprDEBUG_FLUSH;
 
 #if defined(GADGET_DEBUG)
       // For a debug build, search in the debug subdirectory of

@@ -98,13 +98,20 @@ vpr::LibraryPtr LibraryLoader::findDSO(const std::string& dsoBaseName,
       {
          fs::path temp_path = *i / dso_name;
 
+         const std::string temp_path_string(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+            temp_path.string()
+#else
+            temp_path.native_file_string()
+#endif
+         );
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "[vpr::LibraryLoader::findDSO()] Looking for '"
-            << temp_path.native_file_string() << "'\n" << vprDEBUG_FLUSH;
+            << temp_path_string << "'\n" << vprDEBUG_FLUSH;
 
          if ( fs::exists(temp_path) )
          {
-            dso = vpr::LibraryPtr(new vpr::Library(temp_path.native_file_string()));
+            dso = vpr::LibraryPtr(new vpr::Library(temp_path_string));
             break;
          }
       }

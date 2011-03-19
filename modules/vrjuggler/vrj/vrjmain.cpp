@@ -89,8 +89,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                   base_dir = base_dir.branch_path();
 #endif
 
-                  const std::string base_dir_str =
-                     base_dir.native_directory_string();
+                  const std::string base_dir_str(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     base_dir.string()
+#else
+                     base_dir.native_directory_string()
+#endif
+                  );
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   _putenv_s("VJ_BASE_DIR", base_dir_str.c_str());
@@ -120,8 +125,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                if ( NULL == env_dir )
                {
                   fs::path data_dir(base_dir / "share" / "vrjuggler");
-                  const std::string data_dir_str =
-                     data_dir.native_directory_string();
+                  const std::string data_dir_str(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     data_dir.string()
+#else
+                     data_dir.native_directory_string()
+#endif
+                  );
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   _putenv_s("VJ_DATA_DIR", data_dir_str.c_str());

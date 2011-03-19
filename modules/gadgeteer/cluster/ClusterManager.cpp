@@ -30,7 +30,11 @@
 #include <sstream>
 #include <boost/bind.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/filesystem/exception.hpp>
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+#  include <boost/filesystem/operations.hpp>
+#else
+#  include <boost/filesystem/exception.hpp>
+#endif
 
 #include <vpr/vprTypes.h>
 #include <vpr/System.h>
@@ -574,11 +578,15 @@ bool ClusterManager::configAdd( jccl::ConfigElementPtr element )
          const fs::path default_search_dir =
             gadget::getDefaultPluginRoot() / std::string("plugins");
 
-         vprDEBUG( gadgetDBG_RIM, vprDBG_VERB_LVL )
+         vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL)
             << "[cluster::ClusterManager::configAdd()] Appending "
             << "default search path '"
-            << default_search_dir.native_directory_string() << "'\n"
-            << vprDEBUG_FLUSH;
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+            << default_search_dir.string()
+#else
+            << default_search_dir.native_directory_string()
+#endif
+            << "'\n" << vprDEBUG_FLUSH;
 
 #if defined(GADGET_DEBUG)
          // For a debug build, search in the debug subdirectory of

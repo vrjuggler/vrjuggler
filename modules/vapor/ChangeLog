@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- --------- ----------------------------------------------------------
+2011-03-19 patrick   Added support for Boost.Filesystem v3.
+                     Submitted by Doug McCorkle.
 2011-02-21 patrick   Fixed UDP recvfrom() timeout handling on Windows XP.
                      Submitted by Ryan Pavlik.
 

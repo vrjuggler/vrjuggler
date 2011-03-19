@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-19-2010 patrick     Added support for Boost.Filesystem v3.
+                        Submitted by Doug McCorkle.
 Mar-19-2010 patrick     The device unit number can now be changed using a new
                         overload of gadget::TypedProxy<T>::set().
 Mar-06-2011 patrick     Fixed gadget::MouseEvent generation to include the

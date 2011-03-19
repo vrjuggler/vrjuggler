@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-19-2010 patrick     Added support for Boost.Filesystem v3.
+                        Submitted by Doug McCorkle.
+
+[1.4.0 released - 11.27.2010]==================================================
 Feb-09-2008 patrick     Changed the remote run-time reconfiguration plug-in to
                         use a direct connection for Subject Manager access
                         instead of going through the CORBA Naming Service.
