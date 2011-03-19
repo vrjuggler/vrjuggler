@@ -30,6 +30,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <typeinfo>
+#include <boost/optional.hpp>
 
 #include <vpr/Util/Interval.h>
 
@@ -317,14 +318,26 @@ namespace gadget
        *
        * @param devName The name of the device at which we are pointing.
        * @param devPtr  Pointer to the device.
+       * @param unitNum Integer to index the unit on the device. This
+       *                parameter is optional. If not specified, then \c mUnit
+       *                will not be changed.
+       *
+       * @note The \p unitNum parameter was added in Gadgeteer 2.1.14.
        */
-      virtual void set(const std::string& devName,
-                       const device_ptr_type& devPtr)
+      void set(const std::string& devName,
+               const device_ptr_type& devPtr,
+               const boost::optional<int>& unitNum = boost::optional<int>())
       {
          mTypedDevice = devPtr;
          if (NULL != mTypedDevice.get())
          {
             mDeviceName = devName;
+
+            if (unitNum)
+            {
+               mUnit = *unitNum;
+            }
+
             stupefy(false);
          }
          else

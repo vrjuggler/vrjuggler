@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-03-19 patrick     The device unit number can now be changed using
+                       gadget::TypedProxy<T>::set().
+                       NEW VERSION: 2.1.14
 2011-01-29 patrick     Fixed a bug in Cocoa keyboard/mouse event handling where
                        where the mask for mouse events could be computed
                        incorrectly.
