@@ -24,9 +24,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+// Force the use of the stl max function not the windows.h function
+#define NOMINMAX
+
 #include <vrj/Draw/OpenGL/Config.h>
 
 #include <iomanip>
+#include <algorithm>
 
 #include <jccl/Config/ConfigElement.h>
 
@@ -137,6 +141,40 @@ bool WindowWin32::open()
    }
 
    int root_height = GetSystemMetrics(SM_CYSCREEN);
+   // These are the absolute max sizes of a window that MS will
+   // allow you to create for a given display. I am not sure
+   // why they are larger than the SM_*SCREEN variables.
+   int root_maxwidth = GetSystemMetrics(SM_CXMAXTRACK);
+   int root_maxheight = GetSystemMetrics(SM_CYMAXTRACK);
+   // See if the user asked for something larger than MS will deliver
+   mWindowWidth = std::min(mWindowWidth, root_maxwidth);
+   mWindowHeight = std::min(mWindowHeight, root_maxheight);
+
+   // This origin is Windows coordinate frame or the upper left hand corner
+   int win32_y_origin = root_height - mOriginY - mWindowHeight;
+
+   if ( mHasBorder )
+   {
+      // Get the border height to calculate the window origin properly
+      // Height of the vertical border
+      int verical_border_height = GetSystemMetrics(SM_CYFRAME);
+      // Height of the caption/menu bar
+      int caption_border_height = GetSystemMetrics(SM_CYCAPTION);
+      // Since the max height of the window includes the borders
+      // lets subtract them.
+      root_maxheight = root_maxheight -
+         (2*verical_border_height) - caption_border_height;
+      // Now lets determine what MS will give us.
+      mWindowHeight = std::min(mWindowHeight, root_maxheight);
+      // Now that we know that we have a valid window size lets
+      // recreate the new y origin.
+      win32_y_origin = root_height - mOriginY - mWindowHeight;
+      win32_y_origin = win32_y_origin -
+         (2*verical_border_height) - caption_border_height;
+      // We do not need to make any of these adjustments for the
+      // width because the x window origin is the same in VR Juggler
+      // as it is in Windows.
+   }
 
    // The desired client rectangle size (left, top, right, bottom).
    RECT rc = { 0, 0, mWindowWidth, mWindowHeight };
@@ -153,18 +191,6 @@ bool WindowWin32::open()
    // Ensure that the input window base class has the right dimension
    // information.
    InputAreaWin32::resize(mWindowWidth, mWindowHeight);
-
-   int win32_y_origin = root_height - mOriginY - mWindowHeight;
-   if ( mHasBorder )
-   {
-      // Get the border height to calculate the window origin properly
-      // Height of the vertical border
-      int verical_border_height = GetSystemMetrics(SM_CYFRAME);
-      // Height of the caption/menu bar
-      int caption_border_height = GetSystemMetrics(SM_CYCAPTION);
-      win32_y_origin = win32_y_origin -
-         (2*verical_border_height) - caption_border_height;
-   }
 
    // Create the main application window
    mWinHandle = CreateWindowEx(ex_style, GL_WINDOW_WIN32_CLASSNAME,
