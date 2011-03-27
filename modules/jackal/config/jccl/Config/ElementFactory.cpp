@@ -138,7 +138,11 @@ namespace jccl
          const std::string dir_str = ParseUtil::expandFileName(*itr, "");
          try
          {
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+            fs::path dir(dir_str);
+#else
             fs::path dir(dir_str, boost::filesystem::native);
+#endif
 
             if (fs::exists(dir) && fs::is_directory(dir))
             {

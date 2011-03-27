@@ -51,6 +51,14 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
+#include <gadget/Event/KeyboardMouseEventInterface.h>
+#include <gadget/Event/PositionEventInterface.h>
+#include <gadget/Event/DigitalEventInterface.h>
+#include <gadget/Event/AnalogEventInterface.h>
+#include <gadget/Event/CommandEventInterface.h>
+#include <gadget/Event/StringEventInterface.h>
+#include <gadget/Event/MouseMultiClickEventInterface.h>
+#include <gadget/Event/DigitalMultiClickEventInterface.h>
 
 #include <vrj/Kernel/UserPtr.h>
 
@@ -155,6 +163,7 @@ public:
    cubesApp(vrj::Kernel* kern)
       : vrj::opengl::App(kern)
       , mCurFrameNum(0)
+//      , mPosEventIface(gadget::PositionUnitConversion::ConvertToFeet)
    {
       /* Do nothing. */ ;
    }
@@ -324,6 +333,15 @@ public:
    vpr::TSObjectProxy<ContextTimingData>  mContextTiming;
 
    long                             mCurFrameNum;     // Current frame number count
+
+   gadget::KeyboardMouseEventInterface<> mKbEventIface;
+   gadget::PositionEventInterface<> mPosEventIface;
+   gadget::AnalogEventInterface<> mAnalogEventIface;
+   gadget::DigitalEventInterface<> mDigEventIface;
+   gadget::CommandEventInterface<> mCmdEventIface;
+   gadget::StringEventInterface<> mStringEventIface;
+   //gadget::MouseMultiClickEventInterface<2> mDoubleClickIface;
+   gadget::DigitalMultiClickEventInterface<2> mDoubleClickIface;
 };
 
 

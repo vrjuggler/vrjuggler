@@ -27,6 +27,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <string>
+#include <boost/version.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -93,8 +94,12 @@ boost::filesystem::path getDefaultPluginRoot()
 #endif
 
    fs::path default_plugin_dir =
-      fs::path(base_dir, fs::native) / (std::string("lib") + bit_suffix) /
-         gadgeteer_subdir;
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+      fs::path(base_dir)
+#else
+      fs::path(base_dir, fs::native)
+#endif
+         / (std::string("lib") + bit_suffix) / gadgeteer_subdir;
 
    return default_plugin_dir;
 }

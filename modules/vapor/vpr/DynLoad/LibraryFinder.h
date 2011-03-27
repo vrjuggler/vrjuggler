@@ -79,14 +79,7 @@ public:
     * @see getLibraries
     */
    LibraryFinder(const std::string& libDir, const std::string& libExt,
-                 bool scanNow = true)
-      : mLibDir(libDir, boost::filesystem::native), mLibExt(libExt)
-   {
-      if ( scanNow )
-      {
-         rescan();
-      }
-   }
+                 const bool scanNow = true);
 
    /**
     * Changes the name of the directory to be searched for shared libraries.
@@ -99,11 +92,7 @@ public:
     * @param dir The name of the directory to search for shared libraries.
     *            This directory can be an absolute platform-specific path.
     */
-   void setLibraryDirectory(const std::string& dir)
-   {
-      mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
-      rescan();
-   }
+   void setLibraryDirectory(const std::string& dir);
 
    /**
     * Changes the shared library file extension.  After changing the extension,
@@ -141,12 +130,7 @@ public:
     *            UNIX-based systems) or "dll" (for Win32).  Note that the "."
     *            is not included in the enxtension string.
     */
-   void setDirAndExt(const std::string& dir, const std::string& ext)
-   {
-      mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
-      mLibExt = ext;
-      rescan();
-   }
+   void setDirAndExt(const std::string& dir, const std::string& ext);
 
    /**
     * Returns the current list of shared libraries found in the library

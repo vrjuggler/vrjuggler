@@ -60,6 +60,7 @@ void UserData::updateNavigation()
 
    gmtl::identity(transformIdent);
 
+   //std::cout << "Time: " << mWand->getTimeStamp().msec() << std::endl;
    gmtl::Matrix44f wand_matrix = mWand->getData();
    gmtl::setRot( xyzAngles, wand_matrix );
 
@@ -176,6 +177,26 @@ void UserData::updateShapeSetting()
 // cubesApp methods.
 // ----------------------------------------------------------------------------
 
+void keyboardCallback(gadget::EventPtr event)
+{
+   std::cout << event << std::endl;
+}
+
+void positionCallback(const gmtl::Matrix44f& data)
+{
+   std::cout << data << std::endl;
+}
+
+void doubleClickCallbackMouse(gadget::EventPtr event)
+{
+   std::cout << event << std::endl;
+}
+
+void doubleClickCallbackDigital()
+{
+   std::cout << "Digital double click" << std::endl;
+}
+
 // Execute any initialization needed before the API is started.  Put device
 // initialization here.
 void cubesApp::init()
@@ -192,6 +213,15 @@ void cubesApp::init()
 
    UserData* new_user=NULL;
    mUserData = std::vector<UserData*>(num_users);
+
+   //mKbEventIface.init("Keyboard Proxy");
+   //mKbEventIface.addCallback(keyboardCallback);
+   //mPosEventIface.init("VJHead");
+   //mPosEventIface.addCallback(positionCallback);
+   //mDoubleClickIface.init("Keyboard Proxy");
+   //mDoubleClickIface.addCallback(doubleClickCallbackMouse);
+   mDoubleClickIface.init("VJButton0");
+   mDoubleClickIface.addCallback(boost::bind(doubleClickCallbackDigital));
 
    switch (num_users)
    {

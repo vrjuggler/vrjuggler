@@ -28,6 +28,7 @@
 
 #include <iomanip>
 #include <sstream>
+#include <boost/version.hpp>
 #include <boost/bind.hpp>
 #include <boost/filesystem/path.hpp>
 #if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
@@ -554,7 +555,12 @@ bool ClusterManager::configAdd( jccl::ConfigElementPtr element )
 
             try
             {
-               search_path[i] = fs::path( temp_str, fs::native );
+               search_path[i] =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                  fs::path(temp_str);
+#else
+                  fs::path(temp_str, fs::native);
+#endif
             }
             catch( fs::filesystem_error& fsEx )
             {

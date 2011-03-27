@@ -48,6 +48,45 @@ namespace fs = boost::filesystem;
 namespace vpr
 {
 
+LibraryFinder::LibraryFinder(const std::string& libDir,
+                             const std::string& libExt,
+                             const bool scanNow)
+   :
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+     mLibDir(libDir)
+#else
+     mLibDir(libDir, boost::filesystem::native)
+#endif
+   , mLibExt(libExt)
+{
+   if (scanNow)
+   {
+      rescan();
+   }
+}
+
+void LibraryFinder::setLibraryDirectory(const std::string& dir)
+{
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+   mLibDir = boost::filesystem::path(dir);
+#else
+   mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
+#endif
+   rescan();
+}
+
+void LibraryFinder::setDirAndExt(const std::string& dir,
+                                 const std::string& ext)
+{
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+   mLibDir = boost::filesystem::path(dir);
+#else
+   mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
+#endif
+   mLibExt = ext;
+   rescan();
+}
+
 void LibraryFinder::rescan()
 {
    // Wipe out the current list of known libraries.  This will cause the
