@@ -1340,7 +1340,6 @@ void SocketImplBOOST::setOption(const vpr::SocketOptions::Types option,
 
 SocketImplBOOST::~SocketImplBOOST()
 {
-   this->close();
    switch ( mType )
    {
    case vpr::SocketTypes::STREAM:
