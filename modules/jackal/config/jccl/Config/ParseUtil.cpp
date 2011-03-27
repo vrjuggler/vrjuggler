@@ -28,6 +28,7 @@
 
 #include <fstream>
 #include <ctype.h>
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
@@ -49,9 +50,15 @@ ParseUtil::SearchPathData ParseUtil::mSearchInfo;
 std::string ParseUtil::expandFileName(const std::string& name,
                                       const std::string& parentfile)
 {
-   std::string fname = vpr::replaceEnvVars(name);
+   const std::string fname = vpr::replaceEnvVars(name);
 
-   fs::path fname_path(fname, fs::native);
+   fs::path fname_path(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+      fname
+#else
+      fname, fs::native
+#endif
+   );
 
    // If the given file name does not exist, try searching for it.
    if ( ! fs::exists(fname_path) )
@@ -71,14 +78,25 @@ std::string ParseUtil::expandFileName(const std::string& name,
             std::string absolute_fname;
             if ( findFileUsingPath(fname, absolute_fname) )
             {
-               fname_path = fs::path(absolute_fname, fs::native);
+               fname_path =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                  fs::path(absolute_fname);
+#else
+                  fs::path(absolute_fname, fs::native);
+#endif
             }
          }
          // parentfile is not empty, so we assume that fname is relative to
          // parentfile.
          else
          {
-            fs::path parentfile_path(parentfile, fs::native);
+            const fs::path parentfile_path(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               parentfile
+#else
+               parentfile, fs::native
+#endif
+            );
             fs::path parentdir = parentfile_path.branch_path();
             fname_path = parentdir / fname_path;
          }
@@ -101,13 +119,25 @@ bool ParseUtil::findFileUsingPath(const std::string& fileName,
                                   std::string& absoluteFile)
 {
    bool status(false);
-   fs::path filename_path(fileName, fs::native);
+   const fs::path filename_path(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+      fileName
+#else
+      fileName, fs::native
+#endif
+   );
 
    for ( std::vector<std::string>::iterator i = mSearchInfo.mPath.begin();
          i != mSearchInfo.mPath.end();
          ++i )
    {
-      fs::path full_path = fs::path(*i, fs::native) / filename_path;
+      fs::path full_path =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         fs::path(*i)
+#else
+         fs::path(*i, fs::native)
+#endif
+            / filename_path;
 
       vprDEBUG(jcclDBG_CONFIG, vprDBG_HVERB_LVL)
          << "[jccl::ParseUtil::findFileUsingPath()] Attempting to open file '"

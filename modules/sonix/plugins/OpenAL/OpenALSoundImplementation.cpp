@@ -39,6 +39,7 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
@@ -648,8 +649,13 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // any further.
          try
          {
-            boost::filesystem::path file_path(soundInfo.filename,
-                                              boost::filesystem::native);
+            boost::filesystem::path file_path(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               soundInfo.filename
+#else
+               soundInfo.filename, boost::filesystem::native
+#endif
+            );
 
             if ( ! boost::filesystem::exists(file_path) )
             {

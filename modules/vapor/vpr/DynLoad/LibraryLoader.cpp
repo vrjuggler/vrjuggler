@@ -38,6 +38,7 @@
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
+#include <boost/version.hpp>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
 
@@ -248,7 +249,7 @@ void LibraryLoader::makeBoostFsVector(const std::vector<std::string>& strVec,
 
    // Convert the vector of std::string objects to a vector of
    // boost::filesystem::path objects.
-   for ( std::vector<std::string>::size_type i = 0; i < strVec.size(); ++i )
+   for (std::vector<std::string>::size_type i = 0; i < strVec.size(); ++i)
    {
       try
       {
@@ -259,9 +260,13 @@ void LibraryLoader::makeBoostFsVector(const std::vector<std::string>& strVec,
 
          // Use a Boost FS path object here so that we can indicate that
          // native path names are allowed.
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         boostFsVec[i] = fs::path(strVec[i]);
+#else
          boostFsVec[i] = fs::path(strVec[i], fs::native);
+#endif
       }
-      catch(fs::filesystem_error& fsEx)
+      catch (fs::filesystem_error& fsEx)
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "ERROR:")

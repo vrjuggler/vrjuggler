@@ -39,6 +39,7 @@
 #include <vpr/vprConfig.h>
 
 #include <vector>
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
 
 #include <vpr/DynLoad/Library.h>
@@ -80,7 +81,12 @@ public:
     */
    LibraryFinder(const std::string& libDir, const std::string& libExt,
                  bool scanNow = true)
-      : mLibDir(libDir, boost::filesystem::native), mLibExt(libExt)
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+      : mLibDir(libDir)
+#else
+      : mLibDir(libDir, boost::filesystem::native)
+#endif
+      , mLibExt(libExt)
    {
       if ( scanNow )
       {
@@ -101,7 +107,12 @@ public:
     */
    void setLibraryDirectory(const std::string& dir)
    {
-      mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
+      mLibDir =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         boost::filesystem::path(dir);
+#else
+         boost::filesystem::path(dir, boost::filesystem::native);
+#endif
       rescan();
    }
 
@@ -143,7 +154,12 @@ public:
     */
    void setDirAndExt(const std::string& dir, const std::string& ext)
    {
-      mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
+      mLibDir =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         boost::filesystem::path(dir);
+#else
+         boost::filesystem::path(dir, boost::filesystem::native);
+#endif
       mLibExt = ext;
       rescan();
    }

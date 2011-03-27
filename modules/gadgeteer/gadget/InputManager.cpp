@@ -28,6 +28,7 @@
 
 #include <iomanip>
 #include <sstream>
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -722,7 +723,12 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
 
          try
          {
-            search_path[i] = fs::path(temp_str, fs::native);
+            search_path[i] =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               fs::path(temp_str);
+#else
+               fs::path(temp_str, fs::native);
+#endif
          }
          catch(fs::filesystem_error& fsEx)
          {
@@ -855,7 +861,13 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
          // (somehow) an invalid path.
          try
          {
-            fs::path drv_path(driver_dir, fs::native);
+            const fs::path drv_path(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               driver_dir
+#else
+               driver_dir, fs::native
+#endif
+            );
 
             if ( fs::exists(drv_path) )
             {
