@@ -109,7 +109,7 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 #if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
                      base_dir.string()
 #else
-                     base_dir.native_directory_string();
+                     base_dir.native_directory_string()
 #endif
                   );
 
