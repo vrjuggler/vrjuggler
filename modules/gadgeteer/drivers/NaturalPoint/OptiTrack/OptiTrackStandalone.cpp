@@ -2,6 +2,7 @@
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/Util/Interval.h>
+#include <vpr/IO/TimeoutException.h>
 
 OptiTrackStandalone::OptiTrackStandalone() :
    mActive(false)
@@ -59,7 +60,16 @@ bool OptiTrackStandalone::updateData()
    char szData[20000];
    vpr::InetAddr theirAddr;
    const vpr::Interval timeout(0, vpr::Interval::Msec);
-   vpr::Uint32 bytes = mSocket->recvfrom(szData, sizeof(szData), theirAddr, timeout);
+   vpr::Uint32 bytes = 0;
+   try
+   {
+      bytes = mSocket->recvfrom(szData, sizeof(szData), theirAddr, timeout);
+   }
+   catch (vpr::TimeoutException& ex)
+   {
+      return false;
+   }
+
    if (bytes > 0)
    {
       unpack(szData);
