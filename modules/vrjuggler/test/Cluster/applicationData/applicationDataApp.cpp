@@ -24,9 +24,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#if defined(WIN32) || defined(WIN64)
-#  include <windows.h>
-#endif
+#include <gmtl/Generate.h>
+#include <gadget/Node.h>
+#include <cluster/ClusterManager.h>
+#include <cluster/ClusterNetwork.h>
 
 #include <iostream>
 
@@ -38,10 +39,6 @@
 #  include <GL/glu.h>
 #endif
 
-#include <gmtl/Generate.h>
-#include <gadget/Node.h>
-#include <cluster/ClusterManager.h>
-#include <cluster/ClusterNetwork.h>
 
 #include "applicationDataApp.h"
 

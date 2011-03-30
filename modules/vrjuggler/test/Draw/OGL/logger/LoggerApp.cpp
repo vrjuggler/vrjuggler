@@ -24,11 +24,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#if defined(WIN32) || defined(WIN64)
-#  include <windows.h>
-#endif
-
 #include <iostream>
+#include <gmtl/Generate.h>
+
+#include "LoggerApp.h"
 
 #if defined(__APPLE__)
 #  include <OpenGL/gl.h>
@@ -37,10 +36,6 @@
 #  include <GL/gl.h>
 #  include <GL/glu.h>
 #endif
-
-#include <gmtl/Generate.h>
-
-#include "LoggerApp.h"
 
 namespace vrjTest
 {

@@ -24,9 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#if defined(WIN32) || defined(WIN64)
-#  include <windows.h>
-#endif
+#include <vpr/System.h>
+#include <vpr/Util/Debug.h>
 
 #include <iostream>
 
@@ -39,12 +38,8 @@
 #endif
 
 #include <gmtl/Generate.h>
-#include <stdlib.h>
-#include <vpr/System.h>
-#include <vpr/Util/Debug.h>
 
 #include "swapSyncApp.h"
-
 
 namespace vrjTest
 {

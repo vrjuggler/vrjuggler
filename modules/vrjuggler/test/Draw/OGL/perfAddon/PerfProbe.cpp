@@ -25,6 +25,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vpr/Util/Debug.h>
 
 #if defined(__APPLE__)
 #  include <OpenGL/gl.h>
@@ -43,13 +45,6 @@
 
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/Perf/ProfileIterator.h>
-
-#include <vrj/Kernel/Kernel.h>
-#include <vpr/Util/Debug.h>
-
-//#include <boost/format.hpp>
-
-
 
 PerfProbe::PerfProbe()
    : mLastUpdateTime(0, vpr::Interval::Base),
