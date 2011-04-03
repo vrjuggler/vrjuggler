@@ -37,96 +37,20 @@
 #include <boost/bind.hpp>
 #include <boost/bind/apply.hpp>
 #include <boost/ref.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 #include <vpr/Util/Debug.h>
 
 #include <gadget/InputManager.h>
-#include <gadget/InputHandler.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/ProxyPtr.h>
 #include <gadget/Type/ProxyTraits.h>
 #include <gadget/Event/AbstractEventInterface.h>
 #include <gadget/Event/EventTags.h>
+#include <gadget/Event/EventRegistration.h>
 
 
 namespace gadget
 {
-
-namespace event
-{
-
-struct null_data_type {};
-
-class ImmediateRegistrator
-{
-protected:
-   void registerInterface(AbstractEventInterface*)
-   {
-   }
-
-   void unregisterInterface(AbstractEventInterface*)
-   {
-   }
-};
-
-class PeriodicRegistrator
-{
-protected:
-   void registerInterface(AbstractEventInterface* iface)
-   {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
-      handler->registerPeriodicInterface(iface);
-   }
-
-   void unregisterInterface(AbstractEventInterface* iface)
-   {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
-      handler->unregisterPeriodicInterface(iface);
-   }
-};
-
-class SynchronizedRegistrator
-{
-protected:
-   void registerInterface(AbstractEventInterface* iface)
-   {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
-      handler->registerSynchronizedInterface(iface);
-   }
-
-   void unregisterInterface(AbstractEventInterface* iface)
-   {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
-      handler->unregisterSynchronizedInterface(iface);
-   }
-};
-
-}
-
-/** \struct GenerationTypeChooser GenerationTypeChooser.h gadget/Event/GenerationTypeChooser.h
- *
- * A metafunction for choosing the base generation type for an
- * instantiation of gadget::EventInterface<P,G,D>.
- *
- * @since 2.1.2
- */
-template<typename GeneratorType>
-struct RegistrationTypeChooser
-{
-   typedef typename GeneratorType::tag generator_tag;
-   typedef typename boost::mpl::eval_if<
-      boost::is_same<generator_tag, event::immediate_tag>,
-         boost::mpl::identity<event::ImmediateRegistrator>,
-         boost::mpl::eval_if<
-            boost::is_same<generator_tag, event::periodic_tag>,
-            boost::mpl::identity<event::PeriodicRegistrator>,
-            boost::mpl::identity<event::SynchronizedRegistrator>
-         >
-      >::type type;
-};
 
 /** \class EventInterface EventInterface.h gadget/Event/EventInterface.h
  *

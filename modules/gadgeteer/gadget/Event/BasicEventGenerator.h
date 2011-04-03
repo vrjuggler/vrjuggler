@@ -30,100 +30,21 @@
 #include <gadget/gadgetConfig.h>
 
 #include <algorithm>
-#include <vector>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/bind/apply.hpp>
 #include <boost/signals/connection.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include <gadget/Type/ProxyTraits.h>
 #include <gadget/Event/EventGenerator.h>
+#include <gadget/Event/EventCollection.h>
+#include <gadget/Event/SampleHandler.h>
 #include <gadget/Event/EventTags.h>
 
 
 namespace gadget
 {
-
-namespace event
-{
-
-template<typename DataType>
-class EventCollector
-{
-protected:
-   EventCollector()
-   {
-      /* Do nothing. */ ;
-   }
-
-   std::vector<DataType> mPendingEvents;
-};
-
-template<typename DataType>
-class AllEventsCollector : public EventCollector<DataType>
-{
-protected:
-   AllEventsCollector()
-   {
-      /* Do nothing. */ ;
-   }
-
-   void addEvent(const DataType& eventData)
-   {
-      this->mPendingEvents.push_back(eventData);
-   }
-};
-
-template<typename DataType>
-class LastEventCollector : public EventCollector<DataType>
-{
-protected:
-   LastEventCollector()
-   {
-      /* Do nothing. */ ;
-   }
-
-   void addEvent(const DataType& eventData)
-   {
-      this->mPendingEvents.resize(1);
-      this->mPendingEvents[0] = eventData;
-   }
-};
-
-}
-
-template<typename CollectionTag, typename DataType>
-struct CollectionTypeChooser
-{
-   typedef typename boost::mpl::eval_if<
-         boost::is_same<CollectionTag, event::all_events_tag>,
-         boost::mpl::identity<event::AllEventsCollector<DataType> >,
-         boost::mpl::identity<event::LastEventCollector<DataType> >
-      >::type type;
-};
-
-/**
- * The default handler of device samples. This will work for any device type
- * that uses std::vector<gadget::DeviceData<T> > to record samples.
- *
- * @since 2.1.6
- */
-template<typename ProxyType>
-struct DefaultSampleHandler
-{
-   typedef typename ProxyTraits<ProxyType>::device_data_type device_data_type;
-   typedef std::vector<device_data_type>                     sample_type;
-   typedef typename ProxyTraits<ProxyType>::raw_data_type    raw_data_type;
-
-   const raw_data_type& getData(const sample_type& samples,
-                                const unsigned int unit)
-   {
-      return samples[unit].getValue();
-   }
-};
 
 /** \class BasicEventGenerator BasicEventGenerator.h gadget/Event/BasicEventGenerator.h
  *
@@ -190,7 +111,7 @@ public:
       return boost::dynamic_pointer_cast<BasicEventGenerator>(self);
    }
 
-   /** #name gadget::EventGenerator Interface Implementation */
+   /** @name gadget::EventGenerator Interface Implementation */
    //@{
    void emitEvents()
    {
