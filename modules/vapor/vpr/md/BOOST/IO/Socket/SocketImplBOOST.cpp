@@ -460,7 +460,7 @@ vpr::Uint32 SocketImplBOOST::read_i(void* buffer, const vpr::Uint32 length,
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
-         bytes = mTcpSocket->read_some(boost::asio::buffer(buffer, length), ec);
+         bytes = boost::asio::read(*mTcpSocket, boost::asio::buffer(buffer, length));
          break;
       case vpr::SocketTypes::DATAGRAM:
          bytes = mUdpSocket->receive(boost::asio::buffer(buffer, length));
@@ -488,7 +488,7 @@ vpr::Uint32 SocketImplBOOST::readn_i(void* buffer, const vpr::Uint32 length,
    switch (mType)
    {
       case vpr::SocketTypes::STREAM:
-         bytes = mTcpSocket->read_some(boost::asio::buffer(buffer, length), ec);
+         bytes = boost::asio::read(*mTcpSocket, boost::asio::buffer(buffer, length));
          break;
       case vpr::SocketTypes::DATAGRAM:
          bytes = mUdpSocket->receive(boost::asio::buffer(buffer, length));

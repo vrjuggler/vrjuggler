@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-04-04 patrick     Fixed networking issues when using Boost.Asio.
+                       Submitted by Jeff Baker
 2011-03-19 patrick     Added support for Boost.Filesystem v3.
                        Submitted by Doug McCorkle.
                        NEW VERSION: 2.3.4
