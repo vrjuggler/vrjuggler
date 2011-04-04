@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-04-04 patrick     Fixed DNS lookup problems when IPv5 is enabled on
+                       Windows.
+                       Submitted by Jeff Baker
 2011-04-04 patrick     Fixed networking issues when using Boost.Asio.
                        Submitted by Jeff Baker
 2011-03-19 patrick     Added support for Boost.Filesystem v3.

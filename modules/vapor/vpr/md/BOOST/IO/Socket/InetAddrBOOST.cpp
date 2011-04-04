@@ -256,9 +256,17 @@ void InetAddrBOOST::lookupAddress(const std::string& address)
    boost::asio::ip::tcp::resolver resolver(io_service);
    boost::asio::ip::tcp::resolver::query query(address, "http");
    boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
-   boost::asio::ip::tcp::endpoint ep = *iterator;
-   mTcpAddr.address(ep.address());
-   mUdpAddr.address(ep.address());
+   boost::asio::ip::tcp::endpoint ep;
+   while (iterator != boost::asio::ip::tcp::resolver::iterator())
+   {
+      ep = *iterator++;
+      if (ep.address().is_v4())
+      {
+         mTcpAddr.address(ep.address());
+         mUdpAddr.address(ep.address());
+         break;
+      }
+   }
 }
 
 } // End of vpr namespace
