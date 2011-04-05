@@ -66,11 +66,6 @@ namespace gadget
  *                       input handler's thread), or
  *                       gadget::event::synchronized_tag (events are generated
  *                       once per iteration of the frame loop).
- * @tparam DataType      The "raw" data type returned by the associated device
- *                       proxy type. For example, it is the return type of
- *                       gadget::TypedProxy<ProxyType>::getData(). This
- *                       template paramter is optional, and it defaults to
- *                       gadget::ProxyTraits<ProxyType>::raw_data_type.
  *
  * @since 2.1.2
  */
