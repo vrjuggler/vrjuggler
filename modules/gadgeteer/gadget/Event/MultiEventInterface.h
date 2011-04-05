@@ -60,10 +60,11 @@
 namespace gadget
 {
 
-/** \class EventInterface EventInterface.h gadget/Event/EventInterface.h
+/** \class MultiEventInterface MultiEventInterface.h gadget/Event/MultiEventInterface.h
  *
  * @tparam ProxyType     The type of proxy to be used by this EventInterface
  *                       type instantiation.
+ * @tparam EventTags     A type sequence supporting forward iteration.
  * @tparam GeneratorType The event generator type. This is used to determine
  *                       how to register this interface with the central
  *                       input handler. This type must declare a type \c tag
@@ -74,11 +75,6 @@ namespace gadget
  *                       input handler's thread), or
  *                       gadget::event::synchronized_tag (events are generated
  *                       once per iteration of the frame loop).
- * @tparam DataType      The "raw" data type returned by the associated device
- *                       proxy type. For example, it is the return type of
- *                       gadget::TypedProxy<ProxyType>::getData(). This
- *                       template paramter is optional, and it defaults to
- *                       gadget::ProxyTraits<ProxyType>::raw_data_type.
  *
  * @since 2.1.16
  */
@@ -182,10 +178,11 @@ protected:
       CallbackRegistrar(MultiEventInterface* owner)
          : owner(owner)
       {
+         /* Do nothing. */ ;
       }
 
       template<typename U>
-      void operator()(U)
+      void operator()(const U&) const
       {
          owner->mEventGenerator->template setCallback<U>(
             boost::bind(&MultiEventInterface::template invoke<U>, owner, _1)

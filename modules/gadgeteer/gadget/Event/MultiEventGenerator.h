@@ -49,6 +49,7 @@
 #include <gadget/Event/EventGenerator.h>
 #include <gadget/Event/EventCollection.h>
 #include <gadget/Event/SampleHandler.h>
+#include <gadget/Event/DataExaminer.h>
 #include <gadget/Event/EventTags.h>
 
 
@@ -89,9 +90,8 @@ public:
 
 protected:
    MultiEventGenerator()
-      : mCallbackInvoker(this)
    {
-      /* Do nothing. */ ;
+      mCallbackInvoker.owner = this;
    }
 
 public:
@@ -132,10 +132,13 @@ public:
    }
    //@}
 
+   /**
+    * Defines the callback for the identified event tag.
+    */
    template<typename EventTag>
    void setCallback(const callback_type& callback)
    {
-      boost::fusion::at_key<EventTag>(mMap) = callback;
+      boost::fusion::at_key<EventTag>(mCallbackMap) = callback;
    }
 
 protected:
@@ -160,7 +163,8 @@ protected:
       }
       else
       {
-         //addEvent(data);
+         InvokeExaminer invoker(*this, data);
+         boost::mpl::for_each<EventTags>(invoker);
       }
    }
 
@@ -170,31 +174,42 @@ protected:
    }
 
 private:
-   typedef typename
-      boost::mpl::transform<
-           EventTags
-         , boost::fusion::pair<boost::mpl::_1, std::vector<data_type> >
-      >::type
-   event_storage_type;
+   struct InvokeExaminer
+   {
+      InvokeExaminer(MultiEventGenerator& owner, const raw_data_type& value)
+         : owner(owner)
+         , value(&value)
+      {
+         /* Do nothing. */ ;
+      }
 
-   typedef typename
-      boost::fusion::result_of::as_map<event_storage_type>::type
-   event_map_type;
+      template<typename EventTag>
+      void operator()(const EventTag&) const
+      {
+         boost::fusion::at_key<EventTag>(owner->mExaminers).examine(*value);
+      }
+
+      MultiEventGenerator& owner;
+      const raw_data_type* const value;
+   };
 
    struct CallbackInvoker
    {
-      CallbackInvoker(EventGenerator* owner)
-         : owner(owner)
+      CallbackInvoker()
+         : owner(NULL)
       {
+         /* Do nothing. */ ;
       }
 
       template<typename U>
-      void operator()(U)
+      void operator()(const U&) const
       {
          using namespace boost::fusion;
 
-         std::vector<data_type>& events(at_key<U>(owner->mPendingEvents));
-         const callback_type& callback(at_key<U>(owner->mMap));
+         std::vector<raw_data_type>& events(
+            at_key<U>(owner->mExaminers).getEvents()
+         );
+         const callback_type& callback(at_key<U>(owner->mCallbackMap));
 
          if (! callback.empty())
          {
@@ -205,9 +220,30 @@ private:
          events.clear();
       }
 
-      EventGenerator* owner;
+      MultiEventGenerator* owner;
    };
 
+   /** @name Data Examiners */
+   //@{
+   typedef typename
+      boost::mpl::transform<
+           event_tags
+         , boost::fusion::pair<
+                boost::mpl::_1
+              , event::DataExaminer<boost::mpl::_1, raw_data_type>
+           >
+      >::type
+   examiner_tags_type;
+
+   typedef typename
+      boost::fusion::result_of::as_map<examiner_tags_type>::type
+   examiner_map_type;
+
+   examiner_map_type mExaminers;
+   //@}
+
+   /** @name Event Interface Callbacks */
+   //@{
    typedef typename
       boost::mpl::transform<
            EventTags
@@ -218,9 +254,10 @@ private:
    typedef typename
       boost::fusion::result_of::as_map<callback_tags_type>::type
    callback_map_type;
-   callback_map_type mCallbackMap;
 
-   event_map_type  mPendingEvents;
+   callback_map_type mCallbackMap;
+   //@}
+
    CallbackInvoker mCallbackInvoker;
 
    SampleHandler mSampleHandler;
