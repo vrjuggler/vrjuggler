@@ -1,6 +1,6 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# VR Juggler is (C) Copyright 1998-2010 by Iowa State University
+# VR Juggler is (C) Copyright 1998-2011 by Iowa State University
 #
 # Original Authors:
 #   Allen Bierbaum, Christopher Just,
@@ -129,7 +129,8 @@ BUILD_PROF_CXX=	N
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR=	ApplicationDataManager		\
-	RIMPlugin
+	RIMPlugin			\
+	ApplicationBarrierManager
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
