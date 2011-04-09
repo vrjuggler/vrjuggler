@@ -86,6 +86,20 @@ public:
    typedef typename SampleHandler::raw_data_type        raw_data_type;
 
    typedef boost::function<void (const raw_data_type&)> callback_type;
+
+   typedef typename
+      boost::mpl::transform<
+           event_tags
+         , boost::fusion::pair<
+                boost::mpl::_1
+              , event::DataExaminer<boost::mpl::_1, raw_data_type>
+           >
+      >::type
+   examiner_tags_type;
+
+   typedef typename
+      boost::fusion::result_of::as_map<examiner_tags_type>::type
+   examiner_map_type;
    //@}
 
 protected:
@@ -140,6 +154,35 @@ public:
    {
       boost::fusion::at_key<EventTag>(mCallbackMap) = callback;
    }
+
+   /** Data Examiner Access */
+   //@{
+   template<typename EventTag>
+   typename
+   boost::fusion::result_of::at_key<examiner_map_type, EventTag>::type
+   getExaminer()
+   {
+      return boost::fusion::at_key<EventTag>(mExaminers);
+   }
+
+   template<typename EventTag>
+   typename
+   boost::fusion::result_of::at_key<const examiner_map_type, EventTag>::type
+   getExaminer() const
+   {
+      return boost::fusion::at_key<EventTag>(mExaminers);
+   }
+
+   examiner_map_type& getExaminers()
+   {
+      return mExaminers;
+   }
+
+   const examiner_map_type& getExaminers() const
+   {
+      return mExaminers;
+   }
+   //@}
 
 protected:
    static const bool sEmitsImmediately =
@@ -225,20 +268,6 @@ private:
 
    /** @name Data Examiners */
    //@{
-   typedef typename
-      boost::mpl::transform<
-           event_tags
-         , boost::fusion::pair<
-                boost::mpl::_1
-              , event::DataExaminer<boost::mpl::_1, raw_data_type>
-           >
-      >::type
-   examiner_tags_type;
-
-   typedef typename
-      boost::fusion::result_of::as_map<examiner_tags_type>::type
-   examiner_map_type;
-
    examiner_map_type mExaminers;
    //@}
 
