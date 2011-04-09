@@ -87,12 +87,14 @@ public:
    /** @name Type Declarations */
    //@{
    typedef ProxyType                                    proxy_type;
+   typedef EventTags                                    event_tags;
    typedef boost::shared_ptr<proxy_type>                proxy_ptr_type;
    typedef ProxyTraits<ProxyType>                       proxy_traits_type;
    typedef typename proxy_traits_type::device_type      device_type;
    typedef typename proxy_traits_type::device_data_type device_data_type;
    typedef typename GeneratorType::raw_data_type        raw_data_type;
    typedef GeneratorType                                generator_type;
+   typedef boost::shared_ptr<generator_type>            generator_ptr_type;
    //@}
 
    typedef boost::function<void (const raw_data_type&)> callback_type;
@@ -173,10 +175,27 @@ public:
    //@}
 
 protected:
+   /**
+    * Invokes the callbacks registered for the given event tag.
+    *
+    * @tparam EventTag The tag for the event that was generated.
+    *
+    * @param d The event data.
+    */
+   template<typename EventTag>
+   void invoke(const raw_data_type& d) const
+   {
+      std::for_each(boost::fusion::at_key<EventTag>(mCallbackMap).begin(),
+                    boost::fusion::at_key<EventTag>(mCallbackMap).end(),
+                    boost::bind(boost::apply<void>(), _1, d));
+   }
+
    struct CallbackRegistrar
    {
-      CallbackRegistrar(MultiEventInterface* owner)
+      CallbackRegistrar(MultiEventInterface* owner,
+                        const generator_ptr_type& generator)
          : owner(owner)
+         , generator(generator)
       {
          /* Do nothing. */ ;
       }
@@ -184,12 +203,13 @@ protected:
       template<typename U>
       void operator()(const U&) const
       {
-         owner->mEventGenerator->template setCallback<U>(
+         generator->template setCallback<U>(
             boost::bind(&MultiEventInterface::template invoke<U>, owner, _1)
          );
       }
 
       MultiEventInterface* owner;
+      generator_ptr_type   generator;
    };
 
    void setProxy(const proxy_ptr_type& proxy)
@@ -220,9 +240,9 @@ protected:
 
    virtual EventGeneratorPtr createEventGenerator(const proxy_ptr_type& proxy)
    {
-      boost::shared_ptr<generator_type> generator(generator_type::create());
+      generator_ptr_type generator(generator_type::create());
       generator->init(proxy);
-      boost::mpl::for_each<EventTags>(CallbackRegistrar(this));
+      boost::mpl::for_each<EventTags>(CallbackRegistrar(this, generator));
 
       return generator;
    }
@@ -233,7 +253,7 @@ protected:
     */
    void onDataAdded(const raw_data_type& data)
    {
-      std::for_each(mCallbacks.begin(), mCallbacks.end(),
+      std::for_each(mCallbackMap.begin(), mCallbackMap.end(),
                     boost::bind(boost::apply<void>(), _1, boost::ref(data)));
    }
 

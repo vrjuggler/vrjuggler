@@ -78,6 +78,7 @@ public:
    //@{
    typedef GenerationTag                                tag;
    typedef ProxyType                                    proxy_type;
+   typedef EventTags                                    event_tags;
    typedef ProxyTraits<ProxyType>                       proxy_traits_type;
    typedef typename proxy_traits_type::proxy_ptr_type   proxy_ptr_type;
    typedef typename proxy_traits_type::device_type      device_type;
@@ -190,7 +191,7 @@ protected:
 
    void onSamplesAdded(const sample_type& sample)
    {
-      onDataAdded(mSampleHandler.getData(sample, mProxy->getUnit()));
+      //onDataAdded(mSampleHandler.getData(sample, mProxy->getUnit()));
    }
 
    virtual void onDataAdded(const raw_data_type& data)
@@ -229,7 +230,7 @@ private:
       template<typename EventTag>
       void operator()(const EventTag&) const
       {
-         boost::fusion::at_key<EventTag>(owner->mExaminers).examine(*value);
+         boost::fusion::at_key<EventTag>(owner.mExaminers).examine(*value);
       }
 
       MultiEventGenerator& owner;
