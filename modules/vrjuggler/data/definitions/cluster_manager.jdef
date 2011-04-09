@@ -170,7 +170,9 @@
          <help>The names of the cluster plugins to load. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Plugin" defaultvalue=""/>
          <enumeration editable="true">
+            <enum label="ApplicationBarrierManager" value="ApplicationBarrierManager"/>
             <enum label="ApplicationDataManager" value="ApplicationDataManager"/>
+            <enum label="EventManager" value="EventManager"/>
             <enum label="RIMPlugin" value="RIMPlugin"/>
          </enumeration>
       </property>
