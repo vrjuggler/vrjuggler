@@ -82,6 +82,12 @@ template<unsigned ClickCount, typename DataType>
 class DataExaminer<click_tag<ClickCount>, DataType>
 {
 public:
+   DataExaminer()
+      : mClickTime(10)
+   {
+      /* Do nothing. */ ;
+   }
+
    void examine(const DataType& d)
    {
       // TEST: Only record double-click events.
@@ -96,8 +102,14 @@ public:
       return mPendingEvents;
    }
 
+   void setClickTime(const unsigned long clickTime)
+   {
+      mClickTime = clickTime;
+   }
+
 private:
    std::vector<DataType> mPendingEvents;
+   unsigned long         mClickTime;
 };
 
 /**

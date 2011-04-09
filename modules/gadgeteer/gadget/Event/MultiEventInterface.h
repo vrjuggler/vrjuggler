@@ -99,6 +99,16 @@ public:
 
    typedef boost::function<void (const raw_data_type&)> callback_type;
 
+protected:
+   // For use by derived classes
+   typedef
+      MultiEventInterface<
+           ProxyType
+         , EventTags
+         , GeneratorType
+      >
+   event_interface_;
+
 public:
    MultiEventInterface()
    {
