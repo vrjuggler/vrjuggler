@@ -73,13 +73,15 @@ typedef click_tag<2> double_click_tag;
  * A specialization of gadget::event::DataExaminer for all instantiations of
  * gadget::event::click_tag.
  *
- * @tparam ClickCount The number of clicks the designate an event.
- * @tparam DataType   The type of a sample received from a device proxy.
+ * @tparam ClickCount     The number of clicks the designate an event.
+ * @tparam DataType       The type of a sample received from a device proxy.
+ * @tparam CollectionType The base class that handles event collection.
  *
  * @since 2.1.16
  */
-template<unsigned ClickCount, typename DataType>
-class DataExaminer<click_tag<ClickCount>, DataType>
+template<unsigned ClickCount, typename DataType, typename CollectionType>
+class DataExaminer<click_tag<ClickCount>, DataType, CollectionType>
+   : public CollectionType
 {
 public:
    DataExaminer()
@@ -93,13 +95,8 @@ public:
       // TEST: Only record double-click events.
       if (ClickCount == 2)
       {
-         mPendingEvents.push_back(d);
+         addEvent(d);
       }
-   }
-
-   std::vector<DataType>& getEvents()
-   {
-      return mPendingEvents;
    }
 
    void setClickTime(const unsigned long clickTime)
@@ -108,8 +105,7 @@ public:
    }
 
 private:
-   std::vector<DataType> mPendingEvents;
-   unsigned long         mClickTime;
+   unsigned long mClickTime;
 };
 
 /**

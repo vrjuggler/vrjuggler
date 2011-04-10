@@ -69,9 +69,6 @@ template<
 >
 class MultiEventGenerator
    : public EventGenerator
-   , protected CollectionTypeChooser<CollectionTag
-                                   , typename SampleHandler::raw_data_type
-                                   >::type
 {
 public:
    /** @name Type Declarations */
@@ -89,17 +86,37 @@ public:
    typedef boost::function<void (const raw_data_type&)> callback_type;
 
    typedef typename
+      CollectionTypeChooser<
+           CollectionTag
+         , raw_data_type
+      >::type
+   collection_type;
+
+   /**
+    * Produces an MPL sequence type containing an instantiation of
+    * boost::fusion::pair<K,V> for each K in event_tags where V is
+    * gadget::event::DataExaminer<K, raw_data_type, collection_type>.
+    */
+   typedef typename
       boost::mpl::transform<
            event_tags
          , boost::fusion::pair<
                 boost::mpl::_1
-              , event::DataExaminer<boost::mpl::_1, raw_data_type>
+              , event::DataExaminer<
+                     boost::mpl::_1
+                   , raw_data_type
+                   , collection_type
+                >
            >
       >::type
-   examiner_tags_type;
+   examiner_pairs_type;
 
+   /**
+    * Produces a boost::fusion::map instantiation using the
+    * boost::fusion::pair instantiations from examiner_pairs_type.
+    */
    typedef typename
-      boost::fusion::result_of::as_map<examiner_tags_type>::type
+      boost::fusion::result_of::as_map<examiner_pairs_type>::type
    examiner_map_type;
    //@}
 
@@ -191,7 +208,7 @@ protected:
 
    void onSamplesAdded(const sample_type& sample)
    {
-      //onDataAdded(mSampleHandler.getData(sample, mProxy->getUnit()));
+      onDataAdded(mSampleHandler.getData(sample, mProxy->getUnit()));
    }
 
    virtual void onDataAdded(const raw_data_type& data)

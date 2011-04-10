@@ -39,15 +39,19 @@ namespace event
 {
 
 /**
- * @tparam EventTag The tag identifying the kind of event. This is used to
- *                  provide a mechanism for specializing this type based on
- *                  specific needs.
- * @tparam DataType The type of a sample received from a device proxy.
+ * @tparam EventTag       The tag identifying the kind of event. This is used
+ *                        to provide a mechanism for specializing this type
+ *                        based on specific needs.
+ * @tparam DataType       The type of a sample received from a device proxy.
+ * @tparam CollectionType The type that handles event collection. This is
+ *                        intended to be the base class, but specializations
+ *                        may find other ways of putting this to use.
  *
  * @since 2.1.16
  */
-template<typename EventTag, typename DataType>
+template<typename EventTag, typename DataType, typename CollectionType>
 class DataExaminer
+   : public CollectionType
 {
 public:
    /**
@@ -56,16 +60,8 @@ public:
     */
    void examine(const DataType& d)
    {
-      mPendingEvents.push_back(d);
+      addEvent(d);
    }
-
-   std::vector<DataType>& getEvents()
-   {
-      return mPendingEvents;
-   }
-
-private:
-   std::vector<DataType> mPendingEvents;
 };
 
 }
