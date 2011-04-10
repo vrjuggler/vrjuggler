@@ -29,7 +29,9 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <cassert>
 #include <vector>
+#include <boost/function.hpp>
 
 
 namespace gadget
@@ -39,19 +41,44 @@ namespace event
 {
 
 /**
- * @tparam EventTag       The tag identifying the kind of event. This is used
- *                        to provide a mechanism for specializing this type
- *                        based on specific needs.
- * @tparam DataType       The type of a sample received from a device proxy.
- * @tparam CollectionType The type that handles event collection. This is
- *                        intended to be the base class, but specializations
- *                        may find other ways of putting this to use.
+ * @tparam DataType The type of a sample received from a device proxy.
  *
  * @since 2.1.16
  */
-template<typename EventTag, typename DataType, typename CollectionType>
+template<typename DataType>
+class BaseExaminer
+{
+public:
+   typedef boost::function<void (const DataType&)> callback_type;
+
+   void setEventCallback(const callback_type& cb)
+   {
+      mCallback = cb;
+   }
+
+protected:
+   void addEvent(const DataType& d)
+   {
+      assert(! mCallback.empty());
+      mCallback(d);
+   }
+
+private:
+   callback_type mCallback;
+};
+
+/** \class DataExaminer DataExaminer.h gadget/Event/DataExaminer.h
+ *
+ * @tparam EventTag The tag identifying the kind of event. This is used to
+ *                  provide a mechanism for specializing this type based on
+ *                  specific needs.
+ * @tparam DataType The type of a sample received from a device proxy.
+ *
+ * @since 2.1.16
+ */
+template<typename EventTag, typename DataType>
 class DataExaminer
-   : public CollectionType
+   : public BaseExaminer<DataType>
 {
 public:
    /**

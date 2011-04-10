@@ -71,17 +71,16 @@ typedef click_tag<2> double_click_tag;
 
 /**
  * A specialization of gadget::event::DataExaminer for all instantiations of
- * gadget::event::click_tag.
+ * gadget::event::click_tag when gadget::EventPtr is the raw data type. In
+ * other words, this is the data examiner for mouse events.
  *
- * @tparam ClickCount     The number of clicks the designate an event.
- * @tparam DataType       The type of a sample received from a device proxy.
- * @tparam CollectionType The base class that handles event collection.
+ * @tparam ClickCount The number of clicks the designate an event.
  *
  * @since 2.1.16
  */
-template<unsigned ClickCount, typename DataType, typename CollectionType>
-class DataExaminer<click_tag<ClickCount>, DataType, CollectionType>
-   : public CollectionType
+template<unsigned ClickCount>
+class DataExaminer<click_tag<ClickCount>, EventPtr>
+   : public BaseExaminer<EventPtr>
 {
 public:
    DataExaminer()
@@ -90,13 +89,56 @@ public:
       /* Do nothing. */ ;
    }
 
-   void examine(const DataType& d)
+   void examine(const EventPtr& d)
    {
+   /*
       // TEST: Only record double-click events.
       if (ClickCount == 2)
       {
-         addEvent(d);
+         this->addEvent(d);
       }
+   */
+   }
+
+   void setClickTime(const unsigned long clickTime)
+   {
+      mClickTime = clickTime;
+   }
+
+private:
+   unsigned long mClickTime;
+};
+
+/**
+ * A specialization of gadget::event::DataExaminer for all instantiations of
+ * gadget::event::click_tag when gadget::DigitaiState::State is the raw data
+ * type. In other words, this is the data examiner for digital device events.
+ *
+ * @tparam ClickCount     The number of clicks the designate an event.
+ * @tparam CollectionType The base class that handles event collection.
+ *
+ * @since 2.1.16
+ */
+template<unsigned ClickCount>
+class DataExaminer<click_tag<ClickCount>, DigitalState::State>
+   : public BaseExaminer<DigitalState::State>
+{
+public:
+   DataExaminer()
+      : mClickTime(10)
+   {
+      /* Do nothing. */ ;
+   }
+
+   void examine(const DigitalState::State d)
+   {
+   /*
+      // TEST: Only record double-click events.
+      if (ClickCount == 2)
+      {
+         this->addEvent(d);
+      }
+   */
    }
 
    void setClickTime(const unsigned long clickTime)

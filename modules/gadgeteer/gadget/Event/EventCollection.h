@@ -44,23 +44,6 @@ namespace event
 template<typename DataType>
 class EventCollector
 {
-public:
-   /**
-    * @since 2.1.16
-    */
-   std::vector<DataType>& getEvents()
-   {
-      return mPendingEvents;
-   }
-
-   /**
-    * @since 2.1.16
-    */
-   const std::vector<DataType>& getEvents() const
-   {
-      return mPendingEvents;
-   }
-
 protected:
    EventCollector()
    {
