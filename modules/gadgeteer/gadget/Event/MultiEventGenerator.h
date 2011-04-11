@@ -202,7 +202,7 @@ public:
       boost::fusion::at_key<EventTag>(mCallbackMap) = callback;
    }
 
-   /** Data Examiner Access */
+   /** @name Data Examiner Access */
    //@{
    template<typename EventTag>
    typename
@@ -231,10 +231,14 @@ public:
    }
    //@}
 
-protected:
+private:
    static const bool sEmitsImmediately =
       boost::is_same<GenerationTag, event::immediate_tag>::value;
 
+   /**
+    * Slot connected to the dataAdded signal on the device proxy used by this
+    * event generator. When the device adds a sample, this method is invoked.
+    */
    void onSamplesAdded(const sample_type& sample)
    {
       InvokeExaminer invoker(
@@ -243,11 +247,17 @@ protected:
       boost::mpl::for_each<EventTags>(invoker);
    }
 
+   /**
+    * Callback invoked by the gadget::DataExaminer<EventTag,raw_data_type>
+    * object when it determines that an event has been added.
+    */
    template<typename EventTag>
    void onEventAdded(const raw_data_type& eventData)
    {
       using namespace boost::fusion;
 
+      // If this generator emits events immediately, then the callback
+      // registered for EventTag is invoked.
       if (sEmitsImmediately)
       {
          const callback_type& callback(at_key<EventTag>(mCallbackMap));
@@ -257,6 +267,8 @@ protected:
             callback(eventData);
          }
       }
+      // Otherwise, the event is added to the event collector for EventTag for
+      // emission when emitEvents() is invoked.
       else
       {
          at_key<EventTag>(mCollectors).addEvent(eventData);

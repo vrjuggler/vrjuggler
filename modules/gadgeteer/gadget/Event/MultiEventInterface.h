@@ -232,6 +232,7 @@ protected:
          unregisterInterface(this);
       }
 
+      proxy_ptr_type old_proxy(mProxy);
       mProxy = proxy;
 
       // If we now have a non-NULL value for mProxy, then we need to create
@@ -241,6 +242,24 @@ protected:
          mEventGenerator = createEventGenerator(mProxy);
          registerInterface(this);
       }
+
+      onProxyChanged(old_proxy, mProxy);
+   }
+
+   /**
+    * Template method invoked when the proxy is changed. This is invoked
+    * \em after the event generator for this event interface has been created.
+    * In other words, if \p newProxy is not a NULL pointer, then this event
+    * interface has a valid event generator. This default implementation does
+    * nothing.
+    *
+    * @param oldProxy The device proxy in use prior to the change.
+    * @param newProxy The new device proxy for this event interface.
+    */
+   virtual void onProxyChanged(const proxy_ptr_type& oldProxy,
+                               const proxy_ptr_type& newProxy)
+   {
+      /* Do nothing. */ ;
    }
 
    const proxy_ptr_type& getProxy() const
