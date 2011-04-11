@@ -30,7 +30,6 @@
 #include <gadget/gadgetConfig.h>
 
 #include <cassert>
-#include <vector>
 #include <boost/function.hpp>
 
 
