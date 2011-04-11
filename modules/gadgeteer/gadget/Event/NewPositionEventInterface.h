@@ -43,7 +43,7 @@ namespace gadget
 namespace event
 {
 
-struct position_event_tag {};
+struct position_event_tag : base_event_tag {};
 
 template<>
 class DataExaminer<position_event_tag, PositionProxy::raw_data_type>

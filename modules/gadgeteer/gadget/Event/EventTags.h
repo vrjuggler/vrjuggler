@@ -135,6 +135,13 @@ struct all_events_tag : collector_tag {};
 struct last_event_tag : collector_tag {};
 //@}
 
+/**
+ * Base type for event tags.
+ *
+ * @sincw 2.1.16
+ */
+struct base_event_tag {};
+
 }
 
 }

@@ -52,7 +52,7 @@ namespace event
  *
  * @since 2.1.16
  */
-template<unsigned ClickCount> struct click_tag {};
+template<unsigned ClickCount> struct click_tag : base_event_tag {};
 
 /**
  * The event tag for a mouse/digital single click event.
