@@ -64,7 +64,6 @@ namespace gadget
  *
  * @tparam ProxyType     The type of proxy to be used by this EventInterface
  *                       type instantiation.
- * @tparam EventTags     A type sequence supporting forward iteration.
  * @tparam GeneratorType The event generator type. This is used to determine
  *                       how to register this interface with the central
  *                       input handler. This type must declare a type \c tag
@@ -78,7 +77,7 @@ namespace gadget
  *
  * @since 2.1.16
  */
-template<typename ProxyType, typename EventTags, typename GeneratorType>
+template<typename ProxyType, typename GeneratorType>
 class MultiEventInterface
    : public AbstractEventInterface
    , protected RegistrationTypeChooser<GeneratorType>::type
@@ -87,7 +86,6 @@ public:
    /** @name Type Declarations */
    //@{
    typedef ProxyType                                    proxy_type;
-   typedef EventTags                                    event_tags;
    typedef boost::shared_ptr<proxy_type>                proxy_ptr_type;
    typedef ProxyTraits<ProxyType>                       proxy_traits_type;
    typedef typename proxy_traits_type::device_type      device_type;
@@ -95,19 +93,14 @@ public:
    typedef typename GeneratorType::raw_data_type        raw_data_type;
    typedef GeneratorType                                generator_type;
    typedef boost::shared_ptr<generator_type>            generator_ptr_type;
+   typedef typename generator_type::event_tags          event_tags;
    //@}
 
    typedef boost::function<void (const raw_data_type&)> callback_type;
 
 protected:
    // For use by derived classes
-   typedef
-      MultiEventInterface<
-           ProxyType
-         , EventTags
-         , GeneratorType
-      >
-   event_interface_;
+   typedef MultiEventInterface<ProxyType, GeneratorType> event_interface_;
 
 public:
    MultiEventInterface()
@@ -271,7 +264,7 @@ protected:
    {
       generator_ptr_type generator(generator_type::create());
       generator->init(proxy);
-      boost::mpl::for_each<EventTags>(CallbackRegistrar(this, generator));
+      boost::mpl::for_each<event_tags>(CallbackRegistrar(this, generator));
 
       return generator;
    }
@@ -289,7 +282,7 @@ protected:
 private:
    typedef typename
       boost::mpl::transform<
-           EventTags
+           event_tags
          , boost::fusion::pair<boost::mpl::_1, std::vector<callback_type> >
       >::type
    map_pairs_type;

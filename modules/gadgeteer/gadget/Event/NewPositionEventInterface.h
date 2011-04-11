@@ -112,10 +112,11 @@ template<typename CollectionTag = event::last_event_tag
        , typename GenerationTag = event::synchronized_tag>
 class NewPositionEventInterface
    : public MultiEventInterface<PositionProxy
-                              , boost::mpl::vector<event::position_event_tag>
                               , MultiEventGenerator<
                                      PositionProxy
-                                   , boost::mpl::vector<event::position_event_tag>
+                                   , boost::mpl::vector<
+                                        event::position_event_tag
+                                     >
                                    , CollectionTag
                                    , GenerationTag
                                 >

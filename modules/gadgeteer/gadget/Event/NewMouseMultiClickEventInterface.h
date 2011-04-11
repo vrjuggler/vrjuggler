@@ -170,7 +170,6 @@ template<unsigned int ClickCount
 class NewMouseMultiClickEventInterface
    : public MultiEventInterface<
                  KeyboardMouseProxy
-               , typename event::ClickMaker<ClickCount>::type
                , MultiEventGenerator<
                       KeyboardMouseProxy
                     , typename event::ClickMaker<ClickCount>::type
