@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "analog", "Draw\OGL\analog\analog.vcproj", "{119E9321-722B-4BBF-A14E-AF3CB3D5FEC1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "combo", "Draw\OGL\combo\combo.vcproj", "{2F846F64-C67D-43BD-A031-45B4E369CAF2}"
