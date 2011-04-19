@@ -274,6 +274,7 @@ AC_SUBST(DSO_PLUGIN_PROF_DEP_FILES)
 # Final file generation step.
 # -----------------------------------------------------------------------------
 AC_CONFIG_FILES([
+   ApplicationBarrierManager/Makefile
    ApplicationDataManager/Makefile
    common.defs.mk
    gadget.plugin.mk
