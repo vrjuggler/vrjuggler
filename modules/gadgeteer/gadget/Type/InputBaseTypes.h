@@ -42,6 +42,7 @@ class String;
 class Command;
 class Glove;
 class SimInput;
+class Rumble;
 
 /**
  * @name Device Driver Base Types
@@ -71,6 +72,7 @@ typedef InputMixer< InputMixer<SimInput, Input>, Digital> siminput_input_digital
 typedef InputMixer< InputMixer<SimInput, Input>, Analog> siminput_input_analog;
 typedef InputMixer< InputMixer< InputMixer<SimInput,Input>, Digital>, Glove> siminput_input_digital_glove_t;
 typedef InputMixer< InputMixer<Input, Command>, Analog> input_command_analog_t;
+typedef InputMixer< InputMixer< InputMixer<Input, Digital>, Analog>, Rumble> input_digital_analog_rumble_t;
 //@}
 
 } // end namespace

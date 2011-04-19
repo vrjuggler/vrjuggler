@@ -24,37 +24,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#ifndef _GADGET_RUMBLE_INTERFACE_H_
+#define _GADGET_RUMBLE_INTERFACE_H_
 
-#include <gadget/Type/AnalogProxy.h>
-#include <gadget/Type/DigitalProxy.h>
-#include <gadget/Type/PositionProxy.h>
-#include <gadget/Type/GloveProxy.h>
-#include <gadget/Type/GestureProxy.h>
-//#include <gadget/Type/EventWindowProxy.h>
-#include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/RumbleProxy.h>
-#include <gadget/ProxyDepChecker.h>
-#include <jccl/Config/ConfigElement.h>
+#include <gadget/Type/DeviceInterface.h>
 
-namespace gadget
-{
-
-bool ProxyDepChecker::canHandle(jccl::ConfigElementPtr element)
-{
-   std::string element_type(element->getID());
-
-   bool ret_val;
-   ret_val = ((element_type == AnalogProxy::getElementType()) ||
-              (element_type == DigitalProxy::getElementType()) ||
-              (element_type == GestureProxy::getElementType()) ||
-              (element_type == GloveProxy::getElementType()) ||
-              (element_type == KeyboardMouseProxy::getElementType()) ||
-              (element_type == PositionProxy::getElementType()) ||
-              (element_type == RumbleProxy::getElementType()));
-
-   return ret_val;
-}
-
-
-} // End of gadget namespace
+#endif

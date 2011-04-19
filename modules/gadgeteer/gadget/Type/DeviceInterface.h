@@ -234,6 +234,7 @@ typedef DeviceInterface<class KeyboardMouseProxy> KeyboardMouseInterface;
 typedef DeviceInterface<class PositionProxy>    PositionInterface;
 typedef DeviceInterface<class CommandProxy>     CommandInterface;
 typedef DeviceInterface<class StringProxy>      StringInterface;
+typedef DeviceInterface<class RumbleProxy>      RumbleInterface;
 
 } // end namespace
 

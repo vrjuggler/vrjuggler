@@ -42,6 +42,7 @@
 #include <gadget/Type/InputMixer.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/InputBaseTypes.h>
+#include <gadget/Type/Rumble.h>
 
 namespace gadget
 {
@@ -93,6 +94,7 @@ void BaseTypeFactory::hackLoadKnownDevices()
    GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_digital);
    GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_analog);
    GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_digital_glove_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_rumble_t);
 }
 
 } // End of gadget namespace

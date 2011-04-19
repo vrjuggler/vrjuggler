@@ -67,6 +67,9 @@ SRCS=		Analog.cpp			\
 		Position.cpp			\
 		PositionProxy.cpp		\
 		Proxy.cpp			\
+		Rumble.cpp			\
+		RumbleEffect.cpp		\
+		RumbleProxy.cpp			\
 		StringProxy.cpp			\
 		String.cpp
 

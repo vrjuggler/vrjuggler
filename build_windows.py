@@ -300,6 +300,9 @@ def getDefaultVars(clVerMajor, clVerMinor):
    optional.append(BuildOption('DOOZER_ROOT',
                                'Doozer installation directory', '',
                                required = False))
+   optional.append(BuildOption('SDL_ROOT',
+                               'Simple DirectMedia Layer installation directory', '',
+                               required = False))
 
    options = {
       'prefix'      : r'C:\vrjuggler',
@@ -1578,8 +1581,8 @@ def installGadgeteerDrivers(prefix, buildDir):
    drivers = ['DTrack', 'DataGlove', 'DirectXJoystick', 'Ether24', 'Fastrak',
               'Flock', 'IBox', 'IntersenseAPI', 'IS900', 'MotionNode',
               'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove',
-              'SerialEncoder', 'SpaceBall', 'TrackdAPI', 'VRPN', 'Wanda',
-              'X-IST', 'OptiTrack']
+              'SerialEncoder', 'SdlJoystick', 'SpaceBall', 'TrackdAPI', 'VRPN', 
+              'Wanda', 'X-IST', 'OptiTrack']
 
    for d in drivers:
       srcdir = os.path.join(srcroot, d)
@@ -1830,6 +1833,7 @@ def doDependencyInstall(prefix, buildDir):
    installOpenAL(prefix)
    installOmniORB(prefix)
    installDoozer(prefix)
+   installSDL(prefix)
 
 def simpleInstall(name, root, prefix, includeDir = None, libDir = 'lib',
                   optional = False):
@@ -2012,6 +2016,10 @@ def installOmniORB(prefix):
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'bin', 'scripts')
       installDir(srcdir, destdir)
+
+def installSDL(prefix):
+   simpleInstall('SDL headers and libraries', os.environ['SDL_ROOT'],
+                 prefix, optional = True)
 
 class GuiFrontEnd:
    def __init__(self, master):

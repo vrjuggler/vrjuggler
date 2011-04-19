@@ -37,6 +37,7 @@
 #include <gadget/Type/GloveData.h>
 #include <gadget/Type/KeyboardMouseData.h>
 #include <gadget/Type/PositionData.h>
+#include <gadget/Type/RumbleData.h>
 #include <gadget/Type/StringData.h>
 
 
@@ -73,6 +74,7 @@ DECLARE_DEVICE_TRAITS(Glove)
 DECLARE_DEVICE_TRAITS(KeyboardMouse)
 DECLARE_DEVICE_TRAITS(Position)
 DECLARE_DEVICE_TRAITS(String)
+DECLARE_DEVICE_TRAITS(Rumble)
 
 class Gesture;
 
