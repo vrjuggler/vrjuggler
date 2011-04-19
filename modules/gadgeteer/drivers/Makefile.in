@@ -142,8 +142,9 @@ SUBDIR=	3Dconnexion/SpaceBall		\
 	Intersense/IS900		\
 	Intersense/IntersenseAPI	\
 	Logitech/ThreeDMouse		\
-        NaturalPoint/OptiTrack          \
+	NaturalPoint/OptiTrack		\
 	Open/DTK			\
+	Open/SdlJoystick		\
 	Open/LinuxJoydev		\
 	Open/Trackd			\
 	Open/VRPN			\

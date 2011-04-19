@@ -85,6 +85,11 @@ AC_ARG_WITH(ftd2xx, [  --with-ftd2xx=<PATH>    ftd2xx installation],
 AC_ARG_WITH(libusb, [  --with-libusb=<PATH>    libusb installation],
             _with_libusb="$withval", _with_libusb='/usr')
 
+# Build with sdl path.  Then, include the SDL drivers ...
+# There is default path.
+AC_ARG_WITH(sdl, [  --with-sdl=<PATH>     sdl installation],
+            _with_sdl="$withval", _with_sdl='/usr')
+
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -549,6 +554,56 @@ if test "x$LIBUSB_CONFIG" != "xno" ; then
 fi
 
 # -----------------------------------------------------------------------------
+# sdl
+# -----------------------------------------------------------------------------
+
+# Test for the sdl library
+
+if test "x${_with_sdl}" != "xno" ; then
+   if test "x${_with_sdl}" = "xyes" ; then
+      SDL_ROOT="/usr"
+   else
+      SDL_ROOT="${_with_sdl}"
+   fi
+
+   _gadget_save_CFLAGS="$CFLAGS"
+   _gadget_save_CPPFLAGS="$CPPFLAGS"
+   _gadget_save_LDFLAGS="$LDFLAGS"
+   _gadget_save_LIBS="$LIBS"
+
+   SDL_INCLUDES="-I$SDL_ROOT/include"
+   SDL_LDFLAGS="-L$SDL_ROOT/lib"
+   SDL_LIBS="-lSDL"
+
+   CPPFLAGS="$SDL_INCLUDES $CPPFLAGS"
+   LDFLAGS="$SDL_LDFLAGS $LDFLAGS"
+
+   gadget_have_sdl='no'
+
+   DPP_LANG_SAVE
+   DPP_LANG_C
+
+   CPPFLAGS="$CPPFLAGS $STDFLAGS"
+
+   AC_CHECK_LIB(SDL, SDL_Quit, [gadget_have_sdl='yes'], [gadget_have_sdl='no'])
+
+   DPP_LANG_RESTORE
+
+   if test "x$gadget_have_sdl" = "xyes" ; then
+      HAVE_SDL='Y'
+   else
+      HAVE_SDL='N'
+      AC_MSG_WARN([*** Did not find SDL in $SDL_ROOT ***])
+   fi
+
+   CFLAGS="${_gadget_save_CFLAGS}"
+   CPPFLAGS="${_gadget_save_CPPFLAGS}"
+   LDFLAGS="${_gadget_save_LDFLAGS}"
+   LIBS="${_gadget_save_LIBS}"
+fi
+
+
+# -----------------------------------------------------------------------------
 # Checks for header files.
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
@@ -692,6 +747,11 @@ AC_SUBST(HAVE_LIBUSB)
 AC_SUBST(LIBUSB_CFLAGS)
 AC_SUBST(LIBUSB_LIBS)
 
+AC_SUBST(HAVE_SDL)
+AC_SUBST(SDL_INCLUDES)
+AC_SUBST(SDL_LDFLAGS)
+AC_SUBST(SDL_LIBS)
+
 AC_SUBST(DSO_DRIVER_DEPS)
 AC_SUBST(DSO_DRIVER_DEP_FILES)
 AC_SUBST(DSO_DRIVER_PROF_DEPS)
@@ -737,6 +797,7 @@ AC_CONFIG_FILES([
    NaturalPoint/OptiTrack/Makefile
    Open/Makefile
    Open/DTK/Makefile
+   Open/SdlJoystick/Makefile
    Open/LinuxJoydev/Makefile
    Open/Trackd/Makefile
    Open/VRPN/Makefile
