@@ -139,7 +139,7 @@ public:
     * @param pause True to pause, false to un-pause
     *
     */
-   virtual bool setPause(const bool pause) { return false; }
+   virtual bool setPause(const bool pause) { boost::ignore_unused_variable_warning(pause); return false; }
 
    /**
     * Get pause state.
@@ -161,7 +161,7 @@ public:
     * @param writer The object writer to which this object will be
     *               serialized.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer) {;}
+   virtual void writeObject(vpr::ObjectWriter* writer) { boost::ignore_unused_variable_warning(writer); }
 
    /**
     * Required to support serialization interface, does nothing.
@@ -169,11 +169,12 @@ public:
     * @param reader The object reader from which this object will be
     *               de-serialized.
     */
-   virtual void readObject(vpr::ObjectReader* reader) {;}
+   virtual void readObject(vpr::ObjectReader* reader) { boost::ignore_unused_variable_warning(reader); }
 
 protected:
    virtual RumbleEffectPtr createEffectImp(RumbleEffect::RumbleType type)
    {
+      boost::ignore_unused_variable_warning(type);
       return RumbleEffectPtr();
    }
   

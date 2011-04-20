@@ -112,11 +112,13 @@ void SdlJoystick::controlLoop()
          vpr::System::msleep(10);
       }
 
+#if SDL_VERSION_ATLEAST(1,3,0)
       if (mHaptic != NULL)
       {
          SDL_HapticClose(mHaptic);
          mHaptic = NULL;
       }
+#endif
 
       if (mJoystick != NULL)
       {
@@ -384,6 +386,7 @@ bool SdlJoystick::getPaused()
 
 RumbleEffectPtr SdlJoystick::createEffectImp(RumbleEffect::RumbleType type)
 {
+   boost::ignore_unused_variable_warning(type);
    RumbleEffectPtr ret;
 #if SDL_VERSION_ATLEAST(1,3,0)
    bool available = (getCapabilities() & type);
