@@ -1834,6 +1834,7 @@ def doDependencyInstall(prefix, buildDir):
    installOmniORB(prefix)
    installDoozer(prefix)
    installSDL(prefix)
+   installVRPN(prefix)
 
 def simpleInstall(name, root, prefix, includeDir = None, libDir = 'lib',
                   optional = False):
@@ -2020,6 +2021,10 @@ def installOmniORB(prefix):
 def installSDL(prefix):
    simpleInstall('SDL headers and libraries', os.environ['SDL_ROOT'],
                  prefix, optional = True)
+
+def installVRPN(prefix):
+   simpleInstall('VRPN headers, libraries, and executables',
+                 os.environ['VRPN_ROOT'], prefix, optional = True)
 
 class GuiFrontEnd:
    def __init__(self, master):
