@@ -1829,6 +1829,7 @@ def doDependencyInstall(prefix, buildDir):
    installOpenAL(prefix)
    installOmniORB(prefix)
    installDoozer(prefix)
+   installVRPN(prefix)
 
 def simpleInstall(name, root, prefix, includeDir = None, libDir = 'lib',
                   optional = False):
@@ -2011,6 +2012,10 @@ def installOmniORB(prefix):
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'bin', 'scripts')
       installDir(srcdir, destdir)
+
+def installVRPN(prefix):
+   simpleInstall('VRPN headers, libraries, and executables',
+                 os.environ['VRPN_ROOT'], prefix, optional = True)
 
 class GuiFrontEnd:
    def __init__(self, master):
