@@ -33,6 +33,10 @@
 namespace gadget 
 {
 
+/** \class RumbleEffect RumbleEffect.h gadget/Type/RumbleEffect.h
+ *
+ * @since 2.1.16
+ */
 class GADGET_CLASS_API RumbleEffect
 {
 public:

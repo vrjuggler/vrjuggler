@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-04-19 furlong.t   Added framework support for rumble-capable devices.
+                       Authors: Todd Furlong, Daniel Heath, Jeff Baker.
+                       NEW VERSION: 2.1.16
 2011-03-19 patrick     Added support for Boost.Filesystem v3.
                        Submitted by Doug McCorkle.
                        NEW VERSION: 2.1.15

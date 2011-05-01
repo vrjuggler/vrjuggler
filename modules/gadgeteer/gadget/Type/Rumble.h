@@ -52,6 +52,8 @@ namespace gadget
  *
  * Rumble is the abstract base class from which devices supporting rumble
  * haptic feedback derive.
+ *
+ * @since 2.1.16
  */
 class GADGET_CLASS_API Rumble
    : public vpr::SerializableObject

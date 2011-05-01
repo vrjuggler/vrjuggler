@@ -36,6 +36,10 @@
 namespace gadget
 {
 
+/** \class RumbleProxy RumbleProxy.h gadget/Type/RumbleProxy.h
+ *
+ * @since 2.1.16
+ */
 class GADGET_CLASS_API RumbleProxy : public TypedProxy<Rumble>
 {
 public:
