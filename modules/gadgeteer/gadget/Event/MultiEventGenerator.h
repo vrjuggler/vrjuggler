@@ -161,6 +161,7 @@ public:
    virtual ~MultiEventGenerator()
    {
       mDevConn.disconnect();
+      mRefreshConn.disconnect();
    }
 
    boost::shared_ptr<MultiEventGenerator> init(const proxy_ptr_type& proxy)
@@ -169,12 +170,18 @@ public:
 
       device_ptr_type device(mProxy->getTypedInputDevice());
 
+      // If the proxy is not currently stupefied, then we can connect to its
+      // input device.
+      if (device.get() != NULL)
+      {
+         onProxyRefreshed(device);
+      }
+
       // This is not connected using a shared pointer to this object in order
-      // to prevent a circlar reference between this object and the proxied
-      // device.
-      mDevConn =
-         device->dataAdded().connect(
-            boost::bind(&MultiEventGenerator::onSamplesAdded, this, _1)
+      // to prevent a circlar reference between this object and the proxy.
+      mRefreshConn =
+         mProxy->proxyRefreshed().connect(
+            boost::bind(&MultiEventGenerator::onProxyRefreshed, this, _1)
          );
 
       EventRegistrator reg(this);
@@ -278,6 +285,25 @@ private:
    const proxy_ptr_type& getProxy() const
    {
       return mProxy;
+   }
+
+   /**
+    * @since 2.1.17
+    */
+   void onProxyRefreshed(device_ptr_type newDev)
+   {
+      mDevConn.disconnect();
+
+      if (newDev.get() != NULL)
+      {
+         // This is not connected using a shared pointer to this object in
+         // order to prevent a circlar reference between this object and the
+         // proxied device.
+         mDevConn =
+            newDev->dataAdded().connect(
+               boost::bind(&MultiEventGenerator::onSamplesAdded, this, _1)
+            );
+      }
    }
 
 private:
@@ -424,6 +450,7 @@ private:
    SampleHandler mSampleHandler;
    proxy_ptr_type mProxy;
    boost::signals::connection mDevConn;
+   boost::signals::connection mRefreshConn;
 };
 
 }

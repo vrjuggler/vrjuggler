@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-05-14 patrick     gadget::TypedProxy<T> now emits a signal
+                       (proxyRefreshed) whenever its refresh() method is
+                       invoked.
+                       NEW VERSION: 2.1.17
 2011-04-19 furlong.t   Added framework support for rumble-capable devices.
                        Authors: Todd Furlong, Daniel Heath, Jeff Baker.
                        NEW VERSION: 2.1.16

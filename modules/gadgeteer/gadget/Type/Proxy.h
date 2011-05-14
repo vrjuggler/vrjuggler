@@ -31,8 +31,10 @@
 
 #include <typeinfo>
 #include <boost/optional.hpp>
+#include <boost/signal.hpp>
 
 #include <vpr/Util/Interval.h>
+#include <vpr/Util/SignalProxy.h>
 
 #include <jccl/Config/ConfigElement.h>
 
@@ -154,6 +156,7 @@ namespace gadget
       std::string mName;         /**< The name of the proxy */
       bool        mStupefied;    /**< Is the proxy current stupefied (returns default data) */
       bool        mNeedUpdate;   /**< @since 1.1.19 */
+      
    };
 
    /** \class TypedProxy Proxy.h gadget/Type/Proxy.h
@@ -175,6 +178,7 @@ namespace gadget
       typedef typename device_traits_type::device_ptr_type device_ptr_type;
       typedef typename device_traits_type::data_type       device_data_type;
       typedef typename device_data_type::data_type         raw_data_type;
+      typedef boost::signal<void (device_ptr_type)>        refresh_signal_type;
       //@}
 
    protected:
@@ -238,6 +242,7 @@ namespace gadget
        */
       virtual bool refresh()
       {
+         bool result(true);
          InputPtr input_dev = InputManager::instance()->getDevice(mDeviceName);
 
          if (NULL == input_dev.get())       // Not found, so stupefy
@@ -262,18 +267,22 @@ namespace gadget
                   << typeid(input_dev).name() << std::endl << vprDEBUG_FLUSH;
 
                stupefy(true);
-               return false;
+               result = false;
             }
+            else
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "   Proxy '" << mName << "' configured" << std::endl
+                  << vprDEBUG_FLUSH;
 
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "   Proxy '" << mName << "' configured" << std::endl
-               << vprDEBUG_FLUSH;
-
-            mTypedDevice = typed_dev;    // Set the proxy
-            stupefy(false);
+               mTypedDevice = typed_dev;    // Set the proxy
+               stupefy(false);
+            }
          }
 
-         return true;
+         mRefreshed(mTypedDevice);
+
+         return result;
       }
 
       /**
@@ -411,11 +420,24 @@ namespace gadget
       }
       //@}
 
+      /**
+       * Whenever refresh() is invoked, the proxyRefreshed signal is emitted.
+       *
+       * @since 2.1.17
+       */
+      vpr::SignalProxy<refresh_signal_type> proxyRefreshed()
+      {
+         return mRefreshed;
+      }
+
    protected:
       std::string      mDeviceName;   /**< Name of the device to link up with */
       device_ptr_type  mTypedDevice;  /**< The device (type-specific pointer) */
       int              mUnit;
       device_data_type mData;
+
+   private:
+      refresh_signal_type mRefreshed;
    };
 
 } // end namespace
