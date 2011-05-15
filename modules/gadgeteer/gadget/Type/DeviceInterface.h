@@ -119,15 +119,25 @@ private:    // Static information
  *
  * Type-specific device interface.
  */
-template<class PROXY_TYPE>
+template<typename ProxyType>
 class DeviceInterface : public BaseDeviceInterface
 {
 public:
+   typedef ProxyType                     proxy_type;
+   typedef boost::shared_ptr<proxy_type> proxy_ptr_type;
+
+   DeviceInterface()
+      : BaseDeviceInterface()
+      , mDummyProxy(ProxyType::create())
+      , mTypeSpecificProxy(mDummyProxy)
+   {
+      /* Do nothing. */ ;
+   }
+
    DeviceInterface(const DeviceInterface& other)
       : BaseDeviceInterface(other)
+      , mDummyProxy(ProxyType::create())
    {
-      mDummyProxy = PROXY_TYPE::create();
-
       if (NULL != other.mTypeSpecificProxy.get())
       {
          mTypeSpecificProxy = other.mTypeSpecificProxy;
@@ -136,14 +146,6 @@ public:
       {
          mTypeSpecificProxy = mDummyProxy;
       }
-   }
-
-public:
-   DeviceInterface()
-      : BaseDeviceInterface()
-   {
-      mDummyProxy = PROXY_TYPE::create();
-      mTypeSpecificProxy = mDummyProxy;
    }
 
    /**
@@ -160,7 +162,7 @@ public:
     *
     * @see init()
     */
-   const boost::shared_ptr<PROXY_TYPE> operator->() const
+   const proxy_ptr_type& operator->() const
    {
       return mTypeSpecificProxy;
    }
@@ -172,37 +174,38 @@ public:
     *
     * @see init()
     */
-   PROXY_TYPE& operator*()
+   proxy_type& operator*()
    {
-      return *(mTypeSpecificProxy);
+      return *mTypeSpecificProxy;
    }
    //@}
 
    /** Returns the underlying proxy to which we are connected. */
-   const boost::shared_ptr<PROXY_TYPE> getProxy() const
+   const proxy_ptr_type& getProxy() const
    {
       return mTypeSpecificProxy;
    }
 
    /** Sets the proxy to an explicit proxy. */
-   void setProxy(PROXY_TYPE* proxy)
+   void setProxy(const proxy_type* proxy)
    {
       vprASSERT(NULL != proxy);
       mProxyName = proxy->getName();    // Set the name
       mNameSet = true;
       this->refresh();
 
-      // Verify we found the correct proxy
-      vprASSERT(mTypeSpecificProxy.get() == proxy && "Found incorrect proxy for dev interface");
+      // Verify that we found the correct proxy.
+      vprASSERT(mTypeSpecificProxy.get() == proxy &&
+                "Found incorrect proxy for dev interface");
    }
 
    virtual void refresh()
    {
       BaseDeviceInterface::refresh();
-      if(NULL!= mProxyPtr.get())
+      if (NULL!= mProxyPtr.get())
       {
-         mTypeSpecificProxy = boost::dynamic_pointer_cast<PROXY_TYPE>(mProxyPtr);
-         if(NULL == mTypeSpecificProxy.get())
+         mTypeSpecificProxy = boost::dynamic_pointer_cast<ProxyType>(mProxyPtr);
+         if (NULL == mTypeSpecificProxy.get())
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "[gadget::DeviceInterface::refresh()] Tried to point at "
@@ -213,29 +216,33 @@ public:
       }
 
       // If either one of the proxy pointers are NULL, then use a dummy
-      if((NULL == mProxyPtr.get()) || (NULL == mTypeSpecificProxy.get()))
+      if (NULL == mProxyPtr.get() || NULL == mTypeSpecificProxy.get())
       {
          mTypeSpecificProxy = mDummyProxy;
       }
    }
 
 private:
-   boost::shared_ptr<PROXY_TYPE>        mTypeSpecificProxy;   /**< The proxy that is being wrapped */
-   boost::shared_ptr<PROXY_TYPE>        mDummyProxy;
+   proxy_ptr_type mTypeSpecificProxy;   /**< The proxy that is being wrapped */
+   proxy_ptr_type mDummyProxy;
 };
 
-
-// --- Typedefs to the old types --- //
-typedef DeviceInterface<class AnalogProxy>      AnalogInterface;
-typedef DeviceInterface<class DigitalProxy>     DigitalInterface;
-typedef DeviceInterface<class GestureProxy>     GestureInterface;
-typedef DeviceInterface<class GloveProxy>       GloveInterface;
+/**
+ * @name Convenience Types
+ */
+//@{
+typedef DeviceInterface<class AnalogProxy>        AnalogInterface;
+typedef DeviceInterface<class CommandProxy>       CommandInterface;
+typedef DeviceInterface<class DigitalProxy>       DigitalInterface;
+typedef DeviceInterface<class GestureProxy>       GestureInterface;
+typedef DeviceInterface<class GloveProxy>         GloveInterface;
 typedef DeviceInterface<class KeyboardMouseProxy> KeyboardMouseInterface;
-typedef DeviceInterface<class PositionProxy>    PositionInterface;
-typedef DeviceInterface<class CommandProxy>     CommandInterface;
-typedef DeviceInterface<class StringProxy>      StringInterface;
-typedef DeviceInterface<class RumbleProxy>      RumbleInterface;
+typedef DeviceInterface<class PositionProxy>      PositionInterface;
+typedef DeviceInterface<class RumbleProxy>        RumbleInterface;
+typedef DeviceInterface<class StringProxy>        StringInterface;
+//@}
 
 } // end namespace
 
-#endif
+
+#endif /* _GADGET_DEVICE_INTERFACE_H_ */
