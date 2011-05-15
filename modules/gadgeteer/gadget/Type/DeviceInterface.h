@@ -193,7 +193,7 @@ public:
       this->refresh();
 
       // Verify we found the correct proxy
-      vprASSERT(mTypeSpecificProxy == proxy && "Found incorrect proxy for dev interface");
+      vprASSERT(mTypeSpecificProxy.get() == proxy && "Found incorrect proxy for dev interface");
    }
 
    virtual void refresh()
