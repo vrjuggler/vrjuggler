@@ -1,6 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Mar-19-2010 patrick     Added support for Boost.Filesystem v3.
+May-15-2011 patrick     Fixed off-by-one errors in the VRPN driver.
+                        Submitted by Ryan Pavlik.
+Mar-19-2011 patrick     Added support for Boost.Filesystem v3.
                         Submitted by Doug McCorkle.
 Mar-06-2011 patrick     Fixed gadget::MouseEvent generation to include the
                         pressed (released) mouse button for X11 mouse button
