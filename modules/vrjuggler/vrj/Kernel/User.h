@@ -91,6 +91,17 @@ public:
       return mHead.getProxy();
    }
 
+   /**
+    * @since 3.0.1
+    */
+   void setHeadPosProxy(const gadget::PositionProxyPtr& headProxy)
+   {
+      if (headProxy.get() != NULL)
+      {
+         mHead.setProxy(headProxy.get());
+      }
+   }
+
    /** Returns the time stamp of the last head tracker update. */
    vpr::Interval getHeadUpdateTime()
    {
