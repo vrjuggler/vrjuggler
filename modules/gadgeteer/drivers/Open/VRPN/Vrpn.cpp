@@ -639,8 +639,8 @@ void Vrpn::trackerChange(const vrpn_TRACKERCB& t)
          << "Vrpn: tracker " << t.sensor
          << " out of declared range (" << mPositions.size() << ")" << std::endl
          << vprDEBUG_FLUSH;
-      mPositions.resize(t.sensor);
-      mQuats.resize(t.sensor);
+      mPositions.resize(t.sensor + 1);
+      mQuats.resize(t.sensor + 1);
    }
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
@@ -667,7 +667,7 @@ void Vrpn::buttonChange(const vrpn_BUTTONCB& b)
          << "Vrpn: button " << b.button
          << " out of declared range ("<<mButtons.size()<<")"<<std::endl
          << vprDEBUG_FLUSH;
-      mButtons.resize(b.button);
+      mButtons.resize(b.button + 1);
    }
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
@@ -687,7 +687,7 @@ void Vrpn::analogChange(const vrpn_ANALOGCB& b)
          << "Vrpn: analog channel size " << b.num_channel
          << " out of declared range (" << mAnalogs.size() << ")" << std::endl
          << vprDEBUG_FLUSH;
-      mAnalogs.resize(b.num_channel);
+      mAnalogs.resize(b.num_channel + 1);
    }
 
    for ( int i = 0; i < b.num_channel; ++i )
