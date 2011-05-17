@@ -161,6 +161,9 @@ void Analog::readObject(vpr::ObjectReader* reader)
          data_sample.push_back(temp_analog_data);
       }
 
+      // Emit the dataAdded signal.
+      mDataAdded(data_sample);
+
       mAnalogSamples.addSample(data_sample);
       reader->endTag();
    }

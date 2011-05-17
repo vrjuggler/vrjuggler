@@ -144,7 +144,7 @@ void String::readObject(vpr::ObjectReader* reader)
    vprASSERT(temp==MSG_DATA_STRING && "[Remote Input Manager]Not String Data");
    boost::ignore_unused_variable_warning(temp);
 
-   std::vector<StringData> data_sapmle;
+   std::vector<StringData> data_sample;
 
    unsigned int num_string_values;
    std::string value;
@@ -163,7 +163,7 @@ void String::readObject(vpr::ObjectReader* reader)
          num_string_values = reader->readUint16();
       reader->endAttribute();
 
-      data_sapmle.clear();
+      data_sample.clear();
       for (unsigned int j = 0; j < num_string_values; ++j)
       {
          reader->beginTag(tokens::StringValue);
@@ -176,9 +176,13 @@ void String::readObject(vpr::ObjectReader* reader)
          temp_string_data.setValue(value);
          temp_string_data.setTime(vpr::Interval(time_stamp + delta,
                                   vpr::Interval::Usec));
-         data_sapmle.push_back(temp_string_data);
+         data_sample.push_back(temp_string_data);
       }
-      mStringSamples.addSample(data_sapmle);
+
+      // Emit the dataAdded signal.
+      mDataAdded(data_sample);
+
+      mStringSamples.addSample(data_sample);
       reader->endTag();
    }
    mStringSamples.unlock();

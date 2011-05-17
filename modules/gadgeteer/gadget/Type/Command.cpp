@@ -177,6 +177,10 @@ void Command::readObject(vpr::ObjectReader* reader)
                                    vpr::Interval::Usec));
          data_sample.push_back(temp_command_data);
       }
+
+      // Emit the dataAdded signal.
+      mDataAdded(data_sample);
+
       mCommandSamples.addSample(data_sample);
       reader->endTag();
    }

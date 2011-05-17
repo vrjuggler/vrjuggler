@@ -276,6 +276,9 @@ void Position::readObject(vpr::ObjectReader* reader)
          data_sample.push_back(temp_pos_data);
       }
 
+      // Emit the dataAdded signal.
+      mDataAdded(data_sample);
+
       mPosSamples.addSample(data_sample);
       reader->endTag();
    }

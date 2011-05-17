@@ -43,8 +43,17 @@ namespace gadget
 namespace event
 {
 
+/**
+ * @since 2.1.16
+ */
 struct position_event_tag : base_event_tag {};
 
+/**
+ * A specialization of gadget::event::DataExaminer for use by
+ * gadget::NewPositionEventInterface.
+ *
+ * @since 2.1.16
+ */
 template<>
 class DataExaminer<position_event_tag, PositionProxy::raw_data_type>
    : public BaseExaminer<PositionProxy::raw_data_type>
@@ -169,9 +178,10 @@ protected:
       return base_generator;
    }
 
-   void onProxyChanged(const proxy_ptr_type& oldProxy,
-                       const proxy_ptr_type& newProxy)
+   void onProxyChanged(const proxy_ptr_type&, const proxy_ptr_type& newProxy)
    {
+      // If newProxy is NULL, then we don't have an event generator with any
+      // data examiners to update.
       if (newProxy)
       {
          generator_ptr_type generator(
