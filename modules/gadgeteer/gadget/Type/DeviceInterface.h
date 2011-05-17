@@ -223,8 +223,8 @@ public:
    }
 
 private:
-   proxy_ptr_type mTypeSpecificProxy;   /**< The proxy that is being wrapped */
    proxy_ptr_type mDummyProxy;
+   proxy_ptr_type mTypeSpecificProxy;   /**< The proxy that is being wrapped */
 };
 
 /**
