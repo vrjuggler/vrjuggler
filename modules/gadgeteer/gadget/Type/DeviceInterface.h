@@ -187,15 +187,15 @@ public:
    }
 
    /** Sets the proxy to an explicit proxy. */
-   void setProxy(const proxy_type* proxy)
+   void setProxy(const proxy_ptr_type& proxy)
    {
-      vprASSERT(NULL != proxy);
+      vprASSERT(NULL != proxy.get());
       mProxyName = proxy->getName();    // Set the name
       mNameSet = true;
       this->refresh();
 
       // Verify that we found the correct proxy.
-      vprASSERT(mTypeSpecificProxy.get() == proxy &&
+      vprASSERT(mTypeSpecificProxy == proxy &&
                 "Found incorrect proxy for dev interface");
    }
 

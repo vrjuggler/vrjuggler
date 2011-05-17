@@ -98,7 +98,7 @@ public:
    {
       if (headProxy.get() != NULL)
       {
-         mHead.setProxy(headProxy.get());
+         mHead.setProxy(headProxy);
       }
    }
 
