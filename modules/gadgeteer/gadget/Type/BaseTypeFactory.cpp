@@ -82,6 +82,7 @@ void BaseTypeFactory::hackLoadKnownDevices()
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_keyboard_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_string_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_command_t);
+   GADGET_REGISTER_BASE_TYPE_CREATOR(input_command_analog_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_glove_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_t);
    GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_position_t);
