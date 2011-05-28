@@ -206,11 +206,8 @@ private:
       if ( NULL == real_object )    // Failed cast
       {
          std::ostringstream msg_stream;
-         msg_stream << "Failed dynamic_cast for thread-specific object:\n"
-                    << "\tA pointer of type " << typeid(*object).name()
-                    << " was found,\n"
-                    << "\tbut we wanted it to be of type "
-                    << typeid(T).name();
+         msg_stream << "Failed dynamic_cast for thread-specific object to "
+                    << "derived (proxied) type " << typeid(T).name();
          throw vpr::BadCastException(msg_stream.str(), VPR_LOCATION);
       }
 
