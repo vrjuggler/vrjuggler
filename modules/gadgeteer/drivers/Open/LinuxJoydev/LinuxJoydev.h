@@ -28,12 +28,13 @@
 #define _GADGET_LINUX_JOYDEV_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
 #include <utility>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
+#include <boost/mpl/inherit.hpp>
+
+#include <gadget/Type/InputDevice.h>
+
 
 namespace gadget
 {
@@ -41,10 +42,11 @@ namespace gadget
 /**
  * Driver to Linux joystick input.
  *
- * @see gadget:;Digital, gadget:;Analog
+ * @see gadget::Digital
+ * @see gadget::Analog
  */
 class LinuxJoydev
-   : public input_digital_analog_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog>::type>
 {
 public:
 

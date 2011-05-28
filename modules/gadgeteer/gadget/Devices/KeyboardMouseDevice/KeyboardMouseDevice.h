@@ -30,14 +30,11 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vpr/Sync/Mutex.h>
-
-#include <gadget/Type/Input.h>
-#include <gadget/Type/KeyboardMouse.h>
-#include <gadget/Type/InputMixer.h>
+#include <vpr/Util/Singleton.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
 
-#include <vpr/Util/Singleton.h>
+#include <gadget/Type/InputDevice.h>
 
 
 namespace gadget
@@ -47,7 +44,8 @@ namespace gadget
  *
  * Base class for keyboard/mouse input devices.
  */
-class KeyboardMouseDevice : public InputMixer<Input,KeyboardMouse>
+class KeyboardMouseDevice
+   : public InputDevice<KeyboardMouse>
 {
 public:  // --- Internal helper class ----- //
    /**

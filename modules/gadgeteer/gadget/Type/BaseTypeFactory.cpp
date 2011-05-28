@@ -25,74 +25,105 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <typeinfo>
 
+#include <boost/mpl/inherit.hpp>
+
+#include <gadget/Type/AllBaseTypes.h>
+#include <gadget/Type/InputDevice.h>
 #include <gadget/Type/BaseTypeFactory.h>
 
-// Platform-independent devices.
-#include <gadget/Type/Input.h>
-#include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Glove.h>
-#include <gadget/Type/Position.h>
-#include <gadget/Type/KeyboardMouse.h>
-#include <gadget/Type/Command.h>
-#include <gadget/Type/String.h>
-#include <gadget/Type/InputMixer.h>
-#include <gadget/Util/Debug.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Rumble.h>
+
+namespace
+{
+
+template<typename Base>
+class PlaceholderDevice
+   : public gadget::InputDevice<Base>
+{
+private:
+   PlaceholderDevice()
+   {
+      /* Do nothing. */ ;
+   }
+
+   /** @name gadget::Input Interface Implementation */
+   //@{
+   virtual bool sample()
+   {
+      return false;
+   }
+
+   virtual bool startSampling()
+   {
+      return false;
+   }
+
+   virtual bool stopSampling()
+   {
+      return false;
+   }
+
+   virtual void updateData()
+   {
+      /* Do nothing. */ ;
+   }
+   //@}
+
+public:
+   static gadget::InputPtr create()
+   {
+      return gadget::InputPtr(new PlaceholderDevice);
+   }
+};
+
+template<typename T>
+void registerBaseType()
+{
+   std::cout << PlaceholderDevice<T>::create()->getInputTypeName()
+             << std::endl;
+   gadget::BaseTypeFactory::instance()->registerCreator(
+      PlaceholderDevice<T>::create()->getInputTypeName(),
+      PlaceholderDevice<T>::create
+   );
+}
+
+}
 
 namespace gadget
 {
 
-/**
- * Registers a creator for the BaseType base class.
- *
- * @pre Requires that the method std::string getInputTypeName() be defined for
- *      class BaseType.
- *
- * Ex: GADGET_REGISTER_BASE_TYPE_CREATOR(ConnectionAck)
- */
-#define GADGET_REGISTER_BASE_TYPE_CREATOR(BaseType)                     \
-BaseTypeFactory::instance()->                                           \
-   registerCreator(                                                     \
-      BaseType::MixedPlaceholderType::create()->getInputTypeName(),     \
-      BaseType::MixedPlaceholderType::create                            \
-   );
-
-vprSingletonImpWithInitFunc( BaseTypeFactory, hackLoadKnownDevices );
+vprSingletonImpWithInitFunc(BaseTypeFactory, registerBaseDeviceTypes);
 
 /**
- * Registers all the devices that I know about.
- * @note This should really be moved to dynamic library loading code.
+ * Registers all the input device base types.
  */
-void BaseTypeFactory::hackLoadKnownDevices()
+void BaseTypeFactory::registerBaseDeviceTypes()
 {
-   // NOTE: These will all given unused variable errors in compiling.
-   // That is okay, because the don't actually have to do anything.
-   // They just register themselves in their constructor.
-
-   // Platform-independent devices.
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_analog_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_position_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_keyboard_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_string_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_command_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_glove_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_position_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_analog_position_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_glove_digital_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_glove_digital_analog_position_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_position_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_position);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_digital);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_analog);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(siminput_input_digital_glove_t);
-   GADGET_REGISTER_BASE_TYPE_CREATOR(input_digital_analog_rumble_t);
+   // While it would be nice to generate this registration code at compile
+   // time, there are 255 k-combinations of the members of
+   // gadget::all_base_types. That is far more than the few that we actually
+   // need.
+   registerBaseType<Digital>();
+   registerBaseType<Analog>();
+   registerBaseType<Position>();
+   registerBaseType<KeyboardMouse>();
+   registerBaseType<String>();
+   registerBaseType<Command>();
+   registerBaseType<Glove>();
+   registerBaseType<boost::mpl::inherit<Command, Analog>::type>();
+   registerBaseType<boost::mpl::inherit<Digital, Analog>::type>();
+   registerBaseType<boost::mpl::inherit<Digital, Position>::type>();
+   registerBaseType<boost::mpl::inherit<Analog, Position>::type>();
+   registerBaseType<boost::mpl::inherit<Glove, Digital>::type>();
+   registerBaseType<
+      boost::mpl::inherit<Glove, Digital, Analog, Position>::type
+   >();
+   registerBaseType<boost::mpl::inherit<Digital, Analog, Position>::type>();
+   registerBaseType<boost::mpl::inherit<Digital, Analog, Rumble>::type>();
+   registerBaseType<boost::mpl::inherit<SimInput, Position>::type>();
+   registerBaseType<boost::mpl::inherit<SimInput, Digital>::type>();
+   registerBaseType<boost::mpl::inherit<SimInput, Analog>::type>();
+   registerBaseType<boost::mpl::inherit<SimInput, Digital, Glove>::type>();
 }
 
 } // End of gadget namespace

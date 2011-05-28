@@ -32,14 +32,15 @@
 #define _GADGET_INTERSENSE_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
+#include <boost/mpl/inherit.hpp>
+
 #include <vpr/Thread/Thread.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Position.h>
-#include <drivers/Intersense/IS900/IntersenseStandalone.h>
+
+#include <gadget/Type/InputDevice.h>
+
+#include "IntersenseStandalone.h"
 
 // maximum number of digital and analog buttons possible on a IS interface
 // box.
@@ -104,7 +105,7 @@ struct ISStationConfig
  */
 //class Intersense : public Input, public Position, public Digital, public Analog
 class Intersense
-   : public input_digital_analog_position_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog, Position>::type>
 {
 protected:
    struct IsenseData

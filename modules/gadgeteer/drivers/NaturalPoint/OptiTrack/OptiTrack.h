@@ -30,10 +30,11 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <drivers/NaturalPoint/OptiTrack/OptiTrackStandalone.h>
+
+#include <gadget/Type/InputDevice.h>
+
+#include "OptiTrackStandalone.h"
+
 
 namespace gadget
 {
@@ -46,7 +47,7 @@ namespace gadget
  * @see Position
  */
 class OptiTrack
-   : public input_position_t
+   : public InputDevice<Position>
 {
 public:
    OptiTrack();

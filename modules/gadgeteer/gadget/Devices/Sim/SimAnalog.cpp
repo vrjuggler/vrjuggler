@@ -24,12 +24,24 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/Devices/Sim/SimAnalog.h>
-#include <jccl/Config/ConfigElement.h>
+#include <gadget/gadgetConfig.h>
+
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+
 #include <gmtl/Math.h>
+
+#include <jccl/Config/ConfigElement.h>
+
+#include <gadget/Devices/Sim/SimAnalog.h>
+
 
 namespace gadget
 {
+
+BOOST_STATIC_ASSERT((boost::is_base_of<Input, SimAnalog>::value));
+BOOST_STATIC_ASSERT((boost::is_base_of<SimInput, SimAnalog>::value));
+BOOST_STATIC_ASSERT((boost::is_base_of<Analog, SimAnalog>::value));
 
 /** Default Constructor */
 SimAnalog::SimAnalog()

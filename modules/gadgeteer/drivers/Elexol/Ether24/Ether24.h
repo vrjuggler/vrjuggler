@@ -30,10 +30,10 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <vpr/Thread/Thread.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <drivers/Elexol/Ether24/Ether24Standalone.h>
+
+#include <gadget/Type/InputDevice.h>
+
+#include "Ether24Standalone.h"
 
 
 namespace gadget
@@ -43,7 +43,7 @@ namespace gadget
  * @see Digital
  */
 class Ether24
-   : public input_digital_t
+   : public InputDevice<Digital>
 {
 public:
    Ether24();

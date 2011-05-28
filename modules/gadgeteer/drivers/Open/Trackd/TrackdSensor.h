@@ -29,10 +29,9 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <vector>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <drivers/Open/Trackd/TrackdSensorStandalone.h>
+#include <gadget/Type/InputDevice.h>
+
+#include "TrackdSensorStandalone.h"
 
 
 namespace gadget
@@ -51,7 +50,7 @@ namespace gadget
  */
 //class TrackdSensor : public Input, public Position
 class TrackdSensor
-   : public input_position_t
+   : public InputDevice<Position>
 {
 public:
 

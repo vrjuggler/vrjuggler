@@ -846,6 +846,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\AllBaseTypes.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Analog.h"
 				>
 			</File>
@@ -1166,11 +1170,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputBaseTypes.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputDevice.h"
 				>
 			</File>
 			<File
@@ -1191,10 +1195,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\InputManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputMixer.h"
 				>
 			</File>
 			<File

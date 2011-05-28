@@ -29,14 +29,14 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <boost/mpl/inherit.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/vprDomain.h>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <drivers/Ascension/Wanda/WandaStandalone.h>
+#include <gadget/Type/InputDevice.h>
+
+#include "WandaStandalone.h"
 
 
 namespace gadget
@@ -46,7 +46,7 @@ namespace gadget
  * Gadgeteer wrapper around wanda::WandaStandalone driver.
  */
 class Wanda
-   : public input_digital_analog_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog>::type>
 {
 public:
    Wanda(const char* portName = "/dev/ttyS0");

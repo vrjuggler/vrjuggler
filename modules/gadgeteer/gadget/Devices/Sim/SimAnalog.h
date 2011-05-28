@@ -29,13 +29,13 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+
 #include <vector>
+#include <boost/mpl/inherit.hpp>
 
 #include <jccl/Config/ConfigElementPtr.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Devices/Sim/SimInput.h>
+
+#include <gadget/Type/InputDevice.h>
 
 
 namespace gadget
@@ -50,7 +50,7 @@ namespace gadget
  * This class should not be used directly by the user.
  */
 class SimAnalog
-   : public siminput_input_analog
+   : public InputDevice<boost::mpl::inherit<SimInput, Analog>::type>
 {
 public:
    SimAnalog();
@@ -98,12 +98,17 @@ public:
    }
 
 private:
-   std::vector<AnalogData>    mAnaData;      /**< The analog data that we have */
-   std::vector<KeyModPair>    mSimKeysUp;    /**< The keys to press for moving analog up */
-   std::vector<KeyModPair>    mSimKeysDown;  /**< The keys to press for moving analog up */
-   float                      mAnaStep;      /**< The analog step size */
-   float                      mInitialValue; /**< The inital value for all inputs */
-   bool                       mAutoReturn;   /**< Return to initial value when no key is pressed */
+   std::vector<AnalogData> mAnaData;    /**< The analog data that we have */
+
+   /** The keys to press for moving analog up */
+   std::vector<KeyModPair> mSimKeysUp;
+
+   /** The keys to press for moving analog up */
+   std::vector<KeyModPair> mSimKeysDown;
+
+   float mAnaStep;      /**< The analog step size */
+   float mInitialValue; /**< The inital value for all inputs */
+   bool  mAutoReturn;   /**< Return to initial value when no key is pressed */
 };
 
 } // End of gadget namespace

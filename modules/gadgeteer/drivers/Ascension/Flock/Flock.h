@@ -28,11 +28,12 @@
 #define _GADGET_ASCENSION_FLOCK_OF_BIRDS_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vpr/Thread/Thread.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <drivers/Ascension/Flock/FlockStandalone.h>
+
+#include <gadget/Type/InputDevice.h>
+
+#include "FlockStandalone.h"
 
 
 namespace gadget
@@ -61,7 +62,7 @@ namespace gadget
  */
 //class Flock : public Input, public Position
 class Flock
-   : public input_position_t
+   : public InputDevice<Position>
 {
 public:
    /**

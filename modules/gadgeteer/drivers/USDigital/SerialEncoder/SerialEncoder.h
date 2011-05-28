@@ -31,12 +31,9 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Guard.h>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <gadget/Type/DeviceConstructor.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <gadget/Type/InputDevice.h>
 #include <gadget/Type/PositionInterface.h>
 
 #include "SerialEncoderStandalone.h"
@@ -44,7 +41,7 @@
 
 
 class SerialEncoder
-   : public gadget::input_position_t
+   : public gadget::InputDevice<gadget::Position>
 {
 public:
    SerialEncoder();

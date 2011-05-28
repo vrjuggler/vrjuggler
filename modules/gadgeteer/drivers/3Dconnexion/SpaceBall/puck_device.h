@@ -34,12 +34,10 @@
 # include <termios.h> 
 #endif
 
+#include <boost/mpl/inherit.hpp>
+
 #include <gadget/gadgetParam.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/InputManager.h>
+#include <gadget/Type/InputDevice.h>
 
 /*
   Note:  this code needs read (or read/write) access to the serial/usb ports
@@ -809,7 +807,10 @@ class spaceBall2003B : public spaceBall4000FLX
 //----------------------------------------------------------------------------
 /** A driver for puck-like devices
 */
-class PuckDevice : public gadget::input_digital_analog_t
+class PuckDevice
+   : public gadget::InputDevice<
+               boost::mpl::inherit<gadget::Digital, gadget::Analog>::type
+            >
 {
   public:
     /// constructor

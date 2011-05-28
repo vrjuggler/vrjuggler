@@ -29,11 +29,13 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Type/Position.h>
+
+#include <boost/mpl/inherit.hpp>
+
 #include <gmtl/Vec.h>
+
+#include <gadget/Type/InputDevice.h>
+
 
 namespace gadget
 {
@@ -45,7 +47,7 @@ namespace gadget
  * This class should not be accessed directly by the user.
  */
 class SimPosition
-   : public siminput_input_position
+   : public InputDevice<boost::mpl::inherit<SimInput, Position>::type>
 {
 public:
    /** Constants for the key array. */
@@ -139,7 +141,7 @@ private:
     * Checks if movement is allowed.
     * @note It is not allowed if it hits a simulated wall, etc.
     */
-   bool isTransAllowed(gmtl::Vec3f trans);
+   bool isTransAllowed(const gmtl::Vec3f& trans);
 
 
 private:
@@ -153,5 +155,6 @@ private:
 };
 
 } // End of gadget namespace
+
 
 #endif

@@ -28,12 +28,14 @@
 #define _GADGET_SIM_SETABLE_POSITION_H
 
 #include <gadget/gadgetConfig.h>
+
 #include <vector>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <gadget/Type/PositionInterface.h>
+#include <boost/mpl/inherit.hpp>
+
 #include <jccl/Config/ConfigElementPtr.h>
+
+#include <gadget/Type/InputDevice.h>
+#include <gadget/Type/PositionInterface.h>
 
 
 namespace gadget
@@ -51,7 +53,7 @@ namespace gadget
  */
 //class SimSetablePosition : public Input, public Position
 class GADGET_CLASS_API SimSetablePosition
-   : public input_position_t
+   : public InputDevice<boost::mpl::inherit<Position>::type>
 {
 public:
    SimSetablePosition()

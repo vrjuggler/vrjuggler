@@ -45,11 +45,11 @@
 #define _LOGICLASS_H_
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <gmtl/Vec.h>
+
 #include <vector>
+#include <gmtl/Vec.h>
+
+#include <gadget/Type/InputDevice.h>
 
 //#include <Inventor/SbLinear.h> // For the vec classes
 
@@ -85,7 +85,7 @@ namespace gadget
 */
 //class ThreeDMouse : public gadget::Input, public gadget::Position
 class ThreeDMouse
-   : public input_position_t
+   : public InputDevice<Position>
 {
 public:
    /** Default constructor. */

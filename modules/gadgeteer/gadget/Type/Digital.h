@@ -51,7 +51,7 @@ const unsigned short MSG_DATA_DIGITAL = 420;
 /** \class Digital Digital.h gadget/Type/Digital.h
  *
  * Digital is the abstract base class from which devices with digital data
- * derive (through gadget::InputMixer). This is in addition to gadget::Input.
+ * derive (through gadget::InputDevice). This is in addition to gadget::Input.
  * gadget::Input provides pure virtual function constraints in the following
  * functions: startSampling(), stopSampling(), sample(), and updateData().
  *
@@ -60,7 +60,7 @@ const unsigned short MSG_DATA_DIGITAL = 420;
  * gadget::Position and gadget::Analog.
  *
  * @see Input
- * @see InputMixer
+ * @see InputDevice
  */
 class GADGET_CLASS_API Digital
    : public vpr::SerializableObject

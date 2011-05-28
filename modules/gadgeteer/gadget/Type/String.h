@@ -52,7 +52,7 @@ const unsigned short MSG_DATA_STRING = 430;
  *
  * gadget::String is the abstract base class for devices that return
  * spoken commends.  Drivers for all such devices must derive from this
- * class (through gadget::InputMixer).  This is in addition to
+ * class (through gadget::InputDevice).  This is in addition to
  * gadget::Input.  gadget::Input provides pure virtual function constraints
  * in the following functions: startSampling(), stopSampling(), sample(),
  * and updateData().
@@ -68,7 +68,8 @@ const unsigned short MSG_DATA_STRING = 430;
  *       interface may change in a future release of Gadgeteer (such as
  *       Version 1.2).
  *
- * @see Input, InputMixer
+ * @see Input
+ * @see InputDevice
  */
 class GADGET_CLASS_API String
    : public vpr::SerializableObject

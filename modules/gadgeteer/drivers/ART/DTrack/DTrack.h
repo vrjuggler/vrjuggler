@@ -30,11 +30,10 @@
 #define _GADGET_DTRACK_H_
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Position.h>
+
+#include <boost/mpl/inherit.hpp>
+
+#include <gadget/Type/InputDevice.h>
 
 #include "DTrackStandalone.h"
 
@@ -43,7 +42,7 @@ namespace gadget
 {
 
 class DTrack
-   : public input_digital_analog_position_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog, Position>::type>
 {
 public:
 	DTrack();

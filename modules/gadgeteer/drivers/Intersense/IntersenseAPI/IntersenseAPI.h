@@ -28,14 +28,15 @@
 #define _GADGET_INTERSENSE_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
+#include <boost/mpl/inherit.hpp>
+
 #include <vpr/Thread/Thread.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Position.h>
-#include <drivers/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
+
+#include <gadget/Type/InputDevice.h>
+
+#include "IntersenseAPIStandalone.h"
 
 
 namespace gadget
@@ -68,7 +69,7 @@ namespace gadget
  * @see Position
  */
 class IntersenseAPI
-   : public input_digital_analog_position_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog, Position>::type>
 {
 public:
    IntersenseAPI();

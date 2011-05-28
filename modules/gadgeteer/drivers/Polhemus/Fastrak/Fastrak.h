@@ -37,18 +37,16 @@
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
+#include <gadget/Type/InputDevice.h>
 
-#include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
+#include "FastrakStandalone.h"
 
 
 namespace gadget
 {
 
 class Fastrak
-   : public input_position_t
+   : public InputDevice<Position>
 {
 public:
    /**

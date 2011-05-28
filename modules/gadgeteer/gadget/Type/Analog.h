@@ -51,7 +51,7 @@ const unsigned short MSG_DATA_ANALOG = 421;
 /** \class Analog Analog.h gadget/Type/Analog.h
  *
  * Analog is the abstract base class from which devices returning analog data
- * must derive (through the use of gadget::InputMixer).  This is in addition
+ * must derive (through the use of gadget::InputDevice).  This is in addition
  * to gadget::Input.  gadget::Input provides pure virtual function constraints
  * in the following functions: startSampling(), stopSampling(), sample(), and
  * updateData().
@@ -69,7 +69,8 @@ const unsigned short MSG_DATA_ANALOG = 421;
  *       gadget::AnalogProxy::updateData(). Analog device driver authors no
  *       longer need to perform data normalization.
  *
- * @see Input, InputMixer
+ * @see Input
+ * @see InputDevice
  */
 class GADGET_CLASS_API Analog
    : public vpr::SerializableObject

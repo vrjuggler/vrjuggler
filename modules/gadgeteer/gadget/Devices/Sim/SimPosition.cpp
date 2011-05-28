@@ -26,6 +26,10 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Devices/Sim/SimPosition.h>
 
@@ -37,10 +41,13 @@
 #include <gmtl/Generate.h>
 #include <gmtl/EulerAngle.h>
 
-#include <boost/concept_check.hpp>
 
 namespace gadget
 {
+
+BOOST_STATIC_ASSERT((boost::is_base_of<Input, SimPosition>::value));
+BOOST_STATIC_ASSERT((boost::is_base_of<SimInput, SimPosition>::value));
+BOOST_STATIC_ASSERT((boost::is_base_of<Position, SimPosition>::value));
 
 std::string SimPosition::getElementType()
 {
@@ -49,6 +56,9 @@ std::string SimPosition::getElementType()
 
 bool SimPosition::config(jccl::ConfigElementPtr element)
 {
+   Input::config(element);
+   Position::config(element);
+   SimInput::config(element);
    if (! (Input::config(element) && Position::config(element) &&
           SimInput::config(element)) )
    {
@@ -295,7 +305,7 @@ void SimPosition::rotRollCCW(const float amt)
 
 // Checks if movement is allowed.
 // NOTE: It is not allowed if it hits a simulated wall, etc.
-bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
+bool SimPosition::isTransAllowed(const gmtl::Vec3f& trans)
 {
    boost::ignore_unused_variable_warning(trans);
    // check if the movement is goign to intersect with any of the surface displays

@@ -29,21 +29,20 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 
 #include <vpr/vpr.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/InputMixer.h>
+
+#include <gadget/Type/InputDevice.h>
 
 
 using namespace gadget;
 
 /** The device driver class. */
-class ButtonDevice : public InputMixer<Input, Digital>
+class ButtonDevice : public InputDevice<Digital>
 {
 public:
    ButtonDevice()

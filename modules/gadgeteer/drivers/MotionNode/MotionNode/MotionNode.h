@@ -21,9 +21,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
+#include <gadget/Type/InputDevice.h>
 
 /**
   If you prefer to link to the DLL versions
@@ -44,7 +42,9 @@ namespace gadget {
   Gadgeteer driver for all MotionNode devices. Depends
   on the MotionNode Software Development Kit (SDK).
 */
-class MotionNode : public input_position_t {
+class MotionNode
+   : public InputDevice<Position>
+{
 public:
   typedef ::MotionNode::SDK::Device::Sampler<> sampler_type;
 

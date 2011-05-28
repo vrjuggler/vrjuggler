@@ -28,14 +28,12 @@
 #define _GADGET_SIM_DIGITALGLOVE_H
 
 #include <gadget/gadgetConfig.h>
+
 #include <vector>
+#include <boost/mpl/inherit.hpp>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Glove.h>
+#include <gadget/Type/InputDevice.h>
 
-#include <gadget/Devices/Sim/SimInput.h>
 
 namespace gadget
 {
@@ -52,7 +50,7 @@ namespace gadget
  * This class should not be used directly by the user.
  */
 class SimDigitalGlove
-   : public siminput_input_digital_glove_t
+   : public InputDevice<boost::mpl::inherit<SimInput, Digital, Glove>::type>
 {
 public:
    /** Default constructor. */

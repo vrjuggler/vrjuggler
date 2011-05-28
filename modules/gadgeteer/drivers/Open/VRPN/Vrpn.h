@@ -44,13 +44,10 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <vector>
+#include <boost/mpl/inherit.hpp>
 
 #include <vpr/Sync/Mutex.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Position.h>
+#include <gadget/Type/InputDevice.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -78,10 +75,12 @@ namespace gadget
  *  example, if you have recievers 1,2, and 4 with transmitter on 3, then
  *  you can access the data, in order, as 0, 1, 2.
  *
- * @see gadget::Digital, gadget::Analog, gadget::Position
+ * @see gadget::Digital
+ * @see gadget::Analog
+ * @see gadget::Position
  */
 class Vrpn
-   : public input_digital_analog_position_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog, Position>::type>
 {
 public:
 

@@ -1,5 +1,12 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-05-28 patrick     Replaced gadget::InputMixer<T1,T2> with
+                       gadget::InputDevice<T>. The template parameter is
+                       either one of the device base types (gadget::Digital,
+                       gadget::Analog, etc.) or a combination of multiple
+                       types produced using
+                       boost::mpl::inherit<T1,T2,...,Tn>::type.
+                       NEW VERSION: 2.1.18
 2011-05-14 patrick     gadget::TypedProxy<T> now emits a signal
                        (proxyRefreshed) whenever its refresh() method is
                        invoked.

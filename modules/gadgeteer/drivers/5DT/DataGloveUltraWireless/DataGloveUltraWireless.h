@@ -29,16 +29,15 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Command.h>
-
-#include <drivers/5DT/DataGloveUltraWireless/DataGloveUltraWirelessStandalone.h>
+#include <vector>
+#include <boost/mpl/inherit.hpp>
 
 #include <vpr/Thread/Thread.h>
 
-#include <vector>
+#include <gadget/Type/InputDevice.h>
+
+#include "DataGloveUltraWirelessStandalone.h"
+
 
 namespace gadget
 {
@@ -52,7 +51,8 @@ namespace gadget
  * @date 06-15-08
  */
 
-class DataGloveUltraWireless : public input_command_analog_t
+class DataGloveUltraWireless
+   : public InputDevice<boost::mpl::inherit<Command, Analog>::type>
 {
 public:
    /** Construct */

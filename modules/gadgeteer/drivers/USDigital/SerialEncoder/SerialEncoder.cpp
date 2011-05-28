@@ -30,6 +30,7 @@
 #include <gmtl/Generate.h>
 #include <gadget/gadgetParam.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
+#include <gadget/Type/DeviceConstructor.h>
 
 #include "SerialEncoder.h"
 

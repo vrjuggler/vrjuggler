@@ -28,12 +28,12 @@
 #define _GADGET_TRACKD_CONTROLLER_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <drivers/Open/Trackd/TrackdControllerStandalone.h>
+#include <boost/mpl/inherit.hpp>
+
+#include <gadget/Type/InputDevice.h>
+#include "TrackdControllerStandalone.h"
 
 
 namespace gadget
@@ -52,7 +52,7 @@ namespace gadget
  */
 //class TrackdController : public Input, public Digital, public Analog
 class TrackdController
-   : public input_digital_analog_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog>::type>
 {
 public:
 

@@ -28,16 +28,14 @@
 #define _GADGET_P5_GLOVE_WRAPPER_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <string>
 #include <vector>
+#include <boost/mpl/inherit.hpp>
 
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Glove.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/InputMixer.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <drivers/EssentialReality/P5Glove/P5GloveStandalone.h>
+#include <gadget/Type/InputDevice.h>
+
+#include "P5GloveStandalone.h"
 
 
 namespace gadget
@@ -47,7 +45,9 @@ namespace gadget
  * Software interface to EssentialReality P5glove hardware.
  */
 class P5GloveWrapper
-   : public input_glove_digital_analog_position_t
+   : public InputDevice<
+               boost::mpl::inherit<Glove, Digital, Analog, Position>::type
+            >
 {
 public:
    /** Constructor. */

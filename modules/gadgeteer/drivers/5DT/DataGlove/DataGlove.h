@@ -31,9 +31,7 @@
 #include <string>
 #include <vector>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Analog.h>
+#include <gadget/Type/InputDevice.h>
 #include <drivers/5DT/DataGlove/DataGloveStandalone.h>
 
 namespace gadget
@@ -52,7 +50,8 @@ namespace gadget
  */
 
 //class DataGlove : virtual public Input, public Glove, public Analog
-class DataGlove : public input_analog_t
+class DataGlove
+   : public InputDevice<Analog>
 {
 public:
    /** Construct */

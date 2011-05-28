@@ -28,12 +28,14 @@
 #define _GADGET_IBOX_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <drivers/Immersion/IBox/IBoxStandalone.h>
+#include <boost/mpl/inherit.hpp>
+
+#include <gadget/Type/InputDevice.h>
+
+#include "IBoxStandalone.h"
+
 
 namespace gadget
 {
@@ -45,7 +47,7 @@ namespace gadget
  * therefore must inherit from both Digital and Analog.
  */
 class IBox
-   : public input_digital_analog_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog>::type>
 {
 public:
    /** Construction/Destruction */

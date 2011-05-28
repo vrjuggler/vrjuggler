@@ -61,7 +61,7 @@ const unsigned short MSG_DATA_POS = 422;
 /** \class Position Position.h gadget/Type/Position.h
  *
  * Position is the abstract base class from which devices with positional
- * (translation and/or rotation) data derive (through gadget::InputMixer).
+ * (translation and/or rotation) data derive (through gadget::InputDevice).
  * This is in addition to gadget::Input.  gadget::Input provides pure virtual
  * function constraints in the following functions: startSampling(),
  * stopSampling(), sample(), and updateData().
@@ -70,7 +70,8 @@ const unsigned short MSG_DATA_POS = 422;
  * received positional data.  This is similar to the additions made by
  * gadget::Analog and gadget::Digital.
  *
- * @see Input, InputMixer
+ * @see Input
+ * @see InputDevice
  */
 class GADGET_CLASS_API Position
    : public vpr::SerializableObject

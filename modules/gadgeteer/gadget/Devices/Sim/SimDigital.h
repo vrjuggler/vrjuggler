@@ -29,11 +29,12 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+
 #include <vector>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Devices/Sim/SimInput.h>
+#include <boost/mpl/inherit.hpp>
+
+#include <gadget/Type/InputDevice.h>
+
 
 namespace gadget
 {
@@ -51,7 +52,7 @@ namespace gadget
  */
 //class SimDigital : public Input, public Digital, public SimInput
 class SimDigital
-   : public siminput_input_digital
+   : public InputDevice<boost::mpl::inherit<SimInput, Digital>::type>
 {
 public:
    SimDigital();

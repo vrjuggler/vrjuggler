@@ -36,11 +36,9 @@
 #include <string>
 
 #include <vpr/Thread/Thread.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/String.h>
+#include <gadget/Type/InputDevice.h>
 
-#include <drivers/Microsoft/SpeechRecognition/MSFTSpeechServerManager.h>
+#include "MSFTSpeechServerManager.h"
 
 namespace gadget
 {
@@ -51,7 +49,7 @@ namespace gadget
 {
 
 class MSFTSpeechRecogString
-   : public input_string_t
+   : public InputDeviceString>
 {
 public:
    MSFTSpeechRecogString();

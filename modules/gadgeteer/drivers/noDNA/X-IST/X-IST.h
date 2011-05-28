@@ -31,10 +31,9 @@
 #include <string>
 #include <vector>
 
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <drivers/noDNA/X-IST/X-ISTStandalone.h>
+#include <gadget/Type/InputDevice.h>
+
+#include "X-ISTStandalone.h"
 
 
 namespace gadget
@@ -43,7 +42,8 @@ namespace gadget
 /**
  * Software interface to noDNA X-IST hardware.
  */
-class X_IST : public input_analog_t
+class X_IST
+   : public InputDevice<Analog>
 {
    int mGloveNumber;
 public:

@@ -31,12 +31,11 @@
 
 #include <vector>
 #include <utility>
+#include <boost/mpl/inherit.hpp>
 
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <drivers/Microsoft/DirectXJoystick/DirectXJoystickStandalone.h>
+#include <gadget/Type/InputDevice.h>
+
+#include "DirectXJoystickStandalone.h"
 
 
 namespace gadget
@@ -48,7 +47,7 @@ namespace gadget
  * @see Digital, Analog
  */
 class DirectXJoystick
-   : public input_digital_analog_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog>::type>
 {
 public:
 

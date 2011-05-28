@@ -28,13 +28,12 @@
 #define _SDL_JOYSTICK_H_
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Type/InputBaseTypes.h>
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Rumble.h>
-#include <gadget/InputManager.h>
+
+#include <boost/mpl/inherit.hpp>
+
 #include <vpr/Thread/Thread.h>
+
+#include <gadget/Type/InputDevice.h>
 
 #include <SDL/SDL.h>
 
@@ -52,7 +51,7 @@ namespace gadget
 {
 
 class SdlJoystick
-   : public gadget::input_digital_analog_rumble_t
+   : public InputDevice<boost::mpl::inherit<Digital, Analog, Rumble>::type>
 {
 public:
    SdlJoystick();

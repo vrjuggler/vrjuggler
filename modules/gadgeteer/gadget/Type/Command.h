@@ -53,7 +53,7 @@ const unsigned short MSG_DATA_COMMAND = 423;
  *
  * Command is the abstract base class for devices that generate
  * commands into integer-identified commands.  Drivers for all such
- * devices must derive from this class (through gadget::InputMixer).  This
+ * devices must derive from this class (through gadget::InputDevice).  This
  * is in addition to gadget::Input.  gadget::Input provides pure virtual
  * function constraints in the following functions: startSampling(),
  * stopSampling(), sample(), and updateData().
@@ -62,7 +62,8 @@ const unsigned short MSG_DATA_COMMAND = 423;
  * received commands.  This is similar to the additions made by
  * gadget::Position and gadget::Analog.
  *
- * @see Input, InputMixer
+ * @see Input
+ * @see InputDevice
  */
 class GADGET_CLASS_API Command
    : public vpr::SerializableObject
