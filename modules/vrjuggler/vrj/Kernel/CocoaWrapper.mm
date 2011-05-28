@@ -240,7 +240,7 @@ void CocoaWrapper::threadEnded()
       // creating threads of its own, but I am not sure.  -PH 2/13/2008
       NSAutoreleasePool* pool = *mThreadPool;
       [pool release];
-      *mThreadPool = nil;
+      //*mThreadPool = nil;
    }
    catch (vpr::BadCastException& ex)
    {
