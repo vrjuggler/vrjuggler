@@ -32,7 +32,7 @@
 #include <vector>
 #include <boost/mpl/inherit.hpp>
 
-#include <gadget/Type/InputDevice.h>
+#include <gadget/Devices/Sim/SimInputDevice.h>
 
 
 namespace gadget
@@ -50,7 +50,7 @@ namespace gadget
  * This class should not be used directly by the user.
  */
 class SimDigitalGlove
-   : public InputDevice<boost::mpl::inherit<SimInput, Digital, Glove>::type>
+   : public SimInputDevice<boost::mpl::inherit<Digital, Glove>::type>
 {
 public:
    /** Default constructor. */

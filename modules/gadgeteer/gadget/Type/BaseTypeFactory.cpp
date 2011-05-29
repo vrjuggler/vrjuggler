@@ -28,8 +28,8 @@
 
 #include <boost/mpl/inherit.hpp>
 
-#include <gadget/Type/AllBaseTypes.h>
 #include <gadget/Type/InputDevice.h>
+#include <gadget/Devices/Sim/SimInputDevice.h>
 #include <gadget/Type/BaseTypeFactory.h>
 
 
@@ -38,7 +38,7 @@ namespace
 
 template<typename Base>
 class PlaceholderDevice
-   : public gadget::InputDevice<Base>
+   : public Base
 {
 private:
    PlaceholderDevice()
@@ -76,14 +76,15 @@ public:
    }
 };
 
-template<typename T>
+template<template<class> class DeviceType, typename T>
 void registerBaseType()
 {
-   std::cout << PlaceholderDevice<T>::create()->getInputTypeName()
+   typedef DeviceType<T> base_type;
+   std::cout << PlaceholderDevice<base_type>::create()->getInputTypeName()
              << std::endl;
    gadget::BaseTypeFactory::instance()->registerCreator(
-      PlaceholderDevice<T>::create()->getInputTypeName(),
-      PlaceholderDevice<T>::create
+      PlaceholderDevice<base_type>::create()->getInputTypeName(),
+      PlaceholderDevice<base_type>::create
    );
 }
 
@@ -103,27 +104,43 @@ void BaseTypeFactory::registerBaseDeviceTypes()
    // time, there are 255 k-combinations of the members of
    // gadget::all_base_types. That is far more than the few that we actually
    // need.
-   registerBaseType<Digital>();
-   registerBaseType<Analog>();
-   registerBaseType<Position>();
-   registerBaseType<KeyboardMouse>();
-   registerBaseType<String>();
-   registerBaseType<Command>();
-   registerBaseType<Glove>();
-   registerBaseType<boost::mpl::inherit<Command, Analog>::type>();
-   registerBaseType<boost::mpl::inherit<Digital, Analog>::type>();
-   registerBaseType<boost::mpl::inherit<Digital, Position>::type>();
-   registerBaseType<boost::mpl::inherit<Analog, Position>::type>();
-   registerBaseType<boost::mpl::inherit<Glove, Digital>::type>();
+   registerBaseType<InputDevice, Digital>();
+   registerBaseType<InputDevice, Analog>();
+   registerBaseType<InputDevice, Position>();
+   registerBaseType<InputDevice, KeyboardMouse>();
+   registerBaseType<InputDevice, String>();
+   registerBaseType<InputDevice, Command>();
+   registerBaseType<InputDevice, Glove>();
    registerBaseType<
-      boost::mpl::inherit<Glove, Digital, Analog, Position>::type
+      InputDevice, boost::mpl::inherit<Command, Analog>::type
    >();
-   registerBaseType<boost::mpl::inherit<Digital, Analog, Position>::type>();
-   registerBaseType<boost::mpl::inherit<Digital, Analog, Rumble>::type>();
-   registerBaseType<boost::mpl::inherit<SimInput, Position>::type>();
-   registerBaseType<boost::mpl::inherit<SimInput, Digital>::type>();
-   registerBaseType<boost::mpl::inherit<SimInput, Analog>::type>();
-   registerBaseType<boost::mpl::inherit<SimInput, Digital, Glove>::type>();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Digital, Analog>::type
+   >();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Digital, Position>::type
+   >();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Analog, Position>::type
+   >();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Glove, Digital>::type
+   >();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Glove, Digital, Analog, Position>::type
+   >();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Digital, Analog, Position>::type
+   >();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Digital, Analog, Rumble>::type
+   >();
+   registerBaseType<SimInputDevice, Position>();
+   registerBaseType<SimInputDevice, Digital>();
+   registerBaseType<SimInputDevice, Analog>();
+   registerBaseType<
+      SimInputDevice, boost::mpl::inherit<Digital, Glove>::type
+   >();
 }
 
 } // End of gadget namespace

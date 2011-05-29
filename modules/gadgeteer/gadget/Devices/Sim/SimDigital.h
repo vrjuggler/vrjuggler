@@ -31,9 +31,8 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vector>
-#include <boost/mpl/inherit.hpp>
 
-#include <gadget/Type/InputDevice.h>
+#include <gadget/Devices/Sim/SimInputDevice.h>
 
 
 namespace gadget
@@ -52,7 +51,7 @@ namespace gadget
  */
 //class SimDigital : public Input, public Digital, public SimInput
 class SimDigital
-   : public InputDevice<boost::mpl::inherit<SimInput, Digital>::type>
+   : public SimInputDevice<Digital>
 {
 public:
    SimDigital();

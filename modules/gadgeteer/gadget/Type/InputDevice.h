@@ -90,6 +90,8 @@ class InputDevice
    , public Base
 {
 public:
+   typedef InputDevice<Base> input_device_;
+
    /** @name vpr::SerializableObject Overrides */
    //@{
    virtual void writeObject(vpr::ObjectWriter* writer)

@@ -24,55 +24,53 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_ALL_BASE_TYPES_H_
-#define _GADGET_ALL_BASE_TYPES_H_
+#ifndef _GADGET_SIM_INPUT_DEVICE_H_
+#define _GADGET_SIM_INPUT_DEVICE_H_
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/mpl/vector.hpp>
-
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Digital.h>
-#include <gadget/Type/Analog.h>
-#include <gadget/Type/Position.h>
-#include <gadget/Type/KeyboardMouse.h>
-#include <gadget/Type/String.h>
-#include <gadget/Type/Command.h>
-#include <gadget/Type/Glove.h>
-#include <gadget/Type/Rumble.h>
+#include <gadget/Type/InputDevice.h>
+#include <gadget/Devices/Sim/SimInput.h>
 
 
 namespace gadget
 {
 
-/**
- * The type list of all possible base types for input devices. This is
- * mainly for use with gadget::InputDevice. Note that gadget::Input is not
- * included in the list because gadget::Input is an explicit base class of
- * gadget::InputDevice.
- *
- * @note The order of types defined here is what dictates the invocation of
- *       base class methods during device data serialization and
- *       de-serialization.
- *
- * @see gadget::InputDevice::writeObject()
- * @see gadget::InputDevice::readObject()
- * @see gadget::InputDevice::getInputTypeName()
+/** \class SimInputDevice SimInputDevice.h gadget/Devices/Sim/SimInputDevice.h
  *
  * @since 2.1.18
  */
-typedef boost::mpl::vector<
-     Digital
-   , Analog
-   , Position
-   , KeyboardMouse
-   , String
-   , Command
-   , Glove
-   , Rumble
-> all_base_types;
+template<typename Base>
+class SimInputDevice
+   : public SimInput
+   , public InputDevice<Base>
+{
+public:
+   typedef typename SimInputDevice::input_device_ base_type;
+
+   /** @name gadget::InputDevice Overrides */
+   //@{
+   virtual void writeObject(vpr::ObjectWriter* writer)
+   {
+      base_type::writeObject(writer);
+      SimInput::writeObject(writer);
+   }
+
+   virtual void readObject(vpr::ObjectReader* reader)
+   {
+      base_type::readObject(reader);
+      SimInput::readObject(reader);
+   }
+
+   virtual std::string getInputTypeName()
+   {
+      return base_type::getInputTypeName() + SimInput::getInputTypeName();
+   }
+   //@}
+
+};
 
 }
 
 
-#endif /* _GADGET_ALL_BASE_TYPES_H_ */
+#endif /* _GADGET_SIM_INPUT_DEVICE_H_ */

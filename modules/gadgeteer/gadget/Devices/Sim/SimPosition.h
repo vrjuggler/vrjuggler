@@ -30,11 +30,9 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/mpl/inherit.hpp>
-
 #include <gmtl/Vec.h>
 
-#include <gadget/Type/InputDevice.h>
+#include <gadget/Devices/Sim/SimInputDevice.h>
 
 
 namespace gadget
@@ -47,7 +45,7 @@ namespace gadget
  * This class should not be accessed directly by the user.
  */
 class SimPosition
-   : public InputDevice<boost::mpl::inherit<SimInput, Position>::type>
+   : public SimInputDevice<Position>
 {
 public:
    /** Constants for the key array. */

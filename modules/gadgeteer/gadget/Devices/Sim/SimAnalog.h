@@ -31,11 +31,10 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vector>
-#include <boost/mpl/inherit.hpp>
 
 #include <jccl/Config/ConfigElementPtr.h>
 
-#include <gadget/Type/InputDevice.h>
+#include <gadget/Devices/Sim/SimInputDevice.h>
 
 
 namespace gadget
@@ -50,7 +49,7 @@ namespace gadget
  * This class should not be used directly by the user.
  */
 class SimAnalog
-   : public InputDevice<boost::mpl::inherit<SimInput, Analog>::type>
+   : public SimInputDevice<Analog>
 {
 public:
    SimAnalog();
