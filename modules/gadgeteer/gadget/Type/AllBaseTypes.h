@@ -30,6 +30,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/push_back.hpp>
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
@@ -40,16 +41,50 @@
 #include <gadget/Type/Command.h>
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Rumble.h>
+#include <gadget/Devices/Sim/SimInput.h>
 
 
 namespace gadget
 {
 
 /**
+ * The type list of all possible base types for device drivers and simulated
+ * input devices. Note that gadget::Input is not included in the list because
+ * gadget::Input is an explicit base class of gadget::InputDevice. Furthermore,
+ * gadget::KeyboardMouse is not included because device drivers should not
+ * derive from that type.
+ *
+ * @since 2.1.18
+ */
+typedef boost::mpl::vector<
+     Digital
+   , Analog
+   , Position
+   , String
+   , Command
+   , Glove
+   , Rumble
+> device_base_types;
+
+/**
+ * An extension to gadget::device_base_types that pertains specfically to
+ * simulated input devices. This type exists mainly so that
+ * gadget::all_base_types can be defined with relative ease.
+ *
+ * @note Simulated device types should derive from gadget::SimInputDevice
+ *       rether than from gadget::InputDevice with gadget::SimInput in the
+ *       base type list.
+ *
+ * @since 2.1.18
+ */
+typedef boost::mpl::push_back<
+     device_base_types
+   , SimInput
+>::type sim_device_base_types;
+
+/**
  * The type list of all possible base types for input devices. This is
- * mainly for use with gadget::InputDevice. Note that gadget::Input is not
- * included in the list because gadget::Input is an explicit base class of
- * gadget::InputDevice.
+ * mainly for use by gadget::InputDevice.
  *
  * @note The order of types defined here is what dictates the invocation of
  *       base class methods during device data serialization and
@@ -61,16 +96,10 @@ namespace gadget
  *
  * @since 2.1.18
  */
-typedef boost::mpl::vector<
-     Digital
-   , Analog
-   , Position
+typedef boost::mpl::push_back<
+     sim_device_base_types
    , KeyboardMouse
-   , String
-   , Command
-   , Glove
-   , Rumble
-> all_base_types;
+>::type all_base_types;
 
 }
 

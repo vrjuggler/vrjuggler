@@ -101,13 +101,13 @@ vprSingletonImpWithInitFunc(BaseTypeFactory, registerBaseDeviceTypes);
 void BaseTypeFactory::registerBaseDeviceTypes()
 {
    // While it would be nice to generate this registration code at compile
-   // time, there are 255 k-combinations of the members of
-   // gadget::all_base_types. That is far more than the few that we actually
-   // need.
+   // time, there are 127 k-combinations of the members of
+   // gadget::device_base_types for gadget::InputDevice<T> and 127 more for
+   // gadget::SimInputDevice<T>. That is far more than the few that we
+   // actually need.
    registerBaseType<InputDevice, Digital>();
    registerBaseType<InputDevice, Analog>();
    registerBaseType<InputDevice, Position>();
-   registerBaseType<InputDevice, KeyboardMouse>();
    registerBaseType<InputDevice, String>();
    registerBaseType<InputDevice, Command>();
    registerBaseType<InputDevice, Glove>();
@@ -141,6 +141,10 @@ void BaseTypeFactory::registerBaseDeviceTypes()
    registerBaseType<
       SimInputDevice, boost::mpl::inherit<Digital, Glove>::type
    >();
+
+   // This is a special case. gadget::KeyboardMouse is not in
+   // gadget:all_base_types.
+   registerBaseType<InputDevice, KeyboardMouse>();
 }
 
 } // End of gadget namespace
