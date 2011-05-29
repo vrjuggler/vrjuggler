@@ -175,7 +175,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 
 VPR_PATH([1.1.42], , [AC_MSG_ERROR([*** VPR required for Device Drivers ***])])
-GADGETEER_PATH([2.1.5], ,
+GADGETEER_PATH([2.1.18], ,
                [AC_MSG_ERROR(*** Gadgeteer required for Device Drivers ***)])
 JCCL_PATH_CXX([1.1.5], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Device Drivers ***])])
