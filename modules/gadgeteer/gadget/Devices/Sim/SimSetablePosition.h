@@ -30,7 +30,6 @@
 #include <gadget/gadgetConfig.h>
 
 #include <vector>
-#include <boost/mpl/inherit.hpp>
 
 #include <jccl/Config/ConfigElementPtr.h>
 
@@ -53,7 +52,7 @@ namespace gadget
  */
 //class SimSetablePosition : public Input, public Position
 class GADGET_CLASS_API SimSetablePosition
-   : public InputDevice<boost::mpl::inherit<Position>::type>
+   : public InputDevice<Position>
 {
 public:
    SimSetablePosition()

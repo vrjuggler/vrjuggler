@@ -29,8 +29,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/mpl/inherit.hpp>
-
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <gadget/Type/InputDevice.h>
@@ -50,7 +48,7 @@ namespace gadget
  * @note This class should not be used directly by the user.
  */
 class SimRelativePosition
-   : public InputDevice<boost::mpl::inherit<Position>::type>
+   : public InputDevice<Position>
 {
 public:
    SimRelativePosition() {;}
