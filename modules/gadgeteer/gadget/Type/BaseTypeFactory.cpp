@@ -26,7 +26,22 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/plus.hpp>
+#include <boost/mpl/times.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/not_equal_to.hpp>
+#include <boost/mpl/empty_base.hpp>
+#include <boost/mpl/range_c.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/mpl/bitand.hpp>
+#include <boost/mpl/inherit_linearly.hpp>
 #include <boost/mpl/inherit.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 #include <gadget/Type/InputDevice.h>
 #include <gadget/Devices/Sim/SimInputDevice.h>
@@ -88,10 +103,126 @@ void registerBaseType()
    );
 }
 
+template<template<class> class DeviceType>
+struct TypeRegistrar
+{
+   template<typename BaseTypes>
+   void operator()(const BaseTypes&)
+   {
+      typedef typename
+         boost::mpl::inherit_linearly<
+              BaseTypes
+            , boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2>
+         >::type
+      base_type;
+
+      registerBaseType<DeviceType, base_type>();
+   }
+};
+
 }
 
 namespace gadget
 {
+
+namespace detail
+{
+
+/** @name Compile-Time Logarithm Computation */
+//@{
+template<typename N, size_t Base>
+struct log
+   : boost::mpl::plus<
+          boost::mpl::int_<1>
+        , log<boost::mpl::int_<N::value / Base>, Base>
+     >::type
+{};
+
+template<size_t Base>
+struct log<boost::mpl::int_<1>, Base>
+   : boost::mpl::int_<0>::type
+{};
+
+template<size_t Base>
+struct log<boost::mpl::int_<0>, Base>
+   : boost::mpl::int_<0>::type
+{};
+
+template<size_t Base>
+struct log<boost::mpl::integral_c<size_t, 1>, Base>
+   : boost::mpl::int_<0>::type
+{};
+
+template<size_t Base>
+struct log<boost::mpl::integral_c<size_t, 0>, Base>
+   : boost::mpl::int_<0>::type
+{};
+//@}
+
+/** @name Compile-Time Power-of Computation */
+//@{
+template<size_t Value, typename Exponent>
+struct pow
+   : boost::mpl::times<
+          boost::mpl::int_<Value>
+        , pow<Value, boost::mpl::int_<Exponent::value - 1> >
+     >::type
+{};
+
+template<size_t Value>
+struct pow<Value, boost::mpl::int_<0> >
+   : boost::mpl::int_<1>::type
+{};
+//@}
+
+/** @name Metafunctions */
+//@{
+template<typename N>
+struct make_pow
+{
+   typedef pow<2, boost::mpl::int_<N::value> > type;
+};
+
+/**
+ * Chooses a type based on a compile-time mask comparison.
+ */
+template<typename N, typename Mask>
+struct make_base_type
+{
+   typedef typename boost::mpl::bitand_<N, Mask>::type index_type;
+   typedef typename
+      boost::mpl::if_<
+           boost::mpl::not_equal_to<
+                boost::mpl::integral_c<size_t, 0>
+              , index_type
+           >
+         , typename boost::mpl::at<all_base_types, log<index_type, 2> >::type
+         , boost::mpl::empty_base
+      >::type
+   type;
+};
+
+/**
+ * Computes the Nth unique subset of gadget::device_base_types.
+ */
+template<typename N, typename TypeMasks>
+struct make_type_combo
+{
+   /**
+    * A boost::mpl::vector containing the base types for an instantiation of
+    * gadget::InputDevice<T>.
+    */
+   typedef typename
+      boost::mpl::transform<
+           TypeMasks
+         , make_base_type<N, boost::mpl::_1>
+         , boost::mpl::back_inserter<boost::mpl::vector<> >
+      >::type
+   type;
+};
+//@}
+
+}
 
 vprSingletonImpWithInitFunc(BaseTypeFactory, registerBaseDeviceTypes);
 
@@ -100,6 +231,7 @@ vprSingletonImpWithInitFunc(BaseTypeFactory, registerBaseDeviceTypes);
  */
 void BaseTypeFactory::registerBaseDeviceTypes()
 {
+#if 1
    // While it would be nice to generate this registration code at compile
    // time, there are 127 k-combinations of the members of
    // gadget::device_base_types for gadget::InputDevice<T> and 127 more for
@@ -141,6 +273,60 @@ void BaseTypeFactory::registerBaseDeviceTypes()
    registerBaseType<
       SimInputDevice, boost::mpl::inherit<Digital, Glove>::type
    >();
+#else
+   // This produces all unique subsets (k-combinations) of
+   // gadget::device_base_types. This is done by counting from 1 to num_types
+   // where num_types is the number of types in gadget::device_base_types.
+   // A Python representation of this algorithm is as follows:
+   //
+   // device_base_types = [...]
+   // max_size = len(device_base_types)
+   // masks = [2 ** i for i in xrange(max_size)]
+   // combos = []
+   // for i in xrange(1, 2 ** max_size):
+   //    subset = []
+   //    for m in masks:
+   //       index = i & m
+   //       if 0 != index:
+   //          index = int(math.log(index, 2))
+   //          subset.append(device_base_types[index])
+   //    combos.append(subset)
+   // print combos
+   typedef boost::mpl::size<device_base_types> num_types;
+   const size_t max_combos(detail::pow<2, num_types>::value);
+
+   // Compute the mask values for each of the types in device_base_types.
+   typedef boost::mpl::range_c<size_t, 0, num_types::value> mask_range;
+   typedef
+      boost::mpl::transform<
+           mask_range
+         , detail::make_pow<boost::mpl::_1>
+         , boost::mpl::back_inserter<boost::mpl::vector<> >
+      >::type
+   type_masks;
+
+   // This bit counts from 1 to 2 ** max_combos and produces all the unique
+   // subsets of device_base_types.
+   typedef boost::mpl::range_c<size_t, 1, max_combos> type_count_range;
+   typedef
+      boost::mpl::transform<
+           type_count_range
+         , detail::make_type_combo<boost::mpl::_1, type_masks>
+         , boost::mpl::back_inserter<boost::mpl::vector<> >
+      >::type
+   type_combos;
+
+   // This last part ends up being the slowest to compile.
+   {
+      TypeRegistrar<InputDevice> r;
+      boost::mpl::for_each<type_combos>(r);
+   }
+
+   {
+      TypeRegistrar<SimInputDevice> r;
+      boost::mpl::for_each<type_combos>(r);
+   }
+#endif
 
    // This is a special case. gadget::KeyboardMouse is not in
    // gadget:all_base_types.
