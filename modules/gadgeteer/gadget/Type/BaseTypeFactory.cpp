@@ -94,12 +94,10 @@ public:
 template<template<class> class DeviceType, typename T>
 void registerBaseType()
 {
-   typedef DeviceType<T> base_type;
-   std::cout << PlaceholderDevice<base_type>::create()->getInputTypeName()
-             << std::endl;
+   typedef PlaceholderDevice<DeviceType<T> > dev_type;
+   std::cout << dev_type::create()->getInputTypeName() << std::endl;
    gadget::BaseTypeFactory::instance()->registerCreator(
-      PlaceholderDevice<base_type>::create()->getInputTypeName(),
-      PlaceholderDevice<base_type>::create
+      dev_type::create()->getInputTypeName(), dev_type::create
    );
 }
 
@@ -316,7 +314,9 @@ void BaseTypeFactory::registerBaseDeviceTypes()
       >::type
    type_combos;
 
-   // This last part ends up being the slowest to compile.
+   // This last part ends up being the slowest to compile. It is most likely
+   // due to the instantiation of InputDevice<T>::getInputTypeName() for so
+   // many different type combinations.
    {
       TypeRegistrar<InputDevice> r;
       boost::mpl::for_each<type_combos>(r);
