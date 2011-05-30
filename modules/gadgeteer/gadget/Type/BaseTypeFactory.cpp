@@ -189,13 +189,13 @@ struct make_base_type
 {
    typedef typename boost::mpl::bitand_<N, Mask>::type index_type;
    typedef typename
-      boost::mpl::if_<
+      boost::mpl::eval_if<
            boost::mpl::not_equal_to<
                 boost::mpl::integral_c<size_t, 0>
               , index_type
            >
-         , typename boost::mpl::at<all_base_types, log<index_type, 2> >::type
-         , boost::mpl::empty_base
+         , boost::mpl::at<all_base_types, log<index_type, 2> >
+         , boost::mpl::identity<boost::mpl::empty_base>
       >::type
    type;
 };
@@ -303,7 +303,7 @@ void BaseTypeFactory::registerBaseDeviceTypes()
       >::type
    type_masks;
 
-   // This bit counts from 1 to 2 ** max_combos and produces all the unique
+   // This bit counts from 1 to 2^max_combos and produces all the unique
    // subsets of device_base_types.
    typedef boost::mpl::range_c<size_t, 1, max_combos> type_count_range;
    typedef
