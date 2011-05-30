@@ -29,8 +29,9 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/mpl/copy_if.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
 #include <gadget/Type/AllBaseTypes.h>
@@ -92,20 +93,36 @@ class InputDevice
 public:
    typedef InputDevice<Base> input_device_;
 
+   /**
+    * Computes the ordered subset of all_base_types that is the list of base
+    * types for this instantiation.
+    *
+    * @see writeObject()
+    * @see readObject()
+    * @see getInputTypeName()
+    */
+   typedef typename
+      boost::mpl::copy_if<
+           all_base_types
+         , boost::is_base_of<boost::mpl::_1, Base>
+         , boost::mpl::back_inserter<boost::mpl::vector<> >
+      >::type
+   type_list;
+
    /** @name vpr::SerializableObject Overrides */
    //@{
    virtual void writeObject(vpr::ObjectWriter* writer)
    {
       Input::writeObject(writer);
       Caller<WriteInvoker> caller(this, writer);
-      boost::mpl::for_each<all_base_types, wrap<boost::mpl::_1> >(caller);
+      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(caller);
    }
 
    virtual void readObject(vpr::ObjectReader* reader)
    {
       Input::readObject(reader);
       Caller<ReadInvoker> caller(this, reader);
-      boost::mpl::for_each<all_base_types, wrap<boost::mpl::_1> >(caller);
+      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(caller);
    }
    //@}
 
@@ -115,7 +132,7 @@ public:
    {
       std::string result(Input::getInputTypeName());
       Caller<NameBuilder> builder(this, &result);
-      boost::mpl::for_each<all_base_types, wrap<boost::mpl::_1> >(builder);
+      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(builder);
       return result;
    }
    //@}
@@ -141,13 +158,6 @@ private:
          typedef wrap<U> type;
       };
 #endif
-   };
-
-   struct NoOp
-   {
-      template<typename B, typename T1, typename T2>
-      static void invoke(const T1&, const T2&)
-      {}
    };
 
    struct WriteInvoker
@@ -198,15 +208,7 @@ private:
       template<typename BaseType>
       void operator()(wrap<BaseType>)
       {
-         typedef typename
-            boost::mpl::if_<
-                 boost::is_base_of<BaseType, InputDevice>
-               , InvokerType
-               , NoOp
-            >::type
-         invoker_type;
-
-         invoker_type::template invoke<BaseType>(owner, arg);
+         InvokerType::template invoke<BaseType>(owner, arg);
       }
 
    private:
