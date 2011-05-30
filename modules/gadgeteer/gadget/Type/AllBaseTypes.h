@@ -41,7 +41,6 @@
 #include <gadget/Type/Command.h>
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Rumble.h>
-#include <gadget/Devices/Sim/SimInput.h>
 
 
 namespace gadget
@@ -50,9 +49,11 @@ namespace gadget
 /**
  * The type list of all possible base types for device drivers and simulated
  * input devices. Note that gadget::Input is not included in the list because
- * gadget::Input is an explicit base class of gadget::InputDevice. Furthermore,
- * gadget::KeyboardMouse is not included because device drivers should not
- * derive from that type.
+ * gadget::Input is an explicit base class of gadget::InputDevice. Similarly,
+ * gadget::SimInput is excluded because simulated input devices are to be
+ * derived from gadget::SimInputDevice, a class that has gadget::SimInput as an
+ * explicit base class. Finally, gadget::KeyboardMouse is not included because
+ * device drivers should not derive from that type.
  *
  * @since 2.1.18
  */
@@ -65,22 +66,6 @@ typedef boost::mpl::vector<
    , Glove
    , Rumble
 > device_base_types;
-
-/**
- * An extension to gadget::device_base_types that pertains specfically to
- * simulated input devices. This type exists mainly so that
- * gadget::all_base_types can be defined with relative ease.
- *
- * @note Simulated device types should derive from gadget::SimInputDevice
- *       rether than from gadget::InputDevice with gadget::SimInput in the
- *       base type list.
- *
- * @since 2.1.18
- */
-typedef boost::mpl::push_back<
-     device_base_types
-   , SimInput
->::type sim_device_base_types;
 
 /**
  * The type list of all possible base types for input devices. This is
@@ -97,7 +82,7 @@ typedef boost::mpl::push_back<
  * @since 2.1.18
  */
 typedef boost::mpl::push_back<
-     sim_device_base_types
+     device_base_types
    , KeyboardMouse
 >::type all_base_types;
 
