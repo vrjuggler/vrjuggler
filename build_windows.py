@@ -1201,21 +1201,22 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
    os.chdir(cwd)
 
 def installLibs(srcRoot, destdir,
-                buildPlatforms = ['Win32', 'x64'],
                 buildTypes = [('ReleaseDLL',), ('DebugDLL', 'debug'),
                               ('DebugRtDLL',)],
                 extensions = ['.dll', '.lib', '.exp']):
-   for p in buildPlatforms:
-      for t in buildTypes:
-         build_dir = t[0]
-         if len(t) == 2:
-            cur_destdir = os.path.join(destdir, t[1])
-         else:
-            cur_destdir = destdir
+   build_platform = 'Win32'
+   if gBuild64:
+      build_platform = 'x64'
 
-         srcdir = os.path.join(srcRoot, p, build_dir)
-         if os.path.exists(srcdir):
-            installDir(srcdir, cur_destdir, extensions)
+   for t in buildTypes:
+      build_dir = t[0]
+      cur_destdir = destdir
+      if len(t) == 2:
+         cur_destdir = os.path.join(destdir, t[1])
+         
+      srcdir = os.path.join(srcRoot, build_platform, build_dir)
+      if os.path.exists(srcdir):
+         installDir(srcdir, cur_destdir, extensions)
 
 def installExternal(prefix, buildDir):
    pass
