@@ -35,6 +35,11 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 
+// NOTE: This must be included before linux/joystick.h because that header
+// causes KEY_UP, KEY_DOWN, and other symbols to be defined as preprocessor
+// symbols. These conflict with symbols in gadget/Type/KeyboardMouse/Keys.h.
+#include "LinuxJoydev.h"
+
 #include <linux/joystick.h>      // Get the joystick abilities
 
 #include <vpr/Util/Debug.h>
@@ -42,8 +47,6 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/gadgetParam.h>
-
-#include <drivers/Open/LinuxJoydev/LinuxJoydev.h>
 
 
 extern "C"
