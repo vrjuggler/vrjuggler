@@ -265,6 +265,9 @@ void BaseTypeFactory::registerBaseDeviceTypes()
    registerBaseType<
       InputDevice, boost::mpl::inherit<Digital, Analog, Rumble>::type
    >();
+   registerBaseType<
+      InputDevice, boost::mpl::inherit<Digital, Analog, Position, Rumble>::type
+   >();
    registerBaseType<SimInputDevice, Position>();
    registerBaseType<SimInputDevice, Digital>();
    registerBaseType<SimInputDevice, Analog>();

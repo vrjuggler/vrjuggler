@@ -69,7 +69,7 @@
 #include <gadget/Util/Debug.h>
 
 #include <drivers/Open/VRPN/Vrpn.h>
-
+#include "VrpnRumbleEffect.h"
 
 extern "C"
 {
@@ -213,6 +213,7 @@ Vrpn::Vrpn()
    , mButtonChangeHandlerRegistered(false)
    , mAnalogNumber(0)
    , mAnalogHandle(NULL)
+   , mAnalogOutHandle(NULL)
    , mAnalogChangeHandlerRegistered(false)
 {
    /* Do nothing. */ ;
@@ -450,6 +451,49 @@ std::string Vrpn::getElementType()
    return "vrpn";
 }
 
+unsigned int Vrpn::getCapabilities()
+{
+   return gadget::RumbleEffect::CONSTANT;
+}
+
+void Vrpn::startRumble()
+{
+   mAnalogOutMutex.acquire();
+
+   // Send 1.0 to channel 0 to turn on rumble
+   mAnalogOutHandle->request_change_channel_value(0, 1.0);
+   
+   mAnalogOutMutex.release();
+}
+
+void Vrpn::stopRumble()
+{
+   mAnalogOutMutex.acquire();
+   
+   // Send 0.0 to channel 0 to turn off rumble
+   mAnalogOutHandle->request_change_channel_value(0, 0.0);
+   
+   mAnalogOutMutex.release();
+}
+
+RumbleEffectPtr Vrpn::createEffectImp(RumbleEffect::RumbleType type)
+{
+   boost::ignore_unused_variable_warning(type);
+   RumbleEffectPtr ret;
+
+   switch (type)
+   {
+   case RumbleEffect::CONSTANT:
+      ret.reset(new VrpnRumbleEffect(this, RumbleEffect::CONSTANT));
+      break;
+   case RumbleEffect::SQUARE:
+      ret.reset(new VrpnRumbleEffect(this, RumbleEffect::SQUARE));
+      break;
+   }
+
+   return ret;
+}
+
 void Vrpn::registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
                                           vrpn_MESSAGEHANDLER dropHandler,
                                           vrpn_MESSAGEHANDLER lastDropHandler)
@@ -535,6 +579,7 @@ void Vrpn::readLoop()
    if ( mAnalogNumber > 0 )
    {
       mAnalogHandle = new vrpn_Analog_Remote(mAnalogServer.c_str());
+      mAnalogOutHandle = new vrpn_Analog_Output_Remote(mAnalogServer.c_str());
       mAnalogHandle->register_change_handler(static_cast<void *>(this),
                                              &handleAnalogChange);
       mAnalogChangeHandlerRegistered = true;
@@ -559,6 +604,7 @@ void Vrpn::readLoop()
       if ( mAnalogNumber > 0 )
       {
          mAnalogHandle->mainloop();
+         mAnalogOutHandle->mainloop();
       }
 
       // If there is nothing left from which to read data, there is no point

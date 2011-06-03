@@ -48,6 +48,7 @@
 
 #include <vpr/Sync/Mutex.h>
 #include <gadget/Type/InputDevice.h>
+#include <gadget/Type/Rumble.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -57,6 +58,7 @@
 #include <vrpn_Tracker.h>
 #include <vrpn_Button.h>
 #include <vrpn_Analog.h>
+#include <vrpn_Analog_Output.h>
 
 #if ! defined(VRPN_CALLBACK)
 #  define VRPN_CALLBACK
@@ -80,7 +82,7 @@ namespace gadget
  * @see gadget::Position
  */
 class Vrpn
-   : public InputDevice<boost::mpl::inherit<Digital, Analog, Position>::type>
+   : public InputDevice<boost::mpl::inherit<Digital, Analog, Position, Rumble>::type>
 {
 public:
 
@@ -129,6 +131,21 @@ public:
 
    /** Returns what element type is associated with this class. */
    static std::string getElementType();
+
+   /**
+    * Gets the supported capabilities in a bitmask.
+    *
+    * @return bitmask defined in Rumble::RumbleType
+    *
+    */
+   virtual unsigned int getCapabilities();
+
+
+   void startRumble();
+   void stopRumble();
+
+protected:
+   virtual gadget::RumbleEffectPtr createEffectImp(gadget::RumbleEffect::RumbleType type);
 
 private:
    void registerConnectionDropHandlers  (vrpn_BaseClass* vrpnObj,
@@ -195,6 +212,8 @@ private:
    bool                            mAnalogChangeHandlerRegistered;
    vpr::Mutex                      mAnalogMutex;
    std::vector<gadget::AnalogData> mAnalogs;
+   vrpn_Analog_Output_Remote*      mAnalogOutHandle;
+   vpr::Mutex                      mAnalogOutMutex;
    //@}
 
    friend void VRPN_CALLBACK handleTrackerChange(void*, vrpn_TRACKERCB);

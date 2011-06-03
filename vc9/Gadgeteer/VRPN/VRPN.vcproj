@@ -552,6 +552,10 @@
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\Vrpn.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\VrpnRumbleEffect.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -559,6 +563,10 @@
 			>
 			<File
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\Vrpn.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Open\VRPN\VrpnRumbleEffect.h"
 				>
 			</File>
 		</Filter>
