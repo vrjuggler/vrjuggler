@@ -95,7 +95,6 @@ template<template<class> class DeviceType, typename T>
 void registerBaseType()
 {
    typedef PlaceholderDevice<DeviceType<T> > dev_type;
-   std::cout << dev_type::create()->getInputTypeName() << std::endl;
    gadget::BaseTypeFactory::instance()->registerCreator(
       dev_type::create()->getInputTypeName(), dev_type::create
    );
@@ -157,30 +156,8 @@ struct log<boost::mpl::integral_c<size_t, 0>, Base>
 {};
 //@}
 
-/** @name Compile-Time Power-of Computation */
-//@{
-template<size_t Value, typename Exponent>
-struct pow
-   : boost::mpl::times<
-          boost::mpl::int_<Value>
-        , pow<Value, boost::mpl::int_<Exponent::value - 1> >
-     >::type
-{};
-
-template<size_t Value>
-struct pow<Value, boost::mpl::int_<0> >
-   : boost::mpl::int_<1>::type
-{};
-//@}
-
 /** @name Metafunctions */
 //@{
-template<typename N>
-struct make_pow
-{
-   typedef pow<2, boost::mpl::int_<N::value> > type;
-};
-
 /**
  * Chooses a type based on a compile-time mask comparison.
  */

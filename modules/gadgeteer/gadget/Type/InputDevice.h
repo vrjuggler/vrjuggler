@@ -29,16 +29,78 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/mpl/times.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/bitor.hpp>
+#include <boost/mpl/find.hpp>
+#include <boost/mpl/fold.hpp>
 #include <boost/mpl/copy_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+
+#include <vpr/vprTypes.h>
 
 #include <gadget/Type/AllBaseTypes.h>
 
 
 namespace gadget
 {
+
+namespace detail
+{
+
+/** @name Compile-Time Power-of Computation */
+//@{
+template<size_t Value, typename Exponent>
+struct pow
+   : boost::mpl::times<
+          boost::mpl::int_<Value>
+        , pow<Value, boost::mpl::int_<Exponent::value - 1> >
+     >::type
+{};
+
+// specialization for 0
+template<size_t Value>
+struct pow<Value, boost::mpl::int_<0> >
+   : boost::mpl::int_<1>::type
+{};
+//@}
+
+/** @name Metafunctions */
+//@{
+template<typename N>
+struct make_pow
+{
+   typedef pow<2, boost::mpl::int_<N::value> > type;
+};
+
+template<typename MaskType, typename Type>
+struct compute_mask
+{
+   typedef typename boost::mpl::find<all_base_types, Type>::type::pos pos_type;
+   typedef typename
+      boost::mpl::bitor_<
+           MaskType
+         , typename make_pow<pos_type>::type
+      >::type
+   type;
+};
+
+template<typename TypeList>
+struct mask_maker
+{
+   typedef typename
+      boost::mpl::fold<
+           TypeList
+         , boost::mpl::int_<0>
+         , compute_mask<boost::mpl::_1, boost::mpl::_2>
+      >::type
+   type;
+};
+//@}
+
+}
 
 /**
  * @example "Example use of gadget::InputDevice"
@@ -91,6 +153,7 @@ class InputDevice
    , public Base
 {
 public:
+   /** Convenience typedef for use by subclasses. */
    typedef InputDevice<Base> input_device_;
 
    /**
@@ -108,6 +171,14 @@ public:
          , boost::mpl::back_inserter<boost::mpl::vector<> >
       >::type
    type_list;
+
+   /**
+    * The unique identifier for this type instantiation. This is computed as a
+    * bitwise OR of the index value of each member of type_list within
+    * all_base_types.
+    */
+   static const vpr::Uint16 type_id =
+      detail::mask_maker<type_list>::type::value;
 
    /** @name vpr::SerializableObject Overrides */
    //@{
