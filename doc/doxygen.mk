@@ -40,6 +40,7 @@ RM=		rm -f
 
 html: $(HTML_DOXYGEN_FILE)
 	$(DOXYGEN) $(HTML_DOXYGEN_FILE)
+	-rm -f $(HTML_OUTPUT_DIR)/*.md5
 
 man: $(MAN_DOXYGEN_FILE)
 	$(DOXYGEN) $(MAN_DOXYGEN_FILE)
