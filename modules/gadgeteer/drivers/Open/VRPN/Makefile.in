@@ -48,7 +48,8 @@ POST_DSO_DRIVER_DEPS=	@VRPN_LDFLAGS@
 
 ifeq (@HAVE_VRPN@, Y)
 C_AFTERBUILD=	driver-dso
-SRCS=		Vrpn.cpp
+SRCS=		Vrpn.cpp		\
+		VrpnRumbleEffect.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
