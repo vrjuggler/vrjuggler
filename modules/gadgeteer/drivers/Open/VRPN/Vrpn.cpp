@@ -402,34 +402,34 @@ RumbleEffectPtr Vrpn::createEffectImp(RumbleEffect::RumbleType type)
 
 void Vrpn::readLoop()
 {
-   boost::shared_ptr<vrpn_Tracker_Remote> mTrackerHandle;
-   boost::shared_ptr<vrpn_Button_Remote> mButtonHandle;
-   boost::shared_ptr<vrpn_Analog_Remote> mAnalogHandle;
+   boost::shared_ptr<vrpn_Tracker_Remote> tracker_handle;
+   boost::shared_ptr<vrpn_Button_Remote> button_handle;
+   boost::shared_ptr<vrpn_Analog_Remote> analog_handle;
    if ( mTrackerNumber > 0 )
    {
-      mTrackerHandle.reset(new vrpn_Tracker_Remote(mTrackerServer.c_str()));
-      mTrackerHandle->register_change_handler(static_cast<void *>(this),
+      tracker_handle.reset(new vrpn_Tracker_Remote(mTrackerServer.c_str()));
+      tracker_handle->register_change_handler(static_cast<void*>(this),
                                               &handleTrackerChange);
    }
 
    if ( mButtonNumber > 0 )
    {
-      mButtonHandle.reset(new vrpn_Button_Remote(mButtonServer.c_str()));
-      mButtonHandle->register_change_handler(static_cast<void *>(this),
+      button_handle.reset(new vrpn_Button_Remote(mButtonServer.c_str()));
+      button_handle->register_change_handler(static_cast<void*>(this),
                                              &handleButtonChange);
    }
 
    if ( mAnalogNumber > 0 )
    {
-      mAnalogHandle.reset(new vrpn_Analog_Remote(mAnalogServer.c_str()));
+      analog_handle.reset(new vrpn_Analog_Remote(mAnalogServer.c_str()));
       mAnalogOutHandle.reset(new vrpn_Analog_Output_Remote(mAnalogServer.c_str()));
-      mAnalogHandle->register_change_handler(static_cast<void *>(this),
+      analog_handle->register_change_handler(static_cast<void*>(this),
                                              &handleAnalogChange);
    }
 
    // If there is nothing from which to read data, there is no point
    // in continuing to run this thread.
-   if ( !mTrackerHandle && !mButtonHandle && !mAnalogHandle)
+   if ( !tracker_handle && !button_handle && !analog_handle)
    {
       return;
    }
@@ -439,19 +439,19 @@ void Vrpn::readLoop()
    {
       vpr::Guard<vpr::Mutex> g(mVrpnConnectionMutex);
 
-      if (mTrackerHandle)
+      if (tracker_handle)
       {
-         mTrackerHandle->mainloop();
+         tracker_handle->mainloop();
       }
 
-      if (mButtonHandle)
+      if (button_handle)
       {
-         mButtonHandle->mainloop();
+         button_handle->mainloop();
       }
 
-      if (mAnalogHandle)
+      if (analog_handle)
       {
-         mAnalogHandle->mainloop();
+         analog_handle->mainloop();
       }
       if (mAnalogOutHandle)
       {
@@ -464,24 +464,24 @@ void Vrpn::readLoop()
    }
 
    mTrackerNumber = 0;
-   if ( mTrackerHandle )
+   if (tracker_handle)
    {
-      mTrackerHandle->unregister_change_handler(static_cast<void *>(this),
-                                                &handleTrackerChange      );
+      tracker_handle->unregister_change_handler(static_cast<void*>(this),
+                                                &handleTrackerChange);
    }
 
    mButtonNumber = 0;
-   if ( mButtonHandle )
+   if (button_handle)
    {
-      mButtonHandle->unregister_change_handler(static_cast<void *>(this),
-                                               &handleButtonChange      );
+      button_handle->unregister_change_handler(static_cast<void*>(this),
+                                               &handleButtonChange);
    }
 
    mAnalogNumber = 0;
-   if ( mAnalogHandle )
+   if (analog_handle)
    {
-      mAnalogHandle->unregister_change_handler(static_cast<void *>(this),
-                                               &handleAnalogChange      );
+      analog_handle->unregister_change_handler(static_cast<void *>(this),
+                                               &handleAnalogChange);
    }
 
    mAnalogOutHandle.reset();
