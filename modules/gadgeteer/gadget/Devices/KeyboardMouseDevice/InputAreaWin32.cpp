@@ -787,89 +787,85 @@ gadget::Keys InputAreaWin32::VKKeyToKey(const int vkKey)
 
 char InputAreaWin32::getAsciiKey(const int vkKey, const gadget::Keys key)
 {
-   // We can return alphanumeric and white-space characters without any extra
-   // processing.
-   if ( std::isalnum(vkKey) || std::isspace(vkKey) )
+   const int mask(getModifierMask());
+   const bool shift_pressed(mask & gadget::KEY_SHIFT);
+
+   switch ( key )
    {
-      return static_cast<char>(vkKey);
-   }
-   // We could use std::isascii() here, but vkKey does not factor in whether
-   // the SHIFT key was pressed the way that the X Window System does. For
-   // consistency, we test key instead and use it to get the character to
-   // return.
-   else
-   {
-      switch ( key )
-      {
-         case gadget::KEY_AMPERSAND:
-            return '&';
-         case gadget::KEY_APOSTROPHE:
-            return '\'';
-         case gadget::KEY_ASCII_CIRCUM:
-            return '^';
-         case gadget::KEY_ASCII_TILDE:
-            return '~';
-         case gadget::KEY_ASTERISK:
-            return '*';
-         case gadget::KEY_AT:
-            return '@';
-         case gadget::KEY_BACKSLASH:
-            return '\\';
-         case gadget::KEY_BAR:
-            return '|';
-         case gadget::KEY_BRACE_LEFT:
-            return '{';
-         case gadget::KEY_BRACE_RIGHT:
-            return '}';
-         case gadget::KEY_BRACKET_LEFT:
-            return '[';
-         case gadget::KEY_BRACKET_RIGHT:
-            return ']';
-         case gadget::KEY_COLON:
-            return ':';
-         case gadget::KEY_COMMA:
-            return ',';
-         case gadget::KEY_DOLLAR:
-            return '$';
-         case gadget::KEY_EQUAL:
-            return '=';
-         case gadget::KEY_EXCLAM:
-            return '!';
-         case gadget::KEY_GREATER:
-            return '>';
-         case gadget::KEY_LESS:
-            return '<';
-         case gadget::KEY_MINUS:
-            return '-';
-         case gadget::KEY_NUMBER_SIGN:
-            return '#';
-         case gadget::KEY_PAREN_LEFT:
-            return '(';
-         case gadget::KEY_PAREN_RIGHT:
-            return ')';
-         case gadget::KEY_PERCENT:
-            return '%';
-         case gadget::KEY_PERIOD:
-            return '.';
-         case gadget::KEY_PLUS:
-            return '+';
-         case gadget::KEY_QUESTION:
-            return '?';
-         case gadget::KEY_QUOTE_DBL:
-            return '"';
-         case gadget::KEY_QUOTE_LEFT:
-            return '`';
-         case gadget::KEY_SEMICOLON:
-            return ';';
-         case gadget::KEY_SLASH:
-            return '/';
-         case gadget::KEY_SPACE:
-            return ' ';
-         case gadget::KEY_UNDERSCORE:
-            return '_';
-         default:
-            return '\0';
-      }
+      case gadget::KEY_1: return '1';
+      case gadget::KEY_2: return '2';
+      case gadget::KEY_3: return '3';
+      case gadget::KEY_4: return '4';
+      case gadget::KEY_5: return '5';
+      case gadget::KEY_6: return '6';
+      case gadget::KEY_7: return '7';
+      case gadget::KEY_8: return '8';
+      case gadget::KEY_9: return '9';
+      case gadget::KEY_0: return '0';
+
+      case gadget::KEY_A: return (shift_pressed ? 'A' : 'a');
+      case gadget::KEY_B: return (shift_pressed ? 'B' : 'b');
+      case gadget::KEY_C: return (shift_pressed ? 'C' : 'c');
+      case gadget::KEY_D: return (shift_pressed ? 'D' : 'd');
+      case gadget::KEY_E: return (shift_pressed ? 'E' : 'e');
+      case gadget::KEY_F: return (shift_pressed ? 'F' : 'f');
+      case gadget::KEY_G: return (shift_pressed ? 'G' : 'g');
+      case gadget::KEY_H: return (shift_pressed ? 'H' : 'h');
+      case gadget::KEY_I: return (shift_pressed ? 'I' : 'i');
+      case gadget::KEY_J: return (shift_pressed ? 'J' : 'j');
+      case gadget::KEY_K: return (shift_pressed ? 'K' : 'k');
+      case gadget::KEY_L: return (shift_pressed ? 'L' : 'l');
+      case gadget::KEY_M: return (shift_pressed ? 'M' : 'm');
+      case gadget::KEY_N: return (shift_pressed ? 'N' : 'n');
+      case gadget::KEY_O: return (shift_pressed ? 'O' : 'o');
+      case gadget::KEY_P: return (shift_pressed ? 'P' : 'p');
+      case gadget::KEY_Q: return (shift_pressed ? 'Q' : 'q');
+      case gadget::KEY_R: return (shift_pressed ? 'R' : 'r');
+      case gadget::KEY_S: return (shift_pressed ? 'S' : 's');
+      case gadget::KEY_T: return (shift_pressed ? 'T' : 't');
+      case gadget::KEY_U: return (shift_pressed ? 'U' : 'u');
+      case gadget::KEY_V: return (shift_pressed ? 'V' : 'v');
+      case gadget::KEY_W: return (shift_pressed ? 'W' : 'w');
+      case gadget::KEY_X: return (shift_pressed ? 'X' : 'x');
+      case gadget::KEY_Y: return (shift_pressed ? 'Y' : 'y');
+      case gadget::KEY_Z: return (shift_pressed ? 'Z' : 'z');
+
+      case gadget::KEY_SPACE         : return ' ';
+
+      case gadget::KEY_EXCLAM        : return '!';
+      case gadget::KEY_QUOTE_DBL     : return '"';
+      case gadget::KEY_NUMBER_SIGN   : return '#';
+      case gadget::KEY_DOLLAR        : return '$';
+      case gadget::KEY_PERCENT       : return '%';
+      case gadget::KEY_AMPERSAND     : return '&';
+      case gadget::KEY_APOSTROPHE    : return '\'';
+      case gadget::KEY_PAREN_LEFT    : return '(';
+      case gadget::KEY_PAREN_RIGHT   : return ')';
+      case gadget::KEY_ASTERISK      : return '*';
+      case gadget::KEY_PLUS          : return '+';
+      case gadget::KEY_COMMA         : return ',';
+      case gadget::KEY_MINUS         : return '-';
+      case gadget::KEY_PERIOD        : return '.';
+      case gadget::KEY_SLASH         : return '/';
+      case gadget::KEY_COLON         : return ':';
+      case gadget::KEY_SEMICOLON     : return ';';
+      case gadget::KEY_LESS          : return '<';
+      case gadget::KEY_EQUAL         : return '=';
+      case gadget::KEY_GREATER       : return '>';
+      case gadget::KEY_QUESTION      : return '?';
+      case gadget::KEY_AT            : return '@';
+      case gadget::KEY_BRACKET_LEFT  : return '[';
+      case gadget::KEY_BACKSLASH     : return '\\';
+      case gadget::KEY_BRACKET_RIGHT : return ']';
+      case gadget::KEY_ASCII_CIRCUM  : return '^';
+      case gadget::KEY_UNDERSCORE    : return '_';
+      case gadget::KEY_QUOTE_LEFT    : return '`';
+      case gadget::KEY_BRACE_LEFT    : return '{';
+      case gadget::KEY_BAR           : return '|';
+      case gadget::KEY_BRACE_RIGHT   : return '}';
+      case gadget::KEY_ASCII_TILDE   : return '~';
+
+      default: return '\0';
    }
 }
 
@@ -892,7 +888,7 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
 
    // The X Window System returns ASCII key characters as lowercase letters,
    // so we force Windows to do the same for consistency.
-   const char ascii_rep(std::tolower(getAsciiKey(msg.wParam, key)));
+   const char ascii_rep(getAsciiKey(msg.wParam, key));
    int mask = getModifierMask();
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
