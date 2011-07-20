@@ -48,6 +48,14 @@ KeyboardMouseProxy::~KeyboardMouseProxy()
    /* Do nothing. */ ;
 }
 
+void KeyboardMouseProxy::updateData()
+{
+   if (! isStupefied())
+   {
+      mData = mTypedDevice->getEventQueue();
+   }
+}
+
 const vpr::Interval& KeyboardMouseProxy::getTimeStamp() const
 {
    if (isStupefied() || NULL == mTypedDevice.get())

@@ -68,6 +68,14 @@ public:
 
    virtual ~KeyboardMouseProxy();
 
+   /**
+    * Updates \c mData with the most recent copy of the event queue from
+    * the proxied device.
+    *
+    * @since 2.1.19
+    */
+   virtual void updateData();
+
    /** Returns the time of the last update. */
    const vpr::Interval& getTimeStamp() const;
 
