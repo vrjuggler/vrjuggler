@@ -395,6 +395,7 @@ DPP_PATH_JAVA( , [tweek_have_java='Y'],
 if test "x$tweek_have_java" = "xY" ; then
    DPP_JDK_VERSION([$JDK_HOME], [1.4], ,
       [ BUILD_JAVA='N'
+        java_orb_name='none'
         AC_MSG_WARN([*** JDK 1.4 or newer required for Tweek Java API ***])
       ])
 
