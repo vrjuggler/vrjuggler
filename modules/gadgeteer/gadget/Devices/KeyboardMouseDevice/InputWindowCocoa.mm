@@ -223,17 +223,6 @@ bool InputWindowCocoa::sample()
 
 bool InputWindowCocoa::startSampling()
 {
-   if ( NULL != mThread )
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR")
-         << ": [gadget::InputWindowXWin::startSampling()] Already sampling!\n"
-         << vprDEBUG_FLUSH;
-      vprASSERT(false);
-
-      return false;
-   }
-
    bool started(false);
 
    @try
@@ -313,12 +302,6 @@ bool InputWindowCocoa::stopSampling()
 
    mMainView    = nil;
    mCocoaWindow = nil;
-
-   if ( NULL != mThread )
-   {
-      delete mThread;
-      mThread = NULL;
-   }
 
    return true;
 }
