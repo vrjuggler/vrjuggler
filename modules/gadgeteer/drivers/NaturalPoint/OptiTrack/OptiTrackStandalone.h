@@ -13,25 +13,25 @@ class RigidBodyData
 {
 public:
    RigidBodyData()
-      : mX(0.0f)
-      , mY(0.0f)
-      , mZ(0.0f)
-      , mQX(0.0f)
-      , mQY(0.0f)
-      , mQZ(0.0f)
-      , mQW(0.0f)
    {
+      mX = 0.0f;
+      mY = 0.0f;
+      mZ = 0.0f;
+      mQX = 0.0f;
+      mQY = 0.0f;
+      mQZ = 0.0f;
+      mQW = 0.0f;
    }
 
-   RigidBodyData(float, float, float, float, float, float, float)
-      : mX(0.0f)
-      , mY(0.0f)
-      , mZ(0.0f)
-      , mQX(0.0f)
-      , mQY(0.0f)
-      , mQZ(0.0f)
-      , mQW(0.0f)
+   RigidBodyData(float x, float y, float z, float qx, float qy, float qz, float qw)
    {
+      mX = 0.0f;
+      mY = 0.0f;
+      mZ = 0.0f;
+      mQX = 0.0f;
+      mQY = 0.0f;
+      mQZ = 0.0f;
+      mQW = 0.0f;
    }
 
    ~RigidBodyData() {;}
@@ -88,10 +88,19 @@ public:
       return mActive;
    }
 
+   bool isMcastMember()
+   {
+      return mIsMcastMember;
+   }
+
+   bool addMcastMember();
+
 private:
    void unpack(char * pData);
 
    bool                 mActive;  /**< If the driver is active. */
+   bool                 mIsMcastMember;
+   int                  mPort;
    vpr::SocketDatagram  *mSocket;
    vpr::InetAddr        mAddress; /**< Address of TrackingTools. */
    sFrameOfMocapData    mPacket;

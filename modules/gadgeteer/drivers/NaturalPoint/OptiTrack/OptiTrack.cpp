@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2011 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2010 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -130,10 +130,20 @@ void OptiTrack::controlLoop()
    // Loop through and keep sampling until stopSampling is called.
    while (!mDone)
    {
-      this->sample();
+      if(!mTracker.isMcastMember())
+      {
+         if(!mTracker.addMcastMember())
+         {
+             vpr::System::sleep(2);
+         }
+      }
+      else
+      {
+         this->sample();
 
-      // Limit sampling to 100 Hz to match output from hardware
-      vpr::System::msleep(10);
+         // Limit sampling to 100 Hz to match output from hardware
+         vpr::System::msleep(10);
+      }
    }
 }
 
@@ -232,24 +242,24 @@ bool OptiTrack::sample()
    for (i = 0 ; i < mRigidBodyIDs.size(); ++i)
    {
       // Get the station index for the given station.
-      const int index = mRigidBodyIDs[i];
+      int index = mRigidBodyIDs[i];
 
       // Set the time of each PositionData to match the first.
       current_samples[i].setTime(current_samples[0].getTime());
 
-      gmtl::Matrix44f& pos_data(current_samples[i].editValue());
-      gmtl::identity(pos_data);
+      gmtl::identity(current_samples[i].mPosData);
 
       gmtl::Quatf quat(mTracker.xRBQuat(index),
                        mTracker.yRBQuat(index),
                        mTracker.zRBQuat(index),
                        mTracker.wRBQuat(index));
       
-      pos_data = gmtl::makeRot<gmtl::Matrix44f>(quat);
+      current_samples[i].mPosData = gmtl::makeRot<gmtl::Matrix44f>(quat);
 
-      gmtl::setTrans(pos_data, gmtl::Vec3f(mTracker.xRBPos(index),
-                                           mTracker.yRBPos(index),
-                                           mTracker.zRBPos(index)));
+      gmtl::setTrans(current_samples[i].mPosData,
+                     gmtl::Vec3f(mTracker.xRBPos(index),
+                                 mTracker.yRBPos(index),
+                                 mTracker.zRBPos(index)));
    }
     
    // Fill in marker data.  Note: this assumes that the IDs do not overlap with rigid bodies.  
@@ -257,18 +267,17 @@ bool OptiTrack::sample()
    for (i = mRigidBodyIDs.size(); i < (mMarkerIDs.size() + mRigidBodyIDs.size()); ++i)
    {
       // Get the station index for the given station.
-      const int index = mMarkerIDs[i];
+      int index = mMarkerIDs[i];
 
       // Set the time of each PositionData to match the first.
       current_samples[i].setTime( current_samples[0].getTime() );
 
-      gmtl::Matrix44f& pos_data(current_samples[i].editValue());
-      gmtl::identity(pos_data);
+      gmtl::identity(current_samples[i].mPosData);
 
-      gmtl::setTrans(pos_data,
-                     gmtl::Vec3f(mTracker.xMarkerPos(index),
-                                 mTracker.yMarkerPos(index),
-                                 mTracker.zMarkerPos(index)));
+      gmtl::setTrans( current_samples[i].mPosData,
+                      gmtl::Vec3f(mTracker.xMarkerPos( index ),
+                                  mTracker.yMarkerPos( index ),
+                                  mTracker.zMarkerPos( index )) );
    }
 
    // Lock and then swap the buffers.
