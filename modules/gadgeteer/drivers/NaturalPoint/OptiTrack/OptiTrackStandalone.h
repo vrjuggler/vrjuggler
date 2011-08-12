@@ -88,10 +88,19 @@ public:
       return mActive;
    }
 
+   bool isMcastMember()
+   {
+      return mIsMcastMember;
+   }
+
+   bool addMcastMember();
+
 private:
    void unpack(char * pData);
 
    bool                 mActive;  /**< If the driver is active. */
+   bool                 mIsMcastMember;
+   int                  mPort;
    vpr::SocketDatagram  *mSocket;
    vpr::InetAddr        mAddress; /**< Address of TrackingTools. */
    sFrameOfMocapData    mPacket;

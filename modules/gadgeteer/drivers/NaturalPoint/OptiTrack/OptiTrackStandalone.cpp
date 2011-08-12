@@ -3,26 +3,25 @@
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/Util/Interval.h>
 #include <vpr/IO/TimeoutException.h>
+#include <gadget/Util/Debug.h>
 
 OptiTrackStandalone::OptiTrackStandalone() :
-   mActive(false)
+   mActive(false),
+   mIsMcastMember(false)
 {
 
 }
 
 bool OptiTrackStandalone::open(int port)
 {
+   mPort = port;
+
    if (!mActive)
    {
 
-      vpr::InetAddr myAddr, multiCastAddr;
+      vpr::InetAddr myAddr;
 
       myAddr.setPort(port);
-
-      multiCastAddr.setAddress(MULTICAST_ADDRESS);
-      multiCastAddr.setFamily(vpr::SocketTypes::INET);
-
-      vpr::McastReq multiCastReq = vpr::McastReq(multiCastAddr, myAddr);
 
       mSocket = new vpr::SocketDatagram();
       mSocket->setLocalAddr(myAddr);
@@ -38,7 +37,6 @@ bool OptiTrackStandalone::open(int port)
          mActive = false;
          return false;
       }
-      mSocket->addMcastMember(multiCastReq);
 
       mActive = true;
       return true;
@@ -77,6 +75,33 @@ bool OptiTrackStandalone::updateData()
    }
    
    return false;
+}
+
+bool OptiTrackStandalone::addMcastMember()
+{
+   vpr::InetAddr myAddr, multiCastAddr;
+
+   myAddr.setPort(mPort);
+
+   multiCastAddr.setAddress(MULTICAST_ADDRESS);
+   multiCastAddr.setFamily(vpr::SocketTypes::INET);
+
+   vpr::McastReq multiCastReq = vpr::McastReq(multiCastAddr, myAddr);
+
+   try
+   {
+      mSocket->addMcastMember(multiCastReq);
+      mIsMcastMember = true;
+      return(true);
+   }
+   catch (vpr::Exception&)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "OptiTrackStandalone.cpp: Unable to add multicast member."
+         << "Check that OptiTrack server is running.\n"
+         << vprDEBUG_FLUSH;
+      return(false);
+   }
 }
 
 void OptiTrackStandalone::unpack(char * szData)

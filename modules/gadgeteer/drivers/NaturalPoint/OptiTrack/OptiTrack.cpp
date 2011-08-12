@@ -130,10 +130,20 @@ void OptiTrack::controlLoop()
    // Loop through and keep sampling until stopSampling is called.
    while (!mDone)
    {
-      this->sample();
+      if(!mTracker.isMcastMember())
+      {
+         if(!mTracker.addMcastMember())
+         {
+             vpr::System::sleep(2);
+         }
+      }
+      else
+      {
+         this->sample();
 
-      // Limit sampling to 100 Hz to match output from hardware
-      vpr::System::msleep(10);
+         // Limit sampling to 100 Hz to match output from hardware
+         vpr::System::msleep(10);
+      }
    }
 }
 
