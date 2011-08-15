@@ -247,16 +247,17 @@ bool OptiTrack::sample()
       // Set the time of each PositionData to match the first.
       current_samples[i].setTime(current_samples[0].getTime());
 
-      gmtl::identity(current_samples[i].mPosData);
+      gmtl::Matrix44f& pos_data(current_samples[i].editValue());
+      gmtl::identity(pos_data);
 
       gmtl::Quatf quat(mTracker.xRBQuat(index),
                        mTracker.yRBQuat(index),
                        mTracker.zRBQuat(index),
                        mTracker.wRBQuat(index));
       
-      current_samples[i].mPosData = gmtl::makeRot<gmtl::Matrix44f>(quat);
+      gmtl::setRot(pos_data, quat);
 
-      gmtl::setTrans(current_samples[i].mPosData,
+      gmtl::setTrans(pos_data,
                      gmtl::Vec3f(mTracker.xRBPos(index),
                                  mTracker.yRBPos(index),
                                  mTracker.zRBPos(index)));
@@ -272,9 +273,10 @@ bool OptiTrack::sample()
       // Set the time of each PositionData to match the first.
       current_samples[i].setTime( current_samples[0].getTime() );
 
-      gmtl::identity(current_samples[i].mPosData);
+      gmtl::Matrix44f& pos_data(current_samples[i].editValue());
+      gmtl::identity(pos_data);
 
-      gmtl::setTrans( current_samples[i].mPosData,
+      gmtl::setTrans( pos_data,
                       gmtl::Vec3f(mTracker.xMarkerPos( index ),
                                   mTracker.yMarkerPos( index ),
                                   mTracker.zMarkerPos( index )) );
