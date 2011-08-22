@@ -48,7 +48,7 @@ protected:
     * Construct a new "virtual" device that represents a remote input device.
     */
    VirtualDevice(const std::string& name, const vpr::GUID& localId,
-                 const std::string& baseType, const std::string& hostname,
+                 const vpr::Uint16 baseType, const std::string& hostname,
                  gadget::InputPtr device);
 
 public:
@@ -64,7 +64,7 @@ public:
     * @since 1.3.7
     */
    static VirtualDevicePtr create(const std::string& name, const vpr::GUID& id,
-                                  const std::string& baseType,
+                                  const vpr::Uint16 baseType,
                                   const std::string& hostname,
                                   gadget::InputPtr device);
 
@@ -77,7 +77,7 @@ public:
    /**
     * Get the name of the remote device that we represent.
     */
-   std::string getName() const
+   const std::string& getName() const
    {
       return mName;
    }
@@ -85,7 +85,7 @@ public:
    /**
     * Return the hostname for the machine that is connected to the real device.
     */
-   std::string getRemoteHostname() const
+   const std::string& getRemoteHostname() const
    {
       return mRemoteHostname;
    }
@@ -93,7 +93,7 @@ public:
    /**
     * Get the local id used to identify this device.
     */
-   vpr::GUID getLocalId() const
+   const vpr::GUID& getLocalId() const
    {
       return mId;
    }
@@ -108,7 +108,7 @@ public:
 
 private:
    std::string          mName;                     /**< VirtualDevice name */
-   std::string          mBaseType;
+   vpr::Uint16          mBaseType;
    std::string          mRemoteHostname;
    vpr::GUID            mId;
    gadget::InputPtr     mDevice;

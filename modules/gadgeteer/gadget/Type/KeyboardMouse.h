@@ -69,6 +69,8 @@ public:
    typedef KeyboardMouseData::data_type EventQueue;
    typedef boost::signal<void (const EventPtr&)> add_signal_t;
 
+   static const vpr::Uint16 type_id;
+
 protected:
    KeyboardMouse();
 
@@ -82,16 +84,6 @@ public:
    static KeyboardMousePtr create();
 
    virtual ~KeyboardMouse();
-
-   /**
-    * Returns the Input type name used to map into the BaseTypeFactory. In a 
-    * device driver, do not override this method unless the device driver is
-    * also going to be implementing a new core Input device type.
-    */
-   virtual std::string getInputTypeName()
-   {
-      return "keyboard_mouse";
-   }
 
    /**
     * Writes both \c mCurKeys and \c mCurEventQueueLock to a stream using the
@@ -113,6 +105,11 @@ public:
     * @throw vpr::IOException is thrown if de-serialization fails.
     */
    virtual void readObject(vpr::ObjectReader* reader);
+
+   /**
+    * @since 2.1.19
+    */
+   virtual vpr::Uint16 getTypeId() const;
 
    virtual bool config(jccl::ConfigElementPtr)
    {
@@ -214,6 +211,9 @@ protected:
    // timestamps from the event queue but we only get events during frames
    // that have key presses and mouse motion.
    vpr::Interval mSyncTime;      /**< Holds an Interval that is syncrnized across the cluster */
+
+private:
+   static const std::string sTypeName;
 };
 
 } // end namespace

@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-08-22 patrick     Changed input device type identification from string
+                       name to integer type ID. Subclasses of gadget::Input
+                       must now implement getTypeId() and not getTypeName().
+                       This is handled automatically by gadget::InputDevice<T>.
+                       NEW VERSION: 2.1.19
 2011-05-28 patrick     Replaced gadget::InputMixer<T1,T2> with
                        gadget::InputDevice<T>. The template parameter is
                        either one of the device base types (gadget::Digital,

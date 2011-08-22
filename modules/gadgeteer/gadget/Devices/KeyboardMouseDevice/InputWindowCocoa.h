@@ -53,6 +53,8 @@ public:
 
    virtual ~InputWindowCocoa();
 
+   /** @name Input Interface */
+   //@{
    static std::string getElementType();
 
    virtual bool config(jccl::ConfigElementPtr e);
@@ -84,6 +86,24 @@ public:
     * Does nothing.
     */
    virtual void updateData();
+
+   /**
+    * This method exists to implement the full Input interface. However,
+    * because an instance of this class is not shared in a cluster
+    * configuration, there is no reason that this method should ever be
+    * invoked.
+    *
+    * @pre This method should never be invoked.
+    *
+    * @throw vpr::Exception
+    *           Thrown when this method is invoked in an optimized build.
+    *
+    * @see KeyboardMouseDevice
+    *
+    * @since 2.1.19
+    */
+   virtual type_id_type getTypeId() const;
+   //@}
 
    /**
     * Updates the bounds of this window to be the given values.

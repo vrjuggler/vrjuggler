@@ -98,11 +98,6 @@ public:
     */
    virtual bool config(jccl::ConfigElementPtr element);
 
-   virtual std::string getInputTypeName()
-   {
-       return std::string("SimInput");
-   }
-
    virtual void writeObject(vpr::ObjectWriter* writer)
    {
       boost::ignore_unused_variable_warning(writer);

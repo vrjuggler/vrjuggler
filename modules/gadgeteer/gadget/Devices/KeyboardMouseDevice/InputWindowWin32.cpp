@@ -230,6 +230,17 @@ bool InputWindowWin32::stopSampling()
    return true;
 }
 
+void InputWindowWin32::updateData()
+{
+   /* Do nothing. */ ;
+}
+
+InputWindowWin32::type_id_type InputWindowWin32::getTypeId() const
+{
+   vprASSERT(false && "This method should not be invoked on this subclass.");
+   throw vpr::Exception("This method should not be invoked on this subclass.",
+                        VPR_LOCATION);
+}
 
 /*********************** WIN32 STUFF ****************************/
 

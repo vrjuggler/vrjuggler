@@ -30,8 +30,10 @@
 namespace cluster
 {
 
-VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& baseType, 
-                             const std::string& hostname, gadget::InputPtr device)
+VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id,
+                             const vpr::Uint16 baseType, 
+                             const std::string& hostname,
+                             gadget::InputPtr device)
    : mName(name)
    , mBaseType(baseType)
    , mRemoteHostname(hostname)
@@ -39,9 +41,11 @@ VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const
    , mDevice(device)
 {}
 
-VirtualDevicePtr VirtualDevice::create(const std::string& name, const vpr::GUID& id,
-                                       const std::string& baseType,
-                                       const std::string& hostname, gadget::InputPtr device)
+VirtualDevicePtr VirtualDevice::create(const std::string& name,
+                                       const vpr::GUID& id,
+                                       const vpr::Uint16 baseType,
+                                       const std::string& hostname,
+                                       gadget::InputPtr device)
 {
    return VirtualDevicePtr(new VirtualDevice(name, id, baseType, hostname, device));
 }

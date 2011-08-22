@@ -153,8 +153,8 @@ public:
 private:
    /** @name VirtualDevice methods */
    //@{
-   bool addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
-                         const std::string& device_base_type,
+   bool addVirtualDevice(const vpr::GUID& deviceId, const std::string& name,
+                         const vpr::Uint16 deviceBaseType,
                          const std::string& hostname);
 
    void removeVirtualDevice(const std::string& device_name);

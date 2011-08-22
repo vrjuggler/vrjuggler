@@ -109,6 +109,18 @@ public:
 
    void train() { ; }
 
+   /**
+    * This returns 0. This device type does not support serialization, and it
+    * is not declared correctly in order to work with a cluster configuration.
+    * As such, there is no valid type ID value that can be returned here. If
+    * this type and gadget::GloveGesture are updated to work in a cluster
+    * configuration, then this override can be removed
+    * (InputDevice<T>::getTypeId() should be used).
+    *
+    * @since 2.1.19
+    */
+   virtual vpr::Uint16 getTypeId() const;
+
 private:
    std::vector<KeyModPair> mSimKeys;    /**<  The keys to press for the gestures */
    int             mCurGesture;   /**< The current gesture id */

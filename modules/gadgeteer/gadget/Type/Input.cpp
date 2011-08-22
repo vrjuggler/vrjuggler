@@ -40,6 +40,12 @@ Input::Input()
    , mActive(false)
    , mNeedUpdate(true)
 {
+   /* Do nothing. */ ;
+}
+
+Input::~Input()
+{
+   /* Do nothing. */ ;
 }
 
 bool Input::config(jccl::ConfigElementPtr e)
@@ -59,11 +65,31 @@ bool Input::config(jccl::ConfigElementPtr e)
 
 void Input::updateDataIfNeeded()
 {
-   if ( mNeedUpdate )
+   if (mNeedUpdate)
    {
       mNeedUpdate = false;
       updateData();
    }
+}
+
+/**
+ * Returns the name identifying this instance of the device.
+ * This is the name given to the device in its config element (e.g.,
+ * "MyFlockOfBirds", "The Ibox", etc.).
+ */
+const std::string Input::getInstanceName() const
+{
+   return mInstName.empty() ? "Undefined" : mInstName;
+}
+
+void Input::writeObject(vpr::ObjectWriter*)
+{
+   /* Do nothing. */ ;
+}
+
+void Input::readObject(vpr::ObjectReader*)
+{
+   /* Do nothing. */ ;
 }
 
 } // End of gadget namespace

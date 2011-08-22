@@ -50,6 +50,8 @@
 namespace gadget
 {
 
+const std::string Glove::sTypeName("Glove");
+
 Glove::Glove()
 {
    // Initialize the transforms for the default GloveData.
@@ -90,7 +92,7 @@ void Glove::writeObject(vpr::ObjectWriter* writer)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
 
-   writer->beginTag(Glove::getInputTypeName());
+   writer->beginTag(sTypeName);
    writer->beginAttribute(tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_GLOVE);                               // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
@@ -153,7 +155,7 @@ void Glove::readObject(vpr::ObjectReader* reader)
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
-   reader->beginTag(Glove::getInputTypeName());
+   reader->beginTag(sTypeName);
    reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

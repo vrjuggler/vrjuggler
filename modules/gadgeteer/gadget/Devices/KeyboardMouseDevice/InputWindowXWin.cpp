@@ -208,6 +208,24 @@ bool InputWindowXWin::stopSampling()
    return true;
 }
 
+bool InputWindowXWin::sample()
+{
+   handleEvents();
+   return true;
+}
+
+void InputWindowXWin::updateData()
+{
+   /* Do nothing. */ ;
+}
+
+InputWindowXWin::type_id_type InputWindowXWin::getTypeId() const
+{
+   vprASSERT(false && "This method should not be invoked on this subclass.");
+   throw vpr::Exception("This method should not be invoked on this subclass.",
+                        VPR_LOCATION);
+}
+
 // Main thread of control for this active object
 void InputWindowXWin::controlLoop()
 {

@@ -136,16 +136,6 @@ public:
    }
 
    /**
-    * Returns the Input type name used to map into the BaseTypeFactory. In a 
-    * device driver, do not override this method unless the device driver is
-    * also going to be implementing a new core Input device type.
-    */
-   virtual std::string getInputTypeName()
-   {
-      return std::string("Command");
-   }
-
-   /**
     * Serializes this object into the given object writer.
     *
     * @param writer The object writer to which this object will be
@@ -174,6 +164,8 @@ public:
    }
 
 private:
+   static const std::string sTypeName;
+
    add_signal_t mDataAdded;
 
    SampleBuffer_t mCommandSamples; /**< Command samples */

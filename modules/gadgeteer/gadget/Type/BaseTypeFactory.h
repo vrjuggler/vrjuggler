@@ -121,7 +121,7 @@ protected:
  * Input base type factory.
  */
 class GADGET_CLASS_API BaseTypeFactory
-   : public Factory<Input, std::string>
+   : public Factory<Input, vpr::Uint16>
 {
 public:
    vprSingletonHeaderWithInitFunc(BaseTypeFactory, registerBaseDeviceTypes);

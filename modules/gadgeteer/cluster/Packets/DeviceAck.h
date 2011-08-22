@@ -54,17 +54,18 @@ protected:
    /**
     * Create a DeviceAck packet to acknowledge a ApplicationDataRequest.
     *
-    * @param plugin_id        GUID of the ClusterPlugin that should handle this
-    *                         packet.
-    * @param id               GUID of the Device that we are acknowledging.
-    * @param device_name      Name of the device that we are acknowledging.
-    * @param device_base_type Basetype of the device that we are acknowledging.
-    * @param ack              Boolean determining if this is a positive (ACK)
-    *                         or a negative (NACK) responce.
+    * @param pluginId       GUID of the ClusterPlugin that should handle this
+    *                       packet.
+    * @param id             GUID of the Device that we are acknowledging.
+    * @param deviceName     Name of the device that we are acknowledging.
+    * @param deviceBaseType Base type ID of the device that we are
+    *                       acknowledging.
+    * @param ack            Boolean determining if this is a positive (ACK)
+    *                       or a negative (NACK) responce.
     */
    DeviceAck(const vpr::GUID& pluginId, const vpr::GUID& id,
-             const std::string& deviceName,
-             const std::string& deviceBaseType, bool ack);
+             const std::string& deviceName, const vpr::Uint16 deviceBaseType,
+             const bool ack);
 
 public:
    /**
@@ -82,8 +83,9 @@ public:
     * @since 1.3.7
     */
    static DeviceAckPtr create(const vpr::GUID& pluginId, const vpr::GUID& id,
-                              const std::string& deviceName,
-                              const std::string& deviceBaseType, bool ack);
+                              const std::string& devTypeId,
+                              const vpr::Uint16 deviceBaseType,
+                              const bool ack);
 
    virtual ~DeviceAck();
 
@@ -107,13 +109,13 @@ public:
     */
    static vpr::Uint16 getPacketFactoryType()
    {
-      return(Header::RIM_DEVICE_ACK);
+      return Header::RIM_DEVICE_ACK;
    }
 
    /**
     * Return the GUID of the Device that we are acknowledging.
     */
-   vpr::GUID getId()
+   const vpr::GUID& getId() const
    {
       return mId;
    }
@@ -121,7 +123,7 @@ public:
    /**
     * Return the name of the device that we are acknowledging.
     */
-   std::string getDeviceName()
+   const std::string& getDeviceName() const
    {
       return mDeviceName;
    }
@@ -129,7 +131,7 @@ public:
    /**
     * Return the basetype of the device that we are acknowledging.
     */
-   std::string getDeviceBaseType()
+   vpr::Uint16 getDeviceBaseType() const
    {
       return mDeviceBaseType;
    }
@@ -137,7 +139,7 @@ public:
    /**
     * Return the hostname of the node the device is located on.
     */
-   std::string getHostname()
+   const std::string& getHostname() const
    {
       return mHostname;
    }
@@ -146,7 +148,7 @@ public:
     * Return a boolean determining if this is a positive(ACK) or a
     * negative(NACK) responce.
     */
-   bool getAck()
+   bool getAck() const
    {
       return mAck;
    }
@@ -154,7 +156,7 @@ public:
 private:
    vpr::GUID   mId;              /**< GUID of the Device that we are acknowledging. */
    std::string mDeviceName;      /**< Name of the device that we are acknowledging. */
-   std::string mDeviceBaseType;  /**< Basetype of the device that we are acknowledging. */
+   vpr::Uint16 mDeviceBaseType;  /**< Base type of the device that we are acknowledging. */
    std::string mHostname;        /**< The hostname of the node that the device is on. */
    bool        mAck;             /**< Boolean determining if this is a positive(ACK) or a negative(NACK) responce. */
 };

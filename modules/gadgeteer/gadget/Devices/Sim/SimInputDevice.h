@@ -61,11 +61,6 @@ public:
       base_type::readObject(reader);
       SimInput::readObject(reader);
    }
-
-   virtual std::string getInputTypeName()
-   {
-      return base_type::getInputTypeName() + SimInput::getInputTypeName();
-   }
    //@}
 
 };

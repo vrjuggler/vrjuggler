@@ -28,18 +28,18 @@
 #define _GADGET_INPUT_H_
 
 #include <gadget/gadgetConfig.h>
-#include <boost/concept_check.hpp>
-#include <boost/noncopyable.hpp>
-#include <vpr/vpr.h>
 
+#include <boost/noncopyable.hpp>
+
+#include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/IO/SerializableObject.h>
+
 #include <jccl/Config/ConfigElementPtr.h>
 
-//#include <vpr/IO/ObjectReader.h>
-//#include <vpr/IO/ObjectWriter.h>
-#include <vpr/IO/SerializableObject.h>
 #include <gadget/Type/InputPtr.h>
+
 
 namespace gadget
 {
@@ -75,24 +75,19 @@ class GADGET_CLASS_API Input
    , boost::noncopyable
 {
 protected:
-   /** Default Constructor.
-    *
-    * The default constructor is intended only for use by the DummyProxies
-    * which do not need to have their serial port and baud rate etc set up.
-    * Also, initializes mThread and mActive to null values.
+   /**
+    * Default Constructor.
     */
    Input();
 
 public:
-   /** Input Destructor.
+   /**
+    * Destructor.
     *
     * Free the memory for the Instance Name and Serial Port strings if
     * allocated.
     */
-   virtual ~Input()
-   {
-      ;
-   }
+   virtual ~Input();
 
    /**
     * Config method.
@@ -103,37 +98,37 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
    /**
-    * Sample the device.
+    * Samples the device.
     *
-    * Read the next set of input.  This method is normally used internally
-    * by threaded drivers to repetively sample data in a separate thread.
-    * (This new data is not accessable until UpdateData is called)
+    * Reads the next set of input. This method is normally used internally
+    * by threaded drivers to sample data repetitively in a separate thread.
+    * (This new data is not accessable until updateData() is called.)
     */
    virtual bool sample() = 0;
 
    /**
-    * Start a device sampling.
+    * Starts a device sampling.
     *
-    * Start the device sampling, normally this will spawn a thread which will
-    * just repeatedly call Sample().
-    * This function should return true when it sucessfully starts,
-    * false otherwise.
+    * Normally this will spawn a thread which will repeatedly calls sample().
+    * This function should return true when it sucessfully starts and false
+    * otherwise.
     */
    virtual bool startSampling() = 0;
 
    /**
-    * StopSampling.
+    * Stops samping.
     *
-    * Reverse the effects of StartSampling().
+    * Reverse the effects of startSampling().
     */
    virtual bool stopSampling() = 0;
 
    /**
-    * Update the data.
+    * Updates the data.
     *
-    * After this function is called subsequent calls to GetData(d) will
-    * return the most recent data at the time of THIS function call.  Data is
-    * guaranteed to be valid and static until the next call to UpdateData.
+    * After this function is called, subsequent calls to
+    * gadget::TypedProxy::getData() will return the most recent data at the
+    * time of \em this function call. Data is guaranteed to be valid and
+    * static until the next call to updateData().
     */
    virtual void updateData() = 0;
 
@@ -155,55 +150,54 @@ public:
     * This string is used by the device factory to look up device drivers
     * based up the type of element it is trying to load.
     */
-   static std::string getElementType() { return std::string("Undefined"); }
+   static const std::string getElementType()
+   {
+      return std::string("Undefined");
+   }
 
    /**
     * Returns the name identifying this instance of the device.
     * This is the name given to the device in its config element (e.g.,
     * "MyFlockOfBirds", "The Ibox", etc.).
     */
-   const std::string getInstanceName() const
-   {
-      if (mInstName.empty())
-      {
-         return std::string("Undefined");
-      }
-      return mInstName;
-   }
+   const std::string getInstanceName() const;
 
    /**
-    * Get the string name of the current device type.  This is used later by
-    * the BaseTypeFactory to build a "virtual" representation of this to be
-    * used for remote input.
+    * The type of the data returned by getTypeId().
+    *
+    * @since 2.1.19
+    */
+   typedef vpr::Uint16 type_id_type;
+
+   /**
+    * Returns the unique type identifier for the current device type. This is
+    * used for type registration with BaseTypeFactory to build a "virtual"
+    * representation of this device type for remote input. In other words,
+    * this method is only used in conjunction with device types that can be
+    * shared in a cluster configuration.
     *
     * @see gadget::BaseTypeFactory
+    *
+    * @note This method replaced \c getInputTypeName() in 2.1.19.
+    *
+    * @since 2.1.19
     */
-   virtual std::string getInputTypeName()
-   {
-      return std::string("Input");
-   }
+   virtual type_id_type getTypeId() const = 0;
 
    /**
-    * Serializes this object into the given object writer. This default
-    * implementation does nothing.
+    * Serializes this object into the given object writer.
     *
     * @param writer The object writer to which this object will be serialized.
     */
-   virtual void writeObject(vpr::ObjectWriter* writer)
-   {
-      boost::ignore_unused_variable_warning(writer);
-   }
+   virtual void writeObject(vpr::ObjectWriter* writer);
 
    /**
-    * De-serializes this object. This default implementation does nothing.
+    * De-serializes this object.
     *
     * @param reader The object reader from which this object will be
     *               de-serialized.
     */
-   virtual void readObject(vpr::ObjectReader* reader)
-   {
-      boost::ignore_unused_variable_warning(reader);
-   }
+   virtual void readObject(vpr::ObjectReader* reader);
 
    /** Is this input device active? */
    bool isActive() const

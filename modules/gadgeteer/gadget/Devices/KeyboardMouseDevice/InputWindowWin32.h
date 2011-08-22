@@ -47,7 +47,8 @@ namespace gadget
  * Basic Win32 input window type.
  */
 class GADGET_CLASS_API InputWindowWin32
-   : public Input, public InputAreaWin32
+   : public Input
+   , public InputAreaWin32
 {
 public:
    InputWindowWin32()
@@ -67,30 +68,46 @@ public:
    /** Main thread of control for this active object. */
    void controlLoop();
 
-   /* Pure Virtuals required by gadget::Input. */
-
-  /**
-   * Create a win32 window and start a thread
-   * processing it's messages.
-   */
+   /** @name Input Interface */
+   //@{
+   /**
+    * Create a win32 window and start a thread processing its messages.
+    */
    bool startSampling();
+
    bool stopSampling();
 
    /**
     * Process the current window events.
     *
-    * @note - Called repeatedly by the controlLoop.
+    * @note Called repeatedly by the controlLoop.
     */
    bool sample();
    
    /**
-    * Do nothing since we are only sending events to
-    * a KeyboardMouseDevice.
+    * Do nothing since we are only sending events to a KeyboardMouseDevice.
     */
-   void updateData()
-   {;}
-   
+   void updateData();
+  
+   /**
+    * This method exists to implement the full Input interface. However,
+    * because an instance of this class is not shared in a cluster
+    * configuration, there is no reason that this method should ever be
+    * invoked.
+    *
+    * @pre This method should never be invoked.
+    *
+    * @throw vpr::Exception
+    *           Thrown when this method is invoked in an optimized build.
+    *
+    * @see KeyboardMouseDevice
+    *
+    * @since 2.1.19
+    */
+   virtual type_id_type getTypeId() const;
+ 
    static std::string getElementType();
+   //@}
 
 protected:
    virtual void processEvent(UINT, UINT, LONG)

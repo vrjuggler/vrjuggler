@@ -41,6 +41,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Exception.h>
 
 #include <jccl/Config/ConfigElement.h>
 
@@ -111,9 +112,7 @@ namespace gadget
 {
 
 InputWindowCocoa::InputWindowCocoa()
-   : gadget::InputAreaCocoa()
-   , gadget::Input()
-   , mScreen(0)
+   : mScreen(0)
    , mWindowOpen(false)
 {
    /* Do nothing. */ ;
@@ -309,6 +308,13 @@ bool InputWindowCocoa::stopSampling()
 void InputWindowCocoa::updateData()
 {
    /* Do nothing. */ ;
+}
+
+InputWindowCocoa::type_id_type InputWindowCocoa::getTypeId() const
+{
+   vprASSERT(false && "This method should not be invoked on this subclass.");
+   throw vpr::Exception("This method should not be invoked on this subclass.",
+                        VPR_LOCATION);
 }
 
 void InputWindowCocoa::updateBounds(const float x, const float y,

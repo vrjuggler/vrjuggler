@@ -151,12 +151,6 @@ public:
     */
    virtual bool getPaused() { return false; }
 
-
-   virtual std::string getInputTypeName()
-   {
-      return std::string("Rumble");
-   }
-   
    /**
     * Required to support serialization interface, does nothing.
     *
@@ -182,7 +176,7 @@ protected:
   
 
 private:
-
+   static const std::string sTypeName;
 };
 
 } // End of gadget namespace

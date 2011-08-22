@@ -29,11 +29,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/mpl/times.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/bitor.hpp>
-#include <boost/mpl/find.hpp>
-#include <boost/mpl/fold.hpp>
 #include <boost/mpl/copy_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -41,66 +36,11 @@
 
 #include <vpr/vprTypes.h>
 
-#include <gadget/Type/AllBaseTypes.h>
+#include <gadget/Type/TypeHelpers.h>
 
 
 namespace gadget
 {
-
-namespace detail
-{
-
-/** @name Compile-Time Power-of Computation */
-//@{
-template<size_t Value, typename Exponent>
-struct pow
-   : boost::mpl::times<
-          boost::mpl::int_<Value>
-        , pow<Value, boost::mpl::int_<Exponent::value - 1> >
-     >::type
-{};
-
-// specialization for 0
-template<size_t Value>
-struct pow<Value, boost::mpl::int_<0> >
-   : boost::mpl::int_<1>::type
-{};
-//@}
-
-/** @name Metafunctions */
-//@{
-template<typename N>
-struct make_pow
-{
-   typedef pow<2, boost::mpl::int_<N::value> > type;
-};
-
-template<typename MaskType, typename Type>
-struct compute_mask
-{
-   typedef typename boost::mpl::find<all_base_types, Type>::type::pos pos_type;
-   typedef typename
-      boost::mpl::bitor_<
-           MaskType
-         , typename make_pow<pos_type>::type
-      >::type
-   type;
-};
-
-template<typename TypeList>
-struct mask_maker
-{
-   typedef typename
-      boost::mpl::fold<
-           TypeList
-         , boost::mpl::int_<0>
-         , compute_mask<boost::mpl::_1, boost::mpl::_2>
-      >::type
-   type;
-};
-//@}
-
-}
 
 /**
  * @example "Example use of gadget::InputDevice"
@@ -162,7 +102,6 @@ public:
     *
     * @see writeObject()
     * @see readObject()
-    * @see getInputTypeName()
     */
    typedef typename
       boost::mpl::copy_if<
@@ -177,8 +116,7 @@ public:
     * bitwise OR of the index value of each member of type_list within
     * all_base_types.
     */
-   static const vpr::Uint16 type_id =
-      detail::mask_maker<type_list>::type::value;
+   static const type_id_type type_id = type::compose_id<type_list>::type::value;
 
    /** @name vpr::SerializableObject Overrides */
    //@{
@@ -197,16 +135,10 @@ public:
    }
    //@}
 
-   /** @name gadget::Input Overrides */
-   //@{
-   virtual std::string getInputTypeName()
+   virtual type_id_type getTypeId() const
    {
-      std::string result(Input::getInputTypeName());
-      Caller<NameBuilder> builder(this, &result);
-      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(builder);
-      return result;
+      return type_id;
    }
-   //@}
 
 private:
    /**
@@ -250,17 +182,6 @@ private:
       static void invoke(BaseType* obj, vpr::ObjectReader* reader)
       {
          obj->BaseType::readObject(reader);
-      }
-   };
-
-   struct NameBuilder
-   {
-      typedef std::string* arg_type;
-
-      template<typename BaseType>
-      static void invoke(BaseType* obj, std::string* result)
-      {
-         *result += obj->BaseType::getInputTypeName();
       }
    };
 

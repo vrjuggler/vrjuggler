@@ -39,6 +39,8 @@
 namespace gadget
 {
 
+const std::string Digital::sTypeName("Digital");
+
 Digital::Digital()
 {;}
 
@@ -94,7 +96,7 @@ void Digital::addDigitalSample(const std::vector<DigitalData>& digSample)
 
 void Digital::writeObject(vpr::ObjectWriter* writer)
 {
-   writer->beginTag(Digital::getInputTypeName());
+   writer->beginTag(sTypeName);
    //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
    SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
    writer->beginAttribute(tokens::DataTypeAttrib);
@@ -137,7 +139,7 @@ void Digital::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
       // ASSERT if this data is really not Digital Data
-   reader->beginTag(Digital::getInputTypeName());
+   reader->beginTag(sTypeName);
    reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

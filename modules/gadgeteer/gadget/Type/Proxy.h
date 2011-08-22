@@ -32,6 +32,7 @@
 #include <typeinfo>
 #include <boost/optional.hpp>
 #include <boost/signal.hpp>
+#include <boost/noncopyable.hpp>
 
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/SignalProxy.h>
@@ -53,6 +54,7 @@ namespace gadget
     * Base class for all input proxies.
     */
    class GADGET_CLASS_API Proxy
+      : private boost::noncopyable
    {
    protected:
       Proxy();

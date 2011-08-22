@@ -94,10 +94,14 @@ public:
 template<template<class> class DeviceType, typename T>
 void registerBaseType()
 {
+   using namespace gadget;
    typedef PlaceholderDevice<DeviceType<T> > dev_type;
-   gadget::BaseTypeFactory::instance()->registerCreator(
-      dev_type::create()->getInputTypeName(), dev_type::create
-   );
+
+   // Assigning dev_type::type_id to a value here works around a linker error
+   // when building on Mac OS X 10.7 with LLVM-GCC 4.2.
+   const Input::type_id_type type_id = dev_type::type_id;
+
+   BaseTypeFactory::instance()->registerCreator(type_id, dev_type::create);
 }
 
 template<template<class> class DeviceType>
@@ -278,7 +282,7 @@ void BaseTypeFactory::registerBaseDeviceTypes()
    typedef
       boost::mpl::transform<
            mask_range
-         , detail::make_pow<boost::mpl::_1>
+         , type::make_id<boost::mpl::_1>
          , boost::mpl::back_inserter<boost::mpl::vector<> >
       >::type
    type_masks;
@@ -294,9 +298,9 @@ void BaseTypeFactory::registerBaseDeviceTypes()
       >::type
    type_combos;
 
-   // This last part ends up being the slowest to compile. It is most likely
-   // due to the instantiation of InputDevice<T>::getInputTypeName() for so
-   // many different type combinations.
+   // This last part ends up being the slowest to compile. The instantiation
+   // of InputDevice<T> for so many different type combinations seems to be
+   // painfully slow.
    {
       TypeRegistrar<InputDevice> r;
       boost::mpl::for_each<type_combos>(r);

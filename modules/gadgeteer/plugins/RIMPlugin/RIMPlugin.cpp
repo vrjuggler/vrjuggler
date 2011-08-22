@@ -164,10 +164,11 @@ bool RIMPlugin::configAdd(jccl::ConfigElementPtr elm)
          DeviceServerPtr device_server = getDeviceServer(device_name);
          vprASSERT(NULL != device_server.get() && "Must have device server.");
 
-         std::string temp_string = input_device->getInputTypeName();
-         vpr::GUID   temp_guid   = device_server->getId();
-         cluster::DeviceAckPtr device_ack =
-            cluster::DeviceAck::create(mHandlerGUID, temp_guid, device_name, temp_string, true);
+         const vpr::Uint16 dev_type_id(input_device->getTypeId());
+         const vpr::GUID& temp_guid(device_server->getId());
+         DeviceAckPtr device_ack = DeviceAck::create(mHandlerGUID, temp_guid,
+                                                     device_name, dev_type_id,
+                                                     true);
 
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
@@ -284,23 +285,30 @@ void RIMPlugin::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
    }
 }
 
-bool RIMPlugin::addVirtualDevice(const vpr::GUID& device_id,
+bool RIMPlugin::addVirtualDevice(const vpr::GUID& deviceId,
                                  const std::string& name,
-                                 const std::string& device_base_type,
+                                 const vpr::Uint16 deviceBaseType,
                                  const std::string& hostname)
 {
+   using namespace gadget;
+
    vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       << clrOutBOLD(clrMAGENTA, "[RemoteInputManager]")
       << "Creating Virtual Device: " << name << std::endl << vprDEBUG_FLUSH;
 
-   gadget::InputPtr input_device = gadget::InputPtr(gadget::BaseTypeFactory::instance()->createObject(device_base_type));
+   InputPtr input_device(       
+      BaseTypeFactory::instance()->createObject(deviceBaseType)
+   );
    vprASSERT(NULL != input_device.get() &&
              "BaseTypeFactory returned a NULL input device.");
 
    // Create a new VirtualDevice.
-   VirtualDevicePtr virtual_device = VirtualDevice::create(name, device_id, device_base_type, hostname, input_device);
+   VirtualDevicePtr virtual_device(
+      VirtualDevice::create(name, deviceId, deviceBaseType, hostname,
+                            input_device)
+   );
 
-   mVirtualDevices[device_id] = virtual_device;
+   mVirtualDevices[deviceId] = virtual_device;
 
    return true;
 }

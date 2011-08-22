@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/mpl/vector.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
@@ -41,11 +42,15 @@
 #include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Type/KeyboardMouse/EventFactory.h>
 
+#include <gadget/Type/TypeHelpers.h>
 #include <gadget/Type/KeyboardMouse.h>
 
 
 namespace gadget
 {
+
+const vpr::Uint16 KeyboardMouse::type_id =
+   type::compose_id<boost::mpl::vector<KeyboardMouse> >::type::value;
 
 KeyboardMouse::KeyboardMouse()
 {
@@ -150,6 +155,11 @@ void KeyboardMouse::readObject(vpr::ObjectReader* reader)
 
    // We must set sync time correctly here since updateEventQueue() changes it.
    mSyncTime.set(temp_sync, vpr::Interval::Base);
+}
+
+vpr::Uint16 KeyboardMouse::getTypeId() const
+{
+   return type_id;
 }
 
 bool KeyboardMouse::modifierOnly(const Keys modKey) const

@@ -77,7 +77,6 @@ typedef boost::mpl::vector<
  *
  * @see gadget::InputDevice::writeObject()
  * @see gadget::InputDevice::readObject()
- * @see gadget::InputDevice::getInputTypeName()
  *
  * @since 2.1.18
  */

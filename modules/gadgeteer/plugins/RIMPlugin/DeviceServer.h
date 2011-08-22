@@ -97,7 +97,7 @@ public:
 
    /**
     */
-   vpr::GUID getId() const
+   const vpr::GUID& getId() const
    {
       return mId;
    }

@@ -142,11 +142,6 @@ public:
       return mDigitalSamples.stableBuffer();
    }
 
-   virtual std::string getInputTypeName()
-   {
-      return std::string("Digital");
-   }
-
    /**
     * Serializes this object into the given object writer.
     *
@@ -176,6 +171,8 @@ public:
    }
 
 private:
+   static const std::string sTypeName;
+
    add_signal_t mDataAdded;
 
    SampleBuffer_t    mDigitalSamples; /**< Digital samples */

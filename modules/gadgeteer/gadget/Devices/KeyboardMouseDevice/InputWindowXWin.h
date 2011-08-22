@@ -93,10 +93,12 @@ public:
       //stopSampling();
    }
 
-   virtual bool config(jccl::ConfigElementPtr e);
+   /** @name Input Interface */
+   //@{
+   /** Return the element type associated with this device type. */
+   static std::string getElementType();
 
-   /** Main thread of control for this active object. */
-   void controlLoop();
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Start the windows sampling. */
    virtual bool startSampling();
@@ -108,20 +110,35 @@ public:
     * Processes the current x-events.
     * Called repetatively by the controlLoop.
     */
-   virtual bool sample()
-   {
-      handleEvents();
-      return true;
-   }
+   virtual bool sample();
 
-   /** Update the keys and event queue data structures with current data. */
-   virtual void updateData()
-   {;}
+   /**
+    * Does nothing.
+    */
+   virtual void updateData();
 
-   /** Return the element type associated with this device type. */
-   static std::string getElementType();
+   /**
+    * This method exists to implement the full Input interface. However,
+    * because an instance of this class is not shared in a cluster
+    * configuration, there is no reason that this method should ever be
+    * invoked.
+    *
+    * @pre This method should never be invoked.
+    *
+    * @throw vpr::Exception
+    *           Thrown when this method is invoked in an optimized build.
+    *
+    * @see KeyboardMouseDevice
+    *
+    * @since 2.1.19
+    */
+   virtual type_id_type getTypeId() const;
+   //@}
 
 protected:
+   /** Main thread of control for this active object. */
+   void controlLoop();
+
    /** Do any extra event processing needed. */
    virtual void processEvent(XEvent)
    {

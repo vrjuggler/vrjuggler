@@ -38,7 +38,9 @@
 namespace gadget
 {
 
-String::String() : mDefaultValue("")
+const std::string String::sTypeName("String");
+
+String::String()
 {;}
 
 StringPtr String::create()
@@ -93,7 +95,7 @@ void String::addStringSample(const std::vector<StringData>& stringSample)
 
 void String::writeObject(vpr::ObjectWriter* writer)
 {
-   writer->beginTag(String::getInputTypeName());
+   writer->beginTag(sTypeName);
    SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
    writer->beginAttribute(tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_STRING);                               // Write out the data type so that we can assert if reading in wrong place
@@ -134,7 +136,7 @@ void String::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
       // ASSERT if this data is really not String Data
-   reader->beginTag(String::getInputTypeName());
+   reader->beginTag(sTypeName);
    reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

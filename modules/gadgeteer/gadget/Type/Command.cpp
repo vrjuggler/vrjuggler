@@ -34,6 +34,8 @@
 namespace gadget
 {
 
+const std::string Command::sTypeName("Command");
+
 Command::Command()
 {;}
 
@@ -89,7 +91,7 @@ void Command::addCommandSample(const std::vector<CommandData>& cmdSample)
 
 void Command::writeObject(vpr::ObjectWriter* writer)
 {
-   writer->beginTag(Command::getInputTypeName());
+   writer->beginTag(sTypeName);
    SampleBuffer_t::buffer_t& stable_buffer = mCommandSamples.stableBuffer();
    writer->beginAttribute(tokens::DataTypeAttrib);
       // Write out the data type so that we can assert if reading in wrong
@@ -133,7 +135,7 @@ void Command::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
       // ASSERT if this data is really not Command Data
-   reader->beginTag(Command::getInputTypeName());
+   reader->beginTag(sTypeName);
    reader->beginAttribute(tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

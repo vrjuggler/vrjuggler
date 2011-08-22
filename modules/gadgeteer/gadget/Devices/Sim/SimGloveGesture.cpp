@@ -199,4 +199,10 @@ void SimGloveGesture::loadTrainedFile(std::string fileName)
    }
 }
 
+vpr::Uint16 SimGloveGesture::getTypeId() const
+{
+   // XXX: Bogus type ID!
+   return 0;
+}
+
 } // End of gadget namespace

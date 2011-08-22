@@ -40,7 +40,7 @@ DeviceAck::DeviceAck()
 
 DeviceAck::DeviceAck(const vpr::GUID& pluginId, const vpr::GUID& id, 
                      const std::string& deviceName, 
-                     const std::string& deviceBaseType, bool ack)
+                     const vpr::Uint16 deviceBaseType, const bool ack)
    : Packet(pluginId)
    , mId(id)
    , mDeviceName(deviceName)
@@ -58,8 +58,7 @@ DeviceAck::DeviceAck(const vpr::GUID& pluginId, const vpr::GUID& id,
                             + 16 /*mId*/
                             + vpr::BufferObjectReader::STRING_LENGTH_SIZE
                             + mDeviceName.size() /*length of mDeviceName*/
-                            + vpr::BufferObjectReader::STRING_LENGTH_SIZE
-                            + mDeviceBaseType.size() /*length of mDeviceBaseType*/
+                            + 2 /*mDeviceBaseType*/
                             + vpr::BufferObjectReader::STRING_LENGTH_SIZE
                             + mHostname.size() /*length of mDeviceBaseType*/
                             + 1 /*mAck*/,
@@ -76,7 +75,8 @@ DeviceAckPtr DeviceAck::create()
 
 DeviceAckPtr DeviceAck::create(const vpr::GUID& pluginId, const vpr::GUID& id,
                                const std::string& deviceName,
-                               const std::string& deviceBaseType, bool ack)
+                               const vpr::Uint16 deviceBaseType,
+                               const bool ack)
 {
    return DeviceAckPtr(new DeviceAck(pluginId, id, deviceName, deviceBaseType, ack));
 }
@@ -100,7 +100,7 @@ void DeviceAck::serialize()
    mPacketWriter->writeString(mDeviceName);
 
    // Serialize the Base Type of the acknowledged device
-   mPacketWriter->writeString(mDeviceBaseType);
+   mPacketWriter->writeUint16(mDeviceBaseType);
 
    // Serialize the hostname of the acknowledging node
    mPacketWriter->writeString(mHostname);
@@ -126,7 +126,7 @@ void DeviceAck::parse()
    mDeviceName = mPacketReader->readString();
 
    // De-Serialize the Base Type of the acknowledged device
-   mDeviceBaseType = mPacketReader->readString();
+   mDeviceBaseType = mPacketReader->readUint16();
 
    // De-Serialize the hostname of the acknowledging node
    mHostname = mPacketReader->readString();
