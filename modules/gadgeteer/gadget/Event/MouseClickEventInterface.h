@@ -43,7 +43,7 @@
 namespace gadget
 {
 
-/** \class NewMouseMultiClickEventInterface NewMouseMultiClickEventInterface.h gadget/Event/NewMouseMultiClickEventInterface.h
+/** \class MouseClickEventInterface MouseClickEventInterface.h gadget/Event/MouseClickEventInterface.h
  *
  * A specialized keyboard/mouse event interface type for detecting
  * double-click events from a mouse. The callback signature is the same as
@@ -68,12 +68,12 @@ namespace gadget
  *                       compile. This template paramter is optional, and it
  *                       defaults to gadget::event::immediate_tag.
  *
- * @since 2.1.16
+ * @since 2.1.20
  */
 template<unsigned int ClickCount
        , typename CollectionTag = event::all_events_tag
        , typename GenerationTag = event::immediate_tag>
-class NewMouseMultiClickEventInterface
+class MouseClickEventInterface
    : public MultiEventInterface<
                  KeyboardMouseProxy
                , MultiEventGenerator<
@@ -86,8 +86,7 @@ class NewMouseMultiClickEventInterface
             >
 {
 public:
-   typedef typename NewMouseMultiClickEventInterface::event_interface_
-      base_type;
+   typedef typename MouseClickEventInterface::event_interface_ base_type;
    typedef typename base_type::proxy_ptr_type proxy_ptr_type;
 
    /**
@@ -100,13 +99,13 @@ public:
     *
     * @see setClickTime()
     */
-   NewMouseMultiClickEventInterface(const unsigned long clickTime = 10)
+   MouseClickEventInterface(const unsigned long clickTime = 10)
       : mClickTime(clickTime)
    {
       /* Do nothing. */ ;
    }
 
-   virtual ~NewMouseMultiClickEventInterface()
+   virtual ~MouseClickEventInterface()
    {
       /* Do nothing. */ ;
    }
