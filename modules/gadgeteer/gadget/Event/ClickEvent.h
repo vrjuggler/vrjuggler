@@ -37,6 +37,7 @@
 #include <boost/mpl/range_c.hpp>
 
 #include <gadget/Event/DataExaminer.h>
+#include <gadget/Event/ClickAnalyzer.h>
 
 
 namespace gadget
@@ -69,12 +70,95 @@ typedef click_tag<1> single_click_tag;
 typedef click_tag<2> double_click_tag;
 //@}
 
+/** \class NewClickAnalyzer ClickEvent.h gadget/Event/ClickEvent.h
+ *
+ * @since 2.1.20
+ */
+template<unsigned int ClickCount>
+class NewClickAnalyzer
+{
+   BOOST_MPL_ASSERT_RELATION(ClickCount, >, 0);
+
+public:
+   static const unsigned int sClickCount = ClickCount;
+
+   NewClickAnalyzer()
+      : mClickTime(10)
+   {
+      mEvents.resize(sClickCount);
+   }
+
+   /**
+    * Adds the given click event to this analyzer. If the number of events
+    * reaches the required number, then analysis is performed on all recorded
+    * click events.
+    */
+   bool addClickEvent(const ClickEvent& clickEvent)
+   {
+      bool event_generated(false);
+
+      // Check for expired events.
+      if (! mEvents.empty())
+      {
+         if (clickEvent.time - mEvents.back().time > mClickTime)
+         {
+            reset();
+         }
+      }
+
+      mEvents.push_back(clickEvent);
+
+      if (mEvents.size() == sClickCount)
+      {
+         // Compare the recorded click events.
+         detail::EventComparator compare(mEvents[0]);
+         std::for_each(mEvents.begin(), mEvents.end(),
+                       boost::bind<void>(boost::ref(compare), _1));
+
+         // If all the events are equivalent (meaning that they satisfy the
+         // criteria for proper comparison), then we ensure that the maximum
+         // time difference between click events is within the configured time
+         // range.
+         if (compare.allEquivalent && mClickTime >= compare.maxClickDiff)
+         {
+            event_generated = true;
+         }
+
+         reset();
+      }
+
+      return event_generated;
+   }
+
+   void setClickTime(const unsigned long clickTime)
+   {
+      mClickTime = clickTime;
+   }
+
+   void reset()
+   {
+      mEvents.clear();
+   }
+
+private:
+   /**
+    * The maximum time, measured in milliseconds, that can elapse between
+    * events in order to generate a multi-click event.
+    */
+   unsigned long mClickTime;
+
+   /**
+    * Events stored for multi-click analysis.
+    */
+   std::vector<ClickEvent> mEvents;
+};
+
 /**
  * A specialization of gadget::event::DataExaminer for all instantiations of
  * gadget::event::click_tag when gadget::EventPtr is the raw data type. In
  * other words, this is the data examiner for mouse events.
  *
- * @tparam ClickCount The number of clicks the designate an event.
+ * @tparam ClickCount The number of clicks that designate an event.
  *
  * @since 2.1.16
  */
@@ -84,29 +168,42 @@ class DataExaminer<click_tag<ClickCount>, EventPtr>
 {
 public:
    DataExaminer()
-      : mClickTime(10)
    {
       /* Do nothing. */ ;
    }
 
-   void examine(const EventPtr& d)
+   // TODO: Implement something smart here that handles multi-click detection.
+   // This might not be too difficult since Qt (apparently) does double-clicks
+   // as a single click event followed by a double-click event.
+   void examine(const EventPtr& event)
    {
-   /*
-      // TEST: Only record double-click events.
-      if (ClickCount == 2)
+      if (event->type() == MouseButtonReleaseEvent)
       {
-         this->addEvent(d);
+         MouseEventPtr mouse_event(
+            boost::dynamic_pointer_cast<MouseEvent>(event)
+         );
+
+         const ClickEvent click_event(mouse_event->getButton(),
+                                      mouse_event->getX(),
+                                      mouse_event->getY(),
+                                      mouse_event->time());
+
+         const bool have_event(mAnalyzer.addClickEvent(click_event));
+
+         if (have_event)
+         {
+            this->addEvent(event);
+         }
       }
-   */
    }
 
    void setClickTime(const unsigned long clickTime)
    {
-      mClickTime = clickTime;
+      mAnalyzer.setClickTime(clickTime);
    }
 
 private:
-   unsigned long mClickTime;
+   NewClickAnalyzer<ClickCount> mAnalyzer;
 };
 
 /**
@@ -114,8 +211,7 @@ private:
  * gadget::event::click_tag when gadget::DigitaiState::State is the raw data
  * type. In other words, this is the data examiner for digital device events.
  *
- * @tparam ClickCount     The number of clicks the designate an event.
- * @tparam CollectionType The base class that handles event collection.
+ * @tparam ClickCount The number of clicks that designate an event.
  *
  * @since 2.1.16
  */
@@ -125,29 +221,40 @@ class DataExaminer<click_tag<ClickCount>, DigitalState::State>
 {
 public:
    DataExaminer()
-      : mClickTime(10)
+      : mLastState(DigitalState::OFF)
    {
       /* Do nothing. */ ;
    }
 
-   void examine(const DigitalState::State d)
+   // TODO: Implement something smart here that handles multi-click detection.
+   // This might not be too difficult since Qt (apparently) does double-clicks
+   // as a single click event followed by a double-click event.
+   void examine(const DigitalState::State data)
    {
-   /*
-      // TEST: Only record double-click events.
-      if (ClickCount == 2)
+      // If the device unit state toggled from ON to OFF, then we treat that
+      // as a click.
+      if (DigitalState::OFF == data && DigitalState::ON == mLastState)
       {
-         this->addEvent(d);
+         const ClickEvent click_event(vpr::Interval::now().msec());
+         const bool have_event(mAnalyzer.addClickEvent(click_event));
+
+         if (have_event)
+         {
+            this->addEvent(data);
+         }
       }
-   */
+
+      mLastState = data;
    }
 
    void setClickTime(const unsigned long clickTime)
    {
-      mClickTime = clickTime;
+      mAnalyzer.setClickTime(clickTime);
    }
 
 private:
-   unsigned long mClickTime;
+   DigitalState::State          mLastState;
+   NewClickAnalyzer<ClickCount> mAnalyzer;
 };
 
 /**

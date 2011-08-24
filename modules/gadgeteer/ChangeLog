@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-08-24 patrick     Implemented multi-click handling in
+                       gadget::MouseClickEventInterface.
+                       NEW VERSION: 2.1.20
 2011-08-22 patrick     Changed input device type identification from string
                        name to integer type ID. Subclasses of gadget::Input
                        must now implement getTypeId() and not getTypeName().
