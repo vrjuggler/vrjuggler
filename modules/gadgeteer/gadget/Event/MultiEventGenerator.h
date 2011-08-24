@@ -122,7 +122,7 @@ public:
    /**
     * Produces an MPL sequence type containing an instantiation of
     * boost::fusion::pair<K,V> for each K in event_tags where V is
-    * gadget::event::DataExaminer<K, raw_data_type, collection_type>.
+    * gadget::event::DataExaminer<K,raw_data_type>.
     */
    typedef typename
       boost::mpl::transform<

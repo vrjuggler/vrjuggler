@@ -40,6 +40,9 @@ namespace event
 {
 
 /**
+ * This class captures the details that are common to all DataExaminer
+ * instanations.
+ *
  * @tparam DataType The type of a sample received from a device proxy.
  *
  * @since 2.1.16
@@ -67,6 +70,16 @@ private:
 };
 
 /** \class DataExaminer DataExaminer.h gadget/Event/DataExaminer.h
+ *
+ * A "Data Examiner" is a concept. The interface to implement is simple:
+ *
+ * \code
+ * void examine(const DataType&);
+ * \endcode
+ *
+ * This class can be specialized for different combinations of event tags and
+ * data types. This default implementation stores every data sample received
+ * from a device proxy to be emitted later as an event.
  *
  * @tparam EventTag The tag identifying the kind of event. This is used to
  *                  provide a mechanism for specializing this type based on
