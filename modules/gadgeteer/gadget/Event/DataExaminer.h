@@ -39,7 +39,8 @@ namespace gadget
 namespace event
 {
 
-/**
+/** \class BaseExaminer DataExaminer.h gadget/Event/DataExaminer.h
+ *
  * This class captures the details that are common to all DataExaminer
  * instanations.
  *
@@ -71,7 +72,9 @@ private:
 
 /** \class DataExaminer DataExaminer.h gadget/Event/DataExaminer.h
  *
- * A "Data Examiner" is a concept. The interface to implement is simple:
+ * A "Data Examiner" is a concept whose purpose is to process samples from
+ * input devices and determine what constitutes an event. The interface to
+ * implement is simple:
  *
  * \code
  * void examine(const DataType&);

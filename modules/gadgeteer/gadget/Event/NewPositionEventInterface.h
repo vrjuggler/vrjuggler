@@ -43,7 +43,11 @@ namespace gadget
 namespace event
 {
 
-/**
+/** \struct position_event_tag NewPositionEventInterface.h gadget/Event/NewPositionEventInterface.h
+ *
+ * The event tag for position events emitted by instances of
+ * gadget::NewPositionEventInterface.
+ *
  * @since 2.1.16
  */
 struct position_event_tag : base_event_tag {};
@@ -100,9 +104,11 @@ private:
 
 }
 
-/** \class PositionEventInterface PositionEventInterface.h gadget/Event/PositionEventInterface.h
+/** \class NewPositionEventInterface NewPositionEventInterface.h gadget/Event/NewPositionEventInterface.h
  *
- * The event interface for gadget::PositionProxy objects.
+ * The multi-event interface for gadget::PositionProxy objects. While this is
+ * a multi-event interface, there is only only event tag supported:
+ * gadget::event::position_event_tag.
  *
  * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
  *                       the event generator created by this object. This must
@@ -115,7 +121,7 @@ private:
  *                       compile. This template paramter is optional, and it
  *                       defaults to gadget::event::synchronized_tag.
  *
- * @since 2.1.4
+ * @since 2.1.16
  */
 template<typename CollectionTag = event::last_event_tag
        , typename GenerationTag = event::synchronized_tag>
@@ -135,6 +141,15 @@ public:
    typedef typename NewPositionEventInterface::event_interface_ base_type;
    typedef typename base_type::proxy_ptr_type proxy_ptr_type;
 
+   /**
+    * Constructor.
+    *
+    * @param scaleFactor The scale factor to apply to position data received
+    *                    from the gadget::PositionProxy associated with this
+    *                    multi-event interface object. This parameter is
+    *                    optional, and it defaults to
+    *                    gadge::PositionUnitConversion::ConvertToFeet.
+    */
    explicit NewPositionEventInterface(
       const float scaleFactor = PositionUnitConversion::ConvertToFeet
    )
@@ -149,7 +164,10 @@ public:
    }
 
    /**
-    * Compatibility with gadget::PositionEventInterface.
+    * Adds a callback for the gadget::event::position_event_tag event tag.
+    * This is partly for compatibility with gadget::PositionEventInterface,
+    * but it is more for convenience since this multi-event interface supports
+    * just one event tag.
     */
    void addCallback(const typename base_type::callback_type& callback)
    {

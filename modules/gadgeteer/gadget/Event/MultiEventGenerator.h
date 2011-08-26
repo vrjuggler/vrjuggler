@@ -92,6 +92,27 @@ public:
  * thorugh instantiations of gadget::event::MultiEventCollector managed
  * through tag-specific associations.
  *
+ * @tparam ProxyType     The type of proxy to be used by this multi-event
+ *                       generator type instantiation.
+ * @tparam EventTags     The tags for the events that may be generated. Event
+ *                       tags are specified using a type sequence supporting
+ *                       forward iteration. Generally, this would be an
+ *                       instantiation of \c boost::mpl::vector containing
+ *                       all the event tags.
+ * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
+ *                       this event generator. This must be a valid collection
+ *                       tag in order for the code to compile.
+ * @tparam GenerationTag A tag specifying how events will be emitted by this
+ *                       event generator. This must be a valid generation tag
+ *                       in order for the code to compile.
+ * @tparam SampleHandler The handler for samples. This type is used to
+ *                       decouple the specifics of the data type used by
+ *                       \c ProxyType from this multi-event generator type
+ *                       instantiation. This template parameter is optional,
+ *                       and it defaults to DefaultSampleHandler<ProxyType>.
+ *
+ * @see gadget::event::DataExaminer
+ *
  * @since 2.1.16
  */
 template<
@@ -121,7 +142,7 @@ public:
 
    /**
     * Produces an MPL sequence type containing an instantiation of
-    * boost::fusion::pair<K,V> for each K in event_tags where V is
+    * boost::fusion::pair<K,V> for each \c K in event_tags where \c V is
     * gadget::event::DataExaminer<K,raw_data_type>.
     */
    typedef typename
