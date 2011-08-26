@@ -225,35 +225,6 @@ void SocketImplBOOST::open()
 
 void SocketImplBOOST::close()
 {
-   switch (mType)
-   {
-      case vpr::SocketTypes::STREAM:
-         if (mTcpSocket->is_open())
-         {
-            mTcpSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-            mTcpSocket->close();
-         }
-         break;
-      case vpr::SocketTypes::DATAGRAM:
-         if (mUdpSocket->is_open())
-         {
-            mUdpSocket->shutdown(boost::asio::ip::udp::socket::shutdown_both);
-            mUdpSocket->close();
-         }
-         break;
-      case vpr::SocketTypes::RAW:
-         throw SocketException("RAW socket type not supported.", VPR_LOCATION);
-         break;
-      default:
-      {
-         std::stringstream msg_stream;
-         msg_stream << "[vpr::SocketImplBOOST] ERROR: Unknown socket type "
-                    << "value: " << unsigned(mType);
-         throw SocketException(msg_stream.str(), VPR_LOCATION);
-         break;
-      }
-   }
-
    // Reset the local state tracking to initial state
    // since we are not connected or bound any more.
    // This allows the socket to be reused.
