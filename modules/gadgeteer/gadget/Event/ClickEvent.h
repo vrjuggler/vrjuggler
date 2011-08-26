@@ -156,7 +156,10 @@ private:
 /**
  * A specialization of gadget::event::DataExaminer for all instantiations of
  * gadget::event::click_tag when gadget::EventPtr is the raw data type. In
- * other words, this is the data examiner for mouse events.
+ * other words, this is the data examiner for mouse events. An instantiation
+ * of this type is tied to a compile-time constant specifying the click count.
+ * As such, a given instance can be used for N-click events for any value N
+ * (as set by the \c ClickCount template parameter).
  *
  * @tparam ClickCount The number of clicks that designate an event.
  *
@@ -172,9 +175,6 @@ public:
       /* Do nothing. */ ;
    }
 
-   // TODO: Implement something smart here that handles multi-click detection.
-   // This might not be too difficult since Qt (apparently) does double-clicks
-   // as a single click event followed by a double-click event.
    void examine(const EventPtr& event)
    {
       if (event->type() == MouseButtonReleaseEvent)
@@ -210,6 +210,10 @@ private:
  * A specialization of gadget::event::DataExaminer for all instantiations of
  * gadget::event::click_tag when gadget::DigitaiState::State is the raw data
  * type. In other words, this is the data examiner for digital device events.
+ * An instantiation of this type is tied to a compile-time constant
+ * specifying the click count. As such, a given instance can be used for
+ * N-click events for any value N (as set by the \c ClickCount template
+ * parameter).
  *
  * @tparam ClickCount The number of clicks that designate an event.
  *
@@ -226,9 +230,6 @@ public:
       /* Do nothing. */ ;
    }
 
-   // TODO: Implement something smart here that handles multi-click detection.
-   // This might not be too difficult since Qt (apparently) does double-clicks
-   // as a single click event followed by a double-click event.
    void examine(const DigitalState::State data)
    {
       // If the device unit state toggled from ON to OFF, then we treat that
@@ -257,7 +258,8 @@ private:
    NewClickAnalyzer<ClickCount> mAnalyzer;
 };
 
-/**
+/** \struct ClickMaker ClickEvent.h gadget/Event/ClickEvent.h
+ *
  * A metafunction that produces an instantiation of the variadic type
  * boost::mpl::vector containing instantiations of click_tag for click counts
  * in the range [1,MaxClicks]. This metafunction is intended for use with
@@ -283,15 +285,6 @@ private:
  *       , generator_type
  *    >::type
  * iface_type;
- * \endcode
- *
- * User-level code will probably end up using something similar to the
- * following:
- *
- * \code
- * typedef gadget::DigitalClickEventInterface<1> single_click_iface_type;
- * typedef gadget::DigitalClickEventInterface<2> double_click_iface_type;
- * typedef gadget::DigitalClickEventInterface<3> triple_click_iface_type;
  * \endcode
  *
  * @tparam MaxClicks The maximum number of clicks. This must be greater than 0.

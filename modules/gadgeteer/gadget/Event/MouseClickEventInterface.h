@@ -24,18 +24,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_NEW_MOUSE_MULTI_CLICK_EVENT_H_
-#define _GADGET_NEW_MOUSE_MULTI_CLICK_EVENT_H_
+#ifndef _GADGET_MOUSE_CLICK_EVENT_INTERFACE_H_
+#define _GADGET_MOUSE_CLICK_EVENT_INTERFACE_H_
 
 #include <gadget/gadgetConfig.h>
-
-//#include <boost/static_assert.hpp>
-//#include <boost/type_traits/is_same.hpp>
 
 #include <gadget/Event/ClickEvent.h>
 #include <gadget/Event/MultiEventInterface.h>
 #include <gadget/Event/MultiEventGenerator.h>
-#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Event/KeyboardMouse/SampleHandler.h>
 #include <gadget/Type/KeyboardMouseProxy.h>
 
@@ -46,17 +42,78 @@ namespace gadget
 /** \class MouseClickEventInterface MouseClickEventInterface.h gadget/Event/MouseClickEventInterface.h
  *
  * A specialized keyboard/mouse event interface type for detecting
- * double-click events from a mouse. The callback signature is the same as
+ * click events from a mouse. For a given instantiation, events for 1 to
+ * \c ClickCount clicks are generated. The callback signature is the same as
  * for gadget::KeyboardMouseEventInterface, but the event object passed to the
- * callback is guaranteed to be gadget::MouseEvent. This means that the
- * received gadget::EventPtr can be downcast to gadget::MouseEventPtr without
- * performing a NULL check afterward.
+ * callback is guaranteed to point to an instance of gadget::MouseEvent. This
+ * means that the received gadget::EventPtr can be downcast to
+ * gadget::MouseEventPtr without performing a NULL check afterward.
  *
- * @tparam ClickCount    The number of clicks required to create a single
- *                       multi-click event. For example, a value of 2 means
- *                       that double-click events will be generated. A value
- *                       of 3 means that triple-click events will be
- *                       generated.
+ * This is a multi-event interface, and callbacks are classified based on
+ * event tags. The tags for this type are generated automatically based on the
+ * \c ClickCount template parameter. The tag type is gadget::event::click_tag,
+ * a type instantiated based on the number of clicks in the event. Thus, if
+ * \c ClickCount is 2, then there are two event tags that can be used:
+ * gadget::event::click_tag<1> and gadget::event::click_tag<2>. There are
+ * typedefs for these two types because they are so common:
+ * gadget::event::single_click_tag and gadget::event::double_click_tag.
+ *
+ * Event tags are used to correlate event tags to callbacks. For example, if
+ * an application class the following member:
+ *
+ * \code
+ * gadget::MouseClickEventInterface<3> mClickIface;
+ * \endcode
+ *
+ * it effectively declares interest in single, double-, and/or triple-click
+ * events from a gadget::KeyboardMouseProxy. The callbacks are added as
+ * follows:
+ *
+ * \code
+ * void singleClickCallback(const gadget::EventPtr& event)
+ * {
+ *    gadget::MouseEventPtr mouse_event(
+ *       boost::dynamic_pointer_cast<gadget::MouseEvent>(event)
+ *    );
+ *    // Handle a single click event...
+ * }
+ *
+ * void doubleClickCallback(const gadget::EventPtr& event)
+ * {
+ *    gadget::MouseEventPtr mouse_event(
+ *       boost::dynamic_pointer_cast<gadget::MouseEvent>(event)
+ *    );
+ *    // Handle a double-click event...
+ * }
+ *
+ * void tripleClickCallback(const gadget::EventPtr& event)
+ * {
+ *    gadget::MouseEventPtr mouse_event(
+ *       boost::dynamic_pointer_cast<gadget::MouseEvent>(event)
+ *    );
+ *    // Handle a triple-click event...
+ * }
+ *
+ * void MyApp::init()
+ * {
+ *    mClickIface.init("VJKeyboard");
+ *
+ *    using namespace gadget::event;
+ *    mClickIface.addCallback<single_click_tag>(singleClickCallback);
+ *    mClickIface.addCallback<double_click_tag>(doubleClickCallback);
+ *    mClickIface.addCallback<click_tag<3> >(tripleClickCallback);
+ * }
+ * \endcode
+ *
+ * Receipt of a double-click event is preceded by delivery of two single click
+ * events. Whether the single click events are of interest is up to the
+ * user-level code.
+ *
+ * @tparam ClickCount    The maximum number of clicks that can be present in a
+ *                       click event. For example, a value of 2 means that
+ *                       single and double-click events will be generated. A
+ *                       value of 3 means that single, double-, and
+ *                       triple-click events will be generated.
  * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
  *                       the event generator created by this object. This must
  *                       be a valid collection tag in order for the code to
@@ -114,8 +171,8 @@ public:
     * Changes the maximum click time to be the given value.
     *
     * @pre An event generator for this event interface has not been created
-    *      yet. Setting this value after the event generator has been
-    *      created will not influence the event creation.
+    *      yet. Setting this value after the event generator has been created
+    *      will not influence the event creation.
     *
     * @param clickTime The maximum time (measured in milliseconds) allowed
     *                  between sequential clicks for the click events to be
@@ -174,4 +231,4 @@ private:
 }
 
 
-#endif /* _GADGET_NEW_MOUSE_MULTI_CLICK_EVENT_H_ */
+#endif /* _GADGET_MOUSE_CLICK_EVENT_INTERFACE_H_ */
