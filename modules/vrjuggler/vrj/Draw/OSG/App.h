@@ -222,7 +222,7 @@ public:
       OPENSCENEGRAPH_PATCH_VERSION > 5))
       newSceneViewer->getCamera()->setInheritanceMask( 
          newSceneViewer->getCamera()->getInheritanceMask() | 
-         osg::CullSettings::DRAW_BUFFER
+         ::osg::CullSettings::DRAW_BUFFER
       );
 #endif
    }
