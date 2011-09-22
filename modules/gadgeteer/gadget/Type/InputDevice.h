@@ -116,7 +116,8 @@ public:
     * bitwise OR of the index value of each member of type_list within
     * all_base_types.
     */
-   static const type_id_type type_id = type::compose_id<type_list>::type::value;
+   static const type_id_type type_id =
+      gadget::type::compose_id<type_list>::type::value;
 
    /** @name vpr::SerializableObject Overrides */
    //@{
