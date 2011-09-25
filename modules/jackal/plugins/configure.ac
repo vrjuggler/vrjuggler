@@ -123,7 +123,10 @@ else
     BUILD_JAVA='Y'
 fi
 
-ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
+AC_CHECK_PROG([ANT],
+    [ant],
+    [JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig])
+AC_ARG_VAR([ANT], [Path of ant build tool])
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_HAVE_PERL5( , , [AC_MSG_ERROR([*** Perl is required ***])])

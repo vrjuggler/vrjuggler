@@ -161,7 +161,11 @@ if test "x$BUILD_JAVA" = "xY" ; then
         ],
         [$JUNIT_JAR])
 
-    ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
+    AC_CHECK_PROG([ANT],
+        [ant],
+        [JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig])
+    AC_ARG_VAR([ANT], [Path of ant build tool])
+
 fi
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.

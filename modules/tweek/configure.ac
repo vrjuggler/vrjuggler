@@ -415,7 +415,10 @@ if test "x$tweek_have_java" = "xY" ; then
    fi
 fi
 
-ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
+AC_CHECK_PROG([ANT],
+   [ant],
+   [JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig])
+AC_ARG_VAR([ANT], [Path of ant build tool])
 
 if test "x$python_root" != "xnone" ; then
    python_bin_dir="$python_root/bin"
