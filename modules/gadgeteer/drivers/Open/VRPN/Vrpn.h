@@ -28,14 +28,13 @@
 // Vrpn
 //
 // Purpose:
-//    VR Juggler VRPN Hi-Ball tracking class
+//    VR Juggler VRPN driver class
 //
-// Author:
+// Original Author:
 //    Jason Jerald
-// Last Modified:  8-26-02
 //
-// Revisions:
-//      Ported to to 1.1 DR2 and sgi platform Anthony Steed, 10-4-02
+// Ported to to 1.1 DR2 and sgi platform Anthony Steed, 10-4-02
+// See version control system for further revisions info
 //======================================================
 
 #ifndef _GADGET_VRPN_H_
@@ -70,8 +69,7 @@ namespace gadget
 {
 
 /**
- * Class interfacing with VRPN sensor data located on the local machine in
- * a shared memory arena.
+ * Class interfacing with VRPN sensor data.
  *
  * @note A note on reciever access:
  *  Clients of Juggler should access tracker recievers as [0-n].  For
@@ -132,16 +130,6 @@ public:
    static std::string getElementType();
 
 private:
-   void registerConnectionDropHandlers  (vrpn_BaseClass* vrpnObj,
-                                         vrpn_MESSAGEHANDLER dropHandler,
-                                         vrpn_MESSAGEHANDLER lastDropHandler);
-   void unregisterConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
-                                         vrpn_MESSAGEHANDLER dropHandler,
-                                         vrpn_MESSAGEHANDLER lastDropHandler);
-
-   void unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
-                                        const vrpn_int32 type,
-                                        vrpn_MESSAGEHANDLER handler);
 
    void readLoop();
 
@@ -152,27 +140,12 @@ private:
    void analogChange(const vrpn_ANALOGCB& b);
    //@}
 
-   /** @name Connection Drop Handlers */
-   //@{
-   void trackerConnectionDropped(const vrpn_int32 type,
-                                 vrpn_MESSAGEHANDLER handler,
-                                 const bool deleteHandle);
-   void buttonConnectionDropped(const vrpn_int32 type,
-                                vrpn_MESSAGEHANDLER handler,
-                                const bool deleteHandle);
-   void analogConnectionDropped(const vrpn_int32 type,
-                                vrpn_MESSAGEHANDLER handler,
-                                const bool deleteHandle);
-   //@}
-
    bool mExitFlag;
 
    /** @name Tracker Data */
    //@{
    std::string              mTrackerServer;
    int                      mTrackerNumber;
-   vrpn_Tracker_Remote*     mTrackerHandle;
-   bool                     mTrackerChangeHandlerRegistered;
    vpr::Mutex               mTrackerMutex;
    std::vector<gmtl::Quatf> mQuats;
    std::vector<gmtl::Vec3f> mPositions;
@@ -182,8 +155,6 @@ private:
    //@{
    std::string                      mButtonServer;
    int                              mButtonNumber;
-   vrpn_Button_Remote*              mButtonHandle;
-   bool                             mButtonChangeHandlerRegistered;
    vpr::Mutex                       mButtonMutex;
    std::vector<gadget::DigitalData> mButtons;
    //@}
@@ -192,27 +163,13 @@ private:
    //@{
    std::string                     mAnalogServer;
    int                             mAnalogNumber;
-   vrpn_Analog_Remote*             mAnalogHandle;
-   bool                            mAnalogChangeHandlerRegistered;
    vpr::Mutex                      mAnalogMutex;
    std::vector<gadget::AnalogData> mAnalogs;
    //@}
 
    friend void VRPN_CALLBACK handleTrackerChange(void*, vrpn_TRACKERCB);
-   friend int VRPN_CALLBACK handleTrackerConnectionDropped(void*,
-                                                           vrpn_HANDLERPARAM);
-   friend int VRPN_CALLBACK handleLastTrackerConnectionDropped(void*,
-                                                               vrpn_HANDLERPARAM);
    friend void VRPN_CALLBACK handleButtonChange(void*, vrpn_BUTTONCB);
-   friend int VRPN_CALLBACK handleButtonConnectionDropped(void*,
-                                                         vrpn_HANDLERPARAM);
-   friend int VRPN_CALLBACK handleLastButtonConnectionDropped(void*,
-                                                              vrpn_HANDLERPARAM);
    friend void VRPN_CALLBACK handleAnalogChange(void*, vrpn_ANALOGCB);
-   friend int VRPN_CALLBACK handleAnalogConnectionDropped(void*,
-                                                          vrpn_HANDLERPARAM);
-   friend int VRPN_CALLBACK handleLastAnalogConnectionDropped(void*,
-                                                              vrpn_HANDLERPARAM);
 };
 
 } // End of gadget namespace

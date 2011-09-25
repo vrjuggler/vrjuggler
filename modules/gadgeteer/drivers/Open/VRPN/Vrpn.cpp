@@ -62,6 +62,8 @@
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/System.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/InputManager.h>
 #include <gadget/gadgetParam.h>
@@ -69,6 +71,8 @@
 #include <gadget/Util/Debug.h>
 
 #include <drivers/Open/VRPN/Vrpn.h>
+
+#include <boost/shared_ptr.hpp>
 
 
 extern "C"
@@ -98,35 +102,6 @@ void VRPN_CALLBACK handleTrackerChange(void* userdata, vrpn_TRACKERCB t)
    this_ptr->trackerChange(t);
 }
 
-int VRPN_CALLBACK handleTrackerConnectionDropped(void* userdata,
-                                                 vrpn_HANDLERPARAM p)
-{
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "VRPN driver handleTrackerConnectionDropped() called\n"
-      << vprDEBUG_FLUSH;
-
-   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
-   this_ptr->trackerConnectionDropped(p.type, handleTrackerConnectionDropped,
-                                      false);
-
-   return 0;
-}
-
-int VRPN_CALLBACK handleLastTrackerConnectionDropped(void* userdata,
-                                                     vrpn_HANDLERPARAM p)
-{
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "VRPN driver handleLastTrackerConnectionDropped() called\n"
-      << vprDEBUG_FLUSH;
-
-   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
-   this_ptr->trackerConnectionDropped(p.type,
-                                      handleLastTrackerConnectionDropped,
-                                      true);
-
-   return 0;
-}
-
 void VRPN_CALLBACK handleButtonChange(void* userdata, vrpn_BUTTONCB b)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
@@ -134,35 +109,6 @@ void VRPN_CALLBACK handleButtonChange(void* userdata, vrpn_BUTTONCB b)
 
    gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
    this_ptr->buttonChange(b);
-}
-
-int VRPN_CALLBACK handleButtonConnectionDropped(void* userdata,
-                                                vrpn_HANDLERPARAM p)
-{
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "VRPN driver handleButtonConnectionDropped() called\n"
-      << vprDEBUG_FLUSH;
-
-   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
-   this_ptr->buttonConnectionDropped(p.type, handleButtonConnectionDropped,
-                                     false);
-
-   return 0;
-}
-
-int VRPN_CALLBACK handleLastButtonConnectionDropped(void* userdata,
-                                                    vrpn_HANDLERPARAM p)
-{
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "VRPN driver handleLastButtonConnectionDropped() called\n"
-      << vprDEBUG_FLUSH;
-
-   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
-   this_ptr->buttonConnectionDropped(p.type,
-                                     handleLastButtonConnectionDropped,
-                                     true);
-
-   return 0;
 }
 
 void VRPN_CALLBACK handleAnalogChange(void* userdata, vrpn_ANALOGCB b)
@@ -174,46 +120,11 @@ void VRPN_CALLBACK handleAnalogChange(void* userdata, vrpn_ANALOGCB b)
    this_ptr->analogChange(b);
 }
 
-int VRPN_CALLBACK handleAnalogConnectionDropped(void* userdata,
-                                                vrpn_HANDLERPARAM p)
-{
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "VRPN driver handleAnalogConnectionDropped() called\n"
-      << vprDEBUG_FLUSH;
-
-   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
-   this_ptr->analogConnectionDropped(p.type, handleAnalogConnectionDropped,
-                                     false);
-
-   return 0;
-}
-
-int VRPN_CALLBACK handleLastAnalogConnectionDropped(void* userdata,
-                                                    vrpn_HANDLERPARAM p)
-{
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "VRPN driver handleLastAnalogConnectionDropped() called\n"
-      << vprDEBUG_FLUSH;
-
-   gadget::Vrpn* this_ptr = static_cast<gadget::Vrpn*>(userdata);
-   this_ptr->analogConnectionDropped(p.type,
-                                     handleLastAnalogConnectionDropped,
-                                     true);
-
-   return 0;
-}
-
 Vrpn::Vrpn()
    : mExitFlag(false)
    , mTrackerNumber(0)
-   , mTrackerHandle(NULL)
-   , mTrackerChangeHandlerRegistered(false)
    , mButtonNumber(0)
-   , mButtonHandle(NULL)
-   , mButtonChangeHandlerRegistered(false)
    , mAnalogNumber(0)
-   , mAnalogHandle(NULL)
-   , mAnalogChangeHandlerRegistered(false)
 {
    /* Do nothing. */ ;
 }
@@ -335,9 +246,9 @@ bool Vrpn::startSampling()
       // Set flags and spawn sample thread
       mExitFlag = false;
 
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) 
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "[VRPN] Spawning control thread." << std::endl  << vprDEBUG_FLUSH;
-      
+
       try
       {
          mThread = new vpr::Thread(boost::bind(&Vrpn::readLoop, this));
@@ -438,7 +349,7 @@ void Vrpn::updateData()
    // NOTE: This is done here because the readLoop is asyncronous and
    //       if we place it there we get very large buffer sizes.
    sample();
-   
+
    // Swap it
    swapPositionBuffers();
    swapDigitalBuffers();
@@ -450,183 +361,84 @@ std::string Vrpn::getElementType()
    return "vrpn";
 }
 
-void Vrpn::registerConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
-                                          vrpn_MESSAGEHANDLER dropHandler,
-                                          vrpn_MESSAGEHANDLER lastDropHandler)
-{
-   vrpn_Connection* conn = vrpnObj->connectionPtr();
-
-   const vrpn_int32 dropped_conn_type =
-      conn->register_message_type(vrpn_dropped_connection);
-
-   if ( -1 != dropped_conn_type )
-   {
-      conn->register_handler(dropped_conn_type, dropHandler,
-                             static_cast<void *>(this));
-   }
-
-   const vrpn_int32 dropped_last_conn_type =
-      conn->register_message_type(vrpn_dropped_last_connection);
-
-   if ( -1 != dropped_last_conn_type )
-   {
-      conn->register_handler(dropped_last_conn_type, lastDropHandler,
-                             static_cast<void *>(this));
-   }
-}
-
-void Vrpn::unregisterConnectionDropHandlers(vrpn_BaseClass* vrpnObj,
-                                            vrpn_MESSAGEHANDLER dropHandler,
-                                            vrpn_MESSAGEHANDLER lastDropHandler)
-{
-   vrpn_Connection* conn = vrpnObj->connectionPtr();
-
-   const vrpn_int32 dropped_conn_type =
-      conn->register_message_type(vrpn_dropped_connection);
-
-   if ( -1 != dropped_conn_type )
-   {
-      conn->unregister_handler(dropped_conn_type, dropHandler,
-                               static_cast<void *>(this));
-   }
-
-   const vrpn_int32 dropped_last_conn_type =
-      conn->register_message_type(vrpn_dropped_last_connection);
-
-   if ( -1 != dropped_last_conn_type )
-   {
-      conn->unregister_handler(dropped_last_conn_type, lastDropHandler,
-                               static_cast<void *>(this));
-   }
-}
-
-void Vrpn::unregisterConnectionDropHandler(vrpn_BaseClass* vrpnObj,
-                                           const vrpn_int32 type,
-                                           vrpn_MESSAGEHANDLER handler)
-{
-   vrpn_Connection* conn = vrpnObj->connectionPtr();
-   conn->unregister_handler(type, handler, static_cast<void *>(this));
-}
-
 void Vrpn::readLoop()
 {
+   boost::shared_ptr<vrpn_Tracker_Remote> tracker_handle;
+   boost::shared_ptr<vrpn_Button_Remote> button_handle;
+   boost::shared_ptr<vrpn_Analog_Remote> analog_handle;
    if ( mTrackerNumber > 0 )
    {
-      mTrackerHandle = new vrpn_Tracker_Remote(mTrackerServer.c_str());
-      mTrackerHandle->register_change_handler(static_cast<void *>(this),
+      tracker_handle.reset(new vrpn_Tracker_Remote(mTrackerServer.c_str()));
+      tracker_handle->register_change_handler(static_cast<void*>(this),
                                               &handleTrackerChange);
-      mTrackerChangeHandlerRegistered = true;
-      registerConnectionDropHandlers(mTrackerHandle,
-                                     &handleTrackerConnectionDropped,
-                                     &handleLastTrackerConnectionDropped);
    }
 
    if ( mButtonNumber > 0 )
    {
-      mButtonHandle = new vrpn_Button_Remote(mButtonServer.c_str());
-      mButtonHandle->register_change_handler(static_cast<void *>(this),
+      button_handle.reset(new vrpn_Button_Remote(mButtonServer.c_str()));
+      button_handle->register_change_handler(static_cast<void*>(this),
                                              &handleButtonChange);
-      mButtonChangeHandlerRegistered = true;
-      registerConnectionDropHandlers(mButtonHandle,
-                                     &handleButtonConnectionDropped,
-                                     &handleLastButtonConnectionDropped);
    }
 
    if ( mAnalogNumber > 0 )
    {
-      mAnalogHandle = new vrpn_Analog_Remote(mAnalogServer.c_str());
-      mAnalogHandle->register_change_handler(static_cast<void *>(this),
+      analog_handle.reset(new vrpn_Analog_Remote(mAnalogServer.c_str()));
+      analog_handle->register_change_handler(static_cast<void*>(this),
                                              &handleAnalogChange);
-      mAnalogChangeHandlerRegistered = true;
-      registerConnectionDropHandlers(mAnalogHandle,
-                                     &handleAnalogConnectionDropped,
-                                     &handleLastAnalogConnectionDropped);
+   }
+
+   // If there is nothing from which to read data, there is no point
+   // in continuing to run this thread.
+   if ( !tracker_handle && !button_handle && !analog_handle)
+   {
+      return;
    }
 
    // loop through  and keep sampling
    while ( ! mExitFlag )
    {
-      if ( mTrackerNumber > 0 )
+
+      if (tracker_handle)
       {
-         mTrackerHandle->mainloop();
+         tracker_handle->mainloop();
       }
 
-      if ( mButtonNumber > 0 )
+      if (button_handle)
       {
-         mButtonHandle->mainloop();
+         button_handle->mainloop();
       }
 
-      if ( mAnalogNumber > 0 )
+      if (analog_handle)
       {
-         mAnalogHandle->mainloop();
-      }
-
-      // If there is nothing left from which to read data, there is no point
-      // in continuing to run this thread.
-      if ( mTrackerNumber == 0 && mButtonNumber == 0 && mAnalogNumber == 0 )
-      {
-         break;
+         analog_handle->mainloop();
       }
 
       vpr::Thread::yield();
+      // yield and take a brief sleep
+      vpr::System::msleep(1);
    }
 
-   if ( mTrackerNumber > 0 )
+   mTrackerNumber = 0;
+   if (tracker_handle)
    {
-      mTrackerNumber = 0;
-
-      if ( mTrackerChangeHandlerRegistered )
-      {
-         mTrackerHandle->unregister_change_handler(static_cast<void *>(this),
-                                                   &handleTrackerChange      );
-         mTrackerChangeHandlerRegistered = false;
-      }
-
-      unregisterConnectionDropHandlers(mTrackerHandle,
-                                       &handleTrackerConnectionDropped,
-                                       &handleLastTrackerConnectionDropped);
-
-      delete mTrackerHandle;
-      mTrackerHandle = NULL;
+      tracker_handle->unregister_change_handler(static_cast<void*>(this),
+                                                &handleTrackerChange);
    }
 
-   if ( mButtonNumber > 0 )
+   mButtonNumber = 0;
+   if (button_handle)
    {
-      mButtonNumber = 0;
-
-      if ( mButtonChangeHandlerRegistered )
-      {
-         mButtonHandle->unregister_change_handler(static_cast<void *>(this),
-                                                  &handleButtonChange      );
-         mButtonChangeHandlerRegistered = false;
-      }
-
-      unregisterConnectionDropHandlers(mButtonHandle,
-                                       &handleButtonConnectionDropped,
-                                       &handleLastButtonConnectionDropped);
-
-      delete mButtonHandle;
-      mButtonHandle = NULL;
+      button_handle->unregister_change_handler(static_cast<void*>(this),
+                                               &handleButtonChange);
    }
 
-   if ( mAnalogNumber > 0 )
+   mAnalogNumber = 0;
+   if (analog_handle)
    {
-      mAnalogNumber = 0;
-
-      if ( mAnalogChangeHandlerRegistered )
-      {
-         mAnalogHandle->unregister_change_handler(static_cast<void *>(this),
-                                                  &handleAnalogChange      );
-         mAnalogChangeHandlerRegistered = false;
-      }
-
-      unregisterConnectionDropHandlers(mAnalogHandle,
-                                       &handleAnalogConnectionDropped,
-                                       &handleLastAnalogConnectionDropped);
-
-      delete mAnalogHandle;
-      mAnalogHandle = NULL;
+      analog_handle->unregister_change_handler(static_cast<void *>(this),
+                                               &handleAnalogChange);
    }
+
 }
 
 void Vrpn::trackerChange(const vrpn_TRACKERCB& t)
@@ -701,71 +513,4 @@ void Vrpn::analogChange(const vrpn_ANALOGCB& b)
       mAnalogs[i] = value;
    }
 }
-
-void Vrpn::trackerConnectionDropped(const vrpn_int32 type,
-                                    vrpn_MESSAGEHANDLER handler,
-                                    const bool deleteHandle)
-{
-   mTrackerNumber = 0;
-
-   if ( mTrackerChangeHandlerRegistered )
-   {
-      mTrackerHandle->unregister_change_handler(static_cast<void *>(this),
-                                                &handleTrackerChange);
-      mTrackerChangeHandlerRegistered = false;
-   }
-
-   unregisterConnectionDropHandler(mTrackerHandle, type, handler);
-
-   if ( deleteHandle )
-   {
-      delete mTrackerHandle;
-      mTrackerHandle = NULL;
-   }
-}
-
-void Vrpn::buttonConnectionDropped(const vrpn_int32 type,
-                                   vrpn_MESSAGEHANDLER handler,
-                                   const bool deleteHandle)
-{
-   mButtonNumber = 0;
-
-   if ( mButtonChangeHandlerRegistered )
-   {
-      mButtonHandle->unregister_change_handler(static_cast<void *>(this),
-                                               &handleButtonChange);
-      mButtonChangeHandlerRegistered = false;
-   }
-
-   unregisterConnectionDropHandler(mButtonHandle, type, handler);
-
-   if ( deleteHandle )
-   {
-      delete mButtonHandle;
-      mButtonHandle = NULL;
-   }
-}
-
-void Vrpn::analogConnectionDropped(const vrpn_int32 type,
-                                   vrpn_MESSAGEHANDLER handler,
-                                   const bool deleteHandle)
-{
-   mAnalogNumber = 0;
-
-   if ( mAnalogChangeHandlerRegistered )
-   {
-      mAnalogHandle->unregister_change_handler(static_cast<void *>(this),
-                                               &handleAnalogChange);
-      mAnalogChangeHandlerRegistered = false;
-   }
-
-   unregisterConnectionDropHandler(mAnalogHandle, type, handler);
-
-   if ( deleteHandle )
-   {
-      delete mAnalogHandle;
-      mAnalogHandle = NULL;
-   }
-}
-
 } // End of gadget namespace
