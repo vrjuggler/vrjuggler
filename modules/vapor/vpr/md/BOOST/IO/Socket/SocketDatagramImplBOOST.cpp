@@ -138,6 +138,8 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
          if (! cancel_supported)
          {
             const bool was_bound(isBound());
+            mUdpSocket->shutdown(boost::asio::ip::udp::socket::shutdown_both);
+            mUdpSocket->close();
             this->close();
             this->open();
 
