@@ -2575,7 +2575,21 @@ def doMSVCUpgrade(devenvCmd, vcDir, solutionFile):
             project.write()
 
    # Finally upgrade solution if needed
-   subprocess.call([devenvCmd, solutionFile, "/upgrade"])
+   newsln = solution_file[:].replace(".sln", "_upgraded.sln")
+   if os.path.exists(newsln):
+      mtime = os.path.getmtime
+      # Test to see if we should regenerate
+      if mtime(solution_file) > mtime(newsln):
+         print "\nDeleting outdated solution file"
+         try:
+            os.remove(newsln)
+         except OSError, ex:
+            print ex
+   if not os.path.exists(newsln):
+      shutil.copy2(solution_file, newsln)
+      print "\nCreating upgraded solution file..."
+      subprocess.call([devenv_cmd, newsln, "/upgrade"])
+   return newsln
 
 def getBuildCommand(msbuildCmd, solutionFile, config):
    #if gBuild64:
@@ -2673,7 +2687,7 @@ def main():
             solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir,
                                                  'Juggler.sln')      
             if needs_upgrade:
-               doMSVCUpgrade(devenv_cmd, vc_dir, solution_file)
+               solution_file = doMSVCUpgrade(devenv_cmd, vc_dir, solution_file)
             
             if len(configs) > 0:
                for config in configs:
