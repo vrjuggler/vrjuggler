@@ -38,6 +38,7 @@
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
+#include <boost/version.hpp>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
 
@@ -98,13 +99,20 @@ vpr::LibraryPtr LibraryLoader::findDSO(const std::string& dsoBaseName,
       {
          fs::path temp_path = *i / dso_name;
 
+         const std::string temp_path_string(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+            temp_path.string()
+#else
+            temp_path.native_file_string()
+#endif
+         );
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "[vpr::LibraryLoader::findDSO()] Looking for '"
-            << temp_path.native_file_string() << "'\n" << vprDEBUG_FLUSH;
+            << temp_path_string << "'\n" << vprDEBUG_FLUSH;
 
          if ( fs::exists(temp_path) )
          {
-            dso = vpr::LibraryPtr(new vpr::Library(temp_path.native_file_string()));
+            dso = vpr::LibraryPtr(new vpr::Library(temp_path_string));
             break;
          }
       }
@@ -241,7 +249,7 @@ void LibraryLoader::makeBoostFsVector(const std::vector<std::string>& strVec,
 
    // Convert the vector of std::string objects to a vector of
    // boost::filesystem::path objects.
-   for ( std::vector<std::string>::size_type i = 0; i < strVec.size(); ++i )
+   for (std::vector<std::string>::size_type i = 0; i < strVec.size(); ++i)
    {
       try
       {
@@ -252,7 +260,11 @@ void LibraryLoader::makeBoostFsVector(const std::vector<std::string>& strVec,
 
          // Use a Boost FS path object here so that we can indicate that
          // native path names are allowed.
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         boostFsVec[i] = fs::path(strVec[i]);
+#else
          boostFsVec[i] = fs::path(strVec[i], fs::native);
+#endif
       }
       catch(fs::filesystem_error& fsEx)
       {

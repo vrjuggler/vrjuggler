@@ -39,6 +39,7 @@
 #include <fstream>
 #include <string>
 
+#include <boost/version.hpp>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
 
@@ -98,7 +99,13 @@ SoundFactory::SoundFactory()
 
    try
    {
-      const fs::path snx_base_dir(base_dir_env, fs::native);
+      const fs::path snx_base_dir(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         base_dir_env
+#else
+         base_dir_env, fs::native
+#endif
+      );
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
       const fs::path snx_lib_dir = snx_base_dir / "lib32";
@@ -151,8 +158,18 @@ SoundFactory::SoundFactory()
       if ( vpr::System::getenv("HOME", home_dir) )
       {
          search_paths.push_back(
-            fs::path(home_dir, fs::native) / fs::path(".sonix", fs::native) /
-               "plugins"
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+            fs::path(home_dir)
+#else
+            fs::path(home_dir, fs::native)
+#endif
+               /
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               fs::path(".sonix")
+#else
+               fs::path(".sonix", fs::native)
+#endif
+               / "plugins"
          );
       }
    }
@@ -176,7 +193,14 @@ SoundFactory::SoundFactory()
    typedef std::vector<fs::path>::iterator iter_type;
    for ( iter_type p = search_paths.begin(); p != search_paths.end(); ++p )
    {
-      const std::string cur_dir = (*p).native_directory_string();
+      const std::string cur_dir(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         (*p).string()
+#else
+         (*p).native_directory_string()
+#endif
+      );
+
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "Finding plug-ins in " << cur_dir
                                           << std::endl << vprDEBUG_FLUSH;
 

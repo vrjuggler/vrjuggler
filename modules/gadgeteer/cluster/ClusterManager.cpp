@@ -28,8 +28,13 @@
 
 #include <iomanip>
 #include <sstream>
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/filesystem/exception.hpp>
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+#  include <boost/filesystem/operations.hpp>
+#else
+# include <boost/filesystem/exception.hpp>
+#endif
 
 #include <vpr/vprTypes.h>
 #include <vpr/System.h>
@@ -637,7 +642,12 @@ namespace cluster
 
                try
                {
-                  search_path[i] = fs::path( temp_str, fs::native );
+                  search_path[i] =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                  fs::path(temp_str);
+#else
+                  fs::path(temp_str, fs::native);
+#endif
                }
                catch( fs::filesystem_error& fsEx )
                {
@@ -664,8 +674,12 @@ namespace cluster
             vprDEBUG( gadgetDBG_RIM, vprDBG_VERB_LVL )
                << "[cluster::ClusterManager::configAdd()] Appending "
                << "default search path '"
-               << default_search_dir.native_directory_string() << "'\n"
-               << vprDEBUG_FLUSH;
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               << default_search_dir.string()
+#else
+               << default_search_dir.native_directory_string()
+#endif
+               << "'\n" << vprDEBUG_FLUSH;
 
 #if defined(GADGET_DEBUG)
             // For a debug build, search in the debug subdirectory of

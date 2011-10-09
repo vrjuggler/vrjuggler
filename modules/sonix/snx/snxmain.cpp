@@ -44,6 +44,7 @@
 #  include <dlfcn.h>
 #endif
 
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
@@ -90,7 +91,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                   std::memset(tmppath, 0, sizeof(tmppath));
                   GetModuleFileName(module, tmppath, sizeof(tmppath));
 
-                  const fs::path dll_path(tmppath, fs::native);
+                  const fs::path dll_path(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     tmppath
+#else
+                     tmppath, fs::native
+#endif
+                  );
                   base_dir = dll_path.branch_path().branch_path();
 #if (defined(JUGGLER_DEBUG) || defined(SNX_DEBUG)) && ! defined(_DEBUG)
                   // The debug DLL linked against the release runtime is in
@@ -98,8 +105,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                   base_dir = base_dir.branch_path();
 #endif
 
-                  const std::string base_dir_str =
-                     base_dir.native_directory_string();
+                  const std::string base_dir_str
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     base_dir.string()
+#else
+                     base_dir.native_directory_string()
+#endif
+                  );
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   _putenv_s("SNX_BASE_DIR", base_dir_str.c_str());
@@ -111,7 +123,12 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                }
                else
                {
-                  base_dir = fs::path(env_dir, fs::native);
+                  base_dir =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     fs::path(env_dir);
+#else
+                     fs::path(env_dir, fs::native);
+#endif
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   std::free(env_dir);
                   env_dir = NULL;
@@ -129,8 +146,13 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                if ( NULL == env_dir )
                {
                   fs::path data_dir(base_dir / "share" / "sonix");
-                  const std::string data_dir_str =
-                     data_dir.native_directory_string();
+                  const std::string data_dir_str(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     data_dir.string()
+#else
+                     data_dir.native_directory_string()
+#endif
+                  );
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   _putenv_s("SNX_DATA_DIR", data_dir_str.c_str());
@@ -201,7 +223,13 @@ extern "C" void __attribute ((constructor)) snxLibraryInit()
       {
          try
          {
-            fs::path lib_file(info.dli_fname, fs::native);
+            fs::path lib_file(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               info.dli_fname
+#else
+               info.dli_fname, fs::native
+#endif
+            );
             lib_file = fs::system_complete(lib_file);
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
@@ -247,7 +275,12 @@ extern "C" void __attribute ((constructor)) snxLibraryInit()
             if ( found )
             {
                setenv("SNX_BASE_DIR",
-                      base_dir.native_directory_string().c_str(), 1);
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                      base_dir.native().c_str(),
+#else
+                      base_dir.native_directory_string().c_str(),
+#endif
+                      1);
             }
          }
          catch (fs::filesystem_error& ex)
@@ -261,7 +294,12 @@ extern "C" void __attribute ((constructor)) snxLibraryInit()
    {
       try
       {
-         base_dir = fs::path(env_dir, fs::native);
+         base_dir =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+            fs::path(env_dir);
+#else
+            fs::path(env_dir, fs::native);
+#endif
       }
       catch (fs::filesystem_error& ex)
       {
@@ -278,7 +316,13 @@ extern "C" void __attribute ((constructor)) snxLibraryInit()
 
       // We use the overwrite value of 0 as a way around testing whether the
       // environment variable is already set.
-      setenv("SNX_DATA_DIR", data_dir.native_directory_string().c_str(), 0);
+      setenv("SNX_DATA_DIR",
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+             data_dir.native().c_str(),
+#else
+             data_dir.native_directory_string().c_str(),
+#endif
+             0);
    }
 }
 #endif  /* defined(WIN32) || defined(WIN64) */

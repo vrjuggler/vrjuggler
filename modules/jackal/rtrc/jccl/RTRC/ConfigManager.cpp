@@ -27,6 +27,7 @@
 #include <jccl/jcclConfig.h>
 
 #include <iomanip>
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
 
 #include <vpr/vpr.h>
@@ -49,7 +50,6 @@ namespace jccl
 {
 
 vprSingletonImpLifetime(ConfigManager, 10);
-
 
 ConfigManager::ConfigManager()
    : mReconfigIf(NULL)
@@ -139,9 +139,14 @@ void ConfigManager::loadRemoteReconfig()
 #endif
 
    std::vector<fs::path> search_path(1);
-   search_path[0] = fs::path(base_dir, fs::native) /
-                       (std::string("lib") + bit_suffix) /
-                       std::string(jccl_subdir) / std::string("plugins");
+   search_path[0] =
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+      fs::path(base_dir)
+#else
+      fs::path(base_dir, fs::native)
+#endif
+         / (std::string("lib") + bit_suffix) /
+         std::string(jccl_subdir) / std::string("plugins");
 
 #if defined(JCCL_DEBUG)
    // For a debug build, search in plugins/debug first.

@@ -44,6 +44,7 @@
 #  include <dlfcn.h>
 #endif
 
+#include <boost/version.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
@@ -83,15 +84,28 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 
                try
                {
-                  fs::path dll_path(tmppath, fs::native);
+                  fs::path dll_path(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     tmppath
+#else
+                     tmppath, fs::native
+#endif
+                  );
                   fs::path base_dir = dll_path.branch_path().branch_path();
 #if (defined(JUGGLER_DEBUG) || defined(VPR_DEBUG)) && ! defined(_DEBUG)
                   // The debug DLL linked against the release runtime is in
                   // <base_dir>\lib\debug.
                   base_dir = base_dir.branch_path();
 #endif
-                  const std::string base_dir_str =
-                     base_dir.native_directory_string();
+
+                  const std::string base_dir_str(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                     base_dir.string()
+#else
+                     base_dir.native_directory_string()
+#endif
+                  );
+
 #if defined(_MSC_VER) && _MSC_VER >= 1400
                   _putenv_s("VPR_BASE_DIR", base_dir_str.c_str());
 #else
@@ -150,8 +164,15 @@ extern "C" void __attribute ((constructor)) vprLibraryInit()
       {
          try
          {
-            fs::path lib_file(info.dli_fname, fs::native);
+            fs::path lib_file(
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+               info.dli_fname
+#else
+               info.dli_fname, fs::native
+#endif
+            );
             lib_file = fs::system_complete(lib_file);
+
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
             const std::string bit_suffix("32");
@@ -196,7 +217,12 @@ extern "C" void __attribute ((constructor)) vprLibraryInit()
             if ( found )
             {
                setenv("VPR_BASE_DIR",
-                      base_dir.native_directory_string().c_str(), 1);
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+                      base_dir.native().c_str(),
+#else
+                      base_dir.native_directory_string().c_str(),
+#endif
+                      1);
             }
          }
          catch (fs::filesystem_error& ex)

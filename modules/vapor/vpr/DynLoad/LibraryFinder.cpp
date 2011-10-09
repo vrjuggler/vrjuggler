@@ -35,6 +35,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/version.hpp>
 
@@ -47,6 +48,45 @@ namespace fs = boost::filesystem;
 namespace vpr
 {
 
+LibraryFinder::LibraryFinder(const std::string& libDir,
+                             const std::string& libExt,
+                             const bool scanNow)
+   :
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+     mLibDir(libDir)
+#else
+     mLibDir(libDir, boost::filesystem::native)
+#endif
+   , mLibExt(libExt)
+{
+   if (scanNow)
+   {
+      rescan();
+   }
+}
+
+void LibraryFinder::setLibraryDirectory(const std::string& dir)
+{
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+   mLibDir = boost::filesystem::path(dir);
+#else
+   mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
+#endif
+   rescan();
+}
+
+void LibraryFinder::setDirAndExt(const std::string& dir,
+                                 const std::string& ext)
+{
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+   mLibDir = boost::filesystem::path(dir);
+#else
+   mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
+#endif
+   mLibExt = ext;
+   rescan();
+}
+
 void LibraryFinder::rescan()
 {
    // Wipe out the current list of known libraries.  This will cause the
@@ -54,46 +94,41 @@ void LibraryFinder::rescan()
    // vpr::Library to be invoked.
    mLibList.clear();
 
-   if ( fs::is_directory(mLibDir) )
+   if (fs::is_directory(mLibDir))
    {
       fs::directory_iterator end_itr;
 
-      for ( fs::directory_iterator file(mLibDir); file != end_itr; ++file )
+	   // Ignore directories.  Normal files and symlinks are fine.
+	   for (fs::directory_iterator file(mLibDir); file != end_itr; ++file)
       {
+// Boost.Filesystem v1
 #if BOOST_VERSION < 103400
-         // Ignore directories.  Normal files and symlinks are fine.
-         if ( ! fs::is_directory(*file) )
+         if (! fs::is_directory(*file) &&
+             boost::iends_with(file->leaf(), mLibExt))
          {
-            // Construct a substring of file->leaf() that contains only the
-            // file extension.  We require that the file we will match have
-            // names that end with mLibExt.
-            const std::string::size_type pos = file->leaf().size() - mLibExt.size();
-            const std::string file_ext = file->leaf().substr(pos);
-
-            if ( file_ext == mLibExt )
-            {
-               mLibList.push_back(vpr::LibraryPtr(new vpr::Library(file->native_file_string())));
-            }
+            mLibList.push_back(
+               vpr::LibraryPtr(new vpr::Library(file->native_file_string()))
+            );
          }
-#else
-         // Ignore directories.  Normal files and symlinks are fine.
-         if ( ! fs::is_directory(file->status()) )
+// Boost.Filesystem v2
+#elif BOOST_VERSION < 104600
+         if (! fs::is_directory(file->status()) &&
+             boost::iends_with(file->path().leaf(), mLibExt))
          {
-            // Construct a substring of file->path.leaf() that contains only
-            // the file extension. We require that the file we will match have
-            // names that end with mLibExt.
-            const std::string::size_type pos =
-               file->path().leaf().size() - mLibExt.size();
-            const std::string file_ext = file->path().leaf().substr(pos);
-
-            if ( file_ext == mLibExt )
-            {
-               mLibList.push_back(
-                  vpr::LibraryPtr(
-                     new vpr::Library(file->path().native_file_string())
-                  )
-               );
-            }
+            mLibList.push_back(
+               vpr::LibraryPtr(
+                  new vpr::Library(file->path().native_file_string())
+               )
+            );
+         }
+// Boost.Filesystem v3
+#else
+         if (! fs::is_directory(file->status()) &&
+             boost::iends_with(file->path().filename().string(), mLibExt))
+         {
+            mLibList.push_back(
+               vpr::LibraryPtr(new vpr::Library(file->path().string()))
+            );
          }
 #endif
       }
@@ -101,7 +136,12 @@ void LibraryFinder::rescan()
    else
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR") << ": " << mLibDir.native_file_string()
+         << clrOutNORM(clrRED, "ERROR") << ": "
+#if BOOST_VERSION >= 104600 && BOOST_FILESYSTEM_VERSION == 3
+         << mLibDir.string()
+#else
+         << mLibDir.native_file_string()
+#endif
          << " is not a directory\n" << vprDEBUG_FLUSH;
    }
 }
