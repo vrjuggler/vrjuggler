@@ -1613,10 +1613,16 @@ def installGadgeteerPlugins(prefix, buildDir):
                           'ApplicationDataManager')
    installDir(srcdir, destdir, ['.h'])
 
+   destdir = os.path.join(prefix, 'include', 'plugins',
+                          'ApplicationBarrierManager')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'plugins',
+                          'ApplicationBarrierManager')
+   installDir(srcdir, destdir, ['.h'])
+
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'plugins')
    srcroot = os.path.join(buildDir, 'Gadgeteer')
 
-   plugins = ['ApplicationDataManager', 'RemoteInputManager']
+   plugins = ['ApplicationDataManager', 'ApplicationBarrierManager', 'RemoteInputManager']
 
    for p in plugins:
       srcdir = os.path.join(srcroot, p)
