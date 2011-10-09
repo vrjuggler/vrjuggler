@@ -2610,6 +2610,15 @@ def getBuildCommand(msbuildCmd, solutionFile, config):
    cmd.append("/p:BuildInParallel=true")
    return cmd
 
+def getCleanCommand(devenvCmd, solutionFile, config):
+   if gBuild64:
+      arch = 'x64'
+   else:
+      arch = 'Win32'
+
+   cmd = [os.path.splitext(devenvCmd)[0] + ".com", solutionFile, "/clean", '%s|%s' % (config, arch)]
+   return cmd
+
 def getIDECommand(devenvCmd, solutionFile):
    cmd = [devenvCmd, solutionFile]
    return cmd
@@ -2617,11 +2626,13 @@ def getIDECommand(devenvCmd, solutionFile):
 def main():
    disable_tk = False
    configs = []
+   clean_configs = []
 
    try:
       cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cano:h",
                                          ["64", "nogui", "nobuild", "a", "auto",
                                           "b", "build=", "install",
+                                          "clean=",
                                           "install-deps", "install-debug",
                                           "options-file=", "jobs=",
                                           "help"])
@@ -2648,6 +2659,14 @@ def main():
          if a in gValidBuildConfigs:
             print "Will build in %s mode" % a
             configs.append(a)
+         else:
+            print "Unrecognized build configuration %s!" % a
+            print "Valid build configurations: %s" % ", ".join(gValidBuildConfigs)
+            sys.exit(EXIT_STATUS_INVALID_ARGUMENT)
+      elif o == "--clean":
+         if a in gValidBuildConfigs:
+            print "Will clean the build in %s mode" % a
+            clean_configs.append(a)
          else:
             print "Unrecognized build configuration %s!" % a
             print "Valid build configurations: %s" % ", ".join(gValidBuildConfigs)
@@ -2695,6 +2714,12 @@ def main():
             if needs_upgrade:
                solution_file = doMSVCUpgrade(devenv_cmd, vc_dir, solution_file)
             
+            if len(clean_configs) > 0:
+               for config in clean_configs:
+                  cmd = getCleanCommand(devenv_cmd, solution_file, config)
+                  print "Launching %s" % " ".join(cmd)
+                  subprocess.call(cmd)
+
             if len(configs) > 0:
                for config in configs:
                   cmd = getBuildCommand(msbuild_cmd, solution_file, config)
@@ -2765,6 +2790,9 @@ def usage():
    print "                         passed multiple times for more than one"
    print "                         config) - Valid configs:"
    print "                         %s" % ", ".join(gValidBuildConfigs)
+   print "-clean=CONFIG            Do an unattended 'solution clean' in the"
+   print "                         given configuration (may be passed multiple"
+   print "                         times) - same valid configs as --build=CONFIG"
    print "-n, --nobuild            Skip launching Visual Studio or the build tool."
    print "--jobs=NUMJOBS           Do not create more than NUMJOBS parallel processes"
    print "--install                Automatically install VR Juggler."
