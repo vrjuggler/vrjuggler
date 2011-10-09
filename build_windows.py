@@ -1208,6 +1208,9 @@ def installLibs(srcRoot, destdir,
    if gBuild64:
       build_platform = 'x64'
 
+   if gInstallDebug:
+      extensions.append('.pdb')
+
    for t in buildTypes:
       build_dir = t[0]
       cur_destdir = destdir
