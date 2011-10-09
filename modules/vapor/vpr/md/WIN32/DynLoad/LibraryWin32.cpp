@@ -125,7 +125,7 @@ void LibraryWin32::unload()
       throw vpr::IOException("No library to unload", VPR_LOCATION);
    }
 
-   if ( FreeLibrary(mLibrary) != 0 )
+   if ( FreeLibrary(mLibrary) == 0 )
    {
       std::ostringstream msg_stream;
       msg_stream << "Failed to unload '" << mName << "': "

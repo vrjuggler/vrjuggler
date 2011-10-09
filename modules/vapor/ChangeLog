@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-10-09 patrick     Fixed mishandling of the value returned by
+                       FreeLibrary().
 2011-04-04 patrick     Fixed DNS lookup problems when IPv5 is enabled on
                        Windows.
                        Submitted by Jeff Baker
