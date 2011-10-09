@@ -1023,7 +1023,7 @@ bool DTrackStandalone::cmd_send(int cmd, int val)
 	try
 	{
 		d_udpsock->sendto(cmd_stream.str(),
-				  cmd_stream.str().length() + 1, d_remote,
+				  cmd_stream.str().length(), d_remote,
 				  d_udptimeout);
 	}
 	catch (vpr::IOException&)
