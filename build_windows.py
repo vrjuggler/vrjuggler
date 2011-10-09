@@ -2536,12 +2536,12 @@ def getMSBuild():
 
    return msbuild_cmd
 
-def doMSVCUpgrade(devenv_cmd, vc_dir, solution_file):
+def doMSVCUpgrade(devenvCmd, vcDir, solutionFile):
    
    import msvcconv
 
    print "Upgrading solution and project files..."
-   proj_dir = os.path.join(gJugglerDir, vc_dir)
+   proj_dir = os.path.join(gJugglerDir, vcDir)
    for root, dirnames, filenames in os.walk(proj_dir):
       for filename in fnmatch.filter(filenames, '*.vcproj'):
          orig_name = os.path.join(root, filename)
@@ -2565,7 +2565,7 @@ def doMSVCUpgrade(devenv_cmd, vc_dir, solution_file):
                os.remove(os.path.join(root, filename).replace(".vcproj", ".vcxproj.filters"))
             except OSError, ex:
                pass
-            subprocess.call([devenv_cmd, orig_name, "/upgrade"])
+            subprocess.call([devenvCmd, orig_name, "/upgrade"])
 
          project = msvcconv.ProjectFile(converted_name)
          project.parseAndFix()
@@ -2575,14 +2575,14 @@ def doMSVCUpgrade(devenv_cmd, vc_dir, solution_file):
             project.write()
 
    # Finally upgrade solution if needed
-   subprocess.call([devenv_cmd, solution_file, "/upgrade"])
+   subprocess.call([devenvCmd, solutionFile, "/upgrade"])
 
-def getBuildCommand(msbuild_cmd, solution_file, config):
+def getBuildCommand(msbuildCmd, solutionFile, config):
    #if gBuild64:
    #   arch = 'x64'
    #else:
    #   arch = 'Win32'
-   cmd = [msbuild_cmd, solution_file, "/p:Configuration=%s" % config]
+   cmd = [msbuildCmd, solutionFile, "/p:Configuration=%s" % config]
    if gJobLimit == None:
       cmd.append("/m")
    else:
@@ -2590,8 +2590,8 @@ def getBuildCommand(msbuild_cmd, solution_file, config):
    cmd.append("/p:BuildInParallel=true")
    return cmd
 
-def getIDECommand(devenv_cmd, solution_file):
-   cmd = [devenv_cmd, solution_file]
+def getIDECommand(devenvCmd, solutionFile):
+   cmd = [devenvCmd, solutionFile]
    return cmd
    
 def main():
