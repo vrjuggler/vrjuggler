@@ -53,7 +53,7 @@ gBuild64           = False
 gUnattended        = False
 gJobLimit          = None
 gInstallDebug      = False
-gValidBuildConfigs = ("ReleaseDLL", "DebugDLL", "DebugRtDll")
+gValidBuildConfigs = ("releasedll", "debugdll", "debugrtdll")
 
 gJdomJars = [
    'jdom.jar',
@@ -2656,19 +2656,21 @@ def main():
       elif o in ("--jobs="):
          gJobLimit = a         
       elif o in ("-b","--build"):
-         if a in gValidBuildConfigs:
-            print "Will build in %s mode" % a
-            configs.append(a)
+         configname = a.lower()
+         if configname in gValidBuildConfigs:
+            print "Will build in %s mode" % configname
+            configs.append(configname)
          else:
-            print "Unrecognized build configuration %s!" % a
+            print "Unrecognized build configuration %s!" % configname
             print "Valid build configurations: %s" % ", ".join(gValidBuildConfigs)
             sys.exit(EXIT_STATUS_INVALID_ARGUMENT)
       elif o == "--clean":
-         if a in gValidBuildConfigs:
-            print "Will clean the build in %s mode" % a
-            clean_configs.append(a)
+         configname = a.lower()
+         if configname in gValidBuildConfigs:
+            print "Will clean the build in %s mode" % configname
+            clean_configs.append(configname)
          else:
-            print "Unrecognized build configuration %s!" % a
+            print "Unrecognized build configuration %s!" % configname
             print "Valid build configurations: %s" % ", ".join(gValidBuildConfigs)
             sys.exit(EXIT_STATUS_INVALID_ARGUMENT)
       elif o == "--64":
