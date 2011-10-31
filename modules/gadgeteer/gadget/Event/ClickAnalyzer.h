@@ -54,7 +54,7 @@ struct ClickEvent
       : button(KEY_NONE)
       , x(0)
       , y(0)
-      , time(0.0f)
+      , time(0)
    {
       /* Do nothing. */ ;
    }
@@ -99,7 +99,7 @@ struct EventComparator
       , y(baseEvent.y)
       , allEquivalent(true)
       , lastClickTime(baseEvent.time)
-      , maxClickDiff(0.0f)
+      , maxClickDiff(0)
    {
       /* Do nothing. */ ;
    }
