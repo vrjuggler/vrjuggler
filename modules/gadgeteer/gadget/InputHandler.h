@@ -14,6 +14,8 @@
 #  include <map>
 #endif
 
+#include <vpr/Sync/Mutex.h>
+
 #include <gadget/Event/EventGeneratorPtr.h>
 #include <gadget/InputHandlerPtr.h>
 
@@ -91,6 +93,9 @@ private:
 
    iface_map_type mPeriodicIfaces;
    iface_map_type mSyncIfaces;
+
+   vpr::Mutex mPeriodicIfacesLock;
+   vpr::Mutex mSyncIfacesLock;
 };
 
 }
