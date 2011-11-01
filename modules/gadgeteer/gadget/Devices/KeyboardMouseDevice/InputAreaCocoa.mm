@@ -36,6 +36,7 @@
 #import <AppKit/NSEvent.h>
 #import <AppKit/NSView.h>
 #import <AppKit/NSWindow.h>
+#import <mach/mach_time.h>
 
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
@@ -77,7 +78,7 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
       gadget::EventPtr key_event(
          new gadget::KeyEvent(type, gadget::KEY_CAPS_LOCK,
                               getMask(modifiers),
-                              AbsoluteToDuration(UpTime()), this)
+                              mach_absolute_time() * 0.000001, this)
       );
       doAddEvent(key_event, gadget::KEY_CAPS_LOCK);
    }
@@ -100,7 +101,7 @@ void InputAreaCocoa::addKeyEvent(const gadget::EventType type, NSEvent* event)
           
          gadget::EventPtr key_event(
             new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                                 AbsoluteToDuration(UpTime()), this,
+                                 mach_absolute_time() * 0.000001, this,
                                  static_cast<char>(key_char), key_char)
          );
          doAddEvent(key_event, key);
@@ -114,7 +115,7 @@ void InputAreaCocoa::addModifierEvent(const gadget::Keys key,
 {
    gadget::EventPtr key_event(
       new gadget::KeyEvent(type, key, getMask([event modifierFlags]),
-                           AbsoluteToDuration(UpTime()), this)
+                           mach_absolute_time() * 0.000001, this)
    );
    doAddEvent(key_event, key);
 }
@@ -166,7 +167,7 @@ void InputAreaCocoa::addMouseButtonEvent(const gadget::Keys button,
       new gadget::MouseEvent(type, button, view_loc.x, view_loc.y,
                              root_loc.x, root_loc.y, 0.0f, 0.0f,
                              getMask([event modifierFlags]),
-                             AbsoluteToDuration(UpTime()), this)
+                             mach_absolute_time() * 0.000001, this)
    );
    doAddEvent(mouse_event, button);
 }
@@ -180,7 +181,7 @@ void InputAreaCocoa::addMouseMoveEvent(NSEvent* event)
       new gadget::MouseEvent(gadget::MouseMoveEvent, gadget::NO_MBUTTON,
                              view_loc.x, view_loc.y, root_loc.x, root_loc.y,
                              0.0f, 0.0f, getMask([event modifierFlags]),
-                             AbsoluteToDuration(UpTime()), this)
+                             mach_absolute_time() * 0.000001, this)
    );
 
    const float dx = [event deltaX];
@@ -251,7 +252,7 @@ void InputAreaCocoa::addMouseScrollEvent(NSEvent* event)
                                 view_loc.x, view_loc.y, root_loc.x,
                                 root_loc.y, dx, dy,
                                 getMask([event modifierFlags]),
-                                AbsoluteToDuration(UpTime()), this)
+                                mach_absolute_time() * 0.000001, this)
       );
 
       // Hold the keys lock for only as long as we need it.
