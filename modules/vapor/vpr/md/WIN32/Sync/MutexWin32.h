@@ -196,14 +196,14 @@ public:
     * @pre The mutex variable must be locked.
     * @post The mutex variable is unlocked.
     *
-    * @throw vpr::LockException is thrown if the current thread was not the
-    *        one that locked this mutex.
+    * @throw vpr::LockException Thrown if the current thread was not the
+    *                           one that locked this mutex.
     */
    void release()
    {
       const BOOL result = ReleaseMutex(mMutex);
 
-      if (! result)
+      if (FALSE == result)
       {
          throw vpr::LockException(
             "Tried to release a mutex that this thread does not own",
