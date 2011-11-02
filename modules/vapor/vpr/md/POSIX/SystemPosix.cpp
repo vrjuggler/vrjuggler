@@ -45,7 +45,7 @@
 namespace vpr
 {
 
-int SystemPosix::usleep(vpr::Uint32 micro)
+int SystemPosix::usleep(const vpr::Uint32 micro)
 {
 #ifdef VPR_OS_Linux
    ::usleep(micro);
@@ -55,7 +55,7 @@ int SystemPosix::usleep(vpr::Uint32 micro)
 #endif
 }
 
-int SystemPosix::msleep(vpr::Uint32 milli)
+int SystemPosix::msleep(const vpr::Uint32 milli)
 {
    // usleep() cannot sleep for more than 1 second, so we have to work
    // around that here.  First, we sleep for N seconds.
@@ -78,7 +78,7 @@ union uint64_holder
    } struct_value;
 };
 
-vpr::Uint64 SystemPosix::Ntohll(vpr::Uint64 conversion)
+vpr::Uint64 SystemPosix::Ntohll(const vpr::Uint64 conversion)
 {
    uint64_holder input;
    uint64_holder output;
@@ -104,7 +104,7 @@ vpr::Uint64 SystemPosix::Ntohll(vpr::Uint64 conversion)
    return output.uint64_value;
 }
 
-vpr::Uint64 SystemPosix::Htonll(vpr::Uint64 conversion)
+vpr::Uint64 SystemPosix::Htonll(const vpr::Uint64 conversion)
 {
    uint64_holder input;
    uint64_holder output;

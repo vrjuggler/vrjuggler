@@ -84,7 +84,7 @@ int SystemWin32::gettimeofday(vpr::TimeVal* tv, vpr::TimeZone* tz)
    return 0;
 }
 
-vpr::Uint64 SystemWin32::Ntohll(vpr::Uint64 conversion)
+vpr::Uint64 SystemWin32::Ntohll(const vpr::Uint64 conversion)
 {
    vpr::Uint64 ret_val;
 
@@ -106,7 +106,7 @@ vpr::Uint64 SystemWin32::Ntohll(vpr::Uint64 conversion)
    return ret_val;
 }
 
-vpr::Uint64 SystemWin32::Htonll(vpr::Uint64 conversion)
+vpr::Uint64 SystemWin32::Htonll(const vpr::Uint64 conversion)
 {
    vpr::Uint64 ret_val;
 

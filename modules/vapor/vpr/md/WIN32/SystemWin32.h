@@ -72,7 +72,7 @@ public:
     *
     * @param micro The number of microseconds to sleep.
     */
-   static int usleep(vpr::Uint32 micro)
+   static int usleep(const vpr::Uint32 micro)
    {
       return msleep(micro / 1000);
    }
@@ -82,7 +82,7 @@ public:
     *
     * @param milli The number of milliseconds to sleep.
     */
-   static int msleep(vpr::Uint32 milli)
+   static int msleep(const vpr::Uint32 milli)
    {
       ::Sleep(milli);
       return 0;
@@ -93,7 +93,7 @@ public:
     *
     * @param seconds The number of seconds to sleep.
     */
-   static int sleep(vpr::Uint32 seconds)
+   static int sleep(const vpr::Uint32 seconds)
    {
       return msleep(seconds * 1000);
    }
@@ -114,7 +114,7 @@ public:
     * network byte ordering.  This is safe to use with signed and unsigned
     * values.
     */
-   static vpr::Uint16 Ntohs(vpr::Uint16 conversion)
+   static vpr::Uint16 Ntohs(const vpr::Uint16 conversion)
    {
       return ntohs(conversion);
    }
@@ -124,7 +124,7 @@ public:
     * network byte ordering.  This is safe to use with signed and unsigned
     * values.
     */
-   static vpr::Uint32 Ntohl(vpr::Uint32 conversion)
+   static vpr::Uint32 Ntohl(const vpr::Uint32 conversion)
    {
       return ntohl(conversion);
    }
@@ -134,7 +134,7 @@ public:
     * to network byte ordering.  This is safe to use with signed and unsigned
     * values.
     */
-   static vpr::Uint64 Ntohll(vpr::Uint64 conversion);
+   static vpr::Uint64 Ntohll(const vpr::Uint64 conversion);
    //@}
 
    /** @name Host-to-network byte order conversions */
@@ -144,7 +144,7 @@ public:
     * native byte ordering.  This is safe to use with signed and unsigned
     * values.
     */
-   static vpr::Uint16 Htons(vpr::Uint16 conversion)
+   static vpr::Uint16 Htons(const vpr::Uint16 conversion)
    {
       return htons(conversion);
    }
@@ -154,7 +154,7 @@ public:
     * native byte ordering.  This is safe to use with signed and unsigned
     * values.
     */
-   static vpr::Uint32 Htonl(vpr::Uint32 conversion)
+   static vpr::Uint32 Htonl(const vpr::Uint32 conversion)
    {
       return htonl(conversion);
    }
@@ -164,7 +164,7 @@ public:
     * to native byte ordering.  This is safe to use with signed and unsigned
     * values.
     */
-   static vpr::Uint64 Htonll(vpr::Uint64 conversion);
+   static vpr::Uint64 Htonll(const vpr::Uint64 conversion);
    //@}
 
    /**
