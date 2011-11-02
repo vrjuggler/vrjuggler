@@ -86,21 +86,21 @@ int SystemWin32::gettimeofday(vpr::TimeVal* tv, vpr::TimeZone* tz)
 
 vpr::Uint64 SystemWin32::Ntohll(const vpr::Uint64 conversion)
 {
-   vpr::Uint64 ret_val;
+   Uint64 ret_val;
 
    if ( isLittleEndian() )
    {
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
-         Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      *(reinterpret_cast<Uint32*>(&ret_val) + 1) =
+         Ntohl(*reinterpret_cast<const Uint32*>(&conversion));
+      *reinterpret_cast<Uint32*>(&ret_val) =
+         Ntohl(*(reinterpret_cast<const Uint32*>(&conversion) + 1));
    }
    else
    {
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Ntohl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1)  =
-         Ntohl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      *reinterpret_cast<Uint32*>(&ret_val) =
+         Ntohl(*reinterpret_cast<const Uint32*>(&conversion));
+      *(reinterpret_cast<Uint32*>(&ret_val) + 1)  =
+         Ntohl(*(reinterpret_cast<const Uint32*>(&conversion) + 1));
    }
 
    return ret_val;
@@ -108,21 +108,21 @@ vpr::Uint64 SystemWin32::Ntohll(const vpr::Uint64 conversion)
 
 vpr::Uint64 SystemWin32::Htonll(const vpr::Uint64 conversion)
 {
-   vpr::Uint64 ret_val;
+   Uint64 ret_val;
 
    if ( isLittleEndian() )
    {
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
-         Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      *(reinterpret_cast<Uint32*>(&ret_val) + 1) =
+         Htonl(*reinterpret_cast<const Uint32*>(&conversion));
+      *reinterpret_cast<Uint32*>(&ret_val) =
+         Htonl(*(reinterpret_cast<const Uint32*>(&conversion) + 1));
    }
    else
    {
-      *reinterpret_cast<vpr::Uint32*>(&ret_val) =
-         Htonl(*reinterpret_cast<vpr::Uint32*>(&conversion));
-      *(reinterpret_cast<vpr::Uint32*>(&ret_val) + 1) =
-         Htonl(*(reinterpret_cast<vpr::Uint32*>(&conversion) + 1));
+      *reinterpret_cast<Uint32*>(&ret_val) =
+         Htonl(*reinterpret_cast<const Uint32*>(&conversion));
+      *(reinterpret_cast<Uint32*>(&ret_val) + 1) =
+         Htonl(*(reinterpret_cast<const Uint32*>(&conversion) + 1));
    }
 
    return ret_val;
