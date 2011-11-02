@@ -116,7 +116,7 @@ public:
     * network byte ordering.  This is safe to use with signed and unsigned
     * values.
     */
-   static vpr::Uint16 Ntohs(vpr::Uint32 conversion)
+   static vpr::Uint16 Ntohs(vpr::Uint16 conversion)
    {
       return ntohs(conversion);
    }
