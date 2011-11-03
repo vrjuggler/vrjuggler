@@ -107,6 +107,11 @@ public:
     */
    static int gettimeofday(vpr::TimeVal* tp, vpr::TimeZone* tzp = NULL);
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4244)
+#endif
+
    /** @name Host-to-network byte order conversions */
    //@{
    /**
@@ -118,6 +123,10 @@ public:
    {
       return ntohs(conversion);
    }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
    /**
     * Converts the given 32-bit value (a long) from native byte ordering to
