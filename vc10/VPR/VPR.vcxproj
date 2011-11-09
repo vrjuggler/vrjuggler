@@ -108,7 +108,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\md5-c;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -143,7 +143,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\md5-c;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -172,7 +172,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\md5-c;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -208,7 +208,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\md5-c;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -240,7 +240,7 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\md5-c;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -279,7 +279,7 @@
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\md5-c;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -341,7 +341,7 @@
     <ClCompile Include="..\..\modules\vapor\vpr\DynLoad\LoaderError.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\Sync\LockException.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.cpp" />
-    <ClCompile Include="..\..\external\md5-c\md5c.c" />
+    <ClCompile Include="..\..\external\libmd5-rfc\md5c.c" />
     <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\NoPushWriter.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp" />
@@ -411,7 +411,6 @@
     <ClInclude Include="..\..\modules\vapor\vpr\IO\FileHandle.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\IO\FileHandle_t.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\Util\FileUtils.h" />
-    <ClInclude Include="..\..\external\md5-c\global.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\Sync\Guard.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\Sync\GuardedQueue.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\Util\GUID.h" />
@@ -434,7 +433,7 @@
     <ClInclude Include="..\..\modules\vapor\vpr\Sync\LockException.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\McastReq.h" />
-    <ClInclude Include="..\..\external\md5-c\md5.h" />
+    <ClInclude Include="..\..\external\libmd5-rfc\md5.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\Sync\Mutex.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.h" />
     <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\NoPushWriter.h" />

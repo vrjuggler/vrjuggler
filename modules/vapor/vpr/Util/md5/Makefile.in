@@ -44,12 +44,12 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-srcdir=		@srcdir@/../../../../../external/md5-c
+srcdir=		@srcdir@/../../../../../external/libmd5-rfc
 top_srcdir=	@top_srcdir@
 INSTALL_FILES=	
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		md5c.c
+SRCS=		md5.c
 
 include $(MKPATH)/dpp.obj.mk
 

@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\libmd5-rfc&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
 				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -131,7 +131,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\libmd5-rfc&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
 				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -214,7 +214,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\libmd5-rfc&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
 				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -301,7 +301,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\libmd5-rfc&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
 				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -387,7 +387,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\libmd5-rfc&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
 				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -477,7 +477,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\md5-c&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
+				AdditionalIncludeDirectories=".;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_INCLUDES)&quot;;;&quot;..\..\external\libmd5-rfc&quot;;&quot;..\..\external\leach-uuid&quot;;..\..\modules\vapor"
 				PreprocessorDefinitions="CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT;_WIN32_WINNT=0x0500"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -677,7 +677,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\external\md5-c\md5c.c"
+				RelativePath="..\..\external\libmd5-rfc\md5.c"
 				>
 			</File>
 			<File
@@ -954,10 +954,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\external\md5-c\global.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\Guard.h"
 				>
 			</File>
@@ -1046,7 +1042,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\external\md5-c\md5.h"
+				RelativePath="..\..\external\libmd5-rfc\md5.h"
 				>
 			</File>
 			<File
