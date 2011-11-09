@@ -46,11 +46,7 @@
 #if defined(VPR_USE_LEACH_UUID)
 #  include <uuid/sysdep.h>
 #else
-#  define PROTOTYPES 1
-extern "C" {
-#  include <global.h>
 #  include <md5.h>
-}
 #endif  /* VPR_USE_LEACH_UUID */
 
 #if defined(VPR_OS_Windows)
@@ -196,15 +192,15 @@ void GUID::generate(const GUID& nsGuid, const std::string& name)
    net_ns_guid.mGuid.standard.m1 = vpr::System::Htons(net_ns_guid.mGuid.standard.m1);
    net_ns_guid.mGuid.standard.m2 = vpr::System::Htons(net_ns_guid.mGuid.standard.m2);
 
-   // The following uses the MD5 implementation in juggler/external/md5-c.
-   MD5_CTX c;
    unsigned char hash[16];
-
-   MD5Init(&c);
-   MD5Update(&c, (unsigned char*) &net_ns_guid.mGuid.standard,
+   // The following uses the MD5 implementation in juggler/external/libmd5-rfc
+   // containing no RSA code.
+   md5_state_t c;
+   md5_init(&c);
+   md5_append(&c, reinterpret_cast<const unsigned char *>(&net_ns_guid.mGuid.standard),
              sizeof(net_ns_guid.mGuid.standard));
-   MD5Update(&c, (unsigned char*) name.c_str(), name.length());
-   MD5Final(hash, &c);
+   md5_append(&c, reinterpret_cast<const unsigned char *>(name.c_str()), name.length());
+   md5_finish(&c, hash);
 
    // At this point, the hash is in network byte order.
    memcpy((void*) &mGuid.standard, hash, sizeof(mGuid.standard));

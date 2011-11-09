@@ -207,7 +207,7 @@ void uuid_create_from_name(
   void * name,          /* the name from which to generate a UUID */
   int namelen           /* the length of the name */
 ) {
-  MD5_CTX c;
+  md5_state_t c;
   unsigned char hash[16];
   uuid_t net_nsid;      /* context UUID in network byte order */
 
@@ -218,10 +218,10 @@ void uuid_create_from_name(
   htons(net_nsid.time_mid);
   htons(net_nsid.time_hi_and_version);
 
-  MD5Init(&c);
-  MD5Update(&c, &net_nsid, sizeof(uuid_t));
-  MD5Update(&c, name, namelen);
-  MD5Final(hash, &c);
+  md5_init(&c);
+  md5_append(&c, &net_nsid, sizeof(uuid_t));
+  md5_append(&c, name, namelen);
+  md5_finish(&c, hash);
 
   /* the hash is in network byte order at this point */
   format_uuid_v3(uuid, hash);
