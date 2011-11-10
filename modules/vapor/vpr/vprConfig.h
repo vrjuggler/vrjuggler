@@ -109,8 +109,10 @@
  * Versions prior to 8.1 did not make use of any GCC headers, so we have to
  * make sure we are not using a version of the Intel compiler older than 8.1
  * when performing this operation.
+ *
+ * The EKOPath/PathScale compiler similarly lies.
  */
-#if (! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
+#if (! defined(__INTEL_COMPILER) && !defined(__PATHCC__) && defined(__GNUC__) && \
      ((__GNUC__ == 3 && __GNUC_MINOR__ >= 1) || __GNUC__ > 3)) || \
     (defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 810 && defined(__GNUC__))
 namespace std
