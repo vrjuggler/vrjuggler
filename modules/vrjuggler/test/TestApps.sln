@@ -26,6 +26,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "collideApp", "PerfMon\colli
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "swapSync", "Draw\OGL\swapSync\swapSync.vcproj", "{139E6508-6400-43FC-980F-19C509E5EB51}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RumbleApp", "Draw\OGL\rumbleApp\RumbleApp.vcproj", "{9C8039E0-470F-4377-A9DF-D410C995DF83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -111,6 +113,12 @@ Global
 		{139E6508-6400-43FC-980F-19C509E5EB51}.DebugRt|Win32.Build.0 = DebugRt|Win32
 		{139E6508-6400-43FC-980F-19C509E5EB51}.Release|Win32.ActiveCfg = Release|Win32
 		{139E6508-6400-43FC-980F-19C509E5EB51}.Release|Win32.Build.0 = Release|Win32
+		{9C8039E0-470F-4377-A9DF-D410C995DF83}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C8039E0-470F-4377-A9DF-D410C995DF83}.Debug|Win32.Build.0 = Debug|Win32
+		{9C8039E0-470F-4377-A9DF-D410C995DF83}.DebugRt|Win32.ActiveCfg = DebugRt|Win32
+		{9C8039E0-470F-4377-A9DF-D410C995DF83}.DebugRt|Win32.Build.0 = DebugRt|Win32
+		{9C8039E0-470F-4377-A9DF-D410C995DF83}.Release|Win32.ActiveCfg = Release|Win32
+		{9C8039E0-470F-4377-A9DF-D410C995DF83}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -35,6 +35,7 @@ APPS	= analog	\
           cubes		\
           digitalGlove	\
 	  logger	\
+          rumbleApp	\
           simpleGlove	\
           swapSync      \
           texture	\
