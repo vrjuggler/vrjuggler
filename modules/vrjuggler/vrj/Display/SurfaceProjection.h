@@ -117,7 +117,7 @@ public:
     * @param eyePos      The eye position.
     * @param scaleFactor The scale factor currently in use.
     */
-   virtual void calcViewMatrix(const gmtl::Point3f& eyePos,
+   virtual void calcViewMatrix(const gmtl::Matrix44f& eyePos,
                                const float scaleFactor);
 
    /**
@@ -136,7 +136,7 @@ public:
     *
     * @note This function is called as part of calcViewMatrix.
     */
-    void calcViewFrustum(const gmtl::Point3f& eyePos,
+   virtual void calcViewFrustum(const gmtl::Matrix44f& eyePos,
                                 const float scaleFactor);
 
    std::ostream& outStream(std::ostream& out,

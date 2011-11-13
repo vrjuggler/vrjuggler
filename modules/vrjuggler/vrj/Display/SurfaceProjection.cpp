@@ -118,15 +118,18 @@ void SurfaceProjection::config(jccl::ConfigElementPtr element)
 // This method can be used for any rectangular planar screen. By adjusting
 // the wall rotation matrix, this method can be used for the general case
 // of a rectangular screen in 3-space
-void SurfaceProjection::calcViewMatrix(const gmtl::Point3f& eyePos,
+void SurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
                                        const float scaleFactor)
 {
    calculateOffsets();
    calcViewFrustum(eyePos, scaleFactor);
 
+   // Non-transformed position.
+   const gmtl::Vec3f eye_pos(gmtl::makeTrans<gmtl::Vec3f>(eyePos));
+
    // Need to post translate to get the view matrix at the position of the
    // eye.
-   mViewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>(-eyePos);
+   mViewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>(-eye_pos);
 }
 
 // Calculates the view frustum needed for the view matrix. This uses a
@@ -135,7 +138,7 @@ void SurfaceProjection::calcViewMatrix(const gmtl::Point3f& eyePos,
 // edges of the screen. This method can be used for any rectangular planar
 // screen. By adjusting the wall rotation matrix, this method can be used
 // for the general case of a rectangular screen in 3-space.
-void SurfaceProjection::calcViewFrustum(const gmtl::Point3f& eyePos,
+void SurfaceProjection::calcViewFrustum(const gmtl::Matrix44f& eyePos,
                                         const float scaleFactor)
 {
    const float near_dist = mNearDist;
@@ -150,11 +153,12 @@ void SurfaceProjection::calcViewFrustum(const gmtl::Point3f& eyePos,
    // - Converts eye coords into the surface's coord system
    // Xformed position of eyes
    const gmtl::Point3f eye_surface =
-      m_surface_M_base * eyePos;
+      m_surface_M_base * gmtl::makeTrans<gmtl::Point3f>(eyePos);
 
    vprDEBUG(vrjDBG_DISP_MGR, vprDBG_HEX_LVL)
       << "[vrj::SurfaceProjection::calcViewFrustum()] Base eye: "
-      << eyePos << std::endl << vprDEBUG_FLUSH;
+      << gmtl::makeTrans<gmtl::Point3f>(eyePos) << std::endl
+      << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_HEX_LVL)
       << "                                            Transformed eye: "
       << eye_surface << std::endl << vprDEBUG_FLUSH;
