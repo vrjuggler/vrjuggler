@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-13-2011 patrick     Fixed a regression where rotations would not be applied
+                        to simulator viewports.
 May-15-2011 patrick     Added vrj::User::setHeadPosProxy().
                         Submitted by Carsten Neumann.
 Mar-19-2011 patrick     Added support for Boost.Filesystem v3.
