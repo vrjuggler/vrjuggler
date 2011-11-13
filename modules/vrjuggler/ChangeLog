@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-11-13 patrick     Fixed a regression where rotations would not be applied
+                       to simulator viewports.
 2011-05-15 patrick     Added vrj::User::setHeadPosProxy().
                        Submitted by Carsten Neumann.
                        NEW VERSION: 3.1.4
