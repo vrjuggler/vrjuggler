@@ -253,7 +253,7 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
          end_point_stream << "giop:tcp:" << endPointAddr << ":"
                           << endPointPort;
 
-         options[0][0] = strdup("endPoint");
+         options[0][0] = "endPoint";
          options[0][1] = strdup(end_point_stream.str().c_str());
 
          vprDEBUG(tweekDBG_CORBA, vprDBG_CONFIG_LVL)
@@ -267,11 +267,10 @@ bool CorbaManager::initDirect(const std::string& localID, int& argc,
          << "')\n" << vprDEBUG_FLUSH;
       mORB = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING, options);
 
-      if ( options[0][0] != NULL )
+      if ( options[0][1] != NULL )
       {
          // Yes, each of these could be done with a simple C-style cast, but
          // the C++ cast operations exist for a reason.
-         std::free(reinterpret_cast<void*>(const_cast<char*>(options[0][0])));
          std::free(reinterpret_cast<void*>(const_cast<char*>(options[0][1])));
          options[0][0] = NULL;
          options[0][1] = NULL;
