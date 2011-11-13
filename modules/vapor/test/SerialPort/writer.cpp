@@ -62,7 +62,7 @@ int main (int argc, char* argv[])
 
          std::cout << "Port opened\n";
 
-         write_port->getMinInputSize(size);
+         size = write_port->getMinInputSize();
          std::cout << "Min buffer size: " << size << std::endl;
          
 
