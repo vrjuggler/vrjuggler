@@ -322,10 +322,10 @@ std::vector<vpr::InetAddr> getIfAddrs(const bool withLoopback,
       }
 
 #if defined(VPR_OS_Windows)
-      const bool down = if_list[i].iiFlags & IFF_UP == 0;
+      const bool down = (if_list[i].iiFlags & IFF_UP) == 0;
 #else
       // XXX: This call may cause problems. It may not work on Linux.
-      const bool down = ifc.ifc_req[i].ifr_flags & IFF_UP == 0;
+      const bool down = (ifc.ifc_req[i].ifr_flags & IFF_UP) == 0;
 #endif
 
       // If the inerface is down and the caller asked to exclude down
