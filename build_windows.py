@@ -194,10 +194,12 @@ def chooseVisualStudioDir():
       print "ERROR: Visual C++ 8.0 and older are not supported!"
       sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
    # Otherwise, we use the solution in the vc9 subtree.
-   else:
+   elif cl_ver_major == 15:
       vc_dir = 'vc9'
+   else:
+      vc_dir = 'vc10'
 
-   if cl_ver_major > 15:
+   if cl_ver_major > 16:
       # Will need to upgrade the solution
       needs_upgrade = True
    return (cl_ver_major, cl_ver_minor, vc_dir, needs_upgrade)
