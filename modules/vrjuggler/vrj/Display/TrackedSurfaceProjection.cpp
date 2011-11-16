@@ -72,11 +72,12 @@ TrackedSurfaceProjection::create(const gmtl::Point3f& llCorner,
 }
 
 void TrackedSurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
+                                              const gmtl::Point3f& eyePoint,
                                               const float scaleFactor)
 {
    updateSurfaceParams(scaleFactor);
 
-   SurfaceProjection::calcViewMatrix(eyePos,scaleFactor);
+   SurfaceProjection::calcViewMatrix(eyePos, eyePoint, scaleFactor);
 }
 
 void TrackedSurfaceProjection::updateSurfaceParams(const float scaleFactor)

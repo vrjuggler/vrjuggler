@@ -69,6 +69,7 @@ public:
     * viewport.
     */
    virtual void calcViewMatrix(const gmtl::Matrix44f& cameraPos,
+                               const gmtl::Point3f& cameraPoint,
                                const float scaleFactor);
 
    virtual std::ostream& outStream(std::ostream& out,

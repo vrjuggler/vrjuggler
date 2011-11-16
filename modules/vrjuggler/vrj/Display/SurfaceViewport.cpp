@@ -188,20 +188,22 @@ void SurfaceViewport::updateProjections(const float positionScale)
 
    if (Viewport::LEFT_EYE == mView || Viewport::STEREO == mView)
    {
-      const gmtl::Matrix44f left_eye_pos(
-         cur_head_pos *
-            gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-eye_offset, 0, 0))
+      const gmtl::Point3f left_eye_point( 
+         cur_head_pos * gmtl::Point3f(-eye_offset, 0, 0)
       );
-      mLeftProj->calcViewMatrix(left_eye_pos, positionScale);
+
+      mLeftProj->calcViewMatrix(gmtl::MAT_IDENTITY44F, left_eye_point,
+                                positionScale);
    }
 
    if (Viewport::RIGHT_EYE == mView || Viewport::STEREO == mView)
    {
-      const gmtl::Matrix44f right_eye_pos(
-         cur_head_pos * 
-            gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(eye_offset, 0, 0))
+      const gmtl::Point3f right_eye_point(
+         cur_head_pos * gmtl::Point3f(eye_offset, 0, 0)
       );
-      mRightProj->calcViewMatrix(right_eye_pos, positionScale);
+
+      mRightProj->calcViewMatrix(gmtl::MAT_IDENTITY44F, right_eye_point,
+                                 positionScale);
    }
 }
 

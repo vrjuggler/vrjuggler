@@ -118,18 +118,16 @@ void SurfaceProjection::config(jccl::ConfigElementPtr element)
 // This method can be used for any rectangular planar screen. By adjusting
 // the wall rotation matrix, this method can be used for the general case
 // of a rectangular screen in 3-space
-void SurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
+void SurfaceProjection::calcViewMatrix(const gmtl::Matrix44f&,
+                                       const gmtl::Point3f& eyePoint,
                                        const float scaleFactor)
 {
    calculateOffsets();
-   calcViewFrustum(eyePos, scaleFactor);
-
-   // Non-transformed position.
-   const gmtl::Vec3f eye_pos(gmtl::makeTrans<gmtl::Vec3f>(eyePos));
+   calcViewFrustum(eyePoint, scaleFactor);
 
    // Need to post translate to get the view matrix at the position of the
    // eye.
-   mViewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>(-eye_pos);
+   mViewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>(-eyePoint);
 }
 
 // Calculates the view frustum needed for the view matrix. This uses a
@@ -138,7 +136,7 @@ void SurfaceProjection::calcViewMatrix(const gmtl::Matrix44f& eyePos,
 // edges of the screen. This method can be used for any rectangular planar
 // screen. By adjusting the wall rotation matrix, this method can be used
 // for the general case of a rectangular screen in 3-space.
-void SurfaceProjection::calcViewFrustum(const gmtl::Matrix44f& eyePos,
+void SurfaceProjection::calcViewFrustum(const gmtl::Point3f& eyePos,
                                         const float scaleFactor)
 {
    const float near_dist = mNearDist;
@@ -152,12 +150,11 @@ void SurfaceProjection::calcViewFrustum(const gmtl::Matrix44f& eyePos,
    // Compute transformed eye position
    // - Converts eye coords into the surface's coord system
    // Xformed position of eyes
-   const gmtl::Point3f eye_surface =
-      m_surface_M_base * gmtl::makeTrans<gmtl::Point3f>(eyePos);
+   const gmtl::Point3f eye_surface = m_surface_M_base * eyePos;
 
    vprDEBUG(vrjDBG_DISP_MGR, vprDBG_HEX_LVL)
       << "[vrj::SurfaceProjection::calcViewFrustum()] Base eye: "
-      << gmtl::makeTrans<gmtl::Point3f>(eyePos) << std::endl
+      << eyePos << std::endl
       << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DISP_MGR, vprDBG_HEX_LVL)
       << "                                            Transformed eye: "

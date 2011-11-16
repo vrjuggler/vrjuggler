@@ -163,8 +163,15 @@ void BasicSimulator::updateProjectionData(const float positionScale,
    left_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_offset, 0.0f, 0.0f) );
    right_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(eye_offset, 0.0f, 0.0f) );
 
-   leftProj->calcViewMatrix(left_eye_pos, positionScale);
-   rightProj->calcViewMatrix(right_eye_pos, positionScale);
+   // NOTE: Eye coord system is -z forward, x-right, y-up
+   const gmtl::Point3f left_eye_pt(
+      gmtl::makeTrans<gmtl::Point3f>(left_eye_pos)
+   );
+   const gmtl::Point3f right_eye_pt(
+      gmtl::makeTrans<gmtl::Point3f>(right_eye_pos)
+   );
+   leftProj->calcViewMatrix(left_eye_pos, left_eye_pt, positionScale);
+   rightProj->calcViewMatrix(right_eye_pos, right_eye_pt, positionScale);
 }
 
 /**  Update internal simulator data */

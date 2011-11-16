@@ -102,6 +102,7 @@ public:
     * @post Frustum has been recomputed for given \p eyePos.
     */
    virtual void calcViewMatrix(const gmtl::Matrix44f& eyePos,
+                               const gmtl::Point3f& eyePoint,
                                const float scaleFactor);
 
    /** Update the parameters of the tracked surface. */

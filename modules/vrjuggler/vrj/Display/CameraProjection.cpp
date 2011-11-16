@@ -63,13 +63,13 @@ void CameraProjection::config(jccl::ConfigElementPtr element)
 * Auto-calculates aspect ratio from the current size of the window and viewport
 */
 void CameraProjection::calcViewMatrix(const gmtl::Matrix44f& cameraPos,
-                                      const float scaleFactor)
+                                      const gmtl::Point3f&, const float)
 {
-   boost::ignore_unused_variable_warning(scaleFactor);
    mViewMat = cameraPos;
 
    gmtl::Vec3f camera_trans = gmtl::makeTrans<gmtl::Vec3f>(cameraPos);
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "calcView: Cam pos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+      << "calcView: Cam pos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
 
    int win_xo, win_yo, win_xs, win_ys;  // origin and size of display window
    float vp_xo, vp_yo, vp_xs, vp_ys;  // origin and size of viewport
