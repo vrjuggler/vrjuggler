@@ -137,13 +137,9 @@ void BasicSimulator::updateProjectionData(const float positionScale,
    interocular_dist *= positionScale;               // Scale into correct units
    float eye_offset = interocular_dist / 2.0f;      // Distance to move eye
 
-   // NOTE: Eye coord system is -z forward, x-right, y-up
-   const gmtl::Point3f left_eye_pos(
-      camera_pos * gmtl::Point3f(-eye_offset, 0.0f, 0.0f)
-   );
-   const gmtl::Point3f right_eye_pos(
-      camera_pos * gmtl::Point3f(eye_offset, 0.0f, 0.0f)
-   );
+   gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
+   left_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_offset, 0.0f, 0.0f) );
+   right_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(eye_offset, 0.0f, 0.0f) );
 
    leftProj->calcViewMatrix(left_eye_pos, positionScale);
    rightProj->calcViewMatrix(right_eye_pos, positionScale);
