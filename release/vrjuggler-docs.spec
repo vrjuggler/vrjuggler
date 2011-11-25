@@ -6,7 +6,7 @@
 #    http://www.vrjuggler.org/view/Juggler/WritingDocumentationUsingDocBook
 
 %define name vrjuggler-docs
-%define global_version 3.0.0
+%define global_version 3.0.1
 %define global_release 1
 %define srcdir vrjuggler-%{global_version}-%{global_release}-src
 %define file_name %{srcdir}.tar.bz2
@@ -254,6 +254,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Nov 25 2011 Patrick Hartling <patrick.hartling at gmail dot com> 3.0.1-1
+- VR Juggler 3.0.1 release.
+
 * Sat Nov 27 2010 Patrick Hartling <patrick.hartling at gmail dot com> 3.0.0-1
 - VR Juggler 3.0.0 release.
 

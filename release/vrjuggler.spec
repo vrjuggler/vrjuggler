@@ -18,7 +18,7 @@
 # are detected automatically. They must be installed in /usr in order to be
 # detected correctly.
 %define name vrjuggler
-%define global_version 3.0.0
+%define global_version 3.0.1
 %define global_release 1
 
 %define vpr_version 2.2.0
@@ -1371,6 +1371,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Nov 25 2011 Patrick Hartling <patrick.hartling at gmail dot com> 3.0.1-1
+- VR Juggler 3.0.1 release.
+
 * Sat Nov 27 2010 Patrick Hartling <patrick.hartling at gmail dot com> 3.0.0-1
 - VR Juggler 3.0.0 release.
 

@@ -1,7 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- --------- ----------------------------------------------------------
+[2.2.1 released - 11.25.2011]==================================================
 2011-10-09 patrick   Fixed mishandling of the value returned by FreeLibrary().
-2011-04-04 patrick   Fixed DNS lookup problems when IPv5 is enabled on Windows.
+2011-04-04 patrick   Fixed DNS lookup problems when IPv6 is enabled on Windows.
                      Submitted by Jeff Baker
 2011-04-04 patrick   Fixed networking issues when using Boost.Asio.
                      Submitted by Jeff Baker

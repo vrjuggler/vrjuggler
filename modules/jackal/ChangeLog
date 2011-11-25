@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[1.4.1 released - 11.25.2011]==================================================
 Mar-19-2011 patrick     Added support for Boost.Filesystem v3.
                         Submitted by Doug McCorkle.
 

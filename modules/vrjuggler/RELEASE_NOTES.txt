@@ -10,6 +10,27 @@ For all versions:
 
 ===============================================================================
 
+ Version: 3.0.1
+Released: November 25, 2011
+
+   This is a bug-fix release for the VR Juggler 3.0 stable branch. Many bugs
+   have been fixed, and several enhancements have been made. The majority of
+   this work was done based on user feedback and user submissions, which is
+   greatly appreciated. Highights include the followoing:
+
+      * Added support for Boost.Filesytem v3 when using Boost 1.46.0 and newer.
+      * Fixed problems when shutting down the VRPN driver.
+      * Fixed off-by-one errors in the VRPN driver.
+      * Fixed serialization of gadget::Glove angle values.
+      * Fixed Cocoa keyboard and mouse events on to be measured in
+        milliseconds to match X11 and Win32.
+      * Fixed gadget::MouseEvent generation to include the pressed (released)
+        mouse button for X11 mouse button press (release) events.
+      * Fixed mishandling of the value returned by FreeLibrary().
+      * Fixed DNS lookup problems when IPv6 is enabled on Windows.
+      * Fixed networking issues when using Boost.Asio.
+      * Fixed UDP recvfrom() timeout handling on Windows XP.
+
  Version: 3.0.0
 Released: November 27, 2010
 

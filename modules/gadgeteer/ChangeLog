@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0.1 released - 11.25.2011]==================================================
 May-15-2011 patrick     Fixed off-by-one errors in the VRPN driver.
                         Submitted by Ryan Pavlik.
 Mar-19-2011 patrick     Added support for Boost.Filesystem v3.
