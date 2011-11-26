@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-11-26 patrick     Implemented new digital device multi-click handling in
+                       gadget::DigitalClickEventInterface.
+                       NEW VERSION: 2.1.23
 2011-11-26 patrick     Implemented periodic event emission. This occurs in a
                        thread that is separate from the kernel control loop
                        and any device driver sample thread.
@@ -10,7 +13,7 @@ DATE       AUTHOR      CHANGE
                        callbacks. Now, either normalized or raw data can be
                        received.
                        NEW VERSION: 2.1.21
-2011-08-24 patrick     Implemented multi-click handling in
+2011-08-24 patrick     Implemented new multi-click handling in
                        gadget::MouseClickEventInterface.
                        NEW VERSION: 2.1.20
 2011-08-22 patrick     Changed input device type identification from string
