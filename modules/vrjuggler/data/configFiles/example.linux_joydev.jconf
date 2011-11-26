@@ -2,8 +2,9 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Linux Joydev Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <input_manager name="IM Linux Joydev" version="2">
+      <input_manager name="IM Linux Joydev" version="3">
          <driver>LinuxJoydev_drv</driver>
+         <periodic_event_emission_interval>0</periodic_event_emission_interval>
       </input_manager>
       <digital_proxy name="DigitalProxy0" version="1">
          <device>Logitech Dual Action</device>

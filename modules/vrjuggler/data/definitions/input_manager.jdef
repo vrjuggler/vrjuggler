@@ -158,4 +158,75 @@
          </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
+   <definition_version version="3" label="Input Manager">
+      <abstract>false</abstract>
+      <help>Configuration of the Gadgeteer Input Manager. This is used to identify which device driver plug-ins must be loaded to communicate with input device hardare. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more on the Input Manager&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input&lt;/a&gt;)</help>
+      <parent/>
+      <category>/Input</category>
+      <property valuetype="string" variable="true" name="driver_path">
+         <help>Each value adds to the path where dynamically loadable driver objects can be found.  The path may make use of environment variables.  For example: &lt;tt&gt;${VJ_BASE_DIR}/lib/gadgeteer/drivers&lt;/tt&gt;.  If no values are set for this property, the default search path will be &lt;tt&gt;${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/drivers&lt;/tt&gt; depending on the compile-time application binary interface (ABI). (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
+         <value label="DSO Path" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="driver">
+         <help>The base name of a dynamically loadable driver object.  For example: &lt;tt&gt;PinchGlove_drv&lt;/tt&gt; (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Driver module" defaultvalue=""/>
+         <enumeration editable="true">
+            <enum label="DTrack_drv" value="DTrack_drv"/>
+            <enum label="DataGlove_drv" value="DataGlove_drv"/>
+            <enum label="DirectXJoystick_drv" value="DirectXJoystick_drv"/>
+            <enum label="ElexolEther24_drv" value="ElexolEther24_drv"/>
+            <enum label="Fastrak_drv" value="Fastrak_drv"/>
+            <enum label="Flock_drv" value="Flock_drv"/>
+            <enum label="IBox_drv" value="IBox_drv"/>
+            <enum label="IS900_drv" value="IS900_drv"/>
+            <enum label="IntersenseAPI_drv" value="IntersenseAPI_drv"/>
+            <enum label="LinuxJoydev_drv" value="LinuxJoydev_drv"/>
+            <enum label="MSFTSpeechRecog_drv" value="MSFTSpeechRecog_drv"/>
+            <enum label="MotionStar_drv" value="MotionStar_drv"/>
+            <enum label="Optitrack_drv" value="Optitrack_drv"/>
+            <enum label="P5Glove_drv" value="P5Glove_drv"/>
+            <enum label="PinchGlove_drv" value="PinchGlove_drv"/>
+            <enum label="SerialEncoder_drv" value="SerialEncoder_drv"/>
+            <enum label="SpaceBall_drv" value="SpaceBall_drv"/>
+            <enum label="ThreeDMouse_drv" value="ThreeDMouse_drv"/>
+            <enum label="Trackd_drv" value="Trackd_drv"/>
+            <enum label="TrackdAPI_drv" value="TrackdAPI_drv"/>
+            <enum label="VRPN_drv" value="VRPN_drv"/>
+            <enum label="Wanda_drv" value="Wanda_drv"/>
+            <enum label="X-IST_drv" value="X-IST_drv"/>
+         </enumeration>
+      </property>
+      <property valuetype="string" variable="true" name="driver_scan_path">
+         <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html#section.configure.input.manager"&gt;more ...&lt;/a&gt;)</help>
+         <value label="DSO directory" defaultvalue=""/>
+      </property>
+      <property valuetype="integer" variable="false" name="periodic_event_emission_interval">
+         <help>The amount of time to wait between periodic event emissions. This is measured in milliseconds, and a value of 0 or less indicates that periodic event emission will not be enabled.</help>
+         <value label="Periodic Event Interval (ms)" defaultvalue="0"/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:input_manager">
+               <xsl:element namespace="{$jconf}" name="input_manager">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">3</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="periodic_event_emission_interval">
+                     <xsl:text>0</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>

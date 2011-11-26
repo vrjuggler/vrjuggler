@@ -489,9 +489,10 @@
          <head_position>VJHead</head_position>
          <interocular_distance>0.069</interocular_distance>
       </user>
-      <input_manager name="Input Manager" version="2">
+      <input_manager name="Input Manager" version="3">
          <driver>Flock_drv</driver>
          <driver>IBox_drv</driver>
+         <periodic_event_emission_interval>0</periodic_event_emission_interval>
       </input_manager>
       <flock name="Flock_o_Birds" version="2">
          <port>/dev/ttyd3</port>

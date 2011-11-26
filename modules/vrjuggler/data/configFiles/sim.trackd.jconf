@@ -115,8 +115,9 @@
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Wand Proxy</relative_proxy>
       </simulated_relative_position>
-      <input_manager name="Input Manager" version="2">
+      <input_manager name="Input Manager" version="3">
          <driver>Trackd_drv</driver>
+         <periodic_event_emission_interval>0</periodic_event_emission_interval>
       </input_manager>
       <trackd_sensor name="TrackdSensorDev" version="1">
          <shared_memory_key>4148</shared_memory_key>

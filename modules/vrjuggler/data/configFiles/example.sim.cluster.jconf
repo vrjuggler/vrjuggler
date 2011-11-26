@@ -898,7 +898,7 @@
             </display_window>
          </display_windows>
          <listen_port>8500</listen_port>
-         <host_name>patrick.infiscape.com</host_name>
+         <host_name>127.0.0.1</host_name>
       </cluster_node>
       <cluster_node name="Node 1" version="1">
          <display_system>
@@ -976,7 +976,7 @@
             </display_window>
          </display_windows>
          <listen_port>8501</listen_port>
-         <host_name>telperion.infiscape.com</host_name>
+         <host_name>127.0.0.1</host_name>
       </cluster_node>
    </elements>
 </configuration>
