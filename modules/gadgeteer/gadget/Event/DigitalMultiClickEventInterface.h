@@ -181,11 +181,11 @@ public:
     * @param clickTime The maximum time (measured in milliseconds) allowed
     *                  between sequential clicks for the click events to be
     *                  treated as a single multi-click event. This parameter
-    *                  is optional, and it defaults to 10 milliseconds.
+    *                  is optional, and it defaults to 300 milliseconds.
     *
     * @see setClickTime()
     */
-   DigitalMultiClickEventInterface(const unsigned long clickTime = 10)
+   DigitalMultiClickEventInterface(const unsigned long clickTime = 300)
       : mClickTime(clickTime)
    {
       /* Do nothing. */ ;
