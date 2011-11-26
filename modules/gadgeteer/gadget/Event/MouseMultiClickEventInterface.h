@@ -191,7 +191,7 @@ public:
     *
     * @see setClickTime()
     */
-   MouseMultiClickEventInterface(const unsigned long clickTime = 10)
+   MouseMultiClickEventInterface(const unsigned long clickTime = 300)
       : mClickTime(clickTime)
    {
       /* Do nothing. */ ;
