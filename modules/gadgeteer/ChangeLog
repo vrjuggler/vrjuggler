@@ -1,5 +1,11 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-11-26 patrick     Reimplemented gadget::AnalogEventInterface as a
+                       multi-event interface. Previously, only raw
+                       (non-normalized) analog data was delivered to event
+                       callbacks. Now, either normalized or raw data can be
+                       received.
+                       NEW VERSION: 2.1.21
 2011-08-24 patrick     Implemented multi-click handling in
                        gadget::MouseClickEventInterface.
                        NEW VERSION: 2.1.20

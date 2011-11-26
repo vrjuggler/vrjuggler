@@ -58,7 +58,7 @@ void AnalogProxy::updateData()
       getProxiedInputDevice()->updateDataIfNeeded();
 
       mData = mTypedDevice->getAnalogData(mUnit);
-      mNormalizedData = mTypedDevice->normalize(mData.getValue());
+      mNormalizedData = normalizeData(mData.getValue());
    }
 }
 

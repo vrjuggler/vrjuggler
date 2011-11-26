@@ -91,6 +91,17 @@ public:
       return isStupefied() ? 0.0f : mNormalizedData;
    }
 
+   /**
+    * Normalizes the given raw data value to the range [0.0,1.0]. If this
+    * proxy is stupefid, 0.0 is always returned.
+    *
+    * @since 2.1.21
+    */
+   float normalizeData(const float value) const
+   {
+      return isStupefied() ? 0.0f : mTypedDevice->normalize(value);
+   }
+
    static std::string getElementType();
 
 private:
