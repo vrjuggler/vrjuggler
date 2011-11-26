@@ -34,6 +34,7 @@
 
 #include <gadget/Event/MultiEventInterface.h>
 #include <gadget/Event/MultiEventGenerator.h>
+#include <gadget/Event/ProxySetter.h>
 #include <gadget/Type/PositionProxy.h>
 
 
@@ -207,7 +208,12 @@ protected:
                this->getEventGenerator()
             )
          );
-         ProxySetter setter(generator, newProxy);
+
+         typedef
+            event::detail::ProxySetter<generator_ptr_type, proxy_ptr_type>
+         proxy_setter_type;
+
+         proxy_setter_type setter(generator, newProxy);
          boost::mpl::for_each<event_tags>(setter);
       }
    }
@@ -230,26 +236,6 @@ protected:
 
       generator_ptr_type generator;
       const float        scaleFactor;
-   };
-
-   struct ProxySetter
-   {
-      ProxySetter(const generator_ptr_type& generator,
-                  const proxy_ptr_type& proxy)
-         : generator(generator)
-         , proxy(proxy)
-      {
-         /* Do nothing. */ ;
-      }
-
-      template<typename EventTag>
-      void operator()(const EventTag&)
-      {
-         generator->template getExaminer<EventTag>().setProxy(proxy);
-      }
-
-      generator_ptr_type generator;
-      proxy_ptr_type     proxy;
    };
 
 private:
