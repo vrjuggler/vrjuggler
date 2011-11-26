@@ -46,6 +46,40 @@ namespace gadget
 namespace event
 {
 
+namespace detail
+{
+
+/** \struct ClickTimeSetter ClickEvent.h gadget/Event/ClickEvent.h
+ *
+ * This type is for use with \c boost::mpl::for_each<T>() when an event
+ * interface implementation needs to set the maximum time period between
+ * mouse click events.
+ *
+ * @since 2.1.23
+ */
+template<typename GeneratorPtr>
+struct ClickTimeSetter
+{
+   ClickTimeSetter(const GeneratorPtr& generator,
+                   const unsigned long clickTime)
+      : generator(generator)
+      , clickTime(clickTime)
+   {
+      /* Do nothing. */ ;
+   }
+
+   template<typename EventTag>
+   void operator()(const EventTag&)
+   {
+      generator->template getExaminer<EventTag>().setClickTime(clickTime);
+   }
+
+   GeneratorPtr        generator;
+   const unsigned long clickTime;
+};
+
+}
+
 /** @name Click Event Tag */
 //@{
 /**

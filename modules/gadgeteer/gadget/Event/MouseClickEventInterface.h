@@ -198,31 +198,13 @@ protected:
       generator_ptr_type generator(
          boost::dynamic_pointer_cast<generator_type>(base_generator)
       );
-      ClickTimeSetter setter(generator, mClickTime);
+
+      typedef event::detail::ClickTimeSetter<generator_ptr_type> cts_type;
+      cts_type setter(generator, mClickTime);
       boost::mpl::for_each<typename base_type::event_tags>(setter);
 
       return base_generator;
    }
-
-   struct ClickTimeSetter
-   {
-      ClickTimeSetter(const generator_ptr_type& generator,
-                      const unsigned long clickTime)
-         : generator(generator)
-         , clickTime(clickTime)
-      {
-         /* Do nothing. */ ;
-      }
-
-      template<typename EventTag>
-      void operator()(const EventTag&)
-      {
-         generator->template getExaminer<EventTag>().setClickTime(clickTime);
-      }
-
-      generator_ptr_type  generator;
-      const unsigned long clickTime;
-   };
 
 private:
    unsigned long mClickTime;    /**< Maximum click time (milliseconds) */
