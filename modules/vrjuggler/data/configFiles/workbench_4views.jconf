@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="D:\Dropbox\code\VRJ\MPApp\Release\workbench_4views_vrj3_0_new.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_system name="DisplaySystem" version="3">
+         <number_of_pipes>0</number_of_pipes>
+         <use_swap_group>false</use_swap_group>
+      </display_system>
+      <display_window name="OpenGL window" version="6">
+         <origin>350</origin>
+         <origin>0</origin>
+         <size>720</size>
+         <size>720</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="frame_buffer_config 0" version="4">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>1</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <num_sample_buffers>1</num_sample_buffers>
+               <num_samples>2</num_samples>
+               <use_create_context_attribs>false</use_create_context_attribs>
+               <gl_context_major_version>3</gl_context_major_version>
+               <gl_context_minor_version>0</gl_context_minor_version>
+               <gl_context_flags>0</gl_context_flags>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>true</border>
+         <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
+         <active>true</active>
+         <simulator_viewports>
+            <simulator_viewport name="Virtual Camera View1 - top" version="3">
+               <origin>0.0</origin>
+               <origin>0.5</origin>
+               <size>0.5</size>
+               <size>0.5</size>
+               <view>1</view>
+               <user>stereoUser</user>
+               <active>true</active>
+               <vertical_fov>60.0</vertical_fov>
+               <simulator_plugin>
+                  <default_simulator name="SimPlugin1" version="3">
+                     <camera_pos>virtualCamera1</camera_pos>
+                     <wand_pos>wand</wand_pos>
+                     <draw_projections>true</draw_projections>
+                     <surface_color>0.0</surface_color>
+                     <surface_color>0.0</surface_color>
+                     <surface_color>0.3</surface_color>
+                     <head_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt</head_model>
+                     <wand_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt</wand_model>
+                  </default_simulator>
+               </simulator_plugin>
+            </simulator_viewport>
+         </simulator_viewports>
+         <simulator_viewports>
+            <simulator_viewport name="Virtual Camera View2 - Side" version="3">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>0.5</size>
+               <size>0.5</size>
+               <view>1</view>
+               <user>stereoUser</user>
+               <active>true</active>
+               <vertical_fov>60.0</vertical_fov>
+               <simulator_plugin>
+                  <default_simulator name="SimPlugin2" version="3">
+                     <camera_pos>virtualCamera2</camera_pos>
+                     <wand_pos>wand</wand_pos>
+                     <draw_projections>true</draw_projections>
+                     <surface_color>0.0</surface_color>
+                     <surface_color>0.0</surface_color>
+                     <surface_color>0.3</surface_color>
+                     <head_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt</head_model>
+                     <wand_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt</wand_model>
+                  </default_simulator>
+               </simulator_plugin>
+            </simulator_viewport>
+         </simulator_viewports>
+         <simulator_viewports>
+            <simulator_viewport name="Virtual Camera View3 - Back" version="3">
+               <origin>0.5</origin>
+               <origin>0.0</origin>
+               <size>0.5</size>
+               <size>0.5</size>
+               <view>1</view>
+               <user>stereoUser</user>
+               <active>true</active>
+               <vertical_fov>60.0</vertical_fov>
+               <simulator_plugin>
+                  <default_simulator name="Simplugin3" version="3">
+                     <camera_pos>virtualCamera3</camera_pos>
+                     <wand_pos>wand</wand_pos>
+                     <draw_projections>true</draw_projections>
+                     <surface_color>0.2</surface_color>
+                     <surface_color>0.2</surface_color>
+                     <surface_color>0.2</surface_color>
+                     <head_model>${VJ_DATA_DIR}/data/models/head.flt</head_model>
+                     <wand_model>${VJ_DATA_DIR}/data/models/wand.flt</wand_model>
+                  </default_simulator>
+               </simulator_plugin>
+            </simulator_viewport>
+         </simulator_viewports>
+         <surface_viewports>
+            <surface_viewport name="Workbench Screen" version="3">
+               <origin>0.5</origin>
+               <origin>0.5</origin>
+               <size>0.5</size>
+               <size>0.5</size>
+               <view>1</view>
+               <lower_left_corner>-0.84</lower_left_corner>
+               <lower_left_corner>-0.47185</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_right_corner>0.84</lower_right_corner>
+               <lower_right_corner>-0.47185</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <upper_right_corner>0.84</upper_right_corner>
+               <upper_right_corner>0.47185</upper_right_corner>
+               <upper_right_corner>0.0</upper_right_corner>
+               <upper_left_corner>-0.84</upper_left_corner>
+               <upper_left_corner>0.47185</upper_left_corner>
+               <upper_left_corner>0.0</upper_left_corner>
+               <user>monoUser</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+               <auto_corner_update>0</auto_corner_update>
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name>Keyboard/MouseInputHandler</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
+         <lock_key>0</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>50</sleep_time>
+      </display_window>
+      <user name="monoUser" version="1">
+         <head_position>VJHead</head_position>
+         <interocular_distance>0.0</interocular_distance>
+      </user>
+      <position_proxy name="headtracker" version="1">
+         <device>SimulatedHeadPos</device>
+         <unit>0</unit>
+      </position_proxy>
+      <alias name="VJHead" version="1">
+         <proxy>headtracker</proxy>
+      </alias>
+      <simulated_positional_device name="SimulatedHeadPos" version="3">
+         <keyboard_mouse_proxy>HeadControlProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_W</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Backward" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_S</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_A</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_D</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_E</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_Q</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.2</initial_position>
+         <initial_position>1.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.0050</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>Global</translation_coordinate_system>
+         <rotation_coordinate_system>0</rotation_coordinate_system>
+      </simulated_positional_device>
+      <keyboard_mouse_device name="Keyboard/MouseInputHandler" version="2">
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
+      </keyboard_mouse_device>
+      <keyboard_mouse_proxy name="Keyboard/MouseProxy" version="1">
+         <device>Keyboard/MouseInputHandler</device>
+      </keyboard_mouse_proxy>
+      <digital_proxy name="VJSystemStopKernelProxy" version="1">
+         <device>Keyboard</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <alias name="VJSystemStopKernel" version="1">
+         <proxy>VJSystemStopKernelProxy</proxy>
+      </alias>
+      <simulated_digital_device name="Keyboard" version="2">
+         <keyboard_mouse_proxy>Keyboard/MouseProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="KillApp" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_ESC</key>
+            </key_modifier_pair>
+         </key_pair>
+      </simulated_digital_device>
+      <position_proxy name="virtualCamera1" version="1">
+         <device>VirtualCameraPos1</device>
+         <unit>0</unit>
+      </position_proxy>
+      <simulated_positional_device name="VirtualCameraPos1" version="3">
+         <keyboard_mouse_proxy>Keyboard/MouseProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="key_pair 0" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 1" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 2" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 3" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 4" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 5" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 6" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 7" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 8" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 9" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 10" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 11" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>3.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>-90.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.1</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>0</translation_coordinate_system>
+         <rotation_coordinate_system>Local</rotation_coordinate_system>
+      </simulated_positional_device>
+      <simulated_positional_device name="VirtualCameraPos2" version="3">
+         <keyboard_mouse_proxy>Keyboard/MouseProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="key_pair 0" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 1" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 2" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 3" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 4" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 5" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 6" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 7" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 8" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 9" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 10" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 11" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>-3.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>-90.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.1</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>0</translation_coordinate_system>
+         <rotation_coordinate_system>0</rotation_coordinate_system>
+      </simulated_positional_device>
+      <position_proxy name="virtualCamera2" version="1">
+         <device>VirtualCameraPos2</device>
+         <unit>0</unit>
+      </position_proxy>
+      <simulated_positional_device name="SimulatedWandPos" version="3">
+         <keyboard_mouse_proxy>WandControlProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_W</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Backward" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_S</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_A</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_D</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_E</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_Q</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.4</initial_position>
+         <initial_position>-0.15</initial_position>
+         <initial_position>0.7</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.0050</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>Global</translation_coordinate_system>
+         <rotation_coordinate_system>0</rotation_coordinate_system>
+      </simulated_positional_device>
+      <position_proxy name="wand" version="1">
+         <device>SimulatedWandPos</device>
+         <unit>0</unit>
+      </position_proxy>
+      <keyboard_mouse_device name="WandInputHandler" version="2">
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
+      </keyboard_mouse_device>
+      <keyboard_mouse_proxy name="WandControlProxy" version="1">
+         <device>WandInputHandler</device>
+      </keyboard_mouse_proxy>
+      <input_window name="WandTransWin" version="2">
+         <origin>0</origin>
+         <origin>50</origin>
+         <size>200</size>
+         <size>200</size>
+         <display_number>0</display_number>
+         <keyboard_mouse_device_name>WandInputHandler</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
+         <lock_key>0</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>50</sleep_time>
+      </input_window>
+      <simulated_digital_device name="WandButtons" version="2">
+         <keyboard_mouse_proxy>WandControlProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Button1" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Button2" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Button3" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Button4" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Button5" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_5</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Button6" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+      </simulated_digital_device>
+      <keyboard_mouse_device name="HeadInputHandler" version="2">
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <scroll_as_buttons>false</scroll_as_buttons>
+         <scroll_up_button>MOUSE_BUT4</scroll_up_button>
+         <scroll_down_button>MOUSE_BUT5</scroll_down_button>
+         <scroll_left_button>MOUSE_BUT6</scroll_left_button>
+         <scroll_right_button>MOUSE_BUT7</scroll_right_button>
+      </keyboard_mouse_device>
+      <input_window name="HeadTransWin" version="2">
+         <origin>200</origin>
+         <origin>50</origin>
+         <size>200</size>
+         <size>200</size>
+         <display_number>0</display_number>
+         <keyboard_mouse_device_name>HeadInputHandler</keyboard_mouse_device_name>
+         <allow_mouse_locking>true</allow_mouse_locking>
+         <lock_key>0</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>50</sleep_time>
+      </input_window>
+      <keyboard_mouse_proxy name="HeadControlProxy" version="1">
+         <device>HeadInputHandler</device>
+      </keyboard_mouse_proxy>
+      <alias name="VJWand" version="1">
+         <proxy>wand</proxy>
+      </alias>
+      <alias name="VJWandButton1" version="1">
+         <proxy>WandButton1 Proxy</proxy>
+      </alias>
+      <digital_proxy name="WandButton1 Proxy" version="1">
+         <device>WandButtons</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <alias name="VJWandButton2" version="1">
+         <proxy>WandButton2 Proxy</proxy>
+      </alias>
+      <alias name="VJWandButton3" version="1">
+         <proxy>WandButton3 Proxy</proxy>
+      </alias>
+      <alias name="VJWandButton4" version="1">
+         <proxy>WandButton4 Proxy</proxy>
+      </alias>
+      <alias name="VJWandButton5" version="1">
+         <proxy>WandButton5 Proxy</proxy>
+      </alias>
+      <digital_proxy name="WandButton2 Proxy" version="1">
+         <device>WandButtons</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="WandButton5 Proxy" version="1">
+         <device>WandButtons</device>
+         <unit>4</unit>
+      </digital_proxy>
+      <digital_proxy name="WandButton3 Proxy" version="1">
+         <device>WandButtons</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="WandButton4 Proxy" version="1">
+         <device>WandButtons</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <simulated_analog_device name="WandJoystick" version="3">
+         <keyboard_mouse_proxy>WandControlProxy</keyboard_mouse_proxy>
+         <increment_keypress>
+            <key_modifier_pair name="incX" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_RIGHT</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <increment_keypress>
+            <key_modifier_pair name="incY" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_UP</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="decX" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_LEFT</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="decY" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_DOWN</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <delta>0.01</delta>
+         <min>0.0</min>
+         <max>1.0</max>
+         <initial_value>0.5</initial_value>
+         <auto_return>false</auto_return>
+      </simulated_analog_device>
+      <analog_proxy name="WandJoystickX Proxy" version="1">
+         <device>WandJoystick</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <analog_proxy name="WandJoystickY Proxy" version="1">
+         <device>WandJoystick</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <alias name="VJWandJoystickX" version="1">
+         <proxy>WandJoystickX Proxy</proxy>
+      </alias>
+      <alias name="VJWandJoystickY" version="1">
+         <proxy>WandJoystickY Proxy</proxy>
+      </alias>
+      <alias name="VJKeyboard" version="1">
+         <proxy>Keyboard/MouseProxy</proxy>
+      </alias>
+      <user name="stereoUser" version="1">
+         <head_position>VJHead</head_position>
+         <interocular_distance>0.069</interocular_distance>
+      </user>
+      <digital_proxy name="WandButton6 Proxy" version="1">
+         <device>WandButtons</device>
+         <unit>5</unit>
+      </digital_proxy>
+      <alias name="VJWandButton6" version="1">
+         <proxy>WandButton6 Proxy</proxy>
+      </alias>
+      <simulated_positional_device name="VirtualCameraPos3" version="3">
+         <keyboard_mouse_proxy>Keyboard/MouseProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="key_pair 0" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 1" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 2" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 3" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 4" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 5" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 6" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 7" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 8" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 9" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 10" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="key_pair 11" version="1">
+               <modifier_key>-1</modifier_key>
+               <key>0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_position>3.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.1</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>0</translation_coordinate_system>
+         <rotation_coordinate_system>0</rotation_coordinate_system>
+      </simulated_positional_device>
+      <position_proxy name="virtualCamera3" version="1">
+         <device>VirtualCameraPos3</device>
+         <unit>0</unit>
+      </position_proxy>
+   </elements>
+</configuration>
+
