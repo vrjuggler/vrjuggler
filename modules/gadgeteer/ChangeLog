@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-11-26 patrick     Implemented periodic event emission. This occurs in a
+                       thread that is separate from the kernel control loop
+                       and any device driver sample thread.
+                       NEW VERSION: 2.1.22
 2011-11-26 patrick     Reimplemented gadget::AnalogEventInterface as a
                        multi-event interface. Previously, only raw
                        (non-normalized) analog data was delivered to event
