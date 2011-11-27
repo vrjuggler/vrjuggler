@@ -164,6 +164,8 @@ public:
       /* Do nothing. */ ;
    }
 
+   using base_type::addCallback;
+
    /**
     * Adds a callback for the gadget::event::position_event_tag event tag.
     * This is partly for compatibility with gadget::PositionEventInterface,

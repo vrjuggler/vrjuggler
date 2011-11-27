@@ -185,6 +185,8 @@ public:
       /* Do nothing. */ ;
    }
 
+   using base_type::addCallback;
+
    /**
     * Adds a callback for the gadget::event::normalized_analog_event_tag event
     * tag. This is mainly for convenience as most user-level code will want
