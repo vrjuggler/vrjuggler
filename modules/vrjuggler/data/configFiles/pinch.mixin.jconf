@@ -146,9 +146,8 @@
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
       </input_window>
-      <input_manager name="Input Manager" version="3">
+      <input_manager name="Input Manager" version="2">
          <driver>PinchGlove_drv</driver>
-         <periodic_event_emission_interval>0</periodic_event_emission_interval>
       </input_manager>
       <pinch_glove name="FakespacePinchGlove" version="1">
          <port>/dev/ttyd1</port>

@@ -6,9 +6,8 @@
          <min>0.0</min>
          <max>255.0</max>
       </directx_joystick>
-      <input_manager name="IM DirectX Joystick" version="3">
+      <input_manager name="IM DirectX Joystick" version="2">
          <driver>DirectXJoystick_drv</driver>
-         <periodic_event_emission_interval>0</periodic_event_emission_interval>
       </input_manager>
       <digital_proxy name="DigitalProxy0" version="1">
          <device>Logitech Dual Action</device>

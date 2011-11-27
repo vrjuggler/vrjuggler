@@ -2,9 +2,8 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.1"?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/configuration" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/configuration http://www.vrjuggler.org/jccl/xsd/3.1/configuration.xsd">
    <elements>
-      <input_manager name="DTrack Device Input Manager" version="3">
+      <input_manager name="DTrack Device Input Manager" version="2">
          <driver>DTrack_drv</driver>
-         <periodic_event_emission_interval>0</periodic_event_emission_interval>
       </input_manager>
       <dtrack name="DTrack Device" version="1">
          <receive_port>5000</receive_port>

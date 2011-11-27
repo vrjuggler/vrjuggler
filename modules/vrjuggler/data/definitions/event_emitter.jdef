@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="event_emitter" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Input Event Emitter">
+      <abstract>false</abstract>
+      <help>Configuration of the Gadgeteer Input Event Emitter. This is used to control the behavior of non-immediate event emission.</help>
+      <parent/>
+      <category>/Input</category>
+      <property valuetype="integer" variable="false" name="periodic_emission_interval">
+         <help>The amount of time to wait between periodic event emissions. This is measured in milliseconds, and a value of 0 or less indicates that periodic event emission will not be enabled.</help>
+         <value label="Periodic Event Interval (ms)" defaultvalue="0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

@@ -2,9 +2,8 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/home/patrick/src/Juggler/main/juggler/build.linux.posix.gcc40/modules/vrjuggler/test/Draw/OGL/wand/example.wanda.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <input_manager name="IM Wanda" version="3">
+      <input_manager name="IM Wanda" version="2">
          <driver>Wanda_drv</driver>
-         <periodic_event_emission_interval>0</periodic_event_emission_interval>
       </input_manager>
       <wanda name="Wanda" version="1">
          <port>/dev/ttyS1</port>
