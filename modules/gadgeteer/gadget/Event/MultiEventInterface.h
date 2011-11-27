@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <typeinfo>
 #include <vector>
+#include <boost/concept_check.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 #include <boost/fusion/include/map.hpp>
@@ -252,7 +253,8 @@ protected:
    virtual void onProxyChanged(const proxy_ptr_type& oldProxy,
                                const proxy_ptr_type& newProxy)
    {
-      /* Do nothing. */ ;
+      boost::ignore_unused_variable_warning(oldProxy);
+      boost::ignore_unused_variable_warning(newProxy);
    }
 
    const proxy_ptr_type& getProxy() const
