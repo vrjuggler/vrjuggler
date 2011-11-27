@@ -633,6 +633,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\EventEmitter.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventGenerator.cpp"
 				>
 			</File>
@@ -682,10 +686,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\InputHandler.cpp"
 				>
 			</File>
 			<File
@@ -1062,6 +1062,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\EventEmitter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventFactory.h"
 				>
 			</File>
@@ -1175,10 +1179,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputDevice.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\InputHandler.h"
 				>
 			</File>
 			<File

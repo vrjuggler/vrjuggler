@@ -633,6 +633,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\EventEmitter.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventGenerator.cpp"
 				>
 			</File>
@@ -682,10 +686,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\InputHandler.cpp"
 				>
 			</File>
 			<File
@@ -781,6 +781,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\Rumble.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleEffect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleProxy.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\Sim\SimAnalog.cpp"
 				>
 			</File>
@@ -831,6 +843,10 @@
 			>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Event\AbstractEventInterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\AllBaseTypes.h"
 				>
 			</File>
 			<File
@@ -1038,11 +1054,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Event\Event.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\EventEmitter.h"
 				>
 			</File>
 			<File
@@ -1062,11 +1082,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventPtr.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Event\EventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h"
 				>
 			</File>
 			<File
@@ -1154,15 +1174,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputBaseTypes.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputData.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\InputHandler.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputDevice.h"
 				>
 			</File>
 			<File
@@ -1179,10 +1195,6 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\InputManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\InputMixer.h"
 				>
 			</File>
 			<File
@@ -1222,15 +1234,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEvent.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h"
 				>
 			</File>
 			<File
@@ -1238,11 +1246,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Keys.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEventPtr.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Keys.h"
 				>
 			</File>
 			<File
@@ -1250,11 +1258,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEventPtr.h"
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEventPtr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEventPtr.h"
 				>
 			</File>
 			<File
@@ -1371,6 +1383,38 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Reactor.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\Rumble.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleData.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleEffect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleEffectPtr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleInterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleProxy.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumbleProxyPtr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\RumblePtr.h"
 				>
 			</File>
 			<File
