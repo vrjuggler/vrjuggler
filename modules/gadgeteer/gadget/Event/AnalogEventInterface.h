@@ -31,6 +31,7 @@
 
 #include <gadget/Event/MultiEventInterface.h>
 #include <gadget/Event/MultiEventGenerator.h>
+#include <gadget/Event/ProxySetter.h>
 #include <gadget/Type/AnalogProxy.h>
 
 
