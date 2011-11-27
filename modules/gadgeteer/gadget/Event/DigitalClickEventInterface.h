@@ -70,7 +70,7 @@ namespace gadget
  *    // Handle a single click event...
  * }
  *
- * void doubleClickCallback(const gadget::DigitalState::State)
+ * void doubleClickCallback()
  * {
  *    // Handle a double-click event...
  * }
@@ -86,7 +86,9 @@ namespace gadget
  *
  *    using namespace gadget::event;
  *    mClickIface.addCallback<single_click_tag>(singleClickCallback);
- *    mClickIface.addCallback<double_click_tag>(doubleClickCallback);
+ *    mClickIface.addCallback<double_click_tag>(
+ *       boost::bind(doubleClickCallback)
+ *    );
  *    mClickIface.addCallback<click_tag<3> >(tripleClickCallback);
  * }
  * \endcode
