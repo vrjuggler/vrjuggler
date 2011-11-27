@@ -138,7 +138,7 @@ class ClickAnalyzer
 
 protected:
    ClickAnalyzer()
-      : mClickTime(0.01f)
+      : mClickTime(300)
    {
       mEvents.resize(sClickCount);
    }
