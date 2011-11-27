@@ -42,7 +42,7 @@
 #include <gadget/InputLoggerPtr.h>
 #include <gadget/Type/InputPtr.h>
 #include <gadget/Type/ProxyPtr.h>
-#include <gadget/InputHandlerPtr.h>
+#include <gadget/EventEmitterPtr.h>
 
 
 namespace gadget
@@ -246,9 +246,9 @@ public:
    void refreshAllProxies();
    //@}
 
-   InputHandlerPtr getInputHandler()
+   const EventEmitterPtr getEventEmitter()
    {
-      return mInputHandler;
+      return mEventEmitter;
    }
 
 private:
@@ -284,7 +284,7 @@ private:
 
    gadget::InputLoggerPtr mInputLogger;          /**< The input logger for the system. Constructed on demand. */
 
-   InputHandlerPtr mInputHandler;
+   EventEmitterPtr mEventEmitter;
 
 private:
    /** Function to configure the proxy Alias array. */

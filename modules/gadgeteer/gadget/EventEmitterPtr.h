@@ -24,8 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_INPUT_HANDLER_PTR_H_
-#define _GADGET_INPUT_HANDLER_PTR_H_
+#ifndef _GADGET_EVENT_EMITTER_PTR_H_
+#define _GADGET_EVENT_EMITTER_PTR_H_
 
 #include <boost/smart_ptr.hpp>
 
@@ -33,9 +33,9 @@
 namespace gadget
 {
 
-typedef boost::shared_ptr<class InputHandler> InputHandlerPtr;
+typedef boost::shared_ptr<class EventEmitter> EventEmitterPtr;
 
 }
 
 
-#endif /* _GADGET_INPUT_HANDLER_PTR_H_ */
+#endif /* _GADGET_EVENT_EMITTER_PTR_H_ */

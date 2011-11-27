@@ -12,13 +12,13 @@
 #include <gadget/Event/AbstractEventInterface.h>
 #include <gadget/Event/EventGenerator.h>
 #include <gadget/Util/Debug.h>
-#include <gadget/InputHandler.h>
+#include <gadget/EventEmitter.h>
 
 
 namespace gadget
 {
 
-InputHandler::InputHandler()
+EventEmitter::EventEmitter()
    : mRunning(false)
    , mThread(NULL)
    , mWaitInterval(0)
@@ -26,7 +26,7 @@ InputHandler::InputHandler()
    /* Do nothing. */ ;
 }
 
-InputHandler::~InputHandler()
+EventEmitter::~EventEmitter()
 {
    if (isRunning())
    {
@@ -34,12 +34,12 @@ InputHandler::~InputHandler()
    }
 }
 
-InputHandlerPtr InputHandler::create()
+EventEmitterPtr EventEmitter::create()
 {
-   return InputHandlerPtr(new InputHandler());
+   return EventEmitterPtr(new EventEmitter());
 }
 
-void InputHandler::start(const vpr::Interval& interval)
+void EventEmitter::start(const vpr::Interval& interval)
 {
    if (0 == interval.msec())
    {
@@ -52,11 +52,11 @@ void InputHandler::start(const vpr::Interval& interval)
       vprASSERT(NULL == mThread && "Cannot start thread when alredy running!");
 
       mWaitInterval = static_cast<vpr::Uint32>(interval.msec());
-      mThread = new vpr::Thread(boost::bind(&InputHandler::run, this));
+      mThread = new vpr::Thread(boost::bind(&EventEmitter::run, this));
    }
 }
 
-void InputHandler::stop()
+void EventEmitter::stop()
 {
    if (mRunning)
    {
@@ -74,20 +74,20 @@ void InputHandler::stop()
    }
 }
 
-void InputHandler::registerPeriodicInterface(AbstractEventInterface* iface)
+void EventEmitter::registerPeriodicInterface(AbstractEventInterface* iface)
 {
    vpr::Guard<vpr::Mutex> guard(mPeriodicIfacesLock);
    vprASSERT(iface->getEventGenerator().get() != NULL);
    mPeriodicIfaces[iface] = iface->getEventGenerator();
 }
 
-void InputHandler::unregisterPeriodicInterface(AbstractEventInterface* iface)
+void EventEmitter::unregisterPeriodicInterface(AbstractEventInterface* iface)
 {
    vpr::Guard<vpr::Mutex> guard(mPeriodicIfacesLock);
    mPeriodicIfaces.erase(iface);
 }
 
-void InputHandler::registerSynchronizedInterface(AbstractEventInterface* iface)
+void EventEmitter::registerSynchronizedInterface(AbstractEventInterface* iface)
 {
    vpr::Guard<vpr::Mutex> guard(mSyncIfacesLock);
    vprASSERT(iface->getEventGenerator().get() != NULL);
@@ -95,13 +95,13 @@ void InputHandler::registerSynchronizedInterface(AbstractEventInterface* iface)
 }
 
 void
-InputHandler::unregisterSynchronizedInterface(AbstractEventInterface* iface)
+EventEmitter::unregisterSynchronizedInterface(AbstractEventInterface* iface)
 {
    vpr::Guard<vpr::Mutex> guard(mSyncIfacesLock);
    mSyncIfaces.erase(iface);
 }
 
-void InputHandler::sync()
+void EventEmitter::sync()
 {
    vpr::Guard<vpr::Mutex> guard(mSyncIfacesLock);
 
@@ -112,12 +112,12 @@ void InputHandler::sync()
    }
 }
 
-void InputHandler::run()
+void EventEmitter::run()
 {
    vprASSERT(mWaitInterval > 0);
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "Input handler periorid event emission thread starting; "
+      << "Event emitter periorid event emission thread starting; "
       << "wait interval is " << mWaitInterval << " milliseconds." << std::endl
       << vprDEBUG_FLUSH;
 
@@ -141,7 +141,7 @@ void InputHandler::run()
    }
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "Input handler periorid event emission thread stopped." << std::endl
+      << "Event emitter periorid event emission thread stopped." << std::endl
       << vprDEBUG_FLUSH;
 }
 

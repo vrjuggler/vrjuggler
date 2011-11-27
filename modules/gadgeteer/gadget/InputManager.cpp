@@ -55,7 +55,7 @@
 #include <gadget/Util/PluginVersionException.h>
 #include <gadget/Util/PathHelpers.h>
 #include <gadget/Event/AbstractEventInterface.h>
-#include <gadget/InputHandler.h>
+#include <gadget/EventEmitter.h>
 #include <gadget/InputManager.h>
 
 
@@ -73,7 +73,7 @@ static bool recognizeProxyAlias(jccl::ConfigElementPtr element);
  * InputManager Constructor
  */
 InputManager::InputManager()
-   : mInputHandler(InputHandler::create())
+   : mEventEmitter(EventEmitter::create())
 {
 }
 
@@ -89,9 +89,9 @@ void InputManager::shutdown()
 {
    typedef tDevTableType::iterator dev_iter_t;
 
-   if (mInputHandler->isRunning())
+   if (mEventEmitter->isRunning())
    {
-      mInputHandler->stop();
+      mEventEmitter->stop();
    }
 
    // Stop and delete all devices.
@@ -600,9 +600,9 @@ void InputManager::updateAllDevices()
       mInputLogger->process();
    }
 
-   if (mInputHandler.get() != NULL)
+   if (mEventEmitter.get() != NULL)
    {
-      mInputHandler->sync();
+      mEventEmitter->sync();
    }
 }
 
@@ -946,9 +946,9 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
          element->getProperty<vpr::Int32>("periodic_event_emission_interval")
       );
 
-      if (wait_interval > 0 && ! mInputHandler->isRunning())
+      if (wait_interval > 0 && ! mEventEmitter->isRunning())
       {
-         mInputHandler->start(
+         mEventEmitter->start(
             vpr::Interval(wait_interval, vpr::Interval::Msec)
          );
       }

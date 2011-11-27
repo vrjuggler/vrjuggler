@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-11-27 patrick     Renamed gadget::InputHandler to gadget::EventEmitter.
+                       NEW VERSION: 2.1.24
 2011-11-26 patrick     Implemented new digital device multi-click handling in
                        gadget::DigitalClickEventInterface.
                        NEW VERSION: 2.1.23

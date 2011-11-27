@@ -1,5 +1,5 @@
-#ifndef _GADGET_INPUT_HANDLER_H_
-#define _GADGET_INPUT_HANDLER_H_
+#ifndef _GADGET_EVENT_EMITTER_H_
+#define _GADGET_EVENT_EMITTER_H_
 
 #include <gadget/gadgetConfig.h>
 
@@ -19,7 +19,7 @@
 #include <vpr/Util/Interval.h>
 
 #include <gadget/Event/EventGeneratorPtr.h>
-#include <gadget/InputHandlerPtr.h>
+#include <gadget/EventEmitterPtr.h>
 
 
 namespace gadget
@@ -27,21 +27,29 @@ namespace gadget
 
 class AbstractEventInterface;
 
-/** \class InputHandler InputHandler.h gadget/InputHandler.h
+/** \class EventEmitter EventEmitter.h gadget/EventEmitter.h
+ *
+ * This class is responsible for emitting non-immediate events. There are
+ * two such event classifications: syncronous and periodic. Synchronous events
+ * are emitted when gadget::InputManager::updateAllDevices() is invoked.
+ * Periodic events are emitted from a thread controlled by an instance of
+ * this class at a set rate.
+ *
+ * @note This class was renamed from \c gadget::InputHandler in 2.1.24.
  *
  * @since 2.1.2
  */
-class GADGET_CLASS_API InputHandler
-   : public boost::enable_shared_from_this<InputHandler>
+class GADGET_CLASS_API EventEmitter
+   : public boost::enable_shared_from_this<EventEmitter>
    , private boost::noncopyable
 {
 private:
-   InputHandler();
+   EventEmitter();
 
 public:
-   static InputHandlerPtr create();
+   static EventEmitterPtr create();
 
-   ~InputHandler();
+   ~EventEmitter();
 
    /**
     * Starts the thread for periodic event emission.
@@ -151,4 +159,4 @@ private:
 }
 
 
-#endif /* _GADGET_INPUT_HANDLER_H_ */
+#endif /* _GADGET_EVENT_EMITTER_H_ */

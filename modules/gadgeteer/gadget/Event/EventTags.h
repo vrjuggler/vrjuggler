@@ -41,7 +41,7 @@ namespace event
  * an event generator.
  *
  * @see gadget::BasicEventGenerator
- * @see gadget::InputHandler
+ * @see gadget::EventEmitter
  * @see gadget::InputManager
  */
 //@{
@@ -75,7 +75,7 @@ struct immediate_tag : generator_tag {};
  * @since 2.1.2
  *
  * @see gadget::BasicEventGenerator
- * @see gadget::InputHandler::registerPeriodicInterface()
+ * @see gadget::EventEmitter::registerPeriodicInterface()
  */
 struct periodic_tag : generator_tag {};
 
@@ -88,7 +88,7 @@ struct periodic_tag : generator_tag {};
  * @since 2.1.2
  *
  * @see gadget::BasicEventGenerator
- * @see gadget::InputHandler::registerSynchronizedInterface()
+ * @see gadget::EventEmitter::registerSynchronizedInterface()
  * @see gadget::InputManager::updateAllDevices()
  */
 struct synchronized_tag : generator_tag {};

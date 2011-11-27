@@ -51,7 +51,7 @@ SUBDIR=		Devices			\
 		Type			\
 		Util
 
-SRCS=		InputHandler.cpp		\
+SRCS=		EventEmitter.cpp		\
 		InputLogger.cpp			\
 		InputManager.cpp		\
 		NetworkManager.cpp		\

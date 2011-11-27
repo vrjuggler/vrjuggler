@@ -34,7 +34,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include <gadget/InputManager.h>
-#include <gadget/InputHandler.h>
+#include <gadget/EventEmitter.h>
 
 
 namespace gadget
@@ -62,13 +62,13 @@ class PeriodicRegistrator
 protected:
    void registerInterface(AbstractEventInterface* iface)
    {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
+      EventEmitterPtr handler(InputManager::instance()->getEventEmitter());
       handler->registerPeriodicInterface(iface);
    }
 
    void unregisterInterface(AbstractEventInterface* iface)
    {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
+      EventEmitterPtr handler(InputManager::instance()->getEventEmitter());
       handler->unregisterPeriodicInterface(iface);
    }
 };
@@ -78,13 +78,13 @@ class SynchronizedRegistrator
 protected:
    void registerInterface(AbstractEventInterface* iface)
    {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
+      EventEmitterPtr handler(InputManager::instance()->getEventEmitter());
       handler->registerSynchronizedInterface(iface);
    }
 
    void unregisterInterface(AbstractEventInterface* iface)
    {
-      InputHandlerPtr handler(InputManager::instance()->getInputHandler());
+      EventEmitterPtr handler(InputManager::instance()->getEventEmitter());
       handler->unregisterSynchronizedInterface(iface);
    }
 };
