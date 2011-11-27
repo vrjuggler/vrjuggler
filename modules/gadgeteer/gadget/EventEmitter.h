@@ -44,6 +44,8 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Interval.h>
 
+#include <jccl/RTRC/ConfigElementHandler.h>
+
 #include <gadget/Event/EventGeneratorPtr.h>
 #include <gadget/EventEmitterPtr.h>
 
@@ -66,7 +68,8 @@ class AbstractEventInterface;
  * @since 2.1.2
  */
 class GADGET_CLASS_API EventEmitter
-   : public boost::enable_shared_from_this<EventEmitter>
+   : public jccl::ConfigElementHandler
+   , public boost::enable_shared_from_this<EventEmitter>
    , private boost::noncopyable
 {
 private:
@@ -77,39 +80,28 @@ public:
 
    ~EventEmitter();
 
+   /** @name jccl::ConfigElementHandler Interface Implementation */
+   //@{
    /**
-    * Starts the thread for periodic event emission.
-    *
-    * @pre If \c mRunning is false, then \c mThread is NULL.
-    * @post \c mThread is not NULL.
-    *
-    * @param interval The wait interval for the periodic event emission loop.
-    *                 This must represent a number of milliseconds greater
-    *                 than 0.
-    *
-    * @throw vpr::IllegalArgumentException Thrown if \p interval is 0.
-    *
-    * @since 2.1.22
+    * @since 2.1.25
     */
-   void start(const vpr::Interval& interval);
+   bool configCanHandle(jccl::ConfigElementPtr element);
 
    /**
-    * Stops the thread for periodic event emission.
-    *
-    * @pre If \c mRunning is true, then \c mThread is not NULL.
-    * @post \c mRunning is false, and \c mThread is NULL.
-    *
-    * @since 2.1.22
+    * @since 2.1.25
     */
-   void stop();
+   bool configAdd(jccl::ConfigElementPtr element);
 
    /**
-    * @since 2.1.22
+    * @since 2.1.25
     */
-   bool isRunning() const
-   {
-      return mRunning;
-   }
+   bool configRemove(jccl::ConfigElementPtr element);
+   //@}
+
+   /**
+    * @since 2.1.25
+    */
+   void shutdown();
 
    /** @name Interface Registration */
    //@{
@@ -154,6 +146,26 @@ public:
    void sync();
 
 private:
+   /**
+    * Starts the thread for periodic event emission.
+    *
+    * @pre If \c mRunning is false, then \c mThread is NULL.
+    * @post \c mThread is not NULL.
+    *
+    * @param interval The wait interval for the periodic event emission loop.
+    *                 This must represent a number of milliseconds greater
+    *                 than 0.
+    */
+   void start(const vpr::Interval& interval);
+
+   /**
+    * Stops the thread for periodic event emission.
+    *
+    * @pre If \c mRunning is true, then \c mThread is not NULL.
+    * @post \c mRunning is false, and \c mThread is NULL.
+    */
+   void stop();
+
    /**
     * @since 2.1.22
     */

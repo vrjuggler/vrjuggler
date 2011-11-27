@@ -75,6 +75,9 @@ static bool recognizeProxyAlias(jccl::ConfigElementPtr element);
 InputManager::InputManager()
    : mEventEmitter(EventEmitter::create())
 {
+   jccl::ConfigManager::instance()->addConfigElementHandler(
+      mEventEmitter.get()
+   );
 }
 
 /**
@@ -89,10 +92,7 @@ void InputManager::shutdown()
 {
    typedef tDevTableType::iterator dev_iter_t;
 
-   if (mEventEmitter->isRunning())
-   {
-      mEventEmitter->stop();
-   }
+   mEventEmitter->shutdown();
 
    // Stop and delete all devices.
    for ( dev_iter_t a = mDevTable.begin(); a != mDevTable.end(); ++a )
@@ -704,12 +704,12 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
 
    // Keep this up to date with the version of the element definition we're
    // expecting to handle.
-   const unsigned int min_version(2);
+   const unsigned int cur_version(2);
 
-   // If the element version is less than min_version, we will not try to
+   // If the element version is less than cur_version, we will not try to
    // proceed.  Instead, we'll print an error message and return false so
    // that the Config Manager knows this element wasn't consumed.
-   if ( element->getVersion() < min_version )
+   if ( element->getVersion() < cur_version )
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "ERROR")
@@ -717,7 +717,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
          << element->getName() << "'" << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << "is version " << element->getVersion()
-         << ", but we require at least version " << min_version
+         << ", but we require at least version " << cur_version
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << "Ignoring this element and moving on." << std::endl
@@ -940,17 +940,6 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
             vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << fsEx.what() << std::endl << vprDEBUG_FLUSH;
          }
-      }
-
-      const vpr::Int32 wait_interval(
-         element->getProperty<vpr::Int32>("periodic_event_emission_interval")
-      );
-
-      if (wait_interval > 0 && ! mEventEmitter->isRunning())
-      {
-         mEventEmitter->start(
-            vpr::Interval(wait_interval, vpr::Interval::Msec)
-         );
       }
 
       ret_val = true;

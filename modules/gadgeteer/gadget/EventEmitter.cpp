@@ -33,7 +33,8 @@
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
-#include <vpr/Util/IllegalArgumentException.h>
+
+#include <jccl/Config/ConfigElement.h>
 
 #include <gadget/Event/AbstractEventInterface.h>
 #include <gadget/Event/EventGenerator.h>
@@ -54,7 +55,7 @@ EventEmitter::EventEmitter()
 
 EventEmitter::~EventEmitter()
 {
-   if (isRunning())
+   if (mRunning)
    {
       stop();
    }
@@ -65,39 +66,34 @@ EventEmitterPtr EventEmitter::create()
    return EventEmitterPtr(new EventEmitter());
 }
 
-void EventEmitter::start(const vpr::Interval& interval)
+bool EventEmitter::configCanHandle(jccl::ConfigElementPtr element)
 {
-   if (0 == interval.msec())
-   {
-      throw vpr::IllegalArgumentException("Invalid wait interval 0 ms",
-                                          VPR_LOCATION);
-   }
-
-   if (! mRunning)
-   {
-      vprASSERT(NULL == mThread && "Cannot start thread when alredy running!");
-
-      mWaitInterval = static_cast<vpr::Uint32>(interval.msec());
-      mThread = new vpr::Thread(boost::bind(&EventEmitter::run, this));
-   }
+   return "event_emitter" == element->getID();
 }
 
-void EventEmitter::stop()
+bool EventEmitter::configAdd(jccl::ConfigElementPtr element)
 {
-   if (mRunning)
+   const int wait_interval(
+      element->getProperty<int>("periodic_emission_interval")
+   );
+
+   if (wait_interval > 0)
    {
-      vprASSERT(NULL != mThread && "Cannot stop thread when not running!");
-
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-         << "Waiting for input handler periorid event emission thread "
-         << "to stop..." << std::endl << vprDEBUG_FLUSH;
-
-      mRunning = false;
-      mThread->join();
-
-      delete mThread;
-      mThread = NULL;
+      start(vpr::Interval(wait_interval, vpr::Interval::Msec));
    }
+
+   return true;
+}
+
+bool EventEmitter::configRemove(jccl::ConfigElementPtr)
+{
+   stop();
+   return true;
+}
+
+void EventEmitter::shutdown()
+{
+   stop();
 }
 
 void EventEmitter::registerPeriodicInterface(AbstractEventInterface* iface)
@@ -135,6 +131,39 @@ void EventEmitter::sync()
    for (iter_type i = mSyncIfaces.begin(); i != mSyncIfaces.end(); ++i)
    {
       (*i).second->emitEvents();
+   }
+}
+
+void EventEmitter::start(const vpr::Interval& interval)
+{
+   vprASSERT(interval.msec() > 0);
+
+   if (mRunning)
+   {
+      stop();
+   }
+
+   vprASSERT(NULL == mThread && "Cannot start thread when alredy running!");
+
+   mWaitInterval = static_cast<vpr::Uint32>(interval.msec());
+   mThread = new vpr::Thread(boost::bind(&EventEmitter::run, this));
+}
+
+void EventEmitter::stop()
+{
+   if (mRunning)
+   {
+      vprASSERT(NULL != mThread && "Cannot stop thread when not running!");
+
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "Waiting for input handler periorid event emission thread "
+         << "to stop..." << std::endl << vprDEBUG_FLUSH;
+
+      mRunning = false;
+      mThread->join();
+
+      delete mThread;
+      mThread = NULL;
    }
 }
 
