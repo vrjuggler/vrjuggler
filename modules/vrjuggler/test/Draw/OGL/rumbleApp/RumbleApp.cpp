@@ -27,7 +27,11 @@
 #include "RumbleApp.h"
 
 #include <iostream>
+#ifdef VPR_OS_Darwin
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 #include <gadget/InputManager.h>
 #include <gadget/Type/Rumble.h>
