@@ -117,7 +117,7 @@ public:
    static const unsigned int sClickCount = ClickCount;
 
    NewClickAnalyzer()
-      : mClickTime(10)
+      : mClickTime(300)
    {
       mEvents.resize(sClickCount);
    }
@@ -209,9 +209,9 @@ public:
       /* Do nothing. */ ;
    }
 
-   void examine(const EventPtr& event)
+   void examine(const EventPtr& event, bool& consumed)
    {
-      if (event->type() == MouseButtonReleaseEvent)
+      if (! consumed && event->type() == MouseButtonReleaseEvent)
       {
          MouseEventPtr mouse_event(
             boost::dynamic_pointer_cast<MouseEvent>(event)
@@ -226,7 +226,7 @@ public:
 
          if (have_event)
          {
-            this->addEvent(event);
+            this->addEvent(event, consumed);
          }
       }
    }
@@ -264,18 +264,21 @@ public:
       /* Do nothing. */ ;
    }
 
-   void examine(const DigitalState::State data)
+   void examine(const DigitalState::State data, bool& consumed)
    {
       // If the device unit state toggled from ON to OFF, then we treat that
       // as a click.
       if (DigitalState::OFF == data && DigitalState::ON == mLastState)
       {
-         const ClickEvent click_event(vpr::Interval::now().msec());
-         const bool have_event(mAnalyzer.addClickEvent(click_event));
-
-         if (have_event)
+         if (! consumed)
          {
-            this->addEvent(data);
+            const ClickEvent click_event(vpr::Interval::now().msec());
+            const bool have_event(mAnalyzer.addClickEvent(click_event));
+
+            if (have_event)
+            {
+               this->addEvent(data, consumed);
+            }
          }
       }
 
@@ -336,8 +339,13 @@ struct ClickMaker
       typedef click_tag<T::value> type;
    };
 
+   // boost::mpl::reverse_transform is used here to sort the event tags such
+   // that events with higher click counts are given precendence over those
+   // with lower click counts. For example, if the data examiner determines
+   // that a triple-click event has been generated, then no double-click or
+   // single click events should be generated for that occurrence.
    typedef typename
-      boost::mpl::transform<
+      boost::mpl::reverse_transform<
            boost::mpl::range_c<unsigned, 1, MaxClicks + 1>
          , F<boost::mpl::_1>
          , boost::mpl::back_inserter< boost::mpl::vector<> >

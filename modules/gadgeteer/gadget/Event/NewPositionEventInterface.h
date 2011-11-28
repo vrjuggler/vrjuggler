@@ -74,7 +74,7 @@ public:
       /* Do nothing. */ ;
    }
 
-   void examine(const data_type& data)
+   void examine(const data_type& data, bool& consumed)
    {
       // Apply the proxy's position filters to the given data.
       PositionData pos_data(data);
@@ -85,7 +85,7 @@ public:
       mProxy->applyScaleFactor(pos_data.getValue(), mScaleFactor, result);
 
       // Store or emit the result.
-      this->addEvent(result);
+      this->addEvent(result, consumed);
    }
 
    void setScaleFactor(const float scaleFactor)

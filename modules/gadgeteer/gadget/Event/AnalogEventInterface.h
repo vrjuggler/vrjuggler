@@ -73,9 +73,9 @@ class DataExaminer<normalized_analog_event_tag, AnalogProxy::raw_data_type>
 public:
    typedef AnalogProxy::raw_data_type data_type;
 
-   void examine(const data_type data)
+   void examine(const data_type data, bool& consumed)
    {
-      this->addEvent(mProxy->normalizeData(data));
+      this->addEvent(mProxy->normalizeData(data), consumed);
    }
 
    void setProxy(const AnalogProxyPtr& proxy)
@@ -101,9 +101,9 @@ class DataExaminer<raw_analog_event_tag, AnalogProxy::raw_data_type>
 public:
    typedef AnalogProxy::raw_data_type data_type;
 
-   void examine(const data_type data)
+   void examine(const data_type data, bool& consumed)
    {
-      this->addEvent(data);
+      this->addEvent(data, consumed);
    }
 
    void setProxy(const AnalogProxyPtr&)

@@ -54,14 +54,31 @@ class BaseExaminer
 public:
    typedef boost::function<void (const DataType&)> callback_type;
 
+   /**
+    * Stores the given functor as the callback for this examiner.
+    *
+    * @pre If this examiner is going to be used, then \p cb is not empty.
+    */
    void setEventCallback(const callback_type& cb)
    {
       mCallback = cb;
    }
 
 protected:
-   void addEvent(const DataType& d)
+   /**
+    * Invokes the callback associated with this data examiner.
+    *
+    * @pre \c mCallback is not empty.
+    * @post \p consumed is true.
+    *
+    * @param d        The data for the event.
+    * @param consumed A reference to a boolean flag indicating whether the
+    *                 event data has been consumed. Invocation of this method
+    *                 results in this variable being set to true.
+    */
+   void addEvent(const DataType& d, bool& consumed)
    {
+      consumed = true;
       assert(! mCallback.empty());
       mCallback(d);
    }
@@ -77,12 +94,15 @@ private:
  * implement is simple:
  *
  * \code
- * void examine(const DataType&);
+ * void examine(const DataType&, bool&);
  * \endcode
  *
  * This class can be specialized for different combinations of event tags and
  * data types. This default implementation stores every data sample received
  * from a device proxy to be emitted later as an event.
+ *
+ * It is up to individual implementations to determine how to handle the
+ * \c consumed variable. This default implementation effectively ignores it.
  *
  * @tparam EventTag The tag identifying the kind of event. This is used to
  *                  provide a mechanism for specializing this type based on
@@ -100,9 +120,9 @@ public:
     * Stores every data sample received from a device proxy to be emitted
     * later as an event.
     */
-   void examine(const DataType& d)
+   void examine(const DataType& d, bool& consumed)
    {
-      addEvent(d);
+      addEvent(d, consumed);
    }
 };
 

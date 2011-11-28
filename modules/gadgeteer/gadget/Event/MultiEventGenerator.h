@@ -365,6 +365,7 @@ private:
       InvokeExaminer(MultiEventGenerator& owner, const raw_data_type& value)
          : owner(owner)
          , value(&value)
+         , consumed(false)
       {
          /* Do nothing. */ ;
       }
@@ -372,11 +373,13 @@ private:
       template<typename EventTag>
       void operator()(const EventTag&) const
       {
-         boost::fusion::at_key<EventTag>(owner.mExaminers).examine(*value);
+         boost::fusion::at_key<EventTag>(owner.mExaminers).examine(*value,
+                                                                   consumed);
       }
 
       MultiEventGenerator& owner;
       const raw_data_type* const value;
+      mutable bool consumed;
    };
 
    struct CallbackInvoker
