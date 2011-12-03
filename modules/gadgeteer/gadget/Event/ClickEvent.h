@@ -36,8 +36,9 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/range_c.hpp>
 
+#include <gadget/Type/KeyboardMouse/Keys.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Event/DataExaminer.h>
-#include <gadget/Event/ClickAnalyzer.h>
 
 
 namespace gadget
@@ -46,8 +47,86 @@ namespace gadget
 namespace event
 {
 
+/** \struct ClickEvent ClickEvent.h gadget/Event/ClickEvent.h
+ *
+ * @since 2.1.6
+ */
+struct ClickEvent
+{
+   ClickEvent()
+      : button(KEY_NONE)
+      , x(0)
+      , y(0)
+      , time(0)
+   {
+      /* Do nothing. */ ;
+   }
+
+   explicit ClickEvent(const unsigned long time_)
+      : button(KEY_NONE)
+      , x(0)
+      , y(0)
+      , time(time_)
+   {
+      /* Do nothing. */ ;
+   }
+
+   ClickEvent(const gadget::Keys button_, const int x_, const int y_,
+              const unsigned long time_)
+      : button(button_)
+      , x(x_)
+      , y(y_)
+      , time(time_)
+   {
+      /* Do nothing. */ ;
+   }
+
+   gadget::Keys button;
+   int x;
+   int y;
+   unsigned long time;  /**< Event time, measured in milliseconds */
+};
+
 namespace detail
 {
+
+/** \struct EventComparator ClickEvent.h gadget/Event/ClickEvent.h
+ *
+ * @since 2.1.6
+ */
+struct EventComparator
+{
+   EventComparator(const ClickEvent& baseEvent)
+      : button(baseEvent.button)
+      , x(baseEvent.x)
+      , y(baseEvent.y)
+      , allEquivalent(true)
+      , lastClickTime(baseEvent.time)
+      , maxClickDiff(0)
+   {
+      /* Do nothing. */ ;
+   }
+
+   void operator()(const ClickEvent& event)
+   {
+      allEquivalent = allEquivalent && button == event.button &&
+                         x == event.x && y == event.y;
+      maxClickDiff  =
+         std::max<unsigned long>(maxClickDiff, event.time - lastClickTime);
+      lastClickTime = event.time;
+   }
+
+   const gadget::Keys button;
+   const int x;
+   const int y;
+
+   /** @name Comparison Results */
+   //@{
+   bool          allEquivalent;
+   unsigned long lastClickTime; /**< Time of last click event (milliseconds) */
+   unsigned long maxClickDiff;  /**< Maximum click delta (milliseconds) */
+   //@}
+};
 
 /** \struct ClickTimeSetter ClickEvent.h gadget/Event/ClickEvent.h
  *
