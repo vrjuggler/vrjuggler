@@ -29,17 +29,33 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Event/EventInterface.h>
-#include <gadget/Event/BasicEventGenerator.h>
+#include <gadget/Event/MultiEventInterface.h>
+#include <gadget/Event/MultiEventGenerator.h>
 #include <gadget/Type/StringProxy.h>
 
 
 namespace gadget
 {
 
+namespace event
+{
+
+/** \struct string_event_tag StringEventInterface.h gadget/Event/StringEventInterface.h
+ *
+ * The event tag for string events emitted by instances of
+ * gadget::StringEventInterface.
+ *
+ * @since 2.1.27
+ */
+struct string_event_tag : base_event_tag {};
+
+}
+
 /** \class StringEventInterface StringEventInterface.h gadget/Event/StringEventInterface.h
  *
- * The event interface for gadget::StringProxy objects.
+ * The multi-event interface for gadget::StringProxy objects. While this is
+ * a multi-event interface, there is only only event tag supported:
+ * gadget::event::string_event_tag.
  *
  * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
  *                       the event generator created by this object. This must
@@ -52,17 +68,36 @@ namespace gadget
  *                       compile. This template paramter is optional, and it
  *                       defaults to gadget::event::synchronized_tag.
  *
+ * @note This was converted to a multi-event interface in 2.1.27.
+ * 
  * @since 2.1.6
  */
 template<typename CollectionTag = event::last_event_tag
        , typename GenerationTag = event::synchronized_tag>
 class StringEventInterface
-   : public EventInterface<StringProxy
-                         , BasicEventGenerator<StringProxy
-                                             , CollectionTag
-                                             , GenerationTag>
-                         >
+   : public MultiEventInterface<StringProxy
+                              , MultiEventGenerator<StringProxy
+                                                  , boost::mpl::vector<
+                                                       event::string_event_tag
+                                                    >
+                                                  , CollectionTag
+                                                  , GenerationTag>
+                              >
 {
+public:
+   typedef typename StringEventInterface::event_interface_ base_type;
+
+   using base_type::addCallback;
+
+   /**
+    * Adds a callback for the gadget::event::string_event_tag event tag.
+    * This is for convenience since this multi-event interface supports
+    * just one event tag.
+    */
+   void addCallback(const typename base_type::callback_type& callback)
+   {
+      base_type::template addCallback<event::string_event_tag>(callback);
+   }
 };
 
 }

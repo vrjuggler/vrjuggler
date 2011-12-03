@@ -40,7 +40,7 @@ namespace event
  * Event generator tags are used to dictate when events should be emitted by
  * an event generator.
  *
- * @see gadget::BasicEventGenerator
+ * @see gadget::MultiEventGenerator
  * @see gadget::EventEmitter
  * @see gadget::InputManager
  */
@@ -63,7 +63,7 @@ struct generator_tag {};
  *
  * @since 2.1.2
  *
- * @see gadget::BasicEventGenerator
+ * @see gadget::MultiEventGenerator
  */
 struct immediate_tag : generator_tag {};
 
@@ -74,7 +74,7 @@ struct immediate_tag : generator_tag {};
  *
  * @since 2.1.2
  *
- * @see gadget::BasicEventGenerator
+ * @see gadget::MultiEventGenerator
  * @see gadget::EventEmitter::registerPeriodicInterface()
  */
 struct periodic_tag : generator_tag {};
@@ -87,7 +87,7 @@ struct periodic_tag : generator_tag {};
  *
  * @since 2.1.2
  *
- * @see gadget::BasicEventGenerator
+ * @see gadget::MultiEventGenerator
  * @see gadget::EventEmitter::registerSynchronizedInterface()
  * @see gadget::InputManager::updateAllDevices()
  */
@@ -101,7 +101,7 @@ struct synchronized_tag : generator_tag {};
  * should be retained in between synchronization points. These only apply
  * when the generator tag is periodic_tag or synchronized_tag.
  *
- * @see gadget::BasicEventGenerator
+ * @see gadget::MultiEventGenerator
  * @see gadget::InputManager::updateAllDevices()
  */
 //@{
@@ -119,7 +119,7 @@ struct collector_tag {};
  *
  * @since 2.1.2
  *
- * @see gadget::BasicEventGenerator::emitEvents()
+ * @see gadget::MultiEventGenerator::emitEvents()
  */
 struct all_events_tag : collector_tag {};
 
@@ -130,7 +130,7 @@ struct all_events_tag : collector_tag {};
  *
  * @since 2.1.2
  *
- * @see gadget::BasicEventGenerator::emitEvents()
+ * @see gadget::MultiEventGenerator::emitEvents()
  */
 struct last_event_tag : collector_tag {};
 //@}

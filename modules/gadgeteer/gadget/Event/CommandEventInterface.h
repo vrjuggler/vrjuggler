@@ -29,17 +29,33 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Event/EventInterface.h>
-#include <gadget/Event/BasicEventGenerator.h>
+#include <gadget/Event/MultiEventInterface.h>
+#include <gadget/Event/MultiEventGenerator.h>
 #include <gadget/Type/CommandProxy.h>
 
 
 namespace gadget
 {
 
+namespace event
+{
+
+/** \struct command_event_tag CommandEventInterface.h gadget/Event/CommandEventInterface.h
+ *
+ * The event tag for command events emitted by instances of
+ * gadget::CommandEventInterface.
+ *
+ * @since 2.1.27
+ */
+struct command_event_tag : base_event_tag {};
+
+}
+
 /** \class CommandEventInterface CommandEventInterface.h gadget/Event/CommandEventInterface.h
  *
- * The event interface for gadget::CommandProxy objects.
+ * The multi-event interface for gadget::CommandProxy objects. While this is
+ * a multi-event interface, there is only only event tag supported:
+ * gadget::event::command_event_tag.
  *
  * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
  *                       the event generator created by this object. This must
@@ -52,17 +68,38 @@ namespace gadget
  *                       compile. This template paramter is optional, and it
  *                       defaults to gadget::event::synchronized_tag.
  *
+ * @note This was converted to a multi-event interface in 2.1.27.
+ * 
  * @since 2.1.7
  */
 template<typename CollectionTag = event::last_event_tag
        , typename GenerationTag = event::synchronized_tag>
 class CommandEventInterface
-   : public EventInterface<CommandProxy
-                         , BasicEventGenerator<CommandProxy
-                                             , CollectionTag
-                                             , GenerationTag>
-                         >
+   : public MultiEventInterface<CommandProxy
+                              , MultiEventGenerator<
+                                     CommandProxy
+                                   , boost::mpl::vector<
+                                        event::command_event_tag
+                                     >
+                                   , CollectionTag
+                                   , GenerationTag
+                                >
+                              >
 {
+public:
+   typedef typename CommandEventInterface::event_interface_ base_type;
+
+   using base_type::addCallback;
+
+   /**
+    * Adds a callback for the gadget::event::command_event_tag event tag.
+    * This is for convenience since this multi-event interface supports
+    * just one event tag.
+    */
+   void addCallback(const typename base_type::callback_type& callback)
+   {
+      base_type::template addCallback<event::command_event_tag>(callback);
+   }
 };
 
 }

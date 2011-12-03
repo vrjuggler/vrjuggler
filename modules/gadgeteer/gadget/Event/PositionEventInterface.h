@@ -170,8 +170,7 @@ public:
 
    /**
     * Adds a callback for the gadget::event::position_event_tag event tag.
-    * This is partly for compatibility with gadget::PositionEventInterface,
-    * but it is more for convenience since this multi-event interface supports
+    * This is for convenience since this multi-event interface supports
     * just one event tag.
     */
    void addCallback(const typename base_type::callback_type& callback)

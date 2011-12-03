@@ -1,5 +1,11 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-12-03 patrick     Converted gadget::KeyboardMouseEventInterface,
+                       gadget::DigitalEventInterface,
+                       gadget::StringEventInterface, and
+                       gadget::CommandEventInterface to be multi-event
+                       interface types.
+                       NEW VERSION: 2.1.27
 2011-12-03 patrick     Converted gadget::PositionEventInterface to a
                        multi-event interface type.
                        NEW VERSION: 2.1.26

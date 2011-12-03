@@ -29,8 +29,8 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Event/EventInterface.h>
-#include <gadget/Event/BasicEventGenerator.h>
+#include <gadget/Event/MultiEventInterface.h>
+#include <gadget/Event/MultiEventGenerator.h>
 #include <gadget/Type/DigitalProxy.h>
 
 
@@ -39,6 +39,15 @@ namespace gadget
 
 namespace event
 {
+
+/** \struct digital_event_tag DigitalEventInterface.h gadget/Event/DigitalEventInterface.h
+ *
+ * The event tag for digital events emitted by instances of
+ * gadget::DigitalEventInterface.
+ *
+ * @since 2.1.27
+ */
+struct digital_event_tag : base_event_tag {};
 
 /** \class DigitalSampleHandler DigitalEventInterface.h gadget/Event/DigitalEventInterface.h
  *
@@ -69,7 +78,9 @@ private:
 
 /** \class DigitalEventInterface DigitalEventInterface.h gadget/Event/DigitalEventInterface.h
  *
- * The event interface for gadget::DigitalProxy objects.
+ * The multi-event interface for gadget::DigitalProxy objects. While this is
+ * a multi-event interface, there is only only event tag supported:
+ * gadget::event::digital_event_tag.
  *
  * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
  *                       the event generator created by this object. This must
@@ -82,18 +93,39 @@ private:
  *                       compile. This template paramter is optional, and it
  *                       defaults to gadget::event::synchronized_tag.
  *
+ * @note This was converted to a multi-event interface in 2.1.27.
+ *
  * @since 2.1.6
  */
 template<typename CollectionTag = event::last_event_tag
        , typename GenerationTag = event::synchronized_tag>
 class DigitalEventInterface
-   : public EventInterface<DigitalProxy
-                         , BasicEventGenerator<DigitalProxy
-                                             , CollectionTag
-                                             , GenerationTag
-                                             , event::DigitalSampleHandler>
-                         >
+   : public MultiEventInterface<DigitalProxy
+                              , MultiEventGenerator<
+                                     DigitalProxy
+                                   , boost::mpl::vector<
+                                        event::digital_event_tag
+                                     >
+                                   , CollectionTag
+                                   , GenerationTag
+                                   , event::DigitalSampleHandler
+                                >
+                              >
 {
+public:
+   typedef typename DigitalEventInterface::event_interface_ base_type;
+
+   using base_type::addCallback;
+
+   /**
+    * Adds a callback for the gadget::event::digital_event_tag event tag.
+    * This is for convenience since this multi-event interface supports
+    * just one event tag.
+    */
+   void addCallback(const typename base_type::callback_type& callback)
+   {
+      base_type::template addCallback<event::digital_event_tag>(callback);
+   }
 };
 
 }
