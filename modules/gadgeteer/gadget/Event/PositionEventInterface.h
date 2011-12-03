@@ -32,53 +32,60 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <gadget/Event/EventInterface.h>
-#include <gadget/Event/BasicEventGenerator.h>
+#include <gadget/Event/MultiEventInterface.h>
+#include <gadget/Event/MultiEventGenerator.h>
+#include <gadget/Event/ProxySetter.h>
 #include <gadget/Type/PositionProxy.h>
 
 
 namespace gadget
 {
 
-/** \class PositionEventGenerator PositionEventInterface.h gadget/Event/PositionEventInterface.h
+namespace event
+{
+
+/** \struct position_event_tag PositionEventInterface.h gadget/Event/PositionEventInterface.h
  *
- * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
- *                       the event generator created by this object. This must
- *                       be a valid collection tag in order for the code to
- *                       compile.
- * @tparam GenerationTag A tag specifying how events will be emitted by the
- *                       event generator created by this object. This must be
- *                       a valid generation tag in order for the code to
- *                       compile.
+ * The event tag for position events emitted by instances of
+ * gadget::PositionEventInterface.
  *
- * @since 2.1.4
+ * @since 2.1.16
  */
-template<typename CollectionTag, typename GenerationTag>
-class PositionEventGenerator
-   : public BasicEventGenerator<PositionProxy, CollectionTag, GenerationTag>
+struct position_event_tag : base_event_tag {};
+
+/**
+ * A specialization of gadget::event::DataExaminer for use by
+ * gadget::PositionEventInterface.
+ *
+ * @since 2.1.16
+ */
+template<>
+class DataExaminer<position_event_tag, PositionProxy::raw_data_type>
+   : public BaseExaminer<PositionProxy::raw_data_type>
 {
 public:
-   typedef BasicEventGenerator<PositionProxy, CollectionTag, GenerationTag>
-      base_type;
+   typedef PositionProxy::raw_data_type data_type;
 
-protected:
-   PositionEventGenerator()
+   BOOST_STATIC_ASSERT((boost::is_same<data_type, gmtl::Matrix44f>::value));
+
+   DataExaminer()
       : mScaleFactor(PositionUnitConversion::ConvertToFeet)
    {
       /* Do nothing. */ ;
    }
 
-public:
-   static boost::shared_ptr<PositionEventGenerator> create()
+   void examine(const data_type& data, bool& consumed)
    {
-      return boost::shared_ptr<PositionEventGenerator>(
-                new PositionEventGenerator()
-             );
-   }
+      // Apply the proxy's position filters to the given data.
+      PositionData pos_data(data);
+      pos_data = mProxy->applyFilters(pos_data);
 
-   virtual ~PositionEventGenerator()
-   {
-      /* Do nothing. */ ;
+      // Apply our scale factor to our data.
+      gmtl::Matrix44f result;
+      mProxy->applyScaleFactor(pos_data.getValue(), mScaleFactor, result);
+
+      // Store or emit the result.
+      this->addEvent(result, consumed);
    }
 
    void setScaleFactor(const float scaleFactor)
@@ -86,33 +93,23 @@ public:
       mScaleFactor = scaleFactor;
    }
 
-protected:
-   BOOST_STATIC_ASSERT(
-      (boost::is_same<typename base_type::raw_data_type, gmtl::Matrix44f>::value)
-   );
-
-   void onDataAdded(const gmtl::Matrix44f& data)
+   void setProxy(const PositionProxyPtr& proxy)
    {
-      // Apply the proxy's position filters to the given data.
-      PositionData pos_data(data);
-      const PositionProxyPtr& proxy(this->getProxy());
-      pos_data = proxy->applyFilters(pos_data);
-
-      // Apply our scale factor to our data.
-      gmtl::Matrix44f result;
-      proxy->applyScaleFactor(pos_data.getValue(), mScaleFactor, result);
-
-      // Store or emit the result.
-      this->base_type::onDataAdded(result);
+      mProxy = proxy;
    }
 
 private:
    float mScaleFactor;
+   PositionProxyPtr mProxy;
 };
+
+}
 
 /** \class PositionEventInterface PositionEventInterface.h gadget/Event/PositionEventInterface.h
  *
- * The event interface for gadget::PositionProxy objects.
+ * The multi-event interface for gadget::PositionProxy objects. While this is
+ * a multi-event interface, there is only only event tag supported:
+ * gadget::event::position_event_tag.
  *
  * @tparam CollectionTag A tag specifyiing which event(s) will be collected by
  *                       the event generator created by this object. This must
@@ -125,24 +122,38 @@ private:
  *                       compile. This template paramter is optional, and it
  *                       defaults to gadget::event::synchronized_tag.
  *
+ * @note This was converted to a multi-event interface in 2.1.26.
+ *
  * @since 2.1.4
  */
 template<typename CollectionTag = event::last_event_tag
        , typename GenerationTag = event::synchronized_tag>
 class PositionEventInterface
-   : public EventInterface<PositionProxy
-                         , PositionEventGenerator<CollectionTag, GenerationTag>
-                         >
+   : public MultiEventInterface<PositionProxy
+                              , MultiEventGenerator<
+                                     PositionProxy
+                                   , boost::mpl::vector<
+                                        event::position_event_tag
+                                     >
+                                   , CollectionTag
+                                   , GenerationTag
+                                >
+                              >
 {
 public:
-   typedef EventInterface<PositionProxy
-                        , PositionEventGenerator<CollectionTag, GenerationTag>
-                        >
-      base_type;
-
+   typedef typename PositionEventInterface::event_interface_ base_type;
    typedef typename base_type::proxy_ptr_type proxy_ptr_type;
 
-   PositionEventInterface(
+   /**
+    * Constructor.
+    *
+    * @param scaleFactor The scale factor to apply to position data received
+    *                    from the gadget::PositionProxy associated with this
+    *                    multi-event interface object. This parameter is
+    *                    optional, and it defaults to
+    *                    gadge::PositionUnitConversion::ConvertToFeet.
+    */
+   explicit PositionEventInterface(
       const float scaleFactor = PositionUnitConversion::ConvertToFeet
    )
       : mScaleFactor(scaleFactor)
@@ -155,24 +166,81 @@ public:
       /* Do nothing. */ ;
    }
 
+   using base_type::addCallback;
+
+   /**
+    * Adds a callback for the gadget::event::position_event_tag event tag.
+    * This is partly for compatibility with gadget::PositionEventInterface,
+    * but it is more for convenience since this multi-event interface supports
+    * just one event tag.
+    */
+   void addCallback(const typename base_type::callback_type& callback)
+   {
+      base_type::template addCallback<event::position_event_tag>(callback);
+   }
+
 protected:
+   typedef typename base_type::generator_type     generator_type;
+   typedef typename base_type::generator_ptr_type generator_ptr_type;
+   typedef typename base_type::event_tags         event_tags;
+
    EventGeneratorPtr createEventGenerator(const proxy_ptr_type& proxy)
    {
-      typedef typename base_type::generator_type generator_type;
-
       EventGeneratorPtr base_generator(
          this->base_type::createEventGenerator(proxy)
       );
 
       // Downcast to our specific generator type so that we can se the scale
       // factor that the event generator will use.
-      boost::shared_ptr<generator_type> generator(
+      generator_ptr_type generator(
          boost::dynamic_pointer_cast<generator_type>(base_generator)
       );
-      generator->setScaleFactor(mScaleFactor);
+      ScaleFactorSetter setter(generator, mScaleFactor);
+      boost::mpl::for_each<event_tags>(setter);
 
       return base_generator;
    }
+
+   void onProxyChanged(const proxy_ptr_type&, const proxy_ptr_type& newProxy)
+   {
+      // If newProxy is NULL, then we don't have an event generator with any
+      // data examiners to update.
+      if (newProxy)
+      {
+         generator_ptr_type generator(
+            boost::dynamic_pointer_cast<generator_type>(
+               this->getEventGenerator()
+            )
+         );
+
+         typedef
+            event::detail::ProxySetter<generator_ptr_type, proxy_ptr_type>
+         proxy_setter_type;
+
+         proxy_setter_type setter(generator, newProxy);
+         boost::mpl::for_each<event_tags>(setter);
+      }
+   }
+
+   struct ScaleFactorSetter
+   {
+      ScaleFactorSetter(const generator_ptr_type& generator,
+                        const float scaleFactor)
+         : generator(generator)
+         , scaleFactor(scaleFactor)
+      {
+         /* Do nothing. */ ;
+      }
+
+      template<typename EventTag>
+      void operator()(const EventTag&)
+      {
+         generator->template getExaminer<EventTag>().setScaleFactor(scaleFactor);
+      }
+
+      generator_ptr_type generator;
+      const float        scaleFactor;
+   };
 
 private:
    const float mScaleFactor;

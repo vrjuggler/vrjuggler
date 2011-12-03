@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2011-12-03 patrick     Converted gadget::PositionEventInterface to a
+                       multi-event interface type.
+                       NEW VERSION: 2.1.26
 2011-11-27 patrick     Changed the configuration of gadget::EventEmitter to be
                        separate from gadget::InputManager.
                        NEW VERSION: 2.1.25
