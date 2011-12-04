@@ -95,9 +95,9 @@ public:
    typedef GeneratorType                                generator_type;
    typedef boost::shared_ptr<generator_type>            generator_ptr_type;
    typedef typename generator_type::event_tags          event_tags;
-   typedef typename generator_type::iface_traits        iface_traits;
-   typedef typename iface_traits::callback_map          callback_map;
    //@}
+
+   typedef boost::function<void (const raw_data_type&)> callback_type;
 
 protected:
    // For use by derived classes
@@ -164,18 +164,14 @@ public:
    /** @name Callback Management */
    //@{
    template<typename EventTag>
-   MultiEventInterface& addCallback(
-      const EventTag&,
-      const typename boost::mpl::at<callback_map, EventTag>::type& callback
-   )
+   MultiEventInterface& addCallback(const EventTag&,
+                                    const callback_type& callback)
    {
       return addCallback<EventTag>(callback);
    }
 
    template<typename EventTag>
-   MultiEventInterface& addCallback(
-      const typename boost::mpl::at<callback_map, EventTag>::type& callback
-   )
+   MultiEventInterface& addCallback(const callback_type& callback)
    {
       boost::fusion::at_key<EventTag>(mCallbackMap).push_back(callback);
       return *this;
@@ -289,17 +285,12 @@ private:
    typedef typename
       boost::mpl::transform<
            event_tags
-         , boost::fusion::pair<
-                boost::mpl::_1
-              , std::vector<boost::mpl::at<callback_map, boost::mpl::_1> >
-           >
+         , boost::fusion::pair<boost::mpl::_1, std::vector<callback_type> >
       >::type
    map_pairs_type;
 
    typedef typename
-      boost::fusion::result_of::as_map<map_pairs_type>::type
-   map_type;
-
+      boost::fusion::result_of::as_map<map_pairs_type>::type map_type;
    map_type mCallbackMap;
 
    proxy_ptr_type mProxy;

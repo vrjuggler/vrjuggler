@@ -37,7 +37,6 @@
 #include <boost/fusion/include/pair.hpp>
 #include <boost/fusion/include/as_map.hpp>
 #include <boost/fusion/include/mpl.hpp>
-#include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/vector.hpp>
@@ -118,9 +117,10 @@ public:
  */
 template<
      typename ProxyType
-   , typename InterfaceTraits
+   , typename EventTags
    , typename CollectionTag
    , typename GenerationTag
+   , typename SampleHandler = DefaultSampleHandler<ProxyType>
 >
 class MultiEventGenerator
    : public EventGenerator
@@ -128,18 +128,17 @@ class MultiEventGenerator
 public:
    /** @name Type Declarations */
    //@{
-   typedef GenerationTag                               tag;
-   typedef ProxyType                                   proxy_type;
-   typedef InterfaceTraits                             iface_traits;
-   typedef typename iface_traits::callback_map         callback_map;
-   typedef typename iface_traits::event_tags_type      event_tags;
-   typedef ProxyTraits<ProxyType>                      proxy_traits_type;
-   typedef typename proxy_traits_type::proxy_ptr_type  proxy_ptr_type;
-   typedef typename proxy_traits_type::device_type     device_type;
-   typedef typename proxy_traits_type::device_ptr_type device_ptr_type;
-   typedef typename iface_traits::sample_handler_type  sample_handler;
-   typedef typename sample_handler::sample_type        sample_type;
-   typedef typename sample_handler::raw_data_type      raw_data_type;
+   typedef GenerationTag                                tag;
+   typedef ProxyType                                    proxy_type;
+   typedef EventTags                                    event_tags;
+   typedef ProxyTraits<ProxyType>                       proxy_traits_type;
+   typedef typename proxy_traits_type::proxy_ptr_type   proxy_ptr_type;
+   typedef typename proxy_traits_type::device_type      device_type;
+   typedef typename proxy_traits_type::device_ptr_type  device_ptr_type;
+   typedef typename SampleHandler::sample_type          sample_type;
+   typedef typename SampleHandler::raw_data_type        raw_data_type;
+
+   typedef boost::function<void (const raw_data_type&)> callback_type;
 
    /**
     * Produces an MPL sequence type containing an instantiation of
@@ -207,7 +206,7 @@ public:
          );
 
       EventRegistrator reg(this);
-      boost::mpl::for_each<event_tags>(reg);
+      boost::mpl::for_each<EventTags>(reg);
 
       EventGeneratorPtr self(shared_from_this());
       return boost::dynamic_pointer_cast<MultiEventGenerator>(self);
@@ -226,9 +225,7 @@ public:
     * Defines the callback for the identified event tag.
     */
    template<typename EventTag>
-   void setCallback(
-      const typename boost::mpl::at<callback_map, EventTag>::type& callback
-   )
+   void setCallback(const callback_type& callback)
    {
       boost::fusion::at_key<EventTag>(mCallbackMap) = callback;
    }
@@ -275,7 +272,7 @@ private:
       InvokeExaminer invoker(
          *this, mSampleHandler.getData(sample, mProxy->getUnit())
       );
-      boost::mpl::for_each<event_tags>(invoker);
+      boost::mpl::for_each<EventTags>(invoker);
    }
 
    /**
@@ -291,13 +288,7 @@ private:
       // registered for EventTag is invoked.
       if (sEmitsImmediately)
       {
-         typedef typename
-            result_of::at_key<callback_map_type, EventTag>::type
-         callback_type;
-         typedef typename
-            boost::add_reference<callback_type>::type
-         callback_ref_type;
-         const callback_ref_type callback(at_key<EventTag>(mCallbackMap));
+         const callback_type& callback(at_key<EventTag>(mCallbackMap));
 
          if (! callback.empty())
          {
@@ -411,16 +402,7 @@ private:
          std::vector<raw_data_type>& events(
             at_key<EventTag>(owner->mCollectors).getEvents()
          );
-
-         typedef typename
-            result_of::at_key<callback_map_type, EventTag>::type
-         callback_type;
-         typedef typename
-            boost::add_reference<callback_type>::type
-         callback_ref_type;
-         const callback_ref_type callback(
-            at_key<EventTag>(owner->mCallbackMap)
-         );
+         const callback_type& callback(at_key<EventTag>(owner->mCallbackMap));
 
          if (! callback.empty())
          {
@@ -444,7 +426,7 @@ private:
    //@{
    typedef typename
       boost::mpl::transform<
-           event_tags
+           EventTags
          , boost::fusion::pair<
                 boost::mpl::_1
               , event::MultiEventCollector<CollectionTag, raw_data_type>
@@ -471,11 +453,8 @@ private:
    //@{
    typedef typename
       boost::mpl::transform<
-           event_tags
-         , boost::fusion::pair<
-                boost::mpl::_1
-              , boost::mpl::at<callback_map, boost::mpl::_1>
-           >
+           EventTags
+         , boost::fusion::pair<boost::mpl::_1, callback_type>
       >::type
    callback_pairs_type;
 
@@ -492,7 +471,7 @@ private:
 
    CallbackInvoker mCallbackInvoker;
 
-   sample_handler mSampleHandler;
+   SampleHandler mSampleHandler;
    proxy_ptr_type mProxy;
    boost::signals::connection mDevConn;
    boost::signals::connection mRefreshConn;
