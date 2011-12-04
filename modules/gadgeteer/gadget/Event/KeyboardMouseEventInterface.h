@@ -29,8 +29,13 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/function.hpp>
+#include <boost/mpl/map.hpp>
+
 #include <gadget/Event/MultiEventInterface.h>
 #include <gadget/Event/MultiEventGenerator.h>
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
 #include <gadget/Event/KeyboardMouse/SampleHandler.h>
 #include <gadget/Type/KeyboardMouseProxy.h>
 
@@ -49,6 +54,36 @@ namespace event
  * @since 2.1.27
  */
 struct kbd_mouse_event_tag : base_event_tag {};
+struct kbd_event_tag : base_event_tag {};
+struct mouse_event_tag : base_event_tag {};
+
+struct KeyboardMouseEventTraits
+{
+   typedef
+      boost::mpl::vector<
+           kbd_mouse_event_tag
+         , kbd_event_tag
+         , mouse_event_tag
+      >
+   event_tags_type;
+
+   typedef kbd::SampleHandler sample_handler_type;
+
+   typedef boost::mpl::map<
+        boost::mpl::pair<
+             kbd_mouse_event_tag
+           , boost::function<void (const EventPtr&)>
+        >
+      , boost::mpl::pair<
+             kbd_event_tag
+           , boost::function<void (const KeyEventPtr&)>
+        >
+      , boost::mpl::pair<
+             mouse_event_tag
+           , boost::function<void (const MouseEventPtr&)>
+        >
+   > callback_map;
+};
 
 }
 
@@ -76,6 +111,7 @@ struct kbd_mouse_event_tag : base_event_tag {};
 template<typename CollectionTag = event::all_events_tag
        , typename GenerationTag = event::immediate_tag>
 class KeyboardMouseEventInterface
+/*
    : public MultiEventInterface<KeyboardMouseProxy
                               , MultiEventGenerator<
                                      KeyboardMouseProxy
@@ -85,6 +121,15 @@ class KeyboardMouseEventInterface
                                    , CollectionTag
                                    , GenerationTag
                                    , event::kbd::SampleHandler
+                                >
+                              >
+*/
+   : public MultiEventInterface<KeyboardMouseProxy
+                              , MultiEventGenerator<
+                                     KeyboardMouseProxy
+                                   , event::KeyboardMouseEventTraits
+                                   , CollectionTag
+                                   , GenerationTag
                                 >
                               >
 {
@@ -98,7 +143,12 @@ public:
     * This is for convenience since this multi-event interface supports
     * just one event tag.
     */
-   void addCallback(const typename base_type::callback_type& callback)
+   void addCallback(
+      const typename boost::mpl::at<
+           event::KeyboardMouseEventTraits::callback_map
+         , event::kbd_mouse_event_tag
+      >::type& callback
+   )
    {
       base_type::template addCallback<event::kbd_mouse_event_tag>(callback);
    }
