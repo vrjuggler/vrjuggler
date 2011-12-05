@@ -22,7 +22,8 @@
 #
 # bindir             - Path to bin directory containing executables (usually
 #                      $(exec_prefix)/bin).
-# datadir            - Path to a directory generally sharing
+# datadir            - Alias for $(datarootdir).
+# datarootdir        - Path to a directory generally sharing
 #                      platform-independent data (usually $(prefix)/share).
 # exec_prefix        - Path to base directory where executables will be
 #                      (usually $(prefix)).
@@ -168,6 +169,7 @@
 # -----------------------------------------------------------------------------
 bindir=			@bindir@
 datadir=		@datadir@
+datarootdir=		@datarootdir@
 exec_prefix=		@exec_prefix@
 libdir=			@libdir@
 libexecdir=		@libexecdir@
