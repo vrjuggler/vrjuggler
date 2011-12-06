@@ -108,7 +108,7 @@ public:
          return (i->second)();
       }
 
-      return onUnknownType(id);     // Calls template method from FactoryErrorPolicy<>
+      return FactoryErrorPolicy::onUnknownType(id);     // Calls template method from FactoryErrorPolicy<>
    }
 
 protected:
