@@ -702,7 +702,7 @@ VJ_SHARE_DIR="$data_subdir/$DATA_VERSION"
 # Information needed to generate vrjuggler-config.
 # $vrj_extra_libs only lists the external (non-Juggler) libraries needed by
 # VR Juggler.
-vrj_ldflags="-L\$prefix/lib\$LIBBITSUF"
+vrj_ldflags="-L\$prefix/\$LIBDIR_NAME\$LIBBITSUF"
 vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
 
 vrj_libs="-l$vrj_lib_name"

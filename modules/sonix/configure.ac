@@ -325,7 +325,7 @@ else
    static_end="-B dynamic"
 fi
 
-snx_ldflags="-L\$prefix/lib\$LIBBITSUF"
+snx_ldflags="-L\$prefix/\$LIBDIR_NAME\$LIBBITSUF"
 snx_libs="-l$snx_lib_name"
 snx_prof_libs="-l$snx_prof_lib_name"
 

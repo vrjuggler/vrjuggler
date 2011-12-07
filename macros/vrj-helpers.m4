@@ -24,6 +24,14 @@ dnl Boston, MA 02110-1301, USA.
 dnl
 dnl ************* <auto-copyright.pl END do not edit this line> *************
 
+AC_DEFUN([VJ_GET_LIBDIR],
+[
+   changequote(<<, >>)
+   LIBDIR_NAME=`echo $libdir | sed -e 's|.*/\([^/][^/]*\)$|\1|'`
+   changequote([, ])
+   AC_SUBST([LIBDIR_NAME])
+])
+
 AC_DEFUN([VJ_STRIP_JAR_PATH],
 [
    dnl Helper function that removes any path information leading up to a JAR
@@ -616,6 +624,8 @@ dnl     VJ_MTREE_GEN(file-prefix, path, platform [, ISA])
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([VJ_MTREE_LIB_GEN],
 [
+    AC_REQUIRE([VJ_GET_LIBDIR])
+
     mtree_path=`echo $2 | sed -e 's|/| |g'`
 
     # Ensure that the release directory exists since configure would not
@@ -690,7 +700,7 @@ END_IRIX_DIST
     elif test "x$4" != "x" ; then
         cat >>${_lib_file} <<END_ISA_DIST
 .
-    lib$LIBBITSUF
+    $LIBDIR_NAME$LIBBITSUF
         $4
             debug
             ..
@@ -707,7 +717,7 @@ END_ISA_DIST
     else
         cat >>${_lib_file} <<END_DIST
 .
-    lib
+    $LIBDIR_NAME$LIBBITSUF
         debug
         ..
         opt

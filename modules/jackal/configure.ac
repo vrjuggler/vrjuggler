@@ -382,7 +382,7 @@ else
    static_end="-B dynamic"
 fi
 
-jccl_ldflags="-L\$prefix/lib\$LIBBITSUF"
+jccl_ldflags="-L\$prefix/\$LIBDIR_NAME\$LIBBITSUF"
 jccl_libs="-l$jccl_lib_name"
 jccl_prof_libs="-l$jccl_prof_lib_name"
 jccl_extra_cxxflags=''

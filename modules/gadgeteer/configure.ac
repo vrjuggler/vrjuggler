@@ -419,7 +419,7 @@ else
    static_end="-B dynamic"
 fi
 
-gadget_ldflags="-L\$prefix/lib\$LIBBITSUF"
+gadget_ldflags="-L\$prefix/\$LIBDIR_NAME\$LIBBITSUF"
 gadget_libs="-l$gadget_lib_name"
 gadget_prof_libs="-l$gadget_prof_lib_name"
 gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"

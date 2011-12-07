@@ -106,6 +106,8 @@ TWEEKROOT_ABS=		@TWEEKROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
 TWEEK_SHARE_DIR=        @TWEEK_SHARE_DIR@
 
+LIBDIR_NAME=		@LIBDIR_NAME@
+
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------

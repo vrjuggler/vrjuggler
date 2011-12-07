@@ -101,6 +101,8 @@ JCCLROOT_ABS=		@JCCLROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
 JCCL_SHARE_DIR=         @JCCL_SHARE_DIR@
 
+LIBDIR_NAME=		@LIBDIR_NAME@
+
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------

@@ -1311,7 +1311,7 @@ if test "x$PLATFORM" != "xDarwin" ; then
    fi
 fi
 
-tweek_ldflags="-L\$prefix/lib\$LIBBITSUF"
+tweek_ldflags="-L\$prefix/\$LIBDIR_NAME\$LIBBITSUF"
 tweek_libs="-l$tweek_lib_name"
 tweek_prof_libs="-l$tweek_prof_lib_name"
 

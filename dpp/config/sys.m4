@@ -254,7 +254,7 @@ AC_DEFUN([DPP_SYSTEM_SETUP],
 
             esac
 
-            DPP_ABI_CFG('ELF', "$target_cpu", "$dpp_libbitsuf")
+            DPP_ABI_CFG('ELF', "$target_cpu")
          fi
 
          case $target_cpu in

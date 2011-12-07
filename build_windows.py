@@ -724,6 +724,7 @@ def updateVersions(vcDir, options):
    vpr_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'
    vpr_subst_vars['BOOST_LDFLAGS'] = r'/libpath:"${prefix}\lib"'
    vpr_subst_vars['CPPDOM_VERSION'] = '.'.join(getCppDOMVersion())
+   vpr_subst_vars['LIBDIR_NAME'] = 'lib'
    vpr_module = JugglerModule(r'modules\vapor', vcDir, 'VPR', 'VPR_VERSION',
                               vpr_subst_vars,
                               [(r'vpr\vprParam.h',), ('vpr.fpc',),
@@ -783,6 +784,7 @@ def updateVersions(vcDir, options):
       tweek_subst_vars['BUILD_JAVA'] = 'N'
 
    tweek_subst_vars['BUILD_PYTHON_IDL'] = 'N'
+   tweek_subst_vars['LIBDIR_NAME'] = 'lib'
    tweek_module = JugglerModule(r'modules\tweek', vcDir, 'Tweek_CXX',
                                 'TWEEK_VERSION', tweek_subst_vars,
                                 [(r'tweek\tweekParam.h',), ('tweek.fpc',),
@@ -803,6 +805,7 @@ def updateVersions(vcDir, options):
    jccl_subst_vars['BUILD_JAVA'] = tweek_subst_vars['BUILD_JAVA']
    jccl_subst_vars['jccl_java_api_jars'] = ';'.join(jccl_jars)
    jccl_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
+   jccl_subst_vars['LIBDIR_NAME'] = 'lib'
    jccl_module = JugglerModule(r'modules\jackal', vcDir, 'JCCL', 'JCCL_VERSION',
                                jccl_subst_vars,
                                [(r'jccl\jcclParam.h',
@@ -820,6 +823,7 @@ def updateVersions(vcDir, options):
    snx_subst_vars['snx_libs'] = ''
    snx_subst_vars['VPR_VERSION'] = vpr_module.getVersion('.')
    snx_subst_vars['MIN_GMTL_VERSION'] = '.'.join(getGMTLVersion())
+   snx_subst_vars['LIBDIR_NAME'] = 'lib'
    snx_module = JugglerModule(r'modules\sonix', vcDir, 'Sonix', 'SNX_VERSION',
                               snx_subst_vars,
                               [(r'snx\snxParam.h',), ('sonix.fpc',),
@@ -836,6 +840,7 @@ def updateVersions(vcDir, options):
    gadget_subst_vars['VPR_VERSION'] = jccl_subst_vars['VPR_VERSION']
    gadget_subst_vars['JCCL_VERSION'] = jccl_module.getVersion('.')
    gadget_subst_vars['MIN_GMTL_VERSION'] = snx_subst_vars['MIN_GMTL_VERSION']
+   gadget_subst_vars['LIBDIR_NAME'] = 'lib'
    gadget_module = JugglerModule(r'modules\gadgeteer', vcDir, 'Gadgeteer',
                                  'GADGET_VERSION', gadget_subst_vars,
                                  [(r'gadget\gadgetParam.h',),
@@ -865,6 +870,7 @@ def updateVersions(vcDir, options):
    vrj_subst_vars['BOOST_VERSION_DOT'] = '.'.join(getBoostVersion())
    vrj_subst_vars['BOOST_INCLUDES'] = r'/I"${prefix}\include"'
    vrj_subst_vars['BOOST_LDFLAGS'] = r'/libpath:"${prefix}\lib"'
+   vrj_subst_vars['LIBDIR_NAME'] = 'lib'
    vrj_module = JugglerModule(r'modules\vrjuggler', vcDir, 'VRJuggler',
                              'VRJ_VERSION', vrj_subst_vars,
                              [(r'vrj\vrjParam.h',), ('vrjuggler.fpc',),
