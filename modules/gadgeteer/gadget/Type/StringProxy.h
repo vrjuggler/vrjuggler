@@ -61,7 +61,7 @@ class GADGET_CLASS_API StringProxy
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<String> base_type;
+   typedef StringProxy::typed_proxy_ base_type;
 
 protected:
    StringProxy(const std::string& deviceName = "UnknownString",

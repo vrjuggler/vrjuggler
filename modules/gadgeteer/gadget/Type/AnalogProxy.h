@@ -51,7 +51,7 @@ class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<Analog> base_type;
+   typedef AnalogProxy::typed_proxy_ base_type;
 
 protected:
    /** Constructor. */

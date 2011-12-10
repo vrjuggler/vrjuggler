@@ -69,7 +69,7 @@ class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<Position> base_type;
+   typedef PositionProxy::typed_proxy_ base_type;
 
 protected:
    PositionProxy(const std::string& deviceName = "UnknownPosition",

@@ -52,7 +52,7 @@ class GADGET_CLASS_API KeyboardMouseProxy : public TypedProxy<KeyboardMouse>
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<KeyboardMouse> base_type;
+   typedef KeyboardMouseProxy::typed_proxy_ base_type;
 
 protected:
    KeyboardMouseProxy();

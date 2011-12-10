@@ -51,7 +51,7 @@ class GADGET_CLASS_API CommandProxy : public TypedProxy<Command>
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<Command> base_type;
+   typedef CommandProxy::typed_proxy_ base_type;
 
 protected:
    CommandProxy(const std::string& deviceName = "UnknownCommand",

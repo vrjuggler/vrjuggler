@@ -51,7 +51,7 @@ class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<Glove> base_type;
+   typedef GloveProxy::typed_proxy_ base_type;
 
 protected:
    /**

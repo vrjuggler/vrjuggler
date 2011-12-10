@@ -179,6 +179,7 @@ namespace gadget
        * @since 2.1.1
        */
       //@{
+      typedef TypedProxy<DeviceType>                       typed_proxy_;
       typedef DeviceType                                   device_type;
       typedef DeviceTraits<DeviceType>                     device_traits_type;
       typedef typename device_traits_type::device_ptr_type device_ptr_type;

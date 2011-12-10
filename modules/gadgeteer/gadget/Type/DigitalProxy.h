@@ -51,7 +51,7 @@ class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<Digital> base_type;
+   typedef DigitalProxy::typed_proxy_ base_type;
 
 protected:
    DigitalProxy(const std::string& deviceName = "UnknownDigital",

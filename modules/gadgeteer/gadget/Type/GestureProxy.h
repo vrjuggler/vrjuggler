@@ -53,7 +53,7 @@ class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
 public:
    /** @since 2.1.1 */
-   typedef TypedProxy<Gesture> base_type;
+   typedef GestureProxy::typed_proxy_ base_type;
 
 protected:
    /** Constructs the proxy to point to the given gesture device. */
