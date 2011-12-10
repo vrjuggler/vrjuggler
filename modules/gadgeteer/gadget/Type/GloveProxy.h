@@ -99,7 +99,7 @@ public:
 
    virtual const GloveValues getData() const
    {
-      return isStupefied() ? GloveValues()
+      return isStupefied() ? mStupefiedData
                            : mTypedDevice->getGloveData(mUnit).getValue();
    }
 

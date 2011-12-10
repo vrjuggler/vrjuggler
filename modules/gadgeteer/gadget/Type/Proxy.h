@@ -206,6 +206,8 @@ namespace gadget
                  const int unitNum = -1)
          : mDeviceName(deviceName)
          , mUnit(unitNum)
+         , mData()
+         , mStupefiedData()
       {
          /* Do nothing. */ ;
       }
@@ -421,7 +423,7 @@ namespace gadget
        */
       virtual get_data_return_type getData() const
       {
-         return isStupefied() ? raw_data_type() : mData.getValue();
+         return isStupefied() ? mStupefiedData : mData.getValue();
       }
 
       /**
@@ -456,8 +458,10 @@ namespace gadget
       int              mUnit;
       device_data_type mData;
 
+      get_data_return_type mStupefiedData;      /**< Default stupefied data */
+
    private:
-      refresh_signal_type mRefreshed;
+      refresh_signal_type mRefreshed;   /**< Refresh signal */
    };
 
 } // end namespace
