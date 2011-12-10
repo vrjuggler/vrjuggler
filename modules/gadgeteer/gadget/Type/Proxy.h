@@ -33,6 +33,10 @@
 #include <boost/optional.hpp>
 #include <boost/signal.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_pod.hpp>
+#include <boost/type_traits/add_const.hpp>
 
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/SignalProxy.h>
@@ -181,6 +185,19 @@ namespace gadget
       typedef typename device_traits_type::data_type       device_data_type;
       typedef typename device_data_type::data_type         raw_data_type;
       typedef boost::signal<void (device_ptr_type)>        refresh_signal_type;
+
+      /**
+       * Determines the return type for getData(). When raw_data_type is a
+       * plain-old-data (POD) type, then the return type oof getData() is
+       * raw_data_type. Otherwise, it is the const form of raw_data_type.
+       */
+      typedef typename
+         boost::mpl::eval_if<
+              boost::is_pod<raw_data_type>
+            , boost::mpl::identity<raw_data_type>
+            , boost::add_const<raw_data_type>
+         >::type
+      get_data_return_type;
       //@}
 
    protected:
@@ -401,7 +418,7 @@ namespace gadget
        *
        * @since 2.1.1
        */
-      virtual const raw_data_type getData() const
+      virtual get_data_return_type getData() const
       {
          return isStupefied() ? raw_data_type() : mData.getValue();
       }

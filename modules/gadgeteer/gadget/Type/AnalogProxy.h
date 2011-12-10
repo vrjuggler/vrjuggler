@@ -86,7 +86,7 @@ public:
     *
     * @return The normalized analog data from the device.
     */
-   const float getData() const
+   base_type::get_data_return_type getData() const
    {
       return isStupefied() ? 0.0f : mNormalizedData;
    }
