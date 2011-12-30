@@ -28,12 +28,6 @@
 
 #include <vpr/vpr.h>
 
-#ifdef VPR_OS_Darwin
-#   include <OpenGL/gl.h>
-#else
-#   include <GL/gl.h>
-#endif
-
 #include <boost/bind.hpp>
 
 #include <vpr/Thread/Thread.h>

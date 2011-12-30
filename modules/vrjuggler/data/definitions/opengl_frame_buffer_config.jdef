@@ -356,5 +356,110 @@
          </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
-</definition>
+   <definition_version version="5" label="OpenGL Frame Buffer Configuration">
+      <abstract>false</abstract>
+      <help>Frame buffer settings for an OpenGL display window. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more on OpenGL frame buffer configuration&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03.html"&gt;more on configuring displays&lt;/a&gt;)</help>
+      <parent/>
+      <category>/Display</category>
+      <property valuetype="integer" variable="false" name="visual_id">
+         <help>The specific GLX or WGL visual ID to be used.  Setting a value other than -1 causes the remaining frame buffer settings to be ignored.  The value given for this property must be one of the available visuals named in the output from glxinfo or wglinfo.  The value must be entered in base 10 as an integer.  A value of -1 indicates that this setting should be ignored. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Visual ID" defaultvalue="-1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="red_size">
+         <help>The minimum number of bits to use per pixel for the red channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Color Buffer Red Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="green_size">
+         <help>The minimum number of bits to use per pixel for the green channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Color Buffer Green Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="blue_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Color Buffer Blue Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="alpha_size">
+         <help>The minimum number of bits to use per pixel for the alpha channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Color Buffer Alpha Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="auxiliary_buffer_count">
+         <help>The number of desired auxiliary buffers.  The smallest number of available buffers greater than or equal to the requested size will be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Number of Auxillary Buffers" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="depth_buffer_size">
+         <help>The minimum size of the depth buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Depth Buffer Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="stencil_buffer_size">
+         <help>The minimum size of the stencil buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Stencil Buffer Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_red_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no red accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Accumulation Buffer Red Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_green_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no green accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Accumulation Buffer Green Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_blue_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no blue accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Accumulation Buffer Blue Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_alpha_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no alpha accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch03s04.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Accumulation Buffer Alpha Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="num_sample_buffers">
+         <help>The number of multisample buffers.</help>
+         <value label="Number of Multisample Buffers" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="num_samples">
+         <help>The number of samples per pixel to use when multisampling is enabled.</help>
+         <value label="Number of Samples" defaultvalue="2"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="use_create_context_attribs">
+         <help>Use glwCreateContextAttribsARB or glXCreateContextAttribsARB to open an OpenGL 3.0 or newer graphics context.  This requires compatible hardware and drivers.</help>
+         <value label="Use CreateContextAttribsARB?" defaultvalue="false"/>
+      </property>
+      <property valuetype="integer" variable="false" name="gl_context_major_version">
+         <help>If CreateContextAttribsARB is enabled, set the context major version.</help>
+         <value label="Context Major Version" defaultvalue="3"/>
+      </property>
+      <property valuetype="integer" variable="false" name="gl_context_minor_version">
+         <help>If CreateContextAttribsARB is enabled, set the context minor version.</help>
+         <value label="Context Minor Version" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="gl_context_flags">
+         <help>If CreateContextAttribsARB is enabled, set the context flags.</help>
+         <value label="Context Flags" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="gl_context_profile_mask">
+         <help>If CreateContextAttribsARB is enabled, set the context profile mask.</help>
+         <value label="Context Profile Mask" defaultvalue="2"/>
+      </property>
 
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:opengl_frame_buffer_config">
+               <xsl:element namespace="{$jconf}" name="opengl_frame_buffer_config">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">5</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+				  <xsl:element namespace="{$jconf}" name="gl_context_profile_mask">
+				     <xsl:text>2</xsl:text>
+				  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

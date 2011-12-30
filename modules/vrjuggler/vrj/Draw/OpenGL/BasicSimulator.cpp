@@ -49,6 +49,7 @@
 
 #include <vrj/Draw/OpenGL/DrawHeadFunctors.h>
 #include <vrj/Draw/OpenGL/DrawWandFunctors.h>
+#include <vrj/Draw/OpenGL/DrawAxesFunctors.h>
 #include <vrj/Draw/OpenGL/SimInterfaceFactory.h>
 #include <vrj/Draw/OpenGL/BasicSimulator.h>
 
@@ -63,8 +64,7 @@ VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(BasicSimulator);
 
 BasicSimulator::BasicSimulator()
 {
-   setDrawWandFunctor(new DrawRightAngleWandFunctor());
-   setDrawHeadFunctor(new DrawEllipsoidHeadFunctor());
+   ;
 }
 
 BasicSimulator::~BasicSimulator()
@@ -79,6 +79,12 @@ BasicSimulator::~BasicSimulator()
    {
       delete mDrawHeadFunctor;
       mDrawHeadFunctor = NULL;
+   }
+
+   if ( NULL != mDrawAxesFunctor )
+   {
+      delete mDrawAxesFunctor;
+      mDrawAxesFunctor = NULL;
    }
 }
 
@@ -114,6 +120,20 @@ bool BasicSimulator::config(jccl::ConfigElementPtr element)
 
 void BasicSimulator::contextInit()
 {
+   ExtensionLoaderGL& gl = DrawManager::instance()->getGL();
+   if (gl.CreateShader != NULL)
+   {
+      setDrawHeadFunctor(new DrawEllipsoidHeadCoreFunctor());
+      setDrawWandFunctor(new DrawRightAngleWandCoreFunctor());
+      setDrawAxesFunctor(new DrawAxesCoreFunctor());
+   }
+   else
+   {
+      setDrawHeadFunctor(new DrawEllipsoidHeadFunctor());
+      setDrawWandFunctor(new DrawRightAngleWandFunctor());
+      setDrawAxesFunctor(new DrawAxesFunctor());
+   }
+
    initSimulator();
 }
 
@@ -189,10 +209,11 @@ void BasicSimulator::updateInternalData(const float positionScale)
 // XXX: Performance Critical problems here
 void BasicSimulator::drawObjects()
 {
-   glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT );
+   ExtensionLoaderGL& gl = DrawManager::instance()->getGL();
+   gl.PushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT );
    {
-      glDisable(GL_LIGHTING);
-      glDisable(GL_BLEND);
+      gl.Disable(GL_LIGHTING);
+      gl.Disable(GL_BLEND);
       //vjInputManager*  input_mgr = Kernel::instance()->getInputManager();
 
       // Draw all glove Proxies that have drawing flag set
@@ -208,7 +229,7 @@ void BasicSimulator::drawObjects()
 
       // Draw any other object that need to be seen
    }
-   glPopAttrib();
+   gl.PopAttrib();
 }
 
 /**
@@ -222,6 +243,7 @@ void BasicSimulator::drawProjections(const bool drawFrustum,
                                      const gmtl::Vec3f& surfColor,
                                      const float scaleFactor)
 {
+#if defined(SKIP_THIS)
    const float ALPHA_VALUE(0.25f);
 
    DisplayManager* display_man = 
@@ -363,12 +385,14 @@ void BasicSimulator::drawProjections(const bool drawFrustum,
          }  // if surface
       }  // for viewports
    }  // for disps
+#endif
 }
 
 void BasicSimulator::initSimulator()
 {
    mDrawHeadFunctor->contextInit();
    mDrawWandFunctor->contextInit();
+   mDrawAxesFunctor->contextInit();
 }
 
 /**
@@ -377,6 +401,9 @@ void BasicSimulator::initSimulator()
  */
 void BasicSimulator::drawSimulator(const float scaleFactor)
 {
+   ExtensionLoaderGL& gl = DrawManager::instance()->getGL();
+
+#if defined(SKIP_THIS)
    glPushAttrib(GL_ALL_ATTRIB_BITS);
    {
       // Test to see whether there is lighting active. If there is, we will
@@ -406,21 +433,18 @@ void BasicSimulator::drawSimulator(const float scaleFactor)
       ///*
       if ( lighting_on == GL_TRUE )
       {
-         glDisable(GL_LIGHTING);
+         gl.Disable(GL_LIGHTING);
       }
+#endif
 
-      glPushMatrix();
-         glLoadIdentity();
-         gmtl::Vec3f x_axis(scaleFactor,0.0f,0.0f); gmtl::Vec3f y_axis(0.0f, scaleFactor, 0.0f);
-         gmtl::Vec3f z_axis(0.0f, 0.0f, scaleFactor); gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
-         glBegin(GL_LINES);
-            glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.mData); glVertex3fv(x_axis.mData);
-            glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.mData); glVertex3fv(y_axis.mData);
-            glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.mData); glVertex3fv(z_axis.mData);
-         glEnd();
-      glPopMatrix();
+      gl.PushMatrix();
+         gl.LoadIdentity();
+         mDrawAxesFunctor->setScaleFactor(scaleFactor);
+         mDrawAxesFunctor->draw(mSimViewport->getUser());
+      gl.PopMatrix();
       //*/
 
+#if defined(SKIP_THIS)
       const GLfloat light0_ambient[]  = { 0.1f,  0.1f,  0.1f, 1.0f };
       const GLfloat light0_diffuse[]  = { 0.8f,  0.8f,  0.8f, 1.0f };
       const GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f, 1.0f };
@@ -433,33 +457,39 @@ void BasicSimulator::drawSimulator(const float scaleFactor)
 
       // At this point, lighting is disabled. We need it back on for the
       // draw functors.
-      glEnable(GL_LIGHTING);
-      glEnable(GL_LIGHT0);
+      gl.Enable(GL_LIGHTING);
+      gl.Enable(GL_LIGHT0);
+#endif
 
       // Enable depth testing so that the rendered simulator objects look
       // correct. For example, in the case of the default head draw functor,
       // without this, we end up being able to see the eyes when looking at
       // the back of the head.
-      glEnable(GL_DEPTH_TEST);
+      gl.Enable(GL_DEPTH_TEST);
 
       // Draw the user's head
-      glPushMatrix();
-         glLoadIdentity();
-         glMultMatrixf(getHeadPos().mData);
-         glScalef(scaleFactor, scaleFactor, scaleFactor);
-         glEnable(GL_NORMALIZE);
+      gl.PushMatrix();
+         gl.LoadIdentity();
+         gl.MultMatrix(getHeadPos());
+         gl.Scale(scaleFactor, scaleFactor, scaleFactor);
+         //glEnable(GL_NORMALIZE);
          mDrawHeadFunctor->draw(mSimViewport->getUser());
-      glPopMatrix();
+         mDrawAxesFunctor->setScaleFactor(0.15f);
+         mDrawAxesFunctor->draw(mSimViewport->getUser());
+      gl.PopMatrix();
 
       // Draw the wand
-      glPushMatrix();
-         glLoadIdentity();
-         glMultMatrixf(getWandPos().mData);
-         glScalef(scaleFactor,scaleFactor,scaleFactor);
-         glEnable(GL_NORMALIZE);
+      gl.PushMatrix();
+         gl.LoadIdentity();
+         gl.MultMatrix(getWandPos());
+         gl.Scale(scaleFactor, scaleFactor, scaleFactor);
+         //glEnable(GL_NORMALIZE);
          mDrawWandFunctor->draw(mSimViewport->getUser());
-      glPopMatrix();
+         mDrawAxesFunctor->setScaleFactor(0.15f);
+         mDrawAxesFunctor->draw(mSimViewport->getUser());
+      gl.PopMatrix();
 
+#if defined(SKIP_THIS)
       glDisable(GL_LIGHT0);
       glDisable(GL_LIGHTING);
 
@@ -471,8 +501,10 @@ void BasicSimulator::drawSimulator(const float scaleFactor)
       glPopMatrix();
    }
    glPopAttrib();
+#endif
 }
 
+#if defined(SKIP_THIS)
 void BasicSimulator::drawLine(const gmtl::Vec3f& start,
                               const gmtl::Vec3f& end)
 {
@@ -534,6 +566,7 @@ void BasicSimulator::drawSolidCube(const float size)
 {
   drawBox(size, GL_QUADS);
 }
+#endif
 
 /*
 // Draw a glove outline for the user

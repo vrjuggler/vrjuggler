@@ -40,6 +40,8 @@
                 OSG
                 ..
                 OpenGL
+                    GL3
+                    ..
                 ..
                 OpenSG
                 ..

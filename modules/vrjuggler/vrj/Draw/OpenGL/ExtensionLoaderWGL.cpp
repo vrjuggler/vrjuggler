@@ -31,11 +31,6 @@
 
 #include <vrj/Draw/OpenGL/ExtensionLoaderWGL.h>
 
-#ifndef GLAPI
-#  define GLAPI __stdcall
-#  define __DEFINED_GLAPI
-#endif
-
 
 namespace vrj
 {
@@ -44,27 +39,27 @@ namespace opengl
 {
 
 // NVIDIA swap control
-typedef BOOL (GLAPI * PFNWGLJOINSWAPGROUPNVPROC) (HDC hdc, GLuint group);
+typedef BOOL (WINAPI * PFNWGLJOINSWAPGROUPNVPROC) (HDC hdc, GLuint group);
 
-typedef BOOL (GLAPI * PFNWGLBINDSWAPBARRIERNVPROC) (GLuint group,
+typedef BOOL (WINAPI * PFNWGLBINDSWAPBARRIERNVPROC) (GLuint group,
                                                     GLuint barrier);
 
-typedef BOOL (GLAPI * PFNWGLQUERYSWAPGROUPNVPROC) (HDC hdc, GLuint* group,
+typedef BOOL (WINAPI * PFNWGLQUERYSWAPGROUPNVPROC) (HDC hdc, GLuint* group,
                                                    GLuint* barrier);
 
-typedef BOOL (GLAPI * PFNWGLQUERYMAXSWAPGROUPSNVPROC) (HDC hdc,
+typedef BOOL (WINAPI * PFNWGLQUERYMAXSWAPGROUPSNVPROC) (HDC hdc,
                                                        /*int screen,*/
                                                        GLuint* maxGroups,
                                                        GLuint* maxBarriers);
 
-typedef BOOL (GLAPI * PFNWGLQUERYFRAMECOUNTNVPROC) (HDC hdc,
+typedef BOOL (WINAPI * PFNWGLQUERYFRAMECOUNTNVPROC) (HDC hdc,
                                                     /*int screen,*/
                                                     GLuint* count);
 
-typedef BOOL (GLAPI * PFNWGLRESETFRAMECOUNTNVPROC) (HDC hdc /*, int screen*/);
+typedef BOOL (WINAPI * PFNWGLRESETFRAMECOUNTNVPROC) (HDC hdc /*, int screen*/);
 
 // ARB Context Creation
-typedef HGLRC (GLAPI *PFNWGLCREATECONTEXTATTRIBSARBPROC) (HDC, HGLRC,
+typedef HGLRC (WINAPI *PFNWGLCREATECONTEXTATTRIBSARBPROC) (HDC, HGLRC,
                                                           const int*);
 
 struct ExtensionLoaderWGL::WglFuncs

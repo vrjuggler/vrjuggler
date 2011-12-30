@@ -561,6 +561,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctors.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctors.cpp"
 				>
 			</File>
@@ -574,6 +578,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.cpp"
 				>
 			</File>
 			<File
@@ -630,6 +638,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctors.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctors.h"
 				>
 			</File>
@@ -647,6 +659,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.h"
 				>
 			</File>
 			<File

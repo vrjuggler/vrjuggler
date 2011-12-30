@@ -802,15 +802,23 @@ HGLRC WindowWin32::createContext(HDC hdc)
             gl_fb_elt->getProperty<int>("gl_context_minor_version"),
             WGL_CONTEXT_FLAGS_ARB,
             gl_fb_elt->getProperty<int>("gl_context_flags"),
-            0
+            0, 0, 0
          };
+
+         // only specify profile mask attribute for OpenGL 3.2+ contexts
+         if (((attribList[1] == 3) && (attribList[3] >= 2)) || (attribList[1] > 3))
+         {
+            attribList[6] = WGL_CONTEXT_PROFILE_MASK_ARB;
+            attribList[7] = gl_fb_elt->getProperty<int>("gl_context_profile_mask");
+         }
 
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
             << "Creating WGL Context, attributes = {"
             << attribList[0] << ", " << attribList[1] << ", "
             << attribList[2] << ", " << attribList[3] << ", "
             << attribList[4] << ", " << attribList[5] << ", "
-            << attribList[6] << "}"
+            << attribList[6] << ", " << attribList[7] << ", "
+            << attribList[8] << "}""}"
             <<  std::endl << vprDEBUG_FLUSH;
 
          return mExtensions.wglCreateContextAttribsARB(hdc, 0, attribList);

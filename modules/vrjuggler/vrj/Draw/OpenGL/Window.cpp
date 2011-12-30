@@ -28,14 +28,6 @@
 
 #include <vpr/vpr.h>
 
-#ifdef VPR_OS_Darwin
-#   include <OpenGL/gl.h>
-#   include <OpenGL/glu.h>
-#else
-#   include <GL/gl.h>
-#   include <GL/glu.h>
-#endif
-
 #include <gadget/InputManager.h>
 
 // Get info about Gadgeteer keyboard/mouse stuff for registering the simulator
@@ -93,6 +85,7 @@ Window::Window()
    // XXX: Sync problem on window id value assignment
    , mWindowId(getNextWindowId())
    , mIsEventSource(false)
+   , mGL(NULL)
 {
    /* Do nothing. */ ;
 }
@@ -119,6 +112,29 @@ void Window::swapBuffers()
 void Window::finishSetup()
 {
    vprASSERT(mWindowIsOpen && "Pre-condition of being open failed");
+
+   // Use the configuration settings to determine if we have a core profile
+   // NOTE: The frame buffer configuration should have an accessor for determining
+   // the profile mask rather than checking the configuration settings
+   jccl::ConfigElementPtr gl_fb_elt = mVrjDisplay->getGlFrameBufferConfig();
+   if (gl_fb_elt->getProperty<bool>("use_create_context_attribs"))
+   {
+      int mj = gl_fb_elt->getProperty<int>("gl_context_major_version");
+      int mn = gl_fb_elt->getProperty<int>("gl_context_minor_version");
+      if ((mj >= 4) || ((mj == 3) && (mn >= 2)))
+      {
+         int flags = gl_fb_elt->getProperty<int>("gl_context_flags");
+         int mask = gl_fb_elt->getProperty<int>("gl_context_profile_mask");
+         if ((flags == 2) || (mask == 1))
+            mGL = new ExtensionLoaderGLCore();
+      }
+   }
+
+   // Fallback to basic GL extension loader class
+   if (mGL == NULL)
+      mGL = new ExtensionLoaderGL();
+
+   mGL->registerExtensions();
 
    // --- Setup any attached simulator that is needed --- //
    // XXX: This is where we used to set the keyboard proxy for the simulator
@@ -197,7 +213,7 @@ void Window::finishSetup()
 
 void Window::updateViewport()
 {
-   glViewport(0, 0, mWindowWidth, mWindowHeight);
+   mGL->Viewport(0, 0, mWindowWidth, mWindowHeight);
    setDirtyViewport(false);
 }
 
@@ -214,23 +230,16 @@ void Window::setViewport(const float xo, const float yo, const float xSize,
    unsigned int y_size =
       static_cast<unsigned int>(ySize * float(mWindowHeight));
 
-   glViewport(ll_x, ll_y, x_size, y_size);
+   mGL->Viewport(ll_x, ll_y, x_size, y_size);
 }
 
 void Window::setViewBuffer(vrj::Viewport::View view)
 {
-   if ( ! isStereo() )
-   {
-      glDrawBuffer(GL_BACK);
-   }
-   else if ( Viewport::LEFT_EYE == view )
-   {
-      glDrawBuffer(GL_BACK_LEFT);
-   }
-   else if ( Viewport::RIGHT_EYE == view )
-   {
-      glDrawBuffer(GL_BACK_RIGHT);
-   }
+   GLenum buffer = GL_BACK;
+   if (isStereo())
+      buffer = (Viewport::LEFT_EYE == view) ? GL_BACK_LEFT : GL_BACK_RIGHT;
+
+   mGL->DrawBuffer(buffer);
 }
 
 void Window::setProjection(vrj::ProjectionPtr proj)
@@ -240,31 +249,30 @@ void Window::setProjection(vrj::ProjectionPtr proj)
       return;
    }
 
-   // --- Set up the projection --- //
-   glMatrixMode(GL_PROJECTION);
+   mGL->MatrixMode(GL_PROJECTION);
    {
       const std::vector<float>& frust = proj->getFrustum().getValues();
 
-      glLoadIdentity();             // Load identity matrix
-      glFrustum(frust[Frustum::VJ_LEFT],frust[Frustum::VJ_RIGHT],
+      mGL->LoadIdentity();             // Load identity matrix
+      mGL->Frustum(frust[Frustum::VJ_LEFT],frust[Frustum::VJ_RIGHT],
                  frust[Frustum::VJ_BOTTOM],frust[Frustum::VJ_TOP],
                  frust[Frustum::VJ_NEAR],frust[Frustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
-         // Set camera rotation and position
-      glMultMatrixf(proj->getViewMatrix().mData);
+      // Set camera rotation and position
+      mGL->MultMatrix(proj->getViewMatrix());
 #endif
    }
-   glMatrixMode(GL_MODELVIEW);
+   mGL->MatrixMode(GL_MODELVIEW);
 #ifndef USE_PROJECTION_MATRIX
-      // Set camera rotation and position
-   glLoadIdentity();
-   glMultMatrixf(proj->getViewMatrix().mData);
+   // Set camera rotation and position
+   mGL->LoadIdentity();
+   mGL->MultMatrix(proj->getViewMatrix());
 #endif
 }
 
 int Window::getNextWindowId()
 {
-vpr::Guard<vpr::Mutex> guard(mWinIdMutex);      // Protect the id
+   vpr::Guard<vpr::Mutex> guard(mWinIdMutex);      // Protect the id
    return mCurMaxWinId++;
 }
 

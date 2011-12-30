@@ -39,6 +39,7 @@
 #define GLX_CONTEXT_MINOR_VERSION_ARB                   0x2092
 #define GLX_CONTEXT_LAYER_PLANE_ARB                     0x2093
 #define GLX_CONTEXT_FLAGS_ARB                           0x2094
+#define GLX_CONTEXT_PROFILE_MASK_ARB                    0x9126
 
 #if ! defined(GLX_CONTEXT_DEBUG_BIT_ARB)
 #  define GLX_CONTEXT_DEBUG_BIT_ARB			0x0001
@@ -46,6 +47,14 @@
 
 #if ! defined(GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB)
 #  define GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	0x0002
+#endif
+
+#if ! defined(GLX_CONTEXT_CORE_PROFILE_BIT_ARB)
+#  define GLX_CONTEXT_CORE_PROFILE_BIT_ARB              0x00000001
+#endif
+
+#if ! defined(GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB)
+#  define GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB     0x00000002
 #endif
 
 // New error returned by GetLastError
