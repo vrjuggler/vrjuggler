@@ -31,8 +31,6 @@
 
 #pragma warning(disable:4786)  // identifier truncated to 255 characters in the debug information
 
-#include <GL/gl.h>
-
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 #include <vrj/Draw/OpenGL/Window.h>
 #include <vrj/Draw/OpenGL/ExtensionLoaderWGL.h>

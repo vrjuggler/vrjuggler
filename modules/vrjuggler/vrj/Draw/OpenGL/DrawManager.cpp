@@ -67,6 +67,7 @@ namespace opengl
 
 vprSingletonImp(DrawManager);
 
+
 DrawManager::DrawManager()
    : mApp(NULL)
    , drawTriggerSema(0)
@@ -302,7 +303,7 @@ void DrawManager::addDisplay(DisplayPtr disp)
    // -- Create a window for new display
    // -- Store the window in the wins vector
    // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
-   vrj::opengl::WindowPtr new_win = getGLWindow();
+   vrj::opengl::WindowPtr new_win = newGLWindow();
    new_win->configWindow(disp);                                      // Configure it
    mWins.push_back(new_win);                                         // Add to our local window list
 
@@ -493,7 +494,7 @@ namespace vrj
 namespace opengl
 {
 
-vrj::opengl::WindowPtr DrawManager::getGLWindow()
+vrj::opengl::WindowPtr DrawManager::newGLWindow()
 {
 #if  defined(VPR_OS_Windows)
    return vrj::opengl::WindowPtr(new vrj::opengl::WindowWin32);

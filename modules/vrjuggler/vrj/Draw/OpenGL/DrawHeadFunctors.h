@@ -28,15 +28,7 @@
 #define _VRJ_OPENGL_DRAW_HEAD_FUNCTORS_H_
 
 #include <vrj/Draw/OpenGL/Config.h>
-
-#ifdef VPR_OS_Darwin
-#   include <OpenGL/gl.h>
-#   include <OpenGL/glu.h>
-#else
-#   include <GL/gl.h>
-#   include <GL/glu.h>
-#endif
-
+#include <vrj/Draw/OpenGL/DrawManager.h>
 #include <vrj/Draw/OpenGL/DrawObjectFunctor.h>
 
 
@@ -75,9 +67,45 @@ protected:
    GLUquadricObj* mQuadObj;
 };
 
+
+/** \class vrj::opengl::DrawEllipsoidHeadCoreFunctor DrawHeadFunctors.h vrj/Draw/OpenGL/DrawHeadFunctors.h
+ *
+ * Draw a basic ellipsoid head.
+ *
+ */ 
+class DrawEllipsoidHeadCoreFunctor : public vrj::opengl::DrawObjectFunctor
+{
+public:
+   DrawEllipsoidHeadCoreFunctor();
+
+   virtual ~DrawEllipsoidHeadCoreFunctor();
+
+   /** Called to initialize any context-specific information. */
+   virtual void contextInit();
+
+   /**
+    * Callback function for drawing.  Called when the object should be drawn.
+    * @pre GL context is set and ready to go.
+    */
+   virtual void draw(vrj::UserPtr user);
+
+protected:
+   GLfloat* buildSphere(const float radius, const int nSteps);
+
+   GLfloat *mCoarseSphereVertices, *mFineSphereVertices;
+   GLuint mProgram;
+   GLint muMVMatrixHandle;
+   GLint muPMatrixHandle;
+   GLint maVertexCoordHandle;
+   GLint muVertexColorHandle;
+   GLuint mVertexArrayBufferID;
+   GLuint mCoarseVertexCoordBufferID, mCoarseIndexBufferID;
+   GLuint mFineVertexCoordBufferID, mFineIndexBufferID;
+};
+
 } // End of opengl namespace
 
 } // End of vrj namespace
 
 
-#endif /* _GL_DRAW_HEAD_FUNCTORS_H_ */
+#endif /* _VRJ_OPENGL_DRAW_HEAD_FUNCTORS_H_ */

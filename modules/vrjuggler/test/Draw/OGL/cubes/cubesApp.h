@@ -43,7 +43,9 @@
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OpenGL/App.h>
 #include <vrj/Draw/OpenGL/ContextData.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
 
+#include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <vrj/Util/Debug.h>
@@ -88,12 +90,6 @@ public:
 class UserData
 {
 public:
-   enum ShapeSetting
-   {
-      CUBE,
-      CONE
-   };
-
    // Constructor
    // Takes the string names of the devices to use
    // NOTE: This means that we cannot construct a user until the input manager is loaded
@@ -101,7 +97,6 @@ public:
    UserData(vrj::UserPtr user, std::string wandName, std::string incButton,
             std::string decButton, std::string stopButton,
             std::string toggleButton)
-      : mShapeSetting(CUBE)
    {
       mCurVelocity = 0.0;
       gmtl::identity(mNavMatrix);
@@ -120,13 +115,6 @@ public:
    // Uses a quaternion to do rotation in the environment
    void updateNavigation();
 
-   void updateShapeSetting();
-
-   ShapeSetting getShapeSetting()
-   {
-      return mShapeSetting;
-   }
-
 public:
       // Devices to use for the given user
    gadget::PositionInterface mWand;              /**< The wand */
@@ -140,8 +128,6 @@ public:
    gmtl::Matrix44f      mNavMatrix;    // Matrix for navigation in the application
 
    vrj::UserPtr         mUser;         // The user we hold data for
-
-   ShapeSetting mShapeSetting; // Flag identifying the shape to render
 };
 
 //--------------------------------------------------
@@ -154,6 +140,17 @@ class cubesApp : public vrj::opengl::App
 public:
    cubesApp(vrj::Kernel* kern)
       : vrj::opengl::App(kern)
+      , mProgram(0)
+      , muMVMatrixHandle(0)
+      , muPMatrixHandle(0)
+      , muTranslationHandle(0)
+      , maVertexCoordHandle(0)
+      , maVertexNormalHandle(0)
+      , muVertexColorHandle(0)
+      , mVertexArrayBufferID(0)
+      , mVertexCoordBufferID(0)
+      , mVertexNormalBufferID(0)
+      , mIndexBufferID(0)
       , mCurFrameNum(0)
    {
       /* Do nothing. */ ;
@@ -213,7 +210,6 @@ public:
 
        for ( unsigned int i = 0; i < mUserData.size(); ++i )
        {
-          mUserData[i]->updateShapeSetting();
           mUserData[i]->updateNavigation();     // Update the navigation matrix
        }
 
@@ -238,8 +234,12 @@ public:
    virtual void draw()
    {
       VPR_PROFILE_GUARD("cubesApp::draw");
-      glClear(GL_DEPTH_BUFFER_BIT);
-      initGLState();    // This should really be in another function
+
+      vrj::opengl::ExtensionLoaderGL& gl =
+         vrj::opengl::DrawManager::instance()->getGL();
+      gl.Clear(GL_DEPTH_BUFFER_BIT);
+
+      //initGLState();    // This should really be in another function
 
       myDraw(vrj::opengl::DrawManager::instance()->currentUserData()->getUser());
    }
@@ -247,8 +247,10 @@ public:
    // Clear the buffer each frame.
    virtual void bufferPreDraw()
    {
-      glClearColor(0.0, 0.0, 0.0, 0.0);
-      glClear(GL_COLOR_BUFFER_BIT);
+      vrj::opengl::ExtensionLoaderGL& gl =
+         vrj::opengl::DrawManager::instance()->getGL();
+      gl.ClearColor(0.0, 0.0, 0.0, 0.0);
+      gl.Clear(GL_COLOR_BUFFER_BIT);
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes.
@@ -290,36 +292,24 @@ private:
    void myDraw(vrj::UserPtr user);
    void initGLState();
 
-   void drawCube()
-   {       
-      glCallList(mDlCubeData->dlIndex);
-      //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
-   }
+private:
+   static GLfloat sVertexData[];
+   static GLfloat sNormalData[];
+   static GLushort sIndices[];
 
-   void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
-                GLdouble z0, GLdouble z1, GLenum type);
-
-   void drawCone()
-   {
-      glCallList(mDlConeData->dlIndex);
-//      drawCone(1.5f, 2.0f, 20, 10);
-   }
-
-   /**
-    * @pre This is invoked while an OpenGL context is active.
-    */
-   void drawCone(GLdouble base, GLdouble height, GLint slices, GLint stacks)
-   {
-      gluCylinder(*mConeQuad, base, 0.0f, height, slices, stacks);
-      gluDisk(*mBaseQuad, 0.0f, base, slices, 1);
-   }
+   GLuint mProgram;
+   GLint muMVMatrixHandle;
+   GLint muPMatrixHandle;
+   GLint muTranslationHandle;
+   GLint maVertexCoordHandle;
+   GLint maVertexNormalHandle;
+   GLint muVertexColorHandle;
+   GLuint mVertexArrayBufferID;
+   GLuint mVertexCoordBufferID;
+   GLuint mVertexNormalBufferID;
+   GLuint mIndexBufferID;
 
 public:
-   vrj::opengl::ContextData<ContextData> mDlCubeData;  // Data for cube display lists
-   vrj::opengl::ContextData<ContextData> mDlConeData;  // Data for cone display lists
-   vrj::opengl::ContextData<ContextData> mDlDebugData; // Data for debugging display lists
-   vrj::opengl::ContextData<GLUquadric*> mConeQuad;
-   vrj::opengl::ContextData<GLUquadric*> mBaseQuad;
    std::vector<UserData*>           mUserData;    // All the users in the program
    vpr::TSObjectProxy<ContextTimingData>  mContextTiming;
 
@@ -328,3 +318,4 @@ public:
 
 
 #endif
+

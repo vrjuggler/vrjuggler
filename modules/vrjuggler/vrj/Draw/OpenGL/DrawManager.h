@@ -29,7 +29,7 @@
 
 #include <vrj/Draw/OpenGL/Config.h>
 
-#include <vector>
+#include <stack>
 #include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 
@@ -40,19 +40,23 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObjectProxy.h>
 
-#ifdef VPR_OS_Darwin
-#   include <OpenGL/gl.h>
-#   include <OpenGL/glu.h>
-#else
-#   include <GL/gl.h>
-#   include <GL/glu.h>
-#endif
-
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <vrj/Draw/DrawManager.h>
+#include <vrj/Draw/OpenGL/ExtensionLoader.h>
 #include <vrj/Draw/OpenGL/UserData.h>
+#include <vrj/Draw/OpenGL/Window.h>
 #include <vrj/Draw/OpenGL/WindowPtr.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+
+#ifndef GL_MODELVIEW
+#define GL_MODELVIEW                      0x1700
+#endif
+#ifndef GL_PROJECTION
+#define GL_PROJECTION                     0x1701
+#endif
 
 
 namespace vrj
@@ -206,13 +210,24 @@ public:
     */
    int getCurrentContext();
 
+   /**
+    * Returns the GL extensions class for this window.
+    *
+    * @note This id is ONLY valid in contextInit() and draw().
+    */
+   ExtensionLoaderGL& getGL()
+   {
+      const vrj::opengl::WindowPtr ptr = this->currentUserData()->getGlWindow();
+      return ptr->getGLFunctions();
+   }
+
 protected:
    /**
     * Factory function to get system specific OpenGL window.
     *
-    * @post Returns an OpenGL window for the current system.
+    * @post Returns a new OpenGL window for the current system.
     */
-   vrj::opengl::WindowPtr getGLWindow();
+   vrj::opengl::WindowPtr newGLWindow();
 
    void setCurrentContext(const int val);
 

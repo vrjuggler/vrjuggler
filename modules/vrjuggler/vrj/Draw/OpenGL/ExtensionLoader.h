@@ -27,6 +27,19 @@
 #ifndef _VRJ_OPENGL_EXTENSION_LOADER_H_
 #define _VRJ_OPENGL_EXTENSION_LOADER_H_
 
+#if defined(WIN32) && defined(WINGDIAPI)
+#  define GLAPI WINGDIAPI
+#endif
+#define GL3_PROTOTYPES
+#include "GL3/gl3.h"
+
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#endif
 
 namespace vrj
 {

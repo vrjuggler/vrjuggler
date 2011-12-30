@@ -34,6 +34,7 @@
 #include <gmtl/Output.h>
 
 #include <vrj/Draw/OpenGL/UserData.h>
+#include <vrj/Draw/OpenGL/DrawManager.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Kernel/User.h>
 #include <vpr/Perf/ProfileManager.h>
@@ -162,15 +163,32 @@ void UserData::updateNavigation()
       << vprDEBUG_FLUSH;
 }
 
-void UserData::updateShapeSetting()
-{
-   VPR_PROFILE_GUARD("UserData::updateShapeSetting");
-   if ( mToggleButton->getData() == gadget::Digital::TOGGLE_ON )
-   {
-      // Toggle back and forth between cone and cube rendering.
-      mShapeSetting = ((mShapeSetting == CUBE) ? CONE : CUBE);
-   }
-}
+GLfloat cubesApp::sVertexData[] = {
+      1.0f, 1.0f, 1.0f, 1.0f,-1.0f, 1.0f, 1.0f,-1.0f,-1.0f, 1.0f, 1.0f,-1.0f,
+      1.0f, 1.0f, 1.0f, 1.0f, 1.0f,-1.0f,-1.0f, 1.0f,-1.0f,-1.0f, 1.0f, 1.0f,
+      1.0f, 1.0f, 1.0f,-1.0f, 1.0f, 1.0f,-1.0f,-1.0f, 1.0f, 1.0f,-1.0f, 1.0f,
+     -1.0f,-1.0f,-1.0f,-1.0f,-1.0f, 1.0f,-1.0f, 1.0f, 1.0f,-1.0f, 1.0f,-1.0f,
+     -1.0f,-1.0f,-1.0f, 1.0f,-1.0f,-1.0f, 1.0f,-1.0f, 1.0f,-1.0f,-1.0f, 1.0f,
+     -1.0f,-1.0f,-1.0f,-1.0f, 1.0f,-1.0f, 1.0f, 1.0f,-1.0f, 1.0f,-1.0f,-1.0f,
+   };
+
+ GLfloat cubesApp::sNormalData[] = {
+      1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+      0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+      0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+     -1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
+      0.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f,
+      0.0f, 0.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,-1.0f, 0.0f, 0.0f,-1.0f
+   };
+
+GLushort cubesApp::sIndices[] = {
+      0,  1,  2,  0,  2,  3,
+      4,  5,  6,  4,  6,  7,
+      8,  9,  10, 8,  10, 11,
+      12, 13, 14, 12, 14, 15,
+      16, 17, 18, 16, 18, 19,
+      20, 21, 22, 20, 22, 23
+   };
 
 // ----------------------------------------------------------------------------
 // cubesApp methods.
@@ -220,47 +238,77 @@ void cubesApp::init()
 // here.
 void cubesApp::contextInit()
 {
-   *mConeQuad = gluNewQuadric();
-   *mBaseQuad = gluNewQuadric();
+   const std::string& sVertexSource = " \
+      uniform vec4 uTranslation;\n \
+      attribute vec4 aVertexCoord;\n \
+      attribute vec3 aVertexNormal;\n \
+      uniform vec4 uVertexColor;\n \
+      varying vec4 vFragColor;\n \
+      void main(void) {\n \
+         mat3 mNormalMatrix;\n \
+         mNormalMatrix[0] = gl_ModelViewMatrix[0].xyz;\n \
+         mNormalMatrix[1] = gl_ModelViewMatrix[1].xyz;\n \
+         mNormalMatrix[2] = gl_ModelViewMatrix[2].xyz;\n \
+         vec3 mNormal = normalize(mNormalMatrix * aVertexNormal);\n \
+         vec3 mLightDir = vec3(0.0, 0.0, 1.0);\n \
+         float mfDot = max(0.5, dot(mNormal, mLightDir));\n \
+         vFragColor.rgb = uVertexColor.rgb * mfDot;\n \
+         vFragColor.a = uVertexColor.a;\n \
+         mat4 mMVPMatrix = gl_ProjectionMatrix * gl_ModelViewMatrix;\n \
+         gl_Position = mMVPMatrix * (aVertexCoord + uTranslation);\n \
+      }\n";
+
+   const std::string& sFragmentSource = " \
+      varying vec4 vFragColor;\n \
+      void main(void) {\n \
+         gl_FragColor = vFragColor;\n \
+      }\n";
+
+   vrj::opengl::ExtensionLoaderGL& gl =
+         vrj::opengl::DrawManager::instance()->getGL();
+   std::string vertexSource = sVertexSource;
+   std::string fragmentSource = sFragmentSource;
+
+   // Add matrix uniforms if using the core profile
+   if (gl.isCoreProfile())
+   {
+      vertexSource = " \
+         uniform mat4 gl_ModelViewMatrix;\n \
+         uniform mat4 gl_ProjectionMatrix;\n" + vertexSource;
+   }
+
+   mProgram = gl.createProgram(vertexSource, fragmentSource);
+   if (mProgram != 0)
+   {
+      if (gl.isCoreProfile())
+      {
+         muMVMatrixHandle = gl.GetUniformLocation(mProgram, "gl_ModelViewMatrix");
+         muPMatrixHandle = gl.GetUniformLocation(mProgram, "gl_ProjectionMatrix");
+      }
+
+      muTranslationHandle = gl.GetUniformLocation(mProgram, "uTranslation");
+      maVertexCoordHandle = gl.GetAttribLocation(mProgram, "aVertexCoord");
+      maVertexNormalHandle = gl.GetAttribLocation(mProgram, "aVertexNormal");
+      muVertexColorHandle = gl.GetUniformLocation(mProgram, "uVertexColor");
+   
+      if (gl.GenVertexArrays != NULL)
+         gl.GenVertexArrays(1, &mVertexArrayBufferID);
+      gl.GenBuffers(1, &mVertexCoordBufferID);
+      gl.GenBuffers(1, &mVertexNormalBufferID);
+      gl.GenBuffers(1, &mIndexBufferID);
+
+      gl.BindBuffer(GL_ARRAY_BUFFER, mVertexCoordBufferID);
+      gl.BufferData(GL_ARRAY_BUFFER, 72 * sizeof(GLfloat), &sVertexData[0], GL_STATIC_DRAW);
+      gl.BindBuffer(GL_ARRAY_BUFFER, mVertexNormalBufferID);
+      gl.BufferData(GL_ARRAY_BUFFER, 72 * sizeof(GLfloat), &sNormalData[0], GL_STATIC_DRAW);
+      gl.BindBuffer(GL_ARRAY_BUFFER, 0);
+      gl.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferID);
+      gl.BufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(GLushort), &sIndices[0], GL_STATIC_DRAW);
+      gl.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   }
 
    VPR_PROFILE_GUARD("cubesApp::contextInit");
-   // Generate some random lists.  NOTE: Needed for testing/debugging only!
-   mDlDebugData->maxIndex = rand()%50;
-   mDlDebugData->dlIndex = glGenLists(mDlDebugData->maxIndex);
-
-   // Generate the display list to be used for the cube faces.  This is the
-   // important one.
-   mDlCubeData->dlIndex = glGenLists(1);
-
-   // Generate the display list to be used for the cones.
-   mDlConeData->dlIndex = glGenLists(1);
-
-   // Verify that we got a valid display list index.
-   if ( glIsList(mDlCubeData->dlIndex) == GL_FALSE )
-   {
-      vprASSERT(false && "glGenLists() returned an invalid display list!");
-   }
-   else
-   {
-      glNewList(mDlCubeData->dlIndex, GL_COMPILE);
-         drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
-      glEndList();
-
-      glNewList(mDlConeData->dlIndex, GL_COMPILE);
-         drawCone(1.1f, 2.0f, 20, 10);
-      glEndList();
-
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "Created cube DL:" << mDlCubeData->dlIndex << std::endl
-         << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "Created cone DL:" << mDlConeData->dlIndex << std::endl
-         << vprDEBUG_FLUSH;
-      std::cerr << "created displays lists:" << mDlDebugData->maxIndex + 1
-                << std::endl;
-
-      initGLState();
-   }
+   initGLState();
 }
 
 //: Called immediately upon closing an OpenGL context
@@ -268,78 +316,78 @@ void cubesApp::contextInit()
 // put your opengl deallocation here...
 void cubesApp::contextClose()
 {
-   gluDeleteQuadric(*mConeQuad);
-   gluDeleteQuadric(*mBaseQuad);
-
    VPR_PROFILE_GUARD("cubesApp::contextClose");
-   // Deallocate the random display lists used for debugging.
-   if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "Deallocating " << mDlDebugData->maxIndex << " display lists\n"
-         << vprDEBUG_FLUSH;
-      glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
-   }
-
-   // Deallocate the cube face geometry data from the video hardware.
-   if ( glIsList(mDlCubeData->dlIndex) == GL_TRUE )
-   {
-      glDeleteLists(mDlCubeData->dlIndex, 1);
-   }
-
-   // Deallocate the cone geometry data from the video hardware.
-   if ( glIsList(mDlConeData->dlIndex) == GL_TRUE )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "Deallocating cone display list\n" << vprDEBUG_FLUSH;
-      glDeleteLists(mDlConeData->dlIndex, 1);
-   }
 }
 
-// Draw the scene.  A bunch of boxes of
-// differing color and stuff.
-// NOTE: This draw routine places extreme stress on VR Juggler's
-//       vrj::pengl::ContextData class (by repeatedly dereferencing it to
-//       access a display list index).  As such, performance of this method
-//       will suffer on multipipe configurations.
-//       DO NOT IMITATE THIS CODE.
+// Draw the scene.  A bunch of boxes of differing color.
 void cubesApp::myDraw(vrj::UserPtr user)
 {
    VPR_PROFILE_GUARD_HISTORY("cubesApp::myDraw", 10);
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
 
    static const float SCALE = 100;
-   //static const float SCALE = 10;
    static const float INCR = 0.1f;
 
-   /*
-   vrj::opengl::UserData* user_data =
-      vrj::opengl::DrawManager::instance()->currentUserData();
-   int cur_eye = user_data->getProjection()->getEye();
-
-   if(cur_eye == vrj::Projection::LEFT)
+   vrj::opengl::ExtensionLoaderGL& gl =
+         vrj::opengl::DrawManager::instance()->getGL();
+   if (mProgram != 0)   // OpenGL 3.2+ compatible rendering
    {
-      glColor3f(1.0f, 0.0f, 0.0f);
-   }
-   else if(cur_eye == vrj::Projection::RIGHT)
-   {
-      glColor3f(0.0f, 0.0f, 1.0f);
-   }
-   else
-   {
-      glColor3f(0.0f, 1.0f, 0.0f);
-   }
-   */
+      gl.UseProgram(mProgram);
+      if (mVertexArrayBufferID != 0)
+         gl.BindVertexArray(mVertexArrayBufferID);
+      
+      gl.BindBuffer(GL_ARRAY_BUFFER, mVertexCoordBufferID);
+      gl.VertexAttribPointer(maVertexCoordHandle, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+      gl.EnableVertexAttribArray(maVertexCoordHandle);
 
-   ContextTimingData* timing_data = &(*mContextTiming);
-   int dlist_index(0);
+      gl.BindBuffer(GL_ARRAY_BUFFER, mVertexNormalBufferID);
+      gl.VertexAttribPointer(maVertexNormalHandle, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+      gl.EnableVertexAttribArray(maVertexNormalHandle);
 
-   glPushMatrix();
-         // --- Push on Navigation matrix for the user --- //
-
+      gl.PushMatrix();
       gmtl::Matrix44f nav_matrix = mUserData[user->getId()]->mNavMatrix;
-      glMultMatrixf(nav_matrix.mData);
+      gl.MultMatrix(nav_matrix);
 
+      if (gl.isCoreProfile())
+      {
+         gl.UniformMatrix4fv(muMVMatrixHandle, 1, false, gl.getModelViewMatrix().mData);
+         gl.UniformMatrix4fv(muPMatrixHandle, 1, false, gl.getProjectionMatrix().mData);
+      }
+
+      gl.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferID);
+
+      for (float x=0;x<1;x += INCR)
+      {
+         for (float y=0;y<1; y += INCR)
+         {
+            for (float z=0;z<1;z += INCR)
+            {
+               gl.Uniform4f(muTranslationHandle, (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE, 0);
+               gl.Uniform4f(muVertexColorHandle, x, y, z, 1.0f);
+               gl.DrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);  
+            }
+         }
+      }
+
+      gl.PopMatrix();
+      gl.DisableVertexAttribArray(maVertexCoordHandle);
+      gl.DisableVertexAttribArray(maVertexNormalHandle);
+      gl.BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      gl.BindBuffer(GL_ARRAY_BUFFER, 0);
+      if (mVertexArrayBufferID != 0)
+        gl.BindVertexArray(0);
+      gl.UseProgram(0);
+   }
+   else  // OpenGL 1.1 compatible rendering
+   {
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glVertexPointer(3, GL_FLOAT, 0, (const GLvoid*)sVertexData);
+      glEnableClientState(GL_NORMAL_ARRAY);
+      glNormalPointer(GL_FLOAT, 0, (const GLvoid*)sNormalData);
+
+      gl.PushMatrix();
+      gmtl::Matrix44f nav_matrix = mUserData[user->getId()]->mNavMatrix;
+      gl.MultMatrix(nav_matrix);
 
       //---- Main box loop -----///
       for (float x=0;x<1;x += INCR)
@@ -348,135 +396,61 @@ void cubesApp::myDraw(vrj::UserPtr user)
          {
             for (float z=0;z<1;z += INCR)
             {
+               gl.PushMatrix();
+               gl.Translate((x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
                glColor3f(x, y, z);     // Set the Color
-               glPushMatrix();
-               glTranslatef( (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
-
-               switch (mUserData[user->getId()]->getShapeSetting())
-               {
-                  case UserData::CONE:
-                     timing_data->dlist_wait.startSample();
-                     dlist_index = mDlConeData->dlIndex;
-                     timing_data->dlist_wait.stopSample();
-                     break;
-                  case UserData::CUBE:
-                  default:
-                     timing_data->dlist_wait.startSample();
-                     dlist_index = mDlCubeData->dlIndex;
-                     timing_data->dlist_wait.stopSample();
-                     break;
-               }
-
-               glCallList(dlist_index);
-
-               glPopMatrix();
+               gl.DrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, (const GLvoid*)sIndices);
+               gl.PopMatrix();     
             }
          }
       }
 
-
-     /*
-         // --- Draw corner boxes --- //
-      for(float x=0;x<=1.0;x++)
-         for(float y=0.0;y<=1.0;y++)
-            for(float z=0.0;z<=1.0;z++)
-            {
-               //glColor3f(x,y,z);    // Set the color
-               glColor3f(1.0, 0.0,  0.0f);
-                  glPushMatrix();
-               {
-                  glTranslatef( (x-0.5)*SCALE, (y-0.0)*SCALE, (z-0.5)*SCALE);
-                  glScalef(2.0f, 2.0f, 2.0f);
-                  drawCube();
-               }
-               glPopMatrix();
-            }
-     */
-
-   glPopMatrix();
+      gl.PopMatrix();
+      glDisableClientState(GL_VERTEX_ARRAY);
+      glDisableClientState(GL_NORMAL_ARRAY);
+   }
 }
 
 void cubesApp::initGLState()
 {
-   GLfloat light0_ambient[] = { .2f,  .2f,  .2f,  1.0f };
-   GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0 };
-   GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat light0_position[] = {2000.0, 1000.0, 100.0, 1.0};
-   GLfloat light0_direction[] = {-100, -100.0, -100.0};
+   vrj::opengl::ExtensionLoaderGL& gl =
+         vrj::opengl::DrawManager::instance()->getGL();
 
-   GLfloat mat_ambient[] = { 0.7f, 0.7f,  0.7f,  1.0f };
-   GLfloat mat_diffuse[] = { 1.0f,  0.5f,  0.8f,  1.0f };
-   GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat mat_shininess[] = { 50.0};
-//   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
-
-   glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
-   glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
-   glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
-   glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0_direction);
-
-   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-   glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
-   glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-   glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
-   glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
-
-   glEnable(GL_DEPTH_TEST);
-   //glEnable(GL_NORMALIZE);
-   glEnable(GL_LIGHTING);
-   glEnable(GL_LIGHT0);
-   glEnable(GL_COLOR_MATERIAL);
-   glShadeModel(GL_SMOOTH);
-
-   glMatrixMode(GL_MODELVIEW);
-}
-
-void cubesApp::drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
-                       GLdouble z0, GLdouble z1, GLenum type)
-{
-   static GLdouble n[6][3] = {
-      {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0},
-      {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0}
-   };
-   static GLint faces[6][4] = {
-      { 0, 1, 2, 3}, { 3, 2, 6, 7}, { 7, 6, 5, 4},
-      { 4, 5, 1, 0}, { 5, 6, 2, 1}, { 7, 4, 0, 3}
-   };
-   GLdouble v[8][3], tmp;
-   GLint i;
-
-   if (x0 > x1)
+   if (mProgram == 0)
    {
-      tmp = x0; x0 = x1; x1 = tmp;
-   }
-   if (y0 > y1)
-   {
-      tmp = y0; y0 = y1; y1 = tmp;
-   }
-   if (z0 > z1)
-   {
-      tmp = z0; z0 = z1; z1 = tmp;
-   }
-   v[0][0] = v[1][0] = v[2][0] = v[3][0] = x0;
-   v[4][0] = v[5][0] = v[6][0] = v[7][0] = x1;
-   v[0][1] = v[1][1] = v[4][1] = v[5][1] = y0;
-   v[2][1] = v[3][1] = v[6][1] = v[7][1] = y1;
-   v[0][2] = v[3][2] = v[4][2] = v[7][2] = z0;
-   v[1][2] = v[2][2] = v[5][2] = v[6][2] = z1;
+      GLfloat light0_ambient[] = { .2f,  .2f,  .2f,  1.0f };
+      GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0 };
+      GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};
+      GLfloat light0_position[] = {2000.0, 1000.0, 100.0, 1.0};
+      GLfloat light0_direction[] = {-100, -100.0, -100.0};
 
-   for (i = 0; i < 6; i++)
-   {
-      glBegin(type);
-         glNormal3dv(&n[i][0]);
-         glVertex3dv(&v[faces[i][0]][0]);
-         glNormal3dv(&n[i][0]);
-         glVertex3dv(&v[faces[i][1]][0]);
-         glNormal3dv(&n[i][0]);
-         glVertex3dv(&v[faces[i][2]][0]);
-         glNormal3dv(&n[i][0]);
-         glVertex3dv(&v[faces[i][3]][0]);
-      glEnd();
+      GLfloat mat_ambient[] = { 0.7f, 0.7f,  0.7f,  1.0f };
+      GLfloat mat_diffuse[] = { 1.0f,  0.5f,  0.8f,  1.0f };
+      GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
+      GLfloat mat_shininess[] = { 50.0};
+   //   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
+      GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
+
+      glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
+      glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
+      glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
+      glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
+      glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0_direction);
+
+      glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
+      glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
+      glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
+      glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
+      glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
+
+      gl.Enable(GL_DEPTH_TEST);
+      gl.Enable(GL_LIGHTING);
+      gl.Enable(GL_LIGHT0);
+      gl.Enable(GL_COLOR_MATERIAL);
+      glShadeModel(GL_SMOOTH);
    }
+   else
+      gl.Enable(GL_DEPTH_TEST);
+
+   gl.MatrixMode(GL_MODELVIEW);
 }
