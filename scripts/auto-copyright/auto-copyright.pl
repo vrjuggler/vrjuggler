@@ -4,6 +4,7 @@
 # Copyright (c) 2000 Patrick L. Hartling (original author)
 # contributors:
 #  - Kevin Meinert (command line args, external config data, working dir)
+#  - Ryan Pavlik (fixes to use lib, exclusions feature to not mangle .h.in)
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,8 +29,6 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-#       $Id$
-#
 
 use File::Basename;
 use Getopt::Std;
@@ -38,18 +37,20 @@ use Getopt::Std;
 my $path;
 
 BEGIN {
-    $path = (fileparse("$0"))[1];
+    $path = (dirname("$0"));
 }
 
 use lib($path);
+use lib($path . "/../");
 use RecurseDir;
 
 # get opts:
-getopts('d:t:c:e:ha');
+getopts('d:t:c:e:x:ha');
 
 my $tags_file = "$opt_t";
 my $copyright_file = "$opt_c";
 my @extensions = split( /,/, "$opt_e" );
+my @exclusions = split( /,/, "$opt_x" );
 my $working_dir = "$opt_d" || ".";
 
 
@@ -116,6 +117,7 @@ sub helpText()
     print "Options:\n";
     print "       -d <working dir> name of dir to start recursive processing\n";
     print "       -e <ext1,ext2,..,extn> file extensions to process\n";
+    print "       -x <ext1,ext2,..,extn> file extensions to exclude (think h.in)\n";
     print "       -c <(c) header> name of file with copyright text\n";
     print "       -t <tags.pl> name of perl script which defines 4\n";
     print "                    variables as input to this script\n";
@@ -216,10 +218,19 @@ sub recurseFunc {
 
 sub checkName ($) {
    my $filename = shift;
-
+   my $flag = 0;
+   
    foreach (@extensions)
    {
-      return 1 if $filename =~ /\.$_$/;
+      $flag = 1 if $filename =~ /\.$_$/
    }
-   return 0;
+   
+   if ($flag == 1)
+   {
+      foreach (@exclusions)
+      {
+         return 0 if $filename =~ /\.$_$/
+      }
+   }
+   return $flag;
 }
