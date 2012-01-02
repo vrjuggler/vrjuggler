@@ -28,15 +28,6 @@
 
 #include <boost/bind.hpp>
 
-#import <Foundation/NSString.h>
-#import <Foundation/NSArray.h>
-#import <Foundation/NSException.h>
-#import <Foundation/NSLock.h>
-#import <Foundation/NSNotification.h>
-#import <AppKit/NSWindow.h>
-#import <AppKit/NSApplication.h>
-#import <AppKit/NSScreen.h>
-
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
@@ -50,6 +41,15 @@
 
 #include <gadget/Devices/KeyboardMouseDevice/InputViewCocoa.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputWindowCocoa.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSArray.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSLock.h>
+#import <Foundation/NSNotification.h>
+#import <AppKit/NSWindow.h>
+#import <AppKit/NSApplication.h>
+#import <AppKit/NSScreen.h>
 
 
 /**

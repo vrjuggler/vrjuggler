@@ -26,6 +26,12 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <gadget/Event/KeyboardMouse/KeyEvent.h>
+#include <gadget/Event/KeyboardMouse/MouseEvent.h>
+#include <gadget/Util/Debug.h>
+
+#include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
+
 // This header must be included before the Cocoa headers to avoid declaration
 // problems.
 #include <ApplicationServices/ApplicationServices.h>
@@ -37,12 +43,6 @@
 #import <AppKit/NSView.h>
 #import <AppKit/NSWindow.h>
 #import <mach/mach_time.h>
-
-#include <gadget/Event/KeyboardMouse/KeyEvent.h>
-#include <gadget/Event/KeyboardMouse/MouseEvent.h>
-#include <gadget/Util/Debug.h>
-
-#include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 
 
 namespace gadget

@@ -26,13 +26,13 @@
 
 #include <gadget/gadgetConfig.h>
 
-#import <AppKit/NSWindow.h>
-#import <AppKit/NSEvent.h>
-
 #include <gadget/Type/KeyboardMouse/Keys.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 
 #import <gadget/Devices/KeyboardMouseDevice/InputViewCocoa.h>
+
+#import <AppKit/NSWindow.h>
+#import <AppKit/NSEvent.h>
 
 
 /**
