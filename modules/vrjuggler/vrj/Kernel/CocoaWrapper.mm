@@ -30,14 +30,6 @@
 #include <boost/bind.hpp>
 #include <objc/objc-runtime.h>
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSBundle.h>
-#import <Foundation/NSDictionary.h>
-#import <Foundation/NSLock.h>
-#import <Foundation/NSAutoreleasePool.h>
-#import <AppKit/NSApplication.h>
-#import <Cocoa/Cocoa.h>
-
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
@@ -45,6 +37,13 @@
 #import <vrj/Kernel/VRJBasicDelegate.h>
 #include <vrj/Kernel/CocoaWrapper.h>
 
+#import <Foundation/NSObject.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSLock.h>
+#import <Foundation/NSAutoreleasePool.h>
+#import <AppKit/NSApplication.h>
+#import <Cocoa/Cocoa.h>
 
 @interface VRJDummyThread : NSObject
    +(void) run:(id) obj;
