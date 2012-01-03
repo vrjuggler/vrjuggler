@@ -26,16 +26,16 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
+
+#import <vrj/Kernel/Kernel.h>
+#import <vrj/Kernel/VRJBasicDelegate.h>
+
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSLock.h>
 #import <Foundation/NSNotification.h>
 #import <Foundation/NSPathUtilities.h>
 #import <AppKit/NSApplication.h>
-
-#include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
-
-#import <vrj/Kernel/Kernel.h>
-#import <vrj/Kernel/VRJBasicDelegate.h>
 
 
 NSString* VRJMaxRecentFiles = @"VRJMaxRecentFiles";

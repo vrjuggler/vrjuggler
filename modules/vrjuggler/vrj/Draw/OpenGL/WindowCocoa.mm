@@ -28,6 +28,16 @@
 
 #include <boost/bind.hpp>
 
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Perf/ProfileManager.h>
+#include <jccl/Config/ConfigElement.h>
+
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Util/Debug.h>
+#import <vrj/Draw/OpenGL/VRJOpenGLView.h>
+#include <vrj/Draw/OpenGL/WindowCocoa.h>
+
 #import <Foundation/NSArray.h>
 #import <Foundation/NSException.h>
 #import <Foundation/NSString.h>
@@ -40,16 +50,6 @@
 #import <AppKit/NSScreen.h>
 #import <AppKit/NSApplication.h>
 #import <OpenGL/gl.h>
-
-#include <vpr/vpr.h>
-#include <vpr/Thread/Thread.h>
-#include <vpr/Perf/ProfileManager.h>
-#include <jccl/Config/ConfigElement.h>
-
-#include <vrj/Display/DisplayManager.h>
-#include <vrj/Util/Debug.h>
-#import <vrj/Draw/OpenGL/VRJOpenGLView.h>
-#include <vrj/Draw/OpenGL/WindowCocoa.h>
 
 
 /**

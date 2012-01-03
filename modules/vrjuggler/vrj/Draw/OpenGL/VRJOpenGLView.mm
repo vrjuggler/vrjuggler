@@ -28,6 +28,12 @@
 
 #include <vector>
 
+#include <jccl/Config/ConfigElement.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Draw/OpenGL/WindowCocoa.h>
+
+#import <vrj/Draw/OpenGL/VRJOpenGLView.h>
+
 #import <Foundation/NSException.h>
 #import <Foundation/NSString.h>
 #import <Foundation/NSDictionary.h>
@@ -36,12 +42,6 @@
 #import <AppKit/NSScreen.h>
 #import <AppKit/NSWindow.h>
 #import <AGL/agl.h>
-
-#include <jccl/Config/ConfigElement.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Draw/OpenGL/WindowCocoa.h>
-
-#import <vrj/Draw/OpenGL/VRJOpenGLView.h>
 
 
 @interface VRJOpenGLView (PrivateMethods)
