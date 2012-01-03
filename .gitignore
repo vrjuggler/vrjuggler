@@ -1,0 +1,6 @@
+/*build*
+aclocal.m4
+autom4te.cache
+configure
+.*.sw?
+*Defines.h.in
