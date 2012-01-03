@@ -30,18 +30,19 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-APPS	= analog	\
-          combo		\
-          cubes		\
-          digitalGlove	\
-	  logger	\
-          rumbleApp	\
-          simpleGlove	\
-          swapSync      \
-          texture	\
-          torus		\
-	  WallTest	\
-          wand
+APPS=	\
+	analog		\
+	combo		\
+	cubes		\
+	digitalGlove	\
+	logger		\
+	rumbleApp	\
+	simpleGlove	\
+	swapSync	\
+	texture		\
+	torus		\
+	WallTest	\
+	wand
 
 # -----------------------------------------------------------------------------
 # Build targets.
