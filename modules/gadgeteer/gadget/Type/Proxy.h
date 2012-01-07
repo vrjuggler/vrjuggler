@@ -284,9 +284,11 @@ namespace gadget
             if (NULL == typed_dev.get())
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << "[gadget::TypedProxy::refresh()] Device "
-                  << mDeviceName << " was of wrong type "
-                  << typeid(input_dev).name() << std::endl << vprDEBUG_FLUSH;
+                  << "[gadget::TypedProxy::refresh()] Failed to down cast "
+                  << "device '" << mDeviceName << "' to "
+                  << typeid(DeviceType).name() << "; proxy '" << mName
+                  << "' stupefied as a result." << std::endl
+                  << vprDEBUG_FLUSH;
 
                stupefy(true);
                result = false;
