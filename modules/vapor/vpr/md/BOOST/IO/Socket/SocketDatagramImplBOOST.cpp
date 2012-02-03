@@ -175,4 +175,18 @@ vpr::Uint32 SocketDatagramImplBOOST::sendto(const void* msg,
    return bytes_sent;
 }
 
+void SocketDatagramImplBOOST::
+setResult(boost::optional<boost::system::error_code>* a,
+          const boost::system::error_code b, const std::size_t bytes)
+{
+   if (b != boost::asio::error::operation_aborted)
+   {
+      a->reset(b);
+      if (bytes != -1)
+      {
+         mBytesRead = bytes;
+      }
+   }
+}
+
 } // End of vpr namespace
