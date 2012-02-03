@@ -179,10 +179,13 @@ void SocketDatagramImplBOOST::
 setResult(boost::optional<boost::system::error_code>* a,
           const boost::system::error_code b, const std::size_t bytes)
 {
-   a->reset(b);
-   if (bytes != -1)
+   if (b != boost::asio::error::operation_aborted)
    {
-      mBytesRead = bytes;
+      a->reset(b);
+      if (bytes != -1)
+      {
+         mBytesRead = bytes;
+      }
    }
 }
 
