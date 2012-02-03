@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="TUIO_drv" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd" >
+   <definition_version version="1" label="TUIO Device">
+      <abstract>false</abstract>
+      <help>Configuration for TUIO Devices</help>
+	  <parent>digital_device</parent>
+      <parent>analog_device</parent>
+      <parent>input_device</parent>
+      <category>/Devices</category>
+      <property valuetype="integer" variable="false" name="points">
+         <help>Maximum number of points</help>
+         <value label="Max Points" defaultvalue="10"/>
+      </property>
+	  <property valuetype="integer" variable="false" name="port">
+         <help>UDP Port to listen on</help>
+         <value label="UDP Port" defaultvalue="3333"/>
+      </property>
+	  <property valuetype="float" variable="false" name="min">
+         <help>The lower bound for the range of valid values for the analog data.</help>
+         <value label="Analog Minimum" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>The upper bound for the range of valid values for the analog data.</help>
+         <value label="Analog Maximum" defaultvalue="1.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

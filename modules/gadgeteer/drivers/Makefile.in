@@ -147,6 +147,7 @@ SUBDIR=	3Dconnexion/SpaceBall		\
 	Open/LinuxJoydev		\
 	Open/SdlJoystick		\
 	Open/Trackd			\
+	Open/TUIO			\
 	Open/VRPN			\
 	Polhemus/Fastrak		\
 	USDigital/SerialEncoder	        \

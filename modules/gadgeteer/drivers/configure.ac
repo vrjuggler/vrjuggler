@@ -800,6 +800,7 @@ AC_CONFIG_FILES([
    Open/SdlJoystick/Makefile
    Open/LinuxJoydev/Makefile
    Open/Trackd/Makefile
+   Open/TUIO/Makefile
    Open/VRPN/Makefile
    Polhemus/Makefile
    Polhemus/Fastrak/Makefile
