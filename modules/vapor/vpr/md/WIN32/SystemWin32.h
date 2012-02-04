@@ -64,7 +64,7 @@ namespace vpr
  *
  * @since 2.1.17
  */
-class VPR_CLASS_API SystemWin32 : public SystemBase
+class VPR_API SystemWin32 : public SystemBase
 {
 public:
    /**

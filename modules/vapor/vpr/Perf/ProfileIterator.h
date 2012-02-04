@@ -47,7 +47,7 @@ namespace vpr
     *
     * An iterator to navigate through the Profile tree.
     */
-   class VPR_CLASS_API ProfileIterator
+   class VPR_API ProfileIterator
    {
    public:
       /** Constructor.  Returns iterator starting at "start" node. */
@@ -105,7 +105,7 @@ namespace vpr
    /**
     * Overloaded output operator for outputting the current statistics.
     */
-   VPR_API(std::ostream&) operator<< (std::ostream& out, ProfileIterator& iter);
+   VPR_API std::ostream& operator<<(std::ostream& out, ProfileIterator& iter);
 
 } // end vpr namespace
 

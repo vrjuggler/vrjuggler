@@ -58,7 +58,7 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class VPR_CLASS_API BufferObjectReader : public ObjectReader
+class VPR_API BufferObjectReader : public ObjectReader
 {
 public:
    /**

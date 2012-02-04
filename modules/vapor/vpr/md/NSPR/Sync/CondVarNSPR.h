@@ -62,7 +62,7 @@ namespace vpr
  * Condition variable wrapper for NSPR condition variables.  This is
  * typedef'd to vpr::CondVar.
  */
-class VPR_CLASS_API CondVarNSPR : boost::noncopyable
+class VPR_API CondVarNSPR : boost::noncopyable
 {
 public:
    /**

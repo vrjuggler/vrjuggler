@@ -211,7 +211,7 @@ namespace vpr
     *
     * Class to support debug output.
     */
-   class VPR_CLASS_API Debug : private boost::noncopyable
+   class VPR_API Debug : private boost::noncopyable
    {
    protected:
       /**
@@ -342,7 +342,7 @@ namespace vpr
 
       Mutex mDebugLock;
 
-      struct VPR_CLASS_API CategoryInfo
+      struct VPR_API CategoryInfo
       {
          CategoryInfo(const std::string& name, const std::string& prefix,
                       const bool allowed, const bool disallowed);
@@ -399,7 +399,7 @@ namespace vpr
     * Helper class that outputs debug information at creation and destruction
     * of the object.
     */
-   struct VPR_CLASS_API DebugOutputGuard
+   struct VPR_API DebugOutputGuard
    {
       DebugOutputGuard(const vpr::DebugCategory& cat, const int level,
                        const std::string& entryText,

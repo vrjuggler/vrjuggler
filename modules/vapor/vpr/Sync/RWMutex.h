@@ -67,7 +67,7 @@ namespace vpr
  *
  * @date January 31, 1997
  */
-class VPR_CLASS_API RWMutex : boost::noncopyable
+class VPR_API RWMutex : boost::noncopyable
 {
 public:
    RWMutex()

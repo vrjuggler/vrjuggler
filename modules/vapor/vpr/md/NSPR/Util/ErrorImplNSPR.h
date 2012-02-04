@@ -49,7 +49,7 @@ namespace vpr
  *
  * NSPR Implementation of a cross-platform error reporting class.
  */
-class VPR_CLASS_API ErrorImplNSPR : public ErrorBase
+class VPR_API ErrorImplNSPR : public ErrorBase
 {
 public:
    /** @since 1.1.6 */

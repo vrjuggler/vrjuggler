@@ -49,7 +49,7 @@ namespace vpr
  * Used so that we can have an array of heterogenous TS objects.  (We get some
  * type safety.)  This also defines some members that all TS Objects need.
  */
-class VPR_CLASS_API TSBaseObject
+class VPR_API TSBaseObject
 {
 public:
    virtual ~TSBaseObject();

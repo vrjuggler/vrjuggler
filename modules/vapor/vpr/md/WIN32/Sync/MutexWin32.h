@@ -64,7 +64,7 @@ namespace vpr
  * @note This class was originally part of VR Juggler 1.0 and was brought
  *       back into VPR in version 1.1.36.
  */
-class VPR_CLASS_API MutexWin32 : boost::noncopyable
+class VPR_API MutexWin32 : boost::noncopyable
 {
 public:
    /**

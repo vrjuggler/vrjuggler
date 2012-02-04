@@ -56,7 +56,7 @@ namespace vpr
  * paramter to vpr::SerialPort_t<T> for the bridge implementation to create
  * the typedef vpr::SerialPort.
  */
-class VPR_CLASS_API SerialPortImplWin32
+class VPR_API SerialPortImplWin32
 {
 public:
    /**

@@ -63,7 +63,7 @@ struct InetAddrHash;
  * Cross-platform abstraction to Internet address structures.  This is
  * typedef'd to vpr::InetAddr.
  */
-class VPR_CLASS_API InetAddrBSD
+class VPR_API InetAddrBSD
 {
 public:
    static const InetAddrBSD AnyAddr;

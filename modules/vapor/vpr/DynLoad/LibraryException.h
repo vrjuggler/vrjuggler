@@ -49,7 +49,7 @@ namespace vpr
  *
  * @since 1.1.10
  */
-class VPR_CLASS_API LibraryException : public Exception
+class VPR_API LibraryException : public Exception
 {
 public:
    LibraryException(const std::string& msg, const std::string& location = "")

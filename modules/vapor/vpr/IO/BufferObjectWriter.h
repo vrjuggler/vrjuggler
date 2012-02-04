@@ -53,7 +53,7 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class VPR_CLASS_API BufferObjectWriter : public ObjectWriter
+class VPR_API BufferObjectWriter : public ObjectWriter
 {
 public:
    /**

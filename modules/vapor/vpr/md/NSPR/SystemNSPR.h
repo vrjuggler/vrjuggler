@@ -64,7 +64,7 @@ namespace vpr
  * Low-level operating system feature abstractions using NSPR functionality.
  * This is typedef'd to vpr::System.
  */
-class VPR_CLASS_API SystemNSPR : public SystemBase
+class VPR_API SystemNSPR : public SystemBase
 {
 public:
    /**

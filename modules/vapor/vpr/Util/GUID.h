@@ -52,7 +52,7 @@ class GUIDFactory;
  * A cross-platform implementation of globally unique identifiers, also known
  * as GUIDs or UUIDs (universally unique identifiers).
  */
-class VPR_CLASS_API GUID : public vpr::SerializableObject
+class VPR_API GUID : public vpr::SerializableObject
 {
 public:
    /**

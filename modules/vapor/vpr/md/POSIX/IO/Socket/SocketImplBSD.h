@@ -58,7 +58,7 @@ namespace vpr
  * conjunction with vpr::SocketConfiguration to create the typedef
  * vpr::Socket.
  */
-class VPR_CLASS_API SocketImplBSD
+class VPR_API SocketImplBSD
 {
 public:
    // ========================================================================

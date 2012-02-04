@@ -55,7 +55,7 @@ namespace vpr
  *
  * This class is typedef'd to vpr::Library.
  */
-class VPR_CLASS_API LibraryWin32
+class VPR_API LibraryWin32
 {
 public:
    /**

@@ -49,7 +49,7 @@ namespace vpr
  * Strategy for collecting bandwidth data about the block I/O device.
  * Holds all stats for Bandwidth collection.
  */
-class VPR_CLASS_API BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
+class VPR_API BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
 {
 public:
    BandwidthIOStatsStrategy();

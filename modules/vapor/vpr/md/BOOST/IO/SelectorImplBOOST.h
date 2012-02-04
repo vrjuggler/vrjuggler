@@ -58,7 +58,7 @@ namespace vpr
  *
  * @since 2.1.16
  */
-class VPR_CLASS_API SelectorImplBOOST : public vpr::SelectorBase
+class VPR_API SelectorImplBOOST : public vpr::SelectorBase
 {
 public:
    /**

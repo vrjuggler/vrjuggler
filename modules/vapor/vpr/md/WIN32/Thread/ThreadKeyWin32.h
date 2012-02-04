@@ -69,7 +69,7 @@ typedef boost::function<void (void*)> KeyDestructor;
  * @note This class was originally part of VR Juggler 1.0 and was brought back
  *       into VPR in version 1.1.36.
  */
-class VPR_CLASS_API ThreadKeyWin32
+class VPR_API ThreadKeyWin32
 {
 public:
    /**

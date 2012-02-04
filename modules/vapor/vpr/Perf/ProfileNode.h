@@ -67,7 +67,7 @@ namespace vpr
     *       two threads accessing it at the same time would lead to invalid
     *       data.
     */
-   class VPR_CLASS_API ProfileNode
+   class VPR_API ProfileNode
    {
    public:
       /**

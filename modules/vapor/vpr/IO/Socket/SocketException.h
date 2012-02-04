@@ -48,7 +48,7 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API SocketException : public IOException
+class VPR_API SocketException : public IOException
 {
 public:
    SocketException(const std::string& msg, const std::string& location = "")
@@ -57,7 +57,9 @@ public:
    virtual ~SocketException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::SocketException"; }
+   {
+      return "vpr::SocketException";
+   }
 };
 
 }

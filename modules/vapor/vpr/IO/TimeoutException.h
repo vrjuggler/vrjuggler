@@ -48,7 +48,7 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API TimeoutException : public IOException
+class VPR_API TimeoutException : public IOException
 {
 public:
    TimeoutException(const std::string& msg, const std::string& location = "")
@@ -57,7 +57,9 @@ public:
    virtual ~TimeoutException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::TimeoutException"; }
+   {
+      return "vpr::TimeoutException";
+   }
 };
 
 }

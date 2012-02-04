@@ -58,7 +58,7 @@ namespace vpr
  *
  * @since 2.1.9
  */
-class VPR_CLASS_API MaximumAllocationStrategy
+class VPR_API MaximumAllocationStrategy
 {
 public:
    MaximumAllocationStrategy();

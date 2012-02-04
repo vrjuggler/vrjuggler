@@ -50,7 +50,7 @@ namespace vpr
  *
  * @since 1.1.28
  */
-class VPR_CLASS_API LockException : public vpr::Exception
+class VPR_API LockException : public vpr::Exception
 {
 public:
    LockException(const std::string& msg, const std::string& location = "")

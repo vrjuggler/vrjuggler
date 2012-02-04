@@ -49,16 +49,19 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API NoRouteToHostException : public SocketException
+class VPR_API NoRouteToHostException : public SocketException
 {
 public:
-   NoRouteToHostException(const std::string& msg, const std::string& location = "")
+   NoRouteToHostException(const std::string& msg,
+                          const std::string& location = "")
       throw();
 
    virtual ~NoRouteToHostException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::NoRouteToHostException"; }
+   {
+      return "vpr::NoRouteToHostException";
+   }
 };
 
 }

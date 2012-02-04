@@ -44,17 +44,17 @@ namespace vpr
 
 const char* VPR_VERSION(__VPR_VERSION_STRING__);
 
-VPR_IMPLEMENT(std::string) getVersionString ()
+const std::string getVersionString()
 {
    return std::string(VPR_VERSION);
 }
 
-VPR_IMPLEMENT(vpr::Uint32) getVersionNumber ()
+vpr::Uint32 getVersionNumber()
 {
    return __VPR_version;
 }
 
-VPR_IMPLEMENT(std::string) getSubsystem ()
+const std::string getSubsystem()
 {
    std::string subsystem_string;
 

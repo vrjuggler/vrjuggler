@@ -59,7 +59,7 @@ typedef PRThreadPrivateDTOR KeyDestructor;
  * Wrapper around NSPR thread-specific data.  It is typedef'd to
  * vpr::ThreadKey.
  */
-class VPR_CLASS_API ThreadKeyNSPR
+class VPR_API ThreadKeyNSPR
 {
 public:
    /**

@@ -47,7 +47,7 @@ namespace vpr
  * Base class for all for the IOSys class.
  * The "real" implementation is in an included file.
  */
-class VPR_CLASS_API IOSysBase
+class VPR_API IOSysBase
 {
 public:
    

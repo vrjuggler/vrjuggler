@@ -49,16 +49,19 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API ConnectionResetException : public SocketException
+class VPR_API ConnectionResetException : public SocketException
 {
 public:
-   ConnectionResetException(const std::string& msg, const std::string& location = "")
+   ConnectionResetException(const std::string& msg,
+                            const std::string& location = "")
       throw();
 
    virtual ~ConnectionResetException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::ConnectionResetException"; }
+   {
+      return "vpr::ConnectionResetException";
+   }
 };
 
 }

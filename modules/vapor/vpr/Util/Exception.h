@@ -75,7 +75,7 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API Exception : public std::runtime_error
+class VPR_API Exception : public std::runtime_error
 {
 public:
    Exception(const std::string& desc, const std::string& location) throw();

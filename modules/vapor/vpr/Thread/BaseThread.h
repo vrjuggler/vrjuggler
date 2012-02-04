@@ -66,7 +66,7 @@ typedef boost::function<void()> thread_func_t;
  *       to hold references to threads. The lack of virtual methods should
  *       make this fact self-evident. Just use the real thread type.
  */
-class VPR_CLASS_API BaseThread : private boost::noncopyable
+class VPR_API BaseThread : private boost::noncopyable
 {
 public:
    /** @name Thread State Callback Handling */
@@ -275,7 +275,7 @@ private:
 };
 
 /// Ouput operator.
-VPR_API(std::ostream&) operator<<(std::ostream& out, Thread* threadPtr);
+VPR_API std::ostream& operator<<(std::ostream& out, Thread* threadPtr);
 
 // This is the actual function that is called.
 // It must be extern "C".

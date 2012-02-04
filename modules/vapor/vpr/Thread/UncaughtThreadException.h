@@ -50,16 +50,19 @@ namespace vpr
  *
  * @since 1.1.6
  */
-class VPR_CLASS_API UncaughtThreadException : public Exception
+class VPR_API UncaughtThreadException : public Exception
 {
 public:
-   UncaughtThreadException(const std::string& msg, const std::string& location = "")
+   UncaughtThreadException(const std::string& msg,
+                           const std::string& location = "")
       throw();
 
    virtual ~UncaughtThreadException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::UncaughtThreadException"; }
+   {
+      return "vpr::UncaughtThreadException";
+   }
 
    void setException(const vpr::Exception& ex);
    void setException(const std::exception& ex);

@@ -58,7 +58,7 @@ namespace vpr
  *
  * @date September 7, 2002
  */
-class VPR_CLASS_API LibraryNSPR
+class VPR_API LibraryNSPR
 {
 public:
    /**

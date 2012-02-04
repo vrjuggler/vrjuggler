@@ -51,7 +51,7 @@ namespace vpr
  *
  * Helper class for vpr::ThreadPool.
  */
-class VPR_CLASS_API OneThread
+class VPR_API OneThread
 {
 public:
    OneThread();
@@ -65,7 +65,7 @@ public:
    Semaphore threadWait;         //! thread waits for work here
 };
 
-VPR_API(std::ostream&) operator<<(std::ostream&, vpr::OneThread&);
+VPR_API std::ostream& operator<<(std::ostream&, vpr::OneThread&);
 
 /** \class ThreadPool ThreadPool.h vpr/Thread/ThreadPool.h
  *

@@ -52,7 +52,7 @@ namespace vpr
  * Wrapper around UNIX file descriptors.  This is used with
  * vpr::FileHandle_t<T> to create the typedef vpr::FileHandle.
  */
-class VPR_CLASS_API FileHandleImplUNIX
+class VPR_API FileHandleImplUNIX
 {
 public:
    /**

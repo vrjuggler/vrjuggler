@@ -50,7 +50,7 @@ namespace vpr
  *
  * @since 1.1.11
  */
-class VPR_CLASS_API IllegalArgumentException : public vpr::Exception
+class VPR_API IllegalArgumentException : public vpr::Exception
 {
 public:
    IllegalArgumentException(const std::string& msg,

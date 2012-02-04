@@ -49,7 +49,7 @@ namespace vpr
  *
  * @since 1.1.28
  */
-class VPR_CLASS_API ResourceException : public vpr::Exception
+class VPR_API ResourceException : public vpr::Exception
 {
 public:
    ResourceException(const std::string& msg, const std::string& location = "")

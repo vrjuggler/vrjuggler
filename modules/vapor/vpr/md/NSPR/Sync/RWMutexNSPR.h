@@ -50,7 +50,7 @@ namespace vpr
  * Read/write mutex implementation using NSPR read/write mutexes (PRRWLock).
  * This is typedef'd to vpr::RWMutex.
  */
-class VPR_CLASS_API RWMutexNSPR : boost::noncopyable
+class VPR_API RWMutexNSPR : boost::noncopyable
 {
 public:
    /**

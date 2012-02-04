@@ -67,7 +67,7 @@ namespace vpr
     *
     * Global static facade for using the profiling code.
     */
-   class VPR_CLASS_API ProfileManager
+   class VPR_API ProfileManager
    {
    public:
       struct ThreadProfileData

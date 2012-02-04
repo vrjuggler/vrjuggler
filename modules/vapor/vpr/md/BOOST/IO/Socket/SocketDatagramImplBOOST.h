@@ -56,7 +56,7 @@ namespace vpr
  *
  * @since 2.1.16
  */
-class VPR_CLASS_API SocketDatagramImplBOOST : public vpr::SocketImplBOOST
+class VPR_API SocketDatagramImplBOOST : public vpr::SocketImplBOOST
 {
 public:
    typedef SocketImplBOOST Parent;

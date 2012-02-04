@@ -50,7 +50,7 @@ namespace vpr
  * conjunction with vpr::SocketConfiguration to create the typedef
  * vpr::SocketDatagram.
  */
-class VPR_CLASS_API SocketDatagramImplNSPR : public SocketImplNSPR
+class VPR_API SocketDatagramImplNSPR : public SocketImplNSPR
 {
 public:
    typedef SocketImplNSPR Parent;

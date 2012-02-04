@@ -57,7 +57,7 @@ namespace vpr
  * individual methods.  In particular, refer to the documentation for
  * makeFullDSOName.
  */
-class VPR_CLASS_API LibraryLoader
+class VPR_API LibraryLoader
 {
 public:
    /**

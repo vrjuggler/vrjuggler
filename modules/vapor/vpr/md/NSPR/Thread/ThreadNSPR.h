@@ -75,7 +75,7 @@ namespace vpr
  *
  * This is typedef'd to vpr::Thread.
  */
-class VPR_CLASS_API ThreadNSPR : public BaseThread
+class VPR_API ThreadNSPR : public BaseThread
 {
 public:
    /** @name Constructors */

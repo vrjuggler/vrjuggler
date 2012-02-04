@@ -57,7 +57,7 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class VPR_CLASS_API XMLObjectReader : public ObjectReader
+class VPR_API XMLObjectReader : public ObjectReader
 {
 public:
    XMLObjectReader(const std::vector<vpr::Uint8>& data);

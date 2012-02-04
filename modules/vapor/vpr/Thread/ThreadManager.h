@@ -55,7 +55,7 @@ namespace vpr
  *
  * @deprecated This class may go away in the future.
  */
-class VPR_CLASS_API ThreadManager
+class VPR_API ThreadManager
 {
 public:
    /**

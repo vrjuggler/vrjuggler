@@ -90,7 +90,7 @@ struct TimeZone
  *
  * @see vpr::SystemPosix, vpr::SystemNSPR
  */
-class VPR_CLASS_API SystemBase
+class VPR_API SystemBase
 {
 public:
    /**

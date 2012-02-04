@@ -66,7 +66,7 @@ struct InetAddrHash;
  *
  * @since 2.1.16
  */
-class VPR_CLASS_API InetAddrBOOST
+class VPR_API InetAddrBOOST
 {
 public:
    static const InetAddrBOOST AnyAddr;

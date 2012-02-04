@@ -57,7 +57,7 @@ namespace vpr
  *
  * @since 2.1.16
  */
-class VPR_CLASS_API SocketStreamImplBOOST : public SocketImplBOOST
+class VPR_API SocketStreamImplBOOST : public SocketImplBOOST
 {
 public:
    // ========================================================================

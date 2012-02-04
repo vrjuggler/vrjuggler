@@ -48,7 +48,7 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API EOFException : public IOException
+class VPR_API EOFException : public IOException
 {
 public:
    EOFException(const std::string& msg, const std::string& location = "")

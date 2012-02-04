@@ -55,7 +55,7 @@ namespace vpr
  *
  * This means that there is no state associated with the connector.
  */
-class VPR_CLASS_API SocketConnector
+class VPR_API SocketConnector
 {
 public:
    SocketConnector()

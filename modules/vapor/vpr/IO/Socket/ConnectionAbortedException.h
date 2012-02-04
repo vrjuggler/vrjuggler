@@ -49,7 +49,7 @@ namespace vpr
  *
  * @since 1.1.18
  */
-class VPR_CLASS_API ConnectionAbortedException : public SocketException
+class VPR_API ConnectionAbortedException : public SocketException
 {
 public:
    ConnectionAbortedException(const std::string& msg,

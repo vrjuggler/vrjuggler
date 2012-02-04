@@ -57,7 +57,7 @@ namespace vpr
  *
  * @see vpr::getVersionString()
  */
-extern VPR_DATA_API(const char*) VPR_VERSION;
+extern VPR_API const char* VPR_VERSION;
 
 /**
  * Retruns the "human-readable" VPR version \em string. The full form includes
@@ -70,7 +70,7 @@ extern VPR_DATA_API(const char*) VPR_VERSION;
  *
  * @see vpr::VPR_VERSION
  */
-extern VPR_API(std::string) getVersionString();
+extern VPR_API const std::string getVersionString();
 
 /**
  * Returns the 9-digit VPR version integer. This form provides three digits
@@ -80,7 +80,7 @@ extern VPR_API(std::string) getVersionString();
  *       version identifier, use \c __VPR_version. The value is the same as
  *       what is returned by this function.
  */
-extern VPR_API(vpr::Uint32) getVersionNumber();
+extern VPR_API vpr::Uint32 getVersionNumber();
 
 /**
  * Returns the name of the threading subsystem used to compile VPR. It will be
@@ -89,7 +89,7 @@ extern VPR_API(vpr::Uint32) getVersionNumber();
  *
  * @see vpr::getVersionString()
  */
-extern VPR_API(std::string) getSubsystem();
+extern VPR_API const std::string getSubsystem();
 
 }
 

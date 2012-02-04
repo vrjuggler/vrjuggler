@@ -49,7 +49,7 @@ namespace vpr
  *
  * Common base for platform-specific error management.
  */
-class VPR_CLASS_API ErrorBase
+class VPR_API ErrorBase
 {
 public:
    enum ErrorType

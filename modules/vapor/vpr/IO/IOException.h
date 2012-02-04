@@ -48,7 +48,7 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API IOException : public Exception
+class VPR_API IOException : public Exception
 {
 public:
    IOException(const std::string& msg, const std::string& location = "")
@@ -57,7 +57,9 @@ public:
    virtual ~IOException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::IOException"; }
+   {
+      return "vpr::IOException";
+   }
 };
 
 }

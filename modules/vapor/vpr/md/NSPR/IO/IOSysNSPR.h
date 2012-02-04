@@ -49,7 +49,7 @@ namespace vpr
  * Wrapper around NSPR file descriptors.  This class is typedef'd to
  * vpr::IOSys.
  */
-class VPR_CLASS_API IOSysNSPR : public IOSysBase
+class VPR_API IOSysNSPR : public IOSysBase
 {
 public:
    typedef PRFileDesc* Handle;

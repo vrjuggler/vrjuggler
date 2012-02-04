@@ -87,7 +87,7 @@ namespace vpr
  * Wrapper class for a signal set.  A signal set contains the set of system
  * signals to be masked when used with a vpr::SignalAction.
  */
-class VPR_CLASS_API SignalSet
+class VPR_API SignalSet
 {
 public:
    /**
@@ -193,7 +193,7 @@ private:
  * the handler callback, the set of signals to be masked, and flags specifying
  * optional behavior when handling the signal.
  */
-class VPR_CLASS_API SignalAction
+class VPR_API SignalAction
 {
 public:
    /**
@@ -262,7 +262,7 @@ public:
  * operating system.  It currently has only static member functions and thus
  * is not really much of a class at all.
  */
-class VPR_CLASS_API SigHandler
+class VPR_API SigHandler
 {
 public:
    /**

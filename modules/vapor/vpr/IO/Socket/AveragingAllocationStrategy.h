@@ -60,7 +60,7 @@ namespace vpr
  *
  * @since 2.1.11
  */
-class VPR_CLASS_API AveragingAllocationStrategy
+class VPR_API AveragingAllocationStrategy
 {
 public:
    typedef std::vector<size_t>::size_type size_type;

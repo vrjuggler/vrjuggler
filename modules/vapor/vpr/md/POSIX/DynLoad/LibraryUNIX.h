@@ -56,7 +56,7 @@ namespace vpr
  *
  * @date September 6, 2002
  */
-class VPR_CLASS_API LibraryUNIX
+class VPR_API LibraryUNIX
 {
 public:
    /**

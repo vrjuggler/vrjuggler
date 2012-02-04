@@ -63,7 +63,7 @@ namespace vpr
  *
  * @since 2.1.9
  */
-class VPR_CLASS_API NoPushWriter
+class VPR_API NoPushWriter
 {
 public:
    /**

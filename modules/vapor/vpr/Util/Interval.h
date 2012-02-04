@@ -57,7 +57,7 @@ namespace vpr
  * The overloaded operator- will take care of the overflow automatically
  * to make it possible to compare to interval values.
  */
-class VPR_CLASS_API Interval
+class VPR_API Interval
 {
 public:
    /** Units of time. */

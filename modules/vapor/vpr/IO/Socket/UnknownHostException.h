@@ -49,16 +49,19 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API UnknownHostException : public SocketException
+class VPR_API UnknownHostException : public SocketException
 {
 public:
-   UnknownHostException(const std::string& msg, const std::string& location = "")
+   UnknownHostException(const std::string& msg,
+                        const std::string& location = "")
       throw();
 
    virtual ~UnknownHostException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::UnknownHostException"; }
+   {
+      return "vpr::UnknownHostException";
+   }
 };
 
 }

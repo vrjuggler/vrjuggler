@@ -59,7 +59,7 @@ namespace vpr
  *
  * This is an implementation site of the vpr::Selector_t bridge.
  */
-class VPR_CLASS_API SelectorImplNSPR : public SelectorBase
+class VPR_API SelectorImplNSPR : public SelectorBase
 {
 public:
    // XXX: What should we do when we are adding a handler while

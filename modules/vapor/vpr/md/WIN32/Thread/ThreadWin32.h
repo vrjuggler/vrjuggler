@@ -72,7 +72,7 @@ namespace vpr
  * @note This class was originally part of VR Juggler 1.0 and was brought back
  *       into VPR in version 1.1.36.
  */
-class VPR_CLASS_API ThreadWin32 : public vpr::BaseThread
+class VPR_API ThreadWin32 : public vpr::BaseThread
 {
 public:
    /**

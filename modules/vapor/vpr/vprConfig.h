@@ -162,106 +162,42 @@ namespace std
 #   define VPR_HAVE_HASH_SET  1
 #endif
 
-#if !defined(WIN32) && !defined(WIN64)          \
+#if ! defined(WIN32) && ! defined(WIN64)        \
       && defined(__GNUC__) && __GNUC__ >= 4     \
-      && !defined(VPR_HAVE_GCC_VISIBILITY)
+      && ! defined(VPR_HAVE_GCC_VISIBILITY)
 #  define VPR_HAVE_GCC_VISIBILITY
 #endif
 
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * VPR_EXTERN for the prototype and VPR_IMPLEMENT for the implementation.
- * ----------------------------------------------------------------------------
- */
-#ifdef VPR_OS_Windows
+#if defined(VPR_OS_Windows)
 
 #   if defined(__GNUC__)
 #       undef _declspec
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define VPR_EXPORT(__type)      _declspec(dllexport) __type
-#   define VPR_EXPORT_CLASS        _declspec(dllexport)
-#   define VPR_EXPORT_DATA(__type) _declspec(dllexport) __type
-#   define VPR_IMPORT(__type)      _declspec(dllimport) __type
-#   define VPR_IMPORT_DATA(__type) _declspec(dllimport) __type
-#   define VPR_IMPORT_CLASS        _declspec(dllimport)
-
-#   define VPR_EXTERN(__type)         extern _declspec(dllexport) __type
-#   define VPR_IMPLEMENT(__type)      _declspec(dllexport) __type
-#   define VPR_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#   define VPR_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#   define VPR_CALLBACK
-#   define VPR_CALLBACK_DECL
-#   define VPR_STATIC_CALLBACK(__x) static __x
-
-#elif defined(VPR_OS_Mac)
-
-#   define VPR_EXPORT(__type)       __declspec(export) __type
-#   define VPR_EXPORT_CLASS         __declspec(export)
-#   define VPR_EXPORT_DATA(__type)  __declspec(export) __type
-#   define VPR_IMPORT(__type)       __declspec(export) __type
-#   define VPR_IMPORT_CLASS         __declspec(export)
-#   define VPR_IMPORT_DATA(__type)  __declspec(export) __type
-
-#   define VPR_EXTERN(__type)           extern __declspec(export) __type
-#   define VPR_IMPLEMENT(__type)        __declspec(export) __type
-#   define VPR_EXTERN_DATA(__type)      extern __declspec(export) __type
-#   define VPR_IMPLEMENT_DATA(__type)   __declspec(export) __type
-
-#   define VPR_CALLBACK
-#   define VPR_CALLBACK_DECL
-#   define VPR_STATIC_CALLBACK(__x) static __x
+#   define VPR_EXPORT        _declspec(dllexport)
+#   define VPR_IMPORT        _declspec(dllimport)
+#   define VPR_EXTERN_EXPORT extern _declspec(dllexport)
+#   define VPR_EXTERN_IMPORT extern _declspec(dllimport)
 
 #elif defined(VPR_HAVE_GCC_VISIBILITY)
-
-#   define VPR_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VPR_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define VPR_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define VPR_IMPORT(__type)      __type
-#   define VPR_IMPORT_DATA(__type) __type
-#   define VPR_IMPORT_CLASS        
-
-#   define VPR_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define VPR_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VPR_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define VPR_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define VPR_CALLBACK
-#   define VPR_CALLBACK_DECL
-#   define VPR_STATIC_CALLBACK(__x) static __x
-
-
-#else   /* UNIX (where this stuff is simple!) */
-
-#   define VPR_EXPORT(__type)      __type
-#   define VPR_EXPORT_CLASS
-#   define VPR_EXPORT_DATA(__type) __type
-#   define VPR_IMPORT(__type)      __type
-#   define VPR_IMPORT_DATA(__type) __type
-#   define VPR_IMPORT_CLASS
-
-#   define VPR_EXTERN(__type)         extern __type
-#   define VPR_IMPLEMENT(__type)      __type
-#   define VPR_EXTERN_DATA(__type)    extern __type
-#   define VPR_IMPLEMENT_DATA(__type) __type
-
-#   define VPR_CALLBACK
-#   define VPR_CALLBACK_DECL
-#   define VPR_STATIC_CALLBACK(__x) static __x
-
-#endif  /* VPR_OS_Windows */
+#   define VPR_EXPORT        __attribute__ ((visibility("default")))
+#   define VPR_IMPORT
+#   define VPR_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define VPR_EXTERN_IMPORT extern
+#else
+#   define VPR_EXPORT
+#   define VPR_IMPORT
+#   define VPR_EXTERN_EXPORT extern
+#   define VPR_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
 #ifdef _VPR_BUILD_
-#   define VPR_API(__type)      VPR_EXPORT(__type)
-#   define VPR_CLASS_API        VPR_EXPORT_CLASS
-#   define VPR_DATA_API(__type) VPR_EXPORT_DATA(__type)
+#   define VPR_API    VPR_EXPORT
+#   define VPR_EXTERN VPR_EXTERN_EXPORT
 #else
-#   define VPR_API(__type)      VPR_IMPORT(__type)
-#   define VPR_CLASS_API        VPR_IMPORT_CLASS
-#   define VPR_DATA_API(__type) VPR_IMPORT_DATA(__type)
+#   define VPR_API    VPR_IMPORT
+#   define VPR_EXTERN VPR_EXTERN_IMPORT
 #endif
 
 #include <vpr/vprDomain.h>

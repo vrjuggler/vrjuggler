@@ -57,7 +57,7 @@ class BaseIOStatsStrategy;
  *
  * Block-style (as opposed to streaming) I/O interface.
  */
-class VPR_CLASS_API BlockIO
+class VPR_API BlockIO
 {
 public:
    /**

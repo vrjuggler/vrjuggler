@@ -58,7 +58,7 @@ namespace vpr
  * Base class for all thread-specific object proxies.  This handles the
  * thread-specific key allocation.  It allows for friendship (if needed).
  */
-class VPR_CLASS_API TSObjectProxyBase
+class VPR_API TSObjectProxyBase
 {
 public:
    TSObjectProxyBase()

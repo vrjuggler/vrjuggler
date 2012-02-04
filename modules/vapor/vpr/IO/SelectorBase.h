@@ -46,7 +46,7 @@ namespace vpr
  *
  * Common base for all selectors and implementations.
  */
-class VPR_CLASS_API SelectorBase
+class VPR_API SelectorBase
 {
 public:
    enum EventType

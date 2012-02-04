@@ -51,7 +51,7 @@ namespace vpr
  *
  * @since 1.1.36
  */
-class VPR_CLASS_API ErrorImplWin32 : public ErrorBase
+class VPR_API ErrorImplWin32 : public ErrorBase
 {
 public:
    /**

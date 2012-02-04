@@ -55,7 +55,7 @@ namespace vpr
  *
  * @see vpr::NoPushWriter
  */
-class VPR_CLASS_API SocketStreamImplNSPR : public SocketImplNSPR
+class VPR_API SocketStreamImplNSPR : public SocketImplNSPR
 {
 public:
    // ========================================================================

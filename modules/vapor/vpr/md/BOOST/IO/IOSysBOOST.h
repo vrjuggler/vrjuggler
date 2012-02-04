@@ -49,7 +49,7 @@ namespace vpr
  *
  * @since 2.1.16
  */
-class VPR_CLASS_API IOSysBOOST
+class VPR_API IOSysBOOST
 {
 public:
    typedef vpr::SocketImplBOOST* Handle;

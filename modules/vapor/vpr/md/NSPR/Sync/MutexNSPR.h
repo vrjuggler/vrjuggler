@@ -59,7 +59,7 @@ namespace vpr
  *
  * Mutex wrapper for NSPR locks.  This is typedef'd to vpr::Mutex.
  */
-class VPR_CLASS_API MutexNSPR : boost::noncopyable
+class VPR_API MutexNSPR : boost::noncopyable
 {
 public:
    /**

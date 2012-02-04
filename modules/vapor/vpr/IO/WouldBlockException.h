@@ -49,16 +49,19 @@ namespace vpr
  *
  * @since 1.1.5
  */
-class VPR_CLASS_API WouldBlockException : public IOException
+class VPR_API WouldBlockException : public IOException
 {
 public:
-   WouldBlockException(const std::string& msg, const std::string& location = "")
+   WouldBlockException(const std::string& msg,
+                       const std::string& location = "")
       throw();
 
    virtual ~WouldBlockException() throw();
 
    virtual std::string getExceptionName() const
-   { return "vpr::WouldBlockException"; }
+   {
+      return "vpr::WouldBlockException";
+   }
 };
 
 }

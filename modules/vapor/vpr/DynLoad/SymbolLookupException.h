@@ -50,7 +50,7 @@ namespace vpr
  *
  * @since 1.1.10
  */
-class VPR_CLASS_API SymbolLookupException : public vpr::LibraryException
+class VPR_API SymbolLookupException : public vpr::LibraryException
 {
 public:
    SymbolLookupException(const std::string& msg,

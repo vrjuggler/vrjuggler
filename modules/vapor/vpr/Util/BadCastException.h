@@ -51,7 +51,7 @@ namespace vpr
  *
  * @since 2.1.12
  */
-class VPR_CLASS_API BadCastException : public vpr::Exception
+class VPR_API BadCastException : public vpr::Exception
 {
 public:
    BadCastException(const std::string& msg, const std::string& location = "")

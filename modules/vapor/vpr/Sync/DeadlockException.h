@@ -54,7 +54,7 @@ namespace vpr
  * @see vpr::Sempahore
  * @see vpr::RWMutex
  */
-class VPR_CLASS_API DeadlockException : public vpr::LockException
+class VPR_API DeadlockException : public vpr::LockException
 {
 public:
    DeadlockException(const std::string& msg, const std::string& location = "")

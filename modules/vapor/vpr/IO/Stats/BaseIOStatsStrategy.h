@@ -51,7 +51,7 @@ class BlockIO;    // forward declare
  * We add on other stats features using mixins that are added by a template
  * composition adapter.
  */
-class VPR_CLASS_API BaseIOStatsStrategy
+class VPR_API BaseIOStatsStrategy
 {
 public:
    BaseIOStatsStrategy();
@@ -84,7 +84,7 @@ protected:
  * @note Must derive from vpr::BaseIOStatsStrategy because the compiler still
  *       expects that interface.
  */
-class VPR_CLASS_API NullIOStatsStrategy : public BaseIOStatsStrategy
+class VPR_API NullIOStatsStrategy : public BaseIOStatsStrategy
 {
 public:
    NullIOStatsStrategy();

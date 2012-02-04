@@ -53,7 +53,7 @@ namespace vpr
  * extension (e.g., .so or .dll) in a specific directory.  A vector of all
  * discovered dynamic libraries will be created.
  */
-class VPR_CLASS_API LibraryFinder
+class VPR_API LibraryFinder
 {
 public:
    /** Helper typedef to simplify user code a little. */

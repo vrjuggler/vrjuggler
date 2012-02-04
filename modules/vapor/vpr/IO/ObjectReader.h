@@ -50,7 +50,7 @@ namespace vpr
  *
  * Interface used to read object data from a stream.
  */
-class VPR_CLASS_API ObjectReader : public AttributeMapBase
+class VPR_API ObjectReader : public AttributeMapBase
 {
 protected:
    ObjectReader();

@@ -68,7 +68,7 @@ namespace vpr
  *       article text can be found at
  *       http://www.cs.wustl.edu/~schmidt/win32-cv-1.html
  */
-class VPR_CLASS_API CondVarWin32 : boost::noncopyable
+class VPR_API CondVarWin32 : boost::noncopyable
 {
 public:
    /**

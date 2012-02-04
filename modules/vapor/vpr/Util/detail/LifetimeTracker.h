@@ -62,8 +62,8 @@ namespace vpr
         
         // Helper data
         typedef LifetimeTracker** TrackerArray;
-        extern VPR_DATA_API(TrackerArray) pTrackerArray;
-        extern VPR_DATA_API(unsigned int) elements;
+        extern VPR_API TrackerArray pTrackerArray;
+        extern VPR_API unsigned int elements;
 
         // Helper destroyer function
         template <typename T>
@@ -115,7 +115,7 @@ namespace vpr
             Destroyer destroyer_;
         };
 
-        VPR_API(void) AtExitFn(); // declaration needed below
+        VPR_API void AtExitFn(); // declaration needed below
     
     } // namespace detail
 
