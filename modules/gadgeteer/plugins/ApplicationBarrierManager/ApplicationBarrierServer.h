@@ -42,7 +42,7 @@ namespace cluster
 {
 class ApplicationBarrier;
 
-class GADGET_CLUSTER_PLUGIN_API ApplicationBarrierServer
+class ApplicationBarrierServer
    : boost::noncopyable
 {
 protected:

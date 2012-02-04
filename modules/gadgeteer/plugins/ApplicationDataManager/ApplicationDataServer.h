@@ -42,7 +42,7 @@ namespace cluster
 {
 class ApplicationData;
 
-class GADGET_CLUSTER_PLUGIN_API ApplicationDataServer
+class ApplicationDataServer
    : boost::noncopyable
 {
 protected:

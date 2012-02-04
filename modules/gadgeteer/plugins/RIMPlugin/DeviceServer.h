@@ -47,7 +47,7 @@ namespace cluster
  *
  * Device server class.
  */
-class GADGET_CLUSTER_PLUGIN_API DeviceServer
+class DeviceServer
    : boost::noncopyable
 {
 protected:

@@ -40,7 +40,7 @@ namespace cluster
  *
  * Virtual input device type.
  */
-class GADGET_CLUSTER_PLUGIN_API VirtualDevice
+class VirtualDevice
    : boost::noncopyable
 {
 protected:
