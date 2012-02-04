@@ -51,7 +51,7 @@ class BeanDeliverySubjectImpl;
  *
  * Wrapper around ORB features to simplify startup and shutdown.
  */
-class TWEEK_CLASS_API CorbaManager
+class TWEEK_API CorbaManager
 {
 public:
    /**

@@ -56,7 +56,7 @@ class SubjectImpl;
  * to the servant through the Subject Manager.  Most details of CORBA reference
  * management are hidden by this class.
  */
-class TWEEK_CLASS_API SubjectManagerImpl
+class TWEEK_API SubjectManagerImpl
    : private boost::noncopyable
    , public POA_tweek::SubjectManager
    , public PortableServer::RefCountServantBase

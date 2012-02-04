@@ -73,18 +73,12 @@
 /* extern HINSTANCE g_hInst = NULL; */
 #endif   /* WIN32 || WIN64 */
 
-#if !defined(WIN32) && !defined(WIN64)          \
+#if ! defined(WIN32) && ! defined(WIN64)        \
       && defined(__GNUC__) && __GNUC__ >= 4     \
-      && !defined(TWEEK_HAVE_GCC_VISIBILITY)
+      && ! defined(TWEEK_HAVE_GCC_VISIBILITY)
 #  define TWEEK_HAVE_GCC_VISIBILITY
 #endif
 
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * TWEEK_EXTERN for the prototype and TWEEK_IMPLEMENT for the implementation.
- * ----------------------------------------------------------------------------
- */
 #if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
@@ -92,69 +86,32 @@
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define TWEEK_EXPORT(__type)      _declspec(dllexport) __type
-#   define TWEEK_EXPORT_CLASS        _declspec(dllexport)
-#   define TWEEK_EXPORT_DATA(__type) _declspec(dllexport) __type
-#   define TWEEK_IMPORT(__type)      _declspec(dllimport) __type
-#   define TWEEK_IMPORT_DATA(__type) _declspec(dllimport) __type
-#   define TWEEK_IMPORT_CLASS        _declspec(dllimport)
-
-#   define TWEEK_EXTERN(__type)         extern _declspec(dllexport) __type
-#   define TWEEK_IMPLEMENT(__type)      _declspec(dllexport) __type
-#   define TWEEK_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#   define TWEEK_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#   define TWEEK_CALLBACK
-#   define TWEEK_CALLBACK_DECL
-#   define TWEEK_STATIC_CALLBACK(__x) static __x
+#   define TWEEK_EXPORT        _declspec(dllexport)
+#   define TWEEK_IMPORT        _declspec(dllimport)
+#   define TWEEK_EXTERN_EXPORT extern _declspec(dllexport)
+#   define TWEEK_EXTERN_IMPORT extern _declspec(dllimport)
 
 #elif defined(TWEEK_HAVE_GCC_VISIBILITY)
-
-#   define TWEEK_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define TWEEK_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define TWEEK_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define TWEEK_IMPORT(__type)      __type
-#   define TWEEK_IMPORT_DATA(__type) __type
-#   define TWEEK_IMPORT_CLASS        
-
-#   define TWEEK_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define TWEEK_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define TWEEK_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define TWEEK_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define TWEEK_CALLBACK
-#   define TWEEK_CALLBACK_DECL
-#   define TWEEK_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX (where this stuff is simple!) */
-
-#   define TWEEK_EXPORT(__type)      __type
-#   define TWEEK_EXPORT_CLASS
-#   define TWEEK_EXPORT_DATA(__type) __type
-#   define TWEEK_IMPORT(__type)      __type
-#   define TWEEK_IMPORT_CLASS
-#   define TWEEK_IMPORT_DATA(__type) __type
-
-#   define TWEEK_EXTERN(__type)         extern __type
-#   define TWEEK_IMPLEMENT(__type)      __type
-#   define TWEEK_EXTERN_DATA(__type)    extern __type
-#   define TWEEK_IMPLEMENT_DATA(__type) __type
-
-#   define TWEEK_CALLBACK
-#   define TWEEK_CALLBACK_DECL
-#   define TWEEK_STATIC_CALLBACK(__x) static __x
-
-#endif	/* WIN32 || WIN64 */
+#   define TWEEK_EXPORT        __attribute__ ((visibility("default")))
+#   define TWEEK_IMPORT
+#   define TWEEK_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define TWEEK_EXTERN_IMPORT extern
+#else
+#   define TWEEK_EXPORT
+#   define TWEEK_IMPORT
+#   define TWEEK_EXTERN_EXPORT extern
+#   define TWEEK_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
 #ifdef _TWEEK_BUILD_
-#   define TWEEK_API(__type)		TWEEK_EXPORT(__type)
-#   define TWEEK_CLASS_API		TWEEK_EXPORT_CLASS
-#   define TWEEK_DATA_API(__type)	TWEEK_EXPORT_DATA(__type)
+#   define TWEEK_API    TWEEK_EXPORT
+#   define TWEEK_EXTERN TWEEK_EXTERN_EXPORT
 #else
-#   define TWEEK_API(__type)		TWEEK_IMPORT(__type)
-#   define TWEEK_CLASS_API		TWEEK_IMPORT_CLASS
-#   define TWEEK_DATA_API(__type)	TWEEK_IMPORT_DATA(__type)
+#   define TWEEK_API    TWEEK_IMPORT
+#   define TWEEK_EXTERN TWEEK_EXTERN_IMPORT
+#endif
 
+#if ! defined(_TWEEK_BUILD_)
 #   include <tweek/AutoLink.h>
 #endif
 

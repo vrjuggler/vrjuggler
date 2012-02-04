@@ -47,7 +47,7 @@ namespace tweek
  *
  * @see tweek::getVersionString()
  */
-extern TWEEK_DATA_API(const char*) TWEEK_VERSION;
+extern TWEEK_API const char* TWEEK_VERSION;
 
 /**
  * Retruns the "human-readable" Tweek version \em string. The full form
@@ -60,7 +60,7 @@ extern TWEEK_DATA_API(const char*) TWEEK_VERSION;
  *
  * @see tweek::TWEEK_VERSION
  */
-extern TWEEK_API(std::string) getVersionString();
+extern TWEEK_API const std::string getVersionString();
 
 /**
  * Returns the 9-digit Tweek version integer. This form provides three digits
@@ -70,7 +70,7 @@ extern TWEEK_API(std::string) getVersionString();
  *       version identifier, use \c __TWEEK_version. The value is the same as
  *       what is returned by this function.
  */
-extern TWEEK_API(vpr::Uint32) getVersionNumber();
+extern TWEEK_API vpr::Uint32 getVersionNumber();
 
 }
 
