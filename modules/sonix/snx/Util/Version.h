@@ -56,7 +56,7 @@ namespace snx
  *
  * @see snx::getVersionString()
  */
-extern SNX_DATA_API(const char*) SNX_VERSION;
+extern SNX_API const char* SNX_VERSION;
 
 /**
  * Retruns the "human-readable" Sonix version \em string. The full form
@@ -69,7 +69,7 @@ extern SNX_DATA_API(const char*) SNX_VERSION;
  *
  * @see snx::SNX_VERSION
  */
-extern SNX_API(std::string) getVersionString();
+extern SNX_API const std::string getVersionString();
 
 /**
  * Returns the 9-digit Sonix version integer. This form provides three digits
@@ -79,7 +79,7 @@ extern SNX_API(std::string) getVersionString();
  *       version identifier, use \c __SNX_version. The value is the same as
  *       what is returned by this function.
  */
-extern SNX_API(vpr::Uint32) getVersionNumber();
+extern SNX_API vpr::Uint32 getVersionNumber();
 
 }
 

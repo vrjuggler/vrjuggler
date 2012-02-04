@@ -44,12 +44,12 @@ namespace snx
 
 const char* SNX_VERSION(__SNX_VERSION_STRING__);
 
-SNX_IMPLEMENT(std::string) getVersionString ()
+const std::string getVersionString()
 {
    return std::string(SNX_VERSION);
 }
 
-SNX_IMPLEMENT(vpr::Uint32) getVersionNumber ()
+vpr::Uint32 getVersionNumber()
 {
    return __SNX_version;
 }

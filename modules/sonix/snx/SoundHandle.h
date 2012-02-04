@@ -71,7 +71,7 @@ namespace snx
     *
     * @ingroup SonixAPI
     */
-   class SNX_CLASS_API SoundHandle
+   class SNX_API SoundHandle
    {
    public:
       /**

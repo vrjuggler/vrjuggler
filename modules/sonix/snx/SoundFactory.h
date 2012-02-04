@@ -57,7 +57,7 @@ namespace snx
  *
  * Sound factory.
  */
-class SNX_CLASS_API SoundFactory
+class SNX_API SoundFactory
 {
 public:
    void errorOutput(vpr::LibraryPtr lib, const char* test);

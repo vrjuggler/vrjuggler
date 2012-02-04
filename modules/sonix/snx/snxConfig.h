@@ -82,19 +82,12 @@
 
 #endif   /* WIN32 || WIN64 */
 
-#if !defined(WIN32) && !defined(WIN64)          \
+#if ! defined(WIN32) && ! defined(WIN64)        \
       && defined(__GNUC__) && __GNUC__ >= 4     \
-      && !defined(SNX_HAVE_GCC_VISIBILITY)
+      && ! defined(SNX_HAVE_GCC_VISIBILITY)
 #  define SNX_HAVE_GCC_VISIBILITY
 #endif
 
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * SNX_EXTERN for the prototype and SNX_IMPLEMENT for the
- * implementation.
- * ----------------------------------------------------------------------------
- */
 #if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
@@ -102,69 +95,32 @@
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define SNX_EXPORT(__type)      _declspec(dllexport) __type
-#   define SNX_EXPORT_CLASS        _declspec(dllexport)
-#   define SNX_EXPORT_DATA(__type) _declspec(dllexport) __type
-#   define SNX_IMPORT(__type)      _declspec(dllimport) __type
-#   define SNX_IMPORT_DATA(__type) _declspec(dllimport) __type
-#   define SNX_IMPORT_CLASS        _declspec(dllimport)
-
-#   define SNX_EXTERN(__type)         extern _declspec(dllexport) __type
-#   define SNX_IMPLEMENT(__type)      _declspec(dllexport) __type
-#   define SNX_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#   define SNX_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#   define SNX_CALLBACK
-#   define SNX_CALLBACK_DECL
-#   define SNX_STATIC_CALLBACK(__x) static __x
+#   define SNX_EXPORT        _declspec(dllexport)
+#   define SNX_IMPORT        _declspec(dllimport)
+#   define SNX_EXTERN_EXPORT extern _declspec(dllexport)
+#   define SNX_EXTERN_IMPORT extern _declspec(dllimport)
 
 #elif defined(SNX_HAVE_GCC_VISIBILITY)
-
-#   define SNX_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define SNX_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define SNX_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define SNX_IMPORT(__type)      __type
-#   define SNX_IMPORT_DATA(__type) __type
-#   define SNX_IMPORT_CLASS        
-
-#   define SNX_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define SNX_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define SNX_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define SNX_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define SNX_CALLBACK
-#   define SNX_CALLBACK_DECL
-#   define SNX_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX (where this stuff is simple!) */
-
-#   define SNX_EXPORT(__type)      __type
-#   define SNX_EXPORT_CLASS
-#   define SNX_EXPORT_DATA(__type) __type
-#   define SNX_IMPORT(__type)      __type
-#   define SNX_IMPORT_CLASS
-#   define SNX_IMPORT_DATA(__type) __type
-
-#   define SNX_EXTERN(__type)         extern __type
-#   define SNX_IMPLEMENT(__type)      __type
-#   define SNX_EXTERN_DATA(__type)    extern __type
-#   define SNX_IMPLEMENT_DATA(__type) __type
-
-#   define SNX_CALLBACK
-#   define SNX_CALLBACK_DECL
-#   define SNX_STATIC_CALLBACK(__x) static __x
-
-#endif	/* WIN32 || WIN64 */
+#   define SNX_EXPORT        __attribute__ ((visibility("default")))
+#   define SNX_IMPORT
+#   define SNX_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define SNX_EXTERN_IMPORT extern
+#else
+#   define SNX_EXPORT
+#   define SNX_IMPORT
+#   define SNX_EXTERN_EXPORT extern
+#   define SNX_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
 #ifdef _SNX_BUILD_
-#   define SNX_API(__type)	SNX_EXPORT(__type)
-#   define SNX_CLASS_API	SNX_EXPORT_CLASS
-#   define SNX_DATA_API(__type)	SNX_EXPORT_DATA(__type)
+#   define SNX_API    SNX_EXPORT
+#   define SNX_EXTERN SNX_EXTERN_EXPORT
 #else
-#   define SNX_API(__type)	SNX_IMPORT(__type)
-#   define SNX_CLASS_API	SNX_IMPORT_CLASS
-#   define SNX_DATA_API(__type)	SNX_IMPORT_DATA(__type)
+#   define SNX_API    SNX_IMPORT
+#   define SNX_EXTERN SNX_EXTERN_IMPORT
+#endif
 
+#if ! defined(_SNX_BUILD_)
 #   include <snx/AutoLink.h>
 #endif
 

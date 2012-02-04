@@ -57,7 +57,7 @@ namespace snx
  *
  * Sound implementation.
  */
-class SNX_CLASS_API SoundImplementation : public ISoundImplementation
+class SNX_API SoundImplementation : public ISoundImplementation
 {
 public:
    /** Default constructor. */

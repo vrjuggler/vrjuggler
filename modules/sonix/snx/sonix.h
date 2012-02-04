@@ -57,7 +57,7 @@ namespace snx
  *
  * Singelton entry point to the Sonix API.
  */
-class SNX_CLASS_API sonix
+class SNX_API sonix
 {
 protected:
    /** Default constructor. */
