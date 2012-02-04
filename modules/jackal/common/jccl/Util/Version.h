@@ -47,7 +47,7 @@ namespace jccl
  *
  * @see jccl::getVersionString()
  */
-extern JCCL_DATA_API(const char*) JCCL_VERSION;
+extern JCCL_API const char* JCCL_VERSION;
 
 /**
  * Retruns the "human-readable" JCCL version \em string. The full form includes
@@ -60,7 +60,7 @@ extern JCCL_DATA_API(const char*) JCCL_VERSION;
  *
  * @see jccl::JCCL_VERSION
  */
-extern JCCL_API(std::string) getVersionString();
+extern JCCL_API const std::string getVersionString();
 
 /**
  * Returns the 9-digit JCCL version integer. This form provides three digits
@@ -70,7 +70,7 @@ extern JCCL_API(std::string) getVersionString();
  *       version identifier, use \c __JCCL_version. The value is the same as
  *       what is returned by this function.
  */
-extern JCCL_API(vpr::Uint32) getVersionNumber();
+extern JCCL_API vpr::Uint32 getVersionNumber();
 
 }
 

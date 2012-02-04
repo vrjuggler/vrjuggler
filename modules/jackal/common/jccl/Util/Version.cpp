@@ -35,12 +35,12 @@ namespace jccl
 
 const char* JCCL_VERSION(__JCCL_VERSION_STRING__);
 
-JCCL_IMPLEMENT(std::string) getVersionString ()
+const std::string getVersionString()
 {
    return std::string(JCCL_VERSION);
 }
 
-JCCL_IMPLEMENT(vpr::Uint32) getVersionNumber ()
+vpr::Uint32 getVersionNumber()
 {
    return __JCCL_version;
 }
