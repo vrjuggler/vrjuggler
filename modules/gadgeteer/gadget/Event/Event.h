@@ -54,7 +54,8 @@ enum EventType
  * Base event type that an event source may generate.  This class cannot be
  * instantiated directly, and instead, subclasses must be used.
  */
-class GADGET_CLASS_API Event : public vpr::SerializableObject
+class GADGET_API Event
+   : public vpr::SerializableObject
 {
 public:
    Event();

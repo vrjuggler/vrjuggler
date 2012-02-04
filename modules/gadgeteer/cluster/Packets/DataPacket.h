@@ -42,7 +42,7 @@ namespace cluster
  *
  * Cluster data packet.
  */
-class GADGET_CLASS_API DataPacket
+class GADGET_API DataPacket
    : public Packet
 {
 protected:

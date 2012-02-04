@@ -52,7 +52,7 @@ namespace cluster
  *
  * Interface for cluster plugins.
  */
-class GADGET_CLASS_API ClusterPlugin 
+class GADGET_API ClusterPlugin 
    : public gadget::PacketHandler,
      public boost::enable_shared_from_this<ClusterPlugin>
 {

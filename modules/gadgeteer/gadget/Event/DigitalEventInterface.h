@@ -57,7 +57,7 @@ struct digital_event_tag : base_event_tag {};
  *
  * @since 2.1.13
  */
-class GADGET_CLASS_API DigitalSampleHandler
+class GADGET_API DigitalSampleHandler
 {
 public:
    typedef ProxyTraits<DigitalProxy>     device_type;

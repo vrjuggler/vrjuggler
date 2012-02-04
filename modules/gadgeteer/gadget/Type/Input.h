@@ -70,7 +70,7 @@ namespace gadget
  *       frame.  Because of this, threads should not be reading data while
  *       it is being updated to the most recent copy.
  */
-class GADGET_CLASS_API Input
+class GADGET_API Input
    : public vpr::SerializableObject
    , boost::noncopyable
 {

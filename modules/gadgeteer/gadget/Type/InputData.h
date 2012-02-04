@@ -39,7 +39,7 @@ namespace gadget
  * This provides all input data with a standard timestamping system used to
  * calculate input latency.
  */
-class GADGET_CLASS_API InputData 
+class GADGET_API InputData 
 {
 public:
    /** Constructor. */

@@ -49,7 +49,8 @@ namespace gadget
  *
  * @see gadget::Gesture
  */
-class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
+class GADGET_API GestureProxy
+   : public TypedProxy<Gesture>
 {
 public:
    /** @since 2.1.1 */

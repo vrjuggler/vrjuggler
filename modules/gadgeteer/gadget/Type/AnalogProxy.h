@@ -47,7 +47,8 @@ namespace gadget
  *
  * @see Analog
  */
-class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
+class GADGET_API AnalogProxy
+   : public TypedProxy<Analog>
 {
 public:
    /** @since 2.1.1 */

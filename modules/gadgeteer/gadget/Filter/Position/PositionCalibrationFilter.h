@@ -47,7 +47,8 @@ namespace gadget
     * A calibration filter that uses a calibration table to correct 
     * electromagnetic interference error from the tracker.
     */
-   class GADGET_CLASS_API PositionCalibrationFilter : public PositionFilter
+   class GADGET_API PositionCalibrationFilter
+      : public PositionFilter
    {
    public:
       

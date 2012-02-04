@@ -49,7 +49,7 @@ namespace gadget
  *
  * Packet handler interface used for network communication.
  */
-class GADGET_CLASS_API PacketHandler
+class GADGET_API PacketHandler
    : boost::noncopyable
 {
 protected:

@@ -45,7 +45,7 @@ namespace cluster
  *
  * Device acknowledgement packet.
  */
-class GADGET_CLASS_API DeviceAck
+class GADGET_API DeviceAck
    : public Packet
 {
 protected:

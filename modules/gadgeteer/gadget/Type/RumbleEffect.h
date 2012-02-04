@@ -37,7 +37,7 @@ namespace gadget
  *
  * @since 2.1.16
  */
-class GADGET_CLASS_API RumbleEffect
+class GADGET_API RumbleEffect
 {
 public:
    enum RumbleType {

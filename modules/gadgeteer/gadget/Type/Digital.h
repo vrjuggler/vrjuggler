@@ -62,7 +62,7 @@ const unsigned short MSG_DATA_DIGITAL = 420;
  * @see Input
  * @see InputDevice
  */
-class GADGET_CLASS_API Digital
+class GADGET_API Digital
    : public vpr::SerializableObject
    , protected DigitalState
    , private boost::noncopyable

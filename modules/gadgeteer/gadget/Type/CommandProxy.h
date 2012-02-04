@@ -47,7 +47,8 @@ namespace gadget
  *
  * @see gagdet::Command
  */
-class GADGET_CLASS_API CommandProxy : public TypedProxy<Command>
+class GADGET_API CommandProxy
+   : public TypedProxy<Command>
 {
 public:
    /** @since 2.1.1 */

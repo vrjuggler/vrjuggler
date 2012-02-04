@@ -45,7 +45,7 @@ namespace cluster
  *
  * Connection acknowledgement packet.
  */
-class GADGET_CLASS_API ConfigPacket
+class GADGET_API ConfigPacket
    : public Packet
 {
 protected:

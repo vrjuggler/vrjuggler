@@ -47,7 +47,7 @@ namespace gadget
  * PositionFilter is the abstract base class that all position filters derive
  * from.
  */
-class GADGET_CLASS_API PositionFilter
+class GADGET_API PositionFilter
 {
 public:
 //   typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;   

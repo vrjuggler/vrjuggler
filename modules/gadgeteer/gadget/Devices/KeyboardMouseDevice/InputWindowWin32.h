@@ -46,7 +46,7 @@ namespace gadget
  *
  * Basic Win32 input window type.
  */
-class GADGET_CLASS_API InputWindowWin32
+class GADGET_API InputWindowWin32
    : public Input
    , public InputAreaWin32
 {

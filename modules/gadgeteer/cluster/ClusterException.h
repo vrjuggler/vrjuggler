@@ -38,7 +38,8 @@ namespace cluster
  * Basic exception that may be thrown by the ClusterNetwork or any of the
  * Plugins.
  */
-class GADGET_CLASS_API ClusterException : public vpr::Exception
+class GADGET_API ClusterException
+   : public vpr::Exception
 {
 public:
    ClusterException(const std::string& msg,

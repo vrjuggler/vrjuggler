@@ -38,7 +38,7 @@
 namespace gadget
 {
 
-class GADGET_CLASS_API EventGenerator
+class GADGET_API EventGenerator
    : public boost::enable_shared_from_this<EventGenerator>
    , private boost::noncopyable
 {

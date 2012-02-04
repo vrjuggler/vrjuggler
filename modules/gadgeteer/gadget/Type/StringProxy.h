@@ -56,7 +56,7 @@ namespace gadget
  *
  * @see gagdet::String
  */
-class GADGET_CLASS_API StringProxy
+class GADGET_API StringProxy
    : public TypedProxy<String>
 {
 public:

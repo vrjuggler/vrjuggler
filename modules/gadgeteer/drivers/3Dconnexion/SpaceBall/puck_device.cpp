@@ -69,11 +69,11 @@ using std::string;
 extern "C"
 {
     // Register this device with the Input Manager
-    GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
+    GADGET_DRIVER_EXPORT void initDevice(gadget::InputManager* inputMgr)
     { new gadget::DeviceConstructor<PuckDevice>(inputMgr); }
 
     // Provide entry point for loading shared object
-    GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+    GADGET_DRIVER_EXPORT vpr::Uint32 getGadgeteerVersion()
 	{ return __GADGET_version; }
 }
 

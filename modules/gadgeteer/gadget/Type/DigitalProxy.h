@@ -47,7 +47,8 @@ namespace gadget
  *
  * @see gagdet::Digital
  */
-class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
+class GADGET_API DigitalProxy
+   : public TypedProxy<Digital>
 {
 public:
    /** @since 2.1.1 */

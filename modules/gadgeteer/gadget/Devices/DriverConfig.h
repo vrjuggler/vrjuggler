@@ -36,13 +36,6 @@
  
 #include <gadget/gadgetConfig.h>
 
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * GADGET_DRIVER_EXTERN for the prototype and GADGET_DRIVER_IMPLEMENT for the
- * implementation.
- * ----------------------------------------------------------------------------
- */
 #if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
@@ -50,68 +43,29 @@
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define GADGET_DRIVER_EXPORT(__type)      _declspec(dllexport) __type
-#   define GADGET_DRIVER_EXPORT_CLASS        _declspec(dllexport)
-#   define GADGET_DRIVER_EXPORT_DATA(__type) _declspec(dllexport) __type
-#   define GADGET_DRIVER_IMPORT(__type)      _declspec(dllimport) __type
-#   define GADGET_DRIVER_IMPORT_DATA(__type) _declspec(dllimport) __type
-#   define GADGET_DRIVER_IMPORT_CLASS        _declspec(dllimport)
+#   define GADGET_DRIVER_EXPORT        _declspec(dllexport)
+#   define GADGET_DRIVER_IMPORT        _declspec(dllimport)
+#   define GADGET_DRIVER_EXTERN_EXPORT extern _declspec(dllexport)
+#   define GADGET_DRIVER_EXTERN_IMPORT extern _declspec(dllimport)
 
-#   define GADGET_DRIVER_EXTERN(__type)         extern _declspec(dllexport) __type
-#   define GADGET_DRIVER_IMPLEMENT(__type)      _declspec(dllexport) __type
-#   define GADGET_DRIVER_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#   define GADGET_DRIVER_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#   define GADGET_DRIVER_CALLBACK
-#   define GADGET_DRIVER_CALLBACK_DECL
-#   define GADGET_DRIVER_STATIC_CALLBACK(__x) static __x
-
-#elif defined(GADGET_HAVE_GCC_VISIBILITY)
-
-#   define GADGET_DRIVER_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define GADGET_DRIVER_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define GADGET_DRIVER_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define GADGET_DRIVER_IMPORT(__type)      __type
-#   define GADGET_DRIVER_IMPORT_DATA(__type) __type
-#   define GADGET_DRIVER_IMPORT_CLASS        
-
-#   define GADGET_DRIVER_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define GADGET_DRIVER_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define GADGET_DRIVER_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define GADGET_DRIVER_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define GADGET_DRIVER_CALLBACK
-#   define GADGET_DRIVER_CALLBACK_DECL
-#   define GADGET_DRIVER_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX (where this stuff is simple!) */
-
-#   define GADGET_DRIVER_EXPORT(__type)      __type
-#   define GADGET_DRIVER_EXPORT_CLASS
-#   define GADGET_DRIVER_EXPORT_DATA(__type) __type
-#   define GADGET_DRIVER_IMPORT(__type)      __type
-#   define GADGET_DRIVER_IMPORT_CLASS
-#   define GADGET_DRIVER_IMPORT_DATA(__type) __type
-
-#   define GADGET_DRIVER_EXTERN(__type)         extern __type
-#   define GADGET_DRIVER_IMPLEMENT(__type)      __type
-#   define GADGET_DRIVER_EXTERN_DATA(__type)    extern __type
-#   define GADGET_DRIVER_IMPLEMENT_DATA(__type) __type
-
-#   define GADGET_DRIVER_CALLBACK
-#   define GADGET_DRIVER_CALLBACK_DECL
-#   define GADGET_DRIVER_STATIC_CALLBACK(__x) static __x
-
-#endif	/* WIN32 || WIN64 */
+#elif defined(GADGET_DRIVER_HAVE_GCC_VISIBILITY)
+#   define GADGET_DRIVER_EXPORT        __attribute__ ((visibility("default")))
+#   define GADGET_DRIVER_IMPORT
+#   define GADGET_DRIVER_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define GADGET_DRIVER_EXTERN_IMPORT extern
+#else
+#   define GADGET_DRIVER_EXPORT
+#   define GADGET_DRIVER_IMPORT
+#   define GADGET_DRIVER_EXTERN_EXPORT extern
+#   define GADGET_DRIVER_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
 #ifdef _GADGET_DRIVER_BUILD_
-#   define GADGET_DRIVER_API(__type)	GADGET_DRIVER_EXPORT(__type)
-#   define GADGET_DRIVER_CLASS_API	GADGET_DRIVER_EXPORT_CLASS
-#   define GADGET_DRIVER_DATA_API(__type)	GADGET_DRIVER_EXPORT_DATA(__type)
+#   define GADGET_DRIVER_API    GADGET_DRIVER_EXPORT
+#   define GADGET_DRIVER_EXTERN GADGET_DRIVER_EXTERN_EXPORT
 #else
-#   define GADGET_DRIVER_API(__type)	GADGET_DRIVER_IMPORT(__type)
-#   define GADGET_DRIVER_CLASS_API	GADGET_DRIVER_IMPORT_CLASS
-#   define GADGET_DRIVER_DATA_API(__type)	GADGET_DRIVER_IMPORT_DATA(__type)
+#   define GADGET_DRIVER_API    GADGET_DRIVER_IMPORT
+#   define GADGET_DRIVER_EXTERN GADGET_DRIVER_EXTERN_IMPORT
 #endif
 
 #endif /* _GADGET_DRIVER_CONFIG_H_ */

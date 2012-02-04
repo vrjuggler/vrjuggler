@@ -48,7 +48,7 @@ namespace cluster
  *
  * Cluster packet base type.
  */
-class GADGET_CLASS_API Packet
+class GADGET_API Packet
    : boost::noncopyable
 {
 protected:

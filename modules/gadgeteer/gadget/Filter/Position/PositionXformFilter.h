@@ -46,7 +46,8 @@ namespace gadget
  *
  * Position transformation filter.
  */
-class GADGET_CLASS_API PositionXformFilter : public PositionFilter
+class GADGET_API PositionXformFilter
+   : public PositionFilter
 {
 public:
    /** Constructor. */

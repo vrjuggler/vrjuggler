@@ -40,7 +40,8 @@ namespace gadget
  *
  * @since 2.1.16
  */
-class GADGET_CLASS_API RumbleProxy : public TypedProxy<Rumble>
+class GADGET_API RumbleProxy
+   : public TypedProxy<Rumble>
 {
 public:
    typedef RumbleProxy::typed_proxy_ base_type;

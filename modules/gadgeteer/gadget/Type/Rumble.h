@@ -55,7 +55,7 @@ namespace gadget
  *
  * @since 2.1.16
  */
-class GADGET_CLASS_API Rumble
+class GADGET_API Rumble
    : public vpr::SerializableObject
    , private boost::noncopyable
 {

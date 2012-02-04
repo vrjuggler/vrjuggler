@@ -47,7 +47,7 @@ namespace gadget
  *
  * @see gadget::getVersionString()
  */
-extern GADGET_DATA_API(const char*) GADGET_VERSION;
+extern GADGET_API const char* GADGET_VERSION;
 
 /**
  * Retruns the "human-readable" Gadgeteer version \em string. The full form
@@ -60,7 +60,7 @@ extern GADGET_DATA_API(const char*) GADGET_VERSION;
  *
  * @see gadget::GADGET_VERSION
  */
-extern GADGET_API(std::string) getVersionString();
+extern GADGET_API const std::string getVersionString();
 
 /**
  * Returns the 9-digit Gadgeteer version integer. This form provides three
@@ -71,7 +71,7 @@ extern GADGET_API(std::string) getVersionString();
  *       version identifier, use \c __GADGET_version. The value is the same as
  *       what is returned by this function.
  */
-extern GADGET_API(vpr::Uint32) getVersionNumber();
+extern GADGET_API vpr::Uint32 getVersionNumber();
 
 }
 

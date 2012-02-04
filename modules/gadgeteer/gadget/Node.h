@@ -46,7 +46,7 @@ namespace gadget
  *
  * Network node.
  */
-class GADGET_CLASS_API Node
+class GADGET_API Node
    : public boost::enable_shared_from_this<Node>
    , boost::noncopyable
 {

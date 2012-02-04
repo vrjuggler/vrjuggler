@@ -45,7 +45,8 @@ GADGET_REGISTER_EVENT_CREATOR( KeyEvent, KeyReleaseEvent );
  *
  * Key press or release event class.
  */
-class GADGET_CLASS_API KeyEvent : public gadget::Event
+class GADGET_API KeyEvent
+   : public gadget::Event
 {
 public:
    /**

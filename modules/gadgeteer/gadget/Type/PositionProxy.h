@@ -65,7 +65,8 @@ namespace gadget
  *
  * @see gagdet::Position
  */
-class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
+class GADGET_API PositionProxy
+   : public TypedProxy<Position>
 {
 public:
    /** @since 2.1.1 */

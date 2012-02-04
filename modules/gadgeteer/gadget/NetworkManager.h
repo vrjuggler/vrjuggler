@@ -61,7 +61,8 @@ namespace gadget
  *
  * Network abstraction.
  */
-class GADGET_CLASS_API NetworkManager : public jccl::ConfigElementHandler
+class GADGET_API NetworkManager
+   : public jccl::ConfigElementHandler
 {
 public:
    typedef std::vector<NodePtr> node_list_t;

@@ -35,12 +35,12 @@ namespace gadget
 
 const char* GADGET_VERSION(__GADGET_VERSION_STRING__);
 
-GADGET_IMPLEMENT(std::string) getVersionString ()
+const std::string getVersionString()
 {
    return std::string(GADGET_VERSION);
 }
 
-GADGET_IMPLEMENT(vpr::Uint32) getVersionNumber ()
+vpr::Uint32 getVersionNumber()
 {
    return __GADGET_version;
 }

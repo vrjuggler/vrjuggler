@@ -56,7 +56,7 @@ const unsigned short MSG_DATA_GLOVE = 520;
  * It specifies the interface to all glove objects in the system.
  * Gadgeteer will deal only with gloves using this interface.
  */
-class GADGET_CLASS_API Glove
+class GADGET_API Glove
    : public vpr::SerializableObject
    , boost::noncopyable
 {

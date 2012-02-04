@@ -65,7 +65,7 @@ const unsigned short MSG_DATA_COMMAND = 423;
  * @see Input
  * @see InputDevice
  */
-class GADGET_CLASS_API Command
+class GADGET_API Command
    : public vpr::SerializableObject
    , private boost::noncopyable
 {

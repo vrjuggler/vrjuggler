@@ -49,13 +49,13 @@
 #define BUTTONS_PER_MEATOOL     2  // number of buttons per 'Measurement Tool' (fixed)
 
 
-extern "C" GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+extern "C" GADGET_DRIVER_EXPORT vpr::Uint32 getGadgeteerVersion()
 {
    return __GADGET_version;
 }
 
 /** Entry point function for the device driver plug-in. */
-extern "C" GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
+extern "C" GADGET_DRIVER_EXPORT void initDevice(gadget::InputManager* inputMgr)
 {
 	new gadget::DeviceConstructor<gadget::DTrack>(inputMgr);
 }

@@ -39,7 +39,7 @@ namespace cluster
  *
  * Packet handler interface used for network communication.
  */
-class GADGET_CLASS_API ConfigHandler
+class GADGET_API ConfigHandler
    : public gadget::PacketHandler
 {
 protected:

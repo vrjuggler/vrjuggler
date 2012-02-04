@@ -49,7 +49,7 @@ namespace gadget
  *
  * Position filter factory singleton.
  */
-class GADGET_CLASS_API PositionFilterFactory :
+class GADGET_API PositionFilterFactory :
    public vpr::Factory<PositionFilter, std::string> 
 {
    vprSingletonHeader(PositionFilterFactory);

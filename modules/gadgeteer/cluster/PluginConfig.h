@@ -36,6 +36,7 @@
  
 #include <gadget/gadgetConfig.h>
 
+#if 0
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -112,6 +113,39 @@
 #   define GADGET_CLUSTER_PLUGIN_API(__type)	GADGET_CLUSTER_PLUGIN_IMPORT(__type)
 #   define GADGET_CLUSTER_PLUGIN_CLASS_API	GADGET_CLUSTER_PLUGIN_IMPORT_CLASS
 #   define GADGET_CLUSTER_PLUGIN_DATA_API(__type)	GADGET_CLUSTER_PLUGIN_IMPORT_DATA(__type)
+#endif
+#endif
+
+#if defined(WIN32) || defined(WIN64)
+
+#   if defined(__GNUC__)
+#       undef _declspec
+#       define _declspec(x) __declspec(x)
+#   endif
+
+#   define GADGET_CLUSTER_PLUGIN_EXPORT        _declspec(dllexport)
+#   define GADGET_CLUSTER_PLUGIN_IMPORT        _declspec(dllimport)
+#   define GADGET_CLUSTER_PLUGIN_EXTERN_EXPORT extern _declspec(dllexport)
+#   define GADGET_CLUSTER_PLUGIN_EXTERN_IMPORT extern _declspec(dllimport)
+
+#elif defined(GADGET_CLUSTER_PLUGIN_HAVE_GCC_VISIBILITY)
+#   define GADGET_CLUSTER_PLUGIN_EXPORT        __attribute__ ((visibility("default")))
+#   define GADGET_CLUSTER_PLUGIN_IMPORT
+#   define GADGET_CLUSTER_PLUGIN_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define GADGET_CLUSTER_PLUGIN_EXTERN_IMPORT extern
+#else
+#   define GADGET_CLUSTER_PLUGIN_EXPORT
+#   define GADGET_CLUSTER_PLUGIN_IMPORT
+#   define GADGET_CLUSTER_PLUGIN_EXTERN_EXPORT extern
+#   define GADGET_CLUSTER_PLUGIN_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
+
+#ifdef _GADGET_CLUSTER_PLUGIN_BUILD_
+#   define GADGET_CLUSTER_PLUGIN_API    GADGET_CLUSTER_PLUGIN_EXPORT
+#   define GADGET_CLUSTER_PLUGIN_EXTERN GADGET_CLUSTER_PLUGIN_EXTERN_EXPORT
+#else
+#   define GADGET_CLUSTER_PLUGIN_API    GADGET_CLUSTER_PLUGIN_IMPORT
+#   define GADGET_CLUSTER_PLUGIN_EXTERN GADGET_CLUSTER_PLUGIN_EXTERN_IMPORT
 #endif
 
 #endif /* _GADGET_CLUSTER_PLUGIN_CONFIG_H_ */

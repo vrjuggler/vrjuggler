@@ -43,7 +43,8 @@ namespace gadget
  *
  * @since 2.1.2
  */
-class GADGET_CLASS_API AbstractEventInterface : private boost::noncopyable
+class GADGET_API AbstractEventInterface
+   : private boost::noncopyable
 {
 protected:
    AbstractEventInterface();

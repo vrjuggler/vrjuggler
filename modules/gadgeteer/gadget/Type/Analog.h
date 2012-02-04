@@ -72,7 +72,7 @@ const unsigned short MSG_DATA_ANALOG = 421;
  * @see Input
  * @see InputDevice
  */
-class GADGET_CLASS_API Analog
+class GADGET_API Analog
    : public vpr::SerializableObject
    , private boost::noncopyable
 {

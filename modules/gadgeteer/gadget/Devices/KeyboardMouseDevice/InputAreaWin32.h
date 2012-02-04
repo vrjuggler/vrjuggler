@@ -48,7 +48,8 @@ namespace gadget
  *
  * Base class for Win32 windows that accept keyboard and mouse input.
  */
-class GADGET_CLASS_API InputAreaWin32 : public gadget::InputArea
+class GADGET_API InputAreaWin32
+   : public gadget::InputArea
 {
 protected:
    InputAreaWin32();

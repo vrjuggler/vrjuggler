@@ -140,7 +140,7 @@ protected:
  *
  * Cluster packet factory.
  */
-class GADGET_CLASS_API PacketFactory :
+class GADGET_API PacketFactory :
    public Factory<Packet, vpr::Uint16>
 {
 public:

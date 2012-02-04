@@ -48,7 +48,8 @@ GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseScrollEvent );
  * event occurs.  This includes button presses, button releases, and mouse
  * motion.
  */
-class GADGET_CLASS_API MouseEvent : public gadget::Event
+class GADGET_API MouseEvent
+   : public gadget::Event
 {
 public:
    /**

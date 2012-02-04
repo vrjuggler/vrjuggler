@@ -57,7 +57,7 @@ namespace gadget
     *
     * Base class for all input proxies.
     */
-   class GADGET_CLASS_API Proxy
+   class GADGET_API Proxy
       : private boost::noncopyable
    {
    protected:

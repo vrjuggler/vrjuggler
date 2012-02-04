@@ -108,7 +108,7 @@ struct GloveValues
  *
  * @note More docs needed here.
  */
-class GADGET_CLASS_API GloveData : public DeviceData<GloveValues>
+class GADGET_API GloveData : public DeviceData<GloveValues>
 {
 public:
    enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };

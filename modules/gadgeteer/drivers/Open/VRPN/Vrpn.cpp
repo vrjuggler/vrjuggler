@@ -76,12 +76,12 @@
 extern "C"
 {
 
-GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+GADGET_DRIVER_EXPORT vpr::Uint32 getGadgeteerVersion()
 {
    return __GADGET_version;
 }
 
-GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
+GADGET_DRIVER_EXPORT void initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::Vrpn>(inputMgr);
 }

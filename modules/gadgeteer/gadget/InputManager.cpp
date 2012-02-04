@@ -478,7 +478,7 @@ bool InputManager::removeDevice(jccl::ConfigElementPtr element)
  * Dump the current Status of the InputManager, listing all
  * the devices, proxies and internal settings
  */
-GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
+std::ostream& operator<<(std::ostream& out, InputManager& iMgr)
 {
    out << "\n========== Input Manager Status ==========" << std::endl;
    out << "Device List:\n";

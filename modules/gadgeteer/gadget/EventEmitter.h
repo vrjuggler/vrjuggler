@@ -67,7 +67,7 @@ class AbstractEventInterface;
  *
  * @since 2.1.2
  */
-class GADGET_CLASS_API EventEmitter
+class GADGET_API EventEmitter
    : public jccl::ConfigElementHandler
    , public boost::enable_shared_from_this<EventEmitter>
    , private boost::noncopyable

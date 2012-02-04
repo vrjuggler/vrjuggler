@@ -47,7 +47,8 @@ namespace gadget
  *
  * Glove proxy class.
  */
-class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
+class GADGET_API GloveProxy
+   : public TypedProxy<Glove>
 {
 public:
    /** @since 2.1.1 */

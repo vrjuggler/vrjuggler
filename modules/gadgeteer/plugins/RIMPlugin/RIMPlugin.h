@@ -58,7 +58,7 @@
 namespace cluster
 {
 
-class GADGET_CLUSTER_PLUGIN_CLASS_API RIMPlugin
+class GADGET_CLUSTER_PLUGIN_API RIMPlugin
    : public cluster::ClusterPlugin
    , public jccl::ConfigElementHandler
 {

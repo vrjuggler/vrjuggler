@@ -50,8 +50,7 @@ namespace gadget
  * set the data.  This prevents computers connected to the remote
  * input manager from having different copies of data for very long.
  */
-//class SimSetablePosition : public Input, public Position
-class GADGET_CLASS_API SimSetablePosition
+class GADGET_API SimSetablePosition
    : public InputDevice<Position>
 {
 public:

@@ -47,7 +47,7 @@ namespace gadget
  *
  * Input data logger.
  */
-class GADGET_CLASS_API InputLogger
+class GADGET_API InputLogger
 {
 public:
    InputLogger()

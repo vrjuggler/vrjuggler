@@ -58,7 +58,7 @@ namespace cluster
 {
    class ApplicationData;
 
-class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataManager
+class GADGET_CLUSTER_PLUGIN_API ApplicationDataManager
    : public cluster::ClusterPlugin
 {
 protected:

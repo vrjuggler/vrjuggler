@@ -61,7 +61,7 @@ const unsigned short MSG_DATA_EVENT_WINDOW = 420;
  * counts the number of keyboard and mouse events between updates.  Updates in
  * Juggler occur once per frame.
  */
-class GADGET_CLASS_API KeyboardMouse
+class GADGET_API KeyboardMouse
    : public vpr::SerializableObject
    , private boost::noncopyable
 {

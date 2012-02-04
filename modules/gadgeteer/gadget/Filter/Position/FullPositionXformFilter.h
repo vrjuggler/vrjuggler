@@ -48,7 +48,8 @@ namespace gadget
  *
  * @since 1.3.20
  */
-class GADGET_CLASS_API FullPositionXformFilter : public PositionFilter
+class GADGET_API FullPositionXformFilter
+   : public PositionFilter
 {
 public:
    /** Constructor. */

@@ -42,7 +42,7 @@
 namespace cluster
 {
 
-class GADGET_CLASS_API EndBlock
+class GADGET_API EndBlock
    : public Packet
 {
 protected:

@@ -45,7 +45,7 @@ namespace gadget
  * Object used for creating devices.
  * @note Singleton
  */
-class GADGET_CLASS_API DeviceFactory
+class GADGET_API DeviceFactory
 {
 private:
    /** Singleton so must be private. */

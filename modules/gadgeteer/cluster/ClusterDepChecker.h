@@ -43,7 +43,8 @@ namespace cluster
  * Implement the basic stuff plus a check for whether
  * the system knows about Remote Input Manager yet.
  */
-class GADGET_CLASS_API ClusterDepChecker : public jccl::DepChecker
+class GADGET_API ClusterDepChecker
+   : public jccl::DepChecker
 {
 public:
    ClusterDepChecker()

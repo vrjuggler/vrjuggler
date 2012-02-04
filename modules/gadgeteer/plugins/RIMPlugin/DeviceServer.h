@@ -47,18 +47,18 @@ namespace cluster
  *
  * Device server class.
  */
-class GADGET_CLUSTER_PLUGIN_CLASS_API DeviceServer
+class GADGET_CLUSTER_PLUGIN_API DeviceServer
    : boost::noncopyable
 {
 protected:
    /**
     * Create a new DeviceServer.
     *
-    * @param name      Name of the device that we are sharing.
-    * @param device    Pointer to the device that we are sharing.
-    * @param plugin_id GUID that should be placed at the beginning of 
-    *                  each data packet so that the receiver knows which 
-    *                  plugin the data is coming from.
+    * @param name     Name of the device that we are sharing.
+    * @param device   Pointer to the device that we are sharing.
+    * @param pluginId GUID that should be placed at the beginning of 
+    *                 each data packet so that the receiver knows which 
+    *                 plugin the data is coming from.
     */
    DeviceServer(const std::string& name, gadget::InputPtr device,
                 const vpr::GUID& pluginId);

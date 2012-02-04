@@ -65,7 +65,7 @@ class DeviceFactory;
  * set up by config elements and should be accessed by number, rather than by
  * name (for speed reasons).
  */
-class GADGET_CLASS_API InputManager
+class GADGET_API InputManager
    : public jccl::ConfigElementHandler
    , private boost::noncopyable
 {
@@ -84,8 +84,8 @@ protected:
    virtual ~InputManager();
 
 public:
-   friend GADGET_API(std::ostream&) operator<<(std::ostream& out,
-                                               InputManager& iMgr);
+   friend GADGET_API std::ostream& operator<<(std::ostream& out,
+                                              InputManager& iMgr);
 
    /** @name Configuration Interface */
    //@{
@@ -303,7 +303,7 @@ private:
 };
 
 /** Writes out the status of the Input Manager. */
-GADGET_API(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr);
+GADGET_API std::ostream& operator<<(std::ostream& out, InputManager& iMgr);
 
 } // end namespace
 

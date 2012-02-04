@@ -71,7 +71,7 @@ const unsigned short MSG_DATA_STRING = 430;
  * @see Input
  * @see InputDevice
  */
-class GADGET_CLASS_API String
+class GADGET_API String
    : public vpr::SerializableObject
    , boost::noncopyable
 {

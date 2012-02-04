@@ -46,7 +46,7 @@ namespace cluster
  *
  * Cluster packet header block.
  */
-class GADGET_CLASS_API Header
+class GADGET_API Header
    : boost::noncopyable
 {
 public:

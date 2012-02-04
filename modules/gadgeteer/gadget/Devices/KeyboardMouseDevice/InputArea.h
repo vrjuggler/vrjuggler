@@ -43,7 +43,8 @@ namespace gadget
  *
  * Base class for window types that accept keyboard and mouse input.
  */
-class GADGET_CLASS_API InputArea : private boost::noncopyable
+class GADGET_API InputArea
+   : private boost::noncopyable
 {
 public:
    /** Enum to keep track of current lock state for state machine. */

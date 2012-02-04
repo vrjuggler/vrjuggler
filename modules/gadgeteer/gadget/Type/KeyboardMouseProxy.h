@@ -48,7 +48,8 @@ namespace gadget
  *
  * @see gagdet::KeyboardMouse
  */
-class GADGET_CLASS_API KeyboardMouseProxy : public TypedProxy<KeyboardMouse>
+class GADGET_API KeyboardMouseProxy
+   : public TypedProxy<KeyboardMouse>
 {
 public:
    /** @since 2.1.1 */

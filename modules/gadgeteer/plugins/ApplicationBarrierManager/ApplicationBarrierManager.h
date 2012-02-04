@@ -58,7 +58,7 @@ namespace cluster
 {
    class ApplicationBarrier;
 
-class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationBarrierManager
+class GADGET_CLUSTER_PLUGIN_API ApplicationBarrierManager
    : public cluster::ClusterPlugin
 {
 protected:

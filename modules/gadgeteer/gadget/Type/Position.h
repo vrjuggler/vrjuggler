@@ -73,7 +73,7 @@ const unsigned short MSG_DATA_POS = 422;
  * @see Input
  * @see InputDevice
  */
-class GADGET_CLASS_API Position
+class GADGET_API Position
    : public vpr::SerializableObject
    , boost::noncopyable
 {
