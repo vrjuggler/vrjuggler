@@ -265,8 +265,7 @@ std::vector<PropertyDefinition> ConfigDefinition::getAllPropertyDefinitions() co
    return ret_val;
 }
 
-JCCL_IMPLEMENT(std::ostream&) operator<< (std::ostream& out,
-                                          const ConfigDefinition& self)
+std::ostream& operator<<(std::ostream& out, const ConfigDefinition& self)
 {
    self.mNode->save(out);
    return out;

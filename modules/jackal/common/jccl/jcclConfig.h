@@ -67,87 +67,46 @@
 #   include <windows.h>
 #endif /* WIN32 || WIN64 */
 
-#if !defined(WIN32) && !defined(WIN64)          \
+#if ! defined(WIN32) && ! defined(WIN64)        \
       && defined(__GNUC__) && __GNUC__ >= 4     \
-      && !defined(JCCL_HAVE_GCC_VISIBILITY)
+      && ! defined(JCCL_HAVE_GCC_VISIBILITY)
 #  define JCCL_HAVE_GCC_VISIBILITY
 #endif
 
-/**
- ** ----------------------------------------------------------------------------
- ** DLL-related macros.  These are based on the macros used by NSPR.  Use
- ** JCCL_EXTERN for the prototype and JCCL_IMPLEMENT for the implementation.
- ** ----------------------------------------------------------------------------
- **/
 #if defined(WIN32) || defined(WIN64)
-#if defined(__GNUC__)
-#    undef _declspec
-#    define _declspec(x) __declspec(x)
-#endif /* GNUC */
 
-#define JCCL_EXPORT(__type)      _declspec(dllexport) __type
-#define JCCL_EXPORT_CLASS        _declspec(dllexport)
-#define JCCL_EXPORT_DATA(__type) _declspec(dllexport) __type
-#define JCCL_IMPORT(__type)      _declspec(dllimport) __type
-#define JCCL_IMPORT_DATA(__type) _declspec(dllimport) __type
-#define JCCL_IMPORT_CLASS        _declspec(dllimport)
+#   if defined(__GNUC__)
+#       undef _declspec
+#       define _declspec(x) __declspec(x)
+#   endif
 
-#define JCCL_EXTERN(__type)         extern _declspec(dllexport) __type
-#define JCCL_IMPLEMENT(__type)      _declspec(dllexport) __type
-#define JCCL_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#define JCCL_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#define JCCL_CALLBACK
-#define JCCL_CALLBACK_DECL
-#define JCCL_STATIC_CALLBACK(__x) static __x
+#   define JCCL_EXPORT        _declspec(dllexport)
+#   define JCCL_IMPORT        _declspec(dllimport)
+#   define JCCL_EXTERN_EXPORT extern _declspec(dllexport)
+#   define JCCL_EXTERN_IMPORT extern _declspec(dllimport)
 
 #elif defined(JCCL_HAVE_GCC_VISIBILITY)
-#   define JCCL_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define JCCL_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define JCCL_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define JCCL_IMPORT(__type)      __type
-#   define JCCL_IMPORT_DATA(__type) __type
-#   define JCCL_IMPORT_CLASS        
+#   define JCCL_EXPORT        __attribute__ ((visibility("default")))
+#   define JCCL_IMPORT
+#   define JCCL_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define JCCL_EXTERN_IMPORT extern
+#else
+#   define JCCL_EXPORT
+#   define JCCL_IMPORT
+#   define JCCL_EXTERN_EXPORT extern
+#   define JCCL_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
-#   define JCCL_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define JCCL_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define JCCL_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define JCCL_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
+#ifdef _JCCL_BUILD_
+#   define JCCL_API    JCCL_EXPORT
+#   define JCCL_EXTERN JCCL_EXTERN_EXPORT
+#else
+#   define JCCL_API    JCCL_IMPORT
+#   define JCCL_EXTERN JCCL_EXTERN_IMPORT
+#endif
 
-#   define JCCL_CALLBACK
-#   define JCCL_CALLBACK_DECL
-#   define JCCL_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX */
-
-#define JCCL_EXPORT(__type)      __type
-#define JCCL_EXPORT_CLASS
-#define JCCL_EXPORT_DATA(__type) __type
-#define JCCL_IMPORT(__type)      __type
-#define JCCL_IMPORT_CLASS
-#define JCCL_IMPORT_DATA(__type) __type
-
-#define JCCL_EXTERN(__type)         extern __type
-#define JCCL_IMPLEMENT(__type)      __type
-#define JCCL_EXTERN_DATA(__type)    extern __type
-#define JCCL_IMPLEMENT_DATA(__type) __type
-
-#define JCCL_CALLBACK
-#define JCCL_CALLBACK_DECL
-#define JCCL_STATIC_CALLBACK(__x) static __x
-
-#endif	/* WIN32 || WIN64 */
-
-# ifdef _JCCL_BUILD_
-#    define JCCL_API(__type)	JCCL_EXPORT(__type)
-#    define JCCL_CLASS_API		JCCL_EXPORT_CLASS
-#    define JCCL_DATA_API(__type)	JCCL_EXPORT_DATA(__type)
-# else
-#    define JCCL_API(__type)	JCCL_IMPORT(__type)
-#    define JCCL_CLASS_API		JCCL_IMPORT_CLASS
-#    define JCCL_DATA_API(__type)	JCCL_IMPORT_DATA(__type)
-
-#    include <jccl/AutoLink.h>
-# endif
+#if ! defined(_JCCL_BUILD_)
+#   include <jccl/AutoLink.h>
+#endif
 
 #endif   /* _VRJ_JCCL_CONFIG_H_ */

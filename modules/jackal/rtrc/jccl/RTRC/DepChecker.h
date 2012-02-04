@@ -53,7 +53,7 @@ namespace jccl
  * @note The DepChecker must be registered BEFORE a element of the given type
  *       is checked for dependencies.
  */
-class JCCL_CLASS_API DepChecker
+class JCCL_API DepChecker
 {
 public:
    /** Constructor. */

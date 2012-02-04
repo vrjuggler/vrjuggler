@@ -46,7 +46,7 @@ namespace jccl
  * References a config element DOM node and a definition for the given
  * configuration element type.
  */
-class JCCL_CLASS_API ConfigElement
+class JCCL_API ConfigElement
 {
 public:
    /** Constructor. */
@@ -109,8 +109,8 @@ public:
     * @param out  An ostream.
     * @param self A ConfigElement.
     */
-   friend JCCL_API(std::ostream&) operator<<(std::ostream& out,
-                                             const ConfigElement& self);
+   friend JCCL_API std::ostream& operator<<(std::ostream& out,
+                                            const ConfigElement& self);
 
    /**
     * Returns the number of values for the specified property.

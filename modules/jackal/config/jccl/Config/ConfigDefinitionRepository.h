@@ -39,7 +39,7 @@ namespace jccl
     * Stores a set of configuration definitions that can be retrieved by name.
     * Only the newest version of a given definition is available.
     */
-   class JCCL_CLASS_API ConfigDefinitionRepository
+   class JCCL_API ConfigDefinitionRepository
    {
    public:
 

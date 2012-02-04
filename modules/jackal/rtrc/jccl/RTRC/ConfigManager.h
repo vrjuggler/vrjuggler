@@ -88,7 +88,7 @@ class RemoteReconfig;
  *
  * @date January 13, 2000
  */
-class JCCL_CLASS_API ConfigManager
+class JCCL_API ConfigManager
 {
 public:
    struct PendingElement

@@ -40,7 +40,7 @@ namespace jccl
  *
  * List of jccl::ConfigElement objects.
  */
-class JCCL_CLASS_API Configuration
+class JCCL_API Configuration
 {
 public:
 
@@ -108,8 +108,8 @@ public:
    /* IO functions: */
 
    /** Write contents of self to out. */
-   friend JCCL_API(std::ostream&) operator<< (std::ostream& out,
-                                              const Configuration& self);
+   friend JCCL_API std::ostream& operator<<(std::ostream& out,
+                                            const Configuration& self);
 
    /** Reads contents of self from in.
     *  Note that the previous contents of self are not removed (although
@@ -119,8 +119,8 @@ public:
     *  @param self A Configuration.
     *  @return in.
     */
-   friend JCCL_API(std::istream&) operator>> (std::istream& in,
-                                              Configuration& self);
+   friend JCCL_API std::istream& operator>>(std::istream& in,
+                                            Configuration& self);
 
    /**
     * Loads ConfigElements from the given file.

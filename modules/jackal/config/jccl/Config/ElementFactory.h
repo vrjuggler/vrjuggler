@@ -45,7 +45,7 @@ namespace jccl
     * Factory for elements and a place holder for some other system-wide
     * factory functions.
     */
-   class JCCL_CLASS_API ElementFactory
+   class JCCL_API ElementFactory
    {
    public:
       /**

@@ -52,7 +52,7 @@ namespace jccl
  *
  * @see ConfigManager
  */
-class JCCL_CLASS_API ConfigElementHandler
+class JCCL_API ConfigElementHandler
 {
 
 public:

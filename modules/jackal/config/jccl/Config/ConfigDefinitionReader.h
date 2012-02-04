@@ -42,7 +42,7 @@ namespace jccl
     * This object knows how to deserialize all versions of a configuration
     * definition from a stream.
     */
-   class JCCL_CLASS_API ConfigDefinitionReader
+   class JCCL_API ConfigDefinitionReader
    {
    public:
       /**

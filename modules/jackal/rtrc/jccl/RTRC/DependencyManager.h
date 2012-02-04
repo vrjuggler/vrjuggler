@@ -52,7 +52,7 @@ namespace jccl
  *
  * @see jccl::ConfigManager
  */
-class JCCL_CLASS_API DependencyManager
+class JCCL_API DependencyManager
 {
 private:
    /** Constructor. Private since this is a singleton. */

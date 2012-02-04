@@ -45,7 +45,7 @@ namespace jccl
  *       but instead we just create them dynamically from the 
  *       children of our ConfigDefinition XML node.
  */
-class JCCL_CLASS_API ConfigDefinition
+class JCCL_API ConfigDefinition
 {
 public:
    /** Constructor. */
@@ -122,8 +122,8 @@ public:
    }
 
    /** Writes self to the given output stream. */
-   friend JCCL_API(std::ostream&) operator<< (std::ostream& out,
-                                              const ConfigDefinition& self);
+   friend JCCL_API std::ostream& operator<<(std::ostream& out,
+                                            const ConfigDefinition& self);
 
 protected:
    bool             mIsValid;   /**< Validation flag */

@@ -46,7 +46,7 @@ namespace jccl
  *
  * @see VarType
  */
-class JCCL_CLASS_API PropertyDefinition
+class JCCL_API PropertyDefinition
 {
 public:
 
@@ -103,8 +103,8 @@ public:
    std::string getDefaultValueString(int index);
 
    /** Writes a PropertyDefinition to the given ostream. */
-   friend JCCL_API(std::ostream&) operator<< (std::ostream& out,
-                                              const PropertyDefinition& self);
+   friend JCCL_API std::ostream& operator<<(std::ostream& out,
+                                            const PropertyDefinition& self);
 
    /** Equality operator. */
    // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
