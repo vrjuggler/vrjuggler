@@ -4,3 +4,12 @@ autom4te.cache
 configure
 .*.sw?
 *Defines.h.in
+vc*/*/*.fpc
+vc*/*/*/*Param.h
+vc*/*/*/version.rc
+vc*/*/build*.xml
+vc*/*/*/build*.xml
+vc*/*/Win32
+vc*/*/x64
+vc*/Juggler.ncb
+options.cache
