@@ -48,7 +48,8 @@ namespace gadget
  *
  * Base class for X11 windows that accept keyboard and mouse input.
  */
-class GADGET_CLASS_API InputAreaXWin : public InputArea
+class GADGET_API InputAreaXWin
+   : public InputArea
 {
 protected:
    InputAreaXWin();

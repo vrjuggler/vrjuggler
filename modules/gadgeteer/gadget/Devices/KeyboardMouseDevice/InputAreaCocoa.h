@@ -59,7 +59,8 @@ namespace gadget
  *
  * @see InputViewCocoa
  */
-class GADGET_CLASS_API InputAreaCocoa : public InputArea
+class GADGET_API InputAreaCocoa
+   : public InputArea
 {
 protected:
    InputAreaCocoa();
