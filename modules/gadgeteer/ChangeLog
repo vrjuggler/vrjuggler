@@ -6,6 +6,8 @@ DATE       AUTHOR      CHANGE
                        or GADGET_DRIVER_API. Similarly, cluster plug-ins can
                        use GADGET_CLUSTER_PLUGIN_EXPORT or
                        GADGET_CLUSTER_PLUGIN_API.
+2012-02-03 furlong.t   Added TUIO driver.
+                       NEW VERSION: 2.1.28
 2011-12-03 patrick     Converted gadget::KeyboardMouseEventInterface,
                        gadget::DigitalEventInterface,
                        gadget::StringEventInterface, and
