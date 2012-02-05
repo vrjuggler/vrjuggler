@@ -98,16 +98,16 @@ int getJointState(const int sensor1_state, const int sensor2_state)
 
 // Constructor
 DataGloveUltraWirelessStandalone::DataGloveUltraWirelessStandalone()
-   : mIsActive(false),
-     mGestureUpperThresh(0.65f),
-     mGestureLowerThresh(0.35f),
-     mGloveAGesture(-1),
-     mGloveBGesture(-1),
-     mAutoResetEnabled(true),
-     mResetMinA(false),
-     mResetMaxA(false),
-     mResetMinB(false),
-     mResetMaxB(false)
+   : mGloveAGesture(-1)
+   , mGloveBGesture(-1)
+   , mIsActive(false)
+   , mGestureUpperThresh(0.65f)
+   , mGestureLowerThresh(0.35f)
+   , mAutoResetEnabled(true)
+   , mResetMinA(false)
+   , mResetMaxA(false)
+   , mResetMinB(false)
+   , mResetMaxB(false)
 {
    // Initialize min/max values to the opposite of where they will likely be
    for(int i = 0; i < 14; i++)
