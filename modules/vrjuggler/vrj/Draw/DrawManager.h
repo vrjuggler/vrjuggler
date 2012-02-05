@@ -110,15 +110,12 @@ public:
    void setDisplayManager(DisplayManager* dispMgr);
    DisplayManager* getDisplayManager();
 
-   friend VJ_API std::ostream& operator<<(std::ostream& out,
-                                          DrawManager& drawMgr);
-
-   virtual void outStream(std::ostream& out)
-   {
-      out << "vrj::DrawManager: outstream\n";  // Set a default
-   }
+   virtual void outStream(std::ostream& out) const;
 
 protected:
+   friend VJ_API std::ostream& operator<<(std::ostream& out,
+                                          const DrawManager& drawMgr);
+
    DisplayManager* mDisplayManager;  /**< The display manager dealing with */
 };
 

@@ -290,7 +290,7 @@ public:
    }
 
    friend std::ostream& operator<<(std::ostream& out,
-                                   vrj::direct3d::Window& win);
+                                   const vrj::direct3d::Window& win);
 
 private:
    // WindowProcedure to deal with the events generated.
@@ -374,7 +374,7 @@ private:
    static int getNextWindowId();
 };
 
-// ostream& operator<<(ostream& out, vrj::direct3d::Window& win);
+// ostream& operator<<(ostream& out, const vrj::direct3d::Window& win);
 
 } // end direct3d namespace
 

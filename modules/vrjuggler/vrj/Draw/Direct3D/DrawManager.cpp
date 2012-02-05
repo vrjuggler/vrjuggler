@@ -556,7 +556,7 @@ bool DrawManager::isValidWindow(vrj::direct3d::Window* win)
 }
 
 // dumps the object's internal state
-void DrawManager::outStream(std::ostream& out)
+void DrawManager::outStream(std::ostream& out) const
 {
    out << clrSetNORM(clrGREEN)
        << "========== vrj::direct3d::DrawManager: " << (void*)this << " ========="

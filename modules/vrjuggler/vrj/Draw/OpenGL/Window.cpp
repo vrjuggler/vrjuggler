@@ -268,7 +268,7 @@ vpr::Guard<vpr::Mutex> guard(mWinIdMutex);      // Protect the id
    return mCurMaxWinId++;
 }
 
-std::ostream& operator<<(std::ostream& out, vrj::opengl::Window& win)
+std::ostream& operator<<(std::ostream& out, const vrj::opengl::Window& win)
 {
    vprASSERT(win.mVrjDisplay != NULL);
 

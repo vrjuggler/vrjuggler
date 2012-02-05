@@ -60,14 +60,14 @@ void Frustum::set(const float leftVal, const float rightVal,
 }
 
 // ---- FRIEND FUNCTIONS ---- //
-std::ostream& operator<<(std::ostream& out, Frustum& _frust)
+std::ostream& operator<<(std::ostream& out, const Frustum& frust)
 {
-   out << "l: " << _frust[Frustum::VJ_LEFT] << " "
-       << "r: " << _frust[Frustum::VJ_RIGHT] << " "
-       << "b: " << _frust[Frustum::VJ_BOTTOM] << " "
-       << "t: " << _frust[Frustum::VJ_TOP] << " "
-       << "n: " << _frust[Frustum::VJ_NEAR] << " "
-       << "f: " << _frust[Frustum::VJ_FAR];
+   out << "l: " << frust[Frustum::VJ_LEFT] << " "
+       << "r: " << frust[Frustum::VJ_RIGHT] << " "
+       << "b: " << frust[Frustum::VJ_BOTTOM] << " "
+       << "t: " << frust[Frustum::VJ_TOP] << " "
+       << "n: " << frust[Frustum::VJ_NEAR] << " "
+       << "f: " << frust[Frustum::VJ_FAR];
 
    return out;
 }

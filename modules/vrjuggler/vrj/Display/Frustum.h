@@ -94,7 +94,7 @@ private:
    std::vector<float> mFrust;   /**< Left, Right, Bottom, Top, Near, Far */
 };
 
-std::ostream& operator<<(std::ostream& out, Frustum& _frust);
+std::ostream& operator<<(std::ostream& out, const Frustum& frust);
 
 }
 

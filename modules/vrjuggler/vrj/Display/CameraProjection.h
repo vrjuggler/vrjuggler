@@ -74,7 +74,7 @@ public:
                                const float scaleFactor);
 
    virtual std::ostream& outStream(std::ostream& out,
-                                   const unsigned int indentLevel = 0);
+                                   const unsigned int indentLevel = 0) const;
 
 public:
    //float mAspectRatio;     // w/h

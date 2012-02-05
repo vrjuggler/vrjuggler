@@ -225,7 +225,7 @@ jccl::ConfigElementPtr Display::getGlFrameBufferConfig() const
    return element;
 }
 
-std::ostream& operator<<(std::ostream& out, Display& disp)
+std::ostream& operator<<(std::ostream& out, const Display& disp)
 {
    out.setf(std::ios::left);
 

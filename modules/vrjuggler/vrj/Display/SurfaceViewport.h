@@ -103,7 +103,7 @@ public:
    void updateCorners();
 
    virtual std::ostream& outStream(std::ostream& out,
-                                   const unsigned int indentLevel = 0);
+                                   const unsigned int indentLevel = 0) const;
 
 protected:
    /** @name The corners in 3Space (for config) */

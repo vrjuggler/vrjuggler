@@ -111,13 +111,13 @@ bool Viewport::config(jccl::ConfigElementPtr element)
    return result;
 }
 
-std::ostream& operator<<(std::ostream& out, Viewport& viewport)
+std::ostream& operator<<(std::ostream& out, const Viewport& viewport)
 {
    return viewport.outStream(out);
 }
 
 std::ostream& Viewport::outStream(std::ostream& out,
-                                  const unsigned int indentLevel)
+                                  const unsigned int indentLevel) const
 {
    const int pad_width_dot(20 - indentLevel);
    const std::string indent_text(indentLevel, ' ');

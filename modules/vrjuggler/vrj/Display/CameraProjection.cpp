@@ -93,7 +93,7 @@ void CameraProjection::calcViewMatrix(const gmtl::Matrix44f& cameraPos,
 }
 
 std::ostream& CameraProjection::outStream(std::ostream& out,
-                                          const unsigned int indentLevel)
+                                          const unsigned int indentLevel) const
 {
 //   const int pad_width_dot(20 - indentLevel);
    out.setf(std::ios::left);

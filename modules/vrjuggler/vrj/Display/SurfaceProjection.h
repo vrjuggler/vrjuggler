@@ -141,7 +141,7 @@ public:
                                 const float scaleFactor);
 
    std::ostream& outStream(std::ostream& out,
-                           const unsigned int indentLevel = 0);
+                           const unsigned int indentLevel = 0) const;
 
 protected:
    /**

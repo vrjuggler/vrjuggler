@@ -249,7 +249,7 @@ public:
    }
 
    friend std::ostream& operator<<(std::ostream& out,
-                                   vrj::opengl::Window& win);
+                                   const vrj::opengl::Window& win);
 
 protected:
    /**
@@ -288,7 +288,7 @@ private:
    static int getNextWindowId();
 };
 
-// ostream& operator<<(ostream& out, vrj::opengl::Window& win);
+// ostream& operator<<(ostream& out, const vrj::opengl::Window& win);
 
 } // end opengl namespace
 

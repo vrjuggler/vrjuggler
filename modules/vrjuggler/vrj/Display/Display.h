@@ -207,7 +207,7 @@ public:
    jccl::ConfigElementPtr getGlFrameBufferConfig() const;
 
    friend VJ_API std::ostream& operator<<(std::ostream& out,
-                                          vrj::Display& disp);
+                                          const Display& disp);
 
    /** @name Viewport handling */
    //@{
@@ -250,7 +250,7 @@ protected:
    std::vector<vrj::ViewportPtr> mViewports;  /**<  Contained viewports */
 };
 
-VJ_API std::ostream& operator<<(std::ostream& out, vrj::Display& disp);
+VJ_API std::ostream& operator<<(std::ostream& out, const Display& disp);
 
 } // end namespace
 

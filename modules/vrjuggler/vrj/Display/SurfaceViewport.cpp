@@ -329,7 +329,7 @@ void SurfaceViewport::updateCorners()
 }
 
 std::ostream& SurfaceViewport::outStream(std::ostream& out,
-                                         const unsigned int indentLevel)
+                                         const unsigned int indentLevel) const
 {
    Viewport::outStream(out, indentLevel);
    out << std::endl;

@@ -189,8 +189,9 @@ void SurfaceProjection::calcViewFrustum(const gmtl::Point3f& eyePos,
       << "\tFrustum: " << mFrustum << std::endl << vprDEBUG_FLUSH;
 }
 
-std::ostream& SurfaceProjection::outStream(std::ostream& out,
-                                           const unsigned int indentLevel)
+std::ostream&
+SurfaceProjection::outStream(std::ostream& out,
+                             const unsigned int indentLevel) const
 {
 //   const int pad_width_dot(20 - indentLevel);
    out.setf(std::ios::left);

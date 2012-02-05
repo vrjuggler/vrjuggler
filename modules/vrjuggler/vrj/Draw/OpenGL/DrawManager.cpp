@@ -455,7 +455,7 @@ bool DrawManager::isValidWindow(vrj::opengl::WindowPtr win)
 }
 
 /// dumps the object's internal state
-void DrawManager::outStream(std::ostream& out)
+void DrawManager::outStream(std::ostream& out) const
 {
     out << clrSetNORM(clrGREEN)
         << "========== vrj::opengl::DrawManager: " << (void*) this << " ========="

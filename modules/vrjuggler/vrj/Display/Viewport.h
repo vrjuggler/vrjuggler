@@ -214,9 +214,10 @@ public:
    }
 
    virtual std::ostream& outStream(std::ostream& out,
-                                   const unsigned int indentLevel = 0);
+                                   const unsigned int indentLevel = 0) const;
 
-   friend VJ_API std::ostream& operator<<(std::ostream& out, Viewport& viewport);
+   friend VJ_API std::ostream& operator<<(std::ostream& out,
+                                          const Viewport& viewport);
 
 protected:
    std::string       mName;               /**< The name of the viewport being displayed */

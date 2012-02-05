@@ -102,7 +102,7 @@ void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
 }
 
 std::ostream& Projection::outStream(std::ostream& out,
-                                    const unsigned int indentLevel)
+                                    const unsigned int indentLevel) const
 {
    const int pad_width_dot(20 - indentLevel);
    out.setf(std::ios::left);
@@ -143,7 +143,7 @@ void Projection::getNearFar(float& nearVal, float& farVal)
    farVal = mFarDist;
 }
 
-std::ostream& operator<<(std::ostream& out, Projection& proj)
+std::ostream& operator<<(std::ostream& out, const Projection& proj)
 {
    return proj.outStream(out);
 }

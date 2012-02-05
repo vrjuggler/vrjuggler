@@ -39,10 +39,15 @@ DisplayManager* DrawManager::getDisplayManager()
    return mDisplayManager;
 }
 
-std::ostream& operator<<(std::ostream& out, DrawManager& drawMgr)
+void DrawManager::outStream(std::ostream& out) const
+{
+   out << "vrj::DrawManager: outstream\n";  // Set a default
+}
+
+std::ostream& operator<<(std::ostream& out, const DrawManager& drawMgr)
 {
    drawMgr.outStream(out);
    return out;
 }
 
-};
+}

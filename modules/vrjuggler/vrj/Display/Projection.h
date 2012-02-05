@@ -145,9 +145,10 @@ public:
     * the opertetor<< will "just work".
     */
    virtual std::ostream& outStream(std::ostream& out,
-                                   const unsigned int indentLevel = 0);
+                                   const unsigned int indentLevel = 0) const;
 
-   friend VJ_API std::ostream& operator<<(std::ostream& out, Projection& proj);
+   friend VJ_API std::ostream& operator<<(std::ostream& out,
+                                          const Projection& proj);
 
 
 protected:

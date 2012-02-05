@@ -548,7 +548,7 @@ vrj::direct3d::Window* Window::getD3dWin(HWND handle)
    }
 }
 
-std::ostream& operator<<(std::ostream& out, vrj::direct3d::Window& win)
+std::ostream& operator<<(std::ostream& out, const vrj::direct3d::Window& win)
 {
    vprASSERT(win.mVrjDisplay != NULL);
 
