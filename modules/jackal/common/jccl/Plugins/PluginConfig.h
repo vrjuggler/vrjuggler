@@ -48,7 +48,7 @@
 #   define JCCL_PLUGIN_EXTERN_EXPORT extern _declspec(dllexport)
 #   define JCCL_PLUGIN_EXTERN_IMPORT extern _declspec(dllimport)
 
-#elif defined(JCCL_PLUGIN_HAVE_GCC_VISIBILITY)
+#elif defined(JCCL_HAVE_GCC_VISIBILITY)
 #   define JCCL_PLUGIN_EXPORT        __attribute__ ((visibility("default")))
 #   define JCCL_PLUGIN_IMPORT
 #   define JCCL_PLUGIN_EXTERN_EXPORT extern __attribute__ ((visibility("default")))

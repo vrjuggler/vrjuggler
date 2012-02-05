@@ -48,7 +48,7 @@
 #   define GADGET_DRIVER_EXTERN_EXPORT extern _declspec(dllexport)
 #   define GADGET_DRIVER_EXTERN_IMPORT extern _declspec(dllimport)
 
-#elif defined(GADGET_DRIVER_HAVE_GCC_VISIBILITY)
+#elif defined(GADGET_HAVE_GCC_VISIBILITY)
 #   define GADGET_DRIVER_EXPORT        __attribute__ ((visibility("default")))
 #   define GADGET_DRIVER_IMPORT
 #   define GADGET_DRIVER_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
