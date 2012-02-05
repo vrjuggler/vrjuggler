@@ -42,7 +42,7 @@ static jccl::CorbaRemoteReconfig mReconfigObj;
 extern "C"
 {
 
-JCCL_PLUGIN_EXPORT(jccl::RemoteReconfig*)
+JCCL_PLUGIN_EXPORT jccl::RemoteReconfig*
 initPlugin(jccl::ConfigManager* configMgr)
 {
    mReconfigObj.setConfigManager(configMgr);

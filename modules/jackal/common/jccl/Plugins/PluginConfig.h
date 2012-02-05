@@ -36,13 +36,6 @@
  
 #include <jccl/jcclConfig.h>
 
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * JCCL_PLUGIN_EXTERN for the prototype and JCCL_PLUGIN_IMPLEMENT for the
- * implementation.
- * ----------------------------------------------------------------------------
- */
 #if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
@@ -50,68 +43,29 @@
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define JCCL_PLUGIN_EXPORT(__type)      _declspec(dllexport) __type
-#   define JCCL_PLUGIN_EXPORT_CLASS        _declspec(dllexport)
-#   define JCCL_PLUGIN_EXPORT_DATA(__type) _declspec(dllexport) __type
-#   define JCCL_PLUGIN_IMPORT(__type)      _declspec(dllimport) __type
-#   define JCCL_PLUGIN_IMPORT_DATA(__type) _declspec(dllimport) __type
-#   define JCCL_PLUGIN_IMPORT_CLASS        _declspec(dllimport)
+#   define JCCL_PLUGIN_EXPORT        _declspec(dllexport)
+#   define JCCL_PLUGIN_IMPORT        _declspec(dllimport)
+#   define JCCL_PLUGIN_EXTERN_EXPORT extern _declspec(dllexport)
+#   define JCCL_PLUGIN_EXTERN_IMPORT extern _declspec(dllimport)
 
-#   define JCCL_PLUGIN_EXTERN(__type)         extern _declspec(dllexport) __type
-#   define JCCL_PLUGIN_IMPLEMENT(__type)      _declspec(dllexport) __type
-#   define JCCL_PLUGIN_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#   define JCCL_PLUGIN_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#   define JCCL_PLUGIN_CALLBACK
-#   define JCCL_PLUGIN_CALLBACK_DECL
-#   define JCCL_PLUGIN_STATIC_CALLBACK(__x) static __x
-
-#elif defined(JCCL_HAVE_GCC_VISIBILITY)
-
-#   define JCCL_PLUGIN_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define JCCL_PLUGIN_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define JCCL_PLUGIN_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define JCCL_PLUGIN_IMPORT(__type)      __type
-#   define JCCL_PLUGIN_IMPORT_DATA(__type) __type
-#   define JCCL_PLUGIN_IMPORT_CLASS        
-
-#   define JCCL_PLUGIN_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define JCCL_PLUGIN_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define JCCL_PLUGIN_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define JCCL_PLUGIN_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define JCCL_PLUGIN_CALLBACK
-#   define JCCL_PLUGIN_CALLBACK_DECL
-#   define JCCL_PLUGIN_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX (where this stuff is simple!) */
-
-#   define JCCL_PLUGIN_EXPORT(__type)      __type
-#   define JCCL_PLUGIN_EXPORT_CLASS
-#   define JCCL_PLUGIN_EXPORT_DATA(__type) __type
-#   define JCCL_PLUGIN_IMPORT(__type)      __type
-#   define JCCL_PLUGIN_IMPORT_CLASS
-#   define JCCL_PLUGIN_IMPORT_DATA(__type) __type
-
-#   define JCCL_PLUGIN_EXTERN(__type)         extern __type
-#   define JCCL_PLUGIN_IMPLEMENT(__type)      __type
-#   define JCCL_PLUGIN_EXTERN_DATA(__type)    extern __type
-#   define JCCL_PLUGIN_IMPLEMENT_DATA(__type) __type
-
-#   define JCCL_PLUGIN_CALLBACK
-#   define JCCL_PLUGIN_CALLBACK_DECL
-#   define JCCL_PLUGIN_STATIC_CALLBACK(__x) static __x
-
-#endif	/* WIN32 || WIN64 */
+#elif defined(JCCL_PLUGIN_HAVE_GCC_VISIBILITY)
+#   define JCCL_PLUGIN_EXPORT        __attribute__ ((visibility("default")))
+#   define JCCL_PLUGIN_IMPORT
+#   define JCCL_PLUGIN_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define JCCL_PLUGIN_EXTERN_IMPORT extern
+#else
+#   define JCCL_PLUGIN_EXPORT
+#   define JCCL_PLUGIN_IMPORT
+#   define JCCL_PLUGIN_EXTERN_EXPORT extern
+#   define JCCL_PLUGIN_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
 #ifdef _JCCL_PLUGIN_BUILD_
-#   define JCCL_PLUGIN_API(__type)	JCCL_PLUGIN_EXPORT(__type)
-#   define JCCL_PLUGIN_CLASS_API	JCCL_PLUGIN_EXPORT_CLASS
-#   define JCCL_PLUGIN_DATA_API(__type)	JCCL_PLUGIN_EXPORT_DATA(__type)
+#   define JCCL_PLUGIN_API    JCCL_PLUGIN_EXPORT
+#   define JCCL_PLUGIN_EXTERN JCCL_PLUGIN_EXTERN_EXPORT
 #else
-#   define JCCL_PLUGIN_API(__type)	JCCL_PLUGIN_IMPORT(__type)
-#   define JCCL_PLUGIN_CLASS_API	JCCL_PLUGIN_IMPORT_CLASS
-#   define JCCL_PLUGIN_DATA_API(__type)	JCCL_PLUGIN_IMPORT_DATA(__type)
+#   define JCCL_PLUGIN_API    JCCL_PLUGIN_IMPORT
+#   define JCCL_PLUGIN_EXTERN JCCL_PLUGIN_EXTERN_IMPORT
 #endif
 
 #endif /* _JCCL_PLUGIN_CONFIG_H_ */
