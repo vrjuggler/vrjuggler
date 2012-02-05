@@ -42,7 +42,7 @@ namespace cluster
 /**
  * Cluster data packet.
  */
-class GADGET_CLUSTER_PLUGIN_CLASS_API EventPacket
+class EventPacket
    : public Packet
 {
 public:

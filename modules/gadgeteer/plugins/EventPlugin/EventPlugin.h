@@ -58,7 +58,7 @@ namespace cluster
 {
    class ApplicationData;
 
-class GADGET_CLUSTER_PLUGIN_CLASS_API EventPlugin
+class EventPlugin
    : public cluster::ClusterPlugin
 {
 protected:
