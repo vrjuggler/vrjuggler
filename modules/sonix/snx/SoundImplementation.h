@@ -117,7 +117,7 @@ public:
     *
     * @param alias The alias of the sound to query.
     */
-   virtual bool isPlaying( const std::string& alias )
+   virtual bool isPlaying(const std::string& alias) const
    {
       boost::ignore_unused_variable_warning(alias);
       return false;
@@ -142,9 +142,9 @@ public:
     *
     * @param alias The alias of the sound to query.
     */
-   virtual bool isRetriggerable( const std::string& alias )
+   virtual bool isRetriggerable(const std::string& alias) const
    {
-      return bool( this->lookup( alias ).retriggerable == true );
+      return this->lookup(alias).retriggerable;
    }
 
    /**
@@ -185,7 +185,7 @@ public:
     *
     * @param alias The alias of the sound to query.
     */
-   virtual bool isPaused( const std::string& alias )
+   virtual bool isPaused(const std::string& alias) const
    {
       boost::ignore_unused_variable_warning(alias);
       return false;
@@ -211,7 +211,7 @@ public:
     *
     * @param alias The alias of the sound to query.
     */
-   virtual bool isAmbient( const std::string& alias )
+   virtual bool isAmbient(const std::string& alias) const
    {
       return this->lookup( alias ).ambient;
    }

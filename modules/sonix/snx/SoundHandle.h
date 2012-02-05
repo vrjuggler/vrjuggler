@@ -142,7 +142,7 @@ namespace snx
       /**
        * Is the sound currently playing?
        */
-      virtual bool isPlaying()
+      virtual bool isPlaying() const
       {
          return sonix::instance()->isPlaying( mAlias );
       }
@@ -162,7 +162,7 @@ namespace snx
       /**
        * Is the sound retriggerable?
        */
-      virtual bool isRetriggerable()
+      virtual bool isRetriggerable() const
       {
          return sonix::instance()->isRetriggerable( mAlias );
       }
@@ -194,7 +194,7 @@ namespace snx
       }
 
       /** If the sound is paused, then return true. */
-      virtual bool isPaused()
+      virtual bool isPaused() const
       {
          return sonix::instance()->isPaused( mAlias );
       }
@@ -215,7 +215,7 @@ namespace snx
       }
 
       /** Is the sound ambient? */
-      virtual bool isAmbient()
+      virtual bool isAmbient() const
       {
          return sonix::instance()->isAmbient( mAlias );
       }

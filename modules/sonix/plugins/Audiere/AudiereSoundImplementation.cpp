@@ -158,7 +158,7 @@ void AudiereSoundImplementation::trigger(const std::string& alias,
    }
 }
 
-bool AudiereSoundImplementation::isPlaying( const std::string& alias )
+bool AudiereSoundImplementation::isPlaying(const std::string& alias) const
 {
    vprASSERT(mDev.get() != NULL &&
              "startAPI must be called prior to this function");
@@ -187,7 +187,7 @@ bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 }
 
 /** if the sound is paused, then return true. */
-bool AudiereSoundImplementation::isPaused( const std::string& alias )
+bool AudiereSoundImplementation::isPaused(const std::string& alias) const
 {
    vprASSERT(mDev.get() != NULL &&
              "startAPI must be called prior to this function");

@@ -102,7 +102,7 @@ public:
    /**
      * is the sound currently playing?
      */
-   bool isPlaying( const std::string& alias );
+   bool isPlaying(const std::string& alias) const;
    
    /**
     * @semantics stop the sound
@@ -121,7 +121,7 @@ public:
    virtual void unpause( const std::string& alias );
 
    /** if the sound is paused, then return true. */
-   virtual bool isPaused( const std::string& alias );
+   virtual bool isPaused(const std::string& alias) const;
 
    /*
     * when sound is already playing then you call trigger,

@@ -85,7 +85,7 @@ public:
    /**
     * Is the sound currently playing?
     */
-   virtual bool isPlaying( const std::string& alias ) = 0;
+   virtual bool isPlaying(const std::string& alias) const = 0;
 
    /**
     * When sound is already playing then you call trigger,
@@ -96,7 +96,7 @@ public:
    /**
     * Is the sound retriggerable?
     */
-   virtual bool isRetriggerable( const std::string& alias ) = 0;
+   virtual bool isRetriggerable(const std::string& alias) const = 0;
 
    /**
     * Stops the sound.
@@ -116,7 +116,7 @@ public:
    virtual void unpause( const std::string& alias ) = 0;
 
    /** If the sound is paused, then return true. */
-   virtual bool isPaused( const std::string& alias ) = 0;
+   virtual bool isPaused(const std::string& alias) const = 0;
 
    /**
     * Ambient or positional sound.
@@ -130,7 +130,7 @@ public:
     * Is the sound ambient: attached to the listener, doesn't change volume
     * when listener moves.
     */
-   virtual bool isAmbient( const std::string& alias ) = 0;
+   virtual bool isAmbient(const std::string& alias) const = 0;
 
    /** Bends the pitch of the sound. */
    virtual void setPitchBend( const std::string& alias, float amount ) = 0;

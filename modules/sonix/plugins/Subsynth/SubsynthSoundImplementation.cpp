@@ -152,7 +152,7 @@ void SubsynthSoundImplementation::trigger(const std::string& alias,
    }
 }
 
-bool SubsynthSoundImplementation::isPlaying( const std::string& alias )
+bool SubsynthSoundImplementation::isPlaying(const std::string& alias) const
 {
    if (this->isStarted() == false) return false;
    
@@ -168,7 +168,7 @@ bool SubsynthSoundImplementation::isPlaying( const std::string& alias )
 }
 
 /** if the sound is paused, then return true. */
-bool SubsynthSoundImplementation::isPaused( const std::string& alias )
+bool SubsynthSoundImplementation::isPaused(const std::string& alias) const
 {
    if (this->isStarted() == false) return false;
    
