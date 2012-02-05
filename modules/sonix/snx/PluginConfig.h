@@ -45,6 +45,7 @@
  
 #include <snx/snxConfig.h>
 
+#if 0
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -121,6 +122,39 @@
 #   define SNX_PLUGIN_API(__type)	SNX_PLUGIN_IMPORT(__type)
 #   define SNX_PLUGIN_CLASS_API         SNX_PLUGIN_IMPORT_CLASS
 #   define SNX_PLUGIN_DATA_API(__type)	SNX_PLUGIN_IMPORT_DATA(__type)
+#endif
+#endif
+
+#if defined(WIN32) || defined(WIN64)
+
+#   if defined(__GNUC__)
+#       undef _declspec
+#       define _declspec(x) __declspec(x)
+#   endif
+
+#   define SNX_PLUGIN_EXPORT        _declspec(dllexport)
+#   define SNX_PLUGIN_IMPORT        _declspec(dllimport)
+#   define SNX_PLUGIN_EXTERN_EXPORT extern _declspec(dllexport)
+#   define SNX_PLUGIN_EXTERN_IMPORT extern _declspec(dllimport)
+
+#elif defined(GADGET_HAVE_GCC_VISIBILITY)
+#   define SNX_PLUGIN_EXPORT        __attribute__ ((visibility("default")))
+#   define SNX_PLUGIN_IMPORT
+#   define SNX_PLUGIN_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define SNX_PLUGIN_EXTERN_IMPORT extern
+#else
+#   define SNX_PLUGIN_EXPORT
+#   define SNX_PLUGIN_IMPORT
+#   define SNX_PLUGIN_EXTERN_EXPORT extern
+#   define SNX_PLUGIN_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
+
+#ifdef _SNX_PLUGIN_BUILD_
+#   define SNX_PLUGIN_API    SNX_PLUGIN_EXPORT
+#   define SNX_PLUGIN_EXTERN SNX_PLUGIN_EXTERN_EXPORT
+#else
+#   define SNX_PLUGIN_API    SNX_PLUGIN_IMPORT
+#   define SNX_PLUGIN_EXTERN SNX_PLUGIN_EXTERN_IMPORT
 #endif
 
 #endif /* _SNX_PLUGIN_CONFIG_H_ */

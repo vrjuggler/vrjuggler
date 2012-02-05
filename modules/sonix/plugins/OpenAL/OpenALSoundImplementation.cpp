@@ -98,17 +98,17 @@
 extern "C"
 {
 
-SNX_PLUGIN_EXPORT(const char*) getVersion()
+SNX_PLUGIN_EXPORT const char* getVersion()
 {
    return "sonix xx.xx.xx";
 }
 
-SNX_PLUGIN_EXPORT(const char*) getName()
+SNX_PLUGIN_EXPORT const char* getName()
 {
    return "OpenAL";
 }
 
-SNX_PLUGIN_EXPORT(snx::ISoundImplementation*) newPlugin()
+SNX_PLUGIN_EXPORT snx::ISoundImplementation* newPlugin()
 {
    return new snx::OpenALSoundImplementation;
 }
