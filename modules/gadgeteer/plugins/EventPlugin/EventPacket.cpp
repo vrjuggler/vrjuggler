@@ -24,7 +24,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/PluginConfig.h>
+
 #include <gadget/Util/Debug.h>
 
 #include <plugins/EventPlugin/EventPacket.h>
