@@ -170,7 +170,9 @@ bool AudiereSoundImplementation::isPlaying(const std::string& alias) const
    {
       if ( trackMap.count(alias) > 0 )
       {
-         is_playing = trackMap[alias]->isPlaying();
+         track_map_t::const_iterator i = trackMap.find(alias);
+         vprASSERT(i != trackMap.end());
+         is_playing = (*i).second->isPlaying();
       }
    }
    else

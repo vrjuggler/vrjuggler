@@ -280,7 +280,8 @@ private:
    audiere::RefPtr<audiere::OutputStream> mCurrentTrack;
    bool mIsPlaying;
 
-   std::map<std::string, audiere::OutputStreamPtr> trackMap;
+   typedef std::map<std::string, audiere::OutputStreamPtr> track_map_t;
+   track_map_t trackMap;
    std::map<std::string, audiere::SoundEffectPtr> effectMap;
 };
 
