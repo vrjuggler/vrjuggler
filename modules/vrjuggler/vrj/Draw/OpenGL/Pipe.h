@@ -53,11 +53,12 @@ class DrawManager;
  * This class can be used to group OpenGL windows to render efficiently
  * on one pipe (SGI terminology).
  *
- * @date 1-12-98
+ * @date January 12, 1998
  *
  * @note This class was renamed from vrj::GlPipe in VR Juggler 2.3.11.
  */
-class VJ_OGL_CLASS_API Pipe : boost::noncopyable
+class VJ_OGL_API Pipe
+   : boost::noncopyable
 {
 public:
    /**

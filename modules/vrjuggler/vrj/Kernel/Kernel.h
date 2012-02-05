@@ -75,7 +75,8 @@ class CocoaWrapper;
  * class is the only class that MUST be instantiated for all application
  * objects.
  */
-class VJ_CLASS_API Kernel : public jccl::ConfigElementHandler
+class VJ_API Kernel
+   : public jccl::ConfigElementHandler
 {
 public:
    /**

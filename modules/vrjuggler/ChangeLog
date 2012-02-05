@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2012-02-05 patrick     Replaced the VR JUggler DLL import/export macros with
+                       VJ_API. Performance monitor plug-ins can use
+                       VRJ_PLUGIN_EXPORT (which no longer takes a parameter)
+                       or VRJ_PLUGIN_API.
+                       GADGET_CLUSTER_PLUGIN_API.
 2011-11-27 patrick     Updated for Gadgeteer 2.1.25.
                        NEW VERSION: 3.1.6
 2011-11-26 patrick     Updated for Gadgeteer 2.1.22.

@@ -43,7 +43,7 @@ namespace vrj
     *
     * Base class for all simulator interface across all Draw Manager types.
     */
-   class VJ_CLASS_API DrawSimInterface
+   class VJ_API DrawSimInterface
    {
    public:
       virtual ~DrawSimInterface();

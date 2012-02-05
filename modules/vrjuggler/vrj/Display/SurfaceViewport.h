@@ -46,7 +46,8 @@ namespace vrj
  *
  * Defines a display surface an associated projections.
  */
-class VJ_CLASS_API SurfaceViewport : public Viewport
+class VJ_API SurfaceViewport
+   : public Viewport
 {
 protected:
    SurfaceViewport();

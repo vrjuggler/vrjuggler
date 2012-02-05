@@ -39,7 +39,8 @@ namespace vrj
  *
  * General exception type for managers held by vrj::Kernel.
  */
-class VJ_CLASS_API ManagerException : public vpr::Exception
+class VJ_API ManagerException
+   : public vpr::Exception
 {
 public:
    ManagerException(const std::string& msg, const std::string& location = "")
@@ -52,7 +53,8 @@ public:
  *
  * Exception type to be used by Draw Managers.
  */
-class VJ_CLASS_API DrawMgrException : public ManagerException
+class VJ_API DrawMgrException
+   : public ManagerException
 {
 public:
    DrawMgrException(const std::string& msg, const std::string& location = "")

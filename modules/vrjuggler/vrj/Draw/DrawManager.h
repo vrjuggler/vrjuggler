@@ -45,9 +45,10 @@ class App;
  *
  * Concrete classes are responsible for all rendering.
  *
- * @date 9-7-97
+ * @date September 7, 1997
  */
-class VJ_CLASS_API DrawManager : public jccl::ConfigElementHandler
+class VJ_API DrawManager
+   : public jccl::ConfigElementHandler
 {
 public:
    DrawManager()
@@ -109,8 +110,8 @@ public:
    void setDisplayManager(DisplayManager* dispMgr);
    DisplayManager* getDisplayManager();
 
-   friend VJ_API(std::ostream&) operator<<(std::ostream& out,
-                                           DrawManager& drawMgr);
+   friend VJ_API std::ostream& operator<<(std::ostream& out,
+                                          DrawManager& drawMgr);
 
    virtual void outStream(std::ostream& out)
    {

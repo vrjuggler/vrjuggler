@@ -62,7 +62,7 @@ namespace opengl
  *
  * @note This class was renamed from vrj::GlWindow in VR Juggler 2.3.11.
  */
-class VJ_OGL_CLASS_API Window
+class VJ_OGL_API Window
 {
 protected:
    Window();

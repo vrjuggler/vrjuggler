@@ -44,7 +44,8 @@ namespace vrj
  *
  * Simulator viewport.
  */
-class VJ_CLASS_API SimViewport : public Viewport
+class VJ_API SimViewport
+   : public Viewport
 {
 protected:
    SimViewport();

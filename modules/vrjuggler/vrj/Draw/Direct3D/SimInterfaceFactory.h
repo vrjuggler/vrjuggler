@@ -63,7 +63,7 @@ namespace direct3d
  * @note This class was renamed from vrj::D3dSimInterfaceFactory in VR Juggler
  *       2.3.11.
  */
-class VJ_D3D_CLASS_API SimInterfaceFactory :
+class VJ_D3D_API SimInterfaceFactory :
    public vpr::Factory<DrawSimInterface, std::string>
 {
 public:

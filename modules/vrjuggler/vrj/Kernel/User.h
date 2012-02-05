@@ -51,7 +51,7 @@ namespace vrj
  * program array (or other data structure) that stores user-specific data
  * such as navigation matrices or input devices.
  */
-class VJ_CLASS_API User
+class VJ_API User
 {
 private:
    /** Constructs the user. */

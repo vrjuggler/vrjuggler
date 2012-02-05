@@ -50,7 +50,7 @@ namespace vrj
  *
  * @since 2.3.14
  */
-class VJ_CLASS_API CpuAffinityFromEnv
+class VJ_API CpuAffinityFromEnv
 {
 public:
    /**

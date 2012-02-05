@@ -44,15 +44,16 @@ namespace opengl
 /** \class vrj::opengl::ProcAppWrapper ProcApp.h vrj/Draw/OpenGL/ProcApp.h
  *
  * Wrapper class used to allow procedural-style application programming.
- * Callbacks are registered with this class using helper functions.  Those
+ * Callbacks are registered with this class using helper functions. Those
  * callbacks are invoked indirectly by the VR Juggler kernel through the
- * \c vrj::App and \c vrj::opengl::App interface methods implemented in this
+ * vrj::App and vrj::opengl::App interface methods implemented in this
  * class.
  *
  * @note This class was renamed from vrj::GlProcAppWrapper in VR Juggler
  *       2.3.11.
  */
-class VJ_OGL_CLASS_API ProcAppWrapper : public vrj::opengl::App
+class VJ_OGL_API ProcAppWrapper
+   : public vrj::opengl::App
 {
 public:
    typedef boost::function0<void> callback_t;      /** Type for callbacks */
@@ -143,22 +144,22 @@ private:
  * \endcode
  */
 //@{
-VJ_OGL_API(void) VRJSetGLDrawMethod(vrj::opengl::ProcAppWrapper::callback_t m);
+VJ_OGL_API void VRJSetGLDrawMethod(vrj::opengl::ProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJSetGLContextInitMethod(vrj::opengl::ProcAppWrapper::callback_t m);
+VJ_OGL_API void VRJSetGLContextInitMethod(vrj::opengl::ProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJSetBufferPreDrawMethod(vrj::opengl::ProcAppWrapper::callback_t m);
+VJ_OGL_API void VRJSetBufferPreDrawMethod(vrj::opengl::ProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJSetPreFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m);
+VJ_OGL_API void VRJSetPreFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJSetIntraFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m);
+VJ_OGL_API void VRJSetIntraFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJSetPostFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m);
+VJ_OGL_API void VRJSetPostFrameMethod(vrj::opengl::ProcAppWrapper::callback_t m);
 
-VJ_OGL_API(void) VRJConfigure(int& argc, char* argv[]);
+VJ_OGL_API void VRJConfigure(int& argc, char* argv[]);
 
 /** Start everything running */
-VJ_OGL_API(void) VRJProcRunSystem();
+VJ_OGL_API void VRJProcRunSystem();
 //@}
 
 }

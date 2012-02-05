@@ -42,25 +42,6 @@
 /* This should always be included first. */
 #include <vrj/vrjConfig.h>
 
-/* Get rid of symbols added by Autoconf 2.5x. */
-#undef PACKAGE_BUGREPORT
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
-
-#if !defined(WIN32) && !defined(WIN64)          \
-      && defined(__GNUC__) && __GNUC__ >= 4     \
-      && !defined(VJ_OGL_HAVE_GCC_VISIBILITY)
-#  define VJ_OGL_HAVE_GCC_VISIBILITY
-#endif
-
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * VJ_OGL_EXTERN for the prototype and VJ_OGL_IMPLEMENT for the implementation.
- * ----------------------------------------------------------------------------
- */
 #if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
@@ -68,69 +49,32 @@
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define VJ_OGL_EXPORT(__type)      _declspec(dllexport) __type
-#   define VJ_OGL_EXPORT_CLASS        _declspec(dllexport)
-#   define VJ_OGL_EXPORT_DATA(__type) _declspec(dllexport) __type
-#   define VJ_OGL_IMPORT(__type)      _declspec(dllimport) __type
-#   define VJ_OGL_IMPORT_DATA(__type) _declspec(dllimport) __type
-#   define VJ_OGL_IMPORT_CLASS        _declspec(dllimport)
+#   define VJ_OGL_EXPORT        _declspec(dllexport)
+#   define VJ_OGL_IMPORT        _declspec(dllimport)
+#   define VJ_OGL_EXTERN_EXPORT extern _declspec(dllexport)
+#   define VJ_OGL_EXTERN_IMPORT extern _declspec(dllimport)
 
-#   define VJ_OGL_EXTERN(__type)         extern _declspec(dllexport) __type
-#   define VJ_OGL_IMPLEMENT(__type)      _declspec(dllexport) __type
-#   define VJ_OGL_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#   define VJ_OGL_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#   define VJ_OGL_CALLBACK
-#   define VJ_OGL_CALLBACK_DECL
-#   define VJ_OGL_STATIC_CALLBACK(__x) static __x
-
-#elif defined(VJ_OGL_HAVE_GCC_VISIBILITY)
-
-#   define VJ_OGL_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VJ_OGL_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define VJ_OGL_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define VJ_OGL_IMPORT(__type)      __type
-#   define VJ_OGL_IMPORT_DATA(__type) __type
-#   define VJ_OGL_IMPORT_CLASS        
-
-#   define VJ_OGL_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define VJ_OGL_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VJ_OGL_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define VJ_OGL_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define VJ_OGL_CALLBACK
-#   define VJ_OGL_CALLBACK_DECL
-#   define VJ_OGL_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX (where this stuff is simple!) */
-
-#   define VJ_OGL_EXPORT(__type)      __type
-#   define VJ_OGL_EXPORT_CLASS
-#   define VJ_OGL_EXPORT_DATA(__type) __type
-#   define VJ_OGL_IMPORT(__type)      __type
-#   define VJ_OGL_IMPORT_CLASS
-#   define VJ_OGL_IMPORT_DATA(__type) __type
-
-#   define VJ_OGL_EXTERN(__type)         extern __type
-#   define VJ_OGL_IMPLEMENT(__type)      __type
-#   define VJ_OGL_EXTERN_DATA(__type)    extern __type
-#   define VJ_OGL_IMPLEMENT_DATA(__type) __type
-
-#   define VJ_OGL_CALLBACK
-#   define VJ_OGL_CALLBACK_DECL
-#   define VJ_OGL_STATIC_CALLBACK(__x) static __x
-
+#elif defined(VJ_HAVE_GCC_VISIBILITY)
+#   define VJ_OGL_EXPORT        __attribute__ ((visibility("default")))
+#   define VJ_OGL_IMPORT
+#   define VJ_OGL_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define VJ_OGL_EXTERN_IMPORT extern
+#else
+#   define VJ_OGL_EXPORT
+#   define VJ_OGL_IMPORT
+#   define VJ_OGL_EXTERN_EXPORT extern
+#   define VJ_OGL_EXTERN_IMPORT extern
 #endif  /* WIN32 || WIN64 */
 
 #ifdef _VRJ_OGL_BUILD_
-#   define VJ_OGL_API(__type)           VJ_OGL_EXPORT(__type)
-#   define VJ_OGL_CLASS_API             VJ_OGL_EXPORT_CLASS
-#   define VJ_OGL_DATA_API(__type)      VJ_OGL_EXPORT_DATA(__type)
+#   define VJ_OGL_API    VJ_OGL_EXPORT
+#   define VJ_OGL_EXTERN VJ_OGL_EXTERN_EXPORT
 #else
-#   define VJ_OGL_API(__type)           VJ_OGL_IMPORT(__type)
-#   define VJ_OGL_CLASS_API             VJ_OGL_IMPORT_CLASS
-#   define VJ_OGL_DATA_API(__type)      VJ_OGL_IMPORT_DATA(__type)
+#   define VJ_OGL_API    VJ_OGL_IMPORT
+#   define VJ_OGL_EXTERN VJ_OGL_EXTERN_IMPORT
+#endif
 
+#if ! defined(_VRJ_OGL_BUILD_)
 #   define VJ_LIB_NAME "vrj_ogl"
 #   include <vrj/AutoLink.h>
 #   undef VJ_LIB_NAME

@@ -35,7 +35,7 @@ namespace vrj
 
 const char* VJ_VERSION(__VJ_VERSION_STRING__);
 
-std::string getVersionString()
+const std::string getVersionString()
 {
    return std::string(VJ_VERSION);
 }

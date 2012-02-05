@@ -36,82 +36,36 @@
 
 #include <vrj/vrjConfig.h>
 
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * VRJ_PLUGIN_EXTERN for the prototype and VRJ_PLUGIN_IMPLEMENT for the
- * implementation.
- * ----------------------------------------------------------------------------
- */
 #if defined(WIN32) || defined(WIN64)
 
-   #if defined(__GNUC__)
-      #undef _declspec
-      #define _declspec(x) __declspec(x)
-   #endif
+#   if defined(__GNUC__)
+#       undef _declspec
+#       define _declspec(x) __declspec(x)
+#   endif
 
-   #define VRJ_PLUGIN_EXPORT(__type)      _declspec(dllexport) __type
-   #define VRJ_PLUGIN_EXPORT_CLASS        _declspec(dllexport)
-   #define VRJ_PLUGIN_EXPORT_DATA(__type) _declspec(dllexport) __type
-   #define VRJ_PLUGIN_IMPORT(__type)      _declspec(dllimport) __type
-   #define VRJ_PLUGIN_IMPORT_DATA(__type) _declspec(dllimport) __type
-   #define VRJ_PLUGIN_IMPORT_CLASS        _declspec(dllimport)
+#   define VRJ_PLUGIN_EXPORT        _declspec(dllexport)
+#   define VRJ_PLUGIN_IMPORT        _declspec(dllimport)
+#   define VRJ_PLUGIN_EXTERN_EXPORT extern _declspec(dllexport)
+#   define VRJ_PLUGIN_EXTERN_IMPORT extern _declspec(dllimport)
 
-   #define VRJ_PLUGIN_EXTERN(__type)         extern _declspec(dllexport) __type
-   #define VRJ_PLUGIN_IMPLEMENT(__type)      _declspec(dllexport) __type
-   #define VRJ_PLUGIN_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-   #define VRJ_PLUGIN_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-   #define VRJ_PLUGIN_CALLBACK
-   #define VRJ_PLUGIN_CALLBACK_DECL
-   #define VRJ_PLUGIN_STATIC_CALLBACK(__x) static __x
-
-#elif defined(VRJ_HAVE_GCC_VISIBILITY)
-
-#   define VRJ_PLUGIN_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VRJ_PLUGIN_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define VRJ_PLUGIN_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define VRJ_PLUGIN_IMPORT(__type)      __type
-#   define VRJ_PLUGIN_IMPORT_DATA(__type) __type
-#   define VRJ_PLUGIN_IMPORT_CLASS        
-
-#   define VRJ_PLUGIN_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define VRJ_PLUGIN_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VRJ_PLUGIN_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define VRJ_PLUGIN_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define VRJ_PLUGIN_CALLBACK
-#   define VRJ_PLUGIN_CALLBACK_DECL
-#   define VRJ_PLUGIN_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX (where this stuff is simple!) */
-
-   #define VRJ_PLUGIN_EXPORT(__type)      __type
-   #define VRJ_PLUGIN_EXPORT_CLASS
-   #define VRJ_PLUGIN_EXPORT_DATA(__type) __type
-   #define VRJ_PLUGIN_IMPORT(__type)      __type
-   #define VRJ_PLUGIN_IMPORT_CLASS
-   #define VRJ_PLUGIN_IMPORT_DATA(__type) __type
-
-   #define VRJ_PLUGIN_EXTERN(__type)         extern __type
-   #define VRJ_PLUGIN_IMPLEMENT(__type)      __type
-   #define VRJ_PLUGIN_EXTERN_DATA(__type)    extern __type
-   #define VRJ_PLUGIN_IMPLEMENT_DATA(__type) __type
-
-   #define VRJ_PLUGIN_CALLBACK
-   #define VRJ_PLUGIN_CALLBACK_DECL
-   #define VRJ_PLUGIN_STATIC_CALLBACK(__x) static __x
-
-#endif	/* WIN32 || WIN64 */
+#elif defined(VJ_HAVE_GCC_VISIBILITY)
+#   define VRJ_PLUGIN_EXPORT        __attribute__ ((visibility("default")))
+#   define VRJ_PLUGIN_IMPORT
+#   define VRJ_PLUGIN_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define VRJ_PLUGIN_EXTERN_IMPORT extern
+#else
+#   define VRJ_PLUGIN_EXPORT
+#   define VRJ_PLUGIN_IMPORT
+#   define VRJ_PLUGIN_EXTERN_EXPORT extern
+#   define VRJ_PLUGIN_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
 #ifdef _VRJ_PLUGIN_BUILD_
-   #define VRJ_PLUGIN_API(__type)	VRJ_PLUGIN_EXPORT(__type)
-   #define VRJ_PLUGIN_CLASS_API	VRJ_PLUGIN_EXPORT_CLASS
-   #define VRJ_PLUGIN_DATA_API(__type)	VRJ_PLUGIN_EXPORT_DATA(__type)
+#   define VRJ_PLUGIN_API    VRJ_PLUGIN_EXPORT
+#   define VRJ_PLUGIN_EXTERN VRJ_PLUGIN_EXTERN_EXPORT
 #else
-   #define VRJ_PLUGIN_API(__type)	VRJ_PLUGIN_IMPORT(__type)
-   #define VRJ_PLUGIN_CLASS_API	VRJ_PLUGIN_IMPORT_CLASS
-   #define VRJ_PLUGIN_DATA_API(__type)	VRJ_PLUGIN_IMPORT_DATA(__type)
+#   define VRJ_PLUGIN_API    VRJ_PLUGIN_IMPORT
+#   define VRJ_PLUGIN_EXTERN VRJ_PLUGIN_EXTERN_IMPORT
 #endif
 
 #endif /* _VRJ_PLUGIN_CONFIG_H_ */

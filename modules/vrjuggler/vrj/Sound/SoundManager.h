@@ -38,7 +38,8 @@ namespace vrj
     *
     * VR Juggler sound manager.
     */
-   class VJ_CLASS_API SoundManager : public jccl::ConfigElementHandler
+   class VJ_API SoundManager
+      : public jccl::ConfigElementHandler
    {
    protected:
       SoundManager();

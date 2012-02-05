@@ -74,7 +74,8 @@ class SoundManager;
  *
  * @see vrj::Kernel
  */
-class VJ_CLASS_API App : public jccl::ConfigElementHandler
+class VJ_API App
+   : public jccl::ConfigElementHandler
 {
 public:
    /**

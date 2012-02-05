@@ -56,9 +56,10 @@ class Display;
  * current.  This includes updating projections, adding/deleting new displays,
  * etc.
  *
- * @date 9-7-97
+ * @date September 7, 1997
  */
-class VJ_CLASS_API DisplayManager : public jccl::ConfigElementHandler
+class VJ_API DisplayManager
+   : public jccl::ConfigElementHandler
 {
 public:     // --- Config stuff -- //
    /**

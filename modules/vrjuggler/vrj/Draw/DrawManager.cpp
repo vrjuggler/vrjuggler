@@ -39,9 +39,7 @@ DisplayManager* DrawManager::getDisplayManager()
    return mDisplayManager;
 }
 
-
-VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out,
-                                       DrawManager& drawMgr)
+std::ostream& operator<<(std::ostream& out, DrawManager& drawMgr)
 {
    drawMgr.outStream(out);
    return out;

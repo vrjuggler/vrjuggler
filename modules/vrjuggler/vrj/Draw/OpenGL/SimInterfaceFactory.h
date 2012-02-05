@@ -61,7 +61,7 @@ namespace opengl
  * @note This class was renamed from vrj::GlSimInterfaceFactory in VR Juggler
  *       2.3.11.
  */
-class VJ_OGL_CLASS_API SimInterfaceFactory :
+class VJ_OGL_API SimInterfaceFactory :
    public vpr::Factory<vrj::DrawSimInterface, std::string>
 {
 public:

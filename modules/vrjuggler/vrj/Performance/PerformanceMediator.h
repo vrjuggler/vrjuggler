@@ -48,7 +48,7 @@ namespace vrj
     * Performance mediator used by the kernel to communicate with performance
     * monitoring plug-ins.
     */
-   class VJ_CLASS_API PerformanceMediator
+   class VJ_API PerformanceMediator
    {
    public:
       PerformanceMediator();

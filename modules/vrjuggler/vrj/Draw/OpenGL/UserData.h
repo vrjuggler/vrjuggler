@@ -54,7 +54,7 @@ namespace opengl
  *
  * @note This class was renamed from vrj::GlUserData in VR Juggler 2.3.11.
  */
-class VJ_OGL_CLASS_API UserData
+class VJ_OGL_API UserData
 {
 public:
    UserData();

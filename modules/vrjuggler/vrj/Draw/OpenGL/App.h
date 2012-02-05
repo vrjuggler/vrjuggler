@@ -77,7 +77,7 @@ namespace opengl
  *
  * @see vrj::App, vrj::Kernel
  */
-class VJ_OGL_CLASS_API App : public vrj::App
+class VJ_OGL_API App : public vrj::App
 {
 public:
    App(Kernel* kern = NULL);

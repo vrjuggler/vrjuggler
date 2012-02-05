@@ -56,7 +56,7 @@ namespace vrj
  * eye positions.  This class is an abstract base class for other classes
  * that actually compute the projections.
  */
-class VJ_CLASS_API Projection
+class VJ_API Projection
    : public boost::enable_shared_from_this<Projection>
    , boost::noncopyable
 {
@@ -147,7 +147,7 @@ public:
    virtual std::ostream& outStream(std::ostream& out,
                                    const unsigned int indentLevel = 0);
 
-   friend VJ_API(std::ostream&) operator<<(std::ostream& out, Projection& proj);
+   friend VJ_API std::ostream& operator<<(std::ostream& out, Projection& proj);
 
 
 protected:

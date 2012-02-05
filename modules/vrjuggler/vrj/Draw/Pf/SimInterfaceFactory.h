@@ -61,7 +61,7 @@ namespace pf
  * @note This class was renamed from vrj::PfSimInterfaceFactory in VR Juggler
  *       2.3.11.
  */
-class VJ_PF_CLASS_API SimInterfaceFactory :
+class VJ_PF_API SimInterfaceFactory :
    public vpr::Factory<DrawSimInterface, std::string>
 {
 public:

@@ -42,7 +42,8 @@ namespace vrj
  *
  * @since 2.1.12
  */
-class VJ_CLASS_API InvalidSurfaceException : public vpr::Exception
+class VJ_API InvalidSurfaceException
+   : public vpr::Exception
 {
 public:
    InvalidSurfaceException(const std::string& msg,

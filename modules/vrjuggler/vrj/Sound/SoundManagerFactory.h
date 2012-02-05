@@ -38,7 +38,7 @@ namespace vrj
  *
  * Sound Manager factory.
  */
-class VJ_CLASS_API SoundManagerFactory
+class VJ_API SoundManagerFactory
 {
 public:
    // singleton function to get an instance of a soundmanager

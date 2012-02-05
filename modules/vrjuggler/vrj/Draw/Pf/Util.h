@@ -44,16 +44,16 @@ namespace pf
 {
 
 /** Converts a Performer matrix to a Juggler (GMTL) matrix. */
-VJ_PF_API(gmtl::Matrix44f) GetVjMatrix(const pfMatrix& perfMat);
+VJ_PF_API gmtl::Matrix44f GetVjMatrix(const pfMatrix& perfMat);
 
 /** Converts a Juggler (GMTL) matrix to a Performer Matrix. */
-VJ_PF_API(pfMatrix) GetPfMatrix(const gmtl::Matrix44f& mat);
+VJ_PF_API pfMatrix GetPfMatrix(const gmtl::Matrix44f& mat);
 
 /** Converts a Performer 3-element vector to a Juggler (GMTL) vector. */
-VJ_PF_API(gmtl::Vec3f) GetVjVec(const pfVec3& vec);
+VJ_PF_API gmtl::Vec3f GetVjVec(const pfVec3& vec);
 
 /** Converts a Juggler (GMTL) vector to a Pf vector. */
-VJ_PF_API(pfVec3) GetPfVec(const gmtl::Vec3f& vec);
+VJ_PF_API pfVec3 GetPfVec(const gmtl::Vec3f& vec);
 
 }
 

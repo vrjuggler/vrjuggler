@@ -79,18 +79,12 @@
 #endif   /* WIN32 || WIN64 */
 
 
-#if !defined(WIN32) && !defined(WIN64)          \
+#if ! defined(WIN32) && ! defined(WIN64)        \
       && defined(__GNUC__) && __GNUC__ >= 4     \
-      && !defined(VJ_HAVE_GCC_VISIBILITY)
+      && ! defined(VJ_HAVE_GCC_VISIBILITY)
 #  define VJ_HAVE_GCC_VISIBILITY
 #endif
 
-/*
- * ----------------------------------------------------------------------------
- * DLL-related macros.  These are based on the macros used by NSPR.  Use
- * VJ_EXTERN for the prototype and VJ_IMPLEMENT for the implementation.
- * ----------------------------------------------------------------------------
- */
 #if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
@@ -98,69 +92,32 @@
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define VJ_EXPORT(__type)      _declspec(dllexport) __type
-#   define VJ_EXPORT_CLASS        _declspec(dllexport)
-#   define VJ_EXPORT_DATA(__type) _declspec(dllexport) __type
-#   define VJ_IMPORT(__type)      _declspec(dllimport) __type
-#   define VJ_IMPORT_DATA(__type) _declspec(dllimport) __type
-#   define VJ_IMPORT_CLASS        _declspec(dllimport)
-
-#   define VJ_EXTERN(__type)         extern _declspec(dllexport) __type
-#   define VJ_IMPLEMENT(__type)      _declspec(dllexport) __type
-#   define VJ_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
-#   define VJ_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
-
-#   define VJ_CALLBACK
-#   define VJ_CALLBACK_DECL
-#   define VJ_STATIC_CALLBACK(__x) static __x
+#   define VJ_EXPORT        _declspec(dllexport)
+#   define VJ_IMPORT        _declspec(dllimport)
+#   define VJ_EXTERN_EXPORT extern _declspec(dllexport)
+#   define VJ_EXTERN_IMPORT extern _declspec(dllimport)
 
 #elif defined(VJ_HAVE_GCC_VISIBILITY)
-
-#   define VJ_EXPORT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VJ_EXPORT_CLASS        __attribute__ ((visibility("default")))
-#   define VJ_EXPORT_DATA(__type) __attribute__ ((visibility("default"))) __type
-#   define VJ_IMPORT(__type)      __type
-#   define VJ_IMPORT_DATA(__type) __type
-#   define VJ_IMPORT_CLASS        
-
-#   define VJ_EXTERN(__type)         extern __attribute__ ((visibility("default"))) __type
-#   define VJ_IMPLEMENT(__type)      __attribute__ ((visibility("default"))) __type
-#   define VJ_EXTERN_DATA(__type)    extern __attribute__ ((visibility("default"))) __type
-#   define VJ_IMPLEMENT_DATA(__type) __attribute__ ((visibility("default"))) __type
-
-#   define VJ_CALLBACK
-#   define VJ_CALLBACK_DECL
-#   define VJ_STATIC_CALLBACK(__x) static __x
-
-#else   /* UNIX (where this stuff is simple!) */
-
-#   define VJ_EXPORT(__type)      __type
-#   define VJ_EXPORT_CLASS
-#   define VJ_EXPORT_DATA(__type) __type
-#   define VJ_IMPORT(__type)      __type
-#   define VJ_IMPORT_CLASS
-#   define VJ_IMPORT_DATA(__type) __type
-
-#   define VJ_EXTERN(__type)         extern __type
-#   define VJ_IMPLEMENT(__type)      __type
-#   define VJ_EXTERN_DATA(__type)    extern __type
-#   define VJ_IMPLEMENT_DATA(__type) __type
-
-#   define VJ_CALLBACK
-#   define VJ_CALLBACK_DECL
-#   define VJ_STATIC_CALLBACK(__x) static __x
-
-#endif	/* WIN32 || WIN64 */
+#   define VJ_EXPORT        __attribute__ ((visibility("default")))
+#   define VJ_IMPORT
+#   define VJ_EXTERN_EXPORT extern __attribute__ ((visibility("default")))
+#   define VJ_EXTERN_IMPORT extern
+#else
+#   define VJ_EXPORT
+#   define VJ_IMPORT
+#   define VJ_EXTERN_EXPORT extern
+#   define VJ_EXTERN_IMPORT extern
+#endif  /* WIN32 || WIN64 */
 
 #ifdef _VRJ_BUILD_
-#   define VJ_API(__type)	VJ_EXPORT(__type)
-#   define VJ_CLASS_API		VJ_EXPORT_CLASS
-#   define VJ_DATA_API(__type)	VJ_EXPORT_DATA(__type)
+#   define VJ_API    VJ_EXPORT
+#   define VJ_EXTERN VJ_EXTERN_EXPORT
 #else
-#   define VJ_API(__type)	VJ_IMPORT(__type)
-#   define VJ_CLASS_API		VJ_IMPORT_CLASS
-#   define VJ_DATA_API(__type)	VJ_IMPORT_DATA(__type)
+#   define VJ_API    VJ_IMPORT
+#   define VJ_EXTERN VJ_EXTERN_IMPORT
+#endif
 
+#if ! defined(_VRJ_BUILD_)
 #   define VJ_LIB_NAME "vrj"
 #   include <vrj/AutoLink.h>
 #   undef VJ_LIB_NAME

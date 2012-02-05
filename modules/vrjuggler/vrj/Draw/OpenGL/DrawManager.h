@@ -78,11 +78,11 @@ class Pipe;
  * thread of the managed pipes.  Because of this, the object uses queues to
  * hold new windows.
  *
- * @date 1-7-98
+ * @date January 7, 1998
  *
  * @note This class was renamed from vrj::GlDrawManager in VR Juggler 2.3.11.
  */
-class VJ_OGL_CLASS_API DrawManager
+class VJ_OGL_API DrawManager
    : public vrj::DrawManager
    , private boost::noncopyable
 {

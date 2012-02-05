@@ -50,9 +50,9 @@ namespace vrj
  * Base class for window viewports and for all viewport data.
  * Stores projection data, viewport info, and relevant user.
  *
- * @date 3-5-2001
+ * @date March 5, 2001
  */
-class VJ_CLASS_API Viewport
+class VJ_API Viewport
    : public boost::enable_shared_from_this<Viewport>
    , boost::noncopyable
 {
@@ -216,7 +216,7 @@ public:
    virtual std::ostream& outStream(std::ostream& out,
                                    const unsigned int indentLevel = 0);
 
-   friend VJ_API(std::ostream&) operator<<(std::ostream& out, Viewport& viewport);
+   friend VJ_API std::ostream& operator<<(std::ostream& out, Viewport& viewport);
 
 protected:
    std::string       mName;               /**< The name of the viewport being displayed */

@@ -44,17 +44,19 @@
 extern "C"
 {
 
-   VRJ_PLUGIN_EXPORT(vrj::PerfPlugin*) initPlugin(vrj::PerformanceMediator* mediator, jccl::ConfigManager* configMgr)
-   {
-      return new vrj::CorbaPerfPlugin(mediator, configMgr);
-   }
+VRJ_PLUGIN_EXPORT vrj::PerfPlugin*
+initPlugin(vrj::PerformanceMediator* mediator, jccl::ConfigManager* configMgr)
+{
+   return new vrj::CorbaPerfPlugin(mediator, configMgr);
+}
 
 }
 
 namespace vrj
 {
 
-   CorbaPerfPlugin::CorbaPerfPlugin(vrj::PerformanceMediator* mediator, jccl::ConfigManager* configMgr)
+   CorbaPerfPlugin::CorbaPerfPlugin(PerformanceMediator* mediator,
+                                    jccl::ConfigManager* configMgr)
    : mMediator(mediator)
    , mConfigManager(configMgr)
    , mCorbaManager(NULL)

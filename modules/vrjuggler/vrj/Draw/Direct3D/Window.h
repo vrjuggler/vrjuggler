@@ -79,7 +79,7 @@ namespace direct3d
  *
  * @note This class was renamed from vrj::D3dWindow in VR Juggler 2.3.11.
  */
-class VJ_D3D_CLASS_API Window
+class VJ_D3D_API Window
    : public gadget::InputAreaWin32
 {
 public:

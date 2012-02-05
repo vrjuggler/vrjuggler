@@ -46,9 +46,10 @@ namespace vrj
  * Container class for viewports and window information.  This stores the
  * size and location of the window and the viewports contained within.
  *
- * @date 3-5-2001
+ * @date March 5, 2001
  */
-class VJ_CLASS_API Display : public boost::enable_shared_from_this<Display>
+class VJ_API Display
+   : public boost::enable_shared_from_this<Display>
 {
 protected:
    Display();
@@ -205,7 +206,8 @@ public:
    /** Gets the frame buffer configuration element for this display window. */
    jccl::ConfigElementPtr getGlFrameBufferConfig() const;
 
-   friend VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
+   friend VJ_API std::ostream& operator<<(std::ostream& out,
+                                          vrj::Display& disp);
 
    /** @name Viewport handling */
    //@{
@@ -248,7 +250,7 @@ protected:
    std::vector<vrj::ViewportPtr> mViewports;  /**<  Contained viewports */
 };
 
-VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
+VJ_API std::ostream& operator<<(std::ostream& out, vrj::Display& disp);
 
 } // end namespace
 

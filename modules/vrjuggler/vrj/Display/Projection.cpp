@@ -143,7 +143,7 @@ void Projection::getNearFar(float& nearVal, float& farVal)
    farVal = mFarDist;
 }
 
-VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, Projection& proj)
+std::ostream& operator<<(std::ostream& out, Projection& proj)
 {
    return proj.outStream(out);
 }

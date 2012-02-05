@@ -56,7 +56,8 @@ namespace pf
  *
  * @note This class was renamed from vrj::PfApp in VR Juggler 2.3.11.
  */
-class VJ_PF_CLASS_API App : public vrj::App
+class VJ_PF_API App
+   : public vrj::App
 {
 public:
    App(Kernel* kern = NULL);

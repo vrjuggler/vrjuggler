@@ -47,7 +47,7 @@ namespace vrj
  *
  * @see vrj::getVersionString()
  */
-extern VJ_DATA_API(const char*) VJ_VERSION;
+extern VJ_API const char* VJ_VERSION;
 
 /**
  * Retruns the "human-readable" VR Juggler version \em string. The full form
@@ -62,7 +62,7 @@ extern VJ_DATA_API(const char*) VJ_VERSION;
  *
  * @since 2.1.5
  */
-extern VJ_API(std::string) getVersionString();
+extern VJ_API const std::string getVersionString();
 
 /**
  * Returns the 9-digit VR Juggler version integer. This form provides three
@@ -75,7 +75,7 @@ extern VJ_API(std::string) getVersionString();
  *
  * @since 2.1.5
  */
-extern VJ_API(vpr::Uint32) getVersionNumber();
+extern VJ_API vpr::Uint32 getVersionNumber();
 
 }
 

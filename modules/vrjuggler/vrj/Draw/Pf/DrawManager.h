@@ -70,7 +70,8 @@ void appFunc(pfChannel*, void*);
  *
  * @note This class was renamed from vrj::PfDrawManager in VR Juggler 2.3.11.
  */
-class VJ_PF_CLASS_API DrawManager : public vrj::DrawManager
+class VJ_PF_API DrawManager
+   : public vrj::DrawManager
 {
 protected:
 

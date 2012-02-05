@@ -71,7 +71,7 @@ namespace opengl
  *
  * @note This class was renamed from vrj::GlWindowWin32 in VR Juggler 2.3.11.
  */
-class VJ_OGL_CLASS_API WindowWin32
+class VJ_OGL_API WindowWin32
    : public vrj::opengl::Window
    , public gadget::InputAreaWin32
 {
