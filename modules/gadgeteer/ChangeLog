@@ -1,6 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2012-02-24 patrick     Replaced the Gadgeteer DLL import/export macros with
+2012-02-04 patrick     Replaced the Gadgeteer DLL import/export macros with
                        GADGET_API. Device driver plug-ins can use
                        GADGET_DRIVER_EXPORT (which no longer takes a parameter)
                        or GADGET_DRIVER_API. Similarly, cluster plug-ins can

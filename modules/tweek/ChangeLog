@@ -1,6 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2012-02-24 patrick     Replaced the Tweek DLL import/export macros with
+2012-02-04 patrick     Replaced the Tweek DLL import/export macros with
                        TWEEK_API.
 2011-03-19 patrick     Added support for Boost.Filesystem v3.
                        Submitted by Doug McCorkle.
