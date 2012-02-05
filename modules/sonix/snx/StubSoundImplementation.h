@@ -136,7 +136,8 @@ public:
     * @param z     Storage for the Z coordinate of the sound's position (in
     *              OpenGL coordinates).
     */
-   virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
+   virtual void getPosition(const std::string& alias, float& x, float& y,
+                            float& z) const
    {
       snx::SoundImplementation::getPosition( alias, x, y, z );
    }
@@ -152,7 +153,7 @@ public:
    /**
     * Gets the position of the listener.
     */
-   virtual void getListenerPosition( gmtl::Matrix44f& mat )
+   virtual void getListenerPosition(gmtl::Matrix44f& mat) const
    {
       snx::SoundImplementation::getListenerPosition( mat );
    }

@@ -35,12 +35,16 @@
 
 #include <snx/snxConfig.h>
 
+#include <sstream>
+
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
+
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Exception.h>
 
 #include <snx/SoundImplementation.h>
 
@@ -100,6 +104,35 @@ void SoundImplementation::unbindAll()
       //std::cout<<"DEBUG: loading alias: "<<(*it).first<<"\n"<<std::flush;
       this->unbind( (*it).first );
    }
+}
+
+snx::SoundInfo& SoundImplementation::lookup(const std::string& alias)
+{
+   sound_map_t::iterator i = mSounds.find(alias);
+
+   if (i == mSounds.end())
+   {
+      std::ostringstream sstream;
+      sstream << "Unknown sound alias '" << alias << "'";
+      throw vpr::Exception(sstream.str(), VPR_LOCATION);
+   }
+
+   return (*i).second;
+}
+
+const snx::SoundInfo&
+SoundImplementation::lookup(const std::string& alias) const
+{
+   sound_map_t::const_iterator i = mSounds.find(alias);
+
+   if (i == mSounds.end())
+   {
+      std::ostringstream sstream;
+      sstream << "Unknown sound alias '" << alias << "'";
+      throw vpr::Exception(sstream.str(), VPR_LOCATION);
+   }
+
+   return (*i).second;
 }
 
 } // End of snx namespace

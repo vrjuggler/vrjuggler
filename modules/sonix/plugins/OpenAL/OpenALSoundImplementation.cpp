@@ -402,7 +402,7 @@ void OpenALSoundImplementation::setPosition(const std::string& alias, float x,
  * @output x,y,z are returned in OpenGL coordinates.
  */
 void OpenALSoundImplementation::getPosition(const std::string& alias,
-                                            float& x, float& y, float& z)
+                                            float& x, float& y, float& z) const
 {
    snx::SoundImplementation::getPosition( alias, x, y, z );
 }
@@ -444,7 +444,8 @@ void OpenALSoundImplementation::setListenerPosition(const gmtl::Matrix44f& mat)
 /**
  * get the position of the listener
  */
-void OpenALSoundImplementation::getListenerPosition( gmtl::Matrix44f& mat )
+void
+OpenALSoundImplementation::getListenerPosition(gmtl::Matrix44f& mat) const
 {
    snx::SoundImplementation::getListenerPosition( mat );
 }

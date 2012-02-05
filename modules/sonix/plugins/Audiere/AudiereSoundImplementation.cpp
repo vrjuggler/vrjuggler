@@ -281,8 +281,9 @@ void AudiereSoundImplementation::setPosition(const std::string& alias,
  * @input alias is a name that has been associate()d with some sound data
  * @output x,y,z are returned in OpenGL coordinates.
  */
-void AudiereSoundImplementation::getPosition(const std::string& alias,
-                                             float& x, float& y, float& z)
+void
+AudiereSoundImplementation::getPosition(const std::string& alias,
+                                        float& x, float& y, float& z) const
 {
    snx::SoundImplementation::getPosition( alias, x, y, z );
 }
@@ -301,7 +302,8 @@ void AudiereSoundImplementation::setListenerPosition(const gmtl::Matrix44f& mat)
 /**
  * get the position of the listener
  */
-void AudiereSoundImplementation::getListenerPosition( gmtl::Matrix44f& mat )
+void
+AudiereSoundImplementation::getListenerPosition(gmtl::Matrix44f& mat) const
 {
    snx::SoundImplementation::getListenerPosition( mat );
 }

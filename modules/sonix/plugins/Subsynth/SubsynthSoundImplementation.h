@@ -162,7 +162,8 @@ public:
     * @input alias is a name that has been associate()d with some sound data
     * @output x,y,z are returned in OpenGL coordinates.
     */
-   virtual void getPosition( const std::string& alias, float& x, float& y, float& z );
+   virtual void getPosition(const std::string& alias, float& x, float& y,
+                            float& z) const;
    
    /**
     * set the position of the listener
@@ -172,7 +173,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( gmtl::Matrix44f& mat );
+   virtual void getListenerPosition(gmtl::Matrix44f& mat) const;
    
 public:
    /**

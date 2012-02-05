@@ -114,7 +114,10 @@ namespace snx
       }
 
       /** Gets the name of this handle. */
-      std::string getName() const { return mAlias; }
+      const std::string& getName() const
+      {
+         return mAlias;
+      }
 
       /** Virtual destructor. */
       virtual ~SoundHandle();
@@ -273,7 +276,7 @@ namespace snx
        * @param z Storage for the Z coordinate of the sound in 3D OpenGL
        *          coordinates.
        */
-      virtual void getPosition( float& x, float& y, float& z )
+      virtual void getPosition(float& x, float& y, float& z) const
       {
          sonix::instance()->getPosition( mAlias, x, y, z );
       }
@@ -294,7 +297,7 @@ namespace snx
        *
        * @param mat Storage for returning the position of the listener.
        */
-      virtual void getListenerPosition( gmtl::Matrix44f& mat )
+      virtual void getListenerPosition(gmtl::Matrix44f& mat) const
       {
          sonix::instance()->getListenerPosition( mat );
       }

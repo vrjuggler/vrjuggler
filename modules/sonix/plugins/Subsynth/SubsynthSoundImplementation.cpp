@@ -285,7 +285,9 @@ void SubsynthSoundImplementation::setPosition( const std::string& alias, float x
  * @input alias is a name that has been associate()d with some sound data
  * @output x,y,z are returned in OpenGL coordinates.
  */
-void SubsynthSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
+void
+SubsynthSoundImplementation::getPosition(const std::string& alias,
+                                         float& x, float& y, float& z) const
 {
    snx::SoundImplementation::getPosition( alias, x, y, z );
 }
@@ -305,7 +307,8 @@ void SubsynthSoundImplementation::setListenerPosition( const gmtl::Matrix44f& ma
 /**
  * get the position of the listener
  */
-void SubsynthSoundImplementation::getListenerPosition( gmtl::Matrix44f& mat )
+void
+SubsynthSoundImplementation::getListenerPosition(gmtl::Matrix44f& mat) const
 {
    snx::SoundImplementation::getListenerPosition( mat );
 }
