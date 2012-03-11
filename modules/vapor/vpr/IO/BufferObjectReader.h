@@ -166,28 +166,28 @@ public:
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Uint8 readUint8();
+   virtual vpr::Uint8 readUint8();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Uint16 readUint16();
+   virtual vpr::Uint16 readUint16();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Uint32 readUint32();
+   virtual vpr::Uint32 readUint32();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Uint64 readUint64();
+   virtual vpr::Uint64 readUint64();
 
    /**
     * Reads out the single byte.
@@ -198,56 +198,56 @@ public:
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Int8 readInt8();
+   virtual vpr::Int8 readInt8();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Int16 readInt16();
+   virtual vpr::Int16 readInt16();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Int32 readInt32();
+   virtual vpr::Int32 readInt32();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual vpr::Int64 readInt64();
+   virtual vpr::Int64 readInt64();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual float readFloat();
+   virtual float readFloat();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual double readDouble();
+   virtual double readDouble();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual std::string readString();
+   virtual std::string readString();
 
    /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
     */
-   inline virtual bool readBool();
+   virtual bool readBool();
 
    /** @name Helper methods */
    //@{
@@ -392,121 +392,6 @@ public:
    std::vector<unsigned int>  mHeadPosStateStack;  /**< Store pushed and popped state information */
 };
 
-inline vpr::Uint8 BufferObjectReader::readUint8()
-{
-   vpr::Uint8 temp_data;
-   std::memcpy(&temp_data, readRaw(1), 1);
-   return temp_data;
-}
-
-inline vpr::Uint16 BufferObjectReader::readUint16()
-{
-   vpr::Uint16 nw_val;
-   std::memcpy(&nw_val, readRaw(2), 2);
-
-   return vpr::System::Ntohs(nw_val);
-}
-
-inline vpr::Uint32 BufferObjectReader::readUint32()
-{
-   vpr::Uint32 nw_val;
-   std::memcpy(&nw_val, readRaw(4), 4);
-
-   return vpr::System::Ntohl(nw_val);
-}
-
-inline vpr::Uint64 BufferObjectReader::readUint64()
-{
-   vpr::Uint64 nw_val;
-   std::memcpy(&nw_val, readRaw(8), 8);
-   vpr::Uint64 h_val = vpr::System::Ntohll(nw_val);
-
-   return h_val;
-}
-
-inline vpr::Int8 BufferObjectReader::readInt8()
-{
-   vpr::Int8 temp_data;
-   std::memcpy(&temp_data, readRaw(1), 1);
-   return temp_data;
-}
-
-inline vpr::Int16 BufferObjectReader::readInt16()
-{
-   vpr::Int16 nw_val;
-   std::memcpy(&nw_val, readRaw(2), 2);
-
-   return vpr::System::Ntohs(nw_val);
-}
-
-inline vpr::Int32 BufferObjectReader::readInt32()
-{
-   vpr::Int32 nw_val;
-   std::memcpy(&nw_val, readRaw(4), 4);
-
-   return vpr::System::Ntohl(nw_val);
-}
-
-inline vpr::Int64 BufferObjectReader::readInt64()
-{
-   vpr::Int64 nw_val;
-   std::memcpy(&nw_val, readRaw(8), 8);
-   vpr::Int64 h_val = vpr::System::Ntohll(nw_val);
-
-   return h_val;
-}
-
-inline float BufferObjectReader::readFloat()
-{
-   // We are reading the float as a 4 byte value
-   BOOST_STATIC_ASSERT(sizeof(float) == 4);
-   union
-   {
-     float       floatVal;
-     vpr::Uint32 intVal;
-   } data;
-
-   std::memcpy(&data.intVal, readRaw(4), 4);
-   data.intVal = vpr::System::Ntohl(data.intVal);
-
-   return data.floatVal;
-}
-
-inline double BufferObjectReader::readDouble()
-{
-   // We are reading the double as a 8 byte value
-   BOOST_STATIC_ASSERT(sizeof(double) == 8);
-   union
-   {
-     double      doubleVal;
-     vpr::Uint64 intVal;
-   } data;
-
-   std::memcpy(&data.intVal, readRaw(8), 8);
-   data.intVal = vpr::System::Ntohl(data.intVal);
-
-   return data.doubleVal;
-}
-
-inline std::string BufferObjectReader::readString()
-{
-   // Note: If you change this, you need to change STRING_LENGTH_SIZE
-   vpr::Uint32 str_len = readUint32();
-   std::string ret_val;
-   char tempChar;
-   for(vpr::Uint32 i=0; i<str_len;++i)
-   {
-      tempChar = (char)(*readRaw(1));
-      ret_val += tempChar;
-   }
-   return ret_val;
-}
-
-inline bool BufferObjectReader::readBool()
-{
-   return (bool)*(readRaw(1));
-}
-
 inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
 {
    if ( mCurHeadPos >= mData->size() )
@@ -520,5 +405,6 @@ inline vpr::Uint8* BufferObjectReader::readRaw(const unsigned int len)
 }
 
 } // namespace vpr
+
 
 #endif
