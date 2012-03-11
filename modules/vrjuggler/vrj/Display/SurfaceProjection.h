@@ -46,7 +46,7 @@ namespace vrj
  * Responsible for storing and computing projection information of a surface
  * specified.
  */
-class SurfaceProjection : public Projection
+class VJ_API SurfaceProjection : public Projection
 {
 protected:
    /**
