@@ -229,17 +229,6 @@ public:
    inline void writeRaw(vpr::Uint8* data,
                         const unsigned int len = 1);
 
-private:
-   /**
-    * Do not allow copy.  To do so we would need to make the memory handling
-    * much smarter.
-    */
-   BufferObjectWriter(const BufferObjectWriter& rhs)
-      : vpr::ObjectWriter(rhs)
-   {
-      /* Do nothihng. */ ;
-   }
-
 public:
    /** If true we allocated the data buffer and should delete it. */
    bool                       mOwnDataBuffer;

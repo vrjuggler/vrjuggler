@@ -38,6 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/noncopyable.hpp>
+
 #include <vpr/IO/IOException.h>
 #include <vpr/Util/AttributeMapBase.h>
 #include <vpr/vprTypes.h>
@@ -50,7 +52,9 @@ namespace vpr
  *
  * Interface used to read object data from a stream.
  */
-class VPR_API ObjectReader : public AttributeMapBase
+class VPR_API ObjectReader
+   : public AttributeMapBase
+   , private boost::noncopyable
 {
 protected:
    ObjectReader();
@@ -358,5 +362,6 @@ protected:
 };
 
 } // namespace vpr
+
 
 #endif

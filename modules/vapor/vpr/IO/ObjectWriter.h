@@ -38,6 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/noncopyable.hpp>
+
 #include <vpr/vprTypes.h>
 #include <vpr/IO/IOException.h>
 #include <vpr/Util/AttributeMapBase.h>
@@ -52,7 +54,9 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes.
  */
-class VPR_API ObjectWriter : public AttributeMapBase
+class VPR_API ObjectWriter
+   : public AttributeMapBase
+   , private boost::noncopyable
 {
 protected:
    ObjectWriter();
@@ -205,5 +209,5 @@ protected:
 
 } // namespace vpr
 
-#endif
 
+#endif

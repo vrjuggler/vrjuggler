@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2012-03-11 patrick     vpr::ObjectReader and vpr::ObjectWriter are now
+                       non-copyable.
+                       NEW VERSION: 2.3.5
 2012-02-04 patrick     Replaced the VPR DLL import/export macros with VPR_API.
 2011-10-09 patrick     Fixed mishandling of the value returned by
                        FreeLibrary().
