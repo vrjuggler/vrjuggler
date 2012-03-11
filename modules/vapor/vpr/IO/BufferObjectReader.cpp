@@ -160,7 +160,7 @@ std::string BufferObjectReader::readString()
    char tempChar;
    for(vpr::Uint32 i=0; i<str_len;++i)
    {
-      tempChar = (char)(*readRaw(1));
+      tempChar = static_cast<char>(*readRaw(1));
       ret_val += tempChar;
    }
    return ret_val;
@@ -168,7 +168,7 @@ std::string BufferObjectReader::readString()
 
 bool BufferObjectReader::readBool()
 {
-   return (bool)*(readRaw(1));
+   return static_cast<bool>(*readRaw(1));
 }
 
 

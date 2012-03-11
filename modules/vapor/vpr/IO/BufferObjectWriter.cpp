@@ -78,47 +78,47 @@ void BufferObjectWriter::writeUint16(vpr::Uint16 val)
 {
    vpr::Uint16 nw_val = vpr::System::Htons(val);
 
-   writeRaw((vpr::Uint8*) &nw_val, 2);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&nw_val), 2);
 }
 
 void BufferObjectWriter::writeUint32(vpr::Uint32 val)
 {
    vpr::Uint32 nw_val = vpr::System::Htonl(val);
 
-   writeRaw((vpr::Uint8*) &nw_val, 4);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&nw_val), 4);
 }
 
 void BufferObjectWriter::writeUint64(vpr::Uint64 val)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
 
-   writeRaw((vpr::Uint8*) &nw_val, 8);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&nw_val), 8);
 }
 
 void BufferObjectWriter::writeInt8(vpr::Int8 val)
 {
-   writeRaw((vpr::Uint8*) &val, 1);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&val), 1);
 }
 
 void BufferObjectWriter::writeInt16(vpr::Int16 val)
 {
    vpr::Int16 nw_val = vpr::System::Htons(val);
 
-   writeRaw((vpr::Uint8*) &nw_val, 2);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&nw_val), 2);
 }
 
 void BufferObjectWriter::writeInt32(vpr::Int32 val)
 {
    vpr::Int32 nw_val = vpr::System::Htonl(val);
 
-   writeRaw((vpr::Uint8*) &nw_val, 4);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&nw_val), 4);
 }
 
 void BufferObjectWriter::writeInt64(vpr::Int64 val)
 {
    vpr::Int64 nw_val = vpr::System::Htonll(val);
 
-   writeRaw((vpr::Uint8*) &nw_val, 8);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&nw_val), 8);
 }
 
 void BufferObjectWriter::writeFloat(float val)
@@ -134,7 +134,7 @@ void BufferObjectWriter::writeFloat(float val)
    data.floatVal = val;
    data.intVal   = vpr::System::Htonl(data.intVal);
 
-   writeRaw((vpr::Uint8*) &data.intVal, 4);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&data.intVal), 4);
 }
 
 void BufferObjectWriter::writeDouble(double val)
@@ -150,7 +150,7 @@ void BufferObjectWriter::writeDouble(double val)
    data.doubleVal = val;
    data.intVal    = vpr::System::Htonll(data.intVal);
 
-   writeRaw((vpr::Uint8*) &data.intVal, 8);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&data.intVal), 8);
 }
 
 void BufferObjectWriter::writeString(std::string val)
@@ -160,7 +160,7 @@ void BufferObjectWriter::writeString(std::string val)
 
    for ( vpr::Uint32 i = 0; i < val.length(); ++i )
    {
-      writeRaw((vpr::Uint8*) &val[i], 1);
+      writeRaw(reinterpret_cast<vpr::Uint8*>(&val[i]), 1);
    }
 }
 
@@ -168,10 +168,10 @@ void BufferObjectWriter::writeBool(bool val)
 {
    // Darwin uses four bytes (!) for bools.
 #ifdef VPR_OS_Darwin
-   vpr::Uint8 temp = (vpr::Uint8) val;
-   writeRaw((vpr::Uint8*) &temp, 1);
+   vpr::Uint8 temp = static_cast<vpr::Uint8>(val);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&temp), 1);
 #else
-   writeRaw((vpr::Uint8*) &val, 1);
+   writeRaw(reinterpret_cast<vpr::Uint8*>(&val), 1);
 #endif
 }
 
