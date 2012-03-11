@@ -222,7 +222,7 @@ ifeq (@PLATFORM@, Darwin)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(top_srcdir)/java/tweek.icns $(bundleroot)/Contents/Resources
 	echo 'AAPL????' > $(bundleroot)/Contents/PkgInfo
-	/Developer/Tools/SetFile -a B $(bundleroot)
+	SetFile -a B $(bundleroot)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) $(srcdir)/java.security.policy.txt		\
           $(bundle_javadir)
