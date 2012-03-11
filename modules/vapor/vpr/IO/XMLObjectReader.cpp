@@ -355,6 +355,35 @@ vpr::Uint64 XMLObjectReader::readUint64()
    return val;
 }
 
+vpr::Int8 XMLObjectReader::readInt8()
+{
+   // Read a uint16 so that it does not treat it as a single char
+   vpr::Int16 temp_data;
+   readValueStringRep(temp_data, getCurSource());
+   return vpr::Int8(temp_data);
+}
+
+vpr::Int16 XMLObjectReader::readInt16()
+{
+   vpr::Int16 val;
+   readValueStringRep(val, getCurSource());
+   return val;
+}
+
+vpr::Int32 XMLObjectReader::readInt32()
+{
+   vpr::Int32 val;
+   readValueStringRep(val, getCurSource());
+   return val;
+}
+
+vpr::Int64 XMLObjectReader::readInt64()
+{
+   vpr::Int64 val;
+   readValueStringRep(val, getCurSource());
+   return val;
+}
+
 float XMLObjectReader::readFloat()
 {
    float val;

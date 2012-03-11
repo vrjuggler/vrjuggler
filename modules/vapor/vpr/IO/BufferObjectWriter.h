@@ -170,6 +170,34 @@ public:
    virtual void writeUint64(vpr::Uint64 val);
 
    /**
+    * Writes out the single byte.
+    *
+    * @post data = old(data)+val, \c mCurHeadPos advanced 1.
+    *
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
+    */
+   virtual void writeInt8(vpr::Int8 val);
+
+   /**
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
+    */
+   virtual void writeInt16(vpr::Int16 val);
+
+   /**
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
+    */
+   virtual void writeInt32(vpr::Int32 val);
+
+   /**
+    * @throw IOException Thrown if I/O errors occur while writing to the
+    *                    underlying data source.
+    */
+   virtual void writeInt64(vpr::Int64 val);
+
+   /**
     * @throw IOException Thrown if I/O errors occur while writing to the
     *                    underlying data source.
     */
@@ -241,6 +269,32 @@ inline void BufferObjectWriter::writeUint32(vpr::Uint32 val)
 inline void BufferObjectWriter::writeUint64(vpr::Uint64 val)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
+
+   writeRaw((vpr::Uint8*) &nw_val, 8);
+}
+
+inline void BufferObjectWriter::writeInt8(vpr::Int8 val)
+{
+   writeRaw((vpr::Uint8*) &val, 1);
+}
+
+inline void BufferObjectWriter::writeInt16(vpr::Int16 val)
+{
+   vpr::Int16 nw_val = vpr::System::Htons(val);
+
+   writeRaw((vpr::Uint8*) &nw_val, 2);
+}
+
+inline void BufferObjectWriter::writeInt32(vpr::Int32 val)
+{
+   vpr::Int32 nw_val = vpr::System::Htonl(val);
+
+   writeRaw((vpr::Uint8*) &nw_val, 4);
+}
+
+inline void BufferObjectWriter::writeInt64(vpr::Int64 val)
+{
+   vpr::Int64 nw_val = vpr::System::Htonll(val);
 
    writeRaw((vpr::Uint8*) &nw_val, 8);
 }

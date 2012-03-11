@@ -190,6 +190,38 @@ public:
    inline virtual vpr::Uint64 readUint64();
 
    /**
+    * Reads out the single byte.
+    *
+    * @post data = old(data)+val, \c mCurHeadPos advanced 1.
+    *
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   inline virtual vpr::Int8 readInt8();
+
+   /**
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   inline virtual vpr::Int16 readInt16();
+
+   /**
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   inline virtual vpr::Int32 readInt32();
+
+   /**
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   inline virtual vpr::Int64 readInt64();
+
+   /**
     * @throw EOFException Thrown if end of file is reached while reading.
     * @throw IOException  Thrown if some other I/O error occurs while reading
     *                     from the underlying data source.
@@ -258,6 +290,46 @@ public:
    virtual void readUint64(vpr::Uint64& val)
    {
       val = this->readUint64();
+   }
+
+   /**
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   virtual void readInt8(vpr::Int8& val)
+   {
+      val = this->readInt8();
+   }
+
+   /**
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   virtual void readInt16(vpr::Int16& val)
+   {
+      val = this->readInt16();
+   }
+
+   /**
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   virtual void readInt32(vpr::Int32& val)
+   {
+      val = this->readInt32();
+   }
+
+   /**
+    * @throw EOFException Thrown if end of file is reached while reading.
+    * @throw IOException  Thrown if some other I/O error occurs while reading
+    *                     from the underlying data source.
+    */
+   virtual void readInt64(vpr::Int64& val)
+   {
+      val = this->readInt64();
    }
 
    /**
@@ -348,6 +420,38 @@ inline vpr::Uint64 BufferObjectReader::readUint64()
    vpr::Uint64 nw_val;
    std::memcpy(&nw_val, readRaw(8), 8);
    vpr::Uint64 h_val = vpr::System::Ntohll(nw_val);
+
+   return h_val;
+}
+
+inline vpr::Int8 BufferObjectReader::readInt8()
+{
+   vpr::Int8 temp_data;
+   std::memcpy(&temp_data, readRaw(1), 1);
+   return temp_data;
+}
+
+inline vpr::Int16 BufferObjectReader::readInt16()
+{
+   vpr::Int16 nw_val;
+   std::memcpy(&nw_val, readRaw(2), 2);
+
+   return vpr::System::Ntohs(nw_val);
+}
+
+inline vpr::Int32 BufferObjectReader::readInt32()
+{
+   vpr::Int32 nw_val;
+   std::memcpy(&nw_val, readRaw(4), 4);
+
+   return vpr::System::Ntohl(nw_val);
+}
+
+inline vpr::Int64 BufferObjectReader::readInt64()
+{
+   vpr::Int64 nw_val;
+   std::memcpy(&nw_val, readRaw(8), 8);
+   vpr::Int64 h_val = vpr::System::Ntohll(nw_val);
 
    return h_val;
 }

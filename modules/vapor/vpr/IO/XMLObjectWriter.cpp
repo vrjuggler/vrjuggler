@@ -184,6 +184,27 @@ void XMLObjectWriter::writeUint64(vpr::Uint64 val)
    writeValueStringRep(val);
 }
 
+void XMLObjectWriter::writeInt8(vpr::Int8 val)
+{
+   // Cast to int16 so it doesn't get written as a char
+   writeValueStringRep(vpr::Int16(val));
+}
+
+void XMLObjectWriter::writeInt16(vpr::Int16 val)
+{
+   writeValueStringRep(val);
+}
+
+void XMLObjectWriter::writeInt32(vpr::Int32 val)
+{
+   writeValueStringRep(val);
+}
+
+void XMLObjectWriter::writeInt64(vpr::Int64 val)
+{
+   writeValueStringRep(val);
+}
+
 void XMLObjectWriter::writeFloat(float val)
 {
    writeValueStringRep(val);

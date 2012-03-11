@@ -178,6 +178,34 @@ public:
     * @throw IOException  If some other I/O error occurs while reading from
     *                     the underlying data source.
     */
+   virtual vpr::Int8 readInt8() = 0;
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual vpr::Int16 readInt16() = 0;
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual vpr::Int32 readInt32() = 0;
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual vpr::Int64 readInt64() = 0;
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
    virtual float readFloat() = 0;
 
    /**
@@ -242,6 +270,46 @@ public:
    virtual void readUint64(vpr::Uint64& val)
    {
       val = this->readUint64();
+   }
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readInt8(vpr::Int8& val)
+   {
+      val = this->readInt8();
+   }
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readInt16(vpr::Int16& val)
+   {
+      val = this->readInt16();
+   }
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readInt32(vpr::Int32& val)
+   {
+      val = this->readInt32();
+   }
+
+   /**
+    * @throw EOFException If end of file is reached while reading.
+    * @throw IOException  If some other I/O error occurs while reading from
+    *                     the underlying data source.
+    */
+   virtual void readInt64(vpr::Int64& val)
+   {
+      val = this->readInt64();
    }
 
    /**

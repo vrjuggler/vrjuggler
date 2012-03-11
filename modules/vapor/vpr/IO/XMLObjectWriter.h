@@ -150,6 +150,33 @@ public:
    virtual void writeUint64(vpr::Uint64 val);
 
    /**
+    * Writes out the single byte.
+    * @post data = old(data)+val, \c mCurHeadPos advaced 1.
+    *
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeInt8(vpr::Int8 val);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeInt16(vpr::Int16 val);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeInt32(vpr::Int32 val);
+
+   /**
+    * @throw IOException If I/O errors occur while writing to the underlying
+    *                    data source.
+    */
+   virtual void writeInt64(vpr::Int64 val);
+
+   /**
     * @throw IOException If I/O errors occur while writing to the underlying
     *                    data source.
     */
