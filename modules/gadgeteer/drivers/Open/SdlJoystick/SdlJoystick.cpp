@@ -268,6 +268,8 @@ bool SdlJoystick::init()
    gadget::Digital::addDigitalSample(mButtons);
    gadget::Analog::addAnalogSample(mAxes);
 
+   mHardwareName = SDL_JoystickName(mDeviceNumber);
+
    cout << "Found Joystick " << mDeviceNumber << ": " << SDL_JoystickName(mDeviceNumber) << endl
         << "              Axis: " << mAxes.size() << endl
         << "           Buttons: " << mButtons.size() << endl
