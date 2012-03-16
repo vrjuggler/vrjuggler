@@ -163,6 +163,11 @@ public:
    const std::string getInstanceName() const;
 
    /**
+    * Returns the name reported by the underlying device hardware.
+    */
+   const std::string getHardwareName() const;
+
+   /**
     * The type of the data returned by getTypeId().
     *
     * @since 2.1.19
@@ -207,6 +212,7 @@ public:
 
 protected:
    std::string    mInstName;
+   std::string    mHardwareName; /**< The name reported by the actual device hardware. */
    vpr::Thread*   mThread;       /**< The thread being used by the driver. */
    bool           mActive;       /**< Is the driver active? */
    bool           mNeedUpdate;   /**< @since 1.1.19 */

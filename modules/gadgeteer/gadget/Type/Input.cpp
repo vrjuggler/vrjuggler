@@ -36,6 +36,7 @@ namespace gadget
 
 Input::Input()
    : mInstName("")
+   , mHardwareName("")
    , mThread(NULL)
    , mActive(false)
    , mNeedUpdate(true)
@@ -80,6 +81,11 @@ void Input::updateDataIfNeeded()
 const std::string Input::getInstanceName() const
 {
    return mInstName.empty() ? "Undefined" : mInstName;
+}
+
+const std::string Input::getHardwareName() const
+{
+   return mHardwareName.empty() ? "Not Set" : mHardwareName;
 }
 
 void Input::writeObject(vpr::ObjectWriter*)
