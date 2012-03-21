@@ -1209,7 +1209,7 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
 def installLibs(srcRoot, destdir,
                 buildTypes = [('ReleaseDLL',), ('DebugDLL', 'debug'),
                               ('DebugRtDLL',)],
-                extensions = ['.dll', '.lib', '.exp']):
+                extensions = ['.dll', '.lib', '.exp','.pdb']):
    build_platform = 'Win32'
    if gBuild64:
       build_platform = 'x64'
