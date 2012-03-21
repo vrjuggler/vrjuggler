@@ -41,7 +41,7 @@ DigitalSampleHandler::DigitalSampleHandler()
    /* Do nothing. */
 }
 
-DigitalState::State
+const DigitalState::State&
 DigitalSampleHandler::getData(const sample_type& samples,
                               const unsigned int unit)
 {

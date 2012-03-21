@@ -67,8 +67,8 @@ public:
 
    DigitalSampleHandler();
 
-   DigitalState::State getData(const sample_type& samples,
-                               const unsigned int unit);
+   const DigitalState::State& getData(const sample_type& samples,
+                                      const unsigned int unit);
 
 private:
    DigitalState::State mCurState;
