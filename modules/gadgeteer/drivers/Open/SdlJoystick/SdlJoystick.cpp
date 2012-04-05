@@ -72,6 +72,7 @@ SdlJoystick::SdlJoystick()
 {
    mButtons.push_back(gadget::DigitalState::OFF);
    mAxes.push_back(0.0f);
+   mHats.push_back(gadget::HatState::CENTERED);
 }
 
 SdlJoystick::~SdlJoystick()
@@ -89,6 +90,7 @@ bool SdlJoystick::config(jccl::ConfigElementPtr e)
    if (!gadget::Digital::config(e)) return false;
    if (!gadget::Analog::config(e))  return false;
    if (!gadget::Input::config(e))   return false;
+   if (!gadget::Hat::config(e))     return false;
    //if (!gadget::Rumble::config(e))  return false;
 
    mDeviceNumber = e->getProperty<int>("device");
@@ -150,8 +152,15 @@ bool SdlJoystick::sample()
       mAxes[i].setTime();
    }
 
+   for (unsigned int i = 0 ; i < mHats.size() ; ++i)
+   {
+      mHats[i].setValue(static_cast<HatState::State>(SDL_JoystickGetHat(mJoystick, i)));
+      mHats[i].setTime();
+   }
+
    addDigitalSample(mButtons);
    addAnalogSample(mAxes);
+   addHatSample(mHats);
 
    return true;
 }
@@ -233,6 +242,7 @@ void SdlJoystick::updateData()
    {
       swapAnalogBuffers();
       swapDigitalBuffers();
+      swapHatBuffers();
    }
 }
 
@@ -264,16 +274,18 @@ bool SdlJoystick::init()
 
    mButtons.resize(SDL_JoystickNumButtons(mJoystick), gadget::DigitalState::OFF);
    mAxes.resize(SDL_JoystickNumAxes(mJoystick), 0.0f);
+   mHats.resize(SDL_JoystickNumHats(mJoystick), gadget::HatState::CENTERED);
 
    gadget::Digital::addDigitalSample(mButtons);
    gadget::Analog::addAnalogSample(mAxes);
+   gadget::Hat::addHatSample(mHats);
 
    mHardwareName = SDL_JoystickName(mDeviceNumber);
 
    cout << "Found Joystick " << mDeviceNumber << ": " << SDL_JoystickName(mDeviceNumber) << endl
         << "              Axis: " << mAxes.size() << endl
         << "           Buttons: " << mButtons.size() << endl
-        << "              Hats: " << SDL_JoystickNumHats(mJoystick) << " (Unused)" << endl
+        << "              Hats: " << mHats.size() << endl
         << "             Balls: " << SDL_JoystickNumBalls(mJoystick) << " (Unused)" << endl
 #if SDL_VERSION_ATLEAST(1,3,0)
         << "           Haptics: " << (SDL_JoystickIsHaptic(mJoystick) ? "YES" : "NO")

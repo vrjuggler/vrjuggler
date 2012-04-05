@@ -39,6 +39,7 @@
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/RumbleData.h>
 #include <gadget/Type/StringData.h>
+#include <gadget/Type/HatData.h>
 
 
 namespace gadget
@@ -75,7 +76,7 @@ DECLARE_DEVICE_TRAITS(KeyboardMouse)
 DECLARE_DEVICE_TRAITS(Position)
 DECLARE_DEVICE_TRAITS(String)
 DECLARE_DEVICE_TRAITS(Rumble)
-
+DECLARE_DEVICE_TRAITS(Hat)
 class Gesture;
 
 // XXX: This is not correct. gadget::Gesture does not currently use any

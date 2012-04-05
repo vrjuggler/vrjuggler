@@ -38,6 +38,7 @@
 #include <gadget/Type/GestureProxy.h>
 #include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/RumbleProxy.h>
+#include <gadget/Type/HatProxy.h>
 #include <gadget/Type/CommandProxy.h>
 #include <gadget/Type/StringProxy.h>
 #include <gadget/Util/Debug.h>
@@ -86,6 +87,7 @@ void ProxyFactory::loadKnownProxies()
 //   ProxyConstructor<GestureProxy>::create();
    ProxyConstructor<KeyboardMouseProxy>::create();
    ProxyConstructor<RumbleProxy>::create();
+   ProxyConstructor<HatProxy>::create();
    ProxyConstructor<CommandProxy>::create();
    ProxyConstructor<StringProxy>::create();
 

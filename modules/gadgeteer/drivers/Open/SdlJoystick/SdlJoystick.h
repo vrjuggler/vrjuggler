@@ -51,7 +51,7 @@ namespace gadget
 {
 
 class SdlJoystick
-   : public InputDevice<boost::mpl::inherit<Digital, Analog, Rumble>::type>
+   : public InputDevice<boost::mpl::inherit<Digital, Analog, Rumble, Hat>::type>
 {
 public:
    SdlJoystick();
@@ -76,6 +76,11 @@ public:
    virtual const AnalogData getAnalogData(int devNum=0)
    {
       return (mAxes[devNum]);
+   }
+
+   virtual const HatData getHatData(int devNum=0)
+   {
+      return (mHats[devNum]);
    }
 
    bool init();
@@ -160,6 +165,7 @@ private:
 
    std::vector<gadget::DigitalData> mButtons;
    std::vector<gadget::AnalogData> mAxes;
+   std::vector<gadget::HatData> mHats;
 };
 
 } // End of gadget namespace

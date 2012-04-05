@@ -34,6 +34,7 @@
 //#include <gadget/Type/EventWindowProxy.h>
 #include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/RumbleProxy.h>
+#include <gadget/Type/HatProxy.h>
 #include <gadget/ProxyDepChecker.h>
 #include <jccl/Config/ConfigElement.h>
 
@@ -51,7 +52,8 @@ bool ProxyDepChecker::canHandle(jccl::ConfigElementPtr element)
               (element_type == GloveProxy::getElementType()) ||
               (element_type == KeyboardMouseProxy::getElementType()) ||
               (element_type == PositionProxy::getElementType()) ||
-              (element_type == RumbleProxy::getElementType()));
+              (element_type == RumbleProxy::getElementType()) ||
+              (element_type == HatProxy::getElementType()));
 
    return ret_val;
 }

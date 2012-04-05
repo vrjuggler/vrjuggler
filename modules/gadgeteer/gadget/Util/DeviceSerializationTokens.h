@@ -49,6 +49,7 @@ namespace tokens
    const std::string StringValue("StrValue");
    const std::string AnalogValue("AnaValue");
    const std::string GloveValue("GloValue");
+   const std::string HatValue("HatValue");
 
    const std::string TimeStamp("timestamp");
 }

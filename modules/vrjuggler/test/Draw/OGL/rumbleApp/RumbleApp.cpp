@@ -76,6 +76,8 @@ void RumbleApp::init()
     _axes[8].init("Joystick0_a8");
     _axes[9].init("Joystick0_a9");
 
+    _hats[0].init("Joystick0_h0");
+
     initRumble();
 }
 
@@ -150,6 +152,16 @@ void RumbleApp::draw()
     glClear(GL_DEPTH_BUFFER_BIT);
     glColor3f(1.0, 1.0, 1.0);
     
+    glBegin(GL_LINE_LOOP);
+    for (int i = 0; i < 20; i++)
+    {
+        float theta = 2.0f * 3.14159265f *float(i) / float(20);
+        float x = 1.0f * cosf(theta);
+        float y = 1.0f * sinf(theta);
+        glVertex3f(x + -6.5, y + 11.5, -6);
+    }
+    glEnd();
+
     glBegin(GL_LINES);
     glVertex3f(-8, -1, -6); glVertex3f( 8, -1, -6);
     glVertex3f(-8,  0, -6); glVertex3f( 8,  0, -6);
@@ -173,10 +185,56 @@ void RumbleApp::draw()
 
     for (int i = 0 ; i < 10 ; ++i)
     {
-	float f = _axes[i]->getData() * 10;
-	glBegin(GL_LINES);
-	glVertex3f(i-8,f,-6); glVertex3f(i-7,f,-6);
-	glEnd();
+	    float f = _axes[i]->getData() * 10;
+	    glBegin(GL_LINES);
+	    glVertex3f(i-8,f,-6); glVertex3f(i-7,f,-6);
+	    glEnd();
+    }
+
+    switch (_hats[0]->getData())
+    {
+    case gadget::HatState::CENTERED:
+        break;
+    case gadget::HatState::UP:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d(-6.5, 12.5, -6);
+        glEnd();
+        break;
+    case gadget::HatState::UP | gadget::HatState::RIGHT:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d((-6.5 + .7071), (11.5 + .7071), -6);
+        glEnd();
+        break;
+    case gadget::HatState::RIGHT:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d(-5.5, 11.5, -6);
+        glEnd();
+        break;
+    case gadget::HatState::RIGHT | gadget::HatState::DOWN:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d((-6.5 + .7071), (11.5 - .7071), -6);
+        glEnd();
+        break;
+    case gadget::HatState::DOWN:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d(-6.5, 10.5, -6);
+        glEnd();
+        break;
+    case gadget::HatState::DOWN | gadget::HatState::LEFT:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d((-6.5 - .7071), (11.5 - .7071), -6);
+        glEnd();
+        break;
+    case gadget::HatState::LEFT:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d(-7.5, 11.5, -6);
+        glEnd();
+        break;
+    case gadget::HatState::LEFT | gadget::HatState::UP:
+        glBegin(GL_LINES);
+        glVertex3d(-6.5, 11.5, -6); glVertex3d((-6.5 - .7071), (11.5 + .7071), -6);
+        glEnd();
+        break;
     }
 }
 

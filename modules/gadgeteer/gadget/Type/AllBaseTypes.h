@@ -41,6 +41,7 @@
 #include <gadget/Type/Command.h>
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Rumble.h>
+#include <gadget/Type/Hat.h>
 
 
 namespace gadget
@@ -65,6 +66,7 @@ typedef boost::mpl::vector<
    , Command
    , Glove
    , Rumble
+   , Hat
 > device_base_types;
 
 /**

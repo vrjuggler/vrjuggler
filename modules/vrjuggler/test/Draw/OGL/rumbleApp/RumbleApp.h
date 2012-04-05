@@ -32,6 +32,7 @@
 #include <gadget/Type/RumbleInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Type/AnalogInterface.h>
+#include <gadget/Type/HatInterface.h>
 
 namespace juggler {
     class RumbleApp : public vrj::opengl::App
@@ -51,9 +52,12 @@ namespace juggler {
 	gadget::RumbleInterface _rumble;
 	gadget::DigitalInterface _button[16];
 	gadget::AnalogInterface _axes[10];
+    gadget::HatInterface _hats[1];
 
 	gadget::RumbleEffectPtr _speed;
 	gadget::RumbleEffectPtr _objectHit[4];
+
+    gadget::HatState::State _oldHatState;
     };
 }
 #endif // juggler_RumbleApp_h
