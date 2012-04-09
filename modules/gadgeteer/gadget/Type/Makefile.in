@@ -60,6 +60,8 @@ SRCS=		Analog.cpp			\
 		GloveData.cpp			\
 		GloveGesture.cpp		\
 		GloveProxy.cpp			\
+		Hat.cpp				\
+		HatProxy.cpp			\
 		Input.cpp			\
 		InputData.cpp			\
 		KeyboardMouse.cpp		\
