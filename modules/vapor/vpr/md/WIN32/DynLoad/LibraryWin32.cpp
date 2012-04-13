@@ -64,13 +64,6 @@ LibraryWin32::LibraryWin32()
    ;
 }
 
-LibraryWin32::LibraryWin32(const LibraryWin32& lib)
-   : mName("")
-   , mLibrary(NULL)
-{
-   copy(lib);
-}
-
 LibraryWin32::~LibraryWin32()
 {
    if ( NULL != mLibrary )

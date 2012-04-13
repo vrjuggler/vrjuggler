@@ -38,6 +38,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/utility.hpp> // for boost::noncopyable
+
 #include <cstdlib>
 #include <string>
 
@@ -55,7 +57,7 @@ namespace vpr
  *
  * This class is typedef'd to vpr::Library.
  */
-class VPR_API LibraryWin32
+class VPR_API LibraryWin32 : boost::noncopyable
 {
 public:
    /**
@@ -81,23 +83,9 @@ public:
    LibraryWin32();
 
    /**
-    * Copy constructor.
-    */
-   LibraryWin32(const LibraryWin32& lib);
-
-   /**
     * Unloads the library if one has been loaded.
     */
    ~LibraryWin32();
-
-   /**
-    * Overlaoded assignment operator.
-    */
-   LibraryWin32& operator=(const LibraryWin32& lib)
-   {
-      copy(lib);
-      return *this;
-   }
 
    /**
     * Retrieves the name of the library associated with this object.
@@ -171,16 +159,6 @@ public:
     */
    static void* findSymbolAndLibrary(const std::string& symbolName,
                                      LibraryWin32& lib);
-
-protected:
-   /**
-    * Makes a copy of the given vpr::LibraryWin32 into this object.
-    */
-   void copy(const LibraryWin32& lib)
-   {
-      this->mName    = lib.mName;
-      this->mLibrary = lib.mLibrary;
-   }
 
 private:
    std::string mName;      /**< The name of the library */
