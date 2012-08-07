@@ -57,6 +57,12 @@
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\WindowWin32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\App.h">
@@ -114,6 +120,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\WindowWin32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
