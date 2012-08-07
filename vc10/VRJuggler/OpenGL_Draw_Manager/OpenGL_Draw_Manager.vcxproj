@@ -111,7 +111,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -148,7 +148,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -179,7 +179,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -217,7 +217,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -251,7 +251,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -293,7 +293,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_OGL_BUILD_;JUGGLER_OPT;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -325,10 +325,12 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\App.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\BasicSimulator.cpp" />
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctors.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctors.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawManager.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawWandFunctors.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoader.cpp" />
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderWGL.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Pipe.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ProcApp.cpp" />
@@ -343,11 +345,13 @@
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\BasicSimulator.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Config.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ContextData.h" />
+    <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctors.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctors.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawManager.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawObjectFunctor.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawWandFunctors.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoader.h" />
+    <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderWGL.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Pipe.h" />
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ProcApp.h" />
