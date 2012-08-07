@@ -34,10 +34,8 @@
 #include "GL3/gl3.h"
 
 #if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
-#  include <OpenGL/gl.h>
 #  include <OpenGL/glu.h>
 #else
-#  include <GL/gl.h>
 #  include <GL/glu.h>
 #endif
 
