@@ -113,7 +113,7 @@ vpr::Uint32 SocketDatagramImplBOOST::recvfrom(void* msg,
    mUdpSocket->get_io_service().reset();
    static bool cancel_supported(true);
 
-   while (mUdpSocket->io_service().run_one()) {
+   while (mUdpSocket->get_io_service().run_one()) {
       if (read_result)
       {
          timer.cancel();
