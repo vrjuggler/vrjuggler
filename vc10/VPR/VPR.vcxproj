@@ -159,7 +159,7 @@
       <AdditionalDependencies>ws2_32.lib;rpcrt4.lib;dbghelp.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)vpr-$(VPR_VERSION).dll</OutputFile>
       <Version>$(VPR_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -225,7 +225,7 @@
       <AdditionalDependencies>ws2_32.lib;rpcrt4.lib;dbghelp.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)vpr_d-$(VPR_VERSION).dll</OutputFile>
       <Version>$(VPR_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -296,7 +296,7 @@
       <AdditionalDependencies>ws2_32.lib;rpcrt4.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)vpr-$(VPR_VERSION).dll</OutputFile>
       <Version>$(VPR_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
