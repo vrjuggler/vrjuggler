@@ -111,7 +111,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -146,7 +146,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -162,7 +162,7 @@
       </AdditionalDependencies>
       <OutputFile>$(OutDir)vrj-$(VRJ_VERSION).dll</OutputFile>
       <Version>$(VRJ_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)vrj-$(VRJ_VERSION).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -175,7 +175,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -211,7 +211,7 @@
       <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -228,7 +228,7 @@
       </AdditionalDependencies>
       <OutputFile>$(OutDir)vrj_d-$(VRJ_VERSION).dll</OutputFile>
       <Version>$(VRJ_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)vrj_d-$(VRJ_VERSION).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -243,7 +243,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -282,7 +282,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -299,7 +299,7 @@
       </AdditionalDependencies>
       <OutputFile>$(OutDir)vrj-$(VRJ_VERSION).dll</OutputFile>
       <Version>$(VRJ_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

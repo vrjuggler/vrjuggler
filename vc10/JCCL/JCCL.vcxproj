@@ -109,7 +109,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -143,7 +143,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -159,7 +159,7 @@
       </AdditionalDependencies>
       <OutputFile>$(OutDir)jccl-$(JCCL_VERSION).dll</OutputFile>
       <Version>$(JCCL_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)jccl-$(JCCL_VERSION).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -171,7 +171,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -206,7 +206,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JCCL_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -223,7 +223,7 @@
       </AdditionalDependencies>
       <OutputFile>$(OutDir)jccl_d-$(JCCL_VERSION).dll</OutputFile>
       <Version>$(JCCL_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)jccl_d-$(JCCL_VERSION).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -237,7 +237,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JUGGLER_OPT;JCCL_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JUGGLER_OPT;JCCL_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -275,7 +275,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JUGGLER_OPT;JCCL_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_JCCL_BUILD_;JUGGLER_OPT;JCCL_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -292,7 +292,7 @@
       </AdditionalDependencies>
       <OutputFile>$(OutDir)jccl-$(JCCL_VERSION).dll</OutputFile>
       <Version>$(JCCL_VERSION_DOT)</Version>
-      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
