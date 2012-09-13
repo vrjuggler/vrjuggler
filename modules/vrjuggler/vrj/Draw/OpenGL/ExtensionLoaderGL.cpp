@@ -31,6 +31,11 @@
 
 #include <vrj/Draw/OpenGL/ExtensionLoaderGL.h>
 
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+#  include <OpenGL/gl.h>
+#else
+#  include <GL/gl.h>
+#endif
 
 namespace vrj
 {
@@ -78,50 +83,178 @@ void ExtensionLoaderGL::registerExtensions()
 {
    if ( !mExtensionsRegistered )
    {
-      GenBuffers = (PFNGLGENBUFFERSPROC) getFunctionByName("glGenBuffers");
-      BindBuffer = (PFNGLBINDBUFFERPROC) getFunctionByName("glBindBuffer");
-      BufferData = (PFNGLBUFFERDATAPROC) getFunctionByName("glBufferData");
-      DeleteBuffers = (PFNGLDELETEBUFFERSPROC) getFunctionByName("glDeleteBuffers");
+      GenBuffers = (PFNNOGLGENBUFFERSPROC) getFunctionByName("glGenBuffers");
+      BindBuffer = (PFNNOGLBINDBUFFERPROC) getFunctionByName("glBindBuffer");
+      BufferData = (PFNNOGLBUFFERDATAPROC) getFunctionByName("glBufferData");
+      DeleteBuffers = (PFNNOGLDELETEBUFFERSPROC) getFunctionByName("glDeleteBuffers");
 
-      GenVertexArrays = (PFNGLGENVERTEXARRAYSPROC) getFunctionByName("glGenVertexArrays");
-      BindVertexArray = (PFNGLBINDVERTEXARRAYPROC) getFunctionByName("glBindVertexArray");
-      DeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC) getFunctionByName("glDeleteVertexArrays");
+      GenVertexArrays = (PFNNOGLGENVERTEXARRAYSPROC) getFunctionByName("glGenVertexArrays");
+      BindVertexArray = (PFNNOGLBINDVERTEXARRAYPROC) getFunctionByName("glBindVertexArray");
+      DeleteVertexArrays = (PFNNOGLDELETEVERTEXARRAYSPROC) getFunctionByName("glDeleteVertexArrays");
 
-      CreateShader = (PFNGLCREATESHADERPROC) getFunctionByName("glCreateShader");
-      CompileShader = (PFNGLCOMPILESHADERPROC) getFunctionByName("glCompileShader");
-      ShaderSource = (PFNGLSHADERSOURCEPROC) getFunctionByName("glShaderSource");
-      GetShaderiv = (PFNGLGETSHADERIVPROC) getFunctionByName("glGetShaderiv");
-      GetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC) getFunctionByName("glGetShaderInfoLog");
-      AttachShader = (PFNGLATTACHSHADERPROC) getFunctionByName("glAttachShader");
-      DeleteShader = (PFNGLDELETESHADERPROC) getFunctionByName("glDeleteShader");
-      CreateProgram = (PFNGLCREATEPROGRAMPROC) getFunctionByName("glCreateProgram");
-      LinkProgram = (PFNGLLINKPROGRAMPROC) getFunctionByName("glLinkProgram");
-      GetProgramiv = (PFNGLGETPROGRAMIVPROC) getFunctionByName("glGetProgramiv");
-      UseProgram = (PFNGLUSEPROGRAMPROC) getFunctionByName("glUseProgram");
-      DeleteProgram = (PFNGLDELETEPROGRAMPROC) getFunctionByName("glDeleteProgram");
-      GetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC) getFunctionByName("glGetUniformLocation");
-      GetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC) getFunctionByName("glGetAttribLocation");
-      VertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC) getFunctionByName("glVertexAttribPointer");
-      EnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC) getFunctionByName("glEnableVertexAttribArray");
-      DisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC) getFunctionByName("glDisableVertexAttribArray");
-      Uniform1f = (PFNGLUNIFORM1FPROC) getFunctionByName("glUniform1f");
-      Uniform2f = (PFNGLUNIFORM2FPROC) getFunctionByName("glUniform2f");
-      Uniform3f = (PFNGLUNIFORM3FPROC) getFunctionByName("glUniform3f");
-      Uniform4f = (PFNGLUNIFORM4FPROC) getFunctionByName("glUniform4f");
-      Uniform2fv = (PFNGLUNIFORM2FVPROC) getFunctionByName("glUniform2fv");
-      Uniform3fv = (PFNGLUNIFORM3FVPROC) getFunctionByName("glUniform3fv");
-      Uniform4fv = (PFNGLUNIFORM4FVPROC) getFunctionByName("glUniform4fv");
-      UniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC) getFunctionByName("glUniformMatrix4fv");
+      CreateShader = (PFNNOGLCREATESHADERPROC) getFunctionByName("glCreateShader");
+      CompileShader = (PFNNOGLCOMPILESHADERPROC) getFunctionByName("glCompileShader");
+      ShaderSource = (PFNNOGLSHADERSOURCEPROC) getFunctionByName("glShaderSource");
+      GetShaderiv = (PFNNOGLGETSHADERIVPROC) getFunctionByName("glGetShaderiv");
+      GetShaderInfoLog = (PFNNOGLGETSHADERINFOLOGPROC) getFunctionByName("glGetShaderInfoLog");
+      AttachShader = (PFNNOGLATTACHSHADERPROC) getFunctionByName("glAttachShader");
+      DeleteShader = (PFNNOGLDELETESHADERPROC) getFunctionByName("glDeleteShader");
+      CreateProgram = (PFNNOGLCREATEPROGRAMPROC) getFunctionByName("glCreateProgram");
+      LinkProgram = (PFNNOGLLINKPROGRAMPROC) getFunctionByName("glLinkProgram");
+      GetProgramiv = (PFNNOGLGETPROGRAMIVPROC) getFunctionByName("glGetProgramiv");
+      UseProgram = (PFNNOGLUSEPROGRAMPROC) getFunctionByName("glUseProgram");
+      DeleteProgram = (PFNNOGLDELETEPROGRAMPROC) getFunctionByName("glDeleteProgram");
+      GetUniformLocation = (PFNNOGLGETUNIFORMLOCATIONPROC) getFunctionByName("glGetUniformLocation");
+      GetAttribLocation = (PFNNOGLGETATTRIBLOCATIONPROC) getFunctionByName("glGetAttribLocation");
+      VertexAttribPointer = (PFNNOGLVERTEXATTRIBPOINTERPROC) getFunctionByName("glVertexAttribPointer");
+      EnableVertexAttribArray = (PFNNOGLENABLEVERTEXATTRIBARRAYPROC) getFunctionByName("glEnableVertexAttribArray");
+      DisableVertexAttribArray = (PFNNOGLDISABLEVERTEXATTRIBARRAYPROC) getFunctionByName("glDisableVertexAttribArray");
+      Uniform1f = (PFNNOGLUNIFORM1FPROC) getFunctionByName("glUniform1f");
+      Uniform2f = (PFNNOGLUNIFORM2FPROC) getFunctionByName("glUniform2f");
+      Uniform3f = (PFNNOGLUNIFORM3FPROC) getFunctionByName("glUniform3f");
+      Uniform4f = (PFNNOGLUNIFORM4FPROC) getFunctionByName("glUniform4f");
+      Uniform2fv = (PFNNOGLUNIFORM2FVPROC) getFunctionByName("glUniform2fv");
+      Uniform3fv = (PFNNOGLUNIFORM3FVPROC) getFunctionByName("glUniform3fv");
+      Uniform4fv = (PFNNOGLUNIFORM4FVPROC) getFunctionByName("glUniform4fv");
+      UniformMatrix4fv = (PFNNOGLUNIFORMMATRIX4FVPROC) getFunctionByName("glUniformMatrix4fv");
 
       mExtensionsRegistered = true;
    }
 }
 
-ExtensionLoaderGLCore::ExtensionLoaderGLCore()
+void ExtensionLoaderGL::Clear(GLbitfield mask)
 {
-   mModelViewMatrixStack.push(gmtl::MAT_IDENTITY44F);
-   mProjectionMatrixStack.push(gmtl::MAT_IDENTITY44F);
-   mCurrentMatrixStack = &mModelViewMatrixStack;
+   glClear(mask);
+}
+
+void ExtensionLoaderGL::ClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a)
+{
+   glClearColor(r, g, b, a);
+}
+
+void ExtensionLoaderGL::ClearStencil(GLint s)
+{
+   glClearStencil(s);
+}
+
+void ExtensionLoaderGL::ClearDepth(GLclampd depth)
+{
+   glClearDepth(depth);
+}
+
+void ExtensionLoaderGL::StencilMask (GLuint mask)
+{
+   glStencilMask(mask);
+}
+
+void ExtensionLoaderGL::ColorMask(GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+{
+   glColorMask(r, g, b, a);
+}
+
+void ExtensionLoaderGL::DepthMask(GLboolean flag)
+{
+   glDepthMask(flag);
+}
+
+void ExtensionLoaderGL::DrawArrays(GLenum mode, GLint first, GLsizei count)
+{
+   glDrawArrays(mode, first, count);
+}
+
+void ExtensionLoaderGL::DrawBuffer(GLenum mode)
+{
+   glDrawBuffer(mode);
+}
+
+void ExtensionLoaderGL::DrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices)
+{
+   glDrawElements(mode, count, type, indices);
+}
+
+void ExtensionLoaderGL::Finish(void)
+{
+   glFinish();
+}
+
+void ExtensionLoaderGL::Flush(void)
+{
+   glFlush();
+}
+
+void ExtensionLoaderGL::Viewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+   glViewport(x, y, width, height);
+}
+
+void ExtensionLoaderGL::Enable(GLenum cap)
+{
+   glEnable(cap);
+}
+
+void ExtensionLoaderGL::Disable(GLenum cap)
+{
+   glDisable(cap);
+}
+
+void ExtensionLoaderGL::PushAttrib(GLbitfield mask)
+{
+   glPushAttrib(mask);
+}
+
+void ExtensionLoaderGL::PopAttrib()
+{
+   glPopAttrib();
+}
+
+void ExtensionLoaderGL::MatrixMode(GLenum mode)
+{
+   glMatrixMode(mode);
+}
+
+void ExtensionLoaderGL::PushMatrix()
+{
+   glPushMatrix();
+}
+
+void ExtensionLoaderGL::PopMatrix()
+{
+   glPopMatrix();
+}
+
+void ExtensionLoaderGL::LoadIdentity()
+{
+   glLoadIdentity();
+}
+
+void ExtensionLoaderGL::LoadMatrix(const gmtl::Matrix44f& mat)
+{
+   glLoadMatrixf(mat.mData);
+}
+
+void ExtensionLoaderGL::MultMatrix(const gmtl::Matrix44f& mat)
+{
+   glMultMatrixf(mat.mData);
+}
+
+void ExtensionLoaderGL::Translate(float tx, float ty, float tz)
+{
+   glTranslatef(tx, ty, tz);
+}
+
+void ExtensionLoaderGL::Scale(float sx, float sy, float sz)
+{
+   glScalef(sx, sy, sz);
+}
+
+void ExtensionLoaderGL::Ortho(float x0, float x1, float y0, float y1, float z0, float z1)
+{
+   glOrtho(x0, x1, y0, y1, z0, z1);
+}
+
+void ExtensionLoaderGL::Frustum(float x0, float x1, float y0, float y1, float z0, float z1)
+{
+   glFrustum(x0, x1, y0, y1, z0, z1);
 }
 
 }

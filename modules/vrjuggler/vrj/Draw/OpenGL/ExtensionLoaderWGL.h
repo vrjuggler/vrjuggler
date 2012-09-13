@@ -76,16 +76,16 @@ public:
    /** Return true if we have support for NV swap group extensions. */
    bool hasSwapGroupNV();
 
-   BOOL wglJoinSwapGroupNV(HDC hdc, GLuint group);
+   BOOL wglJoinSwapGroupNV(HDC hdc, unsigned int group);
 
-   BOOL wglBindSwapBarrierNV(GLuint group, GLuint barrier);
+   BOOL wglBindSwapBarrierNV(unsigned int group, unsigned int barrier);
 
-   BOOL wglQuerySwapGroupNV(HDC hdc, GLuint* group, GLuint* barrier);
+   BOOL wglQuerySwapGroupNV(HDC hdc, unsigned int* group, unsigned int* barrier);
 
-   BOOL wglQueryMaxSwapGroupsNV(HDC hdc, GLuint* maxGroups,
-                                GLuint* maxBarriers);
+   BOOL wglQueryMaxSwapGroupsNV(HDC hdc, unsigned int* maxGroups,
+                                unsigned int* maxBarriers);
 
-   BOOL wglQueryFrameCountNV(HDC hdc, /*int screen,*/ GLuint* count);
+   BOOL wglQueryFrameCountNV(HDC hdc, /*int screen,*/ unsigned int* count);
 
    BOOL wglResetFrameCountNV(HDC hdc /*, int screen*/);
    //@}

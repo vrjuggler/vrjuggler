@@ -31,6 +31,7 @@
 
 #include <vrj/Draw/OpenGL/ExtensionLoaderWGL.h>
 
+#include <gl/GL.h>
 
 namespace vrj
 {

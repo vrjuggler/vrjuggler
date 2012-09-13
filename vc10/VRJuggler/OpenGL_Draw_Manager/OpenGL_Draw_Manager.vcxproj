@@ -326,11 +326,15 @@
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\App.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\BasicSimulator.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctors.cpp" />
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctorsCore.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctors.cpp" />
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctorsCore.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawManager.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawWandFunctors.cpp" />
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawWandFunctorsCore.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoader.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.cpp" />
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGLCore.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderWGL.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\Pipe.cpp" />
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ProcApp.cpp" />

@@ -263,7 +263,7 @@ bool WindowWin32::open()
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
             << "SwapGroupNV: " << mExtensions.hasSwapGroupNV() << std::endl
             << vprDEBUG_FLUSH;
-         GLuint max_groups, max_barriers;
+         unsigned int max_groups, max_barriers;
          mExtensions.wglQueryMaxSwapGroupsNV(mDeviceContext, &max_groups,
                                              &max_barriers);
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)

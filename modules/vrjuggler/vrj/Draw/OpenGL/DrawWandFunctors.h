@@ -66,7 +66,7 @@ public:
    virtual void draw(vrj::UserPtr user);
 
 protected:
-   GLUquadricObj* mQuadObj;
+   void* mQuadObj;
 };
 
 /** \class vrj::opengl::DrawRightAngleWandFunctor DrawWandFunctors.h vrj/Draw/OpenGL/DrawWandFunctors.h
@@ -141,16 +141,16 @@ public:
    virtual void draw(vrj::UserPtr user);
 
 private:
-   GLuint mProgram;
-   GLint muMVMatrixHandle;
-   GLint muPMatrixHandle;
-   GLint maVertexCoordHandle;
-   GLint maVertexNormalHandle;
-   GLint muVertexColorHandle;
-   GLuint mVertexArrayBufferID;
-   GLuint mVertexCoordBufferID;
-   GLuint mVertexNormalBufferID;
-   GLuint mIndexBufferID;
+   unsigned int mProgram;
+   int muMVMatrixHandle;
+   int muPMatrixHandle;
+   int maVertexCoordHandle;
+   int maVertexNormalHandle;
+   int muVertexColorHandle;
+   unsigned int mVertexArrayBufferID;
+   unsigned int mVertexCoordBufferID;
+   unsigned int mVertexNormalBufferID;
+   unsigned int mIndexBufferID;
 
 };
 

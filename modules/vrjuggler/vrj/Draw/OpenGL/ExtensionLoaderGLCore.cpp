@@ -24,12 +24,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_OPENGL_EXTENSION_LOADER_H_
-#define _VRJ_OPENGL_EXTENSION_LOADER_H_
+#include <vrj/Draw/OpenGL/Config.h>
 
-#if defined(WIN32) && defined(WINGDIAPI)
-#  define GLAPI WINGDIAPI
-#endif
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+
+#include <vrj/Draw/OpenGL/ExtensionLoaderGL.h>
+
+#include "GL3/gl3.h"
 
 namespace vrj
 {
@@ -37,37 +39,14 @@ namespace vrj
 namespace opengl
 {
 
-/**
- * Base class for OpenGL extension registration and lookup.
- * This is the base class for a simple helper class for getting at
- * OpenGL/WGL/GLX extensions that we need for VR Juggler.
- *
- * @note This class was renamed from vrj::GlExtensionLoader in VR Juggler
- *       2.3.11.
- */
-class ExtensionLoader
+
+ExtensionLoaderGLCore::ExtensionLoaderGLCore()
 {
-public:
-   /** Void type to use when treating extensions the same. */
-   typedef void (*VoidExtFunc)(void);
+   mModelViewMatrixStack.push(gmtl::MAT_IDENTITY44F);
+   mProjectionMatrixStack.push(gmtl::MAT_IDENTITY44F);
+   mCurrentMatrixStack = &mModelViewMatrixStack;
+}
 
-   ExtensionLoader()
-   {;}
+}
 
-   virtual ~ExtensionLoader()
-   {;}
-
-   /** Register common extensions that we may need to use. */
-   virtual void registerExtensions()
-   {;}
-
-   /** Return pointer to extension if it exists. */
-   VoidExtFunc getFunctionByName(const char* name);
-};
-
-}  // namespace opengl
-
-}  // namespace vrj
-
-
-#endif
+}
