@@ -176,7 +176,7 @@ protected: // Drawing functions used by library
 protected:     // --- Geom helpers --- //
    void initQuadObj();
    void drawLine(const gmtl::Vec3f& start, const gmtl::Vec3f& end);
-   void drawBox(const float size, const GLenum type);
+   void drawBox(const float size, const unsigned int type);
    void drawWireCube(const float size);
    void drawSolidCube(const float size);
    //void drawGlove(gadget::GloveProxy* gloveProxy);

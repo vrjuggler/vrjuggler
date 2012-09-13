@@ -63,6 +63,18 @@
     <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawAxesFunctorsCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawHeadFunctorsCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\DrawWandFunctorsCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\ExtensionLoaderGLCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\modules\vrjuggler\vrj\Draw\OpenGL\App.h">

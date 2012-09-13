@@ -53,6 +53,11 @@
 #include <vrj/Draw/OpenGL/SimInterfaceFactory.h>
 #include <vrj/Draw/OpenGL/BasicSimulator.h>
 
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+#  include <OpenGL/gl.h>
+#else
+#  include <GL/gl.h>
+#endif
 
 namespace vrj
 {

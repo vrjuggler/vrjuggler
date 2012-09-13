@@ -64,7 +64,7 @@ public:
 protected:
    void drawSphere(const float radius, const int slices, const int stacks);
 
-   GLUquadricObj* mQuadObj;
+   void* mQuadObj;
 };
 
 
@@ -90,17 +90,17 @@ public:
    virtual void draw(vrj::UserPtr user);
 
 protected:
-   GLfloat* buildSphere(const float radius, const int nSteps);
+   float* buildSphere(const float radius, const int nSteps);
 
-   GLfloat *mCoarseSphereVertices, *mFineSphereVertices;
-   GLuint mProgram;
-   GLint muMVMatrixHandle;
-   GLint muPMatrixHandle;
-   GLint maVertexCoordHandle;
-   GLint muVertexColorHandle;
-   GLuint mVertexArrayBufferID;
-   GLuint mCoarseVertexCoordBufferID, mCoarseIndexBufferID;
-   GLuint mFineVertexCoordBufferID, mFineIndexBufferID;
+   float *mCoarseSphereVertices, *mFineSphereVertices;
+   unsigned int mProgram;
+   int muMVMatrixHandle;
+   int muPMatrixHandle;
+   int maVertexCoordHandle;
+   int muVertexColorHandle;
+   unsigned int mVertexArrayBufferID;
+   unsigned int mCoarseVertexCoordBufferID, mCoarseIndexBufferID;
+   unsigned int mFineVertexCoordBufferID, mFineIndexBufferID;
 };
 
 } // End of opengl namespace

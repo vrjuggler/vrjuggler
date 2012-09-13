@@ -52,6 +52,12 @@
 
 #include <vrj/Draw/OpenGL/Window.h>
 
+#if defined(VPR_OS_Darwin) && defined(VRJ_USE_COCOA)
+#  include <OpenGL/gl.h>
+#else
+#  include <GL/gl.h>
+#endif
+
 // This variable determines which matrix stack we put the viewing transformation
 // If it is on the proj matrix, then lighting and env maps work but fog breaks.
 #define USE_PROJECTION_MATRIX 1  /* Should we put the camera transforms on the

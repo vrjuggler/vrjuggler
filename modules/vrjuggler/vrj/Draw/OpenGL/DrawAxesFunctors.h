@@ -110,16 +110,16 @@ public:
    virtual void draw(vrj::UserPtr user);
 
 private:
-   GLuint mProgram;
-   GLint muMVMatrixHandle;
-   GLint muPMatrixHandle;
-   GLint maVertexCoordHandle;
-   GLint maVertexColorHandle;
-   GLint muScaleFactorHandle;
-   GLuint mVertexArrayBufferID;
-   GLuint mVertexCoordBufferID;
-   GLuint mVertexColorBufferID;
-   GLuint mIndexBufferID;
+   unsigned int mProgram;
+   int muMVMatrixHandle;
+   int muPMatrixHandle;
+   int maVertexCoordHandle;
+   int maVertexColorHandle;
+   int muScaleFactorHandle;
+   unsigned int mVertexArrayBufferID;
+   unsigned int mVertexCoordBufferID;
+   unsigned int mVertexColorBufferID;
+   unsigned int mIndexBufferID;
 
 };
 

@@ -37,13 +37,51 @@
 
 #include <vrj/Draw/OpenGL/ExtensionLoader.h>
 
-// GL Defines
-#ifndef GL_MODELVIEW
-#define GL_MODELVIEW                      0x1700
-#endif
-#ifndef GL_PROJECTION
-#define GL_PROJECTION                     0x1701
-#endif
+// "No GL" Defines
+#define NOGL_MODELVIEW                      0x1700
+#define NOGL_PROJECTION                     0x1701
+#define NOGL_FRAGMENT_SHADER                0x8B30
+#define NOGL_VERTEX_SHADER                  0x8B31
+#define NOGL_FALSE                          0
+#define NOGL_TRUE                           1
+#define NOGL_COMPILE_STATUS                 0x8B81
+#define NOGL_LINK_STATUS                    0x8B82
+#define NOGL_INFO_LOG_LENGTH                0x8B84
+
+typedef void (APIENTRY * PFNNOGLGENBUFFERSPROC) (int n, unsigned int *buffers);
+typedef void (APIENTRY * PFNNOGLBINDBUFFERPROC) (unsigned int target, unsigned int buffer);
+typedef void (APIENTRY * PFNNOGLBUFFERDATAPROC) (unsigned int target, ptrdiff_t size, const void *data, unsigned int usage);
+typedef void (APIENTRY * PFNNOGLDELETEBUFFERSPROC) (int n, const unsigned int *buffers);
+
+typedef void (APIENTRY * PFNNOGLBINDVERTEXARRAYPROC) (unsigned int array);
+typedef void (APIENTRY * PFNNOGLDELETEVERTEXARRAYSPROC) (int n, const unsigned int *arrays);
+typedef void (APIENTRY * PFNNOGLGENVERTEXARRAYSPROC) (int n, unsigned int *arrays);
+
+typedef unsigned int (APIENTRY * PFNNOGLCREATESHADERPROC) (unsigned int type);
+typedef void (APIENTRY * PFNNOGLCOMPILESHADERPROC) (unsigned int shader);
+typedef void (APIENTRY * PFNNOGLSHADERSOURCEPROC) (unsigned int shader, int count, const char* *string, const int *length);
+typedef void (APIENTRY * PFNNOGLGETSHADERIVPROC) (unsigned int shader, unsigned int pname, int *params);
+typedef void (APIENTRY * PFNNOGLGETSHADERINFOLOGPROC) (unsigned int shader, int bufSize, int *length, char *infoLog);
+typedef void (APIENTRY * PFNNOGLATTACHSHADERPROC) (unsigned int program, unsigned int shader);
+typedef void (APIENTRY * PFNNOGLDELETESHADERPROC) (unsigned int shader);
+typedef unsigned int (APIENTRY * PFNNOGLCREATEPROGRAMPROC) (void);
+typedef void (APIENTRY * PFNNOGLLINKPROGRAMPROC) (unsigned int program);
+typedef void (APIENTRY * PFNNOGLGETPROGRAMIVPROC) (unsigned int program, unsigned int pname, int *params);
+typedef void (APIENTRY * PFNNOGLUSEPROGRAMPROC) (unsigned int program);
+typedef void (APIENTRY * PFNNOGLDELETEPROGRAMPROC) (unsigned int program);
+typedef int (APIENTRY * PFNNOGLGETUNIFORMLOCATIONPROC) (unsigned int program, const char *name);
+typedef int (APIENTRY * PFNNOGLGETATTRIBLOCATIONPROC) (unsigned int program, const char *name);
+typedef void (APIENTRY * PFNNOGLVERTEXATTRIBPOINTERPROC) (unsigned int index, int size, unsigned int type, unsigned char normalized, int stride, const void *pointer);
+typedef void (APIENTRY * PFNNOGLENABLEVERTEXATTRIBARRAYPROC) (unsigned int index);
+typedef void (APIENTRY * PFNNOGLDISABLEVERTEXATTRIBARRAYPROC) (unsigned int index);
+typedef void (APIENTRY * PFNNOGLUNIFORM1FPROC) (int location, float v0);
+typedef void (APIENTRY * PFNNOGLUNIFORM2FPROC) (int location, float v0, float v1);
+typedef void (APIENTRY * PFNNOGLUNIFORM3FPROC) (int location, float v0, float v1, float v2);
+typedef void (APIENTRY * PFNNOGLUNIFORM4FPROC) (int location, float v0, float v1, float v2, float v3);
+typedef void (APIENTRY * PFNNOGLUNIFORM2FVPROC) (int location, int count, const float *value);
+typedef void (APIENTRY * PFNNOGLUNIFORM3FVPROC) (int location, int count, const float *value);
+typedef void (APIENTRY * PFNNOGLUNIFORM4FVPROC) (int location, int count, const float *value);
+typedef void (APIENTRY * PFNNOGLUNIFORMMATRIX4FVPROC) (int location, int count, unsigned char transpose, const float *value);
 
 namespace vrj
 {
@@ -63,204 +101,123 @@ public:
    friend class Window;
    friend class ExtensionLoaderGLCore;
 
-   void Clear(GLbitfield mask)
-   {
-      glClear(mask);
-   }
+   void Clear(unsigned int mask);
 
-   void ClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a)
-   {
-      glClearColor(r, g, b, a);
-   }
+   void ClearColor(float r, float g, float b, float a);
 
-   void ClearStencil(GLint s)
-   {
-      glClearStencil(s);
-   }
+   void ClearStencil(int s);
 
-   void ClearDepth(GLclampd depth)
-   {
-      glClearDepth(depth);
-   }
+   void ClearDepth(double depth);
 
-   void StencilMask (GLuint mask)
-   {
-      glStencilMask(mask);
-   }
+   void StencilMask (unsigned int mask);
 
-   void ColorMask(GLboolean r, GLboolean g, GLboolean b, GLboolean a)
-   {
-      glColorMask(r, g, b, a);
-   }
+   void ColorMask(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
-   void DepthMask(GLboolean flag)
-   {
-      glDepthMask(flag);
-   }
+   void DepthMask(unsigned char flag);
 
-   void DrawArrays(GLenum mode, GLint first, GLsizei count)
-   {
-      glDrawArrays(mode, first, count);
-   }
+   void DrawArrays(unsigned int mode, int first, int count);
 
-   void DrawBuffer(GLenum mode)
-   {
-      glDrawBuffer(mode);
-   }
+   void DrawBuffer(unsigned int mode);
 
-   void DrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices)
-   {
-      glDrawElements(mode, count, type, indices);
-   }
+   void DrawElements(unsigned int mode, int count, unsigned int type, const void* indices);
 
-   void Finish(void)
-   {
-      glFinish();
-   }
+   void Finish(void);
 
-   void Flush(void)
-   {
-      glFlush();
-   }
+   void Flush(void);
 
-   void Viewport(GLint x, GLint y, GLsizei width, GLsizei height)
-   {
-      glViewport(x, y, width, height);
-   }
+   void Viewport(int x, int y, int width, int height);
 
-   virtual void Enable(GLenum cap)
-   {
-      glEnable(cap);
-   }
+   virtual void Enable(unsigned int cap);
 
-   virtual void Disable(GLenum cap)
-   {
-      glDisable(cap);
-   }
+   virtual void Disable(unsigned int cap);
 
-   virtual void PushAttrib(GLbitfield mask)
-   {
-      glPushAttrib(mask);
-   }
+   virtual void PushAttrib(unsigned int mask);
 
-   virtual void PopAttrib()
-   {
-      glPopAttrib();
-   }
+   virtual void PopAttrib();
 
-   virtual void MatrixMode(GLenum mode)
-   {
-      glMatrixMode(mode);
-   }
+   virtual void MatrixMode(unsigned int mode);
 
-   virtual void PushMatrix()
-   {
-      glPushMatrix();
-   }
+   virtual void PushMatrix();
 
-   virtual void PopMatrix()
-   {
-      glPopMatrix();
-   }
+   virtual void PopMatrix();
 
-   virtual void LoadIdentity()
-   {
-      glLoadIdentity();
-   }
+   virtual void LoadIdentity();
 
-   virtual void LoadMatrix(const gmtl::Matrix44f& mat)
-   {
-      glLoadMatrixf(mat.mData);
-   }
+   virtual void LoadMatrix(const gmtl::Matrix44f& mat);
 
-   virtual void MultMatrix(const gmtl::Matrix44f& mat)
-   {
-      glMultMatrixf(mat.mData);
-   }
+   virtual void MultMatrix(const gmtl::Matrix44f& mat);
 
-   virtual void Translate(float tx, float ty, float tz)
-   {
-      glTranslatef(tx, ty, tz);
-   }
+   virtual void Translate(float tx, float ty, float tz);
 
-   virtual void Scale(float sx, float sy, float sz)
-   {
-      glScalef(sx, sy, sz);
-   }
+   virtual void Scale(float sx, float sy, float sz);
 
-   virtual void Ortho(float x0, float x1, float y0, float y1, float z0, float z1)
-   {
-      glOrtho(x0, x1, y0, y1, z0, z1);
-   }
+   virtual void Ortho(float x0, float x1, float y0, float y1, float z0, float z1);
 
-   virtual void Frustum(float x0, float x1, float y0, float y1, float z0, float z1)
-   {
-      glFrustum(x0, x1, y0, y1, z0, z1);
-   }
+   virtual void Frustum(float x0, float x1, float y0, float y1, float z0, float z1);
 
 
-   PFNGLGENBUFFERSPROC GenBuffers;
-   PFNGLBINDBUFFERPROC BindBuffer;
-   PFNGLBUFFERDATAPROC BufferData;
-   PFNGLDELETEBUFFERSPROC DeleteBuffers;
+   PFNNOGLGENBUFFERSPROC GenBuffers;
+   PFNNOGLBINDBUFFERPROC BindBuffer;
+   PFNNOGLBUFFERDATAPROC BufferData;
+   PFNNOGLDELETEBUFFERSPROC DeleteBuffers;
 
-   PFNGLGENVERTEXARRAYSPROC GenVertexArrays;
-   PFNGLBINDVERTEXARRAYPROC BindVertexArray;
-   PFNGLDELETEVERTEXARRAYSPROC DeleteVertexArrays;
+   PFNNOGLGENVERTEXARRAYSPROC GenVertexArrays;
+   PFNNOGLBINDVERTEXARRAYPROC BindVertexArray;
+   PFNNOGLDELETEVERTEXARRAYSPROC DeleteVertexArrays;
 
-   PFNGLCREATESHADERPROC CreateShader;
-   PFNGLCOMPILESHADERPROC CompileShader;
-   PFNGLSHADERSOURCEPROC ShaderSource;
-   PFNGLGETSHADERIVPROC GetShaderiv;
-   PFNGLGETSHADERINFOLOGPROC GetShaderInfoLog;
-   PFNGLATTACHSHADERPROC AttachShader;
-   PFNGLDELETESHADERPROC DeleteShader;
+   PFNNOGLCREATESHADERPROC CreateShader;
+   PFNNOGLCOMPILESHADERPROC CompileShader;
+   PFNNOGLSHADERSOURCEPROC ShaderSource;
+   PFNNOGLGETSHADERIVPROC GetShaderiv;
+   PFNNOGLGETSHADERINFOLOGPROC GetShaderInfoLog;
+   PFNNOGLATTACHSHADERPROC AttachShader;
+   PFNNOGLDELETESHADERPROC DeleteShader;
    
-   PFNGLCREATEPROGRAMPROC CreateProgram;
-   PFNGLLINKPROGRAMPROC LinkProgram;
-   PFNGLGETPROGRAMIVPROC GetProgramiv;
-   PFNGLUSEPROGRAMPROC UseProgram;
-   PFNGLDELETEPROGRAMPROC DeleteProgram;
+   PFNNOGLCREATEPROGRAMPROC CreateProgram;
+   PFNNOGLLINKPROGRAMPROC LinkProgram;
+   PFNNOGLGETPROGRAMIVPROC GetProgramiv;
+   PFNNOGLUSEPROGRAMPROC UseProgram;
+   PFNNOGLDELETEPROGRAMPROC DeleteProgram;
 
-   PFNGLGETUNIFORMLOCATIONPROC GetUniformLocation;
-   PFNGLGETATTRIBLOCATIONPROC GetAttribLocation;
-   PFNGLVERTEXATTRIBPOINTERPROC VertexAttribPointer;
-   PFNGLENABLEVERTEXATTRIBARRAYPROC EnableVertexAttribArray;
-   PFNGLDISABLEVERTEXATTRIBARRAYPROC DisableVertexAttribArray;
-   PFNGLUNIFORM1FPROC Uniform1f;
-   PFNGLUNIFORM2FPROC Uniform2f;
-   PFNGLUNIFORM3FPROC Uniform3f;
-   PFNGLUNIFORM4FPROC Uniform4f;
-   PFNGLUNIFORM2FVPROC Uniform2fv;
-   PFNGLUNIFORM3FVPROC Uniform3fv;
-   PFNGLUNIFORM4FVPROC Uniform4fv;
-   PFNGLUNIFORMMATRIX4FVPROC UniformMatrix4fv;
+   PFNNOGLGETUNIFORMLOCATIONPROC GetUniformLocation;
+   PFNNOGLGETATTRIBLOCATIONPROC GetAttribLocation;
+   PFNNOGLVERTEXATTRIBPOINTERPROC VertexAttribPointer;
+   PFNNOGLENABLEVERTEXATTRIBARRAYPROC EnableVertexAttribArray;
+   PFNNOGLDISABLEVERTEXATTRIBARRAYPROC DisableVertexAttribArray;
+   PFNNOGLUNIFORM1FPROC Uniform1f;
+   PFNNOGLUNIFORM2FPROC Uniform2f;
+   PFNNOGLUNIFORM3FPROC Uniform3f;
+   PFNNOGLUNIFORM4FPROC Uniform4f;
+   PFNNOGLUNIFORM2FVPROC Uniform2fv;
+   PFNNOGLUNIFORM3FVPROC Uniform3fv;
+   PFNNOGLUNIFORM4FVPROC Uniform4fv;
+   PFNNOGLUNIFORMMATRIX4FVPROC UniformMatrix4fv;
 
-   GLuint createProgram(const std::string& vertexSource,
+   unsigned int createProgram(const std::string& vertexSource,
       const std::string& fragmentSource)
    {
-      int vertexShader = loadShader(GL_VERTEX_SHADER, vertexSource);
+      int vertexShader = loadShader(NOGL_VERTEX_SHADER, vertexSource);
       if (vertexShader == 0)
       {
          return 0;
       }
      
-      int fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentSource);
+      int fragmentShader = loadShader(NOGL_FRAGMENT_SHADER, fragmentSource);
       if (fragmentShader == 0)
       {
          return 0;
       }
 
-      GLuint program = CreateProgram();
+      unsigned int program = CreateProgram();
       if (program != 0)
       {
          AttachShader(program, vertexShader);
          AttachShader(program, fragmentShader);
          LinkProgram(program);
 
-         GLint status = GL_FALSE;
-         GetProgramiv(program, GL_LINK_STATUS, &status);
-         if (status != GL_TRUE)
+         int status = NOGL_FALSE;
+         GetProgramiv(program, NOGL_LINK_STATUS, &status);
+         if (status != NOGL_TRUE)
          {
              DeleteProgram(program);
              program = 0;
@@ -291,7 +248,7 @@ protected:
    bool mExtensionsRegistered;
 
 private:
-   GLuint loadShader(GLuint shaderType, const std::string& source)
+   unsigned int loadShader(unsigned int shaderType, const std::string& source)
    {
       if (CreateShader == NULL)
       {
@@ -305,18 +262,18 @@ private:
       int shader = CreateShader(shaderType);
       if (shader != 0)
       {
-         GLchar* ptr[1];
+         char* ptr[1];
 
-         ptr[0] = (GLchar*)source.c_str();
-         ShaderSource(shader, 1, (const GLchar**)ptr, NULL);
+         ptr[0] = (char*)source.c_str();
+         ShaderSource(shader, 1, (const char**)ptr, NULL);
          CompileShader(shader);
 
-         GLint status = GL_FALSE;
-         GetShaderiv(shader, GL_COMPILE_STATUS, &status);
-         if (status != GL_TRUE)
+         int status = NOGL_FALSE;
+         GetShaderiv(shader, NOGL_COMPILE_STATUS, &status);
+         if (status != NOGL_TRUE)
          {
-            GLint logLength = 0;
-            GetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
+            int logLength = 0;
+            GetShaderiv(shader, NOGL_INFO_LOG_LENGTH, &logLength);
 
             std::string infoLog(logLength, ' ');
             GetShaderInfoLog(shader, logLength, &logLength, &infoLog[0]);
@@ -351,7 +308,7 @@ private:
 public:
    friend class Window;
 
-   virtual void PushAttrib(GLbitfield mask)
+   virtual void PushAttrib(unsigned int mask)
    {
       ;
    }
@@ -361,15 +318,15 @@ public:
       ;
    }
 
-   virtual void MatrixMode(GLenum mode)
+   virtual void MatrixMode(unsigned int mode)
    {
       switch (mode)
       {
-      case GL_PROJECTION:
+      case NOGL_PROJECTION:
          mCurrentMatrixStack = &mProjectionMatrixStack;
          break;
 
-      case GL_MODELVIEW:
+      case NOGL_MODELVIEW:
          mCurrentMatrixStack = &mModelViewMatrixStack;
          break;
       }
