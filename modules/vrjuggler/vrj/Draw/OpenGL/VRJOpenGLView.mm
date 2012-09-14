@@ -28,11 +28,17 @@
 
 #include <vector>
 
+// Work around a Boost header declaration conflict.
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
+
 #include <jccl/Config/ConfigElement.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Draw/OpenGL/WindowCocoa.h>
 
 #import <vrj/Draw/OpenGL/VRJOpenGLView.h>
+
+// This header needs to be here to avoid OpenGL conflicts with the Apple
+// includes below.
+#include <vrj/Draw/OpenGL/WindowCocoa.h>
 
 #import <Foundation/NSException.h>
 #import <Foundation/NSString.h>

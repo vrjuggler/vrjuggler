@@ -34,6 +34,8 @@
 
 // This header must be included before the Cocoa headers to avoid declaration
 // problems.
+//Work around a boost header declaration conflict
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
 #include <ApplicationServices/ApplicationServices.h>
 
 #import <Foundation/NSString.h>

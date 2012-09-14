@@ -33,7 +33,13 @@
 
 #include <vrj/Draw/OpenGL/DrawWandFunctors.h>
 
-#include "GL3/gl3.h"
+#define GL3_PROTOTYPES
+#if defined(VPR_OS_Darwin) && (VPR_OS_RELEASE_MAJOR > 10)
+//For Mac OS 10.7.x or greater the gl3.h file is supplied by the OS
+#  include <OpenGL/gl3.h>
+#else
+#  include <GL3/gl3.h>
+#endif
 
 namespace vrj
 {

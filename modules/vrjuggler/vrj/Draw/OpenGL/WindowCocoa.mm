@@ -28,6 +28,9 @@
 
 #include <boost/bind.hpp>
 
+// Work around a Boost header declaration conflict.
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
+
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Perf/ProfileManager.h>
@@ -36,6 +39,10 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Util/Debug.h>
 #import <vrj/Draw/OpenGL/VRJOpenGLView.h>
+#include <vrj/Draw/OpenGL/WindowCocoa.h>
+
+// This header needs to be here to avoid OpenGL conflicts with the Apple
+// includes below.
 #include <vrj/Draw/OpenGL/WindowCocoa.h>
 
 #import <Foundation/NSArray.h>
@@ -49,7 +56,6 @@
 #import <AppKit/NSOpenGLView.h>
 #import <AppKit/NSScreen.h>
 #import <AppKit/NSApplication.h>
-#import <OpenGL/gl.h>
 
 
 /**

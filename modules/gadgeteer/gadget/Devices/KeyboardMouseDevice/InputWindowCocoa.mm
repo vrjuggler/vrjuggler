@@ -28,6 +28,9 @@
 
 #include <boost/bind.hpp>
 
+// Work around a Boost header declaration conflict.
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
+
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>

@@ -26,6 +26,9 @@
 
 #include <gadget/gadgetConfig.h>
 
+// Work around a Boost header declaration conflict.
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
+
 #include <gadget/Type/KeyboardMouse/Keys.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 

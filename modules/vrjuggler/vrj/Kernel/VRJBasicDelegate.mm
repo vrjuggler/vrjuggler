@@ -26,6 +26,9 @@
 
 #include <vrj/vrjConfig.h>
 
+// Work around to resolve compile errors with Boost 1.48 and greater.
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
+
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 
 #import <vrj/Kernel/Kernel.h>
