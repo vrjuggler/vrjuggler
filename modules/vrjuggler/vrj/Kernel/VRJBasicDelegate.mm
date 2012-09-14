@@ -26,6 +26,8 @@
 
 #include <vrj/vrjConfig.h>
 
+//Work around to resolve compile errors with boost 1.48 and greater
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSLock.h>
 #import <Foundation/NSNotification.h>

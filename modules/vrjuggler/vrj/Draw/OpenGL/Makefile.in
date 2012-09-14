@@ -41,7 +41,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GL_LIBRARY)
 DIRPRFX=	vrj/Draw/OpenGL/
-SUBDIR=		GL3
+#SUBDIR=		GL3
 
 SRCS=		App.cpp				\
 		BasicSimulator.cpp		\

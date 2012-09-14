@@ -26,6 +26,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+//Work around a boost header declaration conflict
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
 #import <AppKit/NSWindow.h>
 #import <AppKit/NSEvent.h>
 

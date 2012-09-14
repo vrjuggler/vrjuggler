@@ -168,7 +168,7 @@ ifeq (@PLATFORM@, Darwin)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(top_srcdir)/../data/ControlPanel.xml $(bundle_vrj_datadir)
 	echo 'AAPL????' > $(bundleroot)/Contents/PkgInfo
-	/Developer/Tools/SetFile -a B $(bundleroot)
+	SetFile -a B $(bundleroot)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) $(TWEEK_JAR_DIR)/java.security.policy.txt	\
           $(bundle_javadir)

@@ -30,6 +30,8 @@
 #include <boost/bind.hpp>
 #include <objc/objc-runtime.h>
 
+//Work around to resolve compile errors with boost 1.48 and greater
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
 #import <Foundation/NSObject.h>
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSDictionary.h>

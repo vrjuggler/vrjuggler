@@ -28,6 +28,8 @@
 
 #include <boost/bind.hpp>
 
+//Work around a boost header declaration conflict
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
 #import <Foundation/NSString.h>
 #import <Foundation/NSArray.h>
 #import <Foundation/NSException.h>
