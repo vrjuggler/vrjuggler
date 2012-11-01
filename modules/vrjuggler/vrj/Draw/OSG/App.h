@@ -207,8 +207,13 @@ public:
       // only once per osgUtil::SceneView instance and should be done before
       // calling osgUtil::SceneView::init().
       newSceneViewer->setFrameStamp(mFrameStamp.get());
-
-      newSceneViewer->init();
+      // The SceneView::init method calls into osg::isGLExtensionOrVersionSupported
+      // which is unclear if this method is thread safe. Testing on various
+      // hardware would indicate that it is not threadsafe.
+      {
+         vpr::Guard<vpr::Mutex> sv_guard(mSceneViewLock);
+         newSceneViewer->init();
+      }
       newSceneViewer->setClearColor(::osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
       // Needed for stereo to work.
