@@ -45,10 +45,12 @@ DIRPRFX=	vrj/Draw/OpenGL/
 
 SRCS=		App.cpp				\
 		BasicSimulator.cpp		\
+		DrawAxesFunctorsCore.cpp	\
 		DrawAxesFunctors.cpp		\
+		DrawHeadFunctorsCore.cpp	\
 		DrawHeadFunctors.cpp		\
 		DrawManager.cpp			\
-		DrawWandFunctors.cpp		\
+		DrawWandFunctorsCore.cpp	\
 		DrawWandFunctors.cpp		\
 		ExtensionLoader.cpp		\
 		ExtensionLoaderGL.cpp		\
