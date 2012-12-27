@@ -28,8 +28,7 @@
 
 #include <vpr/vpr.h>
 
-// On Mac OS X 10.3 and older, use the less portable symbol lookup mechanism.
-#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR < 8
+#if defined(VPR_OS_Darwin)
 #  include <mach-o/dyld.h>
 #elif ! defined(VPR_OS_Windows)
 #  include <dlfcn.h>
@@ -54,9 +53,7 @@ ExtensionLoader::getFunctionByName(const char* name)
 {
    VoidExtFunc found_func(NULL);
 
-   // On Mac OS X 10.3 and older, use the less portable symbol lookup
-   // mechanism.
-#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR < 8
+#if defined(VPR_OS_Darwin)
    if ( NSIsSymbolNameDefined(name) )
    {
       NSSymbol symbol = NSLookupAndBindSymbol(name);
@@ -75,7 +72,7 @@ ExtensionLoader::getFunctionByName(const char* name)
    // On UNIX variants including Mac OS X 10.4 and newer, use dlopen(3).
 #elif defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX) || \
       defined(VPR_OS_Linux) || defined(VPR_OS_FreeBSD) || \
-      defined(VPR_OS_Solaris) || defined(VPR_OS_Darwin)
+      defined(VPR_OS_Solaris)
 
    // Workaround for multiple nVidia/Linux installation bugs, based on code in
    // OpenSG.
