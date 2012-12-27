@@ -37,6 +37,10 @@
 
 #include <vrj/Draw/OpenGL/ExtensionLoader.h>
 
+#if defined(VPR_OS_Darwin)
+#  define APIENTRY
+#endif
+
 // "No GL" Defines
 #define NOGL_MODELVIEW                      0x1700
 #define NOGL_PROJECTION                     0x1701
