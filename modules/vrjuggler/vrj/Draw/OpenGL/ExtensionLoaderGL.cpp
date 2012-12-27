@@ -257,6 +257,10 @@ void ExtensionLoaderGL::Frustum(float x0, float x1, float y0, float y1, float z0
    glFrustum(x0, x1, y0, y1, z0, z1);
 }
 
+ExtensionLoaderGLCore::ExtensionLoaderGLCore()
+{
+}
+
 }
 
 }
