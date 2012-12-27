@@ -37,7 +37,7 @@
 
 #include <vrj/Draw/OpenGL/ExtensionLoader.h>
 
-#if defined(VPR_OS_Darwin)
+#if ! defined(APIENTRY)
 #  define APIENTRY
 #endif
 
