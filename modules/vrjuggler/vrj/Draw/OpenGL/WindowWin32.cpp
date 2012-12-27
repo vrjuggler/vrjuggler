@@ -818,7 +818,7 @@ HGLRC WindowWin32::createContext(HDC hdc)
             << attribList[2] << ", " << attribList[3] << ", "
             << attribList[4] << ", " << attribList[5] << ", "
             << attribList[6] << ", " << attribList[7] << ", "
-            << attribList[8] << "}""}"
+            << attribList[8] << "}"
             <<  std::endl << vprDEBUG_FLUSH;
 
          return mExtensions.wglCreateContextAttribsARB(hdc, 0, attribList);
