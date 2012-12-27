@@ -1280,7 +1280,6 @@ rm -rf %{buildroot}
 %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Display
 %dir %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/
 %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/*.h
-%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/GL3/*.h
 %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Kernel
 %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Performance
 %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Sound
