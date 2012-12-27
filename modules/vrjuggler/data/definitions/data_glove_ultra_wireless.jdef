@@ -3,15 +3,15 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="data_glove_ultra_wireless" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="5DT Data Glove Ultra Wireless">
       <abstract>false</abstract>
-      <help>Configuration for a 5DT Data Glove Ultra Wireless device. This device makes use of 14 analog data sources for each port: Port A Glove (0-13) and Port B Glove (14-28): thumb mcp, thumb pip, thumb-index abduction, index mcp, index pip, index-middle abduction, middle mcp, middle pip, middle-ring abduction, ring mcp, ring pip, ring-pinky abduction, pinky mcp, pinky pip. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more on 5DT DataGlove&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configuration for a 5DT Data Glove Ultra Wireless device. This device makes use of 14 analog data sources for each port: Port A Glove (0-13) and Port B Glove (14-28): thumb mcp, thumb pip, thumb-index abduction, index mcp, index pip, index-middle abduction, middle mcp, middle pip, middle-ring abduction, ring mcp, ring pip, ring-pinky abduction, pinky mcp, pinky pip. (&lt;a href="http://vrjuggler.org/docs/vrjuggler/3.0/configuration.guide/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more on 5DT DataGlove&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
-         <help>The serial port this device is connected to. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <help>The serial port this device is connected to. (&lt;a href="http://vrjuggler.org/docs/vrjuggler/3.0/configuration.guide/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
          <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
-         <help>The speed of the serial port. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <help>The speed of the serial port. (&lt;a href="http://vrjuggler.org/docs/vrjuggler/3.0/configuration.guide/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
          <value label="Baud" defaultvalue="38400"/>
          <enumeration editable="false">
             <enum label="1200" value="1200"/>
@@ -46,16 +46,16 @@
    </definition_version>
    <definition_version version="2" label="5DT Data Glove Ultra Wireless">
       <abstract>false</abstract>
-      <help>Configuration for a 5DT Data Glove Ultra Wireless device. This device makes use of 14 analog data sources for each port: Port A Glove (0-13) and Port B Glove (14-28): thumb mcp, thumb pip, thumb-index abduction, index mcp, index pip, index-middle abduction, middle mcp, middle pip, middle-ring abduction, ring mcp, ring pip, ring-pinky abduction, pinky mcp, pinky pip. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more on 5DT DataGlove&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Configuration for a 5DT Data Glove Ultra Wireless device. This device makes use of 14 analog data sources for each port: Port A Glove (0-13) and Port B Glove (14-28): thumb mcp, thumb pip, thumb-index abduction, index mcp, index pip, index-middle abduction, middle mcp, middle pip, middle-ring abduction, ring mcp, ring pip, ring-pinky abduction, pinky mcp, pinky pip. (&lt;a href="http://vrjuggler.org/docs/vrjuggler/3.0/configuration.guide/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more on 5DT DataGlove&lt;/a&gt;, &lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>analog_device</parent>
       <parent>command_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="port">
-         <help>The serial port this device is connected to. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <help>The serial port this device is connected to. (&lt;a href="http://vrjuggler.org/docs/vrjuggler/3.0/configuration.guide/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
          <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
-         <help>The speed of the serial port. (&lt;a href="http://www.infiscape.com/documentation/vrjuggler-config/3.0/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
+         <help>The speed of the serial port. (&lt;a href="http://vrjuggler.org/docs/vrjuggler/3.0/configuration.guide/configuring_vr_juggler/apb.html#section.configure.dataglove"&gt;more ...&lt;/a&gt;)</help>
          <value label="Baud" defaultvalue="115200"/>
          <enumeration editable="false">
             <enum label="1200" value="1200"/>
