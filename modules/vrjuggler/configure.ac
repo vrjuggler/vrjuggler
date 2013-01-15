@@ -834,6 +834,7 @@ AC_CONFIG_FILES([
    vrj/Draw/Makefile
    vrj/Draw/OSG/Makefile
    vrj/Draw/OpenGL/Makefile
+   vrj/Draw/OpenGL/GL/Makefile
    vrj/Draw/OpenSG/Makefile
    vrj/Draw/Pf/Makefile
    vrj/Kernel/Makefile

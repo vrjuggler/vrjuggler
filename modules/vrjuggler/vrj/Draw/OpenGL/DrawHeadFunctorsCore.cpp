@@ -32,7 +32,17 @@
 #include <vrj/Kernel/User.h>
 #include <vrj/Draw/OpenGL/DrawHeadFunctors.h>
 
-#include "GL3/gl3.h"
+#define GL3_PROTOTYPES
+#if defined(VPR_OS_Darwin) && (VPR_OS_RELEASE_MAJOR > 10)
+//For Mac OS 10.7.x or greater the gl3.h file is supplied by the OS
+#  include <OpenGL/gl3.h>
+#else
+//We append OpenGL here to force the use of the VR Juggler provided glcorearb.h
+//header file instead of an OS supplied file on Windows and Linux platforms. In the
+//future when the glcorearb file is ditributed with drivers and third party libraries
+//this path can be changed to GL/glcorearb.h like GL/gl.h.
+#  include <vrj/Draw/OpenGL/GL/glcorearb.h>
+#endif
 
 #define NUM_TRIANGLES_ON_SPHERE(nsteps)   (3*(2*(nsteps))+6*((nsteps)-1)*(nsteps))
 

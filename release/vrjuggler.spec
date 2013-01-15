@@ -1302,7 +1302,8 @@ rm -rf %{buildroot}
 
 %files -n vrjuggler-opengl-devel
 %defattr(-, root, root)
-%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OGL
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OpenGL
+%{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OpenGL/GL/*.h
 %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OSG
 %{_includedir}/vrjuggler-%{vrjuggler_version_dist}/vrj/Draw/OpenSG
 %{_libdir}/libvrj_ogl*.a

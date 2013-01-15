@@ -36,7 +36,11 @@
 //For Mac OS 10.7.x or greater the gl3.h file is supplied by the OS
 #  include <OpenGL/gl3.h>
 #else
-#  include <GL3/gl3.h>
+//We append OpenGL here to force the use of the VR Juggler provided glcorearb.h
+//header file instead of an OS supplied file on Windows and Linux platforms. In the
+//future when the glcorearb file is ditributed with drivers and third party libraries
+//this path can be changed to GL/glcorearb.h like GL/gl.h.
+#  include <vrj/Draw/OpenGL/GL/glcorearb.h>
 #endif
 namespace vrj
 {

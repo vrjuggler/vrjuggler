@@ -312,7 +312,7 @@ private:
 public:
    friend class Window;
 
-   virtual void PushAttrib(unsigned int mask)
+   virtual void PushAttrib(unsigned int)
    {
       ;
    }
