@@ -98,6 +98,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - 5DT DataGloveUltra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cluster Plug-in - Application Barrier Manager", "Gadgeteer\ApplicationBarrierManager\ApplicationBarrierManager.vcxproj", "{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - SdlJoystick", "Gadgeteer\SdlJoystick\SdlJoystick.vcxproj", "{D0929815-40CA-4270-86CD-60A8C0A577FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DebugDLL|Win32 = DebugDLL|Win32
@@ -647,6 +649,18 @@ Global
 		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
 		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
 		{012B9DF6-2A27-4BC9-AD49-8807AEEB3991}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugDLL|x64.ActiveCfg = DebugDLL|x64
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugDLL|x64.Build.0 = DebugDLL|x64
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugRtDll|Win32.ActiveCfg = DebugRtDLL|Win32
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugRtDll|Win32.Build.0 = DebugRtDLL|Win32
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugRtDll|x64.ActiveCfg = DebugRtDLL|x64
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.DebugRtDll|x64.Build.0 = DebugRtDLL|x64
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.ReleaseDLL|x64.ActiveCfg = ReleaseDLL|x64
+		{D0929815-40CA-4270-86CD-60A8C0A577FD}.ReleaseDLL|x64.Build.0 = ReleaseDLL|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

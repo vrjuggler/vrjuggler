@@ -334,6 +334,8 @@
     <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\GloveGesture.cpp" />
     <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\GloveProxy.cpp" />
     <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\Header.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Hat.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\HatProxy.cpp" />
     <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Input.cpp" />
     <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputArea.cpp" />
     <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputAreaWin32.cpp" />
@@ -410,6 +412,12 @@
     <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\ConfigPacketPtr.h" />
     <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DataPacket.h" />
     <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DataPacketPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Hat.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatPtr.h" />
     <ClInclude Include="..\..\modules\gadgeteer\gadget\Util\Debug.h" />
     <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DeviceAck.h" />
     <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DeviceAckPtr.h" />

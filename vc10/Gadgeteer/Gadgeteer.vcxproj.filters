@@ -234,6 +234,12 @@
     <ClCompile Include="..\..\modules\gadgeteer\gadget\Util\Version.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Hat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\HatProxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\AbstractEventInterface.h">
@@ -723,6 +729,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\modules\gadgeteer\gadget\Util\Version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Hat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatProxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatProxyPtr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatPtr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
