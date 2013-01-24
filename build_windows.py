@@ -482,6 +482,15 @@ def postProcessOptions(options):
             os.environ['GADGET_TRACKD_API_H'] = '<%s>' % h
             break
 
+   # Determine if al.h is in the base include directory or in include\AL.
+   if os.environ['SDL_ROOT'] != '':
+      sdl2_path = os.path.join(os.environ['SDL_ROOT'], 'include', 'SDL2')
+      if os.path.exists(sdl2_path):
+         os.environ['HAVE_SDL2'] = 'HAVE_SDL2'
+         os.environ['SDL_LIB'] = 'SDL2.lib'
+      else:
+         os.environ['SDL_LIB'] = 'SDL.lib'
+
 def writeCacheFile(optionDict):
    cache_file = open(getCacheFileName(), 'w')
    for k, v in optionDict.iteritems():

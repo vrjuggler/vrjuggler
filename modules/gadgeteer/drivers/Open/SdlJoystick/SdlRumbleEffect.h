@@ -27,11 +27,20 @@
 #ifndef _SDL_RUMBLE_EFFECT_H_
 #define _SDL_RUMBLE_EFFECT_H_
 
+#ifdef HAVE_SDL2
+#include <SDL2/SDL.h>
+#else
 #include <SDL/SDL.h>
+#endif
+
 #if SDL_VERSION_ATLEAST(1,3,0)
 
 #include <gadget/Type/RumbleEffect.h>
+#ifdef HAVE_SDL2
+#include <SDL2/SDL_haptic.h>
+#else
 #include <SDL/SDL_haptic.h>
+#endif
 
 class SdlRumbleEffect
     : public gadget::RumbleEffect

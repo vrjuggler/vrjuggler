@@ -26,7 +26,7 @@
 
 #include "SdlRumbleEffect.h"
 #include <memory.h>
-#include <SDL/SDL.h>
+
 #if SDL_VERSION_ATLEAST(1,3,0)
 
 SdlRumbleEffect::SdlRumbleEffect(SDL_Haptic *haptic,

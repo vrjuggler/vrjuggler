@@ -35,14 +35,22 @@
 
 #include <gadget/Type/InputDevice.h>
 
+#ifdef HAVE_SDL2
+#include <SDL2/SDL.h>
+#else
 #include <SDL/SDL.h>
+#endif
 
 #if !SDL_VERSION_ATLEAST(1,2,0)
 #  error "SDL Version 1.2 is required.  Try configure.pl --with-sdl=no"
 #endif
 
 #if SDL_VERSION_ATLEAST(1,3,0)
-#  include <SDL/SDL_haptic.h>
+#   ifdef HAVE_SDL2
+#      include <SDL2/SDL_haptic.h>
+#   else
+#      include <SDL/SDL_haptic.h>
+#   endif
 #else
 #  define SDL_Haptic void
 #endif
