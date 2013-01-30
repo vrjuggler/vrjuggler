@@ -573,7 +573,13 @@ if test "x${_with_sdl}" != "xno" ; then
 
    SDL_INCLUDES="-I$SDL_ROOT/include"
    SDL_LDFLAGS="-L$SDL_ROOT/lib"
-   SDL_LIBS="-lSDL"
+   if test -d "$SDL_ROOT/include/SDL2" ; then
+      HAVE_SDL2="Y"
+      SDL_LIBS="-lSDL2"
+      SDL_INCLUDES="-DHAVE_SDL2 $SDL_INCLUDES"
+   else
+      SDL_LIBS="-lSDL"
+   fi
 
    CPPFLAGS="$SDL_INCLUDES $CPPFLAGS"
    LDFLAGS="$SDL_LDFLAGS $LDFLAGS"
@@ -584,8 +590,11 @@ if test "x${_with_sdl}" != "xno" ; then
    DPP_LANG_C
 
    CPPFLAGS="$CPPFLAGS $STDFLAGS"
-
-   AC_CHECK_LIB(SDL, SDL_Quit, [gadget_have_sdl='yes'], [gadget_have_sdl='no'])
+   if test "x$HAVE_SDL2" = "xY" ; then
+      AC_CHECK_LIB(SDL2, SDL_Quit, [gadget_have_sdl='yes'], [gadget_have_sdl='no'])
+   else
+      AC_CHECK_LIB(SDL, SDL_Quit, [gadget_have_sdl='yes'], [gadget_have_sdl='no'])
+   fi
 
    DPP_LANG_RESTORE
 
