@@ -2516,7 +2516,7 @@ def getVSCmd():
    devenv_cmd = None
    # devenv is used by the full version of Visual Studio. VCExpress is the
    # launch command used by Visual C++ Express Edition.
-   cmds = ['devenv.exe', 'VCExpress.exe']
+   cmds = ['devenv.com', 'VCExpress.exe']
 
    for p in os.getenv('PATH', '').split(os.pathsep):
 #      print "Searching in", p
@@ -2603,17 +2603,21 @@ def doMSVCUpgrade(devenvCmd, vcDir, solutionFile):
    # Finally upgrade solution if needed
    subprocess.call([devenvCmd, solutionFile, "/upgrade"])
 
-def getBuildCommand(msbuildCmd, solutionFile, config):
-   #if gBuild64:
-   #   arch = 'x64'
-   #else:
-   #   arch = 'Win32'
-   cmd = [msbuildCmd, solutionFile, "/p:Configuration=%s" % config]
-   if gJobLimit == None:
-      cmd.append("/m")
+def getBuildCommand(devenvCmd, solutionFile, config):
+   if gBuild64:
+      arch = 'x64'
    else:
-      cmd.append("/maxcpucount:%s" % gJobLimit)
-   cmd.append("/p:BuildInParallel=true")
+      arch = 'Win32'
+   cmd = [devenvCmd, solutionFile, "/build", "%s|%s" % (config, arch)]
+
+   # with devenv, there doesn't seem to be a way to control parallel
+   # builds via the command line
+   #
+   #if gJobLimit == None:
+   #   cmd.append("/m")
+   #else:
+   #   cmd.append("/maxcpucount:%s" % gJobLimit)
+   #cmd.append("/p:BuildInParallel=true")
    return cmd
 
 def getIDECommand(devenvCmd, solutionFile):
@@ -2703,7 +2707,7 @@ def main():
             
             if len(configs) > 0:
                for config in configs:
-                  cmd = getBuildCommand(msbuild_cmd, solution_file, config)
+                  cmd = getBuildCommand(devenv_cmd, solution_file, config)
                   print "Launching %s" % " ".join(cmd)
                   subprocess.call(cmd)
             else:
