@@ -176,6 +176,44 @@ public:
       boost::fusion::at_key<EventTag>(mCallbackMap).push_back(callback);
       return *this;
    }
+
+   /**
+    * Removes the given callback from this multi-event interface. If
+    * \p callback was not previously registered, then this has no effect.
+    *
+    * @param callback A callable convertible to callback_type, but the
+    *                 type \c F is \em not callback_type. Instead, \c F must
+    *                 support comparison with an instance of callback_type.
+    *
+    * @since 2.1.29
+    */
+   template<typename EventTag, typename F>
+   MultiEventInterface& removeCallback(const EventTag&, const F& callback)
+   {
+      return removeCallback<EventTag>(callback);
+   }
+
+   /**
+    * Removes the given callback from this multi-event interface. If
+    * \p callback was not previously registered, then this has no effect.
+    *
+    * @param callback A callable convertible to callback_type, but the
+    *                 type \c F is \em not callback_type. Instead, \c F must
+    *                 support comparison with an instance of callback_type.
+    *
+    * @since 2.1.29
+    */
+   template<typename EventTag, typename F>
+   MultiEventInterface& removeCallback(const F& callback)
+   {
+      std::vector<callback_type>& callbacks(
+         boost::fusion::at_key<EventTag>(mCallbackMap)
+      );
+      typename std::vector<callback_type>::iterator i =
+         std::remove(callbacks.begin(), callbacks.end(), callback);
+      callbacks.erase(i, callbacks.end());
+      return *this;
+   }
    //@}
 
 protected:
