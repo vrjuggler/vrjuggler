@@ -52,7 +52,7 @@ use Time::localtime;
 use strict 'vars';
 use vars qw(%opts $name_printed);
 
-require "hostname.pl";
+use Sys::Hostname;
 
 # Subroutine prototypes.
 sub nonfatalError($;$);
