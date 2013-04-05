@@ -86,7 +86,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getSeconds()
+   vpr::Uint32 getSeconds() const
    {
       return mSeconds;
    }
@@ -98,7 +98,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getSecondsf()
+   double getSecondsf() const
    {
       double sec_f, usec_f, usec_f_div;
 
@@ -116,7 +116,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getMinutes()
+   vpr::Uint32 getMinutes() const
    {
       return mSeconds / 60;
    }
@@ -129,7 +129,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getMinutesf()
+   double getMinutesf() const
    {
       return getSecondsf() / 60.0f;
    }
@@ -141,7 +141,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getHours()
+   vpr::Uint32 getHours() const
    {
       return mSeconds / 3600;
    }
@@ -154,7 +154,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getHoursf()
+   double getHoursf() const
    {
       return getSecondsf() / 3600.0f;
    }
@@ -166,7 +166,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getDays()
+   vpr::Uint32 getDays() const
    {
       return mSeconds / 86400;
    }
@@ -179,7 +179,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getDaysf()
+   double getDaysf() const
    {
       return getSecondsf() / 86400.0f;
    }
@@ -191,7 +191,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getWeeks()
+   vpr::Uint32 getWeeks() const
    {
       return mSeconds / 608400;
    }
@@ -204,7 +204,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getWeeksf()
+   double getWeeksf() const
    {
       return getSecondsf() / 608400.0f;
    }
