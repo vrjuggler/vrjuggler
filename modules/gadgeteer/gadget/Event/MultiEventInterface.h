@@ -113,7 +113,7 @@ public:
    {
       if (mProxy.get() != NULL)
       {
-         unregisterInterface(this);
+         this->unregisterInterface(this);
       }
    }
 
@@ -261,7 +261,7 @@ protected:
       // removed from the input handler.
       if (mProxy.get() != NULL && mProxy != proxy)
       {
-         unregisterInterface(this);
+         this->unregisterInterface(this);
       }
 
       proxy_ptr_type old_proxy(mProxy);
@@ -272,7 +272,7 @@ protected:
       if (mProxy.get() != NULL)
       {
          mEventGenerator = createEventGenerator(mProxy);
-         registerInterface(this);
+         this->registerInterface(this);
       }
 
       onProxyChanged(old_proxy, mProxy);

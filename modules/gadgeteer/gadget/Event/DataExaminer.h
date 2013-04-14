@@ -122,7 +122,7 @@ public:
     */
    void examine(const DataType& d, bool& consumed)
    {
-      addEvent(d, consumed);
+      this->addEvent(d, consumed);
    }
 };
 
