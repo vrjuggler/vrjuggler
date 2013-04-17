@@ -232,13 +232,10 @@ extern "C" void __attribute ((constructor)) snxLibraryInit()
             );
             lib_file = fs::system_complete(lib_file);
 
-#if defined(VPR_OS_IRIX) && defined(_ABIN32)
-            const std::string bit_suffix("32");
-#elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
-      defined(VPR_OS_Linux) && defined(__x86_64__)
-            const std::string bit_suffix("64");
+#if defined(SNX_LIBDIR_NAME)
+             const std::string lib_dir_name(SNX_LIBDIR_NAME);
 #else
-            const std::string bit_suffix("");
+             const std::string lib_dir_name("lib");
 #endif
 
             // Get the directory containing this shared library.
@@ -250,7 +247,7 @@ extern "C" void __attribute ((constructor)) snxLibraryInit()
 
             // Use the lib subdirectory to figure out when we have found the
             // root of the Sonix installation tree.
-            const fs::path lib_subdir(std::string("lib") + bit_suffix);
+            const fs::path lib_subdir(lib_dir_name);
 
             bool found(false);
             while ( ! found && ! base_dir.empty() )

@@ -115,6 +115,7 @@ EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
 EXTRA_DEFS=		-DTWEEK_ROOT_DIR="\"$(instprefix)\""        \
                         -DTWEEK_SHARE_DIR="\"$(TWEEK_SHARE_DIR)\""    \
+                        -DTWEEK_LIBDIR_NAME="\"$(LIBDIR_NAME)\"" \
                         -D_TWEEK_BUILD_ @EXTRA_DEFS@
 EXTRA_DEPEND_FLAGS=	-I$(top_srcdir) -I$(topdir)/tweek/idl
 EXTRA_INCLUDES=		-I$(top_srcdir) -I$(topdir)/tweek/idl

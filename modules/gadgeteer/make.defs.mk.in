@@ -111,6 +111,7 @@ EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
 EXTRA_DEFS=		-DGADGET_ROOT_DIR="\"$(instprefix)\"" \
                         -DGADGET_SHARE_DIR="\"$(GADGET_SHARE_DIR)\"" \
+                        -DGADGET_LIBDIR_NAME="\"$(LIBDIR_NAME)\"" \
                         -D_GADGET_BUILD_
 EXTRA_DEPEND_FLAGS=	-I$(GADGETROOT_ABS)
 EXTRA_INCLUDES=		-I$(top_srcdir)
