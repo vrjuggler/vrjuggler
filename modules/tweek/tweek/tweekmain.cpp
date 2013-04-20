@@ -238,7 +238,7 @@ extern "C" void __attribute ((constructor)) tweekLibraryInit()
 
             // Use the lib subdirectory to figure out when we have found the
             // root of the Tweek installation tree.
-            const fs::path lib_subdir(std::string("lib") + bit_suffix);
+            const fs::path lib_subdir(lib_dir_name);
 
             bool found(false);
             while ( ! found && ! base_dir.empty() )
