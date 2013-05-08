@@ -828,7 +828,16 @@ gadget::Keys InputAreaXWin::xKeyToKey(KeySym xKey)
    case XK_bar          : return gadget::KEY_BAR;
    case XK_braceright   : return gadget::KEY_BRACE_RIGHT;
    case XK_asciitilde   : return gadget::KEY_ASCII_TILDE;
+   case XK_apostrophe   : return gadget::KEY_APOSTROPHE;
 
+   // Numeric keypad operators and separators
+   case XK_KP_Multiply  : return gadget::KEY_ASTERISK;
+   case XK_KP_Add       : return gadget::KEY_PLUS;
+   case XK_KP_Subtract  : return gadget::KEY_MINUS;
+   case XK_KP_Divide    : return gadget::KEY_SLASH;
+   case XK_KP_Decimal   : return gadget::KEY_PERIOD;
+   case XK_KP_Delete    : return gadget::KEY_PERIOD;
+           
    default: return gadget::KEY_UNKNOWN;
    }
 }
