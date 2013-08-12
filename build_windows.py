@@ -2512,11 +2512,14 @@ class GuiFrontEnd:
             sys.exit(EXIT_STATUS_MSVS_START_ERROR)
       self.buildFinished()
 
-def getVSCmd():
+def getVSCmd( interactive=True ):
    devenv_cmd = None
    # devenv is used by the full version of Visual Studio. VCExpress is the
    # launch command used by Visual C++ Express Edition.
-   cmds = ['devenv.com', 'VCExpress.exe']
+   if( interactive ):
+      cmds = ['devenv.exe', 'VCExpress.exe']
+   else:
+      cmds = ['devenv.com', 'VCExpress.exe']
 
    for p in os.getenv('PATH', '').split(os.pathsep):
 #      print "Searching in", p
@@ -2698,7 +2701,8 @@ def main():
          status = 0
 
          if not skip_vs:
-            devenv_cmd    = getVSCmd()
+            devenv_cmd_interactive = getVSCmd()
+            devenv_cmd = getVSCmd( False )
             msbuild_cmd   = getMSBuild()
             solution_file = r'%s' % os.path.join(gJugglerDir, vc_dir,
                                                  'Juggler.sln')      
@@ -2711,7 +2715,7 @@ def main():
                   print "Launching %s" % " ".join(cmd)
                   subprocess.call(cmd)
             else:
-               cmd = getIDECommand(devenv_cmd, solution_file)
+               cmd = getIDECommand(devenv_cmd_interactive, solution_file)
                print "Launching %s" % " ".join(cmd)
                subprocess.call(cmd)
 
