@@ -682,7 +682,7 @@ void ConfigManager::removeActive(const std::string& elementName)
    unlockActive();
 }
 
-boost::signals::connection
+boost::signals2::connection
    ConfigManager::addConfigurationCallback(config_signal_t::slot_function_type slot)
 {
    return mConfigurationSignal.connect(slot);

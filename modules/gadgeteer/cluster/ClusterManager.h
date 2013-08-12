@@ -29,7 +29,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/signals.hpp>
+#include <boost/signals2.hpp>
 
 #include <vpr/Util/GUID.h>
 #include <vpr/Util/Singleton.h>
@@ -354,7 +354,7 @@ private:
 
    vpr::Uint64                  mPreDrawCallCount;       /**< # calls to preDraw() */
    vpr::Uint64                  mPostPostFrameCallCount; /**< # calls to postPostFrame() */
-   boost::signals::connection   mConfigChangeConn;
+   boost::signals2::connection  mConfigChangeConn;
 };
 
 } // end of cluster namespace

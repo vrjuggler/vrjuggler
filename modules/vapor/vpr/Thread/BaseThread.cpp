@@ -54,14 +54,14 @@ vpr::Mutex sExitSignalLock;
 vpr::Int32 BaseThread::mNextThreadId = 0;
 vpr::TSTable BaseThread::sTSTable;
 
-boost::signals::connection BaseThread::
+boost::signals2::connection BaseThread::
 addThreadStartCallback(BaseThread::state_signal_t::slot_function_type slot)
 {
    vpr::Guard<vpr::Mutex> g(sStartSignalLock);
    return sStartSignal.connect(slot);
 }
 
-boost::signals::connection BaseThread::
+boost::signals2::connection BaseThread::
 addThreadExitCallback(BaseThread::state_signal_t::slot_function_type slot)
 {
    vpr::Guard<vpr::Mutex> g(sExitSignalLock);

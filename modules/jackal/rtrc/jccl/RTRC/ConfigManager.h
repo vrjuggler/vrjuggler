@@ -30,7 +30,7 @@
 #include <jccl/jcclConfig.h>
 #include <vector>
 #include <list>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
@@ -410,7 +410,7 @@ public:
     *
     * @since 1.3.0
     */
-   typedef boost::signal<void(Configuration*, PendingElement::Type)> config_signal_t;
+   typedef boost::signals2::signal<void(Configuration*, PendingElement::Type)> config_signal_t;
 
    /**
     * Connects the given slot to the signal that is emitted when a
@@ -426,7 +426,7 @@ public:
     *
     * @since 1.3.0
     */
-   boost::signals::connection
+   boost::signals2::connection
       addConfigurationCallback(config_signal_t::slot_function_type slot);
 
    //@}
