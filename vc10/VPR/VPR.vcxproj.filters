@@ -114,7 +114,7 @@
     <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\external\md5-c\md5c.c">
+    <ClCompile Include="..\..\external\libmd5-rfc\md5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.cpp">
@@ -320,7 +320,7 @@
     <ClInclude Include="..\..\modules\vapor\vpr\Util\FileUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\md5-c\global.h">
+    <ClInclude Include="..\..\external\libmd5-rfc\global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\modules\vapor\vpr\Sync\Guard.h">
@@ -389,7 +389,7 @@
     <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\McastReq.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\external\md5-c\md5.h">
+    <ClInclude Include="..\..\external\libmd5-rfc\md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\modules\vapor\vpr\Sync\Mutex.h">

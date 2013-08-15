@@ -341,7 +341,7 @@
     <ClCompile Include="..\..\modules\vapor\vpr\DynLoad\LoaderError.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\Sync\LockException.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.cpp" />
-    <ClCompile Include="..\..\external\libmd5-rfc\md5c.c" />
+    <ClCompile Include="..\..\external\libmd5-rfc\md5.c" />
     <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\NoPushWriter.cpp" />
     <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp" />
