@@ -47,8 +47,8 @@ include @topdir@/make.defs.mk
 srcdir=			@srcdir@/../../../../../external/leach-uuid/uuid
 top_srcdir=		@top_srcdir@
 EXTRA_DEFS+=		@UUID_DEFS@
-EXTRA_DEPEND_FLAGS=	-I$(JUGGLERROOT_ABS)/external/md5-c
-EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/md5-c
+EXTRA_DEPEND_FLAGS=	-I$(JUGGLERROOT_ABS)/external/libmd5-rfc
+EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/libmd5-rfc
 INSTALL_FILES=
 SUBOBJDIR=		$(VPR_LIBRARY)
 
