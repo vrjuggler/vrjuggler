@@ -47,8 +47,8 @@ include @topdir@/make.defs.mk
 includedir=		@includedir@/vpr/Util
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
-EXTRA_DEPEND_FLAGS=	-I$(JUGGLERROOT_ABS)/external/md5-c
-EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/md5-c
+EXTRA_DEPEND_FLAGS=	-I$(JUGGLERROOT_ABS)/external/libmd5-rfc
+EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/libmd5-rfc
 INSTALL=		@INSTALL@
 SUBOBJDIR=		$(VPR_LIBRARY)
 
