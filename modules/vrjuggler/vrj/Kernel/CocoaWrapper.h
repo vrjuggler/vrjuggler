@@ -75,8 +75,8 @@ private:
 
    void threadEnded();
 
-   boost::signals::connection mThreadStartConn;
-   boost::signals::connection mThreadExitConn;
+   boost::signals2::connection mThreadStartConn;
+   boost::signals2::connection mThreadExitConn;
 
    /** @name Auto-Release Pools */
    //@{
