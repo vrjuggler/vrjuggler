@@ -82,8 +82,11 @@ typedef struct{
 	int num_button;       // number of buttons
 	int button[DTRACK_MEATOOL_MAX_BUTTON];  // button state (1 pressed, 0 not pressed)
 	
+	float tipradius;
+	
 	float loc[3];         // location (in mm)
 	float rot[9];         // rotation matrix (column-wise)
+	float cov[6];
 } dtrack_meatool_type;
 
 // A.R.T. Fingertracking hand data (6DOF + fingers):
