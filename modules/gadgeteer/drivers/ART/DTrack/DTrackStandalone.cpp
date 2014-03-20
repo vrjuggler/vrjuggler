@@ -394,6 +394,53 @@ bool DTrackStandalone::receive(void)
 			continue;
 		}
 		
+		// line of 6di inertial data:
+		
+		if (!strncmp(s, "6di ", 4))	{
+			s += 4;
+			
+			// disable all existing data
+			for (i=0; i<act_num_body; i++) {
+				memset(&act_body[i], 0, sizeof(dtrack_body_type));
+				act_body[i].id = i;
+				act_body[i].quality = -1;
+			}
+			// get number of calibrated inertial bodies
+			if (!(s = string_get_i(s, &n))) {
+				return false;
+			}
+			
+			// get data of inertial bodies
+			for (i=0; i<n; i++) {
+				if (!(s = string_get_block(s, "iif", iarr, &f))){
+					return false;
+				}
+				id = iarr[0];
+				int st = iarr[1];
+				// adjust length of vector
+				if (id >= act_num_body) {
+					act_body.resize(id + 1);
+					for (j = act_num_body; j<=id; j++) {
+						memset(&act_body[j], 0, sizeof(dtrack_body_type));
+						act_body[ j ].id = j;
+						act_body[ j ].quality = -1;
+					}
+					act_num_body = id + 1;
+				}
+				act_body[id].id = id;
+				// creating quality out of state (-1 when not tracked)
+				act_body[id].quality = static_cast< float > ( st - 1 );
+				if (!(s = string_get_block(s, "fff", NULL, act_body[id].loc))) {
+					return false;
+				}
+				if (!(s = string_get_block(s, "fffffffff", NULL, act_body[id].rot))) {
+					return false;
+				}
+			}
+			
+			continue;
+		}
+		
 		// line for Flystick data (older format):
 
 		if(!strncmp(s, "6df ", 4)){
@@ -854,7 +901,6 @@ dtrack_body_type DTrackStandalone::get_body(int id)   // standard body data (id 
 	
 	return dummy;
 }
-
 
 int DTrackStandalone::get_num_flystick(void)          // number of calibrated Flysticks
 {
