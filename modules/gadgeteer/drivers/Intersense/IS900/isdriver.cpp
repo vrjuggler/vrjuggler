@@ -51,9 +51,21 @@ extern InterSenseTrackerType ISD_tracker[ISD_MAX_TRACKERS];
 ******************************************************************************/
 BOOL ISD_detectTrackerOld(InterSenseTrackerType *tracker/*, DWORD commPort*/)
 {
-    char   *systemName[MAX_HARDWARE_VERSIONS] =
-              {"IS-300 Series", "IS-600 Series", "IS-900 Series", "InterTrax", "Unknown"};
-    char   *message[4] = {"first", "second", "third", "fourth"};
+    const char   *systemName[MAX_HARDWARE_VERSIONS] =
+    {
+        "IS-300 Series",
+        "IS-600 Series",
+        "IS-900 Series",
+        "InterTrax",
+        "Unknown"
+    };
+    const char   *message[4] =
+    {
+        "first",
+        "second",
+        "third",
+        "fourth"
+    };
 
     WORD   numTracker;
 //    float  startTime;
@@ -182,9 +194,21 @@ BOOL ISD_detectTrackerOld(InterSenseTrackerType *tracker/*, DWORD commPort*/)
 ////////////////////////////////////////////////////////////////////////////////
 BOOL ISD_detectTracker(InterSenseTrackerType *tracker, std::string com_port, int baud_rate)
 {
-    char   *systemName[MAX_HARDWARE_VERSIONS] =
-              {"IS-300 Series", "IS-600 Series", "IS-900 Series", "InterTrax", "Unknown"};
-    char   *message[4] = {"first", "second", "third", "fourth"};
+    const char   *systemName[MAX_HARDWARE_VERSIONS] =
+    {
+        "IS-300 Series",
+        "IS-600 Series",
+        "IS-900 Series",
+        "InterTrax",
+        "Unknown"
+    };
+    const char   *message[4] =
+    {
+        "first",
+        "second",
+        "third",
+        "fourth"
+    };
 
     WORD   numTracker;
 //    float  startTime;
@@ -464,7 +488,7 @@ BOOL ISD_detectTracker(InterSenseTrackerType *tracker, std::string com_port, int
 *                   set correctly.
 *
 ******************************************************************************/
-BOOL ISD_sendCommand(InterSenseTrackerType *tracker, char *command)
+BOOL ISD_sendCommand(InterSenseTrackerType *tracker, const char *command)
 {
     if(wsockIsClient(tracker)) return FAIL;
 
@@ -1374,7 +1398,7 @@ BOOL ISD_allowUserCommand ( char *cmd )
 
 
 /***************************************************************************/
-void ISD_printf ( InterSenseTrackerType *tracker, char *fs,... )
+void ISD_printf ( InterSenseTrackerType *tracker, const char *fs,... )
 {
    boost::ignore_unused_variable_warning(tracker);
 

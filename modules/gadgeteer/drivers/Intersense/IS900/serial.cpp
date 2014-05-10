@@ -555,7 +555,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 /****************************************************************************/
 int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
 {
-    char *portNames[4] =
+    const char *portNames[4] =
 #if defined VPR_OS_IRIX
     {"/dev/ttyd11", "/dev/ttyd11", "/dev/ttyd11", "/dev/ttyd11"};
 #elif defined VPR_OS_Linux

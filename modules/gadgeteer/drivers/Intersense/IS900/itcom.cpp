@@ -57,7 +57,7 @@ static DWORD charToNum(BYTE c);
 /***************************************************************************/
 /* all commands must be sent with this function */
 
-int itSendCommand(InterSenseTrackerType *tracker, char *fs,...)
+int itSendCommand(InterSenseTrackerType *tracker, const char *fs,...)
 {
     char sbuf[256];
     va_list argptr;
