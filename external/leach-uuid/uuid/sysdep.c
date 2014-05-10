@@ -78,7 +78,7 @@ void get_system_time(uuid_time_t *uuid_time) {
 };
 
 void get_random_info(char seed[16]) {
-  MD5_CTX c;
+  md5_state_t c;
   typedef struct {
       MEMORYSTATUS m;
       SYSTEM_INFO s;
@@ -90,7 +90,7 @@ void get_random_info(char seed[16]) {
   } randomness;
   randomness r;
 
-  MD5Init(&c);
+  md5_init(&c);
   /* memory usage stats */
   GlobalMemoryStatus(&r.m);
   /* random system stats */
@@ -104,8 +104,8 @@ void get_random_info(char seed[16]) {
   r.l = MAX_COMPUTERNAME_LENGTH + 1;
 
   GetComputerName(r.hostname, &r.l );
-  MD5Update(&c, &r, sizeof(randomness));
-  MD5Final(seed, &c);
+  md5_append(&c, &r, sizeof(randomness));
+  md5_finish(&c, seed);
 };
 #else
 
@@ -124,7 +124,7 @@ void get_system_time(uuid_time_t *uuid_time)
 };
 
 void get_random_info(char seed[16]) {
-  MD5_CTX c;
+  md5_state_t c;
   typedef struct {
 #ifdef HAVE_SYS_SYSINFO_H
       struct sysinfo s;
@@ -141,7 +141,7 @@ void get_random_info(char seed[16]) {
   } randomness;
   randomness r;
 
-  MD5Init(&c);
+  md5_init(&c);
 
 #ifdef HAVE_SYS_SYSINFO_H
   sysinfo(&r.s);
@@ -156,8 +156,8 @@ void get_random_info(char seed[16]) {
 
   gettimeofday(&r.t, (struct timezone *)0);
   gethostname(r.hostname, 256);
-  MD5Update(&c, &r, sizeof(randomness));
-  MD5Final(seed, &c);
+  md5_append(&c, &r, sizeof(randomness));
+  md5_finish(&c, seed);
 };
 
 #endif
