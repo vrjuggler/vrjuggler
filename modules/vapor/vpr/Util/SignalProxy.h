@@ -19,7 +19,7 @@
 #ifndef _VPR_SIGNAL_PROXY_H_
 #define _VPR_SIGNAL_PROXY_H_
 
-#include <boost/signals/connection.hpp>
+#include <boost/signals2/connection.hpp>
 
 
 namespace vpr
@@ -62,7 +62,7 @@ public:
       /* Do nothing. */ ;
    }
 
-   boost::signals::connection connect(typename signal_t::slot_type slot)
+   boost::signals2::connection connect(typename signal_t::slot_type slot)
    {
       return mSignal.connect(slot);
    }
@@ -76,7 +76,7 @@ public:
     *
     * @since 0.26.1
     */
-   boost::signals::connection
+   boost::signals2::connection
    connect(const typename signal_t::group_type& group,
            typename signal_t::slot_type slot)
    {

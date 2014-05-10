@@ -31,7 +31,7 @@
 
 #include <typeinfo>
 #include <boost/optional.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -185,7 +185,8 @@ namespace gadget
       typedef typename device_traits_type::device_ptr_type device_ptr_type;
       typedef typename device_traits_type::data_type       device_data_type;
       typedef typename device_data_type::data_type         raw_data_type;
-      typedef boost::signal<void (device_ptr_type)>        refresh_signal_type;
+      typedef boost::signals2::signal<void (device_ptr_type)>
+         refresh_signal_type;
 
       /**
        * Determines the return type for getData(). When raw_data_type is a

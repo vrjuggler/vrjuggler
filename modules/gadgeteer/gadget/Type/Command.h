@@ -31,7 +31,7 @@
 
 #include <vector>
 #include <boost/noncopyable.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <vpr/Util/SignalProxy.h>
 #include <vpr/IO/SerializableObject.h>
@@ -71,7 +71,8 @@ class GADGET_API Command
 {
 public:
    typedef SampleBuffer<CommandData> SampleBuffer_t;
-   typedef boost::signal<void (const std::vector<CommandData>&)> add_signal_t;
+   typedef boost::signals2::signal<void (const std::vector<CommandData>&)>
+      add_signal_t;
 
 protected:
    /* Constructor/Destructors */

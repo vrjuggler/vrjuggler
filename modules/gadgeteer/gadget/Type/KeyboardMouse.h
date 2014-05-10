@@ -32,7 +32,7 @@
 #include <string>
 #include <vector>
 #include <boost/noncopyable.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
@@ -67,7 +67,8 @@ class GADGET_API KeyboardMouse
 {
 public:
    typedef KeyboardMouseData::data_type EventQueue;
-   typedef boost::signal<void (const EventPtr&)> add_signal_t;
+   typedef boost::signals2::signal<void (const EventPtr&)>
+      add_signal_t;
 
    static const vpr::Uint16 type_id;
 
