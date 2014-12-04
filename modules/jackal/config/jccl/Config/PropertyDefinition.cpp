@@ -166,7 +166,7 @@ bool PropertyDefinition::operator== (const PropertyDefinition& pd) const
    mNode->save(self_string);
    pd.mNode->save(d_string);
 
-   return (self_string == d_string);
+   return (self_string.str() == d_string.str());
 }
 
 bool PropertyDefinition::operator!= (const PropertyDefinition& pd) const
