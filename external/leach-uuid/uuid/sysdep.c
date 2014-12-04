@@ -18,6 +18,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "sysdep.h"
 
 /* system dependent call to get IEEE node ID.
