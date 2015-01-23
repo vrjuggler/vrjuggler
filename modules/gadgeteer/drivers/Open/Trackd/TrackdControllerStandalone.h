@@ -8,10 +8,9 @@ class TrackdControllerStandalone
 {
 public:
    TrackdControllerStandalone(int shmKey)
+      : mShmKey(shmKey)
+      , mCon   (NULL)
    {
-      mShmKey = shmKey;
-      //mMem = NULL;
-
       // Attach immediately
       attachToMem();
    }
@@ -41,8 +40,8 @@ protected:
    void releaseMem();
 
 private:
-   int   mShmKey;       /**< The key to the shared memory area. */
-   void* mMem;          /**< The memory area. */
+   int                   mShmKey;       /**< The key to the shared memory area. */
+   ControllerConnection* mCon;          /**< The connection info. */
 };
 
 
