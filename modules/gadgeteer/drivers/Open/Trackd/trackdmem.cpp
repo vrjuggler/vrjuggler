@@ -21,7 +21,7 @@ struct TrackerConnection
    HANDLE                     file_mapping;
    CAVE_TRACKDTRACKER_HEADER* tracker;
 #else
-   int
+   int                        shmid;
    CAVE_TRACKDTRACKER_HEADER* tracker;
 #endif
 };
@@ -175,7 +175,7 @@ trackd_controller_attach(int shmKey)
 
    c->controller =
       reinterpret_cast<CAVE_TRACKDCONTROLLER_HEADER*>(
-         shmat(controller_shmid, (void *) 0, 0));
+         shmat(c->shmid, (void *) 0, 0));
 
    if(c->controller == (CAVE_TRACKDCONTROLLER_HEADER *) -1)
    {
