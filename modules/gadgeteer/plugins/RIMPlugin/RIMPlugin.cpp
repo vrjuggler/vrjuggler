@@ -243,7 +243,8 @@ void RIMPlugin::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
             if ( NULL != input_dev.get() )
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR:")
-               << "Somehow we already have a virtual device named: " << device_name << std::endl << vprDEBUG_FLUSH;
+                  << "Somehow we already have a virtual device named: "
+                  << device_name << std::endl << vprDEBUG_FLUSH;
             }
             else
             {
