@@ -1,0 +1,3 @@
+# VRJConfig Overview #
+
+VRJConfig is the next-generation configuration editor that will be part of VR Juggler 2.0.  It is a highly dynamic application based on Tweek's support for JavaBeans.  It offers customized editors for Gadgeteer and VR Juggler configuration elements, and it has an easy-to-use API for users who want to create their own custom editors.  The first release of VRJConfig came with VR Juggler 1.1 DR2, released September 6, 2002.
