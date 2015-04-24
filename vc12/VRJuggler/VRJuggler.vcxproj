@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugRtDLL|Win32">
+      <Configuration>DebugRtDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugRtDLL|x64">
+      <Configuration>DebugRtDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>VR Juggler</ProjectName>
+    <ProjectGuid>{8CD85B68-8E87-4289-9CD3-0C0012781BF2}</ProjectGuid>
+    <RootNamespace>VR Juggler</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <OutputFile>$(OutDir)vrj-$(VRJ_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vrj-$(VRJ_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)vrj-$(VRJ_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <OutputFile>$(OutDir)vrj-$(VRJ_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vrj-$(VRJ_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary>$(OutDir)vrj-$(VRJ_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <OutputFile>$(OutDir)vrj_d-$(VRJ_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vrj_d-$(VRJ_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)vrj_d-$(VRJ_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <OutputFile>$(OutDir)vrj_d-$(VRJ_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vrj_d-$(VRJ_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary>$(OutDir)vrj_d-$(VRJ_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <OutputFile>$(OutDir)vrj-$(VRJ_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)vrj-$(VRJ_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.;..\..\modules\vrjuggler;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VRJ_BUILD_;JUGGLER_OPT;VJ_SHARE_DIR="share\\vrjuggler";VJ_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <OutputFile>$(OutDir)vrj-$(VRJ_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(CPPDOM_ROOT)\lib64;$(BOOST_ROOT)\lib;..\VPR\$(OutDir);..\JCCL\$(OutDir);..\Gadgeteer\$(OutDir);..\Sonix\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>$(OutDir)vrj-$(VRJ_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Kernel\App.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\CameraProjection.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Draw\CpuAffinityFromEnv.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\Display.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\DisplayExceptions.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\DisplayManager.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Draw\DrawManager.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterface.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\Frustum.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Kernel\Kernel.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Kernel\KernelExceptions.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Performance\PerformanceMediator.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\Projection.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\SimViewport.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Sound\SoundManager.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Sound\SoundManagerFactory.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Sound\SoundManagerSonix.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\SurfaceProjection.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\SurfaceViewport.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\TrackedSurfaceProjection.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Kernel\User.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Util\Version.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\Display\Viewport.cpp" />
+    <ClCompile Include="..\..\modules\vrjuggler\vrj\vrjmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Kernel\App.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Test\Asserter.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\AutoLink.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\CameraProjection.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\CameraProjectionPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Draw\CpuAffinityFromEnv.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Util\Debug.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\Display.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\DisplayExceptions.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\DisplayManager.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\DisplayPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Draw\DrawManager.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterface.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterfacePtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\Frustum.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Kernel\Kernel.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Kernel\KernelExceptions.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Test\Message.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Performance\PerformanceMediator.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Performance\PerfPlugin.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Performance\PluginConfig.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\Projection.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\ProjectionPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\SimViewport.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\SimViewportPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Sound\SoundManager.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Sound\SoundManagerFactory.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Sound\SoundManagerSonix.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\SurfaceProjection.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\SurfaceProjectionPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\SurfaceViewport.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\SurfaceViewportPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Test\Test.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Test\TestCase.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Test\TestFailure.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Test\TestRunner.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Test\TestSuite.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\TrackedSurfaceProjection.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\TrackedSurfaceProjectionPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Kernel\User.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Kernel\UserPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Util\Version.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\Viewport.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\Display\ViewportPtr.h" />
+    <ClInclude Include="..\..\modules\vrjuggler\vrj\vrjConfig.h" />
+    <ClInclude Include="vrj\vrjDefines.h" />
+    <ClInclude Include="vrj\vrjParam.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\modules\vrjuggler\vrj.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gadgeteer\Gadgeteer.vcxproj">
+      <Project>{1aad8712-09dc-4957-8594-af5a49bab4e1}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\JCCL\JCCL.vcxproj">
+      <Project>{5a96b2f8-7000-4988-afd5-e85181b52bcf}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Sonix\Sonix.vcxproj">
+      <Project>{be8a6412-f142-493f-b1bb-363f4edac230}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\VPR\VPR.vcxproj">
+      <Project>{00c860e8-6cc8-4638-b5d1-8e5c5a34c425}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,601 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugRtDLL|Win32">
+      <Configuration>DebugRtDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugRtDLL|x64">
+      <Configuration>DebugRtDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1AAD8712-09DC-4957-8594-AF5A49BAB4E1}</ProjectGuid>
+    <RootNamespace>Gadgeteer</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'" />
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'" />
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" />
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">
+    <TargetName>gadget-$(GADGET_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <TargetName>gadget-$(GADGET_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <TargetName>gadget-$(GADGET_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">
+    <TargetName>gadget-$(GADGET_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <TargetName>gadget-$(GADGET_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <TargetName>gadget-$(GADGET_VERSION)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4267;4275;4290;4312;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;comctl32.lib;gdi32.lib;user32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)gadget-$(GADGET_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;..\JCCL\$(OutDir);..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)gadget-$(GADGET_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)gadget-$(GADGET_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4267;4275;4290;4312;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;comctl32.lib;gdi32.lib;user32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)gadget-$(GADGET_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;..\JCCL\$(OutDir);..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)gadget-$(GADGET_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary>$(OutDir)gadget-$(GADGET_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4267;4275;4290;4312;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;comctl32.lib;gdi32.lib;user32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)gadget_d-$(GADGET_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;..\JCCL\$(OutDir);..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)gadget_d-$(GADGET_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)gadget_d-$(GADGET_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;GADGET_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4267;4275;4290;4312;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;comctl32.lib;gdi32.lib;user32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)gadget_d-$(GADGET_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;..\JCCL\$(OutDir);..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)gadget_d-$(GADGET_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary>$(OutDir)gadget_d-$(GADGET_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;JUGGLER_OPT;GADGET_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4267;4275;4290;4312;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;comctl32.lib;gdi32.lib;user32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)gadget-$(GADGET_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;..\JCCL\$(OutDir);..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)gadget-$(GADGET_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm800 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);$(GMTL_INCLUDES);..\..\modules\gadgeteer;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\VPR;..\JCCL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_GADGET_BUILD_;JUGGLER_OPT;GADGET_ROOT_DIR="$(instprefix)";_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4267;4275;4290;4312;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;comctl32.lib;gdi32.lib;user32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)gadget-$(GADGET_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;..\JCCL\$(OutDir);..\VPR\$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>$(OutDir)gadget-$(GADGET_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Event\AbstractEventInterface.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Analog.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\AnalogProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\BaseTypeFactory.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\ClusterDelta.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\ClusterDepChecker.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\ClusterException.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\ClusterManager.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\ClusterPlugin.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Command.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\CommandProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\ConfigHandler.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\ConfigPacket.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\DataPacket.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\DeviceAck.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\DeviceFactory.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\DeviceInterface.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Digital.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Event\DigitalEventInterface.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\DigitalProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\EndBlock.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Event\Event.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\EventEmitter.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Event\EventGenerator.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Filter\Position\FullPositionXformFilter.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\gadgetmain.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\GestureProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Glove.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\GloveData.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\GloveGesture.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\GloveProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\Header.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Hat.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\HatProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Input.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputArea.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputAreaWin32.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\InputData.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\InputLogger.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\InputManager.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputWindowWin32.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\KeyboardMouseDevice.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEvent.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEvent.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\NetworkManager.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Node.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\Packet.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\cluster\Packets\PacketFactory.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Util\PathHelpers.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Util\PluginVersionException.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Position.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Filter\Position\PositionCalibrationFilter.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Filter\Position\PositionFilterFactory.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\PositionProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Filter\Position\PositionXformFilter.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Proxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\ProxyDepChecker.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\ProxyFactory.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Reactor.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\Rumble.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\RumbleEffect.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\RumbleProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimAnalog.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimDigital.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimDigitalGlove.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimGloveGesture.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimInput.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimPosition.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimRelativePosition.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimSetablePosition.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\String.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Type\StringProxy.cpp" />
+    <ClCompile Include="..\..\modules\gadgeteer\gadget\Util\Version.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\AbstractEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\AllBaseTypes.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Analog.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\AnalogData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\AnalogEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\AnalogInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\AnalogProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\AnalogProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\AnalogPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\AutoLink.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\BaseTypeFactory.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\BasicEventGenerator.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\ClickAnalyzer.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ClusterDelta.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ClusterDepChecker.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ClusterException.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ClusterManager.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ClusterNetwork.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ClusterPlugin.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ClusterPluginPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Command.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\CommandData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\CommandEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\CommandInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\CommandProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\CommandProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\CommandPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ConfigHandler.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\ConfigHandlerPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\ConfigPacket.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\ConfigPacketPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DataPacket.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DataPacketPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Hat.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\HatPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Util\Debug.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DeviceAck.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\DeviceAckPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DeviceConstructor.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DeviceConstructorBase.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DeviceFactory.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DeviceInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Util\DeviceSerializationTokens.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DeviceTraits.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Digital.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DigitalData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\DigitalEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DigitalInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\DigitalMultiClickEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DigitalProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DigitalProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\DigitalPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\DriverConfig.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\EndBlock.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\EndBlockPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Event.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\Event.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\EventEmitter.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventFactory.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\EventGenerator.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\EventGeneratorPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\EventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\EventPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\EventPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\EventTags.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Filter\Position\FullPositionXformFilter.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\gadgetConfig.h" />
+    <ClInclude Include="gadget\gadgetDefines.h" />
+    <ClInclude Include="gadget\gadgetParam.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Gesture.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GestureInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GestureProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GestureProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GesturePtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Glove.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GloveData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GloveGesture.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GloveInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GloveProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GloveProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\GlovePtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\Header.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Input.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputArea.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputAreaWin32.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\InputData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\InputDevice.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\InputHandlerPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\InputLogger.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\InputLoggerPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\InputManager.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\InputPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputWindowWin32.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\KeyboardMouseDevice.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouseEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouseProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMousePtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEvent.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEvent.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\KeyEventPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\KeyEventPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\Keys.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEvent.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEvent.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\MouseEventPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\KeyboardMouse\MouseEventPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\MouseMultiClickEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\NetworkManager.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Node.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\NodePtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\Packet.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\PacketFactory.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\PacketHandler.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\PacketHandlerPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\cluster\Packets\PacketPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Util\PathHelpers.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Util\PluginVersionException.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Position.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\FIlter\Position\PositionCalibrationFilter.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\PositionData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\PositionEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Filter\Position\PositionFilter.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Filter\Position\PositionFilterFactory.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\PositionInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\PositionProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\PositionProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\PositionPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Position\PositionUnitConversion.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Filter\Position\PositionXformFilter.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Proxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\ProxyDepChecker.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\ProxyFactory.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\ProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\ProxyTraits.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Reactor.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Rumble.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\RumbleData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\RumbleEffect.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\RumbleEffectPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\RumbleInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\RumbleProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\RumbleProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\RumblePtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\SampleBuffer.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\KeyboardMouse\SampleHandler.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimAnalog.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimDigital.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimDigitalGlove.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimGloveGesture.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimInput.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimPosition.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimRelativePosition.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Devices\Sim\SimSetablePosition.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\Speech.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\String.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\StringData.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Event\StringEventInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\StringInterface.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\StringProxy.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\StringProxyPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Type\StringPtr.h" />
+    <ClInclude Include="..\..\modules\gadgeteer\gadget\Util\Version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\modules\gadgeteer\gadget.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\vc7\Gadgeteer\gadgeteer.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JCCL\JCCL.vcxproj">
+      <Project>{5a96b2f8-7000-4988-afd5-e85181b52bcf}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\VPR\VPR.vcxproj">
+      <Project>{00c860e8-6cc8-4638-b5d1-8e5c5a34c425}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

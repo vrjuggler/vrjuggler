@@ -127,6 +127,8 @@ def detectVisualStudioVersion(reattempt = False):
          sys.exit(EXIT_STATUS_UNSUPPORTED_COMPILER)
       elif cl_major == 15:
          vs_ver = '2008'
+      elif cl_major == 18:
+         vs_ver = '2013'
       else:
          printStatus("Warning: unrecognized compiler version %s.%s, will treat it like VS2010"
                      % (cl_major, cl_minor))
@@ -196,6 +198,8 @@ def chooseVisualStudioDir():
    # Otherwise, we use the solution in the vc9 subtree.
    elif cl_ver_major == 15:
       vc_dir = 'vc9'
+   elif cl_ver_major == 18:
+      vc_dir = 'vc12'
    else:
       vc_dir = 'vc10'
 

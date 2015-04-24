@@ -1,0 +1,548 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugRtDLL|Win32">
+      <Configuration>DebugRtDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugRtDLL|x64">
+      <Configuration>DebugRtDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{00C860E8-6CC8-4638-B5D1-8E5C5A34C425}</ProjectGuid>
+    <RootNamespace>VPR</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <TargetName>vpr-$(VPR_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">
+    <TargetName>vpr-$(VPR_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <TargetName>vpr-$(VPR_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <TargetName>vpr-$(VPR_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">
+    <TargetName>vpr-$(VPR_VERSION)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <TargetName>vpr-$(VPR_VERSION)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4290;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;rpcrt4.lib;dbghelp.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)vpr-$(VPR_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vpr-$(VPR_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)vpr-$(VPR_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4290;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;rpcrt4.lib;dbghelp.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)vpr-$(VPR_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vpr-$(VPR_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary>$(OutDir)vpr-$(VPR_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4290;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;rpcrt4.lib;dbghelp.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)vpr_d-$(VPR_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vpr_d-$(VPR_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)vpr_d-$(VPR_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRtDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;JUGGLER_DEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4290;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;rpcrt4.lib;dbghelp.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)vpr_d-$(VPR_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)vpr_d-$(VPR_VERSION).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <ImportLibrary>$(OutDir)vpr_d-$(VPR_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN32;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4290;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;rpcrt4.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)vpr-$(VPR_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(OutDir)vpr-$(VPR_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>.;$(BOOST_INCLUDES);$(CPPDOM_INCLUDES);..\..\external\libmd5-rfc;..\..\external\leach-uuid;..\..\modules\vapor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;CPPDOM_DYN_LINK;BOOST_ALL_DYN_LINK;WIN64;NDEBUG;_CONSOLE;_USRDLL;_VPR_BUILD_;WININC;JUGGLER_OPT;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4251;4275;4290;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;rpcrt4.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)vpr-$(VPR_VERSION).dll</OutputFile>
+      <Version>
+      </Version>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)\lib;$(CPPDOM_ROOT)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>$(OutDir)vpr-$(VPR_VERSION).lib</ImportLibrary>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\AveragingAllocationStrategy.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\BadCastException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Stats\BaseIOStatsStrategy.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Thread\BaseThread.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\BlockIO.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\BufferObjectReader.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\BufferObjectWriter.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Sync\CondVarWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\ConnectionAbortedException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\ConnectionRefusedException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\ConnectionResetException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Sync\DeadlockException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\Debug.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\EOFException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Util\ErrorImplWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\Exception.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\FileUtils.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\GUID.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\IllegalArgumentException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\InetAddrBOOST.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\common\InetAddrHelpers.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\Interval.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\IOException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\BOOST\IO\IOSysBOOST.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\DynLoad\LibraryException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\DynLoad\LibraryFinder.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\DynLoad\LibraryLoader.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\DynLoad\LibraryWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\detail\LifetimeTracker.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\DynLoad\LoaderError.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Sync\LockException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.cpp" />
+    <ClCompile Include="..\..\external\libmd5-rfc\md5.c" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\NoPushWriter.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\ObjectReader.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\ObjectWriter.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Port\Port.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Perf\ProfileIterator.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Perf\ProfileManager.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Perf\ProfileNode.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\ResourceException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\BOOST\IO\SelectorImplBOOST.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Sync\SemaphoreWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\IO\Port\SerialPortImplWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Thread\Signal.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\SocketAcceptor.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\SocketConnector.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketDatagramImplBOOST.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\SocketException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketImplBOOST.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketStreamImplBOOST.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\StreamLock.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\DynLoad\SymbolLookupException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\SystemBase.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\SystemWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadKeyWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Thread\ThreadManager.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Thread\ThreadPool.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadWin32.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\TimeoutException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Thread\TSObject.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Thread\TSObjectProxy.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Thread\UncaughtThreadException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\Socket\UnknownHostException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\Util\Version.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\vprmain.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\WouldBlockException.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\XMLObjectReader.cpp" />
+    <ClCompile Include="..\..\modules\vapor\vpr\IO\XMLObjectWriter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Assert.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\AttributeMapBase.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\AutoLink.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\AveragingAllocationStrategy.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\BadCastException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Stats\BandwidthIOStatsStrategy.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Stats\BaseIOStatsStrategy.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\BaseThread.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\BlockIO.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\BufferObjectReader.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\BufferObjectWriter.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\CondVar.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\Sync\CondVarWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\ConnectionAbortedException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\ConnectionRefusedException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\ConnectionResetException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\DateTime.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\DeadlockException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Debug.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\DurationStatCollector.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\EOFException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Error.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\ErrorBase.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\Util\ErrorImplWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Exception.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Factory.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\FileHandle.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\FileHandle_t.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\FileUtils.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\Guard.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\GuardedQueue.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\GUID.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\IllegalArgumentException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\InetAddr.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\InetAddrBOOST.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Interval.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\IOException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Stats\IOStatsStrategyAdapter.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\IOSys.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\IOSysBase.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\BOOST\IO\IOSysBOOST.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\DynLoad\Library.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\DynLoad\LibraryException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\DynLoad\LibraryFinder.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\DynLoad\LibraryLoader.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\DynLoad\LibraryWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\detail\LifetimeTracker.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\DynLoad\LoaderError.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\LockException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\MaximumAllocationStrategy.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\McastReq.h" />
+    <ClInclude Include="..\..\external\libmd5-rfc\md5.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\Mutex.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\Sync\MutexWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\NoPushWriter.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\NoRouteToHostException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\NullMutex.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\ObjectReader.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\ObjectWriter.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Port\Port.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Perf\ProfileIterator.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Perf\ProfileManager.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Perf\ProfileNode.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\RefCountMemory.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\ResourceException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\ReturnStatus.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\RWGuard.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\RWMutex.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\SampleLimitedStatCollector.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Selector.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Selector_t.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\SelectorBase.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\BOOST\IO\SelectorImplBOOST.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Sync\Semaphore.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\Sync\SemaphoreWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\SerializableObject.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Port\SerialPort.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Port\SerialPort_t.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\IO\Port\SerialPortImplWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Port\SerialTypes.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\Signal.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SimpleAllocationStrategies.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Singleton.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\Socket.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\Socket_t.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketAcceptor.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketConnector.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketDatagram.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketDatagram_t.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketDatagramImplBOOST.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketImplBOOST.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketOptions.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketStream.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketStream_t.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\BOOST\IO\Socket\SocketStreamImplBOOST.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\SocketTypes.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\StatCollector.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\StreamLock.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\DynLoad\SymbolLookupException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\System.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\SystemBase.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\SystemWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\Thread.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadKeyWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\ThreadManager.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\ThreadPool.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\WIN32\Thread\ThreadWin32.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\TimeoutException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Timer.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\TSObject.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\TSObjectProxy.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\TSTable.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Thread\UncaughtThreadException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\Socket\UnknownHostException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\Util\Version.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\vpr.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\vprConfig.h" />
+    <ClInclude Include="vpr\vprDefines.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\vprDomain.h" />
+    <ClInclude Include="vpr\vprParam.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\vprTypes.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\md\BOOST\vprTypesBOOST.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\WouldBlockException.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\XMLObjectReader.h" />
+    <ClInclude Include="..\..\modules\vapor\vpr\IO\XMLObjectWriter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\modules\vapor\vpr.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
