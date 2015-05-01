@@ -241,13 +241,13 @@ void ISD_getTrackerData( InterSenseTrackerType * );
  
 BOOL processInterTraxDataRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars);
 
-BOOL ISD_sendCommand( InterSenseTrackerType * , char * );
+BOOL ISD_sendCommand( InterSenseTrackerType * , const char * );
 BOOL ISD_setOutputRecordList( InterSenseTrackerType *, ISD_STATION_INFO_TYPE *, WORD );
 BOOL ISD_configureTracker( InterSenseTrackerType *tracker, BOOL verbose );
 BOOL ISD_allowUserCommand( char * );
 BOOL ISD_applyConfiguration( InterSenseTrackerType *tracker, BOOL verbose );
 void ISD_displayTransferRate( float bps, float sps );
-void ISD_printf( InterSenseTrackerType *tracker, char *fs,... );
+void ISD_printf( InterSenseTrackerType *tracker, const char *fs,... );
 
 int  wsockIsClient( InterSenseTrackerType *tracker );
 int  wsockReceiveData( InterSenseTrackerType *tracker );

@@ -67,7 +67,7 @@ static char* string_get_i(char* str, int* i);
 static char* string_get_ui(char* str, unsigned int* ui);
 static char* string_get_d(char* str, double* d);
 static char* string_get_f(char* str, float* f);
-static char* string_get_block(char* str, char* fmt, int* idat, float* fdat);
+static char* string_get_block(char* str, const char* fmt, int* idat, float* fdat);
 
 
 // --------------------------------------------------------------------------
@@ -1136,7 +1136,7 @@ static char* string_get_f(char* str, float* f)
 // fdat (o): array for 'float' values (long enough due to fmt)
 // return value (o): pointer behind read value in str; NULL in case of error
 
-static char* string_get_block(char* str, char* fmt, int* idat, float* fdat)
+static char* string_get_block(char* str, const char* fmt, int* idat, float* fdat)
 {
 	char* strend;
 	int index_i, index_f;

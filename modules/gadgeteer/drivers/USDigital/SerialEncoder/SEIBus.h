@@ -255,7 +255,7 @@ public:
    }
 
 private:
-   void reportError(char *error)
+   void reportError(const char *error)
    {
       if ( reportErrors )
       {

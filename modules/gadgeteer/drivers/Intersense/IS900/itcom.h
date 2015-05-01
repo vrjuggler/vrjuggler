@@ -97,7 +97,7 @@ typedef struct
 void serviceSerialPort( InterSenseTrackerType *tracker );
 void ISD_INTERTRAX_serviceSerialPort(InterSenseTrackerType *tracker);
 void requestTrackerUpdate( InterSenseTrackerType *tracker );
-int  itSendCommand( InterSenseTrackerType *tracker, char *fs,... );
+int  itSendCommand( InterSenseTrackerType *tracker, const char *fs,... );
 char stationToChar( DWORD stationNum );
 
 BOOL itComUpdateStationStat( InterSenseTrackerType *tracker, DWORD sensorNum );
