@@ -43,7 +43,7 @@
 #include <boost/mpl/for_each.hpp>
 #include <boost/bind.hpp>
 #include <boost/bind/apply.hpp>
-#include <boost/signals/connection.hpp>
+#include <boost/signals2/connection.hpp>
 
 #include <gadget/Type/ProxyTraits.h>
 #include <gadget/Event/EventGenerator.h>
@@ -473,8 +473,8 @@ private:
 
    SampleHandler mSampleHandler;
    proxy_ptr_type mProxy;
-   boost::signals::connection mDevConn;
-   boost::signals::connection mRefreshConn;
+   boost::signals2::connection mDevConn;
+   boost::signals2::connection mRefreshConn;
 };
 
 }

@@ -38,7 +38,7 @@
 #include <typeinfo>
 #include <vector>
 #include <boost/noncopyable.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <gmtl/Matrix.h>
 
@@ -79,7 +79,8 @@ class GADGET_API Position
 {
 public:
    typedef SampleBuffer<PositionData> SampleBuffer_t;
-   typedef boost::signal<void (const std::vector<PositionData>&)> add_signal_t;
+   typedef boost::signals2::signal<void (const std::vector<PositionData>&)>
+      add_signal_t;
 
 protected:
    /** Constructor */

@@ -31,7 +31,7 @@
 
 #include <vector>
 #include <boost/noncopyable.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 
 #include <vpr/Util/SignalProxy.h>
 #include <vpr/IO/SerializableObject.h>
@@ -69,7 +69,8 @@ class GADGET_API Hat
 {
 public:
    typedef SampleBuffer<HatData> SampleBuffer_t;
-   typedef boost::signal<void (const std::vector<HatData>&)> add_signal_t;
+   typedef boost::signals2::signal<void (const std::vector<HatData>&)>
+      add_signal_t;
 
    /** @name Compatibility */
    //@{
