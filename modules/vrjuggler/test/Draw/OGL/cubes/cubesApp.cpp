@@ -41,6 +41,7 @@
 
 #include <cubesApp.h>
 
+#include <vrj/Draw/OpenGL/GL/glcorearb.h>
 
 // ----------------------------------------------------------------------------
 // UserData methods.

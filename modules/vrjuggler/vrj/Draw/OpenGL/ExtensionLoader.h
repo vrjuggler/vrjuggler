@@ -45,7 +45,7 @@ namespace opengl
  * @note This class was renamed from vrj::GlExtensionLoader in VR Juggler
  *       2.3.11.
  */
-class ExtensionLoader
+class VJ_OGL_API ExtensionLoader
 {
 public:
    /** Void type to use when treating extensions the same. */

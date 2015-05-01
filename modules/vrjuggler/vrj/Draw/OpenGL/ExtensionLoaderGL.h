@@ -96,7 +96,7 @@ namespace opengl
 /**
  * GL-specific base class for loading extensions.
  */
-class ExtensionLoaderGL : public vrj::opengl::ExtensionLoader
+  class VJ_OGL_API ExtensionLoaderGL : public vrj::opengl::ExtensionLoader
 {
 private:
    ExtensionLoaderGL();
@@ -300,7 +300,7 @@ private:
 /**
  * GL-specific core profile class.
  */
-class ExtensionLoaderGLCore : public vrj::opengl::ExtensionLoaderGL
+class VJ_OGL_API ExtensionLoaderGLCore : public vrj::opengl::ExtensionLoaderGL
 {
 private:
    ExtensionLoaderGLCore();
