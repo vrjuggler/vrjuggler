@@ -1,5 +1,5 @@
 /* Gadgeteer Driver for 'A.R.T. DTrack' Tracker
- * Copyright (C) 2005-2007, Advanced Realtime Tracking GmbH
+ * Copyright (C) 2005-2014, Advanced Realtime Tracking GmbH
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,10 +20,8 @@
  *          code 'DTrackSDK' (version v1.3.1), modified for use with VPR
  *
  * Authors: Kurt Achatz, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
+ *          Viktor Mukha, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
  *
- * Last modified: 2007/03/27
- *
- * DTrackStandalone.h,v 1.3 2007/06/20 15:14:01 kurt Exp
  */
 
 #ifndef _GADGET_DTRACK_STANDALONE_H_
@@ -75,7 +73,7 @@ typedef struct{
 //  - currently not tracked bodies are getting a quality of -1
 //  - note the maximum number of buttons
 
-#define DTRACK_MEATOOL_MAX_BUTTON    1  // maximum number of buttons
+#define DTRACK_MEATOOL_MAX_BUTTON    4  // maximum number of buttons
 
 typedef struct{
 	int id;               // id number (starting with 0)
@@ -84,8 +82,11 @@ typedef struct{
 	int num_button;       // number of buttons
 	int button[DTRACK_MEATOOL_MAX_BUTTON];  // button state (1 pressed, 0 not pressed)
 	
+	float tipradius;
+	
 	float loc[3];         // location (in mm)
 	float rot[9];         // rotation matrix (column-wise)
+	float cov[6];
 } dtrack_meatool_type;
 
 // A.R.T. Fingertracking hand data (6DOF + fingers):

@@ -1,5 +1,5 @@
 /* Gadgeteer Driver for 'A.R.T. DTrack' Tracker
- * Copyright (C) 2005-2007, Advanced Realtime Tracking GmbH
+ * Copyright (C) 2005-2014, Advanced Realtime Tracking GmbH
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,14 +20,12 @@
  *
  * Authors: Sylvain Brandel, LSIIT-IGG (http://igg.u-strasbg.fr)
  *          Kurt Achatz, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
+ *          Viktor Mukha, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
  *
- * Last modified: 2007/03/28
- *
- * DTrack.h,v 1.3 2007/06/20 15:10:55 kurt Exp
  */
 
-#ifndef _GADGET_DTRACK_H_
-#define _GADGET_DTRACK_H_
+#ifndef _GADGET_DTRACKWRAPPER_H_
+#define _GADGET_DTRACKWRAPPER_H_
 
 #include <gadget/Devices/DriverConfig.h>
 
@@ -41,60 +39,59 @@
 namespace gadget
 {
 
-class DTrack
-   : public InputDevice<boost::mpl::inherit<Digital, Analog, Position>::type>
+class DTrackWrapper
+        : public InputDevice< boost::mpl::inherit< Digital, Analog, Position >::type >
 {
 public:
-	DTrack();
-	~DTrack();
-
+	DTrackWrapper();
+	~DTrackWrapper();
+	
 	/** Returns a string that matches this device's configuration element type. */
 	static std::string getElementType();
-
+	
 	/** Passes configuration data to the driver. */
-	virtual bool config(jccl::ConfigElementPtr e);
-
-
+	virtual bool config( jccl::ConfigElementPtr e );
+	
 	/** Begins sampling. */
 	virtual bool startSampling();
-
+	
 	/** Samples a value. */
 	virtual bool sample();
-
+	
 	/** Stops sampling. */
 	virtual bool stopSampling();
-
+	
 	/** Swap the data indices. */
 	virtual void updateData();
-
+	
 private:
-	vpr::Thread*  thrThread;
+	vpr::Thread* thrThread;
 	void thrFunction();
 	bool thrRunning;
-
+	
 	DTrackStandalone* standalone;
 	int receive_port;
 	bool use_commands;
 	std::string server_name;
 	int command_port;
-
-	std::vector<PositionData> curPosition;
-	std::vector<DigitalData> curDigital;
-	std::vector<AnalogData> curAnalog;
 	
-	void resize_curPosition(int n);
-	void resize_curDigital(int n);
-	void resize_curAnalog(int n);
-
-	gmtl::Matrix44f getpos(dtrack_body_type& bod);
-	gmtl::Matrix44f getpos(dtrack_flystick_type& bod);
-	gmtl::Matrix44f getpos(dtrack_meatool_type& bod);
-	gmtl::Matrix44f getpos_default(void);
+	std::vector< PositionData > curPosition;
+	std::vector< DigitalData > curDigital;
+	std::vector< AnalogData > curAnalog;
+	
+	void resize_curPosition( int n );
+	void resize_curDigital( int n );
+	void resize_curAnalog( int n );
+	
+	gmtl::Matrix44f getpos( dtrack_body_type& bod );
+	gmtl::Matrix44f getpos( dtrack_flystick_type& bod );
+	gmtl::Matrix44f getpos( dtrack_meatool_type& bod );
+	gmtl::Matrix44f getpos_default();
 };
 
 } // End of gadget namespace
 
 
-#endif  // _GADGET_DTRACK_H_
+#endif  // _GADGET_DTRACKWRAPPER_H_
 
 

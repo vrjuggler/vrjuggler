@@ -44,7 +44,7 @@ INSTALL_FILES=
 SUBOBJDIR=	$(DRIVER_NAME)
 C_AFTERBUILD=	driver-dso
 
-SRCS=		DTrack.cpp		\
+SRCS=		DTrackWrapper.cpp		\
 		DTrackStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk

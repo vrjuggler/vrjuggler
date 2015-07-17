@@ -1,5 +1,5 @@
 /* Gadgeteer Driver for 'A.R.T. DTrack' Tracker
- * Copyright (C) 2005-2007, Advanced Realtime Tracking GmbH
+ * Copyright (C) 2005-2014, Advanced Realtime Tracking GmbH
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,10 +20,8 @@
  *          code 'DTrackSDK' (version v1.3.1), just modified for use with VPR
  *
  * Authors: Kurt Achatz, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
+ *          Viktor Mukha, Advanced Realtime Tracking GmbH (http://www.ar-tracking.de)
  *
- * Last modified: 2007/03/27
- *
- * DTrackStandalone.cpp,v 1.4 2007/06/20 15:15:12 kurt Exp
  */
 
 #include <sstream>
@@ -396,6 +394,53 @@ bool DTrackStandalone::receive(void)
 			continue;
 		}
 		
+		// line of 6di inertial data:
+		
+		if (!strncmp(s, "6di ", 4))	{
+			s += 4;
+			
+			// disable all existing data
+			for (i=0; i<act_num_body; i++) {
+				memset(&act_body[i], 0, sizeof(dtrack_body_type));
+				act_body[i].id = i;
+				act_body[i].quality = -1;
+			}
+			// get number of calibrated inertial bodies
+			if (!(s = string_get_i(s, &n))) {
+				return false;
+			}
+			
+			// get data of inertial bodies
+			for (i=0; i<n; i++) {
+				if (!(s = string_get_block(s, "iif", iarr, &f))){
+					return false;
+				}
+				id = iarr[0];
+				int st = iarr[1];
+				// adjust length of vector
+				if (id >= act_num_body) {
+					act_body.resize(id + 1);
+					for (j = act_num_body; j<=id; j++) {
+						memset(&act_body[j], 0, sizeof(dtrack_body_type));
+						act_body[ j ].id = j;
+						act_body[ j ].quality = -1;
+					}
+					act_num_body = id + 1;
+				}
+				act_body[id].id = id;
+				// creating quality out of state (-1 when not tracked)
+				act_body[id].quality = static_cast< float > ( st - 1 );
+				if (!(s = string_get_block(s, "fff", NULL, act_body[id].loc))) {
+					return false;
+				}
+				if (!(s = string_get_block(s, "fffffffff", NULL, act_body[id].rot))) {
+					return false;
+				}
+			}
+			
+			continue;
+		}
+		
 		// line for Flystick data (older format):
 
 		if(!strncmp(s, "6df ", 4)){
@@ -540,43 +585,123 @@ bool DTrackStandalone::receive(void)
 			continue;
 		}
 
-		// line for measurement tool data:
+		// line for measurement tool data (old format):
 
 		if(!strncmp(s, "6dmt ", 5)){
 			s += 5;
 			
-			if(!(s = string_get_i(s, &n))){               // get number of calibrated measurement tools
+			// get number of calibrated measurement tools
+			if (!(s = string_get_i(s, &n))) {
 				return false;
 			}
-
 			loc_num_meatool = n;
-
-			if(n != act_num_meatool){  // adjust length of vector
+			// adjust length of vector
+			if (n != act_num_meatool) {
 				act_meatool.resize(n);
-				
 				act_num_meatool = n;
 			}
-			
-			for(i=0; i<n; i++){                           // get data of measurement tools
-				if(!(s = string_get_block(s, "ifi", iarr, &f))){
+			// get data of measurement tools
+			for (i=0; i<n; i++) {
+				if (!(s = string_get_block(s, "ifi", iarr, &f))) {
 					return false;
 				}
-				
-				if(iarr[0] != i){  // not expected
+				if (iarr[0] != i) {  // not expected
 					return false;
 				}
-
 				act_meatool[i].id = iarr[0];
 				act_meatool[i].quality = f;
 
-				act_meatool[i].num_button = 1;
-				act_meatool[i].button[0] = iarr[1] & 0x01;
+				act_meatool[i].num_button = DTRACK_MEATOOL_MAX_BUTTON;				
 				
-				if(!(s = string_get_block(s, "fff", NULL, act_meatool[i].loc))){
+				k = iarr[1];
+				for (j=0; j<act_meatool[i].num_button; j++)	{
+					act_meatool[i].button[j] = k & 0x01;
+					k >>= 1;
+				}
+				for (j=act_meatool[i].num_button; j<DTRACK_MEATOOL_MAX_BUTTON; j++) {
+					act_meatool[i].button[j] = 0;
+				}
+				
+				act_meatool[i].tipradius = 0.0;
+				
+				if (!(s = string_get_block(s, "fff", NULL, act_meatool[i].loc))) {
+					return false;
+				}
+				if (!(s = string_get_block(s, "fffffffff", NULL, act_meatool[i].rot))) {
 					return false;
 				}
 				
-				if(!(s = string_get_block(s, "fffffffff", NULL, act_meatool[i].rot))){
+				for (j=0; j<6; j++)
+					act_meatool[i].cov[j] = 0.0;
+			}
+			
+			continue;
+		}
+		
+		// line for measurement tool data (new format):
+
+		if(!strncmp(s, "6dmt2 ", 6)){
+			s += 6;
+			
+			// get number of calibrated measurement tools
+			if (!(s = string_get_i(s, &n))) {
+				return false;
+			}
+			// adjust length of vector
+			if (n != act_num_meatool) {
+				act_meatool.resize(n);
+				act_num_meatool = n;
+			}
+			// get data of measurement tools
+			for (i=0; i<n; i++) {
+				if (!(s = string_get_block(s, "ifif", iarr, farr))) {
+					return false;
+				}
+				if (iarr[0] != i) {  // not expected
+					return false;
+				}
+				act_meatool[i].id = iarr[0];
+				act_meatool[i].quality = farr[0];
+				
+				act_meatool[i].num_button = iarr[1];
+				if (act_meatool[i].num_button > DTRACK_MEATOOL_MAX_BUTTON)
+					act_meatool[i].num_button = DTRACK_MEATOOL_MAX_BUTTON;
+				
+				for (j=act_meatool[i].num_button; j<DTRACK_MEATOOL_MAX_BUTTON; j++) {
+					act_meatool[i].button[j] = 0;
+				}
+				
+				act_meatool[i].tipradius = farr[1];
+				
+				if (!(s = string_get_block(s, "fff", NULL, act_meatool[i].loc))) {
+					return false;
+				}
+				if (!(s = string_get_block(s, "fffffffff", NULL, act_meatool[i].rot))) {
+					return false;
+				}
+				
+				strcpy(sfmt, "");
+				j = 0;
+				while (j < act_meatool[i].num_button) {
+					strcat(sfmt, "i");
+					j += 32;
+				}
+				
+				if (!(s = string_get_block(s, sfmt, iarr, NULL))) {
+					return false;
+				}
+				k = l = 0;
+				for (j=0; j<act_meatool[i].num_button; j++) {
+					act_meatool[i].button[j] = iarr[k] & 0x01;
+					iarr[k] >>= 1;
+					l++;
+					if (l == 32) {
+						k++;
+						l = 0;
+					}
+				}
+				
+				if (!(s = string_get_block(s, "ffffff", NULL, act_meatool[i].cov))) {
 					return false;
 				}
 			}
@@ -776,7 +901,6 @@ dtrack_body_type DTrackStandalone::get_body(int id)   // standard body data (id 
 	
 	return dummy;
 }
-
 
 int DTrackStandalone::get_num_flystick(void)          // number of calibrated Flysticks
 {
