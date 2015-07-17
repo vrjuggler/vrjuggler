@@ -119,6 +119,15 @@ public:
    static const type_id_type type_id =
       gadget::type::compose_id<type_list>::type::value;
 
+   virtual bool config(jccl::ConfigElementPtr e)
+   {
+      Input::config(e);
+      Caller<ConfigInvoker> caller(this, e);
+      boost::mpl::for_each<type_list, wrap<boost::mpl::_1> >(caller);
+
+      return true;
+   }
+
    /** @name vpr::SerializableObject Overrides */
    //@{
    virtual void writeObject(vpr::ObjectWriter* writer)
@@ -162,6 +171,17 @@ private:
          typedef wrap<U> type;
       };
 #endif
+   };
+
+   struct ConfigInvoker
+   {
+      typedef jccl::ConfigElementPtr arg_type;
+
+      template <typename BaseType>
+      static void invoke(BaseType* obj, jccl::ConfigElementPtr e)
+      {
+         obj->BaseType::config(e);
+      }
    };
 
    struct WriteInvoker

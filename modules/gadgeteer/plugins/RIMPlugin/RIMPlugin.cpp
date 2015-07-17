@@ -255,6 +255,23 @@ void RIMPlugin::handlePacket(cluster::PacketPtr packet, gadget::NodePtr node)
                input_dev = getVirtualDevice(device_name);
                vprASSERT(NULL != input_dev.get() && "Can't have a NULL device.");
                gadget::InputManager::instance()->addRemoteDevice(input_dev, device_name);
+
+               // obtain config element for device
+               jccl::ConfigElementPtr dev_cfg =
+                  jccl::ConfigManager::instance()->getElementNamed(device_name);
+
+               if ( NULL != dev_cfg.get() )
+               {
+                  input_dev->config(dev_cfg);
+               }
+               else
+               {
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+                     << clrOutBOLD(clrRED, "ERROR:")
+                     << "[RIMPlugin::handlePacket] No config element found for device '"
+                     << device_name << "'!\n"
+                     << vprDEBUG_FLUSH;
+               }
             }
             break;
          }
