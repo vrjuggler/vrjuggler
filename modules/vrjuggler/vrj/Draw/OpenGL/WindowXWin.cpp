@@ -482,6 +482,26 @@ bool WindowXWin::close()
    }
    if ( mXWindow )
    {
+      // Check on using swap group
+      jccl::ConfigElementPtr disp_sys_elt =
+         DisplayManager::instance()->getDisplaySystemElement();
+      bool use_swap_group = disp_sys_elt->getProperty<bool>("use_swap_group");
+
+      if ( use_swap_group )
+      {
+         vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL,
+            "Attempting to leave GLX swap group.\n", "");
+
+         if(mExtensions.hasSwapGroupNV())
+         {
+            // swap group 0 is "not a swap group", i.e. leave current group
+            mExtensions.glXJoinSwapGroupNV(mXDisplay, mXWindow, 0);
+
+            // do NOT undo the swap barrier setup, there may be other windows
+            // in the swap group that still want to use the barrier
+         }
+      }
+
       ::XDestroyWindow(mXDisplay, mXWindow);
       mXWindow = 0;
    }
