@@ -214,13 +214,13 @@ cluster::PacketPtr Node::recvPacket()
    {
       vprDEBUG( gadgetDBG_RIM, vprDBG_HVERB_LVL )
          << clrOutNORM(clrRED, "ERROR: ")
-         << "Node::recvPacket() Could not read the header from the socket." << std::endl
+         << "[Node::recvPacket] Could not read the header from the socket." << std::endl
          << ex.what() << std::endl << vprDEBUG_FLUSH;
       throw ex;
    }
 
    vprDEBUG( gadgetDBG_RIM, vprDBG_HVERB_LVL )
-      << "Node::recvPacket() PacketFactory is trying to make a packet type: "
+      << "[Node::recvPacket] PacketFactory is trying to make a packet type: "
       << packet_head->getPacketType()
       << std::endl << vprDEBUG_FLUSH;
 
@@ -231,6 +231,11 @@ cluster::PacketPtr Node::recvPacket()
    // Verify that the packet has been made
    if ( NULL == new_packet.get() )
    {
+      vprDEBUG( gadgetDBG_RIM, vprDBG_HVERB_LVL )
+         << clrOutNORM(clrRED, "ERROR: ")
+         << "[Node::recvPacket] PacketFactory could not create packet of type "
+         << packet_head->getPacketType() << "\n"
+         << vprDEBUG_FLUSH;
       throw cluster::ClusterException( "Node::recvPacket() - Packet was not found in Factory." );
    }
 
@@ -246,7 +251,7 @@ cluster::PacketPtr Node::recvPacket()
    {
       vprDEBUG( gadgetDBG_RIM, vprDBG_CRITICAL_LVL )
          << clrOutBOLD( clrRED, "ERROR:" )
-         << " mSockSteam is NULL" <<  std::endl << vprDEBUG_FLUSH;
+         << "[Node::recvPacket] mSockSteam is NULL" <<  std::endl << vprDEBUG_FLUSH;
       throw cluster::ClusterException( "Node::recvPacket::recv() - mSocketStream is NULL!" );
    }
    //else if (!mSockStream->isConnected())
@@ -271,7 +276,7 @@ cluster::PacketPtr Node::recvPacket()
       {
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
             << clrOutBOLD( clrRED, "ERROR:" )
-            << " Reading packet data failed. Expecting: "
+            << "[Node::recvPacket] Reading packet data failed. Expecting: "
             << packet_head->getPacketLength() - cluster::Header::RIM_PACKET_HEAD_SIZE
             << " bytes" << std::endl << vprDEBUG_FLUSH;
 
