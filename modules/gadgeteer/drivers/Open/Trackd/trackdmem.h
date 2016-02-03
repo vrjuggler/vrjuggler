@@ -13,13 +13,13 @@
 #endif
 
 struct CAVE_SENSOR_ST
-   {
+{
    float       x, y, z;
    float       azim, elev, roll;
    uint32_t    timestamp[2];
    int32_t     calibrated;
    int32_t     frame;
-   };
+};
 
 struct CAVE_TRACKDTRACKER_HEADER
 {
@@ -53,16 +53,29 @@ struct CAVE_TRACKDCONTROLLER_HEADER
     either the header, sensor, or controller struct definition is expanded */
 #define CAVELIB_2_6  1
 
+struct TrackerConnection;
+struct ControllerConnection;
 
-void * trackd_attach_tracker_mem(int shmKey);
-void trackd_release_tracker_mem(void *mem);
-int trackd_num_sensors(void *mem);
-CAVE_SENSOR_ST * trackd_sensor(void *mem,int sensorNum);
-void * trackd_attach_controller_mem(int shmKey);
-void trackd_release_controller_mem(void *mem);
-int trackd_num_buttons(void *mem);
-int trackd_num_valuators(void *mem);
-int trackd_button(void *mem,int buttonNum);
-float trackd_valuator(void *mem,int valuatorNum);
+TrackerConnection*
+trackd_tracker_attach(int shmKey);
+void
+trackd_tracker_release(TrackerConnection* t);
+int
+trackd_tracker_num_sensors(TrackerConnection* t);
+CAVE_SENSOR_ST*
+trackd_tracker_sensor(TrackerConnection* t, int sensorNum);
+
+ControllerConnection*
+trackd_controller_attach(int shmKey);
+void
+trackd_controller_release(ControllerConnection* c);
+int
+trackd_controller_num_buttons(ControllerConnection* c);
+int
+trackd_controller_num_valuators(ControllerConnection* c);
+int
+trackd_controller_button(ControllerConnection* c, int buttonNum);
+float
+trackd_controller_valuator(ControllerConnection* c, int valuatorNum);
 
 #endif

@@ -8,10 +8,9 @@ class TrackdSensorStandalone
 {
 public:
    TrackdSensorStandalone(int shmKey)
+      : mShmKey(shmKey)
+      , mTrack (NULL)
    {
-      mShmKey = shmKey;
-      mMem = NULL;
-
       // Attach immediately
       attachToMem();
    }
@@ -38,8 +37,8 @@ protected:
    void releaseMem();
 
 private:
-   int   mShmKey;       /**< The key to the shared memory area. */
-   void* mMem;          /**< The memory area. */
+   int                mShmKey;       /**< The key to the shared memory area. */
+   TrackerConnection* mTrack;        /**< The tracker info. */
 };
 
 #endif

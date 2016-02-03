@@ -10,19 +10,18 @@
 
 int TrackdSensorStandalone::numSensors()
 {
-   assert(mMem != NULL);
-   assert(mShmKey != 0);
-   return trackd_num_sensors(mMem);
+   assert(mTrack  != NULL);
+   return trackd_tracker_num_sensors(mTrack);
 }
 
 // Return the position of the given sensor
 gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
 {
-   assert(mMem != NULL && "We don't have a valid trackd memory area");
+   assert(mTrack != NULL && "We don't have a valid trackd memory area");
    assert(sensorNum < numSensors() && "Out of bounds request for a sensor");
 
    CAVE_SENSOR_ST* sensor_val;
-   sensor_val = trackd_sensor(mMem, sensorNum);
+   sensor_val = trackd_tracker_sensor(mTrack, sensorNum);
 
    // For Anthony Steed
    gmtl::Matrix44f ret_val;
@@ -48,13 +47,14 @@ gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
 void TrackdSensorStandalone::attachToMem()
 {
    assert(mShmKey != 0 && "Key was not set correctly");
-   mMem = trackd_attach_tracker_mem(mShmKey);
+   assert(mTrack  == NULL && "Already attached");
+   mTrack = trackd_tracker_attach(mShmKey);
 }
 
 /** Release the memory segment of mMem. */
 void TrackdSensorStandalone::releaseMem()
 {
-   assert(mMem != NULL && "Trying to release trackd memory that was NULL");
-   trackd_release_tracker_mem(mMem);
+   assert(mTrack != NULL && "Trying to release trackd memory that was NULL");
+   trackd_tracker_release(mTrack);
+   mTrack = NULL;
 }
-
