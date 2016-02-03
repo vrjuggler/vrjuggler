@@ -51,13 +51,6 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 
-#ifndef GL_MODELVIEW
-#define GL_MODELVIEW                      0x1700
-#endif
-#ifndef GL_PROJECTION
-#define GL_PROJECTION                     0x1701
-#endif
-
 
 namespace vrj
 {
