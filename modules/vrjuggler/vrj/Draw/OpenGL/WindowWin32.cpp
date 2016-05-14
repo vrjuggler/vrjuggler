@@ -270,16 +270,39 @@ bool WindowWin32::open()
             << "Max groups: " << max_groups << " Max Barriers:" << max_barriers
             << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-            << "Setting up NV swap group and barrier group. "
-            << "Group: 1, Barrier: 1\n" << vprDEBUG_FLUSH;
-         // For now, just assume both groups are group 1
+         // Use group 1, barrier 1 if any groups/barriers are supported
          // Note: In the future this code may need to be refactored to be
          //       controlled from the vrj::opengl::Pipe class since it is
          //       really the thing that would correspond to the group and
          //       could group the correct windows to a group id.
-         mExtensions.wglJoinSwapGroupNV(mDeviceContext, 1);
-         mExtensions.wglBindSwapBarrierNV(1, 1);
+         unsigned int group_id   = (max_groups   > 0u) ? 1u : 0u;
+         unsigned int barrier_id = (max_barriers > 0u) ? 1u : 0u;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_STATUS_LVL)
+            << "Setting up NV swap group and barrier group. "
+            << "Group: " << group_id
+            << ", Barrier: " << barrier_id << "\n" << vprDEBUG_FLUSH;
+
+         bool joinedGroup  = false;
+         bool boundBarrier = false;
+
+         if(group_id > 0u)
+         {
+            joinedGroup =
+               mExtensions.wglJoinSwapGroupNV(mDeviceContext, group_id);
+         }
+
+         if(joinedGroup && barrier_id > 0u)
+         {
+            boundBarrier =
+               mExtensions.wglBindSwapBarrierNV(group_id, barrier_id);
+         }
+
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_STATUS_LVL)
+            << "wglJoinSwapGroupNV: "
+            << (joinedGroup ? "succeeded" : "failed")
+            << " wglBindSwapBarrierNV: "
+            << (boundBarrier ? "succeeded" : "failed")
+            << "\n" << vprDEBUG_FLUSH;
       }
       else
       {
