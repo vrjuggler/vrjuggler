@@ -64,10 +64,7 @@ protected:
 
 public:
    /** Virtual destructor. */
-   virtual ~Window()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual ~Window();
 
    /**
     * Opens the OpenGL window.

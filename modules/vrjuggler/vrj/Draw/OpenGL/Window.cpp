@@ -96,6 +96,12 @@ Window::Window()
    /* Do nothing. */ ;
 }
 
+Window::~Window()
+{
+   delete mGL;
+   mGL = NULL;
+}
+
 void Window::configWindow(vrj::DisplayPtr displayWindow)
 {
    // We can't config to a NULL display
