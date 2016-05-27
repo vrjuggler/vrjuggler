@@ -184,6 +184,20 @@ public:
     */
    void configurationChanged(jccl::Configuration* cfg, vpr::Uint16 type);
 
+   /**
+    * Sets the name of the <cluster_node> config element that is recognized
+    * as the local machine.
+    * If this is empty the element is identified by comparing the
+    * <host_name> value with the local machine's host name.
+    */
+   void setLocalNodeName(std::string const& nodeName);
+
+   /**
+    * Return the name that is used to recognize the local <cluster_node>
+    * config element.
+    */
+   std::string const& getLocalNodeName() const;
+
 private:
    /**
     * Return true if Configelement is a ClusterManager element.
@@ -211,6 +225,11 @@ private:
     */
    void mergeConfigurations(jccl::Configuration* dst, jccl::Configuration* src, vpr::Uint16 type);
    //@}
+
+   /**
+    * Recognized if the config element applies to the local machine.
+    */
+   bool isLocalConfigElement( jccl::ConfigElementPtr element );
 
 public:
    //@{
@@ -348,6 +367,7 @@ private:
    jccl::Configuration          mSystemConfiguration;
    //@}
 
+   std::string                  mLocalNodeName;
    vpr::Uint16                  mListenPort;            /**< Port that we should listen on if we are a slave. */
    ClusterNetwork*              mClusterNetwork;        /**< The network representation of the cluster. */
    ConfigHandlerPtr             mConfigHandler;         /**< Delegate that handles all configuration packets. */
