@@ -257,8 +257,8 @@ bool WindowWin32::open()
       // Use WGL_NV_swap_group extension if available
       if(mExtensions.hasSwapGroupNV())
       {
-         unsigned int max_groups = 0u;
-         unsigned int max_barriers 0u;
+         unsigned int max_groups   = 0u;
+         unsigned int max_barriers = 0u;
          mExtensions.wglQueryMaxSwapGroupsNV(
             mDeviceContext, &max_groups, &max_barriers);
 
@@ -274,8 +274,8 @@ bool WindowWin32::open()
             << group_id << "] and binding barrier group [" << barrier_id
             << "]\n" << vprDEBUG_FLUSH;
 
-         bool joinedGroup  = false;
-         bool boundBarrier = false;
+         BOOL joinedGroup  = false;
+         BOOL boundBarrier = false;
 
          if(group_id > 0u)
          {
@@ -339,8 +339,8 @@ bool WindowWin32::close()
       // Use WGL_NV_swap_group extension if available
       if( mExtensions.hasSwapGroupNV() )
       {
-         GLuint group_id = 0u;
-         GLuint barrier_id = 0u;
+         unsigned int group_id = 0u;
+         unsigned int barrier_id = 0u;
 
          mExtensions.wglQuerySwapGroupNV(
             mDeviceContext, &group_id, &barrier_id);
