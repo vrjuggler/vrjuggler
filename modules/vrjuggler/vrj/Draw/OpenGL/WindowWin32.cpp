@@ -254,38 +254,53 @@ bool WindowWin32::open()
 
    if(use_swap_group)
    {
-      vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL,
-                           "Attempting to set up WGL swap group.\n", "");
-
-      // Try NV swap group extension
+      // Use WGL_NV_swap_group extension if available
       if(mExtensions.hasSwapGroupNV())
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-            << "SwapGroupNV: " << mExtensions.hasSwapGroupNV() << std::endl
-            << vprDEBUG_FLUSH;
-         unsigned int max_groups, max_barriers;
-         mExtensions.wglQueryMaxSwapGroupsNV(mDeviceContext, &max_groups,
-                                             &max_barriers);
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-            << "Max groups: " << max_groups << " Max Barriers:" << max_barriers
-            << std::endl << vprDEBUG_FLUSH;
+         unsigned int max_groups   = 0u;
+         unsigned int max_barriers = 0u;
+         mExtensions.wglQueryMaxSwapGroupsNV(
+            mDeviceContext, &max_groups, &max_barriers);
 
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_STATUS_LVL)
-            << "Setting up NV swap group and barrier group. "
-            << "Group: 1, Barrier: 1\n" << vprDEBUG_FLUSH;
-         // For now, just assume both groups are group 1
+         // Use group 1, barrier 1 if any groups/barriers are supported
          // Note: In the future this code may need to be refactored to be
          //       controlled from the vrj::opengl::Pipe class since it is
          //       really the thing that would correspond to the group and
          //       could group the correct windows to a group id.
-         mExtensions.wglJoinSwapGroupNV(mDeviceContext, 1);
-         mExtensions.wglBindSwapBarrierNV(1, 1);
+         unsigned int group_id   = (max_groups   > 0u) ? 1u : 0u;
+         unsigned int barrier_id = (max_barriers > 0u) ? 1u : 0u;
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_STATUS_LVL)
+            << "[WindowWin32::open] Joining WGL_NV_swap_group swap group ["
+            << group_id << "] and binding barrier group [" << barrier_id
+            << "]\n" << vprDEBUG_FLUSH;
+
+         BOOL joinedGroup  = false;
+         BOOL boundBarrier = false;
+
+         if(group_id > 0u)
+         {
+            joinedGroup =
+               mExtensions.wglJoinSwapGroupNV(mDeviceContext, group_id);
+         }
+
+         if(joinedGroup && barrier_id > 0u)
+         {
+            boundBarrier =
+               mExtensions.wglBindSwapBarrierNV(group_id, barrier_id);
+         }
+
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_STATUS_LVL)
+            << "[WindowWin32::open] wglJoinSwapGroupNV: "
+            << (joinedGroup ? "success" : "failure")
+            << " wglBindSwapBarrierNV: "
+            << (boundBarrier ? "success" : "failure")
+            << "\n" << vprDEBUG_FLUSH;
       }
       else
       {
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "Could not detect any WGL extensions that support swap groups.\n"
-            << vprDEBUG_FLUSH;
+            << "[WindowWin32::open] Swap group requested but no WGL extension "
+            << "for swap groups detected.\n" << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Proceeding with no swap locking.\n" << vprDEBUG_FLUSH;
       }
@@ -312,6 +327,45 @@ bool WindowWin32::close()
    if ( !mWindowIsOpen )
    {
       return false;
+   }
+
+   // Check on using swap group
+   jccl::ConfigElementPtr disp_sys_elt =
+      DisplayManager::instance()->getDisplaySystemElement();
+   bool use_swap_group = disp_sys_elt->getProperty<bool>("use_swap_group");
+
+   if( use_swap_group )
+   {
+      // Use WGL_NV_swap_group extension if available
+      if( mExtensions.hasSwapGroupNV() )
+      {
+         unsigned int group_id = 0u;
+         unsigned int barrier_id = 0u;
+
+         mExtensions.wglQuerySwapGroupNV(
+            mDeviceContext, &group_id, &barrier_id);
+
+         if(group_id > 0u)
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_STATUS_LVL)
+               << "[WindowWin32::close] Leaving WGL_NV_swap_group swap "
+               << "group [" << group_id << "]\n"
+               << vprDEBUG_FLUSH;
+
+            // swap group 0 is "not a swap group", i.e. leave current group
+            mExtensions.wglJoinSwapGroupNV(mDeviceContext, 0);
+
+            // do NOT undo the swap barrier setup, there may be other
+            // windows in the swap group that still want to use the barrier
+         }
+         else
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_STATUS_LVL)
+               << "[WindowWin32::close] Not joined to any WGL_NV_swap_group "
+               << "swap group. Nothing to do.\n"
+               << vprDEBUG_FLUSH;
+         }
+      }
    }
 
    // Remove window from window list
