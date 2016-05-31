@@ -155,7 +155,7 @@ void Pipe::addWindow(vrj::opengl::WindowPtr win)
    vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);       // Protect the data
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
       << "[vrj::opengl::Pipe::addWindow()] Pipe: " << mPipeNum
-      << " adding window (to new wins):\n" << win
+      << " adding window: " << win
       << std::endl << vprDEBUG_FLUSH;
    mNewWins.push_back(win);
 }
@@ -166,7 +166,7 @@ void Pipe::removeWindow(vrj::opengl::WindowPtr win)
    vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
       << "[vrj::opengl::Pipe::removeWindow()] Pipe: " << mPipeNum
-      << " window added to closingWins.\n" << win
+      << " removing window: " << win
       << std::endl << vprDEBUG_FLUSH;
    mClosingWins.push_back(win);
 }
@@ -232,6 +232,22 @@ void Pipe::controlLoop(const int cpuAffinity)
          {
             mRenderTriggerSema.acquire();
 
+            // leave loop early
+            if(mControlExit)
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+                  << "[vrj::opengl::Pipe::controlLoop()] Pipe [" << mPipeNum
+                  << "] exiting control loop after mRenderTriggerSema.\n"
+                  << vprDEBUG_FLUSH;
+               break;
+            }
+
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+               << "[vrj::opengl::Pipe::controlLoop()] Pipe [" << mPipeNum
+               << "] rendering [" << mOpenWins.size() << "] windows.\n"
+               << vprDEBUG_FLUSH;
+
+
             vrj::opengl::App* the_app = mGlDrawManager->getApp();
 
             // --- pipe PRE-draw function ---- //
@@ -260,6 +276,21 @@ void Pipe::controlLoop(const int cpuAffinity)
          {
             mSwapTriggerSema.acquire();
 
+            // leave loop early
+            if(mControlExit)
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+                  << "[vrj::opengl::Pipe::controlLoop()] Pipe [" << mPipeNum
+                  << "] exiting control loop after mSwapTriggerSema.\n"
+                  << vprDEBUG_FLUSH;
+               break;
+            }
+
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+               << "[vrj::opengl::Pipe::controlLoop()] Pipe [" << mPipeNum
+               << "] swapping [" << mOpenWins.size() << "] windows.\n"
+               << vprDEBUG_FLUSH;
+
 #if defined(VRJ_USE_COCOA)
          boost::shared_ptr<vrj::opengl::WindowCocoa> cocoa_window;
 #endif
@@ -271,6 +302,10 @@ void Pipe::controlLoop(const int cpuAffinity)
                cocoa_window->acquireRenderLock();
 #endif
                swapWindowBuffers(mOpenWins[winId]);
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+                  << "[vrj::opengl::Pipe::controlLoop()] Pipe [" << mPipeNum
+                  << "] swapped window [" << winId << "]\n"
+                  << vprDEBUG_FLUSH;
 #if defined(VRJ_USE_COCOA)
                cocoa_window->releaseRenderLock();
 #endif
@@ -282,6 +317,9 @@ void Pipe::controlLoop(const int cpuAffinity)
       checkForWindowsToClose();  // Checks for closing windows
       checkForNewWindows();      // Checks for new windows to open
    }
+
+   // Checks for closing windows - in case the loop was left early
+   checkForWindowsToClose();
 
    mThreadRunning = false;     // We are not running
 }
@@ -307,6 +345,11 @@ void Pipe::stop()
    //completeSwap();
 
    mActiveThread->join();
+
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+      << "[vrj::opengl::Pipe::stop()] Pipe [" << mPipeNum
+      << "] joined thread.\n"
+      << vprDEBUG_FLUSH;
 }
 
 /**
