@@ -120,6 +120,7 @@ bool Kernel::init(int& argc, char* argv[], const int parserStyle)
    bool cluster_slave(false);
    bool print_help(false);
    std::string listen_port;
+   std::string node_name;
 
    for ( int i = 1; i < argc; ++i )
    {
@@ -179,6 +180,26 @@ bool Kernel::init(int& argc, char* argv[], const int parserStyle)
                       << std::endl;
          }
       }
+      else if ( arg == "--vrjnodename" )
+      {
+         if( i + 1 < argc )
+         {
+            processed_args.push_back(argv[i]);
+            ++processed_count;
+
+            ++i;
+            node_name = std::string(argv[i]);
+
+            processed_args.push_back(argv[i]);
+            ++processed_count;
+         }
+
+         if ( node_name.empty() )
+         {
+            std::cerr << "ERROR: No value given for --vrjnodename"
+                      << std::endl;
+         }
+      }
    }
 
    std::for_each(processed_args.begin(), processed_args.end(),
@@ -196,6 +217,7 @@ bool Kernel::init(int& argc, char* argv[], const int parserStyle)
                 << "  --vrjmaster           This node is the cluster master.\n"
                 << "  --vrjslave            This node is a cluster slave."
                 << "  --listen_port arg     Port to listen on for incoming cluster connections."
+                << "  --vrjnodename arg     Name of cluster config element to use for this node."
                 << std::endl;
 
       result = false;
@@ -218,6 +240,11 @@ bool Kernel::init(int& argc, char* argv[], const int parserStyle)
          {
             std::cerr << e.what() << std::endl;
          }
+      }
+
+      if ( ! node_name.empty() )
+      {
+         mClusterManager->setLocalNodeName(node_name);
       }
    }
 
@@ -334,6 +361,11 @@ bool Kernel::init(const po::variables_map& vm)
    {
       const vpr::Uint16 listen_port = vm["listen_port"].as<vpr::Uint16>();
       mClusterManager->setListenPort(listen_port);
+   }
+
+   if (vm.count("vrjnodename"))
+   {
+      mClusterManager->setLocalNodeName(vm["vrjnodename"].as<std::string>());
    }
 
    return true;
@@ -1206,6 +1238,7 @@ Kernel::Kernel()
        ("vrjmaster", po::bool_switch(), "This node is the cluster master.")
        ("vrjslave", po::bool_switch(), "This node is a cluster slave.")
        ("listen_port", po::value<vpr::Uint16>(), "Port to listen on for incoming cluster connections.")
+       ("vrjnodename", po::value<std::string>(), "Name of cluster config element to use for this node.")
    ;
    mConfigOptionDesc.add_options()
        ("jconf", po::value< std::vector<std::string> >()->composing(), "VR Juggler Configuration File")
