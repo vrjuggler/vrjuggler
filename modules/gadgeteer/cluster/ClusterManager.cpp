@@ -769,10 +769,10 @@ bool ClusterManager::isLocalConfigElement( jccl::ConfigElementPtr element )
    }
    else
    {
-      std::string new_node_hostname =
+      std::string node_hostname =
             element->getProperty<std::string>( "host_name" );
 
-      return cluster::ClusterNetwork::isLocalHost(new_node_hostname);
+      return cluster::ClusterNetwork::isLocalHost(node_hostname);
    }
 }
 

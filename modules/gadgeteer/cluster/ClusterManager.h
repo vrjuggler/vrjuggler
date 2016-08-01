@@ -228,6 +228,8 @@ private:
 
    /**
     * Recognized if the config element applies to the local machine.
+    * This uses the local machine's hostname unless mLocalNodeName is
+    * not empty in which case mLocalNodeName is compared with the element name.
     */
    bool isLocalConfigElement( jccl::ConfigElementPtr element );
 
