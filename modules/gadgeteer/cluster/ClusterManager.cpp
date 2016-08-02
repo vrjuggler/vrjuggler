@@ -160,6 +160,7 @@ ClusterManager::ClusterManager()
    , mWindowOpened( false )
    , mIsMaster(false)
    , mSoftwareSwapLock(false)
+   , mLocalNodeName()
    , mListenPort(DEFAULT_SLAVE_PORT)
    , mClusterNetwork(NULL)
    , mPreDrawCallCount(0)
@@ -460,7 +461,8 @@ void ClusterManager::configCluster( jccl::ConfigElementPtr element )
 
          if (1 != mClusterNodeElements.count(new_node))
          {
-            throw ClusterException("Can't find configuration for node: " + new_node, VPR_LOCATION);
+            throw ClusterException(
+               "Can't find configuration for node: " + new_node, VPR_LOCATION);
          }
 
          // ClusterManager element is loaded after all node elements
@@ -475,7 +477,7 @@ void ClusterManager::configCluster( jccl::ConfigElementPtr element )
             << "configAdd() New Node Hostname: " << new_node_hostname
             << std::endl << vprDEBUG_FLUSH;
 
-         if ( !cluster::ClusterNetwork::isLocalHost( new_node_hostname ) )
+         if ( !isLocalConfigElement(new_node_element) )
          {
             vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_STATUS_LVL )
                << clrOutBOLD( clrCYAN, "[ClusterManager] " )
@@ -487,22 +489,24 @@ void ClusterManager::configCluster( jccl::ConfigElementPtr element )
                << " Adding Node: " << element->getName()
                << " to the Cluster Network\n" << vprDEBUG_FLUSH;
 
-            std::string name        = new_node_element->getName();
-            std::string host_name   = new_node_element->getProperty<std::string>( "host_name" );
-            vpr::Uint16 listen_port = new_node_element->getProperty<int>( "listen_port" );
+            std::string new_node_name = new_node_element->getName();
+            vpr::Uint16 listen_port   =
+               new_node_element->getProperty<int>( "listen_port" );
             if (0 == listen_port)
             {
                listen_port = DEFAULT_SLAVE_PORT;
             }
 
-            mClusterNetwork->addNode(name, host_name, listen_port);
+            mClusterNetwork->addNode(
+               new_node_name, new_node_hostname, listen_port);
          }
          else
          {
             vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_STATUS_LVL )
                << clrOutBOLD( clrCYAN, "[ClusterManager] " )
-               << "configAdd() Local configuration."
-               << std::endl << vprDEBUG_FLUSH;
+               << "configAdd() Local configuration "
+               << new_node_element->getName()
+               << "\n" << vprDEBUG_FLUSH;
          }
       }
    }
@@ -757,6 +761,21 @@ void ClusterManager::mergeConfigurations(jccl::Configuration* dst, jccl::Configu
    }
 }
 
+bool ClusterManager::isLocalConfigElement( jccl::ConfigElementPtr element )
+{
+   if( !mLocalNodeName.empty() )
+   {
+      return mLocalNodeName == element->getName();
+   }
+   else
+   {
+      std::string node_hostname =
+            element->getProperty<std::string>( "host_name" );
+
+      return cluster::ClusterNetwork::isLocalHost(node_hostname);
+   }
+}
+
 struct ElementTypePred
 {
    ElementTypePred(const std::string& type)
@@ -821,10 +840,7 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
       // XXX: Leave the ClusterManager configuration around to load the correct plugins.
       //cfg->remove(node_name);
 
-      std::string new_node_hostname =
-         node_elm->getProperty<std::string>( "host_name" );
-
-      if (cluster::ClusterNetwork::isLocalHost( new_node_hostname ))
+      if (isLocalConfigElement( node_elm ))
       {
          mLocalNodeElement = node_elm;
 
@@ -860,6 +876,28 @@ void ClusterManager::configurationChanged(jccl::Configuration* cfg, vpr::Uint16 
       << std::endl << vprDEBUG_FLUSH;
 
    mergeConfigurations(&mSystemConfiguration, cfg, type);
+}
+
+void
+ClusterManager::setLocalNodeName(std::string const& nodeName)
+{
+   if(mClusterStarted)
+   {
+      vprDEBUG( gadgetDBG_RIM, vprDBG_CRITICAL_LVL )
+         << clrOutBOLD( clrRED, "ERROR" )
+         << " [gadget::ClusterManager::setLocalNodeName]: "
+         << "Cannot change local node name after cluster is started!\n"
+         << vprDEBUG_FLUSH;
+      return;
+   }
+
+   mLocalNodeName = nodeName;
+}
+
+std::string const&
+ClusterManager::getLocalNodeName() const
+{
+   return mLocalNodeName;
 }
 
 /**
